@@ -13,6 +13,9 @@ import {
   emptyFilters,
   googleMapsAreaUrl,
   monthDates,
+  availableCreateSlots,
+  validateArrangement,
+  createDueNow,
 } from "../src/domain.ts";
 const meal = initialMeals[0];
 test("apply, approval and payment are distinct; failure is recoverable", () => {
@@ -193,4 +196,73 @@ test("Google Maps link opens the neighbourhood without inventing a restaurant lo
   assert.equal(url.hostname, "www.google.com");
   assert.equal(url.searchParams.get("api"), "1");
   assert.equal(url.searchParams.get("query"), "St James’s, London");
+});
+
+const arrangement = {
+  venue: "The Little Table",
+  date: "2026-10-23",
+  time: "19:00",
+  capacity: 4,
+  min: 25,
+  max: 35,
+  deposit: 10,
+  cost: "deposit",
+  booking: "in-app",
+  externalConfirmed: false,
+};
+test("create availability depends on venue, date and party size", () => {
+  assert.deepEqual(availableCreateSlots("Unknown", "2026-10-23", 4), []);
+  assert.deepEqual(
+    availableCreateSlots(arrangement.venue, "2026-10-19", 4),
+    [],
+  );
+  assert.deepEqual(
+    availableCreateSlots(arrangement.venue, "2026-11-16", 4),
+    [],
+  );
+  assert.equal(validateArrangement(arrangement), "");
+  assert.match(
+    validateArrangement({ ...arrangement, time: "18:30", capacity: 6 }),
+    /available time/,
+  );
+  assert.match(
+    validateArrangement({ ...arrangement, venue: "The Garden Kitchen" }),
+    /available time/,
+  );
+  assert.equal(validateArrangement({ ...arrangement, capacity: 2 }), "");
+});
+test("create payment mode separates budget from amount due", () => {
+  assert.equal(createDueNow(arrangement), 10);
+  assert.equal(createDueNow({ ...arrangement, cost: "offline" }), 0);
+  assert.equal(createDueNow({ ...arrangement, cost: "menu" }), 25);
+  for (const deposit of [0, 26, NaN, 1.234])
+    assert.match(
+      validateArrangement({ ...arrangement, deposit }, "costs"),
+      /deposit/,
+    );
+  assert.match(
+    validateArrangement({ ...arrangement, max: 20 }, "costs"),
+    /budget/,
+  );
+  assert.equal(
+    validateArrangement({ ...arrangement, deposit: 12.5 }, "costs"),
+    "",
+  );
+  assert.equal(
+    validateArrangement({ ...arrangement, deposit: 0.29 }, "costs"),
+    "",
+  );
+});
+test("external reservation requires host attestation separate from slot selection", () => {
+  assert.match(
+    validateArrangement({ ...arrangement, booking: "external" }, "costs"),
+    /Confirm your external/,
+  );
+  assert.equal(
+    validateArrangement(
+      { ...arrangement, booking: "external", externalConfirmed: true },
+      "costs",
+    ),
+    "",
+  );
 });

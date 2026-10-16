@@ -76,7 +76,7 @@ Four destinations plus central creation. Page back restores route history; disco
 
 ### Forms and overlays
 
-KeyboardInput/KeyboardTextarea, shared Field and Primary. Discovery uses shared styled native-radio choice groups and a month/day choice grid, with draft/apply semantics. Creation forms retain native select for fixed venue/slot choices. Runtime BottomSheet owns focus trapping and dismissal. No browser-native alerts/confirm/prompt. Every overlay fits phone bounds and scrolls.
+KeyboardInput/KeyboardTextarea, shared Field and Primary. Discovery uses shared styled native-radio choice groups and a month/day choice grid, with draft/apply semantics. Creation reuses those choices and the month calendar, with restaurant cards and availability-dependent time chips. Runtime BottomSheet owns focus trapping and dismissal. No browser-native alerts/confirm/prompt. Every overlay fits phone bounds and scrolls.
 
 ## Motion
 
@@ -89,3 +89,6 @@ Plain English and friendship-first intent. Display no real-booking/no-charge rib
 ## Discovery review revision
 
 Date and Table size are the two primary filters. All-filter choices are outlined chips with pale-green selected surfaces and checkmarks; labels wrap rather than truncate. The map's selected area has an event count, whole-card action, independent avatars and bounded previous/next pagination. Grip/View all opens an area list. No duplicate View meal or arrow is present. Keep the map-first frame and established colour/type system.
+
+## Create meal revision
+Four steps: Arrange / Introduce / Costs / Review. Restaurant cards, shared native-radio choices and calendar own selection; money fields use KeyboardInput. White/forest surfaces and a dark payment receipt separate estimated spend from approval-time payment. Review groups link back to edit; schedule changes invalidate incompatible slots and external attestation. Demo inventory is explicitly fictional.

@@ -45,6 +45,10 @@ import {
   completePayment,
   longDate,
   validateMeal,
+  createVenues,
+  availableCreateSlots,
+  validateArrangement,
+  createDueNow,
   refundAmount,
   groupReady,
   groupMealsByArea,
@@ -71,6 +75,9 @@ const initialDraft = {
   mood: "Easy conversation",
   cost: "deposit",
   booking: "in-app",
+  deposit: 10,
+  externalConfirmed: false,
+  accepted: false,
 };
 
 type Page =
@@ -223,10 +230,12 @@ function DateChoices({
   value,
   onChange,
   meals,
+  creation = false,
 }: {
   value: string;
   onChange: (date: string) => void;
   meals: Meal[];
+  creation?: boolean;
 }) {
   const [month, setMonth] = useState(value ? value.slice(0, 7) : "2026-10");
   const id = useId();
@@ -298,7 +307,11 @@ function DateChoices({
                 year: "numeric",
                 timeZone: "UTC",
               }).format(new Date(date + "T12:00:00Z"))}
-              disabled={date < "2026-10-16"}
+              disabled={
+                creation
+                  ? date < "2026-10-17" || date > "2026-11-15"
+                  : date < "2026-10-16"
+              }
               checked={value === date}
               onChange={() => onChange(date)}
             />
@@ -547,13 +560,19 @@ export default function Prototype() {
     notify("Participation cancelled. See your refund status.");
   };
   const publish = () => {
-    const issue = validateMeal(
-      draft.title,
-      draft.description,
-      draft.capacity,
-      draft.min,
-      draft.max,
-    );
+    const issue =
+      validateArrangement(
+        { ...draft, max: draft.cost === "menu" ? draft.min : draft.max },
+        "costs",
+      ) ||
+      (!draft.accepted ? "Confirm the meal details before publishing." : "") ||
+      validateMeal(
+        draft.title,
+        draft.description,
+        draft.capacity,
+        draft.min,
+        draft.cost === "menu" ? draft.min : draft.max,
+      );
     if (issue) {
       setError(issue);
       return;
@@ -562,15 +581,14 @@ export default function Prototype() {
       id: `created-${Date.now()}`,
       title: draft.title,
       venue: draft.venue,
-      area: draft.venue === "The Little Table" ? "Soho" : "Covent Garden",
+      area: createVenues.find((v) => v.name === draft.venue)!.area,
       date: draft.date,
       time: draft.time,
       capacity: draft.capacity,
       confirmed: 1,
       min: draft.min,
       max: draft.cost === "menu" ? draft.min : draft.max,
-      deposit:
-        draft.cost === "offline" ? 0 : draft.cost === "menu" ? draft.min : 10,
+      deposit: createDueNow(draft),
       language: draft.language,
       mood: draft.mood,
       description: draft.description,
@@ -586,10 +604,12 @@ export default function Prototype() {
             ? "FIXED_MENU"
             : "DEPOSIT",
       owned: true,
+      reservationSource: draft.booking === "external" ? "external" : "in-app",
     };
     setMeals((ms) => [meal, ...ms]);
     setSelected(meal.id);
     setCreateStep(0);
+    setDraft(initialDraft);
     go("detail");
     notify("Your meal is published. Your table starts here.");
   };
@@ -996,6 +1016,9 @@ export default function Prototype() {
               Open {current.area} in Google Maps <ExternalLinkIcon />
             </a>
             <p className="map-destination-note">
+              {current.reservationSource === "external"
+                ? "Reservation reported by the host; not verified by the app. "
+                : ""}
               Demo restaurant · Google Maps opens the neighbourhood.
             </p>
             <h2>Keeping costs clear</h2>
@@ -1019,7 +1042,7 @@ export default function Prototype() {
             </div>
             <p className="muted">
               {current.costMode === "FIXED_MENU"
-                ? "Menu fee paid in-app. Drinks are paid separately at the restaurant."
+                ? "Menu fee paid in-app. Drinks and service are paid separately at the restaurant."
                 : current.deposit
                   ? "Your deposit goes toward your bill. Pay the rest at the restaurant; everyone pays their own share."
                   : "No payment is due in the app. Everyone pays their own share at the restaurant."}
@@ -1027,9 +1050,9 @@ export default function Prototype() {
             <div className="notice">
               <InfoCircledIcon />
               <span>
-                Free cancellation until Thu 22 Oct, 19:00. After that, this
-                meal’s deposit is non-refundable. A failed reservation receives
-                a full refund.
+                {current.deposit
+                  ? "Full refund until 24 hours before this meal; no refund after that. Host cancellation or a failed reservation receives a full refund."
+                  : "No in-app payment to refund. Let the host know if your plans change."}
               </span>
             </div>
             <div className="demo-note">
@@ -1283,9 +1306,9 @@ export default function Prototype() {
               onChange={(e) => setConsent(e.target.checked)}
             />
             <span>
-              I accept this meal’s cancellation terms: full refund before Thu 22
-              Oct, 19:00; no deposit refund after that. Booking failure is
-              refunded in full.
+              I accept this meal’s sample terms: full refund until 24 hours
+              before the meal; no refund after that. Host cancellation or
+              booking failure is refunded in full.
             </span>
           </label>
           <label className="check-row demo-option">
@@ -1558,90 +1581,166 @@ export default function Prototype() {
         </div>
       );
     }
-    if (page === "create")
+    if (page === "create") {
+      const venue = createVenues.find((v) => v.name === draft.venue)!;
+      const slots = availableCreateSlots(
+        draft.venue,
+        draft.date,
+        draft.capacity,
+      );
+      const updateSchedule = (patch: Partial<typeof draft>) => {
+        const next = {
+          ...draft,
+          ...patch,
+          externalConfirmed: false,
+          accepted: false,
+        };
+        if (
+          !availableCreateSlots(next.venue, next.date, next.capacity).includes(
+            next.time,
+          )
+        )
+          next.time = "";
+        setDraft(next);
+        setError("");
+      };
+      const nextStep = () => {
+        keyboard.hide();
+        const issue =
+          createStep === 0
+            ? validateArrangement(draft)
+            : createStep === 1
+              ? validateMeal(
+                  draft.title,
+                  draft.description,
+                  draft.capacity,
+                  draft.min,
+                  draft.max,
+                )
+              : validateArrangement(
+                  {
+                    ...draft,
+                    max: draft.cost === "menu" ? draft.min : draft.max,
+                  },
+                  "costs",
+                );
+        setError(issue);
+        if (!issue) setCreateStep((s) => s + 1);
+      };
       return (
-        <div className="body-pad">
-          <div className="step-progress">
-            {["The basics", "The company", "The details"].map((s, i) => (
-              <span key={s} className={i <= createStep ? "on" : ""}>
-                {i + 1} · {s}
-              </span>
+        <div className="body-pad create-flow">
+          <div
+            className="create-progress"
+            aria-label={`Step ${createStep + 1} of 4`}
+          >
+            {["Arrange", "Introduce", "Costs", "Review"].map((label, i) => (
+              <button
+                key={label}
+                disabled={i > createStep}
+                aria-current={i === createStep ? "step" : undefined}
+                onClick={() => {
+                  keyboard.hide();
+                  setError("");
+                  setCreateStep(i);
+                }}
+              >
+                <span>{i < createStep ? <CheckIcon /> : i + 1}</span>
+                {label}
+              </button>
             ))}
           </div>
           <h1>
-            {createStep === 0
-              ? "Make room for new faces."
-              : createStep === 1
-                ? "What’s the vibe?"
-                : "A little clarity goes a long way."}
+            {
+              [
+                "A place at your table.",
+                "Good company starts here.",
+                "Keep things clear.",
+                "Ready to bring people together?",
+              ][createStep]
+            }
           </h1>
           <p className="prose">
-            {createStep === 0
-              ? "Pick a place, a time and a few seats. You count as one."
-              : createStep === 1
-                ? "Help your future table know what to expect."
-                : "Set the costs and booking arrangements before publishing."}
+            {
+              [
+                "Choose a restaurant, then find a time for your group.",
+                "Give new faces a feel for your meal.",
+                "Let everyone know what they’ll pay and who’s booking.",
+                "Check the details your guests will see before you publish.",
+              ][createStep]
+            }
           </p>
           {createStep === 0 && (
             <>
-              <Field label="Restaurant">
-                <select
-                  value={draft.venue}
-                  onChange={(e) =>
-                    setDraft({ ...draft, venue: e.target.value })
-                  }
-                >
-                  <option>The Little Table</option>
-                  <option>Casa Evening</option>
-                </select>
-              </Field>
-              <div className="form-grid">
-                <Field label="Date">
-                  <select
-                    value={draft.date}
-                    onChange={(e) =>
-                      setDraft({ ...draft, date: e.target.value })
+              <fieldset className="venue-picker">
+                <legend>Choose a restaurant</legend>
+                {createVenues.map((v) => (
+                  <button
+                    key={v.name}
+                    aria-pressed={draft.venue === v.name}
+                    className={draft.venue === v.name ? "chosen" : ""}
+                    onClick={() =>
+                      updateSchedule({ venue: v.name, min: v.min, max: v.max })
                     }
                   >
-                    <option value="2026-10-23">Fri 23 Oct</option>
-                    <option value="2026-10-24">Sat 24 Oct</option>
-                  </select>
-                </Field>
-                <Field label="Available slot">
-                  <select
-                    value={draft.time}
-                    onChange={(e) =>
-                      setDraft({ ...draft, time: e.target.value })
-                    }
-                  >
-                    <option>18:30</option>
-                    <option>19:00</option>
-                    <option>19:30</option>
-                  </select>
-                </Field>
-              </div>
-              <Field label="People, including you">
-                <div className="size-options">
-                  {[2, 3, 4, 5, 6].map((n) => (
-                    <button
-                      key={n}
-                      aria-label={`Table for ${n} people`}
-                      aria-pressed={draft.capacity === n}
-                      className={draft.capacity === n ? "selected" : ""}
-                      onClick={() => setDraft({ ...draft, capacity: n })}
-                    >
-                      {n}
-                    </button>
-                  ))}
-                </div>
-              </Field>
+                    <span className="venue-monogram">
+                      <SewingPinIcon />
+                    </span>
+                    <span>
+                      <strong>{v.name}</strong>
+                      <small>
+                        {v.area} · {v.cuisine}
+                      </small>
+                      <small>{v.note}</small>
+                      <small>
+                        £{v.min}–{v.max} per person
+                      </small>
+                    </span>
+                    {draft.venue === v.name && <CheckCircledIcon />}
+                  </button>
+                ))}
+              </fieldset>
+              <ChoiceGroup
+                label="People, including you"
+                value={String(draft.capacity)}
+                onChange={(v) => updateSchedule({ capacity: Number(v) })}
+                options={[2, 3, 4, 5, 6].map((n) => [String(n), `${n} people`])}
+              />
               <p className="muted">
-                Small tables, easy conversation. Tables for two are also
-                available in this demo.
+                {draft.capacity - 1} guest{draft.capacity === 2 ? "" : "s"} +
+                you · friendship-first, at every table size.
               </p>
-              <Primary onClick={() => setCreateStep(1)}>
-                Continue <ArrowRightIcon />
-              </Primary>
+              <div className="create-calendar">
+                <DateChoices
+                  creation
+                  value={draft.date}
+                  meals={[]}
+                  onChange={(date) => updateSchedule({ date, time: "" })}
+                />
+              </div>
+              <p className="muted">
+                London time · demo availability 17 Oct–15 Nov 2026. Mondays are
+                unavailable.
+              </p>
+              {slots.length ? (
+                <ChoiceGroup
+                  label="Available times"
+                  value={draft.time}
+                  onChange={(time) => updateSchedule({ time })}
+                  options={slots.map((t) => [t, t])}
+                />
+              ) : (
+                <div className="summary-box" role="status">
+                  <strong>No times for this selection</strong>
+                  <p>
+                    Choose another date or a smaller table. Your other details
+                    are saved.
+                  </p>
+                </div>
+              )}
+              <p className="demo-note">
+                Fictional restaurants and sample availability. A time selection
+                does not hold a table.
+              </p>
             </>
           )}
           {createStep === 1 && (
@@ -1650,18 +1749,29 @@ export default function Prototype() {
                 <KeyboardInput
                   value={draft.title}
                   onChange={(e) =>
-                    setDraft({ ...draft, title: e.target.value })
+                    setDraft({
+                      ...draft,
+                      title: e.target.value,
+                      accepted: false,
+                    })
                   }
                   onBlur={() => keyboard.hide()}
                   placeholder="e.g. Friday dinner & new faces"
                   maxLength={80}
                 />
               </Field>
+              <small className="muted">
+                5–80 characters · {draft.title.length}/80
+              </small>
               <Field label="What should people expect?">
                 <KeyboardTextarea
                   value={draft.description}
                   onChange={(e) =>
-                    setDraft({ ...draft, description: e.target.value })
+                    setDraft({
+                      ...draft,
+                      description: e.target.value,
+                      accepted: false,
+                    })
                   }
                   onBlur={() => keyboard.hide()}
                   rows={4}
@@ -1669,142 +1779,275 @@ export default function Prototype() {
                   placeholder="A relaxed dinner, a shared interest, or simply good company…"
                 />
               </Field>
-              <Field label="Atmosphere">
-                <select
-                  value={draft.mood}
-                  onChange={(e) => setDraft({ ...draft, mood: e.target.value })}
-                >
-                  <option>Easy conversation</option>
-                  <option>Food discoveries</option>
-                  <option>Travel & culture</option>
-                </select>
-              </Field>
-              <Field label="Conversation language">
-                <select
-                  value={draft.language}
-                  onChange={(e) =>
-                    setDraft({ ...draft, language: e.target.value })
-                  }
-                >
-                  <option>English</option>
-                  <option>English & Mandarin</option>
-                  <option>English & French</option>
-                </select>
-              </Field>
-              {error && (
-                <p className="form-error" role="alert">
-                  {error}
-                </p>
-              )}
-              <Primary
-                onClick={() => {
-                  if (
-                    draft.title.trim().length < 5 ||
-                    draft.description.trim().length < 20
-                  ) {
-                    setError(
-                      "Add a title of at least 5 characters and a description of at least 20 characters.",
-                    );
-                    return;
-                  }
-                  setError("");
-                  keyboard.hide();
-                  setCreateStep(2);
-                }}
-              >
-                Continue <ArrowRightIcon />
-              </Primary>
+              <small className="muted">
+                20–1,000 characters · {draft.description.length}/1,000
+              </small>
+              <ChoiceGroup
+                label="Atmosphere"
+                value={draft.mood}
+                onChange={(mood) =>
+                  setDraft({ ...draft, mood, accepted: false })
+                }
+                options={[
+                  "Easy conversation",
+                  "Food discoveries",
+                  "Travel & culture",
+                ].map((v) => [v, v])}
+              />
+              <ChoiceGroup
+                label="Conversation language"
+                value={draft.language}
+                onChange={(language) =>
+                  setDraft({ ...draft, language, accepted: false })
+                }
+                options={[
+                  "English",
+                  "English & Mandarin",
+                  "English & French",
+                ].map((v) => [v, v])}
+              />
             </>
           )}
           {createStep === 2 && (
             <>
+              <ChoiceGroup
+                label="How guests pay"
+                value={draft.cost}
+                onChange={(cost) =>
+                  setDraft({
+                    ...draft,
+                    cost,
+                    max: Math.max(draft.min, draft.max),
+                    accepted: false,
+                  })
+                }
+                options={[
+                  ["offline", "Pay at the restaurant"],
+                  ["deposit", "Deposit in the app"],
+                  ["menu", "Fixed menu in the app"],
+                ]}
+              />
+              <p className="muted">
+                {draft.cost === "offline"
+                  ? "Everyone pays their own share. Nothing collected in the app."
+                  : draft.cost === "deposit"
+                    ? "The deposit is credited towards each guest’s bill. The balance is paid at the restaurant."
+                    : "One fixed price per person. Drinks and service are extra, paid at the restaurant."}
+              </p>
               <div className="form-grid">
-                <Field label="Budget from (£)">
+                <Field
+                  label={
+                    draft.cost === "menu"
+                      ? "Menu price per person (£)"
+                      : "Budget from / person (£)"
+                  }
+                >
                   <KeyboardInput
                     type="number"
-                    min={0}
+                    min={1}
+                    step="0.01"
                     value={draft.min}
                     onBlur={() => keyboard.hide()}
                     onChange={(e) =>
-                      setDraft({ ...draft, min: Number(e.target.value) })
+                      setDraft({
+                        ...draft,
+                        min: Number(e.target.value),
+                        max:
+                          draft.cost === "menu"
+                            ? Number(e.target.value)
+                            : draft.max,
+                        accepted: false,
+                      })
                     }
                   />
                 </Field>
-                <Field label="Budget to (£)">
+                {draft.cost !== "menu" && (
+                  <Field label="Budget to / person (£)">
+                    <KeyboardInput
+                      type="number"
+                      min={draft.min}
+                      step="0.01"
+                      value={draft.max}
+                      onBlur={() => keyboard.hide()}
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          max: Number(e.target.value),
+                          accepted: false,
+                        })
+                      }
+                    />
+                  </Field>
+                )}
+              </div>
+              {draft.cost === "deposit" && (
+                <Field label="Deposit per person (£)">
                   <KeyboardInput
                     type="number"
-                    min={draft.min}
-                    value={draft.max}
+                    min={0.01}
+                    max={draft.min}
+                    step="0.01"
+                    value={draft.deposit}
                     onBlur={() => keyboard.hide()}
                     onChange={(e) =>
-                      setDraft({ ...draft, max: Number(e.target.value) })
+                      setDraft({
+                        ...draft,
+                        deposit: Number(e.target.value),
+                        accepted: false,
+                      })
                     }
                   />
                 </Field>
-              </div>
-              <Field label="How will people pay?">
-                <select
-                  value={draft.cost}
-                  onChange={(e) => setDraft({ ...draft, cost: e.target.value })}
-                >
-                  <option value="deposit">
-                    £10 deposit, remainder at restaurant
-                  </option>
-                  <option value="menu">
-                    Fixed menu, paid in-app (budget from)
-                  </option>
-                  <option value="offline">Pay own share at restaurant</option>
-                </select>
-              </Field>
-              <Field label="Reservation">
-                <select
-                  value={draft.booking}
-                  onChange={(e) =>
-                    setDraft({ ...draft, booking: e.target.value })
-                  }
-                >
-                  <option value="in-app">
-                    Book in the app after guests confirm
-                  </option>
-                  <option value="external">
-                    I have already booked externally
-                  </option>
-                </select>
-              </Field>
-              <div className="summary-box">
-                <strong>{draft.title}</strong>
-                <p>
-                  {draft.venue} · {longDate(draft.date)} · {draft.time}
-                </p>
-                <p>
-                  {draft.capacity} people including you · {draft.language}
-                </p>
-                <p>
-                  {draft.cost === "offline"
-                    ? "No prepayment"
-                    : draft.cost === "menu"
-                      ? `£${draft.min} fixed menu`
-                      : "£10 deposit per person"}
-                </p>
+              )}
+              <div className="cost-receipt">
+                <span>
+                  Each guest pays after approval
+                  <strong>£{createDueNow(draft).toFixed(2)}</strong>
+                </span>
+                <span>
+                  Collected when you publish<strong>£0.00</strong>
+                </span>
                 <small>
-                  Sample terms: full refund before Thu 22 Oct, 19:00; no deposit
-                  refund after. Booking failure is refunded.
+                  {draft.cost === "offline"
+                    ? "Estimated spend is a guide, not a fixed charge."
+                    : "Demo payments only. Host payment is outside this demo."}
                 </small>
               </div>
-              <p className="demo-note">
-                Publishing creates a fictional meal in this demo. No restaurant
-                reservation is made.
-              </p>
-              {error && (
-                <p className="form-error" role="alert">
-                  {error}
-                </p>
+              <ChoiceGroup
+                label="Restaurant reservation"
+                value={draft.booking}
+                onChange={(booking) =>
+                  setDraft({
+                    ...draft,
+                    booking,
+                    externalConfirmed: false,
+                    accepted: false,
+                  })
+                }
+                options={[
+                  ["in-app", "Book through the app"],
+                  ["external", "I’ve already booked"],
+                ]}
+              />
+              {draft.booking === "in-app" ? (
+                <div className="summary-box">
+                  <strong>Reservation pending</strong>
+                  <p>
+                    Publish first, approve guests, then confirm the reservation
+                    in Manage meal. Minimum {draft.capacity === 2 ? 2 : 3}{" "}
+                    confirmed people; final party size uses confirmed guests,
+                    including you.
+                  </p>
+                </div>
+              ) : (
+                <label className="create-consent">
+                  <input
+                    type="checkbox"
+                    checked={draft.externalConfirmed}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        externalConfirmed: e.target.checked,
+                        accepted: false,
+                      })
+                    }
+                  />
+                  <span>
+                    I have a reservation at {draft.venue} for {draft.capacity}{" "}
+                    people on {longDate(draft.date)} at {draft.time}. This is my
+                    confirmation, not verification by the app.
+                  </span>
+                </label>
               )}
-              <Primary onClick={publish}>
-                Publish meal <PlusIcon />
-              </Primary>
+              <div className="summary-box">
+                <strong>Sample cancellation terms</strong>
+                <p>
+                  {draft.cost === "offline"
+                    ? "No in-app payment to refund. Let the host know if plans change."
+                    : "Full refund until 24 hours before the meal; no refund after that. If the host cancels or the reservation fails, all payments are refunded."}
+                </p>
+                <small>Illustrative terms for this demo meal.</small>
+              </div>
             </>
           )}
+          {createStep === 3 && (
+            <>
+              <div className="create-review">
+                <div className="eyebrow">YOUR NEW TABLE</div>
+                <h2>{draft.title}</h2>
+                <p>{draft.description}</p>
+                {[
+                  [
+                    "Place & time",
+                    `${draft.venue} · ${venue.area}`,
+                    `${longDate(draft.date)} · ${draft.time} London time · ${draft.capacity} people including you`,
+                    0,
+                  ],
+                  ["The company", draft.mood, draft.language, 1],
+                  [
+                    "Costs & reservation",
+                    draft.cost === "menu"
+                      ? `£${draft.min} fixed menu per person`
+                      : `£${draft.min}–${draft.max} estimated per person`,
+                    `£${createDueNow(draft)} after approval · ${draft.booking === "external" ? "Host reports already booked" : "Reservation pending"}`,
+                    2,
+                  ],
+                ].map(([label, a, b, step]) => (
+                  <section key={String(label)}>
+                    <div>
+                      <strong>{label}</strong>
+                      <button
+                        className="text-action"
+                        onClick={() => {
+                          setCreateStep(Number(step));
+                          setDraft({ ...draft, accepted: false });
+                        }}
+                      >
+                        Edit
+                      </button>
+                    </div>
+                    <p>{a}</p>
+                    <small>{b}</small>
+                  </section>
+                ))}
+              </div>
+              <div className="summary-box">
+                <strong>Sample cancellation terms</strong>
+                <p>
+                  {draft.cost === "offline"
+                    ? "No in-app payment to refund."
+                    : "Full refund until 24 hours before the meal; no refund after that. Host cancellation or booking failure is refunded in full."}
+                </p>
+              </div>
+              <p className="demo-note">
+                Publishing invites applications. No real booking or charge is
+                made. Guests join only after your approval and any required demo
+                payment.
+              </p>
+              <label className="create-consent">
+                <input
+                  type="checkbox"
+                  checked={draft.accepted}
+                  onChange={(e) =>
+                    setDraft({ ...draft, accepted: e.target.checked })
+                  }
+                />
+                <span>
+                  I’ve checked the arrangements and the sample cancellation
+                  terms.
+                </span>
+              </label>
+            </>
+          )}
+          {error && (
+            <p className="form-error" role="alert">
+              {error}
+            </p>
+          )}
+          <Primary onClick={createStep === 3 ? publish : nextStep}>
+            {createStep === 3 ? "Publish meal" : "Continue"}
+            <ArrowRightIcon />
+          </Primary>
           {createStep > 0 && (
             <button
               className="text-action"
@@ -1819,6 +2062,7 @@ export default function Prototype() {
           )}
         </div>
       );
+    }
     if (page === "meals")
       return (
         <div className="body-pad">
@@ -2357,7 +2601,7 @@ export default function Prototype() {
         renderPage()
       ) : (
         <MobileScroll
-          key={page}
+          key={page === "create" ? `create-${createStep}` : page}
           className={`page-scroll ${topLevel ? "with-tabs" : ""} ${showComposer ? "has-composer" : ""}`}
         >
           <main className={`page-content ${topLevel ? "top-level" : ""}`}>

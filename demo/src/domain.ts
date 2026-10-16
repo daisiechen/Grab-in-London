@@ -40,6 +40,7 @@ export type Meal = {
   booking: BookingState;
   costMode: "DEPOSIT" | "FIXED_MENU" | "OFFLINE";
   owned?: boolean;
+  reservationSource?: "in-app" | "external";
   cuisine?: string;
   dietary?: string[];
 };
@@ -370,3 +371,100 @@ export const longDate = (date: string) =>
     month: "short",
     timeZone: "Europe/London",
   }).format(new Date(date + "T12:00:00Z"));
+
+// Fictional availability, anchored to the demo clock; never live inventory.
+export const createVenues = [
+  {
+    name: "The Little Table",
+    area: "Soho",
+    cuisine: "European",
+    min: 25,
+    max: 35,
+    note: "Sharing plates · vegetarian options",
+  },
+  {
+    name: "Casa Evening",
+    area: "Covent Garden",
+    cuisine: "Spanish",
+    min: 30,
+    max: 45,
+    note: "Small plates · lively atmosphere",
+  },
+  {
+    name: "The Garden Kitchen",
+    area: "St James’s",
+    cuisine: "Seasonal",
+    min: 20,
+    max: 30,
+    note: "Relaxed lunches · plant-friendly",
+  },
+];
+export function availableCreateSlots(
+  venue: string,
+  date: string,
+  capacity: number,
+): string[] {
+  if (
+    !createVenues.some((v) => v.name === venue) ||
+    date < "2026-10-17" ||
+    date > "2026-11-15" ||
+    !Number.isInteger(capacity) ||
+    capacity < 2 ||
+    capacity > 6
+  )
+    return [];
+  const day = new Date(date + "T12:00:00Z").getUTCDay();
+  if (day === 1) return [];
+  const slots =
+    venue === "The Garden Kitchen"
+      ? ["12:00", "12:30", "13:00"]
+      : ["18:00", "18:30", "19:00", "19:30", "20:00"];
+  return capacity >= 5 ? slots.filter((_, i) => i % 2 === 0) : slots;
+}
+export type CreateArrangement = {
+  venue: string;
+  date: string;
+  time: string;
+  capacity: number;
+  min: number;
+  max: number;
+  cost: string;
+  deposit: number;
+  booking: string;
+  externalConfirmed: boolean;
+};
+export function validateArrangement(
+  d: CreateArrangement,
+  stage: "schedule" | "costs" = "schedule",
+) {
+  if (!availableCreateSlots(d.venue, d.date, d.capacity).includes(d.time))
+    return "Choose an available time for this restaurant, date and table size.";
+  if (stage === "schedule") return "";
+  if (
+    !Number.isFinite(d.min) ||
+    !Number.isFinite(d.max) ||
+    d.min <= 0 ||
+    d.max < d.min
+  )
+    return "Enter a positive per-person budget; the maximum must be at least the minimum.";
+  if (!["offline", "deposit", "menu"].includes(d.cost))
+    return "Choose how guests will pay.";
+  if (
+    d.cost === "deposit" &&
+    (!Number.isFinite(d.deposit) ||
+      d.deposit <= 0 ||
+      d.deposit > d.min ||
+      Math.abs(Math.round(d.deposit * 100) - d.deposit * 100) > 0.000001)
+  )
+    return "Enter a deposit greater than £0, no higher than the minimum budget, with up to two decimals.";
+  if (!["in-app", "external"].includes(d.booking))
+    return "Choose a reservation method.";
+  if (d.booking === "external" && !d.externalConfirmed)
+    return "Confirm your external reservation matches this date, time and table size.";
+  return "";
+}
+export function createDueNow(
+  d: Pick<CreateArrangement, "cost" | "min" | "deposit">,
+) {
+  return d.cost === "offline" ? 0 : d.cost === "menu" ? d.min : d.deposit;
+}

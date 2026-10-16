@@ -51,3 +51,12 @@ This revision supersedes the earlier discovery/filter descriptions. The ten user
 Evidence: `discovery-review/home.png`, `date.png`, `filters.png`, `area-list.png`, `screens.png`, `comparison.png`. Main final capture viewport1400×1200; device screen measured393×852; saved images393×852px at scale1. Auxiliary hidden QA tab used1280×720 for functional checks, not1:1 visual assertions.
 
 Checks for this revision:13 domain tests +4 worker/packaging tests +2 root tests; TypeScript/build/runtime integrity passed. Browser console errors/warnings returned none at the checked final checkpoint. Supplementary static scan still has exactly the three previously documented protected-runtime findings, no unresolved contracts. Build retains an advisory530.69kB JS chunk warning (gzip165.03kB), not an error.
+
+## Create meal — 2026-10-16
+Verified in IAB using actual UI controls (mouse and keyboard):
+- Venue change from dinner to Garden Kitchen invalidates the old time; Continue shows an error. Monday produces no-times state, changing date restores lunch slots; two people can choose12:30.
+- Title/description entry proceeds with runtime keyboard. £40 deposit against £25 minimum is blocked; £12.50 succeeds and the published detail retains£12.50,1of4 confirmed and pending reservation.
+- Fixed menu £40, two people, external reservation: missing host declaration blocks; checking it then reviewing/acknowledging publishes correct Garden Kitchen/24Oct/12:30/1of2/£40/menu/confirmed state. External report disclosure was added to avoid implying provider verification.
+- Publish without final acknowledgement is blocked. Success resets the draft. Mouse creation/venue/date/size/slot/payment choices and publishing worked in a fresh QA tab. The older attached tab had stale pointer targeting after viewport changes; keyboard worked, and a fresh tab restored mouse testing without app changes.
+- Actual full-size393×852 screen captures reviewed: `create-review/arrange.png`, `costs.png`, `review.png`. Costs/review captures verify step changes start at the top; receipt text contrast was corrected.
+-16 domain tests,2 root tests,4 worker tests; TypeScript, build and28-file protected runtime integrity pass. Build has an advisory536.51kB JS chunk warning. No real restaurant or payment provider is connected. No Pixel recheck in this revision.

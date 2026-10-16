@@ -1740,3 +1740,181 @@
 .bottom-sheet:has(.filter-layout input:not([type="radio"]):focus) {
   max-height: calc(100% - 415px) !important;
 }
+
+/* Creation reuses discovery choices and calendar within the existing forest system. */
+.create-progress {
+  display: flex;
+  gap: 8px;
+  margin: 4px 0 28px;
+}
+.create-progress button {
+  flex: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 11px;
+  background: none;
+  border: 0;
+  color: var(--muted);
+}
+.create-progress button span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+.create-progress button[aria-current] {
+  color: var(--forest);
+  font-weight: 700;
+}
+.create-progress button[aria-current] span {
+  background: var(--forest);
+  color: white;
+  border-color: var(--forest);
+}
+.create-progress button:disabled {
+  opacity: 0.5;
+}
+.venue-picker {
+  padding: 0;
+  border: 0;
+  margin: 24px 0;
+  min-width: 0;
+}
+.venue-picker legend {
+  font-weight: 700;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+.venue-picker button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  padding: 14px;
+  margin-bottom: 10px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--ink);
+}
+.venue-picker button.chosen {
+  border-color: var(--forest);
+  background: #f0f6f2;
+}
+.venue-picker button > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+.venue-picker strong {
+  display: block;
+  font-size: 14px;
+}
+.venue-picker small {
+  display: block;
+  margin-top: 5px;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.venue-monogram {
+  width: 34px;
+  height: 40px;
+  background: #e3ede6;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.create-calendar .date-choices > .filter-section {
+  display: none;
+}
+.create-flow .filter-section {
+  margin-top: 23px;
+}
+.create-flow .primary {
+  margin-top: 22px;
+}
+.cost-receipt {
+  background: #123f35;
+  color: white;
+  border-radius: 12px;
+  padding: 18px;
+  margin: 20px 0 27px;
+}
+.cost-receipt > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+.cost-receipt strong {
+  font-size: 19px;
+  white-space: nowrap;
+}
+.cost-receipt small {
+  display: block;
+  font-size: 11px;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+.create-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 22px 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.create-consent input {
+  accent-color: #123f35;
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.create-review {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 24px 0;
+}
+.create-review > p {
+  font-size: 14px;
+  line-height: 1.7;
+}
+.create-review section {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  margin-top: 18px;
+  font-size: 13px;
+}
+.create-review section > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.create-review section p {
+  margin: 7px 0;
+  line-height: 1.6;
+}
+.create-review section small {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.create-calendar .calendar-hint {
+  display: none;
+}
+
+.grab-app .cost-receipt small {
+  color: #fff;
+  opacity: 0.85;
+}

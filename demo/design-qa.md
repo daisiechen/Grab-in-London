@@ -45,3 +45,6 @@ Findings/fixes:
 - Final before/after and three-state comparisons were opened and inspected after fixes. No actionable P0/P1/P2 mismatch remains for the scoped comments. Existing prototype integration limits remain as documented; Google redirect is an external access condition.
 
 Validation: see the latest browser-results section and updated domain tests. No template-owned runtime files were changed.
+
+## Create meal refinement — 2026-10-16
+Preserved the established forest/white visual system, runtime and central Create entry. Reused calendar and radio chips; added restaurant cards, receipt and review groups. Inspected actual393×852 screen crops in `qa/create-review/arrange.png`, `costs.png`, `review.png`. Found and fixed low contrast receipt small print and step transitions retaining the previous scroll position. No overflow was observed in the inspected iPhone views; long content scrolls above the home area. Pixel-specific revalidation was not performed in this revision.

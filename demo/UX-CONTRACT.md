@@ -22,3 +22,10 @@ Feedback: public references and private reconnect choice are separate. Mutual co
 Permissions/privacy target: profiles are fictional public projections; role switching is not authentication. Never infer production authorization from hidden buttons. User/host actions in this demo deliberately show what future service boundaries must enforce.
 
 Discovery filtering uses pendingFilters separate from applied filters. Closing restores unchanged results; apply commits; clear affects the draft until apply. Quick date/size preserves other fields. Domain grouping counts matching events by area; selection falls back to a remaining area after filtering. Previous/next is bounded and disabled at ends. Whole-card semantic hit button is a sibling of avatar buttons, never nested around interactive content. Scope grip/list/pager controls outside the detail hit target. Source: PRD FR-01a / FR-03a.
+
+## Create meal contract — 2026-10-16
+- Four steps: Arrange, Introduce, Costs, Review. Reuse ChoiceGroup and DateChoices; app-owned restaurant cards extend selection without changing the mobile runtime.
+- Venue/date/capacity determine fictional availability; invalidate incompatible time and external attestation. Step transitions reset scroll, preserve draft, and dismiss keyboard.
+- Budget and charge are distinct. Offline £0 / variable deposit / fixed menu; publishing collects £0. Approval-time amount flows into Meal.deposit and guest payment displays.
+- External booking is explicitly a host report, not provider verification. In-app selection is not a reservation hold.
+- Publish requires final acknowledgement and revalidation. Success clears the draft; session-only drafts do not survive reload.
