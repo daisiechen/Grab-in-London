@@ -1,11 +1,11 @@
-# Grab in London — confirmed product brief
+# Fancy — confirmed product brief
 
-> 中文正式需求与详细交互规格请以 [PRD](PRD.zh-CN.md) 为准。此文件保留早期讨论摘要。
+> 中文正式需求与详细交互规格请以 [PRD](PRD.zh-CN.md) 为准。此文件同步当前品牌与商业方向；详细规则以 PRD 为准。
 
 ## Purpose and audience
 Help adults living in London build social connections over meals. International residents, newcomers and busy people with limited social circles are the primary audience. Networking and dating are incidental outcomes, not the main promise.
 
-Confirmed slogan: “一起吃顿饭，认识新朋友。” / “Meet new people over a meal.”
+Confirmed slogan: “吃个饭，认识一下。” / “Meet new people over a meal.”
 
 ## Demo versus delivery
 The high-fidelity demo is an English-only mobile-style interactive web app using fictional profiles and simulated bookings and payments. It must not create real reservations or charges.
@@ -40,5 +40,11 @@ Host: create meal, choose venue and slot, set size and costs, review application
 
 Navigation: Discover, Meals, Inbox, Profile; prominent create-meal entry. Core screens include meal detail, profile, application, payment, booking outcome, meal chat and feedback. Familiar-person discovery is an optional proposed extension; private meals must not leak through it.
 
-## Next design gate
-Generate three distinct mobile discovery-screen concepts, choose one with the user, then implement the selected visual direction. No visual direction selected yet. Brand name remains provisional; the bilingual slogan is confirmed. Demo simulations must be clearly identified.
+## Brand, business and AI direction — 2026-10-17
+Fancy is the provisional working brand, inspired by the casual invitation “Fancy a bite?”. Trademark, domain and handle availability remain unverified. Use “Fancy a bite? / 一起吃点？” for invitations and homepage/promotional copy; use the confirmed bilingual slogan above for product introductions. The current demo still uses Grab; this documentation update does not migrate its UI or rename the repository.
+
+Free, user-led meals can take place at any restaurant. Prioritize compatible, reliable potential friends, not wealth, education or transactional networking. Optional background helps conversation; paid status does not establish quality. Friends moving to other messaging platforms is a successful outcome.
+
+Restaurant activity promotion, organizing support or verified attendance is the primary revenue direction, after building local supply and active users. Test personal services per use (delegated coordination or personalized social practice), and consider membership only after repeat purchases. Basic social participation and filtering/recommendations remain free. Organizer tools are a later opportunity. Official curated meals are optional experiments; merchant perks are promotional benefits, and deposits are not platform revenue. Pricing, attribution, willingness to pay and economics remain unvalidated.
+
+Explore AI support for finding meals, preparing conversations and coordinating plans. Longer term, authorized agents may negotiate meeting conditions; people decide whether to participate. A2A, real-time conversation support and expansion to sport/theatre are exploratory, not current demo capabilities or R1 commitments. No WhatsApp/Instagram integration is assumed. See PRD sections 1.3–1.6 for boundaries.
