@@ -5,7 +5,7 @@
 ## Purpose and audience
 Help adults living in London build social connections over meals. International residents, newcomers and busy people with limited social circles are the primary audience. Networking and dating are incidental outcomes, not the main promise.
 
-Working slogan (proposed, not finally selected): “一起吃顿饭，认识新朋友。” / “Meet new people over a meal.”
+Confirmed slogan: “一起吃顿饭，认识新朋友。” / “Meet new people over a meal.”
 
 ## Demo versus delivery
 The high-fidelity demo is an English-only mobile-style interactive web app using fictional profiles and simulated bookings and payments. It must not create real reservations or charges.
@@ -41,4 +41,4 @@ Host: create meal, choose venue and slot, set size and costs, review application
 Navigation: Discover, Meals, Inbox, Profile; prominent create-meal entry. Core screens include meal detail, profile, application, payment, booking outcome, meal chat and feedback. Familiar-person discovery is an optional proposed extension; private meals must not leak through it.
 
 ## Next design gate
-Generate three distinct mobile discovery-screen concepts, choose one with the user, then implement the selected visual direction. No visual direction selected yet. Brand name and slogan remain provisional. Demo simulations must be clearly identified.
+Generate three distinct mobile discovery-screen concepts, choose one with the user, then implement the selected visual direction. No visual direction selected yet. Brand name remains provisional; the bilingual slogan is confirmed. Demo simulations must be clearly identified.

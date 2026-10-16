@@ -10,3 +10,6 @@ coverage/
 !.env.example
 *.pem
 *.key
+
+# Local package-manager caches
+.pnpm-store/
