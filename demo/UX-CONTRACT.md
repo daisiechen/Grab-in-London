@@ -29,3 +29,6 @@ Discovery filtering uses pendingFilters separate from applied filters. Closing r
 - Budget and charge are distinct. Offline £0 / variable deposit / fixed menu; publishing collects £0. Approval-time amount flows into Meal.deposit and guest payment displays.
 - External booking is explicitly a host report, not provider verification. In-app selection is not a reservation hold.
 - Publish requires final acknowledgement and revalidation. Success clears the draft; session-only drafts do not survive reload.
+
+## Brand and account entrance
+BrandEntrance reuses MobileScroll, keyboard-aware fields, ChoiceGroup and BottomSheet. Startup splash is skippable; guest browsing stays open. go/root guard participation and private destinations and remember afterAuth. New demo identities complete a minimal public profile; returning demo identities bypass setup. OTP is visibly fictional123456, resend30s, expiration5min; Google/Apple are labelled simulations and cancellable. No real authentication, emails, token storage, legal contract acceptance or permission requests. Login state is memory-only; refresh resets it. SelfProfileContext projects selected avatar/name consistently without mutating fixtures.

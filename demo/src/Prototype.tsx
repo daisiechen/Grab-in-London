@@ -1,4 +1,12 @@
-import { useEffect, useRef, useState, useId, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useId,
+  createContext,
+  useContext,
+  type ReactNode,
+} from "react";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -45,6 +53,9 @@ import {
   completePayment,
   longDate,
   validateMeal,
+  validateDemoEmail,
+  validateDemoCode,
+  needsAccount,
   createVenues,
   availableCreateSlots,
   validateArrangement,
@@ -118,6 +129,7 @@ const labels: Record<JoinState, string> = {
 };
 const iconStyle = { width: 18, height: 18 };
 const money = (value: number) => `£${value}`;
+const SelfProfileContext = createContext({ image: "leo", name: "Alex" });
 function Avatar({
   id,
   onClick,
@@ -127,7 +139,9 @@ function Avatar({
   onClick?: () => void;
   size?: number;
 }) {
-  const m = members[id] || members.maya;
+  const self = useContext(SelfProfileContext);
+  const m =
+    id === "alex" ? { ...members.alex, ...self } : members[id] || members.maya;
   const content = (
     <img
       src={`/images/${m.image}.png`}
@@ -327,7 +341,522 @@ function DateChoices({
   );
 }
 
+type WelcomeProfile = {
+  photo?: string;
+  name: string;
+  bio: string;
+  life: string;
+  language: string;
+  interests: string;
+  work: string;
+  school: string;
+  hometown: string;
+};
+function BrandEntrance({
+  start,
+  onBrowse,
+  onComplete,
+}: {
+  start: "splash" | "account";
+  onBrowse: () => void;
+  onComplete: (profile?: WelcomeProfile) => void;
+}) {
+  const keyboard = useKeyboard();
+  const [stage, setStage] = useState<
+    "splash" | "welcome" | "account" | "email" | "verify" | "setup"
+  >(start);
+  const [intent, setIntent] = useState("new");
+  const [email, setEmail] = useState("");
+  const [code, setCode] = useState("");
+  const [issue, setIssue] = useState("");
+  const [agreed, setAgreed] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+  const [expired, setExpired] = useState(false);
+  const [codeVersion, setCodeVersion] = useState(0);
+  const [provider, setProvider] = useState("");
+  const [showTerms, setShowTerms] = useState(false);
+  const [photo, setPhoto] = useState("leo");
+  const [person, setPerson] = useState<WelcomeProfile>({
+    name: "",
+    bio: "",
+    life: "New to London",
+    language: "English",
+    interests: "Food",
+    work: "",
+    school: "",
+    hometown: "",
+  });
+  const move = (next: typeof stage) => {
+    keyboard.hide();
+    setIssue("");
+    setStage(next);
+  };
+  useEffect(() => {
+    if (stage !== "splash") return;
+    const timer = setTimeout(() => setStage("welcome"), 2200);
+    return () => clearTimeout(timer);
+  }, [stage]);
+  useEffect(() => {
+    if (!cooldown) return;
+    const timer = setTimeout(() => setCooldown((v) => v - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [cooldown]);
+  useEffect(() => {
+    if (stage !== "verify") return;
+    const timer = setTimeout(() => setExpired(true), 300000);
+    return () => clearTimeout(timer);
+  }, [stage, email, codeVersion]);
+  const finishIdentity = () => {
+    if (intent === "returning") onComplete();
+    else move("setup");
+  };
+  const wordmark = (
+    <div className="brand-wordmark" aria-label="Grab in London">
+      grab<span>in London</span>
+      <i aria-hidden="true">
+        <ArrowRightIcon />
+      </i>
+    </div>
+  );
+  if (stage === "splash")
+    return (
+      <div className="grab-app brand-splash">
+        <div className="brand-splash-center">
+          {wordmark}
+          <p>A little room for someone new.</p>
+        </div>
+        <button onClick={() => move("welcome")}>
+          Skip intro <ArrowRightIcon />
+        </button>
+        <small>MEET NEW PEOPLE OVER A MEAL</small>
+      </div>
+    );
+  return (
+    <div className="grab-app brand-entrance">
+      <div className="brand-demo-label">
+        DESIGN PROTOTYPE · DEMO ACCOUNTS ONLY
+      </div>
+      <MobileScroll key={stage} className="brand-scroll">
+        <div
+          className={`brand-content ${stage === "welcome" ? "brand-welcome" : ""}`}
+        >
+          {stage === "welcome" ? (
+            <>
+              <header>
+                {wordmark}
+                <span className="brand-city">LONDON, LET’S EAT.</span>
+              </header>
+              <div className="brand-art">
+                <img
+                  src="/images/brand-table.png"
+                  alt="A sculptural green table with colourful chairs, laid for new friends"
+                />
+              </div>
+              <div className="brand-welcome-copy">
+                <div className="eyebrow">GOOD FOOD. NEW FACES.</div>
+                <h1>
+                  There’s room
+                  <br />
+                  for you here.
+                </h1>
+                <p>Meet new people over a meal.</p>
+              </div>
+              <Primary onClick={() => move("account")}>
+                Find your people <ArrowRightIcon />
+              </Primary>
+              <button
+                className="brand-browse"
+                onClick={() => {
+                  keyboard.hide();
+                  onBrowse();
+                }}
+              >
+                Explore tables first
+              </button>
+              <button
+                className="brand-browse brand-replay"
+                onClick={() => move("splash")}
+              >
+                Replay intro
+              </button>
+            </>
+          ) : (
+            <>
+              <header className="brand-form-header">
+                <button
+                  aria-label="Back in sign-in"
+                  onClick={() =>
+                    move(
+                      stage === "setup"
+                        ? "account"
+                        : stage === "verify"
+                          ? "email"
+                          : stage === "email"
+                            ? "account"
+                            : "welcome",
+                    )
+                  }
+                >
+                  <ArrowLeftIcon />
+                </button>
+                {wordmark}
+              </header>
+              <div className="eyebrow">
+                {stage === "setup"
+                  ? "ONE LAST INTRODUCTION"
+                  : "YOUR NEXT TABLE STARTS HERE"}
+              </div>
+              <h1>
+                {stage === "account"
+                  ? "Good to meet you."
+                  : stage === "email"
+                    ? "Let’s keep in touch."
+                    : stage === "verify"
+                      ? "Check your inbox."
+                      : "A face. A little story. You."}
+              </h1>
+              <p className="prose">
+                {stage === "account"
+                  ? "Join a table, or come back for another."
+                  : stage === "email"
+                    ? "We’ll use a one-time code, so there’s no password to remember."
+                    : stage === "verify"
+                      ? `In the real app, we’d send a code to ${email}. Here, use 123456.`
+                      : "Give your future table a little context. Your email stays private."}
+              </p>
+              {stage === "account" && (
+                <>
+                  <ChoiceGroup
+                    label="I’m here to"
+                    value={intent}
+                    onChange={setIntent}
+                    options={[
+                      ["new", "Create an account"],
+                      ["returning", "Log in"],
+                    ]}
+                  />
+                  <Primary onClick={() => move("email")}>
+                    Continue with email <ArrowRightIcon />
+                  </Primary>
+                  <div className="brand-divider">or</div>
+                  <button
+                    className="brand-provider"
+                    onClick={() => {
+                      setProvider("Google");
+                      setIssue("");
+                    }}
+                  >
+                    Preview Google sign-in <ExternalLinkIcon />
+                  </button>
+                  <button
+                    className="brand-provider"
+                    onClick={() => {
+                      setProvider("Apple");
+                      setIssue("");
+                    }}
+                  >
+                    Preview Apple sign-in <ExternalLinkIcon />
+                  </button>
+                  <p className="demo-note">
+                    Simulated sign-in only. No provider opens and no personal
+                    data is sent.
+                  </p>
+                  <button
+                    className="text-action"
+                    onClick={() => setShowTerms(true)}
+                  >
+                    Privacy & community principles
+                  </button>
+                  <button className="brand-browse" onClick={onBrowse}>
+                    Keep exploring without an account
+                  </button>
+                </>
+              )}
+              {stage === "email" && (
+                <>
+                  <Field label="Email address">
+                    <KeyboardInput
+                      type="email"
+                      autoComplete="off"
+                      value={email}
+                      onBlur={() => keyboard.hide()}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="alex@example.com"
+                    />
+                  </Field>
+                  <p className="demo-note">
+                    Use a sample address. No email will be sent.
+                  </p>
+                  <Primary
+                    onClick={() => {
+                      const error = validateDemoEmail(email);
+                      if (error) {
+                        setIssue(error);
+                        return;
+                      }
+                      setEmail(email.trim());
+                      setCode("");
+                      setExpired(false);
+                      setCooldown(30);
+                      setCodeVersion((v) => v + 1);
+                      move("verify");
+                    }}
+                  >
+                    Send demo code <ArrowRightIcon />
+                  </Primary>
+                </>
+              )}
+              {stage === "verify" && (
+                <>
+                  <Field label="6-digit code">
+                    <KeyboardInput
+                      inputMode="numeric"
+                      maxLength={6}
+                      value={code}
+                      onBlur={() => keyboard.hide()}
+                      onChange={(e) =>
+                        setCode(e.target.value.replace(/\D/g, ""))
+                      }
+                      placeholder="123456"
+                    />
+                  </Field>
+                  <Primary
+                    onClick={() => {
+                      const error = validateDemoCode(code, expired);
+                      if (error) {
+                        setIssue(error);
+                        return;
+                      }
+                      keyboard.hide();
+                      finishIdentity();
+                    }}
+                  >
+                    {intent === "returning"
+                      ? "Log in to demo"
+                      : "Verify & continue"}
+                    <ArrowRightIcon />
+                  </Primary>
+                  <button
+                    className="text-action"
+                    disabled={cooldown > 0}
+                    onClick={() => {
+                      setExpired(false);
+                      setCode("");
+                      setCooldown(30);
+                      setCodeVersion((v) => v + 1);
+                      setIssue("New demo code ready: 123456.");
+                    }}
+                  >
+                    {cooldown ? `Resend in ${cooldown}s` : "Resend demo code"}
+                  </button>
+                  <button className="text-action" onClick={() => move("email")}>
+                    Change email
+                  </button>
+                  <button
+                    className="text-action"
+                    onClick={() => {
+                      setExpired(true);
+                      setIssue(
+                        "Demo: the code has expired. Request a new code when resend is ready.",
+                      );
+                    }}
+                  >
+                    Preview expired code
+                  </button>
+                </>
+              )}
+              {stage === "setup" && (
+                <>
+                  <Field label="Choose a demo photo">
+                    <div className="brand-photo-options">
+                      {["leo", "maya", "emma"].map((id) => (
+                        <button
+                          key={id}
+                          aria-label={`Choose ${id} demo portrait`}
+                          aria-pressed={photo === id}
+                          onClick={() => setPhoto(id)}
+                        >
+                          <img
+                            src={`/images/${id}.png`}
+                            alt="Fictional demo portrait"
+                          />
+                          {photo === id && <CheckCircledIcon />}
+                        </button>
+                      ))}
+                    </div>
+                  </Field>
+                  <Field label="First name">
+                    <KeyboardInput
+                      value={person.name}
+                      maxLength={40}
+                      placeholder="Alex"
+                      onBlur={() => keyboard.hide()}
+                      onChange={(e) =>
+                        setPerson({ ...person, name: e.target.value })
+                      }
+                    />
+                  </Field>
+                  <Field label="A little about you">
+                    <KeyboardTextarea
+                      value={person.bio}
+                      maxLength={1000}
+                      rows={3}
+                      placeholder="What brought you to London? What do you enjoy?"
+                      onBlur={() => keyboard.hide()}
+                      onChange={(e) =>
+                        setPerson({ ...person, bio: e.target.value })
+                      }
+                    />
+                  </Field>
+                  <small>
+                    At least 20 characters. Share what you’re comfortable making
+                    public.
+                  </small>
+                  <ChoiceGroup
+                    label="Life in London"
+                    value={person.life}
+                    onChange={(life) => setPerson({ ...person, life })}
+                    options={[
+                      "New to London",
+                      "Making London home",
+                      "Visiting London",
+                    ].map((v) => [v, v])}
+                  />
+                  <ChoiceGroup
+                    label="Conversation language"
+                    value={person.language}
+                    onChange={(language) => setPerson({ ...person, language })}
+                    options={[
+                      "English",
+                      "English & Mandarin",
+                      "English & French",
+                    ].map((v) => [v, v])}
+                  />
+                  <ChoiceGroup
+                    label="An interest to start with"
+                    value={person.interests}
+                    onChange={(interests) =>
+                      setPerson({ ...person, interests })
+                    }
+                    options={["Food", "Design", "Travel", "Books", "Music"].map(
+                      (v) => [v, v],
+                    )}
+                  />
+                  <p className="muted">
+                    Add work, school, hometown and more interests in Edit
+                    profile whenever you like.
+                  </p>
+                  <label className="create-consent">
+                    <input
+                      type="checkbox"
+                      checked={agreed}
+                      onChange={(e) => setAgreed(e.target.checked)}
+                    />
+                    <span>
+                      I’m 18 or older and I’ll keep this community welcoming,
+                      respectful and friendship-first.
+                    </span>
+                  </label>
+                  <button
+                    className="text-action"
+                    onClick={() => setShowTerms(true)}
+                  >
+                    Read sample privacy & community principles
+                  </button>
+                  <Primary
+                    onClick={() => {
+                      keyboard.hide();
+                      if (
+                        person.name.trim().length < 2 ||
+                        person.bio.trim().length < 20
+                      ) {
+                        setIssue(
+                          "Add a name of at least 2 characters and an introduction of at least 20 characters.",
+                        );
+                        return;
+                      }
+                      if (!agreed) {
+                        setIssue(
+                          "Confirm the age and community acknowledgement to continue.",
+                        );
+                        return;
+                      }
+                      onComplete({
+                        ...person,
+                        photo,
+                        name: person.name.trim(),
+                      });
+                    }}
+                  >
+                    Take your seat <ArrowRightIcon />
+                  </Primary>
+                </>
+              )}
+              {issue && (
+                <p className="form-error" role="alert">
+                  {issue}
+                </p>
+              )}
+            </>
+          )}
+        </div>
+      </MobileScroll>
+      <BottomSheet
+        open={!!provider}
+        onOpenChange={(open) => {
+          if (!open) setProvider("");
+        }}
+        title={`${provider} sign-in preview`}
+      >
+        <div className="body-pad">
+          <p>
+            This is a simulation, not an OAuth consent screen. Continue as
+            fictional Alex or cancel to return.
+          </p>
+          <Primary
+            onClick={() => {
+              setProvider("");
+              finishIdentity();
+            }}
+          >
+            Continue as demo Alex
+          </Primary>
+          <button className="text-action" onClick={() => setProvider("")}>
+            Cancel
+          </button>
+        </div>
+      </BottomSheet>
+      <BottomSheet
+        open={showTerms}
+        onOpenChange={setShowTerms}
+        title="Sample community & privacy principles"
+      >
+        <div className="body-pad">
+          <p>
+            Adults 18+ meet for friendship over meals. Respect boundaries and
+            dietary needs. No harassment or unsolicited pitches.
+          </p>
+          <p>
+            Your name, photo and introduction are public to other members; your
+            email is private. This prototype stores no real account and sends no
+            authentication data.
+          </p>
+          <p>
+            These are design examples, not production Terms of Service or a
+            privacy policy. Final legal documents, account deletion and
+            reporting support are required before launch.
+          </p>
+          <Primary onClick={() => setShowTerms(false)}>Back to sign-up</Primary>
+        </div>
+      </BottomSheet>
+    </div>
+  );
+}
+
 export default function Prototype() {
+  const [entrance, setEntrance] = useState<"splash" | "account" | "">("splash");
+  const [signedIn, setSignedIn] = useState(false);
+  const [afterAuth, setAfterAuth] = useState<Page>("discover");
   const keyboard = useKeyboard();
   const { screenRef } = useScreenPortal();
   // Native field focus may scroll the clipped phone portal. Only the app's
@@ -373,7 +902,7 @@ export default function Prototype() {
   const [mealTab, setMealTab] = useState("Upcoming");
   const [chatText, setChatText] = useState("");
   const [messages, setMessages] = useState<Record<string, string[]>>({});
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState<WelcomeProfile>({
     name: "Alex",
     bio: members.alex.bio,
     life: "New to London",
@@ -449,6 +978,12 @@ export default function Prototype() {
     [],
   );
   const go = (to: Page) => {
+    if (!signedIn && needsAccount(to)) {
+      keyboard.hide();
+      setAfterAuth(to);
+      setEntrance("account");
+      return;
+    }
     keyboard.hide();
     setError("");
     setSheet("");
@@ -456,6 +991,12 @@ export default function Prototype() {
     setPage(to);
   };
   const root = (to: Page) => {
+    if (!signedIn && needsAccount(to)) {
+      keyboard.hide();
+      setAfterAuth(to);
+      setEntrance("account");
+      return;
+    }
     keyboard.hide();
     setError("");
     setSheet("");
@@ -2267,6 +2808,17 @@ export default function Prototype() {
               <p>{profile.school}</p>
             </>
           )}
+          <button
+            className="text-action"
+            onClick={() => {
+              keyboard.hide();
+              setSignedIn(false);
+              setAfterAuth("discover");
+              setEntrance("splash");
+            }}
+          >
+            Sign out & replay welcome (demo)
+          </button>
           <h2>Your shared meals</h2>
           <p className="muted">
             No published references yet. Your first table is a good place to
@@ -2583,47 +3135,89 @@ export default function Prototype() {
   const showComposer =
     (page === "chat" && (join === "CONFIRMED" || current.owned)) ||
     (page === "direct" && mutual && !blocked);
+  if (entrance)
+    return (
+      <BrandEntrance
+        start={entrance}
+        onBrowse={() => {
+          keyboard.hide();
+          setEntrance("");
+          setPage("discover");
+          setAfterAuth("discover");
+        }}
+        onComplete={(newProfile) => {
+          keyboard.hide();
+          if (newProfile) {
+            setProfile(newProfile);
+            setDraftProfile(newProfile);
+          }
+          setSignedIn(true);
+          setEntrance("");
+          setPage(afterAuth);
+          setHistory([]);
+          setError("");
+        }}
+      />
+    );
   return (
-    <div className="grab-app">
-      <div className="demo-ribbon">
-        INTERACTIVE DEMO · NO REAL BOOKINGS OR CHARGES
-      </div>
-      {!topLevel && (
-        <header className="page-header">
-          <button onClick={back} aria-label="Go back">
-            <ArrowLeftIcon />
-          </button>
-          <strong>{screenTitles[page]}</strong>
-          <span />
-        </header>
-      )}
-      {page === "discover" ? (
-        renderPage()
-      ) : (
-        <MobileScroll
-          key={page === "create" ? `create-${createStep}` : page}
-          className={`page-scroll ${topLevel ? "with-tabs" : ""} ${showComposer ? "has-composer" : ""}`}
-        >
-          <main className={`page-content ${topLevel ? "top-level" : ""}`}>
-            {renderPage()}
-          </main>
-        </MobileScroll>
-      )}
-      {showComposer && (
-        <div className="composer" style={{ bottom: insets.bottomInset }}>
-          <KeyboardInput
-            aria-label="Message"
-            value={chatText}
-            onChange={(e) => setChatText(e.target.value)}
-            onBlur={() => keyboard.hide()}
-            placeholder="Say a little hello…"
-            maxLength={2000}
-            onKeyDown={(e) => {
-              if (
-                e.key === "Enter" &&
-                !e.nativeEvent.isComposing &&
-                chatText.trim()
-              ) {
+    <SelfProfileContext.Provider
+      value={{ image: profile.photo || "leo", name: profile.name }}
+    >
+      <div className="grab-app">
+        <div className="demo-ribbon">
+          INTERACTIVE DEMO · NO REAL BOOKINGS OR CHARGES
+        </div>
+        {!topLevel && (
+          <header className="page-header">
+            <button onClick={back} aria-label="Go back">
+              <ArrowLeftIcon />
+            </button>
+            <strong>{screenTitles[page]}</strong>
+            <span />
+          </header>
+        )}
+        {page === "discover" ? (
+          renderPage()
+        ) : (
+          <MobileScroll
+            key={page === "create" ? `create-${createStep}` : page}
+            className={`page-scroll ${topLevel ? "with-tabs" : ""} ${showComposer ? "has-composer" : ""}`}
+          >
+            <main className={`page-content ${topLevel ? "top-level" : ""}`}>
+              {renderPage()}
+            </main>
+          </MobileScroll>
+        )}
+        {showComposer && (
+          <div className="composer" style={{ bottom: insets.bottomInset }}>
+            <KeyboardInput
+              aria-label="Message"
+              value={chatText}
+              onChange={(e) => setChatText(e.target.value)}
+              onBlur={() => keyboard.hide()}
+              placeholder="Say a little hello…"
+              maxLength={2000}
+              onKeyDown={(e) => {
+                if (
+                  e.key === "Enter" &&
+                  !e.nativeEvent.isComposing &&
+                  chatText.trim()
+                ) {
+                  const key = page === "direct" ? "direct" : current.id;
+                  setMessages((ms) => ({
+                    ...ms,
+                    [key]: [...(ms[key] || []), chatText.trim()],
+                  }));
+                  setChatText("");
+                  keyboard.hide();
+                }
+              }}
+            />
+            <button
+              aria-label="Send message"
+              onPointerDown={(e) => e.preventDefault()}
+              disabled={!chatText.trim()}
+              onClick={() => {
                 const key = page === "direct" ? "direct" : current.id;
                 setMessages((ms) => ({
                   ...ms,
@@ -2631,551 +3225,537 @@ export default function Prototype() {
                 }));
                 setChatText("");
                 keyboard.hide();
-              }
-            }}
-          />
-          <button
-            aria-label="Send message"
-            onPointerDown={(e) => e.preventDefault()}
-            disabled={!chatText.trim()}
-            onClick={() => {
-              const key = page === "direct" ? "direct" : current.id;
-              setMessages((ms) => ({
-                ...ms,
-                [key]: [...(ms[key] || []), chatText.trim()],
-              }));
-              setChatText("");
-              keyboard.hide();
-            }}
-          >
-            <PaperPlaneIcon />
-          </button>
-        </div>
-      )}
-      {topLevel && (
-        <nav className="bottom-nav" aria-label="Main navigation">
-          <button
-            className={page === "discover" ? "active" : ""}
-            onClick={() => root("discover")}
-          >
-            <MagnifyingGlassIcon />
-            <span>Discover</span>
-          </button>
-          <button
-            className={page === "meals" ? "active" : ""}
-            onClick={() => root("meals")}
-          >
-            <PersonIcon />
-            <span>Meals</span>
-          </button>
-          <button className="create-nav" onClick={() => go("create")}>
-            <span className="create-circle">
-              <PlusIcon />
-            </span>
-            <span>Create meal</span>
-          </button>
-          <button
-            className={page === "inbox" ? "active" : ""}
-            onClick={() => root("inbox")}
-          >
-            <ChatBubbleIcon />
-            <span>Inbox</span>
-          </button>
-          <button
-            className={page === "profile" ? "active" : ""}
-            onClick={() => root("profile")}
-          >
-            <PersonIcon />
-            <span>Profile</span>
-          </button>
-        </nav>
-      )}
-      {toast && (
-        <div
-          className="toast"
-          role="status"
-          style={{ bottom: Math.max(125, insets.bottomInset + 75) }}
-        >
-          <CheckCircledIcon />
-          {toast}
-        </div>
-      )}
-      <BottomSheet
-        open={sheet === "date" || sheet === "size" || sheet === "filters"}
-        onOpenChange={(o) => !o && setSheet("")}
-        title={
-          sheet === "date"
-            ? "When are you free?"
-            : sheet === "size"
-              ? "Your kind of table"
-              : "Make it your kind of meal"
-        }
-        description={
-          sheet === "filters" ? "A few preferences, a better table." : ""
-        }
-        snap={sheet === "size" ? 0.55 : 0.88}
-      >
-        <div className="filter-layout">
-          <div className="filter-topline">
-            <span>
-              {sheet === "date"
-                ? "CHOOSE A DAY"
-                : sheet === "size"
-                  ? "INCLUDING THE HOST"
-                  : "YOUR PREFERENCES"}
-            </span>
-            <button
-              aria-label="Close filters without applying"
-              onClick={() => {
-                keyboard.hide();
-                setSheet("");
               }}
             >
-              <Cross2Icon />
+              <PaperPlaneIcon />
             </button>
           </div>
-          <div className="filter-scroll">
-            {(sheet === "size" || sheet === "filters") && (
-              <ChoiceGroup
-                label="Table size"
-                value={pendingFilters.size}
-                onChange={(size) =>
-                  setPendingFilters({ ...pendingFilters, size })
-                }
-                options={[
-                  ["", "Any size"],
-                  ["small", "3–6 people"],
-                  ["2", "2 people"],
-                  ["3", "3 people"],
-                  ["4", "4 people"],
-                  ["5", "5 people"],
-                  ["6", "6 people"],
-                ]}
-              />
-            )}
-            {sheet === "date" && (
-              <DateChoices
-                value={pendingFilters.date}
-                onChange={(date) =>
-                  setPendingFilters({ ...pendingFilters, date })
-                }
-                meals={meals}
-              />
-            )}
-            {sheet === "filters" && (
-              <>
-                <section className="filter-section">
-                  <h3>Date</h3>
-                  <button
-                    className="date-disclosure"
-                    aria-expanded={showCalendar}
-                    onClick={() => setShowCalendar((v) => !v)}
-                  >
-                    <CalendarIcon />
-                    <span>
-                      {pendingFilters.date
-                        ? longDate(pendingFilters.date)
-                        : "Any date"}
-                      <small>Choose a specific day</small>
-                    </span>
-                    <ChevronDownIcon />
-                  </button>
-                  {showCalendar && (
-                    <DateChoices
-                      value={pendingFilters.date}
-                      onChange={(date) =>
-                        setPendingFilters({ ...pendingFilters, date })
-                      }
-                      meals={meals}
-                    />
-                  )}
-                </section>
-                <ChoiceGroup
-                  label="Time of day"
-                  value={pendingFilters.time}
-                  onChange={(time) =>
-                    setPendingFilters({ ...pendingFilters, time })
-                  }
-                  options={[
-                    ["", "Any time"],
-                    ["lunch", "Lunch"],
-                    ["dinner", "Dinner"],
-                  ]}
-                />
-                <ChoiceGroup
-                  label="Neighbourhood"
-                  value={pendingFilters.area}
-                  onChange={(area) =>
-                    setPendingFilters({ ...pendingFilters, area })
-                  }
-                  options={[
-                    ["", "Anywhere"],
-                    ...Array.from(new Set(meals.map((m) => m.area))).map(
-                      (a) => [a, a] as [string, string],
-                    ),
-                  ]}
-                />
-                <ChoiceGroup
-                  label="Budget per person"
-                  value={pendingFilters.budget}
-                  onChange={(budget) =>
-                    setPendingFilters({ ...pendingFilters, budget })
-                  }
-                  options={[
-                    ["", "Any budget"],
-                    ["10", "Up to £10"],
-                    ["25", "Up to £25"],
-                    ["30", "Up to £30"],
-                    ["35", "Up to £35"],
-                    ["50", "Up to £50"],
-                  ]}
-                />
-                <ChoiceGroup
-                  label="Conversation language"
-                  value={pendingFilters.language}
-                  onChange={(language) =>
-                    setPendingFilters({ ...pendingFilters, language })
-                  }
-                  options={[
-                    ["", "Any language"],
-                    ["English", "English"],
-                    ["Mandarin", "Mandarin"],
-                    ["French", "French"],
-                  ]}
-                />
-                <ChoiceGroup
-                  label="Atmosphere"
-                  value={pendingFilters.mood}
-                  onChange={(mood) =>
-                    setPendingFilters({ ...pendingFilters, mood })
-                  }
-                  options={[
-                    ["", "Any atmosphere"],
-                    ["Easy conversation", "Easy conversation"],
-                    ["Food discoveries", "Food discoveries"],
-                    ["Travel & culture", "Travel & culture"],
-                  ]}
-                />
-                <ChoiceGroup
-                  label="Cuisine"
-                  value={pendingFilters.cuisine}
-                  onChange={(cuisine) =>
-                    setPendingFilters({ ...pendingFilters, cuisine })
-                  }
-                  options={[
-                    ["", "Any cuisine"],
-                    ["European", "European"],
-                    ["Japanese", "Japanese"],
-                    ["Spanish", "Spanish"],
-                  ]}
-                />
-                <ChoiceGroup
-                  label="Dietary options"
-                  value={pendingFilters.dietary}
-                  onChange={(dietary) =>
-                    setPendingFilters({ ...pendingFilters, dietary })
-                  }
-                  options={[
-                    ["", "No preference"],
-                    ["Vegetarian options", "Vegetarian options"],
-                  ]}
-                />
-                <Field label="Restaurant or keyword">
-                  <KeyboardInput
-                    placeholder="Search meals or restaurants"
-                    value={pendingFilters.search}
-                    onBlur={() => keyboard.hide()}
-                    onChange={(e) =>
-                      setPendingFilters({
-                        ...pendingFilters,
-                        search: e.target.value,
-                      })
-                    }
-                  />
-                </Field>
-              </>
-            )}
-          </div>
-          <div className="filter-footer">
+        )}
+        {topLevel && (
+          <nav className="bottom-nav" aria-label="Main navigation">
             <button
-              className="filter-clear"
-              onClick={() =>
-                setPendingFilters(
-                  sheet === "date"
-                    ? { ...pendingFilters, date: "" }
-                    : sheet === "size"
-                      ? { ...pendingFilters, size: "" }
-                      : { ...emptyFilters },
-                )
-              }
+              className={page === "discover" ? "active" : ""}
+              onClick={() => root("discover")}
             >
-              {sheet === "filters" ? "Clear all" : "Clear"}
+              <MagnifyingGlassIcon />
+              <span>Discover</span>
             </button>
-            <Primary onClick={applyFilters}>
-              {sheet === "filters"
-                ? `Show ${pendingMatches.length} ${pendingMatches.length === 1 ? "meal" : "meals"}`
-                : sheet === "date"
-                  ? "Apply date"
-                  : "Apply table size"}{" "}
-              <ArrowRightIcon />
-            </Primary>
+            <button
+              className={page === "meals" ? "active" : ""}
+              onClick={() => root("meals")}
+            >
+              <PersonIcon />
+              <span>Meals</span>
+            </button>
+            <button className="create-nav" onClick={() => go("create")}>
+              <span className="create-circle">
+                <PlusIcon />
+              </span>
+              <span>Create meal</span>
+            </button>
+            <button
+              className={page === "inbox" ? "active" : ""}
+              onClick={() => root("inbox")}
+            >
+              <ChatBubbleIcon />
+              <span>Inbox</span>
+            </button>
+            <button
+              className={page === "profile" ? "active" : ""}
+              onClick={() => root("profile")}
+            >
+              <PersonIcon />
+              <span>Profile</span>
+            </button>
+          </nav>
+        )}
+        {toast && (
+          <div
+            className="toast"
+            role="status"
+            style={{ bottom: Math.max(125, insets.bottomInset + 75) }}
+          >
+            <CheckCircledIcon />
+            {toast}
           </div>
-        </div>
-      </BottomSheet>
-      <BottomSheet
-        open={sheet === "area"}
-        onOpenChange={(o) => !o && setSheet("")}
-        title={`${areaGroup?.area || "Area"} tables`}
-        description={`${areaMeals.length} ${areaMeals.length === 1 ? "meal matches" : "meals match"} your filters`}
-        snap={0.85}
-      >
-        <div className="area-sheet-list">
-          {areaMeals.map((m) => (
-            <div className="list-meal" key={m.id}>
-              {mealCard(m, true)}
+        )}
+        <BottomSheet
+          open={sheet === "date" || sheet === "size" || sheet === "filters"}
+          onOpenChange={(o) => !o && setSheet("")}
+          title={
+            sheet === "date"
+              ? "When are you free?"
+              : sheet === "size"
+                ? "Your kind of table"
+                : "Make it your kind of meal"
+          }
+          description={
+            sheet === "filters" ? "A few preferences, a better table." : ""
+          }
+          snap={sheet === "size" ? 0.55 : 0.88}
+        >
+          <div className="filter-layout">
+            <div className="filter-topline">
+              <span>
+                {sheet === "date"
+                  ? "CHOOSE A DAY"
+                  : sheet === "size"
+                    ? "INCLUDING THE HOST"
+                    : "YOUR PREFERENCES"}
+              </span>
+              <button
+                aria-label="Close filters without applying"
+                onClick={() => {
+                  keyboard.hide();
+                  setSheet("");
+                }}
+              >
+                <Cross2Icon />
+              </button>
             </div>
-          ))}
-          <p className="demo-note">
-            Choose a meal to see the restaurant, people and details.
-          </p>
-        </div>
-      </BottomSheet>
-      <BottomSheet
-        open={sheet === "cancel"}
-        onOpenChange={(o) => !o && setSheet("")}
-        title="Cancel your place?"
-        snap={0.65}
-      >
-        <div className="sheet-body">
-          <p className="prose">
-            Your seat at <strong>{current.title}</strong> will be released. The
-            group chat becomes read-only.
-          </p>
-          <div className="summary-box">
-            <div className="price-row">
-              <span>Paid</span>
-              <strong>
-                {payment === "PAID" ? money(current.deposit) : "£0"}
-              </strong>
-            </div>
-            <div className="price-row total">
-              <span>Eligible refund</span>
-              <strong>
-                {payment === "PAID"
-                  ? money(
-                      refundAmount(
-                        current.deposit,
-                        beforeDeadline,
-                        platformCancel,
+            <div className="filter-scroll">
+              {(sheet === "size" || sheet === "filters") && (
+                <ChoiceGroup
+                  label="Table size"
+                  value={pendingFilters.size}
+                  onChange={(size) =>
+                    setPendingFilters({ ...pendingFilters, size })
+                  }
+                  options={[
+                    ["", "Any size"],
+                    ["small", "3–6 people"],
+                    ["2", "2 people"],
+                    ["3", "3 people"],
+                    ["4", "4 people"],
+                    ["5", "5 people"],
+                    ["6", "6 people"],
+                  ]}
+                />
+              )}
+              {sheet === "date" && (
+                <DateChoices
+                  value={pendingFilters.date}
+                  onChange={(date) =>
+                    setPendingFilters({ ...pendingFilters, date })
+                  }
+                  meals={meals}
+                />
+              )}
+              {sheet === "filters" && (
+                <>
+                  <section className="filter-section">
+                    <h3>Date</h3>
+                    <button
+                      className="date-disclosure"
+                      aria-expanded={showCalendar}
+                      onClick={() => setShowCalendar((v) => !v)}
+                    >
+                      <CalendarIcon />
+                      <span>
+                        {pendingFilters.date
+                          ? longDate(pendingFilters.date)
+                          : "Any date"}
+                        <small>Choose a specific day</small>
+                      </span>
+                      <ChevronDownIcon />
+                    </button>
+                    {showCalendar && (
+                      <DateChoices
+                        value={pendingFilters.date}
+                        onChange={(date) =>
+                          setPendingFilters({ ...pendingFilters, date })
+                        }
+                        meals={meals}
+                      />
+                    )}
+                  </section>
+                  <ChoiceGroup
+                    label="Time of day"
+                    value={pendingFilters.time}
+                    onChange={(time) =>
+                      setPendingFilters({ ...pendingFilters, time })
+                    }
+                    options={[
+                      ["", "Any time"],
+                      ["lunch", "Lunch"],
+                      ["dinner", "Dinner"],
+                    ]}
+                  />
+                  <ChoiceGroup
+                    label="Neighbourhood"
+                    value={pendingFilters.area}
+                    onChange={(area) =>
+                      setPendingFilters({ ...pendingFilters, area })
+                    }
+                    options={[
+                      ["", "Anywhere"],
+                      ...Array.from(new Set(meals.map((m) => m.area))).map(
+                        (a) => [a, a] as [string, string],
                       ),
-                    )
-                  : "£0"}
-              </strong>
+                    ]}
+                  />
+                  <ChoiceGroup
+                    label="Budget per person"
+                    value={pendingFilters.budget}
+                    onChange={(budget) =>
+                      setPendingFilters({ ...pendingFilters, budget })
+                    }
+                    options={[
+                      ["", "Any budget"],
+                      ["10", "Up to £10"],
+                      ["25", "Up to £25"],
+                      ["30", "Up to £30"],
+                      ["35", "Up to £35"],
+                      ["50", "Up to £50"],
+                    ]}
+                  />
+                  <ChoiceGroup
+                    label="Conversation language"
+                    value={pendingFilters.language}
+                    onChange={(language) =>
+                      setPendingFilters({ ...pendingFilters, language })
+                    }
+                    options={[
+                      ["", "Any language"],
+                      ["English", "English"],
+                      ["Mandarin", "Mandarin"],
+                      ["French", "French"],
+                    ]}
+                  />
+                  <ChoiceGroup
+                    label="Atmosphere"
+                    value={pendingFilters.mood}
+                    onChange={(mood) =>
+                      setPendingFilters({ ...pendingFilters, mood })
+                    }
+                    options={[
+                      ["", "Any atmosphere"],
+                      ["Easy conversation", "Easy conversation"],
+                      ["Food discoveries", "Food discoveries"],
+                      ["Travel & culture", "Travel & culture"],
+                    ]}
+                  />
+                  <ChoiceGroup
+                    label="Cuisine"
+                    value={pendingFilters.cuisine}
+                    onChange={(cuisine) =>
+                      setPendingFilters({ ...pendingFilters, cuisine })
+                    }
+                    options={[
+                      ["", "Any cuisine"],
+                      ["European", "European"],
+                      ["Japanese", "Japanese"],
+                      ["Spanish", "Spanish"],
+                    ]}
+                  />
+                  <ChoiceGroup
+                    label="Dietary options"
+                    value={pendingFilters.dietary}
+                    onChange={(dietary) =>
+                      setPendingFilters({ ...pendingFilters, dietary })
+                    }
+                    options={[
+                      ["", "No preference"],
+                      ["Vegetarian options", "Vegetarian options"],
+                    ]}
+                  />
+                  <Field label="Restaurant or keyword">
+                    <KeyboardInput
+                      placeholder="Search meals or restaurants"
+                      value={pendingFilters.search}
+                      onBlur={() => keyboard.hide()}
+                      onChange={(e) =>
+                        setPendingFilters({
+                          ...pendingFilters,
+                          search: e.target.value,
+                        })
+                      }
+                    />
+                  </Field>
+                </>
+              )}
             </div>
-            <p>
-              {platformCancel
-                ? "The reservation failed. Your payment is refunded in full."
-                : beforeDeadline
-                  ? "Before this meal’s cancellation deadline."
-                  : "After this meal’s cancellation deadline; no deposit refund."}
+            <div className="filter-footer">
+              <button
+                className="filter-clear"
+                onClick={() =>
+                  setPendingFilters(
+                    sheet === "date"
+                      ? { ...pendingFilters, date: "" }
+                      : sheet === "size"
+                        ? { ...pendingFilters, size: "" }
+                        : { ...emptyFilters },
+                  )
+                }
+              >
+                {sheet === "filters" ? "Clear all" : "Clear"}
+              </button>
+              <Primary onClick={applyFilters}>
+                {sheet === "filters"
+                  ? `Show ${pendingMatches.length} ${pendingMatches.length === 1 ? "meal" : "meals"}`
+                  : sheet === "date"
+                    ? "Apply date"
+                    : "Apply table size"}{" "}
+                <ArrowRightIcon />
+              </Primary>
+            </div>
+          </div>
+        </BottomSheet>
+        <BottomSheet
+          open={sheet === "area"}
+          onOpenChange={(o) => !o && setSheet("")}
+          title={`${areaGroup?.area || "Area"} tables`}
+          description={`${areaMeals.length} ${areaMeals.length === 1 ? "meal matches" : "meals match"} your filters`}
+          snap={0.85}
+        >
+          <div className="area-sheet-list">
+            {areaMeals.map((m) => (
+              <div className="list-meal" key={m.id}>
+                {mealCard(m, true)}
+              </div>
+            ))}
+            <p className="demo-note">
+              Choose a meal to see the restaurant, people and details.
             </p>
           </div>
-          <label className="check-row demo-option">
-            <input
-              type="checkbox"
-              checked={!beforeDeadline}
-              onChange={(e) => setBeforeDeadline(!e.target.checked)}
-            />
-            <span>Demo: preview after the deadline</span>
-          </label>
-          <Primary secondary onClick={() => setSheet("")}>
-            Keep my place
-          </Primary>
-          <button className="cancel-confirm" onClick={cancelParticipation}>
-            Confirm cancellation
-          </button>
-        </div>
-      </BottomSheet>
-      <BottomSheet
-        open={sheet === "scenarios"}
-        onOpenChange={(o) => !o && setSheet("")}
-        title="Explore demo outcomes"
-        snap={0.75}
-      >
-        <div className="sheet-body">
-          <p className="muted">
-            These controls simulate provider and host actions. No external
-            service is contacted.
-          </p>
-          <Primary
-            secondary
-            onClick={() => {
-              setBookings((b) => ({ ...b, [current.id]: "PENDING" }));
-              setSheet("");
-            }}
-          >
-            Reservation pending
-          </Primary>
-          <Primary
-            secondary
-            onClick={() => {
-              setBookings((b) => ({ ...b, [current.id]: "FAILED" }));
-              setPlatformCancel(true);
-              setSheet("");
-            }}
-          >
-            Reservation fails
-          </Primary>
-          <Primary
-            secondary
-            onClick={() => {
-              setBookings((b) => ({ ...b, [current.id]: "CONFIRMED" }));
-              setSheet("");
-            }}
-          >
-            Reservation confirmed
-          </Primary>
-          {refunds[current.id] && (
-            <>
-              <Primary
-                secondary
-                onClick={() => {
-                  setRefunds((r) => ({ ...r, [current.id]: "REFUNDED" }));
-                  setSheet("");
-                }}
-              >
-                Refund completes
-              </Primary>
-              <Primary
-                secondary
-                onClick={() => {
-                  setRefunds((r) => ({ ...r, [current.id]: "FAILED" }));
-                  setSheet("");
-                }}
-              >
-                Refund needs attention
-              </Primary>
-            </>
-          )}
-          {join === "CONFIRMED" && (
+        </BottomSheet>
+        <BottomSheet
+          open={sheet === "cancel"}
+          onOpenChange={(o) => !o && setSheet("")}
+          title="Cancel your place?"
+          snap={0.65}
+        >
+          <div className="sheet-body">
+            <p className="prose">
+              Your seat at <strong>{current.title}</strong> will be released.
+              The group chat becomes read-only.
+            </p>
+            <div className="summary-box">
+              <div className="price-row">
+                <span>Paid</span>
+                <strong>
+                  {payment === "PAID" ? money(current.deposit) : "£0"}
+                </strong>
+              </div>
+              <div className="price-row total">
+                <span>Eligible refund</span>
+                <strong>
+                  {payment === "PAID"
+                    ? money(
+                        refundAmount(
+                          current.deposit,
+                          beforeDeadline,
+                          platformCancel,
+                        ),
+                      )
+                    : "£0"}
+                </strong>
+              </div>
+              <p>
+                {platformCancel
+                  ? "The reservation failed. Your payment is refunded in full."
+                  : beforeDeadline
+                    ? "Before this meal’s cancellation deadline."
+                    : "After this meal’s cancellation deadline; no deposit refund."}
+              </p>
+            </div>
+            <label className="check-row demo-option">
+              <input
+                type="checkbox"
+                checked={!beforeDeadline}
+                onChange={(e) => setBeforeDeadline(!e.target.checked)}
+              />
+              <span>Demo: preview after the deadline</span>
+            </label>
+            <Primary secondary onClick={() => setSheet("")}>
+              Keep my place
+            </Primary>
+            <button className="cancel-confirm" onClick={cancelParticipation}>
+              Confirm cancellation
+            </button>
+          </div>
+        </BottomSheet>
+        <BottomSheet
+          open={sheet === "scenarios"}
+          onOpenChange={(o) => !o && setSheet("")}
+          title="Explore demo outcomes"
+          snap={0.75}
+        >
+          <div className="sheet-body">
+            <p className="muted">
+              These controls simulate provider and host actions. No external
+              service is contacted.
+            </p>
             <Primary
               secondary
               onClick={() => {
-                setCompleted(true);
-                go("review");
+                setBookings((b) => ({ ...b, [current.id]: "PENDING" }));
+                setSheet("");
               }}
             >
-              Advance to post-meal feedback
+              Reservation pending
             </Primary>
-          )}
-        </div>
-      </BottomSheet>
-      <BottomSheet
-        open={sheet === "report"}
-        onOpenChange={(o) => !o && setSheet("")}
-        title="Share a private concern"
-        snap={0.65}
-      >
-        <div className="sheet-body">
-          <p className="muted">
-            Private feedback is separate from public references.
-          </p>
-          <Field label="What would you like us to know?">
-            <KeyboardTextarea
-              rows={4}
-              maxLength={1000}
-              value={report}
-              onBlur={() => keyboard.hide()}
-              onChange={(e) => setReport(e.target.value)}
-            />
-          </Field>
-          <Primary
-            disabled={!report.trim()}
-            onClick={() => {
-              keyboard.hide();
-              setSheet("");
-              setReport("");
-              notify(
-                "Demo report recorded locally. No support team was contacted.",
-              );
-            }}
-          >
-            Submit demo report
-          </Primary>
-          <button
-            className="text-action danger"
-            onClick={() => {
-              setBlocked(true);
-              setSheet("");
-              notify("Member blocked in this demo.");
-            }}
-          >
-            Block this member
-          </button>
-        </div>
-      </BottomSheet>
-      <BottomSheet
-        open={sheet === "reset"}
-        onOpenChange={(o) => !o && setSheet("")}
-        title="Start again?"
-        snap={0.4}
-      >
-        <div className="sheet-body">
-          <p>
-            Demo applications, messages, created meals and profile edits will be
-            cleared.
-          </p>
-          <Primary secondary onClick={() => setSheet("")}>
-            Keep exploring
-          </Primary>
-          <button
-            className="cancel-confirm"
-            onClick={() => {
-              setMeals(initialMeals);
-              setStates({});
-              setPayments({});
-              setBookings({});
-              setRefunds({});
-              setMessages({});
-              setReviewed(false);
-              setMutual(false);
-              setWants(false);
-              setReview("");
-              setBlocked(false);
-              setHostDecision({});
-              setDraft(initialDraft);
-              setChatText("");
-              setIntro(
-                "I’m new to London and would love to meet people over a relaxed dinner.",
-              );
-              setScenarioPayment(false);
-              setCompleted(false);
-              setConsent(false);
-              setBeforeDeadline(true);
-              setPlatformCancel(false);
-              setMode("map");
-              setProfile({
-                name: "Alex",
-                bio: members.alex.bio,
-                life: "New to London",
-                language: "English",
-                interests: "Food, photography, travel",
-                work: "Creative strategist",
-                school: "",
-                hometown: "",
-              });
-              setFilters({ ...emptyFilters });
-              setSelected("supper");
-              setSelectedArea("Soho");
-              setCreateStep(0);
-              root("discover");
-              notify("Demo reset. A fresh table awaits.");
-            }}
-          >
-            Reset demo
-          </button>
-        </div>
-      </BottomSheet>
-    </div>
+            <Primary
+              secondary
+              onClick={() => {
+                setBookings((b) => ({ ...b, [current.id]: "FAILED" }));
+                setPlatformCancel(true);
+                setSheet("");
+              }}
+            >
+              Reservation fails
+            </Primary>
+            <Primary
+              secondary
+              onClick={() => {
+                setBookings((b) => ({ ...b, [current.id]: "CONFIRMED" }));
+                setSheet("");
+              }}
+            >
+              Reservation confirmed
+            </Primary>
+            {refunds[current.id] && (
+              <>
+                <Primary
+                  secondary
+                  onClick={() => {
+                    setRefunds((r) => ({ ...r, [current.id]: "REFUNDED" }));
+                    setSheet("");
+                  }}
+                >
+                  Refund completes
+                </Primary>
+                <Primary
+                  secondary
+                  onClick={() => {
+                    setRefunds((r) => ({ ...r, [current.id]: "FAILED" }));
+                    setSheet("");
+                  }}
+                >
+                  Refund needs attention
+                </Primary>
+              </>
+            )}
+            {join === "CONFIRMED" && (
+              <Primary
+                secondary
+                onClick={() => {
+                  setCompleted(true);
+                  go("review");
+                }}
+              >
+                Advance to post-meal feedback
+              </Primary>
+            )}
+          </div>
+        </BottomSheet>
+        <BottomSheet
+          open={sheet === "report"}
+          onOpenChange={(o) => !o && setSheet("")}
+          title="Share a private concern"
+          snap={0.65}
+        >
+          <div className="sheet-body">
+            <p className="muted">
+              Private feedback is separate from public references.
+            </p>
+            <Field label="What would you like us to know?">
+              <KeyboardTextarea
+                rows={4}
+                maxLength={1000}
+                value={report}
+                onBlur={() => keyboard.hide()}
+                onChange={(e) => setReport(e.target.value)}
+              />
+            </Field>
+            <Primary
+              disabled={!report.trim()}
+              onClick={() => {
+                keyboard.hide();
+                setSheet("");
+                setReport("");
+                notify(
+                  "Demo report recorded locally. No support team was contacted.",
+                );
+              }}
+            >
+              Submit demo report
+            </Primary>
+            <button
+              className="text-action danger"
+              onClick={() => {
+                setBlocked(true);
+                setSheet("");
+                notify("Member blocked in this demo.");
+              }}
+            >
+              Block this member
+            </button>
+          </div>
+        </BottomSheet>
+        <BottomSheet
+          open={sheet === "reset"}
+          onOpenChange={(o) => !o && setSheet("")}
+          title="Start again?"
+          snap={0.4}
+        >
+          <div className="sheet-body">
+            <p>
+              Demo applications, messages, created meals and profile edits will
+              be cleared.
+            </p>
+            <Primary secondary onClick={() => setSheet("")}>
+              Keep exploring
+            </Primary>
+            <button
+              className="cancel-confirm"
+              onClick={() => {
+                setMeals(initialMeals);
+                setStates({});
+                setPayments({});
+                setBookings({});
+                setRefunds({});
+                setMessages({});
+                setReviewed(false);
+                setMutual(false);
+                setWants(false);
+                setReview("");
+                setBlocked(false);
+                setHostDecision({});
+                setDraft(initialDraft);
+                setChatText("");
+                setIntro(
+                  "I’m new to London and would love to meet people over a relaxed dinner.",
+                );
+                setScenarioPayment(false);
+                setCompleted(false);
+                setConsent(false);
+                setBeforeDeadline(true);
+                setPlatformCancel(false);
+                setMode("map");
+                setProfile({
+                  name: "Alex",
+                  bio: members.alex.bio,
+                  life: "New to London",
+                  language: "English",
+                  interests: "Food, photography, travel",
+                  work: "Creative strategist",
+                  school: "",
+                  hometown: "",
+                });
+                setFilters({ ...emptyFilters });
+                setSelected("supper");
+                setSelectedArea("Soho");
+                setCreateStep(0);
+                root("discover");
+                notify("Demo reset. A fresh table awaits.");
+              }}
+            >
+              Reset demo
+            </button>
+          </div>
+        </BottomSheet>
+      </div>
+    </SelfProfileContext.Provider>
   );
 }

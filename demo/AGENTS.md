@@ -77,3 +77,8 @@ When any text-entry control loses focus, dismiss the simulated keyboard. If the 
 - Map numbers mean matching meal events in each neighbourhood, never table capacity. The selected area has previous/next event controls and a grip/View all action for its complete filtered list.
 - Whole meal cards open details; avatars stay independent. No redundant View meal or per-row arrow.
 - Show restaurant name and neighbourhood separately. Replace misleading arrows with a location pin and an explicitly labelled Google Maps link; fictional venues open the real neighbourhood rather than an invented exact address.
+
+## Brand and entrance feedback — 2026-10-16
+- User wants a fancy brand splash and coherent login/signup, with the supplied video as inspiration, explicitly avoiding direct copying.
+- Keep Grab's independent table-led visual identity; do not import or publish reference video frames containing personal accounts.
+- Preserve established slogan and map design. Authentication remains a clearly labelled demo; guest browsing is available before signing in.

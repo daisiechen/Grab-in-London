@@ -48,3 +48,6 @@ Validation: see the latest browser-results section and updated domain tests. No 
 
 ## Create meal refinement — 2026-10-16
 Preserved the established forest/white visual system, runtime and central Create entry. Reused calendar and radio chips; added restaurant cards, receipt and review groups. Inspected actual393×852 screen crops in `qa/create-review/arrange.png`, `costs.png`, `review.png`. Found and fixed low contrast receipt small print and step transitions retaining the previous scroll position. No overflow was observed in the inspected iPhone views; long content scrolls above the home area. Pixel-specific revalidation was not performed in this revision.
+
+## Brand entrance refinement — 2026-10-16
+Compared the built entrance against the independently specified brand direction in docs/brand-direction.zh-CN.md and inspected welcome/account/splash in qa/brand-review. Existing forest map system remains the application interior. Different typography, palette, artwork, composition and controls distinguish Grab from the supplied video; no visual-copy claim or trademark-clearance claim. Fixed caption spacing and missing provider borders after screenshots. iPhone393×852 and Pixel427×952 account layouts inspected.18 domain +4 worker +2 root tests pass; runtime unchanged.

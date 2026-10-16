@@ -92,3 +92,6 @@ Date and Table size are the two primary filters. All-filter choices are outlined
 
 ## Create meal revision
 Four steps: Arrange / Introduce / Costs / Review. Restaurant cards, shared native-radio choices and calendar own selection; money fields use KeyboardInput. White/forest surfaces and a dark payment receipt separate estimated spend from approval-time payment. Review groups link back to edit; schedule changes invalidate incompatible slots and external attestation. Demo inventory is explicitly fictional.
+
+## Brand entrance — 2026-10-16
+Original Grab wordmark in bold compact lowercase with a directional icon; forest #123f35, citrus #d7ee79, ivory #f5f2e8 and vermilion #e96943. Brand artwork `public/images/brand-table.png` generated independently for this project. Welcome uses the table as the gathering metaphor; the existing map remains forest/white. Entrance owns expressive motion, with reduced-motion fallback and a skip action. Never copy the reference's handwritten identity, purple/black grid or gradient controls. Branding is an iterative prototype, not trademark clearance.

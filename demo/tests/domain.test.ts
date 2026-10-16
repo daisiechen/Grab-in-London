@@ -2,6 +2,9 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   initialMeals,
+  validateDemoEmail,
+  validateDemoCode,
+  needsAccount,
   eligibleMeals,
   applyToMeal,
   approveApplication,
@@ -265,4 +268,26 @@ test("external reservation requires host attestation separate from slot selectio
     ),
     "",
   );
+});
+
+test("demo email and one-time code validation preserve recoverable failure states", () => {
+  for (const email of ["", "alex", "a b@example.com", "alex@domain"])
+    assert.notEqual(validateDemoEmail(email), "");
+  assert.equal(validateDemoEmail(" alex@example.com "), "");
+  assert.notEqual(validateDemoCode("000000"), "");
+  assert.notEqual(validateDemoCode("123456", true), "");
+  assert.equal(validateDemoCode("123456"), "");
+});
+test("guests can discover tables but participation needs an account", () => {
+  for (const page of ["discover", "detail", "member"])
+    assert.equal(needsAccount(page), false);
+  for (const page of [
+    "create",
+    "apply",
+    "profile",
+    "meals",
+    "inbox",
+    "checkout",
+  ])
+    assert.equal(needsAccount(page), true);
 });

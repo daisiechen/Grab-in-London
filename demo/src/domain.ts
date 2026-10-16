@@ -468,3 +468,27 @@ export function createDueNow(
 ) {
   return d.cost === "offline" ? 0 : d.cost === "menu" ? d.min : d.deposit;
 }
+
+export function validateDemoEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
+    ? ""
+    : "Enter a valid email address.";
+}
+export function validateDemoCode(code: string, expired = false) {
+  if (expired) return "This code has expired. Request a new demo code.";
+  return code === "123456"
+    ? ""
+    : "That code doesn’t match. Use the demo code 123456.";
+}
+export function needsAccount(destination: string) {
+  return [
+    "create",
+    "apply",
+    "meals",
+    "inbox",
+    "profile",
+    "edit",
+    "chat",
+    "checkout",
+  ].includes(destination);
+}
