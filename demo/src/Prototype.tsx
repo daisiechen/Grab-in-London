@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, useId, type ReactNode } from "react";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -7,6 +7,11 @@ import {
   CheckIcon,
   ChevronDownIcon,
   Cross2Icon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronUpIcon,
+  SewingPinIcon,
+  ExternalLinkIcon,
   GlobeIcon,
   HeartIcon,
   InfoCircledIcon,
@@ -15,7 +20,6 @@ import {
   PersonIcon,
   PlusIcon,
   ReaderIcon,
-  PinLeftIcon,
   MixerHorizontalIcon,
   PaperPlaneIcon,
   CheckCircledIcon,
@@ -30,6 +34,7 @@ import {
   MobileScroll,
   useKeyboard,
   useKeyboardInsets,
+  useScreenPortal,
 } from "./mobile";
 import {
   initialMeals,
@@ -42,6 +47,11 @@ import {
   validateMeal,
   refundAmount,
   groupReady,
+  groupMealsByArea,
+  emptyFilters,
+  monthDates,
+  googleMapsAreaUrl,
+  type DiscoveryFilters,
   type Meal,
   type JoinState,
   type PaymentState,
@@ -49,19 +59,19 @@ import {
 } from "./domain";
 
 const initialDraft = {
-    title: "",
-    venue: "The Little Table",
-    date: "2026-10-23",
-    time: "19:00",
-    capacity: 4,
-    min: 25,
-    max: 35,
-    description: "",
-    language: "English",
-    mood: "Easy conversation",
-    cost: "deposit",
-    booking: "in-app",
-  };
+  title: "",
+  venue: "The Little Table",
+  date: "2026-10-23",
+  time: "19:00",
+  capacity: 4,
+  min: 25,
+  max: 35,
+  description: "",
+  language: "English",
+  mood: "Easy conversation",
+  cost: "deposit",
+  booking: "in-app",
+};
 
 type Page =
   | "discover"
@@ -80,7 +90,16 @@ type Page =
   | "review"
   | "host"
   | "direct";
-type Sheet = "" | "filters" | "cancel" | "scenarios" | "report" | "reset";
+type Sheet =
+  | ""
+  | "date"
+  | "size"
+  | "area"
+  | "filters"
+  | "cancel"
+  | "scenarios"
+  | "report"
+  | "reset";
 const labels: Record<JoinState, string> = {
   NONE: "Open table",
   PENDING: "Application pending",
@@ -164,20 +183,164 @@ function Field({
   );
 }
 
+function ChoiceGroup({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: [string, string][];
+}) {
+  const groupId = useId();
+  return (
+    <fieldset className="filter-section">
+      <legend>{label}</legend>
+      <div className="choice-grid">
+        {options.map(([key, text]) => (
+          <label
+            className={`choice-chip ${value === key ? "chosen" : ""}`}
+            key={key}
+          >
+            <input
+              type="radio"
+              name={groupId}
+              value={key}
+              checked={value === key}
+              onChange={() => onChange(key)}
+            />
+            <span>{text}</span>
+            {value === key && <CheckIcon />}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+function DateChoices({
+  value,
+  onChange,
+  meals,
+}: {
+  value: string;
+  onChange: (date: string) => void;
+  meals: Meal[];
+}) {
+  const [month, setMonth] = useState(value ? value.slice(0, 7) : "2026-10");
+  const id = useId();
+  const { offset, dates } = monthDates(month);
+  const changeMonth = (delta: number) => {
+    const [y, m] = month.split("-").map(Number);
+    setMonth(new Date(Date.UTC(y, m - 1 + delta, 1)).toISOString().slice(0, 7));
+  };
+  return (
+    <div className="date-choices">
+      <ChoiceGroup
+        label="Date preference"
+        value={value ? "specific" : ""}
+        onChange={(key) => {
+          if (key === "") onChange("");
+        }}
+        options={
+          value
+            ? [
+                ["", "Any date"],
+                ["specific", longDate(value)],
+              ]
+            : [["", "Any date"]]
+        }
+      />
+      <div className="calendar-heading">
+        <strong>
+          {new Intl.DateTimeFormat("en-GB", {
+            month: "long",
+            year: "numeric",
+            timeZone: "UTC",
+          }).format(new Date(month + "-01T12:00:00Z"))}
+        </strong>
+        <div>
+          <button
+            aria-label="Previous month"
+            disabled={month <= "2026-10"}
+            onClick={() => changeMonth(-1)}
+          >
+            <ChevronLeftIcon />
+          </button>
+          <button aria-label="Next month" onClick={() => changeMonth(1)}>
+            <ChevronRightIcon />
+          </button>
+        </div>
+      </div>
+      <div className="calendar-weekdays" aria-hidden="true">
+        {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => (
+          <span key={i}>{d}</span>
+        ))}
+      </div>
+      <fieldset className="calendar-days">
+        <legend className="sr-only">Choose a date</legend>
+        {Array.from({ length: offset }, (_, i) => (
+          <span key={`blank-${i}`} />
+        ))}
+        {dates.map((date) => (
+          <label
+            key={date}
+            className={`calendar-day ${date === value ? "chosen" : ""} ${date < "2026-10-16" ? "unavailable" : ""}`}
+          >
+            <input
+              type="radio"
+              name={id}
+              aria-label={new Intl.DateTimeFormat("en-GB", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+                timeZone: "UTC",
+              }).format(new Date(date + "T12:00:00Z"))}
+              disabled={date < "2026-10-16"}
+              checked={value === date}
+              onChange={() => onChange(date)}
+            />
+            <span>{Number(date.slice(-2))}</span>
+            {meals.some((m) => m.date === date) && <i aria-hidden="true" />}
+          </label>
+        ))}
+      </fieldset>
+      <p className="calendar-hint">
+        <span /> Meals available · London time
+      </p>
+    </div>
+  );
+}
+
 export default function Prototype() {
   const keyboard = useKeyboard();
+  const { screenRef } = useScreenPortal();
+  // Native field focus may scroll the clipped phone portal. Only the app's
+  // inner MobileScroll/filter containers should move, never device chrome.
+  useEffect(() => {
+    const screen = screenRef.current;
+    if (!screen) return;
+    const keepFrameAnchored = () => {
+      if (screen.scrollTop || screen.scrollLeft)
+        screen.scrollTo({ top: 0, left: 0 });
+    };
+    screen.addEventListener("scroll", keepFrameAnchored);
+    return () => screen.removeEventListener("scroll", keepFrameAnchored);
+  }, [screenRef]);
   const insets = useKeyboardInsets();
   const [page, setPage] = useState<Page>("discover");
   const [history, setHistory] = useState<Page[]>([]);
   const [meals, setMeals] = useState<Meal[]>(initialMeals);
   const [selected, setSelected] = useState("supper");
   const [mode, setMode] = useState<"map" | "list">("map");
-  const [filters, setFilters] = useState({
-    date: "",
-    budget: "",
-    size: "",
-    search: "",
+  const [filters, setFilters] = useState<DiscoveryFilters>({ ...emptyFilters });
+  const [pendingFilters, setPendingFilters] = useState<DiscoveryFilters>({
+    ...emptyFilters,
   });
+  const [selectedArea, setSelectedArea] = useState("Soho");
+  const [showCalendar, setShowCalendar] = useState(false);
   const [sheet, setSheet] = useState<Sheet>("");
   const [toast, setToast] = useState("");
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -226,12 +389,35 @@ export default function Prototype() {
   const payment = payments[current.id] || "UNPAID";
   const booking = bookings[current.id] || current.booking;
   const matches = eligibleMeals(meals, filters);
-  const activeCount =
-    Number(Boolean(filters.date)) +
-    Number(Boolean(filters.budget)) +
-    Number(Boolean(filters.size)) +
-    Number(Boolean(filters.search));
-  const featured = matches.find((m) => m.id === selected) || matches[0];
+  const activeCount = Object.values(filters).filter((value) =>
+    value.trim(),
+  ).length;
+  const groups = groupMealsByArea(matches);
+  const areaGroup =
+    groups.find((group) => group.area === selectedArea) || groups[0];
+  const areaMeals = areaGroup?.meals || [];
+  const featured = areaMeals.find((m) => m.id === selected) || areaMeals[0];
+  const featuredIndex = areaMeals.findIndex((m) => m.id === featured?.id);
+  const pendingMatches = eligibleMeals(meals, pendingFilters);
+  const openFilters = (target: "date" | "size" | "filters") => {
+    keyboard.hide();
+    setPendingFilters({ ...filters });
+    setShowCalendar(target === "date");
+    setSheet(target);
+  };
+  const applyFilters = () => {
+    keyboard.hide();
+    setFilters({ ...pendingFilters });
+    setSheet("");
+  };
+  const clearFilters = () => setFilters({ ...emptyFilters });
+  const selectArea = (area: string) => {
+    const group = groups.find((g) => g.area === area);
+    if (group) {
+      setSelectedArea(area);
+      setSelected(group.meals[0].id);
+    }
+  };
   const profileComplete =
     profile.name.trim().length >= 2 &&
     profile.bio.trim().length >= 20 &&
@@ -460,35 +646,34 @@ export default function Prototype() {
   const mealCard = (m: Meal, compact = false) => (
     <article className={`meal-card ${compact ? "compact" : ""}`} key={m.id}>
       <button
-        className="meal-photo"
+        className="meal-card-hit"
         onClick={() => openMeal(m)}
-        aria-label={`View ${m.title}`}
-      >
+        aria-label={`Open ${m.title}`}
+      />
+      <div className="meal-photo">
         <img
           src="/images/restaurant.png"
           alt="A warm, leafy London restaurant"
         />
-      </button>
+      </div>
       <div className="meal-copy">
-        <h3>
-          <button onClick={() => openMeal(m)}>{m.title}</button>
-        </h3>
+        <h3>{m.title}</h3>
+        <p className="venue-name">{m.venue}</p>
         <p>
-          <PinLeftIcon />
-          {m.area}
+          <SewingPinIcon />
+          {m.area}, London
         </p>
         <p>
           <CalendarIcon />
           {longDate(m.date)} · {m.time}
         </p>
         <p>
-          <span className="pound">£</span>
           {m.min === m.max ? money(m.min) : `${money(m.min)}–${m.max}`} per
           person
         </p>
         <p>
           <PersonIcon />
-          {m.confirmed} of {m.capacity} confirmed
+          Table for {m.capacity} · {m.confirmed} confirmed
         </p>
         <div className="avatars">
           {m.members.slice(0, 3).map((id) => (
@@ -496,23 +681,17 @@ export default function Prototype() {
               key={id}
               id={id}
               onClick={() => openMember(id)}
-              size={compact ? 31 : 35}
+              size={compact ? 29 : 32}
             />
           ))}
         </div>
       </div>
       {!compact && (
-        <>
-          <p className="card-caption">
-            Relaxed sharing plates in a cosy neighbourhood spot.
-            <br />
-            Good food, easy conversation.
-          </p>
-          <Primary onClick={() => openMeal(m)}>
-            View meal <ArrowRightIcon />
-          </Primary>
-        </>
+        <p className="card-caption">
+          {m.mood} · {m.language}
+        </p>
       )}
+      {compact && <span className="pill card-mood">{m.mood}</span>}
     </article>
   );
   const screenTitles: Partial<Record<Page, string>> = {
@@ -547,7 +726,7 @@ export default function Prototype() {
             <p className="tagline">Meet new people over a meal.</p>
             <div className="discover-controls">
               <button
-                onClick={() => setSheet("filters")}
+                onClick={() => openFilters("date")}
                 aria-label="Filter by date"
               >
                 <CalendarIcon />
@@ -555,11 +734,17 @@ export default function Prototype() {
                 <ChevronDownIcon />
               </button>
               <button
-                onClick={() => setSheet("filters")}
-                aria-label="Filter by budget"
+                onClick={() => openFilters("size")}
+                aria-label="Filter by table size"
               >
-                <span>£</span>
-                {filters.budget ? `Up to £${filters.budget}` : "Budget"}
+                <PersonIcon />
+                {filters.size
+                  ? filters.size === "small"
+                    ? "3–6 people"
+                    : filters.size === "duo"
+                      ? "2 people"
+                      : `${filters.size} people`
+                  : "Table size"}
                 <ChevronDownIcon />
               </button>
               <div className="view-toggle">
@@ -583,7 +768,7 @@ export default function Prototype() {
               <button
                 className="more-filter"
                 aria-label="More filters"
-                onClick={() => setSheet("filters")}
+                onClick={() => openFilters("filters")}
               >
                 <MixerHorizontalIcon />
                 {activeCount > 0 && (
@@ -600,25 +785,26 @@ export default function Prototype() {
                   src="/images/london-map.png"
                   alt="Illustrated map of central London; demonstration locations"
                 />
-                {matches.map((m) => (
+                {groups.map((group) => (
                   <button
-                    key={m.id}
-                    className={`map-pin ${featured?.id === m.id ? "active" : ""}`}
-                    style={{ left: `${m.x}%`, top: `${m.y}%` }}
-                    onClick={() => setSelected(m.id)}
-                    aria-label={`${m.area}: ${m.title}, table for ${m.capacity}`}
-                    aria-pressed={featured?.id === m.id}
+                    key={group.area}
+                    className={`map-pin ${areaGroup?.area === group.area ? "active" : ""}`}
+                    style={{ left: `${group.x}%`, top: `${group.y}%` }}
+                    onClick={() => selectArea(group.area)}
+                    aria-label={`${group.area}: ${group.meals.length} ${group.meals.length === 1 ? "meal" : "meals"}`}
+                    aria-pressed={areaGroup?.area === group.area}
                   >
-                    {m.capacity}
+                    {group.meals.length}
                   </button>
                 ))}
+                <span className="map-key">Numbers = meals in each area</span>
                 <span className="map-note">
                   Illustrative map · Demo locations
                 </span>
                 <button
                   className="map-locate"
                   onClick={() => {
-                    setSelected("supper");
+                    selectArea("Soho");
                     notify(
                       "Showing central London. Location access is not needed.",
                     );
@@ -628,30 +814,66 @@ export default function Prototype() {
                   <PaperPlaneIcon />
                 </button>
               </div>
-              <div className="map-preview">
-                <div className="sheet-grip" />
-                {featured ? (
-                  mealCard(featured)
-                ) : (
+              <section className="map-preview" aria-label="Selected area meals">
+                {featured && (
+                  <>
+                    <button
+                      className="area-results-trigger"
+                      aria-label={`View all ${areaMeals.length} ${areaMeals.length === 1 ? "meal" : "meals"} in ${areaGroup.area}`}
+                      onClick={() => {
+                        keyboard.hide();
+                        setSheet("area");
+                      }}
+                    >
+                      <span className="sheet-grip" />
+                      <span>
+                        <strong>
+                          {areaMeals.length}{" "}
+                          {areaMeals.length === 1 ? "meal" : "meals"} in{" "}
+                          {areaGroup.area}
+                        </strong>
+                        <span>
+                          View all <ChevronUpIcon />
+                        </span>
+                      </span>
+                    </button>
+                    {mealCard(featured)}
+                    <div className="event-pager">
+                      <span>
+                        Meal {featuredIndex + 1} of {areaMeals.length}
+                      </span>
+                      <div>
+                        <button
+                          aria-label="Previous meal in this area"
+                          disabled={featuredIndex <= 0}
+                          onClick={() =>
+                            setSelected(areaMeals[featuredIndex - 1].id)
+                          }
+                        >
+                          <ChevronLeftIcon />
+                        </button>
+                        <button
+                          aria-label="Next meal in this area"
+                          disabled={featuredIndex >= areaMeals.length - 1}
+                          onClick={() =>
+                            setSelected(areaMeals[featuredIndex + 1].id)
+                          }
+                        >
+                          <ChevronRightIcon />
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+                {!featured && (
                   <div className="empty">
                     <MagnifyingGlassIcon />
                     <h3>No tables match just yet</h3>
                     <p>Try another date or a wider budget.</p>
-                    <Primary
-                      onClick={() =>
-                        setFilters({
-                          date: "",
-                          budget: "",
-                          size: "",
-                          search: "",
-                        })
-                      }
-                    >
-                      Clear filters
-                    </Primary>
+                    <Primary onClick={clearFilters}>Clear filters</Primary>
                   </div>
                 )}
-              </div>
+              </section>
             </>
           ) : (
             <MobileScroll className="discover-list">
@@ -663,31 +885,13 @@ export default function Prototype() {
                 {matches.map((m) => (
                   <div className="list-meal" key={m.id}>
                     {mealCard(m, true)}
-                    <div className="list-foot">
-                      <span className="pill">{m.mood}</span>
-                      <button
-                        onClick={() => openMeal(m)}
-                        aria-label={`Open ${m.title}`}
-                      >
-                        <ArrowRightIcon />
-                      </button>
-                    </div>
                   </div>
                 ))}
                 {!matches.length && (
                   <div className="empty">
                     <h3>No meals found</h3>
                     <p>Change your filters to find another table.</p>
-                    <Primary
-                      onClick={() =>
-                        setFilters({
-                          date: "",
-                          budget: "",
-                          size: "",
-                          search: "",
-                        })
-                      }
-                    >
+                    <Primary onClick={() => setFilters({ ...emptyFilters })}>
                       Clear filters
                     </Primary>
                   </div>
@@ -768,7 +972,7 @@ export default function Prototype() {
             </div>
             <h2>The restaurant</h2>
             <div className="venue-line">
-              <PinLeftIcon />
+              <SewingPinIcon />
               <div>
                 <strong>{current.venue}</strong>
                 <p>{current.area}, London</p>
@@ -783,6 +987,17 @@ export default function Prototype() {
                 </span>
               </div>
             </div>
+            <a
+              className="maps-link"
+              href={googleMapsAreaUrl(current.area)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Open {current.area} in Google Maps <ExternalLinkIcon />
+            </a>
+            <p className="map-destination-note">
+              Demo restaurant · Google Maps opens the neighbourhood.
+            </p>
             <h2>Keeping costs clear</h2>
             <div className="price-row">
               <span>Expected spend per person</span>
@@ -1115,7 +1330,9 @@ export default function Prototype() {
               : booking === "FAILED"
                 ? "Let’s find another slot."
                 : booking === "PENDING"
-                  ? (current.owned ? "Your table is taking shape." : "Your seat is ready.")
+                  ? current.owned
+                    ? "Your table is taking shape."
+                    : "Your seat is ready."
                   : "See you at the table."}
           </h1>
           <p className="prose">
@@ -1124,7 +1341,9 @@ export default function Prototype() {
               : booking === "FAILED"
                 ? "The restaurant couldn’t confirm this slot. Choose a different time or cancel for a full refund."
                 : booking === "PENDING"
-                  ? (current.owned ? "Check your confirmed guests, then finalise the restaurant reservation below." : "You have a confirmed seat. Your host is finalising the restaurant reservation.")
+                  ? current.owned
+                    ? "Check your confirmed guests, then finalise the restaurant reservation below."
+                    : "You have a confirmed seat. Your host is finalising the restaurant reservation."
                   : "A little good food and a few new faces await."}
           </p>
           <div className="ticket">
@@ -1663,12 +1882,6 @@ export default function Prototype() {
                           ? "You’re hosting"
                           : labels[states[m.id] || "NONE"]}
                       </span>
-                      <button
-                        aria-label={`Open ${m.title}`}
-                        onClick={() => openMeal(m)}
-                      >
-                        <ArrowRightIcon />
-                      </button>
                     </div>
                   </div>
                 ))}
@@ -2244,72 +2457,243 @@ export default function Prototype() {
         </div>
       )}
       <BottomSheet
-        open={sheet === "filters"}
+        open={sheet === "date" || sheet === "size" || sheet === "filters"}
         onOpenChange={(o) => !o && setSheet("")}
-        title="Find your kind of table"
-        snap={0.8}
+        title={
+          sheet === "date"
+            ? "When are you free?"
+            : sheet === "size"
+              ? "Your kind of table"
+              : "Make it your kind of meal"
+        }
+        description={
+          sheet === "filters" ? "A few preferences, a better table." : ""
+        }
+        snap={sheet === "size" ? 0.55 : 0.88}
       >
-        <div className="sheet-body">
-          <Field label="Restaurant or neighbourhood">
-            <KeyboardInput
-              placeholder="Soho, ramen, a restaurant…"
-              value={filters.search}
-              onBlur={() => keyboard.hide()}
-              onChange={(e) =>
-                setFilters({ ...filters, search: e.target.value })
+        <div className="filter-layout">
+          <div className="filter-topline">
+            <span>
+              {sheet === "date"
+                ? "CHOOSE A DAY"
+                : sheet === "size"
+                  ? "INCLUDING THE HOST"
+                  : "YOUR PREFERENCES"}
+            </span>
+            <button
+              aria-label="Close filters without applying"
+              onClick={() => {
+                keyboard.hide();
+                setSheet("");
+              }}
+            >
+              <Cross2Icon />
+            </button>
+          </div>
+          <div className="filter-scroll">
+            {(sheet === "size" || sheet === "filters") && (
+              <ChoiceGroup
+                label="Table size"
+                value={pendingFilters.size}
+                onChange={(size) =>
+                  setPendingFilters({ ...pendingFilters, size })
+                }
+                options={[
+                  ["", "Any size"],
+                  ["small", "3–6 people"],
+                  ["2", "2 people"],
+                  ["3", "3 people"],
+                  ["4", "4 people"],
+                  ["5", "5 people"],
+                  ["6", "6 people"],
+                ]}
+              />
+            )}
+            {sheet === "date" && (
+              <DateChoices
+                value={pendingFilters.date}
+                onChange={(date) =>
+                  setPendingFilters({ ...pendingFilters, date })
+                }
+                meals={meals}
+              />
+            )}
+            {sheet === "filters" && (
+              <>
+                <section className="filter-section">
+                  <h3>Date</h3>
+                  <button
+                    className="date-disclosure"
+                    aria-expanded={showCalendar}
+                    onClick={() => setShowCalendar((v) => !v)}
+                  >
+                    <CalendarIcon />
+                    <span>
+                      {pendingFilters.date
+                        ? longDate(pendingFilters.date)
+                        : "Any date"}
+                      <small>Choose a specific day</small>
+                    </span>
+                    <ChevronDownIcon />
+                  </button>
+                  {showCalendar && (
+                    <DateChoices
+                      value={pendingFilters.date}
+                      onChange={(date) =>
+                        setPendingFilters({ ...pendingFilters, date })
+                      }
+                      meals={meals}
+                    />
+                  )}
+                </section>
+                <ChoiceGroup
+                  label="Time of day"
+                  value={pendingFilters.time}
+                  onChange={(time) =>
+                    setPendingFilters({ ...pendingFilters, time })
+                  }
+                  options={[
+                    ["", "Any time"],
+                    ["lunch", "Lunch"],
+                    ["dinner", "Dinner"],
+                  ]}
+                />
+                <ChoiceGroup
+                  label="Neighbourhood"
+                  value={pendingFilters.area}
+                  onChange={(area) =>
+                    setPendingFilters({ ...pendingFilters, area })
+                  }
+                  options={[
+                    ["", "Anywhere"],
+                    ...Array.from(new Set(meals.map((m) => m.area))).map(
+                      (a) => [a, a] as [string, string],
+                    ),
+                  ]}
+                />
+                <ChoiceGroup
+                  label="Budget per person"
+                  value={pendingFilters.budget}
+                  onChange={(budget) =>
+                    setPendingFilters({ ...pendingFilters, budget })
+                  }
+                  options={[
+                    ["", "Any budget"],
+                    ["10", "Up to £10"],
+                    ["25", "Up to £25"],
+                    ["30", "Up to £30"],
+                    ["35", "Up to £35"],
+                    ["50", "Up to £50"],
+                  ]}
+                />
+                <ChoiceGroup
+                  label="Conversation language"
+                  value={pendingFilters.language}
+                  onChange={(language) =>
+                    setPendingFilters({ ...pendingFilters, language })
+                  }
+                  options={[
+                    ["", "Any language"],
+                    ["English", "English"],
+                    ["Mandarin", "Mandarin"],
+                    ["French", "French"],
+                  ]}
+                />
+                <ChoiceGroup
+                  label="Atmosphere"
+                  value={pendingFilters.mood}
+                  onChange={(mood) =>
+                    setPendingFilters({ ...pendingFilters, mood })
+                  }
+                  options={[
+                    ["", "Any atmosphere"],
+                    ["Easy conversation", "Easy conversation"],
+                    ["Food discoveries", "Food discoveries"],
+                    ["Travel & culture", "Travel & culture"],
+                  ]}
+                />
+                <ChoiceGroup
+                  label="Cuisine"
+                  value={pendingFilters.cuisine}
+                  onChange={(cuisine) =>
+                    setPendingFilters({ ...pendingFilters, cuisine })
+                  }
+                  options={[
+                    ["", "Any cuisine"],
+                    ["European", "European"],
+                    ["Japanese", "Japanese"],
+                    ["Spanish", "Spanish"],
+                  ]}
+                />
+                <ChoiceGroup
+                  label="Dietary options"
+                  value={pendingFilters.dietary}
+                  onChange={(dietary) =>
+                    setPendingFilters({ ...pendingFilters, dietary })
+                  }
+                  options={[
+                    ["", "No preference"],
+                    ["Vegetarian options", "Vegetarian options"],
+                  ]}
+                />
+                <Field label="Restaurant or keyword">
+                  <KeyboardInput
+                    placeholder="Search meals or restaurants"
+                    value={pendingFilters.search}
+                    onBlur={() => keyboard.hide()}
+                    onChange={(e) =>
+                      setPendingFilters({
+                        ...pendingFilters,
+                        search: e.target.value,
+                      })
+                    }
+                  />
+                </Field>
+              </>
+            )}
+          </div>
+          <div className="filter-footer">
+            <button
+              className="filter-clear"
+              onClick={() =>
+                setPendingFilters(
+                  sheet === "date"
+                    ? { ...pendingFilters, date: "" }
+                    : sheet === "size"
+                      ? { ...pendingFilters, size: "" }
+                      : { ...emptyFilters },
+                )
               }
-            />
-          </Field>
-          <Field label="When">
-            <select
-              value={filters.date}
-              onChange={(e) => setFilters({ ...filters, date: e.target.value })}
             >
-              <option value="">Any date</option>
-              <option value="2026-10-23">Friday 23 October</option>
-              <option value="2026-10-24">Saturday 24 October</option>
-            </select>
-          </Field>
-          <Field label="Budget per person">
-            <select
-              value={filters.budget}
-              onChange={(e) =>
-                setFilters({ ...filters, budget: e.target.value })
-              }
-            >
-              <option value="">Any budget</option>
-              <option value="30">Up to £30</option>
-              <option value="35">Up to £35</option>
-              <option value="10">Up to £10 · empty example</option>
-            </select>
-          </Field>
-          <Field label="Table size">
-            <select
-              value={filters.size}
-              onChange={(e) => setFilters({ ...filters, size: e.target.value })}
-            >
-              <option value="">All tables</option>
-              <option value="small">Small groups · 3–6 people</option>
-              <option value="duo">A table for two</option>
-            </select>
-          </Field>
-          <Primary
-            onClick={() => {
-              keyboard.hide();
-              setSheet("");
-            }}
-          >
-            Show {matches.length} {matches.length === 1 ? "meal" : "meals"}{" "}
-            <ArrowRightIcon />
-          </Primary>
-          <button
-            className="text-action"
-            onClick={() =>
-              setFilters({ date: "", budget: "", size: "", search: "" })
-            }
-          >
-            Clear filters
-          </button>
+              {sheet === "filters" ? "Clear all" : "Clear"}
+            </button>
+            <Primary onClick={applyFilters}>
+              {sheet === "filters"
+                ? `Show ${pendingMatches.length} ${pendingMatches.length === 1 ? "meal" : "meals"}`
+                : sheet === "date"
+                  ? "Apply date"
+                  : "Apply table size"}{" "}
+              <ArrowRightIcon />
+            </Primary>
+          </div>
+        </div>
+      </BottomSheet>
+      <BottomSheet
+        open={sheet === "area"}
+        onOpenChange={(o) => !o && setSheet("")}
+        title={`${areaGroup?.area || "Area"} tables`}
+        description={`${areaMeals.length} ${areaMeals.length === 1 ? "meal matches" : "meals match"} your filters`}
+        snap={0.85}
+      >
+        <div className="area-sheet-list">
+          {areaMeals.map((m) => (
+            <div className="list-meal" key={m.id}>
+              {mealCard(m, true)}
+            </div>
+          ))}
+          <p className="demo-note">
+            Choose a meal to see the restaurant, people and details.
+          </p>
         </div>
       </BottomSheet>
       <BottomSheet
@@ -2517,7 +2901,9 @@ export default function Prototype() {
               setHostDecision({});
               setDraft(initialDraft);
               setChatText("");
-              setIntro("I’m new to London and would love to meet people over a relaxed dinner.");
+              setIntro(
+                "I’m new to London and would love to meet people over a relaxed dinner.",
+              );
               setScenarioPayment(false);
               setCompleted(false);
               setConsent(false);
@@ -2534,8 +2920,9 @@ export default function Prototype() {
                 school: "",
                 hometown: "",
               });
-              setFilters({ date: "", budget: "", size: "", search: "" });
+              setFilters({ ...emptyFilters });
               setSelected("supper");
+              setSelectedArea("Soho");
               setCreateStep(0);
               root("discover");
               notify("Demo reset. A fresh table awaits.");

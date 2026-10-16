@@ -50,7 +50,7 @@ Arial/Helvetica for a close match to the chosen simple sans reference. Headings 
 
 ## Layout
 
-App content is designed within the protected393×852 iPhone screen; Pixel427×952 also supported. Account for device safe areas, fixed tabs, and keyboard. Header → map/list → selected meal → nav. Detail pages scroll with fixed back toolbar. Bottom creation circle must not obscure View meal. Global scrollbar styles are in prototype.css; native fields use platform-owned geometry.
+App content is designed within the protected393×852 iPhone screen; Pixel427×952 also supported. Account for device safe areas, fixed tabs, and keyboard. Header → map/list → selected meal → nav. Detail pages scroll with fixed back toolbar. Bottom creation circle must not obscure event pagination or card content. Global scrollbar styles are in prototype.css; native fields use platform-owned geometry.
 
 ## Elevation & Depth
 
@@ -58,7 +58,7 @@ Use separation through whitespace and hairlines. Bottom sheets use the runtime R
 
 ## Shapes
 
-Controls11px, smaller labels7px, map preview19px top corners. Avatars and create button circular. Pins are interactive controls with one clear numeric meaning: total table capacity.
+Controls11px, smaller labels7px, map preview19px top corners. Avatars and create button circular. Pins are interactive controls with one clear numeric meaning: number of filtered meals in the neighbourhood.
 
 ## Components
 
@@ -76,7 +76,7 @@ Four destinations plus central creation. Page back restores route history; disco
 
 ### Forms and overlays
 
-KeyboardInput/KeyboardTextarea, shared Field and Primary. Native select accepted for the demo's finite date/slot/size options. Runtime BottomSheet owns focus trapping and dismissal. No browser-native alerts/confirm/prompt. Every overlay fits phone bounds and scrolls.
+KeyboardInput/KeyboardTextarea, shared Field and Primary. Discovery uses shared styled native-radio choice groups and a month/day choice grid, with draft/apply semantics. Creation forms retain native select for fixed venue/slot choices. Runtime BottomSheet owns focus trapping and dismissal. No browser-native alerts/confirm/prompt. Every overlay fits phone bounds and scrolls.
 
 ## Motion
 
@@ -85,3 +85,7 @@ Runtime transitions remain intact. App motion restrained; respects prefers-reduc
 ## Content
 
 Plain English and friendship-first intent. Display no real-booking/no-charge ribbon. Demo controls explicitly label simulated actions; no fake live inventory or real human response.
+
+## Discovery review revision
+
+Date and Table size are the two primary filters. All-filter choices are outlined chips with pale-green selected surfaces and checkmarks; labels wrap rather than truncate. The map's selected area has an event count, whole-card action, independent avatars and bounded previous/next pagination. Grip/View all opens an area list. No duplicate View meal or arrow is present. Keep the map-first frame and established colour/type system.

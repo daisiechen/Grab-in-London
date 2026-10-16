@@ -17,7 +17,7 @@ The high-fidelity demo is an English-only mobile-style interactive web app using
 | Payments | Deposit or fixed-menu payment and refund states | Offline settlement with disclosed terms | Integrate payment provider |
 
 ## Discovery and profiles
-Discover supports shared filters across list and map views: date/time, area, budget, cuisine, size, language, dietary needs and atmosphere. Map markers represent restaurants with meals; multiple meals may share a venue. Google Maps/Places is a proposed integration, not yet connected.
+Discover supports shared filters across list and map views: date/time, area, budget, cuisine, size, language, dietary needs and atmosphere. Map markers count matching meal events per neighbourhood; the selected area supports card pagination and a complete event list. Google Maps/Places data integration is not connected; a labelled external Maps URL opens the real neighbourhood for fictional venues.
 
 Required profile fields: display name, avatar, introduction, London life situation, conversational languages and interests. Occupation, school and hometown are optional. Participation and feedback records are system-generated; new profiles explicitly have no history.
 

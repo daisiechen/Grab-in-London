@@ -9,6 +9,10 @@ import {
   refundAmount,
   groupReady,
   validateMeal,
+  groupMealsByArea,
+  emptyFilters,
+  googleMapsAreaUrl,
+  monthDates,
 } from "../src/domain.ts";
 const meal = initialMeals[0];
 test("apply, approval and payment are distinct; failure is recoverable", () => {
@@ -69,7 +73,7 @@ test("filters compose and zero results are recoverable", () => {
   );
   assert.equal(
     eligibleMeals(initialMeals, { date: "", budget: "", size: "" }).length,
-    4,
+    5,
   );
 });
 test("refund respects event terms and platform cancellation", () => {
@@ -111,4 +115,82 @@ test("create validation rejects invalid size and inverted budget", () => {
     ),
     "",
   );
+});
+
+test("map numbers count meals in an area, not table capacity", () => {
+  const groups = groupMealsByArea(initialMeals);
+  assert.equal(groups.find((g) => g.area === "Soho")?.meals.length, 2);
+  assert.equal(
+    groups.reduce((sum, g) => sum + g.meals.length, 0),
+    initialMeals.length,
+  );
+  assert.equal(groups.find((g) => g.area === "Fitzrovia")?.meals.length, 1);
+  const filtered = eligibleMeals(initialMeals, {
+    ...emptyFilters,
+    date: "2026-10-23",
+  });
+  assert.equal(
+    groupMealsByArea(filtered).find((g) => g.area === "Soho")?.meals.length,
+    1,
+  );
+});
+test("exact table size and extended filters compose without losing other conditions", () => {
+  assert.equal(
+    eligibleMeals(initialMeals, { ...emptyFilters, size: "2" }).length,
+    1,
+  );
+  assert.equal(
+    eligibleMeals(initialMeals, {
+      ...emptyFilters,
+      area: "Soho",
+      date: "2026-10-24",
+      size: "5",
+      budget: "35",
+      language: "English",
+      time: "dinner",
+      cuisine: "European",
+      dietary: "Vegetarian options",
+    }).length,
+    1,
+  );
+  assert.equal(
+    eligibleMeals(initialMeals, { ...emptyFilters, language: "Mandarin" })
+      .length,
+    0,
+  );
+  assert.equal(
+    eligibleMeals(initialMeals, {
+      ...emptyFilters,
+      cuisine: "Japanese",
+      dietary: "Vegetarian options",
+    }).length,
+    0,
+  );
+  assert.equal(
+    eligibleMeals(initialMeals, { ...emptyFilters, time: "lunch" }).length,
+    1,
+  );
+});
+test("a date without events yields no results; clearing it restores region events", () => {
+  assert.equal(
+    eligibleMeals(initialMeals, { ...emptyFilters, date: "2026-10-25" }).length,
+    0,
+  );
+  assert.equal(
+    eligibleMeals(initialMeals, { ...emptyFilters, area: "Soho" }).length,
+    2,
+  );
+});
+test("calendar dates have correct Monday-first alignment and month lengths", () => {
+  const october = monthDates("2026-10");
+  assert.equal(october.offset, 3);
+  assert.equal(october.dates.length, 31);
+  assert.equal(october.dates[22], "2026-10-23");
+  assert.equal(monthDates("2028-02").dates.length, 29);
+});
+test("Google Maps link opens the neighbourhood without inventing a restaurant location", () => {
+  const url = new URL(googleMapsAreaUrl("St James’s"));
+  assert.equal(url.hostname, "www.google.com");
+  assert.equal(url.searchParams.get("api"), "1");
+  assert.equal(url.searchParams.get("query"), "St James’s, London");
 });

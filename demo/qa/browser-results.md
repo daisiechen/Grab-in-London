@@ -35,3 +35,19 @@ Do not claim a clean strict static audit. App-owned findings and canonical-map g
 ## Limits
 
 No real APIs, money, booking, multi-user authentication, persistence, timed seat expiry or support delivery. See PRD§12 for precise target-versus-demo coverage. No public hosting or production readiness is claimed.
+
+## Discovery review revision — 2026-10-16
+
+This revision supersedes the earlier discovery/filter descriptions. The ten user browser comments are the new interaction source of truth.
+
+- Comment1: date shortcut opens only the dedicated month/day chooser; selected24Oct was applied, then preserved when table size changed. Native-radio keyboard Space selected23Oct; frame scroll remained0 and keyboard-visible=false after the app focus containment fix.
+- Comment2: second shortcut is Table size, with dedicated2–6/group choices. Date24Oct + size2 produced exactly the StJames’s lunch.
+- Comment3: all filters use shared styled radio chips, expandable date options, independent draft/apply/cancel, clear-all, result count and a fixed footer. A£10 draft was cancelled and the original two filters/results remained. Clear all + Show5 restored all meals. The filter scroll's content exceeded its viewport while footer stayed inside the sheet (footer bottom1002, sheet bottom1026 at scale1).
+- Comments4–5: marker counts are filtered events per area. Soho has2; next produced Saturday event/Meal2of2 with next disabled. View all opened a two-meal Soho list. Filtering changes groups/counts, with fallback to an available area.
+- Comment6: each card now names the restaurant and separately displays Soho, London (a neighbourhood).
+- Comments7/9/10: semantic whole-card targets cover photos/text/blank space; avatar buttons are independent siblings. Five list cards had five detail targets and zero duplicate row buttons. A card opened the correct detail, and an avatar opened Maya's profile. Redundant View meal and row arrows removed from discovery.
+- Comment8: actual Google Maps link launched a new tab using the encoded Soho,London query; original detail remained. Google redirected to its own sign-in page in this environment. No login was attempted; map destination precision beyond the area was not verified. Fictional venues explicitly link to the neighbourhood.
+
+Evidence: `discovery-review/home.png`, `date.png`, `filters.png`, `area-list.png`, `screens.png`, `comparison.png`. Main final capture viewport1400×1200; device screen measured393×852; saved images393×852px at scale1. Auxiliary hidden QA tab used1280×720 for functional checks, not1:1 visual assertions.
+
+Checks for this revision:13 domain tests +4 worker/packaging tests +2 root tests; TypeScript/build/runtime integrity passed. Browser console errors/warnings returned none at the checked final checkpoint. Supplementary static scan still has exactly the three previously documented protected-runtime findings, no unresolved contracts. Build retains an advisory530.69kB JS chunk warning (gzip165.03kB), not an error.

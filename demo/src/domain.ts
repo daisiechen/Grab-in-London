@@ -40,6 +40,8 @@ export type Meal = {
   booking: BookingState;
   costMode: "DEPOSIT" | "FIXED_MENU" | "OFFLINE";
   owned?: boolean;
+  cuisine?: string;
+  dietary?: string[];
 };
 export const members: Record<string, Member> = {
   maya: {
@@ -177,22 +179,127 @@ export const initialMeals: Meal[] = [
     costMode: "OFFLINE",
   },
 ];
+initialMeals.push({
+  ...initialMeals[0],
+  id: "soho-saturday",
+  title: "A Saturday table in Soho",
+  date: "2026-10-24",
+  time: "18:30",
+  capacity: 5,
+  confirmed: 2,
+  members: ["maya", "emma"],
+  deposit: 0,
+  costMode: "OFFLINE",
+  booking: "CONFIRMED",
+  description:
+    "A relaxed Saturday supper with new London friends. Share a few plates and trade your favourite neighbourhood discoveries.",
+});
+const cuisines: Record<string, string> = {
+  supper: "European",
+  ramen: "Japanese",
+  tapas: "Spanish",
+  duo: "European",
+  "soho-saturday": "European",
+};
+initialMeals.forEach((meal) => {
+  meal.cuisine = cuisines[meal.id];
+  meal.dietary = meal.id === "ramen" ? [] : ["Vegetarian options"];
+});
+
+export type DiscoveryFilters = {
+  date: string;
+  budget: string;
+  size: string;
+  search: string;
+  area: string;
+  language: string;
+  mood: string;
+  time: string;
+  cuisine: string;
+  dietary: string;
+};
+export const emptyFilters: DiscoveryFilters = {
+  date: "",
+  budget: "",
+  size: "",
+  search: "",
+  area: "",
+  language: "",
+  mood: "",
+  time: "",
+  cuisine: "",
+  dietary: "",
+};
+export function groupMealsByArea(meals: Meal[]) {
+  const groups = new Map<
+    string,
+    { area: string; meals: Meal[]; x: number; y: number }
+  >();
+  for (const meal of meals) {
+    const group = groups.get(meal.area);
+    if (group) group.meals.push(meal);
+    else
+      groups.set(meal.area, {
+        area: meal.area,
+        meals: [meal],
+        x: meal.x,
+        y: meal.y,
+      });
+  }
+  return [...groups.values()];
+}
+export function googleMapsAreaUrl(area: string) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${area}, London`)}`;
+}
+export function monthDates(month: string) {
+  const [year, m] = month.split("-").map(Number);
+  const count = new Date(Date.UTC(year, m, 0)).getUTCDate();
+  const offset = (new Date(Date.UTC(year, m - 1, 1)).getUTCDay() + 6) % 7;
+  return {
+    offset,
+    dates: Array.from(
+      { length: count },
+      (_, i) => `${month}-${String(i + 1).padStart(2, "0")}`,
+    ),
+  };
+}
+
 export function eligibleMeals(
   meals: Meal[],
-  filters: { date: string; budget: string; size: string; search?: string },
+  filters: {
+    date: string;
+    budget: string;
+    size: string;
+    search?: string;
+  } & Partial<DiscoveryFilters>,
 ) {
   return meals.filter(
     (m) =>
       (!filters.date || m.date === filters.date) &&
       (!filters.budget || m.max <= Number(filters.budget)) &&
       (!filters.size ||
-        (filters.size === "small" ? m.capacity >= 3 : m.capacity === 2)) &&
+        (filters.size === "small"
+          ? m.capacity >= 3
+          : filters.size === "duo"
+            ? m.capacity === 2
+            : m.capacity === Number(filters.size))) &&
       (!filters.search ||
         `${m.title} ${m.venue} ${m.area}`
           .toLowerCase()
-          .includes(filters.search.toLowerCase())),
+          .includes(filters.search.trim().toLowerCase())) &&
+      (!filters.area || m.area === filters.area) &&
+      (!filters.language ||
+        m.language.split(" & ").includes(filters.language)) &&
+      (!filters.mood || m.mood === filters.mood) &&
+      (!filters.time ||
+        (filters.time === "lunch"
+          ? Number(m.time.slice(0, 2)) < 16
+          : Number(m.time.slice(0, 2)) >= 16)) &&
+      (!filters.cuisine || m.cuisine === filters.cuisine) &&
+      (!filters.dietary || m.dietary?.includes(filters.dietary)),
   );
 }
+
 export function applyToMeal(
   meal: Meal,
   current: JoinState,

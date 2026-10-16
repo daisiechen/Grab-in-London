@@ -17,11 +17,11 @@ Open the printed local URL. Keep the server running. Choose iPhone or Pixel 10 f
 
 ## Walkthroughs
 
-1. Select the Soho pin → View meal → view Maya’s profile → apply → Preview host approval → Pay £10 deposit → accept sample terms. Try the failure checkbox, then retry without it → booking → meal chat.
+1. Select the Soho area marker → click the meal card → view Maya’s profile → apply → Preview host approval → Pay £10 deposit → accept sample terms. Try the failure checkbox, then retry without it → booking → meal chat.
 2. Booking → Explore demo outcomes → reservation failure → alternative slot, or cancel and inspect refund states. Outcomes are explicitly simulated.
 3. Create meal → choose 2–6 people, restaurant and slot → add name/description → select payment/reservation → publish → Manage applications → approve Emma → Preview guest payment → back to meal → Manage reservation.
 4. Meals → Past → Leave feedback → privately choose to share a table again → Preview mutual connection → private chat.
-5. More filters → budget up to £10 → show no matches → clear filters. List and map share query state.
+5. More filters → budget up to £10 → apply to show no matches → clear filters. List and map share query state.
 
 ## Checks
 
@@ -36,3 +36,5 @@ pnpm test:sites
 The protected mobile runtime owns device frames, keyboards and scrolling. App UI is in `src/Prototype.tsx`, `src/prototype.css`, with pure state rules in `src/domain.ts`. Browser evidence: `qa/browser-results.md`; visual comparison: `design-qa.md`.
 
 `premium-audit.json` records the supplementary static auditor's inherited runtime findings. Review rationale in the browser report; its presence is not a declaration of a clean strict scan.
+
+Discovery refinements: date and Table size have dedicated quick selectors. More filters contains all preferences with draft/apply/cancel. Map marker counts are matching events per neighbourhood; Soho has two sample events to try previous/next and View all. Entire cards open details; avatars open profiles independently. A labelled Google Maps link opens the real neighbourhood for fictional venues.

@@ -30,3 +30,18 @@ final result: passed
 ## Interaction evidence and remaining polish
 
 See `qa/browser-results.md` for browser journeys, console inspection and check results. Minor P3: richer restaurant-specific imagery and map detail can be refined in future; native selection styling is platform-owned. No real integrations or complete production accessibility certification claimed. Generic static audit's inherited runtime findings are documented separately and not represented as a clean strict scan.
+
+## Latest discovery review — 2026-10-16
+
+Latest source: ten user browser annotations against the previous demo, plus established forest-green design. Baseline `qa/discover.png` (393×852) and revised `qa/discovery-review/home.png` (393×852) were opened together in `qa/discovery-review/comparison.png`. Current date and all-filter states were reviewed together in `qa/discovery-review/screens.png`; all phone-screen captures were393×852 CSS/pixel dimensions at scale1, viewport1400×1200. Region-list evidence: `qa/discovery-review/area-list.png`.
+
+Intentional changes: date + Table size shortcuts replace date + budget; map numbers now count meals per neighbourhood; area count/View all/pagination replace redundant View meal; restaurant and neighbourhood separated; entire cards are the semantic detail action with independent avatars. Existing palette, image assets, header, device runtime and central creation action preserved. These supersede obsolete source elements, not fidelity defects.
+
+Required surfaces checked: same sans typography and density; forest/peach tokens maintained; map/meal/nav proportions stable; existing raster images retained; new copy states map-count and table-size semantics explicitly. Date/size/all-filter controls share radio-chip states, visible keyboard focus and footer controls.
+
+Findings/fixes:
+- P2: long all-filter content initially pushed Apply below view. Scoped app sheet layout now has a bounded internal scroll and fixed footer; browser bounds and screenshot confirm footer within sheet.
+- P2: native radio focus could scroll the outer clipped device screen, visually exposing offscreen keyboard assets. App-owned scroll containment now anchors only the outer portal, preserving MobileScroll and filter scrolling. Post-fix browser measurement: scrollTop0, keyboard-visible=false, date radio selected=true. Revised date capture shows intact chrome and no keyboard.
+- Final before/after and three-state comparisons were opened and inspected after fixes. No actionable P0/P1/P2 mismatch remains for the scoped comments. Existing prototype integration limits remain as documented; Google redirect is an external access condition.
+
+Validation: see the latest browser-results section and updated domain tests. No template-owned runtime files were changed.

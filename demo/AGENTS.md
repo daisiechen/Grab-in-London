@@ -69,3 +69,11 @@ When any text-entry control loses focus, dismiss the simulated keyboard. If the 
 - Fixed phone chrome should not animate with pushed screens. Screen content can animate; the status bar, camera cutout, and preview chrome should stay put.
 - Keep the keyboard below the home indicator/safe area layer in z-index, and above ordinary app UI while visible.
 - Keep the home indicator as the topmost safe-area layer in the z-index above everything else in the prototype.
+
+## Confirmed discovery feedback — 2026-10-16
+
+- Keep the selected forest map style and prominent bottom-centre Create meal.
+- Date opens a dedicated date chooser; Table size is the second quick filter, above budget. Full filters use styled single-choice controls with draft/apply/cancel behavior.
+- Map numbers mean matching meal events in each neighbourhood, never table capacity. The selected area has previous/next event controls and a grip/View all action for its complete filtered list.
+- Whole meal cards open details; avatars stay independent. No redundant View meal or per-row arrow.
+- Show restaurant name and neighbourhood separately. Replace misleading arrows with a location pin and an explicitly labelled Google Maps link; fictional venues open the real neighbourhood rather than an invented exact address.
