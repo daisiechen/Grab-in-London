@@ -69,3 +69,12 @@ Verified in IAB using actual UI controls (mouse and keyboard):
 - Returning login with email and valid code bypassed setup and opened Discover. Explicit expired-code scenario rejected even the correct code; changing email and requesting a fresh code recovered.30s resend cooldown was visible;5min expiry is timer-based and covered by the expired validation test, not a five-minute browser soak.
 - Inspected Pixel427×952 account layout, retained runtime device status/navigation. Saved pixel-account.png. No console error logs at the checked checkpoint. Full cross-platform authentication regression is not claimed.
 - Evidence:brand-review/splash.png,welcome.png,account.png,code-expired.png,pixel-account.png. All screenshots contain fictional sample data only. Main preview kept on welcome; memory-only demo login, no real emails/authentication/provider backend.
+
+## Inbox membership and Settings — 2026-10-16
+Browser-tested on local393×852 iPhone screen:
+- Returning demo login→apply main paid meal→Inbox waiting-host card, not empty state. Preview approval transitions same card to£10 due; checkout consent/payment confirms. Inbox group opens; sent “Looking forward to dinner!” successfully.
+- Settings appears on own Profile; message previews off replaced Inbox text with hidden-preview notice. Sign-out opens confirmation and Stay signed in cancels. Removed combined sign-out/replay and profile reset panel. Fixed an initial placement error that put Settings on the other-member screen before verification.
+- Final permission rule tested through offline Ramen: apply→Track in Inbox→host approval opens chat. Sent “See you at ramen night.”, cancelled participation, returned via Inbox: history visible, read-only notice present, zero Send message controls.
+- Shared tests reject pending/declined/withdrawn/payment-pending even with confirmed restaurant; confirmed users can chat while booking pending/failed. Cancelled users get history only if previously confirmed. Local demonstrations, not server authorization.
+Evidence:inbox-settings/{pending,payment-needed,chat,settings,preview-hidden,archive}.png.23 domain +5 worker/packaging +2 root tests pass; TypeScript/build and28-file runtime check pass. Chunk557.37kB remains advisory. No Pixel rerun in this revision.
+Additional final check: Replay brand intro→Explore tables first→Profile opened Alex directly, confirming the session remained signed in. Sign out confirmation then returned to Good to meet you account screen. Settings switches rendered with distinct on/off controls after visual review.

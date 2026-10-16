@@ -490,5 +490,45 @@ export function needsAccount(destination: string) {
     "edit",
     "chat",
     "checkout",
+    "settings",
   ].includes(destination);
+}
+
+export function inboxStage(
+  meal: Meal,
+  state: JoinState = "NONE",
+  wasConfirmed = false,
+) {
+  if (
+    meal.owned ||
+    state === "CONFIRMED" ||
+    (state === "CANCELLED" && wasConfirmed)
+  )
+    return "chat";
+  if (state === "PENDING") return "approval";
+  if (state === "APPROVED_PAYMENT_PENDING") return "payment";
+  return "none";
+}
+export function conversationPreview(
+  meal: Meal,
+  sent: string[],
+  showPreview = true,
+) {
+  if (!showPreview) return "Message previews are hidden";
+  if (sent.length) return `You: ${sent[sent.length - 1]}`;
+  return meal.owned
+    ? "Your group is ready. Say hello to your table."
+    : `${members[meal.host]?.name || "Your host"}: Looking forward to meeting you!`;
+}
+
+export function groupChatAccess(
+  meal: Meal,
+  state: JoinState = "NONE",
+  wasConfirmed = false,
+  booking: BookingState = meal.booking,
+): "locked" | "read-only" | "write" {
+  const currentMember = meal.owned || state === "CONFIRMED";
+  if (currentMember) return booking === "CANCELLED" ? "read-only" : "write";
+  if (state === "CANCELLED" && wasConfirmed) return "read-only";
+  return "locked";
 }

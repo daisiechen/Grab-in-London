@@ -51,3 +51,6 @@ Preserved the established forest/white visual system, runtime and central Create
 
 ## Brand entrance refinement — 2026-10-16
 Compared the built entrance against the independently specified brand direction in docs/brand-direction.zh-CN.md and inspected welcome/account/splash in qa/brand-review. Existing forest map system remains the application interior. Different typography, palette, artwork, composition and controls distinguish Grab from the supplied video; no visual-copy claim or trademark-clearance claim. Fixed caption spacing and missing provider borders after screenshots. iPhone393×852 and Pixel427×952 account layouts inspected.18 domain +4 worker +2 root tests pass; runtime unchanged.
+
+## Inbox and Settings review — 2026-10-16
+Inspected393×852 pending/payment-needed/settings/archive screenshots. Retained forest/white components; added an application progress card and grouped settings. Real UI walkthroughs cover paid and offline approval-to-chat, successful send, hidden Inbox preview, prior-member cancellation archive with zero composer controls, sign-out cancellation/confirmation and intro replay retaining the session. Shared permission matrix is in PRD FR-09; frontend checks do not replace future backend enforcement. No Pixel rerun for this revision.

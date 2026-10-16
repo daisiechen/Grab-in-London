@@ -95,3 +95,6 @@ Four steps: Arrange / Introduce / Costs / Review. Restaurant cards, shared nativ
 
 ## Brand entrance — 2026-10-16
 Original Grab wordmark in bold compact lowercase with a directional icon; forest #123f35, citrus #d7ee79, ivory #f5f2e8 and vermilion #e96943. Brand artwork `public/images/brand-table.png` generated independently for this project. Welcome uses the table as the gathering metaphor; the existing map remains forest/white. Entrance owns expressive motion, with reduced-motion fallback and a skip action. Never copy the reference's handwritten identity, purple/black grid or gradient controls. Branding is an iterative prototype, not trademark clearance.
+
+## Inbox and Settings refinement
+Pending application cards use a three-step status track, membership explanation and pale-green demo panel. Approved payment-required cards reuse checkout. Conversation rows show the correct host and last message or hidden previews, and label archives. Settings groups notifications/previews, privacy/safety, account and demo tools using existing hairlines and controls; Profile gear appears only on the owner's page.

@@ -82,3 +82,8 @@ When any text-entry control loses focus, dismiss the simulated keyboard. If the 
 - User wants a fancy brand splash and coherent login/signup, with the supplied video as inspiration, explicitly avoiding direct copying.
 - Keep Grab's independent table-led visual identity; do not import or publish reference video frames containing personal accounts.
 - Preserve established slogan and map design. Authentication remains a clearly labelled demo; guest browsing is available before signing in.
+
+## Inbox and Settings feedback — 2026-10-16
+- Applied meals remain visible in Inbox with a path through host approval and payment; pending applicants cannot join. Host approval is admission approval; no second group approval. Restaurant booking is independent.
+- Retain only historical read-only chat after a previously confirmed member cancels; never-confirmed applicants receive no history.
+- Move sign-out and demo actions into one's own Settings. Separate sign-out, replay and reset; notification/preview preferences state their in-memory scope.

@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import {
+  GearIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
   CalendarIcon,
@@ -52,6 +53,9 @@ import {
   approveApplication,
   completePayment,
   longDate,
+  groupChatAccess,
+  inboxStage,
+  conversationPreview,
   validateMeal,
   validateDemoEmail,
   validateDemoCode,
@@ -107,7 +111,8 @@ type Page =
   | "edit"
   | "review"
   | "host"
-  | "direct";
+  | "direct"
+  | "settings";
 type Sheet =
   | ""
   | "date"
@@ -117,7 +122,8 @@ type Sheet =
   | "cancel"
   | "scenarios"
   | "report"
-  | "reset";
+  | "reset"
+  | "signout";
 const labels: Record<JoinState, string> = {
   NONE: "Open table",
   PENDING: "Application pending",
@@ -872,6 +878,10 @@ export default function Prototype() {
     return () => screen.removeEventListener("scroll", keepFrameAnchored);
   }, [screenRef]);
   const insets = useKeyboardInsets();
+  const [preferences, setPreferences] = useState({
+    mealUpdates: true,
+    messagePreviews: true,
+  });
   const [page, setPage] = useState<Page>("discover");
   const [history, setHistory] = useState<Page[]>([]);
   const [meals, setMeals] = useState<Meal[]>(initialMeals);
@@ -886,6 +896,12 @@ export default function Prototype() {
   const [sheet, setSheet] = useState<Sheet>("");
   const [toast, setToast] = useState("");
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [confirmedChats, setConfirmedChats] = useState<Record<string, boolean>>(
+    {},
+  );
+  const [chatArchives, setChatArchives] = useState<Record<string, string[]>>(
+    {},
+  );
   const [states, setStates] = useState<Record<string, JoinState>>({});
   const [payments, setPayments] = useState<Record<string, PaymentState>>({});
   const [bookings, setBookings] = useState<Record<string, BookingState>>({});
@@ -1021,10 +1037,11 @@ export default function Prototype() {
   };
   const updateJoin = (state: JoinState) =>
     setStates((s) => ({ ...s, [current.id]: state }));
-  const countUp = () =>
+  const countUp = (mealId = current.id) => {
+    setConfirmedChats((s) => ({ ...s, [mealId]: true }));
     setMeals((ms) =>
       ms.map((m) =>
-        m.id === current.id
+        m.id === mealId && !m.members.includes("alex")
           ? {
               ...m,
               confirmed: Math.min(m.capacity, m.confirmed + 1),
@@ -1033,6 +1050,7 @@ export default function Prototype() {
           : m,
       ),
     );
+  };
   const submitApplication = () => {
     try {
       const next = applyToMeal(current, join, intro, profileComplete);
@@ -1042,16 +1060,21 @@ export default function Prototype() {
       setError((e as Error).message);
     }
   };
-  const approve = () => {
+  const approveMeal = (meal: Meal) => {
     try {
-      const next = approveApplication(current, join);
-      updateJoin(next);
-      if (next === "CONFIRMED") countUp();
-      notify("Demo: Maya approved your application.");
+      const next = approveApplication(meal, states[meal.id] || "NONE");
+      setStates((s) => ({ ...s, [meal.id]: next }));
+      if (next === "CONFIRMED") countUp(meal.id);
+      setError("");
+      if (preferences.mealUpdates)
+        notify(
+          `Demo: ${members[meal.host]?.name || "Your host"} approved your application.${next === "CONFIRMED" ? " Your group chat is ready." : " Confirm your seat with a demo payment."}`,
+        );
     } catch (e) {
       setError((e as Error).message);
     }
   };
+  const approve = () => approveMeal(current);
   const pay = () => {
     if (busy || !consent) return;
     setBusy(true);
@@ -1077,6 +1100,11 @@ export default function Prototype() {
     }, 650);
   };
   const cancelParticipation = () => {
+    if (join === "CONFIRMED")
+      setChatArchives((a) => ({
+        ...a,
+        [current.id]: [...(messages[current.id] || [])],
+      }));
     if (join === "CONFIRMED")
       setMeals((ms) =>
         ms.map((m) =>
@@ -1268,6 +1296,7 @@ export default function Prototype() {
     review: "After the meal",
     host: "Your guest list",
     direct: "Maya",
+    settings: "Settings",
   };
   const topLevel = ["discover", "meals", "inbox", "profile"].includes(page);
   const renderPage = () => {
@@ -1758,6 +1787,9 @@ export default function Prototype() {
             </p>
             <span className="status-tag">{labels[join]}</span>
           </div>
+          <Primary secondary onClick={() => root("inbox")}>
+            Track in Inbox <ChatBubbleIcon />
+          </Primary>
           {join === "PENDING" && (
             <>
               <div className="demo-panel">
@@ -2047,9 +2079,13 @@ export default function Prototype() {
     if (page === "chat" || page === "direct") {
       const direct = page === "direct";
       const speaker = current.members.find((id) => id !== "alex") || "maya";
-      const allowed = direct
-        ? mutual && !blocked
-        : join === "CONFIRMED" || current.owned;
+      const chatAccess = groupChatAccess(
+        current,
+        join,
+        confirmedChats[current.id],
+        booking,
+      );
+      const allowed = direct ? mutual && !blocked : chatAccess !== "locked";
       return (
         <div className="body-pad chat-body">
           {!allowed ? (
@@ -2080,7 +2116,21 @@ export default function Prototype() {
                   </p>
                 </div>
               </div>
-              <p className="chat-date">TODAY · DEMO CONVERSATION</p>
+              {!direct && chatAccess === "read-only" && (
+                <div className="notice">
+                  <LockClosedIcon />
+                  <span>
+                    Archived conversation · read-only. Your participation has
+                    ended or this meal was cancelled. No new group messages will
+                    be delivered.
+                  </span>
+                </div>
+              )}
+              <p className="chat-date">
+                {!direct && chatAccess === "read-only"
+                  ? "ARCHIVE · DEMO CONVERSATION"
+                  : "TODAY · DEMO CONVERSATION"}
+              </p>
               <div className="chat-message">
                 <Avatar id={direct ? "maya" : speaker} size={30} />
                 <div>
@@ -2103,17 +2153,20 @@ export default function Prototype() {
                     </div>
                   </div>
                 )}
-              {(messages[direct ? "direct" : current.id] || []).map(
-                (text, i) => (
-                  <div className="chat-message own" key={i}>
-                    <div>
-                      <small>You</small>
-                      <p>{text}</p>
-                      <small>Sent · Demo</small>
-                    </div>
+              {(direct
+                ? messages.direct || []
+                : chatAccess === "read-only"
+                  ? chatArchives[current.id] || messages[current.id] || []
+                  : messages[current.id] || []
+              ).map((text, i) => (
+                <div className="chat-message own" key={i}>
+                  <div>
+                    <small>You</small>
+                    <p>{text}</p>
+                    <small>Sent · Demo</small>
                   </div>
-                ),
-              )}
+                </div>
+              ))}
               <p className="demo-note">
                 Messages are simulated in this browser.
               </p>
@@ -2709,56 +2762,206 @@ export default function Prototype() {
           )}
         </div>
       );
-    if (page === "inbox")
+    if (page === "inbox") {
+      const waiting = meals.filter((m) =>
+        ["approval", "payment"].includes(
+          inboxStage(m, states[m.id], confirmedChats[m.id]),
+        ),
+      );
+      const chats = meals.filter(
+        (m) =>
+          groupChatAccess(
+            m,
+            states[m.id],
+            confirmedChats[m.id],
+            bookings[m.id] || m.booking,
+          ) !== "locked",
+      );
+      const hasDirect = mutual && !blocked;
       return (
-        <div className="body-pad">
+        <div className="body-pad inbox-page">
           <div className="eyebrow">BEFORE AND AFTER THE TABLE</div>
-          <h1>A little hello.</h1>
-          <h2>Your conversations</h2>
-          {meals
-            .filter((m) => states[m.id] === "CONFIRMED" || m.owned)
-            .map((m) => (
-              <button
-                className="inbox-row"
-                key={m.id}
-                onClick={() => {
-                  setSelected(m.id);
-                  go("chat");
-                }}
-              >
-                <Avatar id={m.host} size={46} />
-                <div>
-                  <strong>{m.title}</strong>
-                  <p>Maya: Looking forward to meeting you!</p>
-                  <small>{longDate(m.date)} · Meal group</small>
-                </div>
-                <ArrowRightIcon />
-              </button>
-            ))}
-          {mutual && !blocked && (
-            <button className="inbox-row" onClick={() => go("direct")}>
-              <Avatar id="maya" size={46} />
-              <div>
-                <strong>Maya</strong>
-                <p>You both want to meet again.</p>
-              </div>
-              <HeartIcon />
-            </button>
+          <h1>
+            {waiting.length ? "Your table is taking shape." : "A little hello."}
+          </h1>
+          {!!waiting.length && (
+            <>
+              <h2>
+                Applications & next steps{" "}
+                <span className="pill">{waiting.length}</span>
+              </h2>
+              <p className="muted">
+                You’ve applied. Your group chat opens once your seat is
+                confirmed.
+              </p>
+              {waiting.map((m) => {
+                const pending =
+                  inboxStage(m, states[m.id], confirmedChats[m.id]) ===
+                  "approval";
+                return (
+                  <article
+                    className="inbox-progress-card"
+                    key={m.id}
+                    aria-label={`Application for ${m.title}`}
+                  >
+                    <div className="inbox-application-heading">
+                      <Avatar id={m.host} size={40} />
+                      <div>
+                        <h3>{m.title}</h3>
+                        <small>
+                          {longDate(m.date)} · {m.time} · {m.area}
+                        </small>
+                      </div>
+                    </div>
+                    <div
+                      className="application-track"
+                      aria-label={
+                        pending
+                          ? "Applied; awaiting host approval; then confirm your seat"
+                          : "Host approved; payment required to confirm your seat"
+                      }
+                    >
+                      <span className="done">
+                        <CheckIcon />
+                        Applied
+                      </span>
+                      <span className={pending ? "" : "done"}>
+                        {pending ? <PersonIcon /> : <CheckIcon />}Host approval
+                      </span>
+                      <span>
+                        <LockClosedIcon />
+                        Group chat
+                      </span>
+                    </div>
+                    <strong className="status-tag">
+                      {pending
+                        ? "Waiting for host approval"
+                        : "Approved · payment needed"}
+                    </strong>
+                    <p>
+                      {pending
+                        ? `${members[m.host]?.name || "Your host"} will review your introduction. You haven’t joined the group yet.`
+                        : `Pay £${m.deposit} to confirm your seat and unlock the meal group. No real charge is made.`}
+                    </p>
+                    {pending ? (
+                      <div className="demo-next-step">
+                        <small>TRY THE NEXT STEP · DEMO ONLY</small>
+                        <p>
+                          No need to wait for a real host in this prototype.
+                        </p>
+                        <Primary secondary onClick={() => approveMeal(m)}>
+                          Preview host approval
+                        </Primary>
+                      </div>
+                    ) : (
+                      <Primary
+                        onClick={() => {
+                          setSelected(m.id);
+                          setConsent(false);
+                          setScenarioPayment(false);
+                          go("checkout");
+                        }}
+                      >
+                        Pay £{m.deposit} & confirm <ArrowRightIcon />
+                      </Primary>
+                    )}
+                    <button
+                      className="text-action"
+                      onClick={() => {
+                        setSelected(m.id);
+                        go("status");
+                      }}
+                    >
+                      View application
+                    </button>
+                  </article>
+                );
+              })}
+            </>
           )}
-          {!meals.some((m) => states[m.id] === "CONFIRMED" || m.owned) &&
-            !mutual && (
-              <div className="empty">
-                <ChatBubbleIcon />
-                <h2>Conversation starts at the table.</h2>
-                <p>
-                  Your meal group opens when your place is confirmed. Private
-                  chats open by mutual choice.
-                </p>
-                <Primary secondary onClick={() => root("discover")}>
-                  Find a meal
-                </Primary>
-              </div>
-            )}
+          {!!chats.length && (
+            <>
+              <h2>
+                Your meal groups <span className="pill">{chats.length}</span>
+              </h2>
+              {chats.map((m) => (
+                <button
+                  className="inbox-row"
+                  key={m.id}
+                  onClick={() => {
+                    setSelected(m.id);
+                    go("chat");
+                  }}
+                >
+                  <Avatar id={m.host} size={46} />
+                  <div>
+                    <strong>{m.title}</strong>
+                    <p>
+                      {conversationPreview(
+                        m,
+                        messages[m.id] || [],
+                        preferences.messagePreviews,
+                      )}
+                    </p>
+                    <small>
+                      {longDate(m.date)} ·{" "}
+                      {groupChatAccess(
+                        m,
+                        states[m.id],
+                        confirmedChats[m.id],
+                        bookings[m.id] || m.booking,
+                      ) === "read-only"
+                        ? "Archived · Read-only"
+                        : "Seat confirmed · Meal group"}
+                    </small>
+                  </div>
+                  <ArrowRightIcon />
+                </button>
+              ))}
+            </>
+          )}
+          {hasDirect && (
+            <>
+              <h2>Personal conversations</h2>
+              <button className="inbox-row" onClick={() => go("direct")}>
+                <Avatar id="maya" size={46} />
+                <div>
+                  <strong>Maya</strong>
+                  <p>
+                    {preferences.messagePreviews
+                      ? "You both want to meet again."
+                      : "Message previews are hidden"}
+                  </p>
+                </div>
+                <HeartIcon />
+              </button>
+            </>
+          )}
+          {!waiting.length && !chats.length && !hasDirect && (
+            <div className="empty">
+              <ChatBubbleIcon />
+              <h2>Your next hello starts here.</h2>
+              <p>
+                Apply to a meal to track your request here. Once your host
+                approves and your seat is confirmed, your group chat will
+                appear.
+              </p>
+              <Primary secondary onClick={() => root("discover")}>
+                Find a meal
+              </Primary>
+            </div>
+          )}
+          {!!waiting.length && !chats.length && (
+            <p className="inbox-locked-hint">
+              <LockClosedIcon /> No open groups yet. Complete the next step
+              above to join your table.
+            </p>
+          )}
+          {error && (
+            <p className="form-error" role="alert">
+              {error}
+            </p>
+          )}
           <div className="notice">
             <LockClosedIcon />
             <span>
@@ -2768,9 +2971,153 @@ export default function Prototype() {
           </div>
         </div>
       );
+    }
+    if (page === "settings")
+      return (
+        <div className="body-pad settings-page">
+          <h1>Make yourself at home.</h1>
+          <p className="prose">
+            Your preferences, privacy and account in one place.
+          </p>
+          <section>
+            <h2>Notifications & previews</h2>
+            <label className="settings-toggle">
+              <span>
+                <strong>Meal update banners</strong>
+                <small>
+                  Show the simulated approval banner. Your status always remains
+                  in Inbox.
+                </small>
+              </span>
+              <input
+                type="checkbox"
+                role="switch"
+                checked={preferences.mealUpdates}
+                onChange={(e) =>
+                  setPreferences({
+                    ...preferences,
+                    mealUpdates: e.target.checked,
+                  })
+                }
+              />
+            </label>
+            <label className="settings-toggle">
+              <span>
+                <strong>Message previews</strong>
+                <small>Show message text in your Inbox list.</small>
+              </span>
+              <input
+                type="checkbox"
+                role="switch"
+                checked={preferences.messagePreviews}
+                onChange={(e) =>
+                  setPreferences({
+                    ...preferences,
+                    messagePreviews: e.target.checked,
+                  })
+                }
+              />
+            </label>
+            <p className="demo-note">
+              Saved for this visit only. These controls don’t enable device push
+              or email notifications.
+            </p>
+          </section>
+          <section>
+            <h2>Privacy & safety</h2>
+            <p>
+              Your name, photo and introduction help your table get to know you.
+              Your email is private.
+            </p>
+            <p>
+              Meal groups require a confirmed seat. Private conversations
+              require mutual choice after a shared meal.
+            </p>
+            <div className="settings-info-row">
+              <span>Blocked members</span>
+              <strong>{blocked ? "1 member" : "None"}</strong>
+            </div>
+            {blocked && (
+              <button
+                className="text-action"
+                onClick={() => {
+                  setBlocked(false);
+                  notify(
+                    "Maya unblocked. Mutual connection rules still apply.",
+                  );
+                }}
+              >
+                Unblock Maya
+              </button>
+            )}
+            <div className="settings-info-row">
+              <span>App language</span>
+              <strong>English</strong>
+            </div>
+            <small>
+              More interface languages are planned. Conversation languages can
+              be changed in your profile.
+            </small>
+          </section>
+          <section>
+            <h2>Account</h2>
+            <p>Demo account · no real login credentials stored.</p>
+            <button
+              className="settings-link"
+              onClick={() => {
+                setDraftProfile(profile);
+                go("edit");
+              }}
+            >
+              Edit public profile <ArrowRightIcon />
+            </button>
+            <button
+              className="settings-link danger"
+              onClick={() => {
+                keyboard.hide();
+                setSheet("signout");
+              }}
+            >
+              Sign out <ArrowRightIcon />
+            </button>
+          </section>
+          <section className="demo-panel">
+            <span>DEMO TOOLS</span>
+            <p>
+              All people, meals, payments and reservations are fictional.
+              Changes reset on refresh.
+            </p>
+            <button
+              className="settings-link"
+              onClick={() => {
+                keyboard.hide();
+                setAfterAuth("discover");
+                setEntrance("splash");
+              }}
+            >
+              Replay brand intro <ArrowRightIcon />
+            </button>
+            <small>Replaying the intro keeps your current demo session.</small>
+            <button
+              className="settings-link danger"
+              onClick={() => {
+                keyboard.hide();
+                setSheet("reset");
+              }}
+            >
+              Reset demo <ArrowRightIcon />
+            </button>
+          </section>
+        </div>
+      );
     if (page === "profile")
       return (
         <div className="body-pad">
+          <div className="profile-settings-entry">
+            <button aria-label="Settings" onClick={() => go("settings")}>
+              <GearIcon /> Settings
+            </button>
+          </div>
           <div className="profile-heading">
             <Avatar id="alex" size={82} />
             <h1>{profile.name}</h1>
@@ -2808,32 +3155,11 @@ export default function Prototype() {
               <p>{profile.school}</p>
             </>
           )}
-          <button
-            className="text-action"
-            onClick={() => {
-              keyboard.hide();
-              setSignedIn(false);
-              setAfterAuth("discover");
-              setEntrance("splash");
-            }}
-          >
-            Sign out & replay welcome (demo)
-          </button>
           <h2>Your shared meals</h2>
           <p className="muted">
             No published references yet. Your first table is a good place to
             start.
           </p>
-          <div className="demo-panel">
-            <span>ABOUT THIS DEMO</span>
-            <p>
-              Explore as Alex. All people, meals, payments and reservations are
-              fictional. Changes reset on refresh.
-            </p>
-            <button className="text-action" onClick={() => setSheet("reset")}>
-              Reset demo
-            </button>
-          </div>
         </div>
       );
     if (page === "edit")
@@ -3133,7 +3459,9 @@ export default function Prototype() {
     return null;
   };
   const showComposer =
-    (page === "chat" && (join === "CONFIRMED" || current.owned)) ||
+    (page === "chat" &&
+      groupChatAccess(current, join, confirmedChats[current.id], booking) ===
+        "write") ||
     (page === "direct" && mutual && !blocked);
   if (entrance)
     return (
@@ -3694,6 +4022,36 @@ export default function Prototype() {
           </div>
         </BottomSheet>
         <BottomSheet
+          open={sheet === "signout"}
+          onOpenChange={(open) => !open && setSheet("")}
+          title="Sign out of this demo?"
+          snap={0.4}
+        >
+          <div className="sheet-body">
+            <p>
+              You’ll return to the account screen. Demo data remains in this
+              browser until refresh or Reset demo.
+            </p>
+            <Primary secondary onClick={() => setSheet("")}>
+              Stay signed in
+            </Primary>
+            <button
+              className="cancel-confirm"
+              onClick={() => {
+                keyboard.hide();
+                setSheet("");
+                setSignedIn(false);
+                setAfterAuth("discover");
+                setHistory([]);
+                setPage("discover");
+                setEntrance("account");
+              }}
+            >
+              Sign out
+            </button>
+          </div>
+        </BottomSheet>
+        <BottomSheet
           open={sheet === "reset"}
           onOpenChange={(o) => !o && setSheet("")}
           title="Start again?"
@@ -3712,10 +4070,13 @@ export default function Prototype() {
               onClick={() => {
                 setMeals(initialMeals);
                 setStates({});
+                setConfirmedChats({});
+                setChatArchives({});
                 setPayments({});
                 setBookings({});
                 setRefunds({});
                 setMessages({});
+                setPreferences({ mealUpdates: true, messagePreviews: true });
                 setReviewed(false);
                 setMutual(false);
                 setWants(false);

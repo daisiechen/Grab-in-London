@@ -2,6 +2,9 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   initialMeals,
+  groupChatAccess,
+  inboxStage,
+  conversationPreview,
   validateDemoEmail,
   validateDemoCode,
   needsAccount,
@@ -290,4 +293,72 @@ test("guests can discover tables but participation needs an account", () => {
     "checkout",
   ])
     assert.equal(needsAccount(page), true);
+});
+
+test("Inbox tracks pending applications without granting premature chat access", () => {
+  assert.equal(inboxStage(meal, "NONE"), "none");
+  assert.equal(inboxStage(meal, "PENDING"), "approval");
+  const approval = approveApplication(meal, "PENDING");
+  assert.equal(inboxStage(meal, approval), "payment");
+  const failed = completePayment(approval, "UNPAID", false);
+  assert.equal(inboxStage(meal, failed.join), "payment");
+  const paid = completePayment(failed.join, failed.payment, true);
+  assert.equal(inboxStage(meal, paid.join), "chat");
+  for (const state of ["DECLINED", "WITHDRAWN", "CANCELLED"] as const)
+    assert.equal(inboxStage(meal, state), "none");
+});
+test("offline approval opens group directly and hosts can open their own group", () => {
+  const offline = { ...meal, deposit: 0 };
+  assert.equal(
+    inboxStage(offline, approveApplication(offline, "PENDING")),
+    "chat",
+  );
+  assert.equal(inboxStage({ ...meal, owned: true }), "chat");
+});
+test("Inbox previews use the correct host, latest sent message and privacy setting", () => {
+  assert.match(conversationPreview(initialMeals[1], []), /^Leo:/);
+  assert.equal(
+    conversationPreview(meal, ["First", "See you soon"]),
+    "You: See you soon",
+  );
+  assert.equal(
+    conversationPreview(meal, ["Private contents"], false),
+    "Message previews are hidden",
+  );
+  assert.equal(needsAccount("settings"), true);
+});
+
+test("group admission requires host-approved confirmed membership, not restaurant booking", () => {
+  for (const state of [
+    "NONE",
+    "PENDING",
+    "DECLINED",
+    "WITHDRAWN",
+    "APPROVED_PAYMENT_PENDING",
+    "CANCELLED",
+  ] as const)
+    assert.equal(
+      groupChatAccess({ ...meal, booking: "CONFIRMED" }, state),
+      "locked",
+    );
+  assert.equal(
+    groupChatAccess({ ...meal, booking: "PENDING" }, "CONFIRMED"),
+    "write",
+  );
+  assert.equal(
+    groupChatAccess({ ...meal, booking: "FAILED" }, "CONFIRMED"),
+    "write",
+  );
+  assert.equal(groupChatAccess({ ...meal, owned: true }, "NONE"), "write");
+});
+test("only prior confirmed guests retain a read-only archive after cancellation", () => {
+  assert.equal(groupChatAccess(meal, "CANCELLED", true), "read-only");
+  assert.equal(groupChatAccess(meal, "CANCELLED", false), "locked");
+  assert.equal(inboxStage(meal, "CANCELLED", true), "chat");
+  assert.equal(inboxStage(meal, "CANCELLED", false), "none");
+  assert.equal(groupChatAccess(meal, "PENDING", true), "locked");
+  assert.equal(
+    groupChatAccess(meal, "CONFIRMED", true, "CANCELLED"),
+    "read-only",
+  );
 });
