@@ -1,5 +1,7 @@
 # Grab in London — confirmed product brief
 
+> 中文正式需求与详细交互规格请以 [PRD](PRD.zh-CN.md) 为准。此文件保留早期讨论摘要。
+
 ## Purpose and audience
 Help adults living in London build social connections over meals. International residents, newcomers and busy people with limited social circles are the primary audience. Networking and dating are incidental outcomes, not the main promise.
 
