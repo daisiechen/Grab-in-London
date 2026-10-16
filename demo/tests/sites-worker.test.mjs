@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { access } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 import worker from "../worker/index.js";
 
@@ -65,4 +65,14 @@ test("emits the files required by Sites packaging", async () => {
   await access(new URL("../dist/client/index.html", import.meta.url));
   await access(new URL("../dist/server/index.js", import.meta.url));
   await access(new URL("../dist/.openai/hosting.json", import.meta.url));
+});
+
+// A generated archive must target the same Site as its tracked source manifest.
+test("packaging preserves the registered Site identity and contains no credentials", async () => {
+  const source = JSON.parse(await readFile(new URL("../.openai/hosting.json", import.meta.url), "utf8"));
+  const built = JSON.parse(await readFile(new URL("../dist/.openai/hosting.json", import.meta.url), "utf8"));
+  assert.equal(built.project_id, source.project_id);
+  assert.ok(source.project_id);
+  assert.deepEqual(built, source);
+  assert.equal(/token|credential|password|secret/i.test(JSON.stringify(built)), false);
 });

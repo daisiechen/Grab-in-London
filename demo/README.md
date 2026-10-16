@@ -38,3 +38,9 @@ The protected mobile runtime owns device frames, keyboards and scrolling. App UI
 `premium-audit.json` records the supplementary static auditor's inherited runtime findings. Review rationale in the browser report; its presence is not a declaration of a clean strict scan.
 
 Discovery refinements: date and Table size have dedicated quick selectors. More filters contains all preferences with draft/apply/cancel. Map marker counts are matching events per neighbourhood; Soho has two sample events to try previous/next and View all. Entire cards open details; avatars open profiles independently. A labelled Google Maps link opens the real neighbourhood for fictional venues.
+
+## Public experience build
+
+Live demo: https://grab-in-london-demo.daisie-chen-94.chatgpt.site
+
+Anyone with the link can explore the prototype. Email sign-in is simulated with sample email `alex@example.com` and code `123456`; Google/Apple flows are labelled previews. There are no real accounts, bookings or charges. Data is memory-only, resets on reload and is not shared across browsers. Release details: [中文发布记录](../docs/demo-release.zh-CN.md). Keep the registered project ID in `.openai/hosting.json` for later updates.
