@@ -35,3 +35,12 @@
 - 申请中显示Inbox待办，发起人批准与预付决定群权限；以前确认过的退出成员只读归档。Profile新增Settings，独立退出、重播、重置和有效预览偏好。
 - 本地完整路径验证+30项自动测试：23领域/5打包/2根检查。公开站点再次验证模拟登录、申请→Track in Inbox→Waiting for host approval、Settings两项开关；检查时无console error。
 - 证据：demo/qa/inbox-settings/live.png及同目录本地流程截图。欢迎页room→seat仅为文案建议，本版本未改动标题。
+
+## 版本3：欢迎页标题确认 — 2026-10-16
+
+用户确认欢迎页标题改为“There’s a seat for you here.”。主Slogan保持“Meet new people over a meal.”，中文版PRD和品牌方向文档同步更新。
+
+- Sites源码提交：78f6071802f6b91f52a8b41c6d64b8bf66ae4fd7。
+- 保存版本：appgprj_6ad2791025408191bf7b3c5bbce7218c~appgver_87c6b06ad3708191a02fee9c6560c2fc。
+- 部署：appgdep_6ad27ffa42e08191922dd1bc7afaec40，返回succeeded，继续使用原公开URL。
+- 实际线上浏览器精确标题匹配通过；截图demo/qa/brand-review/welcome-seat.png。构建、运行时校验、5项打包测试和3项根检查通过。本次仅改欢迎页文案及相关文档，未改业务流程。

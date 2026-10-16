@@ -460,11 +460,7 @@ function BrandEntrance({
               </div>
               <div className="brand-welcome-copy">
                 <div className="eyebrow">GOOD FOOD. NEW FACES.</div>
-                <h1>
-                  There’s room
-                  <br />
-                  for you here.
-                </h1>
+                <h1>There’s a seat for you here.</h1>
                 <p>Meet new people over a meal.</p>
               </div>
               <Primary onClick={() => move("account")}>

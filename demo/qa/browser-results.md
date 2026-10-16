@@ -79,3 +79,6 @@ Browser-tested on local393×852 iPhone screen:
 Evidence:inbox-settings/{pending,payment-needed,chat,settings,preview-hidden,archive}.png.23 domain +5 worker/packaging +2 root tests pass; TypeScript/build and28-file runtime check pass. Chunk557.37kB remains advisory. No Pixel rerun in this revision.
 Additional final check: Replay brand intro→Explore tables first→Profile opened Alex directly, confirming the session remained signed in. Sign out confirmation then returned to Good to meet you account screen. Settings switches rendered with distinct on/off controls after visual review.
 Published revision2 at the existing public URL. Live smoke: simulated returning login→main meal application→Track in Inbox showed Waiting for host approval; Profile→Settings had2 preference switches. Console error check empty. Public screenshot:inbox-settings/live.png. Local cancellation/history and settings flows are described above; no new full live payment regression claimed.
+
+## Welcome headline — 2026-10-16
+User-approved exact welcome heading: “There’s a seat for you here.” Removed forced JSX line break to keep a single accessible phrase and allow wrapping. Live version3 exact heading locator matched; inspected qa/brand-review/welcome-seat.png and confirmed two-line layout without truncation. Slogan remains unchanged. Build/runtime,5 packaging and3 root checks passed.

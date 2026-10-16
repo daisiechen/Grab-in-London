@@ -15,3 +15,8 @@ class ProductSpecTest(unittest.TestCase):
         self.assertIn('本轮不开发真实后端', text)
         self.assertIn('金额以英镑最小单位整数', text)
         self.assertIn('APPROVED_PAYMENT_PENDING', text)
+
+    def test_confirmed_welcome_headline_and_slogan(self):
+        text = (Path(__file__).resolve().parents[1] / 'docs/PRD.zh-CN.md').read_text()
+        self.assertIn('There’s a seat for you here.', text)
+        self.assertIn('Meet new people over a meal.', text)
