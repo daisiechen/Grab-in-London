@@ -24,3 +24,14 @@
 ## 后续更新
 
 保留现有project_id和公开访问模式，更新后使用同一项目发布新版本，复用现有URL。不要重复创建站点或改写受保护手机运行时。短期发布凭据只在会话内使用，不写入仓库；构建产物不提交到GitHub。
+
+## 版本2：Inbox权限与设置 — 2026-10-16
+
+- 继续使用同一public URL及Sites项目。
+- 应用GitHub实现提交：1071a11347bd385f4c2e0651c6c0e882992f90fd。
+- Sites源码镜像提交：f2771da3ad89667d59bc68953dd524d90397137c。
+- 保存版本：appgprj_6ad2791025408191bf7b3c5bbce7218c~appgver_361629dcab188191860a289f8d33114b（版本2）。
+- 部署：appgdep_6ad27e070c788191a7e20d3b0a976e72，返回succeeded。
+- 申请中显示Inbox待办，发起人批准与预付决定群权限；以前确认过的退出成员只读归档。Profile新增Settings，独立退出、重播、重置和有效预览偏好。
+- 本地完整路径验证+30项自动测试：23领域/5打包/2根检查。公开站点再次验证模拟登录、申请→Track in Inbox→Waiting for host approval、Settings两项开关；检查时无console error。
+- 证据：demo/qa/inbox-settings/live.png及同目录本地流程截图。欢迎页room→seat仅为文案建议，本版本未改动标题。
