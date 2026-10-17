@@ -13,3 +13,7 @@ GitHub 仓库：https://github.com/daisiechen/Grab-in-London
 - 每次改动完成后，都必须创建一个对应的 git commit，以便后续追踪和回滚。
 - 每次改动后，都必须编写或更新相关测试，并在交付给用户前，确保所有测试和验证全部通过。
 - 每次提交 git commit 后，都同步更新 GitHub，确保 GitHub 文件和项目版本与本地最新版本一致。
+
+## 通用技能
+
+- 商业模式设计、市场可行性、单位经济或投入决策分析：先阅读 [business-model-design](.agents/skills/business-model-design/SKILL.md)，再按任务加载其 references。具体业务事实、假设和决策记录在对应项目文档中。
