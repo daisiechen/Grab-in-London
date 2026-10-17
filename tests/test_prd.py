@@ -35,7 +35,7 @@ class ProductSpecTest(unittest.TestCase):
         text = (Path(__file__).resolve().parents[1] / 'docs/PRD.zh-CN.md').read_text()
         for boundary in ('收入假设待验证', '有重复购买后再考虑会员',
                          '订金不是平台收入', '付费身份不代表人更优质',
-                         '不设置资产展示或考核', '当前 Demo 仍使用 Grab',
+                         '不设置资产展示或考核', 'Demo 品牌已迁移至 Fancy',
                          '非已实现需求', '不得视作真实 R1 已承诺范围',
                          '商标、域名与账号可用性尚未完成核查'):
             self.assertIn(boundary, text)

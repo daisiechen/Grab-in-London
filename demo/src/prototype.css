@@ -1919,7 +1919,7 @@
   opacity: 0.85;
 }
 
-/* Original Grab identity: an open table, oversized type and a citrus accent. */
+/* Fancy identity: an open table, oversized type and a citrus accent. */
 .brand-splash {
   background: #d7ee79;
   display: flex;
@@ -2399,4 +2399,43 @@
 }
 .settings-toggle input[role="switch"]:checked:before {
   left: 19px;
+}
+
+/* Fancy is a casual invitation: open lettering, a generous question, warm table imagery. */
+.brand-wordmark {
+  font-size: 72px;
+  letter-spacing: -5px;
+  line-height: 1;
+}
+.brand-wordmark > i {
+  font-size: 27px;
+  top: 2px;
+  right: -27px;
+}
+.brand-splash .brand-wordmark {
+  font-size: 96px;
+  letter-spacing: -7px;
+}
+.brand-splash-center > p {
+  font-size: 20px;
+  letter-spacing: -0.5px;
+}
+.brand-splash > small {
+  font-size: 10px;
+  letter-spacing: 1.2px;
+}
+.brand-form-header .brand-wordmark {
+  font-size: 42px;
+  letter-spacing: -3px;
+}
+.brand-content.brand-welcome h1 {
+  font-size: 47px;
+  letter-spacing: -2.1px;
+  line-height: 1.08;
+  margin-top: 10px;
+}
+.brand-welcome .eyebrow {
+  font-size: 9px;
+  line-height: 1.7;
+  letter-spacing: 1.2px;
 }

@@ -76,3 +76,12 @@ test("packaging preserves the registered Site identity and contains no credentia
   assert.deepEqual(built, source);
   assert.equal(/token|credential|password|secret/i.test(JSON.stringify(built)), false);
 });
+
+
+test("published HTML uses Fancy branding and preserves the approved slogan", async () => {
+  const html = await readFile(new URL("../dist/client/index.html", import.meta.url), "utf8");
+  assert.match(html, /<title>Fancy — Meet new people over a meal\.<\/title>/);
+  assert.match(html, /property="og:title" content="Fancy — Meet new people over a meal\."/);
+  assert.match(html, /Fancy a bite\?/);
+  assert.doesNotMatch(html, /Grab in London/);
+});

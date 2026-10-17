@@ -41,7 +41,7 @@ Host: create meal, choose venue and slot, set size and costs, review application
 Navigation: Discover, Meals, Inbox, Profile; prominent create-meal entry. Core screens include meal detail, profile, application, payment, booking outcome, meal chat and feedback. Familiar-person discovery is an optional proposed extension; private meals must not leak through it.
 
 ## Brand, business and AI direction — 2026-10-17
-Fancy is the provisional working brand, inspired by the casual invitation “Fancy a bite?”. Trademark, domain and handle availability remain unverified. Use “Fancy a bite? / 一起吃点？” for invitations and homepage/promotional copy; use the confirmed bilingual slogan above for product introductions. The current demo still uses Grab; this documentation update does not migrate its UI or rename the repository.
+Fancy is the provisional working brand, inspired by the casual invitation “Fancy a bite?”. Trademark, domain and handle availability remain unverified. Use “Fancy a bite? / 一起吃点？” for invitations and homepage/promotional copy; use the confirmed bilingual slogan above for product introductions. The current demo now uses Fancy across its wordmark, invitation copy and browser metadata. The legacy repository name and shared URL remain for continuity.
 
 Free, user-led meals can take place at any restaurant. Prioritize compatible, reliable potential friends, not wealth, education or transactional networking. Optional background helps conversation; paid status does not establish quality. Friends moving to other messaging platforms is a successful outcome.
 

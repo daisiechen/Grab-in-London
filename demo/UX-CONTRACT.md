@@ -36,3 +36,7 @@ BrandEntrance reuses MobileScroll, keyboard-aware fields, ChoiceGroup and Bottom
 ## Inbox, membership and Settings — 2026-10-16
 Inbox contains application next steps and conversations; pending requests must not look like no activity. Shared inboxStage/groupChatAccess derive admission from per-meal membership. Host approval is the sole admission decision; paid meals also require successful payment. Restaurant PENDING/FAILED is independent. Former confirmed guests retain a frozen read-only archive after cancellation; never-confirmed requests never receive group access. Composer and list use the same permission helper. countUp records prior admission and avoids duplicates. Demo approval is explicitly labelled on each relevant Inbox card; Track in Inbox links from application status.
 Settings lives only on one's own Profile. In-memory switches affect approval banners and Inbox previews. Sign-out confirmation, intro replay and demo reset are distinct. No real push permissions, fake account deletion or inactive language selector.
+
+
+## Current brand copy — 2026-10-18
+BRAND in src/brand.ts owns Fancy name, lowercase wordmark, invitation, supporting welcome sentence and bilingual slogan. Welcome/discovery use Fancy a bite? as the main invitation; account and splash share the revised wordmark. Keep HTML browser/social metadata aligned. PRD brand migration status must describe actual UI. Legacy technical selectors, repository and URL do not imply old product branding.

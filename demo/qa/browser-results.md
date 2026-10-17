@@ -82,3 +82,6 @@ Published revision2 at the existing public URL. Live smoke: simulated returning 
 
 ## Welcome headline — 2026-10-16
 User-approved exact welcome heading: “There’s a seat for you here.” Removed forced JSX line break to keep a single accessible phrase and allow wrapping. Live version3 exact heading locator matched; inspected qa/brand-review/welcome-seat.png and confirmed two-line layout without truncation. Slogan remains unchanged. Build/runtime,5 packaging and3 root checks passed.
+
+## Fancy brand migration — 2026-10-18
+Local UI: precise Fancy a bite? headings matched on welcome and Discover; wordmarks expose Fancy accessible name, browser title Fancy — Meet new people over a meal. Guest exploration and account gate/back remain operational.393×852 welcome/account/discover and427×952 Pixel welcome screenshots inspected: wordmark, invitation, slogan and buttons remain legible, no truncation observed. Legacy .grab-app selectors and public URL intentionally retained.23 domain +6 build/packaging +13 root tests pass, TypeScript/build and28-file runtime integrity pass. Advisory JS chunk557.40kB. This revision does not revalidate all payment/chat flows; their behavior was unchanged.

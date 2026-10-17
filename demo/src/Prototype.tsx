@@ -1,3 +1,4 @@
+import { BRAND } from "./brand";
 import {
   useEffect,
   useRef,
@@ -417,8 +418,8 @@ function BrandEntrance({
     else move("setup");
   };
   const wordmark = (
-    <div className="brand-wordmark" aria-label="Grab in London">
-      grab<span>in London</span>
+    <div className="brand-wordmark" aria-label={BRAND.name}>
+      {BRAND.wordmark}
       <i aria-hidden="true">
         <ArrowRightIcon />
       </i>
@@ -429,12 +430,12 @@ function BrandEntrance({
       <div className="grab-app brand-splash">
         <div className="brand-splash-center">
           {wordmark}
-          <p>A little room for someone new.</p>
+          <p>{BRAND.invitation}</p>
         </div>
         <button onClick={() => move("welcome")}>
           Skip intro <ArrowRightIcon />
         </button>
-        <small>MEET NEW PEOPLE OVER A MEAL</small>
+        <small>{BRAND.slogan}</small>
       </div>
     );
   return (
@@ -459,9 +460,9 @@ function BrandEntrance({
                 />
               </div>
               <div className="brand-welcome-copy">
-                <div className="eyebrow">GOOD FOOD. NEW FACES.</div>
-                <h1>There’s a seat for you here.</h1>
-                <p>Meet new people over a meal.</p>
+                <div className="eyebrow">{BRAND.welcomeSupport}</div>
+                <h1>{BRAND.invitation}</h1>
+                <p>{BRAND.slogan}</p>
               </div>
               <Primary onClick={() => move("account")}>
                 Find your people <ArrowRightIcon />
@@ -1308,8 +1309,8 @@ export default function Prototype() {
             >
               London <ChevronDownIcon />
             </button>
-            <h1>Find your next table</h1>
-            <p className="tagline">Meet new people over a meal.</p>
+            <h1>{BRAND.invitation}</h1>
+            <p className="tagline">{BRAND.slogan}</p>
             <div className="discover-controls">
               <button
                 onClick={() => openFilters("date")}

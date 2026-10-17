@@ -87,3 +87,8 @@ When any text-entry control loses focus, dismiss the simulated keyboard. If the 
 - Applied meals remain visible in Inbox with a path through host approval and payment; pending applicants cannot join. Host approval is admission approval; no second group approval. Restaurant booking is independent.
 - Retain only historical read-only chat after a previously confirmed member cancels; never-confirmed applicants receive no history.
 - Move sign-out and demo actions into one's own Settings. Separate sign-out, replay and reset; notification/preview preferences state their in-memory scope.
+
+
+## Fancy brand migration — 2026-10-18
+- PRD is authoritative: Fancy is the provisional brand; Meet new people over a meal. / 吃个饭，认识一下。 is the slogan; Fancy a bite? / 一起吃点？ is the welcome/discovery invitation. There’s a seat for you here. is secondary welcome support.
+- Keep English UI and established forest/citrus/table identity; update all visible brand touchpoints and browser metadata. Legacy repository, public URL and technical selectors stay unchanged.
