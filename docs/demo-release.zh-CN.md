@@ -44,3 +44,12 @@
 - 保存版本：appgprj_6ad2791025408191bf7b3c5bbce7218c~appgver_87c6b06ad3708191a02fee9c6560c2fc。
 - 部署：appgdep_6ad27ffa42e08191922dd1bc7afaec40，返回succeeded，继续使用原公开URL。
 - 实际线上浏览器精确标题匹配通过；截图demo/qa/brand-review/welcome-seat.png。构建、运行时校验、5项打包测试和3项根检查通过。本次仅改欢迎页文案及相关文档，未改业务流程。
+
+## 版本4：Fancy品牌迁移 — 2026-10-18
+
+- 品牌名Fancy；主Slogan为Meet new people over a meal. / 吃个饭，认识一下。；欢迎页和Discover邀约Fancy a bite? / 一起吃点？。There’s a seat for you here.降为欢迎辅助句。
+- 界面、字标、浏览器及Open Graph元数据、Sites显示名已同步；保留原公开URL与GitHub仓库名。
+- GitHub实现提交：7ee7d1e4f26d6f4f21d13b8d03d7ba3b0d347da0；Sites源码提交：7a30c8b29e4fd26f3907ea76bb2192477925ff7e。
+- 保存版本：appgprj_6ad2791025408191bf7b3c5bbce7218c~appgver_23a80dea5cb481918af061403ca8c654；部署appgdep_6ad4062c0c9c819189a03cecdc3b35a0返回succeeded。
+- 42项测试通过（23领域/6打包与元数据/13根检查），TypeScript/构建与28文件运行时校验通过。检查本地iPhone与Pixel视觉；线上验证Fancy字标、欢迎/发现页精确标题、账号入口及浏览器标题，未见console error。没有声称本轮重新验证所有付款/聊天流程。
+- 截图demo/qa/fancy-brand/live-welcome.png；Fancy仍是暂定名，未完成商标、域名和账号可用性核查。
