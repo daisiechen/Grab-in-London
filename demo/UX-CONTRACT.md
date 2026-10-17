@@ -40,3 +40,6 @@ Settings lives only on one's own Profile. In-memory switches affect approval ban
 
 ## Current brand copy — 2026-10-18
 BRAND in src/brand.ts owns Fancy name, lowercase wordmark, invitation, supporting welcome sentence and bilingual slogan. Welcome/discovery use Fancy a bite? as the main invitation; account and splash share the revised wordmark. Keep HTML browser/social metadata aligned. PRD brand migration status must describe actual UI. Legacy technical selectors, repository and URL do not imply old product branding.
+
+## Product presentation, 18 October 2026
+Use the capitalized Fancy wordmark. Default product screens omit prototype annotations, city marginalia and scenario/replay/reset controls. Acceptance tools are opt-in at `?review=1`; costs, cancellation terms and membership permissions remain visible. No live backend integrations were added.

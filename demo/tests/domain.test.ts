@@ -362,3 +362,13 @@ test("only prior confirmed guests retain a read-only archive after cancellation"
     "read-only",
   );
 });
+
+import { isReviewMode } from "../src/presentation.ts";
+import { BRAND } from "../src/brand.ts";
+test("product presentation defaults to clean Fancy branding; review tools require explicit opt-in", () => {
+  assert.equal(BRAND.wordmark, "Fancy");
+  for (const query of ["", "?review=0", "?review=true", "?preview=1"])
+    assert.equal(isReviewMode(query), false);
+  assert.equal(isReviewMode("?review=1"), true);
+  assert.equal(isReviewMode("?device=pixel&review=1"), true);
+});

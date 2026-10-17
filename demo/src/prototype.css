@@ -2439,3 +2439,20 @@
   line-height: 1.7;
   letter-spacing: 1.2px;
 }
+
+/* Product presentation has no prototype ribbon or reserved annotation space. */
+.grab-app[data-review="false"] .discovery {
+  top: var(--device-safe-area-top, 54px);
+}
+.grab-app[data-review="false"] .page-header {
+  top: var(--device-safe-area-top, 54px);
+}
+.grab-app[data-review="false"] .page-scroll {
+  top: calc(var(--device-safe-area-top, 54px) + 48px) !important;
+}
+.grab-app[data-review="false"] .page-scroll.with-tabs {
+  top: var(--device-safe-area-top, 54px) !important;
+}
+.grab-app[data-review="false"] .brand-scroll {
+  top: var(--device-safe-area-top, 54px);
+}

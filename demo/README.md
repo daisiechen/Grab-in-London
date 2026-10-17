@@ -46,3 +46,6 @@ Live demo: https://grab-in-london-demo.daisie-chen-94.chatgpt.site
 Anyone with the link can explore the prototype. Email sign-in is simulated with sample email `alex@example.com` and code `123456`; Google/Apple flows are labelled previews. There are no real accounts, bookings or charges. Data is memory-only, resets on reload and is not shared across browsers. Release details: [中文发布记录](../docs/demo-release.zh-CN.md). Keep the registered project ID in `.openai/hosting.json` for later updates.
 
 Brand: Fancy (provisional). Invitation: Fancy a bite? / 一起吃点？. Slogan: Meet new people over a meal. / 吃个饭，认识一下。. Existing public URL retains its legacy slug for shared-link continuity.
+
+### Clean product presentation
+Default URL shows product UI without implementation notes. Append `?review=1` to expose acceptance-only scenario controls. Authentication code remains `123456`; OAuth, charges, reservations, notifications and report delivery are frontend simulations. No real backend is added by hiding annotations. Use the PRD as the implementation contract.

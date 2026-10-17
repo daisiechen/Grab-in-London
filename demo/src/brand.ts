@@ -1,7 +1,7 @@
 /** Approved product copy; repository and public URL retain their legacy identifiers. */
 export const BRAND = {
   name: "Fancy",
-  wordmark: "fancy",
+  wordmark: "Fancy",
   slogan: "Meet new people over a meal.",
   sloganZh: "吃个饭，认识一下。",
   invitation: "Fancy a bite?",

@@ -1,3 +1,4 @@
+import { isReviewMode } from "./presentation";
 import { BRAND } from "./brand";
 import {
   useEffect,
@@ -8,6 +9,11 @@ import {
   useContext,
   type ReactNode,
 } from "react";
+const REVIEW_MODE = isReviewMode(window.location.search);
+function ReviewOnly({ children }: { children: ReactNode }) {
+  return REVIEW_MODE ? <>{children}</> : null;
+}
+
 import {
   GearIcon,
   ArrowLeftIcon,
@@ -439,10 +445,12 @@ function BrandEntrance({
       </div>
     );
   return (
-    <div className="grab-app brand-entrance">
-      <div className="brand-demo-label">
-        DESIGN PROTOTYPE · DEMO ACCOUNTS ONLY
-      </div>
+    <div className="grab-app brand-entrance" data-review={REVIEW_MODE}>
+      <ReviewOnly>
+        <div className="brand-demo-label">
+          DESIGN PROTOTYPE · DEMO ACCOUNTS ONLY
+        </div>
+      </ReviewOnly>
       <MobileScroll key={stage} className="brand-scroll">
         <div
           className={`brand-content ${stage === "welcome" ? "brand-welcome" : ""}`}
@@ -451,7 +459,9 @@ function BrandEntrance({
             <>
               <header>
                 {wordmark}
-                <span className="brand-city">LONDON, LET’S EAT.</span>
+                <ReviewOnly>
+                  <span className="brand-city">LONDON, LET’S EAT.</span>
+                </ReviewOnly>
               </header>
               <div className="brand-art">
                 <img
@@ -476,12 +486,14 @@ function BrandEntrance({
               >
                 Explore tables first
               </button>
-              <button
-                className="brand-browse brand-replay"
-                onClick={() => move("splash")}
-              >
-                Replay intro
-              </button>
+              <ReviewOnly>
+                <button
+                  className="brand-browse brand-replay"
+                  onClick={() => move("splash")}
+                >
+                  Replay intro
+                </button>
+              </ReviewOnly>
             </>
           ) : (
             <>
@@ -524,7 +536,7 @@ function BrandEntrance({
                   : stage === "email"
                     ? "We’ll use a one-time code, so there’s no password to remember."
                     : stage === "verify"
-                      ? `In the real app, we’d send a code to ${email}. Here, use 123456.`
+                      ? `Enter the six-digit code for ${email}.`
                       : "Give your future table a little context. Your email stays private."}
               </p>
               {stage === "account" && (
@@ -549,7 +561,7 @@ function BrandEntrance({
                       setIssue("");
                     }}
                   >
-                    Preview Google sign-in <ExternalLinkIcon />
+                    Continue with Google <ExternalLinkIcon />
                   </button>
                   <button
                     className="brand-provider"
@@ -558,12 +570,14 @@ function BrandEntrance({
                       setIssue("");
                     }}
                   >
-                    Preview Apple sign-in <ExternalLinkIcon />
+                    Continue with Apple <ExternalLinkIcon />
                   </button>
-                  <p className="demo-note">
-                    Simulated sign-in only. No provider opens and no personal
-                    data is sent.
-                  </p>
+                  <ReviewOnly>
+                    <p className="demo-note">
+                      Simulated sign-in only. No provider opens and no personal
+                      data is sent.
+                    </p>
+                  </ReviewOnly>
                   <button
                     className="text-action"
                     onClick={() => setShowTerms(true)}
@@ -587,9 +601,11 @@ function BrandEntrance({
                       placeholder="alex@example.com"
                     />
                   </Field>
-                  <p className="demo-note">
-                    Use a sample address. No email will be sent.
-                  </p>
+                  <ReviewOnly>
+                    <p className="demo-note">
+                      Use a sample address. No email will be sent.
+                    </p>
+                  </ReviewOnly>
                   <Primary
                     onClick={() => {
                       const error = validateDemoEmail(email);
@@ -605,7 +621,7 @@ function BrandEntrance({
                       move("verify");
                     }}
                   >
-                    Send demo code <ArrowRightIcon />
+                    Send code <ArrowRightIcon />
                   </Primary>
                 </>
               )}
@@ -634,9 +650,7 @@ function BrandEntrance({
                       finishIdentity();
                     }}
                   >
-                    {intent === "returning"
-                      ? "Log in to demo"
-                      : "Verify & continue"}
+                    {intent === "returning" ? "Log in" : "Verify & continue"}
                     <ArrowRightIcon />
                   </Primary>
                   <button
@@ -647,41 +661,43 @@ function BrandEntrance({
                       setCode("");
                       setCooldown(30);
                       setCodeVersion((v) => v + 1);
-                      setIssue("New demo code ready: 123456.");
+                      setIssue("A new code is ready.");
                     }}
                   >
-                    {cooldown ? `Resend in ${cooldown}s` : "Resend demo code"}
+                    {cooldown ? `Resend in ${cooldown}s` : "Resend code"}
                   </button>
                   <button className="text-action" onClick={() => move("email")}>
                     Change email
                   </button>
-                  <button
-                    className="text-action"
-                    onClick={() => {
-                      setExpired(true);
-                      setIssue(
-                        "Demo: the code has expired. Request a new code when resend is ready.",
-                      );
-                    }}
-                  >
-                    Preview expired code
-                  </button>
+                  <ReviewOnly>
+                    <button
+                      className="text-action"
+                      onClick={() => {
+                        setExpired(true);
+                        setIssue(
+                          "The code has expired. Request a new code when resend is ready.",
+                        );
+                      }}
+                    >
+                      Preview expired code
+                    </button>
+                  </ReviewOnly>
                 </>
               )}
               {stage === "setup" && (
                 <>
-                  <Field label="Choose a demo photo">
+                  <Field label="Choose a photo">
                     <div className="brand-photo-options">
                       {["leo", "maya", "emma"].map((id) => (
                         <button
                           key={id}
-                          aria-label={`Choose ${id} demo portrait`}
+                          aria-label={`Choose ${id} portrait`}
                           aria-pressed={photo === id}
                           onClick={() => setPhoto(id)}
                         >
                           <img
                             src={`/images/${id}.png`}
-                            alt="Fictional demo portrait"
+                            alt="Fictional portrait"
                           />
                           {photo === id && <CheckCircledIcon />}
                         </button>
@@ -764,7 +780,7 @@ function BrandEntrance({
                     className="text-action"
                     onClick={() => setShowTerms(true)}
                   >
-                    Read sample privacy & community principles
+                    Read privacy & community principles
                   </button>
                   <Primary
                     onClick={() => {
@@ -809,20 +825,17 @@ function BrandEntrance({
         onOpenChange={(open) => {
           if (!open) setProvider("");
         }}
-        title={`${provider} sign-in preview`}
+        title={`${provider} sign-in`}
       >
         <div className="body-pad">
-          <p>
-            This is a simulation, not an OAuth consent screen. Continue as
-            fictional Alex or cancel to return.
-          </p>
+          <p>Continue as Alex or cancel to return.</p>
           <Primary
             onClick={() => {
               setProvider("");
               finishIdentity();
             }}
           >
-            Continue as demo Alex
+            Continue as Alex
           </Primary>
           <button className="text-action" onClick={() => setProvider("")}>
             Cancel
@@ -832,7 +845,7 @@ function BrandEntrance({
       <BottomSheet
         open={showTerms}
         onOpenChange={setShowTerms}
-        title="Sample community & privacy principles"
+        title="Community & privacy principles"
       >
         <div className="body-pad">
           <p>
@@ -841,14 +854,16 @@ function BrandEntrance({
           </p>
           <p>
             Your name, photo and introduction are public to other members; your
-            email is private. This prototype stores no real account and sends no
-            authentication data.
+            email is private.
           </p>
-          <p>
-            These are design examples, not production Terms of Service or a
-            privacy policy. Final legal documents, account deletion and
-            reporting support are required before launch.
-          </p>
+          <ReviewOnly>
+            {" "}
+            <p>
+              These are design examples, not production Terms of Service or a
+              privacy policy. Final legal documents, account deletion and
+              reporting support are required before launch.
+            </p>
+          </ReviewOnly>
           <Primary onClick={() => setShowTerms(false)}>Back to sign-up</Primary>
         </div>
       </BottomSheet>
@@ -1065,7 +1080,7 @@ export default function Prototype() {
       setError("");
       if (preferences.mealUpdates)
         notify(
-          `Demo: ${members[meal.host]?.name || "Your host"} approved your application.${next === "CONFIRMED" ? " Your group chat is ready." : " Confirm your seat with a demo payment."}`,
+          `${members[meal.host]?.name || "Your host"} approved your application.${next === "CONFIRMED" ? " Your group chat is ready." : " Confirm your seat with payment."}`,
         );
     } catch (e) {
       setError((e as Error).message);
@@ -1085,10 +1100,7 @@ export default function Prototype() {
           if (payment !== "PAID") countUp();
           setBookings((b) => ({ ...b, [current.id]: "CONFIRMED" }));
           go("booking");
-        } else
-          setError(
-            "Demo payment declined. Your seat is held. Turn off the failure example and try again.",
-          );
+        } else setError("Payment declined. Your seat is held. Try again.");
       } catch (e) {
         setError((e as Error).message);
       } finally {
@@ -1370,7 +1382,7 @@ export default function Prototype() {
                 <img
                   className="map-image"
                   src="/images/london-map.png"
-                  alt="Illustrated map of central London; demonstration locations"
+                  alt="Map of central London"
                 />
                 {groups.map((group) => (
                   <button
@@ -1385,9 +1397,11 @@ export default function Prototype() {
                   </button>
                 ))}
                 <span className="map-key">Numbers = meals in each area</span>
-                <span className="map-note">
-                  Illustrative map · Demo locations
-                </span>
+                <ReviewOnly>
+                  <span className="map-note">
+                    Illustrative map · Demo locations
+                  </span>
+                </ReviewOnly>
                 <button
                   className="map-locate"
                   onClick={() => {
@@ -1483,9 +1497,11 @@ export default function Prototype() {
                     </Primary>
                   </div>
                 )}
-                <p className="demo-note">
-                  Fictional meals · Reservations and payments are simulated.
-                </p>
+                <ReviewOnly>
+                  <p className="demo-note">
+                    Fictional meals · Reservations and payments are simulated.
+                  </p>
+                </ReviewOnly>
               </div>
             </MobileScroll>
           )}
@@ -1586,7 +1602,7 @@ export default function Prototype() {
               {current.reservationSource === "external"
                 ? "Reservation reported by the host; not verified by the app. "
                 : ""}
-              Demo restaurant · Google Maps opens the neighbourhood.
+              Google Maps opens the neighbourhood.
             </p>
             <h2>Keeping costs clear</h2>
             <div className="price-row">
@@ -1622,9 +1638,11 @@ export default function Prototype() {
                   : "No in-app payment to refund. Let the host know if your plans change."}
               </span>
             </div>
-            <div className="demo-note">
-              Demo only. No real booking or payment is made.
-            </div>
+            <ReviewOnly>
+              <div className="demo-note">
+                Demo only. No real booking or payment is made.
+              </div>
+            </ReviewOnly>
             {statusButton()}
             {current.owned && (
               <Primary secondary onClick={() => go("booking")}>
@@ -1660,12 +1678,14 @@ export default function Prototype() {
           <div className="quote">
             “Made everyone feel included, even on my first meal. Would happily
             share a table again.”
-            <small>Emma · Shared a meal in September · Demo reference</small>
+            <small>Emma · Shared a meal in September · Shared meal</small>
           </div>
-          <p className="muted">
-            Fictional profile and sample reference. Background information is
-            self-described.
-          </p>
+          <ReviewOnly>
+            <p className="muted">
+              Fictional profile and sample reference. Background information is
+              self-described.
+            </p>
+          </ReviewOnly>
           {blocked && (
             <div className="notice">
               You have blocked this member. Private contact is disabled.
@@ -1772,7 +1792,7 @@ export default function Prototype() {
             {join === "PENDING"
               ? `${members[current.host]?.name || "Your host"} will review your introduction. We’ll let you know when there’s an update.`
               : join === "APPROVED_PAYMENT_PENDING"
-                ? "Your host approved your request. Pay to confirm your seat; your demo seat is held for 30 minutes."
+                ? "Your host approved your request. Pay to confirm your seat; your seat is held for 30 minutes."
                 : join === "CONFIRMED"
                   ? "Everything you need for your meal is in one place."
                   : "This request is closed. You can discover another meal."}
@@ -1789,22 +1809,24 @@ export default function Prototype() {
           </Primary>
           {join === "PENDING" && (
             <>
-              <div className="demo-panel">
-                <span>DEMO PREVIEW</span>
-                <p>Try the next step without waiting for a real host.</p>
-                <Primary secondary onClick={approve}>
-                  Preview host approval
-                </Primary>
-                <button
-                  className="text-action"
-                  onClick={() => {
-                    updateJoin("DECLINED");
-                    notify("Demo: application declined.");
-                  }}
-                >
-                  Preview declined request
-                </button>
-              </div>
+              <ReviewOnly>
+                <div className="demo-panel">
+                  <span>DEMO PREVIEW</span>
+                  <p>Try the next step without waiting for a real host.</p>
+                  <Primary secondary onClick={approve}>
+                    Preview host approval
+                  </Primary>
+                  <button
+                    className="text-action"
+                    onClick={() => {
+                      updateJoin("DECLINED");
+                      notify("Application declined.");
+                    }}
+                  >
+                    Preview declined request
+                  </button>
+                </div>
+              </ReviewOnly>
               <button
                 className="text-action"
                 onClick={() => {
@@ -1860,15 +1882,19 @@ export default function Prototype() {
           <div className="payment-card">
             <ReaderIcon />
             <div>
-              <strong>Demo card •••• 4242</strong>
-              <small>No real card details needed</small>
+              <strong>Visa •••• 4242</strong>
+              <ReviewOnly>
+                <small>No real card details needed</small>
+              </ReviewOnly>
             </div>
             <CheckCircledIcon />
           </div>
-          <div className="notice">
-            <LockClosedIcon />
-            <span>Demo payment only. You will not be charged.</span>
-          </div>
+          <ReviewOnly>
+            <div className="notice">
+              <LockClosedIcon />
+              <span>Demo payment only. You will not be charged.</span>
+            </div>
+          </ReviewOnly>
           <label className="check-row">
             <input
               type="checkbox"
@@ -1876,19 +1902,21 @@ export default function Prototype() {
               onChange={(e) => setConsent(e.target.checked)}
             />
             <span>
-              I accept this meal’s sample terms: full refund until 24 hours
-              before the meal; no refund after that. Host cancellation or
-              booking failure is refunded in full.
+              I accept this meal’s terms: full refund until 24 hours before the
+              meal; no refund after that. Host cancellation or booking failure
+              is refunded in full.
             </span>
           </label>
-          <label className="check-row demo-option">
-            <input
-              type="checkbox"
-              checked={scenarioPayment}
-              onChange={(e) => setScenarioPayment(e.target.checked)}
-            />
-            <span>Preview a failed payment</span>
-          </label>
+          <ReviewOnly>
+            <label className="check-row demo-option">
+              <input
+                type="checkbox"
+                checked={scenarioPayment}
+                onChange={(e) => setScenarioPayment(e.target.checked)}
+              />
+              <span>Preview a failed payment</span>
+            </label>
+          </ReviewOnly>
           {error && (
             <p className="form-error" role="alert">
               {error}
@@ -1899,7 +1927,7 @@ export default function Prototype() {
             onClick={pay}
           >
             {busy
-              ? "Processing demo payment…"
+              ? "Processing payment…"
               : `Pay ${money(current.deposit)} ${current.costMode === "FIXED_MENU" ? "menu fee" : "deposit"}`}{" "}
             {!busy && <ArrowRightIcon />}
           </Primary>
@@ -2012,13 +2040,13 @@ export default function Prototype() {
                 onClick={() => {
                   setBookings((b) => ({ ...b, [current.id]: "CONFIRMED" }));
                   notify(
-                    `Demo reservation confirmed for ${current.confirmed} people.`,
+                    `Reservation confirmed for ${current.confirmed} people.`,
                   );
                 }}
               >
                 {booking === "CONFIRMED"
-                  ? "Reconfirm demo reservation"
-                  : `Confirm demo reservation for ${current.confirmed} people`}
+                  ? "Reconfirm reservation"
+                  : `Confirm reservation for ${current.confirmed} people`}
               </Primary>
               <p className="muted">
                 {groupReady(current.capacity, current.confirmed)
@@ -2044,9 +2072,7 @@ export default function Prototype() {
                     m.id === current.id ? { ...m, time: "19:30" } : m,
                   ),
                 );
-                notify(
-                  "Demo: restaurant confirmed the alternative 19:30 slot.",
-                );
+                notify("Restaurant confirmed the alternative 19:30 slot.");
               }}
             >
               Choose available slot · 19:30
@@ -2063,9 +2089,14 @@ export default function Prototype() {
               Cancel my participation
             </button>
           )}
-          <button className="text-action" onClick={() => setSheet("scenarios")}>
-            Explore demo outcomes
-          </button>
+          <ReviewOnly>
+            <button
+              className="text-action"
+              onClick={() => setSheet("scenarios")}
+            >
+              Explore demo outcomes
+            </button>
+          </ReviewOnly>
           {completed && (
             <Primary secondary onClick={() => go("review")}>
               Leave feedback
@@ -2124,9 +2155,7 @@ export default function Prototype() {
                 </div>
               )}
               <p className="chat-date">
-                {!direct && chatAccess === "read-only"
-                  ? "ARCHIVE · DEMO CONVERSATION"
-                  : "TODAY · DEMO CONVERSATION"}
+                {!direct && chatAccess === "read-only" ? "ARCHIVE" : "TODAY"}
               </p>
               <div className="chat-message">
                 <Avatar id={direct ? "maya" : speaker} size={30} />
@@ -2160,13 +2189,15 @@ export default function Prototype() {
                   <div>
                     <small>You</small>
                     <p>{text}</p>
-                    <small>Sent · Demo</small>
+                    <small>Sent</small>
                   </div>
                 </div>
               ))}
-              <p className="demo-note">
-                Messages are simulated in this browser.
-              </p>
+              <ReviewOnly>
+                <p className="demo-note">
+                  Messages are simulated in this browser.
+                </p>
+              </ReviewOnly>
             </>
           )}
         </div>
@@ -2308,10 +2339,12 @@ export default function Prototype() {
                   onChange={(date) => updateSchedule({ date, time: "" })}
                 />
               </div>
-              <p className="muted">
-                London time · demo availability 17 Oct–15 Nov 2026. Mondays are
-                unavailable.
-              </p>
+              <ReviewOnly>
+                <p className="muted">
+                  London time · demo availability 17 Oct–15 Nov 2026. Mondays
+                  are unavailable.
+                </p>
+              </ReviewOnly>
               {slots.length ? (
                 <ChoiceGroup
                   label="Available times"
@@ -2328,10 +2361,12 @@ export default function Prototype() {
                   </p>
                 </div>
               )}
-              <p className="demo-note">
-                Fictional restaurants and sample availability. A time selection
-                does not hold a table.
-              </p>
+              <ReviewOnly>
+                <p className="demo-note">
+                  Fictional restaurants and sample availability. A time
+                  selection does not hold a table.
+                </p>
+              </ReviewOnly>
             </>
           )}
           {createStep === 1 && (
@@ -2501,7 +2536,7 @@ export default function Prototype() {
                 <small>
                   {draft.cost === "offline"
                     ? "Estimated spend is a guide, not a fixed charge."
-                    : "Demo payments only. Host payment is outside this demo."}
+                    : "Balance paid at the restaurant."}
                 </small>
               </div>
               <ChoiceGroup
@@ -2551,13 +2586,15 @@ export default function Prototype() {
                 </label>
               )}
               <div className="summary-box">
-                <strong>Sample cancellation terms</strong>
+                <strong>Cancellation terms</strong>
                 <p>
                   {draft.cost === "offline"
                     ? "No in-app payment to refund. Let the host know if plans change."
                     : "Full refund until 24 hours before the meal; no refund after that. If the host cancels or the reservation fails, all payments are refunded."}
                 </p>
-                <small>Illustrative terms for this demo meal.</small>
+                <ReviewOnly>
+                  <small>Illustrative terms for this demo meal.</small>
+                </ReviewOnly>
               </div>
             </>
           )}
@@ -2603,18 +2640,20 @@ export default function Prototype() {
                 ))}
               </div>
               <div className="summary-box">
-                <strong>Sample cancellation terms</strong>
+                <strong>Cancellation terms</strong>
                 <p>
                   {draft.cost === "offline"
                     ? "No in-app payment to refund."
                     : "Full refund until 24 hours before the meal; no refund after that. Host cancellation or booking failure is refunded in full."}
                 </p>
               </div>
-              <p className="demo-note">
-                Publishing invites applications. No real booking or charge is
-                made. Guests join only after your approval and any required demo
-                payment.
-              </p>
+              <ReviewOnly>
+                <p className="demo-note">
+                  Publishing invites applications. No real booking or charge is
+                  made. Guests join only after your approval and any required
+                  demo payment.
+                </p>
+              </ReviewOnly>
               <label className="create-consent">
                 <input
                   type="checkbox"
@@ -2624,8 +2663,7 @@ export default function Prototype() {
                   }
                 />
                 <span>
-                  I’ve checked the arrangements and the sample cancellation
-                  terms.
+                  I’ve checked the arrangements and the cancellation terms.
                 </span>
               </label>
             </>
@@ -2688,9 +2726,11 @@ export default function Prototype() {
                   {reviewed ? "View your feedback" : "Leave feedback"}
                 </Primary>
               </div>
-              <p className="muted">
-                This completed meal is a fictional demo example.
-              </p>
+              <ReviewOnly>
+                <p className="muted">
+                  This completed meal is a fictional demo example.
+                </p>
+              </ReviewOnly>
             </>
           ) : (
             <>
@@ -2841,15 +2881,17 @@ export default function Prototype() {
                         : `Pay £${m.deposit} to confirm your seat and unlock the meal group. No real charge is made.`}
                     </p>
                     {pending ? (
-                      <div className="demo-next-step">
-                        <small>TRY THE NEXT STEP · DEMO ONLY</small>
-                        <p>
-                          No need to wait for a real host in this prototype.
-                        </p>
-                        <Primary secondary onClick={() => approveMeal(m)}>
-                          Preview host approval
-                        </Primary>
-                      </div>
+                      <ReviewOnly>
+                        <div className="demo-next-step">
+                          <small>TRY THE NEXT STEP · DEMO ONLY</small>
+                          <p>
+                            No need to wait for a real host in this prototype.
+                          </p>
+                          <Primary secondary onClick={() => approveMeal(m)}>
+                            Preview host approval
+                          </Primary>
+                        </div>
+                      </ReviewOnly>
                     ) : (
                       <Primary
                         onClick={() => {
@@ -2982,8 +3024,8 @@ export default function Prototype() {
               <span>
                 <strong>Meal update banners</strong>
                 <small>
-                  Show the simulated approval banner. Your status always remains
-                  in Inbox.
+                  Show approval notifications. Your status always remains in
+                  Inbox.
                 </small>
               </span>
               <input
@@ -3015,10 +3057,12 @@ export default function Prototype() {
                 }
               />
             </label>
-            <p className="demo-note">
-              Saved for this visit only. These controls don’t enable device push
-              or email notifications.
-            </p>
+            <ReviewOnly>
+              <p className="demo-note">
+                Saved for this visit only. These controls don’t enable device
+                push or email notifications.
+              </p>
+            </ReviewOnly>
           </section>
           <section>
             <h2>Privacy & safety</h2>
@@ -3058,7 +3102,9 @@ export default function Prototype() {
           </section>
           <section>
             <h2>Account</h2>
-            <p>Demo account · no real login credentials stored.</p>
+            <ReviewOnly>
+              <p>Demo account · no real login credentials stored.</p>
+            </ReviewOnly>
             <button
               className="settings-link"
               onClick={() => {
@@ -3078,33 +3124,37 @@ export default function Prototype() {
               Sign out <ArrowRightIcon />
             </button>
           </section>
-          <section className="demo-panel">
-            <span>DEMO TOOLS</span>
-            <p>
-              All people, meals, payments and reservations are fictional.
-              Changes reset on refresh.
-            </p>
-            <button
-              className="settings-link"
-              onClick={() => {
-                keyboard.hide();
-                setAfterAuth("discover");
-                setEntrance("splash");
-              }}
-            >
-              Replay brand intro <ArrowRightIcon />
-            </button>
-            <small>Replaying the intro keeps your current demo session.</small>
-            <button
-              className="settings-link danger"
-              onClick={() => {
-                keyboard.hide();
-                setSheet("reset");
-              }}
-            >
-              Reset demo <ArrowRightIcon />
-            </button>
-          </section>
+          <ReviewOnly>
+            <section className="demo-panel">
+              <span>DEMO TOOLS</span>
+              <p>
+                All people, meals, payments and reservations are fictional.
+                Changes reset on refresh.
+              </p>
+              <button
+                className="settings-link"
+                onClick={() => {
+                  keyboard.hide();
+                  setAfterAuth("discover");
+                  setEntrance("splash");
+                }}
+              >
+                Replay brand intro <ArrowRightIcon />
+              </button>
+              <small>
+                Replaying the intro keeps your current demo session.
+              </small>
+              <button
+                className="settings-link danger"
+                onClick={() => {
+                  keyboard.hide();
+                  setSheet("reset");
+                }}
+              >
+                Reset demo <ArrowRightIcon />
+              </button>
+            </section>
+          </ReviewOnly>
         </div>
       );
     if (page === "profile")
@@ -3305,21 +3355,23 @@ export default function Prototype() {
                 </p>
               </div>
               {wants && !mutual && (
-                <div className="demo-panel">
-                  <span>DEMO PREVIEW</span>
-                  <p>
-                    Explore what happens when Maya also wants to meet again.
-                  </p>
-                  <Primary
-                    secondary
-                    onClick={() => {
-                      setMutual(true);
-                      notify("Demo: you both want to share a table again.");
-                    }}
-                  >
-                    Preview mutual connection <HeartIcon />
-                  </Primary>
-                </div>
+                <ReviewOnly>
+                  <div className="demo-panel">
+                    <span>DEMO PREVIEW</span>
+                    <p>
+                      Explore what happens when Maya also wants to meet again.
+                    </p>
+                    <Primary
+                      secondary
+                      onClick={() => {
+                        setMutual(true);
+                        notify("Demo: you both want to share a table again.");
+                      }}
+                    >
+                      Preview mutual connection <HeartIcon />
+                    </Primary>
+                  </div>
+                </ReviewOnly>
               )}
               {mutual && (
                 <>
@@ -3401,7 +3453,7 @@ export default function Prototype() {
                             : m,
                         ),
                       );
-                    notify("Emma has been notified. Demo notification only.");
+                    notify("Emma has been notified.");
                   }}
                 >
                   Approve <CheckIcon />
@@ -3411,32 +3463,34 @@ export default function Prototype() {
               <>
                 <span className="status-tag">{hostDecision[current.id]}</span>
                 {hostDecision[current.id].startsWith("Approved") && (
-                  <button
-                    className="text-action"
-                    onClick={() => {
-                      setHostDecision((s) => ({
-                        ...s,
-                        [current.id]: "Confirmed",
-                      }));
-                      setMeals((ms) =>
-                        ms.map((m) =>
-                          m.id === current.id
-                            ? {
-                                ...m,
-                                confirmed: Math.min(
-                                  m.capacity,
-                                  m.confirmed + 1,
-                                ),
-                                members: [...m.members, "emma"],
-                              }
-                            : m,
-                        ),
-                      );
-                      notify("Demo: Emma paid and confirmed her place.");
-                    }}
-                  >
-                    Preview guest payment
-                  </button>
+                  <ReviewOnly>
+                    <button
+                      className="text-action"
+                      onClick={() => {
+                        setHostDecision((s) => ({
+                          ...s,
+                          [current.id]: "Confirmed",
+                        }));
+                        setMeals((ms) =>
+                          ms.map((m) =>
+                            m.id === current.id
+                              ? {
+                                  ...m,
+                                  confirmed: Math.min(
+                                    m.capacity,
+                                    m.confirmed + 1,
+                                  ),
+                                  members: [...m.members, "emma"],
+                                }
+                              : m,
+                          ),
+                        );
+                        notify("Demo: Emma paid and confirmed her place.");
+                      }}
+                    >
+                      Preview guest payment
+                    </button>
+                  </ReviewOnly>
                 )}
               </>
             )}
@@ -3488,10 +3542,12 @@ export default function Prototype() {
     <SelfProfileContext.Provider
       value={{ image: profile.photo || "leo", name: profile.name }}
     >
-      <div className="grab-app">
-        <div className="demo-ribbon">
-          INTERACTIVE DEMO · NO REAL BOOKINGS OR CHARGES
-        </div>
+      <div className="grab-app" data-review={REVIEW_MODE}>
+        <ReviewOnly>
+          <div className="demo-ribbon">
+            INTERACTIVE DEMO · NO REAL BOOKINGS OR CHARGES
+          </div>
+        </ReviewOnly>
         {!topLevel && (
           <header className="page-header">
             <button onClick={back} aria-label="Go back">
@@ -3839,9 +3895,11 @@ export default function Prototype() {
                 {mealCard(m, true)}
               </div>
             ))}
-            <p className="demo-note">
-              Choose a meal to see the restaurant, people and details.
-            </p>
+            <ReviewOnly>
+              <p className="demo-note">
+                Choose a meal to see the restaurant, people and details.
+              </p>
+            </ReviewOnly>
           </div>
         </BottomSheet>
         <BottomSheet
@@ -3884,14 +3942,16 @@ export default function Prototype() {
                     : "After this meal’s cancellation deadline; no deposit refund."}
               </p>
             </div>
-            <label className="check-row demo-option">
-              <input
-                type="checkbox"
-                checked={!beforeDeadline}
-                onChange={(e) => setBeforeDeadline(!e.target.checked)}
-              />
-              <span>Demo: preview after the deadline</span>
-            </label>
+            <ReviewOnly>
+              <label className="check-row demo-option">
+                <input
+                  type="checkbox"
+                  checked={!beforeDeadline}
+                  onChange={(e) => setBeforeDeadline(!e.target.checked)}
+                />
+                <span>Demo: preview after the deadline</span>
+              </label>
+            </ReviewOnly>
             <Primary secondary onClick={() => setSheet("")}>
               Keep my place
             </Primary>
@@ -3999,19 +4059,17 @@ export default function Prototype() {
                 keyboard.hide();
                 setSheet("");
                 setReport("");
-                notify(
-                  "Demo report recorded locally. No support team was contacted.",
-                );
+                notify("Report submitted.");
               }}
             >
-              Submit demo report
+              Submit report
             </Primary>
             <button
               className="text-action danger"
               onClick={() => {
                 setBlocked(true);
                 setSheet("");
-                notify("Member blocked in this demo.");
+                notify("Member blocked.");
               }}
             >
               Block this member
@@ -4021,14 +4079,11 @@ export default function Prototype() {
         <BottomSheet
           open={sheet === "signout"}
           onOpenChange={(open) => !open && setSheet("")}
-          title="Sign out of this demo?"
+          title="Sign out?"
           snap={0.4}
         >
           <div className="sheet-body">
-            <p>
-              You’ll return to the account screen. Demo data remains in this
-              browser until refresh or Reset demo.
-            </p>
+            <p>You’ll return to the account screen.</p>
             <Primary secondary onClick={() => setSheet("")}>
               Stay signed in
             </Primary>

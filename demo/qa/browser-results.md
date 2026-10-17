@@ -86,3 +86,10 @@ User-approved exact welcome heading: “There’s a seat for you here.” Remove
 ## Fancy brand migration — 2026-10-18
 Local UI: precise Fancy a bite? headings matched on welcome and Discover; wordmarks expose Fancy accessible name, browser title Fancy — Meet new people over a meal. Guest exploration and account gate/back remain operational.393×852 welcome/account/discover and427×952 Pixel welcome screenshots inspected: wordmark, invitation, slogan and buttons remain legible, no truncation observed. Legacy .grab-app selectors and public URL intentionally retained.23 domain +6 build/packaging +13 root tests pass, TypeScript/build and28-file runtime integrity pass. Advisory JS chunk557.40kB. This revision does not revalidate all payment/chat flows; their behavior was unchanged.
 Fancy release4 live smoke: title Fancy — Meet new people over a meal.; accessible wordmark Fancy, visible fancy; exact Fancy a bite? heading matched on welcome and Discover. Find your people opened the account page with new wordmark; guest explore still works. Console error check empty. live-welcome.png saved from actual public site; existing URL unchanged.
+
+## 2026-10-18 Clean product presentation
+- Default welcome: capital Fancy wordmark, no prototype ribbon/city marginalia/replay button.
+- Account: standard email/Google/Apple labels, no implementation annotation.
+- Guest discovery: no demo ribbon/map note; cards and navigation retained.
+- Explicit `?review=1`: acceptance annotations and Replay intro remain available.
+- Published Sites version 5; no backend integration added.

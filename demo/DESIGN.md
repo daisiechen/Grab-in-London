@@ -101,3 +101,6 @@ Pending application cards use a three-step status track, membership explanation 
 
 ## Current brand — 2026-10-18
 Fancy replaces the former Grab UI identity. Wordmark:fancy, no in London suffix; use72px welcome /96px splash /42px account sizes with less negative tracking. Main welcome and discovery invitation:Fancy a bite?; secondary welcome support:There’s a seat for you here.; slogan:Meet new people over a meal. / 吃个饭，认识一下。. Preserve table artwork and forest/citrus/ivory/vermilion palette. brand.ts owns app-visible copy; index.html owns browser/social metadata. The legacy repository/URL and .grab-app technical selectors remain intentionally.
+
+## Product presentation, 18 October 2026
+Use the capitalized Fancy wordmark. Default product screens omit prototype annotations, city marginalia and scenario/replay/reset controls. Acceptance tools are opt-in at `?review=1`; costs, cancellation terms and membership permissions remain visible. No live backend integrations were added.

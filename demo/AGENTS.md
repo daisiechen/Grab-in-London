@@ -92,3 +92,8 @@ When any text-entry control loses focus, dismiss the simulated keyboard. If the 
 ## Fancy brand migration — 2026-10-18
 - PRD is authoritative: Fancy is the provisional brand; Meet new people over a meal. / 吃个饭，认识一下。 is the slogan; Fancy a bite? / 一起吃点？ is the welcome/discovery invitation. There’s a seat for you here. is secondary welcome support.
 - Keep English UI and established forest/citrus/table identity; update all visible brand touchpoints and browser metadata. Legacy repository, public URL and technical selectors stay unchanged.
+
+## Clean product presentation — 2026-10-18
+- Visible wordmark is Fancy with capital F. Normal screens contain no prototype ribbons, developer annotations, replay/reset links, or simulated host/payment controls.
+- Keep scenario tools behind explicit `?review=1` acceptance mode using ReviewOnly; this is a presentation switch, never an authorization boundary.
+- Keep product-facing costs, cancellation rules, admission status, and privacy explanations. Document all unimplemented backend capabilities in PRD and development documentation.
