@@ -1,0 +1,10 @@
+{
+  "note": "All commercial inputs are author assumptions, not forecasts or observed benchmarks. GBP; annual steady state; not net profit.",
+  "cases": [
+    {"name":"小试点","merchants":10,"events_per_month":1,"attendees":8,"fee":3,"labor_per_event":30,"other_per_attendee":0.75,"fixed":12000,"merchant_cac":150,"merchant_cac_years":1,"new_paid_users":200,"user_cac":5},
+    {"name":"局部基准","merchants":30,"events_per_month":2,"attendees":12,"fee":4,"labor_per_event":25,"other_per_attendee":0.6,"fixed":30000,"merchant_cac":200,"merchant_cac_years":1,"new_paid_users":1000,"user_cac":3},
+    {"name":"城市扩展压力测试","merchants":300,"events_per_month":4,"attendees":20,"fee":5,"labor_per_event":20,"other_per_attendee":0.5,"fixed":240000,"merchant_cac":300,"merchant_cac_years":1,"new_paid_users":20000,"user_cac":15}
+  ],
+  "demand": {"london_population":9100000,"annual_demand_share":[0.02,0.05,0.1],"serviceable_share":[0.1,0.2,0.3],"visits_per_active":4,"billable_share":0.5,"source":"https://data.london.gov.uk/blog/state-of-london"},
+  "personal": {"active":1000,"paid_share":0.03,"monthly_price":10,"paid_cost":3,"free_cost":0.2}
+}
