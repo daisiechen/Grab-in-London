@@ -6,6 +6,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class AdminDeliveryTests(unittest.TestCase):
+    def test_mobile_preview_listens_on_lan(self):
+        package = json.loads((ROOT / 'admin/package.json').read_text())
+        self.assertIn('--host 0.0.0.0', package['scripts']['dev'])
+        self.assertIn('host: "0.0.0.0"', (ROOT / 'admin/vite.config.ts').read_text())
+        self.assertIn('同一 Wi-Fi', (ROOT / 'admin/README.md').read_text())
+
     def test_independent_entrypoint_and_scripts(self):
         package = json.loads((ROOT / 'admin/package.json').read_text())
         self.assertIn('build', package['scripts'])
