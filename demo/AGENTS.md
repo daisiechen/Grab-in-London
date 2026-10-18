@@ -115,4 +115,8 @@ When any text-entry control loses focus, dismiss the simulated keyboard. If the 
 - Make the sprite draggable with mouse/touch, snap to the nearest side, and let it peek with paws when tucked. Preserve tap vs drag and keyboard access; constrain it to phone safe bounds and adapt to device scale.
 - Reopening always shows the assistant home in compact view. Keep an unexpired conversation behind explicit Continue conversation; new home requests start fresh. Never reopen straight into the preference editor.
 - Use New conversation, not ambiguous Clear chat; it preserves approved preferences. Preference deletion stays in My preferences and explains its context cleanup.
-- Use Larger view / Compact view text for panel resizing. Show London-local message times and a 30-minute inactivity default; expiry preserves approved preferences and unsent chat text, with a clear notice. This is separate from meal/payment expiration.
+- Latest feedback removes panel resizing and the close cross; put My preferences in the top right. Dismiss through the existing sheet drag/overlay/Escape behavior. Show London-local message times and a 30-minute inactivity default; expiry preserves approved preferences and unsent chat text, with a clear notice. This is separate from meal/payment expiration.
+
+## Map prototype feedback — 2026-10-18
+- Keep this iteration simulated: no Google Maps SDK, Places, credentials, geolocation or backend integration. Reuse existing artwork with a draggable/zoomable viewport and explicit Search this area.
+- Arrange uses restaurant search and selectable map markers, followed by Use this restaurant confirmation. Browsing a candidate must not mutate the draft. Existing availability and reservation rules remain authoritative.

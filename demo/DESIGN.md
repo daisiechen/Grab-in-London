@@ -117,3 +117,6 @@ The approved signature is a small original forest-green SVG sprite with citrus l
 
 ## Helper browser feedback — 2026-10-18
 The sprite now owns a draggable, edge-snapping position; a tucked version peeks from either side with two small paws rather than becoming an unrelated icon. Reuse its original SVG and palette. Keep it below toolbars and above navigation, with a visible tap target and no continuous animation; edge-snap motion respects reduced motion. Assistant home/resume, clearly named conversation/preferences actions, textual panel-size controls and subdued London timestamps replace ambiguous controls. No shared palette/type/runtime token changes.
+
+## Compact helper and simulated maps — 18 October 2026
+Latest feedback supersedes size controls and the close cross: My preferences occupies the top-right helper toolbar; empty utility rows collapse. Existing sheet grip/overlay/Escape dismisses the assistant. Map interactions reuse the forest London artwork, fixed-size meal/restaurant pins, quiet zoom/reset controls and explicit Search this area. Arrange uses a map and restaurant card with Use this restaurant confirmation; only nonempty searches show result rows. No external map service or shared runtime changes.

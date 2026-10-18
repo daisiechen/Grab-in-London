@@ -95,7 +95,7 @@ test("helper searches, refines, preserves state, opens a meal and can be tucked 
       }),
     )
     .toBe(true);
-  await page.screenshot({ path: "qa/ai-helper-refinement/launcher.png" });
+  await page.screenshot({ path: "qa/map-helper-update/launcher.png" });
   await page
     .getByRole("button", { name: "Tuck Fancy to edge", exact: true })
     .click();
@@ -109,15 +109,13 @@ test("helper searches, refines, preserves state, opens a meal and can be tucked 
   );
   await settleKeyboard(page, false);
   expect(await page.evaluate(() => window.scrollY)).toBe(0);
-  await page.screenshot({ path: "qa/ai-helper-refinement/search-iphone.png" });
+  await page.screenshot({ path: "qa/map-helper-update/search-iphone.png" });
   await ask(page, "£10");
   await expect(page.getByRole("log")).toContainText(
     "No available tables match",
   );
   await ask(page, "£35");
-  await page
-    .getByRole("button", { name: "Close Fancy helper", exact: true })
-    .click();
+  await page.keyboard.press("Escape");
   await page
     .getByRole("button", { name: "Open Fancy helper", exact: true })
     .click();
@@ -169,7 +167,7 @@ test("preferences require confirmation, can be corrected, and are removed with c
     "Fitzrovia · up to £30",
   );
   await settleKeyboard(page, false);
-  await page.screenshot({ path: "qa/ai-helper-refinement/preferences.png" });
+  await page.screenshot({ path: "qa/map-helper-update/preferences.png" });
   await page
     .getByRole("button", { name: "Delete preferences", exact: true })
     .click();
@@ -248,7 +246,7 @@ test("an unconfirmed guest cannot use a message draft to enter group chat", asyn
   ).toHaveCount(0);
 });
 
-test("keyboard and expanded panel stay in phone bounds on iPhone and Pixel", async ({
+test("keyboard and compact panel stay in phone bounds on iPhone and Pixel", async ({
   page,
 }) => {
   await browse(page);
@@ -260,9 +258,7 @@ test("keyboard and expanded panel stay in phone bounds on iPhone and Pixel", asy
     await page
       .getByRole("button", { name: "Open Fancy helper", exact: true })
       .click();
-    await page
-      .getByRole("button", { name: "Use larger view", exact: true })
-      .click();
+
     await page
       .getByRole("textbox", { name: "Ask about a meal or make a plan" })
       .fill("Find meals");
@@ -291,11 +287,9 @@ test("keyboard and expanded panel stay in phone bounds on iPhone and Pixel", asy
       .toBe(true);
     await settleKeyboard(page, true);
     await page.screenshot({
-      path: `qa/ai-helper-refinement/keyboard-${device === "iPhone" ? "iphone" : "pixel"}.png`,
+      path: `qa/map-helper-update/keyboard-${device === "iPhone" ? "iphone" : "pixel"}.png`,
     });
-    await page
-      .getByRole("button", { name: "Close Fancy helper", exact: true })
-      .click();
+    await page.keyboard.press("Escape");
     await expect(page.getByTestId("keyboard-dock")).toHaveAttribute(
       "data-visible",
       "false",
@@ -333,7 +327,7 @@ test("confirmed guests can review a message draft without sending it", async ({
     page.getByRole("textbox", { name: "Message", exact: true }),
   ).toHaveValue(/Shall we meet at Noodle House/);
   await expect(page.locator(".chat-message.own")).toHaveCount(0);
-  await page.screenshot({ path: "qa/ai-helper-refinement/message-draft.png" });
+  await page.screenshot({ path: "qa/map-helper-update/message-draft.png" });
 });
 
 test("speech permission denial preserves typed input and offers recovery", async ({
@@ -472,7 +466,7 @@ test("sprite drags without opening, snaps to either edge and peeks out when tuck
     .click();
   await expect(page.locator(".helper-launcher")).toHaveClass(/is-tucked/);
   await settleSprite(page);
-  await page.screenshot({ path: "qa/ai-helper-refinement/edge-left.png" });
+  await page.screenshot({ path: "qa/map-helper-update/edge-left.png" });
   const tucked = page.getByRole("button", {
     name: "Show Fancy helper",
     exact: true,
@@ -494,7 +488,7 @@ test("sprite drags without opening, snaps to either edge and peeks out when tuck
     .poll(async () => (await tucked.boundingBox())!.x)
     .toBeGreaterThan(screen.x + screen.width / 2);
   await settleSprite(page);
-  await page.screenshot({ path: "qa/ai-helper-refinement/edge-right.png" });
+  await page.screenshot({ path: "qa/map-helper-update/edge-right.png" });
   await tucked.click();
   await expect(
     page.getByRole("heading", { name: "What sounds good?", exact: true }),
@@ -519,9 +513,7 @@ test("home, preferences and conversation have distinct return and reset behavior
   await expect(
     page.getByRole("button", { name: "New conversation", exact: true }),
   ).toHaveCount(0);
-  await page
-    .getByRole("button", { name: "Close Fancy helper", exact: true })
-    .click();
+  await page.keyboard.press("Escape");
   await page
     .getByRole("button", { name: "Open Fancy helper", exact: true })
     .click();
@@ -548,32 +540,18 @@ test("home, preferences and conversation have distinct return and reset behavior
     .click();
   await ask(page, "Find meals £10");
   await expect(page.locator(".helper-meal-card")).toHaveCount(0);
-  await page
-    .getByRole("button", { name: "Close Fancy helper", exact: true })
-    .click();
+  await page.keyboard.press("Escape");
   await page
     .getByRole("button", { name: "Open Fancy helper", exact: true })
     .click();
   await settleHelper(page);
-  await page.screenshot({ path: "qa/ai-helper-refinement/home-resume.png" });
+  await page.screenshot({ path: "qa/map-helper-update/home-resume.png" });
   await ask(page, "Find meals");
   await expect(page.locator(".helper-turn")).toHaveCount(1);
   await expect(page.locator(".helper-meal-card")).toHaveCount(2);
-  await page
-    .getByRole("button", { name: "Use larger view", exact: true })
-    .click();
-  await expect(
-    page.getByRole("button", { name: "Use compact view", exact: true }),
-  ).toHaveText("Compact view");
-  await page
-    .getByRole("button", { name: "Close Fancy helper", exact: true })
-    .click();
-  await page
-    .getByRole("button", { name: "Open Fancy helper", exact: true })
-    .click();
-  await expect(
-    page.getByRole("button", { name: "Use larger view", exact: true }),
-  ).toHaveText("Larger view");
+  await expect(page.getByRole('button', {name: 'Use larger view', exact: true})).toHaveCount(0);
+  await expect(page.getByRole('button', {name: 'Close Fancy helper', exact: true})).toHaveCount(0);
+  await expect(page.locator('.helper-tools').getByRole('button', {name: 'My preferences', exact: true})).toBeVisible();
 });
 
 test("idle expiry resets context, retains approved preferences and unsent text, and typing renews activity", async ({
@@ -612,7 +590,7 @@ test("idle expiry resets context, retains approved preferences and unsent text, 
   await expect(page.locator(".helper-meal-card")).toHaveCount(2);
   await settleKeyboard(page, false);
   await settleHelper(page);
-  await page.screenshot({ path: "qa/ai-helper-refinement/timestamps.png" });
+  await page.screenshot({ path: "qa/map-helper-update/timestamps.png" });
 });
 
 test("reopening checks expiry even when a background timer has not run", async ({
@@ -626,9 +604,7 @@ test("reopening checks expiry even when a background timer has not run", async (
   await page
     .getByRole("button", { name: "Confirm and remember", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "Close Fancy helper", exact: true })
-    .click();
+  await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toHaveCount(0);
   // Only Date changes: the timer has not elapsed. Reopening must recheck it.
   await page.clock.setFixedTime(new Date("2026-10-18T12:31:00Z"));
@@ -642,7 +618,7 @@ test("reopening checks expiry even when a background timer has not run", async (
     page.getByRole("button", { name: /Continue conversation/ }),
   ).toHaveCount(0);
   await settleHelper(page);
-  await page.screenshot({ path: "qa/ai-helper-refinement/expired.png" });
+  await page.screenshot({ path: "qa/map-helper-update/expired.png" });
   await page
     .getByRole("button", { name: "My preferences", exact: true })
     .click();

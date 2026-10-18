@@ -957,6 +957,101 @@ function HelperSprite() {
     </svg>
   );
 }
+type MapSpot = { id: string; label: string; x: number; y: number; text: string };
+function DemoMap({ spots, selected, onSelect, onSearch, label }: {
+  spots: MapSpot[]; selected: string; onSelect: (id: string) => void;
+  onSearch?: (ids: string[]) => void; label: string;
+}) {
+  const [view, setView] = useState({ x: 0, y: 0, zoom: 1 });
+  const [dirty, setDirty] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
+  const points = useRef(new Map<number, { x: number; y: number }>());
+  const drag = useRef<{ x: number; y: number; distance: number; view: typeof view; moved: boolean } | null>(null);
+  const suppress = useRef(false);
+  const clamp = (v: typeof view) => {
+    const zoom = Math.max(1, Math.min(2.4, v.zoom));
+    const limit = (74 * zoom - 50) / 1.48;
+    return { zoom, x: Math.max(-limit, Math.min(limit, v.x)), y: Math.max(-limit, Math.min(limit, v.y)) };
+  };
+  const zoom = (delta: number) => { setView(v => clamp({ ...v, zoom: v.zoom + delta })); setDirty(true); };
+  return <div className="demo-map" ref={root} role="region" aria-label={label} tabIndex={0}
+    data-scroll-drag="ignore" data-zoom={view.zoom.toFixed(1)}
+    onKeyDown={event => {
+      if (event.target !== event.currentTarget) return;
+      if (event.key === '+' || event.key === '-') { event.preventDefault(); zoom(event.key === '+' ? 0.3 : -0.3); }
+      if (event.key.startsWith('Arrow')) {
+        event.preventDefault(); setDirty(true);
+        setView(v => clamp({...v,x:v.x+(event.key==='ArrowLeft'?5:event.key==='ArrowRight'?-5:0),y:v.y+(event.key==='ArrowUp'?5:event.key==='ArrowDown'?-5:0)}));
+      }
+    }}
+    onPointerDown={event => {
+      suppress.current = false;
+      if (event.button !== 0 || (event.target as Element).closest('button')) return;
+      points.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      const p = [...points.current.values()];
+      drag.current = { x: event.clientX, y: event.clientY, distance: p.length > 1 ? Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y) : 0, view, moved: false };
+      if (!(event.target as Element).closest('button')) event.currentTarget.setPointerCapture(event.pointerId);
+    }}
+    onPointerMove={event => {
+      if (!drag.current || !points.current.has(event.pointerId)) return;
+      points.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      const d = drag.current, p = [...points.current.values()];
+      const dx = event.clientX-d.x, dy = event.clientY-d.y;
+      if (Math.hypot(dx,dy) < 6 && p.length < 2) return;
+      d.moved = true; suppress.current = true; setDirty(true);
+      event.currentTarget.setPointerCapture(event.pointerId);
+      const rect = root.current!.getBoundingClientRect();
+      if (p.length > 1 && d.distance > 0) setView(clamp({ ...d.view, zoom: d.view.zoom * Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y)/d.distance }));
+      else setView(clamp({ ...d.view, x: d.view.x+dx/rect.width*100/1.48, y: d.view.y+dy/rect.height*100/1.48 }));
+    }}
+    onPointerUp={event => { points.current.delete(event.pointerId); if (!points.current.size) drag.current = null; }}
+    onPointerCancel={() => { points.current.clear(); drag.current = null; }}
+    onClickCapture={event => { if (suppress.current) { event.preventDefault(); event.stopPropagation(); suppress.current = false; } }}
+  >
+    <div className="demo-map-world" style={{ transform: `translate(${view.x}%, ${view.y}%) scale(${view.zoom})` }}>
+      <img className="map-image" src="/images/london-map.png" alt="Map of central London" draggable={false} />
+    </div>
+    {spots.map(spot => <button key={spot.id} className={`map-pin ${selected === spot.id ? 'active' : ''}`}
+      style={{ left: `${50+(spot.x-50)*view.zoom+1.48*view.x}%`, top: `${50+(spot.y-50)*view.zoom+1.48*view.y}%` }} aria-label={spot.label} aria-pressed={selected === spot.id}
+      onClick={() => onSelect(spot.id)}>{spot.text}</button>)}
+    {onSearch && dirty && <button className="map-search-area" onClick={() => {
+      const ids = spots.filter(p => Math.abs((p.x-50)*view.zoom+1.48*view.x)<48 && Math.abs((p.y-50)*view.zoom+1.48*view.y)<48).map(p => p.id);
+      onSearch(ids); setDirty(false);
+    }}>Search this area</button>}
+    <div className="demo-map-controls">
+      <button aria-label="Zoom in" disabled={view.zoom >= 2.4} onClick={() => zoom(0.3)}>+</button>
+      <button aria-label="Zoom out" disabled={view.zoom <= 1} onClick={() => zoom(-0.3)}>−</button>
+      <button aria-label="Show central London" onClick={() => { setView({x:0,y:0,zoom:1}); setDirty(false); onSearch?.(spots.map(p=>p.id)); }}>⌖</button>
+    </div>
+  </div>;
+}
+
+function VenueMap({ value, onConfirm }: { value: string; onConfirm: (venue: typeof createVenues[number]) => void }) {
+  const keyboard = useKeyboard();
+  const [search, setSearch] = useState('');
+  const [candidate, setCandidate] = useState(value);
+  const visible = createVenues.filter(v => `${v.name} ${v.area} ${v.cuisine}`.toLowerCase().includes(search.toLowerCase()));
+  const venue = visible.find(v => v.name === candidate);
+  const coords = [{x:48,y:42},{x:76,y:38},{x:30,y:70}];
+  return <section className="venue-map-picker" aria-label="Choose a restaurant">
+    <label className="field-label">Search restaurants or areas
+      <KeyboardInput aria-label="Search restaurants or areas" value={search} placeholder="Soho, Spanish, restaurant name…" onChange={e => setSearch(e.target.value)} />
+    </label>
+    <DemoMap label="Restaurant map" selected={candidate} spots={visible.map(v => ({id:v.name,label:`Show ${v.name}`,text:String(createVenues.indexOf(v)+1),...coords[createVenues.indexOf(v)]}))}
+      onSelect={name => { keyboard.hide(); setCandidate(name); }} />
+    <div className="venue-map-results">
+      {!visible.length && <p>No restaurants match. Try another name or area.</p>}
+      {search && visible.map(v => <button key={v.name} aria-pressed={candidate===v.name} onClick={() => {keyboard.hide();setCandidate(v.name);}}>
+        <strong>{v.name}</strong><span>{v.area} · {v.cuisine}</span>
+      </button>)}
+    </div>
+    {venue && <div className="venue-map-card"><strong>{venue.name}</strong><p>{venue.area} · {venue.cuisine}</p><p>{venue.note}</p><p>£{venue.min}–{venue.max} per person</p>
+      <button className="primary" onClick={() => { keyboard.hide(); onConfirm(venue); }}>Use this restaurant</button>
+    </div>}
+    <p className="venue-selection-status" role="status">Selected: {value}. Choosing a place does not reserve a table.</p>
+  </section>;
+}
+
 function MealHelper({
   meals,
   current,
@@ -979,7 +1074,6 @@ function MealHelper({
   const { device } = useMobileDevice();
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const [expanded, setExpanded] = useState(false);
   const [home, setHome] = useState(true);
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const [lastActive, setLastActive] = useState<number | null>(null);
@@ -1063,7 +1157,6 @@ function MealHelper({
       );
     setManage(false);
     setHome(true);
-    setExpanded(false);
     setHidden(false);
     setOpen(true);
   };
@@ -1190,7 +1283,7 @@ function MealHelper({
         "Help me create a meal",
       ];
   const helperHeight = Math.min(
-    device.geometry.screen.height * (expanded ? 0.95 : 0.82),
+    device.geometry.screen.height * 0.82,
     helperInsets.availableHeight - device.geometry.safeArea.top - 8,
   );
   // BottomSheet subtracts up to 180px for the keyboard. Supply the desired
@@ -1226,6 +1319,7 @@ function MealHelper({
           <button
             aria-label={hidden ? "Show Fancy helper" : "Open Fancy helper"}
             className="helper-launch"
+            data-scroll-drag="ignore"
             title="Drag to move. Tap to open. Arrow keys also move Fancy."
             onPointerDown={(event) => {
               if (event.button !== 0) return;
@@ -1355,15 +1449,8 @@ function MealHelper({
           onClickCapture={(event) => {
             if (helperExpired(lastActive, Date.now())) {
               restart(true);
-              if (
-                !(
-                  event.target instanceof Element &&
-                  event.target.closest('[aria-label="Close Fancy helper"]')
-                )
-              ) {
-                event.preventDefault();
-                event.stopPropagation();
-              }
+              event.preventDefault();
+              event.stopPropagation();
             } else if (turns.length) setLastActive(Date.now());
           }}
           onPointerDownCapture={(event) => {
@@ -1386,17 +1473,19 @@ function MealHelper({
                   : "Your meal plans"}
             </span>
             <button
-              className="helper-size"
-              aria-label={expanded ? "Use compact view" : "Use larger view"}
               onClick={() => {
                 keyboard.hide();
-                setExpanded(!expanded);
+                stopVoice();
+                setVoiceConsent(false);
+                if (manage) {
+                  setManage(false);
+                  setHome(true);
+                } else setManage(true);
+                setNotice("");
+                setPreferenceEdit(preferenceSummary(preferences));
               }}
             >
-              {expanded ? "Compact view" : "Larger view"}
-            </button>
-            <button aria-label="Close Fancy helper" onClick={close}>
-              ×
+              {manage ? "Back to assistant home" : "My preferences"}
             </button>
           </div>
           <div className="helper-utility">
@@ -1412,21 +1501,6 @@ function MealHelper({
                 Assistant home
               </button>
             )}
-            <button
-              onClick={() => {
-                keyboard.hide();
-                stopVoice();
-                setVoiceConsent(false);
-                if (manage) {
-                  setManage(false);
-                  setHome(true);
-                } else setManage(true);
-                setNotice("");
-                setPreferenceEdit(preferenceSummary(preferences));
-              }}
-            >
-              {manage ? "Back to assistant home" : "My preferences"}
-            </button>
             {!manage && !!turns.length && (
               <button onClick={() => restart()}>New conversation</button>
             )}
@@ -1805,6 +1879,7 @@ export default function Prototype() {
     ...emptyFilters,
   });
   const [selectedArea, setSelectedArea] = useState("Soho");
+  const [mapAreas, setMapAreas] = useState<string[] | null>(null);
   const [showCalendar, setShowCalendar] = useState(false);
   const [sheet, setSheet] = useState<Sheet>("");
   const [toast, setToast] = useState("");
@@ -2308,44 +2383,19 @@ export default function Prototype() {
           {mode === "map" ? (
             <>
               <div className="map-canvas">
-                <img
-                  className="map-image"
-                  src="/images/london-map.png"
-                  alt="Map of central London"
-                />
-                {groups.map((group) => (
-                  <button
-                    key={group.area}
-                    className={`map-pin ${areaGroup?.area === group.area ? "active" : ""}`}
-                    style={{ left: `${group.x}%`, top: `${group.y}%` }}
-                    onClick={() => selectArea(group.area)}
-                    aria-label={`${group.area}: ${group.meals.length} ${group.meals.length === 1 ? "meal" : "meals"}`}
-                    aria-pressed={areaGroup?.area === group.area}
-                  >
-                    {group.meals.length}
-                  </button>
-                ))}
+                <DemoMap label="Explore meals map" selected={areaGroup?.area || ''}
+                  spots={groups.map(group => ({id:group.area,label:group.area + ': ' + group.meals.length + (group.meals.length === 1 ? ' meal' : ' meals'),text:String(group.meals.length),x:group.x,y:group.y}))}
+                  onSelect={area => { setMapAreas(null); selectArea(area); }}
+                  onSearch={areas => { setMapAreas(areas); if(areas.length) selectArea(areas[0]); }} />
                 <span className="map-key">Numbers = meals in each area</span>
                 <ReviewOnly>
                   <span className="map-note">
                     Illustrative map · Demo locations
                   </span>
                 </ReviewOnly>
-                <button
-                  className="map-locate"
-                  onClick={() => {
-                    selectArea("Soho");
-                    notify(
-                      "Showing central London. Location access is not needed.",
-                    );
-                  }}
-                  aria-label="Show central London"
-                >
-                  <PaperPlaneIcon />
-                </button>
               </div>
               <section className="map-preview" aria-label="Selected area meals">
-                {featured && (
+                {mapAreas?.length === 0 ? <div className="map-empty"><strong>No meals in this area</strong><p>Move the map or return to central London.</p></div> : featured && (
                   <>
                     <button
                       className="area-results-trigger"
@@ -3270,34 +3320,7 @@ export default function Prototype() {
           </p>
           {createStep === 0 && (
             <>
-              <fieldset className="venue-picker">
-                <legend>Choose a restaurant</legend>
-                {createVenues.map((v) => (
-                  <button
-                    key={v.name}
-                    aria-pressed={draft.venue === v.name}
-                    className={draft.venue === v.name ? "chosen" : ""}
-                    onClick={() =>
-                      updateSchedule({ venue: v.name, min: v.min, max: v.max })
-                    }
-                  >
-                    <span className="venue-monogram">
-                      <SewingPinIcon />
-                    </span>
-                    <span>
-                      <strong>{v.name}</strong>
-                      <small>
-                        {v.area} · {v.cuisine}
-                      </small>
-                      <small>{v.note}</small>
-                      <small>
-                        £{v.min}–{v.max} per person
-                      </small>
-                    </span>
-                    {draft.venue === v.name && <CheckCircledIcon />}
-                  </button>
-                ))}
-              </fieldset>
+              <VenueMap value={draft.venue} onConfirm={v => updateSchedule({venue:v.name,min:v.min,max:v.max})} />
               <ChoiceGroup
                 label="People, including you"
                 value={String(draft.capacity)}

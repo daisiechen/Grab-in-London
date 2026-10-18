@@ -62,3 +62,10 @@ class ProductSpecTest(unittest.TestCase):
                          '30分钟无活动', '保留已确认偏好和未发送文字',
                          '不是饭局申请保留', 'AC-AI12'):
             self.assertIn(contract, text)
+
+    def test_simulated_map_and_compact_helper_contract(self):
+        text = (Path(__file__).resolve().parents[1] / 'docs/product/PRD.zh-CN.md').read_text()
+        for contract in ('取消尺寸切换与关闭×', 'Search this area',
+                         'Use this restaurant', '浏览候选不更改已选餐厅',
+                         '不接入真实 Google Maps', 'AC-MAP02'):
+            self.assertIn(contract, text)

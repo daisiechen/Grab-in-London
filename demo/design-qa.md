@@ -65,3 +65,6 @@ Preserved forest/white map and five navigation destinations. Added original SVG 
 
 ## Helper browser-feedback refinement — 2026-10-18
 Reviewed [peeking sprite](qa/ai-helper-refinement/edge-left.png), [home/resume](qa/ai-helper-refinement/home-resume.png) and [expiry](qa/ai-helper-refinement/expired.png). The floating entry now docks to either side rather than a fixed right coordinate, retains its palette and small paws, and can be tucked without losing access. Arrow-only resizing is replaced by text; time and restart copy distinguish conversation lifetime from approved preferences. Safe-bound drag and device-scaling checks remain separate from real touch-device certification. Visual tokens and mobile runtime were preserved.
+
+## Map/helper revision — 18 October 2026
+Preserve the existing artwork and forest palette. The helper toolbar replaces size/close controls with preferences. Discovery adds pan/pinch, zoom/reset and viewport search; Arrange adds search, map pins, candidate card and explicit confirmation. Regression found shared button :active replaced marker centering and moved targets under the pointer; map-specific active transforms preserve marker/search positioning. No protected runtime files changed. Evidence: qa/map-helper-update/; full results in qa/browser-results.md.
