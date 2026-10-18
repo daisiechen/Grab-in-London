@@ -61,7 +61,7 @@ Click the floating green sprite (Ask Fancy), then try “Friday in Soho, table f
 
 This is a deterministic frontend interaction prototype with limited English/Chinese request patterns, not a live LLM or autonomous agent. Browser SpeechRecognition, when supported, requires explicit user initiation and may use the browser vendor’s service. Audio recognition defaults to en-GB; text/transcript is editable and never automatically sent. Real microphone recognition is not guaranteed in the embedded browser. See [PRD](../docs/product/PRD.zh-CN.md) FR-12 for scope and data boundaries.
 
-Checks: `pnpm test:domain` includes helper rules. `pnpm exec playwright test tests/assistant.spec.ts --workers=1` verifies helper interactions. When only system Chrome is installed, set `PLAYWRIGHT_CHANNEL=chrome`. Existing `pnpm test:runtime`, `pnpm exec tsc --noEmit`, `pnpm build`, and `pnpm test:sites` remain required. This iteration does not publish the public Sites deployment.
+Checks: `pnpm test:domain` includes helper rules. `pnpm exec playwright test tests/assistant.spec.ts --workers=1` verifies helper interactions. When only system Chrome is installed, set `PLAYWRIGHT_CHANNEL=chrome`. Existing `pnpm test:runtime`, `pnpm exec tsc --noEmit`, `pnpm build`, and `pnpm test:sites` remain required. The helper and feedback refinements were published as Sites version 7 on 18 October 2026 at the public URL above.
 
 
 ### Helper feedback refinement — 18 October 2026
