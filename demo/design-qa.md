@@ -57,3 +57,7 @@ Inspected393×852 pending/payment-needed/settings/archive screenshots. Retained 
 
 ## Fancy brand migration — 2026-10-18
 PRD1.3 now owns the current brand: Fancy; invitation Fancy a bite?; slogan Meet new people over a meal. / 吃个饭，认识一下。. Revised five-letter wordmark scale/tracking, removed in London suffix, promoted invitation headline and retained seat sentence as support. Retained original palette/table artwork and protected runtime. Inspected393×852 welcome/account/discover and427×952 Pixel welcome captures in qa/fancy-brand: no clipping in the inspected views. Guest explore→Discover and Profile login gate/back worked. Browser title and generated HTML social metadata verified Fancy. No behavior changes to membership/chat/payment; domain regression checks still pass.
+
+
+## Floating meal helper — 2026-10-18
+Preserved forest/white map and five navigation destinations. Added original SVG sprite below the discovery controls, with tuck/restore, and a runtime BottomSheet conversation using existing type, borders and forest actions. Search cards compare public facts rather than compatibility scores. Reviewed the saved [search](qa/ai-helper/search-iphone.png), [launcher](qa/ai-helper/launcher.png) and [Pixel keyboard](qa/ai-helper/keyboard-pixel.png) views. Browser assertions cover header/navigation clearance, panel/input keyboard bounds and no whole-page scrolling; the protected runtime and shared visual tokens are unchanged. No raster generation or copied character assets. Keyboard/sheet animation must settle before evidence capture.

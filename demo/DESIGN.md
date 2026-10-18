@@ -109,3 +109,7 @@ Use the capitalized Fancy wordmark. Default product screens omit prototype annot
 - Payment confirms membership without confirming the restaurant; only hosts change reservations. Failed bookings retain confirmed group access; cancelled participants retain read-only history.
 - Keep Cancelled separate from Upcoming. Store refund values per meal, blocks per member, and direct messages per contact. Self-avatar navigation uses current profile data.
 - Normal product errors and pending-state copy contain no implementation remarks. Keep simulation controls in explicit acceptance mode. See PRD v0.4 and full-product-audit report for evidence and limitations.
+
+
+## Meal helper — 2026-10-18
+The approved signature is a small original forest-green SVG sprite with citrus leaf, ivory eyes and peach cheeks. It sits above the main content as a collapsed, dismissible edge entry and never replaces a bottom destination. Reuse existing typography, forest/white/surface colours, 11px controls and BottomSheet. Expanded chat uses a quiet white panel, forest user bubbles and factual meal cards. No unsolicited animation or messages. This addition introduces no shared token changes; protected device/runtime styling stays intact.

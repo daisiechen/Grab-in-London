@@ -42,6 +42,14 @@ class ProductSpecTest(unittest.TestCase):
 
     def test_audit_revision_records_independent_states_and_clean_ui(self):
         text = (Path(__file__).resolve().parents[1] / 'docs/product/PRD.zh-CN.md').read_text()
-        for contract in ('版本：0.4', '保留原餐厅预约状态', 'Cancelled 独立',
+        for contract in ('版本：0.5', '保留原餐厅预约状态', 'Cancelled 独立',
                          '按成员记录', '金额最多2位小数', '退款金额在取消时按饭局记录'):
+            self.assertIn(contract, text)
+
+
+    def test_meal_helper_contract_preserves_user_confirmation_and_scope(self):
+        text = (Path(__file__).resolve().parents[1] / 'docs/product/PRD.zh-CN.md').read_text()
+        for contract in ('### FR-12', '不占底部导航', '本地规则驱动',
+                         'Confirm and remember', '不自动读取群聊/私聊正文',
+                         '不自动发送', '不后台录音', 'AC-AI08'):
             self.assertIn(contract, text)

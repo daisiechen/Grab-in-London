@@ -1,6 +1,15 @@
 import { isReviewMode } from "./presentation";
 import { BRAND } from "./brand";
 import {
+  assistantReply,
+  blankPreferences,
+  parseMealRequest,
+  preferenceSummary,
+  type AssistantQuery,
+  type AssistantReply,
+  type MealPreferences,
+} from "./assistant";
+import {
   useEffect,
   useRef,
   useState,
@@ -50,6 +59,7 @@ import {
   MobileScroll,
   useKeyboard,
   useKeyboardInsets,
+  useMobileDevice,
   useScreenPortal,
 } from "./mobile";
 import {
@@ -894,6 +904,587 @@ function BrandEntrance({
         </div>
       </BottomSheet>
     </div>
+  );
+}
+
+type HelperAction = NonNullable<AssistantReply["draft"]>;
+type HelperTurn = { question: string; reply: AssistantReply; used?: boolean };
+type SpeechSession = {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  start: () => void;
+  abort: () => void;
+  onresult:
+    | ((event: {
+        results: {
+          [index: number]: { [index: number]: { transcript: string } };
+        };
+      }) => void)
+    | null;
+  onerror: ((event: { error: string }) => void) | null;
+  onend: (() => void) | null;
+};
+function HelperSprite() {
+  return (
+    <svg className="helper-sprite" viewBox="0 0 64 64" aria-hidden="true">
+      <path
+        d="M32 12C25 2 16 6 18 15c-13 4-16 18-11 29 4 10 11 13 25 11 14 2 21-1 25-11 5-11 2-25-11-29 2-9-7-13-14-3Z"
+        fill="currentColor"
+      />
+      <path d="M30 13c0-8 7-11 13-9-1 6-6 10-13 9Z" fill="#d7ee79" />
+      <ellipse cx="23" cy="33" rx="3" ry="4" fill="#f5f2e8" />
+      <ellipse cx="41" cy="33" rx="3" ry="4" fill="#f5f2e8" />
+      <path
+        d="M26 43q6 5 12 0"
+        fill="none"
+        stroke="#f5f2e8"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <circle cx="16" cy="40" r="3" fill="#ffb49b" />
+      <circle cx="48" cy="40" r="3" fill="#ffb49b" />
+    </svg>
+  );
+}
+function MealHelper({
+  meals,
+  current,
+  filters,
+  page,
+  visible,
+  onAction,
+  onMeal,
+}: {
+  meals: Meal[];
+  current?: Meal;
+  filters: DiscoveryFilters;
+  page: string;
+  visible: boolean;
+  onAction: (action: HelperAction, query: AssistantQuery) => void;
+  onMeal: (id: string) => void;
+}) {
+  const keyboard = useKeyboard();
+  const helperInsets = useKeyboardInsets();
+  const { device } = useMobileDevice();
+  const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [input, setInput] = useState("");
+  const [turns, setTurns] = useState<HelperTurn[]>([]);
+  const [query, setQuery] = useState<AssistantQuery>({});
+  const [preferences, setPreferences] = useState<MealPreferences>({
+    ...blankPreferences,
+  });
+  const [manage, setManage] = useState(false);
+  const [preferenceEdit, setPreferenceEdit] = useState("");
+  const [voiceConsent, setVoiceConsent] = useState(false);
+  const [listening, setListening] = useState(false);
+  const [notice, setNotice] = useState("");
+  const recognition = useRef<SpeechSession | null>(null);
+  const conversationRef = useRef<HTMLDivElement>(null);
+  const speechConstructor = () => {
+    const browser = window as unknown as {
+      SpeechRecognition?: new () => SpeechSession;
+      webkitSpeechRecognition?: new () => SpeechSession;
+    };
+    return browser.SpeechRecognition || browser.webkitSpeechRecognition;
+  };
+  const stopVoice = () => {
+    const session = recognition.current;
+    if (session) {
+      session.onresult = null;
+      session.onerror = null;
+      session.onend = null;
+      session.abort();
+    }
+    recognition.current = null;
+    setListening(false);
+  };
+  const close = () => {
+    keyboard.hide();
+    stopVoice();
+    setVoiceConsent(false);
+    setOpen(false);
+  };
+  useEffect(
+    () => () => {
+      const session = recognition.current;
+      if (session) {
+        session.onresult = null;
+        session.onerror = null;
+        session.onend = null;
+        session.abort();
+      }
+    },
+    [],
+  );
+  useEffect(() => {
+    if (!visible) close();
+  }, [visible]);
+  useEffect(() => {
+    const pane = conversationRef.current;
+    if (pane && open && !manage) pane.scrollTop = pane.scrollHeight;
+  }, [turns.length, open, manage]);
+  const submit = (question = input) => {
+    if (!question.trim()) return;
+    keyboard.hide();
+    stopVoice();
+    setNotice("");
+    const today = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/London",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(new Date());
+    const reply = assistantReply(question.trim(), {
+      meals,
+      current,
+      filters,
+      query,
+      preferences,
+      today,
+    });
+    if (reply.query) setQuery(reply.query);
+    setTurns((t) => [...t, { question: question.trim(), reply }]);
+    setInput("");
+  };
+  const startVoice = () => {
+    keyboard.hide();
+    setVoiceConsent(false);
+    setNotice("");
+    const Speech = speechConstructor();
+    if (!Speech) {
+      setNotice(
+        "Voice input isn’t available in this browser. You can still type your request.",
+      );
+      return;
+    }
+    const session = new Speech();
+    recognition.current = session;
+    session.lang = "en-GB";
+    session.continuous = false;
+    session.interimResults = false;
+    session.onresult = (e) => {
+      setInput((value) =>
+        [value, e.results[0][0].transcript]
+          .filter(Boolean)
+          .join(" ")
+          .slice(0, 1000),
+      );
+      setNotice("Check the transcript, then send when you’re ready.");
+    };
+    session.onerror = (e) => {
+      setListening(false);
+      setNotice(
+        e.error === "not-allowed"
+          ? "Microphone access wasn’t granted. You can type instead or change your browser permission."
+          : "Voice input stopped. Try again or type your request.",
+      );
+    };
+    session.onend = () => {
+      recognition.current = null;
+      setListening(false);
+    };
+    try {
+      session.start();
+      setListening(true);
+    } catch {
+      setNotice("Voice input couldn’t start. Please type or try again.");
+      setListening(false);
+    }
+  };
+  const prompts = current
+    ? [
+        "Explain this meal’s costs",
+        "Draft an application",
+        "Draft a group message",
+      ]
+    : [
+        "Find a meal for Friday",
+        "Compare meals under £35",
+        "Help me create a meal",
+      ];
+  const helperHeight = Math.min(
+    device.geometry.screen.height * (expanded ? 0.95 : 0.82),
+    helperInsets.availableHeight - device.geometry.safeArea.top - 8,
+  );
+  // BottomSheet subtracts up to 180px for the keyboard. Supply the desired
+  // available height before that adjustment so the header stays below chrome.
+  const helperSnap =
+    (helperHeight + Math.min(helperInsets.keyboardHeight, 180)) /
+    device.geometry.screen.height;
+  if (!visible) return null;
+  return (
+    <>
+      {!open && (
+        <div className={`helper-launcher ${hidden ? "is-tucked" : ""}`}>
+          <button
+            aria-label={hidden ? "Show Fancy helper" : "Open Fancy helper"}
+            className="helper-launch"
+            onClick={() => {
+              keyboard.hide();
+              setHidden(false);
+              setOpen(true);
+            }}
+          >
+            <HelperSprite />
+            {!hidden && <span>Ask Fancy</span>}
+          </button>
+          {!hidden && (
+            <button
+              className="helper-hide"
+              aria-label="Hide Fancy helper"
+              onClick={() => setHidden(true)}
+            >
+              ×
+            </button>
+          )}
+        </div>
+      )}
+      <BottomSheet
+        open={open}
+        onOpenChange={(value) => (value ? setOpen(true) : close())}
+        title="A little help from Fancy"
+        description="Find a table. Make a plan. You decide."
+        snap={helperSnap}
+      >
+        <div
+          className="helper-panel"
+          data-testid="meal-helper"
+          onPointerDownCapture={(event) => {
+            // Match Primary: don't blur an editor and move its action under the
+            // pointer before that action receives the click.
+            if (
+              event.target instanceof Element &&
+              event.target.closest("button")
+            )
+              event.preventDefault();
+          }}
+        >
+          <div className="helper-tools">
+            <HelperSprite />
+            <span className="helper-context">
+              {current
+                ? current.title
+                : page === "create"
+                  ? "Your meal draft"
+                  : "Your meal plans"}
+            </span>
+            <button
+              aria-label={expanded ? "Reduce assistant" : "Expand assistant"}
+              onClick={() => {
+                keyboard.hide();
+                setExpanded(!expanded);
+              }}
+            >
+              {expanded ? "↙" : "↗"}
+            </button>
+            <button aria-label="Close Fancy helper" onClick={close}>
+              ×
+            </button>
+          </div>
+          <div className="helper-utility">
+            <button
+              onClick={() => {
+                keyboard.hide();
+                stopVoice();
+                setVoiceConsent(false);
+                setManage(!manage);
+                setNotice("");
+                setPreferenceEdit(preferenceSummary(preferences));
+              }}
+            >
+              {manage ? "Back to chat" : "My preferences"}
+            </button>
+            <button
+              onClick={() => {
+                keyboard.hide();
+                stopVoice();
+                setVoiceConsent(false);
+                setTurns([]);
+                setQuery({});
+                setInput("");
+                setNotice(
+                  "Conversation cleared. Saved preferences are unchanged.",
+                );
+              }}
+            >
+              Clear chat
+            </button>
+          </div>
+          {manage ? (
+            <div className="helper-preferences">
+              <h3>What I remember</h3>
+              <p>
+                Only preferences you approve. Kept for this session; you can
+                change or delete them.
+              </p>
+              <p className="helper-saved">
+                {preferenceSummary(preferences) || "No saved preferences yet."}
+              </p>
+              <label htmlFor="helper-preferences">Replace preferences</label>
+              <KeyboardTextarea
+                id="helper-preferences"
+                value={preferenceEdit}
+                onChange={(e) => setPreferenceEdit(e.target.value)}
+                onBlur={() => keyboard.hide()}
+                maxLength={300}
+                placeholder="Soho, budget £35, table for 4, English"
+              />
+              <button
+                className="helper-primary"
+                onClick={() => {
+                  keyboard.hide();
+                  const parsed = parseMealRequest(preferenceEdit, "2026-10-18");
+                  const next = { ...blankPreferences };
+                  for (const key of Object.keys(
+                    next,
+                  ) as (keyof MealPreferences)[])
+                    if (parsed[key]) next[key] = parsed[key]!;
+                  if (!preferenceSummary(next)) {
+                    setNotice(
+                      "Add an area, budget, table size, English, relaxed conversation or vegetarian preference. Use Delete preferences to remove everything.",
+                    );
+                    return;
+                  }
+                  setPreferences(next);
+                  setQuery({});
+                  setNotice("Preferences updated. Search conditions reset.");
+                }}
+              >
+                Save preferences
+              </button>
+              <button
+                className="helper-text-button"
+                onClick={() => {
+                  keyboard.hide();
+                  setPreferences({ ...blankPreferences });
+                  setPreferenceEdit("");
+                  setQuery({});
+                  setTurns([]);
+                  setInput("");
+                  setNotice("Preferences deleted and conversation cleared.");
+                }}
+              >
+                Delete preferences
+              </button>
+            </div>
+          ) : (
+            <>
+              <div
+                className="helper-conversation"
+                ref={conversationRef}
+                role="log"
+                aria-label="Conversation with Fancy"
+              >
+                {!turns.length && (
+                  <div className="helper-welcome">
+                    <span className="helper-eyebrow">YOUR NEXT GOOD MEAL</span>
+                    <h2>What sounds good?</h2>
+                    <p>
+                      Tell me when, where and what you’d like to spend. Or let’s
+                      get your own table started.
+                    </p>
+                    <div className="helper-prompts">
+                      {prompts.map((prompt) => (
+                        <button key={prompt} onClick={() => submit(prompt)}>
+                          {prompt}
+                          <ArrowRightIcon />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {turns.map((turn, index) => (
+                  <div className="helper-turn" key={index}>
+                    <p className="helper-question">{turn.question}</p>
+                    <div className="helper-answer">
+                      <strong>Fancy</strong>
+                      <p>{turn.reply.text}</p>
+                      {turn.reply.meals?.map((meal) => (
+                        <button
+                          className="helper-meal-card"
+                          key={meal.id}
+                          onClick={() => {
+                            close();
+                            onMeal(meal.id);
+                          }}
+                        >
+                          <strong>{meal.title}</strong>
+                          <span>
+                            {meal.venue} · {meal.area}
+                          </span>
+                          <span>
+                            {meal.date} · {meal.time} · Table for{" "}
+                            {meal.capacity}
+                          </span>
+                          <span>
+                            £{meal.min}–{meal.max} per person ·{" "}
+                            {meal.capacity - meal.confirmed}{" "}
+                            {meal.capacity - meal.confirmed === 1
+                              ? "place"
+                              : "places"}{" "}
+                            left
+                          </span>
+                          <span>
+                            {meal.mood} · {meal.language}
+                          </span>
+                          <b>
+                            View meal <ArrowRightIcon />
+                          </b>
+                        </button>
+                      ))}
+                      {turn.reply.preferences && (
+                        <div className="helper-draft">
+                          <p>{preferenceSummary(turn.reply.preferences)}</p>
+                          <button
+                            className="helper-primary"
+                            disabled={turn.used}
+                            onClick={() => {
+                              setPreferences(turn.reply.preferences!);
+                              setQuery({});
+                              setTurns((t) =>
+                                t.map((item, i) =>
+                                  i === index ? { ...item, used: true } : item,
+                                ),
+                              );
+                              setNotice(
+                                "Preferences saved. You can change them in My preferences.",
+                              );
+                            }}
+                          >
+                            {turn.used ? "Saved" : "Confirm and remember"}
+                          </button>
+                        </div>
+                      )}
+                      {turn.reply.draft && (
+                        <div className="helper-draft">
+                          <span className="helper-eyebrow">
+                            DRAFT · FOR YOU TO REVIEW
+                          </span>
+                          <p>{turn.reply.draft.text}</p>
+                          <button
+                            className="helper-primary"
+                            onClick={() => {
+                              close();
+                              onAction(
+                                turn.reply.draft!,
+                                turn.reply.query || query,
+                              );
+                            }}
+                          >
+                            {turn.reply.draft.kind === "create"
+                              ? "Review in Create meal"
+                              : turn.reply.draft.kind === "application"
+                                ? "Edit application"
+                                : "Review in meal chat"}
+                          </button>
+                          <small>
+                            {turn.reply.draft.kind === "create"
+                              ? "Replaces the current creation draft. Nothing is published."
+                              : "Replaces the text in the editor. Nothing is sent."}
+                          </small>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {voiceConsent && (
+                <div className="helper-voice-consent">
+                  <p>
+                    Your browser may send audio to its speech service. Voice
+                    uses English (UK). Only the transcript is added here; check
+                    it before sending.
+                  </p>
+                  <button className="helper-primary" onClick={startVoice}>
+                    Start voice input
+                  </button>
+                  <button
+                    className="helper-text-button"
+                    onClick={() => setVoiceConsent(false)}
+                  >
+                    Keep typing
+                  </button>
+                </div>
+              )}
+              <form
+                className="helper-composer"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  submit();
+                }}
+              >
+                <label className="helper-input-label" htmlFor="helper-request">
+                  Ask about a meal or make a plan
+                </label>
+                <div className="helper-input-row">
+                  <KeyboardInput
+                    id="helper-request"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onBlur={() => keyboard.hide()}
+                    maxLength={1000}
+                    placeholder="Friday in Soho, under £35…"
+                    autoComplete="off"
+                  />
+                  <button
+                    type="button"
+                    className={`helper-mic ${listening ? "is-listening" : ""}`}
+                    aria-label={
+                      listening ? "Stop voice input" : "Use voice input"
+                    }
+                    onClick={() => {
+                      keyboard.hide();
+                      if (listening) stopVoice();
+                      else if (!speechConstructor())
+                        setNotice(
+                          "Voice input isn’t available in this browser. You can still type your request.",
+                        );
+                      else setVoiceConsent(true);
+                    }}
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <rect
+                        x="9"
+                        y="2"
+                        width="6"
+                        height="12"
+                        rx="3"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.7"
+                      />
+                      <path
+                        d="M6 10v2a6 6 0 0 0 12 0v-2M12 18v4m-4 0h8"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.7"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    type="submit"
+                    className="helper-send"
+                    aria-label="Send to Fancy"
+                    disabled={!input.trim() || listening}
+                    onPointerDown={(e) => e.preventDefault()}
+                  >
+                    <ArrowRightIcon />
+                  </button>
+                </div>
+              </form>
+            </>
+          )}
+          {notice && (
+            <p className="helper-notice" role="status">
+              {notice}
+            </p>
+          )}
+        </div>
+      </BottomSheet>
+    </>
   );
 }
 
@@ -3757,6 +4348,112 @@ export default function Prototype() {
             </button>
           </nav>
         )}
+        <MealHelper
+          meals={meals.map((meal) => ({
+            ...meal,
+            booking: bookings[meal.id] || meal.booking,
+          }))}
+          current={
+            [
+              "detail",
+              "apply",
+              "status",
+              "checkout",
+              "booking",
+              "chat",
+              "host",
+            ].includes(page)
+              ? { ...current, booking }
+              : undefined
+          }
+          filters={filters}
+          page={page}
+          visible={!sheet}
+          onMeal={(id) => {
+            setSelected(id);
+            go("detail");
+          }}
+          onAction={(action, query) => {
+            if (action.kind === "create") {
+              const venue =
+                createVenues.find((v) => v.area === query.area) ||
+                createVenues[0];
+              const capacity =
+                Number(query.size) >= 2 && Number(query.size) <= 6
+                  ? Number(query.size)
+                  : 4;
+              const date = query.date || initialDraft.date;
+              setDraft({
+                ...initialDraft,
+                venue: venue.name,
+                date,
+                capacity,
+                time: "",
+                title: "A meal with new faces",
+                description: action.text,
+                min: venue.min,
+                max: venue.max,
+                language: query.language || "English",
+                mood: query.mood || "Easy conversation",
+                cost: "offline",
+                deposit: 0,
+                accepted: false,
+                externalConfirmed: false,
+              });
+              setCreateStep(0);
+              setReviewed(false);
+              go("create");
+            } else {
+              const meal = meals.find((m) => m.id === action.mealId);
+              if (!meal) {
+                notify("This meal is no longer available.");
+                return;
+              }
+              setSelected(meal.id);
+              if (action.kind === "application") {
+                const membership = states[meal.id] || "NONE";
+                if (meal.owned) {
+                  go("host");
+                  notify(
+                    "You host this meal. Review your guests in Manage applications.",
+                  );
+                } else if (
+                  membership !== "NONE" &&
+                  membership !== "WITHDRAWN"
+                ) {
+                  go("status");
+                  notify(
+                    "You already have an application or membership for this meal.",
+                  );
+                } else if (
+                  meal.confirmed >= meal.capacity ||
+                  (bookings[meal.id] || meal.booking) === "CANCELLED"
+                ) {
+                  go("detail");
+                  notify("This meal isn’t accepting applications.");
+                } else {
+                  setIntro(action.text);
+                  go("apply");
+                }
+              } else if (
+                groupChatAccess(
+                  meal,
+                  states[meal.id] || "NONE",
+                  confirmedChats[meal.id],
+                  bookings[meal.id] || meal.booking,
+                ) === "write"
+              ) {
+                setChatText(action.text);
+                go("chat");
+              } else {
+                go("detail");
+                notify(
+                  "Only confirmed participants can send to the meal group.",
+                );
+              }
+            }
+          }}
+        />
         {toast && (
           <div
             className="toast"

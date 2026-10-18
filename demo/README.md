@@ -52,3 +52,13 @@ Default URL shows product UI without implementation notes. Append `?review=1` to
 
 ### Full product audit — 18 October 2026
 The route/state audit and acceptance evidence are in `../docs/delivery/full-product-audit.zh-CN.md`; PRD v0.4 records corrected payment/reservation separation, cancellations, refunds, member-specific privacy state, and clean product copy. Normal and review URLs deliberately show different control sets. Prototype dates and external-service responses remain fixtures.
+
+
+### Meal helper — 18 October 2026
+Click the floating green sprite (Ask Fancy), then try “Friday in Soho, table for 4, £35”, “£10”, “any area” or “Help me create a meal”. Open a result and ask for an application, costs or a group-message draft. Draft buttons return to existing editors; publishing, applying, paying and sending still require the user’s action. Unconfirmed users cannot enter chat through the helper.
+
+“Remember Soho, budget £35” proposes preferences; confirm the card to save. My preferences supports replacement and deletion. Everything is session-memory only; refresh and authentication transitions clear the helper. No private chats or third-party application/payment records are consumed.
+
+This is a deterministic frontend interaction prototype with limited English/Chinese request patterns, not a live LLM or autonomous agent. Browser SpeechRecognition, when supported, requires explicit user initiation and may use the browser vendor’s service. Audio recognition defaults to en-GB; text/transcript is editable and never automatically sent. Real microphone recognition is not guaranteed in the embedded browser. See [PRD](../docs/product/PRD.zh-CN.md) FR-12 for scope and data boundaries.
+
+Checks: `pnpm test:domain` includes helper rules. `pnpm exec playwright test tests/assistant.spec.ts --workers=1` verifies helper interactions. When only system Chrome is installed, set `PLAYWRIGHT_CHANNEL=chrome`. Existing `pnpm test:runtime`, `pnpm exec tsc --noEmit`, `pnpm build`, and `pnpm test:sites` remain required. This iteration does not publish the public Sites deployment.

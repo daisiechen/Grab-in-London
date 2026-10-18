@@ -102,3 +102,10 @@ When any text-entry control loses focus, dismiss the simulated keyboard. If the 
 - Payment confirms membership without confirming the restaurant; only hosts change reservations. Failed bookings retain confirmed group access; cancelled participants retain read-only history.
 - Keep Cancelled separate from Upcoming. Store refund values per meal, blocks per member, and direct messages per contact. Self-avatar navigation uses current profile data.
 - Normal product errors and pending-state copy contain no implementation remarks. Keep simulation controls in explicit acceptance mode. See PRD v0.4 and full-product-audit report for evidence and limitations.
+
+
+## Confirmed meal helper — 2026-10-18
+- Use an original forest-green little sprite as a collapsed floating entry, never a bottom tab. Open on demand; no unsolicited messages. Allow tuck-away, restore and expansion.
+- Current scope is practical meal finding, creation and participation assistance. Text plus optional browser speech-to-text; users edit transcripts before sending.
+- Drafts return to existing editors. Applications, publishing, messages and payments remain human-confirmed and keep original permissions. No autonomous tool execution.
+- Save only explicitly confirmed meal preferences; allow correction and deletion. No automatic conversation reading or private third-party data access. This prototype uses a local rule model, not a live language-model integration.
