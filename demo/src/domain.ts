@@ -444,9 +444,12 @@ export function validateArrangement(
     !Number.isFinite(d.min) ||
     !Number.isFinite(d.max) ||
     d.min <= 0 ||
-    d.max < d.min
+    d.max < d.min ||
+    [d.min, d.max].some(
+      (amount) => Math.abs(Math.round(amount * 100) - amount * 100) > 0.000001,
+    )
   )
-    return "Enter a positive per-person budget; the maximum must be at least the minimum.";
+    return "Enter a positive per-person budget; the maximum must be at least the minimum, with up to two decimals.";
   if (!["offline", "deposit", "menu"].includes(d.cost))
     return "Choose how guests will pay.";
   if (
@@ -475,10 +478,10 @@ export function validateDemoEmail(email: string) {
     : "Enter a valid email address.";
 }
 export function validateDemoCode(code: string, expired = false) {
-  if (expired) return "This code has expired. Request a new demo code.";
+  if (expired) return "This code has expired. Request a new code.";
   return code === "123456"
     ? ""
-    : "That code doesn’t match. Use the demo code 123456.";
+    : "That code doesn’t match. Check the six digits and try again.";
 }
 export function needsAccount(destination: string) {
   return [
@@ -531,4 +534,66 @@ export function groupChatAccess(
   if (currentMember) return booking === "CANCELLED" ? "read-only" : "write";
   if (state === "CANCELLED" && wasConfirmed) return "read-only";
   return "locked";
+}
+
+/** Seat payment never confirms the restaurant reservation. */
+export function settleSeatPayment(
+  state: JoinState,
+  paid: PaymentState,
+  success: boolean,
+  booking: BookingState,
+) {
+  if (booking === "CANCELLED")
+    throw new Error("This meal was cancelled. No payment can be taken.");
+  return { ...completePayment(state, paid, success), booking };
+}
+export function addConfirmedMember(meal: Meal, memberId: string): Meal {
+  if (meal.members.includes(memberId)) return meal;
+  if (meal.confirmed >= meal.capacity) throw new Error("This table is full.");
+  return {
+    ...meal,
+    confirmed: meal.confirmed + 1,
+    members: [...meal.members, memberId],
+  };
+}
+export function bookingStatusLabel(booking: BookingState) {
+  return {
+    PENDING: "Reservation pending",
+    CONFIRMED: "Restaurant confirmed",
+    FAILED: "Reservation needs attention",
+    CANCELLED: "Reservation cancelled",
+  }[booking];
+}
+export function blockedMemberIds(blocked: Record<string, boolean>) {
+  return Object.keys(blocked).filter((id) => blocked[id]);
+}
+
+export function mealInCategory(meal: Meal, state: JoinState, category: string) {
+  if (category === "Hosting") return !!meal.owned;
+  if (category === "Applications")
+    return [
+      "PENDING",
+      "APPROVED_PAYMENT_PENDING",
+      "DECLINED",
+      "WITHDRAWN",
+    ].includes(state);
+  if (category === "Cancelled") return state === "CANCELLED";
+  return category === "Upcoming" && state === "CONFIRMED";
+}
+
+export function reservationNeedsUpdate(
+  booking: BookingState,
+  reserved: number,
+  confirmed: number,
+) {
+  return booking === "CONFIRMED" && reserved !== confirmed;
+}
+
+export function alternativeReservationSlot(meal: Meal) {
+  const alternatives = availableCreateSlots(
+    meal.venue,
+    meal.date,
+    meal.confirmed,
+  ).filter((time) => time !== meal.time);
+  return alternatives.find((time) => time > meal.time) || alternatives[0] || "";
 }

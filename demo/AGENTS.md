@@ -97,3 +97,8 @@ When any text-entry control loses focus, dismiss the simulated keyboard. If the 
 - Visible wordmark is Fancy with capital F. Normal screens contain no prototype ribbons, developer annotations, replay/reset links, or simulated host/payment controls.
 - Keep scenario tools behind explicit `?review=1` acceptance mode using ReviewOnly; this is a presentation switch, never an authorization boundary.
 - Keep product-facing costs, cancellation rules, admission status, and privacy explanations. Document all unimplemented backend capabilities in PRD and development documentation.
+
+## Full-flow consistency — 2026-10-18
+- Payment confirms membership without confirming the restaurant; only hosts change reservations. Failed bookings retain confirmed group access; cancelled participants retain read-only history.
+- Keep Cancelled separate from Upcoming. Store refund values per meal, blocks per member, and direct messages per contact. Self-avatar navigation uses current profile data.
+- Normal product errors and pending-state copy contain no implementation remarks. Keep simulation controls in explicit acceptance mode. See PRD v0.4 and full-product-audit report for evidence and limitations.

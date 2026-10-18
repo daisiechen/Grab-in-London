@@ -43,3 +43,8 @@ BRAND in src/brand.ts owns Fancy name, lowercase wordmark, invitation, supportin
 
 ## Product presentation, 18 October 2026
 Use the capitalized Fancy wordmark. Default product screens omit prototype annotations, city marginalia and scenario/replay/reset controls. Acceptance tools are opt-in at `?review=1`; costs, cancellation terms and membership permissions remain visible. No live backend integrations were added.
+
+## Full-flow consistency — 2026-10-18
+- Payment confirms membership without confirming the restaurant; only hosts change reservations. Failed bookings retain confirmed group access; cancelled participants retain read-only history.
+- Keep Cancelled separate from Upcoming. Store refund values per meal, blocks per member, and direct messages per contact. Self-avatar navigation uses current profile data.
+- Normal product errors and pending-state copy contain no implementation remarks. Keep simulation controls in explicit acceptance mode. See PRD v0.4 and full-product-audit report for evidence and limitations.

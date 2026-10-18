@@ -58,7 +58,13 @@ import {
   eligibleMeals,
   applyToMeal,
   approveApplication,
-  completePayment,
+  settleSeatPayment,
+  addConfirmedMember,
+  bookingStatusLabel,
+  blockedMemberIds,
+  mealInCategory,
+  reservationNeedsUpdate,
+  alternativeReservationSlot,
   longDate,
   groupChatAccess,
   inboxStage,
@@ -141,7 +147,13 @@ const labels: Record<JoinState, string> = {
   CANCELLED: "Participation cancelled",
 };
 const iconStyle = { width: 18, height: 18 };
-const money = (value: number) => `£${value}`;
+const money = (value: number) =>
+  new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency: "GBP",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(value);
 const SelfProfileContext = createContext({ image: "leo", name: "Alex" });
 function Avatar({
   id,
@@ -191,7 +203,9 @@ function Primary({
 }) {
   return (
     <button
+      type="button"
       className={`primary ${secondary ? "secondary" : ""}`}
+      onPointerDown={(event) => event.preventDefault()}
       onClick={onClick}
       disabled={disabled}
     >
@@ -304,7 +318,11 @@ function DateChoices({
           >
             <ChevronLeftIcon />
           </button>
-          <button aria-label="Next month" onClick={() => changeMonth(1)}>
+          <button
+            aria-label="Next month"
+            disabled={creation && month >= "2026-11"}
+            onClick={() => changeMonth(1)}
+          >
             <ChevronRightIcon />
           </button>
         </div>
@@ -348,7 +366,13 @@ function DateChoices({
         ))}
       </fieldset>
       <p className="calendar-hint">
-        <span /> Meals available · London time
+        {creation ? (
+          "Choose a date · London time"
+        ) : (
+          <>
+            <span /> Meals available · London time
+          </>
+        )}
       </p>
     </div>
   );
@@ -610,6 +634,7 @@ function BrandEntrance({
                     onClick={() => {
                       const error = validateDemoEmail(email);
                       if (error) {
+                        keyboard.hide();
                         setIssue(error);
                         return;
                       }
@@ -643,6 +668,7 @@ function BrandEntrance({
                     onClick={() => {
                       const error = validateDemoCode(code, expired);
                       if (error) {
+                        keyboard.hide();
                         setIssue(error);
                         return;
                       }
@@ -697,7 +723,7 @@ function BrandEntrance({
                         >
                           <img
                             src={`/images/${id}.png`}
-                            alt="Fictional portrait"
+                            alt="Profile portrait"
                           />
                           {photo === id && <CheckCircledIcon />}
                         </button>
@@ -916,13 +942,17 @@ export default function Prototype() {
   );
   const [states, setStates] = useState<Record<string, JoinState>>({});
   const [payments, setPayments] = useState<Record<string, PaymentState>>({});
+  const [reservedSizes, setReservedSizes] = useState<Record<string, number>>(
+    {},
+  );
   const [bookings, setBookings] = useState<Record<string, BookingState>>({});
+  const [refundValues, setRefundValues] = useState<Record<string, number>>({});
   const [refunds, setRefunds] = useState<
     Record<string, "PENDING" | "REFUNDED" | "FAILED">
   >({});
   const [memberId, setMemberId] = useState("maya");
   const [intro, setIntro] = useState(
-    "I’m new to London and would love to meet people over a relaxed dinner.",
+    "I’m new to London and would love to meet people over a relaxed meal.",
   );
   const [error, setError] = useState("");
   const [consent, setConsent] = useState(false);
@@ -947,8 +977,19 @@ export default function Prototype() {
   const [wants, setWants] = useState(false);
   const [reviewed, setReviewed] = useState(false);
   const [mutual, setMutual] = useState(false);
-  const [completed, setCompleted] = useState(false);
-  const [blocked, setBlocked] = useState(false);
+  const [completed, setCompleted] = useState<Record<string, boolean>>({});
+  const [feedbackTarget, setFeedbackTarget] = useState({
+    mealId: "past-supper",
+    title: "A little supper club",
+    date: "2026-10-15",
+    memberId: "maya",
+  });
+  const directKey = `direct-${feedbackTarget.memberId}`;
+  const [blockedMembers, setBlockedMembers] = useState<Record<string, boolean>>(
+    {},
+  );
+  const blocked = !!blockedMembers[feedbackTarget.memberId];
+  const reportMemberId = page === "member" ? memberId : feedbackTarget.memberId;
   const [report, setReport] = useState("");
   const [scenarioPayment, setScenarioPayment] = useState(false);
   const [beforeDeadline, setBeforeDeadline] = useState(true);
@@ -958,6 +999,7 @@ export default function Prototype() {
   const join = states[current.id] || "NONE";
   const payment = payments[current.id] || "UNPAID";
   const booking = bookings[current.id] || current.booking;
+  const alternativeTime = alternativeReservationSlot(current);
   const matches = eligibleMeals(meals, filters);
   const activeCount = Object.values(filters).filter((value) =>
     value.trim(),
@@ -1006,6 +1048,7 @@ export default function Prototype() {
     [],
   );
   const go = (to: Page) => {
+    setToast("");
     if (!signedIn && needsAccount(to)) {
       keyboard.hide();
       setAfterAuth(to);
@@ -1019,6 +1062,7 @@ export default function Prototype() {
     setPage(to);
   };
   const root = (to: Page) => {
+    setToast("");
     if (!signedIn && needsAccount(to)) {
       keyboard.hide();
       setAfterAuth(to);
@@ -1032,6 +1076,7 @@ export default function Prototype() {
     setPage(to);
   };
   const back = () => {
+    setToast("");
     keyboard.hide();
     setError("");
     setHistory((h) => {
@@ -1044,6 +1089,10 @@ export default function Prototype() {
     go("detail");
   };
   const openMember = (id: string) => {
+    if (id === "alex") {
+      go("profile");
+      return;
+    }
     setMemberId(id);
     go("member");
   };
@@ -1052,15 +1101,7 @@ export default function Prototype() {
   const countUp = (mealId = current.id) => {
     setConfirmedChats((s) => ({ ...s, [mealId]: true }));
     setMeals((ms) =>
-      ms.map((m) =>
-        m.id === mealId && !m.members.includes("alex")
-          ? {
-              ...m,
-              confirmed: Math.min(m.capacity, m.confirmed + 1),
-              members: [...m.members, "alex"],
-            }
-          : m,
-      ),
+      ms.map((m) => (m.id === mealId ? addConfirmedMember(m, "alex") : m)),
     );
   };
   const submitApplication = () => {
@@ -1093,12 +1134,12 @@ export default function Prototype() {
     setError("");
     setTimeout(() => {
       try {
-        const r = completePayment(join, payment, !scenarioPayment);
+        const r = settleSeatPayment(join, payment, !scenarioPayment, booking);
         updateJoin(r.join);
         setPayments((p) => ({ ...p, [current.id]: r.payment }));
         if (r.payment === "PAID") {
           if (payment !== "PAID") countUp();
-          setBookings((b) => ({ ...b, [current.id]: "CONFIRMED" }));
+          setBookings((b) => ({ ...b, [current.id]: r.booking }));
           go("booking");
         } else setError("Payment declined. Your seat is held. Try again.");
       } catch (e) {
@@ -1127,8 +1168,13 @@ export default function Prototype() {
         ),
       );
     updateJoin("CANCELLED");
-    if (platformCancel)
-      setBookings((b) => ({ ...b, [current.id]: "CANCELLED" }));
+    setRefundValues((r) => ({
+      ...r,
+      [current.id]:
+        payment === "PAID"
+          ? refundAmount(current.deposit, beforeDeadline, platformCancel)
+          : 0,
+    }));
     if (
       payment === "PAID" &&
       refundAmount(current.deposit, beforeDeadline, platformCancel) > 0
@@ -1157,7 +1203,7 @@ export default function Prototype() {
     }
     const meal: Meal = {
       id: `created-${Date.now()}`,
-      title: draft.title,
+      title: draft.title.trim(),
       venue: draft.venue,
       area: createVenues.find((v) => v.name === draft.venue)!.area,
       date: draft.date,
@@ -1169,11 +1215,19 @@ export default function Prototype() {
       deposit: createDueNow(draft),
       language: draft.language,
       mood: draft.mood,
-      description: draft.description,
+      description: draft.description.trim(),
       host: "alex",
       members: ["alex"],
-      x: 42,
-      y: 38,
+      x: initialMeals.find(
+        (m) =>
+          m.area === createVenues.find((v) => v.name === draft.venue)!.area,
+      )!.x,
+      y: initialMeals.find(
+        (m) =>
+          m.area === createVenues.find((v) => v.name === draft.venue)!.area,
+      )!.y,
+      cuisine: createVenues.find((v) => v.name === draft.venue)!.cuisine,
+      dietary: ["Vegetarian options"],
       booking: draft.booking === "external" ? "CONFIRMED" : "PENDING",
       costMode:
         draft.cost === "offline"
@@ -1304,7 +1358,7 @@ export default function Prototype() {
     edit: "Edit profile",
     review: "After the meal",
     host: "Your guest list",
-    direct: "Maya",
+    direct: members[feedbackTarget.memberId].name,
     settings: "Settings",
   };
   const topLevel = ["discover", "meals", "inbox", "profile"].includes(page);
@@ -1563,13 +1617,19 @@ export default function Prototype() {
               {current.members.map((id) => (
                 <button key={id} onClick={() => openMember(id)}>
                   <Avatar id={id} size={49} />
-                  <span>{members[id]?.name || "Alex"}</span>
+                  <span>
+                    {id === "alex" ? profile.name : members[id]?.name}
+                  </span>
                 </button>
               ))}
               {current.confirmed < current.capacity && (
                 <div className="open-seat">
                   <PersonIcon />
-                  <span>Your seat?</span>
+                  <span>
+                    {current.owned || join === "CONFIRMED"
+                      ? "Open seat"
+                      : "Your seat?"}
+                  </span>
                 </div>
               )}
             </div>
@@ -1586,7 +1646,7 @@ export default function Prototype() {
                     ? "Restaurant booked"
                     : booking === "FAILED"
                       ? "Booking needs attention"
-                      : "Reservation pending"}
+                      : bookingStatusLabel(booking)}
                 </span>
               </div>
             </div>
@@ -1608,7 +1668,9 @@ export default function Prototype() {
             <div className="price-row">
               <span>Expected spend per person</span>
               <strong>
-                £{current.min}–{current.max}
+                {current.min === current.max
+                  ? money(current.min)
+                  : `${money(current.min)}–${current.max}`}
               </strong>
             </div>
             <div className="price-row">
@@ -1678,7 +1740,9 @@ export default function Prototype() {
           <div className="quote">
             “Made everyone feel included, even on my first meal. Would happily
             share a table again.”
-            <small>Emma · Shared a meal in September · Shared meal</small>
+            <small>
+              {m.id === "emma" ? "Maya" : "Emma"} · Shared a meal in September
+            </small>
           </div>
           <ReviewOnly>
             <p className="muted">
@@ -1686,7 +1750,7 @@ export default function Prototype() {
               self-described.
             </p>
           </ReviewOnly>
-          {blocked && (
+          {blockedMembers[memberId] && (
             <div className="notice">
               You have blocked this member. Private contact is disabled.
             </div>
@@ -1695,7 +1759,7 @@ export default function Prototype() {
             Report or block this member
           </button>
           <Primary secondary onClick={back}>
-            Back to the meal
+            Go back
           </Primary>
         </div>
       );
@@ -1703,7 +1767,7 @@ export default function Prototype() {
     if (page === "apply")
       return (
         <div className="body-pad">
-          <span className="eyebrow">A GOOD EVENING STARTS WITH HELLO</span>
+          <span className="eyebrow">A GOOD MEAL STARTS WITH HELLO</span>
           <h1>Pull up a chair.</h1>
           <p className="prose">
             Tell {members[current.host]?.name || "your host"} a little about
@@ -1766,9 +1830,15 @@ export default function Prototype() {
               {error}
             </p>
           )}
-          <Primary onClick={submitApplication}>
-            Send request <ArrowRightIcon />
-          </Primary>
+          {join === "NONE" || join === "WITHDRAWN" ? (
+            <Primary onClick={submitApplication}>
+              Send request <ArrowRightIcon />
+            </Primary>
+          ) : (
+            <Primary onClick={() => go("status")}>
+              View application <ArrowRightIcon />
+            </Primary>
+          )}
         </div>
       );
     if (page === "status")
@@ -1786,7 +1856,9 @@ export default function Prototype() {
                   ? "You’re at the table."
                   : join === "DECLINED"
                     ? "Another table awaits."
-                    : "Your request is withdrawn."}
+                    : join === "CANCELLED"
+                      ? "Your participation is cancelled."
+                      : "Your request is withdrawn."}
           </h1>
           <p className="prose">
             {join === "PENDING"
@@ -1960,7 +2032,9 @@ export default function Prototype() {
             {join === "CANCELLED"
               ? "Your place has been released. Any eligible refund is shown below."
               : booking === "FAILED"
-                ? "The restaurant couldn’t confirm this slot. Choose a different time or cancel for a full refund."
+                ? current.owned
+                  ? "The restaurant couldn’t confirm this slot. Choose an alternative time for your group."
+                  : "The restaurant couldn’t confirm this slot. Your host is arranging an alternative. Chat with your table or cancel for a full refund."
                 : booking === "PENDING"
                   ? current.owned
                     ? "Check your confirmed guests, then finalise the restaurant reservation below."
@@ -1991,7 +2065,7 @@ export default function Prototype() {
               <span>Restaurant</span>
               <strong>
                 {booking === "CONFIRMED"
-                  ? "Confirmed · GRB-1023"
+                  ? "Confirmed"
                   : booking === "FAILED"
                     ? "Confirmation failed"
                     : booking === "CANCELLED"
@@ -2013,16 +2087,7 @@ export default function Prototype() {
             </div>
             {refunds[current.id] && (
               <div className="ticket-status">
-                <span>
-                  Refund ·{" "}
-                  {money(
-                    refundAmount(
-                      current.deposit,
-                      beforeDeadline,
-                      platformCancel,
-                    ),
-                  )}
-                </span>
+                <span>Refund · {money(refundValues[current.id] || 0)}</span>
                 <strong>
                   {refunds[current.id] === "REFUNDED"
                     ? "Refunded"
@@ -2036,21 +2101,41 @@ export default function Prototype() {
           {current.owned && (
             <>
               <Primary
-                disabled={!groupReady(current.capacity, current.confirmed)}
+                disabled={
+                  (booking === "CONFIRMED" &&
+                    !reservationNeedsUpdate(
+                      booking,
+                      reservedSizes[current.id] ?? current.capacity,
+                      current.confirmed,
+                    )) ||
+                  booking === "CANCELLED" ||
+                  booking === "FAILED" ||
+                  !groupReady(current.capacity, current.confirmed)
+                }
                 onClick={() => {
                   setBookings((b) => ({ ...b, [current.id]: "CONFIRMED" }));
+                  setReservedSizes((all) => ({
+                    ...all,
+                    [current.id]: current.confirmed,
+                  }));
                   notify(
                     `Reservation confirmed for ${current.confirmed} people.`,
                   );
                 }}
               >
                 {booking === "CONFIRMED"
-                  ? "Reconfirm reservation"
+                  ? reservationNeedsUpdate(
+                      booking,
+                      reservedSizes[current.id] ?? current.capacity,
+                      current.confirmed,
+                    )
+                    ? `Update reservation for ${current.confirmed} people`
+                    : "Reservation confirmed"
                   : `Confirm reservation for ${current.confirmed} people`}
               </Primary>
               <p className="muted">
                 {groupReady(current.capacity, current.confirmed)
-                  ? "Available slot selected. No real restaurant is contacted."
+                  ? "Confirm the reservation for the current number of confirmed guests."
                   : "At least 3 confirmed guests are needed for a small group, or both guests for a table for two."}
               </p>
               <Primary secondary onClick={() => go("host")}>
@@ -2058,24 +2143,34 @@ export default function Prototype() {
               </Primary>
             </>
           )}
-          {join === "CONFIRMED" && booking !== "FAILED" && (
-            <Primary onClick={() => go("chat")}>
-              Meet your table in chat <ChatBubbleIcon />
-            </Primary>
-          )}
-          {booking === "FAILED" && join !== "CANCELLED" && (
+          {(join === "CONFIRMED" || current.owned) &&
+            booking !== "CANCELLED" && (
+              <Primary onClick={() => go("chat")}>
+                Meet your table in chat <ChatBubbleIcon />
+              </Primary>
+            )}
+          {booking === "FAILED" && current.owned && (
             <Primary
+              disabled={!alternativeTime}
               onClick={() => {
                 setBookings((b) => ({ ...b, [current.id]: "CONFIRMED" }));
                 setMeals((ms) =>
                   ms.map((m) =>
-                    m.id === current.id ? { ...m, time: "19:30" } : m,
+                    m.id === current.id ? { ...m, time: alternativeTime } : m,
                   ),
                 );
-                notify("Restaurant confirmed the alternative 19:30 slot.");
+                setReservedSizes((all) => ({
+                  ...all,
+                  [current.id]: current.confirmed,
+                }));
+                notify(
+                  `Restaurant confirmed the alternative ${alternativeTime} slot.`,
+                );
               }}
             >
-              Choose available slot · 19:30
+              {alternativeTime
+                ? `Choose available slot · ${alternativeTime}`
+                : "No alternative times available"}
             </Primary>
           )}
           {join === "CONFIRMED" && (
@@ -2097,7 +2192,7 @@ export default function Prototype() {
               Explore demo outcomes
             </button>
           </ReviewOnly>
-          {completed && (
+          {completed[current.id] && (
             <Primary secondary onClick={() => go("review")}>
               Leave feedback
             </Primary>
@@ -2139,8 +2234,8 @@ export default function Prototype() {
                   </strong>
                   <p>
                     {direct
-                      ? "Start a conversation or invite Maya to another meal."
-                      : `${current.venue} · ${booking === "CONFIRMED" ? "Restaurant confirmed" : "Reservation pending"}`}
+                      ? `Start a conversation or invite ${members[feedbackTarget.memberId].name} to another meal.`
+                      : `${current.venue} · ${bookingStatusLabel(booking)}`}
                   </p>
                 </div>
               </div>
@@ -2158,9 +2253,16 @@ export default function Prototype() {
                 {!direct && chatAccess === "read-only" ? "ARCHIVE" : "TODAY"}
               </p>
               <div className="chat-message">
-                <Avatar id={direct ? "maya" : speaker} size={30} />
+                <Avatar
+                  id={direct ? feedbackTarget.memberId : speaker}
+                  size={30}
+                />
                 <div>
-                  <small>{direct ? "Maya" : members[speaker].name}</small>
+                  <small>
+                    {direct
+                      ? members[feedbackTarget.memberId].name
+                      : members[speaker].name}
+                  </small>
                   <p>
                     {direct
                       ? "Lovely meeting you! Shall we find another table soon?"
@@ -2180,7 +2282,7 @@ export default function Prototype() {
                   </div>
                 )}
               {(direct
-                ? messages.direct || []
+                ? messages[directKey] || []
                 : chatAccess === "read-only"
                   ? chatArchives[current.id] || messages[current.id] || []
                   : messages[current.id] || []
@@ -2536,7 +2638,9 @@ export default function Prototype() {
                 <small>
                   {draft.cost === "offline"
                     ? "Estimated spend is a guide, not a fixed charge."
-                    : "Balance paid at the restaurant."}
+                    : draft.cost === "menu"
+                      ? "Menu paid in full; drinks and service are extra."
+                      : "Balance paid at the restaurant."}
                 </small>
               </div>
               <ChoiceGroup
@@ -2617,7 +2721,7 @@ export default function Prototype() {
                     draft.cost === "menu"
                       ? `£${draft.min} fixed menu per person`
                       : `£${draft.min}–${draft.max} estimated per person`,
-                    `£${createDueNow(draft)} after approval · ${draft.booking === "external" ? "Host reports already booked" : "Reservation pending"}`,
+                    `${draft.cost === "offline" ? "Pay at the restaurant" : `${money(createDueNow(draft))} after approval`} · ${draft.booking === "external" ? "Host reports already booked" : "Reservation pending"}`,
                     2,
                   ],
                 ].map(([label, a, b, step]) => (
@@ -2696,21 +2800,24 @@ export default function Prototype() {
       return (
         <div className="body-pad">
           <div className="eyebrow">GOOD PLANS, ALL IN ONE PLACE</div>
-          <h1>Your next good evening.</h1>
+          <h1>Your next good meal.</h1>
           <Carousel
             ariaLabel="Meal categories"
             className="tab-carousel"
             contentClassName="tabs"
           >
-            {["Upcoming", "Applications", "Hosting", "Past"].map((t) => (
-              <button
-                className={mealTab === t ? "selected" : ""}
-                onClick={() => setMealTab(t)}
-                key={t}
-              >
-                {t}
-              </button>
-            ))}
+            {["Upcoming", "Applications", "Hosting", "Past", "Cancelled"].map(
+              (t) => (
+                <button
+                  className={mealTab === t ? "selected" : ""}
+                  aria-pressed={mealTab === t}
+                  onClick={() => setMealTab(t)}
+                  key={t}
+                >
+                  {t}
+                </button>
+              ),
+            )}
           </Carousel>
           {mealTab === "Past" ? (
             <>
@@ -2722,8 +2829,27 @@ export default function Prototype() {
                   <Avatar id="maya" />
                   <Avatar id="emma" />
                 </div>
-                <Primary secondary onClick={() => go("review")}>
-                  {reviewed ? "View your feedback" : "Leave feedback"}
+                <Primary
+                  secondary
+                  onClick={() => {
+                    if (feedbackTarget.mealId !== "past-supper") {
+                      setFeedbackTarget({
+                        mealId: "past-supper",
+                        title: "A little supper club",
+                        date: "2026-10-15",
+                        memberId: "maya",
+                      });
+                      setReview("");
+                      setReviewed(false);
+                      setWants(false);
+                      setMutual(false);
+                    }
+                    go("review");
+                  }}
+                >
+                  {reviewed && feedbackTarget.mealId === "past-supper"
+                    ? "View your feedback"
+                    : "Leave feedback"}
                 </Primary>
               </div>
               <ReviewOnly>
@@ -2736,17 +2862,7 @@ export default function Prototype() {
             <>
               {meals
                 .filter((m) =>
-                  mealTab === "Hosting"
-                    ? m.owned
-                    : mealTab === "Applications"
-                      ? [
-                          "PENDING",
-                          "APPROVED_PAYMENT_PENDING",
-                          "DECLINED",
-                          "WITHDRAWN",
-                        ].includes(states[m.id] || "")
-                      : states[m.id] === "CONFIRMED" ||
-                        states[m.id] === "CANCELLED",
+                  mealInCategory(m, states[m.id] || "NONE", mealTab),
                 )
                 .map((m) => (
                   <div className="list-meal" key={m.id}>
@@ -2761,17 +2877,7 @@ export default function Prototype() {
                   </div>
                 ))}
               {!meals.some((m) =>
-                mealTab === "Hosting"
-                  ? m.owned
-                  : mealTab === "Applications"
-                    ? [
-                        "PENDING",
-                        "APPROVED_PAYMENT_PENDING",
-                        "DECLINED",
-                        "WITHDRAWN",
-                      ].includes(states[m.id] || "")
-                    : states[m.id] === "CONFIRMED" ||
-                      states[m.id] === "CANCELLED",
+                mealInCategory(m, states[m.id] || "NONE", mealTab),
               ) && (
                 <div className="empty">
                   <CalendarIcon />
@@ -2878,7 +2984,7 @@ export default function Prototype() {
                     <p>
                       {pending
                         ? `${members[m.host]?.name || "Your host"} will review your introduction. You haven’t joined the group yet.`
-                        : `Pay £${m.deposit} to confirm your seat and unlock the meal group. No real charge is made.`}
+                        : `Pay £${m.deposit} to confirm your seat and unlock the meal group.`}
                     </p>
                     {pending ? (
                       <ReviewOnly>
@@ -2963,9 +3069,9 @@ export default function Prototype() {
             <>
               <h2>Personal conversations</h2>
               <button className="inbox-row" onClick={() => go("direct")}>
-                <Avatar id="maya" size={46} />
+                <Avatar id={feedbackTarget.memberId} size={46} />
                 <div>
-                  <strong>Maya</strong>
+                  <strong>{members[feedbackTarget.memberId].name}</strong>
                   <p>
                     {preferences.messagePreviews
                       ? "You both want to meet again."
@@ -3076,28 +3182,32 @@ export default function Prototype() {
             </p>
             <div className="settings-info-row">
               <span>Blocked members</span>
-              <strong>{blocked ? "1 member" : "None"}</strong>
+              <strong>
+                {blockedMemberIds(blockedMembers).length
+                  ? `${blockedMemberIds(blockedMembers).length} member${blockedMemberIds(blockedMembers).length === 1 ? "" : "s"}`
+                  : "None"}
+              </strong>
             </div>
-            {blocked && (
+            {blockedMemberIds(blockedMembers).map((id) => (
               <button
+                key={id}
                 className="text-action"
                 onClick={() => {
-                  setBlocked(false);
+                  setBlockedMembers((all) => ({ ...all, [id]: false }));
                   notify(
-                    "Maya unblocked. Mutual connection rules still apply.",
+                    `${members[id].name} unblocked. Mutual connection rules still apply.`,
                   );
                 }}
               >
-                Unblock Maya
+                Unblock {members[id].name}
               </button>
-            )}
+            ))}
             <div className="settings-info-row">
               <span>App language</span>
               <strong>English</strong>
             </div>
             <small>
-              More interface languages are planned. Conversation languages can
-              be changed in your profile.
+              Conversation languages can be changed in your profile.
             </small>
           </section>
           <section>
@@ -3168,7 +3278,7 @@ export default function Prototype() {
           <div className="profile-heading">
             <Avatar id="alex" size={82} />
             <h1>{profile.name}</h1>
-            <p>{profile.work}</p>
+            {profile.work && <p>{profile.work}</p>}
             <span className="pill">{profile.life}</span>
           </div>
           <Primary
@@ -3290,10 +3400,12 @@ export default function Prototype() {
             A little feedback helps the next person feel welcome.
           </p>
           <div className="host-line">
-            <Avatar id="maya" size={46} />
+            <Avatar id={feedbackTarget.memberId} size={46} />
             <div>
-              <strong>Maya</strong>
-              <p>A little supper club · Thu 15 Oct</p>
+              <strong>{members[feedbackTarget.memberId].name}</strong>
+              <p>
+                {feedbackTarget.title} · {longDate(feedbackTarget.date)}
+              </p>
             </div>
           </div>
           {!reviewed ? (
@@ -3359,7 +3471,9 @@ export default function Prototype() {
                   <div className="demo-panel">
                     <span>DEMO PREVIEW</span>
                     <p>
-                      Explore what happens when Maya also wants to meet again.
+                      Explore what happens when{" "}
+                      {members[feedbackTarget.memberId].name} also wants to meet
+                      again.
                     </p>
                     <Primary
                       secondary
@@ -3377,10 +3491,14 @@ export default function Prototype() {
                 <>
                   <div className="notice">
                     <HeartIcon />
-                    <span>You and Maya both want to meet again.</span>
+                    <span>
+                      You and {members[feedbackTarget.memberId].name} both want
+                      to meet again.
+                    </span>
                   </div>
                   <Primary onClick={() => go("direct")}>
-                    Say hello to Maya <ChatBubbleIcon />
+                    Say hello to {members[feedbackTarget.memberId].name}{" "}
+                    <ChatBubbleIcon />
                   </Primary>
                 </>
               )}
@@ -3445,11 +3563,7 @@ export default function Prototype() {
                       setMeals((ms) =>
                         ms.map((m) =>
                           m.id === current.id
-                            ? {
-                                ...m,
-                                confirmed: m.confirmed + 1,
-                                members: [...m.members, "emma"],
-                              }
+                            ? addConfirmedMember(m, "emma")
                             : m,
                         ),
                       );
@@ -3474,14 +3588,7 @@ export default function Prototype() {
                         setMeals((ms) =>
                           ms.map((m) =>
                             m.id === current.id
-                              ? {
-                                  ...m,
-                                  confirmed: Math.min(
-                                    m.capacity,
-                                    m.confirmed + 1,
-                                  ),
-                                  members: [...m.members, "emma"],
-                                }
+                              ? addConfirmedMember(m, "emma")
                               : m,
                           ),
                         );
@@ -3584,7 +3691,7 @@ export default function Prototype() {
                   !e.nativeEvent.isComposing &&
                   chatText.trim()
                 ) {
-                  const key = page === "direct" ? "direct" : current.id;
+                  const key = page === "direct" ? directKey : current.id;
                   setMessages((ms) => ({
                     ...ms,
                     [key]: [...(ms[key] || []), chatText.trim()],
@@ -3599,7 +3706,7 @@ export default function Prototype() {
               onPointerDown={(e) => e.preventDefault()}
               disabled={!chatText.trim()}
               onClick={() => {
-                const key = page === "direct" ? "direct" : current.id;
+                const key = page === "direct" ? directKey : current.id;
                 setMessages((ms) => ({
                   ...ms,
                   [key]: [...(ms[key] || []), chatText.trim()],
@@ -4021,11 +4128,24 @@ export default function Prototype() {
                 </Primary>
               </>
             )}
-            {join === "CONFIRMED" && (
+            {(join === "CONFIRMED" || current.owned) && (
               <Primary
                 secondary
                 onClick={() => {
-                  setCompleted(true);
+                  setCompleted((all) => ({ ...all, [current.id]: true }));
+                  setFeedbackTarget({
+                    mealId: current.id,
+                    title: current.title,
+                    date: current.date,
+                    memberId:
+                      current.host === "alex"
+                        ? current.members.find((id) => id !== "alex") || "maya"
+                        : current.host,
+                  });
+                  setReview("");
+                  setReviewed(false);
+                  setWants(false);
+                  setMutual(false);
                   go("review");
                 }}
               >
@@ -4037,7 +4157,7 @@ export default function Prototype() {
         <BottomSheet
           open={sheet === "report"}
           onOpenChange={(o) => !o && setSheet("")}
-          title="Share a private concern"
+          title={`Share a private concern about ${members[reportMemberId].name}`}
           snap={0.65}
         >
           <div className="sheet-body">
@@ -4067,12 +4187,15 @@ export default function Prototype() {
             <button
               className="text-action danger"
               onClick={() => {
-                setBlocked(true);
+                setBlockedMembers((all) => ({
+                  ...all,
+                  [reportMemberId]: true,
+                }));
                 setSheet("");
                 notify("Member blocked.");
               }}
             >
-              Block this member
+              Block {members[reportMemberId].name}
             </button>
           </div>
         </BottomSheet>
@@ -4126,22 +4249,30 @@ export default function Prototype() {
                 setChatArchives({});
                 setPayments({});
                 setBookings({});
+                setReservedSizes({});
                 setRefunds({});
+                setRefundValues({});
+                setFeedbackTarget({
+                  mealId: "past-supper",
+                  title: "A little supper club",
+                  date: "2026-10-15",
+                  memberId: "maya",
+                });
                 setMessages({});
                 setPreferences({ mealUpdates: true, messagePreviews: true });
                 setReviewed(false);
                 setMutual(false);
                 setWants(false);
                 setReview("");
-                setBlocked(false);
+                setBlockedMembers({});
                 setHostDecision({});
                 setDraft(initialDraft);
                 setChatText("");
                 setIntro(
-                  "I’m new to London and would love to meet people over a relaxed dinner.",
+                  "I’m new to London and would love to meet people over a relaxed meal.",
                 );
                 setScenarioPayment(false);
-                setCompleted(false);
+                setCompleted({});
                 setConsent(false);
                 setBeforeDeadline(true);
                 setPlatformCancel(false);

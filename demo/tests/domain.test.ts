@@ -372,3 +372,126 @@ test("product presentation defaults to clean Fancy branding; review tools requir
   assert.equal(isReviewMode("?review=1"), true);
   assert.equal(isReviewMode("?device=pixel&review=1"), true);
 });
+
+import {
+  settleSeatPayment,
+  addConfirmedMember,
+  bookingStatusLabel,
+  blockedMemberIds,
+} from "../src/domain.ts";
+test("seat payment preserves every independent restaurant state", () => {
+  for (const booking of ["PENDING", "CONFIRMED", "FAILED"] as const) {
+    assert.deepEqual(
+      settleSeatPayment("APPROVED_PAYMENT_PENDING", "UNPAID", true, booking),
+      { join: "CONFIRMED", payment: "PAID", booking },
+    );
+    assert.deepEqual(
+      settleSeatPayment("APPROVED_PAYMENT_PENDING", "UNPAID", false, booking),
+      { join: "APPROVED_PAYMENT_PENDING", payment: "FAILED", booking },
+    );
+  }
+});
+test("confirming guests is idempotent and cannot overbook a table", () => {
+  const next = addConfirmedMember(meal, "alex");
+  assert.equal(next.confirmed, meal.confirmed + 1);
+  assert.equal(addConfirmedMember(next, "alex"), next);
+  assert.throws(() => addConfirmedMember(next, "new-person"), /full/);
+  assert.equal(next.members.filter((id) => id === "alex").length, 1);
+});
+test("reservation copy distinguishes failed and cancelled states", () => {
+  assert.equal(bookingStatusLabel("FAILED"), "Reservation needs attention");
+  assert.equal(bookingStatusLabel("CANCELLED"), "Reservation cancelled");
+});
+test("blocking a member does not mark other members blocked", () => {
+  assert.deepEqual(blockedMemberIds({ emma: true, maya: false }), ["emma"]);
+  assert.deepEqual(blockedMemberIds({ emma: true, maya: true }), [
+    "emma",
+    "maya",
+  ]);
+  assert.deepEqual(blockedMemberIds({ emma: false }), []);
+});
+test("authentication errors contain product copy rather than prototype guidance", () => {
+  for (const error of [
+    validateDemoCode("000000"),
+    validateDemoCode("123456", true),
+  ]) {
+    assert.doesNotMatch(error, /demo|123456|prototype/i);
+    assert.ok(error.length > 10);
+  }
+});
+
+test("currency inputs reject fractions smaller than one penny", () => {
+  const arrangement = {
+    venue: "The Little Table",
+    date: "2026-10-23",
+    time: "19:00",
+    capacity: 4,
+    min: 25,
+    max: 35,
+    cost: "menu",
+    deposit: 10,
+    booking: "in-app",
+    externalConfirmed: false,
+  };
+  assert.match(
+    validateArrangement({ ...arrangement, min: 25.001 }, "costs"),
+    /two decimals/,
+  );
+  assert.match(
+    validateArrangement({ ...arrangement, max: 35.001 }, "costs"),
+    /two decimals/,
+  );
+  assert.equal(
+    validateArrangement({ ...arrangement, min: 25.01 }, "costs"),
+    "",
+  );
+});
+
+import { mealInCategory } from "../src/domain.ts";
+test("cancelled participation has its own category and cannot appear as upcoming", () => {
+  assert.equal(mealInCategory(meal, "CANCELLED", "Upcoming"), false);
+  assert.equal(mealInCategory(meal, "CANCELLED", "Cancelled"), true);
+  assert.equal(mealInCategory(meal, "CONFIRMED", "Upcoming"), true);
+  assert.equal(mealInCategory(meal, "PENDING", "Applications"), true);
+  assert.equal(
+    mealInCategory({ ...meal, owned: true }, "NONE", "Hosting"),
+    true,
+  );
+  assert.equal(mealInCategory(meal, "PENDING", "Hosting"), false);
+});
+
+import { reservationNeedsUpdate } from "../src/domain.ts";
+test("hosts can update a confirmed reservation when confirmed guest count changes", () => {
+  assert.equal(reservationNeedsUpdate("CONFIRMED", 3, 4), true);
+  assert.equal(reservationNeedsUpdate("CONFIRMED", 4, 3), true);
+  assert.equal(reservationNeedsUpdate("CONFIRMED", 4, 4), false);
+  assert.equal(reservationNeedsUpdate("PENDING", 0, 3), false);
+});
+
+test("cancelled meals reject payment before any seat is confirmed", () => {
+  assert.throws(
+    () =>
+      settleSeatPayment(
+        "APPROVED_PAYMENT_PENDING",
+        "UNPAID",
+        true,
+        "CANCELLED",
+      ),
+    /cancelled/,
+  );
+});
+
+import { alternativeReservationSlot } from "../src/domain.ts";
+test("failed reservation alternatives respect restaurant hours and party size", () => {
+  const lunch = { ...initialMeals[3], confirmed: 2 };
+  assert.equal(alternativeReservationSlot(lunch), "13:00");
+  assert.equal(
+    alternativeReservationSlot({ ...lunch, time: "13:00" }),
+    "12:00",
+  );
+  assert.equal(
+    alternativeReservationSlot({ ...lunch, date: "2026-10-19" }),
+    "",
+  );
+  assert.equal(alternativeReservationSlot({ ...meal, confirmed: 4 }), "19:30");
+});

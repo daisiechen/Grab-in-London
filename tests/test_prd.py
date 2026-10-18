@@ -39,3 +39,9 @@ class ProductSpecTest(unittest.TestCase):
                          '非已实现需求', '不得视作真实 R1 已承诺范围',
                          '商标、域名与账号可用性尚未完成核查'):
             self.assertIn(boundary, text)
+
+    def test_audit_revision_records_independent_states_and_clean_ui(self):
+        text = (Path(__file__).resolve().parents[1] / 'docs/PRD.zh-CN.md').read_text()
+        for contract in ('版本：0.4', '保留原餐厅预约状态', 'Cancelled 独立',
+                         '按成员记录', '金额最多2位小数', '退款金额在取消时按饭局记录'):
+            self.assertIn(contract, text)

@@ -49,3 +49,6 @@ Brand: Fancy (provisional). Invitation: Fancy a bite? / 一起吃点？. Slogan:
 
 ### Clean product presentation
 Default URL shows product UI without implementation notes. Append `?review=1` to expose acceptance-only scenario controls. Authentication code remains `123456`; OAuth, charges, reservations, notifications and report delivery are frontend simulations. No real backend is added by hiding annotations. Use the PRD as the implementation contract.
+
+### Full product audit — 18 October 2026
+The route/state audit and acceptance evidence are in `../docs/qa/full-product-audit.zh-CN.md`; PRD v0.4 records corrected payment/reservation separation, cancellations, refunds, member-specific privacy state, and clean product copy. Normal and review URLs deliberately show different control sets. Prototype dates and external-service responses remain fixtures.

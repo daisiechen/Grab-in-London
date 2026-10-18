@@ -150,6 +150,7 @@
   height: 28px;
 }
 .toast {
+  pointer-events: none;
   position: absolute;
   left: 17px;
   right: 17px;
@@ -2455,4 +2456,18 @@
 }
 .grab-app[data-review="false"] .brand-scroll {
   top: var(--device-safe-area-top, 54px);
+}
+
+/* Keep keyboard focus and toolbar hit areas consistent across product screens. */
+.grab-app a:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+.grab-app .page-header {
+  grid-template-columns: 44px 1fr 44px;
+}
+.grab-app .page-header button {
+  min-width: 44px;
+  min-height: 44px;
 }
