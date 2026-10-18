@@ -1,5 +1,15 @@
 # 可分享体验版发布记录
 
+## 2026-10-18 — 第 8 版：地图交互与助手顶部精简
+
+- 沿用原公开网址与 public 访问模式。GitHub 实现：`69a38d6cd4fe9b7c98b21ff209edfcef416d8f62`；Sites 源码镜像：`e8be1c78c0ef81677f58861b5ce6662df43ad459`。
+- 保存版本：`appgprj_6ad2791025408191bf7b3c5bbce7218c~appgver_eac8e088c79c8191a0880a2f7a03312b`（版本8）；部署：`appgdep_6ad4cd4f23d48191a8d123cb361d1ac3`，返回 succeeded。
+- 小精灵保留拖动、吸边及收起；补充浏览器触摸事件测试。助手取消尺寸切换和关闭叉，顶部右侧显示 My preferences，保留下拉、外部点击及 Escape 收起。
+- 首页地图支持拖动、双指缩放、加减、复位及 Search this area；创建饭局支持餐厅搜索、地图候选和 Use this restaurant 确认，再进入原有后续步骤。
+- 114项测试通过：51领域/助手、25浏览器、6打包、32仓库；TypeScript/构建、28文件运行时校验和 diff 检查通过。触摸为 Chromium 合成事件，不宣称实体手机全面兼容认证。
+- 线上已刷新并复核欢迎/发现页、地图缩放后 Search this area、助手顶部仅保留偏好入口；未见控制台 warning/error。截图与详细结果：`demo/qa/map-helper-update/`、`demo/qa/browser-results.md`。
+- 地图和餐厅仍为本地示例，未接 Google Maps、Places、定位或真实预约 API；未增加依赖或改动受保护运行时。与版本7一致，沿用 pnpm build 构建后由官方 source helper 同步、校验和打包。
+
 ## 2026-10-18 — 第 7 版：AI 约饭助手公开体验
 
 - 用户确认更新原公开网址，访问模式仍为 public。手机通过本文公开链接访问；`127.0.0.1:4173` 仅供电脑本地预览。
