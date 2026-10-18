@@ -5,6 +5,11 @@ import {
   blankPreferences,
   parseMealRequest,
   preferenceSummary,
+  HELPER_IDLE_MS,
+  helperClock,
+  helperExpired,
+  helperDockPosition,
+  type HelperDock,
   type AssistantQuery,
   type AssistantReply,
   type MealPreferences,
@@ -908,7 +913,12 @@ function BrandEntrance({
 }
 
 type HelperAction = NonNullable<AssistantReply["draft"]>;
-type HelperTurn = { question: string; reply: AssistantReply; used?: boolean };
+type HelperTurn = {
+  question: string;
+  reply: AssistantReply;
+  time: number;
+  used?: boolean;
+};
 type SpeechSession = {
   lang: string;
   continuous: boolean;
@@ -970,6 +980,24 @@ function MealHelper({
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [home, setHome] = useState(true);
+  const [startedAt, setStartedAt] = useState<number | null>(null);
+  const [lastActive, setLastActive] = useState<number | null>(null);
+  const [dock, setDock] = useState<HelperDock>({ side: "right", fraction: 0 });
+  const [dragPoint, setDragPoint] = useState<{ x: number; y: number } | null>(
+    null,
+  );
+  const launcherRef = useRef<HTMLDivElement>(null);
+  const gesture = useRef<{
+    pointer: number;
+    startX: number;
+    startY: number;
+    x: number;
+    y: number;
+    scale: number;
+    moved: boolean;
+  } | null>(null);
+  const suppressClick = useRef(false);
   const [input, setInput] = useState("");
   const [turns, setTurns] = useState<HelperTurn[]>([]);
   const [query, setQuery] = useState<AssistantQuery>({});
@@ -1007,6 +1035,46 @@ function MealHelper({
     setVoiceConsent(false);
     setOpen(false);
   };
+  const restart = (expired = false) => {
+    keyboard.hide();
+    stopVoice();
+    setVoiceConsent(false);
+    setTurns([]);
+    setQuery({});
+    setStartedAt(null);
+    setLastActive(null);
+    setManage(false);
+    setHome(true);
+    if (!expired) setInput("");
+    setNotice(
+      expired
+        ? "Your previous conversation ended after 30 minutes without activity. Saved preferences and unsent text are kept."
+        : "New conversation. Saved preferences are kept.",
+    );
+  };
+  const openHome = () => {
+    keyboard.hide();
+    stopVoice();
+    setVoiceConsent(false);
+    if (helperExpired(lastActive, Date.now())) restart(true);
+    else
+      setNotice((value) =>
+        value.startsWith("Your previous conversation ended") ? value : "",
+      );
+    setManage(false);
+    setHome(true);
+    setExpanded(false);
+    setHidden(false);
+    setOpen(true);
+  };
+  useEffect(() => {
+    if (lastActive === null || !turns.length) return;
+    const timer = setTimeout(
+      () => restart(true),
+      Math.max(0, HELPER_IDLE_MS - (Date.now() - lastActive)),
+    );
+    return () => clearTimeout(timer);
+  }, [lastActive, turns.length]);
   useEffect(
     () => () => {
       const session = recognition.current;
@@ -1024,13 +1092,20 @@ function MealHelper({
   }, [visible]);
   useEffect(() => {
     const pane = conversationRef.current;
-    if (pane && open && !manage) pane.scrollTop = pane.scrollHeight;
-  }, [turns.length, open, manage]);
+    if (pane && open && !manage && !home) pane.scrollTop = pane.scrollHeight;
+  }, [turns.length, open, manage, home]);
   const submit = (question = input) => {
     if (!question.trim()) return;
     keyboard.hide();
     stopVoice();
-    setNotice("");
+    const now = Date.now();
+    const expired = helperExpired(lastActive, now);
+    const fresh = expired || home;
+    setNotice(
+      expired
+        ? "Your previous conversation expired. This is a new conversation; saved preferences are kept."
+        : "",
+    );
     const today = new Intl.DateTimeFormat("en-CA", {
       timeZone: "Europe/London",
       year: "numeric",
@@ -1041,12 +1116,20 @@ function MealHelper({
       meals,
       current,
       filters,
-      query,
+      query: fresh ? {} : query,
       preferences,
       today,
     });
     if (reply.query) setQuery(reply.query);
-    setTurns((t) => [...t, { question: question.trim(), reply }]);
+    else if (fresh) setQuery({});
+    if (fresh || !turns.length) setStartedAt(now);
+    setLastActive(now);
+    setHome(false);
+    setManage(false);
+    setTurns((t) => [
+      ...(fresh ? [] : t),
+      { question: question.trim(), reply, time: now },
+    ]);
     setInput("");
   };
   const startVoice = () => {
@@ -1066,6 +1149,7 @@ function MealHelper({
     session.continuous = false;
     session.interimResults = false;
     session.onresult = (e) => {
+      setLastActive(Date.now());
       setInput((value) =>
         [value, e.results[0][0].transcript]
           .filter(Boolean)
@@ -1114,37 +1198,153 @@ function MealHelper({
   const helperSnap =
     (helperHeight + Math.min(helperInsets.keyboardHeight, 180)) /
     device.geometry.screen.height;
+  const dockTop =
+    device.geometry.safeArea.top + (page === "discover" ? 170 : 64);
+  const dockBottom = helperInsets.availableHeight - 100;
+  const dockPoint = helperDockPosition(
+    dock,
+    device.geometry.screen.width,
+    dockTop,
+    dockBottom,
+    hidden,
+  );
+  const point = dragPoint || dockPoint;
+  const cancelDrag = () => {
+    gesture.current = null;
+    setDragPoint(null);
+  };
   if (!visible) return null;
   return (
     <>
-      {!open && (
-        <div className={`helper-launcher ${hidden ? "is-tucked" : ""}`}>
+      {!open && !helperInsets.isKeyboardVisible && (
+        <div
+          ref={launcherRef}
+          className={`helper-launcher ${hidden ? "is-tucked" : ""} ${dragPoint ? "is-dragging" : ""}`}
+          data-side={dock.side}
+          style={{ left: point.x, top: point.y }}
+        >
           <button
             aria-label={hidden ? "Show Fancy helper" : "Open Fancy helper"}
             className="helper-launch"
-            onClick={() => {
-              keyboard.hide();
-              setHidden(false);
-              setOpen(true);
+            title="Drag to move. Tap to open. Arrow keys also move Fancy."
+            onPointerDown={(event) => {
+              if (event.button !== 0) return;
+              suppressClick.current = false;
+              const rect =
+                launcherRef.current!.parentElement!.getBoundingClientRect();
+              gesture.current = {
+                pointer: event.pointerId,
+                startX: event.clientX,
+                startY: event.clientY,
+                x: point.x,
+                y: point.y,
+                scale: rect.width / device.geometry.screen.width,
+                moved: false,
+              };
+              event.currentTarget.setPointerCapture(event.pointerId);
+            }}
+            onPointerMove={(event) => {
+              const drag = gesture.current;
+              if (!drag || drag.pointer !== event.pointerId) return;
+              const dx = (event.clientX - drag.startX) / drag.scale;
+              const dy = (event.clientY - drag.startY) / drag.scale;
+              if (Math.hypot(dx, dy) > 6) drag.moved = true;
+              if (!drag.moved) return;
+              setDragPoint({
+                x: Math.max(
+                  14,
+                  Math.min(device.geometry.screen.width - 78, drag.x + dx),
+                ),
+                y: Math.max(
+                  dockTop,
+                  Math.min(Math.max(dockTop, dockBottom - 74), drag.y + dy),
+                ),
+              });
+            }}
+            onPointerUp={(event) => {
+              const drag = gesture.current;
+              if (!drag || drag.pointer !== event.pointerId) return;
+              if (drag.moved) {
+                const y = Math.max(
+                  dockTop,
+                  Math.min(
+                    Math.max(dockTop, dockBottom - 74),
+                    drag.y + (event.clientY - drag.startY) / drag.scale,
+                  ),
+                );
+                const x = drag.x + (event.clientX - drag.startX) / drag.scale;
+                setDock({
+                  side:
+                    x + 32 < device.geometry.screen.width / 2
+                      ? "left"
+                      : "right",
+                  fraction:
+                    (y - dockTop) / Math.max(1, dockBottom - 74 - dockTop),
+                });
+                suppressClick.current = true;
+              }
+              gesture.current = null;
+              setDragPoint(null);
+              event.currentTarget.releasePointerCapture(event.pointerId);
+            }}
+            onPointerCancel={cancelDrag}
+            onLostPointerCapture={cancelDrag}
+            onKeyDown={(event) => {
+              if (!event.key.startsWith("Arrow")) return;
+              event.preventDefault();
+              setDock((position) => ({
+                side:
+                  event.key === "ArrowLeft"
+                    ? "left"
+                    : event.key === "ArrowRight"
+                      ? "right"
+                      : position.side,
+                fraction: Math.max(
+                  0,
+                  Math.min(
+                    1,
+                    position.fraction +
+                      (event.key === "ArrowDown"
+                        ? 0.1
+                        : event.key === "ArrowUp"
+                          ? -0.1
+                          : 0),
+                  ),
+                ),
+              }));
+            }}
+            onClick={(event) => {
+              if (suppressClick.current && event.detail !== 0) {
+                suppressClick.current = false;
+                return;
+              }
+              openHome();
             }}
           >
             <HelperSprite />
+            {hidden && (
+              <span className="helper-paws" aria-hidden="true">
+                <i />
+                <i />
+              </span>
+            )}
             {!hidden && <span>Ask Fancy</span>}
           </button>
           {!hidden && (
             <button
               className="helper-hide"
-              aria-label="Hide Fancy helper"
+              aria-label="Tuck Fancy to edge"
+              title="Tuck to screen edge"
               onClick={() => setHidden(true)}
             >
-              ×
+              {dock.side === "right" ? "›" : "‹"}
             </button>
           )}
         </div>
       )}
       <BottomSheet
         open={open}
-        onOpenChange={(value) => (value ? setOpen(true) : close())}
+        onOpenChange={(value) => (value ? openHome() : close())}
         title="A little help from Fancy"
         description="Find a table. Make a plan. You decide."
         snap={helperSnap}
@@ -1152,6 +1352,20 @@ function MealHelper({
         <div
           className="helper-panel"
           data-testid="meal-helper"
+          onClickCapture={(event) => {
+            if (helperExpired(lastActive, Date.now())) {
+              restart(true);
+              if (
+                !(
+                  event.target instanceof Element &&
+                  event.target.closest('[aria-label="Close Fancy helper"]')
+                )
+              ) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+            } else if (turns.length) setLastActive(Date.now());
+          }}
           onPointerDownCapture={(event) => {
             // Match Primary: don't blur an editor and move its action under the
             // pointer before that action receives the click.
@@ -1172,46 +1386,50 @@ function MealHelper({
                   : "Your meal plans"}
             </span>
             <button
-              aria-label={expanded ? "Reduce assistant" : "Expand assistant"}
+              className="helper-size"
+              aria-label={expanded ? "Use compact view" : "Use larger view"}
               onClick={() => {
                 keyboard.hide();
                 setExpanded(!expanded);
               }}
             >
-              {expanded ? "↙" : "↗"}
+              {expanded ? "Compact view" : "Larger view"}
             </button>
             <button aria-label="Close Fancy helper" onClick={close}>
               ×
             </button>
           </div>
           <div className="helper-utility">
+            {!home && !manage && (
+              <button
+                onClick={() => {
+                  keyboard.hide();
+                  stopVoice();
+                  setHome(true);
+                  setNotice("");
+                }}
+              >
+                Assistant home
+              </button>
+            )}
             <button
               onClick={() => {
                 keyboard.hide();
                 stopVoice();
                 setVoiceConsent(false);
-                setManage(!manage);
+                if (manage) {
+                  setManage(false);
+                  setHome(true);
+                } else setManage(true);
                 setNotice("");
                 setPreferenceEdit(preferenceSummary(preferences));
               }}
             >
-              {manage ? "Back to chat" : "My preferences"}
+              {manage ? "Back to assistant home" : "My preferences"}
             </button>
-            <button
-              onClick={() => {
-                keyboard.hide();
-                stopVoice();
-                setVoiceConsent(false);
-                setTurns([]);
-                setQuery({});
-                setInput("");
-                setNotice(
-                  "Conversation cleared. Saved preferences are unchanged.",
-                );
-              }}
-            >
-              Clear chat
-            </button>
+            {!manage && !!turns.length && (
+              <button onClick={() => restart()}>New conversation</button>
+            )}
           </div>
           {manage ? (
             <div className="helper-preferences">
@@ -1227,7 +1445,10 @@ function MealHelper({
               <KeyboardTextarea
                 id="helper-preferences"
                 value={preferenceEdit}
-                onChange={(e) => setPreferenceEdit(e.target.value)}
+                onChange={(e) => {
+                  setPreferenceEdit(e.target.value);
+                  if (turns.length) setLastActive(Date.now());
+                }}
                 onBlur={() => keyboard.hide()}
                 maxLength={300}
                 placeholder="Soho, budget £35, table for 4, English"
@@ -1264,11 +1485,18 @@ function MealHelper({
                   setQuery({});
                   setTurns([]);
                   setInput("");
+                  setStartedAt(null);
+                  setLastActive(null);
+                  setHome(true);
                   setNotice("Preferences deleted and conversation cleared.");
                 }}
               >
                 Delete preferences
               </button>
+              <p className="helper-preference-note">
+                Deleting preferences also clears the conversation context that
+                used them. Starting a new conversation keeps saved preferences.
+              </p>
             </div>
           ) : (
             <>
@@ -1278,7 +1506,7 @@ function MealHelper({
                 role="log"
                 aria-label="Conversation with Fancy"
               >
-                {!turns.length && (
+                {(home || !turns.length) && (
                   <div className="helper-welcome">
                     <span className="helper-eyebrow">YOUR NEXT GOOD MEAL</span>
                     <h2>What sounds good?</h2>
@@ -1286,6 +1514,32 @@ function MealHelper({
                       Tell me when, where and what you’d like to spend. Or let’s
                       get your own table started.
                     </p>
+                    {!!turns.length && (
+                      <button
+                        className="helper-resume"
+                        onClick={() => {
+                          setHome(false);
+                          setLastActive(Date.now());
+                          setNotice("");
+                        }}
+                      >
+                        <strong>
+                          Continue conversation <ArrowRightIcon />
+                        </strong>
+                        <span>
+                          Last active{" "}
+                          {helperClock(
+                            lastActive || turns[turns.length - 1].time,
+                            true,
+                          )}
+                        </span>
+                      </button>
+                    )}
+                    {!!turns.length && (
+                      <p className="helper-session-note">
+                        Continue above, or start a new request below.
+                      </p>
+                    )}
                     <div className="helper-prompts">
                       {prompts.map((prompt) => (
                         <button key={prompt} onClick={() => submit(prompt)}>
@@ -1294,102 +1548,126 @@ function MealHelper({
                         </button>
                       ))}
                     </div>
+                    <p className="helper-session-note">
+                      Conversations restart after 30 minutes without activity.
+                      Saved preferences stay until you delete them.
+                    </p>
                   </div>
                 )}
-                {turns.map((turn, index) => (
-                  <div className="helper-turn" key={index}>
-                    <p className="helper-question">{turn.question}</p>
-                    <div className="helper-answer">
-                      <strong>Fancy</strong>
-                      <p>{turn.reply.text}</p>
-                      {turn.reply.meals?.map((meal) => (
-                        <button
-                          className="helper-meal-card"
-                          key={meal.id}
-                          onClick={() => {
-                            close();
-                            onMeal(meal.id);
-                          }}
-                        >
-                          <strong>{meal.title}</strong>
-                          <span>
-                            {meal.venue} · {meal.area}
-                          </span>
-                          <span>
-                            {meal.date} · {meal.time} · Table for{" "}
-                            {meal.capacity}
-                          </span>
-                          <span>
-                            £{meal.min}–{meal.max} per person ·{" "}
-                            {meal.capacity - meal.confirmed}{" "}
-                            {meal.capacity - meal.confirmed === 1
-                              ? "place"
-                              : "places"}{" "}
-                            left
-                          </span>
-                          <span>
-                            {meal.mood} · {meal.language}
-                          </span>
-                          <b>
-                            View meal <ArrowRightIcon />
-                          </b>
-                        </button>
-                      ))}
-                      {turn.reply.preferences && (
-                        <div className="helper-draft">
-                          <p>{preferenceSummary(turn.reply.preferences)}</p>
+                {!home && startedAt !== null && (
+                  <p className="helper-session-note">
+                    Started {helperClock(startedAt, true)} · 30-minute idle
+                    limit
+                  </p>
+                )}
+                {!home &&
+                  turns.map((turn, index) => (
+                    <div className="helper-turn" key={index}>
+                      <div className="helper-turn-time">
+                        You ·{" "}
+                        <time dateTime={new Date(turn.time).toISOString()}>
+                          {helperClock(turn.time)}
+                        </time>
+                      </div>
+                      <p className="helper-question">{turn.question}</p>
+                      <div className="helper-answer">
+                        <strong>
+                          Fancy{" "}
+                          <time dateTime={new Date(turn.time).toISOString()}>
+                            {helperClock(turn.time)}
+                          </time>
+                        </strong>
+                        <p>{turn.reply.text}</p>
+                        {turn.reply.meals?.map((meal) => (
                           <button
-                            className="helper-primary"
-                            disabled={turn.used}
-                            onClick={() => {
-                              setPreferences(turn.reply.preferences!);
-                              setQuery({});
-                              setTurns((t) =>
-                                t.map((item, i) =>
-                                  i === index ? { ...item, used: true } : item,
-                                ),
-                              );
-                              setNotice(
-                                "Preferences saved. You can change them in My preferences.",
-                              );
-                            }}
-                          >
-                            {turn.used ? "Saved" : "Confirm and remember"}
-                          </button>
-                        </div>
-                      )}
-                      {turn.reply.draft && (
-                        <div className="helper-draft">
-                          <span className="helper-eyebrow">
-                            DRAFT · FOR YOU TO REVIEW
-                          </span>
-                          <p>{turn.reply.draft.text}</p>
-                          <button
-                            className="helper-primary"
+                            className="helper-meal-card"
+                            key={meal.id}
                             onClick={() => {
                               close();
-                              onAction(
-                                turn.reply.draft!,
-                                turn.reply.query || query,
-                              );
+                              onMeal(meal.id);
                             }}
                           >
-                            {turn.reply.draft.kind === "create"
-                              ? "Review in Create meal"
-                              : turn.reply.draft.kind === "application"
-                                ? "Edit application"
-                                : "Review in meal chat"}
+                            <strong>{meal.title}</strong>
+                            <span>
+                              {meal.venue} · {meal.area}
+                            </span>
+                            <span>
+                              {meal.date} · {meal.time} · Table for{" "}
+                              {meal.capacity}
+                            </span>
+                            <span>
+                              £{meal.min}–{meal.max} per person ·{" "}
+                              {meal.capacity - meal.confirmed}{" "}
+                              {meal.capacity - meal.confirmed === 1
+                                ? "place"
+                                : "places"}{" "}
+                              left
+                            </span>
+                            <span>
+                              {meal.mood} · {meal.language}
+                            </span>
+                            <b>
+                              View meal <ArrowRightIcon />
+                            </b>
                           </button>
-                          <small>
-                            {turn.reply.draft.kind === "create"
-                              ? "Replaces the current creation draft. Nothing is published."
-                              : "Replaces the text in the editor. Nothing is sent."}
-                          </small>
-                        </div>
-                      )}
+                        ))}
+                        {turn.reply.preferences && (
+                          <div className="helper-draft">
+                            <p>{preferenceSummary(turn.reply.preferences)}</p>
+                            <button
+                              className="helper-primary"
+                              disabled={turn.used}
+                              onClick={() => {
+                                setPreferences(turn.reply.preferences!);
+                                setQuery({});
+                                setTurns((t) =>
+                                  t.map((item, i) =>
+                                    i === index
+                                      ? { ...item, used: true }
+                                      : item,
+                                  ),
+                                );
+                                setNotice(
+                                  "Preferences saved. You can change them in My preferences.",
+                                );
+                              }}
+                            >
+                              {turn.used ? "Saved" : "Confirm and remember"}
+                            </button>
+                          </div>
+                        )}
+                        {turn.reply.draft && (
+                          <div className="helper-draft">
+                            <span className="helper-eyebrow">
+                              DRAFT · FOR YOU TO REVIEW
+                            </span>
+                            <p>{turn.reply.draft.text}</p>
+                            <button
+                              className="helper-primary"
+                              onClick={() => {
+                                close();
+                                onAction(
+                                  turn.reply.draft!,
+                                  turn.reply.query || query,
+                                );
+                              }}
+                            >
+                              {turn.reply.draft.kind === "create"
+                                ? "Review in Create meal"
+                                : turn.reply.draft.kind === "application"
+                                  ? "Edit application"
+                                  : "Review in meal chat"}
+                            </button>
+                            <small>
+                              {turn.reply.draft.kind === "create"
+                                ? "Replaces the current creation draft. Nothing is published."
+                                : "Replaces the text in the editor. Nothing is sent."}
+                            </small>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
               {voiceConsent && (
                 <div className="helper-voice-consent">
@@ -1423,7 +1701,13 @@ function MealHelper({
                   <KeyboardInput
                     id="helper-request"
                     value={input}
-                    onChange={(e) => setInput(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const now = Date.now();
+                      if (helperExpired(lastActive, now)) restart(true);
+                      else if (turns.length) setLastActive(now);
+                      setInput(value);
+                    }}
                     onBlur={() => keyboard.hide()}
                     maxLength={1000}
                     placeholder="Friday in Soho, under £35…"

@@ -106,7 +106,20 @@ test("keyboard and its attached footer dismiss on the same transition", async ({
 
   await input.click();
   await expect(keyboard).toHaveAttribute("data-visible", "true");
-  await drag(page, footer, 0, 120, 5);
+  // Start the gesture only after the keyboard-attached footer stops moving.
+  await expect.poll(async () => keyboard.evaluate((element) =>
+    Math.abs(new DOMMatrixReadOnly(getComputedStyle(element).transform).m42),
+  )).toBeLessThan(0.5);
+  // The runtime intentionally ignores drags starting inside an input. Use the
+  // footer's blank padding as the dismiss handle, not its text-field centre.
+  const handle = (await page.locator(".keyboard-footer").boundingBox())!;
+  await page.mouse.move(handle.x + 8, handle.y + 8);
+  await page.mouse.down();
+  for (let step = 1; step <= 5; step += 1) {
+    await page.mouse.move(handle.x + 8, handle.y + 8 + (120 * step) / 5);
+    await page.waitForTimeout(8);
+  }
+  await page.mouse.up();
   await expect(keyboard).toHaveAttribute("data-visible", "false");
 
   await page.waitForTimeout(100);

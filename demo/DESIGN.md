@@ -113,3 +113,7 @@ Use the capitalized Fancy wordmark. Default product screens omit prototype annot
 
 ## Meal helper — 2026-10-18
 The approved signature is a small original forest-green SVG sprite with citrus leaf, ivory eyes and peach cheeks. It sits above the main content as a collapsed, dismissible edge entry and never replaces a bottom destination. Reuse existing typography, forest/white/surface colours, 11px controls and BottomSheet. Expanded chat uses a quiet white panel, forest user bubbles and factual meal cards. No unsolicited animation or messages. This addition introduces no shared token changes; protected device/runtime styling stays intact.
+
+
+## Helper browser feedback — 2026-10-18
+The sprite now owns a draggable, edge-snapping position; a tucked version peeks from either side with two small paws rather than becoming an unrelated icon. Reuse its original SVG and palette. Keep it below toolbars and above navigation, with a visible tap target and no continuous animation; edge-snap motion respects reduced motion. Assistant home/resume, clearly named conversation/preferences actions, textual panel-size controls and subdued London timestamps replace ambiguous controls. No shared palette/type/runtime token changes.

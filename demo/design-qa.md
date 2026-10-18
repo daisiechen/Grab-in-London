@@ -61,3 +61,7 @@ PRD1.3 now owns the current brand: Fancy; invitation Fancy a bite?; slogan Meet 
 
 ## Floating meal helper — 2026-10-18
 Preserved forest/white map and five navigation destinations. Added original SVG sprite below the discovery controls, with tuck/restore, and a runtime BottomSheet conversation using existing type, borders and forest actions. Search cards compare public facts rather than compatibility scores. Reviewed the saved [search](qa/ai-helper/search-iphone.png), [launcher](qa/ai-helper/launcher.png) and [Pixel keyboard](qa/ai-helper/keyboard-pixel.png) views. Browser assertions cover header/navigation clearance, panel/input keyboard bounds and no whole-page scrolling; the protected runtime and shared visual tokens are unchanged. No raster generation or copied character assets. Keyboard/sheet animation must settle before evidence capture.
+
+
+## Helper browser-feedback refinement — 2026-10-18
+Reviewed [peeking sprite](qa/ai-helper-refinement/edge-left.png), [home/resume](qa/ai-helper-refinement/home-resume.png) and [expiry](qa/ai-helper-refinement/expired.png). The floating entry now docks to either side rather than a fixed right coordinate, retains its palette and small paws, and can be tucked without losing access. Arrow-only resizing is replaced by text; time and restart copy distinguish conversation lifetime from approved preferences. Safe-bound drag and device-scaling checks remain separate from real touch-device certification. Visual tokens and mobile runtime were preserved.

@@ -109,3 +109,10 @@ When any text-entry control loses focus, dismiss the simulated keyboard. If the 
 - Current scope is practical meal finding, creation and participation assistance. Text plus optional browser speech-to-text; users edit transcripts before sending.
 - Drafts return to existing editors. Applications, publishing, messages and payments remain human-confirmed and keep original permissions. No autonomous tool execution.
 - Save only explicitly confirmed meal preferences; allow correction and deletion. No automatic conversation reading or private third-party data access. This prototype uses a local rule model, not a live language-model integration.
+
+
+## Helper interaction feedback — 2026-10-18
+- Make the sprite draggable with mouse/touch, snap to the nearest side, and let it peek with paws when tucked. Preserve tap vs drag and keyboard access; constrain it to phone safe bounds and adapt to device scale.
+- Reopening always shows the assistant home in compact view. Keep an unexpired conversation behind explicit Continue conversation; new home requests start fresh. Never reopen straight into the preference editor.
+- Use New conversation, not ambiguous Clear chat; it preserves approved preferences. Preference deletion stays in My preferences and explains its context cleanup.
+- Use Larger view / Compact view text for panel resizing. Show London-local message times and a 30-minute inactivity default; expiry preserves approved preferences and unsent chat text, with a clear notice. This is separate from meal/payment expiration.

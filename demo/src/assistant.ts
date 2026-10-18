@@ -5,6 +5,34 @@ import {
   type Meal,
 } from "./domain.ts";
 
+export const HELPER_IDLE_MS = 30 * 60 * 1000;
+export function helperExpired(lastActive: number | null, now: number) {
+  return lastActive !== null && now - lastActive >= HELPER_IDLE_MS;
+}
+export function helperClock(time: number, includeDate = false) {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/London",
+    ...(includeDate ? ({ day: "numeric", month: "short" } as const) : {}),
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(new Date(time));
+}
+export type HelperDock = { side: "left" | "right"; fraction: number };
+export function helperDockPosition(
+  dock: HelperDock,
+  width: number,
+  top: number,
+  bottom: number,
+  tucked: boolean,
+) {
+  const maxY = Math.max(top, bottom - 74);
+  return {
+    x: dock.side === "left" ? (tucked ? -20 : 14) : width - (tucked ? 44 : 78),
+    y: top + (maxY - top) * Math.max(0, Math.min(1, dock.fraction)),
+  };
+}
+
 // A deterministic interaction model for the prototype, not a language-model API.
 export type MealPreferences = Pick<
   DiscoveryFilters,

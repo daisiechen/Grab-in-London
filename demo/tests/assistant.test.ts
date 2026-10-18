@@ -4,6 +4,10 @@ import {
   assistantReply,
   blankPreferences,
   parseMealRequest,
+  helperExpired,
+  HELPER_IDLE_MS,
+  helperClock,
+  helperDockPosition,
 } from "../src/assistant.ts";
 import { initialMeals, emptyFilters } from "../src/domain.ts";
 
@@ -13,6 +17,42 @@ const context = () => ({
   query: {},
   preferences: { ...blankPreferences },
   today: "2026-10-18",
+});
+
+test("helper expires on the 30-minute idle boundary, not while active", () => {
+  assert.equal(helperExpired(null, 10_000_000), false);
+  assert.equal(helperExpired(1_000, 1_000 + HELPER_IDLE_MS - 1), false);
+  assert.equal(helperExpired(1_000, 1_000 + HELPER_IDLE_MS), true);
+  assert.equal(
+    helperExpired(1_000 + HELPER_IDLE_MS - 100, 1_000 + HELPER_IDLE_MS),
+    false,
+  );
+});
+test("helper timestamps use London time across daylight-saving seasons", () => {
+  assert.equal(helperClock(Date.parse("2026-10-18T08:27:00Z")), "09:27");
+  assert.equal(helperClock(Date.parse("2026-11-18T08:27:00Z")), "08:27");
+});
+test("dock placement clamps vertical ratios and keeps a 44px edge target", () => {
+  assert.deepEqual(
+    helperDockPosition({ side: "left", fraction: -1 }, 393, 224, 752, false),
+    { x: 14, y: 224 },
+  );
+  assert.deepEqual(
+    helperDockPosition({ side: "right", fraction: 2 }, 393, 224, 752, false),
+    { x: 315, y: 678 },
+  );
+  assert.equal(
+    helperDockPosition({ side: "right", fraction: 0.5 }, 427, 224, 852, true).x,
+    383,
+  );
+  assert.equal(
+    helperDockPosition({ side: "left", fraction: 0.5 }, 427, 224, 852, true).x,
+    -20,
+  );
+  assert.equal(
+    helperDockPosition({ side: "left", fraction: 1 }, 393, 224, 200, false).y,
+    224,
+  );
 });
 
 test("understands date, area, capacity and strict budget in English and Chinese", () => {
