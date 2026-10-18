@@ -1,0 +1,631 @@
+export const SNAPSHOT = "2026-10-18T12:00:00Z";
+export const DAY = 86_400_000;
+export type User = { id: string; joinedAt: string };
+export type Meal = {
+  id: string;
+  title: string;
+  startsAt: string;
+  publishedAt: string;
+  area: string;
+  language: string;
+  capacity: number;
+  minimum: number;
+  budget: number;
+  source: "user" | "assisted";
+  hostId: string;
+  cancelled: boolean;
+  cancelReason?: string;
+  peakConfirmed: number;
+};
+export type Application = {
+  id: string;
+  userId: string;
+  mealId: string;
+  appliedAt: string;
+  decidedAt?: string;
+  decision?: "approved" | "declined";
+  confirmedAt?: string;
+  withdrawnAt?: string;
+};
+export type AttendanceRecord = {
+  userId: string;
+  mealId: string;
+  host?: "present" | "absent";
+  self?: "present" | "absent";
+  verified?: "present" | "absent";
+  verificationNote?: string;
+  updatedAt: string;
+};
+export type Feedback = {
+  userId: string;
+  mealId: string;
+  score: number;
+  again: boolean;
+  issue: "none" | "coordination" | "expectations" | "venue";
+  at: string;
+};
+export type Event = {
+  id: string;
+  name: string;
+  occurredAt: string;
+  receivedAt: string;
+  userId?: string;
+  anonymousId?: string;
+  sessionId: string;
+  mealId?: string;
+  attemptId?: string;
+  environment: "production" | "demo";
+  appVersion: string;
+  schemaVersion: number;
+  isTest?: boolean;
+  isBot?: boolean;
+  isStaff?: boolean;
+  resultCount?: number;
+  area?: string;
+  language?: string;
+  budget?: number;
+  size?: number;
+  source?: string;
+  field?: string;
+  durationMs?: number;
+  visibleRatio?: number;
+};
+export type IdentityLink = {
+  anonymousId: string;
+  sessionId: string;
+  userId: string;
+};
+export type Dataset = {
+  users: User[];
+  meals: Meal[];
+  applications: Application[];
+  attendance: AttendanceRecord[];
+  feedback: Feedback[];
+  events: Event[];
+  identityLinks?: IdentityLink[];
+};
+export type Filters = {
+  start: string;
+  end: string;
+  area: string;
+  source: string;
+  language: string;
+  size: string;
+  budget: string;
+  segment: string;
+};
+export const defaultFilters: Filters = {
+  start: "2026-09-21",
+  end: "2026-10-18",
+  area: "all",
+  source: "all",
+  language: "all",
+  size: "all",
+  budget: "all",
+  segment: "all",
+};
+const dayFormatter = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/London",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+export function londonDay(iso: string) {
+  const parts = dayFormatter.formatToParts(new Date(iso));
+  return ["year", "month", "day"]
+    .map((type) => parts.find((p) => p.type === type)!.value)
+    .join("-");
+}
+export function weekStart(day: string) {
+  const date = new Date(`${day}T12:00:00Z`);
+  date.setUTCDate(date.getUTCDate() - ((date.getUTCDay() + 6) % 7));
+  return date.toISOString().slice(0, 10);
+}
+export const within = (iso: string, f: Filters) =>
+  londonDay(iso) >= f.start && londonDay(iso) <= f.end;
+export const ratio = (n: number, d: number) => (d ? n / d : null);
+export function validEvent(e: Event) {
+  return (
+    !!(
+      e.id &&
+      e.name &&
+      e.sessionId &&
+      e.schemaVersion &&
+      e.appVersion &&
+      e.occurredAt &&
+      e.receivedAt
+    ) &&
+    !Number.isNaN(+new Date(e.occurredAt)) &&
+    !Number.isNaN(+new Date(e.receivedAt))
+  );
+}
+export function cleanEvents(
+  events: Event[],
+  links: IdentityLink[] = [],
+  asOf = SNAPSHOT,
+) {
+  const seen = new Set<string>();
+  return events
+    .filter((e) => {
+      if (
+        !validEvent(e) ||
+        e.environment !== "production" ||
+        e.isTest ||
+        e.isBot ||
+        e.isStaff ||
+        seen.has(e.id) ||
+        e.receivedAt > asOf ||
+        e.occurredAt > asOf
+      )
+        return false;
+      seen.add(e.id);
+      return true;
+    })
+    .map((e) => ({
+      ...e,
+      userId:
+        e.userId ||
+        links.find(
+          (l) => l.sessionId === e.sessionId && l.anonymousId === e.anonymousId,
+        )?.userId,
+    }));
+}
+export function attendance(
+  record?: AttendanceRecord,
+): "present" | "absent" | "unknown" | "conflict" {
+  if (record?.verified) return record.verified;
+  if (!record || (!record.host && !record.self)) return "unknown";
+  if (record.host && record.self && record.host !== record.self)
+    return "conflict";
+  return record.host || record.self || "unknown";
+}
+export function latestAttendance(
+  data: Dataset,
+  userId: string,
+  mealId: string,
+  asOf = SNAPSHOT,
+) {
+  return data.attendance
+    .map((a, index) => ({ ...a, index }))
+    .filter(
+      (a) => a.userId === userId && a.mealId === mealId && a.updatedAt <= asOf,
+    )
+    .sort(
+      (a, b) => b.updatedAt.localeCompare(a.updatedAt) || b.index - a.index,
+    )[0];
+}
+// Local demo correction only. Production requires server authorization, version checks and an audit actor.
+export function verifyAttendance(
+  data: Dataset,
+  mealId: string,
+  userId: string,
+  result: "present" | "absent",
+  note: string,
+  asOf = SNAPSHOT,
+): Dataset {
+  const meal = data.meals.find((m) => m.id === mealId);
+  if (!note.trim() || !meal || meal.cancelled || meal.startsAt >= asOf)
+    throw new Error("Attendance verification is unavailable.");
+  const eligible =
+    userId === meal.hostId ||
+    data.applications.some(
+      (a) =>
+        a.mealId === mealId &&
+        a.userId === userId &&
+        a.confirmedAt &&
+        a.confirmedAt <= asOf &&
+        (!a.withdrawnAt || a.withdrawnAt > meal.startsAt),
+    );
+  if (!eligible) throw new Error("Only eligible participants may be verified.");
+  const previous = latestAttendance(data, userId, mealId, asOf);
+  return {
+    ...data,
+    attendance: [
+      ...data.attendance,
+      {
+        ...previous,
+        userId,
+        mealId,
+        verified: result,
+        verificationNote: note.trim(),
+        updatedAt: asOf,
+      },
+    ],
+  };
+}
+function mealMatches(meal: Meal, f: Filters) {
+  return (
+    (f.area === "all" || meal.area === f.area) &&
+    (f.source === "all" || meal.source === f.source) &&
+    (f.language === "all" || meal.language === f.language) &&
+    (f.size === "all" ||
+      (f.size === "duo" ? meal.capacity === 2 : meal.capacity >= 3)) &&
+    (f.budget === "all" || meal.budget <= Number(f.budget))
+  );
+}
+export function userMatches(data: Dataset, userId: string, f: Filters) {
+  const u = data.users.find((u) => u.id === userId);
+  return (
+    f.segment === "all" ||
+    (!!u &&
+      (f.segment === "new"
+        ? within(u.joinedAt, f)
+        : londonDay(u.joinedAt) < f.start))
+  );
+}
+export function filterMeals(data: Dataset, f: Filters, asOf = SNAPSHOT) {
+  return data.meals.filter(
+    (m) => m.publishedAt <= asOf && within(m.startsAt, f) && mealMatches(m, f),
+  );
+}
+export function filteredEvents(data: Dataset, f: Filters, asOf = SNAPSHOT) {
+  return cleanEvents(data.events, data.identityLinks, asOf).filter((e) => {
+    if (!within(e.occurredAt, f) || !userMatches(data, e.userId || "", f))
+      return false;
+    const m = data.meals.find((m) => m.id === e.mealId);
+    if (m) return mealMatches(m, f);
+    return (
+      (f.area === "all" || e.area === f.area) &&
+      (f.source === "all" || e.source === f.source) &&
+      (f.language === "all" || e.language === f.language) &&
+      (f.size === "all" ||
+        (e.size !== undefined &&
+          (f.size === "duo" ? e.size === 2 : e.size >= 3))) &&
+      (f.budget === "all" ||
+        (e.budget !== undefined && e.budget <= Number(f.budget)))
+    );
+  });
+}
+export function participation(data: Dataset, asOf = SNAPSHOT) {
+  const result: {
+    userId: string;
+    meal: Meal;
+    status: ReturnType<typeof attendance>;
+  }[] = [];
+  for (const meal of data.meals.filter(
+    (m) => !m.cancelled && m.startsAt < asOf && m.publishedAt <= asOf,
+  )) {
+    const people = new Set([
+      meal.hostId,
+      ...data.applications
+        .filter(
+          (a) =>
+            a.mealId === meal.id &&
+            a.confirmedAt &&
+            a.confirmedAt <= asOf &&
+            (!a.withdrawnAt || a.withdrawnAt > meal.startsAt),
+        )
+        .map((a) => a.userId),
+    ]);
+    for (const userId of people)
+      result.push({
+        userId,
+        meal,
+        status: attendance(latestAttendance(data, userId, meal.id, asOf)),
+      });
+  }
+  return result;
+}
+function firstAttendance(data: Dataset, asOf: string) {
+  const first = new Map<string, Meal>();
+  for (const p of participation(data, asOf)
+    .filter((p) => p.status === "present")
+    .sort((a, b) => a.meal.startsAt.localeCompare(b.meal.startsAt)))
+    if (!first.has(p.userId)) first.set(p.userId, p.meal);
+  return first;
+}
+export function activationUsers(data: Dataset, f: Filters, asOf = SNAPSHOT) {
+  const first = new Map<string, Application>();
+  for (const a of [...data.applications]
+    .filter((a) => a.appliedAt <= asOf)
+    .sort((a, b) => a.appliedAt.localeCompare(b.appliedAt)))
+    if (!first.has(a.userId)) first.set(a.userId, a);
+  const attended = firstAttendance(data, asOf);
+  return [...first.values()]
+    .filter(
+      (a) =>
+        within(a.appliedAt, f) &&
+        userMatches(data, a.userId, f) &&
+        data.meals.some((m) => m.id === a.mealId && mealMatches(m, f)),
+    )
+    .map((a) => {
+      const firstMeal = attended.get(a.userId);
+      return {
+        ...a,
+        mature: +new Date(a.appliedAt) + 14 * DAY <= +new Date(asOf),
+        converted:
+          !!firstMeal &&
+          +new Date(firstMeal.startsAt) >= +new Date(a.appliedAt) &&
+          +new Date(firstMeal.startsAt) <= +new Date(a.appliedAt) + 14 * DAY,
+      };
+    });
+}
+export function cohorts(data: Dataset, f: Filters, asOf = SNAPSHOT) {
+  const first = firstAttendance(data, asOf),
+    parts = participation(data, asOf).filter((p) => p.status === "present");
+  const grouped = new Map<
+    string,
+    {
+      week: string;
+      total: number;
+      mature: number;
+      repeat: number;
+      opportunity: number;
+      users: string[];
+    }
+  >();
+  for (const [userId, meal] of first) {
+    if (
+      !within(meal.startsAt, f) ||
+      !mealMatches(meal, f) ||
+      !userMatches(data, userId, f)
+    )
+      continue;
+    const week = weekStart(londonDay(meal.startsAt));
+    const row = grouped.get(week) || {
+      week,
+      total: 0,
+      mature: 0,
+      repeat: 0,
+      opportunity: 0,
+      users: [],
+    };
+    row.total++;
+    row.users.push(userId);
+    const end = +new Date(meal.startsAt) + 30 * DAY;
+    if (end <= +new Date(asOf)) {
+      row.mature++;
+      if (
+        parts.some(
+          (p) =>
+            p.userId === userId &&
+            p.meal.id !== meal.id &&
+            p.meal.startsAt > meal.startsAt &&
+            +new Date(p.meal.startsAt) <= end,
+        )
+      )
+        row.repeat++;
+      // Opportunity is observed exposure, not inferred availability or inferred compatibility.
+      if (
+        cleanEvents(data.events, data.identityLinks, asOf).some(
+          (e) =>
+            e.userId === userId &&
+            e.name === "meal_impression" &&
+            (e.durationMs || 0) >= 1000 &&
+            (e.visibleRatio || 0) >= 0.5 &&
+            e.mealId !== meal.id &&
+            e.occurredAt > meal.startsAt &&
+            +new Date(e.occurredAt) <= end &&
+            data.meals.some(
+              (m) =>
+                m.id === e.mealId &&
+                m.hostId !== userId &&
+                m.startsAt > e.occurredAt &&
+                !m.cancelled,
+            ),
+        )
+      )
+        row.opportunity++;
+    }
+    grouped.set(week, row);
+  }
+  return [...grouped.values()].sort((a, b) => a.week.localeCompare(b.week));
+}
+export function summarize(data: Dataset, f: Filters, asOf = SNAPSHOT) {
+  const meals = filterMeals(data, f, asOf).filter((m) => m.startsAt <= asOf);
+  const mealIds = new Set(meals.map((m) => m.id));
+  const parts = participation(data, asOf).filter(
+    (p) => mealIds.has(p.meal.id) && userMatches(data, p.userId, f),
+  );
+  const states = { present: 0, absent: 0, unknown: 0, conflict: 0 };
+  parts.forEach((p) => states[p.status]++);
+  const weeks = new Map<string, Set<string>>();
+  for (const meal of meals)
+    weeks.set(weekStart(londonDay(meal.startsAt)), new Set<string>());
+  for (const p of parts.filter((p) => p.status === "present")) {
+    const w = weekStart(londonDay(p.meal.startsAt));
+    const set = weeks.get(w) || new Set<string>();
+    set.add(p.userId);
+    weeks.set(w, set);
+  }
+  const activation = activationUsers(data, f, asOf).filter((a) => a.mature),
+    retention = cohorts(data, f, asOf);
+  const events = filteredEvents(data, f, asOf),
+    discoveries = events.filter((e) => e.name === "discovery_results");
+  const feedbackMap = new Map<string, Feedback>();
+  for (const r of [...data.feedback].sort((a, b) => a.at.localeCompare(b.at)))
+    if (
+      mealIds.has(r.mealId) &&
+      r.at <= asOf &&
+      parts.some(
+        (p) =>
+          p.userId === r.userId &&
+          p.meal.id === r.mealId &&
+          p.status === "present",
+      )
+    )
+      feedbackMap.set(`${r.userId}:${r.mealId}`, r);
+  const feedback = [...feedbackMap.values()];
+  return {
+    meals,
+    parts,
+    attendance: states,
+    attendanceCoverage: {
+      numerator: states.present + states.absent,
+      denominator: parts.length,
+    },
+    weekly: [...weeks]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([week, users]) => ({ week, count: users.size })),
+    attendedUsers: new Set(
+      parts.filter((p) => p.status === "present").map((p) => p.userId),
+    ).size,
+    activation: {
+      numerator: activation.filter((a) => a.converted).length,
+      denominator: activation.length,
+    },
+    retention: {
+      numerator: retention.reduce((s, c) => s + c.repeat, 0),
+      denominator: retention.reduce((s, c) => s + c.mature, 0),
+    },
+    formation: {
+      numerator: meals.filter((m) => m.peakConfirmed >= m.minimum).length,
+      denominator: meals.length,
+    },
+    cancellations: {
+      numerator: meals.filter((m) => m.cancelled).length,
+      denominator: meals.length,
+    },
+    noResults: {
+      numerator: discoveries.filter((e) => e.resultCount === 0).length,
+      denominator: discoveries.length,
+    },
+    feedback,
+    feedbackCoverage: {
+      numerator: new Set(feedback.map((r) => `${r.userId}:${r.mealId}`)).size,
+      denominator: states.present,
+    },
+    again: {
+      numerator: feedback.filter((r) => r.again).length,
+      denominator: feedback.length,
+    },
+  };
+}
+export function funnel(data: Dataset, f: Filters, asOf = SNAPSHOT) {
+  const events = filteredEvents(data, f, asOf);
+  const identities = (es: Event[]) =>
+    new Set(
+      es.map((e) => e.userId || `anonymous:${e.anonymousId || e.sessionId}`),
+    );
+  const discoveries = events.filter((e) => e.name === "discovery_results"),
+    exposed = events.filter(
+      (e) =>
+        e.name === "meal_impression" &&
+        (e.durationMs || 0) >= 1000 &&
+        (e.visibleRatio || 0) >= 0.5,
+    ),
+    details = events.filter((e) => e.name === "detail_view");
+  const applications = data.applications.filter(
+    (a) =>
+      within(a.appliedAt, f) &&
+      a.appliedAt <= asOf &&
+      userMatches(data, a.userId, f) &&
+      data.meals.some((m) => m.id === a.mealId && mealMatches(m, f)),
+  );
+  const approved = applications.filter(
+      (a) => a.decision === "approved" && a.decidedAt && a.decidedAt <= asOf,
+    ),
+    confirmed = approved.filter((a) => a.confirmedAt && a.confirmedAt <= asOf);
+  const completed = applications.filter((a) =>
+    data.meals.some(
+      (m) =>
+        m.id === a.mealId && +new Date(m.startsAt) + DAY <= +new Date(asOf),
+    ),
+  );
+  const present = completed.filter(
+    (a) =>
+      data.meals.some((m) => m.id === a.mealId && !m.cancelled) &&
+      a.confirmedAt &&
+      (!a.withdrawnAt ||
+        a.withdrawnAt > data.meals.find((m) => m.id === a.mealId)!.startsAt) &&
+      attendance(latestAttendance(data, a.userId, a.mealId, asOf)) ===
+        "present",
+  );
+  const discoveryUsers = identities(discoveries);
+  const exposureCohort = exposed.filter(
+    (e) => +new Date(e.occurredAt) + 7 * DAY <= +new Date(asOf),
+  );
+  const exposedMatureUsers = identities(exposureCohort);
+  const exposedAppliedUsers = new Set(
+    exposureCohort
+      .filter((e) =>
+        data.applications.some(
+          (a) =>
+            a.userId === e.userId &&
+            a.appliedAt >= e.occurredAt &&
+            +new Date(a.appliedAt) <= +new Date(e.occurredAt) + 7 * DAY &&
+            a.appliedAt <= asOf &&
+            data.meals.some((m) => m.id === a.mealId && mealMatches(m, f)),
+        ),
+      )
+      .map((e) => e.userId || `anonymous:${e.anonymousId || e.sessionId}`),
+  );
+  const matured = new Set(
+    discoveries
+      .filter((e) => +new Date(e.occurredAt) + 7 * DAY <= +new Date(asOf))
+      .map((e) => e.userId || `anonymous:${e.anonymousId || e.sessionId}`),
+  );
+  const appliedWithin7 = new Set<string>();
+  for (const e of discoveries)
+    if (+new Date(e.occurredAt) + 7 * DAY <= +new Date(asOf)) {
+      if (
+        data.applications.some(
+          (a) =>
+            a.userId === e.userId &&
+            a.appliedAt >= e.occurredAt &&
+            +new Date(a.appliedAt) <= +new Date(e.occurredAt) + 7 * DAY &&
+            a.appliedAt <= asOf &&
+            data.meals.some((m) => m.id === a.mealId && mealMatches(m, f)),
+        )
+      )
+        appliedWithin7.add(e.userId!);
+    }
+  return {
+    discovery: discoveryUsers.size,
+    exposed: identities(exposed).size,
+    details: identities(details).size,
+    applications: applications.length,
+    approved: approved.length,
+    confirmed: confirmed.length,
+    present: present.length,
+    completed: completed.length,
+    matureDiscovery: matured.size,
+    appliedWithin7: appliedWithin7.size,
+    exposedMatureUsers: exposedMatureUsers.size,
+    exposedNoApplyUsers: exposedMatureUsers.size - exposedAppliedUsers.size,
+    records: applications,
+  };
+}
+export function createFunnel(data: Dataset, f: Filters, asOf = SNAPSHOT) {
+  const starts = filteredEvents(data, f, asOf).filter(
+    (e) => e.name === "create_started" && e.attemptId,
+  );
+  const all = cleanEvents(data.events, data.identityLinks, asOf);
+  const identity = (e: Event) =>
+    e.userId || `anonymous:${e.anonymousId || e.sessionId}`;
+  const attempts = new Map<string, Event>();
+  for (const e of starts.sort((a, b) =>
+    a.occurredAt.localeCompare(b.occurredAt),
+  )) {
+    const key = `${identity(e)}:${e.attemptId}`;
+    if (!attempts.has(key)) attempts.set(key, e);
+  }
+  let arranged = 0,
+    published = 0;
+  for (const start of attempts.values()) {
+    const related = all.filter(
+      (e) =>
+        e.attemptId === start.attemptId &&
+        identity(e) === identity(start) &&
+        e.occurredAt >= start.occurredAt,
+    );
+    const arrangement = related
+      .filter((e) => e.name === "create_arranged")
+      .sort((a, b) => a.occurredAt.localeCompare(b.occurredAt))[0];
+    if (!arrangement) continue;
+    arranged++;
+    if (
+      related.some(
+        (e) =>
+          e.name === "meal_published" && e.occurredAt >= arrangement.occurredAt,
+      )
+    )
+      published++;
+  }
+  return [attempts.size, arranged, published];
+}
+export function quantile(values: number[], q: number) {
+  if (!values.length) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  return sorted[Math.ceil(q * sorted.length) - 1];
+}

@@ -1,0 +1,398 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import {
+  cleanEvents,
+  londonDay,
+  weekStart,
+  attendance,
+  ratio,
+  summarize,
+  cohorts,
+  funnel,
+  filterMeals,
+  createFunnel,
+  verifyAttendance,
+} from "../src/analytics.ts";
+import type { Dataset, Event, Meal } from "../src/analytics.ts";
+
+const meal: Meal = {
+  id: "m1",
+  title: "Meal",
+  startsAt: "2026-10-01T18:00:00Z",
+  publishedAt: "2026-09-20T10:00:00Z",
+  area: "Soho",
+  language: "English",
+  capacity: 4,
+  minimum: 3,
+  budget: 25,
+  source: "user",
+  hostId: "h",
+  cancelled: false,
+  peakConfirmed: 3,
+};
+const base: Dataset = {
+  users: [
+    { id: "u", joinedAt: "2026-09-01T10:00:00Z" },
+    { id: "h", joinedAt: "2026-09-01T10:00:00Z" },
+  ],
+  meals: [meal],
+  applications: [
+    {
+      id: "a",
+      userId: "u",
+      mealId: "m1",
+      appliedAt: "2026-09-21T10:00:00Z",
+      decidedAt: "2026-09-21T11:00:00Z",
+      decision: "approved",
+      confirmedAt: "2026-09-21T11:00:00Z",
+    },
+  ],
+  attendance: [
+    {
+      userId: "u",
+      mealId: "m1",
+      host: "present",
+      self: "present",
+      updatedAt: "2026-10-02T10:00:00Z",
+    },
+  ],
+  feedback: [],
+  events: [],
+};
+const filters = {
+  start: "2026-09-21",
+  end: "2026-10-18",
+  area: "all",
+  source: "all",
+  language: "all",
+  size: "all",
+  budget: "all",
+  segment: "all",
+};
+test("zero denominator is unavailable, not zero percent", () => {
+  assert.equal(ratio(0, 0), null);
+  assert.equal(ratio(0, 2), 0);
+});
+test("London date boundaries respect British summer time and autumn transition", () => {
+  assert.equal(londonDay("2026-10-24T23:30:00Z"), "2026-10-25");
+  assert.equal(londonDay("2026-10-25T23:30:00Z"), "2026-10-25");
+  assert.equal(weekStart("2026-10-18"), "2026-10-12");
+});
+test("attendance conflict, missing and explicit absence remain distinct", () => {
+  assert.equal(attendance(undefined), "unknown");
+  assert.equal(
+    attendance({
+      userId: "u",
+      mealId: "m",
+      host: "present",
+      self: "absent",
+      updatedAt: "",
+    }),
+    "conflict",
+  );
+  assert.equal(
+    attendance({ userId: "u", mealId: "m", self: "absent", updatedAt: "" }),
+    "absent",
+  );
+});
+test("events deduplicate, exclude non-production/test/bot and join only explicit identities", () => {
+  const event: Event = {
+    id: "e1",
+    name: "detail_view",
+    occurredAt: "2026-10-01T10:00:00Z",
+    receivedAt: "2026-10-01T10:01:00Z",
+    anonymousId: "anon",
+    sessionId: "s",
+    environment: "production",
+    appVersion: "1",
+    schemaVersion: 1,
+    mealId: "m1",
+  };
+  const events = cleanEvents(
+    [
+      event,
+      event,
+      { ...event, id: "e2", environment: "demo" },
+      { ...event, id: "e3", isTest: true },
+      { ...event, id: "e4", isBot: true },
+      { ...event, id: "e5", isStaff: true },
+    ],
+    [{ anonymousId: "anon", sessionId: "s", userId: "u" }],
+  );
+  assert.equal(events.length, 1);
+  assert.equal(events[0].userId, "u");
+  assert.equal(
+    cleanEvents(
+      [{ ...event, sessionId: "different" }],
+      [{ anonymousId: "anon", sessionId: "s", userId: "u" }],
+    )[0].userId,
+    undefined,
+  );
+});
+test("late event availability uses received time, not just occurrence", () => {
+  const e: Event = {
+    id: "e",
+    name: "detail_view",
+    occurredAt: "2026-10-01T10:00:00Z",
+    receivedAt: "2026-10-19T10:00:00Z",
+    sessionId: "s",
+    environment: "production",
+    appVersion: "1",
+    schemaVersion: 1,
+  };
+  assert.equal(cleanEvents([e], [], "2026-10-18T23:00:00Z").length, 0);
+  assert.equal(cleanEvents([e], [], "2026-10-20T23:00:00Z").length, 1);
+});
+test("first application conversion waits for a complete 14-day observation", () => {
+  const immature = {
+    ...base,
+    applications: [
+      { ...base.applications[0], appliedAt: "2026-10-10T10:00:00Z" },
+    ],
+  };
+  assert.equal(
+    summarize(immature, filters, "2026-10-18T12:00:00Z").activation.denominator,
+    0,
+  );
+  assert.equal(
+    summarize(base, filters, "2026-10-18T12:00:00Z").activation.numerator,
+    1,
+  );
+});
+test("repeat cohorts exclude immature users and count same-meal duplicate attendance once", () => {
+  const data = {
+    ...base,
+    attendance: [...base.attendance, ...base.attendance],
+  };
+  assert.equal(cohorts(data, filters, "2026-10-18T12:00:00Z")[0].mature, 0);
+  const mature = cohorts(data, filters, "2026-11-05T12:00:00Z")[0];
+  assert.equal(mature.mature, 1);
+  assert.equal(mature.repeat, 0);
+});
+test("summary does not treat missing attendance as no-show or count attendance before snapshot", () => {
+  assert.equal(
+    summarize({ ...base, attendance: [] }, filters).attendance.unknown,
+    2,
+  );
+  const future = {
+    ...base,
+    attendance: [{ ...base.attendance[0], updatedAt: "2026-10-19T10:00:00Z" }],
+  };
+  assert.equal(summarize(future, filters).attendance.present, 0);
+});
+test("filters propagate to meals and derived metrics; cancellations stay in formed denominator", () => {
+  const data = {
+    ...base,
+    meals: [
+      meal,
+      { ...meal, id: "m2", area: "Camden", cancelled: true, peakConfirmed: 1 },
+    ],
+  };
+  assert.equal(filterMeals(data, { ...filters, area: "Camden" }).length, 1);
+  assert.equal(summarize(data, filters).formation.denominator, 2);
+  assert.equal(
+    summarize(data, { ...filters, area: "Camden" }).formation.numerator,
+    0,
+  );
+});
+test("funnel never approves an application from a different meal and duplicate events do not inflate users", () => {
+  const ev: Event = {
+    id: "e",
+    name: "detail_view",
+    occurredAt: "2026-09-21T09:00:00Z",
+    receivedAt: "2026-09-21T09:00:00Z",
+    sessionId: "s",
+    userId: "u",
+    environment: "production",
+    appVersion: "1",
+    schemaVersion: 1,
+    mealId: "m1",
+  };
+  const data = {
+    ...base,
+    events: [ev, ev],
+    applications: [{ ...base.applications[0], mealId: "other" }],
+  };
+  const f = funnel(data, filters);
+  assert.equal(f.details, 1);
+  assert.equal(f.applications, 0);
+});
+test("malformed events are quarantined and feedback is deduplicated by participation", () => {
+  const e: Event = {
+    id: "bad",
+    name: "detail_view",
+    occurredAt: "2026-10-01T10:00:00Z",
+    receivedAt: "2026-10-01T10:00:00Z",
+    sessionId: "",
+    environment: "production",
+    appVersion: "1",
+    schemaVersion: 1,
+  };
+  assert.equal(cleanEvents([e]).length, 0);
+  const r = {
+    userId: "u",
+    mealId: "m1",
+    score: 5,
+    again: true,
+    issue: "none" as const,
+    at: "2026-10-02T10:00:00Z",
+  };
+  assert.equal(
+    summarize({ ...base, feedback: [r, r] }, filters).feedback.length,
+    1,
+  );
+});
+test("create funnel follows same attempt and user beyond selected entry dates", () => {
+  const event: Event = {
+    id: "start",
+    name: "create_started",
+    occurredAt: "2026-09-30T10:00:00Z",
+    receivedAt: "2026-09-30T10:00:00Z",
+    sessionId: "s",
+    userId: "h",
+    attemptId: "c",
+    environment: "production",
+    appVersion: "1",
+    schemaVersion: 1,
+    mealId: "m1",
+  };
+  const events = [
+    event,
+    {
+      ...event,
+      id: "arrange",
+      name: "create_arranged",
+      occurredAt: "2026-10-01T10:00:00Z",
+      receivedAt: "2026-10-01T10:00:00Z",
+    },
+    {
+      ...event,
+      id: "publish",
+      name: "meal_published",
+      occurredAt: "2026-10-02T10:00:00Z",
+      receivedAt: "2026-10-02T10:00:00Z",
+    },
+  ];
+  assert.deepEqual(
+    createFunnel({ ...base, events }, { ...filters, end: "2026-09-30" }),
+    [1, 1, 1],
+  );
+  assert.deepEqual(
+    createFunnel(
+      {
+        ...base,
+        events: events.map((e) =>
+          e.name === "meal_published" ? { ...e, userId: "other" } : e,
+        ),
+      },
+      filters,
+    ),
+    [1, 1, 0],
+  );
+  assert.deepEqual(
+    createFunnel(
+      {
+        ...base,
+        events: events.map((e) =>
+          e.name === "create_arranged" ? { ...e, userId: "other" } : e,
+        ),
+      },
+      filters,
+    ),
+    [1, 0, 0],
+  );
+});
+test("verified attendance retains evidence and recalculates, disallowing unconfirmed or cancelled participants", () => {
+  const updated = verifyAttendance(
+    { ...base, attendance: [] },
+    "m1",
+    "u",
+    "present",
+    "Checked with participant",
+  );
+  assert.equal(summarize(updated, filters).attendance.present, 1);
+  assert.equal(base.attendance.length, 1);
+  assert.throws(() =>
+    verifyAttendance(base, "m1", "stranger", "present", "Checked"),
+  );
+  assert.throws(() =>
+    verifyAttendance(
+      { ...base, meals: [{ ...meal, cancelled: true }] },
+      "m1",
+      "u",
+      "present",
+      "Checked",
+    ),
+  );
+  assert.throws(() => verifyAttendance(base, "m1", "u", "present", ""));
+});
+
+test("hand-calculated two-meal cohort reconciles outcomes, coverage and repeat participation", () => {
+  const first = {
+    ...meal,
+    startsAt: "2026-09-01T18:00:00Z",
+    publishedAt: "2026-08-18T10:00:00Z",
+  };
+  const second = {
+    ...meal,
+    id: "m2",
+    startsAt: "2026-09-20T18:00:00Z",
+    publishedAt: "2026-09-15T10:00:00Z",
+  };
+  const data: Dataset = {
+    ...base,
+    meals: [first, second],
+    applications: [
+      {
+        ...base.applications[0],
+        appliedAt: "2026-08-20T10:00:00Z",
+        confirmedAt: "2026-08-21T10:00:00Z",
+      },
+      {
+        ...base.applications[0],
+        id: "a2",
+        mealId: "m2",
+        appliedAt: "2026-09-16T10:00:00Z",
+        confirmedAt: "2026-09-17T10:00:00Z",
+      },
+    ],
+    attendance: [
+      {
+        userId: "u",
+        mealId: "m1",
+        self: "present",
+        updatedAt: "2026-09-02T10:00:00Z",
+      },
+      {
+        userId: "h",
+        mealId: "m1",
+        self: "present",
+        updatedAt: "2026-09-02T10:00:00Z",
+      },
+      {
+        userId: "u",
+        mealId: "m2",
+        self: "present",
+        updatedAt: "2026-09-21T10:00:00Z",
+      },
+    ],
+  };
+  const summary = summarize(data, { ...filters, start: "2026-08-01" });
+  assert.deepEqual(summary.activation, { numerator: 1, denominator: 1 });
+  assert.deepEqual(summary.retention, { numerator: 1, denominator: 2 });
+  assert.deepEqual(summary.attendanceCoverage, {
+    numerator: 3,
+    denominator: 4,
+  });
+  assert.deepEqual(summary.attendance, {
+    present: 3,
+    absent: 0,
+    unknown: 1,
+    conflict: 0,
+  });
+  assert.equal(summary.attendedUsers, 2);
+  assert.deepEqual(
+    summary.weekly.map((w) => w.count),
+    [2, 1],
+  );
+});

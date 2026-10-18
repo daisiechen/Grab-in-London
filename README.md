@@ -7,6 +7,7 @@
 - [中文版产品需求文档](docs/PRD.zh-CN.md)：背景、目标、用户路径、前后端模块、逐功能交互、输入输出、状态、异常与验收。
 - [中美英竞品调研与机会策略](docs/research/competitive-landscape.zh-CN.md)及[证据附录](docs/research/competitor-evidence.zh-CN.md)：24 项候选、12 家核心档案、商业及功能对比、差异化假设与 90 天验证建议；核查日期 2026-10-16，非登录实测或经营结果保证。
 - [高保真交互 Demo](demo/README.md)：地图/列表、个人主页、申请审核、模拟预订支付与退款、发起饭局、群聊和饭后互选。
+- [产品数据后台 Demo](admin/README.md)与[后台 PRD](docs/admin/PRD.zh-CN.md)：产品概览、用户旅程、饭局供需、体验留存和数据口径；支持中英切换、筛选下钻与出席核实演示，当前全部为虚构示例，真实数据采集及服务尚未接入。
 - [视觉验证](demo/design-qa.md) 与 [浏览器验证](demo/qa/browser-results.md)。
 
 Slogan：**吃个饭，认识一下。 / Meet new people over a meal.**
