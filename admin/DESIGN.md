@@ -10,7 +10,7 @@ description: Internal product analytics for real-meal pilot decisions; fictional
 一份围绕真实见面的产品观察笔记：左侧稳定导航，右侧从结果、证据到下一步验证。不是商家经营台，也不以消息量或停留时间装饰增长。保留 Fancy 森林绿和柑橘绿，以轻盈的数据墨水呈现漏斗、供给和队列。
 
 ## Context
-Product/admin register；中文默认、英文可切换，伦敦试点内部团队。与手机端独立，不复用受保护的手机框架。业务来源为 `../docs/PRD.zh-CN.md` 及 `../docs/admin/PRD.zh-CN.md`，当前用户确认的精简范围优先。
+Product/admin register；中文默认、英文可切换，伦敦试点内部团队。与手机端独立，不复用受保护的手机框架。业务来源为 `../docs/product/PRD.zh-CN.md` 及 `../docs/product/admin/PRD.zh-CN.md`，当前用户确认的精简范围优先。
 
 ## Tokens and typography
 Canonical runtime owner: `src/styles.css` 的 `:root`。森林 `--forest:#123f35`；柑橘 `--citrus:#d7ee79`；内容底 `--cream:#f6f7f3`；文字 `--ink:#203d33`；辅助 `--muted:#758279`；分隔 `--border:#e4e9e2`；告警 `--amber:#9b6529`；面板半径 `--radius:14px`。

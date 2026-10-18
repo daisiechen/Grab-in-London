@@ -2,7 +2,7 @@
 
 **Meet new people over a meal.**
 
-English mobile-style prototype with the selected London map direction and prominent bottom-centre Create meal action. Chinese product specification: [PRD](../docs/PRD.zh-CN.md).
+English mobile-style prototype with the selected London map direction and prominent bottom-centre Create meal action. Chinese product specification: [PRD](../docs/product/PRD.zh-CN.md).
 
 ## Run
 
@@ -43,7 +43,7 @@ Discovery refinements: date and Table size have dedicated quick selectors. More 
 
 Live demo: https://grab-in-london-demo.daisie-chen-94.chatgpt.site
 
-Anyone with the link can explore the prototype. Email sign-in is simulated with sample email `alex@example.com` and code `123456`; Google/Apple flows are labelled previews. There are no real accounts, bookings or charges. Data is memory-only, resets on reload and is not shared across browsers. Release details: [中文发布记录](../docs/demo-release.zh-CN.md). Keep the registered project ID in `.openai/hosting.json` for later updates.
+Anyone with the link can explore the prototype. Email sign-in is simulated with sample email `alex@example.com` and code `123456`; Google/Apple flows are labelled previews. There are no real accounts, bookings or charges. Data is memory-only, resets on reload and is not shared across browsers. Release details: [中文发布记录](../docs/delivery/demo-release.zh-CN.md). Keep the registered project ID in `.openai/hosting.json` for later updates.
 
 Brand: Fancy (provisional). Invitation: Fancy a bite? / 一起吃点？. Slogan: Meet new people over a meal. / 吃个饭，认识一下。. Existing public URL retains its legacy slug for shared-link continuity.
 
@@ -51,4 +51,4 @@ Brand: Fancy (provisional). Invitation: Fancy a bite? / 一起吃点？. Slogan:
 Default URL shows product UI without implementation notes. Append `?review=1` to expose acceptance-only scenario controls. Authentication code remains `123456`; OAuth, charges, reservations, notifications and report delivery are frontend simulations. No real backend is added by hiding annotations. Use the PRD as the implementation contract.
 
 ### Full product audit — 18 October 2026
-The route/state audit and acceptance evidence are in `../docs/qa/full-product-audit.zh-CN.md`; PRD v0.4 records corrected payment/reservation separation, cancellations, refunds, member-specific privacy state, and clean product copy. Normal and review URLs deliberately show different control sets. Prototype dates and external-service responses remain fixtures.
+The route/state audit and acceptance evidence are in `../docs/delivery/full-product-audit.zh-CN.md`; PRD v0.4 records corrected payment/reservation separation, cancellations, refunds, member-specific privacy state, and clean product copy. Normal and review URLs deliberately show different control sets. Prototype dates and external-service responses remain fixtures.

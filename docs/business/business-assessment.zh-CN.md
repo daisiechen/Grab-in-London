@@ -220,4 +220,4 @@ AI 小规模探索先看是否解决反复出现的任务。使用“既有免�
 - [经济模型](../../outputs/business-2026-10-17/economic-model.xlsx)：可编辑输入、三情景、敏感性、个人服务模型及来源。
 - [模型输入](model-inputs.json)与[复算程序](../../scripts/business_model.py)：可复现计算。
 - [竞品主报告](../research/competitive-landscape.zh-CN.md)与[证据档案](../research/competitor-evidence.zh-CN.md)：各地区机制、收费边界及延伸阅读。
-- [PRD](../PRD.zh-CN.md)：产品目标和 Demo 边界；本报告为商业评估，不自动更改上线承诺。
+- [PRD](../product/PRD.zh-CN.md)：产品目标和 Demo 边界；本报告为商业评估，不自动更改上线承诺。

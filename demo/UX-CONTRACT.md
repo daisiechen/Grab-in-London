@@ -1,6 +1,6 @@
 # UX contract
 
-Business source: ../docs/PRD.zh-CN.md §§3–10. Product brief is background only. All payment, reservation, permissions and lifecycle behavior in this prototype is a local simulation, not a live service.
+Business source: ../docs/product/PRD.zh-CN.md §§3–10. Product brief is background only. All payment, reservation, permissions and lifecycle behavior in this prototype is a local simulation, not a live service.
 
 | Capability     | Canonical owner                                              | Source of truth | Allowed variants                                 | Verification                             |
 | -------------- | ------------------------------------------------------------ | --------------- | ------------------------------------------------ | ---------------------------------------- |

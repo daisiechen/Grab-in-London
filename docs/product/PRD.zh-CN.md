@@ -400,7 +400,7 @@ Demo 不调用以下真实接口，前端状态模拟提供等价交互。正式
 | AC-09 | 全部 | 运行类型检查、领域测试、构建、浏览器主路径与视觉对照 |
 
 ### 10.2 测试与交付结构
-`docs/PRD.zh-CN.md` 为需求真源；`docs/product-brief.md` 保留早期背景但不替代 PRD；`demo/` 为高保真可交互原型；`demo/DESIGN.md` 与 `demo/UX-CONTRACT.md` 对应视觉和通用行为；测试与 QA 报告记录实际覆盖，不能把目标清单写成已通过结果。
+`docs/product/PRD.zh-CN.md` 为需求真源；`docs/product/product-brief.md` 保留早期背景但不替代 PRD；`demo/` 为高保真可交互原型；`demo/DESIGN.md` 与 `demo/UX-CONTRACT.md` 对应视觉和通用行为；测试与 QA 报告记录实际覆盖，不能把目标清单写成已通过结果。
 
 开发与验证命令（安装 Node 与 pnpm 后）：`cd demo && pnpm install --frozen-lockfile`；`pnpm dev --host 127.0.0.1 --port 4173`；`pnpm check:runtime`；`pnpm test:domain`；`pnpm exec tsc --noEmit`；`pnpm build`。浏览器验证使用本机 in-app browser。发布前记录 Git 提交并核对远程 SHA，不将本地提交等同 GitHub 同步成功。
 
@@ -449,7 +449,7 @@ Demo 不调用以下真实接口，前端状态模拟提供等价交互。正式
 
 ### 公开体验版交付 — 2026-10-16
 
-可分享URL：https://grab-in-london-demo.daisie-chen-94.chatgpt.site 。当前访问模式public，访客不需要项目仓库或本机开发环境。网页内认证仍为模拟，各自浏览器独立内存状态，刷新重置；不构成真实多人服务。版本、部署结果和验证范围见`docs/demo-release.zh-CN.md`。后续迭代复用同一Sites项目与网址。
+可分享URL：https://grab-in-london-demo.daisie-chen-94.chatgpt.site 。当前访问模式public，访客不需要项目仓库或本机开发环境。网页内认证仍为模拟，各自浏览器独立内存状态，刷新重置；不构成真实多人服务。版本、部署结果和验证范围见`docs/delivery/demo-release.zh-CN.md`。后续迭代复用同一Sites项目与网址。
 
 
 ### 2026-10-16 Inbox与设置验收增补
@@ -478,7 +478,7 @@ Demo 不调用以下真实接口，前端状态模拟提供等价交互。正式
 
 ## 全流程审查修订（2026-10-18，v0.4）
 
-本节补充并约束既有功能说明；具体浏览器路径、问题和截图见 `docs/qa/full-product-audit.zh-CN.md`。正常 URL 使用产品文案；`?review=1` 仅用于模拟其他用户和外部服务的状态，不属于面向用户的功能菜单。
+本节补充并约束既有功能说明；具体浏览器路径、问题和截图见 `docs/delivery/full-product-audit.zh-CN.md`。正常 URL 使用产品文案；`?review=1` 仅用于模拟其他用户和外部服务的状态，不属于面向用户的功能菜单。
 
 | 模块 / 触发 | 输入与校验 | 输出、页面跳转与边界 |
 | --- | --- | --- |

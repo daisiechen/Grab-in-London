@@ -14,7 +14,7 @@ class AdminDeliveryTests(unittest.TestCase):
         self.assertIn('/src/main.tsx', (ROOT / 'admin/index.html').read_text())
 
     def test_prd_records_real_data_boundary_and_metric_contracts(self):
-        prd = (ROOT / 'docs/admin/PRD.zh-CN.md').read_text()
+        prd = (ROOT / 'docs/product/admin/PRD.zh-CN.md').read_text()
         for required in ['真实采集及生产服务待建设', '30天', '14天', '零分母',
                          'receivedAt', 'Europe/London', 'expectedVersion',
                          'historyCoverageStart', 'AC-12', '未成熟不算流失']:
@@ -24,7 +24,7 @@ class AdminDeliveryTests(unittest.TestCase):
         for target in ['admin/src/analytics.ts', 'admin/src/fixtures.ts',
                        'admin/DESIGN.md', 'admin/UX-CONTRACT.md',
                        'admin/tests/analytics.test.ts', 'admin/tests/dashboard.spec.ts',
-                       'docs/admin/PRD.zh-CN.md']:
+                       'docs/product/admin/PRD.zh-CN.md']:
             self.assertTrue((ROOT / target).is_file(), target)
 
 

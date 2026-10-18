@@ -1,7 +1,7 @@
 # Fancy Insights — UX contract
 
 ## Source and boundaries
-业务/权限/生命周期来源：`../docs/admin/PRD.zh-CN.md`；用户端状态来源：`../docs/PRD.zh-CN.md`。只做五个分析模块，不提供订单财务、商家、客服、安全审核、内容增长管理。当前数据是本地虚构 fixture，没有真实身份、服务或第三方集成。
+业务/权限/生命周期来源：`../docs/product/admin/PRD.zh-CN.md`；用户端状态来源：`../docs/product/PRD.zh-CN.md`。只做五个分析模块，不提供订单财务、商家、客服、安全审核、内容增长管理。当前数据是本地虚构 fixture，没有真实身份、服务或第三方集成。
 
 ## Canonical UI map
 | Capability | Canonical owner | Source of truth | Allowed variants | Verification |
