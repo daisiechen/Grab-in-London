@@ -27,3 +27,6 @@ Fancy 字标使用本地 Georgia 斜体，分析内容使用 Arial/PingFang SC/M
 
 ## Verification
 `pnpm test`、`pnpm build`、`pnpm test:e2e`；Playwright 验证桌面与390px、语言、过滤/下钻、队列成熟、无数据与失败恢复。截图保存在 `qa/`。
+
+## 2026-10-18 可用性修订
+保持既有森林绿、浅色面板与布局。减少重复的英文装饰眉题、静态教学卡和开发备注；分析口径保留。新增条件标签使用浅绿描边、小关闭图标；出席状态卡有按钮语义、选中描边。正文口径注释统一11px及更深的辅助文字。图标侧栏提供可读名称与悬停标题。筛选弹层复用NativeSelect和既有尺寸，由FilterPopover统一负责关闭行为。

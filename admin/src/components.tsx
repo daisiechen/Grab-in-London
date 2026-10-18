@@ -164,6 +164,55 @@ export function NativeSelect({
     </label>
   );
 }
+export function FilterPopover({
+  children,
+  t,
+  count,
+  route,
+}: {
+  children: ReactNode;
+  t: Translate;
+  count: number;
+  route: string;
+}) {
+  const ref = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    const dismiss = (event: Event) => {
+      if (ref.current?.open && !ref.current.contains(event.target as Node))
+        ref.current.open = false;
+    };
+    document.addEventListener("pointerdown", dismiss, true);
+    document.addEventListener("focusin", dismiss);
+    return () => {
+      document.removeEventListener("pointerdown", dismiss, true);
+      document.removeEventListener("focusin", dismiss);
+    };
+  }, []);
+  useEffect(() => {
+    if (ref.current) ref.current.open = false;
+  }, [route]);
+  return (
+    <details
+      className="advanced-filter"
+      ref={ref}
+      onKeyDown={(event) => {
+        if (event.key === "Escape" && ref.current?.open) {
+          event.preventDefault();
+          event.stopPropagation();
+          ref.current.open = false;
+          ref.current.querySelector("summary")?.focus();
+        }
+      }}
+    >
+      <summary>
+        {t("更多筛选", "More filters")}
+        {count > 0 && <span className="filter-count">{count}</span>}
+        <Icon name="down" size={13} />
+      </summary>
+      <div>{children}</div>
+    </details>
+  );
+}
 export function DataTable({
   caption,
   columns,
@@ -173,17 +222,26 @@ export function DataTable({
 }: {
   caption: string;
   columns: string[];
-  rows: { id: string; cells: ReactNode[]; search: string }[];
+  rows: {
+    id: string;
+    cells: ReactNode[];
+    search: string;
+    sortValue?: string;
+  }[];
   t: Translate;
   onRow?: (id: string) => void;
 }) {
   const [query, setQuery] = useState(""),
     [page, setPage] = useState(0),
     [reverse, setReverse] = useState(false);
-  const filtered = rows.filter((r) =>
-    r.search.toLowerCase().includes(query.toLowerCase()),
-  );
+  const filtered = rows
+    .filter((r) => r.search.toLowerCase().includes(query.toLowerCase()))
+    .sort((a, b) => (b.sortValue || b.id).localeCompare(a.sortValue || a.id));
   if (reverse) filtered.reverse();
+  const datasetKey = rows.map((row) => row.id).join("|");
+  useEffect(() => {
+    setPage(0);
+  }, [datasetKey]);
   const current = Math.min(
     page,
     Math.max(0, Math.ceil(filtered.length / 6) - 1),
@@ -195,7 +253,7 @@ export function DataTable({
           <Icon name="search" size={17} />
           <input
             aria-label={t("搜索记录", "Search records")}
-            placeholder={t("搜索编号或区域…", "Search ID or area…")}
+            placeholder={t("搜索记录…", "Search records…")}
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -205,14 +263,26 @@ export function DataTable({
           {query && (
             <button
               aria-label={t("清除搜索", "Clear search")}
-              onClick={() => setQuery("")}
+              onClick={() => {
+                setQuery("");
+                setPage(0);
+              }}
             >
               <Icon name="close" size={15} />
             </button>
           )}
         </div>
-        <button className="text-button" onClick={() => setReverse(!reverse)}>
-          {t("记录顺序", "Record order")} {reverse ? "↑" : "↓"}
+        <button
+          className="text-button"
+          onClick={() => {
+            setReverse(!reverse);
+            setPage(0);
+          }}
+        >
+          {reverse
+            ? t("最早在前", "Oldest first")
+            : t("最新在前", "Newest first")}{" "}
+          {reverse ? "↑" : "↓"}
         </button>
       </div>
       <div className="table-scroll">
@@ -284,11 +354,13 @@ export function DetailDialog({
   children,
   onClose,
   t,
+  onBack,
 }: {
   title: string;
   children: ReactNode;
   onClose: () => void;
   t: Translate;
+  onBack?: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const trigger = useRef(document.activeElement as HTMLElement);
@@ -311,6 +383,15 @@ export function DetailDialog({
       aria-labelledby="dialog-title"
     >
       <header>
+        {onBack && (
+          <button
+            className="icon-button"
+            onClick={onBack}
+            aria-label={t("返回上一条详情", "Back to previous detail")}
+          >
+            ←
+          </button>
+        )}
         <div>
           <div className="eyebrow">FANCY INSIGHTS</div>
           <h2 id="dialog-title">{title}</h2>

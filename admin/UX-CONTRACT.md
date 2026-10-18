@@ -10,12 +10,20 @@
 | Date | `src/App.tsx` global date filter | admin PRD, this contract | native | date validation and London/DST unit tests |
 | Form | `src/App.tsx` filter state | this contract | filter, sample verification | inline error and retained values |
 | Scrollbar | `src/styles.css` | DESIGN.md tokens | page, table, dialog | root computed style and narrow viewport |
-| Table | `src/components.tsx` DataTable | this contract | read-only, six-row pagination | search, clear, page boundaries |
+| Table | `src/components.tsx` DataTable | this contract | read-only, six-row pagination, real-date newest/oldest ordering | search, clear, page boundaries |
 | Toast | `src/App.tsx` notice | this contract | status | role=status, localized export/verification feedback |
 | Overlay | `src/components.tsx` DetailDialog | this contract | native modal drawer | focus, Escape, restoration |
-| Navigation | `src/App.tsx` pages | this contract | desktop, mobile | hash routes and URL filters |
+| Navigation | `src/App.tsx` pages | this contract | desktop, mobile | named icon links, hash routes and URL filters |
 | CRUD | No production writes | admin PRD | local sample verification only | eligibility and immutable evidence tests |
 
+
+## Revision: minimal pilot interactions
+- Advanced filters: shared `FilterPopover` owns outside pointer/focus dismissal, Escape focus restoration and route dismissal. Keep inner selection open; display active hidden conditions as removable chips.
+- Data checks: `src/checks.ts` owns deterministic summaries for the current dataset and filters. No analyst agent, weekly agenda writer or causal claim. Product team reviews decisions weekly; connected snapshots later supply fresh data.
+- Cohort dates open the full cohort. Nested cohort/user/meal details have a back path. User history includes hosted meals; timestamps display Europe/London.
+- List sorting uses real dates, newest first by default. Locale preserves search and ordering. Dataset changes/sort/clear search reset pagination.
+- Attendance tiles and the evidence action filter the meal list only; aggregation scope stays explicit. Ineligible records show not applicable. Manual verification preserves original sources and focuses invalid basis fields.
+- Review switches require `?review=1`; normal screens retain truthful source status but omit test controls and static teaching cards.
 
 ## Flow ledger
 - Global filters → recompute common facts → all analysis follows the same values; locale changes retain dates, business filters and route. Selected dates define cohorts; follow-up observed to snapshot, explicitly labelled. Source: admin PRD metric rules.

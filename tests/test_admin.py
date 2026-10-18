@@ -20,6 +20,12 @@ class AdminDeliveryTests(unittest.TestCase):
                          'historyCoverageStart', 'AC-12', '未成熟不算流失']:
             self.assertIn(required, prd)
 
+    def test_usability_revision_records_ownership_and_review_boundaries(self):
+        prd = (ROOT / 'docs/product/admin/PRD.zh-CN.md').read_text()
+        for phrase in ['当前数据检查', '没有经营分析Agent', '?review=1', '该组全部用户', 'AC-13']:
+            self.assertIn(phrase, prd)
+        self.assertTrue((ROOT / 'admin/tests/browser-scenarios.mjs').is_file())
+
     def test_delivery_links_point_to_existing_files(self):
         for target in ['admin/src/analytics.ts', 'admin/src/fixtures.ts',
                        'admin/DESIGN.md', 'admin/UX-CONTRACT.md',

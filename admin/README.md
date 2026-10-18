@@ -32,3 +32,8 @@ pnpm test:e2e
 - [设计系统](DESIGN.md)、[交互契约](UX-CONTRACT.md)、[验证](qa/verification.zh-CN.md)。
 
 真实数据适配必须由服务端提供去标识化分析快照，不应把真实数据复制进 fixture 或公开仓库。默认28天，观察窗口随指标分别成熟；30天重复率在默认窗口可能无成熟分母，显示“—”，不能显示0%。
+
+## 当前版本的使用规则
+“当前数据检查”按当前数据/筛选重算，不由经营分析Agent撰写，也不承诺每周自动出议题；产品负责人每周据此复核与确定迭代。没有Agent或定时经营任务接入。普通页面隐藏场景测试开关；需要验收时打开`?review=1#quality`。
+
+[本轮审查报告](../docs/delivery/fancy-admin-usability-review.zh-CN.md)包含逐页问题、修复、截图和范围。`tests/browser-scenarios.mjs`为共享浏览器场景：可由现有Playwright包装器执行，也可在已选内置浏览器通过同一场景适配执行。本轮使用后者，无需另开Chrome。

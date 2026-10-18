@@ -352,6 +352,13 @@ export function cohorts(data: Dataset, f: Filters, asOf = SNAPSHOT) {
       repeat: number;
       opportunity: number;
       users: string[];
+      members: {
+        userId: string;
+        firstAt: string;
+        mature: boolean;
+        repeat: boolean;
+        opportunity: boolean;
+      }[];
     }
   >();
   for (const [userId, meal] of first) {
@@ -369,7 +376,10 @@ export function cohorts(data: Dataset, f: Filters, asOf = SNAPSHOT) {
       repeat: 0,
       opportunity: 0,
       users: [],
+      members: [],
     };
+    const beforeRepeat = row.repeat,
+      beforeOpportunity = row.opportunity;
     row.total++;
     row.users.push(userId);
     const end = +new Date(meal.startsAt) + 30 * DAY;
@@ -407,6 +417,13 @@ export function cohorts(data: Dataset, f: Filters, asOf = SNAPSHOT) {
       )
         row.opportunity++;
     }
+    row.members.push({
+      userId,
+      firstAt: meal.startsAt,
+      mature: end <= +new Date(asOf),
+      repeat: row.repeat > beforeRepeat,
+      opportunity: row.opportunity > beforeOpportunity,
+    });
     grouped.set(week, row);
   }
   return [...grouped.values()].sort((a, b) => a.week.localeCompare(b.week));

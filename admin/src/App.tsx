@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { dataChecks } from "./checks";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   activationUsers,
   attendance,
@@ -11,6 +12,7 @@ import {
   funnel,
   latestAttendance,
   londonDay,
+  participation,
   quantile,
   ratio,
   SNAPSHOT,
@@ -27,6 +29,7 @@ import {
   DataTable,
   DetailDialog,
   Empty,
+  FilterPopover,
   Icon,
   NativeSelect,
   Panel,
@@ -41,6 +44,10 @@ const pages = [
   "quality",
 ] as const;
 type Page = (typeof pages)[number];
+type Detail = {
+  kind: "metric" | "meal" | "user" | "events" | "cohort";
+  id: string;
+};
 const emptyData: Dataset = {
   users: [],
   meals: [],
@@ -79,7 +86,9 @@ const MetricCard = ({
   titleFor,
   openMetric,
   n,
+  title,
 }: {
+  title?: string;
   id: string;
   value: string;
   numerator?: number;
@@ -92,7 +101,7 @@ const MetricCard = ({
 }) => (
   <button className="metric-card" onClick={() => openMetric(id)}>
     <div className="metric-label">
-      <span>{titleFor(id)}</span>
+      <span>{title || titleFor(id)}</span>
       <Icon name="info" size={16} />
     </div>
     <div className="metric-value">
@@ -123,12 +132,21 @@ export default function App() {
   const [dateError, setDateError] = useState(false),
     [journey, setJourney] = useState<"join" | "create">("join"),
     [mode, setMode] = useState("sample");
-  const [detail, setDetail] = useState<{
-      kind: "metric" | "meal" | "user" | "events";
-      id: string;
-    } | null>(null),
+  const [detail, setDetail] = useState<Detail | null>(null),
     [notice, setNotice] = useState("");
+  const [detailHistory, setDetailHistory] = useState<Detail[]>([]);
+  const openDetail = (next: Detail) => {
+    if (detail) setDetailHistory((previous) => [...previous, detail]);
+    setDetail(next);
+  };
+  const closeDetail = () => {
+    setDetail(null);
+    setDetailHistory([]);
+  };
+  const reviewMode = new URLSearchParams(location.search).get("review") === "1";
+  const verificationInput = useRef<HTMLInputElement>(null);
   const [metricQuery, setMetricQuery] = useState("");
+  const [evidenceFilter, setEvidenceFilter] = useState("all");
   const [sampleData, setSampleData] = useState(fixture);
   const [verifyUser, setVerifyUser] = useState(""),
     [verifyResult, setVerifyResult] = useState("present"),
@@ -139,6 +157,10 @@ export default function App() {
     setVerifyNote("");
     setVerifyError(false);
   }, [detail?.kind, detail?.id]);
+  const dateDirty = dates.start !== filters.start || dates.end !== filters.end;
+  const advancedCount = [filters.language, filters.size, filters.budget].filter(
+    (value) => value !== "all",
+  ).length;
   const data = mode === "empty" ? emptyData : sampleData;
   const s = useMemo(() => summarize(data, filters), [data, filters]);
   const f = useMemo(() => funnel(data, filters), [data, filters]);
@@ -154,6 +176,16 @@ export default function App() {
     const value = ratio(numerator, denominator);
     return value === null ? "—" : `${(value * 100).toFixed(1)}%`;
   };
+  const formatTime = (iso: string) =>
+    new Intl.DateTimeFormat(lang === "zh" ? "zh-CN" : "en-GB", {
+      timeZone: "Europe/London",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZoneName: "short",
+    }).format(new Date(iso));
   const label = (
     m: Metric,
     key:
@@ -197,7 +229,8 @@ export default function App() {
   useEffect(() => {
     const onHash = () => {
       setPage(pageFromHash());
-      setDetail(null);
+      closeDetail();
+      window.scrollTo({ top: 0, behavior: "instant" });
     };
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
@@ -205,6 +238,7 @@ export default function App() {
   useEffect(() => {
     document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
     const params = new URLSearchParams({ ...filters, lang });
+    if (reviewMode) params.set("review", "1");
     history.replaceState(null, "", `?${params}${location.hash || "#overview"}`);
   }, [filters, lang]);
   useEffect(() => {
@@ -228,7 +262,7 @@ export default function App() {
     setDates({ start, end: "2026-10-18" });
     setDateError(false);
   };
-  const openMetric = (id: string) => setDetail({ kind: "metric", id });
+  const openMetric = (id: string) => openDetail({ kind: "metric", id });
   const titleFor = (id: string) =>
     label(metrics.find((m) => m.id === id)!, "title");
 
@@ -250,26 +284,129 @@ export default function App() {
     setPage(target);
   };
   const exportSummary = () => {
-    const rows = [
+    const rows: string[][] = [
       ["Fictional demo data; not actual usage", SNAPSHOT],
-      ["start", filters.start, "end", filters.end],
+      ["definitionVersion", "1", "timezone", "Europe/London"],
       ...Object.entries(filters).map(([key, value]) => [key, value]),
-      ["metric", "numerator", "denominator"],
+      ["metric", "numerator", "denominator", "unit"],
+      ...Object.entries({
+        activation14: s.activation,
+        repeat30: s.retention,
+        attendanceCoverage: s.attendanceCoverage,
+        zeroResults: s.noResults,
+        formation: s.formation,
+        cancellation: s.cancellations,
+        feedbackCoverage: s.feedbackCoverage,
+        willingToReturn: s.again,
+        discoveryToApply7: {
+          numerator: f.appliedWithin7,
+          denominator: f.matureDiscovery,
+        },
+        exposedNoApply7: {
+          numerator: f.exposedNoApplyUsers,
+          denominator: f.exposedMatureUsers,
+        },
+        applicationAttendance: {
+          numerator: f.present,
+          denominator: f.completed,
+        },
+      }).map(([key, value]) => [
+        key,
+        String(value.numerator),
+        String(value.denominator),
+        key === "zeroResults"
+          ? "requests"
+          : ["formation", "cancellation"].includes(key)
+            ? "meals"
+            : [
+                  "activation14",
+                  "repeat30",
+                  "discoveryToApply7",
+                  "exposedNoApply7",
+                ].includes(key)
+              ? "users"
+              : "participations",
+      ]),
+      ...s.weekly.map((row) => [
+        `weekly:${row.week}`,
+        String(row.count),
+        "",
+        "users",
+      ]),
+      ...Object.entries({
+        discovery: f.discovery,
+        exposed: f.exposed,
+        details: f.details,
+        applications: f.applications,
+        approved: f.approved,
+        confirmed: f.confirmed,
+      }).map(([key, value]) => [
+        key,
+        String(value),
+        "",
+        ["discovery", "exposed", "details"].includes(key)
+          ? "users"
+          : "applications",
+      ]),
+      ...Object.entries(s.attendance).map(([key, value]) => [
+        `attendance:${key}`,
+        String(value),
+        "",
+        "participations",
+      ]),
+      ...createFunnel(data, filters).map((value, index) => [
+        ["createStarted", "createArranged", "createPublished"][index],
+        String(value),
+        "",
+        "attempts",
+      ]),
       [
-        "attendance",
-        String(s.attendance.present),
-        String(s.attendanceCoverage.denominator),
+        "approvalMedianHours",
+        String(quantile(responseHours, 0.5) ?? ""),
+        "",
+        "hours",
       ],
       [
-        "activation14",
-        String(s.activation.numerator),
-        String(s.activation.denominator),
+        "approvalP90Hours",
+        String(quantile(responseHours, 0.9) ?? ""),
+        "",
+        "hours",
       ],
+      ["pendingApplications", String(pending.length), "", "applications"],
+      ...[1, 2, 3, 4, 5].map((score) => [
+        `rating:${score}`,
+        String(s.feedback.filter((row) => row.score === score).length),
+        "",
+        "responses",
+      ]),
+      ...["map_opened", "filter_applied", "profile_view", "chat_opened"].map(
+        (name) => [
+          `feature:${name}`,
+          String(
+            new Set(
+              events
+                .filter((e) => e.name === name)
+                .map((e) => e.userId || e.anonymousId || e.sessionId),
+            ).size,
+          ),
+          "",
+          "users",
+        ],
+      ),
       [
-        "repeat30",
-        String(s.retention.numerator),
-        String(s.retention.denominator),
+        "cohort_week",
+        "first_attendees",
+        "mature_users",
+        "repeat_users",
+        "opportunity_exposed_users",
       ],
+      ...retention.map((row) => [
+        row.week,
+        String(row.total),
+        String(row.mature),
+        String(row.repeat),
+        String(row.opportunity),
+      ]),
     ];
     const csv =
       "\uFEFF" +
@@ -302,31 +439,48 @@ export default function App() {
       unknown: t("未知", "Unknown"),
       conflict: t("待核实", "Conflict"),
     })[status] || status;
-  const mealRows = s.meals.map((m) => ({
-    id: m.id,
-    search: `${m.id} ${m.area} ${m.title}`,
-    cells: [
-      <span>
-        <strong>{m.title}</strong>
-        <small className="mono">{m.id}</small>
-      </span>,
-      m.area,
-      londonDay(m.startsAt),
-      sourceName(m.source),
-      `${m.peakConfirmed} / ${m.capacity}`,
-      <Badge
-        tone={
-          m.cancelled ? "red" : m.peakConfirmed >= m.minimum ? "green" : "amber"
-        }
-      >
-        {m.cancelled
-          ? t("已取消", "Cancelled")
-          : m.peakConfirmed >= m.minimum
-            ? t("曾成团", "Formed")
-            : t("未成团", "Not formed")}
-      </Badge>,
-    ],
-  }));
+  const mealRows = s.meals
+    .filter(
+      (meal) =>
+        evidenceFilter === "all" ||
+        s.parts.some(
+          (p) =>
+            p.meal.id === meal.id &&
+            (evidenceFilter === "unresolved"
+              ? ["unknown", "conflict"].includes(p.status)
+              : p.status === evidenceFilter),
+        ),
+    )
+    .map((m) => ({
+      id: m.id,
+      sortValue: m.startsAt,
+      search: `${m.id} ${m.area} ${m.title}`,
+      cells: [
+        <span>
+          <strong>{m.title}</strong>
+          <small className="mono">{m.id}</small>
+        </span>,
+        m.area,
+        londonDay(m.startsAt),
+        sourceName(m.source),
+        `${m.peakConfirmed} / ${m.capacity}`,
+        <Badge
+          tone={
+            m.cancelled
+              ? "red"
+              : m.peakConfirmed >= m.minimum
+                ? "green"
+                : "amber"
+          }
+        >
+          {m.cancelled
+            ? t("已取消", "Cancelled")
+            : m.peakConfirmed >= m.minimum
+              ? t("曾成团", "Formed")
+              : t("未成团", "Not formed")}
+        </Badge>,
+      ],
+    }));
   const responseHours = f.records
     .filter((a) => a.decidedAt && a.decidedAt <= SNAPSHOT)
     .map((a) => (+new Date(a.decidedAt!) - +new Date(a.appliedAt)) / 3_600_000);
@@ -334,6 +488,11 @@ export default function App() {
     (a) => !a.decidedAt || a.decidedAt > SNAPSHOT,
   );
   const latestWeek = s.weekly.at(-1);
+  const checks = dataChecks(s, retention);
+  const selectedCohort =
+    detail?.kind === "cohort"
+      ? retention.find((row) => row.week === detail.id)
+      : undefined;
   const qualityEvents = cleanEvents(fixture.events, fixture.identityLinks);
   const missing = fixture.events.filter(
     (e) => e.receivedAt <= SNAPSHOT && !validEvent(e),
@@ -380,6 +539,8 @@ export default function App() {
             <a
               key={p}
               href={`#${p}`}
+              aria-label={nav[i]}
+              title={nav[i]}
               aria-current={page === p ? "page" : undefined}
             >
               <Icon name={p} />
@@ -443,6 +604,8 @@ export default function App() {
           {pages.map((p, i) => (
             <a
               href={`#${p}`}
+              aria-label={nav[i]}
+              title={nav[i]}
               key={p}
               aria-current={page === p ? "page" : undefined}
             >
@@ -454,7 +617,7 @@ export default function App() {
         <main id="main-content" tabIndex={-1}>
           <div className="page-title">
             <div>
-              <div className="eyebrow">LONDON PILOT / PRODUCT ANALYTICS</div>
+              <div className="eyebrow">{t("伦敦试点", "London pilot")}</div>
               <h1>
                 {nav[pages.indexOf(page)]}
                 <span className="heading-dot">.</span>
@@ -474,8 +637,8 @@ export default function App() {
             <Icon name="info" size={17} />
             <span>
               {t(
-                "交互演示 · 全部记录为虚构示例，尚未连接真实业务服务。",
-                "Interactive demo · All records are fictional. No live business service is connected.",
+                "示例数据 · 未接入真实业务",
+                "Sample data · No live business connection",
               )}
             </span>
             <span className="snapshot">
@@ -496,9 +659,10 @@ export default function App() {
                   aria-label={t("开始日期", "Start date")}
                   value={dates.start}
                   max="2026-10-18"
-                  onChange={(e) =>
-                    setDates({ ...dates, start: e.target.value })
-                  }
+                  onInput={(e) => {
+                    const value = e.currentTarget.value;
+                    setDates((previous) => ({ ...previous, start: value }));
+                  }}
                 />
                 <span>—</span>
                 <input
@@ -506,10 +670,14 @@ export default function App() {
                   aria-label={t("结束日期", "End date")}
                   value={dates.end}
                   max="2026-10-18"
-                  onChange={(e) => setDates({ ...dates, end: e.target.value })}
+                  onInput={(e) => {
+                    const value = e.currentTarget.value;
+                    setDates((previous) => ({ ...previous, end: value }));
+                  }}
                 />
                 <button
                   className="text-button"
+                  disabled={!dateDirty}
                   onClick={() => {
                     if (
                       !dates.start ||
@@ -580,44 +748,95 @@ export default function App() {
             <button className="text-button reset-filter" onClick={reset}>
               {t("重置", "Reset")}
             </button>
-            <details className="advanced-filter">
-              <summary>
-                {t("更多筛选", "More filters")} <Icon name="down" size={13} />
-              </summary>
-              <div>
-                <NativeSelect
-                  label={t("交流语言", "Language")}
-                  value={filters.language}
-                  onChange={(v) => update("language", v)}
-                  options={[
-                    ["all", t("全部语言", "All languages")],
-                    ["English", "English"],
-                    ["中文 / English", "中文 / English"],
-                  ]}
-                />
-                <NativeSelect
-                  label={t("人数", "Table size")}
-                  value={filters.size}
-                  onChange={(v) => update("size", v)}
-                  options={[
-                    ["all", t("全部人数", "All sizes")],
-                    ["duo", t("双人", "Two people")],
-                    ["group", t("3–6 人", "3–6 people")],
-                  ]}
-                />
-                <NativeSelect
-                  label={t("人均预算", "Budget / person")}
-                  value={filters.budget}
-                  onChange={(v) => update("budget", v)}
-                  options={[
-                    ["all", t("全部预算", "All budgets")],
-                    ["25", "≤ £25"],
-                    ["30", "≤ £30"],
-                  ]}
-                />
-              </div>
-            </details>
+            <FilterPopover t={t} count={advancedCount} route={page}>
+              <NativeSelect
+                label={t("交流语言", "Language")}
+                value={filters.language}
+                onChange={(v) => update("language", v)}
+                options={[
+                  ["all", t("全部语言", "All languages")],
+                  ["English", "English"],
+                  ["中文 / English", "中文 / English"],
+                ]}
+              />
+              <NativeSelect
+                label={t("人数", "Table size")}
+                value={filters.size}
+                onChange={(v) => update("size", v)}
+                options={[
+                  ["all", t("全部人数", "All sizes")],
+                  ["duo", t("双人", "Two people")],
+                  ["group", t("3–6 人", "3–6 people")],
+                ]}
+              />
+              <NativeSelect
+                label={t("人均预算", "Budget / person")}
+                value={filters.budget}
+                onChange={(v) => update("budget", v)}
+                options={[
+                  ["all", t("全部预算", "All budgets")],
+                  ["25", "≤ £25"],
+                  ["30", "≤ £30"],
+                ]}
+              />
+            </FilterPopover>
           </section>
+          <div
+            className="active-filters"
+            aria-label={t("已应用筛选", "Applied filters")}
+          >
+            {(
+              [
+                "area",
+                "source",
+                "segment",
+                "language",
+                "size",
+                "budget",
+              ] as const
+            )
+              .filter((key) => filters[key] !== "all")
+              .map((key) => {
+                const names = {
+                  area: t("区域", "Area"),
+                  source: t("来源", "Source"),
+                  segment: t("用户", "Users"),
+                  language: t("交流语言", "Language"),
+                  size: t("人数", "Size"),
+                  budget: t("预算", "Budget"),
+                };
+                const values: Record<string, string> = {
+                  user: sourceName("user"),
+                  assisted: sourceName("assisted"),
+                  new: t("期内注册", "Joined in period"),
+                  existing: t("期前注册", "Joined earlier"),
+                  duo: t("双人", "Two people"),
+                  group: t("3–6 人", "3–6 people"),
+                };
+                return (
+                  <button
+                    key={key}
+                    className="filter-chip"
+                    aria-label={`${t("移除筛选", "Remove filter")}: ${names[key]}`}
+                    onClick={() => update(key, "all")}
+                  >
+                    {names[key]}:{" "}
+                    {key === "budget"
+                      ? `≤ £${filters[key]}`
+                      : values[filters[key]] || filters[key]}
+                    <Icon name="close" size={12} />
+                  </button>
+                );
+              })}
+          </div>
+          {dateDirty && !dateError && (
+            <p className="draft-note">
+              {t(
+                "日期尚未应用，图表仍使用上次范围。",
+                "Dates not applied; charts still use the previous range.",
+              )}
+            </p>
+          )}
           {dateError && (
             <p className="inline-error" role="alert">
               {t(
@@ -886,7 +1105,6 @@ export default function App() {
                     <Panel
                       title={t("先看数据是否完整", "Check the evidence first")}
                       className="quality-card"
-                      eyebrow="DATA CONFIDENCE"
                     >
                       <div className="coverage-number">
                         {pct(
@@ -919,20 +1137,22 @@ export default function App() {
                       </p>
                       <button
                         className="text-button"
-                        onClick={() => go("supply")}
+                        onClick={() => {
+                          setEvidenceFilter("unresolved");
+                          go("supply");
+                        }}
                       >
                         {t("查看关联记录", "Inspect related records")}{" "}
                         <Icon name="arrow" size={15} />
                       </button>
                     </Panel>
                   </div>
-                  <div className="overview-grid">
+                  <div className="overview-grid checks-grid">
                     <Panel
                       title={t(
                         "从发现到席位确认",
                         "From discovery to a confirmed seat",
                       )}
-                      eyebrow="JOURNEY AT A GLANCE"
                       action={
                         <button
                           className="text-button"
@@ -973,60 +1193,76 @@ export default function App() {
                         )}
                       </p>
                     </Panel>
-                    <Panel
-                      title={t("本周优先验证什么", "What to investigate next")}
-                      eyebrow="ITERATION NOTES"
-                    >
-                      <div className="insight-item">
-                        <span className="insight-number">↗</span>
-                        <div>
-                          <h3>
-                            {t("定位没有结果的需求", "Locate unmet demand")}
-                          </h3>
-                          <p>
-                            {pct(
-                              s.noResults.numerator,
-                              s.noResults.denominator,
-                            )}{" "}
-                            {t(
-                              "发现请求没有可申请饭局。按区域查看差异。",
-                              "of discovery requests have no eligible meals. Compare areas.",
-                            )}
-                          </p>
-                          <button
-                            className="text-button"
-                            onClick={() => go("supply")}
-                          >
-                            {t("检查供给缺口", "Inspect supply gaps")} →
-                          </button>
-                        </div>
-                      </div>
-                      <div className="insight-item">
-                        <span className="insight-number">↻</span>
-                        <div>
-                          <h3>
-                            {t(
-                              "给重复参与留足观察时间",
-                              "Allow time to observe return",
-                            )}
-                          </h3>
-                          <p>
-                            {t(
-                              "近 28 天首次赴约队列尚未成熟；查看更早队列再判断。",
-                              "First attendees in the last 28 days are not yet mature. Inspect older cohorts.",
-                            )}
-                          </p>
-                          <button
-                            className="text-button"
-                            onClick={() => {
-                              range(90);
-                              go("retention");
-                            }}
-                          >
-                            {t("查看 90 天队列", "View 90-day cohorts")} →
-                          </button>
-                        </div>
-                      </div>
+                    <Panel title={t("当前数据检查", "Current data checks")}>
+                      <p className="checks-source">
+                        {t(
+                          "按当前筛选与数据截止时间计算，供产品团队复核。",
+                          "Calculated from the current filters and data cutoff for product review.",
+                        )}
+                      </p>
+                      {checks.map((check) => {
+                        const copy = {
+                          empty: [
+                            t("当前范围暂无数据", "No data in this selection"),
+                            t(
+                              "先检查数据来源与筛选范围。",
+                              "Check sources and filters first.",
+                            ),
+                          ],
+                          evidence: [
+                            t("出席记录完整性", "Attendance evidence"),
+                            `${check.numerator} / ${check.denominator} ${t("人次仍缺失或冲突，先核对记录再解释赴约率。", "participations are unknown or conflicting. Verify evidence before interpreting conversion.")}`,
+                          ],
+                          discovery: [
+                            t("发现无结果", "Zero-result discovery"),
+                            `${check.numerator} / ${check.denominator} (${pct(check.numerator, check.denominator)}) ${t("请求没有可申请饭局，按区域进一步核对。", "requests returned no eligible meals. Inspect differences by area.")}`,
+                          ],
+                          observing: [
+                            t(
+                              "重复参与仍在观察",
+                              "Repeat attendance still observing",
+                            ),
+                            `${check.numerator} ${t("位首次出席用户尚无完整 30 天窗口，不记作流失。", "first attendees have no full 30-day window yet; this is not churn.")}`,
+                          ],
+                          repeat: [
+                            t(
+                              "已有成熟重复参与结果",
+                              "Mature repeat-attendance results",
+                            ),
+                            `${check.numerator} / ${check.denominator} (${pct(check.numerator, check.denominator)}) ${t("成熟用户再次赴约，结合反馈及后续机会一起判断。", "mature users attended again. Compare feedback and later opportunities.")}`,
+                          ],
+                        }[check.id];
+                        return (
+                          <div className="insight-item" key={check.id}>
+                            <Icon
+                              name={
+                                check.id === "evidence"
+                                  ? "quality"
+                                  : check.target
+                              }
+                              size={18}
+                            />
+                            <div>
+                              <h3>{copy[0]}</h3>
+                              <p>{copy[1]}</p>
+                              <button
+                                className="text-button"
+                                onClick={() => {
+                                  setEvidenceFilter(
+                                    check.id === "evidence"
+                                      ? "unresolved"
+                                      : "all",
+                                  );
+                                  go(check.target);
+                                }}
+                              >
+                                {t("查看依据", "Inspect evidence")}{" "}
+                                <Icon name="arrow" size={14} />
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </Panel>
                   </div>
                 </>
@@ -1194,7 +1430,7 @@ export default function App() {
                         }
                       >
                         <DataTable
-                          key={`${page}-${lang}`}
+                          key={page}
                           t={t}
                           caption={t("申请记录", "Applications")}
                           columns={[
@@ -1206,13 +1442,14 @@ export default function App() {
                           ]}
                           rows={f.records.map((a) => ({
                             id: a.id,
+                            sortValue: a.appliedAt,
                             search: `${a.id} ${a.userId} ${a.mealId} ${data.meals.find((m) => m.id === a.mealId)?.area}`,
                             cells: [
                               <span className="mono">{a.id}</span>,
                               <button
                                 className="text-button mono"
                                 onClick={() =>
-                                  setDetail({ kind: "user", id: a.userId })
+                                  openDetail({ kind: "user", id: a.userId })
                                 }
                               >
                                 {a.userId}
@@ -1220,7 +1457,7 @@ export default function App() {
                               <button
                                 className="text-button"
                                 onClick={() =>
-                                  setDetail({ kind: "meal", id: a.mealId })
+                                  openDetail({ kind: "meal", id: a.mealId })
                                 }
                               >
                                 {a.mealId} ·{" "}
@@ -1289,8 +1526,8 @@ export default function App() {
                         </div>
                         <p className="method-note">
                           {t(
-                            "按期内开始的 attemptId 建立队列，追踪同一用户截至快照的后续完成；不与按开饭日期统计的场次混算。",
-                            "Cohort by attempt start in period; same-user completion is followed through snapshot. This is separate from meals grouped by start date.",
+                            "按创建开始日入组，后续进展观察至数据截止时间。",
+                            "Cohort by creation start date, followed through the data cutoff.",
                           )}
                         </p>
                       </Panel>
@@ -1353,14 +1590,14 @@ export default function App() {
                           </div>
                           <p>
                             {t(
-                              "待验证：时间和场地的输入是否过早、是否提供了足够清晰的错误提示。",
-                              "Hypothesis: scheduling may ask for too much too early, or errors may be unclear.",
+                              "查看失败字段和发生步骤，再判断需要调整的输入流程。",
+                              "Inspect failed fields and steps before changing the creation flow.",
                             )}
                           </p>
                           <button
                             className="text-button"
                             onClick={() =>
-                              setDetail({ kind: "events", id: "form_error" })
+                              openDetail({ kind: "events", id: "form_error" })
                             }
                           >
                             {t("查看相关事件", "View related events")} →
@@ -1380,7 +1617,7 @@ export default function App() {
                         <button
                           key={name}
                           onClick={() =>
-                            setDetail({ kind: "events", id: name })
+                            openDetail({ kind: "events", id: name })
                           }
                         >
                           <span>{text}</span>
@@ -1528,10 +1765,19 @@ export default function App() {
                     >
                       <div className="attendance-grid">
                         {Object.entries(s.attendance).map(([status, count]) => (
-                          <div key={status} className={`attendance-${status}`}>
+                          <button
+                            key={status}
+                            className={`attendance-${status}`}
+                            aria-pressed={evidenceFilter === status}
+                            onClick={() =>
+                              setEvidenceFilter(
+                                evidenceFilter === status ? "all" : status,
+                              )
+                            }
+                          >
                             <span>{statusName(status)}</span>
                             <strong>{count}</strong>
-                          </div>
+                          </button>
                         ))}
                       </div>
                       <p className="method-note">
@@ -1544,13 +1790,40 @@ export default function App() {
                   </div>
                   <Panel
                     title={t("饭局记录", "Meal records")}
+                    action={
+                      <NativeSelect
+                        label={t(
+                          "出席记录筛选（仅下方列表）",
+                          "Attendance filter (list only)",
+                        )}
+                        value={evidenceFilter}
+                        onChange={setEvidenceFilter}
+                        options={[
+                          ["all", t("全部饭局", "All meals")],
+                          [
+                            "unresolved",
+                            t("待补或待核实", "Unknown or conflicting"),
+                          ],
+                          ["unknown", t("出席记录待补", "Unknown attendance")],
+                          [
+                            "conflict",
+                            t("出席记录冲突", "Conflicting reports"),
+                          ],
+                          [
+                            "present",
+                            t("有确认出席", "Has confirmed attendance"),
+                          ],
+                          ["absent", t("有未出席记录", "Has absent reports")],
+                        ]}
+                      />
+                    }
                     eyebrow={t(
                       "只读追溯 · 点击查看参与及证据",
                       "READ-ONLY · TRACE PARTICIPATION & EVIDENCE",
                     )}
                   >
                     <DataTable
-                      key={`${page}-${lang}`}
+                      key={page}
                       t={t}
                       caption={t("饭局记录", "Meal records")}
                       columns={[
@@ -1562,46 +1835,8 @@ export default function App() {
                         t("结果", "Outcome"),
                       ]}
                       rows={mealRows}
-                      onRow={(id) => setDetail({ kind: "meal", id })}
+                      onRow={(id) => openDetail({ kind: "meal", id })}
                     />
-                  </Panel>
-                  <Panel
-                    title={t(
-                      "分析结论如何转成迭代",
-                      "Turn observations into a product test",
-                    )}
-                  >
-                    <div className="decision-flow">
-                      <div>
-                        <small>{t("现象", "OBSERVATION")}</small>
-                        <p>
-                          {t(
-                            "某区域的无结果率较高",
-                            "An area has more zero-result requests",
-                          )}
-                        </p>
-                      </div>
-                      <Icon name="arrow" />
-                      <div>
-                        <small>{t("待验证解释", "HYPOTHESIS")}</small>
-                        <p>
-                          {t(
-                            "时段、预算或人数供给不匹配",
-                            "Supply may not match timing, budget or size",
-                          )}
-                        </p>
-                      </div>
-                      <Icon name="arrow" />
-                      <div>
-                        <small>{t("下一步", "NEXT TEST")}</small>
-                        <p>
-                          {t(
-                            "补充特定供给，比较申请与赴约",
-                            "Add targeted supply; compare applications and attendance",
-                          )}
-                        </p>
-                      </div>
-                    </div>
                   </Panel>
                 </>
               )}
@@ -1627,6 +1862,7 @@ export default function App() {
                       openMetric={openMetric}
                       n={n}
                       id="feedback"
+                      title={t("饭后反馈覆盖率", "Feedback coverage")}
                       value={pct(
                         s.feedbackCoverage.numerator,
                         s.feedbackCoverage.denominator,
@@ -1641,6 +1877,7 @@ export default function App() {
                       openMetric={openMetric}
                       n={n}
                       id="feedback"
+                      title={t("愿意再参加比例", "Willingness to return")}
                       value={pct(s.again.numerator, s.again.denominator)}
                       index=""
                       numerator={s.again.numerator}
@@ -1719,9 +1956,9 @@ export default function App() {
                                 <button
                                   className="text-button mono"
                                   onClick={() =>
-                                    setDetail({
-                                      kind: "user",
-                                      id: row.users[0],
+                                    openDetail({
+                                      kind: "cohort",
+                                      id: row.week,
                                     })
                                   }
                                 >
@@ -1792,7 +2029,7 @@ export default function App() {
                       title={t("首次申请用户追溯", "Trace first applicants")}
                     >
                       <DataTable
-                        key={`${page}-${lang}`}
+                        key={page}
                         t={t}
                         caption={t("首次申请用户", "First applicants")}
                         columns={[
@@ -1802,6 +2039,7 @@ export default function App() {
                         ]}
                         rows={activation.map((a) => ({
                           id: a.userId,
+                          sortValue: a.appliedAt,
                           search: `${a.userId} ${a.mealId}`,
                           cells: [
                             <span className="mono">{a.userId}</span>,
@@ -1823,7 +2061,7 @@ export default function App() {
                             </Badge>,
                           ],
                         }))}
-                        onRow={(id) => setDetail({ kind: "user", id })}
+                        onRow={(id) => openDetail({ kind: "user", id })}
                       />
                     </Panel>
                   </div>
@@ -1841,8 +2079,8 @@ export default function App() {
                       </Badge>
                       <h2>
                         {t(
-                          "清楚知道每个数字从哪里来。",
-                          "Know where every number comes from.",
+                          "数据来源与统计口径",
+                          "Sources and measurement definitions",
                         )}
                       </h2>
                       <p>
@@ -1931,29 +2169,33 @@ export default function App() {
                       <button
                         className="text-button"
                         onClick={() =>
-                          setDetail({ kind: "events", id: "quality" })
+                          openDetail({ kind: "events", id: "quality" })
                         }
                       >
                         {t("查看异常事件", "View anomalous events")} →
                       </button>
                     </Panel>
-                    <Panel title={t("演示状态验证", "Demo state checks")}>
-                      <p>
-                        {t(
-                          "切换状态以验证无数据和失败恢复。这些控件仅影响当前浏览器中的演示。",
-                          "Switch states to inspect empty results and failure recovery. These controls affect only this browser demo.",
-                        )}
-                      </p>
-                      <NativeSelect
-                        label={t("数据场景", "Data scenario")}
-                        value={mode}
-                        onChange={setMode}
-                        options={[
-                          ["sample", t("示例数据", "Sample data")],
-                          ["empty", t("没有数据", "No data")],
-                          ["error", t("加载失败", "Load failed")],
-                        ]}
-                      />
+                    <Panel title={t("数据来源", "Data sources")}>
+                      {reviewMode && (
+                        <div className="review-tools">
+                          <p>
+                            {t(
+                              "切换状态以验证无数据和失败恢复。这些控件仅影响当前浏览器中的演示。",
+                              "Switch states to inspect empty results and failure recovery. These controls affect only this browser demo.",
+                            )}
+                          </p>
+                          <NativeSelect
+                            label={t("数据场景", "Data scenario")}
+                            value={mode}
+                            onChange={setMode}
+                            options={[
+                              ["sample", t("示例数据", "Sample data")],
+                              ["empty", t("没有数据", "No data")],
+                              ["error", t("加载失败", "Load failed")],
+                            ]}
+                          />
+                        </div>
+                      )}
                       <div className="integration-line">
                         <span>{t("客户端行为", "Client behaviour")}</span>
                         <Badge>{t("待接入", "Not connected")}</Badge>
@@ -2044,7 +2286,15 @@ export default function App() {
       {detail && (
         <DetailDialog
           t={t}
-          onClose={() => setDetail(null)}
+          onClose={closeDetail}
+          onBack={
+            detailHistory.length
+              ? () => {
+                  setDetail(detailHistory.at(-1)!);
+                  setDetailHistory((previous) => previous.slice(0, -1));
+                }
+              : undefined
+          }
           title={
             metricDetail
               ? label(metricDetail, "title")
@@ -2052,9 +2302,53 @@ export default function App() {
                 ? `${selectedMeal.id} · ${selectedMeal.title}`
                 : selectedUser
                   ? selectedUser.id
-                  : t("事件追溯", "Event trace")
+                  : selectedCohort
+                    ? `${t("首次赴约队列", "First-attendance cohort")} · ${selectedCohort.week}`
+                    : t("事件追溯", "Event trace")
           }
         >
+          {selectedCohort && (
+            <>
+              <p className="method-note">
+                {t(
+                  "该组全部用户；点击用户查看完整参与历史。",
+                  "All users in this cohort. Open a user to trace participation.",
+                )}{" "}
+                {selectedCohort.repeat} / {selectedCohort.mature}{" "}
+                {t("成熟用户再次赴约", "mature users attended again")}
+              </p>
+              <DataTable
+                t={t}
+                caption={t("队列用户", "Cohort users")}
+                columns={[
+                  t("用户", "User"),
+                  t("首次赴约", "First attendance"),
+                  t("30天观察结果", "30-day outcome"),
+                ]}
+                rows={selectedCohort.members.map((member) => ({
+                  id: member.userId,
+                  sortValue: member.firstAt,
+                  search: member.userId,
+                  cells: [
+                    <span className="mono">{member.userId}</span>,
+                    londonDay(member.firstAt),
+                    <Badge
+                      tone={
+                        member.mature && member.repeat ? "green" : "neutral"
+                      }
+                    >
+                      {!member.mature
+                        ? t("观察中", "Observing")
+                        : member.repeat
+                          ? t("已再赴约", "Attended again")
+                          : t("未确认再赴约", "No confirmed return")}
+                    </Badge>,
+                  ],
+                }))}
+                onRow={(id) => openDetail({ kind: "user", id })}
+              />
+            </>
+          )}
           {metricDetail && (
             <>
               <Badge>{t("指标口径 v1", "Definition v1")}</Badge>
@@ -2128,13 +2422,23 @@ export default function App() {
                       (a) =>
                         a.mealId === selectedMeal.id && a.userId === userId,
                     ),
-                    record = latestAttendance(data, userId, selectedMeal.id),
-                    status = attendance(record);
+                    record = latestAttendance(data, userId, selectedMeal.id);
+                  const eligible =
+                    !selectedMeal.cancelled &&
+                    selectedMeal.startsAt < SNAPSHOT &&
+                    (userId === selectedMeal.hostId ||
+                      (!!a?.confirmedAt &&
+                        a.confirmedAt <= SNAPSHOT &&
+                        (!a.withdrawnAt ||
+                          a.withdrawnAt > selectedMeal.startsAt)));
+                  const status = eligible
+                    ? attendance(record)
+                    : "not-applicable";
                   return (
                     <div key={userId}>
                       <button
                         className="text-button mono"
-                        onClick={() => setDetail({ kind: "user", id: userId })}
+                        onClick={() => openDetail({ kind: "user", id: userId })}
                       >
                         {userId}
                       </button>
@@ -2158,7 +2462,9 @@ export default function App() {
                       >
                         {selectedMeal.cancelled
                           ? t("不适用", "Not applicable")
-                          : statusName(status)}
+                          : status === "not-applicable"
+                            ? t("不适用", "Not applicable")
+                            : statusName(status)}
                       </Badge>
                       {!selectedMeal.cancelled &&
                         selectedMeal.startsAt < SNAPSHOT &&
@@ -2174,7 +2480,7 @@ export default function App() {
                               setVerifyError(false);
                             }}
                           >
-                            {t("核实示例", "Verify sample")}
+                            {t("核实出席", "Verify attendance")}
                           </button>
                         )}
                       {record?.verified && (
@@ -2185,12 +2491,15 @@ export default function App() {
                       )}
                       {record && (
                         <small>
-                          {record.host
-                            ? t("发起人记录", "Host report")
-                            : t("本人自报", "Self-report")}
-                          {record.self && record.host
-                            ? t(" + 本人自报", " + self-report")
-                            : ""}
+                          {[
+                            record.host ? t("发起人记录", "Host report") : "",
+                            record.self ? t("本人自报", "Self-report") : "",
+                            record.verified
+                              ? t("人工核实", "Manual verification")
+                              : "",
+                          ]
+                            .filter(Boolean)
+                            .join(" + ")}
                         </small>
                       )}
                     </div>
@@ -2224,6 +2533,7 @@ export default function App() {
                   <label className="verification-note">
                     {t("核实依据（必填）", "Verification basis (required)")}
                     <input
+                      ref={verificationInput}
                       value={verifyNote}
                       onChange={(e) => setVerifyNote(e.target.value)}
                       aria-invalid={verifyError}
@@ -2268,6 +2578,7 @@ export default function App() {
                         );
                       } catch {
                         setVerifyError(true);
+                        verificationInput.current?.focus();
                       }
                     }}
                   >
@@ -2279,16 +2590,11 @@ export default function App() {
               <ol className="timeline">
                 <li>
                   <span>{t("发布饭局", "Meal published")}</span>
-                  <time>
-                    {selectedMeal.publishedAt.replace("T", " ").slice(0, 16)}{" "}
-                    UTC
-                  </time>
+                  <time>{formatTime(selectedMeal.publishedAt)}</time>
                 </li>
                 <li>
                   <span>{t("计划开始", "Planned start")}</span>
-                  <time>
-                    {selectedMeal.startsAt.replace("T", " ").slice(0, 16)} UTC
-                  </time>
+                  <time>{formatTime(selectedMeal.startsAt)}</time>
                 </li>
                 {selectedMeal.cancelled && (
                   <li>
@@ -2317,31 +2623,48 @@ export default function App() {
               </div>
               <h3>{t("相关饭局", "Related meals")}</h3>
               <div className="evidence-list">
-                {data.applications
+                {data.meals
                   .filter(
-                    (a) =>
-                      a.userId === selectedUser.id && a.appliedAt <= SNAPSHOT,
+                    (meal) =>
+                      meal.publishedAt <= SNAPSHOT &&
+                      (meal.hostId === selectedUser.id ||
+                        data.applications.some(
+                          (a) =>
+                            a.userId === selectedUser.id &&
+                            a.mealId === meal.id &&
+                            a.appliedAt <= SNAPSHOT,
+                        )),
                   )
-                  .map((a) => (
-                    <div key={a.id}>
-                      <button
-                        className="text-button mono"
-                        onClick={() =>
-                          setDetail({ kind: "meal", id: a.mealId })
-                        }
-                      >
-                        {a.mealId}
-                      </button>
-                      <span>{londonDay(a.appliedAt)}</span>
-                      <Badge>
-                        {statusName(
-                          attendance(
-                            latestAttendance(data, selectedUser.id, a.mealId),
-                          ),
-                        )}
-                      </Badge>
-                    </div>
-                  ))}
+                  .sort((a, b) => b.startsAt.localeCompare(a.startsAt))
+                  .map((meal) => {
+                    const entry = participation(data).find(
+                      (p) =>
+                        p.userId === selectedUser.id && p.meal.id === meal.id,
+                    );
+                    return (
+                      <div key={meal.id}>
+                        <button
+                          className="text-button mono"
+                          onClick={() =>
+                            openDetail({ kind: "meal", id: meal.id })
+                          }
+                        >
+                          {meal.id}
+                        </button>
+                        <span>
+                          {londonDay(meal.startsAt)} ·{" "}
+                          {meal.hostId === selectedUser.id
+                            ? t("发起人", "Host")
+                            : t("申请者", "Applicant")}
+                        </span>
+                        <Badge>
+                          {entry
+                            ? statusName(entry.status)
+                            : t("不适用", "Not applicable")}
+                        </Badge>
+                      </div>
+                    );
+                  })}
               </div>
               <h3>
                 {t(
@@ -2358,8 +2681,7 @@ export default function App() {
                     <li key={e.id}>
                       <span className="mono">{e.name}</span>
                       <time>
-                        {e.occurredAt.replace("T", " ").slice(0, 16)} UTC ·{" "}
-                        {e.mealId}
+                        {formatTime(e.occurredAt)} · {e.mealId}
                       </time>
                     </li>
                   ))}
@@ -2390,9 +2712,7 @@ export default function App() {
                       <span className="mono">
                         {e.id} · {e.name}
                       </span>
-                      <time>
-                        {e.occurredAt.replace("T", " ").slice(0, 16)} UTC
-                      </time>
+                      <time>{formatTime(e.occurredAt)}</time>
                       <p>
                         {e.userId} · {e.mealId || "—"} · {t("会话", "Session")}:{" "}
                         {e.sessionId || t("缺失", "Missing")}

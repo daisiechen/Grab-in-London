@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-18",
+  "browser": "Codex in-app browser",
+  "source": "admin/tests/browser-scenarios.mjs",
+  "viewports": [
+    {
+      "width": 864,
+      "height": 609
+    },
+    {
+      "width": 390,
+      "height": 844
+    },
+    {
+      "width": 1440,
+      "height": 1000
+    }
+  ],
+  "newBrowserErrors": [],
+  "results": [
+    {
+      "case": 1,
+      "name": "filters: outside click, Escape, route change and removable active choices",
+      "result": "passed"
+    },
+    {
+      "case": 2,
+      "name": "overview: checks use current maturity and have inspectable evidence",
+      "result": "passed"
+    },
+    {
+      "case": 3,
+      "name": "journey: localized filters/search survive; nested records have a back path",
+      "result": "passed"
+    },
+    {
+      "case": 4,
+      "name": "supply: explicit date ordering, pagination, no-results and restoration",
+      "result": "passed"
+    },
+    {
+      "case": 5,
+      "name": "retention: whole-cohort drilldown and distinct feedback labels",
+      "result": "passed"
+    },
+    {
+      "case": 6,
+      "name": "quality: no normal test switches; dictionary and quarantined evidence",
+      "result": "passed"
+    },
+    {
+      "case": 7,
+      "name": "review-only empty and failure states recover without stale charts",
+      "result": "passed"
+    },
+    {
+      "case": 8,
+      "name": "attendance: basis required, source accurate, invalid participants not no-shows",
+      "result": "passed"
+    },
+    {
+      "case": 9,
+      "name": "date drafts validate; aggregate export includes all ratios and cohort denominators",
+      "result": "passed"
+    },
+    {
+      "case": 10,
+      "name": "compact viewport: named icon navigation, filters and localized state",
+      "result": "passed"
+    }
+  ]
+}

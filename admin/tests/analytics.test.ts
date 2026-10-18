@@ -1,3 +1,4 @@
+import { dataChecks } from "../src/checks.ts";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
@@ -395,4 +396,53 @@ test("hand-calculated two-meal cohort reconciles outcomes, coverage and repeat p
     summary.weekly.map((w) => w.count),
     [2, 1],
   );
+});
+
+test("data checks follow current data, maturity and empty scope without claiming weekly agent advice", () => {
+  assert.equal(
+    dataChecks(summarize(base, filters), cohorts(base, filters)).at(-1)?.id,
+    "observing",
+  );
+  const older = { ...filters, start: "2026-08-01" };
+  assert.equal(
+    dataChecks(
+      summarize(base, older, "2026-11-18T12:00:00Z"),
+      cohorts(base, older, "2026-11-18T12:00:00Z"),
+    ).at(-1)?.id,
+    "repeat",
+  );
+  const empty: Dataset = {
+    users: [],
+    meals: [],
+    applications: [],
+    attendance: [],
+    feedback: [],
+    events: [],
+  };
+  assert.deepEqual(dataChecks(summarize(empty, filters), []), [
+    { id: "empty", numerator: 0, denominator: 0, target: "quality" },
+  ]);
+});
+
+test("cohort drilldown members reconcile with every aggregate and preserve mature-only counts", () => {
+  const rows = cohorts(base, filters, "2026-11-18T12:00:00Z");
+  for (const row of rows) {
+    assert.equal(row.members.length, row.total);
+    assert.deepEqual(
+      row.members.map((member) => member.userId),
+      row.users,
+    );
+    assert.equal(
+      row.members.filter((member) => member.mature).length,
+      row.mature,
+    );
+    assert.equal(
+      row.members.filter((member) => member.repeat).length,
+      row.repeat,
+    );
+    assert.equal(
+      row.members.filter((member) => member.opportunity).length,
+      row.opportunity,
+    );
+  }
 });
