@@ -15,13 +15,20 @@ pnpm dev --host 127.0.0.1 --port 4173
 
 Open the printed local URL. Keep the server running. Choose iPhone or Pixel 10 from the preview menu. No credentials, real payments, reservations or API keys are needed. All data and generated portraits are fictional; changes reset on refresh.
 
-## Walkthroughs
+## Current R1 and future scope
 
-1. Select the Soho area marker → click the meal card → view Maya’s profile → apply → Preview host approval → Pay £10 deposit → accept sample terms. Try the failure checkbox, then retry without it → booking → meal chat.
-2. Booking → Explore demo outcomes → reservation failure → alternative slot, or cancel and inspect refund states. Outcomes are explicitly simulated.
-3. Create meal → choose 2–6 people, restaurant and slot → add name/description → select payment/reservation → publish → Manage applications → approve Emma → Preview guest payment → back to meal → Manage reservation.
-4. Meals → Past → Leave feedback → privately choose to share a table again → Preview mutual connection → private chat.
-5. More filters → budget up to £10 → apply to show no matches → clear filters. List and map share query state.
+Default: D1, everyone pays at the restaurant and the host books externally. This is a local, fictional, in-memory simulation; it is not real login, email, restaurant inventory, messaging delivery or native iOS. The existing public site is unchanged in this work batch.
+
+Use `?review=1` for actor switching, acceptance clock, offline/unavailable previews and sanitized JSON export in Settings. Use `?scope=future&review=1` for the preserved future payment/booking exploration; it is outside R1.
+
+## R1 walkthroughs
+
+1. Explore tables first → open a meal → apply → Log in via a provider preview (or email sample code 123456) → introduction → submit. Inbox shows Application pending, without chat access.
+2. Settings → actor maya → the same meal → Manage your table → approve → declare an external booking for the confirmed count. Switch back to alex → Inbox → group chat opens immediately, without a second admission or payment.
+3. Create meal → preview restaurant → Use this restaurant (or manual name/address/area) → London date/time and 2–6 people → budget/title/description → review → publish. Selecting a candidate never reserves a table.
+4. Meals → A Sunday table → Your shared meal → self attendance → explicit rating and willingness, optional reasons → save. Choose a member privately; switch actor to that member and reciprocate → private chat. Retract/block disables sending and retains read-only history.
+5. Settings → advance UTC acceptance clock to verify T−45 application / T−30 approval / T−15 external-booking check. Going backwards is rejected. Reload resets fixtures.
+6. Review Settings → Export sanitized admin handoff → import as a **demo** snapshot in the admin. This is manual handoff, not connected production data. See [shared contract](../shared/README.md) and [R1 QA](qa/r1/readiness.md).
 
 ## Checks
 
@@ -36,6 +43,10 @@ pnpm test:sites
 The protected mobile runtime owns device frames, keyboards and scrolling. App UI is in `src/Prototype.tsx`, `src/prototype.css`, with pure state rules in `src/domain.ts`. Browser evidence: `qa/browser-results.md`; visual comparison: `design-qa.md`.
 
 `premium-audit.json` records the supplementary static auditor's inherited runtime findings. Review rationale in the browser report; its presence is not a declaration of a clean strict scan.
+
+## Earlier future-scope notes
+
+The notes below describe the earlier exploration. Current R1 rules are authoritative in the PRD and shared contract.
 
 Discovery refinements: date and Table size have dedicated quick selectors. More filters contains all preferences with draft/apply/cancel. Map marker counts are matching events per neighbourhood; Soho has two sample events to try previous/next and View all. Entire cards open details; avatars open profiles independently. A labelled Google Maps link opens the real neighbourhood for fictional venues.
 

@@ -16,7 +16,7 @@ export function dataChecks(
   if (summary.attendanceCoverage.denominator)
     checks.push({
       id: "evidence",
-      numerator: summary.attendance.unknown + summary.attendance.conflict,
+      numerator: summary.attendance.unknown,
       denominator: summary.attendanceCoverage.denominator,
       target: "supply",
     });

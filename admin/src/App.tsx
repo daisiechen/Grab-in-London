@@ -1,7 +1,12 @@
+import { serializeCsv } from "./csv";
+import { AccessGate, GovernancePanels, SnapshotBar } from "./ControlPanels";
+import { buildSnapshot, can, createStore, founder, outsider, importHandoff, pendingWrites, reportFixtures, GovernanceError, type Actor, type Snapshot } from "./governance";
+import { type Handoff } from "./handoff";
 import { dataChecks } from "./checks";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   activationUsers,
+  applicationStateAt,
   analyticalData,
   mealEnded,
   attendance,
@@ -20,7 +25,6 @@ import {
   SNAPSHOT,
   summarize,
   validEvent,
-  verifyAttendance,
   type Dataset,
   type Filters,
 } from "./analytics";
@@ -148,35 +152,48 @@ export default function App() {
     setDetailHistory([]);
   };
   const reviewMode = new URLSearchParams(location.search).get("review") === "1";
-  const verificationInput = useRef<HTMLInputElement>(null);
-  const [classifyId, setClassifyId] = useState("");
-  const [classifyType, setClassifyType] = useState("regular");
-  const [classifyMessage, setClassifyMessage] = useState("");
   const [reasonScore, setReasonScore] = useState("all");
   const [metricQuery, setMetricQuery] = useState("");
   const [evidenceFilter, setEvidenceFilter] = useState("all");
-  const [sampleData, setSampleData] = useState(fixture);
-  const [verifyUser, setVerifyUser] = useState(""),
-    [verifyResult, setVerifyResult] = useState("present"),
-    [verifyNote, setVerifyNote] = useState(""),
-    [verifyError, setVerifyError] = useState(false);
-  useEffect(() => {
-    setVerifyUser("");
-    setVerifyNote("");
-    setVerifyError(false);
-  }, [detail?.kind, detail?.id]);
+  const [actor, setActor] = useState<Actor|null>(() => sessionStorage.getItem("fancy-admin-demo-session") === "founder" ? founder : sessionStorage.getItem("fancy-admin-demo-session") === "outsider" ? outsider : null);
+  const [store, setStore] = useState(() => createStore(fixture, reportFixtures));
+  const [snapshots, setSnapshots] = useState<Snapshot[]>(() => [buildSnapshot(createStore(fixture), [])]);
+  const [selectedId, setSelectedId] = useState(() => new URLSearchParams(location.search).get("snapshot") || "");
+  const modelRef=useRef({actor,store,snapshots});
+  modelRef.current={actor,store,snapshots};
+  const writeStore=(next:typeof store)=>{ const current=modelRef.current; if(!current.actor || !can(current.actor,next.audit.at(-1)?.action==="handle_report"?"handle_report":"classify_account")) throw new GovernanceError("forbidden","write"); if(next.version!==current.store.version+1) throw new GovernanceError("version_conflict","facts"); modelRef.current={...current,store:next};setStore(next); };
+  const snapshotMissing = !!selectedId && !snapshots.some(s=>s.id===selectedId);
+  const snapshot = snapshots.find((s) => s.id === selectedId) || snapshots[0];
+  const asOf = snapshot.asOf;
+  const clientEventsReady = snapshot.sourceStatus.events === "available";
+  const asOfDay = londonDay(asOf);
+  const login = (allowed: boolean) => { sessionStorage.setItem("fancy-admin-demo-session", allowed ? "founder" : "outsider"); setActor(allowed ? founder : outsider); };
+  const logout = () => { sessionStorage.removeItem("fancy-admin-demo-session"); setActor(null); closeDetail(); };
+  const build = () => { if (!actor || !can(actor, "rebuild_snapshot")) return; const next=buildSnapshot(store,snapshots,snapshots.at(-1)?.source); setSnapshots([...snapshots,next]); setSelectedId(next.id); closeDetail(); };
+  const importData = (handoff: Handoff, expectedVersion: number) => {
+    const current=modelRef.current;
+    if(!current.actor || !can(current.actor,"rebuild_snapshot")) throw new GovernanceError("forbidden","import");
+    if(current.store.version!==expectedVersion) throw new GovernanceError("version_conflict","facts");
+    const nextStore=importHandoff(current.store,current.actor,handoff),next=buildSnapshot(nextStore,current.snapshots,"handoff");
+    modelRef.current={...current,store:nextStore,snapshots:[...current.snapshots,next]};
+    setStore(nextStore);setSnapshots([...current.snapshots,next]);setSelectedId(next.id);
+    const end=londonDay(next.asOf),start=new Date(+new Date(next.asOf)-89*DAY).toISOString().slice(0,10);
+    setFilters({...defaultFilters,start,end});setDates({start,end}); closeDetail();
+  };
   const dateDirty = dates.start !== filters.start || dates.end !== filters.end;
   const advancedCount = [filters.language, filters.size, filters.budget].filter(
     (value) => value !== "all",
   ).length;
-  const data = mode === "empty" ? emptyData : sampleData;
-  const s = useMemo(() => summarize(data, filters), [data, filters]);
-  const f = useMemo(() => funnel(data, filters), [data, filters]);
-  const retention = useMemo(() => cohorts(data, filters), [data, filters]);
-  const events = useMemo(() => filteredEvents(data, filters), [data, filters]);
+  const data = mode === "empty" ? emptyData : snapshot.data;
+  const snapshotAreas=[...new Set([...areas,...data.meals.map(m=>m.area)])];
+  const snapshotLanguages=[...new Set(["English","Chinese",...data.meals.flatMap(m=>m.language.replace(/Mandarin|中文/g,"Chinese").split(/\s*(?:\/|&|,)\s*/))])].filter(Boolean);
+  const s = useMemo(() => summarize(data, filters, asOf), [data, filters, asOf]);
+  const f = useMemo(() => funnel(data, filters, asOf), [data, filters, asOf]);
+  const retention = useMemo(() => cohorts(data, filters, asOf), [data, filters, asOf]);
+  const events = useMemo(() => filteredEvents(data, filters, asOf), [data, filters, asOf]);
   const activation = useMemo(
-    () => activationUsers(data, filters),
-    [data, filters],
+    () => activationUsers(data, filters, asOf),
+    [data, filters, asOf],
   );
   const n = (value: number) =>
     value.toLocaleString(lang === "zh" ? "zh-CN" : "en-GB");
@@ -247,8 +264,9 @@ export default function App() {
     document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
     const params = new URLSearchParams({ ...filters, lang });
     if (reviewMode) params.set("review", "1");
+    params.set("snapshot", selectedId || snapshot.id);
     history.replaceState(null, "", `?${params}${location.hash || "#overview"}`);
-  }, [filters, lang]);
+  }, [filters, lang, snapshot.id, selectedId]);
   useEffect(() => {
     if (notice) {
       const timer = setTimeout(() => setNotice(""), 4000);
@@ -256,18 +274,19 @@ export default function App() {
     }
   }, [notice]);
   const reset = () => {
-    setFilters({ ...defaultFilters });
-    setDates({ start: defaultFilters.start, end: defaultFilters.end });
+    const start = new Date(+new Date(asOf)-27*DAY).toISOString().slice(0,10);
+    setFilters({ ...defaultFilters, start, end: asOfDay });
+    setDates({ start, end: asOfDay });
     setDateError(false);
   };
   const update = (key: keyof Filters, value: string) =>
     setFilters((prev) => ({ ...prev, [key]: value }));
   const range = (days: number) => {
-    const start = new Date(+new Date("2026-10-18T12:00:00Z") - (days - 1) * DAY)
+    const start = new Date(+new Date(asOf) - (days - 1) * DAY)
       .toISOString()
       .slice(0, 10);
-    setFilters((prev) => ({ ...prev, start, end: "2026-10-18" }));
-    setDates({ start, end: "2026-10-18" });
+    setFilters((prev) => ({ ...prev, start, end: asOfDay }));
+    setDates({ start, end: asOfDay });
     setDateError(false);
   };
   const openMetric = (id: string) => openDetail({ kind: "metric", id });
@@ -292,9 +311,13 @@ export default function App() {
     setPage(target);
   };
   const exportSummary = () => {
+    if (!actor || !can(actor,"export_aggregates") || mode !== "sample") return;
     const rows: string[][] = [
-      ["Fictional demo data; not actual usage", SNAPSHOT],
-      ["definitionVersion", "2", "timezone", "Europe/London"],
+      ["Fictional demo data; not actual usage", asOf],
+      ["snapshotId", snapshot.id, "factVersion", String(snapshot.factVersion)],
+      ["definitionVersion", snapshot.definitionVersion, "timezone", "Europe/London"],
+      ["eventSource",snapshot.sourceStatus.events,"businessSource",snapshot.sourceStatus.business],
+      ["historyCoverage", "observable snapshot only"],
       ...Object.entries(filters).map(([key, value]) => [key, value]),
       ["metric", "numerator", "denominator", "unit"],
       ...Object.entries({
@@ -350,7 +373,7 @@ export default function App() {
         confirmed: f.confirmed,
       }).map(([key, value]) => [
         key,
-        String(value),
+        ["discovery", "exposed", "details"].includes(key) && !clientEventsReady ? "" : String(value),
         "",
         ["discovery", "exposed", "details"].includes(key)
           ? "users"
@@ -362,9 +385,9 @@ export default function App() {
         "",
         "participations",
       ]),
-      ...createFunnel(data, filters).map((value, index) => [
+      ...createFunnel(data, filters, asOf).map((value, index) => [
         ["createStarted", "createArranged", "createPublished"][index],
-        String(value),
+        clientEventsReady ? String(value) : "",
         "",
         "attempts",
       ]),
@@ -381,6 +404,12 @@ export default function App() {
         "hours",
       ],
       ["pendingApplications", String(pending.length), "", "applications"],
+      ["expiredApplications",String(f.records.filter(a=>stateAt(a)==="expired").length),"","applications"],
+      ["stageWindowOpen",String(f.stageWindowOpen),String(f.completed),"applications"],
+      ["sourceDifferences",String(s.sourceDiffs),"","participations"],
+      ...Object.entries(s.cancelReasons).map(([key,value])=>[`cancelReason:${key}`,String(value),"","meals"]),
+      ...Object.entries(s.checkpoint).map(([key,value])=>[`checkpoint:${key}`,String(value),"","meals"]),
+      ...Object.entries(s.lowCount).map(([key,value])=>[`postCheckLowCount:${key}`,String(value),"","meals"]),
       ...[1, 2, 3, 4, 5].map((score) => [
         `rating:${score}`,
         String(s.feedback.filter((row) => row.score === score).length),
@@ -390,7 +419,7 @@ export default function App() {
       ...["map_opened", "filter_applied", "profile_view", "chat_opened"].map(
         (name) => [
           `feature:${name}`,
-          String(
+          !clientEventsReady ? "" : String(
             new Set(
               events
                 .filter((e) => e.name === name)
@@ -416,13 +445,7 @@ export default function App() {
         String(row.opportunity),
       ]),
     ];
-    const csv =
-      "\uFEFF" +
-      rows
-        .map((row) =>
-          row.map((cell) => `"${cell.replaceAll('"', '""')}"`).join(","),
-        )
-        .join("\r\n");
+    const csv = serializeCsv(rows);
     const url = URL.createObjectURL(
         new Blob([csv], { type: "text/csv;charset=utf-8" }),
       ),
@@ -445,7 +468,7 @@ export default function App() {
       present: t("出席", "Present"),
       absent: t("未出席", "Absent"),
       unknown: t("未知", "Unknown"),
-      conflict: t("待核实", "Conflict"),
+      source_difference: t("来源存在差异", "Source difference"),
     })[status] || status;
   const mealRows = s.meals
     .filter(
@@ -455,7 +478,7 @@ export default function App() {
           (p) =>
             p.meal.id === meal.id &&
             (evidenceFilter === "unresolved"
-              ? ["unknown", "conflict"].includes(p.status)
+              ? p.status === "unknown"
               : p.status === evidenceFilter),
         ),
     )
@@ -490,22 +513,21 @@ export default function App() {
       ],
     }));
   const responseHours = f.records
-    .filter((a) => a.decidedAt && a.decidedAt <= SNAPSHOT)
+    .filter((a) => a.decidedAt && a.decidedAt <= asOf)
     .map((a) => (+new Date(a.decidedAt!) - +new Date(a.appliedAt)) / 3_600_000);
-  const pending = f.records.filter(
-    (a) => !a.decidedAt || a.decidedAt > SNAPSHOT,
-  );
+  const stateAt = (a:typeof f.records[number]) => applicationStateAt(a,data.meals.find(m=>m.id===a.mealId)!,asOf);
+  const pending = f.records.filter(a=>stateAt(a)==="pending");
   const latestWeek = s.weekly.at(-1);
   const checks = dataChecks(s, retention);
   const selectedCohort =
     detail?.kind === "cohort"
       ? retention.find((row) => row.week === detail.id)
       : undefined;
-  const qualityEvents = cleanEvents(analyticalData(data).events, data.identityLinks).filter((e) => !e.userId || !data.users.some((u) => u.id === e.userId && u.accountType && u.accountType !== "regular"));
+  const qualityEvents = cleanEvents(analyticalData(data).events, data.identityLinks, asOf).filter((e) => !e.userId || !data.users.some((u) => u.id === e.userId && u.accountType && u.accountType !== "regular"));
   const missing = data.events.filter(
-    (e) => e.receivedAt <= SNAPSHOT && !validEvent(e),
+    (e) => e.receivedAt <= asOf && !validEvent(e),
   );
-  const rawAvailable = data.events.filter((e) => e.receivedAt <= SNAPSHOT);
+  const rawAvailable = data.events.filter((e) => e.receivedAt <= asOf);
   const lag = qualityEvents.map(
     (e) => (+new Date(e.receivedAt) - +new Date(e.occurredAt)) / 1000,
   );
@@ -522,6 +544,8 @@ export default function App() {
       ? data.users.find((u) => u.id === detail.id)
       : undefined;
 
+  if (!actor || !can(actor,"view_aggregates")) return <AccessGate t={t} onLogin={login} denied={!!actor}/>;
+  if (snapshotMissing) return <main className="access-gate"><div className="panel" role="alert"><h1>{t("快照不可用", "Snapshot unavailable")}</h1><p>{t("该快照不在当前演示会话中，不能用其他快照代替。", "This snapshot is not in the current demo session. Another snapshot will not be substituted.")}</p><button className="button" onClick={()=>setSelectedId(snapshots[0].id)}>{t("查看初始快照", "View initial snapshot")}</button></div></main>;
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main-content">
@@ -571,6 +595,7 @@ export default function App() {
             <strong>{nav[pages.indexOf(page)]}</strong>
           </div>
           <div className="top-actions">
+            <button className="text-button" onClick={logout}>{t("退出", "Sign out")}</button>
             <button
               className="language-button"
               onClick={() => setLang(lang === "zh" ? "en" : "zh")}
@@ -612,12 +637,14 @@ export default function App() {
             <button
               className="button export-button"
               onClick={exportSummary}
-              disabled={mode === "error"}
+              disabled={mode !== "sample"}
             >
               <Icon name="download" size={17} />
               {t("导出指标", "Export metrics")}
             </button>
           </div>
+          {!clientEventsReady && <p className="method-note" role="status">{t("此快照未接入行为采集源，发现/曝光/功能使用不可用；空事件不是零使用。首次申请/出席仅为当前快照可观测首次，未证明全历史完整。", "Behavioral collection is not connected for this snapshot. Discovery/exposure/feature usage are unavailable, not zero. First applications/attendance are observable firsts; complete history is not established.")}</p>}
+          <SnapshotBar snapshots={snapshots} selected={snapshot} pending={pendingWrites(store,snapshot).length} onBuild={build} onSelect={(id)=>{const chosen=snapshots.find(s=>s.id===id)!;const end=filters.end>londonDay(chosen.asOf)?londonDay(chosen.asOf):filters.end;const start=filters.start>end?end:filters.start;setFilters(prev=>({...prev,start,end}));setDates({start,end});setSelectedId(id);closeDetail();}} t={t}/>
           <section
             className="filter-panel"
             aria-label={t("全局筛选", "Global filters")}
@@ -631,7 +658,7 @@ export default function App() {
                   type="date"
                   aria-label={t("开始日期", "Start date")}
                   value={dates.start}
-                  max="2026-10-18"
+                  max={asOfDay}
                   onInput={(e) => {
                     const value = e.currentTarget.value;
                     setDates((previous) => ({ ...previous, start: value }));
@@ -642,7 +669,7 @@ export default function App() {
                   type="date"
                   aria-label={t("结束日期", "End date")}
                   value={dates.end}
-                  max="2026-10-18"
+                  max={asOfDay}
                   onInput={(e) => {
                     const value = e.currentTarget.value;
                     setDates((previous) => ({ ...previous, end: value }));
@@ -656,7 +683,7 @@ export default function App() {
                       !dates.start ||
                       !dates.end ||
                       dates.start > dates.end ||
-                      dates.end > "2026-10-18"
+                      dates.end > asOfDay
                     )
                       setDateError(true);
                     else {
@@ -675,10 +702,10 @@ export default function App() {
                   key={days}
                   onClick={() => range(days)}
                   aria-pressed={
-                    filters.end === "2026-10-18" &&
+                    filters.end === asOfDay &&
                     filters.start ===
                       new Date(
-                        +new Date("2026-10-18T12:00:00Z") - (days - 1) * DAY,
+                        +new Date(asOf) - (days - 1) * DAY,
                       )
                         .toISOString()
                         .slice(0, 10)
@@ -695,7 +722,7 @@ export default function App() {
               onChange={(v) => update("area", v)}
               options={[
                 ["all", t("全部区域", "All areas")],
-                ...areas.map((a) => [a, a] as [string, string]),
+                ...snapshotAreas.map((a) => [a, a] as [string, string]),
               ]}
             />
             <MultiSelect
@@ -728,8 +755,7 @@ export default function App() {
                 onChange={(v) => update("language", v)}
                 options={[
                   ["all", t("全部语言", "All languages")],
-                  ["English", "English"],
-                  ["Chinese", t("中文", "Chinese")],
+                  ...snapshotLanguages.map((code)=>[code, code==="Chinese" ? t("中文","Chinese") : code] as [string,string]),
                 ]}
               />
               <MultiSelect
@@ -1043,7 +1069,7 @@ export default function App() {
                                       Math.min(
                                         +new Date(`${w.week}T12:00:00Z`) +
                                           6 * DAY,
-                                        +new Date("2026-10-18T12:00:00Z"),
+                                        +new Date(asOf),
                                       ),
                                     )
                                       .toISOString()
@@ -1055,7 +1081,7 @@ export default function App() {
                                       Math.min(
                                         +new Date(`${w.week}T12:00:00Z`) +
                                           6 * DAY,
-                                        +new Date("2026-10-18T12:00:00Z"),
+                                        +new Date(asOf),
                                       ),
                                     )
                                       .toISOString()
@@ -1099,14 +1125,14 @@ export default function App() {
                           <strong>{s.attendance.unknown}</strong>
                         </div>
                         <div>
-                          <span>{t("记录冲突", "Conflicts")}</span>
-                          <strong>{s.attendance.conflict}</strong>
+                          <span>{t("来源差异（已按本人优先）", "Source differences (self first)")}</span>
+                          <strong>{s.sourceDiffs}</strong>
                         </div>
                       </div>
                       <p>
                         {t(
-                          "未确认不代表未出席。解释转化前，先核对缺失记录。",
-                          "Unconfirmed does not mean absent. Inspect missing records before interpreting conversion.",
+                          "本人最新自报优先，发起人仅补缺；没有报告保持未知。",
+                          "The latest self-report wins; hosts fill gaps. Missing reports stay unknown.",
                         )}
                       </p>
                       <button
@@ -1139,8 +1165,8 @@ export default function App() {
                     >
                       <div className="mini-funnel">
                         {[
-                          [t("发现", "Discover"), f.discovery],
-                          [t("看详情", "View details"), f.details],
+                          [t("发现", "Discover"), clientEventsReady ? f.discovery : "—"],
+                          [t("看详情", "View details"), clientEventsReady ? f.details : "—"],
                           [t("申请", "Apply"), f.applications],
                           [t("获准", "Approved"), f.approved],
                           [t("确认", "Confirmed"), f.confirmed],
@@ -1149,7 +1175,7 @@ export default function App() {
                             <span>{text}</span>
                             <strong>{value}</strong>
                             <Progress
-                              a={Number(value)}
+                              a={Number.isFinite(Number(value)) ? Number(value) : 0}
                               b={i < 2 ? f.discovery : f.applications}
                             />
                             <small>
@@ -1185,7 +1211,7 @@ export default function App() {
                           ],
                           evidence: [
                             t("出席记录完整性", "Attendance evidence"),
-                            `${check.numerator} / ${check.denominator} ${t("人次仍缺失或冲突，先核对记录再解释赴约率。", "participations are unknown or conflicting. Verify evidence before interpreting conversion.")}`,
+                            `${check.numerator} / ${check.denominator} ${t("人次尚未报告；没有报告不等于未出席。", "participations have no report; missing reports do not imply absence.")}`,
                           ],
                           discovery: [
                             t("发现无结果", "Zero-result discovery"),
@@ -1260,14 +1286,15 @@ export default function App() {
                       {t("发起饭局", "Host a meal")}
                     </button>
                   </div>
-                  {journey === "join" ? (
+                  {journey === "create" && !clientEventsReady ? <Panel title={t("创建行为采集未接入", "Creation collection unavailable")}><p>{t("已导入业务事实，创建尝试/字段错误事件尚不可用。", "Business facts are imported; creation-attempt and validation events are unavailable.")}</p></Panel> : journey === "join" ? (
                     <>
                       <div className="two-column">
+                        {clientEventsReady ? (
                         <Panel
                           title={t("浏览行为", "Browsing behavior")}
                           eyebrow={t(
-                            "用户去重 · 期内事件",
-                            "DISTINCT USERS · EVENTS IN PERIOD",
+                            "访客标识去重（含匿名）· 期内事件",
+                            "DISTINCT VISITOR IDENTITIES (INCLUDING ANONYMOUS)",
                           )}
                         >
                           <div className="horizontal-funnel">
@@ -1327,6 +1354,7 @@ export default function App() {
                             </button>
                           </div>
                         </Panel>
+                        ) : <Panel title={t("浏览行为", "Browsing behavior")}><p>{t("行为采集源未接入，暂无可解释的浏览转化。", "Behavioral source is not connected; browsing conversion is unavailable.")}</p></Panel>}
                         <Panel
                           title={t("申请如何推进", "Application progression")}
                           eyebrow={t(
@@ -1350,12 +1378,12 @@ export default function App() {
                               </div>
                             ))}
                           </div>
-                          <p className="method-note">{t("获准＝发起人批准申请；席位已确认＝已加入名单（需要预付的饭局须付款成功）。这些都不代表实际出席。", "Approved = accepted by the host. Seat secured = added to the roster after any required payment. Neither proves attendance.")}</p>
+                          <p className="method-note">{t("首期各自到店付款，host批准即确认席位并加入名单。席位已确认不代表实际出席。", "R1 uses pay-at-restaurant meals. Host approval secures the seat and roster membership; it does not prove attendance.")}</p>
                           <div className="stat-strip">
                             <span>
                               {t(
-                                "已结束场次的申请 → 出席",
-                                "Ended meals: application → attendance",
+                                "开始后24小时的申请 → 出席（阶段）",
+                                "Start +24h: application → attendance (stage)",
                               )}
                             </span>
                             <strong>{pct(f.present, f.completed)}</strong>
@@ -1363,10 +1391,13 @@ export default function App() {
                               {f.present} / {f.completed}{" "}
                               {t("申请", "applications")}
                             </small>
+                            <button className="text-button" onClick={()=>openMetric("applicationAttendance")}>{t("口径", "Definition")}</button>
                           </div>
                         </Panel>
                       </div>
+                      <p className="method-note">{t(`本阶段按开始后24小时入组，其中${f.stageWindowOpen}笔申请的7天餐后报告窗口仍开放，结果可在新快照补齐。`, `This stage uses start +24h. ${f.stageWindowOpen} applications still have an open 7-day post-meal window; later snapshots may update results.`)}</p>
                       <p className="method-note">{t("用时从申请提交成功算到发起人首次批准或拒绝；50%/90%表示已处理申请的比例，不包含仍等待的申请。", "Time runs from submission to the first approve/decline decision. 50%/90% refer to decided applications; pending requests are listed separately.")}</p>
+                      <p className="method-note">{t(`本期过期申请 ${f.records.filter(a=>stateAt(a)==="expired").length} 笔，撤回 ${f.records.filter(a=>stateAt(a)==="withdrawn").length} 笔。每轮重申使用新applicationId；只有仍等待的申请进入待审数。`, `Expired: ${f.records.filter(a=>stateAt(a)==="expired").length}; withdrawn: ${f.records.filter(a=>stateAt(a)==="withdrawn").length}. Re-applications use new IDs; only active pending requests count as waiting.`)}</p>
                       <div className="three-stats">
                         <div>
                           <span>{t("审核用时 · 50%申请在此内处理", "Median response")}</span>
@@ -1452,15 +1483,9 @@ export default function App() {
                                       : "amber"
                                 }
                               >
-                                {a.withdrawnAt
-                                  ? t("已退出", "Withdrawn")
-                                  : a.confirmedAt
-                                    ? t("席位已确认", "Confirmed")
-                                    : a.decision === "declined"
-                                      ? t("未获准", "Declined")
-                                      : t("待审核", "Pending")}
+                                {{future:t("尚未提交","Not submitted"),pending:t("待审核","Pending"),approved:t("已获准","Approved"),confirmed:t("席位已确认","Seat confirmed"),declined:t("未获准","Declined"),withdrawn:t("已退出","Withdrawn"),expired:t("已过期","Expired")}[stateAt(a)]}
                               </Badge>,
-                              `${((+new Date(a.decidedAt || SNAPSHOT) - +new Date(a.appliedAt)) / 3_600_000).toFixed(1)}h`,
+                              `${((+new Date(a.decidedAt || asOf) - +new Date(a.appliedAt)) / 3_600_000).toFixed(1)}h`,
                             ],
                           }))}
                         />
@@ -1480,7 +1505,7 @@ export default function App() {
                       >
                         <div className="mini-funnel create-funnel">
                           {(() => {
-                            const counts = createFunnel(data, filters);
+                            const counts = createFunnel(data, filters, asOf);
                             return counts.map((count, i) => (
                               <div key={i}>
                                 <span>
@@ -1583,6 +1608,7 @@ export default function App() {
                       </div>
                     </>
                   )}
+                  {clientEventsReady ? (
                   <Panel title={t("功能使用诊断", "Feature diagnostics")}>
                     <div className="feature-grid">
                       {[
@@ -1623,7 +1649,8 @@ export default function App() {
                         "Feature use is diagnostic. Time spent and message count do not substitute for product value.",
                       )}
                     </p>
-                  </Panel>
+                  </Panel>                  ) : <Panel title={t("功能使用诊断", "Feature diagnostics")}><p>{t("行为采集源尚未接入，不显示为0使用。", "Collection is not connected; usage is unavailable, not zero.")}</p></Panel>}
+
                 </>
               )}
               {page === "supply" && (
@@ -1686,6 +1713,7 @@ export default function App() {
                       foot={t("应确认人次", "eligible participations")}
                     />
                   </div>
+                  <Panel title={t("T-15分钟检查与后续减员", "T-15min checkpoint and later departures")}><div className="stat-strip"><span>{t("检查通过 / 有检查记录", "Passed / recorded checkpoints")}</span><strong>{s.checkpoint.numerator} / {s.checkpoint.denominator}</strong></div><p>{t(`仅人数不足 ${s.checkpoint.insufficient}；仅订位未就绪 ${s.checkpoint.booking}；两者同时 ${s.checkpoint.both}；检查前取消 ${s.checkpoint.cancelledBefore}；缺检查事实 ${s.checkpoint.missing}；人数对账差异 ${s.checkpoint.recountMismatch}。`, `Insufficient only ${s.checkpoint.insufficient}; booking only ${s.checkpoint.booking}; both ${s.checkpoint.both}; cancelled before ${s.checkpoint.cancelledBefore}; missing checkpoint ${s.checkpoint.missing}; roster mismatches ${s.checkpoint.recountMismatch}.`)}</p><p>{t(`检查后低于minimum ${s.lowCount.total} 场：继续 ${s.lowCount.continued}、开饭前待host决定 ${s.lowCount.pending}、已开饭未决定 ${s.lowCount.unresolvedAtStart}、已取消 ${s.lowCount.cancelled}、缺决定 ${s.lowCount.missingDecision}。不补员、不自动再次取消。`, `${s.lowCount.total} meals fell below minimum after passing: continue ${s.lowCount.continued}, pre-start host decision pending ${s.lowCount.pending}, unresolved at start ${s.lowCount.unresolvedAtStart}, cancelled ${s.lowCount.cancelled}, decision missing ${s.lowCount.missingDecision}. No replacement guests or second automatic cancellation.`)}</p></Panel>
                   <div className="two-column">
                     <Panel
                       title={t(
@@ -1698,7 +1726,7 @@ export default function App() {
                       )}
                     >
                       <div className="area-bars">
-                        {areas.map((area) => {
+                        {snapshotAreas.map((area) => {
                           const requests = events.filter(
                               (e) =>
                                 e.name === "discovery_results" &&
@@ -1759,8 +1787,8 @@ export default function App() {
                       </div>
                       <p className="method-note">
                         {t(
-                          "提前退出与整场取消不进入应确认人次；未知和待核实绝不自动算作失约。",
-                          "Early withdrawals and cancelled meals are excluded. Unknown and conflicting records are never inferred no-shows.",
+                          "开始前退出与整场取消不进入应确认人次；本人最新自报优先，未知不自动算作失约。",
+                          "Pre-start withdrawals and cancellations are excluded. Self-reports take priority; unknown never means no-show.",
                         )}
                       </p>
                     </Panel>
@@ -1779,13 +1807,9 @@ export default function App() {
                           ["all", t("全部饭局", "All meals")],
                           [
                             "unresolved",
-                            t("待补或待核实", "Unknown or conflicting"),
+                            t("尚未报告", "No report yet"),
                           ],
                           ["unknown", t("出席记录待补", "Unknown attendance")],
-                          [
-                            "conflict",
-                            t("出席记录冲突", "Conflicting reports"),
-                          ],
                           [
                             "present",
                             t("有确认出席", "Has confirmed attendance"),
@@ -1891,7 +1915,7 @@ export default function App() {
                     title={t("首次赴约队列", "First-attendance cohorts")}
                     eyebrow={t(
                       "按首次出席所在周分组 · 后续结果观察至快照",
-                      "FIRST ATTENDANCE WEEK · FOLLOW-UP THROUGH SNAPSHOT",
+                      "FIRST ATTENDANCE WEEK · FOLLOW-UP THROUGH asOf",
                     )}
                     action={
                       <button
@@ -2076,21 +2100,7 @@ export default function App() {
                       </p>
                     </div>
                   </div>
-                  <Panel title={t("统计账号分类", "Analytics account classification")}>
-                    <p className="method-note">{t("按用户编号标注正式、测试或员工账号。测试/员工的行为和参与记录不计入指标；其发起的饭局整场排除。分类只影响统计，不改变登录权限。", "Classify IDs as regular, test or staff. Test/staff behavior and participation are excluded; meals hosted by them are excluded entirely. This does not change login permissions.")}</p>
-                    <div className="classification-form">
-                      <label>{t("用户编号", "User ID")}<input aria-label={t("分类用户编号", "Classification user ID")} value={classifyId} onChange={(e) => setClassifyId(e.target.value)} placeholder="U-001" /></label>
-                      <NativeSelect label={t("账号分类", "Account class")} value={classifyType} onChange={setClassifyType} options={[["regular", t("正式", "Regular")], ["test", t("测试", "Test")], ["staff", t("员工", "Staff")]]}/>
-                      <button className="button" onClick={() => {
-                        const id = classifyId.trim();
-                        if (!data.users.some((u) => u.id === id)) { setClassifyMessage(t("未找到该用户编号。", "User ID not found.")); return; }
-                        setSampleData((previous) => ({...previous, users: previous.users.map((u) => u.id === id ? {...u, accountType: classifyType as "regular" | "test" | "staff"} : u)}));
-                        setClassifyMessage(t("分类已更新，指标已重算。", "Classification updated; metrics recalculated."));
-                      }}>{t("保存分类", "Save classification")}</button>
-                    </div>
-                    <p role="status">{classifyMessage}</p>
-                    <div className="classified-users">{data.users.filter((u) => u.accountType && u.accountType !== "regular").map((u) => <button className="filter-chip" key={u.id} onClick={() => { setClassifyId(u.id); setClassifyType(u.accountType || "regular"); }}>{u.id} · {u.accountType === "test" ? t("测试", "Test") : t("员工", "Staff")}</button>)}</div>
-                  </Panel>
+                  <GovernancePanels store={store} actor={actor!} onWrite={writeStore} onImport={importData} review={reviewMode} t={t}/>
                   <div className="three-stats">
                     <div>
                       <span>
@@ -2120,7 +2130,7 @@ export default function App() {
                       title={t("数据完整性检查", "Data integrity checks")}
                       eyebrow={t(
                         "全量快照，不受业务筛选影响",
-                        "FULL SNAPSHOT · NOT AFFECTED BY BUSINESS FILTERS",
+                        "FULL asOf · NOT AFFECTED BY BUSINESS FILTERS",
                       )}
                     >
                       <div className="check-row">
@@ -2144,7 +2154,7 @@ export default function App() {
                         <Badge tone="neutral">
                           {
                             data.events.filter(
-                              (e) => e.receivedAt > SNAPSHOT,
+                              (e) => e.receivedAt > asOf,
                             ).length
                           }
                         </Badge>
@@ -2152,12 +2162,12 @@ export default function App() {
                       <div className="check-row">
                         <span>
                           {t(
-                            "当前筛选出席未知 / 冲突",
-                            "Filtered unknown / conflicting attendance",
+                            "当前筛选出席未知 / 来源差异",
+                            "Filtered unknown / source differences",
                           )}
                         </span>
                         <Badge tone="amber">
-                          {s.attendance.unknown} / {s.attendance.conflict}
+                          {s.attendance.unknown} / {s.sourceDiffs}
                         </Badge>
                       </div>
                       <p>
@@ -2271,8 +2281,8 @@ export default function App() {
             </span>
             <span>
               {t(
-                "指标定义 v2",
-                "Definitions v2",
+                "指标定义 r1-v3",
+                "Definitions r1-v3",
               )}
             </span>
           </footer>
@@ -2351,7 +2361,7 @@ export default function App() {
           )}
           {metricDetail && (
             <>
-              <Badge>{t("指标口径 v2", "Definition v2")}</Badge>
+              <Badge>{t("指标口径 r1-v3", "Definition r1-v3")}</Badge>
               <dl className="definition-list">
                 {(
                   [
@@ -2394,7 +2404,7 @@ export default function App() {
                 <Badge tone={selectedMeal.cancelled ? "red" : "green"}>
                   {selectedMeal.cancelled
                     ? t("已取消", "Cancelled")
-                    : selectedMeal.startsAt <= SNAPSHOT
+                    : selectedMeal.startsAt <= asOf
                       ? t("已到开始时间", "Past planned start")
                       : t("尚未开始", "Not started")}
                 </Badge>
@@ -2418,17 +2428,14 @@ export default function App() {
                       .map((a) => a.userId),
                   ]),
                 ].map((userId) => {
-                  const a = data.applications.find(
-                      (a) =>
-                        a.mealId === selectedMeal.id && a.userId === userId,
-                    ),
-                    record = latestAttendance(data, userId, selectedMeal.id);
+                  const a = data.applications.filter(a=>a.mealId === selectedMeal.id && a.userId === userId).sort((a,b)=>b.appliedAt.localeCompare(a.appliedAt))[0],
+                    record = latestAttendance(data, userId, selectedMeal.id, asOf);
                   const eligible =
                     !selectedMeal.cancelled &&
-                    mealEnded(selectedMeal) &&
+                    mealEnded(selectedMeal, asOf) &&
                     (userId === selectedMeal.hostId ||
                       (!!a?.confirmedAt &&
-                        a.confirmedAt <= SNAPSHOT && a.confirmedAt < selectedMeal.startsAt &&
+                        a.confirmedAt <= asOf && a.confirmedAt < selectedMeal.startsAt &&
                         (!a.withdrawnAt ||
                           a.withdrawnAt > selectedMeal.startsAt)));
                   const status = eligible
@@ -2445,19 +2452,13 @@ export default function App() {
                       <span>
                         {userId === selectedMeal.hostId
                           ? t("发起人", "Host")
-                          : a?.withdrawnAt
-                            ? t("提前退出", "Withdrew")
-                            : a?.confirmedAt
-                              ? t("确认成员", "Confirmed")
-                              : t("未确认", "Unconfirmed")}
+                          : a ? ({future:t("尚未提交","Not submitted"),pending:t("待审核","Pending"),approved:t("已获准","Approved"),confirmed:t("席位已确认","Seat confirmed"),declined:t("未获准","Declined"),withdrawn:t("已退出","Withdrawn"),expired:t("已过期","Expired")}[stateAt(a)]) : t("未确认", "Unconfirmed")}
                       </span>
                       <Badge
                         tone={
                           status === "present"
                             ? "green"
-                            : status === "conflict"
-                              ? "amber"
-                              : "neutral"
+                            : "neutral"
                         }
                       >
                         {selectedMeal.cancelled
@@ -2466,32 +2467,11 @@ export default function App() {
                             ? t("不适用", "Not applicable")
                             : statusName(status)}
                       </Badge>
-                      {eligible && (
-                          <button
-                            className="text-button"
-                            onClick={() => {
-                              setVerifyUser(userId);
-                              setVerifyNote("");
-                              setVerifyError(false);
-                            }}
-                          >
-                            {t("核实出席", "Verify attendance")}
-                          </button>
-                        )}
-                      {record?.verified && (
-                        <small>
-                          {t("已核实", "Verified")} ·{" "}
-                          {record.verificationNote}
-                        </small>
-                      )}
                       {record && (
                         <small>
                           {[
                             record.host ? t("发起人记录", "Host report") : "",
                             record.self ? t("本人自报", "Self-report") : "",
-                            record.verified
-                              ? t("人工核实", "Manual verification")
-                              : "",
                           ]
                             .filter(Boolean)
                             .join(" + ")}
@@ -2501,86 +2481,6 @@ export default function App() {
                   );
                 })}
               </div>
-              {verifyUser && (
-                <section className="verification-editor">
-                  <h3>
-                    {t(
-                      "核实出席",
-                      "Verify attendance",
-                    )}
-                  </h3>
-                  <p>
-                    {verifyUser} ·{" "}
-                    {t(
-                      "保留原始来源，只追加核实结果。",
-                      "Preserve original evidence and append a resolution.",
-                    )}
-                  </p>
-                  <NativeSelect
-                    label={t("核实结果", "Verified result")}
-                    value={verifyResult}
-                    onChange={setVerifyResult}
-                    options={[
-                      ["present", t("出席", "Present")],
-                      ["absent", t("未出席", "Absent")],
-                    ]}
-                  />
-                  <label className="verification-note">
-                    {t("核实依据（必填）", "Verification basis (required)")}
-                    <input
-                      ref={verificationInput}
-                      value={verifyNote}
-                      onChange={(e) => setVerifyNote(e.target.value)}
-                      aria-invalid={verifyError}
-                      aria-describedby={
-                        verifyError ? "verification-error" : undefined
-                      }
-                      maxLength={200}
-                    />
-                  </label>
-                  {verifyError && (
-                    <p
-                      id="verification-error"
-                      className="inline-error"
-                      role="alert"
-                    >
-                      {t(
-                        "请填写核实依据，且仅核实已结束饭局的有效成员。",
-                        "Provide a basis. Only eligible participants in ended meals may be verified.",
-                      )}
-                    </p>
-                  )}
-                  <button
-                    className="button primary"
-                    onClick={() => {
-                      try {
-                        setSampleData(
-                          verifyAttendance(
-                            sampleData,
-                            selectedMeal.id,
-                            verifyUser,
-                            verifyResult as "present" | "absent",
-                            verifyNote,
-                          ),
-                        );
-                        setVerifyUser("");
-                        setVerifyError(false);
-                        setNotice(
-                          t(
-                            "核实已保存，相关指标已重算",
-                            "Sample verified; metrics recalculated. Reload resets it.",
-                          ),
-                        );
-                      } catch {
-                        setVerifyError(true);
-                        verificationInput.current?.focus();
-                      }
-                    }}
-                  >
-                    {t("保存核实", "Save verification")}
-                  </button>
-                </section>
-              )}
               <h3>{t("业务时间线", "Business timeline")}</h3>
               <ol className="timeline">
                 <li>
@@ -2595,9 +2495,7 @@ export default function App() {
                   <li>
                     <span>{t("取消原因", "Cancellation reason")}</span>
                     <p>
-                      {selectedMeal.cancelReason === "insufficient"
-                        ? t("人数不足", "Insufficient attendance")
-                        : t("发起人取消", "Host cancelled")}
+                      {(selectedMeal.cancelReasons?.length ? selectedMeal.cancelReasons : [selectedMeal.cancelReason || "unknown"]).join(" · ")}
                     </p>
                   </li>
                 )}
@@ -2621,18 +2519,18 @@ export default function App() {
                 {data.meals
                   .filter(
                     (meal) =>
-                      meal.publishedAt <= SNAPSHOT &&
+                      meal.publishedAt <= asOf &&
                       (meal.hostId === selectedUser.id ||
                         data.applications.some(
                           (a) =>
                             a.userId === selectedUser.id &&
                             a.mealId === meal.id &&
-                            a.appliedAt <= SNAPSHOT,
+                            a.appliedAt <= asOf,
                         )),
                   )
                   .sort((a, b) => b.startsAt.localeCompare(a.startsAt))
                   .map((meal) => {
-                    const entry = participation(data).find(
+                    const entry = participation(data, asOf).find(
                       (p) =>
                         p.userId === selectedUser.id && p.meal.id === meal.id,
                     );
@@ -2668,7 +2566,7 @@ export default function App() {
                 )}
               </h3>
               <ol className="timeline">
-                {cleanEvents(data.events, data.identityLinks)
+                {cleanEvents(data.events, data.identityLinks, asOf)
                   .filter((e) => e.userId === selectedUser.id)
                   .sort((a, b) => b.occurredAt.localeCompare(a.occurredAt))
                   .slice(0, 30)

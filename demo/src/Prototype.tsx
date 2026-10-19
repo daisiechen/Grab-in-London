@@ -1,4 +1,34 @@
-import { reportAttendance, attendanceResult, saveExperience, experienceReasons, type AttendanceReport, type MealExperience, type ExperienceReason, type MealContext } from "./postMeal";
+import {
+  pilotSeed,
+  act,
+  advanceLifecycle,
+  confirmedIds,
+  eligibleAtMeal,
+  attendanceStatus,
+  canDirect,
+  readableMessages,
+  groupAccess,
+  projectMember,
+  projectAnalytics,
+  exportAccount,
+  cutoffAt,
+  londonInstants,
+  minimumFor,
+  HOUR,
+  DAY,
+  type Command,
+  type PilotMeal,
+} from "../../shared/pilot";
+import {
+  reportAttendance,
+  attendanceResult,
+  saveExperience,
+  experienceReasons,
+  type AttendanceReport,
+  type MealExperience,
+  type ExperienceReason,
+  type MealContext,
+} from "./postMeal";
 import { isReviewMode } from "./presentation";
 import { BRAND } from "./brand";
 import {
@@ -422,11 +452,21 @@ function BrandEntrance({
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [issue, setIssue] = useState("");
+  const [provider, setProvider] = useState("");
+  const authIssueRef = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    keyboard.hide();
+  }, [stage, provider]);
+  useEffect(() => {
+    if (issue) {
+      keyboard.hide();
+      authIssueRef.current?.scrollIntoView({ block: "center" });
+    }
+  }, [issue]);
   const [agreed, setAgreed] = useState(false);
   const [cooldown, setCooldown] = useState(0);
   const [expired, setExpired] = useState(false);
   const [codeVersion, setCodeVersion] = useState(0);
-  const [provider, setProvider] = useState("");
   const [showTerms, setShowTerms] = useState(false);
   const [photo, setPhoto] = useState("leo");
   const [person, setPerson] = useState<WelcomeProfile>({
@@ -579,6 +619,11 @@ function BrandEntrance({
                       ? `Enter the six-digit code for ${email}.`
                       : "Give your future table a little context. Your email stays private."}
               </p>
+              {issue && (
+                <p ref={authIssueRef} className="form-error" role="alert">
+                  {issue}
+                </p>
+              )}
               {stage === "account" && (
                 <>
                   <ChoiceGroup
@@ -611,6 +656,15 @@ function BrandEntrance({
                     }}
                   >
                     Continue with Apple <ExternalLinkIcon />
+                  </button>
+                  <button
+                    className="brand-provider"
+                    onClick={() => {
+                      setProvider("Facebook");
+                      setIssue("");
+                    }}
+                  >
+                    Continue with Facebook <ExternalLinkIcon />
                   </button>
                   <ReviewOnly>
                     <p className="demo-note">
@@ -853,11 +907,6 @@ function BrandEntrance({
                   </Primary>
                 </>
               )}
-              {issue && (
-                <p className="form-error" role="alert">
-                  {issue}
-                </p>
-              )}
             </>
           )}
         </div>
@@ -870,7 +919,10 @@ function BrandEntrance({
         title={`${provider} sign-in`}
       >
         <div className="body-pad">
-          <p>Continue as Alex or cancel to return.</p>
+          <p>Review this sign-in preview as Alex, or cancel to return.</p>
+          <ReviewOnly>
+            <p>No provider is contacted. Your original action is preserved.</p>
+          </ReviewOnly>
           <Primary
             onClick={() => {
               setProvider("");
@@ -879,6 +931,28 @@ function BrandEntrance({
           >
             Continue as Alex
           </Primary>
+          <ReviewOnly>
+            <button
+              className="text-action"
+              onClick={() => {
+                setProvider("");
+                setIssue("Sign-in could not be completed. Retry or use email.");
+              }}
+            >
+              Preview provider failure
+            </button>
+            <button
+              className="text-action"
+              onClick={() => {
+                setProvider("");
+                setIssue(
+                  "This provider identity is linked to a different account. Sign in to that account to link it; no automatic merge.",
+                );
+              }}
+            >
+              Preview account link conflict
+            </button>
+          </ReviewOnly>
           <button className="text-action" onClick={() => setProvider("")}>
             Cancel
           </button>
@@ -958,99 +1032,330 @@ function HelperSprite() {
     </svg>
   );
 }
-type MapSpot = { id: string; label: string; x: number; y: number; text: string };
-function DemoMap({ spots, selected, onSelect, onSearch, label }: {
-  spots: MapSpot[]; selected: string; onSelect: (id: string) => void;
-  onSearch?: (ids: string[]) => void; label: string;
+type MapSpot = {
+  id: string;
+  label: string;
+  x: number;
+  y: number;
+  text: string;
+};
+function DemoMap({
+  spots,
+  selected,
+  onSelect,
+  onSearch,
+  label,
+}: {
+  spots: MapSpot[];
+  selected: string;
+  onSelect: (id: string) => void;
+  onSearch?: (ids: string[]) => void;
+  label: string;
 }) {
   const [view, setView] = useState({ x: 0, y: 0, zoom: 1 });
   const [dirty, setDirty] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const points = useRef(new Map<number, { x: number; y: number }>());
-  const drag = useRef<{ x: number; y: number; distance: number; view: typeof view; moved: boolean } | null>(null);
+  const drag = useRef<{
+    x: number;
+    y: number;
+    distance: number;
+    view: typeof view;
+    moved: boolean;
+  } | null>(null);
   const suppress = useRef(false);
   const clamp = (v: typeof view) => {
     const zoom = Math.max(1, Math.min(2.4, v.zoom));
     const limit = (74 * zoom - 50) / 1.48;
-    return { zoom, x: Math.max(-limit, Math.min(limit, v.x)), y: Math.max(-limit, Math.min(limit, v.y)) };
+    return {
+      zoom,
+      x: Math.max(-limit, Math.min(limit, v.x)),
+      y: Math.max(-limit, Math.min(limit, v.y)),
+    };
   };
-  const zoom = (delta: number) => { setView(v => clamp({ ...v, zoom: v.zoom + delta })); setDirty(true); };
-  return <div className="demo-map" ref={root} role="region" aria-label={label} tabIndex={0}
-    data-scroll-drag="ignore" data-zoom={view.zoom.toFixed(1)}
-    onKeyDown={event => {
-      if (event.target !== event.currentTarget) return;
-      if (event.key === '+' || event.key === '-') { event.preventDefault(); zoom(event.key === '+' ? 0.3 : -0.3); }
-      if (event.key.startsWith('Arrow')) {
-        event.preventDefault(); setDirty(true);
-        setView(v => clamp({...v,x:v.x+(event.key==='ArrowLeft'?5:event.key==='ArrowRight'?-5:0),y:v.y+(event.key==='ArrowUp'?5:event.key==='ArrowDown'?-5:0)}));
-      }
-    }}
-    onPointerDown={event => {
-      suppress.current = false;
-      if (event.button !== 0 || (event.target as Element).closest('button')) return;
-      points.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-      const p = [...points.current.values()];
-      drag.current = { x: event.clientX, y: event.clientY, distance: p.length > 1 ? Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y) : 0, view, moved: false };
-      if (!(event.target as Element).closest('button')) event.currentTarget.setPointerCapture(event.pointerId);
-    }}
-    onPointerMove={event => {
-      if (!drag.current || !points.current.has(event.pointerId)) return;
-      points.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-      const d = drag.current, p = [...points.current.values()];
-      const dx = event.clientX-d.x, dy = event.clientY-d.y;
-      if (Math.hypot(dx,dy) < 6 && p.length < 2) return;
-      d.moved = true; suppress.current = true; setDirty(true);
-      event.currentTarget.setPointerCapture(event.pointerId);
-      const rect = root.current!.getBoundingClientRect();
-      if (p.length > 1 && d.distance > 0) setView(clamp({ ...d.view, zoom: d.view.zoom * Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y)/d.distance }));
-      else setView(clamp({ ...d.view, x: d.view.x+dx/rect.width*100/1.48, y: d.view.y+dy/rect.height*100/1.48 }));
-    }}
-    onPointerUp={event => { points.current.delete(event.pointerId); if (!points.current.size) drag.current = null; }}
-    onPointerCancel={() => { points.current.clear(); drag.current = null; }}
-    onClickCapture={event => { if (suppress.current) { event.preventDefault(); event.stopPropagation(); suppress.current = false; } }}
-  >
-    <div className="demo-map-world" style={{ transform: `translate(${view.x}%, ${view.y}%) scale(${view.zoom})` }}>
-      <img className="map-image" src="/images/london-map.png" alt="Map of central London" draggable={false} />
+  const zoom = (delta: number) => {
+    setView((v) => clamp({ ...v, zoom: v.zoom + delta }));
+    setDirty(true);
+  };
+  return (
+    <div
+      className="demo-map"
+      ref={root}
+      role="region"
+      aria-label={label}
+      tabIndex={0}
+      data-scroll-drag="ignore"
+      data-zoom={view.zoom.toFixed(1)}
+      onKeyDown={(event) => {
+        if (event.target !== event.currentTarget) return;
+        if (event.key === "+" || event.key === "-") {
+          event.preventDefault();
+          zoom(event.key === "+" ? 0.3 : -0.3);
+        }
+        if (event.key.startsWith("Arrow")) {
+          event.preventDefault();
+          setDirty(true);
+          setView((v) =>
+            clamp({
+              ...v,
+              x:
+                v.x +
+                (event.key === "ArrowLeft"
+                  ? 5
+                  : event.key === "ArrowRight"
+                    ? -5
+                    : 0),
+              y:
+                v.y +
+                (event.key === "ArrowUp"
+                  ? 5
+                  : event.key === "ArrowDown"
+                    ? -5
+                    : 0),
+            }),
+          );
+        }
+      }}
+      onPointerDown={(event) => {
+        suppress.current = false;
+        if (event.button !== 0 || (event.target as Element).closest("button"))
+          return;
+        points.current.set(event.pointerId, {
+          x: event.clientX,
+          y: event.clientY,
+        });
+        const p = [...points.current.values()];
+        drag.current = {
+          x: event.clientX,
+          y: event.clientY,
+          distance:
+            p.length > 1 ? Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y) : 0,
+          view,
+          moved: false,
+        };
+        if (!(event.target as Element).closest("button"))
+          event.currentTarget.setPointerCapture(event.pointerId);
+      }}
+      onPointerMove={(event) => {
+        if (!drag.current || !points.current.has(event.pointerId)) return;
+        points.current.set(event.pointerId, {
+          x: event.clientX,
+          y: event.clientY,
+        });
+        const d = drag.current,
+          p = [...points.current.values()];
+        const dx = event.clientX - d.x,
+          dy = event.clientY - d.y;
+        if (Math.hypot(dx, dy) < 6 && p.length < 2) return;
+        d.moved = true;
+        suppress.current = true;
+        setDirty(true);
+        event.currentTarget.setPointerCapture(event.pointerId);
+        const rect = root.current!.getBoundingClientRect();
+        if (p.length > 1 && d.distance > 0)
+          setView(
+            clamp({
+              ...d.view,
+              zoom:
+                (d.view.zoom * Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y)) /
+                d.distance,
+            }),
+          );
+        else
+          setView(
+            clamp({
+              ...d.view,
+              x: d.view.x + ((dx / rect.width) * 100) / 1.48,
+              y: d.view.y + ((dy / rect.height) * 100) / 1.48,
+            }),
+          );
+      }}
+      onPointerUp={(event) => {
+        points.current.delete(event.pointerId);
+        if (!points.current.size) drag.current = null;
+      }}
+      onPointerCancel={() => {
+        points.current.clear();
+        drag.current = null;
+      }}
+      onClickCapture={(event) => {
+        if (suppress.current) {
+          event.preventDefault();
+          event.stopPropagation();
+          suppress.current = false;
+        }
+      }}
+    >
+      <div
+        className="demo-map-world"
+        style={{
+          transform: `translate(${view.x}%, ${view.y}%) scale(${view.zoom})`,
+        }}
+      >
+        <img
+          className="map-image"
+          src="/images/london-map.png"
+          alt="Map of central London"
+          draggable={false}
+        />
+      </div>
+      {spots.map((spot) => (
+        <button
+          key={spot.id}
+          className={`map-pin ${selected === spot.id ? "active" : ""}`}
+          style={{
+            left: `${50 + (spot.x - 50) * view.zoom + 1.48 * view.x}%`,
+            top: `${50 + (spot.y - 50) * view.zoom + 1.48 * view.y}%`,
+          }}
+          aria-label={spot.label}
+          aria-pressed={selected === spot.id}
+          onClick={() => onSelect(spot.id)}
+        >
+          {spot.text}
+        </button>
+      ))}
+      {onSearch && dirty && (
+        <button
+          className="map-search-area"
+          onClick={() => {
+            const ids = spots
+              .filter(
+                (p) =>
+                  Math.abs((p.x - 50) * view.zoom + 1.48 * view.x) < 48 &&
+                  Math.abs((p.y - 50) * view.zoom + 1.48 * view.y) < 48,
+              )
+              .map((p) => p.id);
+            onSearch(ids);
+            setDirty(false);
+          }}
+        >
+          Search this area
+        </button>
+      )}
+      <div className="demo-map-controls">
+        <button
+          aria-label="Zoom in"
+          disabled={view.zoom >= 2.4}
+          onClick={() => zoom(0.3)}
+        >
+          +
+        </button>
+        <button
+          aria-label="Zoom out"
+          disabled={view.zoom <= 1}
+          onClick={() => zoom(-0.3)}
+        >
+          −
+        </button>
+        <button
+          aria-label="Show central London"
+          onClick={() => {
+            setView({ x: 0, y: 0, zoom: 1 });
+            setDirty(false);
+            onSearch?.(spots.map((p) => p.id));
+          }}
+        >
+          ⌖
+        </button>
+      </div>
     </div>
-    {spots.map(spot => <button key={spot.id} className={`map-pin ${selected === spot.id ? 'active' : ''}`}
-      style={{ left: `${50+(spot.x-50)*view.zoom+1.48*view.x}%`, top: `${50+(spot.y-50)*view.zoom+1.48*view.y}%` }} aria-label={spot.label} aria-pressed={selected === spot.id}
-      onClick={() => onSelect(spot.id)}>{spot.text}</button>)}
-    {onSearch && dirty && <button className="map-search-area" onClick={() => {
-      const ids = spots.filter(p => Math.abs((p.x-50)*view.zoom+1.48*view.x)<48 && Math.abs((p.y-50)*view.zoom+1.48*view.y)<48).map(p => p.id);
-      onSearch(ids); setDirty(false);
-    }}>Search this area</button>}
-    <div className="demo-map-controls">
-      <button aria-label="Zoom in" disabled={view.zoom >= 2.4} onClick={() => zoom(0.3)}>+</button>
-      <button aria-label="Zoom out" disabled={view.zoom <= 1} onClick={() => zoom(-0.3)}>−</button>
-      <button aria-label="Show central London" onClick={() => { setView({x:0,y:0,zoom:1}); setDirty(false); onSearch?.(spots.map(p=>p.id)); }}>⌖</button>
-    </div>
-  </div>;
+  );
 }
 
-function VenueMap({ value, onConfirm }: { value: string; onConfirm: (venue: typeof createVenues[number]) => void }) {
+function VenueMap({
+  value,
+  onConfirm,
+}: {
+  value: string;
+  onConfirm: (venue: (typeof createVenues)[number]) => void;
+}) {
   const keyboard = useKeyboard();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [candidate, setCandidate] = useState(value);
-  const visible = createVenues.filter(v => `${v.name} ${v.area} ${v.cuisine}`.toLowerCase().includes(search.toLowerCase()));
-  const venue = visible.find(v => v.name === candidate);
-  const coords = [{x:48,y:42},{x:76,y:38},{x:30,y:70}];
-  return <section className="venue-map-picker" aria-label="Choose a restaurant">
-    <label className="field-label">Search restaurants or areas
-      <KeyboardInput aria-label="Search restaurants or areas" value={search} placeholder="Soho, Spanish, restaurant name…" onChange={e => setSearch(e.target.value)} />
-    </label>
-    <DemoMap label="Restaurant map" selected={candidate} spots={visible.map(v => ({id:v.name,label:`Show ${v.name}`,text:String(createVenues.indexOf(v)+1),...coords[createVenues.indexOf(v)]}))}
-      onSelect={name => { keyboard.hide(); setCandidate(name); }} />
-    <div className="venue-map-results">
-      {!visible.length && <p>No restaurants match. Try another name or area.</p>}
-      {search && visible.map(v => <button key={v.name} aria-pressed={candidate===v.name} onClick={() => {keyboard.hide();setCandidate(v.name);}}>
-        <strong>{v.name}</strong><span>{v.area} · {v.cuisine}</span>
-      </button>)}
-    </div>
-    {venue && <div className="venue-map-card"><strong>{venue.name}</strong><p>{venue.area} · {venue.cuisine}</p><p>{venue.note}</p><p>£{venue.min}–{venue.max} per person</p>
-      <button className="primary" onClick={() => { keyboard.hide(); onConfirm(venue); }}>Use this restaurant</button>
-    </div>}
-    <p className="venue-selection-status" role="status">Selected: {value}. Choosing a place does not reserve a table.</p>
-  </section>;
+  const visible = createVenues.filter((v) =>
+    `${v.name} ${v.area} ${v.cuisine}`
+      .toLowerCase()
+      .includes(search.toLowerCase()),
+  );
+  const venue = visible.find((v) => v.name === candidate);
+  const coords = [
+    { x: 48, y: 42 },
+    { x: 76, y: 38 },
+    { x: 30, y: 70 },
+  ];
+  return (
+    <section className="venue-map-picker" aria-label="Choose a restaurant">
+      <label className="field-label">
+        Search restaurants or areas
+        <KeyboardInput
+          aria-label="Search restaurants or areas"
+          value={search}
+          placeholder="Soho, Spanish, restaurant name…"
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </label>
+      <DemoMap
+        label="Restaurant map"
+        selected={candidate}
+        spots={visible.map((v) => ({
+          id: v.name,
+          label: `Show ${v.name}`,
+          text: String(createVenues.indexOf(v) + 1),
+          ...coords[createVenues.indexOf(v)],
+        }))}
+        onSelect={(name) => {
+          keyboard.hide();
+          setCandidate(name);
+        }}
+      />
+      <div className="venue-map-results">
+        {!visible.length && (
+          <p>No restaurants match. Try another name or area.</p>
+        )}
+        {search &&
+          visible.map((v) => (
+            <button
+              key={v.name}
+              aria-pressed={candidate === v.name}
+              onClick={() => {
+                keyboard.hide();
+                setCandidate(v.name);
+              }}
+            >
+              <strong>{v.name}</strong>
+              <span>
+                {v.area} · {v.cuisine}
+              </span>
+            </button>
+          ))}
+      </div>
+      {venue && (
+        <div className="venue-map-card">
+          <strong>{venue.name}</strong>
+          <p>
+            {venue.area} · {venue.cuisine}
+          </p>
+          <p>{venue.note}</p>
+          <p>
+            £{venue.min}–{venue.max} per person
+          </p>
+          <button
+            className="primary"
+            onClick={() => {
+              keyboard.hide();
+              onConfirm(venue);
+            }}
+          >
+            Use this restaurant
+          </button>
+        </div>
+      )}
+      <p className="venue-selection-status" role="status">
+        {value ? `Selected: ${value}.` : "Choose a restaurant to preview it."}{" "}
+        Choosing a place does not reserve a table.
+      </p>
+    </section>
+  );
 }
 
 function MealHelper({
@@ -1061,9 +1366,11 @@ function MealHelper({
   visible,
   onAction,
   onMeal,
+  voiceEnabled = true,
 }: {
   meals: Meal[];
   current?: Meal;
+  voiceEnabled?: boolean;
   filters: DiscoveryFilters;
   page: string;
   visible: boolean;
@@ -1788,41 +2095,43 @@ function MealHelper({
                     placeholder="Friday in Soho, under £35…"
                     autoComplete="off"
                   />
-                  <button
-                    type="button"
-                    className={`helper-mic ${listening ? "is-listening" : ""}`}
-                    aria-label={
-                      listening ? "Stop voice input" : "Use voice input"
-                    }
-                    onClick={() => {
-                      keyboard.hide();
-                      if (listening) stopVoice();
-                      else if (!speechConstructor())
-                        setNotice(
-                          "Voice input isn’t available in this browser. You can still type your request.",
-                        );
-                      else setVoiceConsent(true);
-                    }}
-                  >
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <rect
-                        x="9"
-                        y="2"
-                        width="6"
-                        height="12"
-                        rx="3"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.7"
-                      />
-                      <path
-                        d="M6 10v2a6 6 0 0 0 12 0v-2M12 18v4m-4 0h8"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.7"
-                      />
-                    </svg>
-                  </button>
+                  {voiceEnabled && (
+                    <button
+                      type="button"
+                      className={`helper-mic ${listening ? "is-listening" : ""}`}
+                      aria-label={
+                        listening ? "Stop voice input" : "Use voice input"
+                      }
+                      onClick={() => {
+                        keyboard.hide();
+                        if (listening) stopVoice();
+                        else if (!speechConstructor())
+                          setNotice(
+                            "Voice input isn’t available in this browser. You can still type your request.",
+                          );
+                        else setVoiceConsent(true);
+                      }}
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <rect
+                          x="9"
+                          y="2"
+                          width="6"
+                          height="12"
+                          rx="3"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.7"
+                        />
+                        <path
+                          d="M6 10v2a6 6 0 0 0 12 0v-2M12 18v4m-4 0h8"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.7"
+                        />
+                      </svg>
+                    </button>
+                  )}
                   <button
                     type="submit"
                     className="helper-send"
@@ -1847,7 +2156,7 @@ function MealHelper({
   );
 }
 
-export default function Prototype() {
+function FuturePrototype() {
   const [entrance, setEntrance] = useState<"splash" | "account" | "">("splash");
   const [signedIn, setSignedIn] = useState(false);
   const [afterAuth, setAfterAuth] = useState<Page>("discover");
@@ -1935,21 +2244,50 @@ export default function Prototype() {
     date: "2026-10-15",
     memberId: "maya",
   });
-  const [attendanceReports, setAttendanceReports] = useState<AttendanceReport[]>([]);
+  const [attendanceReports, setAttendanceReports] = useState<
+    AttendanceReport[]
+  >([]);
   const [mealExperiences, setMealExperiences] = useState<MealExperience[]>([]);
   const [experienceScore, setExperienceScore] = useState("");
   const [experienceAgain, setExperienceAgain] = useState("");
   const [reasonChoices, setReasonChoices] = useState<ExperienceReason[]>([]);
   const [experienceError, setExperienceError] = useState("");
   const targetMeal = meals.find((m) => m.id === feedbackTarget.mealId);
-  const postMealContext: MealContext = feedbackTarget.mealId.startsWith("past-supper")
-    ? { id: feedbackTarget.mealId, ended: true, cancelled: false, hostId: feedbackTarget.mealId === "past-supper-host" ? "alex" : "maya", participantIds: ["maya", "emma", "alex"] }
-    : { id: feedbackTarget.mealId, ended: !!completed[feedbackTarget.mealId], cancelled: bookings[feedbackTarget.mealId] === "CANCELLED", hostId: targetMeal?.host || "", participantIds: targetMeal ? [...new Set([targetMeal.host, ...targetMeal.members])] : [] };
-  const myAttendance = attendanceResult(attendanceReports, feedbackTarget.mealId, "alex");
-  const savedExperience = mealExperiences.find((r) => r.mealId === feedbackTarget.mealId && r.userId === "alex");
+  const postMealContext: MealContext = feedbackTarget.mealId.startsWith(
+    "past-supper",
+  )
+    ? {
+        id: feedbackTarget.mealId,
+        ended: true,
+        cancelled: false,
+        hostId: feedbackTarget.mealId === "past-supper-host" ? "alex" : "maya",
+        participantIds: ["maya", "emma", "alex"],
+      }
+    : {
+        id: feedbackTarget.mealId,
+        ended: !!completed[feedbackTarget.mealId],
+        cancelled: bookings[feedbackTarget.mealId] === "CANCELLED",
+        hostId: targetMeal?.host || "",
+        participantIds: targetMeal
+          ? [...new Set([targetMeal.host, ...targetMeal.members])]
+          : [],
+      };
+  const myAttendance = attendanceResult(
+    attendanceReports,
+    feedbackTarget.mealId,
+    "alex",
+  );
+  const savedExperience = mealExperiences.find(
+    (r) => r.mealId === feedbackTarget.mealId && r.userId === "alex",
+  );
   useEffect(() => {
-    const row = mealExperiences.find((r) => r.mealId === feedbackTarget.mealId && r.userId === "alex");
-    setExperienceScore(row ? String(row.score) : ""); setExperienceAgain(row ? String(row.again) : ""); setReasonChoices(row?.reasons || []); setExperienceError("");
+    const row = mealExperiences.find(
+      (r) => r.mealId === feedbackTarget.mealId && r.userId === "alex",
+    );
+    setExperienceScore(row ? String(row.score) : "");
+    setExperienceAgain(row ? String(row.again) : "");
+    setReasonChoices(row?.reasons || []);
+    setExperienceError("");
   }, [feedbackTarget.mealId, mealExperiences]);
   const directKey = `direct-${feedbackTarget.memberId}`;
   const [blockedMembers, setBlockedMembers] = useState<Record<string, boolean>>(
@@ -2400,10 +2738,29 @@ export default function Prototype() {
           {mode === "map" ? (
             <>
               <div className="map-canvas">
-                <DemoMap label="Explore meals map" selected={areaGroup?.area || ''}
-                  spots={groups.map(group => ({id:group.area,label:group.area + ': ' + group.meals.length + (group.meals.length === 1 ? ' meal' : ' meals'),text:String(group.meals.length),x:group.x,y:group.y}))}
-                  onSelect={area => { setMapAreas(null); selectArea(area); }}
-                  onSearch={areas => { setMapAreas(areas); if(areas.length) selectArea(areas[0]); }} />
+                <DemoMap
+                  label="Explore meals map"
+                  selected={areaGroup?.area || ""}
+                  spots={groups.map((group) => ({
+                    id: group.area,
+                    label:
+                      group.area +
+                      ": " +
+                      group.meals.length +
+                      (group.meals.length === 1 ? " meal" : " meals"),
+                    text: String(group.meals.length),
+                    x: group.x,
+                    y: group.y,
+                  }))}
+                  onSelect={(area) => {
+                    setMapAreas(null);
+                    selectArea(area);
+                  }}
+                  onSearch={(areas) => {
+                    setMapAreas(areas);
+                    if (areas.length) selectArea(areas[0]);
+                  }}
+                />
                 <span className="map-key">Numbers = meals in each area</span>
                 <ReviewOnly>
                   <span className="map-note">
@@ -2412,55 +2769,62 @@ export default function Prototype() {
                 </ReviewOnly>
               </div>
               <section className="map-preview" aria-label="Selected area meals">
-                {mapAreas?.length === 0 ? <div className="map-empty"><strong>No meals in this area</strong><p>Move the map or return to central London.</p></div> : featured && (
-                  <>
-                    <button
-                      className="area-results-trigger"
-                      aria-label={`View all ${areaMeals.length} ${areaMeals.length === 1 ? "meal" : "meals"} in ${areaGroup.area}`}
-                      onClick={() => {
-                        keyboard.hide();
-                        setSheet("area");
-                      }}
-                    >
-                      <span className="sheet-grip" />
-                      <span>
-                        <strong>
-                          {areaMeals.length}{" "}
-                          {areaMeals.length === 1 ? "meal" : "meals"} in{" "}
-                          {areaGroup.area}
-                        </strong>
+                {mapAreas?.length === 0 ? (
+                  <div className="map-empty">
+                    <strong>No meals in this area</strong>
+                    <p>Move the map or return to central London.</p>
+                  </div>
+                ) : (
+                  featured && (
+                    <>
+                      <button
+                        className="area-results-trigger"
+                        aria-label={`View all ${areaMeals.length} ${areaMeals.length === 1 ? "meal" : "meals"} in ${areaGroup.area}`}
+                        onClick={() => {
+                          keyboard.hide();
+                          setSheet("area");
+                        }}
+                      >
+                        <span className="sheet-grip" />
                         <span>
-                          View all <ChevronUpIcon />
+                          <strong>
+                            {areaMeals.length}{" "}
+                            {areaMeals.length === 1 ? "meal" : "meals"} in{" "}
+                            {areaGroup.area}
+                          </strong>
+                          <span>
+                            View all <ChevronUpIcon />
+                          </span>
                         </span>
-                      </span>
-                    </button>
-                    {mealCard(featured)}
-                    <div className="event-pager">
-                      <span>
-                        Meal {featuredIndex + 1} of {areaMeals.length}
-                      </span>
-                      <div>
-                        <button
-                          aria-label="Previous meal in this area"
-                          disabled={featuredIndex <= 0}
-                          onClick={() =>
-                            setSelected(areaMeals[featuredIndex - 1].id)
-                          }
-                        >
-                          <ChevronLeftIcon />
-                        </button>
-                        <button
-                          aria-label="Next meal in this area"
-                          disabled={featuredIndex >= areaMeals.length - 1}
-                          onClick={() =>
-                            setSelected(areaMeals[featuredIndex + 1].id)
-                          }
-                        >
-                          <ChevronRightIcon />
-                        </button>
+                      </button>
+                      {mealCard(featured)}
+                      <div className="event-pager">
+                        <span>
+                          Meal {featuredIndex + 1} of {areaMeals.length}
+                        </span>
+                        <div>
+                          <button
+                            aria-label="Previous meal in this area"
+                            disabled={featuredIndex <= 0}
+                            onClick={() =>
+                              setSelected(areaMeals[featuredIndex - 1].id)
+                            }
+                          >
+                            <ChevronLeftIcon />
+                          </button>
+                          <button
+                            aria-label="Next meal in this area"
+                            disabled={featuredIndex >= areaMeals.length - 1}
+                            onClick={() =>
+                              setSelected(areaMeals[featuredIndex + 1].id)
+                            }
+                          >
+                            <ChevronRightIcon />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  </>
+                    </>
+                  )
                 )}
                 {!featured && (
                   <div className="empty">
@@ -2526,7 +2890,8 @@ export default function Prototype() {
               <div>
                 <PersonIcon />
                 <strong>
-                  {current.confirmed} of {current.capacity} confirmed · Minimum {current.capacity === 2 ? 2 : 3} including the host
+                  {current.confirmed} of {current.capacity} confirmed · Minimum{" "}
+                  {current.capacity === 2 ? 2 : 3} including the host
                 </strong>
                 <span>Including the host</span>
               </div>
@@ -3337,7 +3702,12 @@ export default function Prototype() {
           </p>
           {createStep === 0 && (
             <>
-              <VenueMap value={draft.venue} onConfirm={v => updateSchedule({venue:v.name,min:v.min,max:v.max})} />
+              <VenueMap
+                value={draft.venue}
+                onConfirm={(v) =>
+                  updateSchedule({ venue: v.name, min: v.min, max: v.max })
+                }
+              />
               <ChoiceGroup
                 label="People, including you"
                 value={String(draft.capacity)}
@@ -3346,7 +3716,8 @@ export default function Prototype() {
               />
               <p className="muted">
                 {draft.capacity - 1} guest{draft.capacity === 2 ? "" : "s"} +
-                you · Minimum {draft.capacity === 2 ? 2 : 3} confirmed people to go ahead, including you. Friendship-first at every table size.
+                you · Minimum {draft.capacity === 2 ? 2 : 3} confirmed people to
+                go ahead, including you. Friendship-first at every table size.
               </p>
               <div className="create-calendar">
                 <DateChoices
@@ -3770,8 +4141,26 @@ export default function Prototype() {
               </div>
               <div className="list-meal">
                 <span className="eyebrow">WED 14 OCT · HOSTED</span>
-                <h2>A table I hosted</h2><p>Soho · You hosted Maya and Emma.</p>
-                <Primary secondary onClick={() => { setFeedbackTarget({mealId:"past-supper-host", title:"A table I hosted", date:"2026-10-14", memberId:"maya"}); setReview(""); setReviewed(false); setWants(false); setMutual(false); go("review"); }}>Record guest attendance</Primary>
+                <h2>A table I hosted</h2>
+                <p>Soho · You hosted Maya and Emma.</p>
+                <Primary
+                  secondary
+                  onClick={() => {
+                    setFeedbackTarget({
+                      mealId: "past-supper-host",
+                      title: "A table I hosted",
+                      date: "2026-10-14",
+                      memberId: "maya",
+                    });
+                    setReview("");
+                    setReviewed(false);
+                    setWants(false);
+                    setMutual(false);
+                    go("review");
+                  }}
+                >
+                  Record guest attendance
+                </Primary>
               </div>
               <ReviewOnly>
                 <p className="muted">
@@ -4329,31 +4718,218 @@ export default function Prototype() {
               </p>
             </div>
           </div>
-          <section className="post-meal-panel" aria-label="Meal attendance and experience">
+          <section
+            className="post-meal-panel"
+            aria-label="Meal attendance and experience"
+          >
             <h2>Record attendance</h2>
-            <p className="muted">A confirmed seat is a place on the guest list. Tell us what happened after the meal. No location tracking is used.</p>
+            <p className="muted">
+              A confirmed seat is a place on the guest list. Tell us what
+              happened after the meal. No location tracking is used.
+            </p>
             <div className="post-meal-actions">
-              {(["present", "absent"] as const).map((value) => <button type="button" className={myAttendance === value ? "selected" : ""} aria-pressed={myAttendance === value} key={value} onClick={() => {
-                try { setAttendanceReports((rows) => reportAttendance(rows, postMealContext, "alex", "alex", value, new Date().toISOString())); setExperienceError(""); notify("Attendance recorded."); } catch (e) { setExperienceError((e as Error).message); }
-              }}>{value === "present" ? "I attended" : "I did not attend"}</button>)}
+              {(["present", "absent"] as const).map((value) => (
+                <button
+                  type="button"
+                  className={myAttendance === value ? "selected" : ""}
+                  aria-pressed={myAttendance === value}
+                  key={value}
+                  onClick={() => {
+                    try {
+                      setAttendanceReports((rows) =>
+                        reportAttendance(
+                          rows,
+                          postMealContext,
+                          "alex",
+                          "alex",
+                          value,
+                          new Date().toISOString(),
+                        ),
+                      );
+                      setExperienceError("");
+                      notify("Attendance recorded.");
+                    } catch (e) {
+                      setExperienceError((e as Error).message);
+                    }
+                  }}
+                >
+                  {value === "present" ? "I attended" : "I did not attend"}
+                </button>
+              ))}
             </div>
-            {myAttendance === "conflict" && <p role="status">Your report differs from the host’s. We keep both reports for review; this is not counted as a no-show.</p>}
-            {postMealContext.hostId === "alex" && <div className="attendance-roster"><h3>Guest attendance</h3>{postMealContext.participantIds.filter((id) => id !== "alex").map((id) => <div key={id}><span>{members[id]?.name || id} · {attendanceResult(attendanceReports, postMealContext.id, id)}</span>{(["present", "absent"] as const).map((value) => <button key={value} onClick={() => {
-              try { setAttendanceReports((rows) => reportAttendance(rows, postMealContext, "alex", id, value, new Date().toISOString())); notify("Guest attendance recorded."); } catch (e) { setExperienceError((e as Error).message); }
-            }}>{value === "present" ? "Attended" : "Did not attend"}</button>)}</div>)}</div>}
-            {myAttendance === "present" && <>
-              <h2>Your meal experience</h2>
-              <p className="muted">Private feedback about the whole meal, separate from public references and reconnect choices. You can skip this section.</p>
-              <fieldset className="experience-field"><legend>Overall experience · 1 = poor, 5 = excellent</legend><div className="post-meal-actions" role="group" aria-label="Overall meal experience">{[1,2,3,4,5].map((value) => <button type="button" key={value} aria-label={`Rate ${value} out of 5`} aria-pressed={experienceScore === String(value)} onClick={() => setExperienceScore(String(value))}>{value}</button>)}</div></fieldset>
-              <fieldset className="experience-field"><legend>What shaped your score? · optional, choose any</legend><div className="experience-reasons">{experienceReasons.map((code) => <label key={code}><input type="checkbox" checked={reasonChoices.includes(code)} onChange={() => setReasonChoices((previous) => previous.includes(code) ? previous.filter((v) => v !== code) : [...previous, code])}/>{{company:"People at the table", conversation:"Conversation", coordination:"Organisation & timing", expectations:"Match with expectations", venue:"Restaurant & food", cost:"Cost", other:"Other"}[code]}</label>)}</div></fieldset>
-              <fieldset className="experience-field"><legend>Would you join another Fancy meal?</legend><div className="post-meal-actions">{[["true","Yes"],["false","No"]].map(([value, name]) => <button type="button" key={value} aria-pressed={experienceAgain === value} onClick={() => setExperienceAgain(value)}>{name}</button>)}</div></fieldset>
-              <Primary secondary onClick={() => {
-                if (!experienceScore || !experienceAgain) { setExperienceError("Choose a score and whether you would join another Fancy meal."); return; }
-                try { setMealExperiences((rows) => saveExperience(rows, attendanceReports, postMealContext, "alex", Number(experienceScore), experienceAgain === "true", reasonChoices, new Date().toISOString())); setExperienceError(""); notify("Private meal experience saved."); } catch (e) { setExperienceError((e as Error).message); }
-              }}>{savedExperience ? "Update meal experience" : "Save meal experience"}</Primary>
-              {savedExperience && <p role="status">Meal experience saved · {savedExperience.score} / 5 · {savedExperience.reasons.length} reason(s)</p>}
-            </>}
-            {experienceError && <p className="form-error" role="alert">{experienceError}</p>}
+            {myAttendance === "conflict" && (
+              <p role="status">
+                Your report differs from the host’s. We keep both reports for
+                review; this is not counted as a no-show.
+              </p>
+            )}
+            {postMealContext.hostId === "alex" && (
+              <div className="attendance-roster">
+                <h3>Guest attendance</h3>
+                {postMealContext.participantIds
+                  .filter((id) => id !== "alex")
+                  .map((id) => (
+                    <div key={id}>
+                      <span>
+                        {members[id]?.name || id} ·{" "}
+                        {attendanceResult(
+                          attendanceReports,
+                          postMealContext.id,
+                          id,
+                        )}
+                      </span>
+                      {(["present", "absent"] as const).map((value) => (
+                        <button
+                          key={value}
+                          onClick={() => {
+                            try {
+                              setAttendanceReports((rows) =>
+                                reportAttendance(
+                                  rows,
+                                  postMealContext,
+                                  "alex",
+                                  id,
+                                  value,
+                                  new Date().toISOString(),
+                                ),
+                              );
+                              notify("Guest attendance recorded.");
+                            } catch (e) {
+                              setExperienceError((e as Error).message);
+                            }
+                          }}
+                        >
+                          {value === "present" ? "Attended" : "Did not attend"}
+                        </button>
+                      ))}
+                    </div>
+                  ))}
+              </div>
+            )}
+            {myAttendance === "present" && (
+              <>
+                <h2>Your meal experience</h2>
+                <p className="muted">
+                  Private feedback about the whole meal, separate from public
+                  references and reconnect choices. You can skip this section.
+                </p>
+                <fieldset className="experience-field">
+                  <legend>Overall experience · 1 = poor, 5 = excellent</legend>
+                  <div
+                    className="post-meal-actions"
+                    role="group"
+                    aria-label="Overall meal experience"
+                  >
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <button
+                        type="button"
+                        key={value}
+                        aria-label={`Rate ${value} out of 5`}
+                        aria-pressed={experienceScore === String(value)}
+                        onClick={() => setExperienceScore(String(value))}
+                      >
+                        {value}
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+                <fieldset className="experience-field">
+                  <legend>
+                    What shaped your score? · optional, choose any
+                  </legend>
+                  <div className="experience-reasons">
+                    {experienceReasons.map((code) => (
+                      <label key={code}>
+                        <input
+                          type="checkbox"
+                          checked={reasonChoices.includes(code)}
+                          onChange={() =>
+                            setReasonChoices((previous) =>
+                              previous.includes(code)
+                                ? previous.filter((v) => v !== code)
+                                : [...previous, code],
+                            )
+                          }
+                        />
+                        {
+                          {
+                            company: "People at the table",
+                            conversation: "Conversation",
+                            coordination: "Organisation & timing",
+                            expectations: "Match with expectations",
+                            venue: "Restaurant & food",
+                            cost: "Cost",
+                            other: "Other",
+                          }[code]
+                        }
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
+                <fieldset className="experience-field">
+                  <legend>Would you join another Fancy meal?</legend>
+                  <div className="post-meal-actions">
+                    {[
+                      ["true", "Yes"],
+                      ["false", "No"],
+                    ].map(([value, name]) => (
+                      <button
+                        type="button"
+                        key={value}
+                        aria-pressed={experienceAgain === value}
+                        onClick={() => setExperienceAgain(value)}
+                      >
+                        {name}
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+                <Primary
+                  secondary
+                  onClick={() => {
+                    if (!experienceScore || !experienceAgain) {
+                      setExperienceError(
+                        "Choose a score and whether you would join another Fancy meal.",
+                      );
+                      return;
+                    }
+                    try {
+                      setMealExperiences((rows) =>
+                        saveExperience(
+                          rows,
+                          attendanceReports,
+                          postMealContext,
+                          "alex",
+                          Number(experienceScore),
+                          experienceAgain === "true",
+                          reasonChoices,
+                          new Date().toISOString(),
+                        ),
+                      );
+                      setExperienceError("");
+                      notify("Private meal experience saved.");
+                    } catch (e) {
+                      setExperienceError((e as Error).message);
+                    }
+                  }}
+                >
+                  {savedExperience
+                    ? "Update meal experience"
+                    : "Save meal experience"}
+                </Primary>
+                {savedExperience && (
+                  <p role="status">
+                    Meal experience saved · {savedExperience.score} / 5 ·{" "}
+                    {savedExperience.reasons.length} reason(s)
+                  </p>
+                )}
+              </>
+            )}
+            {experienceError && (
+              <p className="form-error" role="alert">
+                {experienceError}
+              </p>
+            )}
           </section>
           {!reviewed ? (
             <>
@@ -4384,7 +4960,8 @@ export default function Prototype() {
                 <HeartIcon />
               </label>
               <p className="muted">
-                {myAttendance !== "present" && "Record your attendance before leaving a reference. "}
+                {myAttendance !== "present" &&
+                  "Record your attendance before leaving a reference. "}
                 References appear after both people submit, or after 7 days.
                 Private feedback is separate.
               </p>
@@ -5357,5 +5934,2234 @@ export default function Prototype() {
         </BottomSheet>
       </div>
     </SelfProfileContext.Provider>
+  );
+}
+
+/** R1 uses the same phone runtime, brand entrance, map, fields and helper as the future exploration. */
+function PilotPrototype() {
+  const keyboard = useKeyboard();
+  const { screenRef } = useScreenPortal();
+  useEffect(() => {
+    const screen = screenRef.current;
+    if (!screen) return;
+    const anchor = () => {
+      if (screen.scrollTop || screen.scrollLeft)
+        screen.scrollTo({ top: 0, left: 0 });
+    };
+    anchor();
+    screen.addEventListener("scroll", anchor);
+    return () => screen.removeEventListener("scroll", anchor);
+  }, [screenRef]);
+  const [state, setState] = useState(pilotSeed);
+  const [actor, setActor] = useState("alex");
+  const [signed, setSigned] = useState(false);
+  const [entrance, setEntrance] = useState<"splash" | "account" | "">("splash");
+  const [page, setPage] = useState("discover");
+  const [selected, setSelected] = useState("supper");
+  const [target, setTarget] = useState("maya");
+  const [issue, setIssue] = useState("");
+  const [notice, setNotice] = useState("");
+  const [text, setText] = useState("");
+  const [sheet, setSheet] = useState("");
+  const [step, setStep] = useState(0);
+  const [map, setMap] = useState(true);
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState({
+    date: "",
+    size: "",
+    budget: "",
+    language: "",
+  });
+  const [pending, setPending] = useState(filter);
+  const [areaIds, setAreaIds] = useState<string[] | null>(null);
+  const [settingsByUser, setSettingsByUser] = useState<
+    Record<string, { consent: boolean; updates: boolean }>
+  >({});
+  const consent = settingsByUser[actor]?.consent ?? false;
+  const updates = settingsByUser[actor]?.updates ?? true;
+  const setConsent = (value: boolean) =>
+    setSettingsByUser((all) => ({
+      ...all,
+      [actor]: { consent: value, updates },
+    }));
+  const setUpdates = (value: boolean) =>
+    setSettingsByUser((all) => ({
+      ...all,
+      [actor]: { consent, updates: value },
+    }));
+  const [connection, setConnection] = useState("online");
+  const [draft, setDraft] = useState({
+    title: "",
+    description: "",
+    venue: "",
+    address: "",
+    area: "",
+    date: "2026-10-25",
+    time: "19:00",
+    capacity: "4",
+    budgetMin: "25",
+    budgetMax: "35",
+    language: "en",
+    instant: "",
+    replacementFor: "",
+  });
+  const [editName, setEditName] = useState("");
+  const [editBio, setEditBio] = useState("");
+  const [feedbackReasons, setFeedbackReasons] = useState<string[]>([]);
+  const [score, setScore] = useState("");
+  const [again, setAgain] = useState("");
+  const [reason, setReason] = useState("");
+  const [clock, setClock] = useState(state.now.slice(0, 16));
+  const [deletion, setDeletion] = useState("");
+  const [reauth, setReauth] = useState(false);
+  const self = state.users.find((u) => u.id === actor)!;
+  const meal = state.meals.find((m) => m.id === selected) || state.meals[0];
+  useEffect(() => {
+    if (page === "review") {
+      const saved = state.feedback.find(
+        (f) => f.mealId === selected && f.userId === actor,
+      );
+      setScore(saved ? String(saved.score) : "");
+      setAgain(saved ? (saved.again ? "yes" : "no") : "");
+      setFeedbackReasons(saved?.reasons || []);
+    }
+  }, [page, selected, actor]);
+  const app = [...state.applications]
+    .reverse()
+    .find((a) => a.mealId === selected && a.userId === actor);
+  const count = confirmedIds(state, selected).length;
+  const access = groupAccess(state, selected, actor);
+  const host = meal.hostId === actor;
+  const local = (at: string) =>
+    new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Europe/London",
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZoneName: "short",
+    }).format(new Date(at));
+  const go = (next: string) => {
+    keyboard.hide();
+    setPage(next);
+    setIssue("");
+    setNotice("");
+    setText("");
+  };
+  const open = (id: string) => {
+    if (!state.meals.some((m) => m.id === id)) {
+      setIssue("This meal is unavailable. Choose another table.");
+      return;
+    }
+    setSelected(id);
+    go("detail");
+  };
+  const auth = (next: string) => {
+    if (signed) {
+      go(next);
+      return;
+    }
+    setPage(next);
+    keyboard.hide();
+    setEntrance("account");
+  };
+  const run = (command: Omit<Command, "key">, success?: string) => {
+    keyboard.hide();
+    setIssue("");
+    setNotice("");
+    if (!signed) {
+      setEntrance("account");
+      return false;
+    }
+    if (connection !== "online") {
+      setIssue(
+        connection === "offline"
+          ? "You’re offline. Your input is saved; reconnect and retry."
+          : "The service is unavailable. Your input is saved; retry shortly.",
+      );
+      return false;
+    }
+    const current = advanceLifecycle(state, state.now);
+    try {
+      const next = act(
+        current,
+        actor,
+        { ...command, key: crypto.randomUUID() } as Command,
+        current.now,
+        current.version,
+      );
+      setState(next);
+      if (success) setNotice(success);
+      return next;
+    } catch (error) {
+      setState(current);
+      setIssue(error instanceof Error ? error.message : "Please retry.");
+      return false;
+    }
+  };
+  const download = (data: unknown, name: string) => {
+    const url = URL.createObjectURL(
+      new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }),
+    );
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  const allMatches = state.meals.filter(
+    (m) =>
+      m.status === "OPEN" &&
+      Date.parse(m.startsAt) > Date.parse(state.now) &&
+      (!filter.date ||
+        new Intl.DateTimeFormat("en-CA", {
+          timeZone: "Europe/London",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }).format(new Date(m.startsAt)) === filter.date) &&
+      (!filter.size || m.capacity === Number(filter.size)) &&
+      (!filter.budget || m.budgetMax <= Number(filter.budget) * 100) &&
+      (!filter.language || m.languages.includes(filter.language)) &&
+      (!query ||
+        `${m.title} ${m.area} ${m.venue}`
+          .toLowerCase()
+          .includes(query.toLowerCase())),
+  );
+  const browse = allMatches.filter((m) => !areaIds || areaIds.includes(m.id));
+  const mapGroups = [...new Set(allMatches.map((m) => m.area))].flatMap(
+    (area) => {
+      const point = initialMeals.find((m) => m.area === area);
+      return point
+        ? [
+            {
+              id: area,
+              label: `${area}: ${allMatches.filter((m) => m.area === area).length} meals`,
+              text: String(allMatches.filter((m) => m.area === area).length),
+              x: point.x,
+              y: point.y,
+            },
+          ]
+        : [];
+    },
+  );
+  const field = (
+    label: string,
+    value: string,
+    onChange: (v: string) => void,
+    options: { type?: string; maxLength?: number; area?: boolean } = {},
+  ) => (
+    <Field label={label}>
+      {options.area ? (
+        <KeyboardTextarea
+          rows={3}
+          value={value}
+          maxLength={options.maxLength}
+          onChange={(e) => onChange(e.target.value)}
+          onBlur={() => keyboard.hide()}
+        />
+      ) : (
+        <KeyboardInput
+          type={options.type || "text"}
+          value={value}
+          maxLength={options.maxLength}
+          onChange={(e) => onChange(e.target.value)}
+          onBlur={() => keyboard.hide()}
+        />
+      )}
+    </Field>
+  );
+  const choose = (
+    label: string,
+    value: string,
+    onChange: (v: string) => void,
+    options: string[],
+  ) => (
+    <ChoiceGroup
+      label={label}
+      value={value}
+      onChange={onChange}
+      options={options.map((v) => [v, v || "Any"])}
+    />
+  );
+  const avatar = (id: string) => (
+    <button
+      className="r1-avatar"
+      key={id}
+      aria-label={`View ${state.users.find((u) => u.id === id)?.name || "member"}`}
+      onClick={(e) => {
+        e.stopPropagation();
+        setTarget(id);
+        auth("member");
+      }}
+    >
+      <img
+        alt=""
+        src={`/images/${["maya", "leo", "emma"].includes(id) ? id : "leo"}.png`}
+      />
+    </button>
+  );
+  const card = (m: PilotMeal) => (
+    <article key={m.id} className="r1-card">
+      <button
+        className="r1-card-open"
+        aria-label={`Open ${m.title}`}
+        onClick={() => open(m.id)}
+      />
+      <div className="r1-card-top">
+        <img
+          className="r1-food"
+          src="/images/restaurant.png"
+          onError={(e) => {
+            e.currentTarget.src = "/images/brand-table.png";
+          }}
+          alt="A table for sharing a meal"
+        />
+        <div>
+          <h3>{m.title}</h3>
+          <p>{m.venue}</p>
+          <small>{m.area} · London</small>
+        </div>
+      </div>
+      <p className="r1-meta">
+        {local(m.startsAt)}
+        <br />
+        {money(m.budgetMin / 100)}–{money(m.budgetMax / 100)} per person · Pay
+        at restaurant
+      </p>
+      <div className="r1-people">
+        {confirmedIds(state, m.id).map(avatar)}
+        <span>
+          {confirmedIds(state, m.id).length} of {m.capacity} confirmed
+        </span>
+      </div>
+    </article>
+  );
+  const authProfile = (profile?: WelcomeProfile) => {
+    if (profile) {
+      try {
+        setState((s) =>
+          act(
+            s,
+            "alex",
+            {
+              type: "profile",
+              key: crypto.randomUUID(),
+              name: profile.name,
+              bio: profile.bio,
+              languages: profile.language.includes("Mandarin")
+                ? ["en", "zh"]
+                : profile.language.includes("French")
+                  ? ["en", "fr"]
+                  : ["en"],
+              interests: [profile.interests],
+            },
+            s.now,
+          ),
+        );
+      } catch (e) {
+        setIssue(String(e));
+        return;
+      }
+    }
+    setSigned(true);
+    setEntrance("");
+  };
+  if (entrance)
+    return (
+      <BrandEntrance
+        start={entrance}
+        onBrowse={() => {
+          setEntrance("");
+          go("discover");
+        }}
+        onComplete={authProfile}
+      />
+    );
+  const member = projectMember(state, signed ? actor : null, target);
+  const editingWindow =
+    Date.parse(state.now) >= Date.parse(meal.scheduledEndAt) &&
+    Date.parse(state.now) < Date.parse(meal.scheduledEndAt) + 7 * DAY &&
+    eligibleAtMeal(state, meal.id, actor);
+  const result = attendanceStatus(state, selected, actor);
+  const groups = state.meals.filter(
+    (m) =>
+      m.hostId === actor ||
+      state.applications.some((a) => a.mealId === m.id && a.userId === actor),
+  );
+  const navItems = [
+    ["discover", "Discover", <MagnifyingGlassIcon />],
+    ["meals", "Meals", <PersonIcon />],
+    ["create", "Create meal", <PlusIcon />],
+    ["inbox", "Inbox", <ChatBubbleIcon />],
+    ["profile", "Profile", <PersonIcon />],
+  ] as const;
+  return (
+    <SelfProfileContext.Provider value={{ image: "leo", name: self.name }}>
+      <div
+        className="grab-app r1-app"
+        data-review={REVIEW_MODE}
+        data-scope="r1"
+      >
+        <header className="r1-header">
+          <button
+            aria-label="Back"
+            onClick={() =>
+              go(
+                ["chat", "host", "apply", "review", "member"].includes(page)
+                  ? "detail"
+                  : "discover",
+              )
+            }
+          >
+            <ArrowLeftIcon />
+          </button>
+          <strong>{BRAND.name}</strong>
+          <button aria-label="Settings" onClick={() => auth("settings")}>
+            <GearIcon />
+          </button>
+        </header>
+        <MobileScroll key={`${page}-${selected}`} className="r1-scroll">
+          <main className="body-pad r1-content">
+            {issue && (
+              <div className="form-error" role="alert">
+                {issue}
+              </div>
+            )}
+            {notice && (
+              <div className="r1-notice" role="status">
+                {notice}
+              </div>
+            )}
+            {page === "discover" && (
+              <>
+                <div className="eyebrow">LONDON · GOOD COMPANY AWAITS</div>
+                <h1>{BRAND.invitation}</h1>
+                <p className="muted">{BRAND.slogan}</p>
+                {field("Find a table or neighbourhood", query, setQuery)}
+                <div className="r1-toolbar">
+                  <button
+                    onClick={() => {
+                      setPending(filter);
+                      keyboard.hide();
+                      setSheet("date");
+                    }}
+                  >
+                    <CalendarIcon />
+                    {filter.date || "Any date"}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setPending(filter);
+                      keyboard.hide();
+                      setSheet("size");
+                    }}
+                  >
+                    Table size {filter.size}
+                  </button>
+                  <button
+                    aria-label="All filters"
+                    onClick={() => {
+                      setPending(filter);
+                      keyboard.hide();
+                      setSheet("filters");
+                    }}
+                  >
+                    <MixerHorizontalIcon />
+                  </button>
+                  <button
+                    aria-label={map ? "Show list" : "Show map"}
+                    onClick={() => setMap(!map)}
+                  >
+                    {map ? <ListBulletIcon /> : <GlobeIcon />}
+                  </button>
+                </div>
+                {map && (
+                  <DemoMap
+                    label="Meals in central London"
+                    selected={meal.area}
+                    spots={mapGroups}
+                    onSelect={(area) => {
+                      const matches = allMatches.filter((m) => m.area === area);
+                      setAreaIds(matches.map((m) => m.id));
+                      if (matches[0]) setSelected(matches[0].id);
+                    }}
+                    onSearch={(areas) =>
+                      setAreaIds(
+                        allMatches
+                          .filter((m) => areas.includes(m.area))
+                          .map((m) => m.id),
+                      )
+                    }
+                  />
+                )}
+                {map &&
+                  allMatches.some(
+                    (m) => !mapGroups.some((g) => g.id === m.area),
+                  ) && (
+                    <p className="muted">
+                      Some restaurants are outside this illustrated map. Find
+                      every matching table in the list below.
+                    </p>
+                  )}
+                {areaIds && (
+                  <button
+                    className="text-action"
+                    onClick={() => setAreaIds(null)}
+                  >
+                    Show all areas
+                  </button>
+                )}
+                <p className="muted">
+                  {browse.length} {browse.length === 1 ? "table" : "tables"} to
+                  explore
+                </p>
+                {browse.map(card)}
+                {!browse.length && (
+                  <div className="empty">
+                    <h3>No tables match just yet.</h3>
+                    <Primary
+                      secondary
+                      onClick={() => {
+                        setFilter({
+                          date: "",
+                          size: "",
+                          budget: "",
+                          language: "",
+                        });
+                        setQuery("");
+                        setAreaIds(null);
+                      }}
+                    >
+                      Clear filters
+                    </Primary>
+                    <Primary onClick={() => auth("create")}>
+                      Create a meal
+                    </Primary>
+                  </div>
+                )}
+              </>
+            )}
+            {page === "detail" && (
+              <>
+                <div className="eyebrow">
+                  {meal.area} · {meal.status.toLowerCase()}
+                </div>
+                <h1>{meal.title}</h1>
+                <p>{meal.description}</p>
+                {meal.lowCountUnresolvedAtStart && (
+                  <div className="r1-notice" role="status">
+                    The meal started without a recorded low-count decision. No
+                    host agreement is implied; the original minimum remains
+                    recorded.
+                  </div>
+                )}
+                <div className="r1-facts">
+                  <p>
+                    <CalendarIcon />
+                    {local(meal.startsAt)}
+                  </p>
+                  <p>
+                    <PersonIcon />
+                    {count} of {meal.capacity} confirmed · minimum{" "}
+                    {meal.minimum}
+                  </p>
+                  <p>
+                    {money(meal.budgetMin / 100)}–{money(meal.budgetMax / 100)}{" "}
+                    per person
+                  </p>
+                  <p>
+                    Each person pays for their own food and drinks at the
+                    restaurant.
+                  </p>
+                </div>
+                <h3>The restaurant</h3>
+                <p>
+                  {meal.venue}
+                  <br />
+                  <span className="muted">{meal.address}</span>
+                </p>
+                <a
+                  className="r1-link"
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meal.area + " London")}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <SewingPinIcon />
+                  Open neighbourhood in Google Maps
+                </a>
+                <p className="r1-notice">
+                  {meal.booking === "DECLARED"
+                    ? `The host has declared a reservation for ${meal.declaration?.count || count}.`
+                    : "The host is arranging the reservation externally."}
+                </p>
+                <h3>Meet your table</h3>
+                <div className="r1-people">
+                  {confirmedIds(state, selected).map(avatar)}
+                </div>
+                <p className="muted">
+                  {meal.languages.join(" · ").toUpperCase()} · Hosted by{" "}
+                  {state.users.find((u) => u.id === meal.hostId)?.name}
+                </p>
+                <p className="muted">
+                  Apply by {local(cutoffAt(meal, "apply"))}. Approval closes at{" "}
+                  {local(cutoffAt(meal, "approve"))}. Reservation checked at{" "}
+                  {local(cutoffAt(meal, "booking"))}.
+                </p>
+                {meal.status === "CANCELLED" && (
+                  <div role="status" className="r1-notice">
+                    This meal was cancelled. {meal.cancelReasons?.join(", ")}.
+                    No in-app payment was taken.
+                  </div>
+                )}
+                {host ? (
+                  <Primary onClick={() => auth("host")}>
+                    Manage your table
+                  </Primary>
+                ) : app?.state === "PENDING" ? (
+                  <>
+                    <div className="r1-notice">
+                      Application pending · the host will review your
+                      introduction. Group chat opens only when approved.
+                    </div>
+                    <Primary
+                      secondary
+                      onClick={() =>
+                        run(
+                          { type: "withdraw", applicationId: app.id },
+                          "Application withdrawn. You may apply again before the deadline.",
+                        )
+                      }
+                    >
+                      Withdraw application
+                    </Primary>
+                  </>
+                ) : app?.state === "CONFIRMED" &&
+                  meal.status !== "CANCELLED" ? (
+                  <>
+                    <div className="r1-notice">
+                      Your seat is confirmed. No second approval is needed for
+                      the group.
+                    </div>
+                    <Primary onClick={() => auth("chat")}>
+                      Open group chat
+                    </Primary>
+                    {meal.status === "OPEN" && (
+                      <button
+                        className="text-action"
+                        onClick={() => {
+                          keyboard.hide();
+                          setSheet("leave");
+                        }}
+                      >
+                        Leave this meal
+                      </button>
+                    )}
+                  </>
+                ) : meal.status === "OPEN" && app?.state !== "DECLINED" ? (
+                  <Primary
+                    disabled={
+                      count >= meal.capacity ||
+                      Date.parse(state.now) >=
+                        Date.parse(cutoffAt(meal, "apply"))
+                    }
+                    onClick={() => auth("apply")}
+                  >
+                    {count >= meal.capacity ? "Table full" : "Apply to join"}
+                  </Primary>
+                ) : (
+                  <p className="muted">
+                    {app?.state === "DECLINED"
+                      ? "Your application was declined. Explore another table."
+                      : "Applications are closed."}
+                  </p>
+                )}
+                {access === "read" && (
+                  <Primary secondary onClick={() => auth("chat")}>
+                    Read past group messages
+                  </Primary>
+                )}
+                {meal.status === "COMPLETED" &&
+                  eligibleAtMeal(state, meal.id, actor) && (
+                    <Primary onClick={() => auth("review")}>
+                      Your shared meal
+                    </Primary>
+                  )}
+              </>
+            )}
+            {page === "apply" && (
+              <>
+                <div className="eyebrow">A LITTLE HELLO</div>
+                <h1>Join {meal.title}</h1>
+                <p>
+                  The host reads your introduction and profile before confirming
+                  your seat.
+                </p>
+                {field("Your introduction · 20–300 characters", text, setText, {
+                  area: true,
+                  maxLength: 300,
+                })}
+                <p>
+                  Budget {money(meal.budgetMin / 100)}–
+                  {money(meal.budgetMax / 100)}. Pay for your own order at the
+                  restaurant.
+                </p>
+                <Primary
+                  onClick={() => {
+                    if (
+                      run({ type: "apply", mealId: selected, message: text })
+                    ) {
+                      go("detail");
+                      setNotice(
+                        "Application sent. Your group opens after host approval.",
+                      );
+                    }
+                  }}
+                >
+                  Send application
+                </Primary>
+              </>
+            )}
+            {page === "meals" && (
+              <>
+                <div className="eyebrow">YOUR TABLES</div>
+                <h1>Plans worth keeping.</h1>
+                {["Upcoming", "Past", "Cancelled"].map((section) => (
+                  <section key={section}>
+                    <h3>{section}</h3>
+                    {groups
+                      .filter((m) =>
+                        section === "Upcoming"
+                          ? m.status === "OPEN"
+                          : section === "Past"
+                            ? m.status === "COMPLETED"
+                            : m.status === "CANCELLED",
+                      )
+                      .map(card)}
+                  </section>
+                ))}
+                {!groups.length && <p>No meals yet. Find a table to start.</p>}
+              </>
+            )}
+            {page === "inbox" && (
+              <>
+                <div className="eyebrow">BEFORE AND AFTER THE TABLE</div>
+                <h1>A little hello.</h1>
+                <h3>Your conversations</h3>
+                {groups
+                  .filter(
+                    (m) =>
+                      groupAccess(state, m.id, actor) !== "none" ||
+                      state.applications.some(
+                        (a) =>
+                          a.mealId === m.id &&
+                          a.userId === actor &&
+                          a.state === "PENDING",
+                      ),
+                  )
+                  .map((m) => (
+                    <button
+                      className="r1-row"
+                      key={m.id}
+                      onClick={() => {
+                        setSelected(m.id);
+                        go(
+                          groupAccess(state, m.id, actor) === "none"
+                            ? "detail"
+                            : "chat",
+                        );
+                      }}
+                    >
+                      <ChatBubbleIcon />
+                      <span>
+                        <strong>{m.title}</strong>
+                        <small>
+                          {groupAccess(state, m.id, actor) === "none"
+                            ? "Application pending · view status"
+                            : groupAccess(state, m.id, actor) === "read"
+                              ? "Read-only history"
+                              : "Group chat open"}
+                        </small>
+                      </span>
+                      <ChevronRightIcon />
+                    </button>
+                  ))}
+                {state.users
+                  .filter(
+                    (u) =>
+                      u.id !== actor &&
+                      (canDirect(state, actor, u.id) ||
+                        state.messages.some(
+                          (m) =>
+                            (m.from === actor && m.toId === u.id) ||
+                            (m.from === u.id && m.toId === actor),
+                        )),
+                  )
+                  .map((u) => (
+                    <button
+                      className="r1-row"
+                      key={u.id}
+                      onClick={() => {
+                        setTarget(u.id);
+                        go("direct");
+                      }}
+                    >
+                      <span>
+                        {u.name}
+                        <small>
+                          {canDirect(state, actor, u.id)
+                            ? "Connected after a meal"
+                            : "Read-only conversation"}
+                        </small>
+                      </span>
+                    </button>
+                  ))}
+                <h3>Updates</h3>
+                {state.notifications
+                  .filter((n) => n.userId === actor)
+                  .reverse()
+                  .map((n) => (
+                    <button
+                      className="r1-row"
+                      key={n.id}
+                      onClick={() => {
+                        run({
+                          type: "read-notification",
+                          notificationId: n.id,
+                        });
+                        if (n.mealId) {
+                          setSelected(n.mealId);
+                          go("detail");
+                        }
+                      }}
+                    >
+                      <span>
+                        {n.text}
+                        <small>
+                          {local(n.at)}
+                          {n.read ? "" : " · New"}
+                        </small>
+                      </span>
+                    </button>
+                  ))}
+                {!groups.length && (
+                  <p>
+                    Your pending applications and confirmed groups will appear
+                    here.
+                  </p>
+                )}
+              </>
+            )}
+            {page === "chat" && (
+              <>
+                <h1>{meal.title}</h1>
+                <p className="muted">
+                  {access === "write"
+                    ? "Your confirmed table"
+                    : "Read-only history from your confirmed membership"}
+                </p>
+                {access === "none" ? (
+                  <div className="empty">
+                    Your place must be confirmed by the host before this group
+                    opens.
+                    <Primary onClick={() => go("detail")}>
+                      View application status
+                    </Primary>
+                  </div>
+                ) : (
+                  <>
+                    {readableMessages(state, selected, actor).map((m) => (
+                      <div
+                        className={`r1-message ${m.from === actor ? "own" : ""}`}
+                        key={m.id}
+                      >
+                        <strong>
+                          {state.users.find((u) => u.id === m.from)?.name}
+                        </strong>
+                        <p>{m.text}</p>
+                        <small>{local(m.at)}</small>
+                      </div>
+                    ))}
+                    {!readableMessages(state, selected, actor).length && (
+                      <div className="empty">Say hello to your table.</div>
+                    )}
+                    {access === "write" && (
+                      <>
+                        {field("Message your group", text, setText, {
+                          maxLength: 2000,
+                          area: true,
+                        })}
+                        <Primary
+                          onClick={() => {
+                            if (run({ type: "send", mealId: selected, text }))
+                              setText("");
+                          }}
+                        >
+                          Send message
+                        </Primary>
+                      </>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+            {page === "host" && (
+              <>
+                <div className="eyebrow">YOUR TABLE</div>
+                <h1>Bring people together.</h1>
+                {!host ? (
+                  <p>You don’t host this meal.</p>
+                ) : (
+                  <>
+                    <h3>{meal.title}</h3>
+                    <p>
+                      {count} confirmed · minimum {meal.minimum} ·{" "}
+                      {meal.status.toLowerCase()}
+                    </p>
+                    <p>
+                      Once a guest is confirmed, venue, time and cost
+                      arrangements are locked. Cancel and publish a new meal to
+                      change them.
+                    </p>
+                    {meal.lowCountDecision === "pending" && (
+                      <div className="r1-notice">
+                        <p>
+                          {Date.parse(state.now) < Date.parse(meal.startsAt)
+                            ? "The group is smaller than the original minimum. Choose whether to continue, then contact the restaurant."
+                            : "The original minimum and the unmade decision remain recorded."}
+                        </p>
+                        {Date.parse(state.now) < Date.parse(meal.startsAt) ? (
+                          <Primary
+                            onClick={() =>
+                              run(
+                                { type: "continue", mealId: selected },
+                                "You chose to continue with the smaller group.",
+                              )
+                            }
+                          >
+                            Continue with {count} people
+                          </Primary>
+                        ) : (
+                          <p>
+                            The meal started without a recorded decision. No
+                            host agreement is implied. This record is read-only.
+                          </p>
+                        )}
+                      </div>
+                    )}
+                    {!!meal.lowCountHistory?.length && (
+                      <section>
+                        <h3>Group-size decisions</h3>
+                        {meal.lowCountHistory.map((entry, index) => (
+                          <p className="muted" key={index}>
+                            {entry.kind} · {entry.count} people ·{" "}
+                            {local(entry.at)}
+                          </p>
+                        ))}
+                      </section>
+                    )}
+                    <h3>Applications</h3>
+                    {state.applications
+                      .filter(
+                        (a) => a.mealId === selected && a.state === "PENDING",
+                      )
+                      .map((a) => (
+                        <div className="r1-card" key={a.id}>
+                          <button
+                            className="text-action"
+                            onClick={() => {
+                              setTarget(a.userId);
+                              go("member");
+                            }}
+                          >
+                            View{" "}
+                            {state.users.find((u) => u.id === a.userId)?.name}’s
+                            profile
+                          </button>
+                          <p>{a.message}</p>
+                          <Primary
+                            onClick={() =>
+                              run(
+                                { type: "approve", applicationId: a.id },
+                                "Seat confirmed. The guest can enter the group immediately.",
+                              )
+                            }
+                          >
+                            Approve seat
+                          </Primary>
+                          <Primary
+                            secondary
+                            onClick={() =>
+                              run(
+                                { type: "decline", applicationId: a.id },
+                                "Application declined.",
+                              )
+                            }
+                          >
+                            Decline
+                          </Primary>
+                        </div>
+                      ))}
+                    {meal.status === "OPEN" &&
+                      Date.parse(state.now) < Date.parse(meal.startsAt) && (
+                        <>
+                          <h3>Restaurant reservation</h3>
+                          <p>
+                            Book outside Fancy for {count} confirmed people.
+                            Reconfirm here if the headcount changes before the
+                            deadline.
+                          </p>
+                          <Primary
+                            onClick={() => {
+                              keyboard.hide();
+                              setSheet("declare");
+                            }}
+                          >
+                            Declare reservation for {count}
+                          </Primary>
+                          {field(
+                            "Title",
+                            draft.title || meal.title,
+                            (v) => setDraft({ ...draft, title: v }),
+                            { maxLength: 80 },
+                          )}
+                          {field(
+                            "Description",
+                            draft.description || meal.description,
+                            (v) => setDraft({ ...draft, description: v }),
+                            { maxLength: 1000, area: true },
+                          )}
+                          <Primary
+                            secondary
+                            onClick={() =>
+                              run(
+                                {
+                                  type: "edit",
+                                  mealId: selected,
+                                  title: draft.title || meal.title,
+                                  description:
+                                    draft.description || meal.description,
+                                },
+                                "Description updated. Confirmed arrangements are unchanged.",
+                              )
+                            }
+                          >
+                            Save description
+                          </Primary>
+                          <button
+                            className="text-action"
+                            onClick={() => {
+                              keyboard.hide();
+                              setReason("host");
+                              setSheet("cancel");
+                            }}
+                          >
+                            Cancel entire meal
+                          </button>
+                        </>
+                      )}
+                    {meal.status === "CANCELLED" && (
+                      <Primary
+                        onClick={() => {
+                          setDraft({
+                            ...draft,
+                            title: meal.title,
+                            description: meal.description,
+                            venue: meal.venue,
+                            address: meal.address,
+                            area: meal.area,
+                            replacementFor: meal.id,
+                          });
+                          setStep(0);
+                          go("create");
+                        }}
+                      >
+                        Create replacement meal
+                      </Primary>
+                    )}
+                    <Primary secondary onClick={() => go("chat")}>
+                      Open group
+                    </Primary>
+                  </>
+                )}
+              </>
+            )}
+            {page === "create" && (
+              <>
+                <div className="eyebrow">CREATE A MEAL · {step + 1} OF 4</div>
+                <h1>
+                  {
+                    [
+                      "Choose your table.",
+                      "Make a little time.",
+                      "Set expectations.",
+                      "A seat for someone new.",
+                    ][step]
+                  }
+                </h1>
+                <div className="r1-progress">
+                  {[0, 1, 2, 3].map((i) => (
+                    <span key={i} className={i <= step ? "active" : ""} />
+                  ))}
+                </div>
+                {step === 0 && (
+                  <>
+                    <VenueMap
+                      value={draft.venue}
+                      onConfirm={(v) =>
+                        setDraft({
+                          ...draft,
+                          venue: v.name,
+                          area: v.area,
+                          address: `${v.area}, London`,
+                        })
+                      }
+                    />
+                    <p>Or add your restaurant directly.</p>
+                    {field(
+                      "Restaurant name",
+                      draft.venue,
+                      (v) => setDraft({ ...draft, venue: v }),
+                      { maxLength: 100 },
+                    )}
+                    {field(
+                      "Address",
+                      draft.address,
+                      (v) => setDraft({ ...draft, address: v }),
+                      { maxLength: 200 },
+                    )}
+                    {field(
+                      "Neighbourhood",
+                      draft.area,
+                      (v) => setDraft({ ...draft, area: v }),
+                      { maxLength: 80 },
+                    )}
+                  </>
+                )}
+                {step === 1 && (
+                  <>
+                    {field(
+                      "Date · London",
+                      draft.date,
+                      (v) => setDraft({ ...draft, date: v, instant: "" }),
+                      { type: "date" },
+                    )}
+                    {field(
+                      "Time · Europe/London",
+                      draft.time,
+                      (v) => setDraft({ ...draft, time: v, instant: "" }),
+                      { type: "time" },
+                    )}
+                    {londonInstants(draft.date, draft.time).length === 2 && (
+                      <ChoiceGroup
+                        label="This time occurs twice. Choose the UTC offset."
+                        value={draft.instant}
+                        onChange={(instant) => setDraft({ ...draft, instant })}
+                        options={londonInstants(draft.date, draft.time).map(
+                          (v, i) => [
+                            v,
+                            `${i === 0 ? "First · BST" : "Second · GMT"} (${v.slice(11, 16)} UTC)`,
+                          ],
+                        )}
+                      />
+                    )}
+                    <p className="muted">
+                      Meals last about 2 hours. Publish at least 60 minutes
+                      before the start.
+                    </p>
+                    {choose(
+                      "People, including you",
+                      draft.capacity,
+                      (v) => setDraft({ ...draft, capacity: v }),
+                      ["2", "3", "4", "5", "6"],
+                    )}
+                    <p>
+                      Minimum: {minimumFor(Number(draft.capacity))} confirmed
+                      people.
+                    </p>
+                  </>
+                )}
+                {step === 2 && (
+                  <>
+                    {field(
+                      "Budget from (£ per person)",
+                      draft.budgetMin,
+                      (v) => setDraft({ ...draft, budgetMin: v }),
+                      { type: "number" },
+                    )}
+                    {field(
+                      "Budget up to (£ per person)",
+                      draft.budgetMax,
+                      (v) => setDraft({ ...draft, budgetMax: v }),
+                      { type: "number" },
+                    )}
+                    <p className="r1-notice">
+                      Each guest pays for their own order at the restaurant.
+                      Fancy does not collect a deposit.
+                    </p>
+                    {choose(
+                      "Conversation language",
+                      draft.language,
+                      (v) => setDraft({ ...draft, language: v }),
+                      ["en", "zh", "fr", "es"],
+                    )}
+                    {field(
+                      "Meal title · 5–80 characters",
+                      draft.title,
+                      (v) => setDraft({ ...draft, title: v }),
+                      { maxLength: 80 },
+                    )}
+                    {field(
+                      "What’s the plan? · 20–1000 characters",
+                      draft.description,
+                      (v) => setDraft({ ...draft, description: v }),
+                      { area: true, maxLength: 1000 },
+                    )}
+                  </>
+                )}
+                {step === 3 && (
+                  <>
+                    <h3>{draft.title}</h3>
+                    <p>
+                      {draft.venue}
+                      <br />
+                      {draft.address}
+                      <br />
+                      {draft.date} · {draft.time} London
+                      <br />
+                      {draft.capacity} people including you
+                      <br />
+                      {money(Number(draft.budgetMin))}–
+                      {money(Number(draft.budgetMax))} per person
+                    </p>
+                    <p>{draft.description}</p>
+                    <p>
+                      You can publish before booking. Declare an external
+                      reservation matching your confirmed headcount before the
+                      15-minute check, or the meal will cancel automatically.
+                    </p>
+                  </>
+                )}
+                {step > 0 && (
+                  <Primary
+                    secondary
+                    onClick={() => {
+                      keyboard.hide();
+                      setStep(step - 1);
+                    }}
+                  >
+                    Back
+                  </Primary>
+                )}
+                <Primary
+                  onClick={() => {
+                    keyboard.hide();
+                    setIssue("");
+                    const instants = londonInstants(draft.date, draft.time),
+                      instant = draft.instant || instants[0];
+                    if (
+                      step === 0 &&
+                      (!draft.venue.trim() ||
+                        !draft.address.trim() ||
+                        !draft.area.trim())
+                    ) {
+                      setIssue(
+                        "Add the restaurant name, address and neighbourhood.",
+                      );
+                      return;
+                    }
+                    if (
+                      step === 1 &&
+                      (!instant ||
+                        (instants.length === 2 && !draft.instant) ||
+                        Date.parse(instant) - Date.parse(state.now) < HOUR)
+                    ) {
+                      setIssue(
+                        "Choose a valid London time at least 60 minutes away; select the offset if the hour repeats.",
+                      );
+                      return;
+                    }
+                    if (
+                      step === 2 &&
+                      (!Number.isFinite(Number(draft.budgetMin)) ||
+                        Number(draft.budgetMin) <= 0 ||
+                        Number(draft.budgetMax) < Number(draft.budgetMin) ||
+                        draft.title.trim().length < 5 ||
+                        draft.description.trim().length < 20)
+                    ) {
+                      setIssue(
+                        "Add a positive budget range, title and introduction.",
+                      );
+                      return;
+                    }
+                    if (step < 3) {
+                      setStep(step + 1);
+                      return;
+                    }
+                    const next = run({
+                      type: "publish",
+                      meal: {
+                        ...draft,
+                        startsAt: instant,
+                        capacity: Number(draft.capacity),
+                        budgetMin: Math.round(Number(draft.budgetMin) * 100),
+                        budgetMax: Math.round(Number(draft.budgetMax) * 100),
+                        languages: [draft.language],
+                        replacementFor: draft.replacementFor || undefined,
+                      },
+                    });
+                    if (next) {
+                      setSelected(next.meals.at(-1)!.id);
+                      go("detail");
+                      setNotice(
+                        "Your meal is published. You’re the host; arrange the reservation externally.",
+                      );
+                    }
+                  }}
+                >
+                  {step === 3 ? "Publish meal" : "Continue"}
+                </Primary>
+                <button className="text-action" onClick={() => go("discover")}>
+                  Save draft & close
+                </button>
+              </>
+            )}
+            {(page === "profile" || page === "member") && (
+              <>
+                <div className="eyebrow">A LITTLE BACKGROUND</div>
+                <h1>{page === "profile" ? self.name : member.name}</h1>
+                <div className="r1-people">
+                  {avatar(page === "profile" ? actor : target)}
+                </div>
+                <h3>A little about me</h3>
+                <p>
+                  {page === "profile"
+                    ? self.bio
+                    : "bio" in member
+                      ? member.bio
+                      : "Sign in to view this profile."}
+                </p>
+                <h3>We could talk about</h3>
+                <p>
+                  {(page === "profile"
+                    ? self.interests
+                    : "interests" in member
+                      ? member.interests
+                      : []
+                  )?.join(" · ")}
+                </p>
+                <p>
+                  {(page === "profile"
+                    ? self.languages
+                    : "languages" in member
+                      ? member.languages
+                      : []
+                  )
+                    ?.join(" · ")
+                    .toUpperCase()}
+                </p>
+                {page === "profile" ? (
+                  <>
+                    <Primary
+                      secondary
+                      onClick={() => {
+                        setEditName(self.name);
+                        setEditBio(self.bio);
+                        go("edit");
+                      }}
+                    >
+                      Edit profile
+                    </Primary>
+                    <Primary secondary onClick={() => go("settings")}>
+                      Settings
+                    </Primary>
+                  </>
+                ) : (
+                  target !== actor && (
+                    <>
+                      <Primary
+                        secondary
+                        onClick={() => {
+                          setReason("");
+                          keyboard.hide();
+                          setSheet("report");
+                        }}
+                      >
+                        Report a concern
+                      </Primary>
+                      <button
+                        className="text-action"
+                        onClick={() =>
+                          run(
+                            {
+                              type: "block",
+                              userId: target,
+                              blocked: !state.blocks.some(
+                                (b) => b.from === actor && b.to === target,
+                              ),
+                            },
+                            "Privacy preference updated. Reconnecting needs fresh consent after unblocking.",
+                          )
+                        }
+                      >
+                        {state.blocks.some(
+                          (b) => b.from === actor && b.to === target,
+                        )
+                          ? "Unblock member"
+                          : "Block member"}
+                      </button>
+                    </>
+                  )
+                )}
+              </>
+            )}
+            {page === "edit" && (
+              <>
+                <h1>A little more you.</h1>
+                {field("Name · 2–40 characters", editName, setEditName, {
+                  maxLength: 40,
+                })}
+                {field(
+                  "Introduction · 20–1000 characters",
+                  editBio,
+                  setEditBio,
+                  { maxLength: 1000, area: true },
+                )}
+                <Primary
+                  onClick={() => {
+                    if (
+                      run({
+                        type: "profile",
+                        name: editName,
+                        bio: editBio,
+                        languages: self.languages,
+                        interests: self.interests,
+                      })
+                    )
+                      go("profile");
+                  }}
+                >
+                  Save profile
+                </Primary>
+              </>
+            )}
+            {page === "review" && (
+              <>
+                <h1>How was your table?</h1>
+                <p>
+                  {meal.title} · Your latest attendance report takes priority
+                  over the host’s supplement.
+                </p>
+                <p>
+                  Your attendance: <strong>{result}</strong>
+                </p>
+                {state.attendance
+                  .filter((a) => a.mealId === selected && a.userId === actor)
+                  .map((a, i) => (
+                    <small className="r1-source" key={i}>
+                      {a.source === "self" ? "You" : "Host"} reported {a.value}{" "}
+                      · {local(a.at)}
+                    </small>
+                  ))}
+                {editingWindow ? (
+                  <>
+                    <Primary
+                      onClick={() =>
+                        run(
+                          {
+                            type: "attendance",
+                            mealId: selected,
+                            userId: actor,
+                            value: "present",
+                          },
+                          "Attendance updated.",
+                        )
+                      }
+                    >
+                      I attended
+                    </Primary>
+                    <Primary
+                      secondary
+                      onClick={() =>
+                        run(
+                          {
+                            type: "attendance",
+                            mealId: selected,
+                            userId: actor,
+                            value: "absent",
+                          },
+                          "Attendance updated. Sending permissions are recalculated.",
+                        )
+                      }
+                    >
+                      I didn’t attend
+                    </Primary>
+                    {host && (
+                      <>
+                        <h3>Missing reports</h3>
+                        {confirmedIds(state, selected, meal.startsAt)
+                          .filter(
+                            (id) =>
+                              id !== actor &&
+                              !state.attendance.some(
+                                (a) =>
+                                  a.mealId === selected &&
+                                  a.userId === id &&
+                                  a.source === "self",
+                              ),
+                          )
+                          .map((id) => (
+                            <div key={id}>
+                              <p>
+                                {state.users.find((u) => u.id === id)?.name}
+                              </p>
+                              <button
+                                className="r1-chip"
+                                onClick={() =>
+                                  run({
+                                    type: "attendance",
+                                    mealId: selected,
+                                    userId: id,
+                                    value: "present",
+                                  })
+                                }
+                              >
+                                Attended
+                              </button>
+                              <button
+                                className="r1-chip"
+                                onClick={() =>
+                                  run({
+                                    type: "attendance",
+                                    mealId: selected,
+                                    userId: id,
+                                    value: "absent",
+                                  })
+                                }
+                              >
+                                Didn’t attend
+                              </button>
+                            </div>
+                          ))}
+                      </>
+                    )}
+                    {result === "present" && (
+                      <>
+                        <h3>Private whole-meal feedback</h3>
+                        {choose("Overall experience", score, setScore, [
+                          "1",
+                          "2",
+                          "3",
+                          "4",
+                          "5",
+                        ])}
+                        {choose(
+                          "Would you join another meal?",
+                          again,
+                          setAgain,
+                          ["yes", "no"],
+                        )}
+                        <fieldset className="filter-section">
+                          <legend>
+                            What shaped your experience? · optional, choose any
+                          </legend>
+                          <div className="choice-grid">
+                            {[
+                              "company",
+                              "conversation",
+                              "coordination",
+                              "expectations",
+                              "venue",
+                              "cost",
+                              "other",
+                            ].map((code) => (
+                              <label
+                                className={`choice-chip ${feedbackReasons.includes(code) ? "chosen" : ""}`}
+                                key={code}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={feedbackReasons.includes(code)}
+                                  onChange={(e) =>
+                                    setFeedbackReasons((values) =>
+                                      e.target.checked
+                                        ? [...values, code]
+                                        : values.filter((v) => v !== code),
+                                    )
+                                  }
+                                />
+                                <span>
+                                  {code[0].toUpperCase() + code.slice(1)}
+                                </span>
+                              </label>
+                            ))}
+                          </div>
+                        </fieldset>
+                        <button
+                          className="text-action"
+                          onClick={() => setFeedbackReasons([])}
+                        >
+                          Clear reasons
+                        </button>
+                        <Primary
+                          onClick={() =>
+                            run(
+                              {
+                                type: "feedback",
+                                mealId: selected,
+                                score: score ? Number(score) : undefined,
+                                again: again ? again === "yes" : undefined,
+                                reasons: feedbackReasons,
+                              },
+                              "Private feedback saved. It is not published on member profiles.",
+                            )
+                          }
+                        >
+                          Save private feedback
+                        </Primary>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <p className="r1-notice">
+                    Reports and new connections can be updated for 7 days after
+                    the scheduled end. You can retract a connection or block
+                    someone at any time.
+                  </p>
+                )}
+                <h3>Keep in touch</h3>
+                {confirmedIds(state, selected, meal.startsAt)
+                  .filter((id) => id !== actor)
+                  .map((id) => {
+                    const wants = state.reconnect.find(
+                      (r) =>
+                        r.mealId === selected &&
+                        r.from === actor &&
+                        r.to === id,
+                    )?.wants;
+                    return (
+                      <div className="r1-card" key={id}>
+                        <div className="r1-people">
+                          {avatar(id)}
+                          <strong>
+                            {state.users.find((u) => u.id === id)?.name}
+                          </strong>
+                        </div>
+                        <p>
+                          Your choice stays private unless you both choose to
+                          connect.
+                        </p>
+                        <Primary
+                          secondary
+                          disabled={
+                            !wants && (!editingWindow || result !== "present")
+                          }
+                          onClick={() =>
+                            run(
+                              {
+                                type: "reconnect",
+                                mealId: selected,
+                                userId: id,
+                                wants: !wants,
+                              },
+                              wants
+                                ? "Connection retracted."
+                                : "Your choice is saved privately.",
+                            )
+                          }
+                        >
+                          {wants
+                            ? "Retract connection"
+                            : "I’d like to stay in touch"}
+                        </Primary>
+                        {canDirect(state, actor, id) && (
+                          <Primary
+                            onClick={() => {
+                              setTarget(id);
+                              go("direct");
+                            }}
+                          >
+                            Open private chat
+                          </Primary>
+                        )}
+                      </div>
+                    );
+                  })}
+              </>
+            )}
+            {page === "direct" && (
+              <>
+                <h1>{state.users.find((u) => u.id === target)?.name}</h1>
+                <p>
+                  {canDirect(state, actor, target)
+                    ? "You both chose to keep in touch."
+                    : "Read-only · consent and attendance are required to send."}
+                </p>
+                {state.messages
+                  .filter(
+                    (m) =>
+                      (m.from === actor && m.toId === target) ||
+                      (m.from === target && m.toId === actor),
+                  )
+                  .map((m) => (
+                    <div className="r1-message" key={m.id}>
+                      <p>{m.text}</p>
+                      <small>{local(m.at)}</small>
+                    </div>
+                  ))}
+                {canDirect(state, actor, target) && (
+                  <>
+                    {field("Private message", text, setText, {
+                      area: true,
+                      maxLength: 2000,
+                    })}
+                    <Primary
+                      onClick={() => {
+                        if (run({ type: "direct", userId: target, text }))
+                          setText("");
+                      }}
+                    >
+                      Send message
+                    </Primary>
+                  </>
+                )}
+                <button
+                  className="text-action"
+                  onClick={() =>
+                    run(
+                      {
+                        type: "reconnect",
+                        mealId:
+                          state.reconnect.find(
+                            (r) => r.from === actor && r.to === target,
+                          )?.mealId || selected,
+                        userId: target,
+                        wants: false,
+                      },
+                      "Connection retracted.",
+                    )
+                  }
+                >
+                  Retract connection
+                </button>
+              </>
+            )}
+            {page === "settings" && (
+              <>
+                <h1>Make yourself comfortable.</h1>
+                <h3>Notifications</h3>
+                <label className="check-row">
+                  <input
+                    type="checkbox"
+                    checked={updates}
+                    onChange={(e) => setUpdates(e.target.checked)}
+                  />
+                  <span>Optional meal recommendations by email</span>
+                </label>
+                <p>
+                  Applications, cancellations and account security still appear
+                  in your updates and email. Push is an additional iOS channel.
+                </p>
+                <h3>Privacy</h3>
+                <label className="check-row">
+                  <input
+                    type="checkbox"
+                    checked={consent}
+                    onChange={(e) => setConsent(e.target.checked)}
+                  />
+                  <span>Allow optional product analytics</span>
+                </label>
+                <p>
+                  Changing this choice stops future optional collection. It does
+                  not change essential meal records.
+                </p>
+                <Primary
+                  secondary
+                  onClick={() =>
+                    download(exportAccount(state, actor), "fancy-my-data.json")
+                  }
+                >
+                  Export my data
+                </Primary>
+                <Primary
+                  secondary
+                  onClick={() => {
+                    keyboard.hide();
+                    setSheet("support");
+                  }}
+                >
+                  Community & support
+                </Primary>
+                <Primary
+                  secondary
+                  onClick={() => {
+                    setSigned(false);
+                    go("discover");
+                    setEntrance("account");
+                  }}
+                >
+                  Sign out
+                </Primary>
+                <button
+                  className="text-action"
+                  onClick={() => {
+                    setDeletion("");
+                    setReauth(false);
+                    keyboard.hide();
+                    setSheet("delete");
+                  }}
+                >
+                  Delete account
+                </button>
+                <ReviewOnly>
+                  <section className="r1-review-tools">
+                    <h3>R1 acceptance tools</h3>
+                    <p>
+                      Local fixtures only. OAuth, email and notifications do not
+                      contact providers. Reload resets this session.
+                    </p>
+                    {choose(
+                      "Actor",
+                      actor,
+                      (v) => {
+                        setActor(v);
+                        go("settings");
+                      },
+                      state.users
+                        .filter((u) => !u.deleted && u.id !== "operator")
+                        .map((u) => u.id),
+                    )}
+                    {field("Acceptance clock · UTC", clock, setClock, {
+                      type: "datetime-local",
+                    })}
+                    <Primary
+                      secondary
+                      onClick={() => {
+                        try {
+                          setState((s) =>
+                            act(
+                              s,
+                              "system",
+                              { type: "tick", key: crypto.randomUUID() },
+                              new Date(clock + "Z").toISOString(),
+                            ),
+                          );
+                          setIssue("");
+                          setNotice(
+                            "Deadlines evaluated at their scheduled instants.",
+                          );
+                        } catch (e) {
+                          setIssue(String(e));
+                        }
+                      }}
+                    >
+                      Advance clock
+                    </Primary>
+                    {choose("Connection", connection, setConnection, [
+                      "online",
+                      "offline",
+                      "unavailable",
+                    ])}
+                    <Primary
+                      secondary
+                      onClick={() =>
+                        download(
+                          projectAnalytics(state),
+                          "fancy-r1-analytics.json",
+                        )
+                      }
+                    >
+                      Export sanitized admin handoff
+                    </Primary>
+                    <a href="?scope=future&review=1">
+                      Explore future payments & booking
+                    </a>
+                  </section>
+                </ReviewOnly>
+              </>
+            )}
+          </main>
+        </MobileScroll>
+        <nav className="r1-nav" aria-label="Main navigation">
+          {navItems.map(([id, label, icon]) => (
+            <button
+              key={id}
+              className={`${page === id ? "active" : ""} ${id === "create" ? "create" : ""}`}
+              onClick={() => (id === "discover" ? go(id) : auth(id))}
+            >
+              {icon}
+              <span>{label}</span>
+            </button>
+          ))}
+        </nav>
+        <BottomSheet
+          open={["date", "size", "filters"].includes(sheet)}
+          onOpenChange={(o) => !o && setSheet("")}
+          title={
+            sheet === "date"
+              ? "Choose a date"
+              : sheet === "size"
+                ? "Choose a table size"
+                : "Find your kind of table"
+          }
+        >
+          <div className="body-pad">
+            {sheet !== "size" &&
+              field(
+                "Date · London",
+                pending.date,
+                (v) => setPending({ ...pending, date: v }),
+                { type: "date" },
+              )}
+            {sheet !== "date" && (
+              <ChoiceGroup
+                label="People, including the host"
+                value={pending.size}
+                onChange={(size) => setPending({ ...pending, size })}
+                options={["", "2", "3", "4", "5", "6"].map((v) => [
+                  v,
+                  v || "Any size",
+                ])}
+              />
+            )}{" "}
+            {sheet === "filters" && (
+              <>
+                {choose(
+                  "Maximum budget per person (£)",
+                  pending.budget,
+                  (v) => setPending({ ...pending, budget: v }),
+                  ["", "25", "35", "50"],
+                )}
+                {choose(
+                  "Conversation language",
+                  pending.language,
+                  (v) => setPending({ ...pending, language: v }),
+                  ["", "en", "zh", "fr", "es"],
+                )}
+              </>
+            )}
+            <Primary
+              onClick={() => {
+                setFilter(pending);
+                keyboard.hide();
+                setSheet("");
+              }}
+            >
+              Show tables
+            </Primary>
+            <button
+              className="text-action"
+              onClick={() => {
+                setPending({ date: "", size: "", budget: "", language: "" });
+              }}
+            >
+              Clear selections
+            </button>
+          </div>
+        </BottomSheet>
+        <BottomSheet
+          open={[
+            "leave",
+            "cancel",
+            "declare",
+            "delete",
+            "report",
+            "support",
+          ].includes(sheet)}
+          onOpenChange={(o) => !o && setSheet("")}
+          title={
+            sheet === "declare"
+              ? "Confirm your external booking"
+              : sheet === "delete"
+                ? "Delete your account?"
+                : sheet === "report"
+                  ? "Report a concern"
+                  : sheet === "support"
+                    ? "Community & support"
+                    : "Review your change"
+          }
+        >
+          <div className="body-pad">
+            {sheet === "declare" && (
+              <>
+                <p>
+                  I booked {meal.venue} outside Fancy for {count} confirmed
+                  people at {local(meal.startsAt)}. This declaration is not
+                  supplier confirmation.
+                </p>
+                <Primary
+                  onClick={() => {
+                    if (
+                      run(
+                        { type: "declare", mealId: selected },
+                        "Reservation declaration saved.",
+                      )
+                    )
+                      setSheet("");
+                  }}
+                >
+                  Confirm declaration for {count}
+                </Primary>
+              </>
+            )}
+            {sheet === "leave" && (
+              <>
+                <p>
+                  Your seat will be released. Your previous group messages
+                  remain read-only. You can reapply before applications close;
+                  the host must approve the new application.
+                </p>
+                <Primary
+                  onClick={() => {
+                    if (
+                      run(
+                        { type: "leave", mealId: selected },
+                        "You left this meal.",
+                      )
+                    )
+                      setSheet("");
+                  }}
+                >
+                  Confirm leaving
+                </Primary>
+              </>
+            )}
+            {sheet === "cancel" && (
+              <>
+                <p>
+                  This cancels the entire meal and notifies applicants and
+                  confirmed guests. Contact the restaurant separately to cancel
+                  its booking.
+                </p>
+                {choose("Cancellation reason", reason, setReason, [
+                  "host",
+                  "host_changed",
+                  "other",
+                ])}
+                <Primary
+                  onClick={() => {
+                    if (
+                      run(
+                        {
+                          type: "cancel",
+                          mealId: selected,
+                          reason: reason || "host",
+                        },
+                        "Meal cancelled.",
+                      )
+                    )
+                      setSheet("");
+                  }}
+                >
+                  Cancel entire meal
+                </Primary>
+              </>
+            )}
+            {sheet === "delete" && (
+              <>
+                <p>
+                  Deleting your account cancels hosted meals that haven’t
+                  started, withdraws upcoming participation, removes your
+                  profile and personal messages, and revokes connections.
+                  Historical meal records are deidentified. This cannot be
+                  undone.
+                </p>
+                <label className="check-row">
+                  <input
+                    type="checkbox"
+                    checked={reauth}
+                    onChange={(e) => setReauth(e.target.checked)}
+                  />
+                  <span>Confirm my identity again</span>
+                </label>
+                {field("Type DELETE", deletion, setDeletion)}
+                <Primary
+                  onClick={() => {
+                    if (
+                      run({
+                        type: "delete-account",
+                        confirmation: deletion,
+                        reauthenticated: reauth,
+                      })
+                    ) {
+                      setSigned(false);
+                      setSheet("");
+                      setEntrance("splash");
+                      setPage("discover");
+                    }
+                  }}
+                >
+                  Delete account permanently
+                </Primary>
+              </>
+            )}
+            {sheet === "report" && (
+              <>
+                <p>
+                  Your report is private. You’ll receive a case reference. You
+                  can block this member immediately.
+                </p>
+                {field(
+                  "What happened? · 5–1000 characters",
+                  reason,
+                  setReason,
+                  { area: true, maxLength: 1000 },
+                )}
+                <Primary
+                  onClick={() => {
+                    const next = run({
+                      type: "report",
+                      userId: target,
+                      reason,
+                    });
+                    if (next) {
+                      setSheet("");
+                      setNotice(`Report received: ${next.reports.at(-1)?.id}.`);
+                    }
+                  }}
+                >
+                  Submit report
+                </Primary>
+              </>
+            )}
+            {sheet === "support" && (
+              <>
+                <p>
+                  Respect boundaries, meet in public restaurants and don’t share
+                  another person’s details without permission. Use Report a
+                  concern on a member profile and block unwanted contact.
+                </p>
+                <p>Your submitted cases</p>
+                {state.reports
+                  .filter((r) => r.actorId === actor)
+                  .map((r) => (
+                    <p key={r.id}>
+                      {r.id} · {r.status}
+                    </p>
+                  ))}
+                <ReviewOnly>
+                  <p>
+                    Launch dependency: configure a verified contact address,
+                    community policy and privacy notice. No response SLA or real
+                    provider delivery is represented here.
+                  </p>
+                </ReviewOnly>
+              </>
+            )}
+            <button
+              className="text-action"
+              onClick={() => {
+                keyboard.hide();
+                setSheet("");
+              }}
+            >
+              Back
+            </button>
+          </div>
+        </BottomSheet>
+        <MealHelper
+          meals={browse
+            .filter(
+              (m) =>
+                Date.parse(state.now) < Date.parse(cutoffAt(m, "apply")) &&
+                confirmedIds(state, m.id).length < m.capacity,
+            )
+            .map((m) => ({
+              ...initialMeals[0],
+              id: m.id,
+              title: m.title,
+              description: m.description,
+              venue: m.venue,
+              area: m.area,
+              date: m.startsAt.slice(0, 10),
+              time: new Intl.DateTimeFormat("en-GB", {
+                timeZone: "Europe/London",
+                hour: "2-digit",
+                minute: "2-digit",
+              }).format(new Date(m.startsAt)),
+              capacity: m.capacity,
+              confirmed: confirmedIds(state, m.id).length,
+              min: m.budgetMin / 100,
+              max: m.budgetMax / 100,
+              host: m.hostId,
+              members: confirmedIds(state, m.id),
+              language: m.languages.join(" · "),
+              costMode: "OFFLINE",
+              deposit: 0,
+              reservationSource: "external",
+              owned: m.hostId === actor,
+            }))}
+          voiceEnabled={false}
+          current={{
+            ...initialMeals[0],
+            id: meal.id,
+            title: meal.title,
+            description: meal.description,
+            venue: meal.venue,
+            area: meal.area,
+            date: meal.startsAt.slice(0, 10),
+            time: new Intl.DateTimeFormat("en-GB", {
+              timeZone: "Europe/London",
+              hour: "2-digit",
+              minute: "2-digit",
+            }).format(new Date(meal.startsAt)),
+            capacity: meal.capacity,
+            confirmed: count,
+            min: meal.budgetMin / 100,
+            max: meal.budgetMax / 100,
+            host: meal.hostId,
+            members: confirmedIds(state, meal.id),
+            owned: host,
+            costMode: "OFFLINE",
+            deposit: 0,
+            booking: meal.status === "CANCELLED" ? "CANCELLED" : "PENDING",
+            reservationSource: "external",
+          }}
+          filters={emptyFilters}
+          page={page}
+          visible={["discover", "detail", "create", "apply"].includes(page)}
+          onMeal={open}
+          onAction={(action) => {
+            keyboard.hide();
+            if (action.kind === "create") {
+              setDraft({
+                ...draft,
+                title: "A table for new friends",
+                description: action.text,
+              });
+              setStep(0);
+              auth("create");
+            } else if (action.kind === "application") {
+              if (
+                action.mealId &&
+                state.meals.some((m) => m.id === action.mealId)
+              )
+                setSelected(action.mealId);
+              auth("apply");
+              setText(action.text || "");
+            } else if (action.kind === "message") {
+              if (access !== "write") {
+                setNotice(
+                  "Only confirmed participants can send to the meal group.",
+                );
+                return;
+              }
+              auth("chat");
+              setText(action.text || "");
+            } else setNotice("Review your meal choices before applying.");
+          }}
+        />
+      </div>
+    </SelfProfileContext.Provider>
+  );
+}
+
+export default function Prototype() {
+  return new URLSearchParams(window.location.search).get("scope") ===
+    "future" ? (
+    <FuturePrototype />
+  ) : (
+    <PilotPrototype />
   );
 }

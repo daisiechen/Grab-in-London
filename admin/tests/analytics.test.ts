@@ -12,7 +12,6 @@ import {
   funnel,
   filterMeals,
   createFunnel,
-  verifyAttendance,
 } from "../src/analytics.ts";
 import type { Dataset, Event, Meal } from "../src/analytics.ts";
 
@@ -79,7 +78,7 @@ test("London date boundaries respect British summer time and autumn transition",
   assert.equal(londonDay("2026-10-25T23:30:00Z"), "2026-10-25");
   assert.equal(weekStart("2026-10-18"), "2026-10-12");
 });
-test("attendance conflict, missing and explicit absence remain distinct", () => {
+test("self-report takes priority, missing remains unknown", () => {
   assert.equal(attendance(undefined), "unknown");
   assert.equal(
     attendance({
@@ -89,7 +88,7 @@ test("attendance conflict, missing and explicit absence remain distinct", () => 
       self: "absent",
       updatedAt: "",
     }),
-    "conflict",
+    "absent",
   );
   assert.equal(
     attendance({ userId: "u", mealId: "m", self: "absent", updatedAt: "" }),
@@ -303,31 +302,6 @@ test("create funnel follows same attempt and user beyond selected entry dates", 
     [1, 0, 0],
   );
 });
-test("verified attendance retains evidence and recalculates, disallowing unconfirmed or cancelled participants", () => {
-  const updated = verifyAttendance(
-    { ...base, attendance: [] },
-    "m1",
-    "u",
-    "present",
-    "Checked with participant",
-  );
-  assert.equal(summarize(updated, filters).attendance.present, 1);
-  assert.equal(base.attendance.length, 1);
-  assert.throws(() =>
-    verifyAttendance(base, "m1", "stranger", "present", "Checked"),
-  );
-  assert.throws(() =>
-    verifyAttendance(
-      { ...base, meals: [{ ...meal, cancelled: true }] },
-      "m1",
-      "u",
-      "present",
-      "Checked",
-    ),
-  );
-  assert.throws(() => verifyAttendance(base, "m1", "u", "present", ""));
-});
-
 test("hand-calculated two-meal cohort reconciles outcomes, coverage and repeat participation", () => {
   const first = {
     ...meal,
@@ -389,7 +363,6 @@ test("hand-calculated two-meal cohort reconciles outcomes, coverage and repeat p
     present: 3,
     absent: 0,
     unknown: 1,
-    conflict: 0,
   });
   assert.equal(summary.attendedUsers, 2);
   assert.deepEqual(
@@ -489,5 +462,5 @@ test("invalid discovery result counts are not silently added to the zero-result 
 test("late seat confirmation cannot create eligible attendance", () => {
   const late = {...base,applications:base.applications.map((a) => ({...a,confirmedAt:"2026-10-02T12:00:00Z"}))};
   assert.equal(summarize(late,filters).attendance.present,0);
-  assert.throws(() => verifyAttendance(late,"m1","u","present","Checked"));
+
 });

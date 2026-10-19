@@ -10,6 +10,7 @@
 | [产品简介](product/product-brief.md) | 产品定位与摘要；详细规则以主 PRD 为准 |
 | [首期运营指标与采集契约](product/admin/measurement-contract.zh-CN.md) | 后台全部指标算法、App采集入口与生产数据接入验收 |
 | [管理端 PRD](product/admin/PRD.zh-CN.md) | 管理端范围及指标；引用主 PRD，不替代共享业务规则 |
+| [R1 研发契约与模拟交接](../shared/README.md) | 对象、命令、权限、时间、幂等和脱敏JSON；明确真实服务依赖 |
 
 ## 调研与商业模式
 
@@ -28,6 +29,7 @@
 
 - [发布记录](delivery/demo-release.zh-CN.md)与[完整产品审查](delivery/full-product-audit.zh-CN.md)。
 - 用户端：[视觉验证](../demo/design-qa.md)、[浏览器验证](../demo/qa/browser-results.md)，截图按批次保存在 `demo/qa/`。
+- 本轮 R1：[用户端候选核验](../demo/qa/r1/readiness.md)、[后台候选证据](../admin/qa/readiness-2026-10-19/)。最终准入以本轮评审关闭记录为准，旧交付记录及截图不覆盖现行PRD。
 - [管理端指标与采集修订](delivery/fancy-admin-measurement-review.zh-CN.md)：19条批注、App补充、口径与本轮验证。
 - [管理端可用性审查](delivery/fancy-admin-usability-review.zh-CN.md)：逐页走查、精简决策、规则维护职责及浏览器证据。
 - 管理端：[验证报告](../admin/qa/verification.zh-CN.md)，截图按批次保存在 `admin/qa/`。

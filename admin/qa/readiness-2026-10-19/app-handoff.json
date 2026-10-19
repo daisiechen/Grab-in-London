@@ -1,0 +1,208 @@
+{
+  "contractVersion": "r1-1",
+  "demo": true,
+  "asOf": "2026-10-19T12:00:00.000Z",
+  "users": [
+    {
+      "id": "alex",
+      "joinedAt": "2026-09-01T12:00:00.000Z"
+    },
+    {
+      "id": "maya",
+      "joinedAt": "2026-09-01T12:00:00.000Z"
+    },
+    {
+      "id": "leo",
+      "joinedAt": "2026-09-01T12:00:00.000Z"
+    },
+    {
+      "id": "emma",
+      "joinedAt": "2026-09-01T12:00:00.000Z"
+    }
+  ],
+  "meals": [
+    {
+      "id": "supper",
+      "title": "Meal supper",
+      "hostId": "maya",
+      "startsAt": "2026-10-23T18:00:00.000Z",
+      "endsAt": "2026-10-23T20:00:00.000Z",
+      "publishedAt": "2026-10-17T12:00:00.000Z",
+      "area": "Soho",
+      "language": "English",
+      "capacity": 4,
+      "minimum": 3,
+      "budget": 35,
+      "source": "user",
+      "cancelled": false,
+      "peakConfirmed": 3
+    },
+    {
+      "id": "duo",
+      "title": "Meal duo",
+      "hostId": "maya",
+      "startsAt": "2026-10-24T11:30:00.000Z",
+      "endsAt": "2026-10-24T13:30:00.000Z",
+      "publishedAt": "2026-10-17T12:00:00.000Z",
+      "area": "St James’s",
+      "language": "English",
+      "capacity": 2,
+      "minimum": 2,
+      "budget": 35,
+      "source": "user",
+      "cancelled": false,
+      "peakConfirmed": 1
+    },
+    {
+      "id": "hosting",
+      "title": "Meal hosting",
+      "hostId": "alex",
+      "startsAt": "2026-10-24T18:00:00.000Z",
+      "endsAt": "2026-10-24T20:00:00.000Z",
+      "publishedAt": "2026-10-17T12:00:00.000Z",
+      "area": "Soho",
+      "language": "English",
+      "capacity": 4,
+      "minimum": 3,
+      "budget": 35,
+      "source": "user",
+      "cancelled": false,
+      "peakConfirmed": 3
+    },
+    {
+      "id": "past",
+      "title": "Meal past",
+      "hostId": "maya",
+      "startsAt": "2026-10-18T11:00:00.000Z",
+      "endsAt": "2026-10-18T13:00:00.000Z",
+      "publishedAt": "2026-10-15T12:00:00.000Z",
+      "area": "Soho",
+      "language": "English",
+      "capacity": 4,
+      "minimum": 3,
+      "budget": 35,
+      "source": "user",
+      "cancelled": false,
+      "peakConfirmed": 3
+    }
+  ],
+  "applications": [
+    {
+      "id": "seed-0",
+      "mealId": "supper",
+      "userId": "leo",
+      "appliedAt": "2026-10-17T13:00:00.000Z",
+      "decidedAt": "2026-10-17T14:00:00.000Z",
+      "confirmedAt": "2026-10-17T14:00:00.000Z",
+      "decision": "approved",
+      "expired": false
+    },
+    {
+      "id": "seed-1",
+      "mealId": "supper",
+      "userId": "emma",
+      "appliedAt": "2026-10-17T13:00:00.000Z",
+      "decidedAt": "2026-10-17T14:00:00.000Z",
+      "confirmedAt": "2026-10-17T14:00:00.000Z",
+      "decision": "approved",
+      "expired": false
+    },
+    {
+      "id": "seed-2",
+      "mealId": "hosting",
+      "userId": "emma",
+      "appliedAt": "2026-10-17T13:00:00.000Z",
+      "decidedAt": "2026-10-17T14:00:00.000Z",
+      "confirmedAt": "2026-10-17T14:00:00.000Z",
+      "decision": "approved",
+      "expired": false
+    },
+    {
+      "id": "seed-3",
+      "mealId": "hosting",
+      "userId": "leo",
+      "appliedAt": "2026-10-17T13:00:00.000Z",
+      "decidedAt": "2026-10-17T14:00:00.000Z",
+      "confirmedAt": "2026-10-17T14:00:00.000Z",
+      "decision": "approved",
+      "expired": false
+    },
+    {
+      "id": "seed-4",
+      "mealId": "past",
+      "userId": "alex",
+      "appliedAt": "2026-10-16T12:00:00.000Z",
+      "decidedAt": "2026-10-16T13:00:00.000Z",
+      "confirmedAt": "2026-10-16T13:00:00.000Z",
+      "decision": "approved",
+      "expired": false
+    },
+    {
+      "id": "seed-5",
+      "mealId": "past",
+      "userId": "emma",
+      "appliedAt": "2026-10-16T12:00:00.000Z",
+      "decidedAt": "2026-10-16T13:00:00.000Z",
+      "confirmedAt": "2026-10-16T13:00:00.000Z",
+      "decision": "approved",
+      "expired": false
+    }
+  ],
+  "attendance": [
+    {
+      "mealId": "supper",
+      "userId": "maya",
+      "updatedAt": "2026-10-19T12:00:00.000Z"
+    },
+    {
+      "mealId": "supper",
+      "userId": "leo",
+      "updatedAt": "2026-10-19T12:00:00.000Z"
+    },
+    {
+      "mealId": "supper",
+      "userId": "emma",
+      "updatedAt": "2026-10-19T12:00:00.000Z"
+    },
+    {
+      "mealId": "duo",
+      "userId": "maya",
+      "updatedAt": "2026-10-19T12:00:00.000Z"
+    },
+    {
+      "mealId": "hosting",
+      "userId": "alex",
+      "updatedAt": "2026-10-19T12:00:00.000Z"
+    },
+    {
+      "mealId": "hosting",
+      "userId": "leo",
+      "updatedAt": "2026-10-19T12:00:00.000Z"
+    },
+    {
+      "mealId": "hosting",
+      "userId": "emma",
+      "updatedAt": "2026-10-19T12:00:00.000Z"
+    },
+    {
+      "mealId": "past",
+      "userId": "alex",
+      "self": "present",
+      "updatedAt": "2026-10-18T14:00:00.000Z"
+    },
+    {
+      "mealId": "past",
+      "userId": "maya",
+      "self": "present",
+      "updatedAt": "2026-10-18T14:00:00.000Z"
+    },
+    {
+      "mealId": "past",
+      "userId": "emma",
+      "self": "present",
+      "updatedAt": "2026-10-18T14:00:00.000Z"
+    }
+  ],
+  "feedback": [],
+  "events": []
+}

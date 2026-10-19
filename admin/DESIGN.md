@@ -17,13 +17,13 @@ Canonical runtime owner: `src/styles.css` 的 `:root`。森林 `--forest:#123f35
 Fancy 字标使用本地 Georgia 斜体，分析内容使用 Arial/PingFang SC/Microsoft YaHei，数字使用 Avenir Next/Arial，事件与编号使用 SFMono/Consolas。主标题29px，面板标题16px，指标数字41px，表格与控制11–12px。显示单位和计算单位必须显式。
 
 ## Layout and signature
-桌面228px浅色侧栏，69px顶部路径，内容最大1570px。指标三列；主要趋势与证据面板按1.85:1组织。特色是餐桌线描与真实见面趋势的呼应，避免无关装饰图。1000px以下侧栏收成图标，640px以下横向移动导航，表格自身水平滚动，页面无水平溢出。
+桌面228px浅色侧栏，品牌与导航之间48px留白，69px顶部路径，内容最大1570px。指标三列；主要趋势与证据面板按1.85:1组织。特色是餐桌线描与真实见面趋势的呼应，避免无关装饰图。1000px以下侧栏收成图标，640px以下横向移动导航，表格自身水平滚动，页面无水平溢出。
 
 ## Components and visual states
 `src/components.tsx` 统一 Icon、Panel、Badge、NativeSelect、DataTable、Empty、DetailDialog。状态同时有文字。筛选与日期采用原生控件：接受平台弹出样式与日期显示，原生日期本身的语言由浏览器/OS决定；产品文案由语言状态决定。抽屉使用原生 modal dialog 和背景遮罩，焦点限制、Escape、关闭恢复焦点。
 
 ## Motion, accessibility and data
-操作反馈克制，尊重 reduced-motion。所有操作为语义按钮/链接，焦点轮廓清楚。图表配有可键盘操作的数据点及文本数值，不仅依赖颜色。无分母显示破折号；未成熟显示观察中。示例边界常驻，绝不假装真实数据已接入。
+操作反馈克制，尊重 reduced-motion。所有操作为语义按钮/链接，焦点轮廓清楚。图表配有可键盘操作的数据点及文本数值，不仅依赖颜色。无分母显示破折号；未成熟显示观察中。常规页面不重复演示备注；数据页及文档集中解释来源。行为源未接入必须明确显示未接入，不以零值或fixture替代。
 
 ## Verification
 `pnpm test`、`pnpm build`、`pnpm test:e2e`；Playwright 验证桌面与390px、语言、过滤/下钻、队列成熟、无数据与失败恢复。截图保存在 `qa/`。

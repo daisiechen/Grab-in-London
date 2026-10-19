@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-19",
+  "runner": "Playwright with installed Chrome",
+  "command": "pnpm --dir admin test:e2e",
+  "total": 17,
+  "passed": 17,
+  "failed": 0,
+  "durationSeconds": 45.5,
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "width": 390
+    }
+  ],
+  "results": [
+    {
+      "name": "filters: outside click, Escape, route change and removable active choices",
+      "status": "passed"
+    },
+    {
+      "name": "overview: checks use current maturity and have inspectable evidence",
+      "status": "passed"
+    },
+    {
+      "name": "journey: localized filters/search survive; nested records have a back path",
+      "status": "passed"
+    },
+    {
+      "name": "supply: explicit date ordering, pagination, no-results and restoration",
+      "status": "passed"
+    },
+    {
+      "name": "retention: whole-cohort drilldown and distinct feedback labels",
+      "status": "passed"
+    },
+    {
+      "name": "quality: no normal test switches; dictionary and quarantined evidence",
+      "status": "passed"
+    },
+    {
+      "name": "review-only empty and failure states recover without stale charts",
+      "status": "passed"
+    },
+    {
+      "name": "attendance: source priority is read-only and manual verification is absent",
+      "status": "passed"
+    },
+    {
+      "name": "date drafts validate; aggregate export includes all ratios and cohort denominators",
+      "status": "passed"
+    },
+    {
+      "name": "compact viewport: named icon navigation, filters and localized state",
+      "status": "passed"
+    },
+    {
+      "name": "measurement: clean navigation, multi-choice language/size and complete budget ranges",
+      "status": "passed"
+    },
+    {
+      "name": "classification: test host excluded from metrics and restored without deleting records",
+      "status": "passed"
+    },
+    {
+      "name": "definitions: follow-up example, distinct seat state and reason rating slice",
+      "status": "passed"
+    },
+    {
+      "name": "R13 access gate and classification 409 preserve input, require explicit reload",
+      "status": "passed"
+    },
+    {
+      "name": "R14 selected snapshot and downloaded CSV stay reproducible after writes/builds",
+      "status": "passed"
+    },
+    {
+      "name": "R11 minimal case status requires basis, versions transitions and records receipt",
+      "status": "passed"
+    },
+    {
+      "name": "R17 actual App JSON import rejects private/invalid input and keeps old snapshot, then reconciles business without SDK zeros",
+      "status": "passed"
+    }
+  ],
+  "limits": "Local fictional prototype only; not full browser, screen-reader or production integration certification"
+}

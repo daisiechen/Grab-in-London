@@ -1,6 +1,6 @@
 const ensure = (ok, message) => { if (!ok) throw new Error(message); };
 export async function postMealScenario(page) {
-  await page.goto("/");
+  await page.goto("/?scope=future");
   await page.getByRole("button", {name:"Find your people",exact:true}).click();
   await page.getByRole("radio",{name:"Log in",exact:true}).check();
   await page.getByRole("button",{name:"Continue with email",exact:true}).click();
@@ -25,7 +25,7 @@ export async function postMealScenario(page) {
   await page.getByText("Meal experience saved · 2 / 5 · 2 reason(s)",{exact:true}).waitFor({state:"visible"});
   ensure(!(await page.getByRole("checkbox",{name:/I’d like to share a table again/}).evaluate((el)=>el.checked)),"Meal intent never selects person reconnect");
   await page.getByText("Meal experience saved · 2 / 5 · 2 reason(s)",{exact:true}).click();
-  await page.screenshot({path:"../admin/qa/measurement-2026-10-19/07-app-saved-experience.png",fullPage:false});
+  await page.screenshot({path:"qa/r1/future-regression/post-meal.png",fullPage:false});
   await page.getByRole("button",{name:"Go back",exact:true}).click();
   await page.getByRole("button",{name:"Record guest attendance",exact:true}).click();
   ensure(await page.getByRole("button",{name:"Save meal experience",exact:true}).count() === 0,"Other meal did not inherit attendance");

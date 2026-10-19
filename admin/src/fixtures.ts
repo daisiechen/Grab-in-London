@@ -1,5 +1,5 @@
-import type { Dataset, Event, Meal } from "./analytics";
-import { DAY, SNAPSHOT } from "./analytics";
+import type { Dataset, Event, Meal } from "./analytics.ts";
+import { DAY, SNAPSHOT, rosterAt } from "./analytics.ts";
 
 // Deterministic synthetic fixtures. No records represent actual people or activity.
 const iso = (ms: number) => new Date(ms).toISOString();
@@ -73,7 +73,11 @@ export function createFixture(): Dataset {
       source: i % 4 === 0 ? "assisted" : "user",
       hostId: data.users[i % 12].id,
       cancelled: i % 11 === 0,
-      cancelReason: i % 22 === 0 ? "insufficient" : "host",
+      ...(i%11===0 ? {cancelledAt:iso(time-(i%22===0?15*60_000:2*3_600_000))} : {}),
+      // R1: failed 15-minute checkpoint, or a host cancellation before it.
+      ...(i % 11 === 0
+        ? { cancelReasons: i === 0 ? ["insufficient"] : i % 22 === 0 ? ["booking"] : ["host"] }
+        : {}),
       peakConfirmed: 1,
     };
     data.meals.push(meal);
@@ -122,7 +126,8 @@ export function createFixture(): Dataset {
               ),
             }
           : {}),
-        ...(i % 9 === 0 && j === 1 ? { withdrawnAt: iso(time - DAY) } : {}),
+        // M-055 loses a guest after its passed checkpoint (D-08 example).
+        ...(i % 9 === 0 && j === 1 ? { withdrawnAt: iso(i === 54 ? time - 10 * 60_000 : time - DAY) } : {}),
       };
       data.applications.push(a);
       add("discovery_results", user.id, applied - 120_000, meal, {
@@ -168,6 +173,12 @@ export function createFixture(): Dataset {
         }
       }
     }
+    meal.cancelReason = meal.cancelReasons?.[0];
+    if (i % 11 !== 0 || i % 22 === 0) {
+      const at = iso(time - 15 * 60_000);
+      meal.checkpoint = { at, passed: i % 11 !== 0, count: rosterAt(data, meal, at).size };
+    }
+    if (i === 54) meal.lowCountDecision = "continue";
     meal.peakConfirmed = Math.min(
       meal.capacity,
       1 +
@@ -232,6 +243,15 @@ export function createFixture(): Dataset {
     { ...example, id: "LATE-1", receivedAt: "2026-10-19T12:00:00Z" },
     { ...example, id: "BAD-1", sessionId: "" },
   );
+  // R-16 samples: a two-area request, an unconstrained request and pre-login browsing.
+  const wide = { ...example, name: "discovery_results", mealId: undefined, attemptId: undefined, resultCount: 2, budget: undefined, size: undefined, language: undefined };
+  data.events.push(
+    { ...wide, id: "WIDE-1", area: "Soho,Camden" },
+    { ...wide, id: "WIDE-2", area: undefined },
+    { ...wide, id: "ANON-1", userId: undefined, anonymousId: "anon-150", sessionId: "S-anon-150", area: "Soho" },
+    { ...wide, id: "ANON-2", userId: undefined, anonymousId: "anon-150", sessionId: "S-anon-150-later", area: "Soho" },
+  );
+  data.identityLinks!.push({ anonymousId: "anon-150", sessionId: "S-anon-150", userId: "U-150" });
   data.events = data.events.filter((e) => e.occurredAt <= SNAPSHOT);
   for (const user of data.users) {
     const first = data.events

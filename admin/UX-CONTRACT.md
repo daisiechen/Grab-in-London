@@ -8,13 +8,13 @@
 |---|---|---|---|---|
 | Select/Listbox | `src/components.tsx` NativeSelect | DESIGN.md, this contract | native | E2E choice, label and locale retention |
 | Date | `src/App.tsx` global date filter | admin PRD, this contract | native | date validation and London/DST unit tests |
-| Form | `src/App.tsx` filter state | this contract | filter, sample verification | inline error and retained values |
+| Form | `src/App.tsx` filter state | this contract | filter, versioned classification and case basis | inline error and retained values |
 | Scrollbar | `src/styles.css` | DESIGN.md tokens | page, table, dialog | root computed style and narrow viewport |
 | Table | `src/components.tsx` DataTable | this contract | read-only, six-row pagination, real-date newest/oldest ordering | search, clear, page boundaries |
-| Toast | `src/App.tsx` notice | this contract | status | role=status, localized export/verification feedback |
+| Toast | `src/App.tsx` notice | this contract | status | role=status, localized export/governance feedback |
 | Overlay | `src/components.tsx` DetailDialog | this contract | native modal drawer | focus, Escape, restoration |
 | Navigation | `src/App.tsx` pages | this contract | desktop, mobile | named icon links, hash routes and URL filters |
-| CRUD | No production writes | admin PRD | local sample verification only | eligibility and immutable evidence tests |
+| CRUD | No production writes | admin PRD | local versioned governance commands only | eligibility and immutable evidence tests |
 
 
 ## Revision: minimal pilot interactions
@@ -22,7 +22,7 @@
 - Data checks: `src/checks.ts` owns deterministic summaries for the current dataset and filters. No analyst agent, weekly agenda writer or causal claim. Product team reviews decisions weekly; connected snapshots later supply fresh data.
 - Cohort dates open the full cohort. Nested cohort/user/meal details have a back path. User history includes hosted meals; timestamps display Europe/London.
 - List sorting uses real dates, newest first by default. Locale preserves search and ordering. Dataset changes/sort/clear search reset pagination.
-- Attendance tiles and the evidence action filter the meal list only; aggregation scope stays explicit. Ineligible records show not applicable. Manual verification preserves original sources and focuses invalid basis fields.
+- Attendance tiles and the evidence action filter the meal list only; aggregation scope stays explicit. Ineligible records show not applicable. Self-report takes priority; host fills missing self-report. Source differences remain inspectable, with no manual attendance resolution.
 - Review switches require `?review=1`; normal screens retain truthful source status but omit test controls and static teaching cards.
 
 ## Flow ledger
@@ -35,7 +35,7 @@
 - Export → only aggregate counts plus snapshot and filters → CSV marked fictional → localized status announcement. No raw personal export.
 
 ## Data truth and security
-UI switches are presentation, not authorization. A real deployment requires server authentication and scoped analytics/attendance permissions. Never expose raw production records through a static public build. Events from test/staff/bots/demo, duplicates and malformed records are excluded. Attendance unknown/conflict is not no-show. The frontend is not authoritative for business outcomes.
+UI switches are presentation, not authorization. A real deployment requires server authentication and scoped analytics/governance permissions. Never expose raw production records through a static public build. Events from test/staff/bots/demo, duplicates and malformed records are excluded. Unknown attendance is not no-show; source differences follow self-report priority. The frontend is not authoritative for business outcomes.
 
 ## Acceptance evidence
 `tests/dashboard.spec.ts` covers core routes, focus/Escape, locale, narrow layout, exports, empty/error recovery. `tests/analytics.test.ts` covers data definitions and windows. `qa/verification.zh-CN.md` records actual validation and limits.
@@ -45,3 +45,6 @@ UI switches are presentation, not authorization. A real deployment requires serv
 Normal navigation has five real destinations and no unused workspace/account avatars. Repeated demo badges/banner are removed; source status and local-only edits stay documented on Data & definitions. Numeric filter choices cover the complete domain. Multi-selects use OR within a field and AND across fields; both-language meals match each supported language without duplicated results. Date inputs keep calendar icons with their text and separate Apply.
 
 Account classification in the quality page updates local account metadata, recomputes behavior and facts, and excludes host test meals. It is not an authorization UI. Production requires server data-admin authorization, change reason/version/audit. Experience reasons are grouped by rating, optional missing reasons stay explicit, and person reconnect intent is never used as meal-return intent. Formula and data authority: [measurement contract](../docs/product/admin/measurement-contract.zh-CN.md).
+
+## Current R1 authority
+The current admin PRD and measurement contract override historical v2 verification flows. No manual attendance verification exists in R1. Snapshot selection freezes asOf, facts, definitions, drilldowns and CSV. Classification/import writes require an explicit new snapshot; case status remains a separate operational receipt. Imports accept id/joinedAt only for users; account classification is a founder-only command. Historical screenshot records do not certify production auth or service integration.
