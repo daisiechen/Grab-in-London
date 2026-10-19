@@ -2122,3 +2122,28 @@ dd {
 .overview-grid.checks-grid {
   align-items: start;
 }
+
+/* Multi-choice analytics filters: OR within each field, AND across fields. */
+.multi-select { position: relative; min-width: 108px; }
+.multi-select summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; max-width: 200px; font-size: 11px; min-height: 30px; }
+.multi-select summary::-webkit-details-marker { display: none; }
+.multi-options { display: none; }
+.multi-select[open] > .multi-options { display: grid; position: absolute; z-index: 35; top: 100%; right: 0; width: max-content; min-width: 150px; max-width: 270px; padding: 10px; border: 1px solid #dce4d8; border-radius: 8px; background: white; box-shadow: 0 8px 24px #203b2e15; }
+.multi-options label { display: flex; gap: 10px; align-items: center; padding: 8px; font-size: 12px; cursor: pointer; }
+.multi-options input { accent-color: #174e39; }
+.advanced-filter .multi-select { border: 0; }
+.advanced-filter .multi-select[open] > .multi-options { position: static; box-shadow: none; width: auto; max-width: none; }
+.date-inputs { gap: 8px; }
+.date-inputs input { width: 88px; flex: 0 0 88px; padding-right: 2px; }
+.date-inputs > button { margin-left: 12px; padding: 6px 10px; border: 1px solid #dce4d8; border-radius: 5px; }
+.classification-form { display: flex; align-items: end; gap: 16px; flex-wrap: wrap; }
+.classification-form > label { display: grid; gap: 8px; font-size: 12px; }
+.classification-form input { border: 1px solid #dce4d8; border-radius: 6px; padding: 10px; max-width: 180px; }
+.classified-users { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 650px) { .multi-select summary { max-width: 130px; } .date-inputs input { width: 88px; } }
+
+.multi-caption { display: grid; gap: 4px; min-width: 0; }
+.multi-caption .filter-label { margin: 0; }
+.multi-select summary { min-height: 42px; }
+.advanced-filter[open] > div { max-height: min(65vh, 440px); overflow-y: auto; }
+@media (max-width: 650px) { .filter-panel > .multi-select:nth-of-type(1) > .multi-options { left: 0; right: auto; } }

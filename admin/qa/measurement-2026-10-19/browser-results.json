@@ -1,0 +1,64 @@
+{
+  "browser": "Codex in-app browser",
+  "date": "2026-10-19",
+  "scenarios": [
+    {
+      "name": "filters: outside click, Escape, route change and removable active choices",
+      "pass": true
+    },
+    {
+      "name": "overview: checks use current maturity and have inspectable evidence",
+      "pass": true
+    },
+    {
+      "name": "journey: localized filters/search survive; nested records have a back path",
+      "pass": true
+    },
+    {
+      "name": "supply: explicit date ordering, pagination, no-results and restoration",
+      "pass": true
+    },
+    {
+      "name": "retention: whole-cohort drilldown and distinct feedback labels",
+      "pass": true
+    },
+    {
+      "name": "quality: no normal test switches; dictionary and quarantined evidence",
+      "pass": true
+    },
+    {
+      "name": "review-only empty and failure states recover without stale charts",
+      "pass": true
+    },
+    {
+      "name": "attendance: basis required, source accurate, invalid participants not no-shows",
+      "pass": true
+    },
+    {
+      "name": "date drafts validate; aggregate export includes all ratios and cohort denominators",
+      "pass": true
+    },
+    {
+      "name": "compact viewport: named icon navigation, filters and localized state",
+      "pass": true
+    },
+    {
+      "name": "measurement: clean navigation, multi-choice language/size and complete budget ranges",
+      "pass": true
+    },
+    {
+      "name": "classification: test host excluded from metrics and restored without deleting records",
+      "pass": true
+    },
+    {
+      "name": "definitions: follow-up example, distinct seat state and reason rating slice",
+      "pass": true
+    }
+  ],
+  "appScenario": {
+    "name": "App attendance, private experience, host roster and state isolation",
+    "pass": true
+  },
+  "browserErrors": [],
+  "appErrors": []
+}

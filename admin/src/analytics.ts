@@ -1,10 +1,12 @@
 export const SNAPSHOT = "2026-10-18T12:00:00Z";
 export const DAY = 86_400_000;
-export type User = { id: string; joinedAt: string };
+export type AccountType = "regular" | "test" | "staff";
+export type User = { id: string; joinedAt: string; accountType?: AccountType };
 export type Meal = {
   id: string;
   title: string;
   startsAt: string;
+  endsAt?: string;
   publishedAt: string;
   area: string;
   language: string;
@@ -42,6 +44,7 @@ export type Feedback = {
   score: number;
   again: boolean;
   issue: "none" | "coordination" | "expectations" | "venue";
+  reasons?: string[];
   at: string;
 };
 export type Event = {
@@ -136,7 +139,8 @@ export function validEvent(e: Event) {
       e.receivedAt
     ) &&
     !Number.isNaN(+new Date(e.occurredAt)) &&
-    !Number.isNaN(+new Date(e.receivedAt))
+    !Number.isNaN(+new Date(e.receivedAt)) &&
+    (e.name !== "discovery_results" || (Number.isInteger(e.resultCount) && e.resultCount! >= 0))
   );
 }
 export function cleanEvents(
@@ -204,7 +208,7 @@ export function verifyAttendance(
   asOf = SNAPSHOT,
 ): Dataset {
   const meal = data.meals.find((m) => m.id === mealId);
-  if (!note.trim() || !meal || meal.cancelled || meal.startsAt >= asOf)
+  if (!note.trim() || !meal || meal.cancelled || !mealEnded(meal, asOf))
     throw new Error("Attendance verification is unavailable.");
   const eligible =
     userId === meal.hostId ||
@@ -213,7 +217,7 @@ export function verifyAttendance(
         a.mealId === mealId &&
         a.userId === userId &&
         a.confirmedAt &&
-        a.confirmedAt <= asOf &&
+        a.confirmedAt <= asOf && a.confirmedAt < meal.startsAt &&
         (!a.withdrawnAt || a.withdrawnAt > meal.startsAt),
     );
   if (!eligible) throw new Error("Only eligible participants may be verified.");
@@ -233,57 +237,86 @@ export function verifyAttendance(
     ],
   };
 }
+export const selectedValues = (value: string) => value === "all" ? [] : value.split(",");
+export const matchesChoice = (filter: string, value: string) => filter === "all" || selectedValues(filter).includes(value);
+export function budgetBand(budget?: number) {
+  return budget === undefined || !Number.isFinite(budget) || budget < 0 ? "unknown"
+    : budget <= 20 ? "0-20" : budget <= 30 ? "20-30" : budget <= 40 ? "30-40" : "40+";
+}
+export function matchesLanguage(filter: string, language?: string) {
+  if (filter === "all") return true;
+  const codes = (language || "").replace(/Mandarin|中文/g, "Chinese").split(/\s*(?:\/|&|,)\s*/);
+  return selectedValues(filter).some((v) => codes.includes(v));
+}
+export function matchesSize(filter: string, size?: number) {
+  return filter === "all" || selectedValues(filter).some((v) => v === "duo" ? size === 2 : v === "group" ? size !== undefined && size >= 3 && size <= 6 : v === "7+" ? size !== undefined && size >= 7 : size === Number(v));
+}
+export function matchesBudget(filter: string, budget?: number) {
+  if (filter === "all") return true;
+  // Retain old shared URLs with a numeric upper bound.
+  if (/^\d+$/.test(filter)) return budget !== undefined && budget <= Number(filter);
+  return matchesChoice(filter, budgetBand(budget));
+}
+export function regularUser(data: Dataset, id: string) {
+  const kind = data.users.find((u) => u.id === id)?.accountType;
+  return !kind || kind === "regular";
+}
+export function analyticalData(data: Dataset): Dataset {
+  const meals = data.meals.filter((m) => regularUser(data, m.hostId));
+  const ids = new Set(meals.map((m) => m.id));
+  const allowed = (u: string, m: string) => regularUser(data, u) && ids.has(m);
+  return { ...data, meals,
+    users: data.users,
+    applications: data.applications.filter((a) => allowed(a.userId, a.mealId)),
+    attendance: data.attendance.filter((a) => allowed(a.userId, a.mealId)),
+    feedback: data.feedback.filter((a) => allowed(a.userId, a.mealId)),
+    events: data.events.filter((e) => (!e.userId || regularUser(data, e.userId)) && (!e.mealId || ids.has(e.mealId))),
+    identityLinks: data.identityLinks,
+  };
+}
 function mealMatches(meal: Meal, f: Filters) {
-  return (
-    (f.area === "all" || meal.area === f.area) &&
-    (f.source === "all" || meal.source === f.source) &&
-    (f.language === "all" || meal.language === f.language) &&
-    (f.size === "all" ||
-      (f.size === "duo" ? meal.capacity === 2 : meal.capacity >= 3)) &&
-    (f.budget === "all" || meal.budget <= Number(f.budget))
-  );
+  return matchesChoice(f.area, meal.area) && matchesChoice(f.source, meal.source)
+    && matchesLanguage(f.language, meal.language) && matchesSize(f.size, meal.capacity) && matchesBudget(f.budget, meal.budget);
 }
 export function userMatches(data: Dataset, userId: string, f: Filters) {
   const u = data.users.find((u) => u.id === userId);
   return (
-    f.segment === "all" ||
-    (!!u &&
-      (f.segment === "new"
-        ? within(u.joinedAt, f)
-        : londonDay(u.joinedAt) < f.start))
+    regularUser(data, userId) && (f.segment === "all" ||
+    (!!u && matchesChoice(f.segment, within(u.joinedAt, f) ? "new" : londonDay(u.joinedAt) < f.start ? "existing" : "future")))
   );
+}
+export function peakBeforeStart(data: Dataset, meal: Meal, asOf = SNAPSHOT) {
+  const rows = data.applications.filter((a) => a.mealId === meal.id && regularUser(data, a.userId) && a.confirmedAt && a.confirmedAt < meal.startsAt && a.confirmedAt <= asOf && (!a.withdrawnAt || a.withdrawnAt > a.confirmedAt));
+  return Math.max(1, ...rows.map((at) => 1 + new Set(rows.filter((a) => a.confirmedAt! <= at.confirmedAt! && (!a.withdrawnAt || a.withdrawnAt > at.confirmedAt!)).map((a) => a.userId).filter((id) => id !== meal.hostId)).size));
 }
 export function filterMeals(data: Dataset, f: Filters, asOf = SNAPSHOT) {
+  data = analyticalData(data);
   return data.meals.filter(
     (m) => m.publishedAt <= asOf && within(m.startsAt, f) && mealMatches(m, f),
-  );
+  ).map((m) => ({...m, peakConfirmed: peakBeforeStart(data, m, asOf)}));
 }
 export function filteredEvents(data: Dataset, f: Filters, asOf = SNAPSHOT) {
+  data = analyticalData(data);
   return cleanEvents(data.events, data.identityLinks, asOf).filter((e) => {
+    if (e.userId && !regularUser(data, e.userId)) return false;
     if (!within(e.occurredAt, f) || !userMatches(data, e.userId || "", f))
       return false;
     const m = data.meals.find((m) => m.id === e.mealId);
     if (m) return mealMatches(m, f);
-    return (
-      (f.area === "all" || e.area === f.area) &&
-      (f.source === "all" || e.source === f.source) &&
-      (f.language === "all" || e.language === f.language) &&
-      (f.size === "all" ||
-        (e.size !== undefined &&
-          (f.size === "duo" ? e.size === 2 : e.size >= 3))) &&
-      (f.budget === "all" ||
-        (e.budget !== undefined && e.budget <= Number(f.budget)))
-    );
+    return matchesChoice(f.area, e.area || "unknown") && matchesChoice(f.source, e.source || "unknown")
+      && matchesLanguage(f.language, e.language) && matchesSize(f.size, e.size) && matchesBudget(f.budget, e.budget);
   });
 }
+export const mealEnded = (meal: Meal, asOf = SNAPSHOT) => +new Date(meal.endsAt || new Date(+new Date(meal.startsAt) + 2 * 3_600_000).toISOString()) <= +new Date(asOf);
 export function participation(data: Dataset, asOf = SNAPSHOT) {
+  data = analyticalData(data);
   const result: {
     userId: string;
     meal: Meal;
     status: ReturnType<typeof attendance>;
   }[] = [];
   for (const meal of data.meals.filter(
-    (m) => !m.cancelled && m.startsAt < asOf && m.publishedAt <= asOf,
+    (m) => !m.cancelled && mealEnded(m, asOf) && m.publishedAt <= asOf,
   )) {
     const people = new Set([
       meal.hostId,
@@ -292,7 +325,7 @@ export function participation(data: Dataset, asOf = SNAPSHOT) {
           (a) =>
             a.mealId === meal.id &&
             a.confirmedAt &&
-            a.confirmedAt <= asOf &&
+            a.confirmedAt <= asOf && a.confirmedAt < meal.startsAt &&
             (!a.withdrawnAt || a.withdrawnAt > meal.startsAt),
         )
         .map((a) => a.userId),
@@ -315,6 +348,7 @@ function firstAttendance(data: Dataset, asOf: string) {
   return first;
 }
 export function activationUsers(data: Dataset, f: Filters, asOf = SNAPSHOT) {
+  data = analyticalData(data);
   const first = new Map<string, Application>();
   for (const a of [...data.applications]
     .filter((a) => a.appliedAt <= asOf)
@@ -341,6 +375,7 @@ export function activationUsers(data: Dataset, f: Filters, asOf = SNAPSHOT) {
     });
 }
 export function cohorts(data: Dataset, f: Filters, asOf = SNAPSHOT) {
+  data = analyticalData(data);
   const first = firstAttendance(data, asOf),
     parts = participation(data, asOf).filter((p) => p.status === "present");
   const grouped = new Map<
@@ -429,6 +464,7 @@ export function cohorts(data: Dataset, f: Filters, asOf = SNAPSHOT) {
   return [...grouped.values()].sort((a, b) => a.week.localeCompare(b.week));
 }
 export function summarize(data: Dataset, f: Filters, asOf = SNAPSHOT) {
+  data = analyticalData(data);
   const meals = filterMeals(data, f, asOf).filter((m) => m.startsAt <= asOf);
   const mealIds = new Set(meals.map((m) => m.id));
   const parts = participation(data, asOf).filter(
@@ -448,12 +484,12 @@ export function summarize(data: Dataset, f: Filters, asOf = SNAPSHOT) {
   const activation = activationUsers(data, f, asOf).filter((a) => a.mature),
     retention = cohorts(data, f, asOf);
   const events = filteredEvents(data, f, asOf),
-    discoveries = events.filter((e) => e.name === "discovery_results");
+    discoveries = events.filter((e) => e.name === "discovery_results" && Number.isInteger(e.resultCount) && e.resultCount! >= 0);
   const feedbackMap = new Map<string, Feedback>();
   for (const r of [...data.feedback].sort((a, b) => a.at.localeCompare(b.at)))
     if (
       mealIds.has(r.mealId) &&
-      r.at <= asOf &&
+      r.at <= asOf && Number.isInteger(r.score) && r.score >= 1 && r.score <= 5 && typeof r.again === "boolean" &&
       parts.some(
         (p) =>
           p.userId === r.userId &&
@@ -509,6 +545,7 @@ export function summarize(data: Dataset, f: Filters, asOf = SNAPSHOT) {
   };
 }
 export function funnel(data: Dataset, f: Filters, asOf = SNAPSHOT) {
+  data = analyticalData(data);
   const events = filteredEvents(data, f, asOf);
   const identities = (es: Event[]) =>
     new Set(
@@ -543,6 +580,7 @@ export function funnel(data: Dataset, f: Filters, asOf = SNAPSHOT) {
     (a) =>
       data.meals.some((m) => m.id === a.mealId && !m.cancelled) &&
       a.confirmedAt &&
+      a.confirmedAt < data.meals.find((m) => m.id === a.mealId)!.startsAt &&
       (!a.withdrawnAt ||
         a.withdrawnAt > data.meals.find((m) => m.id === a.mealId)!.startsAt) &&
       attendance(latestAttendance(data, a.userId, a.mealId, asOf)) ===
@@ -604,10 +642,11 @@ export function funnel(data: Dataset, f: Filters, asOf = SNAPSHOT) {
   };
 }
 export function createFunnel(data: Dataset, f: Filters, asOf = SNAPSHOT) {
+  data = analyticalData(data);
   const starts = filteredEvents(data, f, asOf).filter(
     (e) => e.name === "create_started" && e.attemptId,
   );
-  const all = cleanEvents(data.events, data.identityLinks, asOf);
+  const all = cleanEvents(data.events, data.identityLinks, asOf).filter((e) => !e.userId || regularUser(data, e.userId));
   const identity = (e: Event) =>
     e.userId || `anonymous:${e.anonymousId || e.sessionId}`;
   const attempts = new Map<string, Event>();

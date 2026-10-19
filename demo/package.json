@@ -12,7 +12,7 @@
     "dev": "vite",
     "prebuild": "node scripts/check-mobile-runtime.mjs",
     "build": "tsc && vite build && node scripts/prepare-sites-build.mjs",
-    "test:domain": "node --test tests/domain.test.ts tests/assistant.test.ts"
+    "test:domain": "node --test tests/domain.test.ts tests/assistant.test.ts tests/post-meal.test.ts"
   },
   "dependencies": {
     "@fontsource/roboto": "5.2.10",

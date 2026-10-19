@@ -37,18 +37,18 @@ export const metrics: Metric[] = [
   },
   {
     id: "activation",
-    title: ["14 天首次赴约率", "14-day first attendance"],
+    title: ["首次申请后 14 天内出席率", "14-day first attendance"],
     definition: [
-      "首次申请后 14 天内首次确认赴约的成熟用户 ÷ 首次申请已观察满 14 天的用户。发起人单独看创建漏斗。",
-      "Mature first applicants whose first attendance occurs within 14 days / first applicants observed for a full 14 days. Host-only users use the create funnel.",
+      "先找每人的历史第一笔已提交申请；只选申请日期在当前范围、到数据截止已过完整 14×24 小时的人作为分母。其中在首次申请起 14 天内第一次实际出席饭局的人作为分子。例：10月1日12点首次申请，到10月15日12点才纳入分母；近期用户仍在观察，不算失败。发起人发布饭局不是提交申请，单看“发起饭局”的开始创建→完成安排→发布。",
+      "Users first attending within 14 days of their first submitted application / first applicants whose full 14-day follow-up has elapsed by the cutoff. Select cohorts by first application date; recent applicants remain under observation. Hosts publishing a meal are measured in the host flow, not counted as applications.",
     ],
     unit: [
-      "用户；首次申请归入所选日期",
+      "去重用户；例如选9月1–30日，就只选历史首次申请发生在9月的人，不要求出席也在9月。",
       "Users; cohort by first application date",
     ],
-    window: ["14×24 小时；只计成熟用户。", "14 × 24 hours; mature users only."],
+    window: ["从首次申请成功时间起算连续14×24小时；不足14天者另列观察中。", "14 × 24 hours; full follow-up only."],
     source: [
-      "申请成功业务记录 + 出席确认。",
+      "同时关联同一用户的申请提交成功业务记录和有效出席记录。申请成功是提交成功，不是获准；出席须是已确认成员或发起人、未提前退出、场次未取消，且饭后有出席报告。",
       "Authoritative applications and attendance.",
     ],
     decision: [
@@ -62,18 +62,18 @@ export const metrics: Metric[] = [
   },
   {
     id: "retention",
-    title: ["30 天重复赴约率", "30-day repeat attendance"],
+    title: ["首次出席后 30 天内再赴约率", "30-day repeat attendance"],
     definition: [
-      "首次出席后 30 天内参加另一场饭局的成熟用户 ÷ 首次出席已观察满 30 天的用户。",
-      "Mature first attendees attending another meal within 30 days / first attendees observed for 30 days.",
+      "分母：历史首次实际出席发生在所选日期，且到数据截止已过完整30天的用户。分子：这些人在首次出席后30天内又出席另一场饭局的人。首次出席后还没满30天的人单列“观察中”，不算流失。",
+      "Users attending a different meal within 30 days of their first attendance / first attendees whose full 30-day follow-up has elapsed. Recent attendees remain under observation, not classified as churn.",
     ],
     unit: [
-      "用户；首次出席归入所选日期",
+      "去重用户；所选日期筛选历史第一次出席发生的时间，后续出席可在所选日期之外。",
       "Users; cohort by first attendance date",
     ],
     window: [
-      "30×24 小时；未成熟用户单列。",
-      "30 × 24 hours; immature users reported separately.",
+      "从第一次实际出席的饭局开始时间起算30×24小时；未满30天单列观察中。",
+      "30 × 24 hours; users still under observation reported separately.",
     ],
     source: [
       "去重出席事实，关联不同 mealId。",
@@ -90,7 +90,7 @@ export const metrics: Metric[] = [
   },
   {
     id: "coverage",
-    title: ["出席确认覆盖率", "Attendance coverage"],
+    title: ["出席结果记录覆盖率", "Attendance coverage"],
     definition: [
       "状态明确为出席或未出席的参与记录 ÷ 已结束且未取消饭局的应确认参与记录（发起人及未提前退出的确认成员）。",
       "Present or absent records / eligible participation records in ended, non-cancelled meals, including hosts and confirmed members who did not withdraw before start.",
@@ -101,7 +101,7 @@ export const metrics: Metric[] = [
       "By meal start date, as of snapshot.",
     ],
     source: [
-      "参与关系 + 发起人确认 / 本人自报。",
+      "饭后App“记录出席”：发起人逐人报告、本人自报；存在冲突时由获授权运营核实并保留原始来源。打开群聊或席位已确认都不能代替出席。",
       "Membership and host/self attendance reports.",
     ],
     decision: [
@@ -137,9 +137,9 @@ export const metrics: Metric[] = [
   },
   {
     id: "formation",
-    title: ["成团率", "Formation rate"],
+    title: ["开始前招募达标率", "Formation rate"],
     definition: [
-      "计划开始前曾达到最低确认人数的场次 ÷ 已到计划开始时间的已发布场次；取消仍在分母。",
+      "计划开始前，确认成员数（含发起人）曾达到最低成团人数的场次 ÷ 已到计划开始时间的已发布场次。双人饭局门槛2人，3–6人饭局门槛3人；取消仍在分母。仅代表招募达标，不代表实际举行。",
       "Published meals reaching minimum confirmed size before start / published meals whose planned start has passed; cancellations stay in denominator.",
     ],
     unit: ["饭局", "Meals"],
@@ -186,7 +186,7 @@ export const metrics: Metric[] = [
     id: "approval",
     title: ["申请处理耗时", "Application response time"],
     definition: [
-      "申请成功到首次有效审核的小时数，展示中位数及 P90；待处理申请另看当前等待。",
+      "从申请提交成功，到发起人第一次批准或拒绝的小时数。中位数=50%的已处理申请用时不超过此值；P90=90%不超过此值（最近秩法）。例如5.0h与12.0h表示一半在5小时内、九成在12小时内处理。待处理申请不计入，另列数量与等待用时。",
       "Hours from application success to first valid decision, median and P90; pending wait is separate.",
     ],
     unit: ["申请 / 小时", "Application / hours"],
@@ -211,7 +211,7 @@ export const metrics: Metric[] = [
     id: "discovery7",
     title: ["发现后 7 天申请率", "7-day discovery to application"],
     definition: [
-      "至少有一次成熟发现请求且在该请求后 7 天内成功申请的用户 ÷ 有成熟发现请求的用户；用户去重。",
+      "分母：所选日期内至少有一次发现列表加载成功，且该次加载到截止时间已过完整7天的用户。分子：同一用户在这些加载中的任一次之后7天内提交成功至少一笔申请。每人只计一次，不是点击申请按钮的次数。",
       "Users applying within 7 days of at least one mature discovery request / users with a discovery request observed for 7 days.",
     ],
     unit: [
@@ -219,7 +219,7 @@ export const metrics: Metric[] = [
       "Users, including explicit session-linked identities",
     ],
     window: [
-      "成熟发现请求；按发现日期入组。",
+      "发现加载时间在所选范围、且已观察满7×24小时；后续申请可跨所选结束日但不能晚于数据截止。",
       "Mature discovery requests; cohort by discovery date.",
     ],
     source: [
@@ -239,7 +239,7 @@ export const metrics: Metric[] = [
     id: "feedback",
     title: ["饭后反馈与再参加意愿", "Feedback and return intent"],
     definition: [
-      "反馈覆盖=提交反馈的出席人次/确认出席人次；愿再参加=选择愿意的反馈/有效反馈。",
+      "反馈覆盖=提交整场体验评分的出席人次÷确认出席人次；愿再参加=选择“愿意再参加Fancy饭局”的有效反馈÷回答该问题的有效反馈。原因按评分与固定多选标签分析，未填写原因单列，不推断为无问题。",
       "Coverage = feedback submissions / attended participations; return intent = positive answers / valid feedback.",
     ],
     unit: ["用户 × 饭局", "User × meal"],
@@ -248,7 +248,7 @@ export const metrics: Metric[] = [
       "Meal dates in range; feedback up to snapshot.",
     ],
     source: [
-      "确认出席 + feedback_submitted 业务结果。",
+      "确认出席人次 + App饭后“整场饭局体验”私密反馈（1–5分、愿否再参加、可选多项原因）。不读取公开评价正文或针对某人的私密互选。",
       "Attendance and authoritative feedback submissions.",
     ],
     decision: [

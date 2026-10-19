@@ -1,3 +1,4 @@
+import { reportAttendance, attendanceResult, saveExperience, experienceReasons, type AttendanceReport, type MealExperience, type ExperienceReason, type MealContext } from "./postMeal";
 import { isReviewMode } from "./presentation";
 import { BRAND } from "./brand";
 import {
@@ -1934,6 +1935,22 @@ export default function Prototype() {
     date: "2026-10-15",
     memberId: "maya",
   });
+  const [attendanceReports, setAttendanceReports] = useState<AttendanceReport[]>([]);
+  const [mealExperiences, setMealExperiences] = useState<MealExperience[]>([]);
+  const [experienceScore, setExperienceScore] = useState("");
+  const [experienceAgain, setExperienceAgain] = useState("");
+  const [reasonChoices, setReasonChoices] = useState<ExperienceReason[]>([]);
+  const [experienceError, setExperienceError] = useState("");
+  const targetMeal = meals.find((m) => m.id === feedbackTarget.mealId);
+  const postMealContext: MealContext = feedbackTarget.mealId.startsWith("past-supper")
+    ? { id: feedbackTarget.mealId, ended: true, cancelled: false, hostId: feedbackTarget.mealId === "past-supper-host" ? "alex" : "maya", participantIds: ["maya", "emma", "alex"] }
+    : { id: feedbackTarget.mealId, ended: !!completed[feedbackTarget.mealId], cancelled: bookings[feedbackTarget.mealId] === "CANCELLED", hostId: targetMeal?.host || "", participantIds: targetMeal ? [...new Set([targetMeal.host, ...targetMeal.members])] : [] };
+  const myAttendance = attendanceResult(attendanceReports, feedbackTarget.mealId, "alex");
+  const savedExperience = mealExperiences.find((r) => r.mealId === feedbackTarget.mealId && r.userId === "alex");
+  useEffect(() => {
+    const row = mealExperiences.find((r) => r.mealId === feedbackTarget.mealId && r.userId === "alex");
+    setExperienceScore(row ? String(row.score) : ""); setExperienceAgain(row ? String(row.again) : ""); setReasonChoices(row?.reasons || []); setExperienceError("");
+  }, [feedbackTarget.mealId, mealExperiences]);
   const directKey = `direct-${feedbackTarget.memberId}`;
   const [blockedMembers, setBlockedMembers] = useState<Record<string, boolean>>(
     {},
@@ -2509,7 +2526,7 @@ export default function Prototype() {
               <div>
                 <PersonIcon />
                 <strong>
-                  {current.confirmed} of {current.capacity} confirmed
+                  {current.confirmed} of {current.capacity} confirmed · Minimum {current.capacity === 2 ? 2 : 3} including the host
                 </strong>
                 <span>Including the host</span>
               </div>
@@ -3329,7 +3346,7 @@ export default function Prototype() {
               />
               <p className="muted">
                 {draft.capacity - 1} guest{draft.capacity === 2 ? "" : "s"} +
-                you · friendship-first, at every table size.
+                you · Minimum {draft.capacity === 2 ? 2 : 3} confirmed people to go ahead, including you. Friendship-first at every table size.
               </p>
               <div className="create-calendar">
                 <DateChoices
@@ -3428,6 +3445,7 @@ export default function Prototype() {
                 }
                 options={[
                   "English",
+                  "Mandarin",
                   "English & Mandarin",
                   "English & French",
                 ].map((v) => [v, v])}
@@ -3610,7 +3628,7 @@ export default function Prototype() {
                   [
                     "Place & time",
                     `${draft.venue} · ${venue.area}`,
-                    `${longDate(draft.date)} · ${draft.time} London time · ${draft.capacity} people including you`,
+                    `${longDate(draft.date)} · ${draft.time} London time · ${draft.capacity} people including you · Minimum ${draft.capacity === 2 ? 2 : 3} confirmed`,
                     0,
                   ],
                   ["The company", draft.mood, draft.language, 1],
@@ -3749,6 +3767,11 @@ export default function Prototype() {
                     ? "View your feedback"
                     : "Leave feedback"}
                 </Primary>
+              </div>
+              <div className="list-meal">
+                <span className="eyebrow">WED 14 OCT · HOSTED</span>
+                <h2>A table I hosted</h2><p>Soho · You hosted Maya and Emma.</p>
+                <Primary secondary onClick={() => { setFeedbackTarget({mealId:"past-supper-host", title:"A table I hosted", date:"2026-10-14", memberId:"maya"}); setReview(""); setReviewed(false); setWants(false); setMutual(false); go("review"); }}>Record guest attendance</Primary>
               </div>
               <ReviewOnly>
                 <p className="muted">
@@ -4306,6 +4329,32 @@ export default function Prototype() {
               </p>
             </div>
           </div>
+          <section className="post-meal-panel" aria-label="Meal attendance and experience">
+            <h2>Record attendance</h2>
+            <p className="muted">A confirmed seat is a place on the guest list. Tell us what happened after the meal. No location tracking is used.</p>
+            <div className="post-meal-actions">
+              {(["present", "absent"] as const).map((value) => <button type="button" className={myAttendance === value ? "selected" : ""} aria-pressed={myAttendance === value} key={value} onClick={() => {
+                try { setAttendanceReports((rows) => reportAttendance(rows, postMealContext, "alex", "alex", value, new Date().toISOString())); setExperienceError(""); notify("Attendance recorded."); } catch (e) { setExperienceError((e as Error).message); }
+              }}>{value === "present" ? "I attended" : "I did not attend"}</button>)}
+            </div>
+            {myAttendance === "conflict" && <p role="status">Your report differs from the host’s. We keep both reports for review; this is not counted as a no-show.</p>}
+            {postMealContext.hostId === "alex" && <div className="attendance-roster"><h3>Guest attendance</h3>{postMealContext.participantIds.filter((id) => id !== "alex").map((id) => <div key={id}><span>{members[id]?.name || id} · {attendanceResult(attendanceReports, postMealContext.id, id)}</span>{(["present", "absent"] as const).map((value) => <button key={value} onClick={() => {
+              try { setAttendanceReports((rows) => reportAttendance(rows, postMealContext, "alex", id, value, new Date().toISOString())); notify("Guest attendance recorded."); } catch (e) { setExperienceError((e as Error).message); }
+            }}>{value === "present" ? "Attended" : "Did not attend"}</button>)}</div>)}</div>}
+            {myAttendance === "present" && <>
+              <h2>Your meal experience</h2>
+              <p className="muted">Private feedback about the whole meal, separate from public references and reconnect choices. You can skip this section.</p>
+              <fieldset className="experience-field"><legend>Overall experience · 1 = poor, 5 = excellent</legend><div className="post-meal-actions" role="group" aria-label="Overall meal experience">{[1,2,3,4,5].map((value) => <button type="button" key={value} aria-label={`Rate ${value} out of 5`} aria-pressed={experienceScore === String(value)} onClick={() => setExperienceScore(String(value))}>{value}</button>)}</div></fieldset>
+              <fieldset className="experience-field"><legend>What shaped your score? · optional, choose any</legend><div className="experience-reasons">{experienceReasons.map((code) => <label key={code}><input type="checkbox" checked={reasonChoices.includes(code)} onChange={() => setReasonChoices((previous) => previous.includes(code) ? previous.filter((v) => v !== code) : [...previous, code])}/>{{company:"People at the table", conversation:"Conversation", coordination:"Organisation & timing", expectations:"Match with expectations", venue:"Restaurant & food", cost:"Cost", other:"Other"}[code]}</label>)}</div></fieldset>
+              <fieldset className="experience-field"><legend>Would you join another Fancy meal?</legend><div className="post-meal-actions">{[["true","Yes"],["false","No"]].map(([value, name]) => <button type="button" key={value} aria-pressed={experienceAgain === value} onClick={() => setExperienceAgain(value)}>{name}</button>)}</div></fieldset>
+              <Primary secondary onClick={() => {
+                if (!experienceScore || !experienceAgain) { setExperienceError("Choose a score and whether you would join another Fancy meal."); return; }
+                try { setMealExperiences((rows) => saveExperience(rows, attendanceReports, postMealContext, "alex", Number(experienceScore), experienceAgain === "true", reasonChoices, new Date().toISOString())); setExperienceError(""); notify("Private meal experience saved."); } catch (e) { setExperienceError((e as Error).message); }
+              }}>{savedExperience ? "Update meal experience" : "Save meal experience"}</Primary>
+              {savedExperience && <p role="status">Meal experience saved · {savedExperience.score} / 5 · {savedExperience.reasons.length} reason(s)</p>}
+            </>}
+            {experienceError && <p className="form-error" role="alert">{experienceError}</p>}
+          </section>
           {!reviewed ? (
             <>
               <Field
@@ -4325,6 +4374,7 @@ export default function Prototype() {
                 <input
                   type="checkbox"
                   checked={wants}
+                  disabled={myAttendance !== "present"}
                   onChange={(e) => setWants(e.target.checked)}
                 />
                 <span>
@@ -4334,10 +4384,12 @@ export default function Prototype() {
                 <HeartIcon />
               </label>
               <p className="muted">
+                {myAttendance !== "present" && "Record your attendance before leaving a reference. "}
                 References appear after both people submit, or after 7 days.
                 Private feedback is separate.
               </p>
               <Primary
+                disabled={myAttendance !== "present"}
                 onClick={() => {
                   setReviewed(true);
                   keyboard.hide();
@@ -4418,7 +4470,7 @@ export default function Prototype() {
             <strong>{current.title}</strong>
             <p>
               {current.confirmed} of {current.capacity} confirmed · You’re
-              hosting
+              hosting · Minimum {current.capacity === 2 ? 2 : 3} including you
             </p>
           </div>
           <h2>Requests</h2>

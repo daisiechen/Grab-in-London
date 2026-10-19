@@ -66,7 +66,7 @@ export function createFixture(): Dataset {
       startsAt: iso(time),
       publishedAt: iso(time - 5 * DAY),
       area,
-      language: i % 5 === 0 ? "中文 / English" : "English",
+      language: i % 11 === 0 ? "中文" : i % 5 === 0 ? "中文 / English" : "English",
       capacity: i % 13 === 0 ? 2 : 4 + (i % 3),
       minimum: i % 13 === 0 ? 2 : 3,
       budget: 20 + (i % 4) * 5,

@@ -33,9 +33,8 @@ export const scenarios = [
         (await page.locator(".advanced-filter").getAttribute("open")) !== null,
         "Filters open",
       );
-      await page
-        .getByLabel("交流语言", { exact: true })
-        .selectOption("English");
+      await page.getByLabel("交流语言", { exact: true }).click();
+      await page.getByRole("checkbox", { name: "English", exact: true }).check();
       ensure(
         (await page.locator(".advanced-filter").getAttribute("open")) !== null,
         "Choosing inside keeps filters open",
@@ -86,7 +85,7 @@ export const scenarios = [
         ),
         "28-day cohort is observing",
       );
-      const metric = page.getByRole("button", { name: /14 天首次赴约率/ });
+      const metric = page.getByRole("button", { name: /首次申请后 14 天内出席率/ });
       await metric.click();
       await close(page);
       ensure(
@@ -97,7 +96,7 @@ export const scenarios = [
       ensure(
         await visible(
           page.getByRole("heading", {
-            name: "已有成熟重复参与结果",
+            name: "已有完整 30 天的再赴约结果",
             exact: true,
           }),
         ),
@@ -128,7 +127,8 @@ export const scenarios = [
     name: "journey: localized filters/search survive; nested records have a back path",
     run: async (page) => {
       await page.goto("/#journey");
-      await page.getByLabel("区域", { exact: true }).selectOption("Camden");
+      await page.getByLabel("区域", { exact: true }).click();
+      await page.getByRole("checkbox", { name: "Camden", exact: true }).check();
       await page.getByLabel("搜索记录", { exact: true }).fill("A-");
       await page
         .getByRole("button", { name: "切换为英文", exact: true })
@@ -422,7 +422,7 @@ export const scenarios = [
         .getByRole("button", { name: "核实出席", exact: true })
         .click();
       await page
-        .getByRole("button", { name: "保存示例核实", exact: true })
+        .getByRole("button", { name: "保存核实", exact: true })
         .click();
       ensure(await visible(page.getByRole("alert")), "Missing basis error");
       const basis = page.getByLabel("核实依据（必填）", { exact: true });
@@ -432,7 +432,7 @@ export const scenarios = [
       );
       await basis.fill("演示核对：参与者确认");
       await page
-        .getByRole("button", { name: "保存示例核实", exact: true })
+        .getByRole("button", { name: "保存核实", exact: true })
         .click();
       ensure(
         (await page.getByRole("dialog").innerText()).includes("人工核实"),

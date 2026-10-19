@@ -446,3 +446,48 @@ test("cohort drilldown members reconcile with every aggregate and preserve matur
     );
   }
 });
+
+test("multi filters use OR within a dimension, AND across dimensions; language is membership", () => {
+  const all = { ...base, meals: [meal, {...meal, id:"m2", area:"Camden", language:"中文 / English", budget:35, capacity:6}, {...meal,id:"m3",area:"Shoreditch",budget:50,capacity:2}] };
+  assert.equal(filterMeals(all, {...filters, area:"Soho,Camden", size:"4,6"}).length,2);
+  assert.equal(filterMeals(all, {...filters, language:"Chinese"}).length,1);
+  assert.equal(filterMeals(all, {...filters, language:"English"}).length,3);
+  assert.equal(filterMeals(all, {...filters, budget:"20-30,30-40"}).length,2);
+  assert.equal(filterMeals(all, {...filters, area:"Camden", budget:"20-30"}).length,0);
+});
+test("budget bands form a complete non-overlapping partition", async () => {
+  const {budgetBand} = await import("../src/analytics.ts");
+  for (const [value, expected] of [[0,"0-20"],[20,"0-20"],[20.01,"20-30"],[30,"20-30"],[30.01,"30-40"],[40,"30-40"],[40.01,"40+"],[900,"40+"]] as const) assert.equal(budgetBand(value),expected);
+  assert.equal(budgetBand(undefined),"unknown");
+});
+test("classified test users are excluded from facts, linked events and host meals; restoring regular restores history", () => {
+  const ev: Event = {id:"e",name:"discovery_results",sessionId:"s",anonymousId:"anon",occurredAt:"2026-09-21T12:00:00Z",receivedAt:"2026-09-21T12:01:00Z",environment:"production",schemaVersion:1,appVersion:"1",resultCount:1};
+  const classified: Dataset = {...base,users: base.users.map((u) => u.id === "u" ? {...u, accountType:"test"} : u),events:[ev],identityLinks:[{anonymousId:"anon",sessionId:"s",userId:"u"}]};
+  assert.equal(summarize(classified,filters).attendance.present,0);
+  assert.equal(funnel(classified,filters).applications,0);
+  assert.equal(funnel(classified,filters).discovery,0);
+  const host = {...base,users:base.users.map((u) => u.id === "h" ? {...u,accountType:"staff" as const} : u)};
+  assert.equal(summarize(host,filters).formation.denominator,0);
+  assert.equal(summarize(base,filters).attendance.present,1);
+});
+test("seat confirmation does not imply attendance and a not-ended meal has no report denominator", () => {
+  const futureEnd = {...base,meals:[{...meal,endsAt:"2026-10-18T13:00:00Z"}]};
+  assert.equal(funnel(futureEnd, filters).confirmed,1);
+  assert.equal(summarize(futureEnd,filters).attendanceCoverage.denominator,0);
+});
+
+test("test members cannot make a host meal reach its minimum", () => {
+  const duo = {...base, meals:[{...meal, capacity:2, minimum:2}], users:base.users.map((u) => u.id === "u" ? {...u,accountType:"test" as const} : u)};
+  assert.equal(summarize(duo,filters).formation.numerator,0);
+  assert.equal(summarize({...duo, users:base.users},filters).formation.numerator,1);
+});
+test("invalid discovery result counts are not silently added to the zero-result denominator", () => {
+  const common: Event = {id:"valid",name:"discovery_results",sessionId:"s",userId:"u",occurredAt:"2026-09-21T12:00:00Z",receivedAt:"2026-09-21T12:01:00Z",environment:"production",schemaVersion:1,appVersion:"1",resultCount:0};
+  const data = {...base,events:[common,{...common,id:"missing",resultCount:undefined},{...common,id:"negative",resultCount:-1}]};
+  assert.deepEqual(summarize(data,filters).noResults,{numerator:1,denominator:1});
+});
+test("late seat confirmation cannot create eligible attendance", () => {
+  const late = {...base,applications:base.applications.map((a) => ({...a,confirmedAt:"2026-10-02T12:00:00Z"}))};
+  assert.equal(summarize(late,filters).attendance.present,0);
+  assert.throws(() => verifyAttendance(late,"m1","u","present","Checked"));
+});

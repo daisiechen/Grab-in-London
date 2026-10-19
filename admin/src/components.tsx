@@ -164,6 +164,37 @@ export function NativeSelect({
     </label>
   );
 }
+export function MultiSelect({ label, value, options, onChange }: {
+  label: string; value: string; options: [string, string][]; onChange: (value: string) => void;
+}) {
+  const ref = useRef<HTMLDetailsElement>(null);
+  const selected = value === "all" ? [] : value.split(",");
+  useEffect(() => {
+    const dismiss = (event: Event) => {
+      if (ref.current?.open && !ref.current.contains(event.target as Node)) ref.current.open = false;
+    };
+    const dismissFocus = (event: Event) => {
+      if ((event.target as Element).closest?.(".multi-select")) return;
+      dismiss(event);
+    };
+    document.addEventListener("click", dismiss);
+    document.addEventListener("focusin", dismissFocus);
+    const close = () => { if (ref.current) ref.current.open = false; };
+    window.addEventListener("hashchange", close);
+    return () => { document.removeEventListener("click", dismiss); document.removeEventListener("focusin", dismissFocus); window.removeEventListener("hashchange", close); };
+  }, []);
+  return <details ref={ref} className="multi-select select-control" onKeyDown={(e) => {
+    if (e.key === "Escape" && ref.current?.open) { e.stopPropagation(); e.preventDefault(); ref.current.open = false; ref.current.querySelector("summary")?.focus(); }
+  }}>
+    <summary aria-label={label}><span className="multi-caption"><span className="filter-label">{label}</span><span>{selected.length ? selected.map((v) => options.find(([key]) => key === v)?.[1] || ({duo:"2",group:"3–6","25":"≤ £25","30":"≤ £30"}[v] || v)).join("、") : options[0][1]}</span></span><Icon name="down" size={14}/></summary>
+    <div className="multi-options" role="group" aria-label={`${label}选项`}>
+      {options.map(([v, text]) => <label key={v}><input type="checkbox" checked={v === "all" ? value === "all" : selected.includes(v)} onChange={() => {
+        const next = selected.includes(v) ? selected.filter((x) => x !== v) : [...selected, v];
+        onChange(v === "all" || !next.length ? "all" : next.sort().join(","));
+      }}/>{text}</label>)}
+    </div>
+  </details>;
+}
 export function FilterPopover({
   children,
   t,

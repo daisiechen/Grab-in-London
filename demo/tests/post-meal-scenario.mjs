@@ -1,0 +1,37 @@
+const ensure = (ok, message) => { if (!ok) throw new Error(message); };
+export async function postMealScenario(page) {
+  await page.goto("/");
+  await page.getByRole("button", {name:"Find your people",exact:true}).click();
+  await page.getByRole("radio",{name:"Log in",exact:true}).check();
+  await page.getByRole("button",{name:"Continue with email",exact:true}).click();
+  await page.getByRole("textbox",{name:"Email address",exact:true}).fill("alex@example.com");
+  await page.getByRole("button",{name:"Send code",exact:true}).click();
+  await page.getByRole("textbox",{name:"6-digit code",exact:true}).fill("123456");
+  await page.getByRole("button",{name:"Log in",exact:true}).click();
+  await page.getByRole("button",{name:"Meals",exact:true}).click();
+  await page.getByRole("button",{name:"Past",exact:true}).click();
+  await page.getByRole("button",{name:"Leave feedback",exact:true}).click();
+  ensure(!(await page.getByRole("button",{name:"Save feedback",exact:true}).isEnabled()),"Reference requires reported attendance");
+  await page.getByRole("button",{name:"I did not attend",exact:true}).click();
+  ensure(await page.getByRole("heading",{name:"Your meal experience",exact:true}).count() === 0,"Absence does not show rating");
+  await page.getByRole("button",{name:"I attended",exact:true}).click();
+  await page.getByRole("button",{name:"Save meal experience",exact:true}).click();
+  ensure(await page.getByRole("alert").isVisible(),"Missing score and intent rejected");
+  await page.getByRole("button",{name:"Rate 2 out of 5",exact:true}).click();
+  await page.getByRole("checkbox",{name:"Organisation & timing",exact:true}).check();
+  await page.getByRole("checkbox",{name:"Cost",exact:true}).check();
+  await page.getByRole("button",{name:"No",exact:true}).click();
+  await page.getByRole("button",{name:"Save meal experience",exact:true}).click();
+  await page.getByText("Meal experience saved · 2 / 5 · 2 reason(s)",{exact:true}).waitFor({state:"visible"});
+  ensure(!(await page.getByRole("checkbox",{name:/I’d like to share a table again/}).evaluate((el)=>el.checked)),"Meal intent never selects person reconnect");
+  await page.getByText("Meal experience saved · 2 / 5 · 2 reason(s)",{exact:true}).click();
+  await page.screenshot({path:"../admin/qa/measurement-2026-10-19/07-app-saved-experience.png",fullPage:false});
+  await page.getByRole("button",{name:"Go back",exact:true}).click();
+  await page.getByRole("button",{name:"Record guest attendance",exact:true}).click();
+  ensure(await page.getByRole("button",{name:"Save meal experience",exact:true}).count() === 0,"Other meal did not inherit attendance");
+  await page.getByRole("button",{name:"Attended",exact:true}).first().click();
+  ensure(await page.getByText("Maya · present",{exact:true}).isVisible(),"Host can report guest attendance");
+  await page.getByRole("button",{name:"Go back",exact:true}).click();
+  await page.getByRole("button",{name:"Leave feedback",exact:true}).click();
+  ensure(await page.getByText("Meal experience saved · 2 / 5 · 2 reason(s)",{exact:true}).isVisible(),"Experience survives switching meals");
+}

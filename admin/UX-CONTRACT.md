@@ -39,3 +39,9 @@ UI switches are presentation, not authorization. A real deployment requires serv
 
 ## Acceptance evidence
 `tests/dashboard.spec.ts` covers core routes, focus/Escape, locale, narrow layout, exports, empty/error recovery. `tests/analytics.test.ts` covers data definitions and windows. `qa/verification.zh-CN.md` records actual validation and limits.
+
+
+## Measurement revision v2
+Normal navigation has five real destinations and no unused workspace/account avatars. Repeated demo badges/banner are removed; source status and local-only edits stay documented on Data & definitions. Numeric filter choices cover the complete domain. Multi-selects use OR within a field and AND across fields; both-language meals match each supported language without duplicated results. Date inputs keep calendar icons with their text and separate Apply.
+
+Account classification in the quality page updates local account metadata, recomputes behavior and facts, and excludes host test meals. It is not an authorization UI. Production requires server data-admin authorization, change reason/version/audit. Experience reasons are grouped by rating, optional missing reasons stay explicit, and person reconnect intent is never used as meal-return intent. Formula and data authority: [measurement contract](../docs/product/admin/measurement-contract.zh-CN.md).

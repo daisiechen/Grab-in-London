@@ -39,3 +39,6 @@ pnpm test:e2e
 “当前数据检查”按当前数据/筛选重算，不由经营分析Agent撰写，也不承诺每周自动出议题；产品负责人每周据此复核与确定迭代。没有Agent或定时经营任务接入。普通页面隐藏场景测试开关；需要验收时打开`?review=1#quality`。
 
 [本轮审查报告](../docs/delivery/fancy-admin-usability-review.zh-CN.md)包含逐页问题、修复、截图和范围。`tests/browser-scenarios.mjs`为共享浏览器场景：可由现有Playwright包装器执行，也可在已选内置浏览器通过同一场景适配执行。本轮使用后者，无需另开Chrome。
+
+
+指标v2与App采集入口见[采集契约](../docs/product/admin/measurement-contract.zh-CN.md)，[本轮19条批注修订](../docs/delivery/fancy-admin-measurement-review.zh-CN.md)记录验证。统计账号分类和出席核实均为会话内操作，刷新恢复；两端原型没有生产数据联通。

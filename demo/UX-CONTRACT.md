@@ -67,3 +67,7 @@ Larger view / Compact view replaces arrow-only resize controls. Message times an
 
 ## Simulated map and helper revision — 18 October 2026
 The latest helper toolbar has My preferences and no size/close controls. Existing sheet drag, overlay and Escape remain exit paths. Sprite touch dragging is owned by the launcher, not parent scroll. Maps own pan/pinch gestures, suppress a tap following a drag, and expose zoom/reset plus keyboard pan. Discovery searches the current viewport explicitly and can show no meals. Restaurant markers/search rows select a candidate; Use this restaurant alone updates the meal draft through its existing schedule invalidation. Search with no results keeps the prior confirmed venue. Google Maps, Places, location and reservation APIs remain unconnected.
+
+
+## Post-meal measurement revision
+P-11 separates attendance reporting, private whole-meal experience (score, explicit return intent, optional reasons), public reference and person-specific reconnect. Only ended eligible meals may be reported; self and host evidence remain distinct, conflicts stay unresolved. Per-meal state is preserved during navigation. See the [main PRD](../docs/product/PRD.zh-CN.md) and [measurement contract](../docs/product/admin/measurement-contract.zh-CN.md); production persistence and instrumentation remain separate from the local prototype.

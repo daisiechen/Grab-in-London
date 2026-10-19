@@ -42,7 +42,7 @@ class ProductSpecTest(unittest.TestCase):
 
     def test_audit_revision_records_independent_states_and_clean_ui(self):
         text = (Path(__file__).resolve().parents[1] / 'docs/product/PRD.zh-CN.md').read_text()
-        for contract in ('版本：0.6', '保留原餐厅预约状态', 'Cancelled 独立',
+        for contract in ('版本：0.7', '保留原餐厅预约状态', 'Cancelled 独立',
                          '按成员记录', '金额最多2位小数', '退款金额在取消时按饭局记录'):
             self.assertIn(contract, text)
 

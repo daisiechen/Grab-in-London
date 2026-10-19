@@ -32,6 +32,17 @@ class AdminDeliveryTests(unittest.TestCase):
             self.assertIn(phrase, prd)
         self.assertTrue((ROOT / 'admin/tests/browser-scenarios.mjs').is_file())
 
+    def test_measurement_v2_defines_sources_windows_and_app_gaps(self):
+        spec = (ROOT / 'docs/product/admin/measurement-contract.zh-CN.md').read_text()
+        for phrase in ['scheduledEndAt', 'resultCount', '50%', '1000ms', 'applicationId',
+                       '14天', '30天', 'reasons', 'sourceStatus', 'data-admin', '7天',
+                       '[0,20]', '(20,30]', '公开', '单方互选']:
+            self.assertIn(phrase, spec)
+        report = (ROOT / 'docs/delivery/fancy-admin-measurement-review.zh-CN.md').read_text()
+        for index in range(1, 20):
+            self.assertIn(f'| {index:02d} ', report)
+        self.assertTrue((ROOT / 'demo/src/postMeal.ts').is_file())
+
     def test_delivery_links_point_to_existing_files(self):
         for target in ['admin/src/analytics.ts', 'admin/src/fixtures.ts',
                        'admin/DESIGN.md', 'admin/UX-CONTRACT.md',
