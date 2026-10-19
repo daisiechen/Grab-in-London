@@ -25,7 +25,7 @@
 
 ## 发布与验收
 
-- [双端研发准入评审](reviews/development-readiness-2026-10-19.zh-CN.md)：Codex/Claude联合评审、首期范围决策、开发阻塞与关闭标准；当前尚未通过准入。
+- [双端研发准入评审](reviews/development-readiness-2026-10-19.zh-CN.md)：Codex/Claude联合评审、首期范围决策、开发阻塞与关闭标准；已通过R1开发前置依赖验收；固定基线与22项关闭证据见报告。
 
 - [发布记录](delivery/demo-release.zh-CN.md)与[完整产品审查](delivery/full-product-audit.zh-CN.md)。
 - 用户端：[视觉验证](../demo/design-qa.md)、[浏览器验证](../demo/qa/browser-results.md)，截图按批次保存在 `demo/qa/`。

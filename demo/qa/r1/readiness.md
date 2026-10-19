@@ -1,6 +1,6 @@
 # R1 用户端候选核验（2026-10-19）
 
-状态：本地候选，交协调会话与独立审查；未提交、未推送、未发布。本轮默认R1，`?scope=future`保留早期收费/代订探索。没有接入生产服务，不将当前结果称为原生iOS或真实多人系统完成。
+状态：实现基线 `e9c90fa` 已由协调会话统一提交并同步 GitHub；Claude 固定 SHA 只读复核通过，未发现开发设计阻塞。最终准入签核由协调会话单独记录；本轮未部署线上。本轮默认R1，`?scope=future`保留早期收费/代订探索。没有接入生产服务，不将当前结果称为原生iOS或真实多人系统完成。
 
 ## 文件与范围
 
@@ -18,10 +18,10 @@
 | `cd demo && npm run test:domain` | 最终82项（含29项R1）；覆盖原future、助手、餐后及新R1。以本轮最终命令输出为准 |
 | `cd demo && npm run build` | TypeScript/Vite/Sites打包通过；28个受保护运行时文件完整；约650KB主包有性能warning，未提高阈值掩盖 |
 | `cd demo && npm run test:sites` | 6项静态Worker/打包检查通过；不表示已部署 |
-| `python3 -m unittest tests.test_prd tests.test_readiness_review` | 8项结构、规则/权威引用、协作边界检查通过；全仓 `python3 -m unittest discover -s tests` 37项通过；不是业务充分性证明 |
-| `node --test admin/tests/handoff.test.ts` | 4项通过，包含**实际projectAnalytics→parseHandoff**与普通虚构人仍在分析分母；后台文件只读 |
+| `python3 -m unittest tests.test_prd tests.test_readiness_review` | 10项结构、规则/权威引用、协作边界检查通过；最终全仓 `python3 -m unittest discover -s tests` 39项通过；不是业务充分性证明 |
+| `node --test admin/tests/handoff.test.ts` | 最终5项通过，包含**实际projectAnalytics→parseHandoff**与普通虚构人仍在分析分母；后台文件只读 |
 | CUA in-app browser | 本地iPhone实际走查如下；非全平台/读屏/原生验收 |
-| 全量Playwright | 协调会话独立执行完整31项多worker回归，最终 **31 passed (4.6m)，exit 0**；另5项R1单worker定向回归 **34.4s，exit 0**。多worker在逐项显示通过后曾有较长退出清理等待，最终正常结束；没有放宽断言、配置或阈值。另一次完整单worker复跑尚在进行，不将中间进度计为完成 |
+| 全量Playwright | **最终实现基线 `e9c90fa`**：协调会话在全部 F 修正冻结后执行 `PLAYWRIGHT_CHANNEL=chrome pnpm exec playwright test --workers=1 --global-timeout=180000`，**31 passed (1.3m)，exec session 90625，exit 0**。覆盖最终用户端代码，不仅是旧候选或定向复测。初轮历史另有31项多worker4.6m及5项R1定向34.4s正常退出；初轮退出清理延迟已记录，没有修改源码、断言、配置或阈值来规避 |
 
 浏览器已走查：访客→申请前登录→Facebook/Google预览返回原申请；Apple失败/关联冲突可恢复；申请后Inbox待审不可入群；切maya批准→外订声明→切alex群聊发送；餐厅候选先确认→双人创建四步→发布独立mealId；地图Soho标记筛为两场，范围搜索/重置及人数快筛；餐后评分与again空初始校验、多原因保存、切人不继承、回本人恢复；双方互选开私聊，撤回后历史只读；助手当前饭局生成申请草稿，回原编辑器且不自动提交，R1无语音入口。
 
@@ -60,9 +60,9 @@
 | R-21 | 本人导出；确认后删除取消hosting/退出参与/去资料正文/撤互选；保留政策 | 当前模拟重新认证、无真实会话/备份作业；consent是每人内存设置，r1-1 events空 |
 | R-22 | 名字/简介/申请长度、人数/预算必填、历史unknown与传输映射 | 正式API需显式typed validation，不依赖当前英文错误归类 |
 
-## 候选冻结后的待办
+## 最终核验状态
 
-不把研发依赖与原型缺陷混为一谈。接下来由协调会话复核本地候选、运行独立浏览器和Claude只读审查、决定是否允许串行提交。当前未提交/未推送/未部署；既有线上站点保持此前版本。不得把本报告的“规格已补”自动标成22项全部关闭。
+实现候选已冻结在 `e9c90fa`，由协调会话统一提交并同步 GitHub；全部 F 修正后完整31项浏览器回归 exit 0，Claude 针对该固定 SHA 只读复核通过。最终22项关闭矩阵及准入签核由协调会话维护；本报告提供用户端证据，不将研发前置通过等同生产上线。既有线上站点保持此前版本。
 
 
 ## 独立审查后的边界修订
@@ -71,7 +71,7 @@
 - F3/S1：删除账号只取消未开始主持桌、退出未开始参与；已开始桌保持生命周期和开始时成员关系、他人餐后资格，host去标识。测试覆盖host/guest开饭后删除、他人结束后仍可自报、不产生晚到低人数任务。
 - S3/S4：apply/publish均要求adult===true；缺失/false拒绝。attendanceStatus只保留present/absent/unknown，反馈不再接受死conflict分支。
 - F2/S2：每次pending/continue以人数/时间/命令序列追加历史；再次减员清空当前旧决定字段。开饭未决定保留pending+lowCountUnresolvedAtStart，一次通知、不自动取消、不推定同意，界面只读，不再给不可执行按钮。r1-1仅传原pending和既有startsAt/cancelled/asOf；后台派生pending且未取消且asOf<startsAt才可操作。内部历史不加到白名单；新增实际解析往返测试。
-- 此次修改后82项领域、构建/运行时完整性及适用文档/交接验证重新执行；此前31项完整浏览器exit0是前一候选证据，当前局部修订仍待协调会话定向复核，不冒称自动继承全部UI通过。
+- 全部边界修订已纳入 `e9c90fa`：82项领域测试不变，构建/28文件运行时完整性及适用文档/交接验证通过；协调会话对最终代码完整重跑31项浏览器回归，1.3分钟、exit 0（session 90625）。此结果覆盖 F 修正后的实现，不再以初轮或定向证据代替。
 
 ### 最终文件白名单（交协调会话统一原子提交）
 
@@ -94,6 +94,6 @@ tests/test_prd.py
 tests/test_readiness_review.py
 ```
 
-`demo/qa/r1/**`仅包含本轮虚构场景报告与截图；旧`qa/map-helper-update/preferences.png`的测试覆盖已恢复为HEAD，不在提交清单。后台文件、总评审/索引、协作规则、竞品研究不属于本会话写入范围。当前用户端新测试直接使用后台handoff解析器；后台测试亦使用shared投影，需协调会话将互相依赖的候选统一原子提交，避免中间版本测试断裂。
+`demo/qa/r1/**`仅包含本轮虚构场景报告与截图；旧`qa/map-helper-update/preferences.png`的测试覆盖已恢复为HEAD，不在提交清单。后台文件、总评审/索引、协作规则、竞品研究不属于本会话写入范围。当前用户端新测试直接使用后台handoff解析器；后台测试亦使用shared投影，已由协调会话将互相依赖的候选统一原子提交为 `e9c90fa`，避免中间版本测试断裂。
 
-最终方案：取消代码白名单/必要收件人；删除仅自动取消或退出未开始桌，已开始历史及他人资格保留并去标识；低人数每轮历史追加、当前旧值清空、开饭未决定只读且一次通知；adult严格true；无死conflict类型。最后一轮82项领域、37项Python、4项handoff、build/28文件runtime完整性、6项Sites包装检查通过；本轮UI小改以独立定向复核结果为准。未自行暂存、提交、推送或发布。
+最终方案：取消代码白名单/必要收件人；删除仅自动取消或退出未开始桌，已开始历史及他人资格保留并去标识；低人数每轮历史追加、当前旧值清空、开饭未决定只读且一次通知；adult严格true；无死conflict类型。最终82项领域、39项Python、5项handoff、build/28文件runtime完整性、6项Sites包装检查通过；全部F修正后的完整31项浏览器回归1.3分钟、exit 0，对应实现基线 `e9c90fa`。实现已由协调会话提交同步；本会话本次仅更新QA证据文字，未自行暂存、提交、推送或发布。
