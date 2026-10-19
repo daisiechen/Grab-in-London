@@ -41,6 +41,21 @@ class ReadinessReviewTest(unittest.TestCase):
                 self.assertIn('锁定', text)
                 self.assertRegex(text, '重发|发布新mealId')
 
+    def test_deadlines_low_count_exception_and_platforms_align(self):
+        for path in ('docs/product/PRD.zh-CN.md',
+                     'docs/product/admin/PRD.zh-CN.md',
+                     'docs/product/admin/measurement-contract.zh-CN.md'):
+            text = (ROOT / path).read_text()
+            with self.subTest(path=path):
+                for rule in ('开饭前3小时', '批准', '前2小时', '前1小时',
+                             '不补员', '不设候补', 'host决定继续或取消',
+                             'iOS App和移动Web', '桌面Web', '个人公开文字评价'):
+                    self.assertIn(rule, text)
+                self.assertIn('不自动处罚或公开显示', text)
+        report = REPORT.read_text()
+        self.assertIn('D-08', report)
+        self.assertIn('不等于实现关闭', report)
+
     def test_coordination_preserves_file_ownership_and_remote_checks(self):
         text = (ROOT / 'docs/agent-collaboration.md').read_text()
         for requirement in ('唯一文件负责人', '未提交清单', '仅暂存本轮',
