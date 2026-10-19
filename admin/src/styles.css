@@ -199,15 +199,8 @@ strong {
   background: #98b464;
   margin-left: auto;
 }
-.nav-heading {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  color: #839080;
-  padding: 0 13px;
-  margin-bottom: 14px;
-}
 .sidebar nav {
+  margin-top: 32px;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -1753,7 +1746,6 @@ dd {
   }
   .workspace > div,
   .workspace-dot,
-  .nav-heading,
   .sidebar nav a > span,
   .sidebar-note,
   .sidebar-bottom > div {

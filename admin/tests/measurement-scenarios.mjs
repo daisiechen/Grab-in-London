@@ -5,6 +5,8 @@ export const measurementScenarios = [
     run: async (page) => {
       await page.goto("/#overview");
       assert(await page.locator(".workspace,.avatar,.sample-label,.demo-banner").count() === 0, "No empty workspace, fake avatars or demo banner");
+      assert(await page.locator(".nav-heading").count() === 0, "No decorative navigation heading");
+      assert(await page.locator(".sidebar").evaluate((el) => { const logo = el.querySelector(".wordmark").getBoundingClientRect(); const nav = el.querySelector("nav").getBoundingClientRect(); return !logo.width || nav.top - logo.bottom >= 30; }), "Logo and navigation have distinct spacing");
       assert(!(await page.locator(".breadcrumb").innerText()).includes("产品洞察"), "No nonexistent breadcrumb level");
       await page.locator(".advanced-filter > summary").click();
       await page.getByLabel("交流语言", {exact:true}).click();

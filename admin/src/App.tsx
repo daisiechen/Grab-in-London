@@ -531,9 +531,6 @@ export default function App() {
         <a href="#overview" className="wordmark">
           Fancy<span className="brand-flower">✳</span>
         </a>
-        <div className="nav-heading">
-          {t("观察与理解", "OBSERVE & UNDERSTAND")}
-        </div>
         <nav aria-label={t("主导航", "Main navigation")}>
           {pages.map((p, i) => (
             <a
