@@ -26,3 +26,8 @@ GitHub 仓库：https://github.com/daisiechen/Grab-in-London
 - [文档索引](docs/README.md)列出现行文档和权威关系；项目知识按用途分类，主 PRD 为需求真源。
 - 正式项目技能放 `.agents/skills/`，待审核草稿放 `.agents/candidates/`；批准前不安装、不添加正式引用。
 - 移动文档时同步维护链接、图片、脚本、测试和索引；模块专属说明与截图就近保留，避免复制业务规则。
+
+## 多 Agent 协作
+
+- 本文件是所有 Agent 共用的项目规则；Claude Code 通过 `CLAUDE.md` 引用。任务交接、评审及文件边界遵循 [Agent 协作说明](docs/agent-collaboration.md)。
+- 项目技能以 `.agents/skills/` 为权威源；`.claude/skills/` 仅保存相对链接，不复制正文。工具内置与个人全局配置不进入公开项目。

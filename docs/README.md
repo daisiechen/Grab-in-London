@@ -35,3 +35,7 @@
 - 重要决策需要独立记录时使用 `decisions/`；目录按需创建，不建空目录占位。
 - 文件移动必须更新所有入口、引用和依赖，并运行 `python3 -m unittest discover -s tests -v` 及 `git diff --check`。
 - 本次整理仅变更文件位置、引用和导航，不重新裁定调研、产品或商业结论；后续结论变化更新对应权威文档。
+
+## Agent 协作
+
+- [Agent 协作与配置边界](agent-collaboration.md)：共用规则、桌面可见评审、文件职责与 Git 交付。

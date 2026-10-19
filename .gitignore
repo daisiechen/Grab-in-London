@@ -14,3 +14,10 @@ coverage/
 # Local package-manager caches
 .pnpm-store/
 .chart-data-*/
+
+# Agent local state and private permissions
+.claude/settings.local.json
+.claude/worktrees/
+.claude/projects/
+.claude/cache/
+CLAUDE.local.md
