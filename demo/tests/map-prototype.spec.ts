@@ -20,7 +20,7 @@ test('map pans and zooms, searches its viewport and resets', async ({ page }) =>
   await map.getByRole('button',{name:'Show central London',exact:true}).click();
   await expect(map).toHaveAttribute('data-zoom','1.0');
   await expect(page.getByRole('button',{name:'Soho: 2 meals',exact:true})).toBeVisible();
-  await page.screenshot({path:'qa/r1/future-regression/discovery.png'});
+  await page.screenshot({path:'qa/experience-restoration-2026-10-19/future/discovery.png'});
 });
 
 test('restaurant search and map selection require explicit confirmation', async ({page}) => {
@@ -48,7 +48,7 @@ test('restaurant search and map selection require explicit confirmation', async 
   await expect(page.getByTestId('keyboard-dock')).toHaveAttribute('data-visible','false');
   await expect.poll(async()=>page.getByTestId('keyboard-dock').evaluate(el=>Math.abs(new DOMMatrixReadOnly(getComputedStyle(el).transform).m42-el.getBoundingClientRect().height))).toBeLessThan(1);
   await page.getByTestId('mobile-scroll').evaluate(el=>{el.scrollTop=0;});
-  await page.screenshot({path:'qa/r1/future-regression/create-restaurant.png'});
+  await page.screenshot({path:'qa/experience-restoration-2026-10-19/future/create-restaurant.png'});
   await page.getByRole('group',{name:'Available times',exact:true}).getByRole('radio').first().check();
   await page.getByRole('button',{name:'Continue',exact:true}).click();
   await expect(page.getByRole('button',{name:'2 Introduce',exact:true})).toHaveAttribute('aria-current','step');
@@ -72,7 +72,7 @@ test('touch pointer moves the sprite without opening a conversation', async ({pa
   await expect(page.locator('.helper-tools').getByRole('button',{name:'My preferences',exact:true})).toBeVisible();
   await expect(page.getByRole('button',{name:'Close Fancy helper',exact:true})).toHaveCount(0);
   await expect.poll(async()=>page.getByTestId('bottom-sheet').evaluate(el=>Math.abs(new DOMMatrixReadOnly(getComputedStyle(el).transform).m42))).toBeLessThan(.5);
-  await page.screenshot({path:'qa/r1/future-regression/helper.png'});
+  await page.screenshot({path:'qa/experience-restoration-2026-10-19/future/helper.png'});
 });
 
 test('touch pinch zooms the map and viewport search handles empty areas', async ({page,context}) => {

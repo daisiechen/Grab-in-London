@@ -1,0 +1,17 @@
+{
+  "published_at": "2026-10-20T07:37:51.193010+00:00",
+  "project_id": "appgprj_6ad2791025408191bf7b3c5bbce7218c",
+  "version_number": 9,
+  "version_id": "appgprj_6ad2791025408191bf7b3c5bbce7218c~appgver_f4159cbf83ec819196eca58a0b8f45ed",
+  "deployment_id": "appgdep_6ad71a3f9b6881919221175d73116a8f",
+  "status": "succeeded",
+  "source_commit": "3285783965d6a4d91ccd127c39e21c95e532689d",
+  "url": "https://grab-in-london-demo.daisie-chen-94.chatgpt.site",
+  "audience": "public",
+  "release_checks": {
+    "domain_passed": 86,
+    "sites_passed": 6,
+    "protected_runtime_files": 28,
+    "build": "passed"
+  }
+}

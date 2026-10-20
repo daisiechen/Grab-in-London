@@ -1,3 +1,4 @@
+import { findVenue, londonVenues } from "./venues.ts";
 /** Canonical, in-memory R1 acceptance model. No authentication, storage or external delivery. */
 export const HOUR = 3_600_000;
 export const DAY = 24 * HOUR;
@@ -19,6 +20,11 @@ export type PilotUser = {
   joinedAt: string;
   deleted?: boolean;
   adult?: boolean;
+  photo?: string;
+  work?: string;
+  school?: string;
+  hometown?: string;
+  life?: string;
 };
 export type PilotMeal = {
   id: string;
@@ -26,6 +32,8 @@ export type PilotMeal = {
   title: string;
   description: string;
   venue: string;
+  venueId?: string;
+  groupClosedAt?: string;
   address: string;
   area: string;
   mapUrl?: string;
@@ -74,6 +82,8 @@ export type PilotApplication = {
   withdrawnAt?: string;
   confirmedSequence?: number;
   withdrawnSequence?: number;
+  chatLeftAt?: string;
+  chatLeftSequence?: number;
   archivedMessages?: string[];
 };
 export type PilotAttendance = {
@@ -236,12 +246,17 @@ export function readableMessages(s: PilotState, mealId: string, actor: string) {
       msg.mealId === mealId &&
       Date.parse(msg.at) <= Date.parse(s.now) &&
       (!m.cancelledAt || Date.parse(msg.at) <= Date.parse(m.cancelledAt)) &&
+      (!m.groupClosedAt || Date.parse(msg.at) <= Date.parse(m.groupClosedAt)) &&
       (actor === m.hostId ||
         intervals.some(
           (a) =>
             (Date.parse(msg.at) > Date.parse(a.confirmedAt!) ||
               (Date.parse(msg.at) === Date.parse(a.confirmedAt!) &&
                 (msg.sequence ?? 0) >= (a.confirmedSequence ?? 0))) &&
+            (!a.chatLeftAt ||
+              Date.parse(msg.at) < Date.parse(a.chatLeftAt) ||
+              (Date.parse(msg.at) === Date.parse(a.chatLeftAt) &&
+                (msg.sequence ?? 0) < (a.chatLeftSequence ?? 0))) &&
             (!a.withdrawnAt ||
               Date.parse(msg.at) < Date.parse(a.withdrawnAt) ||
               (Date.parse(msg.at) === Date.parse(a.withdrawnAt) &&
@@ -685,6 +700,8 @@ export function act(
       open();
       const critical = [
         "venue",
+        "venueId",
+        "minimum",
         "address",
         "area",
         "startsAt",
@@ -745,6 +762,23 @@ export function act(
       const input = (c.meal as Partial<PilotMeal>) || {};
       const title = String(input.title || "").trim(),
         description = String(input.description || "").trim();
+      const selectedVenue = findVenue(String(input.venueId || ""));
+      if (
+        !selectedVenue ||
+        input.venue !== selectedVenue.name ||
+        input.address !== selectedVenue.address ||
+        input.area !== selectedVenue.area
+      )
+        fail("Choose a restaurant from the Google Maps linked results.");
+      const minimum = input.minimum ?? minimumFor(input.capacity!);
+      if (
+        !Number.isInteger(minimum) ||
+        minimum < 2 ||
+        minimum > Number(input.capacity)
+      )
+        fail(
+          "Choose a group range from 2 to 6, with minimum no larger than maximum.",
+        );
       if (
         title.length < 5 ||
         title.length > 80 ||
@@ -776,10 +810,7 @@ export function act(
         input.area.length > 80
       )
         fail("Add the restaurant name, address and area.");
-      if (
-        input.mapUrl &&
-        !/^https:\/\/(www\.)?google\.[^/]+\/maps/.test(input.mapUrl)
-      )
+      if (input.mapUrl && input.mapUrl !== selectedVenue.mapUrl)
         fail("Use a valid HTTPS Google Maps link.");
       if (
         !Number.isInteger(input.budgetMin) ||
@@ -821,15 +852,16 @@ export function act(
         hostId: actor,
         title,
         description,
-        venue: input.venue.trim(),
+        venueId: selectedVenue.id,
+        venue: selectedVenue.name,
         address: input.address.trim(),
         area: input.area.trim(),
         capacity: input.capacity!,
-        minimum: minimumFor(input.capacity!),
+        minimum,
         budgetMin: input.budgetMin!,
         budgetMax: input.budgetMax!,
         languages: input.languages,
-        mapUrl: input.mapUrl,
+        mapUrl: selectedVenue.mapUrl,
         startsAt: iso(Date.parse(input.startsAt)),
         scheduledEndAt: iso(+new Date(input.startsAt) + 2 * HOUR),
         publishedAt: at,
@@ -842,11 +874,7 @@ export function act(
     }
     case "send": {
       const row = required();
-      if (
-        row.status !== "OPEN" ||
-        Date.parse(at) >= Date.parse(row.scheduledEndAt) ||
-        !confirmedIds(s, row.id).includes(actor)
-      )
+      if (groupAccess(s, row.id, actor) !== "write")
         fail("Your group is read-only. Confirmed membership is required.");
       const text = String(c.text || "").trim();
       if (!text || text.length > 2000) fail("Write 1–2000 characters.");
@@ -860,9 +888,47 @@ export function act(
       });
       notify(
         s,
-        confirmedIds(s, row.id).filter((id) => id !== actor),
+        confirmedIds(s, row.id).filter(
+          (id) => id !== actor && groupAccess(s, row.id, id) === "write",
+        ),
         row,
         "Your table has a new message.",
+        at,
+      );
+      break;
+    }
+    case "leave-group": {
+      const row = required();
+      if (row.hostId === actor)
+        fail("Hosts dissolve the group instead of leaving it.");
+      if (groupAccess(s, row.id, actor) === "none")
+        fail("Confirmed membership is required.");
+      const active = [...s.applications]
+        .reverse()
+        .find(
+          (a) =>
+            a.mealId === row.id &&
+            a.userId === actor &&
+            a.confirmedAt &&
+            !a.withdrawnAt &&
+            !a.chatLeftAt,
+        );
+      if (!active) fail("Your group is already read-only.");
+      active.chatLeftAt = at;
+      active.chatLeftSequence = s.version + 1;
+      active.archivedMessages = readableMessages(s, row.id, actor).map(
+        (m) => m.id,
+      );
+      break;
+    }
+    case "dissolve-group": {
+      const row = host();
+      row.groupClosedAt = at;
+      notify(
+        s,
+        confirmedIds(s, row.id),
+        row,
+        "The host closed this meal group. Your history is read-only.",
         at,
       );
       break;
@@ -1052,6 +1118,19 @@ export function act(
         fail(
           "Add a name (2–40), introduction (20–1000), language and interest.",
         );
+      for (const field of [
+        "work",
+        "school",
+        "hometown",
+        "life",
+        "photo",
+      ] as const) {
+        if (c[field] !== undefined) {
+          if (typeof c[field] !== "string" || String(c[field]).length > 100)
+            fail("Background fields must be at most 100 characters.");
+          u[field] = String(c[field]).trim();
+        }
+      }
       u.name = name;
       u.bio = bio;
       u.languages = languages;
@@ -1104,6 +1183,11 @@ export function act(
       u.bio = "";
       u.languages = [];
       u.interests = [];
+      u.work = undefined;
+      u.school = undefined;
+      u.hometown = undefined;
+      u.life = undefined;
+      u.photo = undefined;
       s.messages = s.messages.map((m) =>
         m.from === actor ? { ...m, text: "[Deleted message]" } : m,
       );
@@ -1150,6 +1234,18 @@ export function pilotSeed(): PilotState {
     languages: ["en"],
     interests: ["Food"],
     adult: true,
+    photo: id === "alex" ? "leo" : id,
+    life: "Making London home",
+    work:
+      id === "maya"
+        ? "Product designer"
+        : id === "leo"
+          ? "Architect"
+          : id === "emma"
+            ? "Creative producer"
+            : "Product builder",
+    school: "",
+    hometown: "",
     joinedAt: "2026-09-01T12:00:00.000Z",
   }));
   const base: PilotMeal = {
@@ -1158,8 +1254,10 @@ export function pilotSeed(): PilotState {
     title: "An easy Friday supper",
     description:
       "A relaxed Friday dinner with new London friends. Sharing plates, easy conversation and no agenda.",
-    venue: "The Little Table",
-    address: "Fictional restaurant · Soho, London",
+    venueId: londonVenues[0].id,
+    venue: londonVenues[0].name,
+    address: londonVenues[0].address,
+    mapUrl: londonVenues[0].mapUrl,
     area: "Soho",
     startsAt: "2026-10-23T18:00:00.000Z",
     scheduledEndAt: "2026-10-23T20:00:00.000Z",
@@ -1179,9 +1277,11 @@ export function pilotSeed(): PilotState {
       ...base,
       id: "duo",
       title: "Lunch with someone new",
-      venue: "The Garden Kitchen",
-      address: "Fictional restaurant · St James’s, London",
-      area: "St James’s",
+      venueId: londonVenues[2].id,
+      venue: londonVenues[2].name,
+      address: londonVenues[2].address,
+      mapUrl: londonVenues[2].mapUrl,
+      area: londonVenues[2].area,
       startsAt: "2026-10-24T11:30:00.000Z",
       scheduledEndAt: "2026-10-24T13:30:00.000Z",
       capacity: 2,
@@ -1190,6 +1290,10 @@ export function pilotSeed(): PilotState {
     {
       ...base,
       id: "hosting",
+      venueId: londonVenues[1].id,
+      venue: londonVenues[1].name,
+      address: londonVenues[1].address,
+      mapUrl: londonVenues[1].mapUrl,
       hostId: "alex",
       title: "A table for new friends",
       capacity: 4,
@@ -1294,7 +1398,7 @@ export function projectAnalytics(s: PilotState) {
         )
         .join(" & "),
       capacity: m.capacity,
-      minimum: m.minimum,
+      minimum: m.minimum ?? minimumFor(m.capacity),
       budget: m.budgetMax / 100,
       source: "user" as const,
       cancelled: m.status === "CANCELLED",
@@ -1321,6 +1425,8 @@ export function projectAnalytics(s: PilotState) {
         archivedMessages,
         confirmedSequence,
         withdrawnSequence,
+        chatLeftAt,
+        chatLeftSequence,
         state,
         ...a
       }) => ({
@@ -1389,6 +1495,11 @@ export function projectMember(
     bio: u.bio,
     languages: u.languages,
     interests: u.interests,
+    work: u.work,
+    school: u.school,
+    hometown: u.hometown,
+    life: u.life,
+    photo: u.photo,
   };
 }
 export function exportAccount(s: PilotState, actor: string) {
@@ -1407,16 +1518,18 @@ export function exportAccount(s: PilotState, actor: string) {
 export function groupAccess(s: PilotState, mealId: string, actor: string) {
   const m = s.meals.find((m) => m.id === mealId);
   if (!m || s.users.find((u) => u.id === actor)?.deleted) return "none";
-  const ever =
-    m.hostId === actor ||
-    s.applications.some(
-      (a) => a.mealId === mealId && a.userId === actor && a.confirmedAt,
-    );
-  if (!ever) return "none";
-  return m.status === "OPEN" && confirmedIds(s, mealId).includes(actor)
+  const applications = s.applications.filter(
+    (a) => a.mealId === mealId && a.userId === actor && a.confirmedAt,
+  );
+  if (actor !== m.hostId && !applications.length) return "none";
+  const active =
+    actor === m.hostId ||
+    applications.some((a) => !a.withdrawnAt && !a.chatLeftAt);
+  return m.status !== "CANCELLED" && !m.groupClosedAt && active
     ? "write"
     : "read";
 }
+
 /** Resolve London wall time without the browser's timezone. A repeated DST hour requires an explicit offset choice. */
 export function londonInstants(date: string, time: string): string[] {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time))

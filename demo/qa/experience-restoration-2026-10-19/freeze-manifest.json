@@ -1,0 +1,56 @@
+{
+  "baseline": "83c5fea3a794b8ae5e70d045a510b37e64bc8a29",
+  "status": "frontend-frozen-awaiting-coordinated-integration",
+  "files": {
+    "demo/src/Prototype.tsx": "939393791b3f40033c3183ab3be90e4eb4aab2cc4e847b411281be3f3f5b3395",
+    "demo/src/prototype.css": "3e79e72e7fd711518378997261947d777910121356a50c44414e57c0ac7da36f",
+    "demo/src/experience.ts": "9cad93ea87e8a9226d8a452cab09068fc026de7c74d6cfb9dec81cd3a5d9eae5",
+    "demo/package.json": "42e1af0f649aba37d9fc8fd94d89c66796b654002f599152bfa5166a9db5a035",
+    "demo/tests/experience.test.ts": "0c0e0cccfb94400b94941c587ef39aecf48c01630ec262d5e54b30cff00ae57e",
+    "demo/tests/pilot.test.ts": "d1231490ebc3db9c27fabc210a1a9a5a3214aeed61597dcc64c3b2fc44cfcc4a",
+    "demo/tests/r1.spec.ts": "5fe1d766eaaafd033d731dcad81a2f9971c097c2908a3a30dc9901bdba3c9d08",
+    "demo/tests/assistant.spec.ts": "28eba3568a4dfc82da1d9a1233c444765650116a76eabb98c7c2c8118fc9df8b",
+    "demo/tests/map-prototype.spec.ts": "648efd4f466c3b219c4575c2a8513884ba9b79be17e19f0a4dc6e6323fdf8903",
+    "demo/tests/post-meal-scenario.mjs": "87f0d0153c3690f444a827152a543f9cd150248b2bbd0d288804a5814bbae108",
+    "demo/README.md": "1d6578d98b9fc9eb4137012ed7f28b4558ff874671388cbc78cd08233eb5f374",
+    "shared/pilot.ts": "37ea9a0f8e700e1a620bd093e5856a9a4c1f4b97b6afb633d5296f4b57818c7c",
+    "shared/venues.ts": "d5ed97271502552d5de67e470673f9a5f458dd76173cb2e8e0ae0d2f3d358b73",
+    "shared/README.md": "5634587b7dbfc996765b206312768411e10396a1abf928fcf57a14a9abaaa688",
+    "docs/product/PRD.zh-CN.md": "013c9e60a9808784ceb569b27f6ccf34e62ed55a2397d1da7040e2b9780cc005",
+    "docs/product/product-brief.md": "d7b10e8b442fabe6ffd9dc0fb40752d09cf02b0b6f160615d3a9e7e85e9cba8e"
+  },
+  "checks": {
+    "domain": {
+      "passed": 86,
+      "failed": 0
+    },
+    "sites": {
+      "passed": 6,
+      "failed": 0
+    },
+    "python": {
+      "passed": 39,
+      "failed": 0
+    },
+    "admin_current_workspace": {
+      "passed": 49,
+      "failed": 0
+    },
+    "browser_full_suite": {
+      "passed": 35,
+      "failed": 0
+    },
+    "browser_after_navigation_fix": {
+      "passed": 10,
+      "failed": 0,
+      "duration_seconds": 45.6
+    },
+    "build": "passed",
+    "protected_mobile_files": 28,
+    "browser_final_map_fix": {
+      "passed": 1,
+      "failed": 0,
+      "duration_seconds": 1.7
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{"title":"helper searches, refines, preserves state, opens a meal and can be tucked away","status":"passed","duration":4906,"errors":[]}
+{"title":"preferences require confirmation, can be corrected, and are removed with chat context","status":"passed","duration":2051,"errors":[]}
+{"title":"application and creation drafts return to existing editors without submitting","status":"passed","duration":5128,"errors":[]}
+{"title":"an unconfirmed guest cannot use a message draft to enter group chat","status":"passed","duration":3239,"errors":[]}
+{"title":"keyboard and compact panel stay in phone bounds on iPhone and Pixel","status":"passed","duration":1955,"errors":[]}
+{"title":"confirmed guests can review a message draft without sending it","status":"passed","duration":3480,"errors":[]}
+{"title":"speech permission denial preserves typed input and offers recovery","status":"passed","duration":1385,"errors":[]}
+{"title":"unsupported speech gracefully falls back to text","status":"passed","duration":1260,"errors":[]}
+{"title":"speech requires disclosure, creates an editable transcript, and never auto-sends","status":"passed","duration":1465,"errors":[]}
+{"title":"sprite drags without opening, snaps to either edge and peeks out when tucked","status":"passed","duration":1720,"errors":[]}
+{"title":"home, preferences and conversation have distinct return and reset behavior","status":"passed","duration":5164,"errors":[]}
+{"title":"idle expiry resets context, retains approved preferences and unsent text, and typing renews activity","status":"passed","duration":1911,"errors":[]}
+{"title":"reopening checks expiry even when a background timer has not run","status":"passed","duration":3317,"errors":[]}
+{"title":"map pans and zooms, searches its viewport and resets","status":"passed","duration":721,"errors":[]}
+{"title":"restaurant search and map selection require explicit confirmation","status":"passed","duration":2132,"errors":[]}
+{"title":"touch pointer moves the sprite without opening a conversation","status":"passed","duration":1754,"errors":[]}
+{"title":"touch pinch zooms the map and viewport search handles empty areas","status":"passed","duration":543,"errors":[]}
+{"title":"horizontal intent stays in Carousel and cannot create parent momentum","status":"passed","duration":556,"errors":[]}
+{"title":"vertical intent over a carousel is handed to MobileScroll in both directions","status":"passed","duration":550,"errors":[]}
+{"title":"tap activates a card but a completed drag does not","status":"passed","duration":375,"errors":[]}
+{"title":"Carousel preserves momentum and edge rubber-banding","status":"passed","duration":1413,"errors":[]}
+{"title":"BottomSheet remains mounted while its default exit animation plays","status":"passed","duration":849,"errors":[]}
+{"title":"keyboard and its attached footer dismiss on the same transition","status":"passed","duration":1187,"errors":[]}
+{"title":"switching to Pixel keeps the composer above Android navigation","status":"passed","duration":1005,"errors":[]}
+{"title":"FlowStack pushes and pops screens while dismissing the keyboard","status":"passed","duration":2240,"errors":[]}
+{"title":"attendance, private meal experience, host reporting and cross-meal state","status":"passed","duration":3540,"errors":[]}
+{"title":"R1 restored date dropdown, non-contiguous choices and list-map view are observable","status":"passed","duration":1097,"errors":[]}
+{"title":"R1 pending Inbox cannot chat; host approval opens group without a payment step","status":"passed","duration":3714,"errors":[]}
+{"title":"R1 feedback has no defaults, optional multiple reasons and persists per meal/user","status":"passed","duration":2261,"errors":[]}
+{"title":"R1 helper uses current public meal data and returns drafts without submitting","status":"passed","duration":8089,"errors":[]}
+{"title":"R1 provider failures keep original intent and move the error into the phone viewport","status":"passed","duration":3109,"errors":[]}
+{"title":"restored create flow publishes a real restaurant and custom range, then returns to Hosting","status":"passed","duration":3435,"errors":[]}
+{"title":"reports acknowledge receipt, blocking requires confirmation and profile settings are unique","status":"passed","duration":2360,"errors":[]}
+{"title":"past meal chat remains open and leaving chat preserves access to attendance","status":"passed","duration":3334,"errors":[]}
+{"title":"restored profile saves optional background and full-name conversation languages","status":"passed","duration":1529,"errors":[]}

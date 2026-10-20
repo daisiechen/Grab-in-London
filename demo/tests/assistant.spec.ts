@@ -95,7 +95,7 @@ test("helper searches, refines, preserves state, opens a meal and can be tucked 
       }),
     )
     .toBe(true);
-  await page.screenshot({ path: "qa/r1/future-regression/launcher.png" });
+  await page.screenshot({ path: "qa/experience-restoration-2026-10-19/future/launcher.png" });
   await page
     .getByRole("button", { name: "Tuck Fancy to edge", exact: true })
     .click();
@@ -109,7 +109,7 @@ test("helper searches, refines, preserves state, opens a meal and can be tucked 
   );
   await settleKeyboard(page, false);
   expect(await page.evaluate(() => window.scrollY)).toBe(0);
-  await page.screenshot({ path: "qa/r1/future-regression/search-iphone.png" });
+  await page.screenshot({ path: "qa/experience-restoration-2026-10-19/future/search-iphone.png" });
   await ask(page, "£10");
   await expect(page.getByRole("log")).toContainText(
     "No available tables match",
@@ -167,7 +167,7 @@ test("preferences require confirmation, can be corrected, and are removed with c
     "Fitzrovia · up to £30",
   );
   await settleKeyboard(page, false);
-  await page.screenshot({ path: "qa/r1/future-regression/preferences.png" });
+  await page.screenshot({ path: "qa/experience-restoration-2026-10-19/future/preferences.png" });
   await page
     .getByRole("button", { name: "Delete preferences", exact: true })
     .click();
@@ -287,7 +287,7 @@ test("keyboard and compact panel stay in phone bounds on iPhone and Pixel", asyn
       .toBe(true);
     await settleKeyboard(page, true);
     await page.screenshot({
-      path: `qa/r1/future-regression/keyboard-${device === "iPhone" ? "iphone" : "pixel"}.png`,
+      path: `qa/experience-restoration-2026-10-19/future/keyboard-${device === "iPhone" ? "iphone" : "pixel"}.png`,
     });
     await page.keyboard.press("Escape");
     await expect(page.getByTestId("keyboard-dock")).toHaveAttribute(
@@ -327,7 +327,7 @@ test("confirmed guests can review a message draft without sending it", async ({
     page.getByRole("textbox", { name: "Message", exact: true }),
   ).toHaveValue(/Shall we meet at Noodle House/);
   await expect(page.locator(".chat-message.own")).toHaveCount(0);
-  await page.screenshot({ path: "qa/r1/future-regression/message-draft.png" });
+  await page.screenshot({ path: "qa/experience-restoration-2026-10-19/future/message-draft.png" });
 });
 
 test("speech permission denial preserves typed input and offers recovery", async ({
@@ -466,7 +466,7 @@ test("sprite drags without opening, snaps to either edge and peeks out when tuck
     .click();
   await expect(page.locator(".helper-launcher")).toHaveClass(/is-tucked/);
   await settleSprite(page);
-  await page.screenshot({ path: "qa/r1/future-regression/edge-left.png" });
+  await page.screenshot({ path: "qa/experience-restoration-2026-10-19/future/edge-left.png" });
   const tucked = page.getByRole("button", {
     name: "Show Fancy helper",
     exact: true,
@@ -488,7 +488,7 @@ test("sprite drags without opening, snaps to either edge and peeks out when tuck
     .poll(async () => (await tucked.boundingBox())!.x)
     .toBeGreaterThan(screen.x + screen.width / 2);
   await settleSprite(page);
-  await page.screenshot({ path: "qa/r1/future-regression/edge-right.png" });
+  await page.screenshot({ path: "qa/experience-restoration-2026-10-19/future/edge-right.png" });
   await tucked.click();
   await expect(
     page.getByRole("heading", { name: "What sounds good?", exact: true }),
@@ -545,7 +545,7 @@ test("home, preferences and conversation have distinct return and reset behavior
     .getByRole("button", { name: "Open Fancy helper", exact: true })
     .click();
   await settleHelper(page);
-  await page.screenshot({ path: "qa/r1/future-regression/home-resume.png" });
+  await page.screenshot({ path: "qa/experience-restoration-2026-10-19/future/home-resume.png" });
   await ask(page, "Find meals");
   await expect(page.locator(".helper-turn")).toHaveCount(1);
   await expect(page.locator(".helper-meal-card")).toHaveCount(2);
@@ -590,7 +590,7 @@ test("idle expiry resets context, retains approved preferences and unsent text, 
   await expect(page.locator(".helper-meal-card")).toHaveCount(2);
   await settleKeyboard(page, false);
   await settleHelper(page);
-  await page.screenshot({ path: "qa/r1/future-regression/timestamps.png" });
+  await page.screenshot({ path: "qa/experience-restoration-2026-10-19/future/timestamps.png" });
 });
 
 test("reopening checks expiry even when a background timer has not run", async ({
@@ -618,7 +618,7 @@ test("reopening checks expiry even when a background timer has not run", async (
     page.getByRole("button", { name: /Continue conversation/ }),
   ).toHaveCount(0);
   await settleHelper(page);
-  await page.screenshot({ path: "qa/r1/future-regression/expired.png" });
+  await page.screenshot({ path: "qa/experience-restoration-2026-10-19/future/expired.png" });
   await page
     .getByRole("button", { name: "My preferences", exact: true })
     .click();

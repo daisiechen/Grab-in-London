@@ -10,7 +10,7 @@
 | Meal | publish，新 mealId、hostId、capacity、minimum | 公开摘要；本人主持管理 | edit描述，确认前关键安排可改；cancel不可改为OPEN；replacement新ID | confirmedIds按时点，budget整数便士；Analytics匿名title |
 | ApplicationRound | apply 每轮新 applicationId | 申请人自己的轮次/发起人对应饭局 | approve/decline/withdraw；scheduler expire；leave结束确认区间 | 当前轮次按最新记录；人数按confirmedAt/withdrawnAt；不得复用ID |
 | Declaration/Checkpoint | declare at/count；scheduler checkpoint | 餐厅声明状态、检查结果 | 截止前重新声明；检查只一次；low-count主办决定 | T−15历史人数，保留全部失败原因；声明不是供应商确认 |
-| Membership/GroupMessage | approve开启区间；send带client intent | readableMessages历次区间并集；屏蔽读者隐藏 | 退出/取消/结束只读；无消息编辑撤回；账号删除正文 | id、服务端sequence/cursor；禁止读全表再前端过滤 |
+| Membership/GroupMessage | approve开启区间；send带client intent | readableMessages历次区间并集；屏蔽读者隐藏 | 退出饭局/取消只读；结束后继续；独立leave-group/dissolve-group关闭聊天；无消息编辑撤回；账号删除正文 | id、服务端sequence/cursor；禁止读全表再前端过滤 |
 | AttendanceRevision | eligible + end≤now<end+7d | 最新本人，否则发起人补缺，unknown保留 | 自报可改，来源与序列历史保留；不人工核实 | 有效present控制反馈/互选私聊；Analytics保留self/host最新及时间 |
 | ExperienceRevision | 本人有效present，评分/again无默认 | 仅本人原始反馈；后台统计 | 窗口内upsert，保留修订；资格失效退出有效统计 | 原因可[]；不是公开个人评分 |
 | Connection/Block | 同桌互选/随时拉黑 | 单方仅自己；双方合格才显示connected | 撤回任意时点且清actor→目标人全部饭局同意，对方选择独立保留；新选择仍验七天窗口；block清双方同意；unblock不恢复 | canDirect每次发送重算；不导出单方选择 |
@@ -55,10 +55,16 @@ UTC ISO规范化后比较。T−60发布等号可，T−45申请/T−30批准/T�
 
 ## 5. 研发前置与Demo未实现
 
-必须补真实Identity/4 OAuth providers、通知邮箱验证/投递、数据库事务/定时任务/outbox、消息分页/限流、内容检测/安全联系、allowlist鉴权、report处置、真实删除/导出作业、备份清理、consent SDK、iOS原生实现与平台验收。本地 checkbox“再次认证”、角色切换和连接失败控件都是验收模拟，不能作为生产方案。
+必须补真实Identity/4 OAuth providers、通知邮箱验证/投递、数据库事务/定时任务/outbox、消息分页/限流、内容检测/安全联系、allowlist鉴权、report处置、真实删除作业、备份清理、consent SDK、iOS原生实现与平台验收。本地 checkbox“再次认证”、角色切换和连接失败控件都是验收模拟，不能作为生产方案。
 
 UI普通界面移除开发备注；验收模式记录上述限制。旧预付/代订只在 `?scope=future`，旧测试继续证明其独立领域行为，不证明R1后端已就绪。
 
 取消命令只接受host/host_changed/other；自动取消的insufficient/booking和删除内部原因由系统产生。自由文本不得作群发reason，私密note不入通知；收件人仅host+当时CONFIRMED/PENDING。删除账号只取消未开始主持桌、退出未开始参与；已开始桌保留生命周期、开始时成员关系与他人出席/反馈资格，个人内容去标识，不创造开饭后低人数任务。apply/publish均要求adult===true；缺失与false不能提交。attendanceStatus仅present/absent/unknown，无conflict结果。
 
 低人数未决定的r1-1传输保持原枚举：`lowCountDecision: "pending"`，连同既有`startsAt`、`cancelled`、root `asOf`。不新增unresolved枚举；内部历史与lowCountUnresolvedAtStart不进入当前白名单。后台须派生可操作条件 `pending && !cancelled && asOf < startsAt`；已开饭pending仅是未决定历史，不是待办，不能推定host同意。已增加该状态的实际导出→parseHandoff往返测试。
+
+## 2026-10-19 已确认的体验规则
+
+人数为发起人自选整数区间 `2 <= minimum <= capacity <= 6`，历史缺值按旧规则推定。群聊退出 `chatLeftAt/chatLeftSequence` 与解散 `groupClosedAt` 不改变参与退出 `withdrawnAt`、历史出席或统计，均排除在 r1-1 投影外。饭后保持群聊开放；不新增二次入群审批。
+
+创建只接受 `venues.ts` 中核验的真实地点身份，不能自由填写虚构名称/地址。当前是固定真实目录，并非实时 Google Places 搜索；Google Maps/官网链接是餐厅身份来源，不代表预约或库存。用户端不提供保存草稿或 Export my data。

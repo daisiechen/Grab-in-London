@@ -1,3 +1,5 @@
+import { relativeMealDay } from "./experience";
+import { londonVenues, findVenue, type LondonVenue } from "../../shared/venues";
 import {
   pilotSeed,
   act,
@@ -18,6 +20,7 @@ import {
   DAY,
   type Command,
   type PilotMeal,
+  type PilotUser,
 } from "../../shared/pilot";
 import {
   reportAttendance,
@@ -1385,7 +1388,10 @@ function MealHelper({
   const [home, setHome] = useState(true);
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const [lastActive, setLastActive] = useState<number | null>(null);
-  const [dock, setDock] = useState<HelperDock>({ side: "right", fraction: 0 });
+  const [dock, setDock] = useState<HelperDock>({
+    side: "right",
+    fraction: 0.28,
+  });
   const [dragPoint, setDragPoint] = useState<{ x: number; y: number } | null>(
     null,
   );
@@ -1599,8 +1605,7 @@ function MealHelper({
   const helperSnap =
     (helperHeight + Math.min(helperInsets.keyboardHeight, 180)) /
     device.geometry.screen.height;
-  const dockTop =
-    device.geometry.safeArea.top + (page === "discover" ? 170 : 64);
+  const dockTop = device.geometry.safeArea.top + 8;
   const dockBottom = helperInsets.availableHeight - 100;
   const dockPoint = helperDockPosition(
     dock,
@@ -5938,6 +5943,203 @@ function FuturePrototype() {
 }
 
 /** R1 uses the same phone runtime, brand entrance, map, fields and helper as the future exploration. */
+const languageNames: Record<string, string> = {
+  en: "English",
+  zh: "Chinese",
+  fr: "French",
+  es: "Spanish",
+  de: "German",
+  it: "Italian",
+  ja: "Japanese",
+  ko: "Korean",
+  ar: "Arabic",
+  pt: "Portuguese",
+  hi: "Hindi",
+};
+function MealCalendar({
+  values,
+  onChange,
+  multiple = false,
+  earliest = "2026-10-19",
+}: {
+  values: string[];
+  onChange: (values: string[]) => void;
+  multiple?: boolean;
+  earliest?: string;
+}) {
+  const [month, setMonth] = useState(
+    values[0]?.slice(0, 7) || earliest.slice(0, 7),
+  );
+  const { offset, dates } = monthDates(month);
+  const move = (n: number) => {
+    const [y, m] = month.split("-").map(Number);
+    setMonth(new Date(Date.UTC(y, m - 1 + n, 1)).toISOString().slice(0, 7));
+  };
+  return (
+    <div className="date-choices">
+      <div className="calendar-heading">
+        <strong>
+          {new Intl.DateTimeFormat("en-GB", {
+            month: "long",
+            year: "numeric",
+            timeZone: "UTC",
+          }).format(new Date(month + "-01T12:00:00Z"))}
+        </strong>
+        <div>
+          <button
+            aria-label="Previous month"
+            disabled={month <= earliest.slice(0, 7)}
+            onClick={() => move(-1)}
+          >
+            <ChevronLeftIcon />
+          </button>
+          <button aria-label="Next month" onClick={() => move(1)}>
+            <ChevronRightIcon />
+          </button>
+        </div>
+      </div>
+      <div className="calendar-weekdays" aria-hidden="true">
+        {["M", "T", "W", "T", "F", "S", "S"].map((v, i) => (
+          <span key={i}>{v}</span>
+        ))}
+      </div>
+      <div
+        className="calendar-days"
+        role="group"
+        aria-label={multiple ? "Choose dates" : "Choose a date"}
+      >
+        {Array.from({ length: offset }, (_, i) => (
+          <span key={"blank" + i} />
+        ))}
+        {dates.map((date) => (
+          <button
+            className={`calendar-day ${values.includes(date) ? "chosen" : ""}`}
+            aria-label={longDate(date)}
+            aria-pressed={values.includes(date)}
+            disabled={date < earliest}
+            key={date}
+            onClick={() =>
+              onChange(
+                multiple
+                  ? values.includes(date)
+                    ? values.filter((v) => v !== date)
+                    : [...values, date].sort()
+                  : [date],
+              )
+            }
+          >
+            {Number(date.slice(-2))}
+          </button>
+        ))}
+      </div>
+      {multiple && (
+        <p className="muted calendar-hint">
+          Choose any days that suit you, including separate dates.
+        </p>
+      )}
+    </div>
+  );
+}
+function RealVenuePicker({
+  selected,
+  onConfirm,
+}: {
+  selected: string;
+  onConfirm: (venue: LondonVenue) => void;
+}) {
+  const keyboard = useKeyboard();
+  const [search, setSearch] = useState("");
+  const [candidate, setCandidate] = useState(selected);
+  const matches = londonVenues.filter((v) =>
+    `${v.name} ${v.area} ${v.address} ${v.cuisine}`
+      .toLowerCase()
+      .includes(search.toLowerCase()),
+  );
+  const venue = londonVenues.find(
+    (v) => v.id === candidate && matches.some((m) => m.id === v.id),
+  );
+  return (
+    <section className="venue-picker" aria-label="Choose a restaurant">
+      <Field label="Search restaurants">
+        <KeyboardInput
+          value={search}
+          placeholder="Restaurant name or London area"
+          onChange={(e) => setSearch(e.target.value)}
+          onBlur={() => keyboard.hide()}
+        />
+      </Field>
+      <DemoMap
+        label="Restaurant map"
+        spots={matches.map((v) => ({
+          id: v.id,
+          label: `Show ${v.name}`,
+          text: "•",
+          x: v.x,
+          y: v.y,
+        }))}
+        selected={candidate}
+        onSelect={setCandidate}
+      />
+      <div className="real-venue-results">
+        {matches.map((v) => (
+          <button
+            className={`r1-row ${candidate === v.id ? "chosen" : ""}`}
+            key={v.id}
+            onClick={() => {
+              keyboard.hide();
+              setCandidate(v.id);
+            }}
+          >
+            <SewingPinIcon />
+            <span>
+              <strong>{v.name}</strong>
+              <small>
+                {v.area} · {v.cuisine}
+              </small>
+            </span>
+            {candidate === v.id && <CheckIcon />}
+          </button>
+        ))}
+      </div>
+      {!matches.length && (
+        <div className="empty">
+          <p>No restaurants match your search.</p>
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(search + " restaurant London")}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Search Google Maps <ExternalLinkIcon />
+          </a>
+        </div>
+      )}
+      {venue && (
+        <div className="venue-map-preview">
+          <strong>{venue.name}</strong>
+          <p>{venue.address}</p>
+          <a href={venue.mapUrl} target="_blank" rel="noreferrer">
+            View on Google Maps <ExternalLinkIcon />
+          </a>
+          <Primary
+            onClick={() => {
+              keyboard.hide();
+              onConfirm(venue);
+            }}
+          >
+            Use this restaurant
+          </Primary>
+        </div>
+      )}
+      {selected && (
+        <p className="venue-selection-status">
+          Selected: {findVenue(selected)?.name}. Choosing a place does not
+          reserve a table.
+        </p>
+      )}
+    </section>
+  );
+}
+
 function PilotPrototype() {
   const keyboard = useKeyboard();
   const { screenRef } = useScreenPortal();
@@ -5961,13 +6163,37 @@ function PilotPrototype() {
   const [target, setTarget] = useState("maya");
   const [issue, setIssue] = useState("");
   const [notice, setNotice] = useState("");
+  const noticeRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (notice) {
+      keyboard.hide();
+      noticeRef.current?.scrollIntoView({ block: "nearest" });
+    }
+  }, [notice]);
   const [text, setText] = useState("");
   const [sheet, setSheet] = useState("");
+  useEffect(() => {
+    if (!["date", "size", "filters"].includes(sheet)) return;
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSheet("");
+    };
+    window.addEventListener("keydown", escape);
+    return () => window.removeEventListener("keydown", escape);
+  }, [sheet]);
   const [step, setStep] = useState(0);
+  const [routeStack, setRouteStack] = useState<
+    { page: string; selected: string; target: string }[]
+  >([]);
+  const [mealTab, setMealTab] = useState("Upcoming");
+  const [createPicker, setCreatePicker] = useState("");
+  const [mapIndex, setMapIndex] = useState(0);
+  const [discardDestination, setDiscardDestination] = useState("");
+
   const [map, setMap] = useState(true);
   const [query, setQuery] = useState("");
+  const [pendingQuery, setPendingQuery] = useState("");
   const [filter, setFilter] = useState({
-    date: "",
+    dates: [] as string[],
     size: "",
     budget: "",
     language: "",
@@ -5990,21 +6216,25 @@ function PilotPrototype() {
       [actor]: { consent, updates: value },
     }));
   const [connection, setConnection] = useState("online");
-  const [draft, setDraft] = useState({
+  const freshDraft = {
     title: "",
     description: "",
+    venueId: "",
     venue: "",
     address: "",
     area: "",
     date: "2026-10-25",
     time: "19:00",
     capacity: "4",
+    minimum: "3",
     budgetMin: "25",
     budgetMax: "35",
     language: "en",
     instant: "",
     replacementFor: "",
-  });
+  };
+  const [draft, setDraft] = useState(freshDraft);
+  const [profileDraft, setProfileDraft] = useState<Partial<PilotUser>>({});
   const [editName, setEditName] = useState("");
   const [editBio, setEditBio] = useState("");
   const [feedbackReasons, setFeedbackReasons] = useState<string[]>([]);
@@ -6044,10 +6274,40 @@ function PilotPrototype() {
     }).format(new Date(at));
   const go = (next: string) => {
     keyboard.hide();
+    setRouteStack((stack) => [...stack, { page, selected, target }]);
     setPage(next);
     setIssue("");
     setNotice("");
     setText("");
+  };
+  const back = () => {
+    keyboard.hide();
+    setIssue("");
+    setNotice("");
+    const previous = routeStack.at(-1);
+    if (previous) {
+      setPage(previous.page);
+      setSelected(previous.selected);
+      setTarget(previous.target);
+      setRouteStack((stack) => stack.slice(0, -1));
+    } else setPage("discover");
+  };
+  const root = (next: string) => {
+    if (page === "create" && next !== "create") {
+      setDiscardDestination(next);
+      setSheet("discard");
+      return;
+    }
+    keyboard.hide();
+    setRouteStack([]);
+    if (!signed && next !== "discover") {
+      setPage(next);
+      setEntrance("account");
+      return;
+    }
+    setPage(next);
+    setIssue("");
+    setNotice("");
   };
   const open = (id: string) => {
     if (!state.meals.some((m) => m.id === id)) {
@@ -6062,6 +6322,7 @@ function PilotPrototype() {
       go(next);
       return;
     }
+    setRouteStack((stack) => [...stack, { page, selected, target }]);
     setPage(next);
     keyboard.hide();
     setEntrance("account");
@@ -6114,13 +6375,15 @@ function PilotPrototype() {
     (m) =>
       m.status === "OPEN" &&
       Date.parse(m.startsAt) > Date.parse(state.now) &&
-      (!filter.date ||
-        new Intl.DateTimeFormat("en-CA", {
-          timeZone: "Europe/London",
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        }).format(new Date(m.startsAt)) === filter.date) &&
+      (!filter.dates.length ||
+        filter.dates.includes(
+          new Intl.DateTimeFormat("en-CA", {
+            timeZone: "Europe/London",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          }).format(new Date(m.startsAt)),
+        )) &&
       (!filter.size || m.capacity === Number(filter.size)) &&
       (!filter.budget || m.budgetMax <= Number(filter.budget) * 100) &&
       (!filter.language || m.languages.includes(filter.language)) &&
@@ -6182,7 +6445,7 @@ function PilotPrototype() {
       label={label}
       value={value}
       onChange={onChange}
-      options={options.map((v) => [v, v || "Any"])}
+      options={options.map((v) => [v, languageNames[v] || v || "Any"])}
     />
   );
   const avatar = (id: string) => (
@@ -6198,7 +6461,7 @@ function PilotPrototype() {
     >
       <img
         alt=""
-        src={`/images/${["maya", "leo", "emma"].includes(id) ? id : "leo"}.png`}
+        src={`/images/${state.users.find((u) => u.id === id)?.photo || (["maya", "leo", "emma"].includes(id) ? id : "leo")}.png`}
       />
     </button>
   );
@@ -6249,6 +6512,11 @@ function PilotPrototype() {
               type: "profile",
               key: crypto.randomUUID(),
               name: profile.name,
+              work: profile.work,
+              school: profile.school,
+              hometown: profile.hometown,
+              life: profile.life,
+              photo: profile.photo,
               bio: profile.bio,
               languages: profile.language.includes("Mandarin")
                 ? ["en", "zh"]
@@ -6297,31 +6565,114 @@ function PilotPrototype() {
     ["inbox", "Inbox", <ChatBubbleIcon />],
     ["profile", "Profile", <PersonIcon />],
   ] as const;
+  const discoveryHeader = (
+    <header className="discover-header r1-discover-header">
+      <button
+        className="location-label"
+        onClick={() => {
+          setPending(filter);
+          setPendingQuery(query);
+          setSheet("filters");
+        }}
+      >
+        London <ChevronDownIcon />
+      </button>
+      <h1>{BRAND.invitation}</h1>
+      <p className="muted">{BRAND.slogan}</p>
+      <div className="discover-controls">
+        <button
+          aria-label="Filter by date"
+          onClick={() => {
+            setPending({ ...filter, dates: [...filter.dates] });
+            setPendingQuery(query);
+            keyboard.hide();
+            setSheet(sheet === "date" ? "" : "date");
+          }}
+        >
+          <CalendarIcon />
+          {filter.dates.length ? `${filter.dates.length} dates` : "Any date"}
+          <ChevronDownIcon />
+        </button>
+        <button
+          aria-label="Filter by table size"
+          onClick={() => {
+            setPending({ ...filter, dates: [...filter.dates] });
+            setPendingQuery(query);
+            keyboard.hide();
+            setSheet(sheet === "size" ? "" : "size");
+          }}
+        >
+          Table size {filter.size}
+          <ChevronDownIcon />
+        </button>
+        <div className="view-toggle" role="group" aria-label="Discovery view">
+          <button
+            aria-label="List view"
+            aria-pressed={!map}
+            className={!map ? "selected" : ""}
+            onClick={() => setMap(false)}
+          >
+            <ListBulletIcon />
+          </button>
+          <button
+            aria-label="Map view"
+            aria-pressed={map}
+            className={map ? "selected" : ""}
+            onClick={() => setMap(true)}
+          >
+            <GlobeIcon />
+          </button>
+        </div>
+        <button
+          className="more-filter"
+          aria-label="More filters"
+          onClick={() => {
+            setPending({ ...filter, dates: [...filter.dates] });
+            setPendingQuery(query);
+            keyboard.hide();
+            setSheet(sheet === "filters" ? "" : "filters");
+          }}
+        >
+          <MixerHorizontalIcon />
+        </button>
+      </div>
+    </header>
+  );
   return (
     <SelfProfileContext.Provider value={{ image: "leo", name: self.name }}>
       <div
-        className="grab-app r1-app"
+        className={`grab-app r1-app ${["discover", "meals", "inbox", "profile"].includes(page) ? "r1-top-level" : ""} ${page === "discover" ? "r1-discovery" : ""}`}
         data-review={REVIEW_MODE}
         data-scope="r1"
       >
-        <header className="r1-header">
-          <button
-            aria-label="Back"
-            onClick={() =>
-              go(
-                ["chat", "host", "apply", "review", "member"].includes(page)
-                  ? "detail"
-                  : "discover",
-              )
-            }
-          >
-            <ArrowLeftIcon />
-          </button>
-          <strong>{BRAND.name}</strong>
-          <button aria-label="Settings" onClick={() => auth("settings")}>
-            <GearIcon />
-          </button>
-        </header>
+        {!["discover", "meals", "inbox", "profile"].includes(page) && (
+          <header className="r1-header">
+            <button
+              aria-label="Go back"
+              onClick={() => {
+                if (page === "create") {
+                  if (step > 0) {
+                    keyboard.hide();
+                    setStep(step - 1);
+                  } else setSheet("discard");
+                } else back();
+              }}
+            >
+              <ArrowLeftIcon />
+            </button>
+            <strong>
+              {page === "create"
+                ? "Create meal"
+                : page === "chat"
+                  ? meal.title
+                  : page === "settings"
+                    ? "Settings"
+                    : BRAND.name}
+            </strong>
+            <span />
+          </header>
+        )}
+        {page === "discover" && discoveryHeader}
         <MobileScroll key={`${page}-${selected}`} className="r1-scroll">
           <main className="body-pad r1-content">
             {issue && (
@@ -6330,57 +6681,16 @@ function PilotPrototype() {
               </div>
             )}
             {notice && (
-              <div className="r1-notice" role="status">
+              <div ref={noticeRef} className="r1-notice" role="status">
                 {notice}
               </div>
             )}
             {page === "discover" && (
               <>
-                <div className="eyebrow">LONDON · GOOD COMPANY AWAITS</div>
-                <h1>{BRAND.invitation}</h1>
-                <p className="muted">{BRAND.slogan}</p>
-                {field("Find a table or neighbourhood", query, setQuery)}
-                <div className="r1-toolbar">
-                  <button
-                    onClick={() => {
-                      setPending(filter);
-                      keyboard.hide();
-                      setSheet("date");
-                    }}
-                  >
-                    <CalendarIcon />
-                    {filter.date || "Any date"}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setPending(filter);
-                      keyboard.hide();
-                      setSheet("size");
-                    }}
-                  >
-                    Table size {filter.size}
-                  </button>
-                  <button
-                    aria-label="All filters"
-                    onClick={() => {
-                      setPending(filter);
-                      keyboard.hide();
-                      setSheet("filters");
-                    }}
-                  >
-                    <MixerHorizontalIcon />
-                  </button>
-                  <button
-                    aria-label={map ? "Show list" : "Show map"}
-                    onClick={() => setMap(!map)}
-                  >
-                    {map ? <ListBulletIcon /> : <GlobeIcon />}
-                  </button>
-                </div>
                 {map && (
                   <DemoMap
                     label="Meals in central London"
-                    selected={meal.area}
+                    selected={areaIds ? meal.area : ""}
                     spots={mapGroups}
                     onSelect={(area) => {
                       const matches = allMatches.filter((m) => m.area === area);
@@ -6413,11 +6723,52 @@ function PilotPrototype() {
                     Show all areas
                   </button>
                 )}
-                <p className="muted">
-                  {browse.length} {browse.length === 1 ? "table" : "tables"} to
-                  explore
-                </p>
-                {browse.map(card)}
+                {map && browse.length > 0 ? (
+                  <section className="r1-map-preview">
+                    <button
+                      className="area-results-trigger"
+                      onClick={() => setMap(false)}
+                    >
+                      <span className="sheet-grip" />
+                      <strong>{browse.length} meals in this view</strong>
+                      <span>
+                        View all <ChevronUpIcon />
+                      </span>
+                    </button>
+                    {card(browse[mapIndex % browse.length])}
+                    {browse.length > 1 && (
+                      <div className="area-pagination">
+                        <button
+                          aria-label="Previous meal in this area"
+                          onClick={() =>
+                            setMapIndex(
+                              (mapIndex + browse.length - 1) % browse.length,
+                            )
+                          }
+                        >
+                          <ChevronLeftIcon />
+                        </button>
+                        <span>
+                          Meal {(mapIndex % browse.length) + 1} of{" "}
+                          {browse.length}
+                        </span>
+                        <button
+                          aria-label="Next meal in this area"
+                          onClick={() =>
+                            setMapIndex((mapIndex + 1) % browse.length)
+                          }
+                        >
+                          <ChevronRightIcon />
+                        </button>
+                      </div>
+                    )}
+                  </section>
+                ) : (
+                  <>
+                    <p className="muted">{browse.length} meals</p>
+                    {browse.map(card)}
+                  </>
+                )}
                 {!browse.length && (
                   <div className="empty">
                     <h3>No tables match just yet.</h3>
@@ -6425,7 +6776,7 @@ function PilotPrototype() {
                       secondary
                       onClick={() => {
                         setFilter({
-                          date: "",
+                          dates: [],
                           size: "",
                           budget: "",
                           language: "",
@@ -6484,12 +6835,15 @@ function PilotPrototype() {
                 </p>
                 <a
                   className="r1-link"
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meal.area + " London")}`}
+                  href={
+                    meal.mapUrl ||
+                    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meal.venue + " " + meal.address)}`
+                  }
                   target="_blank"
                   rel="noreferrer"
                 >
                   <SewingPinIcon />
-                  Open neighbourhood in Google Maps
+                  Open in Google Maps
                 </a>
                 <p className="r1-notice">
                   {meal.booking === "DECLARED"
@@ -6500,8 +6854,11 @@ function PilotPrototype() {
                 <div className="r1-people">
                   {confirmedIds(state, selected).map(avatar)}
                 </div>
-                <p className="muted">
-                  {meal.languages.join(" · ").toUpperCase()} · Hosted by{" "}
+                <p className="muted r1-table-background">
+                  {meal.languages
+                    .map((code) => languageNames[code] || code)
+                    .join(" · ")}{" "}
+                  · Hosted by{" "}
                   {state.users.find((u) => u.id === meal.hostId)?.name}
                 </p>
                 <p className="muted">
@@ -6612,7 +6969,8 @@ function PilotPrototype() {
                     if (
                       run({ type: "apply", mealId: selected, message: text })
                     ) {
-                      go("detail");
+                      setRouteStack((stack) => stack.slice(0, -1));
+                      setPage("detail");
                       setNotice(
                         "Application sent. Your group opens after host approval.",
                       );
@@ -6625,68 +6983,236 @@ function PilotPrototype() {
             )}
             {page === "meals" && (
               <>
-                <div className="eyebrow">YOUR TABLES</div>
-                <h1>Plans worth keeping.</h1>
-                {["Upcoming", "Past", "Cancelled"].map((section) => (
-                  <section key={section}>
-                    <h3>{section}</h3>
-                    {groups
-                      .filter((m) =>
-                        section === "Upcoming"
-                          ? m.status === "OPEN"
-                          : section === "Past"
-                            ? m.status === "COMPLETED"
-                            : m.status === "CANCELLED",
-                      )
-                      .map(card)}
-                  </section>
-                ))}
-                {!groups.length && <p>No meals yet. Find a table to start.</p>}
+                <div className="eyebrow">GOOD PLANS, ALL IN ONE PLACE</div>
+                <h1>Your next good meal.</h1>
+                <Carousel
+                  ariaLabel="Meal categories"
+                  className="tab-carousel"
+                  contentClassName="tabs"
+                >
+                  {[
+                    "Upcoming",
+                    "Applications",
+                    "Hosting",
+                    "Past",
+                    "Cancelled",
+                  ].map((tab) => (
+                    <button
+                      key={tab}
+                      aria-pressed={mealTab === tab}
+                      className={mealTab === tab ? "selected" : ""}
+                      onClick={() => setMealTab(tab)}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </Carousel>
+                {(() => {
+                  const matching = groups
+                    .filter((m) =>
+                      mealTab === "Hosting"
+                        ? m.hostId === actor && m.status === "OPEN"
+                        : mealTab === "Applications"
+                          ? state.applications.some(
+                              (a) =>
+                                a.mealId === m.id &&
+                                a.userId === actor &&
+                                a.state === "PENDING",
+                            )
+                          : mealTab === "Upcoming"
+                            ? m.status === "OPEN" &&
+                              (m.hostId === actor ||
+                                state.applications.some(
+                                  (a) =>
+                                    a.mealId === m.id &&
+                                    a.userId === actor &&
+                                    !a.withdrawnAt &&
+                                    (a.state === "CONFIRMED" ||
+                                      a.state === "PENDING"),
+                                ))
+                            : mealTab === "Past"
+                              ? m.status === "COMPLETED"
+                              : m.status === "CANCELLED",
+                    )
+                    .sort((a, b) =>
+                      mealTab === "Past"
+                        ? Date.parse(b.startsAt) - Date.parse(a.startsAt)
+                        : Date.parse(a.startsAt) - Date.parse(b.startsAt),
+                    );
+                  return matching.length ? (
+                    matching.map((m) => (
+                      <article className="list-meal r1-agenda-card" key={m.id}>
+                        <button
+                          className="r1-card-open"
+                          aria-label={`Open ${m.title}`}
+                          onClick={() => open(m.id)}
+                        />
+                        <div className="agenda-date">
+                          <strong>
+                            {new Intl.DateTimeFormat("en-GB", {
+                              timeZone: "Europe/London",
+                              day: "numeric",
+                            }).format(new Date(m.startsAt))}
+                          </strong>
+                          <span>
+                            {new Intl.DateTimeFormat("en-GB", {
+                              timeZone: "Europe/London",
+                              month: "short",
+                            }).format(new Date(m.startsAt))}
+                          </span>
+                        </div>
+                        <div className="agenda-content">
+                          <span className="eyebrow">
+                            {relativeMealDay(m.startsAt, state.now)} ·{" "}
+                            {new Intl.DateTimeFormat("en-GB", {
+                              timeZone: "Europe/London",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }).format(new Date(m.startsAt))}
+                          </span>
+                          <h3>{m.title}</h3>
+                          <p>
+                            {m.venue} · {m.area}
+                          </p>
+                          <span className="status-tag">
+                            {m.hostId === actor
+                              ? "You’re hosting"
+                              : state.applications
+                                    .filter(
+                                      (a) =>
+                                        a.mealId === m.id && a.userId === actor,
+                                    )
+                                    .at(-1)?.state === "PENDING"
+                                ? "Awaiting host approval"
+                                : "Your table"}
+                          </span>
+                          <small>
+                            {confirmedIds(state, m.id).length} confirmed ·{" "}
+                            {m.minimum}–{m.capacity} people
+                          </small>
+                        </div>
+                      </article>
+                    ))
+                  ) : (
+                    <div className="empty">
+                      <CalendarIcon />
+                      <h2>
+                        {mealTab === "Hosting"
+                          ? "Your table starts with you."
+                          : "No meals here yet."}
+                      </h2>
+                      <Primary
+                        onClick={() =>
+                          auth(mealTab === "Hosting" ? "create" : "discover")
+                        }
+                      >
+                        {mealTab === "Hosting"
+                          ? "Create a meal"
+                          : "Explore meals"}
+                      </Primary>
+                    </div>
+                  );
+                })()}
               </>
             )}
             {page === "inbox" && (
-              <>
+              <div className="inbox-page">
                 <div className="eyebrow">BEFORE AND AFTER THE TABLE</div>
                 <h1>A little hello.</h1>
-                <h3>Your conversations</h3>
+                {groups.some((m) =>
+                  state.applications.some(
+                    (a) =>
+                      a.mealId === m.id &&
+                      a.userId === actor &&
+                      a.state === "PENDING",
+                  ),
+                ) && (
+                  <>
+                    <h2>Applications & next steps</h2>
+                    {groups
+                      .filter((m) =>
+                        state.applications.some(
+                          (a) =>
+                            a.mealId === m.id &&
+                            a.userId === actor &&
+                            a.state === "PENDING",
+                        ),
+                      )
+                      .map((m) => (
+                        <article className="inbox-progress-card" key={m.id}>
+                          <div className="inbox-application-heading">
+                            {avatar(m.hostId)}
+                            <div>
+                              <h3>{m.title}</h3>
+                              <small>
+                                {local(m.startsAt)} · {m.area}
+                              </small>
+                            </div>
+                          </div>
+                          <div className="application-track">
+                            <span className="done">
+                              <CheckIcon />
+                              Applied
+                            </span>
+                            <span>
+                              <PersonIcon />
+                              Host approval
+                            </span>
+                            <span>
+                              <LockClosedIcon />
+                              Group chat
+                            </span>
+                          </div>
+                          <p>
+                            Your introduction is with the host. Your group opens
+                            after approval.
+                          </p>
+                          <button
+                            className="text-action"
+                            onClick={() => open(m.id)}
+                          >
+                            View application
+                          </button>
+                        </article>
+                      ))}
+                  </>
+                )}
+                <h2>Your meal groups</h2>
                 {groups
-                  .filter(
-                    (m) =>
-                      groupAccess(state, m.id, actor) !== "none" ||
-                      state.applications.some(
-                        (a) =>
-                          a.mealId === m.id &&
-                          a.userId === actor &&
-                          a.state === "PENDING",
-                      ),
-                  )
-                  .map((m) => (
-                    <button
-                      className="r1-row"
-                      key={m.id}
-                      onClick={() => {
-                        setSelected(m.id);
-                        go(
-                          groupAccess(state, m.id, actor) === "none"
-                            ? "detail"
-                            : "chat",
-                        );
-                      }}
-                    >
-                      <ChatBubbleIcon />
-                      <span>
-                        <strong>{m.title}</strong>
-                        <small>
-                          {groupAccess(state, m.id, actor) === "none"
-                            ? "Application pending · view status"
-                            : groupAccess(state, m.id, actor) === "read"
-                              ? "Read-only history"
-                              : "Group chat open"}
-                        </small>
-                      </span>
-                      <ChevronRightIcon />
-                    </button>
-                  ))}
+                  .filter((m) => groupAccess(state, m.id, actor) !== "none")
+                  .map((m) => {
+                    const messages = readableMessages(state, m.id, actor),
+                      last = messages.at(-1);
+                    return (
+                      <button
+                        className="inbox-row"
+                        key={m.id}
+                        onClick={() => {
+                          setSelected(m.id);
+                          go("chat");
+                        }}
+                      >
+                        <span className="inbox-group-avatar">
+                          <ChatBubbleIcon />
+                        </span>
+                        <div>
+                          <strong>{m.title}</strong>
+                          <small>
+                            {local(m.startsAt)} ·{" "}
+                            {m.hostId === actor ? "You’re hosting" : m.area}
+                          </small>
+                          <p>
+                            {groupAccess(state, m.id, actor) === "read"
+                              ? "You left this group or the host closed it. History is read-only."
+                              : last
+                                ? `${state.users.find((u) => u.id === last.from)?.name}: ${last.text}`
+                                : "Say hello to your table."}
+                          </p>
+                        </div>
+                        <ChevronRightIcon />
+                      </button>
+                    );
+                  })}
                 {state.users
                   .filter(
                     (u) =>
@@ -6700,24 +7226,40 @@ function PilotPrototype() {
                   )
                   .map((u) => (
                     <button
-                      className="r1-row"
+                      className="inbox-row"
                       key={u.id}
                       onClick={() => {
                         setTarget(u.id);
                         go("direct");
                       }}
                     >
-                      <span>
-                        {u.name}
-                        <small>
+                      <img
+                        className="inbox-person-photo"
+                        src={`/images/${u.photo || "leo"}.png`}
+                        alt=""
+                      />
+                      <div>
+                        <strong>{u.name}</strong>
+                        <p>
                           {canDirect(state, actor, u.id)
                             ? "Connected after a meal"
                             : "Read-only conversation"}
-                        </small>
-                      </span>
+                        </p>
+                      </div>
+                      <ChevronRightIcon />
                     </button>
                   ))}
-                <h3>Updates</h3>
+                {!groups.length && (
+                  <div className="empty">
+                    <ChatBubbleIcon />
+                    <h2>Conversation starts at the table.</h2>
+                    <p>Find a meal to meet your next people.</p>
+                    <Primary onClick={() => root("discover")}>
+                      Find a meal
+                    </Primary>
+                  </div>
+                )}
+                <h2>Updates</h2>
                 {state.notifications
                   .filter((n) => n.userId === actor)
                   .reverse()
@@ -6730,28 +7272,16 @@ function PilotPrototype() {
                           type: "read-notification",
                           notificationId: n.id,
                         });
-                        if (n.mealId) {
-                          setSelected(n.mealId);
-                          go("detail");
-                        }
+                        if (n.mealId) open(n.mealId);
                       }}
                     >
                       <span>
                         {n.text}
-                        <small>
-                          {local(n.at)}
-                          {n.read ? "" : " · New"}
-                        </small>
+                        <small>{local(n.at)}</small>
                       </span>
                     </button>
                   ))}
-                {!groups.length && (
-                  <p>
-                    Your pending applications and confirmed groups will appear
-                    here.
-                  </p>
-                )}
-              </>
+              </div>
             )}
             {page === "chat" && (
               <>
@@ -6761,6 +7291,17 @@ function PilotPrototype() {
                     ? "Your confirmed table"
                     : "Read-only history from your confirmed membership"}
                 </p>
+                {access === "write" && (
+                  <button
+                    className="text-action"
+                    onClick={() => {
+                      keyboard.hide();
+                      setSheet(host ? "dissolve-group" : "leave-group");
+                    }}
+                  >
+                    {host ? "Close group" : "Leave group"}
+                  </button>
+                )}
                 {access === "none" ? (
                   <div className="empty">
                     Your place must be confirmed by the host before this group
@@ -6968,6 +7509,9 @@ function PilotPrototype() {
                             ...draft,
                             title: meal.title,
                             description: meal.description,
+                            venueId: meal.venueId || "",
+                            minimum: String(meal.minimum),
+                            capacity: String(meal.capacity),
                             venue: meal.venue,
                             address: meal.address,
                             area: meal.area,
@@ -7006,96 +7550,217 @@ function PilotPrototype() {
                   ))}
                 </div>
                 {step === 0 && (
-                  <>
-                    <VenueMap
-                      value={draft.venue}
-                      onConfirm={(v) =>
-                        setDraft({
-                          ...draft,
-                          venue: v.name,
-                          area: v.area,
-                          address: `${v.area}, London`,
-                        })
-                      }
-                    />
-                    <p>Or add your restaurant directly.</p>
-                    {field(
-                      "Restaurant name",
-                      draft.venue,
-                      (v) => setDraft({ ...draft, venue: v }),
-                      { maxLength: 100 },
-                    )}
-                    {field(
-                      "Address",
-                      draft.address,
-                      (v) => setDraft({ ...draft, address: v }),
-                      { maxLength: 200 },
-                    )}
-                    {field(
-                      "Neighbourhood",
-                      draft.area,
-                      (v) => setDraft({ ...draft, area: v }),
-                      { maxLength: 80 },
-                    )}
-                  </>
+                  <RealVenuePicker
+                    selected={draft.venueId}
+                    onConfirm={(venue) =>
+                      setDraft({
+                        ...draft,
+                        venueId: venue.id,
+                        venue: venue.name,
+                        address: venue.address,
+                        area: venue.area,
+                      })
+                    }
+                  />
                 )}
                 {step === 1 && (
                   <>
-                    {field(
-                      "Date · London",
-                      draft.date,
-                      (v) => setDraft({ ...draft, date: v, instant: "" }),
-                      { type: "date" },
-                    )}
-                    {field(
-                      "Time · Europe/London",
-                      draft.time,
-                      (v) => setDraft({ ...draft, time: v, instant: "" }),
-                      { type: "time" },
-                    )}
+                    <div className="r1-arrange-row">
+                      <div className="r1-picker-field">
+                        <span>Date</span>
+                        <button
+                          className="r1-picker-trigger"
+                          aria-label="Choose meal date"
+                          aria-expanded={createPicker === "date"}
+                          onClick={() => {
+                            keyboard.hide();
+                            setCreatePicker(
+                              createPicker === "date" ? "" : "date",
+                            );
+                          }}
+                        >
+                          <CalendarIcon />
+                          {longDate(draft.date)}
+                          <ChevronDownIcon />
+                        </button>
+                        {createPicker === "date" && (
+                          <div className="r1-picker-dropdown">
+                            <MealCalendar
+                              values={[draft.date]}
+                              onChange={(dates) => {
+                                setDraft({
+                                  ...draft,
+                                  date: dates[0],
+                                  instant: "",
+                                });
+                                setCreatePicker("");
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
+                      <div className="r1-picker-field">
+                        <span>Time</span>
+                        <button
+                          className="r1-picker-trigger"
+                          aria-label="Choose meal time"
+                          aria-expanded={createPicker === "time"}
+                          onClick={() => {
+                            keyboard.hide();
+                            setCreatePicker(
+                              createPicker === "time" ? "" : "time",
+                            );
+                          }}
+                        >
+                          {draft.time}
+                          <ChevronDownIcon />
+                        </button>
+                        {createPicker === "time" && (
+                          <div
+                            className="r1-time-dropdown"
+                            role="group"
+                            aria-label="Choose a time"
+                          >
+                            {Array.from(
+                              { length: 48 },
+                              (_, i) =>
+                                `${String(Math.floor(i / 2)).padStart(2, "0")}:${i % 2 ? "30" : "00"}`,
+                            ).map((time) => (
+                              <button
+                                aria-pressed={draft.time === time}
+                                key={time}
+                                onClick={() => {
+                                  setDraft({ ...draft, time, instant: "" });
+                                  setCreatePicker("");
+                                }}
+                              >
+                                {time}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                     {londonInstants(draft.date, draft.time).length === 2 && (
                       <ChoiceGroup
-                        label="This time occurs twice. Choose the UTC offset."
+                        label="This clock time occurs twice. Choose the first or second."
                         value={draft.instant}
                         onChange={(instant) => setDraft({ ...draft, instant })}
                         options={londonInstants(draft.date, draft.time).map(
-                          (v, i) => [
-                            v,
-                            `${i === 0 ? "First · BST" : "Second · GMT"} (${v.slice(11, 16)} UTC)`,
+                          (value, i) => [
+                            value,
+                            i === 0 ? "First occurrence" : "Second occurrence",
                           ],
                         )}
                       />
                     )}
                     <p className="muted">
-                      Meals last about 2 hours. Publish at least 60 minutes
-                      before the start.
+                      About 2 hours together. All times are local to your London
+                      restaurant.
                     </p>
-                    {choose(
-                      "People, including you",
-                      draft.capacity,
-                      (v) => setDraft({ ...draft, capacity: v }),
-                      ["2", "3", "4", "5", "6"],
-                    )}
-                    <p>
-                      Minimum: {minimumFor(Number(draft.capacity))} confirmed
-                      people.
+                    <div
+                      className="field"
+                      role="group"
+                      aria-label="Group size, including you"
+                    >
+                      <span>Group size, including you</span>
+                      <div className="r1-range">
+                        <label>
+                          From
+                          <select
+                            aria-label="Minimum people"
+                            value={draft.minimum}
+                            onChange={(e) =>
+                              setDraft({
+                                ...draft,
+                                minimum: e.target.value,
+                                capacity: String(
+                                  Math.max(
+                                    Number(draft.capacity),
+                                    Number(e.target.value),
+                                  ),
+                                ),
+                              })
+                            }
+                          >
+                            {[2, 3, 4, 5, 6].map((n) => (
+                              <option value={n} key={n}>
+                                {n}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <span>—</span>
+                        <label>
+                          Up to
+                          <select
+                            aria-label="Maximum people"
+                            value={draft.capacity}
+                            onChange={(e) =>
+                              setDraft({
+                                ...draft,
+                                capacity: e.target.value,
+                                minimum: String(
+                                  Math.min(
+                                    Number(draft.minimum),
+                                    Number(e.target.value),
+                                  ),
+                                ),
+                              })
+                            }
+                          >
+                            {[2, 3, 4, 5, 6].map((n) => (
+                              <option value={n} key={n}>
+                                {n}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      </div>
+                    </div>
+                    <p className="muted">
+                      Invite {draft.minimum}–{draft.capacity} people in total.
+                      You’ll need at least {draft.minimum} confirmed to go
+                      ahead.
                     </p>
                   </>
                 )}
                 {step === 2 && (
                   <>
-                    {field(
-                      "Budget from (£ per person)",
-                      draft.budgetMin,
-                      (v) => setDraft({ ...draft, budgetMin: v }),
-                      { type: "number" },
-                    )}
-                    {field(
-                      "Budget up to (£ per person)",
-                      draft.budgetMax,
-                      (v) => setDraft({ ...draft, budgetMax: v }),
-                      { type: "number" },
-                    )}
+                    <div
+                      className="field"
+                      role="group"
+                      aria-label="Budget per person"
+                    >
+                      <span>Budget per person</span>
+                      <div className="r1-range budget-range">
+                        <label>
+                          From (£)
+                          <KeyboardInput
+                            aria-label="Budget from (£ per person)"
+                            type="number"
+                            value={draft.budgetMin}
+                            onChange={(e) =>
+                              setDraft({ ...draft, budgetMin: e.target.value })
+                            }
+                            onBlur={() => keyboard.hide()}
+                          />
+                        </label>
+                        <span>—</span>
+                        <label>
+                          Up to (£)
+                          <KeyboardInput
+                            aria-label="Budget up to (£ per person)"
+                            type="number"
+                            value={draft.budgetMax}
+                            onChange={(e) =>
+                              setDraft({ ...draft, budgetMax: e.target.value })
+                            }
+                            onBlur={() => keyboard.hide()}
+                          />
+                        </label>
+                      </div>
+                    </div>
                     <p className="r1-notice">
                       Each guest pays for their own order at the restaurant.
                       Fancy does not collect a deposit.
@@ -7104,7 +7769,7 @@ function PilotPrototype() {
                       "Conversation language",
                       draft.language,
                       (v) => setDraft({ ...draft, language: v }),
-                      ["en", "zh", "fr", "es"],
+                      Object.keys(languageNames),
                     )}
                     {field(
                       "Meal title · 5–80 characters",
@@ -7113,7 +7778,7 @@ function PilotPrototype() {
                       { maxLength: 80 },
                     )}
                     {field(
-                      "What’s the plan? · 20–1000 characters",
+                      "A little note for your table",
                       draft.description,
                       (v) => setDraft({ ...draft, description: v }),
                       { area: true, maxLength: 1000 },
@@ -7130,7 +7795,7 @@ function PilotPrototype() {
                       <br />
                       {draft.date} · {draft.time} London
                       <br />
-                      {draft.capacity} people including you
+                      {draft.minimum}–{draft.capacity} people, including you
                       <br />
                       {money(Number(draft.budgetMin))}–
                       {money(Number(draft.budgetMax))} per person
@@ -7143,32 +7808,14 @@ function PilotPrototype() {
                     </p>
                   </>
                 )}
-                {step > 0 && (
-                  <Primary
-                    secondary
-                    onClick={() => {
-                      keyboard.hide();
-                      setStep(step - 1);
-                    }}
-                  >
-                    Back
-                  </Primary>
-                )}
                 <Primary
                   onClick={() => {
                     keyboard.hide();
                     setIssue("");
                     const instants = londonInstants(draft.date, draft.time),
                       instant = draft.instant || instants[0];
-                    if (
-                      step === 0 &&
-                      (!draft.venue.trim() ||
-                        !draft.address.trim() ||
-                        !draft.area.trim())
-                    ) {
-                      setIssue(
-                        "Add the restaurant name, address and neighbourhood.",
-                      );
+                    if (step === 0 && !findVenue(draft.venueId)) {
+                      setIssue("Choose a restaurant from the results first.");
                       return;
                     }
                     if (
@@ -7205,6 +7852,7 @@ function PilotPrototype() {
                         ...draft,
                         startsAt: instant,
                         capacity: Number(draft.capacity),
+                        minimum: Number(draft.minimum),
                         budgetMin: Math.round(Number(draft.budgetMin) * 100),
                         budgetMax: Math.round(Number(draft.budgetMax) * 100),
                         languages: [draft.language],
@@ -7213,7 +7861,18 @@ function PilotPrototype() {
                     });
                     if (next) {
                       setSelected(next.meals.at(-1)!.id);
-                      go("detail");
+                      setDraft(freshDraft);
+                      setStep(0);
+                      setCreatePicker("");
+                      setRouteStack([
+                        {
+                          page: "meals",
+                          selected: next.meals.at(-1)!.id,
+                          target,
+                        },
+                      ]);
+                      setMealTab("Hosting");
+                      setPage("detail");
                       setNotice(
                         "Your meal is published. You’re the host; arrange the reservation externally.",
                       );
@@ -7221,36 +7880,92 @@ function PilotPrototype() {
                   }}
                 >
                   {step === 3 ? "Publish meal" : "Continue"}
-                </Primary>
-                <button className="text-action" onClick={() => go("discover")}>
-                  Save draft & close
+                </Primary>{" "}
+                {step > 0 && (
+                  <Primary
+                    secondary
+                    onClick={() => {
+                      keyboard.hide();
+                      setStep(step - 1);
+                    }}
+                  >
+                    Back
+                  </Primary>
+                )}
+                <button
+                  className="text-action"
+                  onClick={() => {
+                    keyboard.hide();
+                    setSheet("discard");
+                  }}
+                >
+                  Cancel
                 </button>
               </>
             )}
             {(page === "profile" || page === "member") && (
               <>
-                <div className="eyebrow">A LITTLE BACKGROUND</div>
-                <h1>{page === "profile" ? self.name : member.name}</h1>
-                <div className="r1-people">
-                  {avatar(page === "profile" ? actor : target)}
+                <div className="profile-settings-entry">
+                  {page === "profile" && (
+                    <button
+                      aria-label="Settings"
+                      onClick={() => go("settings")}
+                    >
+                      <GearIcon /> Settings
+                    </button>
+                  )}
                 </div>
-                <h3>A little about me</h3>
-                <p>
+                <div className="profile-heading">
+                  {avatar(page === "profile" ? actor : target)}
+                  <h1>{page === "profile" ? self.name : member.name}</h1>
+                  <p>
+                    {page === "profile"
+                      ? self.work
+                      : "work" in member
+                        ? member.work
+                        : ""}
+                  </p>
+                  <span className="pill">
+                    {page === "profile"
+                      ? self.life
+                      : "life" in member
+                        ? member.life
+                        : ""}
+                  </span>
+                </div>
+                {page === "profile" && (
+                  <Primary
+                    secondary
+                    onClick={() => {
+                      setEditName(self.name);
+                      setEditBio(self.bio);
+                      setProfileDraft({ ...self });
+                      go("edit");
+                    }}
+                  >
+                    Edit profile <PersonIcon />
+                  </Primary>
+                )}
+                <h2>A little about me</h2>
+                <p className="prose">
                   {page === "profile"
                     ? self.bio
                     : "bio" in member
                       ? member.bio
                       : "Sign in to view this profile."}
                 </p>
-                <h3>We could talk about</h3>
-                <p>
+                <h2>We could talk about</h2>
+                <div className="chips">
                   {(page === "profile"
                     ? self.interests
                     : "interests" in member
                       ? member.interests
                       : []
-                  )?.join(" · ")}
-                </p>
+                  )?.map((i) => (
+                    <span key={i}>{i}</span>
+                  ))}
+                </div>
+                <h2>Languages</h2>
                 <p>
                   {(page === "profile"
                     ? self.languages
@@ -7258,61 +7973,82 @@ function PilotPrototype() {
                       ? member.languages
                       : []
                   )
-                    ?.join(" · ")
-                    .toUpperCase()}
+                    ?.map((code) => languageNames[code] || code)
+                    .join(" · ")}
                 </p>
-                {page === "profile" ? (
+                {(page === "profile"
+                  ? self.school
+                  : "school" in member
+                    ? member.school
+                    : "") && (
+                  <>
+                    <h2>Education</h2>
+                    <p>
+                      {page === "profile"
+                        ? self.school
+                        : "school" in member
+                          ? member.school
+                          : ""}
+                    </p>
+                  </>
+                )}
+                {(page === "profile"
+                  ? self.hometown
+                  : "hometown" in member
+                    ? member.hometown
+                    : "") && (
+                  <>
+                    <h2>Originally from</h2>
+                    <p>
+                      {page === "profile"
+                        ? self.hometown
+                        : "hometown" in member
+                          ? member.hometown
+                          : ""}
+                    </p>
+                  </>
+                )}
+                <h2>Your shared meals</h2>
+                <p className="muted">
+                  {
+                    state.meals.filter(
+                      (m) =>
+                        m.status === "COMPLETED" &&
+                        eligibleAtMeal(
+                          state,
+                          m.id,
+                          page === "profile" ? actor : target,
+                        ),
+                    ).length
+                  }{" "}
+                  shared meals · Experiences stay private.
+                </p>
+                {page === "member" && target !== actor && (
                   <>
                     <Primary
                       secondary
                       onClick={() => {
-                        setEditName(self.name);
-                        setEditBio(self.bio);
-                        go("edit");
+                        setReason("");
+                        keyboard.hide();
+                        setSheet("report");
                       }}
                     >
-                      Edit profile
+                      Report a concern
                     </Primary>
-                    <Primary secondary onClick={() => go("settings")}>
-                      Settings
-                    </Primary>
+                    <button
+                      className="text-action"
+                      onClick={() => {
+                        keyboard.hide();
+                        setSheet("block");
+                      }}
+                    >
+                      {state.blocks.some(
+                        (b) => b.from === actor && b.to === target,
+                      )
+                        ? "Unblock member"
+                        : "Block member"}
+                    </button>
                   </>
-                ) : (
-                  target !== actor && (
-                    <>
-                      <Primary
-                        secondary
-                        onClick={() => {
-                          setReason("");
-                          keyboard.hide();
-                          setSheet("report");
-                        }}
-                      >
-                        Report a concern
-                      </Primary>
-                      <button
-                        className="text-action"
-                        onClick={() =>
-                          run(
-                            {
-                              type: "block",
-                              userId: target,
-                              blocked: !state.blocks.some(
-                                (b) => b.from === actor && b.to === target,
-                              ),
-                            },
-                            "Privacy preference updated. Reconnecting needs fresh consent after unblocking.",
-                          )
-                        }
-                      >
-                        {state.blocks.some(
-                          (b) => b.from === actor && b.to === target,
-                        )
-                          ? "Unblock member"
-                          : "Block member"}
-                      </button>
-                    </>
-                  )
                 )}
               </>
             )}
@@ -7328,6 +8064,71 @@ function PilotPrototype() {
                   setEditBio,
                   { maxLength: 1000, area: true },
                 )}
+                {field(
+                  "Work or what keeps you busy (optional)",
+                  profileDraft.work || "",
+                  (value) => setProfileDraft({ ...profileDraft, work: value }),
+                  { maxLength: 100 },
+                )}
+                {field(
+                  "School (optional)",
+                  profileDraft.school || "",
+                  (value) =>
+                    setProfileDraft({ ...profileDraft, school: value }),
+                  { maxLength: 100 },
+                )}
+                {field(
+                  "Originally from (optional)",
+                  profileDraft.hometown || "",
+                  (value) =>
+                    setProfileDraft({ ...profileDraft, hometown: value }),
+                  { maxLength: 100 },
+                )}
+                {choose(
+                  "Life in London",
+                  profileDraft.life || "Making London home",
+                  (life) => setProfileDraft({ ...profileDraft, life }),
+                  ["New to London", "Making London home", "Visiting London"],
+                )}
+                <fieldset className="filter-section">
+                  <legend>Conversation languages</legend>
+                  <div className="choice-grid">
+                    {Object.entries(languageNames).map(([code, label]) => (
+                      <label
+                        className={`choice-chip ${profileDraft.languages?.includes(code) ? "chosen" : ""}`}
+                        key={code}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={
+                            profileDraft.languages?.includes(code) || false
+                          }
+                          onChange={(e) =>
+                            setProfileDraft({
+                              ...profileDraft,
+                              languages: e.target.checked
+                                ? [...(profileDraft.languages || []), code]
+                                : (profileDraft.languages || []).filter(
+                                    (v) => v !== code,
+                                  ),
+                            })
+                          }
+                        />
+                        <span>{label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
+                {field(
+                  "Interests (separate with commas)",
+                  profileDraft.interests?.join(", ") || "",
+                  (value) =>
+                    setProfileDraft({
+                      ...profileDraft,
+                      interests: value.split(",").map((v) => v.trim()),
+                    }),
+                  { maxLength: 200 },
+                )}
                 <Primary
                   onClick={() => {
                     if (
@@ -7335,11 +8136,16 @@ function PilotPrototype() {
                         type: "profile",
                         name: editName,
                         bio: editBio,
-                        languages: self.languages,
-                        interests: self.interests,
+                        work: profileDraft.work,
+                        school: profileDraft.school,
+                        hometown: profileDraft.hometown,
+                        life: profileDraft.life,
+                        photo: profileDraft.photo,
+                        languages: profileDraft.languages || self.languages,
+                        interests: profileDraft.interests || self.interests,
                       })
                     )
-                      go("profile");
+                      back();
                   }}
                 >
                   Save profile
@@ -7676,14 +8482,7 @@ function PilotPrototype() {
                   Changing this choice stops future optional collection. It does
                   not change essential meal records.
                 </p>
-                <Primary
-                  secondary
-                  onClick={() =>
-                    download(exportAccount(state, actor), "fancy-my-data.json")
-                  }
-                >
-                  Export my data
-                </Primary>
+
                 <Primary
                   secondary
                   onClick={() => {
@@ -7788,78 +8587,117 @@ function PilotPrototype() {
             <button
               key={id}
               className={`${page === id ? "active" : ""} ${id === "create" ? "create" : ""}`}
-              onClick={() => (id === "discover" ? go(id) : auth(id))}
+              onClick={() => root(id)}
             >
               {icon}
               <span>{label}</span>
             </button>
           ))}
         </nav>
-        <BottomSheet
-          open={["date", "size", "filters"].includes(sheet)}
-          onOpenChange={(o) => !o && setSheet("")}
-          title={
-            sheet === "date"
-              ? "Choose a date"
-              : sheet === "size"
-                ? "Choose a table size"
-                : "Find your kind of table"
-          }
-        >
-          <div className="body-pad">
-            {sheet !== "size" &&
-              field(
-                "Date · London",
-                pending.date,
-                (v) => setPending({ ...pending, date: v }),
-                { type: "date" },
-              )}
-            {sheet !== "date" && (
-              <ChoiceGroup
-                label="People, including the host"
-                value={pending.size}
-                onChange={(size) => setPending({ ...pending, size })}
-                options={["", "2", "3", "4", "5", "6"].map((v) => [
-                  v,
-                  v || "Any size",
-                ])}
-              />
-            )}{" "}
-            {sheet === "filters" && (
-              <>
-                {choose(
-                  "Maximum budget per person (£)",
-                  pending.budget,
-                  (v) => setPending({ ...pending, budget: v }),
-                  ["", "25", "35", "50"],
-                )}
-                {choose(
-                  "Conversation language",
-                  pending.language,
-                  (v) => setPending({ ...pending, language: v }),
-                  ["", "en", "zh", "fr", "es"],
-                )}
-              </>
-            )}
-            <Primary
-              onClick={() => {
-                setFilter(pending);
-                keyboard.hide();
-                setSheet("");
-              }}
-            >
-              Show tables
-            </Primary>
+        {["date", "size", "filters"].includes(sheet) && (
+          <div
+            className="r1-filter-layer"
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setSheet("");
+            }}
+          >
             <button
-              className="text-action"
-              onClick={() => {
-                setPending({ date: "", size: "", budget: "", language: "" });
-              }}
+              className="r1-filter-scrim"
+              aria-label="Close filters without applying"
+              onClick={() => setSheet("")}
+            />
+            <section
+              className="r1-filter-dropdown"
+              role="dialog"
+              aria-modal="false"
+              aria-label={
+                sheet === "date"
+                  ? "When are you free?"
+                  : sheet === "size"
+                    ? "Table size"
+                    : "Filters"
+              }
             >
-              Clear selections
-            </button>
+              <div className="filter-topline">
+                <strong>
+                  {sheet === "date"
+                    ? "When are you free?"
+                    : sheet === "size"
+                      ? "Your kind of table"
+                      : "Your preferences"}
+                </strong>
+                <button aria-label="Close filters" onClick={() => setSheet("")}>
+                  <Cross2Icon />
+                </button>
+              </div>
+              <MobileScroll className="r1-filter-scroll">
+                {sheet !== "size" && (
+                  <MealCalendar
+                    values={pending.dates}
+                    multiple
+                    onChange={(dates) => setPending({ ...pending, dates })}
+                  />
+                )}
+                {sheet !== "date" && (
+                  <ChoiceGroup
+                    label="Table size"
+                    value={pending.size}
+                    onChange={(size) => setPending({ ...pending, size })}
+                    options={["", "2", "3", "4", "5", "6"].map((v) => [
+                      v,
+                      v ? `${v} people` : "Any size",
+                    ])}
+                  />
+                )}
+                {sheet === "filters" && (
+                  <>
+                    {field("Restaurant or area", pendingQuery, setPendingQuery)}
+                    {choose(
+                      "Maximum budget per person (£)",
+                      pending.budget,
+                      (v) => setPending({ ...pending, budget: v }),
+                      ["", "25", "35", "50"],
+                    )}
+                    {choose(
+                      "Conversation language",
+                      pending.language,
+                      (v) => setPending({ ...pending, language: v }),
+                      ["", ...Object.keys(languageNames)],
+                    )}
+                  </>
+                )}
+              </MobileScroll>
+              <div className="r1-filter-actions">
+                <Primary
+                  onClick={() => {
+                    setFilter({ ...pending, dates: [...pending.dates] });
+                    setQuery(pendingQuery);
+                    setAreaIds(null);
+                    setMapIndex(0);
+                    keyboard.hide();
+                    setSheet("");
+                  }}
+                >
+                  Show tables
+                </Primary>
+                <button
+                  className="text-action"
+                  onClick={() => {
+                    setPending({
+                      dates: [],
+                      size: "",
+                      budget: "",
+                      language: "",
+                    });
+                    setPendingQuery("");
+                  }}
+                >
+                  Clear selections
+                </button>
+              </div>
+            </section>
           </div>
-        </BottomSheet>
+        )}
         <BottomSheet
           open={[
             "leave",
@@ -7868,6 +8706,10 @@ function PilotPrototype() {
             "delete",
             "report",
             "support",
+            "block",
+            "discard",
+            "leave-group",
+            "dissolve-group",
           ].includes(sheet)}
           onOpenChange={(o) => !o && setSheet("")}
           title={
@@ -7883,6 +8725,85 @@ function PilotPrototype() {
           }
         >
           <div className="body-pad">
+            {sheet === "block" && (
+              <>
+                <p>
+                  {state.blocks.some((b) => b.from === actor && b.to === target)
+                    ? "Unblock this member? Previous connection consent will remain cleared."
+                    : "Block this member? Private messaging will stop immediately and their messages will be hidden from you in shared groups. You can unblock them in their profile."}
+                </p>
+                <Primary
+                  onClick={() => {
+                    if (
+                      run(
+                        {
+                          type: "block",
+                          userId: target,
+                          blocked: !state.blocks.some(
+                            (b) => b.from === actor && b.to === target,
+                          ),
+                        },
+                        "Your privacy choice is updated.",
+                      )
+                    )
+                      setSheet("");
+                  }}
+                >
+                  {state.blocks.some((b) => b.from === actor && b.to === target)
+                    ? "Confirm unblock"
+                    : "Confirm block"}
+                </Primary>
+              </>
+            )}
+            {sheet === "discard" && (
+              <>
+                <p>Discard this meal? Your changes won’t be saved.</p>
+                <Primary
+                  onClick={() => {
+                    setDraft(freshDraft);
+                    setStep(0);
+                    setCreatePicker("");
+                    setSheet("");
+                    if (discardDestination) {
+                      setPage(discardDestination);
+                      setRouteStack([]);
+                      setDiscardDestination("");
+                    } else back();
+                  }}
+                >
+                  Discard meal
+                </Primary>
+                <Primary secondary onClick={() => setSheet("")}>
+                  Keep editing
+                </Primary>
+              </>
+            )}
+            {["leave-group", "dissolve-group"].includes(sheet) && (
+              <>
+                <p>
+                  {sheet === "leave-group"
+                    ? "Leave this group? Your past messages stay read-only. Your meal attendance record is unchanged."
+                    : "Close this group for everyone? Members can read their history, but no new messages can be sent."}
+                </p>
+                <Primary
+                  onClick={() => {
+                    if (
+                      run(
+                        { type: sheet, mealId: selected },
+                        sheet === "leave-group"
+                          ? "You left the group."
+                          : "Group closed.",
+                      )
+                    )
+                      setSheet("");
+                  }}
+                >
+                  {sheet === "leave-group"
+                    ? "Leave group"
+                    : "Close group for everyone"}
+                </Primary>
+              </>
+            )}
             {sheet === "declare" && (
               <>
                 <p>
@@ -8017,7 +8938,9 @@ function PilotPrototype() {
                     });
                     if (next) {
                       setSheet("");
-                      setNotice(`Report received: ${next.reports.at(-1)?.id}.`);
+                      setNotice(
+                        `Thank you for letting us know. Your report has been received and will be reviewed. Reference: ${next.reports.at(-1)?.id}.`,
+                      );
                     }
                   }}
                 >

@@ -421,11 +421,13 @@ test("before first confirmation host can edit arrangements and must reconfirm an
   s = command(s, "maya", {
     type: "edit",
     mealId: "duo",
-    venue: "A new restaurant",
-    address: "New area, London",
-    area: "New area",
+    venueId: "flat-iron-soho",
+    venue: "Flat Iron Soho",
+    address: "17 Beak Street, London W1F 9RW",
+    area: "Soho",
+    mapUrl: "https://maps.app.goo.gl/QKogMhUDhSXw8DGH8",
   });
-  assert.equal(s.meals[1].venue, "A new restaurant");
+  assert.equal(s.meals[1].venue, "Flat Iron Soho");
   assert.equal(s.meals[1].declaration, undefined);
 });
 test("approval interval after application cutoff remains valid, then closes at approval cutoff", () => {

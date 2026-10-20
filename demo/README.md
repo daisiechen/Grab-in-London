@@ -17,17 +17,17 @@ Open the printed local URL. Keep the server running. Choose iPhone or Pixel 10 f
 
 ## Current R1 and future scope
 
-Default: D1, everyone pays at the restaurant and the host books externally. This is a local, fictional, in-memory simulation; it is not real login, email, restaurant inventory, messaging delivery or native iOS. The existing public site is unchanged in this work batch.
+Default: D1, everyone pays at the restaurant and the host books externally. This is a local, fictional, in-memory simulation; it is not real login, email, restaurant inventory, messaging delivery or native iOS. The restored R1 experience was published as Sites version 9 on 2026-10-20 at https://grab-in-london-demo.daisie-chen-94.chatgpt.site; public access and the existing URL are preserved.
 
 Use `?review=1` for actor switching, acceptance clock, offline/unavailable previews and sanitized JSON export in Settings. Use `?scope=future&review=1` for the preserved future payment/booking exploration; it is outside R1.
 
 ## R1 walkthroughs
 
 1. Explore tables first → open a meal → apply → Log in via a provider preview (or email sample code 123456) → introduction → submit. Inbox shows Application pending, without chat access.
-2. Settings → actor maya → the same meal → Manage your table → approve → declare an external booking for the confirmed count. Switch back to alex → Inbox → group chat opens immediately, without a second admission or payment.
-3. Create meal → preview restaurant → Use this restaurant (or manual name/address/area) → London date/time and 2–6 people → budget/title/description → review → publish. Selecting a candidate never reserves a table.
-4. Meals → A Sunday table → Your shared meal → self attendance → explicit rating and willingness, optional reasons → save. Choose a member privately; switch actor to that member and reciprocate → private chat. Retract/block disables sending and retains read-only history.
-5. Settings → advance UTC acceptance clock to verify T−45 application / T−30 approval / T−15 external-booking check. Going backwards is rejected. Reload resets fixtures.
+2. Profile → Settings → actor maya → the same meal → Manage your table → approve → declare an external booking for the confirmed count. Switch back to alex → Inbox → group chat opens immediately, without a second admission or payment.
+3. Create meal → preview restaurant → Use this restaurant (verified Google Maps linked catalogue only) → compact local date/time and a custom minimum–maximum range within 2–6 people → budget/title/description → review → publish. Selecting a candidate never reserves a table.
+4. Meals → Past → A Sunday table → Your shared meal → self attendance → explicit rating and willingness, optional reasons → save. Choose a member privately; switch actor to that member and reciprocate → private chat. Retract/block disables sending and retains read-only history.
+5. Profile → Settings → advance UTC acceptance clock to verify T−45 application / T−30 approval / T−15 external-booking check. Going backwards is rejected. Reload resets fixtures.
 6. Review Settings → Export sanitized admin handoff → import as a **demo** snapshot in the admin. This is manual handoff, not connected production data. See [shared contract](../shared/README.md) and [R1 QA](qa/r1/readiness.md).
 
 ## Checks
@@ -82,3 +82,5 @@ Messages show London-local times. Conversations restart after 30 minutes without
 
 ### Map and compact helper prototype — 18 October 2026
 Drag the discovery map, use +/− or pinch to zoom, then Search this area. Reset returns to central London. Create meal now offers restaurant name/area/cuisine search and map pins; review a candidate and select Use this restaurant before continuing. These are local fixture interactions using the existing map artwork, without Google Maps/Places, API keys or real availability. Helper preferences now sit in its top toolbar; dismiss using the sheet grip, outside area or Escape. No size toggle or close cross remains.
+
+Restoration review (2026-10-19): [28-comment comparison and verification](qa/experience-restoration-2026-10-19/verification.zh-CN.md). The prior interaction baseline remains available at `?scope=future`; payment/booking simulations there remain outside R1.
