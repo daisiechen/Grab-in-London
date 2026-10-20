@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-21",
+  "version": 12,
+  "versionId": "appgprj_6ad2791025408191bf7b3c5bbce7218c~appgver_4f1a8a2cd0a081919a95ec56e2564d3b",
+  "deploymentId": "appgdep_6ad7f9a43a2c8191938cea25b45f9ea2",
+  "status": "succeeded",
+  "url": "https://grab-in-london-demo.daisie-chen-94.chatgpt.site",
+  "siteSourceCommit": "116a70a72590cbedfab6799bf227110907878d49",
+  "githubAppCommit": "68ed7a808244c52a360d4eaf78cb52ecf18ca5b0",
+  "verification": {
+    "domain": 64,
+    "sites": 6,
+    "python": 46,
+    "browser": 32,
+    "protectedRuntimeFiles": 28,
+    "sourceFilesByteCompared": 74,
+    "build": "passed",
+    "live": "Restaurant map candidate preview and48-option Time dropdown verified"
+  },
+  "scope": "Demo and PRD only; no Google Maps/Places API configured or connected",
+  "screenshot": "live-picker.jpg"
+}

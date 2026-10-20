@@ -30,4 +30,8 @@
 
 当前没有Google Maps/Places API、真实库存、订位、地理验证或跨设备持久化。示意地图与样例结果有可见标识；外链使用[Google官方Maps URL格式](https://developers.google.com/maps/documentation/urls/get-started)，不需API密钥但不能把选择自动带回。真实[Places接入](https://developers.google.com/maps/documentation/javascript/place-get-started)仍待配置和研发；本轮不创建Google项目、不启用计费或索要聊天中的密钥。
 
-PRD/原型验证不等于真实研发完成，也不自动关闭此前双端研发准入报告中的其他阻塞。发布版本、源码比对和线上截图见本批QA的release.json，发布后登记。
+PRD/原型验证不等于真实研发完成，也不自动关闭此前双端研发准入报告中的其他阻塞。发布版本、源码比对和线上截图见本批QA的release.json及下方记录。
+
+## 已发布
+
+Sites v12状态succeeded：[手机Demo](https://grab-in-london-demo.daisie-chen-94.chatgpt.site/)。App提交`68ed7a808244c52a360d4eaf78cb52ecf18ca5b0`，Sites源码`116a70a72590cbedfab6799bf227110907878d49`，74个Demo源文件逐字节相同。线上已打开创建页并点击Casa Evening地图标记，确认候选预览与Use this restaurant、原选店未覆盖；Time包含全天48个时刻。见[release.json](../../demo/qa/restaurant-picker-2026-10-21/release.json)和[线上截图](../../demo/qa/restaurant-picker-2026-10-21/live-picker.jpg)。
