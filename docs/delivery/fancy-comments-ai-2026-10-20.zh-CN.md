@@ -31,3 +31,9 @@ AI入口此前随星期日基线回滚被移除。本轮只恢复助手模块及
 这是内存交互Demo：刷新/重置清空本地状态；模型、真实认证、消息、餐厅、问卷采集API及原生iOS仍待研发。浏览器语音只在用户确认说明后使用浏览器支持能力，不自动发送。此记录不代替双端整体研发准入复评，不把历史评审阻塞自动标为关闭。
 
 发布版本、源码SHA与线上截图由本批QA目录的release.json及live-ai.jpg记录。GitHub与Sites源仓库分开核对，仅提交本轮App/文档文件，保留研究会话的未提交改动。
+
+## 已发布
+
+- Sites v11，状态succeeded：[手机可访问的Demo](https://grab-in-london-demo.daisie-chen-94.chatgpt.site/)。
+- App/PRD提交`37585b744abb829b4aa8f1dce1fb1d2265605cb1`；Sites源码`0b40ce53d39d278ed8bd6cc5fa69f8b7eb8218cc`；72个Demo源文件逐字节一致。发布元数据见[release.json](../../demo/qa/comments-2026-10-20/release.json)。
+- 已在线打开Ask Fancy、My preferences入口并执行Find a meal for Friday，显示23日两场可选饭局；截图见[live-ai.jpg](../../demo/qa/comments-2026-10-20/live-ai.jpg)。

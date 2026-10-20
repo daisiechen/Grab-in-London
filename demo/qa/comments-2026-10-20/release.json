@@ -1,0 +1,26 @@
+{
+  "version": 11,
+  "versionId": "appgprj_6ad2791025408191bf7b3c5bbce7218c~appgver_de73858572a08191879e64e28cb89c2c",
+  "deploymentId": "appgdep_6ad7f383dfb081919b8213eb88c28945",
+  "status": "succeeded",
+  "url": "https://grab-in-london-demo.daisie-chen-94.chatgpt.site",
+  "siteSourceCommit": "0b40ce53d39d278ed8bd6cc5fa69f8b7eb8218cc",
+  "githubAppCommit": "37585b744abb829b4aa8f1dce1fb1d2265605cb1",
+  "githubAdminCommit": "a396397dddf010b6ab3c555176b5cd25732eb53a",
+  "verification": {
+    "domain": 62,
+    "sites": 6,
+    "python": 44,
+    "browserScenarios": 29,
+    "finalTargetedBrowserPasses": 8,
+    "protectedRuntimeFiles": 28,
+    "sourceFilesByteCompared": 72,
+    "build": "passed",
+    "live": "Ask Fancy home, My preferences and Friday results verified in browser"
+  },
+  "limitations": [
+    "Local deterministic helper; no live model integration",
+    "Session state resets on refresh",
+    "Development-readiness review blockers require a separate re-review"
+  ]
+}
