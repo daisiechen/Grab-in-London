@@ -7,6 +7,7 @@ export default defineConfig({
   testMatch: "**/*.spec.ts",
   timeout: 20_000,
   use: {
+    channel: process.env.PLAYWRIGHT_CHANNEL,
     baseURL: `http://127.0.0.1:${testPort}`,
     viewport: { width: 1100, height: 1100 },
   },

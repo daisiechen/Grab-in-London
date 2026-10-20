@@ -42,6 +42,24 @@ class ProductSpecTest(unittest.TestCase):
 
     def test_audit_revision_records_independent_states_and_clean_ui(self):
         text = (Path(__file__).resolve().parents[1] / 'docs/product/PRD.zh-CN.md').read_text()
-        for contract in ('版本：0.4', '保留原餐厅预约状态', 'Cancelled 独立',
+        for contract in ('版本：0.5', '保留原餐厅预约状态', 'Cancelled 独立',
                          '按成员记录', '金额最多2位小数', '退款金额在取消时按饭局记录'):
             self.assertIn(contract, text)
+
+    def test_first_release_scope_has_one_current_rule_set(self):
+        text = (Path(__file__).resolve().parents[1] / 'docs/product/PRD.zh-CN.md').read_text()
+        current = text.split('## 0.', 1)[1].split('## 1.', 1)[0]
+        for contract in ('移动Web和iOS App', '2 ≤ minimum ≤ capacity ≤ 6',
+                         '到店各自付款', 'now ≥ closesAt', '低于',
+                         '本人报告present/absent优先', 'end ≤ now < end+7天',
+                         'scheduledEndAt+24小时', '每次重申',
+                         '解除不恢复旧同意'):
+            if contract == '低于':
+                self.assertIn('跌破最低，立即取消', current)
+            elif contract == '每次重申':
+                self.assertIn('生成新轮次', current)
+            else:
+                self.assertIn(contract, current)
+        self.assertIn('历史原型', current)
+        self.assertIn('不自动只读', current)
+        self.assertNotIn('曾CONFIRMED后退出/取消 | 原会话保留Archived', text)

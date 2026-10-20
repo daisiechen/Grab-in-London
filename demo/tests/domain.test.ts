@@ -351,15 +351,15 @@ test("group admission requires host-approved confirmed membership, not restauran
   );
   assert.equal(groupChatAccess({ ...meal, owned: true }, "NONE"), "write");
 });
-test("only prior confirmed guests retain a read-only archive after cancellation", () => {
-  assert.equal(groupChatAccess(meal, "CANCELLED", true), "read-only");
+test("only admitted guests keep chatting after participation or reservation cancellation", () => {
+  assert.equal(groupChatAccess(meal, "CANCELLED", true), "write");
   assert.equal(groupChatAccess(meal, "CANCELLED", false), "locked");
   assert.equal(inboxStage(meal, "CANCELLED", true), "chat");
   assert.equal(inboxStage(meal, "CANCELLED", false), "none");
-  assert.equal(groupChatAccess(meal, "PENDING", true), "locked");
+  assert.equal(groupChatAccess(meal, "PENDING", true), "write");
   assert.equal(
     groupChatAccess(meal, "CONFIRMED", true, "CANCELLED"),
-    "read-only",
+    "write",
   );
 });
 

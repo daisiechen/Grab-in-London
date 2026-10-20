@@ -6,11 +6,11 @@
 
 | 文档 | 用途与权威关系 |
 | --- | --- |
-| [主 PRD](product/PRD.zh-CN.md) | 当前恢复版0.4的需求真源，目标为2026-10-18 01:03:45快照 |
+| [主 PRD](product/PRD.zh-CN.md) | 当前v0.5需求真源；§0为已确认首期规格，沿用星期日恢复版界面 |
 | [产品简介](product/product-brief.md) | 产品定位与摘要；详细规则以主 PRD 为准 |
 | [首期运营指标与采集契约](product/admin/measurement-contract.zh-CN.md) | 后台全部指标算法、App采集入口与生产数据接入验收 |
 | [管理端 PRD](product/admin/PRD.zh-CN.md) | 管理端范围及指标；引用主 PRD，不替代共享业务规则 |
-| [R1 研发契约与模拟交接](../shared/README.md) | 对象、命令、权限、时间、幂等和脱敏JSON；明确真实服务依赖 |
+| [历史R1原型与模拟交接](../shared/README.md) | 历史参考，非现行研发契约；业务真源为主PRD§0 |
 
 ## 调研与商业模式
 
@@ -47,3 +47,5 @@
 ## Agent 协作
 
 - [Agent 协作与配置边界](agent-collaboration.md)：共用规则、桌面可见评审、文件职责与 Git 交付。
+
+- [2026-10-20 App修订与验证](delivery/fancy-app-readiness-2026-10-20.zh-CN.md)：恢复版上的必要局部修订及B-01—B-11映射；不是双端独立复评通过结论。

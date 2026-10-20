@@ -64,7 +64,6 @@ import {
   blockedMemberIds,
   mealInCategory,
   reservationNeedsUpdate,
-  alternativeReservationSlot,
   longDate,
   groupChatAccess,
   inboxStage,
@@ -90,19 +89,25 @@ import {
   type BookingState,
 } from "./domain";
 
+import { DEMO_NOW, MINUTE, startsAt, endsAt, londonInstant, closesAt, minimumFor, canRecruit, resolveLifecycle, validateRecruitment, cancelWholeMeal, criticalEditAllowed, newApplicationRound, chatPermission, type ApplicationRound, type GroupMembership } from "./readiness";
+import { attendanceStatus, reportWindow, feedbackEligible, feedbackReasons, validateExperience, canMessage, revokeConnection, connectionHasAttendance, type AttendanceRecord, type MealExperience, type Connection } from "./postMeal";
+
 const initialDraft = {
   title: "",
   venue: "The Little Table",
   date: "2026-10-23",
   time: "19:00",
   capacity: 4,
+  minimum: 3,
+  deadlineDate: "2026-10-23",
+  deadlineTime: "18:00",
   min: 25,
   max: 35,
   description: "",
   language: "English",
   mood: "Easy conversation",
-  cost: "deposit",
-  booking: "in-app",
+  cost: "offline",
+  booking: "external",
   deposit: 10,
   externalConfirmed: false,
   accepted: false,
@@ -136,12 +141,18 @@ type Sheet =
   | "scenarios"
   | "report"
   | "reset"
-  | "signout";
+  | "signout"
+  | "cancel-meal"
+  | "leave-group"
+  | "close-group"
+  | "revoke"
+  | "block";
 const labels: Record<JoinState, string> = {
   NONE: "Open table",
   PENDING: "Application pending",
   DECLINED: "Application declined",
   WITHDRAWN: "Application withdrawn",
+  EXPIRED: "Application expired",
   APPROVED_PAYMENT_PENDING: "Approved · payment pending",
   CONFIRMED: "Your seat is confirmed",
   CANCELLED: "Participation cancelled",
@@ -922,7 +933,18 @@ export default function Prototype() {
   });
   const [page, setPage] = useState<Page>("discover");
   const [history, setHistory] = useState<Page[]>([]);
-  const [meals, setMeals] = useState<Meal[]>(initialMeals);
+  const pastMeal: Meal = { ...initialMeals[0], id: "past-supper", title: "A little supper club", date: "2026-10-15", time: "19:00", deposit: 0, costMode: "OFFLINE", members: ["maya", "emma", "alex"], confirmed: 3, booking: "CONFIRMED" };
+  const [meals, setMeals] = useState<Meal[]>([...initialMeals, pastMeal]);
+  const [clock, setClock] = useState(DEMO_NOW);
+  const [rounds, setRounds] = useState<ApplicationRound[]>([]);
+  const [groupMemberships, setGroupMemberships] = useState<Record<string, GroupMembership>>({});
+  const [cancelReason, setCancelReason] = useState<"host" | "booking" | "other">("host");
+  const [editingMeal, setEditingMeal] = useState<string | null>(null);
+  const [attendance, setAttendance] = useState<Record<string, AttendanceRecord>>({ "past-supper:maya": { host: "present" }, "past-supper:emma": { host: "present" } });
+  const [eligibility, setEligibility] = useState<Record<string, string[]>>({ "past-supper": ["maya", "emma", "alex"] });
+  const [experiences, setExperiences] = useState<Record<string, MealExperience>>({});
+  const [connections, setConnections] = useState<Record<string, Connection>>({});
+  const [references, setReferences] = useState<Record<string, { text: string; saved: boolean }>>({});
   const [selected, setSelected] = useState("supper");
   const [mode, setMode] = useState<"map" | "list">("map");
   const [filters, setFilters] = useState<DiscoveryFilters>({ ...emptyFilters });
@@ -934,13 +956,11 @@ export default function Prototype() {
   const [sheet, setSheet] = useState<Sheet>("");
   const [toast, setToast] = useState("");
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [confirmedChats, setConfirmedChats] = useState<Record<string, boolean>>(
-    {},
-  );
+  const [confirmedChats, setConfirmedChats] = useState<Record<string, boolean>>({ "past-supper": true });
   const [chatArchives, setChatArchives] = useState<Record<string, string[]>>(
     {},
   );
-  const [states, setStates] = useState<Record<string, JoinState>>({});
+  const [states, setStates] = useState<Record<string, JoinState>>({ "past-supper": "CONFIRMED" });
   const [payments, setPayments] = useState<Record<string, PaymentState>>({});
   const [reservedSizes, setReservedSizes] = useState<Record<string, number>>(
     {},
@@ -973,17 +993,25 @@ export default function Prototype() {
   const [draftProfile, setDraftProfile] = useState(profile);
   const [createStep, setCreateStep] = useState(0);
   const [draft, setDraft] = useState(initialDraft);
-  const [review, setReview] = useState("");
-  const [wants, setWants] = useState(false);
-  const [reviewed, setReviewed] = useState(false);
-  const [mutual, setMutual] = useState(false);
-  const [completed, setCompleted] = useState<Record<string, boolean>>({});
+
+  const [completed, setCompleted] = useState<Record<string, boolean>>({ "past-supper": true });
   const [feedbackTarget, setFeedbackTarget] = useState({
     mealId: "past-supper",
     title: "A little supper club",
     date: "2026-10-15",
     memberId: "maya",
   });
+  const feedbackKey = `${feedbackTarget.mealId}:${feedbackTarget.memberId}`;
+  const reference = references[feedbackKey] || { text: "", saved: false };
+  const review = reference.text;
+  const reviewed = reference.saved;
+  const connection = connections[feedbackTarget.memberId];
+  const wants = !!connection?.mine;
+  const mutual = canMessage(connection, false) && connectionHasAttendance(connection, feedbackTarget.memberId, attendance, eligibility);
+  const setReview = (text: string) => setReferences((all) => ({ ...all, [feedbackKey]: { ...reference, text } }));
+  const setReviewed = (saved: boolean) => setReferences((all) => ({ ...all, [feedbackKey]: { ...reference, saved } }));
+  const setWants = (mine: boolean) => setConnections((all) => ({ ...all, [feedbackTarget.memberId]: { ...all[feedbackTarget.memberId], mine, theirs: mine && !!all[feedbackTarget.memberId]?.theirs, sourceMeal: feedbackTarget.mealId, sourceMeals: [...new Set([...(all[feedbackTarget.memberId]?.sourceMeals || []), ...(all[feedbackTarget.memberId]?.sourceMeal ? [all[feedbackTarget.memberId].sourceMeal!] : []), feedbackTarget.mealId])] } }));
+  const setMutual = (theirs: boolean) => setConnections((all) => ({ ...all, [feedbackTarget.memberId]: { mine: !!all[feedbackTarget.memberId]?.mine, theirs, sourceMeal: feedbackTarget.mealId, sourceMeals: [...new Set([...(all[feedbackTarget.memberId]?.sourceMeals || []), ...(all[feedbackTarget.memberId]?.sourceMeal ? [all[feedbackTarget.memberId].sourceMeal!] : []), feedbackTarget.mealId])] } }));
   const directKey = `direct-${feedbackTarget.memberId}`;
   const [blockedMembers, setBlockedMembers] = useState<Record<string, boolean>>(
     {},
@@ -999,8 +1027,33 @@ export default function Prototype() {
   const join = states[current.id] || "NONE";
   const payment = payments[current.id] || "UNPAID";
   const booking = bookings[current.id] || current.booking;
-  const alternativeTime = alternativeReservationSlot(current);
-  const matches = eligibleMeals(meals, filters);
+  const reservationStale = reservationNeedsUpdate(booking, reservedSizes[current.id] ?? current.capacity, current.confirmed);
+  const feedbackMeal = meals.find((m) => m.id === feedbackTarget.mealId) || pastMeal;
+  const feedbackEnd = endsAt(feedbackMeal);
+  const inReportWindow = reportWindow(feedbackEnd, clock);
+  const attendanceKey = `${feedbackTarget.mealId}:alex`;
+  const myAttendance = attendance[attendanceKey] || {};
+  const myEligible = !!eligibility[feedbackTarget.mealId]?.includes("alex");
+  const canFeedback = feedbackEligible(myEligible, myAttendance, feedbackEnd, clock) && !feedbackMeal.cancelledAt;
+  const canPersonalFeedback = canFeedback && !!eligibility[feedbackTarget.mealId]?.includes(feedbackTarget.memberId) && attendanceStatus(attendance[`${feedbackTarget.mealId}:${feedbackTarget.memberId}`]) === "present";
+  const experience = experiences[feedbackTarget.mealId] || { score: 0, again: null, reasons: [] };
+  const setExperience = (patch: Partial<MealExperience>) => setExperiences((all) => ({ ...all, [feedbackTarget.mealId]: { ...experience, ...patch, saved: false } }));
+  const accessFor = (m: Meal, state: JoinState = states[m.id] || "NONE", admitted = confirmedChats[m.id], reservation = bookings[m.id] || m.booking) =>
+    chatPermission(groupChatAccess(m, state, admitted, reservation) !== "locked", groupMemberships[m.id]);
+  useEffect(() => {
+    const resolved = meals.map((m) => resolveLifecycle(m, clock));
+    if (resolved.some((m, i) => m !== meals[i])) {
+      setMeals(resolved);
+      if (resolved.some((m, i) => m.cancelledAt && !meals[i].cancelledAt)) setToast("A meal was cancelled because it no longer meets its minimum. Members have been notified. The group chat stays open.");
+    }
+    setStates((all) => {
+      const next = { ...all }; let changed = false;
+      resolved.forEach((m) => { if (!canRecruit(m, clock) && ["PENDING", "APPROVED_PAYMENT_PENDING"].includes(next[m.id])) { next[m.id] = "EXPIRED"; changed = true; } });
+      return changed ? next : all;
+    });
+    setRounds((all) => all.some((r) => r.state === "PENDING" && !canRecruit(resolved.find((m) => m.id === r.mealId)!, clock)) ? all.map((r) => r.state === "PENDING" && !canRecruit(resolved.find((m) => m.id === r.mealId)!, clock) ? { ...r, state: "EXPIRED" } : r) : all);
+  }, [clock, meals]);
+  const matches = eligibleMeals(meals.filter((m) => !m.cancelledAt && startsAt(m) > Date.parse(clock)), filters);
   const activeCount = Object.values(filters).filter((value) =>
     value.trim(),
   ).length;
@@ -1010,7 +1063,7 @@ export default function Prototype() {
   const areaMeals = areaGroup?.meals || [];
   const featured = areaMeals.find((m) => m.id === selected) || areaMeals[0];
   const featuredIndex = areaMeals.findIndex((m) => m.id === featured?.id);
-  const pendingMatches = eligibleMeals(meals, pendingFilters);
+  const pendingMatches = eligibleMeals(meals.filter((m) => !m.cancelledAt && startsAt(m) > Date.parse(clock)), pendingFilters);
   const openFilters = (target: "date" | "size" | "filters") => {
     keyboard.hide();
     setPendingFilters({ ...filters });
@@ -1096,9 +1149,12 @@ export default function Prototype() {
     setMemberId(id);
     go("member");
   };
-  const updateJoin = (state: JoinState) =>
+  const updateJoin = (state: JoinState) => {
     setStates((s) => ({ ...s, [current.id]: state }));
+    setRounds((all) => { const last = all.map((r, i) => r.mealId === current.id ? i : -1).filter((i) => i >= 0).at(-1) ?? -1; return all.map((r, i) => i === last ? { ...r, state } : r); });
+  };
   const countUp = (mealId = current.id) => {
+    setGroupMemberships((all) => ({ ...all, [mealId]: { ...all[mealId], left: false } }));
     setConfirmedChats((s) => ({ ...s, [mealId]: true }));
     setMeals((ms) =>
       ms.map((m) => (m.id === mealId ? addConfirmedMember(m, "alex") : m)),
@@ -1106,8 +1162,10 @@ export default function Prototype() {
   };
   const submitApplication = () => {
     try {
+      const round = newApplicationRound(current, rounds, clock);
       const next = applyToMeal(current, join, intro, profileComplete);
-      updateJoin(next);
+      setRounds((all) => [...all, round]);
+      setStates((all) => ({ ...all, [current.id]: next }));
       go("status");
     } catch (e) {
       setError((e as Error).message);
@@ -1115,7 +1173,9 @@ export default function Prototype() {
   };
   const approveMeal = (meal: Meal) => {
     try {
+      if (!canRecruit(meal, clock)) throw new Error("Applications have closed.");
       const next = approveApplication(meal, states[meal.id] || "NONE");
+      setRounds((all) => { const last = all.map((r, i) => r.mealId === meal.id ? i : -1).filter((i) => i >= 0).at(-1) ?? -1; return all.map((r, i) => i === last ? { ...r, state: next } : r); });
       setStates((s) => ({ ...s, [meal.id]: next }));
       if (next === "CONFIRMED") countUp(meal.id);
       setError("");
@@ -1150,6 +1210,7 @@ export default function Prototype() {
     }, 650);
   };
   const cancelParticipation = () => {
+    if (Date.parse(clock) >= startsAt(current)) { notify("This meal has started. Contact support about attendance; leaving the group is a separate action."); return; }
     if (join === "CONFIRMED")
       setChatArchives((a) => ({
         ...a,
@@ -1181,10 +1242,12 @@ export default function Prototype() {
     )
       setRefunds((r) => ({ ...r, [current.id]: "PENDING" }));
     setSheet("");
-    notify("Participation cancelled. See your refund status.");
+    notify("Your place is cancelled. You can keep chatting with your group unless you leave it.");
   };
   const publish = () => {
     const issue =
+      (editingMeal && !criticalEditAllowed(current) ? "Members have already been approved. Cancel this meal and create a new one to change the arrangements." : "") ||
+      validateRecruitment(draft.capacity, draft.minimum, londonInstant(draft.deadlineDate, draft.deadlineTime), draft.date, draft.time, clock) ||
       validateArrangement(
         { ...draft, max: draft.cost === "menu" ? draft.min : draft.max },
         "costs",
@@ -1202,7 +1265,9 @@ export default function Prototype() {
       return;
     }
     const meal: Meal = {
-      id: `created-${Date.now()}`,
+      id: editingMeal || `created-${Date.now()}`,
+      minimum: draft.minimum,
+      closesAt: londonInstant(draft.deadlineDate, draft.deadlineTime),
       title: draft.title.trim(),
       venue: draft.venue,
       area: createVenues.find((v) => v.name === draft.venue)!.area,
@@ -1238,7 +1303,8 @@ export default function Prototype() {
       owned: true,
       reservationSource: draft.booking === "external" ? "external" : "in-app",
     };
-    setMeals((ms) => [meal, ...ms]);
+    setMeals((ms) => editingMeal ? ms.map((m) => m.id === editingMeal ? meal : m) : [meal, ...ms]);
+    setEditingMeal(null);
     setSelected(meal.id);
     setCreateStep(0);
     setDraft(initialDraft);
@@ -1246,6 +1312,8 @@ export default function Prototype() {
     notify("Your meal is published. Your table starts here.");
   };
   const statusButton = () => {
+    if (current.cancelledAt || !canRecruit(current, clock) && !["CONFIRMED", "APPROVED_PAYMENT_PENDING"].includes(join) && !current.owned)
+      return <div className="notice" role="status">{current.cancelledAt ? "This meal was cancelled. Existing members can still chat in Inbox." : "Applications have closed."}</div>;
     if (current.owned)
       return (
         <Primary onClick={() => go("host")}>
@@ -1277,7 +1345,7 @@ export default function Prototype() {
           View application <ArrowRightIcon />
         </Primary>
       );
-    if (join === "CANCELLED" || join === "DECLINED")
+    if (join === "DECLINED" || join === "EXPIRED")
       return (
         <Primary secondary onClick={() => root("discover")}>
           Find another table
@@ -1633,6 +1701,8 @@ export default function Prototype() {
                 </div>
               )}
             </div>
+            <p className="muted">{minimumFor(current)}–{current.capacity} people including the host · Applications close {new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" }).format(closesAt(current))}</p>
+            {current.cancelledAt && <div className="notice" role="status">This meal was cancelled. Existing members can still chat in Inbox.</div>}
             <h2>The restaurant</h2>
             <div className="venue-line">
               <SewingPinIcon />
@@ -1643,7 +1713,7 @@ export default function Prototype() {
                   className={`status-tag ${booking === "CONFIRMED" ? "good" : ""}`}
                 >
                   {booking === "CONFIRMED"
-                    ? "Restaurant booked"
+                    ? reservationStale ? "Host to update reservation" : "Restaurant booked"
                     : booking === "FAILED"
                       ? "Booking needs attention"
                       : bookingStatusLabel(booking)}
@@ -1830,7 +1900,7 @@ export default function Prototype() {
               {error}
             </p>
           )}
-          {join === "NONE" || join === "WITHDRAWN" ? (
+          {["NONE", "WITHDRAWN", "CANCELLED"].includes(join) && canRecruit(current, clock) ? (
             <Primary onClick={submitApplication}>
               Send request <ArrowRightIcon />
             </Primary>
@@ -1858,7 +1928,7 @@ export default function Prototype() {
                     ? "Another table awaits."
                     : join === "CANCELLED"
                       ? "Your participation is cancelled."
-                      : "Your request is withdrawn."}
+                      : join === "EXPIRED" ? "Applications have closed." : "Your request is withdrawn."}
           </h1>
           <p className="prose">
             {join === "PENDING"
@@ -2033,7 +2103,7 @@ export default function Prototype() {
               ? "Your place has been released. Any eligible refund is shown below."
               : booking === "FAILED"
                 ? current.owned
-                  ? "The restaurant couldn’t confirm this slot. Choose an alternative time for your group."
+                  ? "The restaurant couldn’t confirm this slot. Check the arrangements in Manage applications."
                   : "The restaurant couldn’t confirm this slot. Your host is arranging an alternative. Chat with your table or cancel for a full refund."
                 : booking === "PENDING"
                   ? current.owned
@@ -2065,7 +2135,7 @@ export default function Prototype() {
               <span>Restaurant</span>
               <strong>
                 {booking === "CONFIRMED"
-                  ? "Confirmed"
+                  ? reservationStale ? "Needs updated guest count" : "Confirmed"
                   : booking === "FAILED"
                     ? "Confirmation failed"
                     : booking === "CANCELLED"
@@ -2110,7 +2180,7 @@ export default function Prototype() {
                     )) ||
                   booking === "CANCELLED" ||
                   booking === "FAILED" ||
-                  !groupReady(current.capacity, current.confirmed)
+                  !(current.confirmed >= minimumFor(current))
                 }
                 onClick={() => {
                   setBookings((b) => ({ ...b, [current.id]: "CONFIRMED" }));
@@ -2134,44 +2204,24 @@ export default function Prototype() {
                   : `Confirm reservation for ${current.confirmed} people`}
               </Primary>
               <p className="muted">
-                {groupReady(current.capacity, current.confirmed)
+                {(current.confirmed >= minimumFor(current))
                   ? "Confirm the reservation for the current number of confirmed guests."
-                  : "At least 3 confirmed guests are needed for a small group, or both guests for a table for two."}
+                  : `At least ${minimumFor(current)} confirmed guests are needed for this meal.`}
               </p>
+              {reservationStale && <p className="notice">The confirmed guest count changed. Contact the restaurant and update your reservation confirmation.</p>}
               <Primary secondary onClick={() => go("host")}>
                 Manage guest list
               </Primary>
             </>
           )}
           {(join === "CONFIRMED" || current.owned) &&
-            booking !== "CANCELLED" && (
+            !current.cancelledAt && (
               <Primary onClick={() => go("chat")}>
                 Meet your table in chat <ChatBubbleIcon />
               </Primary>
             )}
           {booking === "FAILED" && current.owned && (
-            <Primary
-              disabled={!alternativeTime}
-              onClick={() => {
-                setBookings((b) => ({ ...b, [current.id]: "CONFIRMED" }));
-                setMeals((ms) =>
-                  ms.map((m) =>
-                    m.id === current.id ? { ...m, time: alternativeTime } : m,
-                  ),
-                );
-                setReservedSizes((all) => ({
-                  ...all,
-                  [current.id]: current.confirmed,
-                }));
-                notify(
-                  `Restaurant confirmed the alternative ${alternativeTime} slot.`,
-                );
-              }}
-            >
-              {alternativeTime
-                ? `Choose available slot · ${alternativeTime}`
-                : "No alternative times available"}
-            </Primary>
+            <div className="notice">{criticalEditAllowed(current) ? "You can edit the arrangements in Manage applications." : "Members have already joined. To change the restaurant or time, cancel this meal and create a new one. Your group can keep discussing the plan."}</div>
           )}
           {join === "CONFIRMED" && (
             <button
@@ -2202,13 +2252,13 @@ export default function Prototype() {
     if (page === "chat" || page === "direct") {
       const direct = page === "direct";
       const speaker = current.members.find((id) => id !== "alex") || "maya";
-      const chatAccess = groupChatAccess(
+      const chatAccess = accessFor(
         current,
         join,
         confirmedChats[current.id],
         booking,
       );
-      const allowed = direct ? mutual && !blocked : chatAccess !== "locked";
+      const allowed = direct ? (mutual && !blocked) || !!messages[directKey]?.length : chatAccess !== "locked";
       return (
         <div className="body-pad chat-body">
           {!allowed ? (
@@ -2243,12 +2293,13 @@ export default function Prototype() {
                 <div className="notice">
                   <LockClosedIcon />
                   <span>
-                    Archived conversation · read-only. Your participation has
-                    ended or this meal was cancelled. No new group messages will
-                    be delivered.
+                    You left this group or the host dissolved it. Your earlier messages remain read-only. No new group messages will be delivered.
                   </span>
                 </div>
               )}
+              {direct && (!mutual || blocked) && <div className="notice">Your previous messages are read-only. A new mutual connection is needed to send messages.</div>}
+              {!direct && chatAccess === "write" && <div className="two-actions"><button className="text-action danger" onClick={() => setSheet(current.owned ? "close-group" : "leave-group")}>{current.owned ? "Dissolve group" : "Leave group"}</button></div>}
+              {direct && mutual && <button className="text-action danger" onClick={() => setSheet("revoke")}>Withdraw connection</button>}
               <p className="chat-date">
                 {!direct && chatAccess === "read-only" ? "ARCHIVE" : "TODAY"}
               </p>
@@ -2325,6 +2376,12 @@ export default function Prototype() {
           )
         )
           next.time = "";
+        if (patch.date || patch.time) {
+          const deadline = new Date(startsAt(next) - 60 * MINUTE);
+          const parts = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(deadline).map((p) => [p.type, p.value]));
+          next.deadlineDate = `${parts.year}-${parts.month}-${parts.day}`;
+          next.deadlineTime = `${parts.hour}:${parts.minute}`;
+        }
         setDraft(next);
         setError("");
       };
@@ -2332,7 +2389,7 @@ export default function Prototype() {
         keyboard.hide();
         const issue =
           createStep === 0
-            ? validateArrangement(draft)
+            ? validateRecruitment(draft.capacity, draft.minimum, londonInstant(draft.deadlineDate, draft.deadlineTime), draft.date, draft.time, clock) || validateArrangement(draft)
             : createStep === 1
               ? validateMeal(
                   draft.title,
@@ -2426,9 +2483,10 @@ export default function Prototype() {
               <ChoiceGroup
                 label="People, including you"
                 value={String(draft.capacity)}
-                onChange={(v) => updateSchedule({ capacity: Number(v) })}
+                onChange={(v) => updateSchedule({ capacity: Number(v), minimum: Math.min(draft.minimum, Number(v)) })}
                 options={[2, 3, 4, 5, 6].map((n) => [String(n), `${n} people`])}
               />
+              <ChoiceGroup label="Minimum people, including you" value={String(draft.minimum)} onChange={(v) => updateSchedule({ minimum: Number(v) })} options={[2, 3, 4, 5, 6].filter((n) => n <= draft.capacity).map((n) => [String(n), `${n} people`])} />
               <p className="muted">
                 {draft.capacity - 1} guest{draft.capacity === 2 ? "" : "s"} +
                 you · friendship-first, at every table size.
@@ -2463,6 +2521,9 @@ export default function Prototype() {
                   </p>
                 </div>
               )}
+              <h2>Applications close</h2>
+              <Field label="Deadline date"><input type="date" value={draft.deadlineDate} max={draft.date} onChange={(e) => setDraft({ ...draft, deadlineDate: e.target.value, accepted: false })} /></Field>
+              <Field label="Deadline time" hint="At least 30 minutes before the meal. At the deadline, we stop applications and approvals and cancel if your minimum isn’t met."><input type="time" value={draft.deadlineTime} onChange={(e) => setDraft({ ...draft, deadlineTime: e.target.value, accepted: false })} /></Field>
               <ReviewOnly>
                 <p className="demo-note">
                   Fictional restaurants and sample availability. A time
@@ -2664,7 +2725,7 @@ export default function Prototype() {
                   <strong>Reservation pending</strong>
                   <p>
                     Publish first, approve guests, then confirm the reservation
-                    in Manage meal. Minimum {draft.capacity === 2 ? 2 : 3}{" "}
+                    in Manage meal. Minimum {draft.minimum}{" "}
                     confirmed people; final party size uses confirmed guests,
                     including you.
                   </p>
@@ -2821,6 +2882,7 @@ export default function Prototype() {
           </Carousel>
           {mealTab === "Past" ? (
             <>
+              {meals.filter((m) => m.id !== "past-supper" && completed[m.id]).map((m) => <div className="list-meal" key={m.id}>{mealCard(m, true)}<Primary secondary onClick={() => { setSelected(m.id); setFeedbackTarget({ mealId: m.id, title: m.title, date: m.date, memberId: m.members.find((id) => id !== "alex") || "maya" }); go("review"); }}>Leave feedback</Primary><button className="text-action" onClick={() => { setSelected(m.id); go("chat"); }}>Open group chat</button></div>)}
               <div className="list-meal">
                 <span className="eyebrow">THU 15 OCT · COMPLETED</span>
                 <h2>A little supper club</h2>
@@ -2839,10 +2901,6 @@ export default function Prototype() {
                         date: "2026-10-15",
                         memberId: "maya",
                       });
-                      setReview("");
-                      setReviewed(false);
-                      setWants(false);
-                      setMutual(false);
                     }
                     go("review");
                   }}
@@ -2852,6 +2910,7 @@ export default function Prototype() {
                     : "Leave feedback"}
                 </Primary>
               </div>
+              <button className="text-action" onClick={() => { setSelected("past-supper"); go("chat"); }}>Open supper club group</button>
               <ReviewOnly>
                 <p className="muted">
                   This completed meal is a fictional demo example.
@@ -2862,7 +2921,7 @@ export default function Prototype() {
             <>
               {meals
                 .filter((m) =>
-                  mealInCategory(m, states[m.id] || "NONE", mealTab),
+                  !completed[m.id] && mealInCategory(m, states[m.id] || "NONE", mealTab),
                 )
                 .map((m) => (
                   <div className="list-meal" key={m.id}>
@@ -2877,7 +2936,7 @@ export default function Prototype() {
                   </div>
                 ))}
               {!meals.some((m) =>
-                mealInCategory(m, states[m.id] || "NONE", mealTab),
+                !completed[m.id] && mealInCategory(m, states[m.id] || "NONE", mealTab),
               ) && (
                 <div className="empty">
                   <CalendarIcon />
@@ -2913,14 +2972,19 @@ export default function Prototype() {
       );
       const chats = meals.filter(
         (m) =>
-          groupChatAccess(
+          accessFor(
             m,
             states[m.id],
             confirmedChats[m.id],
             bookings[m.id] || m.booking,
           ) !== "locked",
       );
-      const hasDirect = mutual && !blocked;
+      const directContacts = Object.keys(connections).filter((id) => {
+        const c = connections[id];
+        const qualified = connectionHasAttendance(c, id, attendance, eligibility);
+        return (canMessage(c, !!blockedMembers[id]) && qualified) || !!messages[`direct-${id}`]?.length;
+      });
+      const hasDirect = directContacts.length > 0;
       return (
         <div className="body-pad inbox-page">
           <div className="eyebrow">BEFORE AND AFTER THE TABLE</div>
@@ -3050,7 +3114,7 @@ export default function Prototype() {
                     </p>
                     <small>
                       {longDate(m.date)} ·{" "}
-                      {groupChatAccess(
+                      {accessFor(
                         m,
                         states[m.id],
                         confirmedChats[m.id],
@@ -3065,23 +3129,7 @@ export default function Prototype() {
               ))}
             </>
           )}
-          {hasDirect && (
-            <>
-              <h2>Personal conversations</h2>
-              <button className="inbox-row" onClick={() => go("direct")}>
-                <Avatar id={feedbackTarget.memberId} size={46} />
-                <div>
-                  <strong>{members[feedbackTarget.memberId].name}</strong>
-                  <p>
-                    {preferences.messagePreviews
-                      ? "You both want to meet again."
-                      : "Message previews are hidden"}
-                  </p>
-                </div>
-                <HeartIcon />
-              </button>
-            </>
-          )}
+          {hasDirect && <><h2>Personal conversations</h2>{directContacts.map((id) => <button key={id} className="inbox-row" onClick={() => { const source = connections[id]?.sourceMeal || "past-supper"; const meal = meals.find((m) => m.id === source) || pastMeal; setFeedbackTarget({ mealId: source, title: meal.title, date: meal.date, memberId: id }); go("direct"); }}><Avatar id={id} size={46} /><div><strong>{members[id].name}</strong><p>{preferences.messagePreviews ? messages[`direct-${id}`]?.at(-1) || "You both want to meet again." : "Message previews are hidden"}</p></div><HeartIcon /></button>)}</>}
           {!waiting.length && !chats.length && !hasDirect && (
             <div className="empty">
               <ChatBubbleIcon />
@@ -3408,7 +3456,30 @@ export default function Prototype() {
               </p>
             </div>
           </div>
-          {!reviewed ? (
+          <section aria-label="Attendance and meal experience">
+            <h2>Your attendance</h2>
+            <p className="muted">Your report takes priority. If you haven’t reported, we use your host’s report. No report means unknown.</p>
+            {myEligible && inReportWindow && !feedbackMeal.cancelledAt ? <ChoiceGroup label="Did you attend this meal?" value={myAttendance.self || "unknown"} options={[["present", "I attended"], ["absent", "I didn’t attend"]]} onChange={(value) => {
+              setAttendance((all) => ({ ...all, [attendanceKey]: { ...all[attendanceKey], self: value as "present" | "absent" } }));
+              notify("Your attendance report is saved.");
+            }} /> : <div className="notice">{!myEligible || feedbackMeal.cancelledAt ? "This meal isn’t eligible for attendance feedback." : "The 7-day reporting window has closed or hasn’t opened yet. Contact support to correct your attendance."}</div>}
+            <p className="muted">Attendance: {attendanceStatus(myAttendance)} · Reporting closes {new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" }).format(feedbackEnd + 7 * 86400000)}</p>
+            {feedbackMeal.owned && inReportWindow && <fieldset className="filter-section"><legend>Report your table’s attendance</legend><p className="muted">Each member’s own report takes priority.</p>{(eligibility[feedbackTarget.mealId] || []).map((id) => <ChoiceGroup key={id} label={id === "alex" ? "You" : members[id]?.name || id} value={attendance[`${feedbackTarget.mealId}:${id}`]?.host || "unknown"} options={[["unknown", "Not reported"], ["present", "Attended"], ["absent", "Didn’t attend"]]} onChange={(value) => setAttendance((all) => ({ ...all, [`${feedbackTarget.mealId}:${id}`]: { ...all[`${feedbackTarget.mealId}:${id}`], host: value as "present" | "absent" | "unknown" } }))} />)}</fieldset>}
+            <ReviewOnly><Primary secondary onClick={() => { setAttendance((all) => ({ ...all, [attendanceKey]: { ...all[attendanceKey], host: "present" } })); notify("Demo: the host reported your attendance. Your own report still takes priority."); }}>Preview host attendance report</Primary><Primary secondary onClick={() => setClock(new Date(feedbackEnd + 7 * 86400000).toISOString())}>Advance to reporting deadline</Primary></ReviewOnly>
+            <h2>Meal experience · private</h2>
+            <p className="muted">About the whole meal, separate from your thoughts about any one person. Only authorised staff can see this feedback.</p>
+            {canFeedback ? <>
+              <ChoiceGroup label="How was the meal?" value={String(experience.score)} options={[1, 2, 3, 4, 5].map((n) => [String(n), String(n)])} onChange={(score) => setExperience({ score: Number(score) })} />
+              <ChoiceGroup label="Would you join another Fancy meal?" value={experience.again === null ? "" : experience.again ? "yes" : "no"} options={[["yes", "Yes"], ["no", "No"]]} onChange={(again) => setExperience({ again: again === "yes" })} />
+              <fieldset className="filter-section"><legend>What shaped your experience? · optional</legend><div className="choice-grid">{feedbackReasons.map(([key, label]) => <label key={key} className={`choice-chip ${experience.reasons.includes(key) ? "chosen" : ""}`}><input type="checkbox" checked={experience.reasons.includes(key)} onChange={(e) => setExperience({ reasons: e.target.checked ? [...experience.reasons, key] : experience.reasons.filter((r) => r !== key) })} />{label}</label>)}</div></fieldset>
+              <Primary secondary onClick={() => { const issue = validateExperience(experience); if (issue) { notify(issue); return; } setExperiences((all) => ({ ...all, [feedbackTarget.mealId]: { ...experience, saved: true } })); notify("Thank you. Your private meal experience is saved."); }}>{experience.saved ? "Update meal experience" : "Save meal experience"}</Primary>
+              {experience.saved && <p role="status">Your private meal experience is saved.</p>}
+            </> : <div className="notice">Confirm that you attended within the reporting window to share your meal experience.</div>}
+          </section>
+          <h2>Sharing a table with {members[feedbackTarget.memberId].name}</h2>
+          <ChoiceGroup label="Choose a tablemate" value={feedbackTarget.memberId} options={(eligibility[feedbackTarget.mealId] || []).filter((id) => id !== "alex").map((id) => [id, members[id]?.name || id])} onChange={(memberId) => setFeedbackTarget({ ...feedbackTarget, memberId })} />
+          {!canPersonalFeedback && <p className="notice">Both people need a recorded attendance before you can leave a reference or choose to reconnect.</p>}
+          {canPersonalFeedback && !reviewed ? (
             <>
               <Field
                 label="A public reference · optional"
@@ -3427,7 +3498,8 @@ export default function Prototype() {
                 <input
                   type="checkbox"
                   checked={wants}
-                  onChange={(e) => setWants(e.target.checked)}
+                  disabled={blocked}
+                  onChange={(e) => { if (!e.target.checked && mutual) setSheet("revoke"); else setWants(e.target.checked); }}
                 />
                 <span>
                   <strong>I’d like to share a table again</strong>
@@ -3451,7 +3523,7 @@ export default function Prototype() {
                 Save feedback <CheckIcon />
               </Primary>
             </>
-          ) : (
+          ) : canPersonalFeedback ? (
             <>
               <div className="summary-box">
                 <strong>
@@ -3478,6 +3550,7 @@ export default function Prototype() {
                     <Primary
                       secondary
                       onClick={() => {
+                        if (blocked) { notify("Unblock this person before choosing to reconnect."); return; }
                         setMutual(true);
                         notify("Demo: you both want to share a table again.");
                       }}
@@ -3503,7 +3576,8 @@ export default function Prototype() {
                 </>
               )}
             </>
-          )}
+          ) : null}
+          {wants && <button className="text-action danger" onClick={() => setSheet("revoke")}>Withdraw my connection choice</button>}
           <button className="text-action" onClick={() => setSheet("report")}>
             Share private feedback or report a concern
           </button>
@@ -3540,6 +3614,7 @@ export default function Prototype() {
               <div className="two-actions">
                 <Primary
                   secondary
+                  disabled={!canRecruit(current, clock)}
                   onClick={() => {
                     setHostDecision((s) => ({
                       ...s,
@@ -3551,7 +3626,7 @@ export default function Prototype() {
                   Decline
                 </Primary>
                 <Primary
-                  disabled={current.confirmed >= current.capacity}
+                  disabled={current.confirmed >= current.capacity || !canRecruit(current, clock)}
                   onClick={() => {
                     setHostDecision((s) => ({
                       ...s,
@@ -3609,6 +3684,17 @@ export default function Prototype() {
               due receive a temporary hold.
             </span>
           </div>
+          <h2>Meal arrangements</h2>
+          <p className="muted">{criticalEditAllowed(current) ? "You can edit before anyone is approved." : "The restaurant, time, budget and group size are locked after the first approval. Cancel and create a new meal to change them."}</p>
+          <Primary secondary disabled={!criticalEditAllowed(current) || !canRecruit(current, clock)} onClick={() => {
+            const local = new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/London", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }).format(closesAt(current)).split(" ");
+            setDraft({ ...initialDraft, title: current.title, venue: current.venue, date: current.date, time: current.time, capacity: current.capacity, minimum: minimumFor(current), deadlineDate: local[0], deadlineTime: local[1], min: current.min, max: current.max, description: current.description, language: current.language, mood: current.mood, cost: current.costMode === "OFFLINE" ? "offline" : current.costMode === "FIXED_MENU" ? "menu" : "deposit", booking: current.reservationSource === "external" ? "external" : "in-app", deposit: current.deposit });
+            setEditingMeal(current.id); setCreateStep(0); go("create");
+          }}>Edit arrangements</Primary>
+          <Primary secondary disabled={!!current.cancelledAt || Date.parse(clock) >= startsAt(current)} onClick={() => setSheet("cancel-meal")}>Cancel this meal</Primary>
+          {current.cancelledAt && <p role="status">This meal is cancelled. Please cancel or adjust the restaurant reservation yourself. Your group remains open.</p>}
+          {completed[current.id] && <Primary secondary onClick={() => { setFeedbackTarget({ mealId: current.id, title: current.title, date: current.date, memberId: current.members.find((id) => id !== "alex") || "maya" }); go("review"); }}>Report attendance and leave feedback</Primary>}
+          <ReviewOnly><Primary secondary onClick={() => { setClock(new Date(closesAt(current)).toISOString()); notify("Demo clock advanced to the recruitment deadline."); }}>Advance to application deadline</Primary><Primary secondary onClick={() => { setSheet("scenarios"); }}>Explore meal outcomes</Primary></ReviewOnly>
           <Primary secondary onClick={() => go("chat")}>
             Open meal group <ChatBubbleIcon />
           </Primary>
@@ -3618,7 +3704,7 @@ export default function Prototype() {
   };
   const showComposer =
     (page === "chat" &&
-      groupChatAccess(current, join, confirmedChats[current.id], booking) ===
+      accessFor(current, join, confirmedChats[current.id], booking) ===
         "write") ||
     (page === "direct" && mutual && !blocked);
   if (entrance)
@@ -4018,7 +4104,7 @@ export default function Prototype() {
           <div className="sheet-body">
             <p className="prose">
               Your seat at <strong>{current.title}</strong> will be released.
-              The group chat becomes read-only.
+              Your group chat stays open unless you leave it or the host dissolves it.
             </p>
             <div className="summary-box">
               <div className="price-row">
@@ -4132,7 +4218,11 @@ export default function Prototype() {
               <Primary
                 secondary
                 onClick={() => {
+                  const outcome = resolveLifecycle(current, new Date(endsAt(current)).toISOString());
+                  if (outcome.cancelledAt) { setMeals((all) => all.map((m) => m.id === current.id ? outcome : m)); notify("This meal was cancelled because the minimum wasn’t met. It has no attendance or feedback eligibility."); return; }
                   setCompleted((all) => ({ ...all, [current.id]: true }));
+                  setEligibility((all) => ({ ...all, [current.id]: [...current.members] }));
+                  setClock(new Date(endsAt(current)).toISOString());
                   setFeedbackTarget({
                     mealId: current.id,
                     title: current.title,
@@ -4142,10 +4232,6 @@ export default function Prototype() {
                         ? current.members.find((id) => id !== "alex") || "maya"
                         : current.host,
                   });
-                  setReview("");
-                  setReviewed(false);
-                  setWants(false);
-                  setMutual(false);
                   go("review");
                 }}
               >
@@ -4179,7 +4265,7 @@ export default function Prototype() {
                 keyboard.hide();
                 setSheet("");
                 setReport("");
-                notify("Report submitted.");
+                notify("Thank you for your feedback. We’ve received your report and will review it.");
               }}
             >
               Submit report
@@ -4187,16 +4273,33 @@ export default function Prototype() {
             <button
               className="text-action danger"
               onClick={() => {
-                setBlockedMembers((all) => ({
-                  ...all,
-                  [reportMemberId]: true,
-                }));
-                setSheet("");
-                notify("Member blocked.");
+                setSheet("block");
               }}
             >
               Block {members[reportMemberId].name}
             </button>
+          </div>
+        </BottomSheet>
+        <BottomSheet open={["cancel-meal", "leave-group", "close-group", "revoke", "block"].includes(sheet)} onOpenChange={(open) => !open && setSheet("")} title={sheet === "cancel-meal" ? "Cancel this meal?" : sheet === "close-group" ? "Dissolve this group?" : sheet === "leave-group" ? "Leave this group?" : sheet === "block" ? `Block ${members[reportMemberId].name}?` : "Withdraw your connection?"} snap={0.6}>
+          <div className="sheet-body">
+            <p>{sheet === "cancel-meal" ? `Cancel ${current.title} for everyone. Pending applications will close, and members will be notified. Your group chat stays open. You must cancel the restaurant reservation yourself.` : sheet === "close-group" ? "Everyone will lose the ability to send new messages. Earlier messages remain available. This does not cancel the meal or change attendance." : sheet === "leave-group" ? "You will stop receiving and sending new group messages. Your earlier messages remain available. Your meal participation does not change." : sheet === "block" ? "Private messages will stop. Unblocking will not restore your connection; you will both need to choose again. Shared groups are unaffected." : "Private messages will stop. Your earlier messages remain available. You will both need to choose again to reconnect."}</p>
+            {sheet === "cancel-meal" && <ChoiceGroup label="Reason for cancelling" value={cancelReason} options={[["host", "My plans changed"], ["booking", "Restaurant arrangements"], ["other", "Other"]]} onChange={(value) => setCancelReason(value as typeof cancelReason)} />}
+            <Primary secondary onClick={() => setSheet("")}>Keep things as they are</Primary>
+            <button className="cancel-confirm" onClick={() => {
+              if (sheet === "cancel-meal") {
+                try { const next = cancelWholeMeal(current, clock, cancelReason); setMeals((all) => all.map((m) => m.id === current.id ? next : m)); notify("Meal cancelled. Members have been notified. Your group stays open; remember to cancel your restaurant reservation."); } catch (e) { notify((e as Error).message); return; }
+              } else if (sheet === "leave-group" || sheet === "close-group") {
+                setGroupMemberships((all) => ({ ...all, [current.id]: { ...all[current.id], left: sheet === "leave-group", closed: sheet === "close-group", history: [...(messages[current.id] || [])] } }));
+                setChatArchives((all) => ({ ...all, [current.id]: [...(messages[current.id] || [])] }));
+                notify(sheet === "leave-group" ? "You left the group. Your meal participation is unchanged." : "Group dissolved. Earlier messages remain available.");
+              } else {
+                const id = sheet === "block" ? reportMemberId : feedbackTarget.memberId;
+                setConnections((all) => ({ ...all, [id]: revokeConnection() }));
+                if (sheet === "block") setBlockedMembers((all) => ({ ...all, [id]: true }));
+                notify(sheet === "block" ? "Member blocked. A new mutual connection is required after unblocking." : "Connection withdrawn. Private messages are now read-only.");
+              }
+              setSheet("");
+            }}>{sheet === "cancel-meal" ? "Cancel meal for everyone" : sheet === "close-group" ? "Dissolve group" : sheet === "leave-group" ? "Leave group" : sheet === "block" ? "Block member" : "Withdraw connection"}</button>
           </div>
         </BottomSheet>
         <BottomSheet
@@ -4243,7 +4346,10 @@ export default function Prototype() {
             <button
               className="cancel-confirm"
               onClick={() => {
-                setMeals(initialMeals);
+                setMeals([...initialMeals, pastMeal]);
+                setClock(DEMO_NOW); setRounds([]); setGroupMemberships({}); setEditingMeal(null); setExperiences({}); setConnections({}); setReferences({});
+                setAttendance({ "past-supper:maya": { host: "present" }, "past-supper:emma": { host: "present" } });
+                setEligibility({ "past-supper": ["alex", "maya", "emma"] });
                 setStates({});
                 setConfirmedChats({});
                 setChatArchives({});
@@ -4272,7 +4378,7 @@ export default function Prototype() {
                   "I’m new to London and would love to meet people over a relaxed meal.",
                 );
                 setScenarioPayment(false);
-                setCompleted({});
+                setCompleted({ "past-supper": true });
                 setConsent(false);
                 setBeforeDeadline(true);
                 setPlatformCancel(false);

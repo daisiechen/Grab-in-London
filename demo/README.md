@@ -52,3 +52,9 @@ Default URL shows product UI without implementation notes. Append `?review=1` to
 
 ### Full product audit — 18 October 2026
 The route/state audit and acceptance evidence are in `../docs/qa/full-product-audit.zh-CN.md`; PRD v0.4 records corrected payment/reservation separation, cancellations, refunds, member-specific privacy state, and clean product copy. Normal and review URLs deliberately show different control sets. Prototype dates and external-service responses remain fixtures.
+
+## 20 October 2026 readiness revision
+
+Current requirements: [PRD v0.5](../docs/product/PRD.zh-CN.md) §0. Mobile Web and iOS are the intended first-release clients; this repository supplies a local web interaction prototype, not a native iOS build. Existing layouts and full payment/booking reference journeys remain. New default creation uses external booking/offline payment, a custom 2–6 minimum/capacity range and a host-set deadline. Attendance, private whole-meal experience and contact/group lifecycle changes are tested separately.
+
+`?review=1` exposes simulated approval and clock progression; normal UI keeps these tools hidden. `pnpm test:domain` covers domain/readiness rules; `PLAYWRIGHT_CHANNEL=chrome pnpm test:runtime` can use an installed Chrome. No actual reports, deletion requests, messages, payments or reservations are transmitted.

@@ -3,6 +3,7 @@ export type JoinState =
   | "PENDING"
   | "DECLINED"
   | "WITHDRAWN"
+  | "EXPIRED"
   | "APPROVED_PAYMENT_PENDING"
   | "CONFIRMED"
   | "CANCELLED";
@@ -43,6 +44,12 @@ export type Meal = {
   reservationSource?: "in-app" | "external";
   cuisine?: string;
   dietary?: string[];
+  minimum?: number;
+  arrangementsLocked?: boolean;
+  formationCheckedAt?: string;
+  closesAt?: string;
+  cancelledAt?: string;
+  cancelReason?: "insufficient" | "host" | "booking" | "other";
 };
 export const members: Record<string, Member> = {
   maya: {
@@ -307,9 +314,10 @@ export function applyToMeal(
   message: string,
   profileComplete = true,
 ): JoinState {
-  if (current !== "NONE" && current !== "WITHDRAWN")
+  if (!["NONE", "WITHDRAWN", "CANCELLED"].includes(current))
     throw new Error("You already have an application for this meal.");
   if (meal.owned) throw new Error("You are hosting this meal.");
+  if (meal.cancelledAt) throw new Error("This meal has been cancelled.");
   if (meal.confirmed >= meal.capacity)
     throw new Error("This table is full. Try another meal.");
   if (!profileComplete)
@@ -530,9 +538,10 @@ export function groupChatAccess(
   wasConfirmed = false,
   booking: BookingState = meal.booking,
 ): "locked" | "read-only" | "write" {
-  const currentMember = meal.owned || state === "CONFIRMED";
-  if (currentMember) return booking === "CANCELLED" ? "read-only" : "write";
-  if (state === "CANCELLED" && wasConfirmed) return "read-only";
+  // Booking, participation and group membership have independent lifecycles.
+  void booking;
+  const currentMember = meal.owned || state === "CONFIRMED" || wasConfirmed;
+  if (currentMember) return "write";
   return "locked";
 }
 
@@ -553,6 +562,7 @@ export function addConfirmedMember(meal: Meal, memberId: string): Meal {
   return {
     ...meal,
     confirmed: meal.confirmed + 1,
+    arrangementsLocked: true,
     members: [...meal.members, memberId],
   };
 }
@@ -569,6 +579,7 @@ export function blockedMemberIds(blocked: Record<string, boolean>) {
 }
 
 export function mealInCategory(meal: Meal, state: JoinState, category: string) {
+  if (meal.cancelledAt) return category === "Cancelled";
   if (category === "Hosting") return !!meal.owned;
   if (category === "Applications")
     return [
@@ -576,6 +587,7 @@ export function mealInCategory(meal: Meal, state: JoinState, category: string) {
       "APPROVED_PAYMENT_PENDING",
       "DECLINED",
       "WITHDRAWN",
+      "EXPIRED",
     ].includes(state);
   if (category === "Cancelled") return state === "CANCELLED";
   return category === "Upcoming" && state === "CONFIRMED";

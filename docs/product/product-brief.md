@@ -48,3 +48,7 @@ Free, user-led meals can take place at any restaurant. Prioritize compatible, re
 Restaurant activity promotion, organizing support or verified attendance is the primary revenue direction, after building local supply and active users. Test personal services per use (delegated coordination or personalized social practice), and consider membership only after repeat purchases. Basic social participation and filtering/recommendations remain free. Organizer tools are a later opportunity. Official curated meals are optional experiments; merchant perks are promotional benefits, and deposits are not platform revenue. Pricing, attribution, willingness to pay and economics remain unvalidated.
 
 Explore AI support for finding meals, preparing conversations and coordinating plans. Longer term, authorized agents may negotiate meeting conditions; people decide whether to participate. A2A, real-time conversation support and expansion to sport/theatre are exploratory, not current demo capabilities or R1 commitments. No WhatsApp/Instagram integration is assumed. See PRD sections 1.3–1.6 for boundaries.
+
+## 2026-10-20 首期范围
+
+移动Web和iOS；发起人设置2–6人区间与统一申请/审批截止，外部订位、到店付款，获准即入群。出席本人优先、发起人补缺；饭后7天独立整场反馈与个人互选。结束或取消饭局不关闭群聊。细则和范围以[主PRD](PRD.zh-CN.md)§0为准。完整Demo的支付和平台订位保留为后续参考。

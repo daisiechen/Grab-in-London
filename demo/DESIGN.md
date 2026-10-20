@@ -109,3 +109,6 @@ Use the capitalized Fancy wordmark. Default product screens omit prototype annot
 - Payment confirms membership without confirming the restaurant; only hosts change reservations. Failed bookings retain confirmed group access; cancelled participants retain read-only history.
 - Keep Cancelled separate from Upcoming. Store refund values per meal, blocks per member, and direct messages per contact. Self-avatar navigation uses current profile data.
 - Normal product errors and pending-state copy contain no implementation remarks. Keep simulation controls in explicit acceptance mode. See PRD v0.4 and full-product-audit report for evidence and limitations.
+
+## Targeted readiness additions — 20 October 2026
+PRD v0.5 §0 updates lifecycle, not the visual system. Keep the restored welcome, map/list controls, Meals tabs, Inbox, rich profiles, typography, colours and protected mobile runtime. Add minimum/deadline using existing form controls; attendance/whole-meal experience in the existing feedback page; cancellation/group/contact confirmations in runtime BottomSheet. Group chat remains open after meal end/cancellation. Only explicit departure/dissolution yields read-only history. All new outcome text uses the existing live-region toast.
