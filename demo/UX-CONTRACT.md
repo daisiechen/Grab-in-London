@@ -50,7 +50,7 @@ Use the capitalized Fancy wordmark. Default product screens omit prototype annot
 - Normal product errors and pending-state copy contain no implementation remarks. Keep simulation controls in explicit acceptance mode. See PRD v0.4 and full-product-audit report for evidence and limitations.
 
 ## Current first release — 20 October 2026
-Business source: [PRD v0.5](../docs/product/PRD.zh-CN.md) §0. This section replaces earlier membership/cancellation statements. Preserve all established screen layouts and shared primitives.
+Business source: [PRD v0.6](../docs/product/PRD.zh-CN.md) §0. This section replaces earlier membership/cancellation statements. Preserve all established screen layouts and shared primitives.
 
 - Canonical business owners: `domain.ts` handles existing payment/reference paths; `readiness.ts` owns custom group minimum, deadline/formation, application rounds and independent group departure; `postMeal.ts` owns attendance precedence, feedback window and contact consent.
 - Creation retains four steps. Existing ChoiceGroup owns minimum/capacity and selection; Field owns deadline date/time inputs. Default costs are offline and external booking. Existing simulated payment/provider choices remain future references.
@@ -59,3 +59,12 @@ Business source: [PRD v0.5](../docs/product/PRD.zh-CN.md) §0. This section repl
 - The original post-meal page adds attendance and a separate private meal-experience section. Existing public references remain per meal/person; reconnect choices and direct messages remain per person. No self-rating, fabricated other-party consent, or feedback without qualifying attendance.
 - Production must enforce clock, immutable start membership, message visibility intervals, notification delivery and audited late corrections server-side; current state is local and resets on refresh. Real support, deletion, analytics SDK and iOS implementation remain development work.
 - Verification: `tests/readiness.test.ts`, `tests/readiness.spec.ts`, existing domain/runtime/Sites checks. Browser automation may select an installed Chrome via `PLAYWRIGHT_CHANNEL=chrome`; default Playwright behaviour is unchanged.
+
+## October 20 browser feedback and AI restoration
+- Keep the existing MealHelper launcher, drag/snap/tuck, compact BottomSheet, home/preferences/conversation navigation, explicit preference confirmation and 30-minute idle reset. Restore the original parser; no remote AI dependency or automatic application, publish or send. Existing login, recruitment cutoff and chat authorization still gate drafts.
+- Discovery dates use checkbox semantics and OR within the selected dates; other filters intersect. Creation stays a single date. Dismiss discards pending changes.
+- Inbox has Chats/Applications tabs with counts and independent empty states. Active main icons are filled and declare aria-current. Avatar profile navigation returns to the source chat.
+- Group settings holds the roster and Host/Member/You roles. Only host sees meal-management/dissolution; other current members see Leave group. Read-only settings expose no new destructive action. Participation and group membership remain separate.
+- Meal experience is score-only. Settings Product survey is per user, optional, and separate from attendance, mealId, the seven-day window, and per-person reconnect consent. Null is not No; at least one answer/factor before save. Backend latest-version/date semantics are in PRD §0.5.
+- Supporting descriptions use information buttons with hover, keyboard focus and tap; Escape/outside dismiss. Keep actionable permission/status/errors visible. Remove the actionless large heart and repeated attendance heading. Past feedback button clears avatar row by20px.
+- Signup and profile edit share London-life radio tags, one full-name language selection, and interest checkboxes. Save applies; back cancels the draft. Session reset also clears survey/helper state.

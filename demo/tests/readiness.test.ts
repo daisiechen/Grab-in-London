@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { initialMeals } from "../src/domain.ts";
 import { DEMO_NOW, MINUTE, DAY, londonInstant, startsAt, endsAt, closesAt, canRecruit, resolveLifecycle, validateRecruitment, cancelWholeMeal, criticalEditAllowed, newApplicationRound, chatPermission } from "../src/readiness.ts";
-import { attendanceStatus, feedbackEligible, reportWindow, validateExperience, canMessage, revokeConnection, connectionHasAttendance } from "../src/postMeal.ts";
+import { attendanceStatus, feedbackEligible, reportWindow, validateExperience, canMessage, revokeConnection, connectionHasAttendance, validateSurvey } from "../src/postMeal.ts";
 const meal = { ...initialMeals[1], minimum: 2, capacity: 4, confirmed: 2, owned: true };
 test("London wall times handle both sides of DST", () => {
   assert.equal(londonInstant("2026-10-23", "19:00"), "2026-10-23T18:00:00.000Z");
@@ -59,10 +59,14 @@ test("self attendance wins, missing report stays unknown, feedback checks exact 
   assert.equal(reportWindow(end, new Date(end + 7 * DAY).toISOString()), false);
   assert.equal(feedbackEligible(false, { self: "present" }, end, new Date(end).toISOString()), false);
 });
-test("meal experience requires explicit answers and connection revocation clears both consents", () => {
-  assert.ok(validateExperience({ score: 4, again: null, reasons: [] }));
-  assert.equal(validateExperience({ score: 4, again: false, reasons: [] }), "");
-  assert.ok(validateExperience({ score: 4, again: true, reasons: ["invented"] }));
+test("meal rating and voluntary product survey have independent validation", () => {
+  assert.ok(validateExperience({ score: 0 }));
+  assert.equal(validateExperience({ score: 4 }), "");
+  assert.ok(validateExperience({ score: 4.5 }));
+  assert.ok(validateSurvey({ again: null, reasons: [] }));
+  assert.equal(validateSurvey({ again: false, reasons: [] }), "");
+  assert.equal(validateSurvey({ again: null, reasons: ["company"] }), "");
+  assert.ok(validateSurvey({ again: true, reasons: ["invented"] }));
   const c = { mine: true, theirs: true };
   assert.equal(canMessage(c), true);
   assert.equal(canMessage(c, true), false);

@@ -495,3 +495,14 @@ test("failed reservation alternatives respect restaurant hours and party size", 
   );
   assert.equal(alternativeReservationSlot({ ...meal, confirmed: 4 }), "19:30");
 });
+
+import { selectedDates, toggleDate } from "../src/domain.ts";
+test("discovery dates toggle independently and combine with OR inside the filter intersection", () => {
+  const dates = toggleDate(toggleDate("", "2026-10-23"), "2026-10-24");
+  assert.deepEqual(selectedDates(dates), ["2026-10-23", "2026-10-24"]);
+  assert.equal(toggleDate(dates, "2026-10-23"), "2026-10-24");
+  const matches = eligibleMeals(initialMeals, { ...emptyFilters, date: dates });
+  assert.ok(matches.some((m) => m.date === "2026-10-23"));
+  assert.ok(matches.some((m) => m.date === "2026-10-24"));
+  assert.deepEqual(eligibleMeals(initialMeals, { ...emptyFilters, date: "2026-11-30" }), []);
+});

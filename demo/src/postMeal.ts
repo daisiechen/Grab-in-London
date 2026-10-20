@@ -15,11 +15,17 @@ export const feedbackReasons = [
   ["coordination", "Organisation"], ["expectations", "Expectations"],
   ["company", "Company"], ["conversation", "Conversation"], ["venue", "Restaurant"], ["cost", "Cost"], ["other", "Other"],
 ] as const;
-export type MealExperience = { score: number; again: boolean | null; reasons: string[]; saved?: boolean };
+export type MealExperience = { score: number; saved?: boolean };
 export function validateExperience(value: MealExperience) {
-  if (!Number.isInteger(value.score) || value.score < 1 || value.score > 5 || value.again === null)
-    return "Choose a score and whether you’d join another Fancy meal.";
-  if (value.reasons.some((r) => !feedbackReasons.some(([key]) => key === r))) return "Choose one of the listed reasons.";
+  if (!Number.isInteger(value.score) || value.score < 1 || value.score > 5)
+    return "Choose a score from 1 to 5 for this meal.";
+  return "";
+}
+export type ProductSurvey = { again: boolean | null; reasons: string[]; saved?: boolean; submittedAt?: string; version?: number };
+export function validateSurvey(value: ProductSurvey) {
+  if (value.again !== null && typeof value.again !== "boolean") return "Choose Yes or No, or leave the question unanswered.";
+  if (value.again === null && !value.reasons.length) return "Answer a question or choose a factor before saving.";
+  if (value.reasons.some((r) => !feedbackReasons.some(([key]) => key === r))) return "Choose one of the listed factors.";
   return "";
 }
 export type Connection = { mine: boolean; theirs: boolean; sourceMeal?: string; sourceMeals?: string[] };

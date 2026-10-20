@@ -238,6 +238,13 @@ export const emptyFilters: DiscoveryFilters = {
   cuisine: "",
   dietary: "",
 };
+export function selectedDates(value: string) {
+  return [...new Set(value.split(",").filter((date) => /^\d{4}-\d{2}-\d{2}$/.test(date)))].sort();
+}
+export function toggleDate(value: string, date: string) {
+  const dates = selectedDates(value);
+  return (dates.includes(date) ? dates.filter((d) => d !== date) : [...dates, date]).sort().join(",");
+}
 export function groupMealsByArea(meals: Meal[]) {
   const groups = new Map<
     string,
@@ -283,7 +290,7 @@ export function eligibleMeals(
 ) {
   return meals.filter(
     (m) =>
-      (!filters.date || m.date === filters.date) &&
+      (!filters.date || selectedDates(filters.date).includes(m.date)) &&
       (!filters.budget || m.max <= Number(filters.budget)) &&
       (!filters.size ||
         (filters.size === "small"
@@ -502,6 +509,8 @@ export function needsAccount(destination: string) {
     "chat",
     "checkout",
     "settings",
+    "group-settings",
+    "survey",
   ].includes(destination);
 }
 

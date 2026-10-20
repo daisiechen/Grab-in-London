@@ -1,3 +1,17 @@
+import {
+  assistantReply,
+  blankPreferences,
+  parseMealRequest,
+  preferenceSummary,
+  HELPER_IDLE_MS,
+  helperClock,
+  helperExpired,
+  helperDockPosition,
+  type HelperDock,
+  type AssistantQuery,
+  type AssistantReply,
+  type MealPreferences,
+} from "./assistant";
 import { isReviewMode } from "./presentation";
 import { BRAND } from "./brand";
 import {
@@ -51,6 +65,7 @@ import {
   useKeyboard,
   useKeyboardInsets,
   useScreenPortal,
+  useMobileDevice,
 } from "./mobile";
 import {
   initialMeals,
@@ -81,6 +96,8 @@ import {
   groupMealsByArea,
   emptyFilters,
   monthDates,
+  selectedDates,
+  toggleDate,
   googleMapsAreaUrl,
   type DiscoveryFilters,
   type Meal,
@@ -90,7 +107,7 @@ import {
 } from "./domain";
 
 import { DEMO_NOW, MINUTE, startsAt, endsAt, londonInstant, closesAt, minimumFor, canRecruit, resolveLifecycle, validateRecruitment, cancelWholeMeal, criticalEditAllowed, newApplicationRound, chatPermission, type ApplicationRound, type GroupMembership } from "./readiness";
-import { attendanceStatus, reportWindow, feedbackEligible, feedbackReasons, validateExperience, canMessage, revokeConnection, connectionHasAttendance, type AttendanceRecord, type MealExperience, type Connection } from "./postMeal";
+import { attendanceStatus, reportWindow, feedbackEligible, feedbackReasons, validateExperience, canMessage, revokeConnection, connectionHasAttendance, type AttendanceRecord, type MealExperience, type ProductSurvey, validateSurvey, type Connection } from "./postMeal";
 
 const initialDraft = {
   title: "",
@@ -130,7 +147,9 @@ type Page =
   | "review"
   | "host"
   | "direct"
-  | "settings";
+  | "settings"
+  | "group-settings"
+  | "survey";
 type Sheet =
   | ""
   | "date"
@@ -243,11 +262,13 @@ function Field({
 }
 
 function ChoiceGroup({
+  hideLabel = false,
   label,
   value,
   onChange,
   options,
 }: {
+  hideLabel?: boolean;
   label: string;
   value: string;
   onChange: (value: string) => void;
@@ -256,7 +277,7 @@ function ChoiceGroup({
   const groupId = useId();
   return (
     <fieldset className="filter-section">
-      <legend>{label}</legend>
+      <legend className={hideLabel ? "sr-only" : undefined}>{label}</legend>
       <div className="choice-grid">
         {options.map(([key, text]) => (
           <label
@@ -277,6 +298,42 @@ function ChoiceGroup({
       </div>
     </fieldset>
   );
+}
+function InfoTip({ label, children }: { label: string; children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+  const id = useId();
+  useEffect(() => {
+    if (!open) return;
+    const close = (event: PointerEvent) => { if (!ref.current?.contains(event.target as Node)) setOpen(false); };
+    const escape = (event: KeyboardEvent) => { if (event.key === "Escape") setOpen(false); };
+    document.addEventListener("pointerdown", close); document.addEventListener("keydown", escape);
+    return () => { document.removeEventListener("pointerdown", close); document.removeEventListener("keydown", escape); };
+  }, [open]);
+  return <span className="info-tip" ref={ref} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+    <button type="button" aria-label={label} aria-expanded={open} aria-describedby={open ? id : undefined} onPointerDown={(e) => e.preventDefault()} onClick={() => setOpen(true)} onFocus={() => setOpen(true)} onBlur={() => setOpen(false)}><InfoCircledIcon /></button>
+    {open && <span id={id} role="tooltip">{children}</span>}
+  </span>;
+}
+const lifeOptions = ["New to London", "Making London home", "Living and working in London", "Studying in London", "Visiting London"];
+const languageOptions = ["English", "Mandarin", "French", "Spanish", "Hindi", "English & Mandarin", "English & French"];
+const interestOptions = ["Food", "Photography", "Travel", "Design", "Books", "Cinema", "Walking", "Cooking", "Music", "Art", "Sport"];
+function ProfilePreferences({ value, onChange }: { value: { life: string; language: string; interests: string }; onChange: (patch: Partial<Pick<WelcomeProfile, "life" | "language" | "interests">>) => void }) {
+  const interests = value.interests.split(",").map((s) => s.trim().toLowerCase());
+  return <>
+    <ChoiceGroup label="Your life in London" value={value.life} options={lifeOptions.map((v) => [v, v])} onChange={(life) => onChange({ life })} />
+    <Field label="Conversation language"><select aria-label="Conversation language" value={value.language} onChange={(e) => onChange({ language: e.target.value })}>{languageOptions.map((v) => <option key={v}>{v}</option>)}</select></Field>
+    <fieldset className="filter-section"><legend>Interests · choose one or more</legend><div className="choice-grid">{interestOptions.map((interest) => <label key={interest} className={`choice-chip ${interests.includes(interest.toLowerCase()) ? "chosen" : ""}`}><input type="checkbox" checked={interests.includes(interest.toLowerCase())} onChange={(e) => onChange({ interests: interestOptions.filter((v) => v === interest ? e.target.checked : interests.includes(v.toLowerCase())).join(", ") })} /><span>{interest}</span>{interests.includes(interest.toLowerCase()) && <CheckIcon />}</label>)}</div></fieldset>
+  </>;
+}
+function NavGlyph({ kind, active }: { kind: "search" | "person" | "chat"; active: boolean }) {
+  if (!active) return kind === "search" ? <MagnifyingGlassIcon /> : kind === "chat" ? <ChatBubbleIcon /> : <PersonIcon />;
+  return <svg viewBox="0 0 24 24" aria-hidden="true" data-filled="true" fill="currentColor">{kind === "chat" ? <><path d="M4 3h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6l-5 4v-4H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" /><path d="M7 9h10M7 13h7" stroke="white" strokeWidth="1.5" /></> : kind === "person" ? <><circle cx="12" cy="7" r="5" /><path d="M3 23v-3a9 9 0 0 1 18 0v3Z" /></> : <><circle cx="10" cy="10" r="8" /><path d="m16 16 6 6" stroke="currentColor" strokeWidth="4" /><circle cx="10" cy="10" r="4" fill="white" /></>}</svg>;
+}
+
+function dateSelectionLabel(value: string) {
+  const dates = selectedDates(value);
+  return dates.length > 1 ? `${dates.length} dates` : dates.length ? longDate(dates[0]) : "Any date";
 }
 function DateChoices({
   value,
@@ -308,7 +365,7 @@ function DateChoices({
           value
             ? [
                 ["", "Any date"],
-                ["specific", longDate(value)],
+                ["specific", dateSelectionLabel(value)],
               ]
             : [["", "Any date"]]
         }
@@ -344,17 +401,17 @@ function DateChoices({
         ))}
       </div>
       <fieldset className="calendar-days">
-        <legend className="sr-only">Choose a date</legend>
+        <legend className="sr-only">{creation ? "Choose a date" : "Choose dates"}</legend>
         {Array.from({ length: offset }, (_, i) => (
           <span key={`blank-${i}`} />
         ))}
         {dates.map((date) => (
           <label
             key={date}
-            className={`calendar-day ${date === value ? "chosen" : ""} ${date < "2026-10-16" ? "unavailable" : ""}`}
+            className={`calendar-day ${(creation ? date === value : selectedDates(value).includes(date)) ? "chosen" : ""} ${date < "2026-10-16" ? "unavailable" : ""}`}
           >
             <input
-              type="radio"
+              type={creation ? "radio" : "checkbox"}
               name={id}
               aria-label={new Intl.DateTimeFormat("en-GB", {
                 weekday: "long",
@@ -368,8 +425,8 @@ function DateChoices({
                   ? date < "2026-10-17" || date > "2026-11-15"
                   : date < "2026-10-16"
               }
-              checked={value === date}
-              onChange={() => onChange(date)}
+              checked={creation ? value === date : selectedDates(value).includes(date)}
+              onChange={() => onChange(creation ? date : toggleDate(value, date))}
             />
             <span>{Number(date.slice(-2))}</span>
             {meals.some((m) => m.date === date) && <i aria-hidden="true" />}
@@ -768,36 +825,7 @@ function BrandEntrance({
                     At least 20 characters. Share what you’re comfortable making
                     public.
                   </small>
-                  <ChoiceGroup
-                    label="Life in London"
-                    value={person.life}
-                    onChange={(life) => setPerson({ ...person, life })}
-                    options={[
-                      "New to London",
-                      "Making London home",
-                      "Visiting London",
-                    ].map((v) => [v, v])}
-                  />
-                  <ChoiceGroup
-                    label="Conversation language"
-                    value={person.language}
-                    onChange={(language) => setPerson({ ...person, language })}
-                    options={[
-                      "English",
-                      "English & Mandarin",
-                      "English & French",
-                    ].map((v) => [v, v])}
-                  />
-                  <ChoiceGroup
-                    label="An interest to start with"
-                    value={person.interests}
-                    onChange={(interests) =>
-                      setPerson({ ...person, interests })
-                    }
-                    options={["Food", "Design", "Travel", "Books", "Music"].map(
-                      (v) => [v, v],
-                    )}
-                  />
+                  <ProfilePreferences value={person} onChange={(patch) => setPerson({ ...person, ...patch })} />
                   <p className="muted">
                     Add work, school, hometown and more interests in Edit
                     profile whenever you like.
@@ -908,6 +936,845 @@ function BrandEntrance({
   );
 }
 
+type HelperAction = NonNullable<AssistantReply["draft"]>;
+type HelperTurn = {
+  question: string;
+  reply: AssistantReply;
+  time: number;
+  used?: boolean;
+};
+type SpeechSession = {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  start: () => void;
+  abort: () => void;
+  onresult:
+    | ((event: {
+        results: {
+          [index: number]: { [index: number]: { transcript: string } };
+        };
+      }) => void)
+    | null;
+  onerror: ((event: { error: string }) => void) | null;
+  onend: (() => void) | null;
+};
+function HelperSprite() {
+  return (
+    <svg className="helper-sprite" viewBox="0 0 64 64" aria-hidden="true">
+      <path
+        d="M32 12C25 2 16 6 18 15c-13 4-16 18-11 29 4 10 11 13 25 11 14 2 21-1 25-11 5-11 2-25-11-29 2-9-7-13-14-3Z"
+        fill="currentColor"
+      />
+      <path d="M30 13c0-8 7-11 13-9-1 6-6 10-13 9Z" fill="#d7ee79" />
+      <ellipse cx="23" cy="33" rx="3" ry="4" fill="#f5f2e8" />
+      <ellipse cx="41" cy="33" rx="3" ry="4" fill="#f5f2e8" />
+      <path
+        d="M26 43q6 5 12 0"
+        fill="none"
+        stroke="#f5f2e8"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <circle cx="16" cy="40" r="3" fill="#ffb49b" />
+      <circle cx="48" cy="40" r="3" fill="#ffb49b" />
+    </svg>
+  );
+}
+function MealHelper({
+  meals,
+  current,
+  filters,
+  page,
+  visible,
+  onAction,
+  onMeal,
+}: {
+  meals: Meal[];
+  current?: Meal;
+  filters: DiscoveryFilters;
+  page: string;
+  visible: boolean;
+  onAction: (action: HelperAction, query: AssistantQuery) => void;
+  onMeal: (id: string) => void;
+}) {
+  const keyboard = useKeyboard();
+  const helperInsets = useKeyboardInsets();
+  const { device } = useMobileDevice();
+  const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [home, setHome] = useState(true);
+  const [startedAt, setStartedAt] = useState<number | null>(null);
+  const [lastActive, setLastActive] = useState<number | null>(null);
+  const [dock, setDock] = useState<HelperDock>({ side: "right", fraction: 0 });
+  const [dragPoint, setDragPoint] = useState<{ x: number; y: number } | null>(
+    null,
+  );
+  const launcherRef = useRef<HTMLDivElement>(null);
+  const gesture = useRef<{
+    pointer: number;
+    startX: number;
+    startY: number;
+    x: number;
+    y: number;
+    scale: number;
+    moved: boolean;
+  } | null>(null);
+  const suppressClick = useRef(false);
+  const [input, setInput] = useState("");
+  const [turns, setTurns] = useState<HelperTurn[]>([]);
+  const [query, setQuery] = useState<AssistantQuery>({});
+  const [preferences, setPreferences] = useState<MealPreferences>({
+    ...blankPreferences,
+  });
+  const [manage, setManage] = useState(false);
+  const [preferenceEdit, setPreferenceEdit] = useState("");
+  const [voiceConsent, setVoiceConsent] = useState(false);
+  const [listening, setListening] = useState(false);
+  const [notice, setNotice] = useState("");
+  const recognition = useRef<SpeechSession | null>(null);
+  const conversationRef = useRef<HTMLDivElement>(null);
+  const speechConstructor = () => {
+    const browser = window as unknown as {
+      SpeechRecognition?: new () => SpeechSession;
+      webkitSpeechRecognition?: new () => SpeechSession;
+    };
+    return browser.SpeechRecognition || browser.webkitSpeechRecognition;
+  };
+  const stopVoice = () => {
+    const session = recognition.current;
+    if (session) {
+      session.onresult = null;
+      session.onerror = null;
+      session.onend = null;
+      session.abort();
+    }
+    recognition.current = null;
+    setListening(false);
+  };
+  const close = () => {
+    keyboard.hide();
+    stopVoice();
+    setVoiceConsent(false);
+    setOpen(false);
+  };
+  const restart = (expired = false) => {
+    keyboard.hide();
+    stopVoice();
+    setVoiceConsent(false);
+    setTurns([]);
+    setQuery({});
+    setStartedAt(null);
+    setLastActive(null);
+    setManage(false);
+    setHome(true);
+    if (!expired) setInput("");
+    setNotice(
+      expired
+        ? "Your previous conversation ended after 30 minutes without activity. Saved preferences and unsent text are kept."
+        : "New conversation. Saved preferences are kept.",
+    );
+  };
+  const openHome = () => {
+    keyboard.hide();
+    stopVoice();
+    setVoiceConsent(false);
+    if (helperExpired(lastActive, Date.now())) restart(true);
+    else
+      setNotice((value) =>
+        value.startsWith("Your previous conversation ended") ? value : "",
+      );
+    setManage(false);
+    setHome(true);
+    setHidden(false);
+    setOpen(true);
+  };
+  useEffect(() => {
+    if (lastActive === null || !turns.length) return;
+    const timer = setTimeout(
+      () => restart(true),
+      Math.max(0, HELPER_IDLE_MS - (Date.now() - lastActive)),
+    );
+    return () => clearTimeout(timer);
+  }, [lastActive, turns.length]);
+  useEffect(
+    () => () => {
+      const session = recognition.current;
+      if (session) {
+        session.onresult = null;
+        session.onerror = null;
+        session.onend = null;
+        session.abort();
+      }
+    },
+    [],
+  );
+  useEffect(() => {
+    if (!visible) close();
+  }, [visible]);
+  useEffect(() => {
+    const pane = conversationRef.current;
+    if (pane && open && !manage && !home) pane.scrollTop = pane.scrollHeight;
+  }, [turns.length, open, manage, home]);
+  const submit = (question = input) => {
+    if (!question.trim()) return;
+    keyboard.hide();
+    stopVoice();
+    const now = Date.now();
+    const expired = helperExpired(lastActive, now);
+    const fresh = expired || home;
+    setNotice(
+      expired
+        ? "Your previous conversation expired. This is a new conversation; saved preferences are kept."
+        : "",
+    );
+    const today = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/London",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(new Date());
+    const reply = assistantReply(question.trim(), {
+      meals,
+      current,
+      filters,
+      query: fresh ? {} : query,
+      preferences,
+      today,
+    });
+    if (reply.query) setQuery(reply.query);
+    else if (fresh) setQuery({});
+    if (fresh || !turns.length) setStartedAt(now);
+    setLastActive(now);
+    setHome(false);
+    setManage(false);
+    setTurns((t) => [
+      ...(fresh ? [] : t),
+      { question: question.trim(), reply, time: now },
+    ]);
+    setInput("");
+  };
+  const startVoice = () => {
+    keyboard.hide();
+    setVoiceConsent(false);
+    setNotice("");
+    const Speech = speechConstructor();
+    if (!Speech) {
+      setNotice(
+        "Voice input isn’t available in this browser. You can still type your request.",
+      );
+      return;
+    }
+    const session = new Speech();
+    recognition.current = session;
+    session.lang = "en-GB";
+    session.continuous = false;
+    session.interimResults = false;
+    session.onresult = (e) => {
+      setLastActive(Date.now());
+      setInput((value) =>
+        [value, e.results[0][0].transcript]
+          .filter(Boolean)
+          .join(" ")
+          .slice(0, 1000),
+      );
+      setNotice("Check the transcript, then send when you’re ready.");
+    };
+    session.onerror = (e) => {
+      setListening(false);
+      setNotice(
+        e.error === "not-allowed"
+          ? "Microphone access wasn’t granted. You can type instead or change your browser permission."
+          : "Voice input stopped. Try again or type your request.",
+      );
+    };
+    session.onend = () => {
+      recognition.current = null;
+      setListening(false);
+    };
+    try {
+      session.start();
+      setListening(true);
+    } catch {
+      setNotice("Voice input couldn’t start. Please type or try again.");
+      setListening(false);
+    }
+  };
+  const prompts = current
+    ? [
+        "Explain this meal’s costs",
+        "Draft an application",
+        "Draft a group message",
+      ]
+    : [
+        "Find a meal for Friday",
+        "Compare meals under £35",
+        "Help me create a meal",
+      ];
+  const helperHeight = Math.min(
+    device.geometry.screen.height * 0.82,
+    helperInsets.availableHeight - device.geometry.safeArea.top - 8,
+  );
+  // BottomSheet subtracts up to 180px for the keyboard. Supply the desired
+  // available height before that adjustment so the header stays below chrome.
+  const helperSnap =
+    (helperHeight + Math.min(helperInsets.keyboardHeight, 180)) /
+    device.geometry.screen.height;
+  const dockTop =
+    device.geometry.safeArea.top + (page === "discover" ? 170 : 64);
+  const dockBottom = helperInsets.availableHeight - 100;
+  const dockPoint = helperDockPosition(
+    dock,
+    device.geometry.screen.width,
+    dockTop,
+    dockBottom,
+    hidden,
+  );
+  const point = dragPoint || dockPoint;
+  const cancelDrag = () => {
+    gesture.current = null;
+    setDragPoint(null);
+  };
+  if (!visible) return null;
+  return (
+    <>
+      {!open && !helperInsets.isKeyboardVisible && (
+        <div
+          ref={launcherRef}
+          className={`helper-launcher ${hidden ? "is-tucked" : ""} ${dragPoint ? "is-dragging" : ""}`}
+          data-side={dock.side}
+          style={{ left: point.x, top: point.y }}
+        >
+          <button
+            aria-label={hidden ? "Show Fancy helper" : "Open Fancy helper"}
+            className="helper-launch"
+            data-scroll-drag="ignore"
+            title="Drag to move. Tap to open. Arrow keys also move Fancy."
+            onPointerDown={(event) => {
+              if (event.button !== 0) return;
+              suppressClick.current = false;
+              const rect =
+                launcherRef.current!.parentElement!.getBoundingClientRect();
+              gesture.current = {
+                pointer: event.pointerId,
+                startX: event.clientX,
+                startY: event.clientY,
+                x: point.x,
+                y: point.y,
+                scale: rect.width / device.geometry.screen.width,
+                moved: false,
+              };
+              event.currentTarget.setPointerCapture(event.pointerId);
+            }}
+            onPointerMove={(event) => {
+              const drag = gesture.current;
+              if (!drag || drag.pointer !== event.pointerId) return;
+              const dx = (event.clientX - drag.startX) / drag.scale;
+              const dy = (event.clientY - drag.startY) / drag.scale;
+              if (Math.hypot(dx, dy) > 6) drag.moved = true;
+              if (!drag.moved) return;
+              setDragPoint({
+                x: Math.max(
+                  14,
+                  Math.min(device.geometry.screen.width - 78, drag.x + dx),
+                ),
+                y: Math.max(
+                  dockTop,
+                  Math.min(Math.max(dockTop, dockBottom - 74), drag.y + dy),
+                ),
+              });
+            }}
+            onPointerUp={(event) => {
+              const drag = gesture.current;
+              if (!drag || drag.pointer !== event.pointerId) return;
+              if (drag.moved) {
+                const y = Math.max(
+                  dockTop,
+                  Math.min(
+                    Math.max(dockTop, dockBottom - 74),
+                    drag.y + (event.clientY - drag.startY) / drag.scale,
+                  ),
+                );
+                const x = drag.x + (event.clientX - drag.startX) / drag.scale;
+                setDock({
+                  side:
+                    x + 32 < device.geometry.screen.width / 2
+                      ? "left"
+                      : "right",
+                  fraction:
+                    (y - dockTop) / Math.max(1, dockBottom - 74 - dockTop),
+                });
+                suppressClick.current = true;
+              }
+              gesture.current = null;
+              setDragPoint(null);
+              event.currentTarget.releasePointerCapture(event.pointerId);
+            }}
+            onPointerCancel={cancelDrag}
+            onLostPointerCapture={cancelDrag}
+            onKeyDown={(event) => {
+              if (!event.key.startsWith("Arrow")) return;
+              event.preventDefault();
+              setDock((position) => ({
+                side:
+                  event.key === "ArrowLeft"
+                    ? "left"
+                    : event.key === "ArrowRight"
+                      ? "right"
+                      : position.side,
+                fraction: Math.max(
+                  0,
+                  Math.min(
+                    1,
+                    position.fraction +
+                      (event.key === "ArrowDown"
+                        ? 0.1
+                        : event.key === "ArrowUp"
+                          ? -0.1
+                          : 0),
+                  ),
+                ),
+              }));
+            }}
+            onClick={(event) => {
+              if (suppressClick.current && event.detail !== 0) {
+                suppressClick.current = false;
+                return;
+              }
+              openHome();
+            }}
+          >
+            <HelperSprite />
+            {hidden && (
+              <span className="helper-paws" aria-hidden="true">
+                <i />
+                <i />
+              </span>
+            )}
+            {!hidden && <span>Ask Fancy</span>}
+          </button>
+          {!hidden && (
+            <button
+              className="helper-hide"
+              aria-label="Tuck Fancy to edge"
+              title="Tuck to screen edge"
+              onClick={() => setHidden(true)}
+            >
+              {dock.side === "right" ? "›" : "‹"}
+            </button>
+          )}
+        </div>
+      )}
+      <BottomSheet
+        open={open}
+        onOpenChange={(value) => (value ? openHome() : close())}
+        title="A little help from Fancy"
+        description="Find a table. Make a plan. You decide."
+        snap={helperSnap}
+      >
+        <div
+          className="helper-panel"
+          data-testid="meal-helper"
+          onClickCapture={(event) => {
+            if (helperExpired(lastActive, Date.now())) {
+              restart(true);
+              event.preventDefault();
+              event.stopPropagation();
+            } else if (turns.length) setLastActive(Date.now());
+          }}
+          onPointerDownCapture={(event) => {
+            // Match Primary: don't blur an editor and move its action under the
+            // pointer before that action receives the click.
+            if (
+              event.target instanceof Element &&
+              event.target.closest("button")
+            )
+              event.preventDefault();
+          }}
+        >
+          <div className="helper-tools">
+            <HelperSprite />
+            <span className="helper-context">
+              {current
+                ? current.title
+                : page === "create"
+                  ? "Your meal draft"
+                  : "Your meal plans"}
+            </span>
+            <button
+              onClick={() => {
+                keyboard.hide();
+                stopVoice();
+                setVoiceConsent(false);
+                if (manage) {
+                  setManage(false);
+                  setHome(true);
+                } else setManage(true);
+                setNotice("");
+                setPreferenceEdit(preferenceSummary(preferences));
+              }}
+            >
+              {manage ? "Back to assistant home" : "My preferences"}
+            </button>
+          </div>
+          <div className="helper-utility">
+            {!home && !manage && (
+              <button
+                onClick={() => {
+                  keyboard.hide();
+                  stopVoice();
+                  setHome(true);
+                  setNotice("");
+                }}
+              >
+                Assistant home
+              </button>
+            )}
+            {!manage && !!turns.length && (
+              <button onClick={() => restart()}>New conversation</button>
+            )}
+          </div>
+          {manage ? (
+            <div className="helper-preferences">
+              <h3>What I remember</h3>
+              <p>
+                Only preferences you approve. Kept for this session; you can
+                change or delete them.
+              </p>
+              <p className="helper-saved">
+                {preferenceSummary(preferences) || "No saved preferences yet."}
+              </p>
+              <label htmlFor="helper-preferences">Replace preferences</label>
+              <KeyboardTextarea
+                id="helper-preferences"
+                value={preferenceEdit}
+                onChange={(e) => {
+                  setPreferenceEdit(e.target.value);
+                  if (turns.length) setLastActive(Date.now());
+                }}
+                onBlur={() => keyboard.hide()}
+                maxLength={300}
+                placeholder="Soho, budget £35, table for 4, English"
+              />
+              <button
+                className="helper-primary"
+                onClick={() => {
+                  keyboard.hide();
+                  const parsed = parseMealRequest(preferenceEdit, "2026-10-18");
+                  const next = { ...blankPreferences };
+                  for (const key of Object.keys(
+                    next,
+                  ) as (keyof MealPreferences)[])
+                    if (parsed[key]) next[key] = parsed[key]!;
+                  if (!preferenceSummary(next)) {
+                    setNotice(
+                      "Add an area, budget, table size, English, relaxed conversation or vegetarian preference. Use Delete preferences to remove everything.",
+                    );
+                    return;
+                  }
+                  setPreferences(next);
+                  setQuery({});
+                  setNotice("Preferences updated. Search conditions reset.");
+                }}
+              >
+                Save preferences
+              </button>
+              <button
+                className="helper-text-button"
+                onClick={() => {
+                  keyboard.hide();
+                  setPreferences({ ...blankPreferences });
+                  setPreferenceEdit("");
+                  setQuery({});
+                  setTurns([]);
+                  setInput("");
+                  setStartedAt(null);
+                  setLastActive(null);
+                  setHome(true);
+                  setNotice("Preferences deleted and conversation cleared.");
+                }}
+              >
+                Delete preferences
+              </button>
+              <p className="helper-preference-note">
+                Deleting preferences also clears the conversation context that
+                used them. Starting a new conversation keeps saved preferences.
+              </p>
+            </div>
+          ) : (
+            <>
+              <div
+                className="helper-conversation"
+                ref={conversationRef}
+                role="log"
+                aria-label="Conversation with Fancy"
+              >
+                {(home || !turns.length) && (
+                  <div className="helper-welcome">
+                    <span className="helper-eyebrow">YOUR NEXT GOOD MEAL</span>
+                    <h2>What sounds good?</h2>
+                    <p>
+                      Tell me when, where and what you’d like to spend. Or let’s
+                      get your own table started.
+                    </p>
+                    {!!turns.length && (
+                      <button
+                        className="helper-resume"
+                        onClick={() => {
+                          setHome(false);
+                          setLastActive(Date.now());
+                          setNotice("");
+                        }}
+                      >
+                        <strong>
+                          Continue conversation <ArrowRightIcon />
+                        </strong>
+                        <span>
+                          Last active{" "}
+                          {helperClock(
+                            lastActive || turns[turns.length - 1].time,
+                            true,
+                          )}
+                        </span>
+                      </button>
+                    )}
+                    {!!turns.length && (
+                      <p className="helper-session-note">
+                        Continue above, or start a new request below.
+                      </p>
+                    )}
+                    <div className="helper-prompts">
+                      {prompts.map((prompt) => (
+                        <button key={prompt} onClick={() => submit(prompt)}>
+                          {prompt}
+                          <ArrowRightIcon />
+                        </button>
+                      ))}
+                    </div>
+                    <p className="helper-session-note">
+                      Conversations restart after 30 minutes without activity.
+                      Saved preferences stay until you delete them.
+                    </p>
+                  </div>
+                )}
+                {!home && startedAt !== null && (
+                  <p className="helper-session-note">
+                    Started {helperClock(startedAt, true)} · 30-minute idle
+                    limit
+                  </p>
+                )}
+                {!home &&
+                  turns.map((turn, index) => (
+                    <div className="helper-turn" key={index}>
+                      <div className="helper-turn-time">
+                        You ·{" "}
+                        <time dateTime={new Date(turn.time).toISOString()}>
+                          {helperClock(turn.time)}
+                        </time>
+                      </div>
+                      <p className="helper-question">{turn.question}</p>
+                      <div className="helper-answer">
+                        <strong>
+                          Fancy{" "}
+                          <time dateTime={new Date(turn.time).toISOString()}>
+                            {helperClock(turn.time)}
+                          </time>
+                        </strong>
+                        <p>{turn.reply.text}</p>
+                        {turn.reply.meals?.map((meal) => (
+                          <button
+                            className="helper-meal-card"
+                            key={meal.id}
+                            onClick={() => {
+                              close();
+                              onMeal(meal.id);
+                            }}
+                          >
+                            <strong>{meal.title}</strong>
+                            <span>
+                              {meal.venue} · {meal.area}
+                            </span>
+                            <span>
+                              {meal.date} · {meal.time} · Table for{" "}
+                              {meal.capacity}
+                            </span>
+                            <span>
+                              £{meal.min}–{meal.max} per person ·{" "}
+                              {meal.capacity - meal.confirmed}{" "}
+                              {meal.capacity - meal.confirmed === 1
+                                ? "place"
+                                : "places"}{" "}
+                              left
+                            </span>
+                            <span>
+                              {meal.mood} · {meal.language}
+                            </span>
+                            <b>
+                              View meal <ArrowRightIcon />
+                            </b>
+                          </button>
+                        ))}
+                        {turn.reply.preferences && (
+                          <div className="helper-draft">
+                            <p>{preferenceSummary(turn.reply.preferences)}</p>
+                            <button
+                              className="helper-primary"
+                              disabled={turn.used}
+                              onClick={() => {
+                                setPreferences(turn.reply.preferences!);
+                                setQuery({});
+                                setTurns((t) =>
+                                  t.map((item, i) =>
+                                    i === index
+                                      ? { ...item, used: true }
+                                      : item,
+                                  ),
+                                );
+                                setNotice(
+                                  "Preferences saved. You can change them in My preferences.",
+                                );
+                              }}
+                            >
+                              {turn.used ? "Saved" : "Confirm and remember"}
+                            </button>
+                          </div>
+                        )}
+                        {turn.reply.draft && (
+                          <div className="helper-draft">
+                            <span className="helper-eyebrow">
+                              DRAFT · FOR YOU TO REVIEW
+                            </span>
+                            <p>{turn.reply.draft.text}</p>
+                            <button
+                              className="helper-primary"
+                              onClick={() => {
+                                close();
+                                onAction(
+                                  turn.reply.draft!,
+                                  turn.reply.query || query,
+                                );
+                              }}
+                            >
+                              {turn.reply.draft.kind === "create"
+                                ? "Review in Create meal"
+                                : turn.reply.draft.kind === "application"
+                                  ? "Edit application"
+                                  : "Review in meal chat"}
+                            </button>
+                            <small>
+                              {turn.reply.draft.kind === "create"
+                                ? "Replaces the current creation draft. Nothing is published."
+                                : "Replaces the text in the editor. Nothing is sent."}
+                            </small>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+              {voiceConsent && (
+                <div className="helper-voice-consent">
+                  <p>
+                    Your browser may send audio to its speech service. Voice
+                    uses English (UK). Only the transcript is added here; check
+                    it before sending.
+                  </p>
+                  <button className="helper-primary" onClick={startVoice}>
+                    Start voice input
+                  </button>
+                  <button
+                    className="helper-text-button"
+                    onClick={() => setVoiceConsent(false)}
+                  >
+                    Keep typing
+                  </button>
+                </div>
+              )}
+              <form
+                className="helper-composer"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  submit();
+                }}
+              >
+                <label className="helper-input-label" htmlFor="helper-request">
+                  Ask about a meal or make a plan
+                </label>
+                <div className="helper-input-row">
+                  <KeyboardInput
+                    id="helper-request"
+                    value={input}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const now = Date.now();
+                      if (helperExpired(lastActive, now)) restart(true);
+                      else if (turns.length) setLastActive(now);
+                      setInput(value);
+                    }}
+                    onBlur={() => keyboard.hide()}
+                    maxLength={1000}
+                    placeholder="Friday in Soho, under £35…"
+                    autoComplete="off"
+                  />
+                  <button
+                    type="button"
+                    className={`helper-mic ${listening ? "is-listening" : ""}`}
+                    aria-label={
+                      listening ? "Stop voice input" : "Use voice input"
+                    }
+                    onClick={() => {
+                      keyboard.hide();
+                      if (listening) stopVoice();
+                      else if (!speechConstructor())
+                        setNotice(
+                          "Voice input isn’t available in this browser. You can still type your request.",
+                        );
+                      else setVoiceConsent(true);
+                    }}
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <rect
+                        x="9"
+                        y="2"
+                        width="6"
+                        height="12"
+                        rx="3"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.7"
+                      />
+                      <path
+                        d="M6 10v2a6 6 0 0 0 12 0v-2M12 18v4m-4 0h8"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.7"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    type="submit"
+                    className="helper-send"
+                    aria-label="Send to Fancy"
+                    disabled={!input.trim() || listening}
+                    onPointerDown={(e) => e.preventDefault()}
+                  >
+                    <ArrowRightIcon />
+                  </button>
+                </div>
+              </form>
+            </>
+          )}
+          {notice && (
+            <p className="helper-notice" role="status">
+              {notice}
+            </p>
+          )}
+        </div>
+      </BottomSheet>
+    </>
+  );
+}
+
 export default function Prototype() {
   const [entrance, setEntrance] = useState<"splash" | "account" | "">("splash");
   const [signedIn, setSignedIn] = useState(false);
@@ -942,6 +1809,9 @@ export default function Prototype() {
   const [editingMeal, setEditingMeal] = useState<string | null>(null);
   const [attendance, setAttendance] = useState<Record<string, AttendanceRecord>>({ "past-supper:maya": { host: "present" }, "past-supper:emma": { host: "present" } });
   const [eligibility, setEligibility] = useState<Record<string, string[]>>({ "past-supper": ["maya", "emma", "alex"] });
+  const [inboxTab, setInboxTab] = useState<"chats" | "applications">("chats");
+  const [helperEpoch, setHelperEpoch] = useState(0);
+  const [survey, setSurvey] = useState<ProductSurvey>({ again: null, reasons: [] });
   const [experiences, setExperiences] = useState<Record<string, MealExperience>>({});
   const [connections, setConnections] = useState<Record<string, Connection>>({});
   const [references, setReferences] = useState<Record<string, { text: string; saved: boolean }>>({});
@@ -1036,7 +1906,7 @@ export default function Prototype() {
   const myEligible = !!eligibility[feedbackTarget.mealId]?.includes("alex");
   const canFeedback = feedbackEligible(myEligible, myAttendance, feedbackEnd, clock) && !feedbackMeal.cancelledAt;
   const canPersonalFeedback = canFeedback && !!eligibility[feedbackTarget.mealId]?.includes(feedbackTarget.memberId) && attendanceStatus(attendance[`${feedbackTarget.mealId}:${feedbackTarget.memberId}`]) === "present";
-  const experience = experiences[feedbackTarget.mealId] || { score: 0, again: null, reasons: [] };
+  const experience = experiences[feedbackTarget.mealId] || { score: 0 };
   const setExperience = (patch: Partial<MealExperience>) => setExperiences((all) => ({ ...all, [feedbackTarget.mealId]: { ...experience, ...patch, saved: false } }));
   const accessFor = (m: Meal, state: JoinState = states[m.id] || "NONE", admitted = confirmedChats[m.id], reservation = bookings[m.id] || m.booking) =>
     chatPermission(groupChatAccess(m, state, admitted, reservation) !== "locked", groupMemberships[m.id]);
@@ -1428,6 +2298,8 @@ export default function Prototype() {
     host: "Your guest list",
     direct: members[feedbackTarget.memberId].name,
     settings: "Settings",
+    "group-settings": "Group settings",
+    survey: "Product survey",
   };
   const topLevel = ["discover", "meals", "inbox", "profile"].includes(page);
   const renderPage = () => {
@@ -1451,7 +2323,7 @@ export default function Prototype() {
                 aria-label="Filter by date"
               >
                 <CalendarIcon />
-                {filters.date ? longDate(filters.date) : "Any date"}
+                {filters.date ? dateSelectionLabel(filters.date) : "Any date"}
                 <ChevronDownIcon />
               </button>
               <button
@@ -1946,7 +2818,7 @@ export default function Prototype() {
             </p>
             <span className="status-tag">{labels[join]}</span>
           </div>
-          <Primary secondary onClick={() => root("inbox")}>
+          <Primary secondary onClick={() => { setInboxTab("applications"); root("inbox"); }}>
             Track in Inbox <ChatBubbleIcon />
           </Primary>
           {join === "PENDING" && (
@@ -2298,7 +3170,6 @@ export default function Prototype() {
                 </div>
               )}
               {direct && (!mutual || blocked) && <div className="notice">Your previous messages are read-only. A new mutual connection is needed to send messages.</div>}
-              {!direct && chatAccess === "write" && <div className="two-actions"><button className="text-action danger" onClick={() => setSheet(current.owned ? "close-group" : "leave-group")}>{current.owned ? "Dissolve group" : "Leave group"}</button></div>}
               {direct && mutual && <button className="text-action danger" onClick={() => setSheet("revoke")}>Withdraw connection</button>}
               <p className="chat-date">
                 {!direct && chatAccess === "read-only" ? "ARCHIVE" : "TODAY"}
@@ -2306,6 +3177,7 @@ export default function Prototype() {
               <div className="chat-message">
                 <Avatar
                   id={direct ? feedbackTarget.memberId : speaker}
+                  onClick={() => openMember(direct ? feedbackTarget.memberId : speaker)}
                   size={30}
                 />
                 <div>
@@ -2325,7 +3197,7 @@ export default function Prototype() {
                 current.members.includes("emma") &&
                 speaker !== "emma" && (
                   <div className="chat-message">
-                    <Avatar id="emma" size={30} />
+                    <Avatar id="emma" size={30} onClick={() => openMember("emma")} />
                     <div>
                       <small>Emma</small>
                       <p>Sounds lovely! This is my first meal here. 😊</p>
@@ -2991,7 +3863,10 @@ export default function Prototype() {
           <h1>
             {waiting.length ? "Your table is taking shape." : "A little hello."}
           </h1>
-          {!!waiting.length && (
+          <div className="tabs inbox-tabs" role="tablist" aria-label="Inbox sections">{(["chats", "applications"] as const).map((tab) => <button key={tab} id={`inbox-${tab}-tab`} role="tab" aria-selected={inboxTab === tab} aria-controls={`inbox-${tab}-panel`} className={inboxTab === tab ? "active" : ""} onClick={() => setInboxTab(tab)}>{tab === "chats" ? "Chats" : "Applications"} <span className="pill">{tab === "chats" ? chats.length + directContacts.length : waiting.length}</span></button>)}</div>
+          <section role="tabpanel" id={`inbox-${inboxTab}-panel`} aria-labelledby={`inbox-${inboxTab}-tab`}>
+          {inboxTab === "applications" && !waiting.length && <div className="empty"><h2>No pending applications.</h2><p>Your applications will appear here while you wait for approval.</p><Primary secondary onClick={() => root("discover")}>Find a meal</Primary></div>}
+          {inboxTab === "applications" && !!waiting.length && (
             <>
               <h2>
                 Applications & next steps{" "}
@@ -3088,7 +3963,7 @@ export default function Prototype() {
               })}
             </>
           )}
-          {!!chats.length && (
+          {inboxTab === "chats" && !!chats.length && (
             <>
               <h2>
                 Your meal groups <span className="pill">{chats.length}</span>
@@ -3129,8 +4004,8 @@ export default function Prototype() {
               ))}
             </>
           )}
-          {hasDirect && <><h2>Personal conversations</h2>{directContacts.map((id) => <button key={id} className="inbox-row" onClick={() => { const source = connections[id]?.sourceMeal || "past-supper"; const meal = meals.find((m) => m.id === source) || pastMeal; setFeedbackTarget({ mealId: source, title: meal.title, date: meal.date, memberId: id }); go("direct"); }}><Avatar id={id} size={46} /><div><strong>{members[id].name}</strong><p>{preferences.messagePreviews ? messages[`direct-${id}`]?.at(-1) || "You both want to meet again." : "Message previews are hidden"}</p></div><HeartIcon /></button>)}</>}
-          {!waiting.length && !chats.length && !hasDirect && (
+          {inboxTab === "chats" && hasDirect && <><h2>Personal conversations</h2>{directContacts.map((id) => <button key={id} className="inbox-row" onClick={() => { const source = connections[id]?.sourceMeal || "past-supper"; const meal = meals.find((m) => m.id === source) || pastMeal; setFeedbackTarget({ mealId: source, title: meal.title, date: meal.date, memberId: id }); go("direct"); }}><Avatar id={id} size={46} /><div><strong>{members[id].name}</strong><p>{preferences.messagePreviews ? messages[`direct-${id}`]?.at(-1) || "You both want to meet again." : "Message previews are hidden"}</p></div><HeartIcon /></button>)}</>}
+          {inboxTab === "chats" && !chats.length && !hasDirect && (
             <div className="empty">
               <ChatBubbleIcon />
               <h2>Your next hello starts here.</h2>
@@ -3144,12 +4019,13 @@ export default function Prototype() {
               </Primary>
             </div>
           )}
-          {!!waiting.length && !chats.length && (
+          {inboxTab === "chats" && !!waiting.length && !chats.length && (
             <p className="inbox-locked-hint">
               <LockClosedIcon /> No open groups yet. Complete the next step
               above to join your table.
             </p>
           )}
+          </section>
           {error && (
             <p className="form-error" role="alert">
               {error}
@@ -3165,6 +4041,21 @@ export default function Prototype() {
         </div>
       );
     }
+    if (page === "group-settings") {
+      const access = accessFor(current, join, confirmedChats[current.id], booking);
+      if (access === "locked") return <div className="body-pad"><h1>Your group opens after confirmation.</h1><Primary onClick={() => go("detail")}>View meal</Primary></div>;
+      const roster = [...new Set([current.host, ...current.members, ...(confirmedChats[current.id] ? ["alex"] : [])])];
+      return <div className="body-pad group-settings"><h1>{current.title}</h1><Primary secondary onClick={() => go("detail")}>View meal <ArrowRightIcon /></Primary><h2>Group members <span className="pill">{roster.length}</span></h2>{roster.map((id) => <div className="group-member" key={id}><Avatar id={id} size={42} onClick={() => openMember(id)} /><div><strong>{id === "alex" ? profile.name : members[id]?.name || id}</strong><small>{id === current.host ? "Host" : "Member"}{id === "alex" ? " · You" : ""}</small></div></div>)}
+        {access === "read-only" ? <p className="notice">This group is read-only. Your earlier messages remain available.</p> : <section><h2>Group settings</h2><p className="muted">Group membership is separate from your meal participation.</p>{current.owned && <Primary secondary onClick={() => go("host")}>Manage meal & applications</Primary>}<Primary secondary onClick={() => setSheet(current.owned ? "close-group" : "leave-group")}>{current.owned ? "Dissolve group" : "Leave group"}</Primary></section>}
+      </div>;
+    }
+    if (page === "survey") return <div className="body-pad"><h1>Help shape Fancy.</h1><p className="prose">An optional survey about Fancy. You can update your answers whenever you like.</p>
+      <div className="section-heading"><h2>Your experience of Fancy</h2><InfoTip label="About the product survey">This survey is about Fancy overall. It is separate from your private meal rating and your choice to reconnect with a person. Only authorised staff can see your answers.</InfoTip></div>
+      <ChoiceGroup label="Would you join another Fancy meal?" value={survey.again === null ? "" : survey.again ? "yes" : "no"} options={[["yes", "Yes"], ["no", "No"]]} onChange={(answer) => setSurvey({ ...survey, again: answer === "yes", saved: false })} />
+      {survey.again !== null && <button className="text-action" onClick={() => setSurvey({ ...survey, again: null, saved: false })}>Clear answer</button>}
+      <fieldset className="filter-section"><legend>What shapes your experience of Fancy? · optional</legend><div className="choice-grid">{feedbackReasons.map(([key, label]) => <label key={key} className={`choice-chip ${survey.reasons.includes(key) ? "chosen" : ""}`}><input type="checkbox" checked={survey.reasons.includes(key)} onChange={(e) => setSurvey({ ...survey, reasons: e.target.checked ? [...survey.reasons, key] : survey.reasons.filter((r) => r !== key), saved: false })} /><span>{label}</span></label>)}</div></fieldset>
+      <Primary onClick={() => { const issue = validateSurvey(survey); if (issue) { notify(issue); return; } setSurvey({ ...survey, saved: true, submittedAt: new Date().toISOString(), version: (survey.version || 0) + 1 }); notify("Thank you. Your product survey is saved."); }}>{survey.saved ? "Update survey" : "Save survey"}</Primary>{survey.saved && <p role="status">Your product survey is saved.</p>}
+    </div>;
     if (page === "settings")
       return (
         <div className="body-pad settings-page">
@@ -3257,6 +4148,10 @@ export default function Prototype() {
             <small>
               Conversation languages can be changed in your profile.
             </small>
+          </section>
+          <section>
+            <h2>Help shape Fancy</h2>
+            <button className="settings-link" onClick={() => go("survey")}>Product survey <ArrowRightIcon /></button>
           </section>
           <section>
             <h2>Account</h2>
@@ -3377,9 +4272,6 @@ export default function Prototype() {
           {[
             ["name", "Your name"],
             ["bio", "About you"],
-            ["life", "Your life in London"],
-            ["language", "Conversation languages"],
-            ["interests", "Interests, separated by commas"],
             ["work", "Work · optional"],
             ["school", "School · optional"],
             ["hometown", "Hometown · optional"],
@@ -3407,6 +4299,7 @@ export default function Prototype() {
               )}
             </Field>
           ))}
+          <ProfilePreferences value={draftProfile} onChange={(patch) => setDraftProfile({ ...draftProfile, ...patch })} />
           {error && (
             <p className="form-error" role="alert">
               {error}
@@ -3438,9 +4331,6 @@ export default function Prototype() {
     if (page === "review")
       return (
         <div className="body-pad">
-          <div className="state-illustration">
-            <HeartIcon />
-          </div>
           <h1>
             {reviewed ? "Good company stays with you." : "How was your table?"}
           </h1>
@@ -3457,21 +4347,17 @@ export default function Prototype() {
             </div>
           </div>
           <section aria-label="Attendance and meal experience">
-            <h2>Your attendance</h2>
-            <p className="muted">Your report takes priority. If you haven’t reported, we use your host’s report. No report means unknown.</p>
-            {myEligible && inReportWindow && !feedbackMeal.cancelledAt ? <ChoiceGroup label="Did you attend this meal?" value={myAttendance.self || "unknown"} options={[["present", "I attended"], ["absent", "I didn’t attend"]]} onChange={(value) => {
+            <div className="section-heading"><h2>Your attendance</h2><InfoTip label="About attendance">Your report takes priority. If you haven’t reported, we use your host’s report. No report means unknown.</InfoTip></div>
+            {myEligible && inReportWindow && !feedbackMeal.cancelledAt ? <ChoiceGroup hideLabel label="Your attendance" value={myAttendance.self || "unknown"} options={[["present", "I attended"], ["absent", "I didn’t attend"]]} onChange={(value) => {
               setAttendance((all) => ({ ...all, [attendanceKey]: { ...all[attendanceKey], self: value as "present" | "absent" } }));
               notify("Your attendance report is saved.");
             }} /> : <div className="notice">{!myEligible || feedbackMeal.cancelledAt ? "This meal isn’t eligible for attendance feedback." : "The 7-day reporting window has closed or hasn’t opened yet. Contact support to correct your attendance."}</div>}
             <p className="muted">Attendance: {attendanceStatus(myAttendance)} · Reporting closes {new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" }).format(feedbackEnd + 7 * 86400000)}</p>
             {feedbackMeal.owned && inReportWindow && <fieldset className="filter-section"><legend>Report your table’s attendance</legend><p className="muted">Each member’s own report takes priority.</p>{(eligibility[feedbackTarget.mealId] || []).map((id) => <ChoiceGroup key={id} label={id === "alex" ? "You" : members[id]?.name || id} value={attendance[`${feedbackTarget.mealId}:${id}`]?.host || "unknown"} options={[["unknown", "Not reported"], ["present", "Attended"], ["absent", "Didn’t attend"]]} onChange={(value) => setAttendance((all) => ({ ...all, [`${feedbackTarget.mealId}:${id}`]: { ...all[`${feedbackTarget.mealId}:${id}`], host: value as "present" | "absent" | "unknown" } }))} />)}</fieldset>}
             <ReviewOnly><Primary secondary onClick={() => { setAttendance((all) => ({ ...all, [attendanceKey]: { ...all[attendanceKey], host: "present" } })); notify("Demo: the host reported your attendance. Your own report still takes priority."); }}>Preview host attendance report</Primary><Primary secondary onClick={() => setClock(new Date(feedbackEnd + 7 * 86400000).toISOString())}>Advance to reporting deadline</Primary></ReviewOnly>
-            <h2>Meal experience · private</h2>
-            <p className="muted">About the whole meal, separate from your thoughts about any one person. Only authorised staff can see this feedback.</p>
+            <div className="section-heading"><h2>Meal experience · private</h2><InfoTip label="About meal feedback">About the whole meal, separate from your thoughts about any one person. Only authorised staff can see this feedback.</InfoTip></div>
             {canFeedback ? <>
               <ChoiceGroup label="How was the meal?" value={String(experience.score)} options={[1, 2, 3, 4, 5].map((n) => [String(n), String(n)])} onChange={(score) => setExperience({ score: Number(score) })} />
-              <ChoiceGroup label="Would you join another Fancy meal?" value={experience.again === null ? "" : experience.again ? "yes" : "no"} options={[["yes", "Yes"], ["no", "No"]]} onChange={(again) => setExperience({ again: again === "yes" })} />
-              <fieldset className="filter-section"><legend>What shaped your experience? · optional</legend><div className="choice-grid">{feedbackReasons.map(([key, label]) => <label key={key} className={`choice-chip ${experience.reasons.includes(key) ? "chosen" : ""}`}><input type="checkbox" checked={experience.reasons.includes(key)} onChange={(e) => setExperience({ reasons: e.target.checked ? [...experience.reasons, key] : experience.reasons.filter((r) => r !== key) })} />{label}</label>)}</div></fieldset>
               <Primary secondary onClick={() => { const issue = validateExperience(experience); if (issue) { notify(issue); return; } setExperiences((all) => ({ ...all, [feedbackTarget.mealId]: { ...experience, saved: true } })); notify("Thank you. Your private meal experience is saved."); }}>{experience.saved ? "Update meal experience" : "Save meal experience"}</Primary>
               {experience.saved && <p role="status">Your private meal experience is saved.</p>}
             </> : <div className="notice">Confirm that you attended within the reporting window to share your meal experience.</div>}
@@ -3747,7 +4633,7 @@ export default function Prototype() {
               <ArrowLeftIcon />
             </button>
             <strong>{screenTitles[page]}</strong>
-            <span />
+            {page === "chat" && accessFor(current, join, confirmedChats[current.id], booking) !== "locked" ? <button aria-label="Open group settings" onClick={() => go("group-settings")}><GearIcon /></button> : <span />}
           </header>
         )}
         {page === "discover" ? (
@@ -3808,17 +4694,19 @@ export default function Prototype() {
         {topLevel && (
           <nav className="bottom-nav" aria-label="Main navigation">
             <button
+              aria-current={page === "discover" ? "page" : undefined}
               className={page === "discover" ? "active" : ""}
               onClick={() => root("discover")}
             >
-              <MagnifyingGlassIcon />
+              <NavGlyph kind="search" active={page === "discover"} />
               <span>Discover</span>
             </button>
             <button
+              aria-current={page === "meals" ? "page" : undefined}
               className={page === "meals" ? "active" : ""}
               onClick={() => root("meals")}
             >
-              <PersonIcon />
+              <NavGlyph kind="person" active={page === "meals"} />
               <span>Meals</span>
             </button>
             <button className="create-nav" onClick={() => go("create")}>
@@ -3828,21 +4716,131 @@ export default function Prototype() {
               <span>Create meal</span>
             </button>
             <button
+              aria-current={page === "inbox" ? "page" : undefined}
               className={page === "inbox" ? "active" : ""}
               onClick={() => root("inbox")}
             >
-              <ChatBubbleIcon />
+              <NavGlyph kind="chat" active={page === "inbox"} />
               <span>Inbox</span>
             </button>
             <button
+              aria-current={page === "profile" ? "page" : undefined}
               className={page === "profile" ? "active" : ""}
               onClick={() => root("profile")}
             >
-              <PersonIcon />
+              <NavGlyph kind="person" active={page === "profile"} />
               <span>Profile</span>
             </button>
           </nav>
         )}
+        <MealHelper
+          key={helperEpoch}
+          meals={meals.filter((meal) => canRecruit(meal, clock)).map((meal) => ({
+            ...meal,
+            booking: bookings[meal.id] || meal.booking,
+          }))}
+          current={
+            [
+              "detail",
+              "apply",
+              "status",
+              "checkout",
+              "booking",
+              "chat",
+              "host",
+            ].includes(page)
+              ? { ...current, booking }
+              : undefined
+          }
+          filters={filters}
+          page={page}
+          visible={!sheet}
+          onMeal={(id) => {
+            setSelected(id);
+            go("detail");
+          }}
+          onAction={(action, query) => {
+            if (action.kind === "create") {
+              const venue =
+                createVenues.find((v) => v.area === query.area) ||
+                createVenues[0];
+              const capacity =
+                Number(query.size) >= 2 && Number(query.size) <= 6
+                  ? Number(query.size)
+                  : 4;
+              const date = selectedDates(query.date || "")[0] || initialDraft.date;
+              setDraft({
+                ...initialDraft,
+                venue: venue.name,
+                date,
+                capacity,
+                minimum: Math.min(initialDraft.minimum, capacity),
+                time: "",
+                title: "A meal with new faces",
+                description: action.text,
+                min: venue.min,
+                max: venue.max,
+                language: query.language || "English",
+                mood: query.mood || "Easy conversation",
+                cost: "offline",
+                deposit: 0,
+                accepted: false,
+                externalConfirmed: false,
+              });
+              setCreateStep(0);
+              setReviewed(false);
+              go("create");
+            } else {
+              const meal = meals.find((m) => m.id === action.mealId);
+              if (!meal) {
+                notify("This meal is no longer available.");
+                return;
+              }
+              setSelected(meal.id);
+              if (action.kind === "application") {
+                const membership = states[meal.id] || "NONE";
+                if (meal.owned) {
+                  go("host");
+                  notify(
+                    "You host this meal. Review your guests in Manage applications.",
+                  );
+                } else if (
+                  membership !== "NONE" &&
+                  membership !== "WITHDRAWN"
+                ) {
+                  go("status");
+                  notify(
+                    "You already have an application or membership for this meal.",
+                  );
+                } else if (
+                  !canRecruit(meal, clock) ||
+                  (bookings[meal.id] || meal.booking) === "CANCELLED"
+                ) {
+                  go("detail");
+                  notify("This meal isn’t accepting applications.");
+                } else {
+                  setIntro(action.text);
+                  go("apply");
+                }
+              } else if (
+                accessFor(
+                  meal,
+                  states[meal.id] || "NONE",
+                  confirmedChats[meal.id],
+                  bookings[meal.id] || meal.booking,
+                ) === "write"
+              ) {
+                setChatText(action.text);
+                go("chat");
+              } else {
+                go("detail");
+                notify(
+                  "Only confirmed participants can send to the meal group.",
+                );
+              }
+            }
+          }}
+        />
         {toast && (
           <div
             className="toast"
@@ -3872,7 +4870,7 @@ export default function Prototype() {
             <div className="filter-topline">
               <span>
                 {sheet === "date"
-                  ? "CHOOSE A DAY"
+                  ? "CHOOSE YOUR DAYS"
                   : sheet === "size"
                     ? "INCLUDING THE HOST"
                     : "YOUR PREFERENCES"}
@@ -3927,9 +4925,9 @@ export default function Prototype() {
                       <CalendarIcon />
                       <span>
                         {pendingFilters.date
-                          ? longDate(pendingFilters.date)
+                          ? dateSelectionLabel(pendingFilters.date)
                           : "Any date"}
-                        <small>Choose a specific day</small>
+                        <small>Choose one or more days</small>
                       </span>
                       <ChevronDownIcon />
                     </button>
@@ -4318,6 +5316,7 @@ export default function Prototype() {
               onClick={() => {
                 keyboard.hide();
                 setSheet("");
+                setHelperEpoch((n) => n + 1);
                 setSignedIn(false);
                 setAfterAuth("discover");
                 setHistory([]);
@@ -4347,7 +5346,7 @@ export default function Prototype() {
               className="cancel-confirm"
               onClick={() => {
                 setMeals([...initialMeals, pastMeal]);
-                setClock(DEMO_NOW); setRounds([]); setGroupMemberships({}); setEditingMeal(null); setExperiences({}); setConnections({}); setReferences({});
+                setClock(DEMO_NOW); setRounds([]); setGroupMemberships({}); setEditingMeal(null); setInboxTab("chats"); setSurvey({ again: null, reasons: [] }); setHelperEpoch((n) => n + 1); setExperiences({}); setConnections({}); setReferences({});
                 setAttendance({ "past-supper:maya": { host: "present" }, "past-supper:emma": { host: "present" } });
                 setEligibility({ "past-supper": ["alex", "maya", "emma"] });
                 setStates({});
