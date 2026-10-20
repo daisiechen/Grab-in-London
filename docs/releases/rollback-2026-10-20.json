@@ -1,0 +1,15 @@
+{
+  "target_commit": "c149e360e895a92c44ecb0109b998df9b96f82d9",
+  "target_london_time": "2026-10-18T01:03:45+01:00",
+  "prd_sha256": "f8b7da09be80e64d62827402109051a8818ba1059c58779a337b49a33fbbb1b7",
+  "demo_files_exact": 128,
+  "readme_exception": "Only migrated documentation links adjusted",
+  "site_version": 6,
+  "deployment_id": "appgdep_6ad71c2b669c81918bef8be64aa67fd2",
+  "status": "succeeded",
+  "url": "https://grab-in-london-demo.daisie-chen-94.chatgpt.site",
+  "non_product_exceptions": [
+    "README migrated documentation links",
+    "Stable runtime test coordinates and keyboard gesture harness; no product behavior changed"
+  ]
+}

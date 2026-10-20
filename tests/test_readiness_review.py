@@ -1,10 +1,15 @@
-"""Check review traceability and the confirmed R1 boundary across both specs."""
+"""Check historical R1 review traceability and preserved backend rules after the explicit App rollback."""
 from pathlib import Path
 import re
+import subprocess
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / 'docs/reviews/development-readiness-2026-10-19.zh-CN.md'
+
+REVIEW_SPEC_COMMIT = 'e9c90fa'
+def reviewed_spec(path):
+    return subprocess.check_output(['git', 'show', f'{REVIEW_SPEC_COMMIT}:{path}'], cwd=ROOT, text=True)
 
 
 class ReadinessReviewTest(unittest.TestCase):
@@ -89,19 +94,19 @@ class ReadinessReviewTest(unittest.TestCase):
                 with self.assertRaises(AssertionError):
                     self.assert_current_conclusion(invalid)
 
-    def test_current_authority_and_contract_are_linked(self):
+    def test_historical_review_specs_and_contract_are_linked(self):
         for path in ('docs/product/PRD.zh-CN.md','docs/product/admin/PRD.zh-CN.md','docs/product/admin/measurement-contract.zh-CN.md'):
-            text=(ROOT/path).read_text()
+            text=reviewed_spec(path)
             with self.subTest(path=path):
                 self.assertRegex(text,r'各自到店(?:付款|支付)|线下付款')
                 self.assertRegex(text,r'外订|外部订位|自行订位')
-        admin=(ROOT/'docs/product/admin/PRD.zh-CN.md').read_text()
+        admin=reviewed_spec('docs/product/admin/PRD.zh-CN.md')
         self.assertIn('measurement-contract.zh-CN.md',admin)
         self.assertIn('../PRD.zh-CN.md',admin)
 
-    def test_shared_deadlines_and_eligibility_are_current(self):
+    def test_historical_review_deadlines_and_eligibility(self):
         for path in ('docs/product/PRD.zh-CN.md','docs/product/admin/measurement-contract.zh-CN.md'):
-            text=(ROOT/path).read_text()
+            text=reviewed_spec(path)
             with self.subTest(path=path):
                 for minutes in ('60','45','30','15'):
                     self.assertRegex(text,rf'T[−-]{minutes}')

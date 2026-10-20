@@ -1,6 +1,6 @@
 # UX contract
 
-Business source: ../docs/product/PRD.zh-CN.md §§3–10. Product brief is background only. All payment, reservation, permissions and lifecycle behavior in this prototype is a local simulation, not a live service.
+Business source: ../docs/PRD.zh-CN.md §§3–10. Product brief is background only. All payment, reservation, permissions and lifecycle behavior in this prototype is a local simulation, not a live service.
 
 | Capability     | Canonical owner                                              | Source of truth | Allowed variants                                 | Verification                             |
 | -------------- | ------------------------------------------------------------ | --------------- | ------------------------------------------------ | ---------------------------------------- |
@@ -48,26 +48,3 @@ Use the capitalized Fancy wordmark. Default product screens omit prototype annot
 - Payment confirms membership without confirming the restaurant; only hosts change reservations. Failed bookings retain confirmed group access; cancelled participants retain read-only history.
 - Keep Cancelled separate from Upcoming. Store refund values per meal, blocks per member, and direct messages per contact. Self-avatar navigation uses current profile data.
 - Normal product errors and pending-state copy contain no implementation remarks. Keep simulation controls in explicit acceptance mode. See PRD v0.4 and full-product-audit report for evidence and limitations.
-
-
-## Meal helper contract — 2026-10-18
-Canonical overlay: runtime BottomSheet; canonical fields: KeyboardInput/KeyboardTextarea; keyboard geometry: useKeyboardInsets/useMobileDevice. App-specific helper lives in Prototype.tsx, pure local request logic in assistant.ts. A phone-scoped scrollable transcript sits between fixed panel tools and its composer. Clamp the sheet to available keyboard/safe-area height. Closing stops speech and hides the keyboard. The sprite can be tucked to an accessible restore control.
-
-Searches inherit discovery conditions but never mutate them. Follow-up criteria persist, including explicit relaxation; recommendations exclude unavailable/full/past/owned meals and use upper estimated cost. Result cards return to existing detail navigation. Contextual application/coordination drafts only use public meal facts and enter existing editors, with original login and membership gates; no direct submit or publish. Creation resets incompatible schedule/confirmation fields and leaves a slot for the user to choose. Draft transfer buttons disclose replacement.
-
-Preferences are a proposed card until confirmed. My preferences can correct or delete; deletion also clears the conversation and transient query. Conversation clearing alone preserves approved preferences. Helper state is in memory and clears when its component unmounts (including authentication) or the page refreshes. No chat-body ingestion, automatic profile inference or third-party private data. Speech starts only after disclosure and the user’s start action, yields an editable transcript, and falls back to typing on failure/unavailability. Mocked speech acceptance is separate from real microphone testing. PRD FR-12 is authoritative.
-
-
-## Helper home, docking and conversation lifetime — 2026-10-18
-User browser feedback supersedes earlier immediate-history reopening. Each sprite activation opens the helper home in compact view; preferences close and unexpired conversation appears only through Continue conversation. A new home request or New conversation replaces the active transcript/query; approved preferences remain. My preferences is the sole deletion surface; its label explains clearing the context that used deleted preferences.
-
-Pointer capture owns sprite dragging, measures device scale, uses a 6px threshold to suppress click, then snaps to the nearest side and clamps height. Tucked state keeps a partially visible sprite/paws and a 44px target, including drag and keyboard repositioning; it is absent while another keyboard composer is active. Cancelled gestures never open the helper. Position is in-memory and normalized within current safe bounds.
-
-Larger view / Compact view replaces arrow-only resize controls. Message times and conversation start use Europe/London, with full ISO datetime attributes. A single 30-minute idle timer, plus checks before opening/submission, clears old temporary context and stops speech. Typing and meaningful helper activity renew the timer. Timeout keeps approved preferences and unsent chat text, returns home and explains the restart; it does not change membership/payment/reservation/chat permissions. The active conversation is not a persistent multi-session history service. Tests use virtual clock advancement and wait for phone/sheet animations before screenshots.
-
-## Simulated map and helper revision — 18 October 2026
-The latest helper toolbar has My preferences and no size/close controls. Existing sheet drag, overlay and Escape remain exit paths. Sprite touch dragging is owned by the launcher, not parent scroll. Maps own pan/pinch gestures, suppress a tap following a drag, and expose zoom/reset plus keyboard pan. Discovery searches the current viewport explicitly and can show no meals. Restaurant markers/search rows select a candidate; Use this restaurant alone updates the meal draft through its existing schedule invalidation. Search with no results keeps the prior confirmed venue. Google Maps, Places, location and reservation APIs remain unconnected.
-
-
-## Post-meal measurement revision
-P-11 separates attendance reporting, private whole-meal experience (score, explicit return intent, optional reasons), public reference and person-specific reconnect. Only ended eligible meals may be reported; self and host evidence remain distinct, conflicts stay unresolved. Per-meal state is preserved during navigation. See the [main PRD](../docs/product/PRD.zh-CN.md) and [measurement contract](../docs/product/admin/measurement-contract.zh-CN.md); production persistence and instrumentation remain separate from the local prototype.

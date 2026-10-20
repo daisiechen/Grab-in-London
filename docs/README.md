@@ -6,7 +6,7 @@
 
 | 文档 | 用途与权威关系 |
 | --- | --- |
-| [主 PRD](product/PRD.zh-CN.md) | 当前产品需求、业务状态、交互和验收的权威来源 |
+| [主 PRD](product/PRD.zh-CN.md) | 当前恢复版0.4的需求真源，目标为2026-10-18 01:03:45快照 |
 | [产品简介](product/product-brief.md) | 产品定位与摘要；详细规则以主 PRD 为准 |
 | [首期运营指标与采集契约](product/admin/measurement-contract.zh-CN.md) | 后台全部指标算法、App采集入口与生产数据接入验收 |
 | [管理端 PRD](product/admin/PRD.zh-CN.md) | 管理端范围及指标；引用主 PRD，不替代共享业务规则 |
@@ -25,11 +25,12 @@
 
 ## 发布与验收
 
-- [双端研发准入评审](reviews/development-readiness-2026-10-19.zh-CN.md)：Codex/Claude联合评审、首期范围决策、开发阻塞与关闭标准；已通过R1开发前置依赖验收；固定基线与22项关闭证据见报告。
+- [双端研发准入评审](reviews/development-readiness-2026-10-19.zh-CN.md)：当时R1基线的历史评审；App及主PRD已回滚，该结论不适用于当前组合。
 
 - [发布记录](delivery/demo-release.zh-CN.md)与[完整产品审查](delivery/full-product-audit.zh-CN.md)。
 - 用户端：[视觉验证](../demo/design-qa.md)、[浏览器验证](../demo/qa/browser-results.md)，截图按批次保存在 `demo/qa/`。
-- 本轮 R1：[用户端候选核验](../demo/qa/r1/readiness.md)、[后台候选证据](../admin/qa/readiness-2026-10-19/)。最终准入以本轮评审关闭记录为准，旧交付记录及截图不覆盖现行PRD。
+- 历史 R1：[用户端候选核验](../demo/qa/r1/readiness.md)、[后台候选证据](https://github.com/daisiechen/Grab-in-London/tree/102183d/admin/qa/readiness-2026-10-19)。该R1评审不覆盖当前恢复版PRD。
+- [2026-10-20回滚记录](releases/rollback-2026-10-20.zh-CN.md)：当前Demo与主PRD的目标提交、线上版本及回滚边界。
 - [管理端指标与采集修订](delivery/fancy-admin-measurement-review.zh-CN.md)：19条批注、App补充、口径与本轮验证。
 - [管理端可用性审查](delivery/fancy-admin-usability-review.zh-CN.md)：逐页走查、精简决策、规则维护职责及浏览器证据。
 - 管理端：[验证报告](../admin/qa/verification.zh-CN.md)，截图按批次保存在 `admin/qa/`。
