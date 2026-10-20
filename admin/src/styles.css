@@ -200,7 +200,7 @@ strong {
   margin-left: auto;
 }
 .sidebar nav {
-  margin-top: 48px;
+  margin-top: 32px;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -2139,13 +2139,3 @@ dd {
 .multi-select summary { min-height: 42px; }
 .advanced-filter[open] > div { max-height: min(65vh, 440px); overflow-y: auto; }
 @media (max-width: 650px) { .filter-panel > .multi-select:nth-of-type(1) > .multi-options { left: 0; right: auto; } }
-.access-gate { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
-.access-gate > .panel { max-width: 560px; }
-.access-gate .button { margin: 16px 12px 12px 0; }
-.snapshot-bar { display: flex; align-items: end; flex-wrap: wrap; gap: 12px; padding: 12px 16px; margin-bottom: 16px; background: #f0f4e9; border: 1px solid var(--border); border-radius: 8px; font-size: 11px; }
-.snapshot-bar .select-control { min-width: min(100%, 310px); }
-.snapshot-bar select { max-width: 100%; }
-.case-row, .audit-list > div { display: grid; gap: 8px; padding: 16px 0; border-bottom: 1px solid var(--border); }
-.case-row input { width: min(100%, 420px); border: 1px solid var(--border); border-radius: 5px; padding: 10px; display: block; }
-.case-row .button, .case-row .text-button { width: fit-content; }
-@media (max-width:650px) { .snapshot-bar { align-items: stretch; } .snapshot-bar .select-control { min-width: 0; width: 100%; } .snapshot-bar .select-wrap select { width: 100%; } .classification-form > label { width: 100%; } }

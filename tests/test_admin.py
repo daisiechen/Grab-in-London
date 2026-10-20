@@ -19,33 +19,40 @@ class AdminDeliveryTests(unittest.TestCase):
         self.assertTrue((ROOT / 'admin/pnpm-lock.yaml').is_file())
         self.assertIn('/src/main.tsx', (ROOT / 'admin/index.html').read_text())
 
-    def test_prd_records_current_r1_scope_permissions_and_snapshot_boundary(self):
+    def test_prd_records_real_data_boundary_and_metric_contracts(self):
         prd = (ROOT / 'docs/product/admin/PRD.zh-CN.md').read_text()
-        for required in ['r1-v3', '真实采集及生产服务待建设', '稳定userId', '服务端',
-                         'expectedVersion', 'factVersion', 'snapshotId', '不可变快照',
-                         '不建设', '员工账号管理', '不提供', '本人最新自报优先',
-                         'startsAt+24h', '7天', 'D-09至D-15', '409', '410', 'AC-12', 'AC-18']:
+        for required in ['真实采集及生产服务待建设', '30天', '14天', '零分母',
+                         'receivedAt', 'Europe/London', 'expectedVersion',
+                         'historyCoverageStart', 'AC-12', '未成熟不算流失']:
             self.assertIn(required, prd)
 
-    def test_usability_and_review_import_are_explicit_without_fake_integration(self):
+    def test_usability_revision_records_ownership_and_review_boundaries(self):
         prd = (ROOT / 'docs/product/admin/PRD.zh-CN.md').read_text()
-        for phrase in ['没有经营分析Agent', '?review=1', '该组全部用户', 'not_connected',
-                       '失败', '不更新store', '旧快照', '不是真实生产数据']:
+        for phrase in ['当前数据检查', '没有经营分析Agent', '?review=1', '该组全部用户', 'AC-13']:
             self.assertIn(phrase, prd)
-        source = (ROOT / 'admin/src/analytics.ts').read_text()
-        self.assertNotIn('export function verifyAttendance', source)
-        self.assertTrue((ROOT / 'admin/tests/readiness-scenarios.mjs').is_file())
+        self.assertTrue((ROOT / 'admin/tests/browser-scenarios.mjs').is_file())
 
-    def test_measurement_r1_defines_sources_windows_privacy_and_real_roundtrip(self):
+    def test_measurement_v3_defines_sources_windows_and_app_gaps(self):
         spec = (ROOT / 'docs/product/admin/measurement-contract.zh-CN.md').read_text()
-        for phrase in ['scheduledEndAt', 'resultCount', '1000ms', 'applicationId', '14天', '30天',
-                       'reasons', 'sourceStatus', '7天', '[0,20]', '(20,30]', '单方互选',
-                       'projectAnalytics', 'r1-1', '512KiB', 'scope', 'receivedAt', 'account-deleted映射other', 'unresolvedAtStart', 'users仅允许id与joinedAt',
-                       '已由用户下载', '服务控制', '90天', '12个月']:
+        for phrase in ['scheduledEndAt', 'resultCount', '50%', '1000ms', 'applicationId',
+                       '14天', '30天', 'reasons', 'sourceStatus', 'data-admin', '7天',
+                       '[0,20]', '(20,30]', '公开', '单方互选']:
             self.assertIn(phrase, spec)
-        test_source = (ROOT / 'admin/tests/handoff.test.ts').read_text()
-        self.assertIn('projectAnalytics(pilotSeed())', test_source)
-        self.assertIn('parseHandoff(JSON.stringify(exported))', test_source)
+        report = (ROOT / 'docs/delivery/fancy-admin-measurement-review.zh-CN.md').read_text()
+        for index in range(1, 20):
+            self.assertIn(f'| {index:02d} ', report)
+        self.assertTrue((ROOT / 'demo/src/postMeal.ts').is_file())
+
+    def test_readiness_alignment_uses_current_authority(self):
+        spec = (ROOT / 'docs/product/admin/measurement-contract.zh-CN.md').read_text()
+        for phrase in ['主PRD v0.5 §0', 'closesAt', 'scheduledEndAt+24小时',
+                       'applicationId', 'SupportCorrection', 'caseId', 'company/conversation',
+                       '本人优先', '最迟T−30', '跌破也取消', '首位获准']:
+            self.assertIn(phrase, spec)
+        app = (ROOT / 'admin/src/App.tsx').read_text()
+        self.assertNotIn('保存核实', app)
+        self.assertNotIn('核实出席', app)
+        self.assertIn('本人报告优先', app)
 
     def test_delivery_links_point_to_existing_files(self):
         for target in ['admin/src/analytics.ts', 'admin/src/fixtures.ts',

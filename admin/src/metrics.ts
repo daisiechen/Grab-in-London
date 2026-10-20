@@ -31,8 +31,8 @@ export const metrics: Metric[] = [
       "Understand the scale of real meetings.",
     ],
     caveat: [
-      "未知不计出席；本人最新自报优先，发起人仅补缺。差异单列但不等待人工核实。",
-      "Unknown records are excluded. Latest self-report takes priority; hosts only fill gaps. Source differences do not wait for adjudication.",
+      "未知不计出席；本人报告优先，须同时看记录覆盖。",
+      "Unknown records are excluded; self reports take priority. Inspect coverage.",
     ],
   },
   {
@@ -101,16 +101,16 @@ export const metrics: Metric[] = [
       "By meal start date, as of snapshot.",
     ],
     source: [
-      "饭后App“记录出席”：本人最新自报优先，发起人仅补缺；双方差异保留来源，不设人工出席核实。报告在计划结束后7天内提交或修改。打开群聊或席位已确认都不能代替出席。",
-      "Membership and reports made within 7 days after scheduled end; latest self-report wins, host fills gaps.",
+      "饭后App“记录出席”：发起人逐人报告、本人自报；本人报告优先，发起人补缺；来源差异保留。逾期支持个案纠错单独审计。打开群聊或席位已确认都不能代替出席。",
+      "Membership and host/self attendance reports.",
     ],
     decision: [
       "先修复证据缺失，再解释到场表现。",
       "Resolve evidence gaps before interpreting attendance.",
     ],
     caveat: [
-      "未知保持未知，来源差异不影响本人自报优先；不推断失约，不代表独立核实。",
-      "Unknown is not a no-show; self-report takes priority and is not independent verification.",
+      "未知不推断失约；来源不一致仍按本人报告统计，自报不等于独立核实。",
+      "Unknown is not a no-show; source differences do not override self reports. Self-report is not independent verification.",
     ],
   },
   {
@@ -139,7 +139,7 @@ export const metrics: Metric[] = [
     id: "formation",
     title: ["开始前招募达标率", "Formation rate"],
     definition: [
-      "计划开始前，确认成员数（含发起人）曾达到最低成团人数的场次 ÷ 已到计划开始时间的已发布场次。双人饭局门槛2人，3–6人饭局门槛3人；取消仍在分母。仅代表招募达标，不代表实际举行。",
+      "计划开始前，确认成员数（含发起人）曾达到最低成团人数的场次 ÷ 已到计划开始时间的已发布场次。门槛取发起人发布时选定且首位获准后锁定的minimum，2≤minimum≤capacity≤6；取消仍在分母。仅代表招募达标，不代表实际举行。",
       "Published meals reaching minimum confirmed size before start / published meals whose planned start has passed; cancellations stay in denominator.",
     ],
     unit: ["饭局", "Meals"],
@@ -261,10 +261,3 @@ export const metrics: Metric[] = [
     ],
   },
 ];
-
-export const attendanceStageDefinition = {
-  id: "applicationAttendance", title: ["开始后24小时的申请到出席率（阶段）", "Start +24h application-to-attendance (stage)"],
-  definition: ["申请所关联饭局的startsAt+24小时不晚于当前快照时纳入观察；不是结束后24小时，也不是7天最终结果。截止时缺报告仍未知，新快照可补报回补，旧快照不变。", "Observe linked applications once meal startsAt +24h is at or before the selected cutoff. This is not end +24h or the final 7-day result. Later snapshots can include reports; old snapshots stay unchanged."],
-  unit:["申请记录", "Applications"],window:["按申请入组；开始后24小时进入阶段", "Application cohort; stage starts at meal start +24h"],source:["申请与有效出席报告", "Applications and eligible attendance reports"],decision:["观察申请兑现；与报告覆盖一起看", "Monitor follow-through alongside reporting coverage"],caveat:["7天窗口内仍可修改，不是最终失约结论", "Reports can change during 7 days; this is not a final no-show judgment"],
-} satisfies Metric;
-metrics.push(attendanceStageDefinition);

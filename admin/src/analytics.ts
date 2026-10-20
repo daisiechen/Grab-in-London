@@ -1,19 +1,15 @@
+export const DEFINITION_VERSION = "3";
 export const SNAPSHOT = "2026-10-18T12:00:00Z";
 export const DAY = 86_400_000;
-export const HOUR = 3_600_000;
-// Application → attendance is a stage reading 24h after planned start, not the final attendance result.
-export const ATTENDANCE_STAGE_HOURS = 24;
-// R1 report window: scheduled end inclusive to end +7 days exclusive.
-export const REPORT_WINDOW_DAYS = 7;
 export type AccountType = "regular" | "test" | "staff";
 export type User = { id: string; joinedAt: string; accountType?: AccountType };
-// Recorded by the scheduler at the publish-time deadline; analytics never hard-codes the deadline.
-export type Checkpoint = { at: string; passed: boolean; count: number };
 export type Meal = {
   id: string;
   title: string;
   startsAt: string;
   endsAt?: string;
+  closesAt?: string;
+  cancelledAt?: string;
   publishedAt: string;
   area: string;
   language: string;
@@ -23,13 +19,7 @@ export type Meal = {
   source: "user" | "assisted";
   hostId: string;
   cancelled: boolean;
-  cancelledAt?: string;
-  // First reason, kept for v1 links; cancelReasons holds every recorded reason.
   cancelReason?: string;
-  cancelReasons?: string[];
-  checkpoint?: Checkpoint;
-  // D-08: after a passed checkpoint, a short table waits for or records the host's choice to continue.
-  lowCountDecision?: "pending" | "continue";
   peakConfirmed: number;
 };
 export type Application = {
@@ -40,18 +30,24 @@ export type Application = {
   decidedAt?: string;
   decision?: "approved" | "declined";
   confirmedAt?: string;
-  // Leaving before or after confirmation; a later re-application is a new application ID.
   withdrawnAt?: string;
-  // Closed by the approval deadline without a decision.
-  expired?: boolean;
+  expiredAt?: string;
 };
+export function applicationState(data: Dataset, a: Application, asOf = SNAPSHOT) {
+  if (a.withdrawnAt && a.withdrawnAt <= asOf) return "withdrawn";
+  if (a.confirmedAt && a.confirmedAt <= asOf) return "confirmed";
+  if (a.decision === "declined" && a.decidedAt && a.decidedAt <= asOf) return "declined";
+  const meal = data.meals.find((m) => m.id === a.mealId);
+  if ((a.expiredAt && a.expiredAt <= asOf) || (meal?.closesAt && meal.closesAt <= asOf) || (meal?.cancelled && (!meal.cancelledAt || meal.cancelledAt <= asOf))) return "expired";
+  return "pending";
+}
 export type AttendanceRecord = {
   userId: string;
   mealId: string;
   host?: "present" | "absent";
   self?: "present" | "absent";
+  correction?: { result: "present" | "absent"; caseId: string; actorId: string; reason: string };
   updatedAt: string;
-  version?: number;
 };
 export type Feedback = {
   userId: string;
@@ -87,7 +83,6 @@ export type Event = {
   field?: string;
   durationMs?: number;
   visibleRatio?: number;
-  request?: { areas?: string[]; dates?: string[]; budgetMin?: number; budgetMax?: number; sizes?: number[]; languages?: string[]; sources?: string[] };
 };
 export type IdentityLink = {
   anonymousId: string;
@@ -190,24 +185,20 @@ export function cleanEvents(
         )?.userId,
     }));
 }
-// R1: the participant's latest self-report wins; the host report only fills a missing self-report.
-export function attendance(
-  record?: AttendanceRecord,
-): "present" | "absent" | "unknown" {
-  return record?.self || record?.host || "unknown";
+// Resolve facts, never treat source disagreement or silence as absence.
+export function attendance(record?: AttendanceRecord): "present" | "absent" | "unknown" {
+  return record?.correction?.result || record?.self || record?.host || "unknown";
 }
-// Source disagreement is kept for audit only; it is never a status or a manual task.
-export const sourcesDiffer = (record?: AttendanceRecord) =>
-  !!record?.self && !!record.host && record.self !== record.host;
-export function latestAttendance(
-  data: Dataset,
-  userId: string,
-  mealId: string,
-  asOf = SNAPSHOT,
-) {
-  const rows = data.attendance.map((a,index) => ({...a,index})).filter(a=>a.userId===userId && a.mealId===mealId && a.updatedAt<=asOf).sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt) || (b.version||b.index)-(a.version||a.index));
-  if(!rows.length) return undefined;
-  return {...rows[0], self:rows.find(a=>a.self!==undefined)?.self,host:rows.find(a=>a.host!==undefined)?.host};
+export function latestAttendance(data: Dataset, userId: string, mealId: string, asOf = SNAPSHOT) {
+  const records = data.attendance.map((a, index) => ({ ...a, index }))
+    .filter((a) => a.userId === userId && a.mealId === mealId && a.updatedAt <= asOf)
+    .sort((a, b) => a.updatedAt.localeCompare(b.updatedAt) || a.index - b.index);
+  if (!records.length) return undefined;
+  // Host and self are independent streams; a host update cannot erase a self report.
+  return records.reduce<AttendanceRecord>((latest, record) => ({ ...latest, ...record }), { userId, mealId, updatedAt: "" });
+}
+export function sourceDifference(record?: AttendanceRecord) {
+  return !!(record?.self && record?.host && record.self !== record.host);
 }
 export const selectedValues = (value: string) => value === "all" ? [] : value.split(",");
 export const matchesChoice = (filter: string, value: string) => filter === "all" || selectedValues(filter).includes(value);
@@ -275,66 +266,11 @@ export function filteredEvents(data: Dataset, f: Filters, asOf = SNAPSHOT) {
       return false;
     const m = data.meals.find((m) => m.id === e.mealId);
     if (m) return mealMatches(m, f);
-    if (e.request) {
-      const q=e.request;
-      const member=(filter:string, values?:string[])=>filter==="all" || !!values?.some(v=>matchesChoice(filter,v));
-      const bands: Record<string,[number,number]>={"0-20":[0,20],"20-30":[20,30],"30-40":[30,40],"40+":[40,Infinity]};
-      const budget = f.budget === "all" || selectedValues(f.budget).some(v=>v==="unknown" ? q.budgetMin===undefined && q.budgetMax===undefined : q.budgetMin!==undefined && q.budgetMax!==undefined && !!bands[v] && q.budgetMax >= bands[v][0] && q.budgetMin <= bands[v][1] && (bands[v][0]===0 || q.budgetMax>bands[v][0]));
-      return member(f.area,q.areas) && member(f.source,q.sources) && (f.language==="all" || !!q.languages?.some(v=>matchesLanguage(f.language,v))) && (f.size==="all" || !!q.sizes?.some(v=>matchesSize(f.size,v))) && budget;
-    }
-    // A request may name several areas; an unconstrained or missing area matches only "all".
-    return (f.area === "all" || (e.area || "unknown").split(",").some((a) => matchesChoice(f.area, a.trim()))) && matchesChoice(f.source, e.source || "unknown")
+    return matchesChoice(f.area, e.area || "unknown") && matchesChoice(f.source, e.source || "unknown")
       && matchesLanguage(f.language, e.language) && matchesSize(f.size, e.size) && matchesBudget(f.budget, e.budget);
   });
 }
 export const mealEnded = (meal: Meal, asOf = SNAPSHOT) => +new Date(meal.endsAt || new Date(+new Date(meal.startsAt) + 2 * 3_600_000).toISOString()) <= +new Date(asOf);
-export type ApplicationState = "future" | "pending" | "approved" | "confirmed" | "declined" | "withdrawn" | "expired";
-export function applicationStateAt(a: Application, meal: Meal, asOf = SNAPSHOT): ApplicationState {
-  if (a.appliedAt > asOf) return "future";
-  if (a.withdrawnAt && a.withdrawnAt <= asOf) return "withdrawn";
-  if (a.decidedAt && a.decidedAt <= asOf) {
-    if (a.decision === "declined") return "declined";
-    return a.confirmedAt && a.confirmedAt <= asOf ? "confirmed" : "approved";
-  }
-  const deadline=+new Date(meal.startsAt)-30*60_000;
-  if (+new Date(asOf)>=deadline || (meal.cancelled && meal.cancelledAt && meal.cancelledAt<=asOf)) return "expired";
-  return "pending";
-}
-export const attendanceStageReady = (meal: Meal, asOf = SNAPSHOT) =>
-  +new Date(meal.startsAt) + ATTENDANCE_STAGE_HOURS * HOUR <= +new Date(asOf);
-export const reportWindowOpen = (meal: Meal, asOf = SNAPSHOT) =>
-  +new Date(meal.endsAt || +new Date(meal.startsAt) + 2 * HOUR) + REPORT_WINDOW_DAYS * DAY > +new Date(asOf);
-// Roster holding at an instant: confirmed strictly before it, not yet left by it.
-export function rosterAt(data: Dataset, meal: Meal, at: string) {
-  return new Set([
-    meal.hostId,
-    ...data.applications
-      .filter((a) => a.mealId === meal.id && a.confirmedAt && a.confirmedAt < at && (!a.withdrawnAt || a.withdrawnAt > at))
-      .map((a) => a.userId),
-  ]);
-}
-export type CheckpointOutcome = {
-  status: "not_reached" | "passed" | "failed" | "cancelled_before" | "missing";
-  failures: string[];
-  recountMismatch: boolean;
-  belowMinimumAfter: boolean;
-};
-// Reads the recorded formation checkpoint and recounts its roster for reconciliation.
-export function checkpointOutcome(data: Dataset, meal: Meal, asOf = SNAPSHOT): CheckpointOutcome {
-  const none = { failures: [], recountMismatch: false, belowMinimumAfter: false };
-  const c = meal.checkpoint;
-  if (!c || c.at > asOf) {
-    if (meal.cancelled && meal.cancelledAt && meal.cancelledAt<=asOf && +new Date(meal.cancelledAt)<+new Date(meal.startsAt)-15*60_000) return { status: "cancelled_before", ...none };
-    return { status: meal.startsAt <= asOf ? "missing" : "not_reached", ...none };
-  }
-  const until = meal.startsAt < asOf ? meal.startsAt : asOf;
-  return {
-    status: c.passed ? "passed" : "failed",
-    failures: c.passed ? [] : [...(meal.cancelReasons || [meal.cancelReason || "unknown"])].sort(),
-    recountMismatch: rosterAt(data, meal, c.at).size !== c.count,
-    belowMinimumAfter: c.passed && rosterAt(data, meal, until).size < meal.minimum,
-  };
-}
 export function participation(data: Dataset, asOf = SNAPSHOT) {
   data = analyticalData(data);
   const result: {
@@ -491,21 +427,14 @@ export function cohorts(data: Dataset, f: Filters, asOf = SNAPSHOT) {
   return [...grouped.values()].sort((a, b) => a.week.localeCompare(b.week));
 }
 export function summarize(data: Dataset, f: Filters, asOf = SNAPSHOT) {
-  // T-15min outcomes are business facts: test guests still held real seats at the check.
-  const business = data;
   data = analyticalData(data);
   const meals = filterMeals(data, f, asOf).filter((m) => m.startsAt <= asOf);
-  const checks = filterMeals(data, f, asOf).map((meal) => ({ meal, outcome: checkpointOutcome(business, meal, asOf) }));
-  const checked = checks.filter((c) => c.outcome.status === "passed" || c.outcome.status === "failed");
-  const failed = (kind: string) => checked.filter((c) => c.outcome.failures.join() === kind).length;
-  const short = checked.filter((c) => c.outcome.belowMinimumAfter);
   const mealIds = new Set(meals.map((m) => m.id));
   const parts = participation(data, asOf).filter(
     (p) => mealIds.has(p.meal.id) && userMatches(data, p.userId, f),
   );
   const states = { present: 0, absent: 0, unknown: 0 };
   parts.forEach((p) => states[p.status]++);
-  const sourceDiffs = parts.filter((p) => sourcesDiffer(latestAttendance(data, p.userId, p.meal.id, asOf))).length;
   const weeks = new Map<string, Set<string>>();
   for (const meal of meals)
     weeks.set(weekStart(londonDay(meal.startsAt)), new Set<string>());
@@ -537,6 +466,7 @@ export function summarize(data: Dataset, f: Filters, asOf = SNAPSHOT) {
     meals,
     parts,
     attendance: states,
+    sourceDifferences: parts.filter((p) => sourceDifference(latestAttendance(data, p.userId, p.meal.id, asOf))).length,
     attendanceCoverage: {
       numerator: states.present + states.absent,
       denominator: parts.length,
@@ -563,32 +493,6 @@ export function summarize(data: Dataset, f: Filters, asOf = SNAPSHOT) {
       numerator: meals.filter((m) => m.cancelled).length,
       denominator: meals.length,
     },
-    // Multiple recorded reasons are counted per reason, so totals may exceed cancelled meals.
-    cancelReasons: meals.reduce<Record<string, number>>((all, m) => {
-      if (m.cancelled)
-        for (const reason of new Set(m.cancelReasons?.length ? m.cancelReasons : [m.cancelReason || "unknown"]))
-          all[reason] = (all[reason] || 0) + 1;
-      return all;
-    }, {}),
-    checkpoint: {
-      numerator: checked.filter((c) => c.outcome.status === "passed").length,
-      denominator: checked.length,
-      insufficient: failed("insufficient"),
-      booking: failed("booking"),
-      both: failed("booking,insufficient"),
-      cancelledBefore: checks.filter((c) => c.outcome.status === "cancelled_before").length,
-      missing: checks.filter((c) => c.outcome.status === "missing").length,
-      recountMismatch: checks.filter((c) => c.outcome.recountMismatch).length,
-    },
-    lowCount: {
-      total: short.length,
-      continued: short.filter((c) => !c.meal.cancelled && c.meal.lowCountDecision === "continue").length,
-      pending: short.filter((c) => !c.meal.cancelled && c.meal.lowCountDecision === "pending" && asOf<c.meal.startsAt).length,
-      unresolvedAtStart: short.filter((c) => !c.meal.cancelled && c.meal.lowCountDecision === "pending" && asOf>=c.meal.startsAt).length,
-      missingDecision: short.filter((c) => !c.meal.cancelled && !c.meal.lowCountDecision).length,
-      cancelled: short.filter((c) => c.meal.cancelled).length,
-    },
-    sourceDiffs,
     noResults: {
       numerator: discoveries.filter((e) => e.resultCount === 0).length,
       denominator: discoveries.length,
@@ -630,12 +534,11 @@ export function funnel(data: Dataset, f: Filters, asOf = SNAPSHOT) {
       (a) => a.decision === "approved" && a.decidedAt && a.decidedAt <= asOf,
     ),
     confirmed = approved.filter((a) => a.confirmedAt && a.confirmedAt <= asOf);
-  // Stage reading: planned start + 24h, while the 7-day report window may still be open.
   const completed = applications.filter((a) =>
-    data.meals.some((m) => m.id === a.mealId && attendanceStageReady(m, asOf)),
-  );
-  const stageWindowOpen = completed.filter((a) =>
-    data.meals.some((m) => m.id === a.mealId && reportWindowOpen(m, asOf)),
+    data.meals.some(
+      (m) =>
+        m.id === a.mealId && +new Date(m.endsAt || new Date(+new Date(m.startsAt) + 2 * 3_600_000).toISOString()) + DAY <= +new Date(asOf),
+    ),
   );
   const present = completed.filter(
     (a) =>
@@ -695,7 +598,6 @@ export function funnel(data: Dataset, f: Filters, asOf = SNAPSHOT) {
     confirmed: confirmed.length,
     present: present.length,
     completed: completed.length,
-    stageWindowOpen: stageWindowOpen.length,
     matureDiscovery: matured.size,
     appliedWithin7: appliedWithin7.size,
     exposedMatureUsers: exposedMatureUsers.size,

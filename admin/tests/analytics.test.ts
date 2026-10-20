@@ -12,6 +12,9 @@ import {
   funnel,
   filterMeals,
   createFunnel,
+  latestAttendance,
+  sourceDifference,
+  applicationState,
 } from "../src/analytics.ts";
 import type { Dataset, Event, Meal } from "../src/analytics.ts";
 
@@ -78,7 +81,7 @@ test("London date boundaries respect British summer time and autumn transition",
   assert.equal(londonDay("2026-10-25T23:30:00Z"), "2026-10-25");
   assert.equal(weekStart("2026-10-18"), "2026-10-12");
 });
-test("self-report takes priority, missing remains unknown", () => {
+test("self report takes priority over host, missing is not absence", () => {
   assert.equal(attendance(undefined), "unknown");
   assert.equal(
     attendance({
@@ -302,6 +305,20 @@ test("create funnel follows same attempt and user beyond selected entry dates", 
     [1, 0, 0],
   );
 });
+test("independent source streams retain self priority and case corrections at snapshot cutoff", () => {
+  const history = {...base, attendance:[
+    {userId:"u", mealId:"m1", self:"absent" as const, updatedAt:"2026-10-02T10:00:00Z"},
+    {userId:"u", mealId:"m1", host:"present" as const, updatedAt:"2026-10-03T10:00:00Z"},
+    {userId:"u", mealId:"m1", correction:{result:"present" as const,caseId:"C1",actorId:"support",reason:"Participant correction"}, updatedAt:"2026-10-15T10:00:00Z"},
+  ]};
+  const before = latestAttendance(history,"u","m1","2026-10-10T10:00:00Z");
+  assert.equal(attendance(before),"absent");
+  assert.equal(sourceDifference(before),true);
+  assert.equal(attendance(latestAttendance(history,"u","m1")),"present");
+  assert.equal(summarize(history,filters,"2026-10-10T10:00:00Z").attendanceCoverage.numerator,1);
+  assert.equal(summarize(history,filters,"2026-10-10T10:00:00Z").sourceDifferences,1);
+});
+
 test("hand-calculated two-meal cohort reconciles outcomes, coverage and repeat participation", () => {
   const first = {
     ...meal,
@@ -462,5 +479,42 @@ test("invalid discovery result counts are not silently added to the zero-result 
 test("late seat confirmation cannot create eligible attendance", () => {
   const late = {...base,applications:base.applications.map((a) => ({...a,confirmedAt:"2026-10-02T12:00:00Z"}))};
   assert.equal(summarize(late,filters).attendance.present,0);
+});
 
+test("application attendance matures at scheduled end plus 24 hours, never start plus 24", () => {
+  for (const hours of [24,25]) assert.equal(funnel(base,filters,new Date(+new Date(meal.startsAt)+hours*3600000).toISOString()).completed,0);
+  assert.equal(funnel(base,filters,"2026-10-02T20:00:00Z").completed,1);
+});
+
+test("withdrawn round stays in denominator while reapplication contributes exactly one attendance", () => {
+  const rounds = {...base, applications:[
+    {...base.applications[0],id:"old",withdrawnAt:"2026-09-22T10:00:00Z"},
+    {...base.applications[0],id:"new",appliedAt:"2026-09-23T10:00:00Z",decidedAt:"2026-09-23T11:00:00Z",confirmedAt:"2026-09-23T11:00:00Z"},
+  ]};
+  assert.equal(funnel(rounds,filters).applications,2);
+  assert.equal(funnel(rounds,filters).present,1);
+  assert.equal(summarize(rounds,filters).attendance.present,1);
+  assert.equal(summarize(rounds,filters).meals[0].peakConfirmed,2);
+});
+test("whole-meal cancellation keeps application denominator but removes attendance and experience eligibility", () => {
+  const cancelled = {...base, meals:[{...meal,cancelled:true,cancelReason:"insufficient"}], feedback:[{userId:"u",mealId:"m1",score:5,again:true,issue:"none" as const,at:"2026-10-03T10:00:00Z"}]};
+  assert.equal(funnel(cancelled,filters).completed,1);
+  assert.equal(funnel(cancelled,filters).present,0);
+  assert.equal(summarize(cancelled,filters).feedback.length,0);
+  assert.equal(summarize(cancelled,filters).attendanceCoverage.denominator,0);
+});
+test("attendance correction invalidates feedback in new snapshot without changing previous cutoff", () => {
+  const data = {...base, attendance:[...base.attendance,{userId:"u",mealId:"m1",self:"absent" as const,updatedAt:"2026-10-04T10:00:00Z"}], feedback:[{userId:"u",mealId:"m1",score:2,again:false,issue:"none" as const,reasons:["company","cost"],at:"2026-10-03T10:00:00Z"}]};
+  assert.equal(summarize(data,filters,"2026-10-03T12:00:00Z").feedback.length,1);
+  assert.equal(summarize(data,filters,"2026-10-04T12:00:00Z").feedback.length,0);
+  assert.equal(summarize(data,filters,"2026-10-03T12:00:00Z").feedback.length,1);
+});
+
+test("pending excludes withdrawn, declined and expired rounds at the unified cutoff", () => {
+  const a = {...base.applications[0],decision:undefined,decidedAt:undefined,confirmedAt:undefined};
+  const d = {...base,meals:[{...meal,closesAt:"2026-10-01T17:00:00Z"}]};
+  assert.equal(applicationState(d,a,"2026-10-01T16:59:59Z"),"pending");
+  assert.equal(applicationState(d,a,"2026-10-01T17:00:00Z"),"expired");
+  assert.equal(applicationState(d,{...a,withdrawnAt:"2026-09-22T12:00:00Z"},"2026-10-01T16:00:00Z"),"withdrawn");
+  assert.equal(applicationState(d,{...a,decision:"declined",decidedAt:"2026-09-22T12:00:00Z"},"2026-10-01T16:00:00Z"),"declined");
 });

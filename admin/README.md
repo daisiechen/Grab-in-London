@@ -41,4 +41,6 @@ pnpm test:e2e
 [本轮审查报告](../docs/delivery/fancy-admin-usability-review.zh-CN.md)包含逐页问题、修复、截图和范围。`tests/browser-scenarios.mjs`为共享浏览器场景：可由现有Playwright包装器执行，也可在已选内置浏览器通过同一场景适配执行。本轮使用后者，无需另开Chrome。
 
 
-指标r1-v3与App采集入口见[采集契约](../docs/product/admin/measurement-contract.zh-CN.md)，[本轮19条批注修订](../docs/delivery/fancy-admin-measurement-review.zh-CN.md)记录验证。统计账号分类、举报回执和快照均为会话内操作，刷新恢复；出席仅按本人最新自报优先、host补缺，无人工核实入口。验收模式可导入用户端r1-1去标识JSON，行为SDK与生产连接尚未实现。最新候选验证见[研发准入验证](qa/readiness-2026-10-19/verification.zh-CN.md)。
+指标v3与App采集入口见[采集契约](../docs/product/admin/measurement-contract.zh-CN.md)，[本轮19条批注修订](../docs/delivery/fancy-admin-measurement-review.zh-CN.md)记录验证。统计账号分类为会话内操作、刷新恢复；出席仅只读追溯；两端原型没有生产数据联通。
+
+本轮按恢复版最小修订的[2026-10-20验证记录](qa/readiness-2026-10-20/verification.zh-CN.md)说明当前候选、评审项对应与生产依赖；旧R1验证仅保留历史引用，不代表当前版本通过研发准入。

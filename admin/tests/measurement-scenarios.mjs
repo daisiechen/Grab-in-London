@@ -1,14 +1,9 @@
-const visit = async (page, url) => {
-  await page.goto(url);
-  const gate=page.getByRole("button",{name:"使用创始人演示身份",exact:true});
-  if(await gate.count()) await gate.click();
-};
 const assert = (ok, message) => { if (!ok) throw new Error(message); };
 export const measurementScenarios = [
   {
     name: "measurement: clean navigation, multi-choice language/size and complete budget ranges",
     run: async (page) => {
-      await visit(page, "/#overview");
+      await page.goto("/#overview");
       assert(await page.locator(".workspace,.avatar,.sample-label,.demo-banner").count() === 0, "No empty workspace, fake avatars or demo banner");
       assert(await page.locator(".nav-heading").count() === 0, "No decorative navigation heading");
       assert(await page.locator(".sidebar").evaluate((el) => { const logo = el.querySelector(".wordmark").getBoundingClientRect(); const nav = el.querySelector("nav").getBoundingClientRect(); return !logo.width || nav.top - logo.bottom >= 30; }), "Logo and navigation have distinct spacing");
@@ -27,7 +22,7 @@ export const measurementScenarios = [
       assert(await page.getByRole("checkbox",{name:"预算未填写",exact:true}).count() === 1,"Unknown budget is an explicit bucket");
       await page.getByRole("heading",{name:"产品概览.",exact:true}).click();
       assert(await page.locator(".filter-chip").count() === 3,"Selected dimensions remain visible");
-      await page.screenshot({path:"qa/readiness-2026-10-19/02-filters.png",fullPage:false});
+      await page.screenshot({path:"qa/readiness-2026-10-20/02-filters.png",fullPage:false});
       await page.reload();
       assert((await page.locator(".active-filters").innerText()).includes("2、4"),"Multi-choice URL survives reload");
     },
@@ -35,47 +30,38 @@ export const measurementScenarios = [
   {
     name: "classification: test host excluded from metrics and restored without deleting records",
     run: async (page) => {
-      await visit(page, "/#overview");
+      await page.goto("/#overview");
       const before = await page.locator(".metric-card").first().innerText();
-      await visit(page, "/#quality");
+      await page.goto("/#quality");
       await page.getByLabel("分类用户编号",{exact:true}).fill("U-001");
       await page.getByLabel("账号分类",{exact:true}).selectOption("test");
-      await page.getByLabel("分类理由（必填）",{exact:true}).fill("Acceptance fixture classification");
       await page.getByRole("button",{name:"保存分类",exact:true}).click();
-      assert(await page.getByRole("button",{name:"U-001 · test",exact:true}).isVisible(),"Classification inspectable");
+      assert(await page.getByRole("button",{name:"U-001 · 测试",exact:true}).isVisible(),"Excluded account inspectable");
+      await page.screenshot({path:"qa/readiness-2026-10-20/03-classification.png",fullPage:true});
+      // Route through navigation to preserve local state.
       await page.getByRole("navigation",{name:"主导航",exact:true}).getByRole("link",{name:"产品概览",exact:true}).click();
-      assert(await page.locator(".metric-card").first().innerText() === before,"Write does not silently change old snapshot");
-      const old=await page.getByLabel("当前快照",{exact:true}).evaluate(e=>e.value);
-      await page.getByRole("button",{name:"生成并查看新快照",exact:true}).click();
-      assert(await page.locator(".metric-card").first().innerText() !== before,"New snapshot applies classification");
-      await page.getByLabel("当前快照",{exact:true}).selectOption(old);
-      assert(await page.locator(".metric-card").first().innerText() === before,"Old snapshot remains reproducible");
+      assert(await page.locator(".metric-card").first().innerText() !== before,"Classification affects business results");
       await page.getByRole("navigation",{name:"主导航",exact:true}).getByRole("link",{name:"数据与定义",exact:true}).click();
-      await page.getByLabel("分类用户编号",{exact:true}).fill("U-001");
       await page.getByLabel("账号分类",{exact:true}).selectOption("regular");
-      await page.getByLabel("分类理由（必填）",{exact:true}).fill("Restore fixture");
       await page.getByRole("button",{name:"保存分类",exact:true}).click();
-      await page.getByRole("button",{name:"生成并查看新快照",exact:true}).click();
-      await page.screenshot({path:"qa/readiness-2026-10-19/03-classification.png",fullPage:true});
       await page.getByRole("navigation",{name:"主导航",exact:true}).getByRole("link",{name:"产品概览",exact:true}).click();
-      assert(await page.locator(".metric-card").first().innerText() === before,"Restored classification appears in new snapshot");
+      assert(await page.locator(".metric-card").first().innerText() === before,"Restoring regular recalculates original records");
     },
   },
   {
     name: "definitions: follow-up example, distinct seat state and reason rating slice",
     run: async (page) => {
-      await visit(page, "/#overview");
+      await page.goto("/#overview");
       await page.getByRole("button",{name:/首次申请后 14 天内出席率/}).click();
       assert((await page.getByRole("dialog").innerText()).includes("10月1日12点"),"Follow-up has a concrete time example");
       assert((await page.getByRole("dialog").innerText()).includes("申请成功是提交成功，不是获准"),"Submission and approval distinct");
       await page.getByRole("button",{name:"关闭详情",exact:true}).click();
-      await visit(page, "/#journey");
-      await page.getByText("首期各自到店付款，host批准即确认席位并加入名单。席位已确认不代表实际出席。",{exact:true}).waitFor({state:"visible"});
-      assert((await page.locator("main").innerText()).includes("host批准即确认席位") && (await page.locator("main").innerText()).includes("席位已确认不代表实际出席"),"R1 approval confirms a seat but does not prove attendance");
-      await visit(page, "/#retention");
+      await page.goto("/#journey");
+      assert((await page.locator("main").innerText()).includes("这些都不代表实际出席"),"Seat state is distinct from attendance");
+      await page.goto("/#retention");
       await page.getByLabel("原因对应评分",{exact:true}).selectOption("2");
       assert(await page.getByRole("heading",{name:"体验原因（可多选）",exact:true}).isVisible(),"Rating reasons available");
-      await page.screenshot({path:"qa/readiness-2026-10-19/04-feedback-reasons.png",fullPage:true});
+      await page.screenshot({path:"qa/readiness-2026-10-20/04-feedback-reasons.png",fullPage:true});
     },
   },
 ];

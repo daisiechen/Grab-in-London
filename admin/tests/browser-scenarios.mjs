@@ -1,8 +1,3 @@
-const visit = async (page, url) => {
-  await page.goto(url);
-  const gate=page.getByRole("button",{name:"使用创始人演示身份",exact:true});
-  if(await gate.count()) await gate.click();
-};
 // The same scenarios run against Playwright Page or the in-app browser adapter.
 // No dependency on a particular browser profile, network service or test framework.
 import { readFile } from "node:fs/promises";
@@ -31,7 +26,7 @@ export const scenarios = [
   {
     name: "filters: outside click, Escape, route change and removable active choices",
     run: async (page) => {
-      await visit(page, "/#overview");
+      await page.goto("/#overview");
       const more = page.locator(".advanced-filter > summary");
       await more.click();
       ensure(
@@ -83,13 +78,7 @@ export const scenarios = [
   {
     name: "overview: checks use current maturity and have inspectable evidence",
     run: async (page) => {
-      await visit(page, "/#overview");
-      const brandGap = await page.evaluate(() => {
-        const brand = document.querySelector(".wordmark").getBoundingClientRect();
-        const navigation = document.querySelector(".sidebar nav").getBoundingClientRect();
-        return navigation.top - brand.bottom;
-      });
-      ensure(brandGap >= 48, "Logo and navigation need a clear visual gap");
+      await page.goto("/#overview");
       ensure(
         await visible(
           page.getByRole("heading", { name: "重复参与仍在观察", exact: true }),
@@ -120,7 +109,7 @@ export const scenarios = [
         "No stale fixed weekly advice",
       );
       await page.screenshot({
-        path: "qa/readiness-2026-10-19/06-after-overview.png",
+        path: "qa/readiness-2026-10-20/06-after-overview.png",
         fullPage: true,
       });
       await page
@@ -137,7 +126,7 @@ export const scenarios = [
   {
     name: "journey: localized filters/search survive; nested records have a back path",
     run: async (page) => {
-      await visit(page, "/#journey");
+      await page.goto("/#journey");
       await page.getByLabel("区域", { exact: true }).click();
       await page.getByRole("checkbox", { name: "Camden", exact: true }).check();
       await page.getByLabel("搜索记录", { exact: true }).fill("A-");
@@ -185,7 +174,7 @@ export const scenarios = [
       );
       await close(page);
       await page.screenshot({
-        path: "qa/readiness-2026-10-19/07a-after-join.png",
+        path: "qa/readiness-2026-10-20/07a-after-join.png",
         fullPage: true,
       });
       await page.getByRole("button", { name: "发起饭局", exact: true }).click();
@@ -204,7 +193,7 @@ export const scenarios = [
       );
       await close(page);
       await page.screenshot({
-        path: "qa/readiness-2026-10-19/07-after-journey.png",
+        path: "qa/readiness-2026-10-20/07-after-journey.png",
         fullPage: true,
       });
     },
@@ -212,7 +201,7 @@ export const scenarios = [
   {
     name: "supply: explicit date ordering, pagination, no-results and restoration",
     run: async (page) => {
-      await visit(page, "/#supply");
+      await page.goto("/#supply");
       await page.getByRole("button", { name: /^Camden/ }).click();
       ensure(
         (await page.locator("tbody tr").count()) === 6,
@@ -272,7 +261,7 @@ export const scenarios = [
         .getByLabel("出席记录筛选（仅下方列表）", { exact: true })
         .selectOption("all");
       await page.screenshot({
-        path: "qa/readiness-2026-10-19/08-after-supply.png",
+        path: "qa/readiness-2026-10-20/08-after-supply.png",
         fullPage: true,
       });
     },
@@ -280,7 +269,7 @@ export const scenarios = [
   {
     name: "retention: whole-cohort drilldown and distinct feedback labels",
     run: async (page) => {
-      await visit(page, "/#retention");
+      await page.goto("/#retention");
       ensure(
         await visible(
           page.getByText("当前队列还没有完整的 30 天观察窗口", { exact: true }),
@@ -327,12 +316,12 @@ export const scenarios = [
         "Back restores cohort",
       );
       await page.screenshot({
-        path: "qa/readiness-2026-10-19/09a-after-cohort-detail.png",
+        path: "qa/readiness-2026-10-20/09a-after-cohort-detail.png",
         fullPage: false,
       });
       await close(page);
       await page.screenshot({
-        path: "qa/readiness-2026-10-19/09-after-retention.png",
+        path: "qa/readiness-2026-10-20/09-after-retention.png",
         fullPage: true,
       });
     },
@@ -340,7 +329,7 @@ export const scenarios = [
   {
     name: "quality: no normal test switches; dictionary and quarantined evidence",
     run: async (page) => {
-      await visit(page, "/#quality");
+      await page.goto("/#quality");
       ensure(
         (await page.getByLabel("数据场景", { exact: true }).count()) === 0,
         "Review controls hidden in ordinary product",
@@ -374,7 +363,7 @@ export const scenarios = [
         .getByRole("button", { name: "清除指标搜索", exact: true })
         .click();
       await page.screenshot({
-        path: "qa/readiness-2026-10-19/10-after-quality.png",
+        path: "qa/readiness-2026-10-20/10-after-quality.png",
         fullPage: true,
       });
     },
@@ -382,7 +371,7 @@ export const scenarios = [
   {
     name: "review-only empty and failure states recover without stale charts",
     run: async (page) => {
-      await visit(page, "/?review=1#quality");
+      await page.goto("/?review=1#quality");
       await page.getByLabel("数据场景", { exact: true }).selectOption("empty");
       await nav(page, "产品概览").click();
       ensure(
@@ -415,19 +404,21 @@ export const scenarios = [
     },
   },
   {
-    name: "attendance: source priority is read-only and manual verification is absent",
+    name: "attendance: read-only source evidence and no routine verification operation",
     run: async (page) => {
-      await visit(page,"/#supply");
-      await page.getByRole("button",{name:/^查看 M-/}).first().click();
-      ensure((await page.getByRole("dialog").innerText()).includes("参与与出席证据"),"Participation source trace remains");
-      ensure(await page.getByRole("button",{name:"核实出席",exact:true}).count()===0,"No manual attendance verification");
+      await page.goto("/#supply");
+      await page.getByLabel("搜索记录", { exact: true }).fill("M-038");
+      await page.getByRole("button", { name: "查看 M-038", exact: true }).click();
+      ensure((await page.getByRole("dialog").innerText()).includes("本人报告优先"), "Priority is explained");
+      ensure(await page.getByRole("button", {name:"核实出席",exact:true}).count() === 0, "No routine manual verification");
+      ensure(await page.locator(".evidence-list>div").count() > 0, "Evidence rows retained");
       await close(page);
     },
   },
   {
     name: "date drafts validate; aggregate export includes all ratios and cohort denominators",
     run: async (page) => {
-      await visit(page, "/#overview");
+      await page.goto("/#overview");
       await page.getByLabel("开始日期", { exact: true }).fill("2026-10-18");
       await page.getByLabel("结束日期", { exact: true }).fill("2026-10-01");
       await page.getByRole("button", { name: "应用", exact: true }).click();
@@ -458,7 +449,7 @@ export const scenarios = [
     name: "compact viewport: named icon navigation, filters and localized state",
     run: async (page) => {
       await page.setViewportSize({ width: 864, height: 609 });
-      await visit(page, "/#overview");
+      await page.goto("/#overview");
       ensure(
         await visible(nav(page, "用户旅程")),
         "Icon navigation has accessible names",
@@ -498,7 +489,7 @@ export const scenarios = [
         "No document horizontal overflow",
       );
       await page.screenshot({
-        path: "qa/readiness-2026-10-19/11-after-mobile.png",
+        path: "qa/readiness-2026-10-20/11-after-mobile.png",
         fullPage: true,
       });
       await page.setViewportSize({ width: 864, height: 609 });
