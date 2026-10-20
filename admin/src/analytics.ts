@@ -1,4 +1,4 @@
-export const DEFINITION_VERSION = "3";
+export const DEFINITION_VERSION = "4";
 export const SNAPSHOT = "2026-10-18T12:00:00Z";
 export const DAY = 86_400_000;
 export type AccountType = "regular" | "test" | "staff";
@@ -49,15 +49,40 @@ export type AttendanceRecord = {
   correction?: { result: "present" | "absent"; caseId: string; actorId: string; reason: string };
   updatedAt: string;
 };
-export type Feedback = {
+export type MealExperience = {
   userId: string;
   mealId: string;
   score: number;
-  again: boolean;
-  issue: "none" | "coordination" | "expectations" | "venue";
-  reasons?: string[];
   at: string;
 };
+export type Feedback = MealExperience;
+export const surveyReasons = ["company", "conversation", "coordination", "expectations", "venue", "cost", "other"] as const;
+export type ProductSurvey = {
+  userId: string;
+  again: boolean | null;
+  reasons: string[];
+  submittedAt: string;
+};
+// Select the latest valid version per user at asOf, then cohort by its submission date.
+// Meal dimensions cannot be attributed to a product-level questionnaire.
+export function productSurveys(data: Dataset, f: Filters, asOf = SNAPSHOT) {
+  const latest = new Map<string, ProductSurvey>();
+  for (const row of [...(data.surveys || [])].sort((a, b) => a.submittedAt.localeCompare(b.submittedAt))) {
+    if (!data.users.some((u) => u.id === row.userId) || !regularUser(data, row.userId) ||
+        !Number.isFinite(+new Date(row.submittedAt)) || row.submittedAt > asOf ||
+        !(row.again === null || typeof row.again === "boolean") ||
+        !Array.isArray(row.reasons) || row.reasons.some((reason) => !surveyReasons.includes(reason as typeof surveyReasons[number])) ||
+        (row.again === null && row.reasons.length === 0)) continue;
+    latest.set(row.userId, {...row, reasons: [...new Set(row.reasons)]});
+  }
+  const responses = [...latest.values()].filter((row) => within(row.submittedAt, f) && userMatches(data, row.userId, f));
+  const answered = responses.filter((row) => row.again !== null);
+  return {
+    responses,
+    unanswered: responses.length - answered.length,
+    again: { numerator: answered.filter((row) => row.again === true).length, denominator: answered.length },
+  };
+}
 export type Event = {
   id: string;
   name: string;
@@ -95,6 +120,7 @@ export type Dataset = {
   applications: Application[];
   attendance: AttendanceRecord[];
   feedback: Feedback[];
+  surveys?: ProductSurvey[];
   events: Event[];
   identityLinks?: IdentityLink[];
 };
@@ -233,6 +259,7 @@ export function analyticalData(data: Dataset): Dataset {
     applications: data.applications.filter((a) => allowed(a.userId, a.mealId)),
     attendance: data.attendance.filter((a) => allowed(a.userId, a.mealId)),
     feedback: data.feedback.filter((a) => allowed(a.userId, a.mealId)),
+    surveys: (data.surveys || []).filter((r) => regularUser(data, r.userId)),
     events: data.events.filter((e) => (!e.userId || regularUser(data, e.userId)) && (!e.mealId || ids.has(e.mealId))),
     identityLinks: data.identityLinks,
   };
@@ -452,7 +479,7 @@ export function summarize(data: Dataset, f: Filters, asOf = SNAPSHOT) {
   for (const r of [...data.feedback].sort((a, b) => a.at.localeCompare(b.at)))
     if (
       mealIds.has(r.mealId) &&
-      r.at <= asOf && Number.isInteger(r.score) && r.score >= 1 && r.score <= 5 && typeof r.again === "boolean" &&
+      r.at <= asOf && Number.isInteger(r.score) && r.score >= 1 && r.score <= 5 &&
       parts.some(
         (p) =>
           p.userId === r.userId &&
@@ -502,10 +529,7 @@ export function summarize(data: Dataset, f: Filters, asOf = SNAPSHOT) {
       numerator: new Set(feedback.map((r) => `${r.userId}:${r.mealId}`)).size,
       denominator: states.present,
     },
-    again: {
-      numerator: feedback.filter((r) => r.again).length,
-      denominator: feedback.length,
-    },
+    survey: productSurveys(data, f, asOf),
   };
 }
 export function funnel(data: Dataset, f: Filters, asOf = SNAPSHOT) {

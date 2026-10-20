@@ -15,6 +15,7 @@ import {
   latestAttendance,
   sourceDifference,
   applicationState,
+  productSurveys,
 } from "../src/analytics.ts";
 import type { Dataset, Event, Meal } from "../src/analytics.ts";
 
@@ -517,4 +518,40 @@ test("pending excludes withdrawn, declined and expired rounds at the unified cut
   assert.equal(applicationState(d,a,"2026-10-01T17:00:00Z"),"expired");
   assert.equal(applicationState(d,{...a,withdrawnAt:"2026-09-22T12:00:00Z"},"2026-10-01T16:00:00Z"),"withdrawn");
   assert.equal(applicationState(d,{...a,decision:"declined",decidedAt:"2026-09-22T12:00:00Z"},"2026-10-01T16:00:00Z"),"declined");
+});
+
+test("meal rating requires only score; legacy meal intent is never migrated to survey", () => {
+  const onlyScore = {...base,feedback:[{userId:"u",mealId:"m1",score:5,at:"2026-10-02T10:00:00Z"}]};
+  assert.equal(summarize(onlyScore,filters).feedback.length,1);
+  assert.equal(summarize({...onlyScore,feedback:[{...onlyScore.feedback[0],again:true,reasons:["cost"]}]},filters).survey.responses.length,0);
+});
+test("product survey is per latest user response, then submission date, independent of meal dimensions", () => {
+  const surveys = [
+    {userId:"u",again:true,reasons:[],submittedAt:"2026-09-25T10:00:00Z"},
+    {userId:"u",again:false,reasons:["cost"],submittedAt:"2026-10-02T10:00:00Z"},
+    {userId:"h",again:null,reasons:["company","company"],submittedAt:"2026-10-03T10:00:00Z"},
+  ];
+  const data = {...base,surveys};
+  const current = productSurveys(data,{...filters,area:"nonexistent",language:"Chinese",budget:"40+"});
+  assert.deepEqual(current.again,{numerator:0,denominator:1});
+  assert.equal(current.unanswered,1);
+  assert.equal(current.responses.length,2);
+  assert.equal(productSurveys(data,{...filters,segment:"new"}).responses.length,0);
+  assert.equal(productSurveys(data,{...filters,segment:"existing"}).responses.length,2);
+  assert.deepEqual(current.responses.find((r) => r.userId === "h")!.reasons,["company"]);
+  assert.equal(productSurveys(data,{...filters,end:"2026-09-30"}).responses.length,0);
+  assert.deepEqual(productSurveys(data,filters,"2026-09-30T12:00:00Z").again,{numerator:1,denominator:1});
+});
+test("survey accepts reasons-only and No without meal attendance, excludes blank, malformed, future and test users", () => {
+  const data = {...base,attendance:[],surveys:[
+    {userId:"u",again:null,reasons:["venue"],submittedAt:"2026-10-02T12:00:00Z"},
+    {userId:"u",again:null,reasons:[],submittedAt:"2026-10-03T12:00:00Z"},
+    {userId:"u",again:true,reasons:["invalid"],submittedAt:"2026-10-04T12:00:00Z"},
+    {userId:"u",again:true,reasons:[],submittedAt:"2026-10-19T12:00:00Z"},
+    {userId:"h",again:false,reasons:[],submittedAt:"2026-10-03T12:00:00Z"},
+  ]};
+  assert.deepEqual(summarize(data,filters).survey.again,{numerator:0,denominator:1});
+  assert.equal(summarize(data,filters).survey.unanswered,1);
+  assert.equal(summarize(data,filters).feedback.length,0);
+  assert.equal(productSurveys({...data,users:data.users.map((u) => ({...u,accountType:"test" as const}))},filters).responses.length,0);
 });

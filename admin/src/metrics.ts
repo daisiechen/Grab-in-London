@@ -237,27 +237,22 @@ export const metrics: Metric[] = [
   },
   {
     id: "feedback",
-    title: ["饭后反馈与再参加意愿", "Feedback and return intent"],
-    definition: [
-      "反馈覆盖=提交整场体验评分的出席人次÷确认出席人次；愿再参加=选择“愿意再参加Fancy饭局”的有效反馈÷回答该问题的有效反馈。原因按评分与固定多选标签分析，未填写原因单列，不推断为无问题。",
-      "Coverage = feedback submissions / attended participations; return intent = positive answers / valid feedback.",
-    ],
+    title: ["单场饭局评分覆盖率", "Meal rating coverage"],
+    definition: ["有效1–5分评分人次 ÷ 有效出席人次；同人同场取截至快照最新评分。不要求回答再参加意愿或选择因素。", "Valid 1–5 meal ratings / attended participations; latest per user and meal. No survey answer is required."],
     unit: ["用户 × 饭局", "User × meal"],
-    window: [
-      "饭局开始日期在所选范围；反馈截至快照。",
-      "Meal dates in range; feedback up to snapshot.",
-    ],
-    source: [
-      "确认出席人次 + App饭后“整场饭局体验”私密反馈（1–5分、愿否再参加、可选多项原因）。不读取公开评价正文或针对某人的私密互选。",
-      "Attendance and authoritative feedback submissions.",
-    ],
-    decision: [
-      "对照实际重复参与，理解体验问题。",
-      "Understand experience alongside observed return.",
-    ],
-    caveat: [
-      "存在响应偏差；意愿不是实际留存。",
-      "Subject to response bias; intention is not retention.",
-    ],
+    window: ["按饭局开始日期入组；计划结束后7天内自助评分，结果取截至快照。", "Cohort by meal start; self-service ratings within 7 days of scheduled end, as of snapshot."],
+    source: ["App饭后私密整场评分，与出席资格关联；不读取公开个人评价或按人再约。", "Private post-meal rating and eligible attendance, independent of public references and person reconnects."],
+    decision: ["了解单场体验及评分覆盖。", "Understand meal experience and rating coverage."],
+    caveat: ["未评分者可能有不同体验；不与产品问卷交叉归因。", "Response bias; do not attribute product survey responses to a meal."],
+  },
+  {
+    id: "survey",
+    title: ["问卷：愿意再参加比例", "Survey: willingness to return"],
+    definition: ["最新有效产品问卷中again=Yes的用户 ÷ 明确回答Yes或No的用户；只选因素而未回答again的用户单列，不当作No。因素按提交用户分别计数，可多选，不按饭局评分切片。", "Users answering Yes / users explicitly answering Yes or No in their latest valid product survey. Factors-only responses stay unanswered; factors may overlap and are never sliced by meal ratings."],
+    unit: ["去重用户", "Distinct users"],
+    window: ["先取截至快照每人最新有效问卷，再按该问卷提交日期筛选；用户分群生效，饭局维度不生效。", "Latest valid response per user at snapshot, then filter its submission date. User segment applies; meal dimensions do not."],
+    source: ["Settings自愿ProductSurvey，登录即可提交，不绑定mealId、出席资格或饭后7天；不迁移旧单场again/reasons。", "Voluntary authenticated Settings ProductSurvey, independent of meals, attendance and the 7-day window. Legacy meal fields are not migrated."],
+    decision: ["观察Fancy整体体验因素与意愿，作为访谈线索。", "Use product-level experience and intention to guide interviews."],
+    caveat: ["展示提交、回答与未回答样本；不以问卷意愿替代实际再赴约。", "Show response and missing-answer counts; survey intent is not observed retention."],
   },
 ];

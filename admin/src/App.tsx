@@ -153,7 +153,6 @@ export default function App() {
   const [classifyId, setClassifyId] = useState("");
   const [classifyType, setClassifyType] = useState("regular");
   const [classifyMessage, setClassifyMessage] = useState("");
-  const [reasonScore, setReasonScore] = useState("all");
   const [metricQuery, setMetricQuery] = useState("");
   const [evidenceFilter, setEvidenceFilter] = useState("all");
   const [sampleData, setSampleData] = useState(fixture);
@@ -297,7 +296,7 @@ export default function App() {
         formation: s.formation,
         cancellation: s.cancellations,
         feedbackCoverage: s.feedbackCoverage,
-        willingToReturn: s.again,
+        surveyWillingToReturn: s.survey.again,
         discoveryToApply7: {
           numerator: f.appliedWithin7,
           denominator: f.matureDiscovery,
@@ -321,6 +320,7 @@ export default function App() {
             : [
                   "activation14",
                   "repeat30",
+                  "surveyWillingToReturn",
                   "discoveryToApply7",
                   "exposedNoApply7",
                 ].includes(key)
@@ -373,6 +373,12 @@ export default function App() {
         "hours",
       ],
       ["pendingApplications", String(pending.length), "", "applications"],
+      ["surveyScope", "latest submission date + user segment only", "", ""],
+      ["surveySubmittedUsers", String(s.survey.responses.length), "", "users"],
+      ["surveyUnansweredAgain", String(s.survey.unanswered), "", "users"],
+      ...["company", "conversation", "coordination", "expectations", "venue", "cost", "other", "unspecified"].map((reason) => [
+        `surveyFactor:${reason}`, String(s.survey.responses.filter((r) => reason === "unspecified" ? !r.reasons.length : r.reasons.includes(reason)).length), String(s.survey.responses.length), "users",
+      ]),
       ...[1, 2, 3, 4, 5].map((score) => [
         `rating:${score}`,
         String(s.feedback.filter((row) => row.score === score).length),
@@ -1825,7 +1831,7 @@ export default function App() {
                       openMetric={openMetric}
                       n={n}
                       id="feedback"
-                      title={t("饭后反馈覆盖率", "Feedback coverage")}
+                      title={t("饭局评分覆盖率", "Meal rating coverage")}
                       value={pct(
                         s.feedbackCoverage.numerator,
                         s.feedbackCoverage.denominator,
@@ -1833,21 +1839,21 @@ export default function App() {
                       index=""
                       numerator={s.feedbackCoverage.numerator}
                       denominator={s.feedbackCoverage.denominator}
-                      foot={t("饭后反馈覆盖", "feedback coverage")}
+                      foot={t("单场评分 · 出席人次", "meal ratings · attended participations")}
                     />
                     <MetricCard
                       titleFor={titleFor}
                       openMetric={openMetric}
                       n={n}
-                      id="feedback"
-                      title={t("愿意再参加比例", "Willingness to return")}
-                      value={pct(s.again.numerator, s.again.denominator)}
+                      id="survey"
+                      title={t("问卷：愿意再参加比例", "Survey: willingness to return")}
+                      value={pct(s.survey.again.numerator, s.survey.again.denominator)}
                       index=""
-                      numerator={s.again.numerator}
-                      denominator={s.again.denominator}
+                      numerator={s.survey.again.numerator}
+                      denominator={s.survey.again.denominator}
                       foot={t(
-                        "反馈者愿再参加 · 非实际留存",
-                        "respondents willing to return · not retention",
+                        "按问卷提交日期 · 仅明确回答者",
+                        "by survey submission date · explicit answers only",
                       )}
                     />
                   </div>
@@ -1962,39 +1968,13 @@ export default function App() {
                       )}
                     </p>
                   </Panel>
-                  <div className="two-column">
-                    <Panel
-                      title={t("饭后体验分布", "Post-meal experience")}
-                      eyebrow={`${s.feedback.length} ${t("份有效反馈", "valid responses")}`}
-                    >
-                      <div className="rating-bars">
-                        {[5, 4, 3, 2, 1].map((score) => {
-                          const count = s.feedback.filter(
-                            (r) => r.score === score,
-                          ).length;
-                          return (
-                            <div key={score}>
-                              <span>{score} / 5</span>
-                              <Progress a={count} b={s.feedback.length} />
-                              <strong>{count}</strong>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <h3>{t("体验原因（可多选）", "Experience reasons (multiple choices)")}</h3><NativeSelect label={t("原因对应评分", "Rating for reasons")} value={reasonScore} onChange={setReasonScore} options={[["all", t("全部评分", "All ratings")], ...[1,2,3,4,5].map((v) => [String(v), `${v} / 5`] as [string,string])]}/>
-                      <div className="rating-bars">{[
-                        ["company", t("同桌伙伴", "Company")], ["conversation", t("交流体验", "Conversation")], ["coordination", t("组织安排", "Coordination")], ["expectations", t("与预期的差异", "Expectations")], ["venue", t("餐厅与餐食", "Venue and food")], ["cost", t("费用体验", "Cost")], ["other", t("其他", "Other")], ["unspecified", t("未填写原因", "No reason given")],
-                      ].map(([code, name]) => {
-                        const count = s.feedback.filter((row) => { if (reasonScore !== "all" && row.score !== Number(reasonScore)) return false; const reasons = row.reasons || (row.issue === "none" ? [] : [row.issue]); return code === "unspecified" ? !reasons.length : reasons.includes(code); }).length;
-                        return <div key={code}><span>{name}</span><Progress a={count} b={s.feedback.length}/><strong>{count}</strong></div>;
+                  <div className="two-column ratings-and-applicants">
+                    <Panel title={t("单场饭局评分分布", "Meal rating distribution")} eyebrow={`${s.feedback.length} ${t("份有效评分", "valid meal ratings")}`}>
+                      <div className="rating-bars">{[5,4,3,2,1].map((score) => {
+                        const count = s.feedback.filter((row) => row.score === score).length;
+                        return <div key={score}><span>{score} / 5</span><Progress a={count} b={s.feedback.length}/><strong>{count}</strong></div>;
                       })}</div>
-                      <p className="method-note">{t("原因按评分筛选；同一反馈可选多个原因，合计可能超过反馈数。未填写不代表没有问题。", "Reasons can overlap within a response; totals may exceed responses. Missing reasons do not imply no issues.")}</p>
-                      <p className="method-note">
-                        {t(
-                          "未反馈者可能有不同体验；不将反馈均分描述为全体满意度。",
-                          "Non-respondents may have different experiences. Ratings do not represent all attendees.",
-                        )}
-                      </p>
+                      <p className="method-note">{t("按饭局开始日期统计；每位出席者每场一份最新评分。未评分者可能有不同体验。", "By meal start date; one latest rating per attendee and meal. Non-respondents may have different experiences.")}</p>
                     </Panel>
                     <Panel
                       title={t("首次申请用户追溯", "Trace first applicants")}
@@ -2036,6 +2016,18 @@ export default function App() {
                       />
                     </Panel>
                   </div>
+                    <Panel title={t("Fancy 整体体验问卷", "Fancy product survey")} eyebrow={`${s.survey.responses.length} ${t("位提交用户", "responding users")}`}>
+                      <p className="method-note">{t("按最新问卷提交日期和用户统计；仅日期与用户分群生效，不按饭局区域、来源、语言、人数或预算筛选。", "By latest survey submission date and user. Only dates and user segment apply; meal area, source, language, size and budget do not.")}</p>
+                      <p>{t("明确回答愿否再参加", "Answered return intention")} {s.survey.again.denominator} · {t("未回答", "Unanswered")} {s.survey.unanswered}</p>
+                      <h3>{t("影响 Fancy 整体体验的因素（可多选）", "Factors shaping the Fancy experience (multiple choices)")}</h3>
+                      <div className="rating-bars survey-factors">{[
+                        ["company", t("伙伴体验", "Meeting people")], ["conversation", t("交流体验", "Conversation")], ["coordination", t("组织协调", "Coordination")], ["expectations", t("预期匹配", "Expectations")], ["venue", t("餐厅与餐食", "Venues and food")], ["cost", t("费用体验", "Cost")], ["other", t("其他", "Other")], ["unspecified", t("未选择因素", "No factor selected")],
+                      ].map(([code, name]) => {
+                        const count = s.survey.responses.filter((row) => code === "unspecified" ? !row.reasons.length : row.reasons.includes(code)).length;
+                        return <div key={code}><span>{name}</span><Progress a={count} b={s.survey.responses.length}/><strong>{count}</strong></div>;
+                      })}</div>
+                      <p className="method-note">{t("问卷来自设置，不绑定单场饭局或评分。每人取截至快照最新有效回答；多选因素不相加成100%，意愿不等于实际留存。", "The Settings survey is independent of meal ratings. Use each user's latest valid response at snapshot. Factors can overlap; intention is not observed retention.")}</p>
+                    </Panel>
                 </>
               )}
               {page === "quality" && (
@@ -2257,8 +2249,8 @@ export default function App() {
             </span>
             <span>
               {t(
-                "指标定义 v3",
-                "Definitions v3",
+                "指标定义 v4",
+                "Definitions v4",
               )}
             </span>
           </footer>
@@ -2337,7 +2329,7 @@ export default function App() {
           )}
           {metricDetail && (
             <>
-              <Badge>{t("指标口径 v3", "Definition v3")}</Badge>
+              <Badge>{t("指标口径 v4", "Definition v4")}</Badge>
               <dl className="definition-list">
                 {(
                   [

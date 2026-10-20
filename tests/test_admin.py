@@ -32,7 +32,7 @@ class AdminDeliveryTests(unittest.TestCase):
             self.assertIn(phrase, prd)
         self.assertTrue((ROOT / 'admin/tests/browser-scenarios.mjs').is_file())
 
-    def test_measurement_v3_defines_sources_windows_and_app_gaps(self):
+    def test_measurement_v4_defines_sources_windows_and_app_gaps(self):
         spec = (ROOT / 'docs/product/admin/measurement-contract.zh-CN.md').read_text()
         for phrase in ['scheduledEndAt', 'resultCount', '50%', '1000ms', 'applicationId',
                        '14天', '30天', 'reasons', 'sourceStatus', 'data-admin', '7天',
@@ -45,7 +45,7 @@ class AdminDeliveryTests(unittest.TestCase):
 
     def test_readiness_alignment_uses_current_authority(self):
         spec = (ROOT / 'docs/product/admin/measurement-contract.zh-CN.md').read_text()
-        for phrase in ['主PRD v0.5 §0', 'closesAt', 'scheduledEndAt+24小时',
+        for phrase in ['主PRD §0', 'closesAt', 'scheduledEndAt+24小时',
                        'applicationId', 'SupportCorrection', 'caseId', 'company/conversation',
                        '本人优先', '最迟T−30', '跌破也取消', '首位获准']:
             self.assertIn(phrase, spec)
@@ -53,6 +53,15 @@ class AdminDeliveryTests(unittest.TestCase):
         self.assertNotIn('保存核实', app)
         self.assertNotIn('核实出席', app)
         self.assertIn('本人报告优先', app)
+
+    def test_meal_rating_and_product_survey_have_independent_contracts(self):
+        spec = (ROOT / 'docs/product/admin/measurement-contract.zh-CN.md').read_text()
+        for phrase in ['ProductSurvey', 'definitionVersion=4', 'surveyScope', 'surveyUnansweredAgain',
+                       '不绑定mealId', '不按单场评分', '两者全空不可保存', '旧单场答案迁移']:
+            self.assertIn(phrase, spec)
+        app = (ROOT / 'admin/src/App.tsx').read_text()
+        self.assertNotIn('原因对应评分', app)
+        self.assertIn('Fancy 整体体验问卷', app)
 
     def test_delivery_links_point_to_existing_files(self):
         for target in ['admin/src/analytics.ts', 'admin/src/fixtures.ts',

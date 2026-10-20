@@ -109,7 +109,7 @@ export const scenarios = [
         "No stale fixed weekly advice",
       );
       await page.screenshot({
-        path: "qa/readiness-2026-10-20/06-after-overview.png",
+        path: "qa/survey-2026-10-20/06-after-overview.png",
         fullPage: true,
       });
       await page
@@ -174,7 +174,7 @@ export const scenarios = [
       );
       await close(page);
       await page.screenshot({
-        path: "qa/readiness-2026-10-20/07a-after-join.png",
+        path: "qa/survey-2026-10-20/07a-after-join.png",
         fullPage: true,
       });
       await page.getByRole("button", { name: "发起饭局", exact: true }).click();
@@ -193,7 +193,7 @@ export const scenarios = [
       );
       await close(page);
       await page.screenshot({
-        path: "qa/readiness-2026-10-20/07-after-journey.png",
+        path: "qa/survey-2026-10-20/07-after-journey.png",
         fullPage: true,
       });
     },
@@ -261,7 +261,7 @@ export const scenarios = [
         .getByLabel("出席记录筛选（仅下方列表）", { exact: true })
         .selectOption("all");
       await page.screenshot({
-        path: "qa/readiness-2026-10-20/08-after-supply.png",
+        path: "qa/survey-2026-10-20/08-after-supply.png",
         fullPage: true,
       });
     },
@@ -284,11 +284,11 @@ export const scenarios = [
         "Mature cohorts present",
       );
       ensure(
-        await visible(page.getByRole("button", { name: /^饭后反馈覆盖率/ })),
+        await visible(page.getByRole("button", { name: /^饭局评分覆盖率/ })),
         "Feedback coverage has precise label",
       );
       ensure(
-        await visible(page.getByRole("button", { name: /^愿意再参加比例/ })),
+        await visible(page.getByRole("button", { name: /^问卷：愿意再参加比例/ })),
         "Return intent has distinct label",
       );
       await page.locator(".cohort-table tbody .text-button").first().click();
@@ -316,12 +316,12 @@ export const scenarios = [
         "Back restores cohort",
       );
       await page.screenshot({
-        path: "qa/readiness-2026-10-20/09a-after-cohort-detail.png",
+        path: "qa/survey-2026-10-20/09a-after-cohort-detail.png",
         fullPage: false,
       });
       await close(page);
       await page.screenshot({
-        path: "qa/readiness-2026-10-20/09-after-retention.png",
+        path: "qa/survey-2026-10-20/09-after-retention.png",
         fullPage: true,
       });
     },
@@ -363,7 +363,7 @@ export const scenarios = [
         .getByRole("button", { name: "清除指标搜索", exact: true })
         .click();
       await page.screenshot({
-        path: "qa/readiness-2026-10-20/10-after-quality.png",
+        path: "qa/survey-2026-10-20/10-after-quality.png",
         fullPage: true,
       });
     },
@@ -436,7 +436,7 @@ export const scenarios = [
       ensure(
         csv.includes("cohort_week") &&
           csv.includes("zeroResults") &&
-          csv.includes("feedbackCoverage"),
+          csv.includes("feedbackCoverage") && csv.includes("surveyUnansweredAgain") && csv.includes("surveyScope") && csv.includes("surveyWillingToReturn"),
         "Export covers drivers and cohorts, not just three metrics",
       );
       ensure(
@@ -489,7 +489,7 @@ export const scenarios = [
         "No document horizontal overflow",
       );
       await page.screenshot({
-        path: "qa/readiness-2026-10-20/11-after-mobile.png",
+        path: "qa/survey-2026-10-20/11-after-mobile.png",
         fullPage: true,
       });
       await page.setViewportSize({ width: 864, height: 609 });

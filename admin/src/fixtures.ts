@@ -12,6 +12,7 @@ export function createFixture(): Dataset {
     applications: [],
     attendance: [],
     feedback: [],
+    surveys: [],
     events: [],
     identityLinks: [],
   };
@@ -161,8 +162,6 @@ export function createFixture(): Dataset {
               userId: user.id,
               mealId: meal.id,
               score: (i + j) % 9 === 0 ? 2 : 4 + (j % 2),
-              again: (i + j) % 6 !== 0,
-              issue: (i + j) % 9 === 0 ? "coordination" : "none",
               at: iso(time + 18 * 3_600_000),
             });
         }
@@ -220,6 +219,12 @@ export function createFixture(): Dataset {
       );
     }
   }
+  // Independent Settings questionnaire examples, never converted from meal feedback.
+  data.users.slice(0, 45).forEach((user, index) => {
+    data.surveys!.push({ userId: user.id, again: index % 7 === 0 ? null : index % 4 !== 0,
+      reasons: index % 7 === 0 ? ["coordination"] : index % 3 === 0 ? ["company", "conversation"] : [],
+      submittedAt: iso(+new Date("2026-10-01T12:00:00Z") + index * 4 * 3600000) });
+  });
   // Raw quality fixtures: duplicates, non-live traffic, late arrival, missing schema field.
   const example = data.events.find((e) =>
     e.occurredAt.startsWith("2026-10-01"),

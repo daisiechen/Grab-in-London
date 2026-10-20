@@ -2139,3 +2139,8 @@ dd {
 .multi-select summary { min-height: 42px; }
 .advanced-filter[open] > div { max-height: min(65vh, 440px); overflow-y: auto; }
 @media (max-width: 650px) { .filter-panel > .multi-select:nth-of-type(1) > .multi-options { left: 0; right: auto; } }
+
+/* Product-survey labels are words, unlike numeric meal ratings. */
+.survey-factors > div { grid-template-columns: minmax(95px, 150px) minmax(0, 1fr) 30px; }
+
+.ratings-and-applicants { align-items: start; }

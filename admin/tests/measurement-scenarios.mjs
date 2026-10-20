@@ -22,7 +22,7 @@ export const measurementScenarios = [
       assert(await page.getByRole("checkbox",{name:"预算未填写",exact:true}).count() === 1,"Unknown budget is an explicit bucket");
       await page.getByRole("heading",{name:"产品概览.",exact:true}).click();
       assert(await page.locator(".filter-chip").count() === 3,"Selected dimensions remain visible");
-      await page.screenshot({path:"qa/readiness-2026-10-20/02-filters.png",fullPage:false});
+      await page.screenshot({path:"qa/survey-2026-10-20/02-filters.png",fullPage:false});
       await page.reload();
       assert((await page.locator(".active-filters").innerText()).includes("2、4"),"Multi-choice URL survives reload");
     },
@@ -37,7 +37,7 @@ export const measurementScenarios = [
       await page.getByLabel("账号分类",{exact:true}).selectOption("test");
       await page.getByRole("button",{name:"保存分类",exact:true}).click();
       assert(await page.getByRole("button",{name:"U-001 · 测试",exact:true}).isVisible(),"Excluded account inspectable");
-      await page.screenshot({path:"qa/readiness-2026-10-20/03-classification.png",fullPage:true});
+      await page.screenshot({path:"qa/survey-2026-10-20/03-classification.png",fullPage:true});
       // Route through navigation to preserve local state.
       await page.getByRole("navigation",{name:"主导航",exact:true}).getByRole("link",{name:"产品概览",exact:true}).click();
       assert(await page.locator(".metric-card").first().innerText() !== before,"Classification affects business results");
@@ -49,7 +49,7 @@ export const measurementScenarios = [
     },
   },
   {
-    name: "definitions: follow-up example, distinct seat state and reason rating slice",
+    name: "definitions: follow-up example, distinct seat state and independent product survey",
     run: async (page) => {
       await page.goto("/#overview");
       await page.getByRole("button",{name:/首次申请后 14 天内出席率/}).click();
@@ -59,9 +59,17 @@ export const measurementScenarios = [
       await page.goto("/#journey");
       assert((await page.locator("main").innerText()).includes("这些都不代表实际出席"),"Seat state is distinct from attendance");
       await page.goto("/#retention");
-      await page.getByLabel("原因对应评分",{exact:true}).selectOption("2");
-      assert(await page.getByRole("heading",{name:"体验原因（可多选）",exact:true}).isVisible(),"Rating reasons available");
-      await page.screenshot({path:"qa/readiness-2026-10-20/04-feedback-reasons.png",fullPage:true});
+      assert(await page.getByRole("heading",{name:"单场饭局评分分布",exact:true}).isVisible(),"Meal ratings remain separate");
+      assert(await page.getByRole("heading",{name:"Fancy 整体体验问卷",exact:true}).isVisible(),"Survey has its own section");
+      assert(await page.getByLabel("原因对应评分",{exact:true}).count() === 0,"No meal-score slice of product-level factors");
+      assert((await page.locator("main").innerText()).includes("未回答"),"Unanswered intention is visible");
+      const survey = page.locator("section.panel").filter({has:page.getByRole("heading",{name:"Fancy 整体体验问卷",exact:true})});
+      const before = await survey.innerText();
+      await page.getByLabel("区域",{exact:true}).click();
+      await page.getByRole("checkbox",{name:"Camden",exact:true}).check();
+      await page.getByRole("heading",{name:"Fancy 整体体验问卷",exact:true}).click();
+      assert(await survey.innerText() === before,"Meal area does not change global survey sample");
+      await page.screenshot({path:"qa/survey-2026-10-20/04-feedback-reasons.png",fullPage:true});
     },
   },
 ];
