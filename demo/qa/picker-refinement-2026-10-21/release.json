@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-21",
+  "version": 13,
+  "versionId": "appgprj_6ad2791025408191bf7b3c5bbce7218c~appgver_b19f2cfc5d088191baa91ab9be05908e",
+  "deploymentId": "appgdep_6ad7fda93e4c8191a1cb0a386990c66d",
+  "status": "succeeded",
+  "url": "https://grab-in-london-demo.daisie-chen-94.chatgpt.site",
+  "siteSourceCommit": "d59160f0d09138c251892762c75e9f0f88e4163c",
+  "githubAppCommit": "361ab04ed6fc55c0f1e041bb5d6cc5d216d1a7b2",
+  "verification": {
+    "domainAndAssistant": 63,
+    "sites": 6,
+    "python": 47,
+    "browser": 33,
+    "protectedRuntimeFiles": 28,
+    "sourceFilesByteCompared": 75,
+    "sourceMismatches": 0,
+    "build": "passed",
+    "live": "Profile root has no back button; restaurant creation has no manual add entry; compact Time menu opens with 48 options and selected 19:00 focused."
+  },
+  "imageIntegration": "PRD specifies selected Google Places photos; Demo uses a fixed local illustration. Google API is not connected."
+}

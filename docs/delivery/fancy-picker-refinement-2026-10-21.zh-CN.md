@@ -16,3 +16,9 @@ App领域/助手63项、Sites6项、仓库Python47项、最终完整浏览器33�
 第一次定向验证菜单定位误用aria-label“Choose a time”，实际继承触发器名称“Time”；修正断言。随后发现手机portal下方向键未推进选项，补充显式键盘移动与滚动保持，最终全量33项通过，未跳过失败场景。
 
 截图：[紧凑时间菜单](../../demo/qa/picker-refinement-2026-10-21/compact-time.png)、[只有地图候选的选店页](../../demo/qa/picker-refinement-2026-10-21/map-selection.png)。Google API/照片、持久化和真实预约仍未接入；此验证不替代研发准入复评。发布版本与源码核对由本批QA的release.json和线上截图登记。
+
+## 已发布
+
+[手机可打开的Demo](https://grab-in-london-demo.daisie-chen-94.chatgpt.site/)已更新至v13，部署状态succeeded，部署ID为`appgdep_6ad7fda93e4c8191a1cb0a386990c66d`。App提交为`361ab04ed6fc55c0f1e041bb5d6cc5d216d1a7b2`，Sites源码提交为`d59160f0d09138c251892762c75e9f0f88e4163c`；逐字节核对75个Demo源码文件，无差异。
+
+线上登录后复核：Profile根页没有返回按钮，创建页没有手动新增入口，Time菜单展示48个时刻并聚焦已选19:00。留存[线上时间菜单](../../demo/qa/picker-refinement-2026-10-21/live-time.jpg)、[线上Profile](../../demo/qa/picker-refinement-2026-10-21/live-profile.jpg)及[发布记录](../../demo/qa/picker-refinement-2026-10-21/release.json)。真实Google照片尚未接入，不将本地示意图表述为Google图片。
