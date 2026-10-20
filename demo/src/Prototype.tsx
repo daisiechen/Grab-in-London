@@ -12,6 +12,7 @@ import {
   type AssistantReply,
   type MealPreferences,
 } from "./assistant";
+import { TimePicker } from "./TimePicker";
 import { RestaurantPicker } from "./RestaurantPicker";
 import { isReviewMode } from "./presentation";
 import { BRAND } from "./brand";
@@ -1805,7 +1806,6 @@ export default function Prototype() {
     messagePreviews: true,
   });
   const [page, setPage] = useState<Page>("discover");
-  const [profileReturn, setProfileReturn] = useState<Page>("discover");
   const [history, setHistory] = useState<Page[]>([]);
   const pastMeal: Meal = { ...initialMeals[0], id: "past-supper", title: "A little supper club", date: "2026-10-15", time: "19:00", deposit: 0, costMode: "OFFLINE", members: ["maya", "emma", "alex"], confirmed: 3, booking: "CONFIRMED" };
   const [meals, setMeals] = useState<Meal[]>([...initialMeals, pastMeal]);
@@ -1992,7 +1992,6 @@ export default function Prototype() {
     setPage(to);
   };
   const root = (to: Page) => {
-    if (to === "profile") setProfileReturn(["discover", "meals", "inbox"].includes(page) ? page : "discover");
     setToast("");
     if (!signedIn && needsAccount(to)) {
       keyboard.hide();
@@ -3360,7 +3359,7 @@ export default function Prototype() {
                 </p>
               </ReviewOnly>
               <Field label="Time" hint="London time. This is your planned meeting time; confirm opening hours and book with the restaurant separately.">
-                <select aria-label="Time" value={draft.time} onChange={(e) => updateSchedule({ time: e.target.value })}><option value="">Choose a time</option>{slots.map((time) => <option key={time} value={time}>{time}</option>)}</select>
+                <TimePicker value={draft.time} options={slots} onChange={(time) => updateSchedule({ time })} />
               </Field>
               <h2>Applications close</h2>
               <Field label="Deadline date"><input type="date" value={draft.deadlineDate} max={draft.date} onChange={(e) => setDraft({ ...draft, deadlineDate: e.target.value, accepted: false })} /></Field>
@@ -4180,7 +4179,6 @@ export default function Prototype() {
       return (
         <div className="body-pad">
           <div className="profile-settings-entry">
-            <button aria-label="Go back" onClick={() => history.length ? back() : root(profileReturn)}><ArrowLeftIcon /></button>
             <button aria-label="Settings" onClick={() => go("settings")}>
               <GearIcon /> Settings
             </button>

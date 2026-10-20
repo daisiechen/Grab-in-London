@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { KeyboardInput, useKeyboard } from "./mobile";
-import { createVenues, restaurantChoice, restaurantMapsUrl, validateRestaurant, type RestaurantChoice } from "./domain";
+import { createVenues, restaurantChoice, type RestaurantChoice } from "./domain";
 type MapSpot = { id: string; label: string; x: number; y: number; text: string };
 function DemoMap({ spots, selected, onSelect, onSearch, label }: {
   spots: MapSpot[]; selected: string; onSelect: (id: string) => void;
@@ -73,35 +73,24 @@ export function RestaurantPicker({ value, onConfirm }: { value: RestaurantChoice
   const keyboard = useKeyboard();
   const [search, setSearch] = useState("");
   const [candidate, setCandidate] = useState<RestaurantChoice | null>(null);
-  const [editing, setEditing] = useState(false);
-  const [manual, setManual] = useState({ name: "", address: "", area: "" });
-  const [error, setError] = useState("");
   const [visibleIds, setVisibleIds] = useState<string[] | null>(null);
   const matches = createVenues.filter((v) => `${v.name} ${v.area} ${v.cuisine}`.toLowerCase().includes(search.trim().toLowerCase()));
   const visible = matches.filter((v) => !visibleIds || visibleIds.includes(v.name));
   const coords = [{ x: 48, y: 42 }, { x: 76, y: 38 }, { x: 30, y: 70 }];
-  const choose = (name: string) => { keyboard.hide(); setEditing(false); setError(""); setCandidate(restaurantChoice(name)); };
+  const choose = (name: string) => { keyboard.hide(); setCandidate(restaurantChoice(name)); };
   const sample = candidate?.source === "demo" ? createVenues.find((v) => v.name === candidate.name) : undefined;
   return <section className="venue-map-picker" aria-label="Choose a restaurant">
     <label className="field-label">Search restaurants or areas
-      <KeyboardInput aria-label="Search restaurants or areas" value={search} placeholder="Restaurant, neighbourhood or cuisine…" onBlur={() => keyboard.hide()} onChange={(e) => { setSearch(e.target.value); setVisibleIds(null); setCandidate(null); setError(""); }} />
+      <KeyboardInput aria-label="Search restaurants or areas" value={search} placeholder="Restaurant, neighbourhood or cuisine…" onBlur={() => keyboard.hide()} onChange={(e) => { setSearch(e.target.value); setVisibleIds(null); setCandidate(null); }} />
     </label>
     <a className="maps-link" href={`https://www.google.com/maps/search/?${new URLSearchParams({ api: "1", query: `${search.trim() || "restaurants"}, London` })}`} target="_blank" rel="noopener noreferrer">Search Google Maps ↗</a>
-    <p className="muted venue-demo-label">Demo map · sample locations. Add any restaurant using its details below.</p>
+    <p className="muted venue-demo-label">Demo map · sample locations. Search or select a map marker, then confirm your restaurant.</p>
     <DemoMap label="Restaurant map" selected={candidate?.source === "demo" ? candidate.name : ""} spots={matches.map((v) => ({ id: v.name, label: `Show ${v.name}`, text: String(createVenues.indexOf(v) + 1), ...coords[createVenues.indexOf(v)] }))} onSelect={choose} onSearch={(ids) => { keyboard.hide(); setVisibleIds(ids); setCandidate(null); }} />
     {(search.trim() || visibleIds) && <div className="venue-map-results" aria-live="polite">
-      {!visible.length && <p>No sample restaurants match. Add your restaurant below.</p>}
+      {!visible.length && <p>No sample restaurants match. Try another name or map area.</p>}
       {visible.map((v) => <button key={v.name} aria-pressed={candidate?.name === v.name} onClick={() => choose(v.name)}><strong>{v.name}</strong><span>{v.area} · {v.cuisine}</span></button>)}
     </div>}
-    {!editing && <button className="text-action add-restaurant" onClick={() => { keyboard.hide(); setManual({ name: search.trim(), address: "", area: "" }); setError(""); setCandidate(null); setEditing(true); }}>Add a restaurant</button>}
-    {editing && <div className="manual-restaurant">
-      <h3>Add your restaurant</h3><p className="muted">Find it in Google Maps, then enter its name and full address here. Returning from Maps won’t select it automatically.</p>
-      {([["name", "Restaurant name", 150], ["address", "Full address", 250], ["area", "Neighbourhood or area", 80]] as const).map(([key, label, max]) => <label className="field" key={key}><span>{label}</span><KeyboardInput aria-label={label} value={manual[key]} maxLength={max} onBlur={() => keyboard.hide()} onChange={(e) => { setManual({ ...manual, [key]: e.target.value }); setError(""); }} /></label>)}
-      {error && <p role="alert" className="form-error">{error}</p>}
-      <button className="primary secondary" onPointerDown={(e) => e.preventDefault()} onClick={() => { keyboard.hide(); const next: RestaurantChoice = { name: manual.name.trim(), address: manual.address.trim(), area: manual.area.trim(), source: "manual" }; const issue = validateRestaurant(next); if (issue) { setError(issue); return; } setCandidate(next); setEditing(false); }}>Preview restaurant</button>
-      <button className="text-action" onClick={() => { keyboard.hide(); setEditing(false); setError(""); }}>Cancel adding restaurant</button>
-    </div>}
-    {candidate && <div className="venue-map-card" aria-label="Restaurant preview"><h3>{candidate.name}</h3><p>{candidate.source === "demo" ? `${candidate.area} · ${sample?.cuisine}` : candidate.address}</p><p>{candidate.source === "demo" ? sample?.note : candidate.area}</p>{sample && <p>£{sample.min}–{sample.max} per person · sample estimate</p>}{candidate.source === "manual" && <><p>Details supplied by you. Set your meal budget in Costs; confirm opening hours and book with the restaurant.</p><a className="maps-link" href={restaurantMapsUrl(candidate)} target="_blank" rel="noopener noreferrer">Check this restaurant in Google Maps ↗</a></>}
+    {candidate && <div className="venue-map-card" aria-label="Restaurant preview"><h3>{candidate.name}</h3><p>{candidate.source === "demo" ? `${candidate.area} · ${sample?.cuisine}` : candidate.address}</p><p>{candidate.source === "demo" ? sample?.note : candidate.area}</p>{sample && <p>£{sample.min}–{sample.max} per person · sample estimate</p>}
       <button className="primary" onPointerDown={(e) => e.preventDefault()} onClick={() => { keyboard.hide(); onConfirm(candidate); setCandidate(null); }}>Use this restaurant</button>
       <button className="text-action" onClick={() => setCandidate(null)}>Cancel selection</button>
     </div>}

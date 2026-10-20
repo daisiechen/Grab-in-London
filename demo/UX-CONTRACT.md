@@ -50,7 +50,7 @@ Use the capitalized Fancy wordmark. Default product screens omit prototype annot
 - Normal product errors and pending-state copy contain no implementation remarks. Keep simulation controls in explicit acceptance mode. See PRD v0.4 and full-product-audit report for evidence and limitations.
 
 ## Current first release — 20 October 2026
-Business source: [PRD v0.7](../docs/product/PRD.zh-CN.md) §0. This section replaces earlier membership/cancellation statements. Preserve all established screen layouts and shared primitives.
+Business source: [PRD v0.8](../docs/product/PRD.zh-CN.md) §0. This section replaces earlier membership/cancellation statements. Preserve all established screen layouts and shared primitives.
 
 - Canonical business owners: `domain.ts` handles existing payment/reference paths; `readiness.ts` owns custom group minimum, deadline/formation, application rounds and independent group departure; `postMeal.ts` owns attendance precedence, feedback window and contact consent.
 - Creation retains four steps. Existing ChoiceGroup owns minimum/capacity and selection; Field owns deadline date/time inputs. Default costs are offline and external booking. Existing simulated payment/provider choices remain future references.
@@ -69,11 +69,8 @@ Business source: [PRD v0.7](../docs/product/PRD.zh-CN.md) §0. This section repl
 - Supporting descriptions use information buttons with hover, keyboard focus and tap; Escape/outside dismiss. Keep actionable permission/status/errors visible. Remove the actionless large heart and repeated attendance heading. Past feedback button clears avatar row by20px.
 - Signup and profile edit share London-life radio tags, one full-name language selection, and interest checkboxes. Save applies; back cancels the draft. Session reset also clears survey/helper state.
 
-## Restaurant picker — 21 October 2026
-- Create step1 uses the restored app-owned DemoMap, name/area/cuisine search, sample pins, viewport search, candidate preview and Use this restaurant. Preview/cancel do not commit to the parent draft. Keep the remaining four-step flow and runtime unchanged.
-- The three fictional restaurants are examples, not a whitelist. Search Google Maps opens a real external search. Add a restaurant accepts name/full address/area, validates, previews and explicitly confirms a manual selection. The user must enter the details on return; no fabricated Places ID or automatic import.
-- RestaurantChoice follows the selected restaurant through review, publication and host edits. A manual name matching a sample must retain its supplied address and source. Unknown areas remain list-visible rather than receiving an invented map pin. Dietary guarantees and supplier prices are not inferred for a manual place.
-- Restaurant replacement clears selected time, booking attestation and final review; other draft content remains. All restaurants share a native Time dropdown with48 half-hour planned wall times, without the sample supplier's artificial hours/capacity slots; manual places use external reservations. Google Maps links use the selected name and full address.
-- The real product's Google Places branch identity/search/error contract is in PRD v0.7 FR-05. User explicitly chose Demo/PRD only until API configuration exists. Illustrative maps/results must be labelled; selecting a venue never reserves it.
-
-- Additional comments: Review cancellation terms is a navigable link, preserving draft/consent on return. Profile has a source-aware back button opposite Settings; host-name decorative arrow is removed. Publish/save details has Meals/Hosting as parent, never the completed Create flow.
+## Restaurant and time refinements — 21 October 2026
+- Only map/search candidates can be confirmed; no Add/manual fields or fallback-to-manual on empty results. Empty/cancelled candidates preserve the selected venue. Historical manual records may be read but cannot be submitted through validateArrangement.
+- The intended source is Google Places; the current map/results are local examples with visible labels until a real API is configured. Photos will come from the selected Google place with attribution/fallback; current images are the shared local restaurant illustration.
+- TimePicker uses the installed Radix menu within the phone portal:160px trigger/menu,16px chevron inset,224px maximum menu height and internal scrolling; focus selected time, support keyboard/Escape/outside close and prevent phone overflow. Keep all48 half-hour choices. Do not change shared runtime files.
+- Profile is a root tab without a back button. Settings and Edit profile retain parent navigation. Terms links and publish/save→Meals/Hosting are retained.

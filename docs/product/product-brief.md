@@ -54,6 +54,8 @@ Ask Fancy is restored in the Demo: a floating local example assistant finds/comp
 移动Web和iOS；发起人设置2–6人区间与统一申请/审批截止，外部订位、到店付款，获准即入群。出席本人优先、发起人补缺；饭后7天独立单场评分与个人互选；再次参加意愿和产品因素移至Settings独立可选问卷，不绑定饭局及7天窗口。结束或取消饭局不关闭群聊。细则和范围以[主PRD](PRD.zh-CN.md)§0为准。完整Demo的支付和平台订位保留为后续参考。
 
 ## 2026-10-21 Restaurant selection
-The intended product searches and selects any supported London restaurant through Google Maps/Places, with branch identity, full address and coordinates; it is not limited to three presets. This Demo restores the illustrative map, search and explicit confirmation, and accepts manually supplied restaurant details when no sample matches. Manual records are not Google-verified; users plan the time and book externally. A real Maps search link is available, with no automatic selection on return. Real API integration remains unconnected by the user's explicit choice.
+The intended product searches and selects any supported London restaurant through Google Maps/Places, with branch identity, full address and coordinates; it is not limited to three presets. This Demo restores the illustrative map, search and explicit confirmation, and only allows confirmation of map/search candidates. There is no manual-add path; users plan the time and book externally. A real Maps search link is available, with no automatic selection on return. Real API integration remains unconnected by the user's explicit choice.
 
 All restaurant choices share the planned Time dropdown (48 half-hour values); no sample restaurant inventory constrains creation. Review links to readable cancellation terms, and published details return to Meals/Hosting.
+
+Latest refinement: Time uses a compact bounded scrolling menu; Profile is a root tab without a back button. Images are planned to come from the selected Google place, with attribution and a placeholder fallback. Current Demo photographs are local illustrations, not Google merchant photographs.

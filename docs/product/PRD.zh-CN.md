@@ -1,6 +1,6 @@
 # Fancy 产品需求文档（PRD）
 
-版本：0.7｜日期：2026-10-20｜语言：中文｜阶段：首期研发规格与完整Demo参考
+版本：0.8｜日期：2026-10-20｜语言：中文｜阶段：首期研发规格与完整Demo参考
 
 > 本文描述首期研发规格与目标产品Demo；真实首期按§0及各功能首期说明执行，支付/退款/平台订位章节仅为后续参考。已确认需求来自本项目讨论；补充参数标记为「Demo 默认」，用于形成可评审体验，不等于上线业务承诺。品牌 Fancy 为暂定工作名称，商标、域名与账号可用性尚未完成核查；Slogan 已由用户确认。本轮不开发真实后端、不产生真实订位或扣款。
 
@@ -313,7 +313,7 @@ Meals 的历史饭局 → 参与者主页 → 私密选择愿意再次同桌 →
 
 | 步骤 | 输入与交互 | 输出及校验 |
 |---|---|---|
-| Arrange：餐厅 | 搜索餐厅名称/地址/区域或操作地图，预览候选后Use this restaurant确认；可选择支持范围内任意可识别餐厅，不限三家样例 | 正式版Google Places结果区分分店，展示完整地址和地图位置；选择才写入草稿。Demo为示意地图与示例搜索，同时可手动添加任意餐厅资料，不伪装Google结果 |
+| Arrange：餐厅 | 搜索餐厅名称/地址/区域或操作地图，预览候选后Use this restaurant确认；可选择支持范围内任意可识别餐厅，不限三家样例 | 正式版Google Places结果区分分店，展示完整地址和地图位置；选择才写入草稿。Demo为示意地图与示例搜索，只可从地图/搜索候选确认选店，禁止手动新增，不伪装Google结果 |
 | Arrange：人数 | 2/3/4/5/6人单选，提示“嘉宾人数 + 你” | 双人明确 friendship-first；不得超出2–6或非整数 |
 | Arrange：日期时间 | 月历单日选择；Time为下拉，00:00–23:30每半小时一个选项，伦敦当地时间 | 选择计划聚餐时间，不由三家示例店限定为3个时间点，不受示例星期/桌型库存约束；本批Demo日期仍为2026-10-17至11-15。营业时间及外订由发起人确认；申请截止和未来时间校验仍执行 |
 | Introduce | 标题5–80字符，介绍20–1000字符及计数；氛围与交流语言单选 | 去掉首尾空白后检查最短长度；保留所有输入并展示错误，不能跳过必填 |
@@ -328,9 +328,11 @@ Meals 的历史饭局 → 参与者主页 → 私密选择愿意再次同桌 →
 - 正式产品通过Google Maps与Places查询支持的伦敦餐厅；按名称、完整地址/区域搜索，支持地图拖动缩放与当前区域查询。预览名称、分店完整地址和位置，明确确认才替换草稿；浏览、取消或无结果不覆盖原选店。同名分店按placeId识别，禁止仅凭名字合并。
 - 确认结果保留provider=google、placeId、name、formattedAddress、latitude/longitude及规范区域；搜索关键字不是已选择地点。不可识别、缺地点/地址、超出支持范围、已永久关闭或非餐饮地点不允许确认。数据/网络/配额错误显示重试；不静默退回三家限定清单，不把未选结果当成功。
 - 搜索与选店均不订位、不验证营业/餐位、不自动填写价格或饮食保证；发起人确认营业时间和外部订位，再填写计划时间和预计预算。更换餐厅清空旧预约声明、时间和最终核对，保留其他可复用草稿；有人获准后的锁定规则不变。
-- 本轮用户明确暂不提供Google配置，只改Demo和PRD：复用示意地图、原生搜索、候选和Use this restaurant确认；始终显示Demo map与sample locations。未找到本地样例时可Add a restaurant，名字/完整地址/区域必填，先Preview再确认；source=manual，不生成Google placeId/经纬度或声称Google已核验。取消新增/候选不改已选餐厅。
-- Demo提供Search Google Maps外链，按当前搜索词打开真正Google Maps；返回不会自动选店。手动餐厅按名字+完整地址生成地图搜索链接，Review和发布详情保留地址；同名样例不覆盖手填地址。没有坐标的新区域仅在发现列表展示，不伪造地图位置。
-- 所有餐厅共用Time下拉，全天48个半小时时刻，不使用三家示例供应商库存限制。手动餐厅不自动生成定价，外部订位并由发起人声明；日期仍为本批Demo窗口。availableCreateSlots仅保留历史供应商样例/备选算法，不决定当前创建时间；未完成真实地图、地理验证、Places API或预约接入。
+- 本轮用户明确暂不提供Google配置，只改Demo和PRD：复用示意地图、搜索、候选和Use this restaurant确认；显示Demo map与sample locations。禁止手动新增餐厅：不提供Add a restaurant、手填名称/地址或失败后的新增回退；无结果保留原选店，提示更换名称或地图区域。正式产品仅接受Google Places已识别候选，Demo仅模拟该交互。
+- Demo提供Search Google Maps外链，按当前搜索词打开真正Google Maps；返回不会自动选店，也不允许把外链里的文字手动当成已选地点。正式版Review和发布详情保留地址；同名分店用placeId识别，不伪造地图位置。旧source=manual只读历史，不允许创建或再次提交。
+- 所有餐厅共用Time下拉，全天48个半小时时刻，不使用三家示例供应商库存限制。紧凑触发器宽160px、箭头内缩16px；选项菜单与字段左对齐、约160px宽、最高224px、内部滚动，默认聚焦已选时间；可键盘选择、Escape或外部点击关闭，保持在手机内容边界内，不展开成系统长列表。日期仍为本批Demo窗口；availableCreateSlots仅作历史供应商算法，不决定当前创建时间。
+- 图片正式来源为所选placeId对应的Google Places照片：列表卡片、详情和其他饭局缩略图使用同一餐厅对应图片，不要求用户上传，不用其他店图片冒充。无照片、加载失败或不可用时显示默认占位图；更换餐厅同时更新图片，旧店图片不残留。响应含authorAttributions时，展示图片处保留要求的署名与来源；照片资源失效时重新获取，不把短期资源名当永久素材。依据：[Google Place Photos](https://developers.google.com/maps/documentation/places/web-service/place-photos)。
+- 当前Demo所有饭局复用本地`/images/restaurant.png`示意素材，没有拉取Google商家照片；尚未实现真实Maps/Places、照片、库存或预约接入。本轮照片来源规则写入PRD，不将本地素材改称Google照片。
 - 接入前需配置Google项目、启用相应Maps/Places服务及域名/API限制；生产数据保存与展示遵循接入时的服务政策。依据：[Places接入](https://developers.google.com/maps/documentation/javascript/place-get-started)、[地图选店示例](https://developers.google.com/maps/documentation/javascript/examples/place-autocomplete-map)、[无需API密钥的Maps URL外链](https://developers.google.com/maps/documentation/urls/get-started)。
 
 
@@ -625,14 +627,18 @@ Demo 不调用以下真实接口，前端状态模拟提供等价交互。正式
 
 沿用恢复版布局；仅修订发现日期、导航选中态、Inbox分tab、头像导航与群设置、饭后反馈和设置问卷、资料选项，并恢复历史Ask Fancy组件。验收见Demo `tests/comments.spec.ts`、`assistant.spec.ts`、`readiness.spec.ts`；实际发布版本和验证证据由本次交付记录登记，不能以Demo通过推断真实服务已开发。
 
-### 2026-10-21 选店批注修订
+### 2026-10-21 选店批注修订（v0.7历史记录，手动新增由v0.8取消）
 
 真实首期为Google Maps/Places任意餐厅搜索与确认，不是三家白名单。用户本轮选择先完善Demo/PRD、暂不接真实API；模拟地图搜索/候选和任意餐厅手动添加均可操作，资格与数据边界见FR-05创建章节。
 
-### 2026-10-21 补充批注1–5
+### 2026-10-21 补充批注1–5（v0.7历史记录，Profile返回由v0.8取消）
 
 - 创建Time统一为全天半小时下拉；保留申请截止≥开餐前30分钟等原验证，选择时间不代表库存或预约。
 - Review确认文案中的cancellation terms可点击，打开独立可阅读页；包含本场付款方式对应取消/退款、外订处理、人数不足取消与群聊独立规则。返回保持Review及勾选状态；点条款不自动同意。Demo文案不代替上线法律文本审核。
 - 本人Profile左上补返回：由其他页面点击本人头像进入时返回该来源；由底部导航进入时返回前一个主页面，缺省Discover。Settings入口保持右侧。
 - 饭局详情的Your host姓名旁删除装饰箭头，头像和姓名查看主页的能力保留。
 - 发布或保存饭局安排成功后，详情的父级为Meals的Hosting列表；返回不再进入已完成创建流程。其他饭局详情仍返回原列表/来源；查看条款和未发布返回不会清除草稿。
+
+### 2026-10-21 v0.8最新修订
+
+仅从Google地图/Places候选选店，不支持手动新增；无API时Demo模拟候选选择。时间为紧凑限高滚动下拉，不用系统巨型菜单。底部导航Profile顶层无返回按钮，不再返回Meals；Settings、Edit profile等子页保留返回父级。餐厅照片来源为Google Places，缺图使用占位；当前Demo仍是本地示意图，接入状态单独说明。以上覆盖v0.7同日历史记录中的Add路径和Profile顶层返回设计。

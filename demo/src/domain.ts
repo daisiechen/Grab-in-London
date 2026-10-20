@@ -444,11 +444,9 @@ export function availableCreateSlots(
   venue: string,
   date: string,
   capacity: number,
-  restaurant?: RestaurantChoice | null,
 ): string[] {
-  const manual = restaurant?.source === "manual" && restaurant.name === venue && !validateRestaurant(restaurant);
   if (
-    (!manual && !createVenues.some((v) => v.name === venue)) ||
+    !createVenues.some((v) => v.name === venue) ||
     date < "2026-10-17" ||
     date > "2026-11-15" ||
     !Number.isInteger(capacity) ||
@@ -456,7 +454,6 @@ export function availableCreateSlots(
     capacity > 6
   )
     return [];
-  if (manual) return Array.from({ length: 48 }, (_, i) => `${String(Math.floor(i / 2)).padStart(2, "0")}:${i % 2 ? "30" : "00"}`);
   const day = new Date(date + "T12:00:00Z").getUTCDay();
   if (day === 1) return [];
   const slots =
@@ -482,8 +479,8 @@ export function validateArrangement(
   d: CreateArrangement,
   stage: "schedule" | "costs" = "schedule",
 ) {
+  if (d.restaurant?.source === "manual") return "Choose a restaurant from the map; manually added restaurants are not supported.";
   if (d.restaurant && (d.restaurant.name !== d.venue || validateRestaurant(d.restaurant))) return "Confirm the restaurant name, address and area before continuing.";
-  if (d.restaurant?.source === "manual" && d.booking !== "external") return "Book this restaurant externally and confirm the reservation yourself.";
   if (!restaurantChoice(d.venue, d.restaurant)) return "Confirm your restaurant before continuing.";
   if (!plannedCreateSlots(d.date, d.capacity).includes(d.time))
     return "Choose a planned time in half-hour steps for this date and table size.";

@@ -506,30 +506,15 @@ test("discovery dates toggle independently and combine with OR inside the filter
 });
 
 import { restaurantChoice, restaurantMapsUrl, validateRestaurant } from "../src/domain.ts";
-test("arbitrary restaurant retains host supplied address without pretending to be Google verified", () => {
-  const restaurant = { name: "Dockside Kitchen", address: "25 Test Road, London E14 0XX", area: "Canary Wharf", source: "manual" as const };
-  assert.equal(validateRestaurant(restaurant), "");
-  assert.ok(validateRestaurant({ ...restaurant, address: "" }));
-  assert.ok(validateRestaurant({ ...restaurant, area: "" }));
-  assert.equal(restaurantChoice(restaurant.name, restaurant), restaurant);
+test("map selection is required; manual restaurant records cannot be published", () => {
+  const sample = restaurantChoice("The Little Table")!;
+  const manual = { name: "Dockside Kitchen", address: "25 Test Road, London", area: "Canary Wharf", source: "manual" as const };
+  assert.equal(validateRestaurant(sample), "");
   assert.equal(restaurantChoice("Unknown"), null);
-  const url = new URL(restaurantMapsUrl(restaurant));
+  const draft = { restaurant: manual, venue: manual.name, date: "2026-10-23", time: "19:00", capacity: 4, min: 25, max: 35, cost: "offline", deposit: 0, booking: "external", externalConfirmed: true };
+  assert.match(validateArrangement(draft, "costs"), /from the map/);
+  assert.deepEqual(availableCreateSlots(manual.name, draft.date, 4), []);
+  const url = new URL(restaurantMapsUrl(sample));
   assert.equal(url.origin, "https://www.google.com");
-  assert.equal(url.searchParams.get("api"), "1");
-  assert.equal(url.searchParams.get("query"), `${restaurant.name}, ${restaurant.address}`);
-  assert.equal(url.searchParams.has("query_place_id"), false);
-  assert.equal(restaurantChoice("The Little Table")?.source, "demo");
-  const duplicateName = { ...restaurant, name: "The Little Table" };
-  assert.equal(restaurantChoice(duplicateName.name, duplicateName)?.address, restaurant.address);
-});
-test("manual restaurant scheduling is independent from the three fictional suppliers", () => {
-  const restaurant = { name: "Dockside Kitchen", address: "25 Test Road, London E14 0XX", area: "Canary Wharf", source: "manual" as const };
-  assert.equal(availableCreateSlots(restaurant.name, "2026-10-26", 6, restaurant).length, 48);
-  assert.deepEqual(availableCreateSlots(restaurant.name, "2026-10-26", 6), []);
-  const draft = { restaurant, venue: restaurant.name, date: "2026-10-26", time: "12:30", capacity: 6, min: 25, max: 35, cost: "offline", deposit: 0, booking: "external", externalConfirmed: true };
-  assert.equal(validateArrangement(draft, "costs"), "");
-  assert.ok(validateArrangement({ ...draft, externalConfirmed: false }, "costs"));
-  assert.ok(validateArrangement({ ...draft, booking: "in-app" }, "costs"));
-  assert.ok(validateArrangement({ ...draft, venue: "Another name" }));
-  assert.ok(validateArrangement({ ...draft, time: "12:17" }));
+  assert.equal(url.searchParams.get("query"), `${sample.name}, ${sample.address}`);
 });
