@@ -1,6 +1,6 @@
 # 历史R1原型与模拟交接（非现行研发契约）
 
-2026-10-20：本目录pilot.ts、旧JSON白名单、固定60/45/30/15截止、低人数决定、导出及删除方案均为历史参考，未接入当前App。现行共享业务以[主PRD v0.6](../docs/product/PRD.zh-CN.md)§0为准；当前局部交互使用demo/src/domain.ts、readiness.ts和postMeal.ts。不得直接把旧模型接回App，或以旧测试代替新规则验收。后台需由原负责人按同一规则对齐。
+2026-10-20：本目录pilot.ts、旧JSON白名单、固定60/45/30/15截止、低人数决定、导出及删除方案均为历史参考，未接入当前App。现行共享业务以[主PRD v0.7](../docs/product/PRD.zh-CN.md)§0为准；当前局部交互使用demo/src/domain.ts、readiness.ts和postMeal.ts。不得直接把旧模型接回App，或以旧测试代替新规则验收。后台需由原负责人按同一规则对齐。
 
 以下保留旧方案原文以便追溯，不是现行范围或权限授权。
 

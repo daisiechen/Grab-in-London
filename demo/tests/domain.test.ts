@@ -20,6 +20,7 @@ import {
   googleMapsAreaUrl,
   monthDates,
   availableCreateSlots,
+  plannedCreateSlots,
   validateArrangement,
   createDueNow,
 } from "../src/domain.ts";
@@ -216,7 +217,7 @@ const arrangement = {
   booking: "in-app",
   externalConfirmed: false,
 };
-test("create availability depends on venue, date and party size", () => {
+test("legacy sample availability remains separate from planned meal times", () => {
   assert.deepEqual(availableCreateSlots("Unknown", "2026-10-23", 4), []);
   assert.deepEqual(
     availableCreateSlots(arrangement.venue, "2026-10-19", 4),
@@ -227,14 +228,11 @@ test("create availability depends on venue, date and party size", () => {
     [],
   );
   assert.equal(validateArrangement(arrangement), "");
-  assert.match(
-    validateArrangement({ ...arrangement, time: "18:30", capacity: 6 }),
-    /available time/,
-  );
-  assert.match(
-    validateArrangement({ ...arrangement, venue: "The Garden Kitchen" }),
-    /available time/,
-  );
+  assert.equal(validateArrangement({ ...arrangement, time: "18:30", capacity: 6 }), "");
+  assert.equal(validateArrangement({ ...arrangement, venue: "The Garden Kitchen" }), "");
+  assert.equal(plannedCreateSlots("2026-10-26", 6).length, 48);
+  assert.equal(validateArrangement({ ...arrangement, time: "23:30" }), "");
+  assert.ok(validateArrangement({ ...arrangement, time: "12:17" }));
   assert.equal(validateArrangement({ ...arrangement, capacity: 2 }), "");
 });
 test("create payment mode separates budget from amount due", () => {
@@ -505,4 +503,33 @@ test("discovery dates toggle independently and combine with OR inside the filter
   assert.ok(matches.some((m) => m.date === "2026-10-23"));
   assert.ok(matches.some((m) => m.date === "2026-10-24"));
   assert.deepEqual(eligibleMeals(initialMeals, { ...emptyFilters, date: "2026-11-30" }), []);
+});
+
+import { restaurantChoice, restaurantMapsUrl, validateRestaurant } from "../src/domain.ts";
+test("arbitrary restaurant retains host supplied address without pretending to be Google verified", () => {
+  const restaurant = { name: "Dockside Kitchen", address: "25 Test Road, London E14 0XX", area: "Canary Wharf", source: "manual" as const };
+  assert.equal(validateRestaurant(restaurant), "");
+  assert.ok(validateRestaurant({ ...restaurant, address: "" }));
+  assert.ok(validateRestaurant({ ...restaurant, area: "" }));
+  assert.equal(restaurantChoice(restaurant.name, restaurant), restaurant);
+  assert.equal(restaurantChoice("Unknown"), null);
+  const url = new URL(restaurantMapsUrl(restaurant));
+  assert.equal(url.origin, "https://www.google.com");
+  assert.equal(url.searchParams.get("api"), "1");
+  assert.equal(url.searchParams.get("query"), `${restaurant.name}, ${restaurant.address}`);
+  assert.equal(url.searchParams.has("query_place_id"), false);
+  assert.equal(restaurantChoice("The Little Table")?.source, "demo");
+  const duplicateName = { ...restaurant, name: "The Little Table" };
+  assert.equal(restaurantChoice(duplicateName.name, duplicateName)?.address, restaurant.address);
+});
+test("manual restaurant scheduling is independent from the three fictional suppliers", () => {
+  const restaurant = { name: "Dockside Kitchen", address: "25 Test Road, London E14 0XX", area: "Canary Wharf", source: "manual" as const };
+  assert.equal(availableCreateSlots(restaurant.name, "2026-10-26", 6, restaurant).length, 48);
+  assert.deepEqual(availableCreateSlots(restaurant.name, "2026-10-26", 6), []);
+  const draft = { restaurant, venue: restaurant.name, date: "2026-10-26", time: "12:30", capacity: 6, min: 25, max: 35, cost: "offline", deposit: 0, booking: "external", externalConfirmed: true };
+  assert.equal(validateArrangement(draft, "costs"), "");
+  assert.ok(validateArrangement({ ...draft, externalConfirmed: false }, "costs"));
+  assert.ok(validateArrangement({ ...draft, booking: "in-app" }, "costs"));
+  assert.ok(validateArrangement({ ...draft, venue: "Another name" }));
+  assert.ok(validateArrangement({ ...draft, time: "12:17" }));
 });

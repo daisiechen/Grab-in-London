@@ -19,7 +19,15 @@ export type Member = {
   language: string;
   life: string;
 };
+export type RestaurantChoice = {
+  name: string;
+  address: string;
+  area: string;
+  source: "demo" | "manual";
+};
 export type Meal = {
+  restaurant?: RestaurantChoice;
+  mapLocated?: boolean;
   id: string;
   title: string;
   venue: string;
@@ -414,13 +422,33 @@ export const createVenues = [
     note: "Relaxed lunches · plant-friendly",
   },
 ];
+export function restaurantChoice(name: string, selected?: RestaurantChoice | null): RestaurantChoice | null {
+  if (selected?.name === name) return selected;
+  const sample = createVenues.find((v) => v.name === name);
+  return sample ? { name: sample.name, area: sample.area, address: `${sample.area}, London`, source: "demo" } : null;
+}
+export function validateRestaurant(value: RestaurantChoice) {
+  if (value.name.trim().length < 2 || value.name.length > 150) return "Add a restaurant name (2–150 characters).";
+  if (value.address.trim().length < 5 || value.address.length > 250) return "Add a full restaurant address (5–250 characters).";
+  if (value.area.trim().length < 2 || value.area.length > 80) return "Add a neighbourhood or area (2–80 characters).";
+  return "";
+}
+export function restaurantMapsUrl(value: Pick<RestaurantChoice, "name" | "address">) {
+  return `https://www.google.com/maps/search/?${new URLSearchParams({ api: "1", query: `${value.name}, ${value.address}` })}`;
+}
+export function plannedCreateSlots(date: string, capacity: number): string[] {
+  if (date < "2026-10-17" || date > "2026-11-15" || !Number.isInteger(capacity) || capacity < 2 || capacity > 6) return [];
+  return Array.from({ length: 48 }, (_, i) => `${String(Math.floor(i / 2)).padStart(2, "0")}:${i % 2 ? "30" : "00"}`);
+}
 export function availableCreateSlots(
   venue: string,
   date: string,
   capacity: number,
+  restaurant?: RestaurantChoice | null,
 ): string[] {
+  const manual = restaurant?.source === "manual" && restaurant.name === venue && !validateRestaurant(restaurant);
   if (
-    !createVenues.some((v) => v.name === venue) ||
+    (!manual && !createVenues.some((v) => v.name === venue)) ||
     date < "2026-10-17" ||
     date > "2026-11-15" ||
     !Number.isInteger(capacity) ||
@@ -428,6 +456,7 @@ export function availableCreateSlots(
     capacity > 6
   )
     return [];
+  if (manual) return Array.from({ length: 48 }, (_, i) => `${String(Math.floor(i / 2)).padStart(2, "0")}:${i % 2 ? "30" : "00"}`);
   const day = new Date(date + "T12:00:00Z").getUTCDay();
   if (day === 1) return [];
   const slots =
@@ -437,6 +466,7 @@ export function availableCreateSlots(
   return capacity >= 5 ? slots.filter((_, i) => i % 2 === 0) : slots;
 }
 export type CreateArrangement = {
+  restaurant?: RestaurantChoice | null;
   venue: string;
   date: string;
   time: string;
@@ -452,8 +482,11 @@ export function validateArrangement(
   d: CreateArrangement,
   stage: "schedule" | "costs" = "schedule",
 ) {
-  if (!availableCreateSlots(d.venue, d.date, d.capacity).includes(d.time))
-    return "Choose an available time for this restaurant, date and table size.";
+  if (d.restaurant && (d.restaurant.name !== d.venue || validateRestaurant(d.restaurant))) return "Confirm the restaurant name, address and area before continuing.";
+  if (d.restaurant?.source === "manual" && d.booking !== "external") return "Book this restaurant externally and confirm the reservation yourself.";
+  if (!restaurantChoice(d.venue, d.restaurant)) return "Confirm your restaurant before continuing.";
+  if (!plannedCreateSlots(d.date, d.capacity).includes(d.time))
+    return "Choose a planned time in half-hour steps for this date and table size.";
   if (stage === "schedule") return "";
   if (
     !Number.isFinite(d.min) ||

@@ -55,7 +55,7 @@ The route/state audit and acceptance evidence are in `../docs/qa/full-product-au
 
 ## 20 October 2026 readiness revision
 
-Current requirements: [PRD v0.6](../docs/product/PRD.zh-CN.md) §0. Mobile Web and iOS are the intended first-release clients; this repository supplies a local web interaction prototype, not a native iOS build. Existing layouts and full payment/booking reference journeys remain. New default creation uses external booking/offline payment, a custom 2–6 minimum/capacity range and a host-set deadline. Attendance, private whole-meal experience and contact/group lifecycle changes are tested separately.
+Current requirements: [PRD v0.7](../docs/product/PRD.zh-CN.md) §0. Mobile Web and iOS are the intended first-release clients; this repository supplies a local web interaction prototype, not a native iOS build. Existing layouts and full payment/booking reference journeys remain. New default creation uses external booking/offline payment, a custom 2–6 minimum/capacity range and a host-set deadline. Attendance, private whole-meal experience and contact/group lifecycle changes are tested separately.
 
 `?review=1` exposes simulated approval and clock progression; normal UI keeps these tools hidden. `pnpm test:domain` covers domain/readiness rules; `PLAYWRIGHT_CHANNEL=chrome pnpm test:runtime` can use an installed Chrome. No actual reports, deletion requests, messages, payments or reservations are transmitted.
 
@@ -63,3 +63,8 @@ Current requirements: [PRD v0.6](../docs/product/PRD.zh-CN.md) §0. Mobile Web a
 The existing floating Ask Fancy assistant is restored from its approved implementation: search/compare local meals, explain costs, draft an application/message/meal, and review saved preferences. Drafts enter existing editors; the user still submits. It is a deterministic prototype, not a live model integration. Browser speech is optional, consented, editable, and never auto-sends.
 
 Discover supports multiple nonconsecutive dates. Inbox separates Chats and Applications; chat avatars open profiles and group settings contain the roster and role-specific leave/dissolve actions. Settings now has an independent voluntary Product survey. Meal experience stores only this meal's 1–5 score; public references and personal reconnection stay separate. Profile onboarding/editing share single-choice London-life tags, a language dropdown and multiple interest tags. All state is session-only.
+
+## Restaurant selection — 21 October 2026
+Create meal now searches/previews sample restaurants on the illustrative map, with pan/zoom and viewport search. Add a restaurant accepts any manually supplied restaurant name, full address and neighbourhood, then requires preview and confirmation; the resulting meal retains those details in Review, the published page and host edits. All restaurants use a native Time dropdown with48 half-hour planned times; manual places use host-managed external booking, not fictional supplier availability. Search Google Maps opens a real name/area search; it does not automatically import a place when returning. No Maps/Places API was connected, as requested. Tests: `restaurant-picker.spec.ts` and domain restaurant selection/scheduling cases.
+
+Review links to readable cancellation terms and returns without accepting them automatically. Profile has a return button opposite Settings. Publishing/saving arrangements makes Meals/Hosting the detail parent, preventing a return to the finished creation form. Host-name decorative arrows are removed.

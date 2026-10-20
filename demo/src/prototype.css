@@ -2932,3 +2932,45 @@
 .group-settings .primary + .primary { margin-top:12px; }
 .list-meal > .avatars + .primary { margin-top:20px; }
 .grab-app select { width:100%; min-height:48px; padding:12px; border:1px solid #ccd8d0; border-radius:12px; background:transparent; color:inherit; font:inherit; }
+
+/* Restored app-owned restaurant map; runtime is unchanged. */
+.demo-map { position: relative; height: 100%; min-height: 190px; overflow: hidden; touch-action: none; background: #e9eee4; cursor: grab; }
+.demo-map:active { cursor: grabbing; }
+.demo-map-world { position: absolute; inset: -24%; transform-origin: center; pointer-events: none; }
+.demo-map > .map-pin { z-index: 1; }
+.demo-map > .map-pin.active { z-index: 2; }
+.demo-map-world .map-image { pointer-events: none; }
+.demo-map-controls { position: absolute; z-index: 3; bottom: 12px; right: 10px; display: grid; gap: 3px; }
+.grab-app .demo-map-controls button { width: 36px; height: 36px; padding: 0; border: 1px solid #dce4de; background: white; border-radius: 10px; font-size: 21px; box-shadow: 0 2px 8px #123f3515; }
+.grab-app .demo-map-controls button:disabled { opacity: .45; }
+.grab-app .map-search-area { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); border-radius: 24px; padding: 10px 16px; background: white; box-shadow: 0 2px 12px #123f3520; font-size: 12px; white-space: nowrap; }
+.grab-app .map-search-area:active:not(:disabled) { transform: translateX(-50%); }
+.map-key { pointer-events: none; }
+.map-empty { padding: 24px; text-align: center; }
+.venue-map-picker { margin-bottom: 22px; }
+.venue-map-picker .field-label { display: grid; gap: 8px; margin-bottom: 12px; font-size: 13px; font-weight: 600; }
+.venue-map-picker input { width: 100%; border: 1px solid #dce4de; border-radius: 12px; padding: 12px; }
+.venue-map-picker .demo-map { height: 230px; border-radius: 16px; }
+.venue-map-results { display: grid; gap: 6px; margin-top: 12px; }
+.grab-app .venue-map-results button { display: grid; gap: 4px; text-align: left; border: 1px solid #dce4de; border-radius: 12px; padding: 12px; }
+.venue-map-results span { font-size: 12px; color: var(--muted); }
+.grab-app .venue-map-results button[aria-pressed="true"] { border-color: var(--forest); background: #f2f6f1; }
+.venue-map-card { padding: 16px; margin-top: 12px; border-radius: 14px; background: #f3f5f0; }
+.venue-map-card p { margin: 6px 0; font-size: 13px; }
+.venue-map-card .primary { margin-top: 12px; width: 100%; }
+.venue-selection-status { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.venue-demo-label { font-size:12px; margin:10px 0; }
+.venue-map-picker > .maps-link { margin:8px 0; }
+.venue-map-picker .add-restaurant { min-height:44px; margin-top:8px; }
+.manual-restaurant { margin:12px 0; padding:16px; border:1px solid #dce4de; border-radius:14px; }
+.manual-restaurant .primary { width:100%; }
+.manual-restaurant .field { margin:14px 0; }
+.venue-selection-status { padding:14px 0; border-top:1px solid #dce4de; margin-top:16px; font-size:14px; }
+.venue-selection-status p { margin:6px 0; }
+.venue-selection-status small { color:var(--muted); }
+.grab-app .map-search-area { position:absolute; z-index:3; top:10px; left:50%; transform:translateX(-50%); padding:10px 14px; background:white; border:1px solid #dce4de; border-radius:20px; font-size:12px; }
+.profile-settings-entry { justify-content:space-between; }
+.profile-settings-entry > button[aria-label="Go back"] { min-width:44px; min-height:44px; display:grid; place-items:center; padding:8px; }
+.create-consent a { color:var(--forest); text-decoration:underline; text-underline-offset:3px; }
+.cancellation-terms p { line-height:1.65; }
+.grab-app .demo-map > .map-pin:active:not(:disabled) { transform:translate(-50%, -50%); }

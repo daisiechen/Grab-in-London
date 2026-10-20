@@ -6,7 +6,7 @@
 
 | 文档 | 用途与权威关系 |
 | --- | --- |
-| [主 PRD](product/PRD.zh-CN.md) | 当前v0.6需求真源；§0为已确认首期规格，沿用星期日恢复版界面 |
+| [主 PRD](product/PRD.zh-CN.md) | 当前v0.7需求真源；§0为已确认首期规格，沿用星期日恢复版界面 |
 | [产品简介](product/product-brief.md) | 产品定位与摘要；详细规则以主 PRD 为准 |
 | [首期运营指标与采集契约](product/admin/measurement-contract.zh-CN.md) | 后台全部指标算法、App采集入口与生产数据接入验收 |
 | [管理端 PRD](product/admin/PRD.zh-CN.md) | 管理端范围及指标；引用主 PRD，不替代共享业务规则 |
@@ -24,6 +24,8 @@
 - 管理端：[模块说明](../admin/README.md)、[设计规范](../admin/DESIGN.md)、[交互契约](../admin/UX-CONTRACT.md)。模块说明就近维护，不另建副本。
 
 ## 发布与验收
+
+- [2026-10-21选店与创建修订](delivery/fancy-restaurant-picker-2026-10-21.zh-CN.md)：任意餐厅Demo、Google Places正式规格、时间下拉、条款与返回路径。
 
 - [浏览器批注与AI恢复](delivery/fancy-comments-ai-2026-10-20.zh-CN.md)：16条批注、Ask Fancy恢复、问卷拆分及验证边界。
 

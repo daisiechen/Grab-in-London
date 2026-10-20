@@ -42,7 +42,7 @@ class ProductSpecTest(unittest.TestCase):
 
     def test_audit_revision_records_independent_states_and_clean_ui(self):
         text = (Path(__file__).resolve().parents[1] / 'docs/product/PRD.zh-CN.md').read_text()
-        for contract in ('版本：0.6', '保留原餐厅预约状态', 'Cancelled 独立',
+        for contract in ('版本：0.7', '保留原餐厅预约状态', 'Cancelled 独立',
                          '按成员记录', '金额最多2位小数', '退款金额在取消时按饭局记录'):
             self.assertIn(contract, text)
 
@@ -67,4 +67,14 @@ class ProductSpecTest(unittest.TestCase):
     def test_product_survey_and_assistant_boundaries(self):
         text = (Path(__file__).resolve().parents[1] / 'docs/product/PRD.zh-CN.md').read_text()
         for rule in ('只收本顿饭的score', '不绑定mealId', '不回捞日期范围内的旧版本', '发现筛选日期可多选', '不自动迁移', '草稿只带入原编辑器', '不是大模型'):
+            self.assertIn(rule, text)
+
+    def test_restaurant_picker_is_not_a_three_venue_whitelist(self):
+        text = (Path(__file__).resolve().parents[1] / 'docs/product/PRD.zh-CN.md').read_text()
+        for rule in ('不限三家样例', '同名分店按placeId识别', 'source=manual', '返回不会自动选店', 'Review和发布详情保留地址', '不伪造地图位置'):
+            self.assertIn(rule, text)
+
+    def test_creation_time_terms_and_return_paths(self):
+        text = (Path(__file__).resolve().parents[1] / 'docs/product/PRD.zh-CN.md').read_text()
+        for rule in ('全天48个半小时时刻', '点条款不自动同意', '本人Profile左上补返回', '返回不再进入已完成创建流程'):
             self.assertIn(rule, text)

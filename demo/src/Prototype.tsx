@@ -12,6 +12,7 @@ import {
   type AssistantReply,
   type MealPreferences,
 } from "./assistant";
+import { RestaurantPicker } from "./RestaurantPicker";
 import { isReviewMode } from "./presentation";
 import { BRAND } from "./brand";
 import {
@@ -88,7 +89,10 @@ import {
   validateDemoCode,
   needsAccount,
   createVenues,
-  availableCreateSlots,
+  restaurantChoice,
+  restaurantMapsUrl,
+  type RestaurantChoice,
+  plannedCreateSlots,
   validateArrangement,
   createDueNow,
   refundAmount,
@@ -110,6 +114,7 @@ import { DEMO_NOW, MINUTE, startsAt, endsAt, londonInstant, closesAt, minimumFor
 import { attendanceStatus, reportWindow, feedbackEligible, feedbackReasons, validateExperience, canMessage, revokeConnection, connectionHasAttendance, type AttendanceRecord, type MealExperience, type ProductSurvey, validateSurvey, type Connection } from "./postMeal";
 
 const initialDraft = {
+  restaurant: null as RestaurantChoice | null,
   title: "",
   venue: "The Little Table",
   date: "2026-10-23",
@@ -149,7 +154,8 @@ type Page =
   | "direct"
   | "settings"
   | "group-settings"
-  | "survey";
+  | "survey"
+  | "terms";
 type Sheet =
   | ""
   | "date"
@@ -1799,6 +1805,7 @@ export default function Prototype() {
     messagePreviews: true,
   });
   const [page, setPage] = useState<Page>("discover");
+  const [profileReturn, setProfileReturn] = useState<Page>("discover");
   const [history, setHistory] = useState<Page[]>([]);
   const pastMeal: Meal = { ...initialMeals[0], id: "past-supper", title: "A little supper club", date: "2026-10-15", time: "19:00", deposit: 0, costMode: "OFFLINE", members: ["maya", "emma", "alex"], confirmed: 3, booking: "CONFIRMED" };
   const [meals, setMeals] = useState<Meal[]>([...initialMeals, pastMeal]);
@@ -1927,7 +1934,7 @@ export default function Prototype() {
   const activeCount = Object.values(filters).filter((value) =>
     value.trim(),
   ).length;
-  const groups = groupMealsByArea(matches);
+  const groups = groupMealsByArea(matches.filter((m) => m.mapLocated !== false));
   const areaGroup =
     groups.find((group) => group.area === selectedArea) || groups[0];
   const areaMeals = areaGroup?.meals || [];
@@ -1985,6 +1992,7 @@ export default function Prototype() {
     setPage(to);
   };
   const root = (to: Page) => {
+    if (to === "profile") setProfileReturn(["discover", "meals", "inbox"].includes(page) ? page : "discover");
     setToast("");
     if (!signedIn && needsAccount(to)) {
       keyboard.hide();
@@ -2134,13 +2142,18 @@ export default function Prototype() {
       setError(issue);
       return;
     }
+    const restaurant = restaurantChoice(draft.venue, draft.restaurant)!;
+    const sample = restaurant.source === "demo" ? createVenues.find((v) => v.name === draft.venue) : undefined;
+    const areaLocation = initialMeals.find((m) => m.area === restaurant.area);
     const meal: Meal = {
+      restaurant,
+      mapLocated: !!areaLocation,
       id: editingMeal || `created-${Date.now()}`,
       minimum: draft.minimum,
       closesAt: londonInstant(draft.deadlineDate, draft.deadlineTime),
       title: draft.title.trim(),
       venue: draft.venue,
-      area: createVenues.find((v) => v.name === draft.venue)!.area,
+      area: restaurant.area,
       date: draft.date,
       time: draft.time,
       capacity: draft.capacity,
@@ -2153,16 +2166,10 @@ export default function Prototype() {
       description: draft.description.trim(),
       host: "alex",
       members: ["alex"],
-      x: initialMeals.find(
-        (m) =>
-          m.area === createVenues.find((v) => v.name === draft.venue)!.area,
-      )!.x,
-      y: initialMeals.find(
-        (m) =>
-          m.area === createVenues.find((v) => v.name === draft.venue)!.area,
-      )!.y,
-      cuisine: createVenues.find((v) => v.name === draft.venue)!.cuisine,
-      dietary: ["Vegetarian options"],
+      x: areaLocation?.x ?? 50,
+      y: areaLocation?.y ?? 50,
+      cuisine: sample?.cuisine || "",
+      dietary: restaurant.source === "demo" ? ["Vegetarian options"] : [],
       booking: draft.booking === "external" ? "CONFIRMED" : "PENDING",
       costMode:
         draft.cost === "offline"
@@ -2178,7 +2185,10 @@ export default function Prototype() {
     setSelected(meal.id);
     setCreateStep(0);
     setDraft(initialDraft);
-    go("detail");
+    keyboard.hide();
+    setMealTab("Hosting");
+    setHistory(["meals"]);
+    setPage("detail");
     notify("Your meal is published. Your table starts here.");
   };
   const statusButton = () => {
@@ -2300,6 +2310,7 @@ export default function Prototype() {
     settings: "Settings",
     "group-settings": "Group settings",
     survey: "Product survey",
+    terms: "Cancellation terms",
   };
   const topLevel = ["discover", "meals", "inbox", "profile"].includes(page);
   const renderPage = () => {
@@ -2372,6 +2383,7 @@ export default function Prototype() {
           </header>
           {mode === "map" ? (
             <>
+              {matches.some((m) => m.mapLocated === false) && <div className="notice">Some added restaurants have no map position in this demo. <button className="text-action" onClick={() => setMode("list")}>See all meals in list</button></div>}
               <div className="map-canvas">
                 <img
                   className="map-image"
@@ -2541,7 +2553,6 @@ export default function Prototype() {
                   {current.host === "alex"
                     ? profile.name
                     : members[current.host].name}{" "}
-                  <ArrowRightIcon />
                 </button>
               </div>
               <span className="pill">{current.language}</span>
@@ -2580,7 +2591,7 @@ export default function Prototype() {
               <SewingPinIcon />
               <div>
                 <strong>{current.venue}</strong>
-                <p>{current.area}, London</p>
+                <p>{current.restaurant?.source === "manual" ? current.restaurant.address : `${current.area}, London`}</p>
                 <span
                   className={`status-tag ${booking === "CONFIRMED" ? "good" : ""}`}
                 >
@@ -2594,17 +2605,17 @@ export default function Prototype() {
             </div>
             <a
               className="maps-link"
-              href={googleMapsAreaUrl(current.area)}
+              href={current.restaurant?.source === "manual" ? restaurantMapsUrl(current.restaurant) : googleMapsAreaUrl(current.area)}
               target="_blank"
               rel="noopener noreferrer"
             >
-              Open {current.area} in Google Maps <ExternalLinkIcon />
+              Open {current.restaurant?.source === "manual" ? current.venue : current.area} in Google Maps <ExternalLinkIcon />
             </a>
             <p className="map-destination-note">
               {current.reservationSource === "external"
                 ? "Reservation reported by the host; not verified by the app. "
                 : ""}
-              Google Maps opens the neighbourhood.
+              {current.restaurant?.source === "manual" ? "Google Maps searches the restaurant name and address you supplied." : "Google Maps opens the neighbourhood."}
             </p>
             <h2>Keeping costs clear</h2>
             <div className="price-row">
@@ -3229,12 +3240,8 @@ export default function Prototype() {
       );
     }
     if (page === "create") {
-      const venue = createVenues.find((v) => v.name === draft.venue)!;
-      const slots = availableCreateSlots(
-        draft.venue,
-        draft.date,
-        draft.capacity,
-      );
+      const venue = restaurantChoice(draft.venue, draft.restaurant)!;
+      const slots = plannedCreateSlots(draft.date, draft.capacity);
       const updateSchedule = (patch: Partial<typeof draft>) => {
         const next = {
           ...draft,
@@ -3243,12 +3250,12 @@ export default function Prototype() {
           accepted: false,
         };
         if (
-          !availableCreateSlots(next.venue, next.date, next.capacity).includes(
+          !plannedCreateSlots(next.date, next.capacity).includes(
             next.time,
           )
         )
           next.time = "";
-        if (patch.date || patch.time) {
+        if ((patch.date || patch.time) && next.time) {
           const deadline = new Date(startsAt(next) - 60 * MINUTE);
           const parts = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(deadline).map((p) => [p.type, p.value]));
           next.deadlineDate = `${parts.year}-${parts.month}-${parts.day}`;
@@ -3324,34 +3331,10 @@ export default function Prototype() {
           </p>
           {createStep === 0 && (
             <>
-              <fieldset className="venue-picker">
-                <legend>Choose a restaurant</legend>
-                {createVenues.map((v) => (
-                  <button
-                    key={v.name}
-                    aria-pressed={draft.venue === v.name}
-                    className={draft.venue === v.name ? "chosen" : ""}
-                    onClick={() =>
-                      updateSchedule({ venue: v.name, min: v.min, max: v.max })
-                    }
-                  >
-                    <span className="venue-monogram">
-                      <SewingPinIcon />
-                    </span>
-                    <span>
-                      <strong>{v.name}</strong>
-                      <small>
-                        {v.area} · {v.cuisine}
-                      </small>
-                      <small>{v.note}</small>
-                      <small>
-                        £{v.min}–{v.max} per person
-                      </small>
-                    </span>
-                    {draft.venue === v.name && <CheckCircledIcon />}
-                  </button>
-                ))}
-              </fieldset>
+              <RestaurantPicker value={venue} onConfirm={(restaurant) => {
+                const sample = createVenues.find((v) => restaurant.source === "demo" && v.name === restaurant.name);
+                updateSchedule({ venue: restaurant.name, restaurant, min: sample?.min ?? draft.min, max: sample?.max ?? draft.max, booking: restaurant.source === "manual" ? "external" : draft.booking, time: "" });
+              }} />
               <ChoiceGroup
                 label="People, including you"
                 value={String(draft.capacity)}
@@ -3373,33 +3356,18 @@ export default function Prototype() {
               </div>
               <ReviewOnly>
                 <p className="muted">
-                  London time · demo availability 17 Oct–15 Nov 2026. Mondays
-                  are unavailable.
+                  London time · demo planning dates 17 Oct–15 Nov 2026. Check opening hours with your restaurant.
                 </p>
               </ReviewOnly>
-              {slots.length ? (
-                <ChoiceGroup
-                  label="Available times"
-                  value={draft.time}
-                  onChange={(time) => updateSchedule({ time })}
-                  options={slots.map((t) => [t, t])}
-                />
-              ) : (
-                <div className="summary-box" role="status">
-                  <strong>No times for this selection</strong>
-                  <p>
-                    Choose another date or a smaller table. Your other details
-                    are saved.
-                  </p>
-                </div>
-              )}
+              <Field label="Time" hint="London time. This is your planned meeting time; confirm opening hours and book with the restaurant separately.">
+                <select aria-label="Time" value={draft.time} onChange={(e) => updateSchedule({ time: e.target.value })}><option value="">Choose a time</option>{slots.map((time) => <option key={time} value={time}>{time}</option>)}</select>
+              </Field>
               <h2>Applications close</h2>
               <Field label="Deadline date"><input type="date" value={draft.deadlineDate} max={draft.date} onChange={(e) => setDraft({ ...draft, deadlineDate: e.target.value, accepted: false })} /></Field>
               <Field label="Deadline time" hint="At least 30 minutes before the meal. At the deadline, we stop applications and approvals and cancel if your minimum isn’t met."><input type="time" value={draft.deadlineTime} onChange={(e) => setDraft({ ...draft, deadlineTime: e.target.value, accepted: false })} /></Field>
               <ReviewOnly>
                 <p className="demo-note">
-                  Fictional restaurants and sample availability. A time
-                  selection does not hold a table.
+                  Choosing a planned time does not hold a table or confirm opening hours.
                 </p>
               </ReviewOnly>
             </>
@@ -3587,10 +3555,7 @@ export default function Prototype() {
                     accepted: false,
                   })
                 }
-                options={[
-                  ["in-app", "Book through the app"],
-                  ["external", "I’ve already booked"],
-                ]}
+                options={venue.source === "manual" ? [["external", "I’ve already booked"]] : [["in-app", "Book through the app"], ["external", "I’ve already booked"]]}
               />
               {draft.booking === "in-app" ? (
                 <div className="summary-box">
@@ -3644,7 +3609,7 @@ export default function Prototype() {
                 {[
                   [
                     "Place & time",
-                    `${draft.venue} · ${venue.area}`,
+                    `${draft.venue} · ${venue.source === "manual" ? venue.address : venue.area}`,
                     `${longDate(draft.date)} · ${draft.time} London time · ${draft.capacity} people including you`,
                     0,
                   ],
@@ -3700,7 +3665,7 @@ export default function Prototype() {
                   }
                 />
                 <span>
-                  I’ve checked the arrangements and the cancellation terms.
+                  I’ve checked the arrangements and the <a href="#cancellation-terms" onClick={(e) => { e.preventDefault(); e.stopPropagation(); go("terms"); }}>cancellation terms</a>.
                 </span>
               </label>
             </>
@@ -4056,6 +4021,7 @@ export default function Prototype() {
       <fieldset className="filter-section"><legend>What shapes your experience of Fancy? · optional</legend><div className="choice-grid">{feedbackReasons.map(([key, label]) => <label key={key} className={`choice-chip ${survey.reasons.includes(key) ? "chosen" : ""}`}><input type="checkbox" checked={survey.reasons.includes(key)} onChange={(e) => setSurvey({ ...survey, reasons: e.target.checked ? [...survey.reasons, key] : survey.reasons.filter((r) => r !== key), saved: false })} /><span>{label}</span></label>)}</div></fieldset>
       <Primary onClick={() => { const issue = validateSurvey(survey); if (issue) { notify(issue); return; } setSurvey({ ...survey, saved: true, submittedAt: new Date().toISOString(), version: (survey.version || 0) + 1 }); notify("Thank you. Your product survey is saved."); }}>{survey.saved ? "Update survey" : "Save survey"}</Primary>{survey.saved && <p role="status">Your product survey is saved.</p>}
     </div>;
+    if (page === "terms") return <div className="body-pad cancellation-terms"><h1>Cancellation terms</h1><h2>Your place</h2><p>You can withdraw an application or cancel your place before the meal starts. Let your host know as early as possible.</p><p>If the group falls below its minimum after applications close, the meal is cancelled. Before the deadline, the host can keep recruiting.</p><h2>Hosting a meal</h2><p>Hosts can cancel the whole meal before it starts. Cancel any external restaurant booking separately and tell your guests.</p><h2>Payments and refunds</h2><p>{draft.cost === "offline" ? "Guests pay at the restaurant. There is no in-app payment to refund. Any restaurant cancellation fee follows the arrangement you made directly with the restaurant." : "A full refund is available until 24 hours before the meal; no refund after that. Host cancellation or booking failure is refunded in full."}</p><h2>Your group chat</h2><p>Cancelling a place or meal does not close the group chat. Leaving the group or dissolving it is a separate confirmed action.</p><Primary secondary onClick={back}>Back to review</Primary></div>;
     if (page === "settings")
       return (
         <div className="body-pad settings-page">
@@ -4214,6 +4180,7 @@ export default function Prototype() {
       return (
         <div className="body-pad">
           <div className="profile-settings-entry">
+            <button aria-label="Go back" onClick={() => history.length ? back() : root(profileReturn)}><ArrowLeftIcon /></button>
             <button aria-label="Settings" onClick={() => go("settings")}>
               <GearIcon /> Settings
             </button>
@@ -4574,7 +4541,7 @@ export default function Prototype() {
           <p className="muted">{criticalEditAllowed(current) ? "You can edit before anyone is approved." : "The restaurant, time, budget and group size are locked after the first approval. Cancel and create a new meal to change them."}</p>
           <Primary secondary disabled={!criticalEditAllowed(current) || !canRecruit(current, clock)} onClick={() => {
             const local = new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/London", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }).format(closesAt(current)).split(" ");
-            setDraft({ ...initialDraft, title: current.title, venue: current.venue, date: current.date, time: current.time, capacity: current.capacity, minimum: minimumFor(current), deadlineDate: local[0], deadlineTime: local[1], min: current.min, max: current.max, description: current.description, language: current.language, mood: current.mood, cost: current.costMode === "OFFLINE" ? "offline" : current.costMode === "FIXED_MENU" ? "menu" : "deposit", booking: current.reservationSource === "external" ? "external" : "in-app", deposit: current.deposit });
+            setDraft({ ...initialDraft, title: current.title, venue: current.venue, restaurant: current.restaurant || null, date: current.date, time: current.time, capacity: current.capacity, minimum: minimumFor(current), deadlineDate: local[0], deadlineTime: local[1], min: current.min, max: current.max, description: current.description, language: current.language, mood: current.mood, cost: current.costMode === "OFFLINE" ? "offline" : current.costMode === "FIXED_MENU" ? "menu" : "deposit", booking: current.reservationSource === "external" ? "external" : "in-app", deposit: current.deposit });
             setEditingMeal(current.id); setCreateStep(0); go("create");
           }}>Edit arrangements</Primary>
           <Primary secondary disabled={!!current.cancelledAt || Date.parse(clock) >= startsAt(current)} onClick={() => setSheet("cancel-meal")}>Cancel this meal</Primary>
