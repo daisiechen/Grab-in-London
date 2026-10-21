@@ -11,6 +11,9 @@ export type RetryOptions = NonNullable<Parameters<typeof withRetry>[1]>;
 export interface WebApi {
   client: ApiClient;
   setCsrfToken(token: string | null): void;
+  setAIDeviceToken(token:string|null):void;
+  setGuestCsrfToken(token:string|null):void;
+  setAnalyticsEnabled(enabled:boolean):void;
   onUnauthorized(listener: () => void): () => void;
   retry: RetryOptions;
 }
@@ -23,17 +26,29 @@ export interface WebApiOptions {
 
 export function createWebApi(options: WebApiOptions = {}): WebApi {
   let csrf: string | null = null;
+  let aiDeviceToken:string|null=null,guestCsrf:string|null=null;
+  let authGeneration = 0;
+  let analyticsEnabled = false;
+  const stale = () => new ApiError({status:409,code:'STATE_CONFLICT',message:'Your account changed while this request was running.'});
   const listeners = new Set<() => void>();
   const inner = createApiClient({
     baseUrl: options.baseUrl ?? '',
     credentials: { kind: 'cookie', csrfToken: () => csrf },
+    headers: (id) => {
+      const ai = ['bootstrapAI','readAI','activityAI','resetAI','requestAI','pollAI','validateAIDraft','replaceAIPreferences'].includes(id);
+      return {'x-fancy-analytics':analyticsEnabled?'enabled':'disabled', ...(ai ? {...(aiDeviceToken?{'ai-device-token':aiDeviceToken}:{}),...(!csrf&&guestCsrf?{'x-csrf-token':guestCsrf}:{})} : {})};
+    },
     ...(options.fetch ? { fetch: options.fetch } : {}),
   });
   const client: ApiClient = {
     async call(operationId, request) {
+      const generation = authGeneration;
       try {
-        return await inner.call(operationId, request);
+        const result = await inner.call(operationId, request);
+        if (generation !== authGeneration) throw stale();
+        return result;
       } catch (error) {
+        if (generation !== authGeneration) throw stale();
         if (error instanceof ApiError && error.status === 401) for (const l of [...listeners]) l();
         throw error;
       }
@@ -41,7 +56,10 @@ export function createWebApi(options: WebApiOptions = {}): WebApi {
   };
   return {
     client,
-    setCsrfToken: (token) => { csrf = token; },
+    setCsrfToken: (token) => { if(token===null){authGeneration++;aiDeviceToken=null;guestCsrf=null;analyticsEnabled=false;}csrf = token; },
+    setAnalyticsEnabled:(enabled)=>{analyticsEnabled=enabled;},
+    setAIDeviceToken:(token)=>{aiDeviceToken=token;},
+    setGuestCsrfToken:(token)=>{guestCsrf=token;},
     onUnauthorized(listener) {
       listeners.add(listener);
       return () => { listeners.delete(listener); };

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Fragment, createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { ApiError, newIntentKey } from '@fancy/client';
 import { useApi } from './ApiProvider.tsx';
 import type { SessionInfo } from './types.ts';
@@ -30,11 +30,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
    * after logout therefore can never sign the user back in.
    */
   const generation = useRef(0);
+  const [epoch, setEpoch] = useState(0);
   const stateRef = useRef<SessionState>(state);
   stateRef.current = state;
 
   const clearLocal = useCallback(() => {
     generation.current++;
+    setEpoch(generation.current);
     api.setCsrfToken(null);
     cache.clear();
     clearAllPrivateState();
@@ -46,6 +48,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     try {
       const { data } = await api.client.call('getSession', {});
       if (gen !== generation.current) return { status: 'guest' };
+      if (stateRef.current.status === 'signed-in' && stateRef.current.session.user.id !== data.user.id) {
+        generation.current++;
+        setEpoch(generation.current);
+        api.setCsrfToken(null);
+        cache.clear();
+        clearAllPrivateState();
+      }
       api.setCsrfToken(data.csrfToken ?? null);
       const next: SessionState = { status: 'signed-in', session: data };
       setState(next);
@@ -63,7 +72,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       setState({ status: 'guest' });
       return { status: 'guest' };
     }
-  }, [api]);
+  }, [api, cache]);
 
   /**
    * A 401 only revokes something if we were signed in. A guest's 401 (e.g. getSession on
@@ -85,7 +94,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   }, [api, clearLocal]);
 
   const value = useMemo(() => ({ state, refresh, signOut, clearLocal }), [state, refresh, signOut, clearLocal]);
-  return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
+  return <SessionContext.Provider value={value}><Fragment key={epoch}>{children}</Fragment></SessionContext.Provider>;
 }
 
 export function useSession(): SessionContextValue {

@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router';
+import { useRenderedEvent } from '../../api/telemetry.tsx';
 import { ArrowRightIcon, CalendarIcon, ChatBubbleIcon, ExternalLinkIcon, InfoCircledIcon, PersonIcon, SewingPinIcon } from '@radix-ui/react-icons';
 import { useSignedIn } from '../../api/session.tsx';
 import { useQuery } from '../../api/useQuery.ts';
@@ -19,6 +20,7 @@ export function MealDetailPage() {
   const { mealId = '' } = useParams();
   const signedIn = useSignedIn();
   const q = useQuery<MealDetail>(`meal:${mealId}:${signedIn?.user.id ?? 'guest'}`, async (c) => (await c.call('getMeal', { params: { mealId } })).data);
+  useRenderedEvent('detail_view',{mealId},!!q.data);
 
   if (!q.data) return q.error ? <><PageHeader title="The table" backTo="/discover" /><div className="body-pad"><FormError>{errorMessage(q.error)}</FormError></div></> : <Loading />;
   const { meal, myApplication, conversationId } = q.data;

@@ -5,10 +5,17 @@ import { renderApp } from '../../test/render.tsx';
 import { createFetchStub, fail, ok } from '../../test/fetchStub.ts';
 import { session } from '../../test/fixtures.ts';
 import { clearAllPrivateState, saveDraft, loadDraft } from '../../lib/drafts.ts';
-import { ensureDeletionReceipt, readDeletionReceipt } from './deletionReceipt.ts';
+import { ensureDeletionReceipt, readDeletionReceipt, rememberDeletionStatus } from './deletionReceipt.ts';
 
-const pending = { status: 'PENDING', requestedAt: '2026-10-21T12:00:00Z', completedAt: null };
+const pending = { status: 'PENDING' as const, requestedAt: '2026-10-21T12:00:00Z', completedAt: null };
 describe('account deletion', () => {
+  it('does not show a previous account receipt as the newly signed-in account deletion state',async()=>{
+    const old=ensureDeletionReceipt();rememberDeletionStatus(pending);
+    const stub=createFetchStub({getSession:()=>ok(session())});renderApp(stub.fetch,'/settings/deletion');
+    await screen.findByRole('button',{name:'Delete my account'});
+    expect(screen.queryByText('Your account is blocked from further activity. Removal is queued.')).toBeNull();
+    expect(ensureDeletionReceipt()).not.toBe(old);
+  });
   it('persists a 256-bit receipt before the destructive request, clears private state, and checks with a body only', async () => {
     saveDraft('profile', { bio: 'private' });
     const stub = createFetchStub({ getSession: () => ok(session()), requestDeletion: c => {

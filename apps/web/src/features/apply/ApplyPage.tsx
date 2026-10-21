@@ -1,3 +1,4 @@
+import { useAssistantEditor, useAssistantEditorRevision } from '../assistant/index.ts';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { ApiError } from '@fancy/client';
@@ -33,6 +34,9 @@ const STATUS_COPY: Record<Application['state'], { title: string; prose: (host: s
  */
 export function ApplyPage() {
   const { mealId = '' } = useParams();
+  return <ApplicationEditorPage key={mealId} mealId={mealId} />;
+}
+function ApplicationEditorPage({ mealId }: { mealId: string }) {
   const { api, cache } = useApi();
   const session = useSignedIn();
   const gate = useActionGate();
@@ -47,6 +51,9 @@ export function ApplyPage() {
   const intent = useMemo(() => new Intent(api.retry), [api]);
 
   useEffect(() => { if (intro) saveDraft(draftKey, { intro }); else clearDraft(draftKey); }, [draftKey, intro]);
+  const editorVersion = useAssistantEditorRevision(intro);
+  const editorAvailable = q.data && !busy && (!q.data.myApplication || composeAgain) && (q.data.meal.allowedActions.includes('APPLY') || (!session && q.data.meal.status === 'OPEN'));
+  useAssistantEditor(editorAvailable ? { kind: 'APPLICATION', targetId: mealId, version: editorVersion, text: intro, apply: (candidate) => { if(candidate.text!==null){ setIntro(candidate.text); setError(''); } } } : null);
 
   if (!q.data) return q.error ? <><PageHeader title="Request a seat" backTo={`/meals/${mealId}`} /><div className="body-pad"><FormError>{errorMessage(q.error)}</FormError></div></> : <Loading />;
   const { meal, myApplication } = q.data;

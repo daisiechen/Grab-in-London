@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRenderedEvent } from '../../api/telemetry.tsx';
 import { useParams } from 'react-router';
 import { GlobeIcon } from '@radix-ui/react-icons';
 import { useApi } from '../../api/ApiProvider.tsx';
@@ -20,6 +21,7 @@ export function PublicProfilePage() {
   const q = useQuery<ProfileData>(`profile:${userId}`, async (c) => (await c.call('getPublicProfile', { params: { userId } })).data);
   const [more, setMore] = useState<{ reviews: PublicReview[]; cursor: string | null } | null>(null);
   const [error, setError] = useState('');
+  useRenderedEvent('profile_view',{userId},!!q.data);
 
   if (!q.data) return q.error ? <div className="body-pad"><FormError>{errorMessage(q.error)}</FormError></div> : <Loading />;
   const { profile } = q.data;

@@ -1,3 +1,5 @@
+import { useAssistantEditor, useAssistantEditorRevision } from '../assistant/index.ts';
+import { useRenderedEvent } from '../../api/telemetry.tsx';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useParams } from 'react-router';
 import { ApiError, newIntentKey, withRetry } from '@fancy/client';
@@ -31,7 +33,10 @@ const londonTime = (instant: string) => new Intl.DateTimeFormat('en-GB', { timeZ
  */
 export function ChatPage() {
   const { conversationId = '' } = useParams();
-  const { api } = useApi();
+  return <ConversationPage key={conversationId} conversationId={conversationId} />;
+}
+function ConversationPage({ conversationId }: { conversationId: string }) {
+  const { api, cache } = useApi();
   const { state, refresh } = useSession();
   const notify = useToast();
   const pollerDeps = usePollerDeps();
@@ -40,6 +45,7 @@ export function ChatPage() {
   const [conversation, setConversation] = useState<Conversation | null | undefined>(undefined);
   const [meal, setMeal] = useState<MealDetail['meal'] | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [hasRead,setHasRead]=useState(false);
   const [mode, setMode] = useState<Mode>('LIVE');
   const [olderCursor, setOlderCursor] = useState<string | null>(null);
   const [text, setText] = useState(() => loadDraft<{ text: string }>(`message:${conversationId}`)?.text ?? '');
@@ -52,10 +58,20 @@ export function ChatPage() {
   const pending = useRef<{ id: string; body: string } | null>(null);
   const poller = useRef<LivePoller | null>(null);
   const intent = useRef(new Intent(api.retry));
+  const [renderedThrough,setRenderedThrough] = useState<string|null>(null);
+  const acknowledged = useRef('0');
+  const [visible,setVisible] = useState(document.visibilityState !== 'hidden');
+  useRenderedEvent('chat_opened',{conversationId},!!conversation&&conversation.kind==='GROUP'&&hasRead);
+  useEffect(()=>{const changed=()=>setVisible(document.visibilityState !== 'hidden');document.addEventListener('visibilitychange',changed);return()=>document.removeEventListener('visibilitychange',changed);},[]);
+  const editorVersion = useAssistantEditorRevision(text);
+  useAssistantEditor(conversation?.kind === 'GROUP' && conversation.canSend && !conversation.dissolved && mode === 'LIVE' && !sending ? { kind: 'GROUP',targetId:conversationId,version:editorVersion,text,apply:(candidate)=>{if(candidate.text!==null){setText(candidate.text);pending.current=null;setError('');}} } : null);
 
   const absorb = useCallback((list: readonly Message[], scanned?: string) => {
+    setHasRead(true);
     after.current = maxSeq(after.current, scanned, ...list.map((m) => m.seq));
     if (list.length) setMessages((cur) => mergeMessages(cur, list));
+    const rendered = maxSeq(scanned,...list.map(message=>message.seq));
+    if(rendered)setRenderedThrough(previous=>maxSeq(previous,rendered));
   }, []);
 
   const toHistory = useCallback(async () => {
@@ -69,6 +85,10 @@ export function ChatPage() {
       /* the archive itself may be unavailable; already-shown authorised messages stay */
     }
   }, [absorb, api, conversationId]);
+
+  // Effects run after this batch is committed to the DOM. No acknowledgement while hidden,
+  // and a failed write is never optimistically reflected or automatically retried.
+  useEffect(()=>{if(!me||!visible||!renderedThrough||BigInt(renderedThrough)<=BigInt(acknowledged.current))return;acknowledged.current=renderedThrough;void api.client.call('markConversationRead',{params:{conversationId},body:{throughSeq:renderedThrough}}).then(()=>cache.delete('inbox')).catch(()=>{});},[api,cache,conversationId,me,renderedThrough,visible]);
 
   // Conversation metadata (+ meal for the pinned card / host role).
   useEffect(() => {
@@ -242,9 +262,9 @@ export function ChatPage() {
         <FormError>{error}</FormError>
       </div>
       {canSend ? (
-        <form className="composer" onSubmit={(e) => void send(e)}>
+        <form noValidate className="composer" onSubmit={(e) => void send(e)}>
           <label className="sr-only" htmlFor="composer">Message</label>
-          <textarea id="composer" rows={1} maxLength={2000} value={text} placeholder="Write a message…"
+          <textarea className="resize-none" id="composer" rows={1} maxLength={2000} value={text} placeholder="Write a message…"
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); void send(); } }} />
           <button type="submit" disabled={sending || !text.trim()} aria-label="Send message"><PaperPlaneIcon /></button>

@@ -6,7 +6,7 @@ import { Intent } from '../../api/webApi.ts';
 import { errorMessage } from '../../api/errors.ts';
 import { browser } from '../../lib/browser.ts';
 import { Field, FormError, Loading, Notice, PageHeader, Primary, PrimaryLink } from '../../ui/components.tsx';
-import { ensureDeletionReceipt, readDeletionReceipt } from './deletionReceipt.ts';
+import { ensureDeletionReceipt, readDeletionReceipt, readSavedDeletionStatus, rememberDeletionStatus } from './deletionReceipt.ts';
 
 type Status = ResponseOf<'deletionStatus'>['data'];
 const descriptions: Record<Status['status'], string> = {
@@ -23,12 +23,13 @@ export function DeletionPage() {
   const [checked, setChecked] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const [status, setStatus] = useState<Status | null>(null);
+  const [savedStatus, setStatus] = useState<Status | null>(readSavedDeletionStatus);
   const [receipt, setReceipt] = useState(readDeletionReceipt);
   const [reauth, setReauth] = useState(false);
   const [challenge, setChallenge] = useState<string | null>(null);
   const [code, setCode] = useState('');
   if (state.status === 'loading') return <Loading />;
+  const status=state.status==='signed-in'?null:savedStatus;
   const run = async (action: () => Promise<void>) => {
     setBusy(true); setError('');
     try { await action(); } catch (e) {
@@ -45,7 +46,7 @@ export function DeletionPage() {
     const version = state.session.user.version;
     const body = { confirm: true as const, receiptToken: token };
     const response = await intent.run({ body, version }, key => api.client.call('requestDeletion', { body, ifMatch: version, idempotencyKey: key }));
-    setStatus(response.data); clearLocal();
+    rememberDeletionStatus(response.data); setStatus(response.data); clearLocal();
   });
   const startProof = (method: 'EMAIL' | 'GOOGLE' | 'APPLE') => run(async () => {
     const result = await api.client.call('startReauth', { body: { clientRequestId: newIntentKey(), method, returnTarget: '/settings/deletion' } });
@@ -68,7 +69,7 @@ export function DeletionPage() {
         await refresh(); setReauth(false); setChallenge(null); setCode(''); setChecked(false);
       })}>Verify code</Primary></>}
     </section>}
-    {receipt && <Primary secondary disabled={busy} onClick={() => void run(async () => { const result = await api.client.call('deletionStatus', { body: { receiptToken: receipt } }); setStatus(result.data); })}>Check removal status</Primary>}
+    {receipt && state.status !== 'signed-in' && <Primary secondary disabled={busy} onClick={() => void run(async () => { const result = await api.client.call('deletionStatus', { body: { receiptToken: receipt } }); rememberDeletionStatus(result.data); setStatus(result.data); })}>Check removal status</Primary>}
     <FormError>{error}</FormError>
   </div></>;
 }

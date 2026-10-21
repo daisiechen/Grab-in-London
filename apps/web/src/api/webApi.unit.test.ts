@@ -39,3 +39,22 @@ describe('Intent (one user intent = one Idempotency-Key)', () => {
     expect(new Set(keys).size).toBe(keys.length);
   });
 });
+
+describe('web transport account lifetime',()=>{
+  it('rejects late private success and never lets an old 401 clear a newer session',async()=>{
+    const {createWebApi}=await import('./webApi.ts');
+    const {createFetchStub,deferred,ok,fail}=await import('../test/fetchStub.ts');
+    const {me}=await import('../test/fixtures.ts');
+    const pending=deferred<import('../test/fetchStub.ts').StubResponse>();
+    const oldUnauthorized=deferred<import('../test/fetchStub.ts').StubResponse>();
+    let calls=0,clears=0;
+    const stub=createFetchStub({getMe:()=>++calls===1?pending.promise:oldUnauthorized.promise});
+    const api=createWebApi({fetch:stub.fetch,baseUrl:'http://web.test'});api.onUnauthorized(()=>clears++);
+    api.setCsrfToken('first');
+    const a=api.client.call('getMe',{});const b=api.client.call('getMe',{});
+    const checkedA=expect(a).rejects.toMatchObject({code:'STATE_CONFLICT'});const checkedB=expect(b).rejects.toMatchObject({code:'STATE_CONFLICT'});
+    api.setCsrfToken(null);api.setCsrfToken('second');
+    pending.resolve(ok(me()));oldUnauthorized.resolve(fail(401,'AUTH_REQUIRED'));
+    await checkedA;await checkedB;expect(clears).toBe(0);
+  });
+});

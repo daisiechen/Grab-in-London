@@ -1,4 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useAssistantEditor, useAssistantEditorRevision } from '../assistant/index.ts';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTelemetry } from '../../api/telemetry.tsx';
+import { serverValidationMetrics,validationMetric } from './validationMetrics.ts';
 import { Link, useNavigate } from 'react-router';
 import { ApiError, type TimeChoice } from '@fancy/client';
 import { LANGUAGES, MOODS } from '@fancy/contracts';
@@ -46,8 +49,22 @@ export function CreatePage() {
   const [ambiguity, setAmbiguity] = useState<Ambiguity | null>(null);
   const [busy, setBusy] = useState(false);
   const intent = useMemo(() => new Intent(api.retry), [api]);
+  const telemetry=useTelemetry();
+  const started=useRef(new Set<string>()),arranged=useRef(new Set<string>());
+  const begin=()=>{
+    const key=`${telemetry.generation}:${draft.attemptId}`;
+    if(telemetry.enabled&&document.visibilityState==='visible'&&!started.current.has(key)){started.current.add(key);telemetry.emit('create_started',{attemptId:draft.attemptId});}
+  };
+  useEffect(()=>{if(state.status==='signed-in')begin();},[state.status,telemetry.enabled,telemetry.generation,draft.attemptId]);
+  const arrangedEvent=()=>{
+    begin();const key=`${telemetry.generation}:${draft.attemptId}`;
+    if(telemetry.enabled&&document.visibilityState==='visible'&&!arranged.current.has(key)){arranged.current.add(key);telemetry.emit('create_arranged',{attemptId:draft.attemptId});}
+  };
+  const formError=(s:Step,issue:string)=>{begin();const properties=validationMetric(draft.attemptId,s,issue);if(properties)telemetry.emit('form_error',properties);};
 
   useEffect(() => { saveDraft('create', draft); }, [draft]);
+  const editorVersion = useAssistantEditorRevision(JSON.stringify(draft));
+  useAssistantEditor(state.status === 'signed-in' && !busy ? { kind: 'CREATE', targetId: null, version: editorVersion, text: [draft.title,draft.description].filter(Boolean).join('\n'), apply: (candidate) => { if(candidate.fields){setDraft(previous=>({...previous,...candidate.fields,bookingConfirmed:false,reviewConfirmed:false}));setStep(1);setError('');} } } : null);
 
   if (state.status === 'loading') return <Loading />;
   if (state.status === 'guest') {
@@ -61,6 +78,7 @@ export function CreatePage() {
   }
 
   const update = (patch: Partial<MealDraft>) => {
+    begin();
     setDraft((d) => ({ ...d, ...patch, ...('reviewConfirmed' in patch ? {} : { reviewConfirmed: false }), ...(touchesBooking(patch) ? { bookingConfirmed: false } : {}) }));
     setError('');
     if ('date' in patch || 'time' in patch || 'closeDate' in patch || 'closeTime' in patch) setAmbiguity(null);
@@ -69,14 +87,16 @@ export function CreatePage() {
   const next = () => {
     const issue = validateStep(draft, step);
     setError(issue);
-    if (!issue) setStep((s) => Math.min(3, s + 1) as Step);
+    if(issue)formError(step,issue);
+    if (!issue) {if(step===0)arrangedEvent();setStep((s) => Math.min(3, s + 1) as Step);}
   };
 
   const publish = async () => {
     for (const s of [0, 1, 2, 3] as const) {
       const issue = validateStep(draft, s);
-      if (issue) { setError(issue); if (s < 3) setStep(s); return; }
+      if (issue) { formError(s,issue);setError(issue); if (s < 3) setStep(s); return; }
     }
+    arrangedEvent();
     if (!gate.check('/create')) return;
     const body = toCreateBody(draft);
     if (!body) return;
@@ -91,6 +111,8 @@ export function CreatePage() {
     } catch (e) {
       if (gate.handle(e, '/create')) return;
       const field = e instanceof ApiError ? timeFieldOf(e.fieldErrors) : null;
+      if(field&&e instanceof ApiError&&['TIME_AMBIGUOUS','TIME_NONEXISTENT','INVALID_OFFSET'].includes(e.code))telemetry.emit('form_error',{attemptId:draft.attemptId,step:'arrange',field:field==='start'?'time':'closeTime',errorCode:e.code==='TIME_AMBIGUOUS'?'time_ambiguous':e.code==='TIME_NONEXISTENT'?'time_nonexistent':'invalid'});
+      else if(e instanceof ApiError)for(const properties of serverValidationMetrics(draft.attemptId,e.fieldErrors))telemetry.emit('form_error',properties);
       if (e instanceof ApiError && e.code === 'TIME_AMBIGUOUS' && e.choices?.length && field) {
         setAmbiguity({ field, choices: e.choices });
         setError(errorMessage(e));

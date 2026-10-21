@@ -1,4 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTelemetry } from '../../api/telemetry.tsx';
+import { ObservedMeal } from './ObservedMeal.tsx';
 import { useSearchParams } from 'react-router';
 import { CUISINES, DIETARY, LANGUAGES, MOODS, type CuisineCode, type DietaryCode, type LanguageCode, type MoodCode } from '@fancy/contracts';
 import { CalendarIcon, ChevronDownIcon, LayersIcon, ListBulletIcon, MagnifyingGlassIcon, MixerHorizontalIcon, PersonIcon } from '@radix-ui/react-icons';
@@ -17,7 +19,7 @@ import {
 } from './filters.ts';
 
 type SheetKind = '' | 'date' | 'size' | 'filters';
-interface Results { meals: Meal[]; nextCursor: string | null }
+interface Results { meals: Meal[]; nextCursor: string | null; requestId:string; key:string }
 
 const BUDGETS: Array<readonly [string, string]> = [['', 'Any budget'], ['2000', 'Up to £20'], ['3000', 'Up to £30'], ['4000', 'Up to £40'], ['6000', 'Up to £60']];
 
@@ -31,27 +33,47 @@ const sizeButtonLabel = (sizes: number[]) => (sizes.length ? (sizes.length === 1
  */
 export function DiscoverPage() {
   const { api } = useApi();
+  const telemetry=useTelemetry();
+  const rendered=useRef(new Set<string>());
   const notify = useToast();
   const [params, setParams] = useSearchParams();
   const applied = useMemo(() => parseFilters(params), [params]);
   const view = params.get('view') === 'areas' ? 'areas' : 'list';
-  const queryKey = filtersToParams(applied).toString();
+  const queryKey = `${telemetry.enabled?`analytics-${telemetry.generation}`:'private'}:${filtersToParams(applied).toString()}`;
   const [sheet, setSheet] = useState<SheetKind>('');
   const [pending, setPending] = useState<Filters>(applied);
-  const [extra, setExtra] = useState<{ key: string; meals: Meal[]; nextCursor: string | null } | null>(null);
+  const [extra, setExtra] = useState<{ key: string; meals: Meal[]; nextCursor: string | null; proofs:Record<string,string>; requests:string[] } | null>(null);
   const [moreError, setMoreError] = useState('');
   const [area, setArea] = useState<string | null>(null);
+  const pendingFilterEvents=useRef<{key:string;filters:string[]}|null>(null);
 
   const results = useQuery<Results>(`discover:${queryKey}`, async (c) => {
     const res = await c.call('discoverMeals', { query: filtersToQuery(applied) });
-    return { meals: res.data, nextCursor: res.page.nextCursor };
+    return { meals: res.data, nextCursor: res.page.nextCursor,requestId:res.meta.requestId,key:queryKey };
   });
+  useEffect(()=>{
+    if(!telemetry.enabled)return;
+    const presented=()=>{
+    if(document.visibilityState!=='visible')return;
+    if(results.data?.key===queryKey&&pendingFilterEvents.current?.key===queryKey){
+      for(const filter of pendingFilterEvents.current.filters)telemetry.emit('filter_applied',{filter});
+      pendingFilterEvents.current=null;
+    }
+    for(const id of [results.data?.key===queryKey?results.data.requestId:undefined,...(extra?.key===queryKey?extra.requests:[])]) {
+      if(id&&!rendered.current.has(id)){rendered.current.add(id);telemetry.emit('discovery_results',{discoveryRequestId:id});}
+    }
+    };
+    presented();document.addEventListener('visibilitychange',presented);
+    return()=>document.removeEventListener('visibilitychange',presented);
+  },[telemetry,results.data,extra,queryKey]);
 
   const meals = [...(results.data?.meals ?? []), ...(extra?.key === queryKey ? extra.meals : [])];
   const nextCursor = extra?.key === queryKey ? extra.nextCursor : results.data?.nextCursor ?? null;
 
   const open = (kind: SheetKind) => { setPending(applied); setSheet(kind); };
   const apply = (next: Filters) => {
+    const dimensions=[['area','areaCodes'],['dates','dates'],['languages','languages'],['capacity','tableSizes'],['budget','budgetMaxPence'],['cuisine','cuisineCodes'],['dietary','dietaryCodes']] as const;
+    pendingFilterEvents.current=telemetry.enabled?{key:`analytics-${telemetry.generation}:${filtersToParams(next).toString()}`,filters:dimensions.filter(([,key])=>JSON.stringify(next[key])!==JSON.stringify(applied[key])).map(([name])=>name)}:null;
     setSheet('');
     setArea(null);
     setParams(filtersToParams(next, params));
@@ -66,7 +88,7 @@ export function DiscoverPage() {
     setMoreError('');
     try {
       const res = await api.client.call('discoverMeals', { query: filtersToQuery(applied, nextCursor) });
-      setExtra({ key: queryKey, meals: [...(extra?.key === queryKey ? extra.meals : []), ...res.data], nextCursor: res.page.nextCursor });
+      setExtra({ key: queryKey, meals: [...(extra?.key === queryKey ? extra.meals : []), ...res.data], nextCursor: res.page.nextCursor,proofs:{...(extra?.key===queryKey?extra.proofs:{}),...Object.fromEntries(res.data.map(m=>[m.id,res.meta.requestId]))},requests:[...(extra?.key===queryKey?extra.requests:[]),res.meta.requestId] });
     } catch (e) {
       setMoreError(errorMessage(e));
     }
@@ -122,7 +144,7 @@ export function DiscoverPage() {
               </>
             )}
             {view === 'list' && <div className="section-heading"><h2>A seat for you</h2><span>{meals.length} meals</span></div>}
-            {shown.map((m) => <div className="list-meal" key={m.id}><MealCard meal={m} compact /></div>)}
+            {shown.map((m) => <ObservedMeal key={m.id} meal={m} requestId={(extra?.key===queryKey?extra.proofs[m.id]:undefined)??(results.data?.key===queryKey?results.data.requestId:undefined)}><MealCard meal={m} compact /></ObservedMeal>)}
             {!meals.length && (
               <div className="empty">
                 <MagnifyingGlassIcon />
