@@ -12,7 +12,7 @@ Browser tab: 74633022, Title: "Fancy", URL: "http://127.0.0.1:5174/inbox".
 				37 tab (selected, settable, boolean) Applications, Value: 1, ID: inbox-applications-tab
 			38 container Description: Applications, ID: inbox-applications-panel
 				56 heading Applications & next steps 2, Value: 2
-					57 text Applications & next steps 
+					57 text Applications & next steps
 				58 text You’ve applied. Your group chat opens once your seat is confirmed.
 				59 container Application Application pending
 					60 heading QA Saturday brunch verification, Value: 3
