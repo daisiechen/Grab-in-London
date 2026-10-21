@@ -20,11 +20,12 @@ beforeEach(() => {
 describe('SignInScreen (S03)', () => {
   it('Google: system browser → handoff → profile setup for a new account', async () => {
     const app = createTestApp();
-    app.mock.on('POST', '/v1/auth/oauth/start', ok({ authorizationUrl: 'https://auth.example.test/a', stateTransactionId: CHALLENGE_ID }, 201));
+    app.mock.on('POST', '/v1/auth/oauth/start', ok({ authorizationUrl: 'https://auth.example.test/a?state=provider-state', stateTransactionId: CHALLENGE_ID }, 201));
+    app.mock.on('GET','/v1/auth/oauth/callback',ok({outcome:'AUTHENTICATED',handoffCode:HANDOFF}));
     app.mock.on('POST', '/v1/auth/handoff', ok(credentials()));
     app.mock.on('GET', '/v1/auth/session', ok(sessionInfo(incompleteMe())));
     app.openAuthSession.mockResolvedValueOnce({ type: WebBrowserResultType.DISMISS } as never);
-    app.openAuthSession.mockResolvedValueOnce({ type: 'success', url: `fancy://auth/callback?handoffCode=${HANDOFF}` });
+    app.openAuthSession.mockResolvedValueOnce({ type: 'success', url: 'fancy://auth/callback?code=provider-code&state=provider-state' });
     await renderApp(app, <SignInScreen />);
 
     await fireEvent.press(screen.getByRole('button', { name: 'Continue with Google' }));
@@ -34,17 +35,18 @@ describe('SignInScreen (S03)', () => {
 
     await fireEvent.press(screen.getByRole('button', { name: 'Continue with Google' }));
     await waitFor(() => expect(mockRouter.replace).toHaveBeenCalledWith('/profile-setup'));
-    expect(app.openAuthSession).toHaveBeenLastCalledWith('https://auth.example.test/a', 'fancy://auth/callback');
+    expect(app.openAuthSession).toHaveBeenLastCalledWith('https://auth.example.test/a?state=provider-state', 'fancy://auth/callback');
     expect(app.store.value?.refreshToken).toBe(credentials().refreshToken);
   });
 
   it('returning member goes back to the remembered meal target (QA-AUTH-004)', async () => {
     const app = createTestApp();
     rememberReturnTo('/meals/6a1f6c32-6c4e-4c4d-9a51-6c1d0e5f9b11/apply');
-    app.mock.on('POST', '/v1/auth/oauth/start', ok({ authorizationUrl: 'https://auth.example.test/a', stateTransactionId: CHALLENGE_ID }, 201));
+    app.mock.on('POST', '/v1/auth/oauth/start', ok({ authorizationUrl: 'https://auth.example.test/a?state=provider-state', stateTransactionId: CHALLENGE_ID }, 201));
+    app.mock.on('GET','/v1/auth/oauth/callback',ok({outcome:'AUTHENTICATED',handoffCode:HANDOFF}));
     app.mock.on('POST', '/v1/auth/handoff', ok(credentials()));
     app.mock.on('GET', '/v1/auth/session', ok(sessionInfo(me())));
-    app.openAuthSession.mockResolvedValueOnce({ type: 'success', url: `fancy://auth/callback?handoffCode=${HANDOFF}` });
+    app.openAuthSession.mockResolvedValueOnce({ type: 'success', url: 'fancy://auth/callback?code=provider-code&state=provider-state' });
     await renderApp(app, <SignInScreen />);
     await fireEvent.press(screen.getByRole('button', { name: 'Continue with Apple' }));
     await waitFor(() => expect(mockRouter.replace).toHaveBeenCalledWith('/meals/6a1f6c32-6c4e-4c4d-9a51-6c1d0e5f9b11/apply'));

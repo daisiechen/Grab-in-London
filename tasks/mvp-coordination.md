@@ -191,3 +191,10 @@
 - CLI默认同一进程浏览器认证后执行一条stdin命令，token仅RAM不写文件/argv/输出；显式安全注入旧token仅保留运维/测试兼容。原始本机HTTP path/host/origin/method/state/重复参数均校验，官方OS浏览器handler不用shell，超时退出关闭listener，无自动写重试。真实供应商回调名单/MFA及case grant仍待配置。
 - CLI18unit、后端identity+support41API及根真实HTTP listener→核心回调→PKCE兑换→session读取/无权限拒绝联调1通过。完整核心unit232/DB111/API144/release11、冻结前core:check以及最终API/contracts/CLI typecheck、限定eslint、generated检查通过；日志/private/tmp/fancy-f06-{core,api,http-loopback,check}.log。独立QA正式复验需固定新SHA，R32原失败保留。
 - 同时只读复核发现原生OAuth code/state未交core兑换，以及删除reauth误等handoff，属于另一本地桥接缺口（候选QA-F07）。已分配原生负责人最小修复并与本批分开提交，未以缺Key/真机免验，不在本批宣称iOS OAuth已闭环。
+
+## QA-F07 原生OAuth与再次认证桥接（2026-10-21）
+
+- QA独立R33复现Google/Apple原始code/state深链无法登录；开发新增oauth-bridge修前5失败，实际core JSON session的OAuth/EMAIL再次认证另2失败。旧客户端把提供方原code误当已经由核心兑换过的handoff，且曾接受URL linkTicket，不能归为设备或Key阻塞。
+- 修复严格绑定授权URL内真实provider state（不是stateTransactionId）与精确app回调，原code/state仅交现有HTTPS oauthCallback；仅其JSON结果能提供handoff或LINK_REQUIRED，URL中的handoff/linkTicket拒绝。正常登录才兑换handoff；两类再次认证重验证原family JSON session，再以同一删除intent/receipt提交。generation、userId及mounted校验防止退出/换账号/页面卸载后的响应继续删除；再次认证后仍要求reauth时不自动循环。
+- 冻结后根整合Web/后台219及iOS207测试通过（包含QA当前独立四项），全core:check通过；原生负责人另已完成iOS Hermes导出（/private/tmp/fancy-ios-f07-export及同名前缀日志）、类型/lint。根日志/private/tmp/fancy-f07-{clients,check}.log。仅原生七文件与本协调记录，不含QA/研究文件，不改server或共享契约；独立正式复验仍需固定修复SHA，真实Auth0/Google/Apple/设备仍未验收。
+- Claude对b76c593 CLI及本批原生源码继续只读交叉检查；其新增适配器MFA claim丢失与原生双证明链接缺口正分别核证，不将静态检查当测试通过，也不因已修F07宣称完整认证已闭环。

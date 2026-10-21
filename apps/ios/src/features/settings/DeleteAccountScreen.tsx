@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Share } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ApiError } from '@fancy/client';
@@ -10,18 +10,18 @@ import { Field } from '../../ui/Field.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
 import { Screen } from '../../ui/Screen.tsx';
 import { Body, Heading } from '../../ui/Text.tsx';
-import { parseAuthRedirect } from '../auth/oauth.ts';
+import { parseAuthRedirect,providerState } from '../auth/oauth.ts';
 import { otpErrorMessage } from '../auth/otp.ts';
 import { StaleSessionError } from '../auth/session.ts';
 
+type Binding={generation:number;userId:string};
 type Stage = { kind: 'intro' } | { kind: 'reauthEmail'; challengeId: string } | { kind: 'done'; receipt: string; status: string };
 
 /**
  * Account deletion (API §4): 5-minute re-authentication, then a synchronous barrier. The client
  * generates the 256-bit receipt token (only its hash is stored server-side) and shows it once so the
  * user can check status after every session and local cache has been removed.
- * CONTRACT GAP: how a startReauth email challenge is completed is not specified; verifyEmail +
- * exchangeHandoff (same as sign-in) is assumed.
+ * Reauthentication verifies provider/OTP proof on the existing family; it never redeems a new login handoff.
  */
 export function DeleteAccountScreen() {
   const services = useServices();
@@ -33,8 +33,13 @@ export function DeleteAccountScreen() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   // One deletion intent: same receipt token and Idempotency-Key across re-auth and network retries.
-  const intent = useRef<{ key: string; receiptToken: string } | null>(null);
-  const pkce = useRef<{ verifier: string; challenge: string } | null>(null);
+  const intent = useRef<({ key: string; receiptToken: string }&Binding) | null>(null);
+  const pkce = useRef<({ verifier: string; challenge: string;binding:Binding }) | null>(null);
+  const mounted=useRef(true);
+  useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;};},[]);
+  const actor=state.status==='signedIn'?state.session.user.id:null;const previousActor=useRef(actor);
+  useEffect(()=>{if(previousActor.current!==actor){previousActor.current=actor;intent.current=null;pkce.current=null;setCode('');setError(null);setStage(current=>actor===null&&current.kind==='done'?current:{kind:'intro'});}},[actor]);
+  const assertOwner=(binding:Binding)=>{session.assertGeneration(binding.generation);const current=session.getState();if(!mounted.current||current.status!=='signedIn'||current.session.user.id!==binding.userId)throw new StaleSessionError();};
 
   if (stage.kind === 'done') {
     return (
@@ -52,62 +57,59 @@ export function DeleteAccountScreen() {
   const me = state.session.user;
   const amr = state.session.amr;
 
-  const requestDeletion = async () => {
-    if (!intent.current) intent.current = { key: newId(), receiptToken: base64UrlEncode(services.randomBytes(32)) };
-    setBusy(true);
-    setError(null);
+  const requestDeletion = async (binding:Binding={generation:session.generation,userId:me.id},afterReauth=false) => {
+    setBusy(true);setError(null);
     try {
-      const res = await api.call('requestDeletion', { body: { confirm: true, receiptToken: intent.current.receiptToken }, idempotencyKey: intent.current.key, ifMatch: me.version });
-      const receipt = intent.current.receiptToken;
-      intent.current = null;
-      setStage({ kind: 'done', receipt, status: res.data.status });
+      assertOwner(binding);
+      if (!intent.current||intent.current.generation!==binding.generation||intent.current.userId!==binding.userId) intent.current = { key: newId(), receiptToken: base64UrlEncode(services.randomBytes(32)),...binding };
+      const attempt=intent.current;const current=session.getState();if(current.status!=='signedIn')throw new StaleSessionError();
+      const res = await api.call('requestDeletion', { body: { confirm: true, receiptToken: attempt.receiptToken }, idempotencyKey: attempt.key, ifMatch: current.session.user.version });
+      assertOwner(binding);intent.current = null;
+      setStage({ kind: 'done', receipt:attempt.receiptToken, status: res.data.status });
       await session.endForDeletion();
     } catch (e) {
-      if (e instanceof ApiError && e.code === 'REAUTH_REQUIRED') await startReauth();
+      if(e instanceof StaleSessionError)return;
+      if (e instanceof ApiError && e.code === 'REAUTH_REQUIRED'&&!afterReauth) await startReauth(binding);
       else setError(e instanceof ApiError && e.kind === 'network' ? 'We couldn’t confirm the request. Check your connection and try again.' : 'We couldn’t delete your account. Please try again or contact support.');
-    } finally {
-      setBusy(false);
-    }
+    } finally {if(mounted.current)setBusy(false);}
   };
 
-  const startReauth = async () => {
+  const confirmReauth=async(outcome:import('@fancy/client').ResponseOf<'oauthCallback'>['data'],binding:Binding)=>{
+    assertOwner(binding);
+    if(outcome.outcome!=='AUTHENTICATED'||!outcome.session||outcome.handoffCode||outcome.session.user.id!==binding.userId)throw new ApiError({status:409,code:'STATE_CONFLICT',message:'Unexpected reauthentication outcome'});
+    // Rotation/revalidation preserves the original family; no new sign-in credentials are minted.
+    const checked=await session.revalidate();assertOwner(binding);
+    if(checked.status!=='signedIn'||checked.session.user.id!==binding.userId)throw new StaleSessionError();
+  };
+  const startReauth = async (binding:Binding) => {
     const method = amr.includes('google') ? 'GOOGLE' : amr.includes('apple') ? 'APPLE' : 'EMAIL';
     try {
-      const pair = await services.createChallenge();
-      pkce.current = pair;
-      const res = await api.call('startReauth', { body: { clientRequestId: newId(), method, appChallenge: pair.challenge } });
+      assertOwner(binding);const pair = await services.createChallenge();assertOwner(binding);
+      pkce.current = {...pair,binding};
+      const res = await api.call('startReauth', { body: { clientRequestId: newId(), method, appChallenge: pair.challenge } });assertOwner(binding);
       if (method === 'EMAIL' && res.data.challengeId) {
-        setStage({ kind: 'reauthEmail', challengeId: res.data.challengeId });
-        setError('For your security, enter the code we just emailed you.');
-        return;
+        setStage({ kind: 'reauthEmail', challengeId: res.data.challengeId });setError('For your security, enter the code we just emailed you.');return;
       }
       if (!res.data.authorizationUrl) return setError('We couldn’t confirm it’s you. Please try again.');
-      const result = await services.openAuthSession(res.data.authorizationUrl, AUTH_REDIRECT_URL);
+      const expectedState=providerState(res.data.authorizationUrl);
+      const result = await services.openAuthSession(res.data.authorizationUrl, AUTH_REDIRECT_URL);assertOwner(binding);
       if (result.type !== 'success') return setError('Confirm it’s you to delete your account.');
-      const parsed = parseAuthRedirect(result.url, AUTH_REDIRECT_URL);
-      if (parsed.kind !== 'handoff') return setError('We couldn’t confirm it’s you. Please try again.');
-      await session.completeHandoff(parsed.code, pair.verifier);
-      await requestDeletion();
-    } catch (e) {
-      if (!(e instanceof StaleSessionError)) setError('We couldn’t confirm it’s you. Please try again.');
-    }
+      const parsed = parseAuthRedirect(result.url, AUTH_REDIRECT_URL,expectedState);
+      if (parsed.kind !== 'provider') return setError('We couldn’t confirm it’s you. Please try again.');
+      const outcome=await api.call('oauthCallback',{query:{code:parsed.code,state:parsed.state}});assertOwner(binding);
+      await confirmReauth(outcome.data,binding);await requestDeletion(binding,true);
+    } catch (e) {if (!(e instanceof StaleSessionError)) setError('We couldn’t confirm it’s you. Please try again.');}
   };
 
   const verifyCode = async () => {
     if (stage.kind !== 'reauthEmail' || !pkce.current) return;
-    setBusy(true);
+    const attempt=pkce.current;setBusy(true);
     try {
-      const pair = pkce.current;
-      const res = await api.call('verifyEmail', { body: { clientRequestId: newId(), challengeId: stage.challengeId, code, appChallenge: pair.challenge } });
-      if (res.data.outcome !== 'AUTHENTICATED' || !res.data.handoffCode) throw new ApiError({ status: 409, code: 'STATE_CONFLICT', message: 'unexpected' });
-      await session.completeHandoff(res.data.handoffCode, pair.verifier);
-      setStage({ kind: 'intro' });
-      await requestDeletion();
-    } catch (e) {
-      setError(otpErrorMessage(e).message);
-    } finally {
-      setBusy(false);
-    }
+      assertOwner(attempt.binding);
+      const res = await api.call('verifyEmail', { body: { clientRequestId: newId(), challengeId: stage.challengeId, code, appChallenge: attempt.challenge } });assertOwner(attempt.binding);
+      await confirmReauth(res.data,attempt.binding);setStage({ kind: 'intro' });await requestDeletion(attempt.binding,true);
+    } catch (e) {if(!(e instanceof StaleSessionError))setError(otpErrorMessage(e).message);}
+    finally {if(mounted.current)setBusy(false);}
   };
 
   return (

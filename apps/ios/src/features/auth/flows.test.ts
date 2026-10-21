@@ -20,29 +20,20 @@ function setup() {
   return { mock, api, manager, deps: { api, session: manager, createChallenge: async () => PAIR, newId: seqId } };
 }
 
-describe('parseAuthRedirect', () => {
-  it('rejects sibling callback paths, credentials and duplicate outcome parameters', () => {
-    for (const url of [
-      `${REDIRECT}.evil?handoffCode=${HANDOFF}`,
-      `fancy://auth/callback/extra?handoffCode=${HANDOFF}`,
-      `fancy://user@auth/callback?handoffCode=${HANDOFF}`,
-      `${REDIRECT}?handoffCode=${HANDOFF}&handoffCode=${HANDOFF}`,
-    ]) expect(parseAuthRedirect(url, REDIRECT).kind).toBe('error');
-  });
-
-  it('reads handoffCode, link-required and provider errors; rejects foreign prefixes', () => {
-    expect(parseAuthRedirect(`${REDIRECT}?handoffCode=${HANDOFF}`, REDIRECT)).toEqual({ kind: 'handoff', code: HANDOFF });
-    expect(parseAuthRedirect(`${REDIRECT}?outcome=LINK_REQUIRED&linkTicket=${'t'.repeat(32)}&expiresAt=2026-10-21T10:10:00Z`, REDIRECT)).toEqual({ kind: 'linkRequired', linkTicket: 't'.repeat(32), expiresAt: '2026-10-21T10:10:00Z' });
-    expect(parseAuthRedirect(`${REDIRECT}?error=access_denied`, REDIRECT)).toEqual({ kind: 'error', error: 'access_denied' });
-    expect(parseAuthRedirect(`https://evil.example/cb?handoffCode=${HANDOFF}`, REDIRECT)).toEqual({ kind: 'error', error: 'unexpected_redirect' });
-    expect(parseAuthRedirect(`${REDIRECT}?handoffCode=short`, REDIRECT)).toEqual({ kind: 'error', error: 'missing_code' });
-  });
+describe('parseAuthRedirect',()=>{
+ it('matches exact base and the provider state, rejecting injected handoff/ticket and duplicate fields',()=>{
+  for(const url of [`${REDIRECT}.evil?code=p&state=s`,`${REDIRECT}/extra?code=p&state=s`,`fancy://user@auth/callback?code=p&state=s`,`${REDIRECT}?code=p&code=q&state=s`,`${REDIRECT}?handoffCode=${HANDOFF}`,`${REDIRECT}?linkTicket=forged&state=s`])expect(parseAuthRedirect(url,REDIRECT,'s').kind).toBe('error');
+  expect(parseAuthRedirect(`${REDIRECT}?code=provider-code&state=s`,REDIRECT,'s')).toEqual({kind:'provider',code:'provider-code',state:'s'});
+  expect(parseAuthRedirect(`${REDIRECT}?error=access_denied&state=s`,REDIRECT,'s')).toEqual({kind:'error',error:'access_denied'});
+  expect(parseAuthRedirect(`${REDIRECT}?code=p&state=other`,REDIRECT,'s').kind).toBe('error');
+ });
 });
 
 describe('signInWithProvider (system browser + handoff)', () => {
   it('sends the app challenge, opens the system browser and redeems the handoff with the verifier', async () => {
     const { mock, deps } = setup();
-    mock.on('POST', '/v1/auth/oauth/start', ok({ authorizationUrl: 'https://auth.example.test/authorize?x=1', stateTransactionId: CHALLENGE_ID }, 201));
+    mock.on('POST', '/v1/auth/oauth/start', ok({ authorizationUrl: 'https://auth.example.test/authorize?state=provider-state', stateTransactionId: CHALLENGE_ID }, 201));
+    mock.on('GET','/v1/auth/oauth/callback',ok({outcome:'AUTHENTICATED',handoffCode:HANDOFF}));
     mock.on('POST', '/v1/auth/handoff', ok(credentials()));
     mock.on('GET', '/v1/auth/session', ok(sessionInfo()));
     const opened: string[] = [];
@@ -51,18 +42,18 @@ describe('signInWithProvider (system browser + handoff)', () => {
       redirectUrl: REDIRECT,
       openAuthSession: async (url, redirect) => {
         opened.push(url, redirect);
-        return { type: 'success', url: `${REDIRECT}?handoffCode=${HANDOFF}` };
+        return { type: 'success', url: `${REDIRECT}?code=provider-code&state=provider-state` };
       },
     });
     expect(result.kind).toBe('signedIn');
-    expect(opened).toEqual(['https://auth.example.test/authorize?x=1', REDIRECT]);
+    expect(opened).toEqual(['https://auth.example.test/authorize?state=provider-state', REDIRECT]);
     expect(mock.callsTo('POST', '/v1/auth/oauth/start')[0]?.body).toMatchObject({ provider: 'GOOGLE', client: 'IOS', appChallenge: PAIR.challenge });
     expect(mock.callsTo('POST', '/v1/auth/handoff')[0]?.body).toMatchObject({ code: HANDOFF, appVerifier: PAIR.verifier });
   });
 
   it('provider cancel returns to sign-in without any session request (QA-AUTH-004)', async () => {
     const { mock, deps, manager } = setup();
-    mock.on('POST', '/v1/auth/oauth/start', ok({ authorizationUrl: 'https://auth.example.test/a', stateTransactionId: CHALLENGE_ID }, 201));
+    mock.on('POST', '/v1/auth/oauth/start', ok({ authorizationUrl: 'https://auth.example.test/a?state=provider-state', stateTransactionId: CHALLENGE_ID }, 201));
     const result = await signInWithProvider('APPLE', { ...deps, redirectUrl: REDIRECT, openAuthSession: async () => ({ type: WebBrowserResultType.CANCEL }) });
     expect(result).toEqual({ kind: 'cancelled' });
     expect(mock.calls.map((c) => c.path)).toEqual(['/v1/auth/oauth/start']);
@@ -71,9 +62,10 @@ describe('signInWithProvider (system browser + handoff)', () => {
 
   it('surfaces LINK_REQUIRED without issuing a session', async () => {
     const { mock, deps, manager } = setup();
-    mock.on('POST', '/v1/auth/oauth/start', ok({ authorizationUrl: 'https://auth.example.test/a', stateTransactionId: CHALLENGE_ID }, 201));
-    const result = await signInWithProvider('GOOGLE', { ...deps, redirectUrl: REDIRECT, openAuthSession: async () => ({ type: 'success', url: `${REDIRECT}?outcome=LINK_REQUIRED&linkTicket=${'t'.repeat(40)}` }) });
-    expect(result).toEqual({ kind: 'linkRequired', linkTicket: 't'.repeat(40), expiresAt: null });
+    mock.on('POST', '/v1/auth/oauth/start', ok({ authorizationUrl: 'https://auth.example.test/a?state=provider-state', stateTransactionId: CHALLENGE_ID }, 201));
+    mock.on('GET','/v1/auth/oauth/callback',ok({outcome:'LINK_REQUIRED',linkTicket:'t'.repeat(40),expiresAt:'2026-10-21T10:10:00Z'}));
+    const result = await signInWithProvider('GOOGLE', { ...deps, redirectUrl: REDIRECT, openAuthSession: async () => ({ type: 'success', url: `${REDIRECT}?code=provider-code&state=provider-state` }) });
+    expect(result).toEqual({ kind: 'linkRequired', linkTicket: 't'.repeat(40), expiresAt: '2026-10-21T10:10:00Z' });
     expect(manager.getState().status).not.toBe('signedIn');
   });
 

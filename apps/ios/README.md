@@ -16,7 +16,7 @@ This file only records the iOS module layout and how to run it.
 | Runtime | Expo SDK 58 (expo 58.0.16), React Native 0.88.0, React 19.3.0, New Architecture, Hermes |
 | Navigation | expo-router 58 (file routes on react-native-screens native stack + native tabs) |
 | API | `@fancy/client` (`createApiClient` bearer credentials, `withRetry`, `newIntentKey`, `ApiError`), DTO types from `@fancy/contracts` |
-| Auth | expo-auth-session + expo-web-browser (system browser, PKCE app challenge) → one-time `handoffCode` → `exchangeHandoff`; email OTP via same API |
+| Auth | expo-auth-session + expo-web-browser (system browser, PKCE app challenge) → provider `code/state` → core `oauthCallback` JSON → one-time `handoffCode` → `exchangeHandoff`; email OTP via same API |
 | Session storage | access token in memory only; rotating refresh token in expo-secure-store (Keychain, `WHEN_UNLOCKED_THIS_DEVICE_ONLY`); install marker so a reinstall never reuses an old Keychain item |
 | Time input | `@react-native-community/datetimepicker` + server 422 `TIME_AMBIGUOUS` choices (explicit BST/GMT) / `TIME_NONEXISTENT` error |
 | Tests | jest-expo 58 (`jest-expo/ios` preset) + @testing-library/react-native 14, isolated mock `fetch` only |
@@ -138,3 +138,21 @@ event queue live only in RAM and clear on account/session changes. Source hooks 
 foreground presentation, discovery proofs and continuous 50%/one-second list visibility. Search input,
 message text and client-invented business success/result counts are not sent. Missing native protocol
 fails closed; component tests do not establish the device networking stack's behavior.
+
+
+### Native OAuth and account reauthentication bridge
+
+Google/Apple returns the original provider `code/state` to the exact registered
+`fancy://auth/callback` base. The app keeps the authorization URL's real provider state in RAM
+(distinct from `stateTransactionId`), rejects duplicate fields/fragments or a mismatched state,
+and relays code/state to the core `oauthCallback` API. Only the core exchanges the provider code
+with its stored verifier/nonce. Login then redeems the core JSON handoff using the app verifier.
+Raw `handoffCode` and link tickets from callback URLs are rejected; LINK_REQUIRED is accepted
+only from the HTTPS core JSON response and kept in RAM. The app never receives provider secrets.
+
+OAuth and emailed-code reauthentication return the existing family's JSON session. The client
+revalidates that family and rechecks actor/generation before retrying the original deletion key
+and receipt. It never signs in a replacement family to complete reauthentication. Failure,
+account switch or screen unmount stops the pending path; repeated REAUTH_REQUIRED after a verified
+attempt shows failure instead of recursively launching another deletion attempt. Local synthetic
+protocol and race tests do not replace real Auth0/Google/Apple configuration and device acceptance.
