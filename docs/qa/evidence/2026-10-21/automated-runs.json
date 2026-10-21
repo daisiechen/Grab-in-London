@@ -9047,6 +9047,825 @@
           "durationMs": 49.66724999999997
         }
       ]
+    },
+    {
+      "id": "R32",
+      "testedCommit": "291e11595aea7fb436a072a147fdecdc730c6e8f",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-auth-protocol.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-auth-protocol-repro.json",
+      "startedAt": "2026-10-21T09:55:41.290000+00:00",
+      "exitCode": 1,
+      "passed": 3,
+      "failed": 1,
+      "total": 4,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R32-T001",
+          "run": "R32",
+          "path": "scripts/qa-independent-auth-protocol.api.test.ts",
+          "title": "independent identity protocols QA-AUTH-008 discarded successful OTP response never replays old token from generic idempotency",
+          "status": "passed",
+          "durationMs": 105.32962500000008
+        },
+        {
+          "id": "R32-T002",
+          "run": "R32",
+          "path": "scripts/qa-independent-auth-protocol.api.test.ts",
+          "title": "independent identity protocols QA-AUTH-010 ticket expires at ten-minute boundary without returning identity list",
+          "status": "passed",
+          "durationMs": 20.201625000000035
+        },
+        {
+          "id": "R32-T003",
+          "run": "R32",
+          "path": "scripts/qa-independent-auth-protocol.api.test.ts",
+          "title": "independent identity protocols QA-AUTH-010 wrong original challenge rejected; correct challenge links once and second consumption rejects",
+          "status": "passed",
+          "durationMs": 14.665583999999967
+        },
+        {
+          "id": "R32-T004",
+          "run": "R32",
+          "path": "scripts/qa-independent-auth-protocol.api.test.ts",
+          "title": "independent identity protocols QA-API-010 SUPPORT_CLI can start approved browser authentication with app PKCE",
+          "status": "failed",
+          "durationMs": 2.411624999999958,
+          "failureSummary": "AssertionError: {\"error\":{\"code\":\"FORBIDDEN\",\"message\":\"Support CLI sign-in is not available yet.\"},\"meta\":{\"requestId\":\"8e2eae99-ae44-48e3-9641-4f91adc580e3\",\"serverNow\":\"2026-10-21T09:55:42.556Z\"}}: expected 403 to be 201 // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "R33",
+      "testedCommit": "291e11595aea7fb436a072a147fdecdc730c6e8f",
+      "command": "pnpm --filter @fancy/ios exec jest src/features/auth/qa-independent-oauth.test.ts --runInBand --json --outputFile=/private/tmp/fancy-independent-ios-oauth-repro.json",
+      "startedAt": "2026-10-21T10:02:36.314000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R33-T001",
+          "run": "R33",
+          "path": "apps/ios/src/features/auth/qa-independent-oauth.test.ts",
+          "title": "QA-F07 real provider code/state callback exchanges core JSON outcome before handoff and signs in",
+          "status": "failed",
+          "durationMs": 8,
+          "failureSummary": "Expected signedIn; received failed for provider code/state callback; core JSON exchange and handoff not reached."
+        }
+      ]
+    },
+    {
+      "id": "R34",
+      "testedCommit": "b76c5930b1b881bca4e0cd1f2d5caffde645d23b",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-auth-protocol.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-auth-protocol-b76c593.json",
+      "startedAt": "2026-10-21T10:05:14.169000+00:00",
+      "exitCode": 0,
+      "passed": 8,
+      "failed": 0,
+      "total": 8,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R34-T001",
+          "run": "R34",
+          "path": "scripts/qa-independent-auth-protocol.api.test.ts",
+          "title": "independent identity protocols QA-AUTH-008 discarded successful OTP response never replays old token from generic idempotency",
+          "status": "passed",
+          "durationMs": 110.51549999999997
+        },
+        {
+          "id": "R34-T002",
+          "run": "R34",
+          "path": "scripts/qa-independent-auth-protocol.api.test.ts",
+          "title": "independent identity protocols QA-AUTH-010 ticket expires at ten-minute boundary without returning identity list",
+          "status": "passed",
+          "durationMs": 20.459749999999985
+        },
+        {
+          "id": "R34-T003",
+          "run": "R34",
+          "path": "scripts/qa-independent-auth-protocol.api.test.ts",
+          "title": "independent identity protocols QA-AUTH-010 wrong original challenge rejected; correct challenge links once and second consumption rejects",
+          "status": "passed",
+          "durationMs": 14.486083000000008
+        },
+        {
+          "id": "R34-T004",
+          "run": "R34",
+          "path": "scripts/qa-independent-auth-protocol.api.test.ts",
+          "title": "independent identity protocols QA-API-010 SUPPORT_CLI can start approved browser authentication with app PKCE",
+          "status": "passed",
+          "durationMs": 0.6657919999998967
+        },
+        {
+          "id": "R34-T005",
+          "run": "R34",
+          "path": "scripts/qa-independent-auth-protocol.api.test.ts",
+          "title": "independent support access-only credentials fixture QA-API-010 synthetic issued CLI credential is 15-minute access-only and each case request rechecks grant role and MFA",
+          "status": "passed",
+          "durationMs": 17.900041999999985
+        },
+        {
+          "id": "R34-T006",
+          "run": "R34",
+          "path": "scripts/qa-independent-auth-protocol.api.test.ts",
+          "title": "independent registered CLI browser handoff QA-API-010 rejects unregistered host scheme path port query hash and userinfo before creating transaction",
+          "status": "passed",
+          "durationMs": 1.7517080000000078
+        },
+        {
+          "id": "R34-T007",
+          "run": "R34",
+          "path": "scripts/qa-independent-auth-protocol.api.test.ts",
+          "title": "independent registered CLI browser handoff QA-API-010 valid callback redeems 60-second PKCE handoff once into 15-minute access-only credentials",
+          "status": "passed",
+          "durationMs": 6.008166999999958
+        },
+        {
+          "id": "R34-T008",
+          "run": "R34",
+          "path": "scripts/qa-independent-auth-protocol.api.test.ts",
+          "title": "independent registered CLI browser handoff QA-API-010 wrong PKCE burns code and elapsed 60-second handoff cannot redeem",
+          "status": "passed",
+          "durationMs": 5.208999999999946
+        }
+      ]
+    },
+    {
+      "id": "R35",
+      "testedCommit": "b76c5930b1b881bca4e0cd1f2d5caffde645d23b",
+      "command": "pnpm exec vitest run --project api --project unit apps/api/src/identity/cli.api.test.ts apps/api/src/identity/cli-loopback.api.test.ts apps/support-cli/src/auth.unit.test.ts apps/support-cli/src/commands.unit.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-cli-b76c593.json",
+      "startedAt": "2026-10-21T10:05:16.971000+00:00",
+      "exitCode": 0,
+      "passed": 32,
+      "failed": 0,
+      "total": 32,
+      "suiteFiles": 4,
+      "assertions": [
+        {
+          "id": "R35-T001",
+          "run": "R35",
+          "path": "apps/support-cli/src/auth.unit.test.ts",
+          "title": "same-process browser OAuth and guarded loopback callback uses RAM PKCE and validates state, then exchanges once without returning tokens to the browser",
+          "status": "passed",
+          "durationMs": 33.31175000000002
+        },
+        {
+          "id": "R35-T002",
+          "run": "R35",
+          "path": "apps/support-cli/src/auth.unit.test.ts",
+          "title": "same-process browser OAuth and guarded loopback callback rejects wrong host, route, method, cross-origin request, duplicate parameters and state without consuming the real callback",
+          "status": "passed",
+          "durationMs": 12.387875000000008
+        },
+        {
+          "id": "R35-T003",
+          "run": "R35",
+          "path": "apps/support-cli/src/auth.unit.test.ts",
+          "title": "same-process browser OAuth and guarded loopback callback rejects wrong client, refresh-bearing or invalid-lifetime credentials",
+          "status": "passed",
+          "durationMs": 2.911292000000003
+        },
+        {
+          "id": "R35-T004",
+          "run": "R35",
+          "path": "apps/support-cli/src/auth.unit.test.ts",
+          "title": "same-process browser OAuth and guarded loopback callback rejects wrong client, refresh-bearing or invalid-lifetime credentials",
+          "status": "passed",
+          "durationMs": 2.372833999999955
+        },
+        {
+          "id": "R35-T005",
+          "run": "R35",
+          "path": "apps/support-cli/src/auth.unit.test.ts",
+          "title": "same-process browser OAuth and guarded loopback callback rejects wrong client, refresh-bearing or invalid-lifetime credentials",
+          "status": "passed",
+          "durationMs": 3.360500000000002
+        },
+        {
+          "id": "R35-T006",
+          "run": "R35",
+          "path": "apps/support-cli/src/auth.unit.test.ts",
+          "title": "same-process browser OAuth and guarded loopback callback rejects wrong client, refresh-bearing or invalid-lifetime credentials",
+          "status": "passed",
+          "durationMs": 2.3646659999999997
+        },
+        {
+          "id": "R35-T007",
+          "run": "R35",
+          "path": "apps/support-cli/src/auth.unit.test.ts",
+          "title": "same-process browser OAuth and guarded loopback callback expires the local listener and never exchanges when browser login does not finish",
+          "status": "passed",
+          "durationMs": 213.2475
+        },
+        {
+          "id": "R35-T008",
+          "run": "R35",
+          "path": "apps/support-cli/src/auth.unit.test.ts",
+          "title": "same-process browser OAuth and guarded loopback callback default run logs in then executes exactly one stdin command and never outputs credentials",
+          "status": "passed",
+          "durationMs": 19.80716700000005
+        },
+        {
+          "id": "R35-T009",
+          "run": "R35",
+          "path": "apps/support-cli/src/auth.unit.test.ts",
+          "title": "same-process browser OAuth and guarded loopback callback invalid input never opens the browser and provider/browser errors remain fixed diagnostics",
+          "status": "passed",
+          "durationMs": 3.75324999999998
+        },
+        {
+          "id": "R35-T010",
+          "run": "R35",
+          "path": "apps/support-cli/src/auth.unit.test.ts",
+          "title": "same-process browser OAuth and guarded loopback callback never launches an arbitrary OS protocol or URL containing userinfo from the API response",
+          "status": "passed",
+          "durationMs": 8.59845800000005
+        },
+        {
+          "id": "R35-T011",
+          "run": "R35",
+          "path": "apps/support-cli/src/commands.unit.test.ts",
+          "title": "support CLI strict stdin commands parses all three exact shapes and keeps explicit intent and versions",
+          "status": "passed",
+          "durationMs": 3.001708000000008
+        },
+        {
+          "id": "R35-T012",
+          "run": "R35",
+          "path": "apps/support-cli/src/commands.unit.test.ts",
+          "title": "support CLI strict stdin commands rejects unknown keys, private argv, missing intent/version/reason, invalid enums and invalid versions",
+          "status": "passed",
+          "durationMs": 1.8161660000000097
+        },
+        {
+          "id": "R35-T013",
+          "run": "R35",
+          "path": "apps/support-cli/src/commands.unit.test.ts",
+          "title": "support CLI strict stdin commands refuses insecure nonlocal origins, URL credentials, query tokens and malformed credentials",
+          "status": "passed",
+          "durationMs": 1.162417000000005
+        },
+        {
+          "id": "R35-T014",
+          "run": "R35",
+          "path": "apps/support-cli/src/commands.unit.test.ts",
+          "title": "support CLI strict stdin commands sends resolve once with bearer, If-Match and unchanged intent; only explicit repeat retries",
+          "status": "passed",
+          "durationMs": 6.592000000000041
+        },
+        {
+          "id": "R35-T015",
+          "run": "R35",
+          "path": "apps/support-cli/src/commands.unit.test.ts",
+          "title": "support CLI strict stdin commands sends correction expectedVersion in body and never prints mutation case or subject details",
+          "status": "passed",
+          "durationMs": 2.510249999999985
+        },
+        {
+          "id": "R35-T016",
+          "run": "R35",
+          "path": "apps/support-cli/src/commands.unit.test.ts",
+          "title": "support CLI strict stdin commands only the explicit view command emits case facts",
+          "status": "passed",
+          "durationMs": 0.7039580000000001
+        },
+        {
+          "id": "R35-T017",
+          "run": "R35",
+          "path": "apps/support-cli/src/commands.unit.test.ts",
+          "title": "support CLI strict stdin commands does not leak errors, token, private body, requestId or field errors and never refreshes/retries",
+          "status": "passed",
+          "durationMs": 1.045833000000016
+        },
+        {
+          "id": "R35-T018",
+          "run": "R35",
+          "path": "apps/support-cli/src/commands.unit.test.ts",
+          "title": "support CLI strict stdin commands rejects invalid input before transport and produces a fixed safe diagnostic",
+          "status": "passed",
+          "durationMs": 0.3542500000000359
+        },
+        {
+          "id": "R35-T019",
+          "run": "R35",
+          "path": "apps/api/src/identity/cli-loopback.api.test.ts",
+          "title": "connects the CLI loopback listener to the real HTTP core callback and PKCE exchange",
+          "status": "passed",
+          "durationMs": 382.42983300000014
+        },
+        {
+          "id": "R35-T020",
+          "run": "R35",
+          "path": "apps/api/src/identity/cli.api.test.ts",
+          "title": "issues a 60-second PKCE handoff then a 15-minute opaque CLI session without refresh or implicit support rights",
+          "status": "passed",
+          "durationMs": 341.501667
+        },
+        {
+          "id": "R35-T021",
+          "run": "R35",
+          "path": "apps/api/src/identity/cli.api.test.ts",
+          "title": "burns a wrong-verifier handoff and refuses expired handoffs",
+          "status": "passed",
+          "durationMs": 22.188374999999724
+        },
+        {
+          "id": "R35-T022",
+          "run": "R35",
+          "path": "apps/api/src/identity/cli.api.test.ts",
+          "title": "refuses nonliteral or unregistered loopback http://localhost:54321/auth/callback",
+          "status": "passed",
+          "durationMs": 1.8012910000002194
+        },
+        {
+          "id": "R35-T023",
+          "run": "R35",
+          "path": "apps/api/src/identity/cli.api.test.ts",
+          "title": "refuses nonliteral or unregistered loopback http://127.0.0.1:80/auth/callback",
+          "status": "passed",
+          "durationMs": 1.5263749999999163
+        },
+        {
+          "id": "R35-T024",
+          "run": "R35",
+          "path": "apps/api/src/identity/cli.api.test.ts",
+          "title": "refuses nonliteral or unregistered loopback http://127.0.0.1:65536/auth/callback",
+          "status": "passed",
+          "durationMs": 1.4114159999999174
+        },
+        {
+          "id": "R35-T025",
+          "run": "R35",
+          "path": "apps/api/src/identity/cli.api.test.ts",
+          "title": "refuses nonliteral or unregistered loopback http://127.0.0.1:54321/other",
+          "status": "passed",
+          "durationMs": 0.9321669999999358
+        },
+        {
+          "id": "R35-T026",
+          "run": "R35",
+          "path": "apps/api/src/identity/cli.api.test.ts",
+          "title": "refuses nonliteral or unregistered loopback http://127.0.0.1:54321/auth/callback?next=evil",
+          "status": "passed",
+          "durationMs": 0.7573330000000169
+        },
+        {
+          "id": "R35-T027",
+          "run": "R35",
+          "path": "apps/api/src/identity/cli.api.test.ts",
+          "title": "refuses nonliteral or unregistered loopback http://127.0.0.1:54321/auth/callback#evil",
+          "status": "passed",
+          "durationMs": 1.0962910000002921
+        },
+        {
+          "id": "R35-T028",
+          "run": "R35",
+          "path": "apps/api/src/identity/cli.api.test.ts",
+          "title": "refuses nonliteral or unregistered loopback http://user@127.0.0.1:54321/auth/callback",
+          "status": "passed",
+          "durationMs": 0.8413330000003043
+        },
+        {
+          "id": "R35-T029",
+          "run": "R35",
+          "path": "apps/api/src/identity/cli.api.test.ts",
+          "title": "refuses nonliteral or unregistered loopback http://2130706433:54321/auth/callback",
+          "status": "passed",
+          "durationMs": 0.79300000000012
+        },
+        {
+          "id": "R35-T030",
+          "run": "R35",
+          "path": "apps/api/src/identity/cli.api.test.ts",
+          "title": "refuses nonliteral or unregistered loopback http://127.0.0.1:54321/auth/%63allback",
+          "status": "passed",
+          "durationMs": 0.6620419999999285
+        },
+        {
+          "id": "R35-T031",
+          "run": "R35",
+          "path": "apps/api/src/identity/cli.api.test.ts",
+          "title": "requires CLI challenge and loopback while disallowing loopback on other clients",
+          "status": "passed",
+          "durationMs": 2.2298329999998714
+        },
+        {
+          "id": "R35-T032",
+          "run": "R35",
+          "path": "apps/api/src/identity/cli.api.test.ts",
+          "title": "keeps a link-required identity in the browser error without issuing a CLI session or leaking a ticket",
+          "status": "passed",
+          "durationMs": 99.04445900000019
+        }
+      ]
+    },
+    {
+      "id": "R36",
+      "testedCommit": "10809932f5afe9899c7567fe12314befbaecded5",
+      "command": "pnpm --filter @fancy/ios exec jest src/features/auth/qa-independent-oauth.test.ts src/features/auth/oauth-bridge.test.ts src/features/auth/flows.test.ts src/features/settings/settings.test.tsx src/features/auth/screens/auth-screens.test.tsx --runInBand --json --outputFile=/private/tmp/fancy-independent-ios-oauth-1080993.json",
+      "startedAt": "2026-10-21T11:52:53.043000+00:00",
+      "exitCode": 0,
+      "passed": 49,
+      "failed": 0,
+      "total": 49,
+      "suiteFiles": 5,
+      "assertions": [
+        {
+          "id": "R36-T001",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/screens/auth-screens.test.tsx",
+          "title": "SignInScreen (S03) Google: system browser → handoff → profile setup for a new account",
+          "status": "passed",
+          "durationMs": 136
+        },
+        {
+          "id": "R36-T002",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/screens/auth-screens.test.tsx",
+          "title": "SignInScreen (S03) returning member goes back to the remembered meal target (QA-AUTH-004)",
+          "status": "passed",
+          "durationMs": 5
+        },
+        {
+          "id": "R36-T003",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/screens/auth-screens.test.tsx",
+          "title": "SignInScreen (S03) shows the community principles in a native sheet",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R36-T004",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/screens/auth-screens.test.tsx",
+          "title": "EmailScreen (S04, QA-AUTH-002/003) validates the email, sends a code, enforces the resend cooldown and handles a wrong then right code",
+          "status": "passed",
+          "durationMs": 15
+        },
+        {
+          "id": "R36-T005",
+          "run": "R36",
+          "path": "apps/ios/src/features/settings/settings.test.tsx",
+          "title": "SurveyScreen (S24) needs at least one answer, then saves with If-Match independent of any meal",
+          "status": "passed",
+          "durationMs": 25
+        },
+        {
+          "id": "R36-T006",
+          "run": "R36",
+          "path": "apps/ios/src/features/settings/settings.test.tsx",
+          "title": "ReportScreen sends a private report and shows the receipt, not a resolution",
+          "status": "passed",
+          "durationMs": 4
+        },
+        {
+          "id": "R36-T007",
+          "run": "R36",
+          "path": "apps/ios/src/features/settings/settings.test.tsx",
+          "title": "ReportScreen rejects an invalid target",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R36-T008",
+          "run": "R36",
+          "path": "apps/ios/src/features/settings/settings.test.tsx",
+          "title": "DeleteAccountScreen (QA deletion receipt) REAUTH_REQUIRED → system-browser re-auth → retry with the same key and receipt → signed out, receipt shown",
+          "status": "passed",
+          "durationMs": 5
+        },
+        {
+          "id": "R36-T009",
+          "run": "R36",
+          "path": "apps/ios/src/features/settings/settings.test.tsx",
+          "title": "DeletionStatusScreen checks status with the receipt in the body, never the URL",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R36-T010",
+          "run": "R36",
+          "path": "apps/ios/src/features/settings/settings.test.tsx",
+          "title": "DeleteAccountScreen email re-auth OTP sessions re-authenticate with an emailed code bound to the app challenge",
+          "status": "passed",
+          "durationMs": 6
+        },
+        {
+          "id": "R36-T011",
+          "run": "R36",
+          "path": "apps/ios/src/features/settings/settings.test.tsx",
+          "title": "does not continue deletion after a late browser callback when switch occurs",
+          "status": "passed",
+          "durationMs": 4
+        },
+        {
+          "id": "R36-T012",
+          "run": "R36",
+          "path": "apps/ios/src/features/settings/settings.test.tsx",
+          "title": "does not continue deletion after a late browser callback when unmount occurs",
+          "status": "passed",
+          "durationMs": 7
+        },
+        {
+          "id": "R36-T013",
+          "run": "R36",
+          "path": "apps/ios/src/features/settings/settings.test.tsx",
+          "title": "ignores late core reauth after account switch without deleting B or restoring A",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R36-T014",
+          "run": "R36",
+          "path": "apps/ios/src/features/settings/settings.test.tsx",
+          "title": "does not delete on mismatched reauth identity or failed core provider verification",
+          "status": "passed",
+          "durationMs": 4
+        },
+        {
+          "id": "R36-T015",
+          "run": "R36",
+          "path": "apps/ios/src/features/settings/settings.test.tsx",
+          "title": "stops if the server still requires reauth after a verified same-family attempt",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R36-T016",
+          "run": "R36",
+          "path": "apps/ios/src/features/settings/settings.test.tsx",
+          "title": "does not retry deletion after an invalid email reauth code",
+          "status": "passed",
+          "durationMs": 4
+        },
+        {
+          "id": "R36-T017",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "bridges GOOGLE provider code through core callback before handoff redemption",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R36-T018",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "bridges APPLE provider code through core callback before handoff redemption",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R36-T019",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "rejects unsafe callback before core/session requests: fancy://auth/callback?code=p&state=wrong",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T020",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "rejects unsafe callback before core/session requests: fancy://auth/callback?code=p&code=q&state=synthetic-provider-state",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T021",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "rejects unsafe callback before core/session requests: fancy://auth/callback?code=p&state=synthetic-provider-state&state=synthetic-provider-state",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T022",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "rejects unsafe callback before core/session requests: fancy://auth/callback.evil?code=p&state=synthetic-provider-state",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R36-T023",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "rejects unsafe callback before core/session requests: fancy://auth/callback?code=p&state=synthetic-provider-state#x",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T024",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "rejects unsafe callback before core/session requests: fancy://auth/callback?handoffCode=handoff-code-0000000000000000000000000",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T025",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "rejects unsafe callback before core/session requests: fancy://auth/callback?code=p&state=synthetic-provider-state&linkTicket=forged",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T026",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "rejects unsafe callback before core/session requests: fancy://auth/callback?outcome=LINK_REQUIRED&linkTicket=forged&state=synthetic-provider-state",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T027",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "accepts LINK_REQUIRED only from core JSON and never mints a session",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T028",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "does not redeem a handoff if provider verification fails at core",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R36-T029",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "fails before opening a provider URL without one real state: https://auth.example.test/authorize",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T030",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "fails before opening a provider URL without one real state: https://auth.example.test/authorize?state=a&state=b",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T031",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "treats a state-bound provider denial as cancellation, never a handoff",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T032",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "ignores a late provider redirect after logout and account B login",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R36-T033",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/oauth-bridge.test.ts",
+          "title": "ignores late core verification after account switch without redeeming the old handoff",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R36-T034",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/flows.test.ts",
+          "title": "parseAuthRedirect matches exact base and the provider state, rejecting injected handoff/ticket and duplicate fields",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T035",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/flows.test.ts",
+          "title": "signInWithProvider (system browser + handoff) sends the app challenge, opens the system browser and redeems the handoff with the verifier",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T036",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/flows.test.ts",
+          "title": "signInWithProvider (system browser + handoff) provider cancel returns to sign-in without any session request (QA-AUTH-004)",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T037",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/flows.test.ts",
+          "title": "signInWithProvider (system browser + handoff) surfaces LINK_REQUIRED without issuing a session",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R36-T038",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/flows.test.ts",
+          "title": "signInWithProvider (system browser + handoff) offline start shows a retryable message",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T039",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/flows.test.ts",
+          "title": "email OTP (QA-AUTH-002/003/007/008) rejects an invalid email locally without calling the API",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T040",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/flows.test.ts",
+          "title": "email OTP (QA-AUTH-002/003/007/008) starts an IOS challenge with a trimmed email",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T041",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/flows.test.ts",
+          "title": "email OTP (QA-AUTH-002/003/007/008) a wrong code does not sign in and keeps the challenge",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T042",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/flows.test.ts",
+          "title": "email OTP (QA-AUTH-002/003/007/008) an expired code asks for a new one without calling the API",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R36-T043",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/flows.test.ts",
+          "title": "email OTP (QA-AUTH-002/003/007/008) a consumed/locked challenge (409) requires a new code instead of replaying",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T044",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/flows.test.ts",
+          "title": "email OTP (QA-AUTH-002/003/007/008) a correct code exchanges the handoff with this attempt verifier",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T045",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/flows.test.ts",
+          "title": "return target keeps allow-listed app paths and drops anything else",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T046",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/qa-independent-oauth.test.ts",
+          "title": "QA-F07 GOOGLE real provider code/state callback exchanges core JSON outcome before handoff and signs in",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R36-T047",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/qa-independent-oauth.test.ts",
+          "title": "QA-F07 APPLE real provider code/state callback exchanges core JSON outcome before handoff and signs in",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R36-T048",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/qa-independent-oauth.test.ts",
+          "title": "QA-F07 mismatched provider state never exchanges core or handoff",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R36-T049",
+          "run": "R36",
+          "path": "apps/ios/src/features/auth/qa-independent-oauth.test.ts",
+          "title": "QA-F07 LINK_REQUIRED comes from core JSON without a link ticket in callback URL or handoff",
+          "status": "passed",
+          "durationMs": 0
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -9066,7 +9885,9 @@
     "scripts/qa-independent-ai-budget.api.test.ts": "7d7064a23115ea75243e97bd0e1ca423ecc5f63a9af199bfb785cf43a2593ae4",
     "apps/web/src/features/assistant/qa-independent-session.unit.test.tsx": "8382dada4f38db9d53988c7739db587207674e011ec606aaca940f96c39426c1",
     "scripts/qa-independent-ai-session.api.test.ts": "8910212437dc6e1484f1778200517e03a6731ca5a7c35bf6583628991b680ff3",
-    "scripts/qa-independent-access.api.test.ts": "be6bfd2b89278cb935dda6258bdb8372a4f06a60805ace1967351bb52f6cac42"
+    "scripts/qa-independent-access.api.test.ts": "be6bfd2b89278cb935dda6258bdb8372a4f06a60805ace1967351bb52f6cac42",
+    "scripts/qa-independent-auth-protocol.api.test.ts": "5f86f768740c0ad39228d81cdef12a2f55da5d6db6446359442719d708aec835",
+    "apps/ios/src/features/auth/qa-independent-oauth.test.ts": "b9a279faea7b109da69c30634fe35b2f705ed0a0f7d92ad3d5d28aafdb45bdd0"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。",
   "runtimeSnapshotVerification": {
@@ -9116,6 +9937,18 @@
     {
       "run": "R31",
       "detail": "跨快照下钻首前置使用未来饭局，正式meals指标仅纳入已开始场而无分页cursor；改为已开始合成数据后seal，4项全过，不修改成熟度规则。CSV公式转义为真实formatter单元断言，下载授权/epoch为真实HTTP；未把formatter等同Excel实际执行。"
+    },
+    {
+      "run": "R32",
+      "detail": "初次关联票据预期误写403；正式LINK_TICKET_INVALID为409，更正后过期/重复消费与错proof均通过。不改产品实现。CLI合法startOAuth依然403，稳定复现F06。"
+    },
+    {
+      "run": "R34",
+      "detail": "修复补齐每次start登记loopbackRedirectUri必填参数，原R32旧入口失败保留；修后合法请求显式登记，不把缺登记422改为201。CLI权限夹具report.reason误用synthetic_concern被正确422拒绝，改正式private_concern后全过。"
+    },
+    {
+      "run": "R36",
+      "detail": "LINK_REQUIRED扩展探针曾后注册mock.on却未覆盖先注册成功路由，导致得到signedIn；修为setup(outcome)单一路由后4项过。该次是QA夹具，不是新产品缺陷。R33原provider code/state失败不删除。"
     }
   ]
 }

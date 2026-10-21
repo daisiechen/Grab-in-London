@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 117,
-    "PASS": 88,
+    "NOT_RUN": 114,
+    "PASS": 91,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -1770,8 +1770,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R32-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T001",
         "R1-T002",
@@ -1866,14 +1868,15 @@
         "R2-T164",
         "R2-T165",
         "R2-T166",
-        "R2-T167"
+        "R2-T167",
+        "R32-T001"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "不从通用幂等表返回旧明文token",
-        "提示重新认证或重新start"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "真实HTTP/test IDP：成功OTP响应丢弃后另一浏览器重放同clientRequestId/challenge/code得到409 STATE_CONFLICT，提示重新start；无cookie/凭据/data，通用idempotency无OTP验证明文结果。"
     },
     {
       "id": "QA-AUTH-009",
@@ -1994,8 +1997,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R32-T002",
+        "R32-T003"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T001",
         "R1-T002",
@@ -2090,14 +2096,16 @@
         "R2-T164",
         "R2-T165",
         "R2-T166",
-        "R2-T167"
+        "R2-T167",
+        "R32-T002",
+        "R32-T003"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "过期/错绑定/重放拒绝",
-        "不返回旧身份列表"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "真实HTTP/PG核LINK票据约10分钟TTL；令ticket恰过期后409不返回identities。其他family的原challenge proof403，正确proof仅成功一次，新intent再消费409且无旧身份列表。未真实提供方调用。"
     },
     {
       "id": "QA-AUTH-011",
@@ -15237,10 +15245,7 @@
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
-      "evidence": [
-        "B1",
-        "B2"
-      ],
+      "evidence": [],
       "relatedAutomatedAssertions": [
         "R1-T054",
         "R1-T055",
@@ -15548,7 +15553,57 @@
         "R5-T008",
         "R5-T009",
         "R5-T010",
-        "R5-T011"
+        "R5-T011",
+        "R33-T001",
+        "R36-T001",
+        "R36-T002",
+        "R36-T003",
+        "R36-T004",
+        "R36-T005",
+        "R36-T006",
+        "R36-T007",
+        "R36-T008",
+        "R36-T009",
+        "R36-T010",
+        "R36-T011",
+        "R36-T012",
+        "R36-T013",
+        "R36-T014",
+        "R36-T015",
+        "R36-T016",
+        "R36-T017",
+        "R36-T018",
+        "R36-T019",
+        "R36-T020",
+        "R36-T021",
+        "R36-T022",
+        "R36-T023",
+        "R36-T024",
+        "R36-T025",
+        "R36-T026",
+        "R36-T027",
+        "R36-T028",
+        "R36-T029",
+        "R36-T030",
+        "R36-T031",
+        "R36-T032",
+        "R36-T033",
+        "R36-T034",
+        "R36-T035",
+        "R36-T036",
+        "R36-T037",
+        "R36-T038",
+        "R36-T039",
+        "R36-T040",
+        "R36-T041",
+        "R36-T042",
+        "R36-T043",
+        "R36-T044",
+        "R36-T045",
+        "R36-T046",
+        "R36-T047",
+        "R36-T048",
+        "R36-T049"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -15558,9 +15613,9 @@
         "出席才反馈",
         "后台同一事实可追溯"
       ],
-      "actual": "QA-F01在04cb601经两场pending卡片浏览器及API/Web/iOS组件定向复验关闭；保留原失败历史。出席、反馈及后台追溯后半程未完成，因此完整旅程仍NOT_RUN。",
+      "actual": "QA-F07在1080993定向修复关闭：R36独立49项含QA自有Google/Apple code-state→core JSON→handoff、错state、JSON LINK_REQUIRED，以及OAuth/email reauth与切账号晚到响应。仅解除iOS登录必要前置失败；原加入者完整Web/iOS跨端后半程及后台同事实核账仍未跑完，保留NOT_RUN。",
       "defectIds": [
-        "QA-F01"
+        "QA-F07"
       ],
       "relatedBrowserEvidence": [
         "B1"
@@ -18774,8 +18829,14 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R34-T004",
+        "R34-T005",
+        "R34-T006",
+        "R34-T007",
+        "R34-T008"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T242",
         "R1-T243",
@@ -18894,16 +18955,25 @@
         "R3-T026",
         "R3-T027",
         "R3-T028",
-        "R3-T029"
+        "R3-T029",
+        "R32-T004",
+        "R34-T004",
+        "R34-T005",
+        "R34-T006",
+        "R34-T007",
+        "R34-T008"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "只允许登记loopback",
-        "60秒绑定challenge",
-        "15分钟session无refresh",
-        "case/MFA每次重验"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2,
+        3
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "QA-F06在b76c593修复。独立8auth探针含登记127.0.0.1固定path、非法host/scheme/path/port/query/hash/userinfo拒绝、provider直接/v1核心callback、303原state、60秒PKCE handoff错码/过期/消费拒绝、15min access无refresh；合成CLI凭据每次重查case/MFA/role。R35另独立32项含真实loopback listener联调。非真实浏览器/提供方MFA或上线验收。",
+      "defectIds": [
+        "QA-F06"
+      ]
     },
     {
       "id": "QA-DB-012",
@@ -21331,7 +21401,14 @@
     ],
     "initialDocumentationFailure": "新增浏览器证据未直接列入docs/README.md；补索引后69项通过，未删除或降低断言。",
     "remoteCI": "f27c17d run39567618348失败历史保留；5a37fdc修复后独立R19/R20通过。QA通过GitHub只读API核实bf297d9 run39568947238 completed/success（https://github.com/daisiechen/Grab-in-London/actions/runs/39568947238）；5a37fdc自身run被后续push取消，不算通过。",
-    "claudeCrossReview": "Claude只读发现由开发筛选复现后提交至ac09af4；QA独立R23重跑代理、owner重放、acceptedAt恢复/快照、删除旧申请、支持文本屏障API/DB 28项通过。不是Claude动态执行或双方全签；原生iOS与真实供应商门槛不变。"
+    "claudeCrossReview": "Claude只读发现由开发筛选复现后提交至ac09af4；QA独立R23重跑代理、owner重放、acceptedAt恢复/快照、删除旧申请、支持文本屏障API/DB 28项通过。不是Claude动态执行或双方全签；原生iOS与真实供应商门槛不变。",
+    "cliFixCI": {
+      "id": 39581746626,
+      "headSha": "b76c5930b1b881bca4e0cd1f2d5caffde645d23b",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/daisiechen/Grab-in-London/actions/runs/39581746626"
+    }
   },
   "lastTargetedCommit": "0518d45f89a392c716debc87ba9e23b27d26b5e2",
   "defectStatus": {
@@ -21339,7 +21416,9 @@
     "QA-F02": "FIX_VERIFIED_COMPONENT",
     "QA-F03": "CLOSED_TARGETED_QA",
     "QA-F04": "CLOSED_TARGETED_QA",
-    "QA-F05": "CLOSED_TARGETED_QA"
+    "QA-F05": "CLOSED_TARGETED_QA",
+    "QA-F06": "CLOSED_TARGETED_QA",
+    "QA-F07": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
