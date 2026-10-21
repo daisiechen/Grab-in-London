@@ -54,7 +54,7 @@
 
 ## T04 会话与身份API
 
-- 状态：todo；依赖：T02。
+- 状态：in_progress；依赖：T02。
 - 文件：`apps/api/src/identity/`, `packages/db/schema/identity.ts`, `packages/client/auth.ts`；相应测试就近创建。
 - 验收：实现opaque session/rotation/CSRF/state nonce PKCE/handoff；双proof链接不静默搬业务历史；真实provider接T03，test adapter禁生产。
 - 验证：`core:test:api S03 S04`。
@@ -288,12 +288,12 @@
 
 ## T30 会话与授权区间内核（先于T07）
 
-- 状态：in_progress；依赖：T02。
+- 状态：done；依赖：T02。
 - 文件：`packages/db/schema/conversations.ts`, `packages/db/migrations/`, `apps/api/src/membership/intervals.ts`；相应测试就近创建。
 - 验收：只建GROUP及interval/event/head内核；JOIN/LEAVE/分配序号事务服务可供T07调用；提交顺序与seq一致，区间查询不包含空档；消息HTTP/UI在T12。
 - 验证：`core:test:db S14（内核部分）`。
 - 外部依赖/证据：无。
-- 完成记录：未实施；commit/命令结果/证据待执行者填写。
+- 完成记录：commit d51abb2（2026-10-21）。命令：干净worktree中`pnpm install --frozen-lockfile`后`pnpm core:check`、`core:test:unit`、`core:test:db`、`core:test:release`、`core:test:clients`及Python仓库测试，各自退出码0。结果：unit 69/69、db 51/51（真实PostgreSQL 17.11）、release 9/9、clients 43/43。证据：`apps/api/src/membership/intervals.db.test.ts`（S14内核：JOIN/MESSAGE/LEAVE同序列无空洞、重入新区间、锁等待者仅在持有者提交后取下一seq、回滚不留洞、解散同seq关闭全部区间且不可重开、DB约束）、`intervals.unit.test.ts`（join<seq<leave、区间并集跳过空档、游标与head边界）。边界：消息正文/HTTP/UI属T12；meals/user_pairs外键由T07/T15迁移补加。
 
 ## T31 生命周期函数（先于T08/T09）
 
