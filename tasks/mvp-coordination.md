@@ -154,3 +154,21 @@
 - 远端 `f27c17d` Actions run39567618348/job119113614631实际failure：105项API断言均通过，但load场次退出时报57P01未处理异常。日志指出其超过1秒，触发后台deadline sweep。审查发现onClose仅清timer而不等待正在进行的sweep，是可独立复现的退出竞态。
 - 新受控promise单测在旧逻辑FAIL，修复改为清timer→等待当前sweep→shutdown/recover；同一API生命周期不会在pool关闭后继续其定时任务。修后单测1、全API105、API类型/lint通过；远端CI需对应新提交复验，暂不声称已经绿。
 - 用户已完成Xcode首次配置：checkFirstLaunchStatus退出0；只读host simctl查询退出0但devices为空、runtimes为空。旧许可69已解除；需安装运行时或配置实际iPhone/签名。没有代接受协议或安装组件。
+
+
+## Claude第一轮只读结论与远端CI恢复（2026-10-21）
+
+- 已直接核实5a37fdc Actions run39568728053被后续push取消；后续同生产修复的bf297d9 run39568947238完成success（https://github.com/daisiechen/Grab-in-London/actions/runs/39568947238）。不把cancelled当通过，也不继续说新修复远端未核实。
+- Claude在原桌面会话完成至bf297d9第一轮源码交叉检查，声明无写入/旧脚本续跑，所有发现均静态、尚未写失败复现。身份proof、删除锁/授权、worker分步checkpoint、恢复gate、费用预留及Web账号响应隔离未发现新增问题；这不是运行验收签字。
+- 六项静态发现分派：CR-01代理后IP限流合并（开发复现/配置可信代理）；CR-02恢复重放用当前时刻而非原acceptedAt（开发补跨start复现）；CR-03全局epoch导致AI/快照/幂等响应广泛失效（先查依赖与必要隐私fail-closed，不能直接拆屏障）；CR-04举报/支持自由文本保留（G-PRIVACY政策待批准，先查最小字段）；CR-05恢复503使用未登记码（随HTTP契约修复）；CR-06leave采用meal.version引发额外409（三端一致，Claude明确非正确性问题，记录权衡而非功能缺陷）。
+- 已要求Claude继续只读补未覆盖的iOS session/guest存储/采集epoch及完整审批/退席/取消命令权限。QA正在本批5文件串行提交窗口，开发仅各自源码/测试实施，不git add/commit，待QA明确释放后集成。
+
+## Claude补审修复与整合复验（2026-10-21 10:03 London）
+
+- QA在90f3ab8释放Git窗口；原217条为74 PASS /131 NOT_RUN /12外部门槛BLOCKED。仅集成生产负责人冻结文件，不触及QA报告/脚本/索引及其他研究修改。
+- CR-01/05已提交1251d08：可信代理IP/CIDR显式配置，默认不信任任意转发头；OTP/游客/回执客户端隔离与伪造头拒绝9API，配置26unit；503登记SERVICE_UNAVAILABLE。CR-03本人幂等响应7afdecf：旧实现无关删除后survey重放403，修后严格白名单且DB证明归属的survey/application返回原body不增业务行，其余继续fail-closed。
+- CR-02及快照边界2585460：台账原acceptedAt重建删除时取消/退出，再推进他人生命周期；严格时间与整批预检。仅可证明账号出现前的S0/E0保持原ID、数据和CSV正文，S1/E1及旧epoch/撤销/证据不足仍410。恢复/快照5文件11API通过，未放宽AI全局屏障。
+- Claude补审仍仅静态，开发分别复现：N1删除申请人后旧Approve/Decline401误登出正常主持人；N2首次钥匙串失败使后续登录永久受阻；N3晚到401重复旋转使另一重试token失效。修后N1业务404且主持人session200，自己失效仍401；fa61c8b原生失败存储动作显式重试，未成功清除仍阻断游客恢复，晚到401按实际使用token隔离刷新/失效。iOS180测试及Hermes1535modules导出通过，不等同真机重装。
+- CR-04对已知举报人/目标/主持人/消息作者关联，读取即时遮罩、处理锁关联用户后重读、worker清双正文/理由/公开结果/精确审计关联出勤理由和幂等响应副本。保留IDs/事实/幂等键；旧NEEDS_SUPPORT本地已完成但缺文本步骤也补清。未知正文提及和已完成历史记录受控backfill仍需政策/实际数据评估，默认policy未批准仍NEEDS_SUPPORT。
+- 整合发现另一个测试清库竞态：pg-pool.end可早于底层socket end回调完成，force drop导致57P01；受控单测修前FAIL，测试工具改为等待实际客户端end后再清库。没有吞掉数据库错误。修后全量core unit212/DB107/API130/release11、Web+后台215/iOS180通过，core:check通过。日志/private/tmp/fancy-cr-final-{check,core,clients}.log。最终提交后交独立QA复验，不将本轮自动化计数折算217条全通过；最新提交远端CI需另查。
+- 用户重启后已实际读到Claude补审结果；其原会话保持只读、不恢复旧写入任务。Xcode许可完成但host尚无simulator runtime/device；账号/真实Key/首尔部署/政策门槛仍保留。

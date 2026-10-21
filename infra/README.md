@@ -30,6 +30,8 @@ FANCY_LOCAL_ACCEPTANCE=1 node infra/local-acceptance.ts
 
 通过安全配置提供 `.env.example` 的变量后，API入口为 `node apps/api/src/main.ts`，worker入口为 `node apps/worker/src/main.ts`。API绑定回环；由同源HTTPS网关同时提供Web、后台及 `/v1`，不得跨域直接转发session cookie。Node24和项目固定pnpm版本需预装；迁移由单独受控发布步骤执行，API启动不擅自迁移。
 
+同源网关上线时，将 `TRUSTED_PROXY_CIDRS` 配置为实际受控代理的IP或CIDR（逗号分隔）；默认空值不信任转发头。网关须清理并重写客户端转发地址，不得把任意用户提供的头作为可信来源。不使用通配符、主机名或全网CIDR。未配置时，代理后的OTP、游客及删除回执限流会共用代理IP；实际部署需复验不同客户端隔离与伪造头无法绕过限流。
+
 当前仅支持一个API进程承载AI的RAM内容；worker独立一份运行。多API或多worker快照定时器的协调尚未完成，不能直接水平扩容。worker有饭局close/start/end、删除清理、事务邮件发送端口及小时快照；实际邮件/身份撤销提供方尚未配置，邮件不发送、删除状态保留NEEDS_SUPPORT。发现来源与客户端采集覆盖未整体复验前，快照标记partial，未知值为null。
 
 部署后实际复验API来源hook、Web和iOS全部采集入口后，设置 `ANALYTICS_COVERAGE_START` 为三者实际覆盖起点的最晚时刻。worker再与数据库ledger安装起点取较晚值；不设置时保持partial，不把旧历史伪补为完整采集。这个操作不能用代码存在或mock测试替代实际部署验证。
@@ -40,11 +42,13 @@ FANCY_LOCAL_ACCEPTANCE=1 node infra/local-acceptance.ts
 
 - G-HOST：批准安装及部署；确认域名/TLS、备份目标、磁盘与网络访问策略。当前未部署。
 - G-AUTH/G-PLACES/G-MAIL：Auth0、Google、邮件真实项目及最小权限密钥；Google服务端Key与Web受域名限制的公开Key/Map ID、iOS受bundle限制的公开Key分开。客户端配置见各app的说明，不复用服务端密钥。Google Places结果只放Google底图；无配置时列表回退。测试适配器在staging/production启动时被拒绝。
-- G-IOS：Xcode首次启动与许可、Apple/Expo账号、签名和iPhone实测；自动化组件测试不能代替安装测试。
+- G-IOS：Xcode首次启动与许可已在本机核实完成；仍需模拟器运行时或实际iPhone配对、Apple账号及签名实测。免费Personal Team可用于个人设备开发；TestFlight/商店分发需要相应开发者资格，Expo/EAS不是本地Xcode构建的必需条件。自动化组件测试不能代替安装测试。
 - G-AI：DeepSeek安全Key放未跟踪安全环境变量 `DEEPSEEK_API_KEY`，不要发聊天或进Git；当前价格/计数器及每天/每用户额度仍须核实。月预算固定人民币50元，无自动充值；Key本身不启用调用。HTTP应用可通过 `AppDeps.assistant` 显式注入经过验证的provider/价格/计数器，默认不注入，真实评测通过后才开放。
 - G-PRIVACY：批准保留期、删除身份/Apple授权撤销、争议最小记录、加密删除回执邮件通道与备份清理；未关闭不能接真实用户。
 
 恢复备份时先停API/worker、恢复到隔离库，重放独立删除台账和快照撤销屏障，再验证删除主体不可登录、正文不可读、旧快照/导出返回410。实际备份/恢复演练尚未在首尔服务器执行，不能据本文件宣称通过。数据库迁移后的回滚不能仅切旧代码，须先核对旧代码与当前schema兼容性。
+
+删除隐私屏障保持全局保守失效：AI RAM内容没有完整第三方来源索引，不能只按会话主人清理。快照仅在严格早于删除账号创建、无该主体索引且处于删除前有效epoch时保留；幂等响应仅对冻结字段白名单内、经数据库证明完全属于当前活跃调用人的survey/application成功响应允许跨无关删除重放，其余继续拒绝。举报/工单按举报人、USER目标、MEAL主持人、MESSAGE发送人等已知结构关联即时遮罩、worker清理文本及已证实副本；任意正文中的未知提及不猜测删除。保留期与合法争议记录政策仍待批准，默认删除不得假报全部完成。
 
 CI只运行验证，无部署凭据或远程写权限。配置依据官方 [checkout](https://github.com/actions/checkout)、[pnpm/setup](https://github.com/pnpm/setup) 文档；远端CI首次执行结果需单独核查，不能以本地测试替代。
 
@@ -55,6 +59,7 @@ CI只运行验证，无部署凭据或远程写权限。配置依据官方 [chec
 使用真实PG17的pg_dump/pg_restore，把备份之后接受的删除台账保存在备份之外，再在隔离库恢复。
 0022恢复闸门会阻止API业务流量和worker；台账摘要匹配且逐主体复用生产删除事务、撤身份/快照后才ready。
 重放保留原删除ID与回执hash，避免恢复后换provider幂等键；重复重放不多建删除请求。
+恢复重放按台账原 `acceptedAt` 判断当时取消主持饭局或退出席位，再推进其余主体到当前生命周期；身份新鲜度和清理调度仍按实际执行时刻。台账整批预检接受时刻、有效期及账号创建顺序，错误台账不得先写一部分业务数据。
 
 人工生产恢复必须先停入口/API/worker，恢复到隔离库，应用迁移，再在API/worker启动前arm闸门。
 绝不能先开放恢复库再补台账。以下工具默认拒绝运行，需显式离线模式、安全环境和独立台账文件：
