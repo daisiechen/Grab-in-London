@@ -115,3 +115,19 @@ it('QA-NOTIFY-003 actual group message private report and unilateral reconnect n
  const rows=(await h.db.pool.query('SELECT payload FROM outbox')).rows;expect(JSON.stringify(rows)).not.toContain(body);expect(JSON.stringify(rows)).not.toContain(details);expect(JSON.stringify(rows)).not.toMatch(/selected|reconnect|WAITING/);
  expect((await h.db.pool.query('SELECT event_id,recipient_id,channel,count(*) n FROM outbox GROUP BY event_id,recipient_id,channel HAVING count(*)>1')).rows).toEqual([]);
 });
+
+it('QA-METRIC-016 page drilldown cursor and CSV remain pinned S0 while S1 contains a new independent meal',async()=>{
+ const f=await fixture(),a=await analyst(),s0=await sealSourceSnapshot(h.db.pool,new Date('2026-01-01'));
+ const read=async(id:string)=>{const r=await a.b.request('GET',`/v1/admin/overview?snapshotId=${id}&languages=en`);expect(r.statusCode,r.body).toBe(200);return json(r).data;};
+ const before=await read(s0);expect(before.metrics.coverage).toEqual({numerator:2,denominator:2});
+ const url=`/v1/admin/drilldowns/attendance?snapshotId=${s0}&filterHash=${before.filterHash}&languages=en&limit=1`;
+ const first=await a.b.request('GET',url);expect(first.statusCode,first.body).toBe(200);const one=json(first);expect(one.data).toHaveLength(1);expect(one.page.nextCursor).toBeTruthy();
+ const csv0=await exported(a.b,s0,'attendance',{languages:'en'});
+ await fixture();const s1=await sealSourceSnapshot(h.db.pool,new Date('2026-01-01'));expect(s1).not.toBe(s0);
+ const second=await a.b.request('GET',`${url}&cursor=${encodeURIComponent(one.page.nextCursor)}`);expect(second.statusCode,second.body).toBe(200);expect(json(second).data).toHaveLength(1);
+ const people=[...one.data,...json(second).data].map((r:{attributes:{userId:string}})=>r.attributes.userId);expect(new Set(people)).toEqual(new Set([f.host.id,f.guest.id]));
+ const after=await read(s0);expect(after).toEqual(before);expect(await exported(a.b,s0,'attendance',{languages:'en'})).toBe(csv0);
+ expect(csv0).toContain(`"snapshotId","${s0}"`);expect(csv0).toContain(`"filterHash","${before.filterHash}"`);expect(csv0).toContain('"definitionVersion","v4"');expect(csv0).toContain('"asOf"');
+ expect((await read(s1)).metrics.coverage).toEqual({numerator:4,denominator:4});
+ expect((await a.b.request('GET',`/v1/admin/drilldowns/attendance?snapshotId=${s1}&filterHash=${before.filterHash}&languages=en&limit=1&cursor=${encodeURIComponent(one.page.nextCursor)}`)).statusCode).toBe(422);
+});

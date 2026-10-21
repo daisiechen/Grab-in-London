@@ -17,8 +17,8 @@
     "nativeRuntimeEvidence20261021": "Native owner actual headless Release install/launch and first-screen evidence independently reviewed by QA, F20 exact red874/fixed9df, F21 formal5b source-equivalent AppRoot and Metro matched. No independent native taps or complete role journey; root complete5b archive rebuild pending when reviewed."
   },
   "counts": {
-    "NOT_RUN": 23,
-    "PASS": 182,
+    "NOT_RUN": 21,
+    "PASS": 184,
     "FAIL": 1,
     "BLOCKED": 11
   },
@@ -290,8 +290,11 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R162-T001",
+        "R165-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T001",
         "R1-T002",
@@ -388,13 +391,13 @@
         "R2-T166",
         "R2-T167"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "到期拒绝",
-        "冷却说明明确",
-        "新轮可继续且不丢邮箱"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：控制Demo时钟，签发后5分钟验证 → 尝试30秒内重发 → 冷却后重发。当前仍缺：到期拒绝；冷却说明明确；新轮可继续且不丢邮箱。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+      "remainingExpected": [],
+      "actual": "Actual Web component server-derived30s cooldown/expiry error and explicit resend preserve email/new challenge/clear code, plus real PG exact300000ms expiry rejection and fresh adapter-issued OTP success. No real mail provider claim."
     },
     {
       "id": "QA-AUTH-004",
@@ -402,8 +405,11 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "R166-T002",
+        "R166-T003"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T001",
         "R1-T002",
@@ -506,7 +512,10 @@
         "饭局目标保留",
         "完成后仍需主动提交"
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：在Apply触发Google/Apple模拟 → 取消 → 重新完成登录。当前仍缺：取消不产生申请；饭局目标保留；完成后仍需主动提交。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+      "actual": "Original canceled OAuth Google/Apple return component loses saved meal apply target: retry hardcodes Discover. No auto application assertion passes; exact target preservation fails. Owner notified, formal fix/original replay pending.",
+      "defectIds": [
+        "QA-F31"
+      ]
     },
     {
       "id": "QA-AUTH-005",
@@ -7857,9 +7866,9 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
-        "B10-T002"
+        "R161-T001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T012",
@@ -7900,12 +7909,12 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "本次链路仍S0+原filters+v4",
-        "显式切换才S1"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "本地生产实现尚需实际执行：固定S0+filterHash翻页/下钻/CSV → 期间产生S1。尚缺逐项证据：本次链路仍S0+原filters+v4；显式切换才S1。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations."
+      "remainingExpected": [],
+      "actual": "Independent actual S0 page/drilldown cursor/CSV across new S1 retain exact original filters/asOf/v4; hand oracle2/2→explicit S1 4/4, wrong-snapshot cursor422."
     },
     {
       "id": "QA-METRIC-017",
@@ -15583,9 +15592,11 @@
       "priority": "P0",
       "plannedStage": "review",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "NOT_RUN",
       "evidence": [
-        "R158-T001"
+        "R148-T001",
+        "R148-T002",
+        "R164-T001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T242",
@@ -15660,7 +15671,7 @@
         "禁止整行序列化",
         "错误不泄密"
       ],
-      "actual": "F30: actual DELETE202 commits DELETING before queued LINK still returns200 and adds GOOGLE identity. Formal lock-after-current-state repair and original dual HTTP replay pending.",
+      "actual": "F30 original dual HTTP queue fixed on3b322cb: after DELETE202/DELETING, LINK403/no new GOOGLE identity. Contract inventory+unauthenticated routing verified; full authorized-role/DTO audit remains to be consolidated.",
       "defectIds": [
         "QA-F30"
       ]

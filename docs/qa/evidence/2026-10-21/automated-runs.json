@@ -17362,6 +17362,173 @@
           "durationMs": 53.102832999999976
         }
       ]
+    },
+    {
+      "id": "R160",
+      "testedCommit": "55a7f500891b142aa133a6d3a5e43a0d5f8b6d03",
+      "command": "vitest independent pinned snapshot candidate; QA wrong overview metric field setup failure",
+      "startedAt": "2026-10-21T19:57:07.378000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R160-T001",
+          "run": "R160",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-016 page drilldown cursor and CSV remain pinned S0 while S1 contains a new independent meal",
+          "status": "failed",
+          "durationMs": 132.09933299999994,
+          "failureSummary": "AssertionError: expected undefined to deeply equal { numerator: 2, denominator: 2 }"
+        }
+      ]
+    },
+    {
+      "id": "R161",
+      "testedCommit": "55a7f500891b142aa133a6d3a5e43a0d5f8b6d03",
+      "command": "vitest independent S0 pinned page drilldown cursor CSV across S1; correct declared coverage metric schema",
+      "startedAt": "2026-10-21T19:57:42.335000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R161-T001",
+          "run": "R161",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-016 page drilldown cursor and CSV remain pinned S0 while S1 contains a new independent meal",
+          "status": "passed",
+          "durationMs": 183.70008399999995
+        }
+      ]
+    },
+    {
+      "id": "R162",
+      "testedCommit": "3b322cbf0327b6f171261dcb2e7d31a2ab2aedc8",
+      "command": "independent actual Web OTP component expiry cooldown explicit resend",
+      "startedAt": "2026-10-21T20:00:14.410000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R162-T001",
+          "run": "R162",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-003 expired code rejects and explicit post-cooldown resend preserves email with fresh challenge",
+          "status": "passed",
+          "durationMs": 200.22520900000006
+        }
+      ]
+    },
+    {
+      "id": "R163",
+      "testedCommit": "3b322cbf0327b6f171261dcb2e7d31a2ab2aedc8",
+      "command": "independent real PG expiry resend; QA wrong fixed OTP against random test adapter",
+      "startedAt": "2026-10-21T20:00:15.706000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R163-T001",
+          "run": "R163",
+          "path": "scripts/qa-independent-auth-protocol.api.test.ts",
+          "title": "QA-AUTH-003 real PG OTP expires at five minutes, cooldown rejects immediate resend, later fresh challenge verifies",
+          "status": "failed",
+          "durationMs": 96.28208400000005,
+          "failureSummary": "AssertionError: {\"error\":{\"code\":\"VALIDATION_FAILED\",\"message\":\"That code is not right. Check it and try again.\",\"fieldErrors\":{\"body.code\":\"Incorrect code (4 attempts left)\"}},\"meta\":{\"requestId\":\"e71148b8-c900-4f71-8cf1-45fb46d07753\",\"serverNow\":\"2026-10-21T20:00:16.896Z\"}}: expected 422 to be 200 // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "R164",
+      "testedCommit": "3b322cbf0327b6f171261dcb2e7d31a2ab2aedc8",
+      "command": "independent original F30 true two HTTP user lock queue fixed replay",
+      "startedAt": "2026-10-21T20:00:23.710000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R164-T001",
+          "run": "R164",
+          "path": "scripts/qa-independent-link-deletion-race.api.test.ts",
+          "title": "QA-CODE-004 actual accepted deletion wins queued user lock before link and prevents a new identity link",
+          "status": "passed",
+          "durationMs": 141.17041599999993
+        }
+      ]
+    },
+    {
+      "id": "R165",
+      "testedCommit": "3b322cbf0327b6f171261dcb2e7d31a2ab2aedc8",
+      "command": "independent real PG OTP expiry exact five minutes cooldown and fresh adapter-issued code",
+      "startedAt": "2026-10-21T20:00:50.195000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R165-T001",
+          "run": "R165",
+          "path": "scripts/qa-independent-auth-protocol.api.test.ts",
+          "title": "QA-AUTH-003 real PG OTP expires at five minutes, cooldown rejects immediate resend, later fresh challenge verifies",
+          "status": "passed",
+          "durationMs": 108.26649999999995
+        }
+      ]
+    },
+    {
+      "id": "R166",
+      "testedCommit": "3b322cbf0327b6f171261dcb2e7d31a2ab2aedc8",
+      "command": "independent Web OTP plus Google Apple canceled OAuth exact target original F31 red",
+      "startedAt": "2026-10-21T20:01:24.862000+00:00",
+      "exitCode": 1,
+      "passed": 1,
+      "failed": 2,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R166-T001",
+          "run": "R166",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-003 expired code rejects and explicit post-cooldown resend preserves email with fresh challenge",
+          "status": "passed",
+          "durationMs": 195.199833
+        },
+        {
+          "id": "R166-T002",
+          "run": "R166",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-004 GOOGLE cancelled OAuth retains exact meal apply target without submitting application",
+          "status": "failed",
+          "durationMs": 14.456709000000046,
+          "failureSummary": "AssertionError: expected '/sign-in?returnTo=%2Fdiscover' to be '/sign-in?returnTo=%2Fmeals%2F33333333…' // Object.is equality"
+        },
+        {
+          "id": "R166-T003",
+          "run": "R166",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-004 APPLE cancelled OAuth retains exact meal apply target without submitting application",
+          "status": "failed",
+          "durationMs": 8.65462500000001,
+          "failureSummary": "AssertionError: expected '/sign-in?returnTo=%2Fdiscover' to be '/sign-in?returnTo=%2Fmeals%2F33333333…' // Object.is equality"
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -17382,7 +17549,7 @@
     "apps/web/src/features/assistant/qa-independent-session.unit.test.tsx": "8382dada4f38db9d53988c7739db587207674e011ec606aaca940f96c39426c1",
     "scripts/qa-independent-ai-session.api.test.ts": "8910212437dc6e1484f1778200517e03a6731ca5a7c35bf6583628991b680ff3",
     "scripts/qa-independent-access.api.test.ts": "be6bfd2b89278cb935dda6258bdb8372a4f06a60805ace1967351bb52f6cac42",
-    "scripts/qa-independent-auth-protocol.api.test.ts": "5f86f768740c0ad39228d81cdef12a2f55da5d6db6446359442719d708aec835",
+    "scripts/qa-independent-auth-protocol.api.test.ts": "98473bc09821c1f20d65453fcedb68e50b145b3ec2f6f8830885bb6de7188126",
     "apps/ios/src/features/auth/qa-independent-oauth.test.ts": "b9a279faea7b109da69c30634fe35b2f705ed0a0f7d92ad3d5d28aafdb45bdd0",
     "apps/api/src/identity/qa-independent-auth0.unit.test.ts": "bd95da9ca9d7afbc2cad0432f04c74867965af9e898a5a4c9da4a7aba77852cd",
     "apps/web/src/features/auth/qa-independent-link.unit.test.tsx": "67fe69e71a4d799dcf40363b43ce1e0f40486dd22cf0071d765e40510688839a",
@@ -17429,7 +17596,7 @@
     "scripts/qa-inspect-ai-writes.py": "4568f5c5325eb40e1895fefc49ef87fb18974ac3a5ce1ac4df2f74189ba80857",
     "scripts/qa-independent-ai-search-matrix.api.test.ts": "9a2da2d8836fddc5b3f6939079cdaa80f49f9d9318a3ea9730ffcd5182210bdf",
     "scripts/qa-independent-support-propagation.api.test.ts": "08d793622ea3d9dbfba5862cd44ba08e3c917fd918bad8c8a6a1d0397b601ad3",
-    "scripts/qa-independent-metrics-matrix.api.test.ts": "8f7a0227193c66f185ae05c6576d1df2b90ebd1648c7b31b3ef7eb7e55042224",
+    "scripts/qa-independent-metrics-matrix.api.test.ts": "1b07dfef2b094d89925f635da2c7237ae65877437bb0fef80f6a51873503076d",
     "scripts/qa-independent-my-meals.api.test.ts": "438ee4cf061fcae4b28e2ebf4c0b38af0fab92206e2d19e052fe50da989ffc94",
     "scripts/qa-independent-account-isolation.api.test.ts": "46eedbf8beddacf0eb98f6a4244fc3b8d94655c6e3a90506689034d94865a6a3",
     "scripts/qa-independent-discovery-scan.api.test.ts": "e3a3274f73122eec1ebdbc94dc013980b7ecf97a5c17d2c77ec6edb759b8fd39",
@@ -17437,7 +17604,8 @@
     "scripts/qa-independent-contract-audit.api.test.ts": "a7879e3a133341ea90d1f9e770cdba2c8361a81172ab58433e1f064c5be7eca6",
     "scripts/qa-independent-tonight.api.test.ts": "27a0b42b3be4701307dcaaeb9a285a867e897b15057ef450284852f499040d79",
     "scripts/qa-independent-session-lock-upgrade.api.test.ts": "3386ec283d304a28660123e9082dbb94d7618fe3caf38321d045deb5ed7f8386",
-    "scripts/qa-independent-link-deletion-race.api.test.ts": "c7c81eaab7b91413cb24d340b47e342789cacc782ad796d3dcf9cb97219c359c"
+    "scripts/qa-independent-link-deletion-race.api.test.ts": "c7c81eaab7b91413cb24d340b47e342789cacc782ad796d3dcf9cb97219c359c",
+    "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx": "0f02889acb9be8d464fe2dcd58858878778a771d775a1816c1104fa3a6380575"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console. R68/R69 valid TestIDP OAuth callback200 captured actual non-silent child stdout only in parent RAM. Metadata contains only leak booleans, never credential strings or raw logs. R69 aggregates code/state/email checks without stopping at the first boolean failure. R72 mutates semantic OpenAPI/SDK artifacts only in an owned temporary contracts copy, requires the real checker fail1 and restore0, and verifies original workspace bytes untouched. Static cases remain NOT_RUN until fixed committed handoff recheck.",
   "runtimeSnapshotVerification": {

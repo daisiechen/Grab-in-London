@@ -44,3 +44,13 @@ describe('independent registered CLI browser handoff',()=>{
   const wrong=await cli();expect((await exchange(wrong.handoff,randomToken(48))).statusCode).toBe(409);expect((await exchange(wrong.handoff,wrong.verifier)).statusCode).toBe(409);const expired=await cli();await h.db.pool.query("WITH t AS(SELECT clock_timestamp() n) UPDATE auth_transactions SET created_at=t.n-interval '60 seconds',expires_at=t.n FROM t WHERE secret_hash=$1 AND kind='HANDOFF'",[sha256Hex(expired.handoff)]);const result=await exchange(expired.handoff,expired.verifier);expect(result.statusCode,result.body).toBe(409);expect(json(result).data).toBeUndefined();
  });
 });
+
+it('QA-AUTH-003 real PG OTP expires at five minutes, cooldown rejects immediate resend, later fresh challenge verifies',async()=>{
+ const b=new Browser(h),email=`qa-expiry-${randomUUID()}@example.invalid`,start=()=>b.request('POST','/v1/auth/email/start',{body:{clientRequestId:randomUUID(),email,client:'WEB'}});
+ const first=await start();expect(first.statusCode,first.body).toBe(201);const id=json(first).data.challengeId;
+ const row=(await h.db.pool.query('SELECT created_at,expires_at FROM auth_transactions WHERE id=$1',[id])).rows[0];expect(+row.expires_at-+row.created_at).toBe(300000);
+ const early=await start();expect(early.statusCode,early.body).toBe(429);expect(json(early).error.retryAfterSeconds).toBeGreaterThan(0);
+ await h.db.pool.query("WITH t AS(SELECT clock_timestamp() n) UPDATE auth_transactions SET created_at=t.n-interval '5 minutes',expires_at=t.n FROM t WHERE id=$1",[id]);
+ const expired=await b.request('POST','/v1/auth/email/verify',{body:{clientRequestId:randomUUID(),challengeId:id,code:h.idp.inbox.get(email)!.at(-1)!}});expect(expired.statusCode,expired.body).toBe(409);expect(json(expired).error.code).toBe('STATE_CONFLICT');
+ const fresh=await start();expect(fresh.statusCode,fresh.body).toBe(201);expect(json(fresh).data.challengeId).not.toBe(id);const yes=await b.request('POST','/v1/auth/email/verify',{body:{clientRequestId:randomUUID(),challengeId:json(fresh).data.challengeId,code:h.idp.inbox.get(email)!.at(-1)!}});expect(yes.statusCode,yes.body).toBe(200);
+});

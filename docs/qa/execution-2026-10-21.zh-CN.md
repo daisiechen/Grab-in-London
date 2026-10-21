@@ -14,10 +14,10 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 182 |
+| PASS | 184 |
 | FAIL | 1 |
 | BLOCKED | 11 |
-| NOT_RUN | 23 |
+| NOT_RUN | 21 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实环境、原生runtime/设备/签名或政策批准证据；本地恢复与分步删除现已复验通过，不能再笼统视为外部阻塞。FAIL优先于未完成的后续步骤。
@@ -185,6 +185,13 @@
 | R157 | 退出码1；0/1通过，失败1，1个测试文件 | `8ae96ef` |
 | R158 | 退出码1；0/1通过，失败1，1个测试文件 | `8ae96ef` |
 | R159 | 退出码0；6/6通过，失败0，3个测试文件 | `8ae96ef` |
+| R160 | 退出码1；0/1通过，失败1，1个测试文件 | `55a7f50` |
+| R161 | 退出码0；1/1通过，失败0，1个测试文件 | `55a7f50` |
+| R162 | 退出码0；1/1通过，失败0，1个测试文件 | `3b322cb` |
+| R163 | 退出码1；0/1通过，失败1，1个测试文件 | `3b322cb` |
+| R164 | 退出码0；1/1通过，失败0，1个测试文件 | `3b322cb` |
+| R165 | 退出码0；1/1通过，失败0，1个测试文件 | `3b322cb` |
+| R166 | 退出码1；1/3通过，失败2，1个测试文件 | `3b322cb` |
 
 R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯函数探针；R5复跑分页修复回归，R6是QA第二批6项独立P0探针；R7/R8为QA-F01修复的API/Web及iOS组件定向复跑；R9是第三批12项独立边界探针，R10/R11复跑解除准备，R12为QA新增真实备份中E0导出的恢复后撤销分支；R13为饭后及群/私聊权限独立探针；R14保留QA-F03修前2失败，R15为0518d45修后的12项独立探针复验，R16为身份模块26项受影响HTTP回归（包括fresh会话下未来proof拒绝），不能删除修前结果或把历史失败当当前通过；R17为举报本人回执及撤授权重放3项独立HTTP/PG探针，撤session/DELETING状态通过受控数据库夹具设置。R18为安排锁、历史截止补算、开始名单及预约隔离6项独立PG/HTTP探针，删除仅屏障状态，完整删除名单断言仍未通过。R19/R20独立定向复跑5a37fdc关闭顺序单测及真实PG负载退出，未替代远端CI结果。R21为删除实际HTTP/本地purge、故障rollback及用户锁消息/审批竞态5项独立探针，生产日志脱敏仍待完整捕获。R22为ac09af4固定版本的11项独立受控AI/controller/HTTP探针，仅035/036/037具完整预期证据；R23为该版本Claude发现修复28项API/DB独立定向复验。R24保留QA-F04修前停用后仍发布失败；R25为8e2b908修后7项独立停用/费用/reaper探针，R26为22项受影响DB回归，F04定向关闭而043仍有未测断言。R27保留QA-F05修前Web失败，T001另为已分类夹具错误；R28/R29为f298048独立session/PG及Web组件各3项，R30为iOS manager17项定向回归；F05在NEW与TTL/偏好删除差异范围关闭。R31为公开DTO/后台角色/CSV授权及跨快照游标和大序号4项独立HTTP/PG探针，公式转义另覆盖formatter，不声称Excel实际执行。R32保留QA-F06 CLI入口失败，R33保留QA-F07原生协议失败；R34/R35固定b76c593独立8+32项验证CLI修复，R36固定1080993独立iOS49项验证桥接修复。完整加入用户路径仍NOT_RUN，不据组件通过升级。不能将这些数量相加当作独立业务用例数；R5与R1有重复，R2也不是原生设备验收。逐项测试名、状态、时间和命令见[机器证据](evidence/2026-10-21/automated-runs.json)。R4是质量检查而非业务用例。
 
@@ -210,8 +217,8 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 |---|---|---|
 | QA-AUTH-001 · 游客浏览与敏感入口门禁 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：Explore tables first → 浏览地图、详情及公开主页 → 分别点Create/Apply/Meals/Inbox。当前仍缺：公开路径可达；受限动作进入认证；没有自动申请或创建。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B4补充实际游客详情→Apply未发草稿→认证→已有账号免补资料回原草稿，明确第二次Send后Pending/Inbox3卡、无自动席位/群。完整剩余预期仍见remainingExpected。 B5补齐实际游客Meals/Inbox认证门禁，无离开账号私有记录；公开详情可达、Create/Apply已有实际证据，live地图及欢迎Explore入口完整路径仍未验，不授PASS。；证据 B4-T001, B5-T005 |
 | QA-AUTH-002 · 邮箱失败与恢复 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：输入非法邮箱 → 改为 qa@example.invalid → 输入错误验证码再输入123456。当前仍缺：非法邮箱不能继续；错误码不登录；合法示例码回到初始操作且标为模拟。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
-| QA-AUTH-003 · 验证码过期和重发 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：控制Demo时钟，签发后5分钟验证 → 尝试30秒内重发 → 冷却后重发。当前仍缺：到期拒绝；冷却说明明确；新轮可继续且不丢邮箱。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
-| QA-AUTH-004 · 供应商取消回流 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：在Apply触发Google/Apple模拟 → 取消 → 重新完成登录。当前仍缺：取消不产生申请；饭局目标保留；完成后仍需主动提交。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
+| QA-AUTH-003 · 验证码过期和重发 | PASS | Actual Web component server-derived30s cooldown/expiry error and explicit resend preserve email/new challenge/clear code, plus real PG exact300000ms expiry rejection and fresh adapter-issued OTP success. No real mail provider claim.；证据 R162-T001, R165-T001 |
+| QA-AUTH-004 · 供应商取消回流 | FAIL | Original canceled OAuth Google/Apple return component loses saved meal apply target: retry hardcodes Discover. No auto application assertion passes; exact target preservation fails. Owner notified, formal fix/original replay pending.；证据 R166-T002, R166-T003 |
 | QA-AUTH-005 · 资料门槛 | PASS | B3固定8387580实际IAB：资料各缺项就地拒绝，合成完整资料成功返回原Create，随后饭局host公开投影与昵称/bio/English/Food录入一致；不公开email。一次London life未选导致提交拒绝，重新明确选择后正常保存，无稳定丢字段缺陷。仅本地fixture身份，非真实供应商。；证据 B3-T001 |
 | QA-AUTH-006 · 退出及刷新边界 | PASS | B4真实IAB两次合成账号：Sign out弹确认，Stay signed in保持原账号；明确确认后回认证页，再reload仍认证页，不恢复离开账号。Web980c8ed/API8387580本地实际session；不是外部IdP持久登录/真实设备声明。；证据 B4-T006 |
 | QA-INPUT-001 · 姓名长度1 | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R3-T001 |
@@ -318,7 +325,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-METRIC-013 · 测试员工分类恢复 | PASS | R125 independent production metrics hand-calculated facts / real PG+HTTP snapshot checks. Dedup and forged success rejection, immutable S0/late S1, person-meal vs latest-user survey factors, classification exclusion/restoration each verified by the named assertion. No real telemetry deployment claim.；证据 R125-T006 |
 | QA-METRIC-014 · 删除后peak重算 | PASS | Actual deletion202 after3-seat formation: newly sealed snapshot removes user contribution and recomputes analysis peak2; authoritative lifecycle/business formation remains unchanged.；证据 R146-T001 |
 | QA-METRIC-015 · London周跨DST | PASS | Independent hand-computable fixed-asOf fixtures R109, actual production calculateMetrics. London2026-10-25 00:30Z and01:30Z both local01:30 and oneSunday; weekly keysOct19 forSunday thenOct26 forMonday, unique counts2 and1. Across fallback14-day maturity exactUTC ms and30-day repeat exactUTC accepted while+1h excluded. Exact plan1/2/3/10 and alternate1/2/4/10 yield nearest-rankP50=2/P90=10; later duplicate approval does not shift first decision, withdrawals/expiry/cancel have no decision duration, only one live pending; cancelled meal and exactclose pending excluded. This is independent fixture reconciliation, not page/network/native proof.；证据 R109-T001, R109-T002 |
-| QA-METRIC-016 · 同快照全链路 | NOT_RUN | 本地生产实现尚需实际执行：固定S0+filterHash翻页/下钻/CSV → 期间产生S1。尚缺逐项证据：本次链路仍S0+原filters+v4；显式切换才S1。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations.；证据 B10-T002 |
+| QA-METRIC-016 · 同快照全链路 | PASS | Independent actual S0 page/drilldown cursor/CSV across new S1 retain exact original filters/asOf/v4; hand oracle2/2→explicit S1 4/4, wrong-snapshot cursor422.；证据 R161-T001 |
 | QA-METRIC-017 · 审核分位数 | PASS | Independent hand-computable fixed-asOf fixtures R109, actual production calculateMetrics. London2026-10-25 00:30Z and01:30Z both local01:30 and oneSunday; weekly keysOct19 forSunday thenOct26 forMonday, unique counts2 and1. Across fallback14-day maturity exactUTC ms and30-day repeat exactUTC accepted while+1h excluded. Exact plan1/2/3/10 and alternate1/2/4/10 yield nearest-rankP50=2/P90=10; later duplicate approval does not shift first decision, withdrawals/expiry/cancel have no decision duration, only one live pending; cancelled meal and exactclose pending excluded. This is independent fixture reconciliation, not page/network/native proof.；证据 R109-T003, R109-T004 |
 | QA-METRIC-018 · 采集曝光阈值 | PASS | Independent targeted production probes R136 and cited UI evidence cover the original expected assertions. Local synthetic environment; real PG/API where stated, controlled clock/provider or component transport explicitly scoped. Historical setup/real failures retained; no native journey or real vendor claim.；证据 R136-T001, R128-T001, R128-T002 |
 | QA-ADMIN-001 · 五页导航与筛选 | PASS | B10 real browser traversed exactly five primary pages; en+zh and sizes2+3 OR retain English capacity2 meal; Chinese AND matching sizes yields no meals. Switching to English and navigating supply/retention preserves both sets, date and language. Local synthetic staff environment only.；证据 B10-T001 |
@@ -381,7 +388,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-CODE-001 · 生产隔离 | PASS | 正式26317f8独立R74通过：生产/staging拒测试适配及固定OTP；AST检查六端与生产包无旧Demo/shared权威、模拟键盘付款依赖。隔离副本语义破坏OpenAPI/SDK均使真实生成检查失败，恢复通过，原artifact字节不变；四端API/Web/iOS/admin typecheck通过，共享workspace client/contracts。；证据 R74-T003, R74-T004 |
 | QA-CODE-002 · 数据库真约束 | PASS | R79隔离真实PG直接SQL：活跃申请partial unique拒23505、人数7 CHECK拒23514、非法host FK拒23503、重复message拒23505，原meal不变。空库先首迁移后植入version7用户，升级全部迁移并重跑no-op；附加失败迁移建表/改用户后除零，整迁移回滚，用户仍version7、半表不存在、迁移台账不增、随后正式迁移可重跑。验证失败迁移回滚与前向升级兼容，未声称支持任意生产降级。；证据 R79-T001, R79-T002 |
 | QA-CODE-003 · 事务与锁顺序 | NOT_RUN | F12修复761304c：独立R70原provider挂起/NOWAIT探针通过；R71 create/edit/confirm等待无actor/meal锁，成功/404重放不依赖provider，503同key恢复；准备期间version/venue/profile/actor/deadline变化均拒绝且无改写。已知拒绝首次/封存同JSON和Retry-After、COMMIT40001重试后不运行旧attempt after也通过。F12 targeted关闭、R66原红保留；全写命令锁顺序及DB时钟审阅尚未完成，本CODE003回NOT_RUN而非PASS。；证据 R70-T001, R71-T001, R71-T002, R71-T003, R71-T004, R71-T005, R71-T006, R71-T007, R71-T008, R71-T009, R71-T010, R71-T011, R71-T012, R71-T013, R71-T014 |
-| QA-CODE-004 · 权限和响应schema | FAIL | F30: actual DELETE202 commits DELETING before queued LINK still returns200 and adds GOOGLE identity. Formal lock-after-current-state repair and original dual HTTP replay pending.；证据 R158-T001 |
+| QA-CODE-004 · 权限和响应schema | NOT_RUN | F30 original dual HTTP queue fixed on3b322cb: after DELETE202/DELETING, LINK403/no new GOOGLE identity. Contract inventory+unauthenticated routing verified; full authorized-role/DTO audit remains to be consolidated.；证据 R148-T001, R148-T002, R164-T001 |
 | QA-CODE-005 · SDK契约漂移 | PASS | 正式26317f8独立R74通过：生产/staging拒测试适配及固定OTP；AST检查六端与生产包无旧Demo/shared权威、模拟键盘付款依赖。隔离副本语义破坏OpenAPI/SDK均使真实生成检查失败，恢复通过，原artifact字节不变；四端API/Web/iOS/admin typecheck通过，共享workspace client/contracts。；证据 R74-T005 |
 | QA-CODE-006 · 日志与存储泄露 | NOT_RUN | F26 targeted original RootLayout callback independently fixed on19d: raw private Error never logged. Remaining whole logging/evaluation source inventory not yet accepted; originalR139 red retained in runs.；证据 R143-T001 |
 | QA-CODE-007 · 测试可信度 | NOT_RUN | 本地生产实现尚需实际执行：审查skip/only、无断言、过度mock、随机sleep和截图更新 → 重跑最小反例。尚缺逐项证据：关键DB用双连接barrier；mock不关闭真实门槛；断言来自需求，不降低标准掩盖缺陷。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
