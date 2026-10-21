@@ -1,0 +1,122 @@
+{
+  "observations": [
+    {
+      "id": "B17-O001",
+      "status": "passed",
+      "title": "Independent minimum3 cross-client fixture published",
+      "testedCommit": "39194656d483a6bf634a5f1c36cd29f9bf287472",
+      "environment": "Actual IAB Web and native XCUITest iOS27.0, same API19d real isolated PG; synthetic identities/Places/mail and controlled clock; no real vendors",
+      "steps": [
+        "Web explicitly selects North, capacity3/minimum3,22Oct20:00London/defaultclose19:00; introduction,budget15-30,booking/reviewchecked and Publish.",
+        "SamePG meal5b8d682f hostonlyseat1; Native26 applies; Web approves uniqueguest to2/3 and explicitlyreconfirms booking. Deadline not yet advanced; cancellation/notifications not yet asserted."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/cross-insufficient-published.jpg",
+        "evidence/2026-10-21/cross-insufficient-published-facts.json",
+        "evidence/2026-10-21/cross-insufficient-approved-facts.json",
+        "evidence/2026-10-21/native-apply26-xcui.swift"
+      ]
+    },
+    {
+      "id": "B17-O002",
+      "status": "passed",
+      "title": "Native reverse host actual create and approve Web guest",
+      "testedCommit": "611a90e672f818c9562abf743bf38dddf5f9c643",
+      "environment": "Actual IAB Web and native XCUITest iOS27.0, same API19d real isolated PG; synthetic identities/Places/mail and controlled clock; no real vendors",
+      "steps": [
+        "NativeCreate24 actual foursteps,backnavigationpreserves title/description/budget,explicitbooking/review/Publish; meale0af2bf6 23Oct00:00 min2/cap2.",
+        "Websubmitsoneapplication; readonlypendingfacts hostonlyseat/membership. NativeHost25 approves thenreconfirms stale reservation; actualWeb seesconfirmed."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-create24-xcui.swift",
+        "evidence/2026-10-21/native-reverse-published.png",
+        "evidence/2026-10-21/native-host25-xcui.swift",
+        "evidence/2026-10-21/native-reverse-approved-booking.png",
+        "evidence/2026-10-21/cross-reverse-pending-facts.json",
+        "evidence/2026-10-21/cross-reverse-approved-facts.json"
+      ]
+    },
+    {
+      "id": "B17-O003",
+      "status": "passed",
+      "title": "Web seat cancel, group leave, native gap and rejoin union",
+      "testedCommit": "611a90e672f818c9562abf743bf38dddf5f9c643",
+      "environment": "Actual IAB Web and native XCUITest iOS27.0, same API19d real isolated PG; synthetic identities/Places/mail and controlled clock; no real vendors",
+      "steps": [
+        "Webexplicitlycancelsseat; PG applicationCANCELLED/seatLEFT butmembershipremains; actualWebsendsmessage.",
+        "Webexplicitlyleavesgroup: earliermessage readonly/nocomposer. NativeChat27 sendsabsencegap; refreshedWebhistory excludesgap.",
+        "Webexplicitlysubmitsround2; NativeHost28 approves/reconfirms/sendsnewsegment. Webseesoldauthorized+newsegment,notabsencegap; PGround2/intervals/IDsprovephysicalfacts."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/cross-reverse-cancelled-seat-facts.json",
+        "evidence/2026-10-21/cross-reverse-left-facts.json",
+        "evidence/2026-10-21/cross-reverse-left-readonly.jpg",
+        "evidence/2026-10-21/native-chat27-xcui.swift",
+        "evidence/2026-10-21/native-host28-xcui.swift",
+        "evidence/2026-10-21/cross-reverse-rejoined-union.jpg",
+        "evidence/2026-10-21/cross-reverse-rejoined-facts.json"
+      ]
+    },
+    {
+      "id": "B17-O004",
+      "status": "failed",
+      "title": "F39 original Inbox falsely confirms cancelled seat",
+      "testedCommit": "39194656d483a6bf634a5f1c36cd29f9bf287472",
+      "environment": "Actual IAB Web and native XCUITest iOS27.0, same API19d real isolated PG; synthetic identities/Places/mail and controlled clock; no real vendors",
+      "steps": [
+        "Explicitseatcancel-TrackInbox-reload: livegroupstillSeat confirmed whilePGCANCELLED/LEFT.",
+        "GroupstillcanSend asrequired; hardcodedInboxrowconflatesgroupwritewithseat. FrozenR192red retained."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f39-inbox-cancelled-seat-false-confirmed.jpg",
+        "evidence/2026-10-21/cross-reverse-cancelled-seat-facts.json"
+      ]
+    },
+    {
+      "id": "B17-O005",
+      "status": "failed",
+      "title": "F40 native host lacks required dissolve action",
+      "testedCommit": "611a90e672f818c9562abf743bf38dddf5f9c643",
+      "environment": "Actual IAB Web and native XCUITest iOS27.0, same API19d real isolated PG; synthetic identities/Places/mail and controlled clock; no real vendors",
+      "steps": [
+        "ActualHost28 nativehost approvedround2 andopenedgroup; AXonlyLeave group,nodissolve/hostsettings.",
+        "FullChatScreen/iossrccontainnodissolveGroup call; PRD57-58/386 andAPIcontract60requirehostindependentconfirmation,allreadonly,nonreopen. Handedtooriginaldeveloper; noAPI/Web substitutionclaim."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-host-no-dissolve-f40.png",
+        "evidence/2026-10-21/native-host28-xcui.swift"
+      ]
+    },
+    {
+      "id": "B17-O006",
+      "status": "passed",
+      "title": "F39 formal neutral group label targeted verification",
+      "testedCommit": "2debc60ba399953c3b78f80762a9b6cb76e31d4b",
+      "environment": "Actual IAB Web and native XCUITest iOS27.0, same API19d real isolated PG; synthetic identities/Places/mail and controlled clock; no real vendors",
+      "steps": [
+        "IndependentR1912/0 againstformal2debc60; frozen391R1921red demonstratesregressionsensitivity.",
+        "ActualformalWebInbox4livegroupsallneutralMeal group,noSeatconfirmed. NoAPI/auth/membershipchanges."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f39-inbox-neutral-fixed.jpg"
+      ]
+    },
+    {
+      "id": "B17-O007",
+      "status": "passed",
+      "title": "Native guest actual seat cancellation then independent group leave",
+      "testedCommit": "611a90e672f818c9562abf743bf38dddf5f9c643",
+      "environment": "Actual iOS27.0 XCUITest/API19d/same isolated PG/synthetic providers",
+      "steps": [
+        "Native31 explicitly confirms seatcancellation; actualParticipationcancelled before unique postcancelmessage send.",
+        "ExplicitgroupLeaveconfirmation follows, actualHistoryreadonly/noMessageeditor/oldauthorizedmessageretained. OriginalNative30selectorfailure andpre-cancelmessagepermanentlyexcludedfrompostcancelproof."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-cancel31-xcui.swift",
+        "evidence/2026-10-21/native-cancel-seat-still-send.png",
+        "evidence/2026-10-21/native-left-group-readonly.png",
+        "evidence/2026-10-21/cross-native-cancel-left-facts.json"
+      ]
+    }
+  ]
+}

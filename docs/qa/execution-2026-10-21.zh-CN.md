@@ -1,6 +1,6 @@
 # 独立QA执行报告 · 2026-10-21
 
-**结论：本轮不通过，存在未闭环缺陷：QA-F38。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18, QA-F19, QA-F20, QA-F21, QA-F22, QA-F23, QA-F24, QA-F25, QA-F26, QA-F27, QA-F28, QA-F29, QA-F30, QA-F31, QA-F32, QA-F33, QA-F34, QA-F35, QA-F36, QA-F37；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
+**结论：本轮不通过，存在未闭环缺陷：QA-F40。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18, QA-F19, QA-F20, QA-F21, QA-F22, QA-F23, QA-F24, QA-F25, QA-F26, QA-F27, QA-F28, QA-F29, QA-F30, QA-F31, QA-F32, QA-F33, QA-F34, QA-F35, QA-F36, QA-F37, QA-F38, QA-F39；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
 
 原测试计划基线4659fdb；被测交接`8ba6fc7c9974cf6be1ac06d8b16e0380fb3beced`，业务代码`8bc1e9280153491b6a63c68cd6ba6a49f8061978`。Inbox分页修复在`cd66d87a153b3171cebbe7ae74680eceb356aed1`仅做定向复验；QA-F01及第二批P0探针在04cb601验证，第三批边界、删除/恢复和适配在d4582f7及后续仅CI增量版本定向验证，具体版本见运行表；更早证据沿用对应固定基线。
 
@@ -24,7 +24,7 @@
 
 ## 实际运行
 
-当前实际矩阵：Web83df（F33/34/35）+原生83df→611a（正常签名/真实XCTest）+API19d/隔离PG。F38首次读取错误原反例仍FAIL；R188含原开发未提交修复只作工作树验证。B16记录实际跨端申请/待审/批准/双向消息，完整角色互换和后续旅程仍未授PASS。
+Web2debc60/API19d/Native611a same isolated PG. F38 formalR1897/0 targetedclosed; F39 originalR192red/formalR1912/0 and actualneutralrow passed. Native reverse create/approve/reapply and Web history-union/gap exclusion executed; newF40 nativehost missingdissolve handedoff, JOURNEY003FAIL. Mainacfe remains normal and untouched. Native31actualcancelthenSend/Leave passed; Native32historynogapandround2pendingpassed. R193formalF40components16/0, realruntime pending. Workingtreecorecheckscanner blocked by otherowner gitignored localconfig; frozenpublishablearchive scan separatelyclear, not wholeworkingtreecheckPASS.
 
 | ID | 结果 | 范围 |
 |---|---|---|
@@ -216,6 +216,11 @@
 | R186 | 退出码0；8/8通过，失败0，5个测试文件 | `83dfde3` |
 | R187 | 退出码1；0/1通过，失败1，1个测试文件 | `83dfde3` |
 | R188 | 退出码0；312/312通过，失败0，50个测试文件 | `611a90e` |
+| R189 | 退出码0；7/7通过，失败0，3个测试文件 | `3919465` |
+| R190 | 退出码1；0/0通过，失败0，0个测试文件 | `3919465` |
+| R191 | 退出码0；2/2通过，失败0，2个测试文件 | `2debc60` |
+| R192 | 退出码1；0/1通过，失败1，1个测试文件 | `3919465` |
+| R193 | 退出码0；16/16通过，失败0，2个测试文件 | `4945453` |
 
 R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯函数探针；R5复跑分页修复回归，R6是QA第二批6项独立P0探针；R7/R8为QA-F01修复的API/Web及iOS组件定向复跑；R9是第三批12项独立边界探针，R10/R11复跑解除准备，R12为QA新增真实备份中E0导出的恢复后撤销分支；R13为饭后及群/私聊权限独立探针；R14保留QA-F03修前2失败，R15为0518d45修后的12项独立探针复验，R16为身份模块26项受影响HTTP回归（包括fresh会话下未来proof拒绝），不能删除修前结果或把历史失败当当前通过；R17为举报本人回执及撤授权重放3项独立HTTP/PG探针，撤session/DELETING状态通过受控数据库夹具设置。R18为安排锁、历史截止补算、开始名单及预约隔离6项独立PG/HTTP探针，删除仅屏障状态，完整删除名单断言仍未通过。R19/R20独立定向复跑5a37fdc关闭顺序单测及真实PG负载退出，未替代远端CI结果。R21为删除实际HTTP/本地purge、故障rollback及用户锁消息/审批竞态5项独立探针，生产日志脱敏仍待完整捕获。R22为ac09af4固定版本的11项独立受控AI/controller/HTTP探针，仅035/036/037具完整预期证据；R23为该版本Claude发现修复28项API/DB独立定向复验。R24保留QA-F04修前停用后仍发布失败；R25为8e2b908修后7项独立停用/费用/reaper探针，R26为22项受影响DB回归，F04定向关闭而043仍有未测断言。R27保留QA-F05修前Web失败，T001另为已分类夹具错误；R28/R29为f298048独立session/PG及Web组件各3项，R30为iOS manager17项定向回归；F05在NEW与TTL/偏好删除差异范围关闭。R31为公开DTO/后台角色/CSV授权及跨快照游标和大序号4项独立HTTP/PG探针，公式转义另覆盖formatter，不声称Excel实际执行。R32保留QA-F06 CLI入口失败，R33保留QA-F07原生协议失败；R34/R35固定b76c593独立8+32项验证CLI修复，R36固定1080993独立iOS49项验证桥接修复。完整加入用户路径仍NOT_RUN，不据组件通过升级。不能将这些数量相加当作独立业务用例数；R5与R1有重复，R2也不是原生设备验收。逐项测试名、状态、时间和命令见[机器证据](evidence/2026-10-21/automated-runs.json)。R4是质量检查而非业务用例。
 
@@ -427,12 +432,12 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-GATE-009 · G-AI-COST实账 | BLOCKED | 缺真实usage/账单与call账本对照证据。并发人民币50预留已有本地通过证据；开发可预备对账脚本，真实账单必须来自已批准配置，不扩大金额或开自动充值。 |
 | QA-JOURNEY-001 · 加入者完整闭环 | NOT_RUN | B7 complete real Web lifecycle/postmeal and B8 same-meal Admin trace passed in explicit local fixture. F18 fixed2b9449a independently API2+boundary8 and actual browser Inbox/header/send/reload passed B9. Historical reds retained in history and run bundles. Original cross-client precondition requires actual Web/iOS role swap; no native-device proof yet, so NOT_RUN rather than whole-case PASS. B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations. Native first-launch F20 reported by native owner and log corroborated; temporary TypeBox resolver screen exists, formal fix/rebuild/interaction not yet accepted. QA has not operated native App; retain NOT_RUN and full native role-swap requirement.；证据 B7-T001, B7-T002, B7-T003, B7-T004, B8-T002, B9-T001, R93-T001, R93-T002, B10-T002 |
 | QA-JOURNEY-002 · 主持者完整闭环 | NOT_RUN | B7统一4a0c66f新隔离场从真实UI创建4步/餐厅确认/最低2上限2/截止/Review发布，guest主动申请hostApprove首客锁安排、声明stale后本人重报；同场真实worker截止达标/开始封存2人/结束Completed。默认双方Unknown，GuestSELFpresent后Host报其absent不覆盖，freshGuest仍Attendedyourreport。无应用支付/库存依赖；明确fixture时钟与供应商边界，不代表真实自然时间/外部订位或原生验收。 Original cross-client precondition audit corrects whole-case PASS to NOT_RUN: B7 Web lifecycle proof retained, actual iOS role swap missing. No product regression inferred. Native first-launch F20 reported by native owner and log corroborated; temporary TypeBox resolver screen exists, formal fix/rebuild/interaction not yet accepted. QA has not operated native App; retain NOT_RUN and full native role-swap requirement.；证据 B7-T001, B7-T002, B7-T003 |
-| QA-JOURNEY-003 · 取消与聊天独立路径 | NOT_RUN | B6 Web cancellation/seat/group union-history/dissolution slice remains valid, but frozen case requires native/Web role swap too. Native half is now locally executable and being completed on a separate meal to preserve main happy path; no external dependency claimed.；证据 B6-T002 |
+| QA-JOURNEY-003 · 取消与聊天独立路径 | FAIL | Native24 real four-step publish and Native25 host approval/reconfirmation; Web guest cancellation retains group send then explicit leave yields read-only earlier message. NewF39: fresh Inbox falsely claims Seat confirmed after cancellation; original complete Web slice retained, remaining native guest cancellation/rejoin/dissolve and role-swap paths pending. Native27 sends absence gap; Native28 approves round2 and sends new segment. Actual Web shows old+new authorized messages and excludes gap. F39 formal2debc60 independent2/0 and actualneutralrow; F40 actualNativehost lacks required dissolve action, remainsFAIL. Native guest cancellation direction on separate3870 fixture underway.；证据 B17-O005 |
 | QA-JOURNEY-004 · 互选私密路径 | NOT_RUN | 本地生产实现尚需实际执行：A单方再约→B访问→B互选→私聊→A撤回→解除拉黑。尚缺逐项证据：单方不可推断；互选才可发；撤回后历史只读；解除不复活同意。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-JOURNEY-005 · AI申请路径 | NOT_RUN | 本地生产实现尚需实际执行：显式查找→选明确M→生成申请→转入已有编辑器→本人确认提交。尚缺逐项证据：AI阶段无写；不覆盖未发字；提交时重验名额/截止；服务失败可继续原路径。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B11 realWeb actualcontrolled-model generate/explicit-transfer/single-request and manual-create confirmations complete with physical write proof. Full failure-recovery/group-send and actual native role swap remain outstanding, so NOT_RUN retained.；证据 B11-T001, B11-T002 |
 | QA-JOURNEY-006 · AI创建及群草稿路径 | NOT_RUN | 本地生产实现尚需实际执行：生成Create草稿→原四步补选地点/条款→主动发布→群草稿→主动Send。尚缺逐项证据：没有模型代办；所有人工确认实际发生；生成/转入/发送分别授权。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B11 realWeb actualcontrolled-model generate/explicit-transfer/single-request and manual-create confirmations complete with physical write proof. Full failure-recovery/group-send and actual native role swap remain outstanding, so NOT_RUN retained.；证据 B11-T001, B11-T002 |
 | QA-JOURNEY-007 · 反馈问卷独立路径 | NOT_RUN | 本地生产实现尚需实际执行：未出席账号填产品问卷 → 合格账号填单场评分 → 后台分别下钻CSV。尚缺逐项证据：问卷不要求资格、不归meal；评分仅合格人次；不混用公开评价或再约。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-JOURNEY-008 · 异常返回路径 | FAIL | F38 first message-read429 is hidden as SAY HELLO empty state; independent original R187 red. Owner working-tree fix passes R188 but formal commit and targeted/browser recheck pending; other full path assertions remain unexecuted.；证据 R187-T001 |
+| QA-JOURNEY-008 · 异常返回路径 | NOT_RUN | F38 targeted fixed-SHA3919465 independent R189:7PASS/0FAIL proves visible initial429, retained messages/composer, terminal403 fencing and HISTORY-only retry; originalR187 failure retained. Full cross-client abnormal journey and remaining snapshot410 assertions still require execution.；证据 R189-T001 |
 | QA-JOURNEY-009 · 支持删除闭环 | NOT_RUN | 本地生产实现尚需实际执行：举报→查本人回执→support个案→reauth删除→断网丢202→receipt查→后台快照撤销。尚缺逐项证据：受理不称处理完成；202同步屏障；receipt无私密数据；旧导出不可再读。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-API-006 · 重放仍检查授权 | PASS | 独立HTTP+PG：成功缓存响应后撤case grant、撤support角色、撤session family及actor置DELETING均拒绝同key重放，不泄露旧回执/私密内容、不新增举报或重复改case。撤session与DELETING用受控DB夹具，不代替完整退出/删除用户路径。；证据 R17-T002, R17-T003 |
 | QA-API-007 · 缺版本与429退避 | PASS | 独立真实PG/API/SDK：编辑缺If-Match得428；真实writes限额得429和正Retry-After，SDK按该秒数退避，受控sleep中仅清合成actor限额模拟下一窗口；同原intent/key及version重试200，同key再重放仍仅一次meal.edited事实。未通过更换key规避限额，不声称等待了真实时长。；证据 R44-T002 |
@@ -459,7 +464,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 
 ## 下一批执行顺序
 
-1. 完成F38正式修复的独立定向/真实错误态复验，保首次失败与QA夹具错误。
+1. F40 formal native dissolve fix4945453/0dbcfed owner build pending: independentJestR19316/0 proves coveredbranches only; actual runtime retest required. F38/F39 targetedclosed.
 2. 继续现有同餐局原生/Web完整旅程并互换角色；单独场景执行退席位/退群/重入/解散，避免污染正常路径一次性事实。
 3. 本地AI生命周期/重装及AI完整用户路径由开发落实受控服务夹具；后台/支持以明确复制receipt或同环境实际事实核对，不能仅因缺夹具而交给用户。
 4. 真实供应商、账号Key、付款/部署/保留政策及真实发行设备仅保留必要外部门槛，不以本地mock或模拟器关闭。

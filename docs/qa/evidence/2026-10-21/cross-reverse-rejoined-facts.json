@@ -1,0 +1,172 @@
+{
+  "ownedClockDatabaseVerified": true,
+  "mealId": "e0af2bf6-41e9-4d8b-ae79-310b7ab3d095",
+  "meal": {
+    "id": "e0af2bf6-41e9-4d8b-ae79-310b7ab3d095",
+    "status": "OPEN",
+    "version": 6,
+    "head": 8,
+    "minimum": 2,
+    "capacity": 2
+  },
+  "applications": [
+    {
+      "id": "45935122-4dc6-47c1-91d0-b569e4ecc5bc",
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "round": 2,
+      "state": "CONFIRMED",
+      "version": 2
+    },
+    {
+      "id": "d79201cf-fcdf-4e6b-86a6-dbb53aa83bc9",
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "round": 1,
+      "state": "CANCELLED",
+      "version": 3
+    }
+  ],
+  "seats": [
+    {
+      "seq": 1,
+      "type": "HOST_CONFIRMED",
+      "user_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50"
+    },
+    {
+      "seq": 3,
+      "type": "GUEST_CONFIRMED",
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583"
+    },
+    {
+      "seq": 5,
+      "type": "LEFT",
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583"
+    },
+    {
+      "seq": 7,
+      "type": "GUEST_CONFIRMED",
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583"
+    }
+  ],
+  "groupMemberships": [
+    {
+      "user_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "join_seq": 1,
+      "leave_seq": null
+    },
+    {
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "join_seq": 2,
+      "leave_seq": 4
+    },
+    {
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "join_seq": 6,
+      "leave_seq": null
+    }
+  ],
+  "messageRefs": [
+    {
+      "id": "9ae47d8d-600d-4c64-8ee2-9b208c33b2ad",
+      "seq": 3,
+      "sender_id": "fc2e9e2a-20db-41db-936f-2c1493315583"
+    },
+    {
+      "id": "d2e93279-d301-401e-947d-0bf9f4c7de96",
+      "seq": 5,
+      "sender_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50"
+    },
+    {
+      "id": "d4a72ae1-10ba-48a1-b34b-6e603da409f7",
+      "seq": 7,
+      "sender_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "049f5a61-7946-478d-8786-27b5672f63de",
+      "event_id": "2e4a1d1b-0c7d-4401-af9a-8df20f65df81",
+      "recipient_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "channel": "IN_APP",
+      "template": "guest_left"
+    },
+    {
+      "id": "3855fb14-6a72-4c63-b39e-603100abf370",
+      "event_id": "e1a41392-7a32-44be-91c6-b1fc6f97907a",
+      "recipient_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "channel": "IN_APP",
+      "template": "application_submitted"
+    },
+    {
+      "id": "8da4372d-7422-4f34-89e6-6dc4f21244aa",
+      "event_id": "adaa9fc0-7d3f-4df7-9e49-a84bbc38c5c2",
+      "recipient_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "channel": "IN_APP",
+      "template": "booking_updated"
+    },
+    {
+      "id": "8de51955-25b2-4898-8a24-5cf1a1085393",
+      "event_id": "303e0018-003d-4b25-857d-542c4b0703c6",
+      "recipient_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "channel": "IN_APP",
+      "template": "booking_updated"
+    },
+    {
+      "id": "908384ac-6699-4a3d-b8e7-a67f29df6538",
+      "event_id": "54f2c899-9d47-4fe5-8be0-28c07d464f0c",
+      "recipient_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "channel": "IN_APP",
+      "template": "application_approved"
+    },
+    {
+      "id": "a6f8ef3e-7363-44db-a75d-ad55350f1a60",
+      "event_id": "303e0018-003d-4b25-857d-542c4b0703c6",
+      "recipient_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "channel": "IN_APP",
+      "template": "booking_updated"
+    },
+    {
+      "id": "a817b2c7-783d-4a95-9191-f75e15906d0a",
+      "event_id": "3cb0d220-7e3f-452f-ac6e-a00b7a18113e",
+      "recipient_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "channel": "IN_APP",
+      "template": "application_submitted"
+    },
+    {
+      "id": "d99b1f02-38e2-462d-8298-aca034a895ab",
+      "event_id": "4faade4b-d9ea-45d6-ac55-262440812543",
+      "recipient_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "channel": "IN_APP",
+      "template": "application_approved"
+    },
+    {
+      "id": "e7c53d51-2a96-4837-bf89-1f8210a41d26",
+      "event_id": "adaa9fc0-7d3f-4df7-9e49-a84bbc38c5c2",
+      "recipient_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "channel": "IN_APP",
+      "template": "booking_updated"
+    }
+  ],
+  "messageCount": 3,
+  "marks": [],
+  "startRoster": [],
+  "jobs": [
+    {
+      "kind": "meal.close",
+      "state": "PENDING",
+      "due_at": "2026-10-22T23:00:00+01:00",
+      "attempts": 0
+    },
+    {
+      "kind": "meal.end",
+      "state": "PENDING",
+      "due_at": "2026-10-23T02:00:00+01:00",
+      "attempts": 0
+    },
+    {
+      "kind": "meal.start",
+      "state": "PENDING",
+      "due_at": "2026-10-23T00:00:00+01:00",
+      "attempts": 0
+    }
+  ]
+}

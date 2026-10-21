@@ -1,0 +1,52 @@
+{
+  "ownedClockDatabaseVerified": true,
+  "mealId": "5b8d682f-cfda-493d-8d0f-cc58a37d7533",
+  "meal": {
+    "id": "5b8d682f-cfda-493d-8d0f-cc58a37d7533",
+    "status": "OPEN",
+    "version": 1,
+    "head": 1,
+    "minimum": 3,
+    "capacity": 3
+  },
+  "applications": [],
+  "seats": [
+    {
+      "seq": 1,
+      "type": "HOST_CONFIRMED",
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583"
+    }
+  ],
+  "groupMemberships": [
+    {
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "join_seq": 1,
+      "leave_seq": null
+    }
+  ],
+  "messageRefs": [],
+  "notifications": [],
+  "messageCount": 0,
+  "marks": [],
+  "startRoster": [],
+  "jobs": [
+    {
+      "kind": "meal.close",
+      "state": "PENDING",
+      "due_at": "2026-10-22T19:00:00+01:00",
+      "attempts": 0
+    },
+    {
+      "kind": "meal.end",
+      "state": "PENDING",
+      "due_at": "2026-10-22T22:00:00+01:00",
+      "attempts": 0
+    },
+    {
+      "kind": "meal.start",
+      "state": "PENDING",
+      "due_at": "2026-10-22T20:00:00+01:00",
+      "attempts": 0
+    }
+  ]
+}

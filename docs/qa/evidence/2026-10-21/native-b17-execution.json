@@ -1,0 +1,74 @@
+{
+  "scope": "Actual611a Release on dedicated iOS27.0 simulator, frozenAPI19d/samePG; syntheticproviders only. Test counts never mapped to217 cases.",
+  "runs": [
+    {
+      "id": "CREATE20",
+      "result": "QA_SETUP_FAILED",
+      "actual": "Fast native search typed Fncy rather than Fancy; no candidate/no business write. Corrected pacing+exact value assertion in21; original private log retained."
+    },
+    {
+      "id": "CREATE21",
+      "result": "PASS_PARTIAL",
+      "actual": "Actual native search Fancy exact verified; explicitNorth selection. No full-create claim. Coldlaunch clears ephemeral draft, so next independent run must reselect venue."
+    },
+    {
+      "id": "CREATE22",
+      "result": "QA_SETUP_FAILED",
+      "actual": "Reveal helper overscrolled date and coldlaunch lost RAM-only venue; continued after failed assertion, serverform correctly said Choose a restaurant. No meal published."
+    },
+    {
+      "id": "CREATE23",
+      "result": "QA_SETUP_FAILED",
+      "actual": "Same-run selection/date/time/capacity reached introduction; next field tap was behind already-open title keyboard and had no focus. No meal published. Legitimate Back/reenter used in24, no claim direct keyboard path passes."
+    },
+    {
+      "id": "CREATE24",
+      "result": "PASS",
+      "actual": "Full actualNative611a four-stepCreate; selectedNorth,dateFri23Oct00:00London,capacity2/min2,titleQA Native Reverse Table,description,budget15-30; backnavigationexactdraftchecks; explicitbooking/review+Publish. Actualnewmeal-detail and Web/PGcrossconfirmation."
+    },
+    {
+      "id": "HOST25",
+      "result": "PASS",
+      "actual": "Nativehost approvesWebround1, waitsRequests0, bookingstale thenexplicitBookedsave. PGoneapp2seats andWebconfirmed."
+    },
+    {
+      "id": "APPLY26",
+      "result": "PASS",
+      "actual": "Nativeguest explicitly applies toWebminimum3 meal5b8..., pending thenWebapproves2/3. Not deadline result."
+    },
+    {
+      "id": "CHAT27",
+      "result": "PASS",
+      "actual": "AfterWebexplicitLeavegroup, nativehost readsoldauthorizedmessage andsendsonlyabsencegap once. Webhistorycannotreadgap."
+    },
+    {
+      "id": "HOST28",
+      "result": "PASS_PARTIAL",
+      "actual": "Nativehostexplicitapprovesround2/reconfirmsbooking,sendsnewsegment. Webshowsold+newnotgap; F40 missingdissolve discovered, so completejourney fails."
+    },
+    {
+      "id": "APPLY29",
+      "result": "PASS",
+      "actual": "Nativeguest explicitlyapplies toseparateWebhostcancelmeal3870; Webapproves. No cancellation yet."
+    },
+    {
+      "id": "CANCEL30",
+      "result": "QA_SETUP_FAILED_WITH_PRE_CANCEL_MESSAGE",
+      "actual": "Same-labelled modal/background buttons; last-bound selector hitpoint(-1,-1), no cancel/leave occurred. Assertions correctlyfailed; scriptcontinued and sent QA native after seat cancel. while stillCONFIRMED, so that message is NOT evidence of post-cancellation send. No falsePASS. Corrected31 targetsactuallyhittablemodalbutton, failsfast, uniquepost-cancelbody."
+    },
+    {
+      "id": "CANCEL31",
+      "result": "PASS",
+      "actual": "Same actual611a app, onlyhittablemodalconfirmbutton andfailfast. ActualParticipationcancelled beforeuniqueQA native confirmed cancellation. sent; legitimate Back/reenterdismisseskeyboard; explicitLeavegroup then Historyisreadonly,noeditor andoldauthorizedmessage retained. CANCEL30 pre-cancelmessage retained and excluded frompostcancelproof."
+    },
+    {
+      "id": "REAPPLY32",
+      "result": "PASS_PARTIAL",
+      "actual": "ColdrestoreactualNative611a Inbox shows own priorauthorizedmessage/historyreadonly, nogapWebbody/noeditor; explicitnewapplicationdraft/backretention/Sendtopending. Round2approval/newsegmentunion/dissolve stillpending."
+    }
+  ],
+  "pending": [
+    "F40 formal native dissolve fix/build/retest",
+    "fullcross-clientjourneys"
+  ]
+}

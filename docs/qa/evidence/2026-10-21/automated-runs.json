@@ -20875,6 +20875,287 @@
         "apps/web/src/features/inbox/ChatPage.tsx": "9bf1724715b9075ff4e71469e91ddb4df3b69cae38a64c8e730a6f2656f69f84",
         "apps/web/src/features/inbox/read-error.unit.test.tsx": "7a323d5e453e20c6b4e614ecc2626cb835fbd63c96e6cf7aa3af7476aaf24e90"
       }
+    },
+    {
+      "id": "R189",
+      "testedCommit": "39194656d483a6bf634a5f1c36cd29f9bf287472",
+      "command": "node node_modules/vitest/vitest.mjs run --project web apps/web/src/features/inbox/qa-independent-read-error.unit.test.tsx apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx apps/web/src/features/inbox/read-error.unit.test.tsx --reporter=json --outputFile=/private/tmp/fancy-r189.json",
+      "startedAt": "2026-10-21T21:18:21.679000+00:00",
+      "exitCode": 0,
+      "passed": 7,
+      "failed": 0,
+      "total": 7,
+      "suiteFiles": 3,
+      "assertions": [
+        {
+          "id": "R189-T001",
+          "run": "R189",
+          "path": "apps/web/src/features/inbox/qa-independent-read-error.unit.test.tsx",
+          "title": "QA-JOURNEY-008 initial message rate limit remains a visible read failure and never claims an empty history",
+          "status": "passed",
+          "durationMs": 111.25991599999998
+        },
+        {
+          "id": "R189-T002",
+          "run": "R189",
+          "path": "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx",
+          "title": "QA-CHAT-009 GROUP hides polling, backs off to30s, authenticates before catchup and never sends retained text after403",
+          "status": "passed",
+          "durationMs": 524.5949169999999
+        },
+        {
+          "id": "R189-T003",
+          "run": "R189",
+          "path": "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx",
+          "title": "QA-CHAT-009 DIRECT hides polling, backs off to30s, authenticates before catchup and never sends retained text after403",
+          "status": "passed",
+          "durationMs": 208.23020900000006
+        },
+        {
+          "id": "R189-T004",
+          "run": "R189",
+          "path": "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx",
+          "title": "QA-CHAT-009 metadata captured before revocation cannot restart LIVE after a terminal403",
+          "status": "passed",
+          "durationMs": 22.17920799999979
+        },
+        {
+          "id": "R189-T005",
+          "run": "R189",
+          "path": "apps/web/src/features/inbox/read-error.unit.test.tsx",
+          "title": "shows first-read loading then failure, preserves backoff, and shows empty only after successful recovery",
+          "status": "passed",
+          "durationMs": 126.32791699999984
+        },
+        {
+          "id": "R189-T006",
+          "run": "R189",
+          "path": "apps/web/src/features/inbox/read-error.unit.test.tsx",
+          "title": "keeps existing messages and unsent composer text during a later read failure",
+          "status": "passed",
+          "durationMs": 181.02529099999992
+        },
+        {
+          "id": "R189-T007",
+          "run": "R189",
+          "path": "apps/web/src/features/inbox/read-error.unit.test.tsx",
+          "title": "keeps HISTORY terminal when its read fails and permits only an explicit HISTORY retry",
+          "status": "passed",
+          "durationMs": 35.64929199999983
+        }
+      ]
+    },
+    {
+      "id": "R190",
+      "testedCommit": "39194656d483a6bf634a5f1c36cd29f9bf287472",
+      "command": "node vitest --config /private/tmp/fancy-qa-web-3919465/vitest.config.ts --project web absolute-QA-file (wrong cwd: no tests selected; setup only)",
+      "startedAt": "2026-10-21T21:30:39.364000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 0,
+      "total": 0,
+      "suiteFiles": 0,
+      "assertions": [],
+      "suiteLoadFailures": [
+        {
+          "path": "apps/web/src/features/inbox/qa-independent-seat-label.unit.test.tsx",
+          "message": "No tests selected: frozen archive config invoked with shared-workspace cwd; no test assertions executed. Separate corrected R192 retains original product red."
+        }
+      ],
+      "environmentNote": "Wrong-cwd config selected zero tests; no business assertion executed. Corrected separate R192 preserves original failing seat-label."
+    },
+    {
+      "id": "R191",
+      "testedCommit": "2debc60ba399953c3b78f80762a9b6cb76e31d4b",
+      "command": "node node_modules/vitest/vitest.mjs run --project web apps/web/src/features/inbox/qa-independent-seat-label.unit.test.tsx apps/web/src/features/inbox/seat-label.unit.test.tsx --reporter=json --outputFile=/private/tmp/fancy-r191.json",
+      "startedAt": "2026-10-21T21:30:44.858000+00:00",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "total": 2,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R191-T001",
+          "run": "R191",
+          "path": "apps/web/src/features/inbox/qa-independent-seat-label.unit.test.tsx",
+          "title": "QA-JOURNEY-003 live group permission never asserts a cancelled or unknown seat is confirmed",
+          "status": "passed",
+          "durationMs": 98.01287500000001
+        },
+        {
+          "id": "R191-T002",
+          "run": "R191",
+          "path": "apps/web/src/features/inbox/seat-label.unit.test.tsx",
+          "title": "labels a retained live meal group without claiming the member still has a confirmed seat",
+          "status": "passed",
+          "durationMs": 73.73466699999994
+        }
+      ]
+    },
+    {
+      "id": "R192",
+      "testedCommit": "39194656d483a6bf634a5f1c36cd29f9bf287472",
+      "command": "frozen3919465 archive cwd: node node_modules/vitest/vitest.mjs run --project web apps/web/src/features/inbox/qa-independent-seat-label.unit.test.tsx --reporter=json",
+      "startedAt": "2026-10-21T21:31:04.353000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R192-T001",
+          "run": "R192",
+          "path": "apps/web/src/features/inbox/qa-independent-seat-label.unit.test.tsx",
+          "title": "QA-JOURNEY-003 live group permission never asserts a cancelled or unknown seat is confirmed",
+          "status": "failed",
+          "durationMs": 100.97008300000005,
+          "failureSummary": "AssertionError: expected 'Seat cancelled, group retainedNo mess…' not to contain 'Seat confirmed'"
+        }
+      ],
+      "environmentNote": "Frozen3919465 actual InboxPage; QA source copied only, original red canonical test path normalized for validator. Shared production tree never reverted."
+    },
+    {
+      "id": "R193",
+      "testedCommit": "4945453b95c9d6c343c016a4ac6ecccb972b730e",
+      "command": "pnpm --dir apps/ios test --runInBand --runTestsByPath src/features/inbox/chat-dissolve.test.tsx src/features/inbox/chat.test.tsx --json --outputFile=/private/tmp/fancy-r193.json",
+      "startedAt": "2026-10-21T21:41:52.366000+00:00",
+      "exitCode": 0,
+      "passed": 16,
+      "failed": 0,
+      "total": 16,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R193-T001",
+          "run": "R193",
+          "path": "apps/ios/src/features/inbox/chat-dissolve.test.tsx",
+          "title": "guest has leave but no host dissolution",
+          "status": "passed",
+          "durationMs": 204
+        },
+        {
+          "id": "R193-T002",
+          "run": "R193",
+          "path": "apps/ios/src/features/inbox/chat-dissolve.test.tsx",
+          "title": "host cancels without request, then confirms current version and keeps unsent text visible in history",
+          "status": "passed",
+          "durationMs": 22
+        },
+        {
+          "id": "R193-T003",
+          "run": "R193",
+          "path": "apps/ios/src/features/inbox/chat-dissolve.test.tsx",
+          "title": "conflict refresh needs explicit new confirmation and uses refreshed version",
+          "status": "passed",
+          "durationMs": 19
+        },
+        {
+          "id": "R193-T004",
+          "run": "R193",
+          "path": "apps/ios/src/features/inbox/chat-dissolve.test.tsx",
+          "title": "failed conflict refresh blocks stale dissolution and preserves draft",
+          "status": "passed",
+          "durationMs": 11
+        },
+        {
+          "id": "R193-T005",
+          "run": "R193",
+          "path": "apps/ios/src/features/inbox/chat-dissolve.test.tsx",
+          "title": "ordinary failure keeps confirmation and draft without changing history",
+          "status": "passed",
+          "durationMs": 10
+        },
+        {
+          "id": "R193-T006",
+          "run": "R193",
+          "path": "apps/ios/src/features/inbox/chat-dissolve.test.tsx",
+          "title": "conflict refresh discovering dissolved group stops actions and shows retained draft",
+          "status": "passed",
+          "durationMs": 9
+        },
+        {
+          "id": "R193-T007",
+          "run": "R193",
+          "path": "apps/ios/src/features/inbox/chat-dissolve.test.tsx",
+          "title": "failed authoritative meal lookup never grants dissolution or removes existing chat",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R193-T008",
+          "run": "R193",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "InboxScreen separates chats from pending applications and keeps pending requests visible",
+          "status": "passed",
+          "durationMs": 21
+        },
+        {
+          "id": "R193-T009",
+          "run": "R193",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) drops messages and compose drafts across logout and another account sign-in",
+          "status": "passed",
+          "durationMs": 26
+        },
+        {
+          "id": "R193-T010",
+          "run": "R193",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) polls LIVE in the foreground, pauses in the background and catches up on resume",
+          "status": "passed",
+          "durationMs": 11
+        },
+        {
+          "id": "R193-T011",
+          "run": "R193",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) a failed send stays visible with Retry (same clientMessageId); there is no automatic resend",
+          "status": "passed",
+          "durationMs": 67
+        },
+        {
+          "id": "R193-T012",
+          "run": "R193",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) 403 while polling switches to read-only history and stops polling",
+          "status": "passed",
+          "durationMs": 6
+        },
+        {
+          "id": "R193-T013",
+          "run": "R193",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) a dissolved group loads HISTORY once and never polls",
+          "status": "passed",
+          "durationMs": 12
+        },
+        {
+          "id": "R193-T014",
+          "run": "R193",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) leaving the group needs confirmation and sends If-Match",
+          "status": "passed",
+          "durationMs": 11
+        },
+        {
+          "id": "R193-T015",
+          "run": "R193",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) renders message bodies as plain text",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R193-T016",
+          "run": "R193",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "acknowledges only rendered foreground progress and stops acknowledgements in background",
+          "status": "passed",
+          "durationMs": 4
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -20957,7 +21238,8 @@
     "apps/web/src/features/discover/qa-independent-map.unit.test.tsx": "e001472685b47428c349592865209dadbb7259f58446e7b2a7649e6ddd46246e",
     "apps/web/src/features/create/qa-independent-time-picker.unit.test.tsx": "3a7e240e3223143aee404d85311d77ea326bcfae23bb3cae1735095bef571429",
     "apps/web/src/features/create/qa-independent-venue-reset.unit.test.tsx": "a937371da042850e1fd1338f77f7379e3120843806d42417161b34d6a0f750d8",
-    "apps/web/src/features/inbox/qa-independent-read-error.unit.test.tsx": "b338fa2cea745b3bed84f14a5cd6dd1aba37079c7cee9a7aa93d2d11e613c62c"
+    "apps/web/src/features/inbox/qa-independent-read-error.unit.test.tsx": "b338fa2cea745b3bed84f14a5cd6dd1aba37079c7cee9a7aa93d2d11e613c62c",
+    "apps/web/src/features/inbox/qa-independent-seat-label.unit.test.tsx": "f6ce8c7df12d07b1fa364df42b75231f7579c3c17afc4cdd162ada9ed1a7dd23"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console. R68/R69 valid TestIDP OAuth callback200 captured actual non-silent child stdout only in parent RAM. Metadata contains only leak booleans, never credential strings or raw logs. R69 aggregates code/state/email checks without stopping at the first boolean failure. R72 mutates semantic OpenAPI/SDK artifacts only in an owned temporary contracts copy, requires the real checker fail1 and restore0, and verifies original workspace bytes untouched. Static cases remain NOT_RUN until fixed committed handoff recheck.",
   "runtimeSnapshotVerification": {

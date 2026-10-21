@@ -58,7 +58,8 @@
     "browserObservationsCodeTrust": "evidence/2026-10-21/code-trust-logging-review.json",
     "browserObservationsB15": "evidence/2026-10-21/browser-b15.json",
     "browserObservationsB16": "evidence/2026-10-21/browser-b16.json",
-    "nativeFormalRuntimeReview": "evidence/2026-10-21/native-formal-runtime-review.json"
+    "nativeFormalRuntimeReview": "evidence/2026-10-21/native-formal-runtime-review.json",
+    "browserObservationsB17": "evidence/2026-10-21/browser-b17.json"
   },
   "cases": [
     {
@@ -17035,9 +17036,9 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "FAIL",
       "evidence": [
-        "B6-T002"
+        "B17-O005"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -17346,7 +17347,10 @@
         "R5-T008",
         "R5-T009",
         "R5-T010",
-        "R5-T011"
+        "R5-T011",
+        "R191-T001",
+        "R191-T002",
+        "R192-T001"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -17354,7 +17358,7 @@
         "只读已授权union历史",
         "解散不可重开"
       ],
-      "actual": "B6 Web cancellation/seat/group union-history/dissolution slice remains valid, but frozen case requires native/Web role swap too. Native half is now locally executable and being completed on a separate meal to preserve main happy path; no external dependency claimed.",
+      "actual": "Native24 real four-step publish and Native25 host approval/reconfirmation; Web guest cancellation retains group send then explicit leave yields read-only earlier message. NewF39: fresh Inbox falsely claims Seat confirmed after cancellation; original complete Web slice retained, remaining native guest cancellation/rejoin/dissolve and role-swap paths pending. Native27 sends absence gap; Native28 approves round2 and sends new segment. Actual Web shows old+new authorized messages and excludes gap. F39 formal2debc60 independent2/0 and actualneutralrow; F40 actualNativehost lacks required dissolve action, remainsFAIL. Native guest cancellation direction on separate3870 fixture underway.",
       "history": [
         {
           "status": "NOT_RUN",
@@ -17369,6 +17373,10 @@
           ],
           "reason": "Correct scope: B6 proves Web slice only; frozen cross-client role-swap preconditions not completed"
         }
+      ],
+      "defectIds": [
+        "QA-F39",
+        "QA-F40"
       ]
     },
     {
@@ -18685,9 +18693,9 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "NOT_RUN",
       "evidence": [
-        "R187-T001"
+        "R189-T001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -18996,7 +19004,15 @@
         "R5-T008",
         "R5-T009",
         "R5-T010",
-        "R5-T011"
+        "R5-T011",
+        "R187-T001",
+        "R189-T001",
+        "R189-T002",
+        "R189-T003",
+        "R189-T004",
+        "R189-T005",
+        "R189-T006",
+        "R189-T007"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -19005,7 +19021,7 @@
         "410清旧缓存选新snapshot",
         "无假成功"
       ],
-      "actual": "F38 first message-read429 is hidden as SAY HELLO empty state; independent original R187 red. Owner working-tree fix passes R188 but formal commit and targeted/browser recheck pending; other full path assertions remain unexecuted.",
+      "actual": "F38 targeted fixed-SHA3919465 independent R189:7PASS/0FAIL proves visible initial429, retained messages/composer, terminal403 fencing and HISTORY-only retry; originalR187 failure retained. Full cross-client abnormal journey and remaining snapshot410 assertions still require execution.",
       "defectIds": [
         "QA-F38"
       ]
@@ -22581,7 +22597,9 @@
     "QA-F35": "CLOSED_TARGETED_QA",
     "QA-F36": "CLOSED_TARGETED_QA",
     "QA-F37": "CLOSED_TARGETED_QA",
-    "QA-F38": "OPEN"
+    "QA-F38": "CLOSED_TARGETED_QA",
+    "QA-F39": "CLOSED_TARGETED_QA",
+    "QA-F40": "OPEN"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -22592,10 +22610,10 @@
   },
   "blockerTriage": "当前11条外部门槛仍缺真实供应商/真实设备发行/部署或政策批准；AI034已转本地NOT_RUN，模拟器、runtime、正常签名和原生UI已实际可运行。原14条中的两项本地隐私/恢复已通过，不能重列待修。当前FAIL为F38显示问题由开发修复，不需用户确认；剩余本地双端完整旅程继续推进。",
   "nextExecution": [
-    "完成F38正式修复的独立定向/真实错误态复验，保首次失败与QA夹具错误。",
+    "F40 formal native dissolve fix4945453/0dbcfed owner build pending: independentJestR19316/0 proves coveredbranches only; actual runtime retest required. F38/F39 targetedclosed.",
     "继续现有同餐局原生/Web完整旅程并互换角色；单独场景执行退席位/退群/重入/解散，避免污染正常路径一次性事实。",
     "本地AI生命周期/重装及AI完整用户路径由开发落实受控服务夹具；后台/支持以明确复制receipt或同环境实际事实核对，不能仅因缺夹具而交给用户。",
     "真实供应商、账号Key、付款/部署/保留政策及真实发行设备仅保留必要外部门槛，不以本地mock或模拟器关闭。"
   ],
-  "currentExecutionSlice": "当前实际矩阵：Web83df（F33/34/35）+原生83df→611a（正常签名/真实XCTest）+API19d/隔离PG。F38首次读取错误原反例仍FAIL；R188含原开发未提交修复只作工作树验证。B16记录实际跨端申请/待审/批准/双向消息，完整角色互换和后续旅程仍未授PASS。"
+  "currentExecutionSlice": "Web2debc60/API19d/Native611a same isolated PG. F38 formalR1897/0 targetedclosed; F39 originalR192red/formalR1912/0 and actualneutralrow passed. Native reverse create/approve/reapply and Web history-union/gap exclusion executed; newF40 nativehost missingdissolve handedoff, JOURNEY003FAIL. Mainacfe remains normal and untouched. Native31actualcancelthenSend/Leave passed; Native32historynogapandround2pendingpassed. R193formalF40components16/0, realruntime pending. Workingtreecorecheckscanner blocked by otherowner gitignored localconfig; frozenpublishablearchive scan separatelyclear, not wholeworkingtreecheckPASS."
 }

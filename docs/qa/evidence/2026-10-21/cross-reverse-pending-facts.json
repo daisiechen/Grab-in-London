@@ -1,0 +1,68 @@
+{
+  "ownedClockDatabaseVerified": true,
+  "mealId": "e0af2bf6-41e9-4d8b-ae79-310b7ab3d095",
+  "meal": {
+    "id": "e0af2bf6-41e9-4d8b-ae79-310b7ab3d095",
+    "status": "OPEN",
+    "version": 1,
+    "head": 2,
+    "minimum": 2,
+    "capacity": 2
+  },
+  "applications": [
+    {
+      "id": "d79201cf-fcdf-4e6b-86a6-dbb53aa83bc9",
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "round": 1,
+      "state": "PENDING",
+      "version": 1
+    }
+  ],
+  "seats": [
+    {
+      "seq": 1,
+      "type": "HOST_CONFIRMED",
+      "user_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50"
+    }
+  ],
+  "groupMemberships": [
+    {
+      "user_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "join_seq": 1,
+      "leave_seq": null
+    }
+  ],
+  "messageRefs": [],
+  "notifications": [
+    {
+      "id": "a817b2c7-783d-4a95-9191-f75e15906d0a",
+      "event_id": "3cb0d220-7e3f-452f-ac6e-a00b7a18113e",
+      "recipient_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "channel": "IN_APP",
+      "template": "application_submitted"
+    }
+  ],
+  "messageCount": 0,
+  "marks": [],
+  "startRoster": [],
+  "jobs": [
+    {
+      "kind": "meal.close",
+      "state": "PENDING",
+      "due_at": "2026-10-22T23:00:00+01:00",
+      "attempts": 0
+    },
+    {
+      "kind": "meal.end",
+      "state": "PENDING",
+      "due_at": "2026-10-23T02:00:00+01:00",
+      "attempts": 0
+    },
+    {
+      "kind": "meal.start",
+      "state": "PENDING",
+      "due_at": "2026-10-23T00:00:00+01:00",
+      "attempts": 0
+    }
+  ]
+}
