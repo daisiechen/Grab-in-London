@@ -320,3 +320,11 @@
 - 临时相同修复重新Release成功，Discover首屏持续显示，独立合成API61973收到App GET /v1/meals 200。根直接检查/private/tmp/fancy-ios-typebox-screen.png确认实际画面，同时统计授权标题与状态栏重叠另交QA核证，不混入模块解析修复。API/PG独立，QA B7现场不动。
 - 上述实际运行来自临时副本，正式提交SHA需独立复验，不作为完整Web/iOS角色互换通过；根原生251项通过（/private/tmp/fancy-ios-metro-tests.log），其余最终验证及QA原红登记后提交。临时入口/private/tmp/fancy-ios-native-entry.txt，构建/private/tmp/fancy-ios-native-release-typebox.log，原崩溃/private/tmp/fancy-ios-runtime.log。
 - 正式Metro两文件冻结后根core:check及Python71通过（/private/tmp/fancy-ios-metro-{check,python}.log）；负责人已逐字同步当前源码到ASCII临时副本重建，安装/启动结果另交QA。QA在87434e3保留F20原崩溃与F21安全区独立缺陷，释放提交窗口；原红准确源码基线仍待负责人确认，不推测。组件测试/首屏截图均不替代原生交互旅程。
+
+## QA-F21 原生顶层提示安全区（2026-10-21）
+
+- QA原图确认统计授权标题与系统时钟重叠，独立F21不与TypeBox首开F20混合。仅AppRoot将SessionBanner与AnalyticsConsent一起置于一个SafeAreaView top/left/right，避免各自重复顶边距；导航children和助手仍原布局，不改授权存储/允许拒绝语义。
+- 自有修前3红，修后定向8绿、负责人全iOS254绿。测试使用真实safe-area库及非零initialMetrics，并验证初始/折叠偏好/离线提示共用容器，导航/助手不被包入；实际Release布局截图为主要视觉证据，不仅断言props。
+- 精确9df9ab0归档加唯一AppRoot生产差异实际Release成功，PID41469持续，API61973 GET /v1/meals 200且runtime无fatal。根直接查看/private/tmp/fancy-f21-native-screen.png确认19:21状态栏与标题分离；构建/runtime为/private/tmp/fancy-f21-native-{build,runtime}.log，不称完整交互旅程通过。repo与ASCII副本AppRoot哈希一致，正式SHA仍交QA复验。
+- F20另已精确87434e3无Metro归档重建并launch复现defineProperty/RCTFatal（/private/tmp/fancy-f20-87434e3-red-runtime.log）；精确9df9ab0归档无F21重建运行持续Discover（/private/tmp/fancy-f20-9df9ab0-native-screen.png及同前缀build/runtime）。不再依赖首次未记SHA旧红，正式关闭结论仍由QA持有。
+- 根最终iOS254、core:check及Python74通过（/private/tmp/fancy-f21-{ios,check,python}.log）。后端/Web未改，沿用最近已验证层；仅AppRoot、自有safe-area测试及本记录提交，等待QA B11窗口释放。实际修复关闭由QA按正式SHA独立决定。

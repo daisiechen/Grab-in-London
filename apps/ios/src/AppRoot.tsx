@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { AppState, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Primary } from './ui/Button.tsx';
 import { Body } from './ui/Text.tsx';
 import {AssistantWidget} from './features/assistant/AssistantWidget.tsx';
@@ -21,8 +22,10 @@ export function AppRoot({ services, children }: { services: Services; children: 
   }, [services, started]);
   return (
     <ServicesProvider services={services}>
-      <SessionBanner services={services} />
-      <AnalyticsConsent manager={services.analytics}/>
+      <SafeAreaView edges={['top', 'left', 'right']} testID="app-notices">
+        <SessionBanner services={services} />
+        <AnalyticsConsent manager={services.analytics}/>
+      </SafeAreaView>
       {children}
       <AssistantWidget />
     </ServicesProvider>
