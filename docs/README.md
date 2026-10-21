@@ -111,3 +111,5 @@
 - QA F20: [native original first-launch failure evidence](qa/evidence/2026-10-21/native-first-launch-crash.txt).
 
 - QA F21: [native consent safe-area original screenshot](qa/evidence/2026-10-21/native-consent-safe-area-original.png).
+
+- QA F20 formal build: [review](qa/evidence/2026-10-21/f20-independent-build-review.md), [machine bundle proof](qa/evidence/2026-10-21/f20-independent-bundle-proof.json).

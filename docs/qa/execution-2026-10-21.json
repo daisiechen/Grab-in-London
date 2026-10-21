@@ -40,7 +40,9 @@
     "browserObservationsB9": "evidence/2026-10-21/browser-b9.json",
     "B9": "evidence/2026-10-21/browser-b9.zh-CN.md",
     "browserObservationsB10": "evidence/2026-10-21/browser-b10.json",
-    "B10": "evidence/2026-10-21/browser-b10.zh-CN.md"
+    "B10": "evidence/2026-10-21/browser-b10.zh-CN.md",
+    "F20BundleProof": "evidence/2026-10-21/f20-independent-bundle-proof.json",
+    "F20BuildReview": "evidence/2026-10-21/f20-independent-build-review.md"
   },
   "cases": [
     {
@@ -22345,7 +22347,7 @@
     "userAuthorizedMessaging": true,
     "status": "remaining_local_execution_in_progress",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
-    "latestFeedback": "R111 Web-cookie/native-bearer guest→account→logout→newguest API isolation2PASS, AI033 mapped via planned API method. Actual native App journey still unexecuted pending build. Native owner actual Release startup fatal independently corroborated by QA runtime log read; F20 OPEN, exact source baseline/formal Metro fix pending. Temporary Discover screen not native journey PASS. F21 separate native consent/statusbar overlap directly visually corroborated from supplied original screen; formal source/fix pending."
+    "latestFeedback": "F20 formal9df fixed archive independent resolver7PASS and actual Metro/Hermes export0, CJS200/ESM0 plus106 exact physical source checks; original red baseline and native fixed runtime replay still pending, F20/F21 OPEN. No case pass count changed."
   },
   "blockerTriage": "原14条中供应商分步删除和恢复删除台账两条已转本地执行并通过；其余12条缺真实环境/许可/批准证据，各项可本地准备部分已继续推进，不能视为12个未修代码故障。"
 }

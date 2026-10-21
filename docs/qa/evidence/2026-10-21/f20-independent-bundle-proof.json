@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "typeboxCjsSources": 200,
+  "typeboxEsmSources": 0,
+  "fixedAppSourceFilesVerified": 106,
+  "hermesBundleBytes": 2703300,
+  "hermesBundleSha256": "bb6e50a61a2efe4c9a72f78c684c018dd108143538223323b06e7af63a3ed9e6",
+  "sourceMapSha256": "c48c082bc290d2212fba39126071d94070d47e2c834784098e4c8e9e2049c9bc",
+  "scope": "actual Metro export and fixed application-source mapping; not native launch or interaction",
+  "testedCommit": "9df9ab0dd2ad67aa0a830bd5b6122bead4fc6258",
+  "command": "CI=1 EXPO_PUBLIC_API_BASE_URL=http://127.0.0.1:61973 expo export --platform ios --source-maps",
+  "exitCode": 0,
+  "environment": "Formal fixed git archive with installed workspace dependency links; actual Metro/Hermes export; no simulator launch in this independent check."
+}
