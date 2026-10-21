@@ -27,16 +27,16 @@
 
 ## T01 请求响应schema与SDK
 
-- 状态：in_progress；依赖：T00。
+- 状态：done；依赖：T00。
 - 文件：`packages/contracts/`, `packages/client/`；相应测试就近创建。
 - 验收：逐端点落实operationId/DTO/error/If-Match；OpenAPI与SDK由同schema生成；五页slug及survey枚举固定并验证未知字段拒绝。
 - 验证：`schema生成漂移+API contract tests`。
 - 外部依赖/证据：无。
-- 完成记录：未实施；commit/命令结果/证据待执行者填写。
+- 完成记录：commit c34d9c4（2026-10-21，含Codex评审4项修正：iOS/SUPPORT_CLI凭据区分且CLI无refresh；returnTarget拒绝`//host`、`/\host`并有运行时同源路由allowlist；createMeal菜系/饮食可省略且省略=null归一；CLI入口改`import.meta.main`修复非ASCII路径下secret-scan未执行）。命令：`source infra/dev-env.sh && pnpm core:check && pnpm core:test:unit && pnpm core:test:db && pnpm core:test:release`（各命令独立退出码）。结果：check通过（含`check:generated`漂移检查）；unit 60/60（contracts 43、client 7、config 11中含新增）、db 4/4、release 9/9；Python仓库测试64项通过。证据：`packages/contracts/src/contracts.unit.test.ts`（58个文档operationId/方法/路径逐一比对、全部对象additionalProperties:false、If-Match集合、OpenAPI 3.1校验、生成物漂移）、`packages/client/src/client.unit.test.ts`。说明：服务端运行时Ajv同配置（禁removeAdditional）在T04接入；补充通用码INVALID_REQUEST/VALIDATION_FAILED/STATE_CONFLICT/RATE_LIMITED/RECEIPT_EXPIRED/INTERNAL_ERROR对应契约已描述的状态类；举报reason暂只有原型的`private_concern`，细分原因需产品决定。
 
 ## T02 迁移与事务内核
 
-- 状态：todo；依赖：T01。
+- 状态：in_progress；依赖：T01。
 - 文件：`packages/db/`, `apps/api/src/common/`, `apps/worker/src/runner/`, `packages/testkit/db/`；相应测试就近创建。
 - 验收：只建通用user/幂等/审计/outbox/notifications/jobs/privacy_control迁移、runner租约及短事务锁工具；业务schema由各切片随自己的迁移创建，不能声明全部业务表已完成；普通30天与永久资源去重协议分开。
 - 验证：`core:test:db（通用幂等/锁/租约fixture，不提前声称饭局并发测试通过）`。
