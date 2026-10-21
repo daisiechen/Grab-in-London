@@ -1,0 +1,11 @@
+{
+  "candidate": "QA-F43",
+  "classification": "actual HTTP429, recovered next normal quota window; not confirmed product business defect",
+  "requestId": "37f989d8-baa3-4964-ac94-5f9d70bd5eea",
+  "method": "PUT",
+  "path": "/v1/meals/57c7b03f-29d5-4a4f-8cc2-8d2db7fc91bb/reconnect/fc2e9e2a-20db-41db-936f-2c1493315583",
+  "statusCode": 429,
+  "native56": "Self attendance, private rating and public reference saved; last reconnect returned generic error, zero new consent. Original test failed and retained.",
+  "native57": "Only reconnect retried after advancing ownedclock to next normal window, passed; no quotas modified and no successful earlier business writes repeated.",
+  "qaThirdActorSetup": "Initial urllib cookie policy prevented authenticated GETme; corrected explicit RAM cookie handling matches existing API test Browser. Repeated synthetic OTP attempt within same frozen minute returned429; next normal window sign-in/profile/checks passed. No server protections modified; initial unrecorded GETme status is not guessed."
+}

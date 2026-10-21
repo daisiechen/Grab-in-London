@@ -1,0 +1,193 @@
+{
+  "observations": [
+    {
+      "id": "B19-O001",
+      "status": "passed",
+      "title": "Explicit mutual reconnect opens one direct conversation with native/Web messages",
+      "testedCommit": "042bc79321ec3f6be4de2d235264d128d06b0540",
+      "environment": "Native042 actual iOS27.0 dedicated simulator, Web2debc60/API19d same real local PG; synthetic actors/providers; controlledclock",
+      "steps": [
+        "Native46 explicitly selects after self attendance/experience/reference; actual readonly PG: one consent, zero DM. Webhost reload own checkbox false, no mutual indicator or DM action.",
+        "Webhost explicitly selects; mutual message and Say hello appear. Opens DM, sends QA mutual connection hello once. Native48 reads remote message, explicitly replies QA native mutual reply once. Webreload shows both.",
+        "ReadonlyPG has two consents, one directconversation and exactly two directMessageRefs. Fulljourney004 still needs third privacy actor, withdrawal/block/unblock and both directions; no wholecase PASS."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/cross-main-one-sided-web.jpg",
+        "evidence/2026-10-21/cross-main-one-sided-feedback-facts.json",
+        "evidence/2026-10-21/cross-main-mutual-web.jpg",
+        "evidence/2026-10-21/cross-main-direct-roundtrip-facts.json",
+        "evidence/2026-10-21/native-direct48-xcui.swift",
+        "evidence/2026-10-21/native-direct-roundtrip.png"
+      ]
+    },
+    {
+      "id": "B19-O002",
+      "status": "passed",
+      "title": "Native withdrawal and Web block/unblock preserve read-only history without revived consent",
+      "testedCommit": "042bc79321ec3f6be4de2d235264d128d06b0540",
+      "environment": "Native042 actual iOS27.0 dedicated simulator, Web2debc60/API19d same real local PG; synthetic actors/providers; controlledclock",
+      "steps": [
+        "Native49 explicit Undochoice succeeded and Notchosen asserted; next navigation erroneously expected hidden tab in nested PostMeal, retained QA setupfailure. Native50 wrong unread-name suffix failslookup, no business write; correctedNative51 coldexactname readsbotholdmessages and noeditor.",
+        "Webreload after withdrawal readsbothmessages and noeditor. ExplicitBlock confirmation thenUnblock reports previousconnectionnotrestored. RevisitingoriginalDM remainsread-only, noeditor.",
+        "ReadonlyPG afterunblock: consentepoch3; botholdepoch1consents revoked; oneoriginalDM andtwooriginalmessages remain. Fullcaseawaitsthirdactorprivacy, mirror and sharedfactsadminprecondition."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-withdraw49-xcui.swift",
+        "evidence/2026-10-21/native-withdraw50-xcui.swift",
+        "evidence/2026-10-21/native-withdraw51-xcui.swift",
+        "evidence/2026-10-21/native-withdraw-readonly.png",
+        "evidence/2026-10-21/cross-main-withdraw-web-readonly.jpg",
+        "evidence/2026-10-21/cross-main-blocked-web.jpg",
+        "evidence/2026-10-21/cross-main-unblocked-still-readonly-web.jpg",
+        "evidence/2026-10-21/cross-main-withdraw-facts.json",
+        "evidence/2026-10-21/cross-main-unblock-facts.json"
+      ]
+    },
+    {
+      "id": "B19-O003",
+      "status": "failed",
+      "title": "F42 original formal native host cannot report guest attendance",
+      "testedCommit": "042bc79321ec3f6be4de2d235264d128d06b0540",
+      "environment": "Actual iOS27.0 simulator normal signed formal042; real localPG/API19d synthetic actors; M5 COMPLETED controlled2026-10-24T01:02Z",
+      "steps": [
+        "ActualNative52 hostopenscompletednormalM5 aftermeal: selfunknown with selfbuttons, guestunknown nohostcontrols. Frozenformal042source only invokes reportAttendance for subjectId==meId.",
+        "RequirementsJOURNEY002 hostreport/selfpriority cannot be executed from this UI. Owneralready deliveredcd69 candidate; independent14componenttests pass, actualfixverificationpending.",
+        "PG mealCOMPLETED, attendance0/experience0; no defaultpresent inferred. Native52 observationtestsuccess only confirms capturedsurface, doesnot mean missing requirement passes."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-host-surface52-xcui.swift",
+        "evidence/2026-10-21/f42-native-host-original-missing.png",
+        "evidence/2026-10-21/cross-native-normal-end-unknown-facts.json",
+        "evidence/2026-10-21/cross-native-normal-web-unknown.jpg"
+      ]
+    },
+    {
+      "id": "B19-O004",
+      "status": "passed",
+      "title": "F42 formal native host independent review cancel writes nothing",
+      "testedCommit": "cd69e09fd4de8272dd33da4f4bbacb57a16c60ed",
+      "environment": "Actual normally signed Release iOS27.0 dedicated simulator; API19d real isolatedPG syntheticactors, controlledclock",
+      "steps": [
+        "IndependentGitshow compares194trackednative/client/contractsources byteforbyte with candidate manifest; actualinstalledbinary/Hermes match formal build.",
+        "Native53 host enters M5 postmeal: bothunknown, nohostselection, Reviewdisabled. Explicitselectcame thenReview opens independentconfirmation; Keepediting closesconfirmation, reportstillnotreported.",
+        "ReadonlyPG aftercancel attendanceRevisions0 and experienceRevisions0. This doesnot establishconfirm/SELFpriority/window/conflict assertions alone."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f42-independent-formal-proof.json",
+        "evidence/2026-10-21/native-host-cancel53-xcui.swift",
+        "evidence/2026-10-21/f42-native-host-cancel-no-write.png",
+        "evidence/2026-10-21/f42-cancel-no-write-facts.json"
+      ]
+    },
+    {
+      "id": "B19-O005",
+      "status": "passed",
+      "title": "F42 formal native independent host report preserves SELF priority",
+      "testedCommit": "cd69e09fd4de8272dd33da4f4bbacb57a16c60ed",
+      "environment": "Actual iOS27.0 dedicated simulator and Web2debc60/API19d same real isolatedPG, syntheticactors/providers, controlledclock",
+      "steps": [
+        "Native54 explicit guestabsent selection-Review-Confirm saves HOSTabsence; Webguest reloadshows absencefromhost and nofeedbackqualification.",
+        "Webguest explicitlySELFpresent; Native55 coldreads effective Came·theyreported, explicitlyconfirmsHOSTabsentagain; effectiveSELFpresent retained alongside hostabsent. PGorderedrevisions independently captured.",
+        "R19614/0 covers additionalcomponentconfirmation/conflict/window branches; actualUI409 andclosedwindow are NOT claimed by this observation. FullJOURNEY002 still needs sharedfacts/admin/thirdactorpreconditions."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-host-confirm54-xcui.swift",
+        "evidence/2026-10-21/native-host-priority55-xcui.swift",
+        "evidence/2026-10-21/f42-native-host-absent-confirmed.png",
+        "evidence/2026-10-21/f42-native-self-priority.png",
+        "evidence/2026-10-21/f42-host-absent-web.jpg",
+        "evidence/2026-10-21/f42-host-absent-facts.json",
+        "evidence/2026-10-21/f42-self-priority-facts.json"
+      ]
+    },
+    {
+      "testedCommit": "cd69e09fd4de8272dd33da4f4bbacb57a16c60ed",
+      "environment": "Actual iOS27.0 normal signed dedicated simulator/Web2debc60/API19d same localPG, syntheticproviders, controlledclock",
+      "id": "B19-O006",
+      "status": "failed",
+      "title": "Native56 last reconnect hits actual429; previous feedback writes preserved",
+      "steps": [
+        "Native56 selfpresent/private5/reference save assertions passed; explicitreconnect laststep didnotshow success; testfailed and nativegenericerror hierarchy preserved privately.",
+        "APIlog safe extraction correlates exactrequestId with429, PGnewM5consent0. No duplicate rating/reference replays permitted. CandidateF43 is classified as real rate-limit plus frozen testclock recovery, no backend business patch."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-feedback56-xcui.swift",
+        "evidence/2026-10-21/native56-rate-limit-classification.json",
+        "evidence/2026-10-21/reverse-feedback-before-choice-facts.json"
+      ]
+    },
+    {
+      "testedCommit": "cd69e09fd4de8272dd33da4f4bbacb57a16c60ed",
+      "environment": "Actual iOS27.0 normal signed dedicated simulator/Web2debc60/API19d same localPG, syntheticproviders, controlledclock",
+      "id": "B19-O007",
+      "status": "passed",
+      "title": "Reverse normal feedback and single-sided retry recover; third actor cannot infer choice",
+      "steps": [
+        "Native57 only retrieschoice after legitimate clockwindowadvance, success; privateexperience and publicreview notresubmitted. Webretained failedeligibilityreference draft thenexplicitretry oncebothSELFpresent succeeds; noautomaticwrite.",
+        "ActualWebotherparty checkboxfalse/no mutual indicator orDM action; thirdBAPI checksR197 in samephysicalPG: publicprofiles omitconsentfields, direct404/postmeal403/inboxnoDM.",
+        "Afterotherpartyexplicitmutualchoice, sameBactor7checksagainpass and bothpublicprojectionhashesexactlymatch one-sidedphase. No model/email/realprovider operation."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-choice57-xcui.swift",
+        "evidence/2026-10-21/native-reverse-one-sided-choice.png",
+        "evidence/2026-10-21/reverse-one-sided-choice-facts.json",
+        "evidence/2026-10-21/reverse-one-sided-web-private.jpg",
+        "evidence/2026-10-21/reverse-review-ineligible-draft-kept.jpg",
+        "evidence/2026-10-21/third-privacy-one-sided.json",
+        "evidence/2026-10-21/third-privacy-mutual.json"
+      ]
+    },
+    {
+      "testedCommit": "cd69e09fd4de8272dd33da4f4bbacb57a16c60ed",
+      "environment": "Actual iOS27.0 normal signed dedicated simulator/Web2debc60/API19d same localPG, syntheticproviders, controlledclock",
+      "id": "B19-O008",
+      "status": "passed",
+      "title": "Reverse mutual choice restores original DM; native/Web exchange exactlytwo additional messages",
+      "steps": [
+        "Afternewexplicitmutualchoice originalDM restoreseditor and earlierauthorizedhistory. Websends reverse-rolemutualhello once; Native58 readsitandreplies once.",
+        "Webactualread bothnewmessages afterreal429 visibleerror andlegitimatewindowadvance. PGoriginalDM totalfourmessages (old2+new2), no secondDM. Originalread429 screenshot retained separately."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-direct58-xcui.swift",
+        "evidence/2026-10-21/native-reverse-direct-roundtrip.png",
+        "evidence/2026-10-21/reverse-direct-roundtrip-facts.json",
+        "evidence/2026-10-21/reverse-direct-roundtrip-web.jpg",
+        "evidence/2026-10-21/reverse-direct-read429-web.jpg"
+      ]
+    },
+    {
+      "testedCommit": "cd69e09fd4de8272dd33da4f4bbacb57a16c60ed",
+      "environment": "Actual signed Release iOS27.0 dedicated simulator/Web2debc60/API19d same real isolatedPG syntheticactors/providers, fixedclock2026-10-24T01:10Z",
+      "id": "B19-O009",
+      "status": "passed",
+      "title": "Reverse Web withdrawal leaves original native DM history read-only",
+      "steps": [
+        "Webguest explicitlyWithdraw connection confirmation succeeds; Native59A coldlaunch opens originalDM, sees bothnewreversemessages and noMessageeditor. Oldhistory retained.",
+        "OriginalWebconfirmation disappeared while otherworkcontinued; firstscopedclick foundnodialog and made no write. Freshsnapshot confirmedstillconnected; reopenedconfirmation andexplicitlyconfirmedonce. No false claim from timedoutclick.",
+        "Atcheckpoint mainAPI/PIDunchanged, allchatWebtabs moved to completed detail/feedback pages with emptydrafts, NativeSettings idle. No businesswrites or clockadvance while environmentowner prepares sameDB staff sidecar."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-readonly-safety59-xcui.swift",
+        "evidence/2026-10-21/native-reverse-withdraw-readonly.png",
+        "evidence/2026-10-21/cross-safe-checkpoint-facts.json"
+      ]
+    },
+    {
+      "testedCommit": "cd69e09fd4de8272dd33da4f4bbacb57a16c60ed",
+      "environment": "Actual signed Release iOS27.0 dedicated simulator/Web2debc60/API19d same real isolatedPG syntheticactors/providers, fixedclock2026-10-24T01:10Z",
+      "id": "B19-O010",
+      "status": "failed",
+      "title": "F44 native lacks normal Block/Unblock safety entry points",
+      "steps": [
+        "Native59B normalMealsPast→originalM1→YourhostQACrossHost→publicprofile: onlyReportthisprofile, noBlock/Unblock. NormalBack→Profile→Settings: privacycopy withno blocked management.",
+        "Frozenformalcd69 native source has no block/unblock/getBlock calls. PRD60/416 and mirroredJOURNEY004 requireblockclearsconsent/unblockdoesnotrestore; cannot execute on originalnativeUI.",
+        "Native59B observationcapture passes, but productrequirement is failed. Handedrootnative/backendowners; fixrequiresmatchingauthoritative blockstate endpoint andformalnativebuild, notdeclarationor guessed409state."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-readonly-safety59-xcui.swift",
+        "evidence/2026-10-21/f44-native-original-profile-no-block.png",
+        "evidence/2026-10-21/f44-native-original-settings-no-unblock.png"
+      ]
+    }
+  ]
+}

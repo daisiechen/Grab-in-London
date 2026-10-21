@@ -1,0 +1,13 @@
+{
+  "formalCommit": "cd69e09fd4de8272dd33da4f4bbacb57a16c60ed",
+  "independentTrackedSourceGitComparison": {
+    "files": 194,
+    "result": "all match formal Git bytes and manifest hashes"
+  },
+  "actualInstalledHashes": {
+    "Fancy": "f65f0bfcf0ac7893a6a573ab38fdd969bc732b98d2b9311a85b971deea9c376f",
+    "main.jsbundle": "3b477799cc1297c44b1f922da83d93d4bc53c84d40725c7a6e11070641cbff89"
+  },
+  "runtime": "dedicated iOS27.0 simulator; normally signed Release; actual API61973/real isolatedPG syntheticproviders",
+  "scope": "Native53 confirms host-only report controls initially unknown/no selection; explicit review then Keepediting; actual PG attendanceRevisions0. Further confirmation/SELF priority still pending."
+}

@@ -1,0 +1,9 @@
+import XCTest
+final class ProbeTests:XCTestCase {
+ func testFixedNativeHostAttendanceCancelConfirmation() throws {
+  continueAfterFailure=false
+  let app=XCUIApplication(bundleIdentifier:"com.example.fancy.dev");app.launch();let decline=app.buttons["Decline analytics"];if decline.waitForExistence(timeout:3){decline.tap()}
+  app.buttons["Meals, tab, 2 of 5"].tap();app.otherElements["Past"].tap();let meal=app.buttons.matching(NSPredicate(format:"label BEGINSWITH %@","QA Native Normal Table,")).firstMatch;XCTAssertTrue(meal.waitForExistence(timeout:12),app.debugDescription);meal.tap();app.buttons["After the meal"].tap();XCTAssertTrue(app.staticTexts["You · Not reported yet"].firstMatch.waitForExistence(timeout:12),app.debugDescription)
+  app.buttons["I came"].tap();XCTAssertTrue(app.staticTexts["Thanks — attendance saved."].firstMatch.waitForExistence(timeout:10));app.otherElements["5"].tap();app.buttons["Save experience"].tap();XCTAssertTrue(app.staticTexts["Saved privately."].firstMatch.waitForExistence(timeout:10));let reference=app.textViews.matching(NSPredicate(format:"label BEGINSWITH %@","Reference for QA Cross Host")).firstMatch;reference.tap();reference.typeText("QA public reference from native host.");app.staticTexts["After the meal"].firstMatch.tap();app.buttons["Save reference for QA Cross Host"].tap();XCTAssertTrue(app.staticTexts["Reference saved."].firstMatch.waitForExistence(timeout:10));app.buttons["I’d meet QA Cross Host again"].tap();XCTAssertTrue(app.staticTexts["Choice saved privately."].firstMatch.waitForExistence(timeout:10));XCTAssertTrue(app.staticTexts["QA Cross Host · You chose to meet again"].firstMatch.exists);print("QA_NATIVE_NORMAL_HOST_FEEDBACK_ONE_SIDED\n"+app.debugDescription);let a=XCTAttachment(screenshot:app.screenshot());a.name="native-normal-host-feedback-one-sided";a.lifetime = .keepAlways;add(a)
+ }
+}

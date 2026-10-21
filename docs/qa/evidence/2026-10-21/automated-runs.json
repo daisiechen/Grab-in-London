@@ -21324,6 +21324,257 @@
           "durationMs": 4
         }
       ]
+    },
+    {
+      "id": "R196",
+      "testedCommit": "cd69e09fd4de8272dd33da4f4bbacb57a16c60ed",
+      "command": "pnpm --dir apps/ios test --runInBand --runTestsByPath src/features/post-meal/host-attendance.test.tsx src/features/post-meal/post-meal.test.tsx --json --outputFile=/private/tmp/fancy-r196.json",
+      "startedAt": "2026-10-21T22:38:16.893000+00:00",
+      "exitCode": 0,
+      "passed": 14,
+      "failed": 0,
+      "total": 14,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R196-T001",
+          "run": "R196",
+          "path": "apps/ios/src/features/post-meal/host-attendance.test.tsx",
+          "title": "ordinary member and failed host lookup never expose host controls",
+          "status": "passed",
+          "durationMs": 232
+        },
+        {
+          "id": "R196-T002",
+          "run": "R196",
+          "path": "apps/ios/src/features/post-meal/host-attendance.test.tsx",
+          "title": "failed host lookup preserves self reporting without granting host actions",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R196-T003",
+          "run": "R196",
+          "path": "apps/ios/src/features/post-meal/host-attendance.test.tsx",
+          "title": "closed window has no host reports",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R196-T004",
+          "run": "R196",
+          "path": "apps/ios/src/features/post-meal/host-attendance.test.tsx",
+          "title": "unknown is unselected; host explicitly confirms, SELF remains effective and other drafts remain",
+          "status": "passed",
+          "durationMs": 32
+        },
+        {
+          "id": "R196-T005",
+          "run": "R196",
+          "path": "apps/ios/src/features/post-meal/host-attendance.test.tsx",
+          "title": "409 rereads and requires a fresh explicit confirmation/version",
+          "status": "passed",
+          "durationMs": 21
+        },
+        {
+          "id": "R196-T006",
+          "run": "R196",
+          "path": "apps/ios/src/features/post-meal/host-attendance.test.tsx",
+          "title": "failed conflict refresh blocks old confirmation and can recover through explicit read-only reload",
+          "status": "passed",
+          "durationMs": 15
+        },
+        {
+          "id": "R196-T007",
+          "run": "R196",
+          "path": "apps/ios/src/features/post-meal/host-attendance.test.tsx",
+          "title": "ordinary failure is visible inside confirmation and retains chosen fact",
+          "status": "passed",
+          "durationMs": 17
+        },
+        {
+          "id": "R196-T008",
+          "run": "R196",
+          "path": "apps/ios/src/features/post-meal/host-attendance.test.tsx",
+          "title": "saving a host fact does not discard private experience or reference drafts",
+          "status": "passed",
+          "durationMs": 33
+        },
+        {
+          "id": "R196-T009",
+          "run": "R196",
+          "path": "apps/ios/src/features/post-meal/host-attendance.test.tsx",
+          "title": "conflict discovering closed reporting window removes host actions without replay",
+          "status": "passed",
+          "durationMs": 12
+        },
+        {
+          "id": "R196-T010",
+          "run": "R196",
+          "path": "apps/ios/src/features/post-meal/host-attendance.test.tsx",
+          "title": "late post-meal response after session expiry cannot refill private cache",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R196-T011",
+          "run": "R196",
+          "path": "apps/ios/src/features/post-meal/post-meal.test.tsx",
+          "title": "attendanceText keeps UNKNOWN distinct from absent and names the source",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R196-T012",
+          "run": "R196",
+          "path": "apps/ios/src/features/post-meal/post-meal.test.tsx",
+          "title": "PostMealScreen (S19/S21) self attendance uses If-Match; feedback opens only once present",
+          "status": "passed",
+          "durationMs": 28
+        },
+        {
+          "id": "R196-T013",
+          "run": "R196",
+          "path": "apps/ios/src/features/post-meal/post-meal.test.tsx",
+          "title": "PostMealScreen (S19/S21) a closed window is read-only and a conflict refreshes",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R196-T014",
+          "run": "R196",
+          "path": "apps/ios/src/features/post-meal/post-meal.test.tsx",
+          "title": "PostMealScreen (S19/S21) meet-again is private and reloads on 409",
+          "status": "passed",
+          "durationMs": 12
+        }
+      ]
+    },
+    {
+      "id": "R197",
+      "testedCommit": "19d1fb9784c4727e664c026c4a0bd6c29eb7b5cb",
+      "command": "FANCY_QA_LOCAL_FIXTURE=1 python3 scripts/qa-cross-privacy.py one-sided; separately mutual after explicit other-side choice (normal OTP window advance)",
+      "completedAt": "2026-10-21T22:57:42.997497+00:00",
+      "timingNote": "Run start/durations not captured; zero durations are unknown, not latency measurements. Phase receipts retain actual results.",
+      "exitCode": 0,
+      "passed": 14,
+      "failed": 0,
+      "total": 14,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R197-T001",
+          "run": "R197",
+          "path": "scripts/qa-cross-privacy.py",
+          "title": "one-sided: public profile omits connection/consent fields",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R197-T002",
+          "run": "R197",
+          "path": "scripts/qa-cross-privacy.py",
+          "title": "one-sided: third actor has no direct conversation with participant",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R197-T003",
+          "run": "R197",
+          "path": "scripts/qa-cross-privacy.py",
+          "title": "one-sided: public profile omits connection/consent fields",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R197-T004",
+          "run": "R197",
+          "path": "scripts/qa-cross-privacy.py",
+          "title": "one-sided: third actor has no direct conversation with participant",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R197-T005",
+          "run": "R197",
+          "path": "scripts/qa-cross-privacy.py",
+          "title": "one-sided: third actor cannot read participant post-meal choices",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R197-T006",
+          "run": "R197",
+          "path": "scripts/qa-cross-privacy.py",
+          "title": "one-sided: third actor cannot read participant post-meal choices",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R197-T007",
+          "run": "R197",
+          "path": "scripts/qa-cross-privacy.py",
+          "title": "one-sided: third actor inbox contains no participant conversations",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R197-T008",
+          "run": "R197",
+          "path": "scripts/qa-cross-privacy.py",
+          "title": "mutual: public profile omits connection/consent fields",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R197-T009",
+          "run": "R197",
+          "path": "scripts/qa-cross-privacy.py",
+          "title": "mutual: third actor has no direct conversation with participant",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R197-T010",
+          "run": "R197",
+          "path": "scripts/qa-cross-privacy.py",
+          "title": "mutual: public profile omits connection/consent fields",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R197-T011",
+          "run": "R197",
+          "path": "scripts/qa-cross-privacy.py",
+          "title": "mutual: third actor has no direct conversation with participant",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R197-T012",
+          "run": "R197",
+          "path": "scripts/qa-cross-privacy.py",
+          "title": "mutual: third actor cannot read participant post-meal choices",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R197-T013",
+          "run": "R197",
+          "path": "scripts/qa-cross-privacy.py",
+          "title": "mutual: third actor cannot read participant post-meal choices",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R197-T014",
+          "run": "R197",
+          "path": "scripts/qa-cross-privacy.py",
+          "title": "mutual: third actor inbox contains no participant conversations",
+          "status": "passed",
+          "durationMs": 0
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -21407,7 +21658,8 @@
     "apps/web/src/features/create/qa-independent-time-picker.unit.test.tsx": "3a7e240e3223143aee404d85311d77ea326bcfae23bb3cae1735095bef571429",
     "apps/web/src/features/create/qa-independent-venue-reset.unit.test.tsx": "a937371da042850e1fd1338f77f7379e3120843806d42417161b34d6a0f750d8",
     "apps/web/src/features/inbox/qa-independent-read-error.unit.test.tsx": "b338fa2cea745b3bed84f14a5cd6dd1aba37079c7cee9a7aa93d2d11e613c62c",
-    "apps/web/src/features/inbox/qa-independent-seat-label.unit.test.tsx": "f6ce8c7df12d07b1fa364df42b75231f7579c3c17afc4cdd162ada9ed1a7dd23"
+    "apps/web/src/features/inbox/qa-independent-seat-label.unit.test.tsx": "f6ce8c7df12d07b1fa364df42b75231f7579c3c17afc4cdd162ada9ed1a7dd23",
+    "scripts/qa-cross-privacy.py": "978c5c8518262e5c96c1e78ad3c8fec9cefb76b0cf04fde352174ec31a762daa"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console. R68/R69 valid TestIDP OAuth callback200 captured actual non-silent child stdout only in parent RAM. Metadata contains only leak booleans, never credential strings or raw logs. R69 aggregates code/state/email checks without stopping at the first boolean failure. R72 mutates semantic OpenAPI/SDK artifacts only in an owned temporary contracts copy, requires the real checker fail1 and restore0, and verifies original workspace bytes untouched. Static cases remain NOT_RUN until fixed committed handoff recheck.",
   "runtimeSnapshotVerification": {

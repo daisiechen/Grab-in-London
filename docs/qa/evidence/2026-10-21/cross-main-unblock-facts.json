@@ -1,0 +1,255 @@
+{
+  "ownedClockDatabaseVerified": true,
+  "mealId": "acfe9e54-d6d7-4c63-81b6-f6aae4e53610",
+  "meal": {
+    "id": "acfe9e54-d6d7-4c63-81b6-f6aae4e53610",
+    "status": "COMPLETED",
+    "version": 4,
+    "head": 7,
+    "minimum": 2,
+    "capacity": 2,
+    "cancel_reason": null
+  },
+  "applications": [
+    {
+      "id": "ffceafab-1a8a-43d2-be05-dca1529f1b83",
+      "user_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "round": 1,
+      "state": "CONFIRMED",
+      "version": 2
+    }
+  ],
+  "seats": [
+    {
+      "seq": 1,
+      "type": "HOST_CONFIRMED",
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583"
+    },
+    {
+      "seq": 3,
+      "type": "GUEST_CONFIRMED",
+      "user_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50"
+    }
+  ],
+  "conversations": [
+    {
+      "id": "06cbc092-d158-404c-afd1-368de46e1459",
+      "kind": "GROUP",
+      "version": 3,
+      "head": 4,
+      "dissolved_at": null,
+      "dissolved_seq": null
+    }
+  ],
+  "groupMemberships": [
+    {
+      "user_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "join_seq": 2,
+      "leave_seq": null
+    },
+    {
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "join_seq": 1,
+      "leave_seq": null
+    }
+  ],
+  "messageRefs": [
+    {
+      "id": "0d215ab0-e5c8-4a33-af44-090971200e5e",
+      "seq": 3,
+      "sender_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50"
+    },
+    {
+      "id": "ec4ddede-c1b4-4f17-b9d1-733cd8d3bfd5",
+      "seq": 4,
+      "sender_id": "fc2e9e2a-20db-41db-936f-2c1493315583"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "355ada8e-9f2b-42b5-a2ee-0cab60c97567",
+      "event_id": "2b8f7fb6-a403-4c3a-ae23-872fb710b577",
+      "recipient_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "channel": "IN_APP",
+      "template": "booking_updated"
+    },
+    {
+      "id": "3b85d9e5-5af0-4f31-bc90-ca766e851952",
+      "event_id": "2b8f7fb6-a403-4c3a-ae23-872fb710b577",
+      "recipient_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "channel": "IN_APP",
+      "template": "booking_updated"
+    },
+    {
+      "id": "a81edd75-8007-429e-b387-1466d962b04c",
+      "event_id": "cc379dde-c011-4729-bd47-604231d5ddfa",
+      "recipient_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "channel": "IN_APP",
+      "template": "application_approved"
+    },
+    {
+      "id": "d46d469c-cc56-4978-a03a-3658a3583181",
+      "event_id": "69a5ad5b-1215-4191-a6fe-c39cdb7860f2",
+      "recipient_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "channel": "IN_APP",
+      "template": "application_submitted"
+    }
+  ],
+  "emailOutbox": [
+    {
+      "id": "31053258-1e8a-4795-842d-9990c893a10b",
+      "event_id": "cc379dde-c011-4729-bd47-604231d5ddfa",
+      "recipient_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "channel": "EMAIL",
+      "template": "application_approved",
+      "status": "PENDING",
+      "attempts": 0
+    }
+  ],
+  "messageCount": 2,
+  "marks": [
+    {
+      "kind": "CLOSE",
+      "due_at": "2026-10-22T18:00:00+01:00"
+    },
+    {
+      "kind": "END",
+      "due_at": "2026-10-22T21:00:00+01:00"
+    },
+    {
+      "kind": "START",
+      "due_at": "2026-10-22T19:00:00+01:00"
+    }
+  ],
+  "startRoster": [
+    {
+      "user_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "starts_at": "2026-10-22T19:00:00+01:00"
+    },
+    {
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "starts_at": "2026-10-22T19:00:00+01:00"
+    }
+  ],
+  "attendanceRevisions": [
+    {
+      "id": "146c0132-57b2-41be-a94e-b794febc9dd2",
+      "subject_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "source": "SELF",
+      "value": "present",
+      "version": 1,
+      "actor_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50"
+    },
+    {
+      "id": "a5fec752-6e92-4d8c-a36f-9f7750f3c7c6",
+      "subject_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "source": "HOST",
+      "value": "absent",
+      "version": 2,
+      "actor_id": "fc2e9e2a-20db-41db-936f-2c1493315583"
+    },
+    {
+      "id": "a2f3380a-126d-4df8-88e9-855bc1d06477",
+      "subject_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "source": "SELF",
+      "value": "present",
+      "version": 1,
+      "actor_id": "fc2e9e2a-20db-41db-936f-2c1493315583"
+    }
+  ],
+  "experienceRevisions": [
+    {
+      "id": "25236763-d6f0-403f-bb4d-597d04f7b9b0",
+      "user_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "score": 5,
+      "revision": 1
+    },
+    {
+      "id": "65822d3a-9ccb-4371-874d-863b8600f7a9",
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "score": 4,
+      "revision": 1
+    }
+  ],
+  "publicReviewRefs": [
+    {
+      "id": "ddf455a0-17ef-4ca2-8ef3-f209983d327a",
+      "author_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "subject_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "revision": 1
+    },
+    {
+      "id": "12bedd27-1d85-4f76-99f0-45cbe618a4e8",
+      "author_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "subject_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "revision": 1
+    }
+  ],
+  "pairConsentRefs": [
+    {
+      "id": "8c36f8a3-d9c3-4ab5-b83e-d15050cabca5",
+      "pair_id": "40366117-701e-4a0b-9ef8-690b69803dce",
+      "user_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "epoch": 1,
+      "revision": 2,
+      "revoked_at": "2026-10-22T21:06:00+01:00"
+    },
+    {
+      "id": "e5a59d48-88ed-4e49-8d11-079418c4ea70",
+      "pair_id": "40366117-701e-4a0b-9ef8-690b69803dce",
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "epoch": 1,
+      "revision": 2,
+      "revoked_at": "2026-10-22T21:06:00+01:00"
+    }
+  ],
+  "pairMetadata": [
+    {
+      "id": "40366117-701e-4a0b-9ef8-690b69803dce",
+      "low_user": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "high_user": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "consent_epoch": 3,
+      "version": 3
+    }
+  ],
+  "directConversations": [
+    {
+      "id": "23616e6a-08d9-48a7-9dac-e335b0360257",
+      "pair_id": "40366117-701e-4a0b-9ef8-690b69803dce",
+      "version": 3,
+      "head": 4
+    }
+  ],
+  "directMessageRefs": [
+    {
+      "id": "cd6a40fa-b77d-4ebe-b7cc-674e98689101",
+      "seq": 3,
+      "sender_id": "fc2e9e2a-20db-41db-936f-2c1493315583"
+    },
+    {
+      "id": "5c8928d3-440a-4892-aec1-a015b58b1c6a",
+      "seq": 4,
+      "sender_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50"
+    }
+  ],
+  "jobs": [
+    {
+      "kind": "meal.close",
+      "state": "DONE",
+      "due_at": "2026-10-22T18:00:00+01:00",
+      "attempts": 1
+    },
+    {
+      "kind": "meal.end",
+      "state": "DONE",
+      "due_at": "2026-10-22T21:00:00+01:00",
+      "attempts": 1
+    },
+    {
+      "kind": "meal.start",
+      "state": "DONE",
+      "due_at": "2026-10-22T19:00:00+01:00",
+      "attempts": 1
+    }
+  ]
+}

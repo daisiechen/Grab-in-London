@@ -1,0 +1,44 @@
+{
+  "phase": "mutual",
+  "actorId": "2203f3ac-dff3-4fb7-b1f4-3b26d1401c32",
+  "environment": "owned API19d/same real isolatedPG; synthetic OTP/profile; credentials RAM only",
+  "checks": [
+    {
+      "name": "public profile omits connection/consent fields",
+      "status": 200,
+      "expected": 200,
+      "projectionSha256": "b8f74faadf92942a9a7fd8a42c8c5572cfc1cfa654debfbfcc4a30b5834b7a37"
+    },
+    {
+      "name": "third actor has no direct conversation with participant",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "name": "public profile omits connection/consent fields",
+      "status": 200,
+      "expected": 200,
+      "projectionSha256": "a9a0d125cbc86a8ebbc3990100df67c2577837a87d54382f83dfa59288c7a97d"
+    },
+    {
+      "name": "third actor has no direct conversation with participant",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "name": "third actor cannot read participant post-meal choices",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "name": "third actor cannot read participant post-meal choices",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "name": "third actor inbox contains no participant conversations",
+      "status": 200,
+      "expected": 200
+    }
+  ]
+}
