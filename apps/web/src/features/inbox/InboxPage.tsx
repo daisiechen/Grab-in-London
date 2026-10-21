@@ -56,7 +56,7 @@ export function InboxPage() {
         <div>
           <strong>{c.title}</strong>
           <p>{item.lastMessage?.preview ?? 'No messages yet'}</p>
-          <small>{readOnly ? 'Archived · Read-only' : c.kind === 'GROUP' ? 'Seat confirmed · Meal group' : 'Personal conversation'}</small>
+          <small>{readOnly ? 'Archived · Read-only' : c.kind === 'GROUP' ? 'Meal group' : 'Personal conversation'}</small>
         </div>
         {item.unreadCount > 0 && <span className="unread" aria-label={`${item.unreadCount} unread`}>{item.unreadCount}</span>}
         <ArrowRightIcon />

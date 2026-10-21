@@ -447,3 +447,10 @@
 - 自有3修前红→绿、原QA probe1与完整inbox21通过；根全Web/admin311通过但QA-owned OTP重发1失败（找不到Resend code），保/private/tmp/fancy-f38-clients-final.log并交QA核计时，不改QA脚本或声称全量绿。Web生产构建与core:check通过。QA仍持第四批Git窗口，生产本切片尚待其释放后提交与独立正式SHA复验。
 - QA已定位OTP探针base取早于异步响应启动countdown，满载提前检查；仅受控Date.now从render前固定，同一spy推进，原30秒/过期/保邮箱断言不放宽。独立全Web/admin R188当前冻结工作树312通过/0失败，root只读JSON核success=true；前次311/1保历史。此增量仍待正式SHA，不提前关闭F38。
 - QA随后正式611a Chat19实际iOS27.0保留账号冷启动1PASS，191源/binary/Hermes核对；title.y189.667与Leave.y178均在nav.bottom170以下，截图直接视觉无重叠，冷载读回两条持久消息，原83df重叠图保留。F37由QA定向关闭，不扩为整个原生旅程或生产发布通过。
+
+
+## QA-F39 收件箱群聊不得误报席位确认（2026-10-21）
+
+- QA正式Web3919465/API19d反向Native主持/Web加入饭局e0af2bf6-41e9-4d8b-ae79-310b7ab3d095，显式Cancel my place成功后application CANCELLED/seat LEFT，群membership leave_seq仍null；保留群聊是独立权限事实，旧Inbox硬编码Seat confirmed误称仍有席位。
+- 仅InboxPage将LIVE GROUP改为中性Meal group，不从群权限猜申请状态，不改退席/群权限/API；自有seat-label组件投影回归修前1红，修后完整inbox5文件22项通过，Web类型、两文件lint、diff均绿（/private/tmp/fancy-f39-before.log、fancy-f39-after.log）。此为文案/组件证明，真实反向取消路径原证据由QA拥有，正式关闭待提交SHA独立复验。
+- F38已由QA正式3919465独立R189七项通过并定向关闭；JOURNEY008完整异常路径仍NOT_RUN。F39不改后端/iOS，沿用其既有验证，不冒重跑；root保留QA/平台配置/research修改，Git窗口须明确交接后才提交。
