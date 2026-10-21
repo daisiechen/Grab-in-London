@@ -36,12 +36,12 @@
 
 ## T02 迁移与事务内核
 
-- 状态：in_progress；依赖：T01。
+- 状态：done；依赖：T01。
 - 文件：`packages/db/`, `apps/api/src/common/`, `apps/worker/src/runner/`, `packages/testkit/db/`；相应测试就近创建。
 - 验收：只建通用user/幂等/审计/outbox/notifications/jobs/privacy_control迁移、runner租约及短事务锁工具；业务schema由各切片随自己的迁移创建，不能声明全部业务表已完成；普通30天与永久资源去重协议分开。
 - 验证：`core:test:db（通用幂等/锁/租约fixture，不提前声称饭局并发测试通过）`。
 - 外部依赖/证据：无。
-- 完成记录：未实施；commit/命令结果/证据待执行者填写。
+- 完成记录：commit 7ee1d60（2026-10-21；前置契约补充commit d6218c4）。命令：在仅含本切片文件的干净git worktree中`pnpm install`后`pnpm core:check && pnpm core:test:unit && pnpm core:test:db && pnpm core:test:release`及`python3 -m unittest discover -s tests`，各自退出码0；提交暂存内容与该worktree逐字节一致。结果：check通过；unit 66/66、db 44/44（真实PostgreSQL 17.11，5文件）、release 9/9、Python全部通过。证据：`packages/db/src/migrate.db.test.ts`（空库/重放/篡改checksum/失败整体回滚/Drizzle列一致/CHECK/append-only/NULLS NOT DISTINCT/单例）、`apps/api/src/common/kernel.db.test.ts`（锁序/逆序请求不死锁/真实40P01重试/effectiveNow在锁等待后/删除屏障FOR SHARE vs FOR UPDATE）、`apps/api/src/common/idempotency.db.test.ts`（并发声明仅一成功、重放与payload冲突、5xx不封存、租约接管、陈旧尝试FencingError在commitOnDomainError下仍整体回滚、失权不重放、30天过期与清理）、`apps/worker/src/runner/runner.db.test.ts`（SKIP LOCKED不重叠、claim≠完成、同owner重领用claim token隔离、过期重领受max_attempts约束转DEAD、仅有限错误码入库/告警、空闲轮询无abort监听泄漏）。含Codex评审修正6项。边界：只建通用表；未建任何饭局业务表，饭局并发验收属T07/T10。
 
 ## T03 真实身份可行性spike
 
@@ -288,7 +288,7 @@
 
 ## T30 会话与授权区间内核（先于T07）
 
-- 状态：todo；依赖：T02。
+- 状态：in_progress；依赖：T02。
 - 文件：`packages/db/schema/conversations.ts`, `packages/db/migrations/`, `apps/api/src/membership/intervals.ts`；相应测试就近创建。
 - 验收：只建GROUP及interval/event/head内核；JOIN/LEAVE/分配序号事务服务可供T07调用；提交顺序与seq一致，区间查询不包含空档；消息HTTP/UI在T12。
 - 验证：`core:test:db S14（内核部分）`。
