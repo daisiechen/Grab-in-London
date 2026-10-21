@@ -40,6 +40,18 @@ class QACasesTest(unittest.TestCase):
             if mutation == 'source': data['cases'][0]['sources'][0]['path'] = '../../secret'
             with self.assertRaises(ValueError): validator.validate(data)
 
+    def test_confirmed_reauth_boundary_is_exclusive_and_unblocked(self):
+        case = next(c for c in self.data['cases'] if c['id'] == 'QA-API-008')
+        boundary = case['reauthBoundary']
+        self.assertEqual(case['status'], 'NOT_RUN')
+        self.assertNotIn('reason', case)
+        self.assertEqual(boundary['maxAgeMs'], 5 * 60 * 1000)
+        self.assertTrue(boundary['exclusive'])
+        self.assertEqual({v['ageMs'] for v in boundary['variants']}, {299999, 300000, 300001})
+        for variant in boundary['variants']:
+            self.assertEqual(variant['valid'], 0 <= variant['ageMs'] < boundary['maxAgeMs'])
+        self.assertTrue(case['decision']['text'])
+
     def test_catalog_renders_reproducibly(self):
         catalog = ROOT/'docs/qa/test-cases.zh-CN.md'
         before = catalog.read_bytes()

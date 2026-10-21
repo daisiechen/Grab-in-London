@@ -579,11 +579,11 @@
 
 ### QA-API-008 五分钟再次认证
 
-- 优先级/阶段/方法：P0 / implementation / api_db_or_unit；状态：BLOCKED
+- 优先级/阶段/方法：P0 / implementation / api_db_or_unit；状态：NOT_RUN
 - 需求：§0.6、FR-11；场景：S03、S04、S23；任务：T03、T04、T18、T24
-- 前置：隔离API，固定鉴权时钟与actor；合法资源先执行成功后撤权
-- 步骤：reauth年龄5min−1ms/等号/+1ms分别删除与链接
-- 预期：按当前契约新鲜度边界实现并固定断言；等号是否包含若规范未明确先标需求澄清，不猜测
+- 前置：隔离API；固定服务端鉴权时钟；合法删除及身份关联请求的其他条件均满足；用户于2026-10-21明确满5分钟无效
+- 步骤：认证时间固定authTime，分别设置服务端effectiveNow−authTime为299999、300000、300001毫秒 → 每个变体在独立fixture分别提交账号删除及身份关联，记录响应与副作用
+- 预期：299999毫秒：通过再次认证新鲜度校验；其他条件满足时允许操作；300000和300001毫秒：再次认证无效，拒绝敏感操作并要求重新认证（REAUTH_REQUIRED）；无删除受理或身份关联写入；有效条件为0≤effectiveNow−authTime<300000毫秒；未来authTime不能绕过校验
 - 依据：[PRD.zh-CN.md](../../docs/product/PRD.zh-CN.md) §0.6 FR-11、[api-and-client-contract.zh-CN.md](../../docs/engineering/api-and-client-contract.zh-CN.md) §1—7
 
 ### QA-API-009 空壳身份迁移

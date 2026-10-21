@@ -2,7 +2,7 @@
 
 本轮交付为**测试设计**，不是业务验收报告。输入基线为 `4659fdb3b5e4779157ac45058cbf5134aea1b4d2`：主PRD v0.8/AI增补0.2、后台PRD v1.4/采集契约v4、现有双端Demo及共同认可技术包。资源补充输入为`0dfd0c8`的[tasks/mvp-coordination.md](../../tasks/mvp-coordination.md)：DeepSeek、人民币50/月及自测后交接。JSON的decisionOverrides单独固定此来源，不改写旧技术快照。研发会话可继续推进，执行测试前须记录实际被测commit并复核与本基线的差异，不能把固定快照描述为当前实现进度。
 
-入口：[可读用例](test-cases.zh-CN.md)、[结构化真源](test-cases.json)、[协作与差异登记](collaboration-and-gaps.zh-CN.md)。全部业务用例尚未执行；一条待澄清边界标为BLOCKED，其余NOT_RUN。所有已有场景/任务有用例关联，不等于每个需求断言均已证明正确或生产功能已完成。
+入口：[可读用例](test-cases.zh-CN.md)、[结构化真源](test-cases.json)、[协作与差异登记](collaboration-and-gaps.zh-CN.md)。全部217条业务用例均为NOT_RUN；本测试包的规则澄清阻塞为0。2026-10-21用户明确再次认证满5分钟即无效，QA-API-008按经过时间严格小于300000毫秒验收。所有已有场景/任务有用例关联，不等于每个需求断言均已证明正确或生产功能已完成。
 
 ## 1. 测试对象与权威
 
