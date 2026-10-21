@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 108,
-    "PASS": 97,
+    "NOT_RUN": 107,
+    "PASS": 98,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -13538,8 +13538,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R49-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -13644,15 +13646,16 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R49-T001"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "同guest不重置10轮",
-        "新guest可新主体并明确可规避",
-        "错来源请求拒绝"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "真实PG/API和计数provider：同guest已9轮后完成第10轮；第二cookie视图刷新复用guest并保持原expiresAt，bootstrap及NEW重建仍同subject且429，不新增provider调用。DB凭据TTL精确24h；清cookie生成新subject可独立成功一次，明确其可规避匿名额度；合成expiry后旧凭据410并新建主体。错误Origin的创建/AI bootstrap和缺CSRF写均403。保留原subject10轮及新subject1轮记录；不声称真实等待24小时或匿名限额不可规避。"
     },
     {
       "id": "QA-AI-039",
