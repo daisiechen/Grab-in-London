@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 74,
-    "PASS": 131,
+    "NOT_RUN": 73,
+    "PASS": 132,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -29,7 +29,9 @@
     "browserObservationsB4": "evidence/2026-10-21/browser-b4.json",
     "B4": "evidence/2026-10-21/browser-b4.zh-CN.md",
     "browserObservationsB5": "evidence/2026-10-21/browser-b5.json",
-    "B5": "evidence/2026-10-21/browser-b5.zh-CN.md"
+    "B5": "evidence/2026-10-21/browser-b5.zh-CN.md",
+    "browserObservationsB6": "evidence/2026-10-21/browser-b6.json",
+    "B6": "evidence/2026-10-21/browser-b6.zh-CN.md"
   },
   "cases": [
     {
@@ -15910,7 +15912,9 @@
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
       "evidence": [
-        "B4-T001"
+        "B4-T001",
+        "B6-T001",
+        "B6-T002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -16273,13 +16277,10 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "每一步目标不丢",
-        "申请/席位/消息各一次",
-        "pending不入群",
-        "出席才反馈",
-        "后台同一事实可追溯"
+        "同一场结束后SELF出席资格、评分/公评/再约与后台同一事实可追溯",
+        "全链每步目标与申请/席位/消息一次性，须在后续受控时间全程再次固定核证"
       ],
-      "actual": "QA-F07在1080993定向修复关闭：R36独立49项含QA自有Google/Apple code-state→core JSON→handoff、错state、JSON LINK_REQUIRED，以及OAuth/email reauth与切账号晚到响应。仅解除iOS登录必要前置失败；原加入者完整Web/iOS跨端后半程及后台同事实核账仍未跑完，保留NOT_RUN。 B4补充实际游客详情→Apply未发草稿→认证→已有账号免补资料回原草稿，明确第二次Send后Pending/Inbox3卡、无自动席位/群。完整剩余预期仍见remainingExpected。",
+      "actual": "B3-B6真实Web已覆盖游客筛选/详情、Apply认证回流保稿、已有账号免补资料、明确Send Pending、H批准、A群消息；没有自动席位或自动发送。独立取消/退群/重申/解散全路径另JOURNEY003 PASS。尚未同一场走完结束SELF出席→评分/公评/再约→后台核账，整体NOT_RUN。",
       "defectIds": [
         "QA-F07"
       ],
@@ -16294,6 +16295,11 @@
           ],
           "testedCommit": "8ba6fc7c9974cf6be1ac06d8b16e0380fb3beced",
           "actual": "浏览器执行到审批入群及主持发送；申请目标回流保稿已取证，QA-F01违反FR09/AC-I01场次可辨认预期；出席、反馈及后台追溯尚未端到端串联。"
+        },
+        {
+          "status": "NOT_RUN",
+          "actual": "QA-F07在1080993定向修复关闭：R36独立49项含QA自有Google/Apple code-state→core JSON→handoff、错state、JSON LINK_REQUIRED，以及OAuth/email reauth与切账号晚到响应。仅解除iOS登录必要前置失败；原加入者完整Web/iOS跨端后半程及后台同事实核账仍未跑完，保留NOT_RUN。 B4补充实际游客详情→Apply未发草稿→认证→已有账号免补资料回原草稿，明确第二次Send后Pending/Inbox3卡、无自动席位/群。完整剩余预期仍见remainingExpected。",
+          "reason": "B6 advances host/guest approval and group path, does not prove postmeal"
         }
       ]
     },
@@ -16306,7 +16312,9 @@
       "status": "NOT_RUN",
       "evidence": [
         "B3-T004",
-        "B4-T003"
+        "B4-T003",
+        "B6-T001",
+        "B6-T002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -16619,12 +16627,10 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "无支付/平台库存依赖",
-        "首guest锁关键安排",
-        "host报告不压self",
-        "不默认所有人出席"
+        "同一场截止达标、开始名单/结束后host报告",
+        "host报告不压self，默认出席保持未知"
       ],
-      "actual": "F17正式Web980c8ed B4真实Publish/Edit无修改/改标题均回Hosting，avatar/name公开资料返回原meal和父级，Discover来源不变，R90导航安全回归通过。主持创建发布实际完成但审批/首guest锁安排/host与self出席优先级/完整结束路径仍缺，整条NOT_RUN，不用局部修复授完整路径PASS。",
+      "actual": "B3-B6真实Web已四步创建/Review发布/无应用支付，审批后首guest锁安排、reservation stale随2/3人数变化、host明确重新报告均通过；F16/F17已正式复验。旧真实钟场尚未截止/开始/结束，因此饭后host不覆盖self及默认未知出席未在同一全程走完，整体NOT_RUN。",
       "relatedBrowserEvidence": [
         "B1"
       ],
@@ -16638,6 +16644,11 @@
           "status": "FAIL",
           "actual": "B3主持者真实浏览器创建发布成功；但发布后详情Back指向Discover而非Hosting，详情进入host公开页后Back亦丢原meal，QA-F17。审批/成团/出席/结束尚未完成，不授整条PASS。",
           "reason": "R90 and B4 independent formal navigation regression"
+        },
+        {
+          "status": "NOT_RUN",
+          "actual": "F17正式Web980c8ed B4真实Publish/Edit无修改/改标题均回Hosting，avatar/name公开资料返回原meal和父级，Discover来源不变，R90导航安全回归通过。主持创建发布实际完成但审批/首guest锁安排/host与self出席优先级/完整结束路径仍缺，整条NOT_RUN，不用局部修复授完整路径PASS。",
+          "reason": "B6 advances host/guest approval and group path, does not prove postmeal"
         }
       ],
       "defectIds": [
@@ -16650,8 +16661,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "B6-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T054",
         "R1-T055",
@@ -16961,13 +16974,20 @@
         "R5-T010",
         "R5-T011"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "席位和群分别变化",
-        "只读已授权union历史",
-        "解散不可重开"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：成员获准→本人退席位→仍群聊→主动退群→重申获准→解散。尚缺逐项证据：席位和群分别变化；只读已授权union历史；解散不可重开。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "B6实际IAB从Round1获准→本人取消席位后仍发送群消息→本人另退群只读→主动重申Round2待审→H批准重入→host解散。离群间隔GAP由仍授权host发送，返回guest只见离群前旧消息与重入后AFTER_REJOIN、GAP0，解散后Message0，刷新仍只读且无重新开启控件。全部使用真实本地API/PG、模拟身份/餐厅，非iOS原生/真实服务。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：成员获准→本人退席位→仍群聊→主动退群→重申获准→解散。尚缺逐项证据：席位和群分别变化；只读已授权union历史；解散不可重开。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
+          "reason": "B6 complete real-browser seat/group independence journey"
+        }
+      ]
     },
     {
       "id": "QA-JOURNEY-004",

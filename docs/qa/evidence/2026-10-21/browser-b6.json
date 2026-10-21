@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "fixtureScript": "scripts/qa-browser-extra-applicant.mjs",
+  "fixtureScriptSha256": "f6654ae9a9ed43cf44c2f55e1adc51b61815ebb179cfb126c6bc5f2a9eaf31fe",
+  "observations": [
+    {
+      "id": "B6-T001",
+      "status": "passed",
+      "title": "Real host approvals lock arrangements and stale reservation follows guest count",
+      "steps": [
+        "Switch from guest to host via actual logout/login UI",
+        "Host seesPending73-character request,1of4 confirmed; Approve→2of4 and critical arrangementEdit disappears",
+        "Reservation becomesNeedsUpdate; host reportsBookedfor2",
+        "QAhelper creates one additionalPending synthetic actor; hostApprove→3of4/minimum3, reservationNeedsUpdateagain; explicitreportBookedfor3",
+        "Host sends onegrouphello viaUI"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b6-approved-arrangements-locked.jpg",
+        "evidence/2026-10-21/b6-group-message.jpg"
+      ],
+      "testedCommit": "980c8edd634bd212a92cfac46d54cf562c8480e4",
+      "environment": "Actual IAB Web980c8ed archive with API/PG/worker8387580 archive, relevant core sources unchanged. Real wall clock; TestIDP/Places/mail fixture only; no native-device/live-vendor claim."
+    },
+    {
+      "id": "B6-T002",
+      "status": "passed",
+      "title": "Complete seat cancellation, separate leave, round2 rejoin, union history and permanent dissolution",
+      "steps": [
+        "Guest Round1confirmed3of4 opens ownapplication; explicitCancelmyplace→Participationcancelled, samegroupstillwritable",
+        "Guest sendscancel-seat marker then separatelyLeavegroup confirms; oldhistoryreadonly and Messageboxabsent",
+        "GuestApplyagain opensblanknewform, explicitSendcreatesRound2Pending; doesnotrejoinyet",
+        "Still-authorizedhost sends GAP marker whileguestout; approvesRound2 then sendsAFTER_REJOIN marker",
+        "Host explicitlyDissolvegroup; bothhost andguestreadonly; settings noReopencontrol",
+        "Guestfreshlogin seeshosthello andowncancelmarker andAFTER_REJOIN, GAP count0; Messageboxcount0",
+        "Reload samegroup persistsreadonly, noLeave/Dissolve/Reopencontrols"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b6-cancel-seat-group-still-open.jpg",
+        "evidence/2026-10-21/b6-left-group-history.jpg",
+        "evidence/2026-10-21/b6-rejoined-union-history-dissolved.jpg"
+      ],
+      "testedCommit": "980c8edd634bd212a92cfac46d54cf562c8480e4",
+      "environment": "Actual IAB Web980c8ed archive with API/PG/worker8387580 archive, relevant core sources unchanged. Real wall clock; TestIDP/Places/mail fixture only; no native-device/live-vendor claim."
+    }
+  ]
+}
