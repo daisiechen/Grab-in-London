@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 98,
-    "PASS": 107,
+    "NOT_RUN": 94,
+    "PASS": 111,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -11280,8 +11280,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R65-T001",
+        "R65-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -11386,15 +11389,17 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R65-T001",
+        "R65-T002"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "目标不串",
-        "最新状态提示并剔除不可申请",
-        "旧draft不锁位"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：M1生成后切M2 → 或M1满员/截止 → 再打开卡片转入。尚缺逐项证据：目标不串；最新状态提示并剔除不可申请；旧draft不锁位。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "真实PG/controller FULL/CLOSED两分支：M1生成申请草稿不写业务，切M2转入TARGET_CHANGED；M1被其他人填满或截止后，原M1草稿转入也TARGET_CHANGED。随后SEARCH不再给M1可申请卡，手工填席后业务计数在AI操作期间不变，旧draft无占位。容量/截止检查不依赖人为递增meal.version，验证实时条件。"
     },
     {
       "id": "QA-AI-020",
@@ -11523,8 +11528,14 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R65-T003",
+        "R65-T004",
+        "R65-T005",
+        "R65-T006",
+        "R65-T016"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -11630,15 +11641,20 @@
         "R2-T061",
         "R2-T062",
         "R2-T063",
-        "R22-T011"
+        "R22-T011",
+        "R65-T003",
+        "R65-T004",
+        "R65-T005",
+        "R65-T006",
+        "R65-T016"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "不扩大DTO或工具权限",
-        "业务写spy0",
-        "无他人资料/隐藏数据"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "R22独立controller/PG已覆盖部分：tool注入/虚构职业拒绝，无业务写；尚缺他人ID、群正文、未知URL完整矩阵。 保持NOT_RUN，不按自动化数授整条PASS。"
+      "remainingExpected": [],
+      "actual": "五项真实PG/受控provider矩阵：unknown tool、foreign user额外字段、未知URL拒绝；非成员试图给hidden group起草SUPERSEDED；带ignore-rules标题/描述的公开meal进入第二阶段时，模型额外tool/userId字段仍整轮拒绝。provider捕获输入无数据库中的private_contact秘密或隐藏群正文，生成/查询/拒绝前后application/message/meal计数不变，不扩大DTO或业务权限。"
     },
     {
       "id": "QA-AI-022",
@@ -11646,8 +11662,14 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R65-T007",
+        "R65-T008",
+        "R65-T009",
+        "R65-T010",
+        "R65-T011"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -11753,15 +11775,20 @@
         "R2-T061",
         "R2-T062",
         "R2-T063",
-        "R22-T011"
+        "R22-T011",
+        "R65-T007",
+        "R65-T008",
+        "R65-T009",
+        "R65-T010",
+        "R65-T011"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "整轮FAILED或事实模板校验拒绝",
-        "无可操作残片和业务写",
-        "实际费用仍计"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "R22独立controller/PG已覆盖部分：多余tool与虚构职业/已付款整轮失败无残片；尚缺不存在ID、金额错误全矩阵及实际费用仍计断言。 保持NOT_RUN，不按自动化数授整条PASS。"
+      "remainingExpected": [],
+      "actual": "五项矩阵：不存在meal ID被事实源拒绝（SUPERSEDED），£30却返回999900金额、extra field、虚构工作/已订位、已付款/已批准等均FAILED且result null，无业务写和可操作残片。每次实际模型调用ai_calls KNOWN20，日/月used金额增量均精确等于调用数×20，包括无效结果，非真实供应商计费验收。"
     },
     {
       "id": "QA-AI-023",
@@ -11769,8 +11796,13 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R65-T012",
+        "R65-T013",
+        "R65-T014",
+        "R65-T015"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -11875,15 +11907,19 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R65-T012",
+        "R65-T013",
+        "R65-T014",
+        "R65-T015"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "作为文本显示或拒绝",
-        "链接只由允许ID构造",
-        "不执行脚本"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：模型返回HTML/script及非允许URL。尚缺逐项证据：作为文本显示或拒绝；链接只由允许ID构造；不执行脚本。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "三种模型文本script、img/onerror、未知https URL在草稿校验时整轮FAILED/result null，无业务写；未把脚本文字eval，global sentinel不存在。合法解释控制组仅返回已显式供给、源端存在的meal UUID，cards无url/href模型字段。按本条api_db_or_unit方法验证“拒绝”分支，不把服务器拒绝说成浏览器已执行恶意脚本。"
     },
     {
       "id": "QA-AI-024",

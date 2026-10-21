@@ -12208,6 +12208,147 @@
           "durationMs": 437.281125
         }
       ]
+    },
+    {
+      "id": "R65",
+      "testedCommit": "f1c4e16f59c7c7666148fbc17a4f1855864eca86",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-hostile.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-ai-hostile-matrix.json",
+      "startedAt": "2026-10-21T13:40:38.242000+00:00",
+      "exitCode": 0,
+      "passed": 16,
+      "failed": 0,
+      "total": 16,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R65-T001",
+          "run": "R65",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-019 FULL target and page switch reject stale application drafts without reserving a seat",
+          "status": "passed",
+          "durationMs": 79.23895799999997
+        },
+        {
+          "id": "R65-T002",
+          "run": "R65",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-019 CLOSED target and page switch reject stale application drafts without reserving a seat",
+          "status": "passed",
+          "durationMs": 20.957333000000062
+        },
+        {
+          "id": "R65-T003",
+          "run": "R65",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-021 TOOL injection cannot expand context or write business records",
+          "status": "passed",
+          "durationMs": 9.558625000000006
+        },
+        {
+          "id": "R65-T004",
+          "run": "R65",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-021 FOREIGN_USER injection cannot expand context or write business records",
+          "status": "passed",
+          "durationMs": 8.389332999999965
+        },
+        {
+          "id": "R65-T005",
+          "run": "R65",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-021 UNKNOWN_URL injection cannot expand context or write business records",
+          "status": "passed",
+          "durationMs": 7.087792000000036
+        },
+        {
+          "id": "R65-T006",
+          "run": "R65",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-021 HIDDEN_GROUP injection cannot expand context or write business records",
+          "status": "passed",
+          "durationMs": 6.126834000000031
+        },
+        {
+          "id": "R65-T007",
+          "run": "R65",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-022 MISSING_ID yields no actionable fragment and still settles actual provider cost",
+          "status": "passed",
+          "durationMs": 5.976916999999958
+        },
+        {
+          "id": "R65-T008",
+          "run": "R65",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-022 WRONG_AMOUNT yields no actionable fragment and still settles actual provider cost",
+          "status": "passed",
+          "durationMs": 5.591790999999944
+        },
+        {
+          "id": "R65-T009",
+          "run": "R65",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-022 EXTRA_FIELD yields no actionable fragment and still settles actual provider cost",
+          "status": "passed",
+          "durationMs": 7.17816700000003
+        },
+        {
+          "id": "R65-T010",
+          "run": "R65",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-022 INVENTED_JOB yields no actionable fragment and still settles actual provider cost",
+          "status": "passed",
+          "durationMs": 7.0434999999999945
+        },
+        {
+          "id": "R65-T011",
+          "run": "R65",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-022 COMPLETED_ACTION yields no actionable fragment and still settles actual provider cost",
+          "status": "passed",
+          "durationMs": 6.676458000000025
+        },
+        {
+          "id": "R65-T012",
+          "run": "R65",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-023 model text <script>globalThis.qaMustNeverExecute=true</script> is rejected before any actionable output or link exists",
+          "status": "passed",
+          "durationMs": 6.666249999999991
+        },
+        {
+          "id": "R65-T013",
+          "run": "R65",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-023 model text <img src=x onerror=\"alert(1)\"> is rejected before any actionable output or link exists",
+          "status": "passed",
+          "durationMs": 6.449792000000002
+        },
+        {
+          "id": "R65-T014",
+          "run": "R65",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-023 model text Open https://unknown.example.invalid/private is rejected before any actionable output or link exists",
+          "status": "passed",
+          "durationMs": 6.392458999999917
+        },
+        {
+          "id": "R65-T015",
+          "run": "R65",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-023 legitimate cards expose only verified supplied meal IDs and no model-provided URL field",
+          "status": "passed",
+          "durationMs": 5.589749999999981
+        },
+        {
+          "id": "R65-T016",
+          "run": "R65",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-021 poisoned public meal title and description cannot grant tool rights at draft generation",
+          "status": "passed",
+          "durationMs": 6.965832999999975
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -12248,7 +12389,8 @@
     "scripts/qa-deletion-log-child.ts": "802a845b48bf184645d73d8a3bc78939e5f43bbfec25fe44951e47f342f979be",
     "scripts/qa-independent-snapshot-race.api.test.ts": "2f71df1295860e2dfcc2df39890c6f9ba1f4c7627877573cff175b2b2334102a",
     "apps/admin/src/state/qa-independent-revocation.unit.test.tsx": "e2999aca140d3f9bdb9f2f88319e44a1e9c99884da300a701967d05f74c01c09",
-    "scripts/qa-independent-ai-group-permissions.api.test.ts": "67ded17c812c8d5fa85aebdeb3c0849e7691b7b4a81900c9cfd4df6f5631638f"
+    "scripts/qa-independent-ai-group-permissions.api.test.ts": "67ded17c812c8d5fa85aebdeb3c0849e7691b7b4a81900c9cfd4df6f5631638f",
+    "scripts/qa-independent-ai-hostile.api.test.ts": "4583366343408eab5952f0dc8e1b333376a65c4a01a484fdf87943133f9d5234"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console.",
   "runtimeSnapshotVerification": {
@@ -12316,6 +12458,7 @@
     "R48 initial SQL period alias day caused six setup failures; corrected reserved alias to day_period/month_period. Owner-only preferences route has no target-user parameter: initially QA expected unknown userId query rejection422, but contract binds auth.userId and returns B own empty fields. Corrected to assert no A disclosure, guessed target path404, B wrong-version deletion409 and A fields unchanged; no access-control expectation weakened. Real disable configuration is AI_PROVIDER=disabled, not an invented AI_ENABLED env var. Local synthetic iOS credentials are issued through session service; OS browser/Keychain are not tested.",
     "R49 initial NEW/reset request omitted contract-required explicit idempotency intent key and returned422 before quota assertions. Added required UUID header; quota and source/CSRF assertions unchanged. Fixed guest expiry validated as exactly24h in DB; expiry path advanced by changing only synthetic credential expires_at to past, not waiting24h. This verifies refresh/NEW cannot renew it but cookie clearing can create a fresh quota subject, an explicit known bypass boundary.",
     "R56 initial DIRECT assertion used GROUP read-only wording (QA fixture mismatch), and current-metadata test unconditionally returned stale canSend=true. R57 uses the correct group/direct wording and current canSend projection; allows repeated HISTORY reads but forbids LIVE after HISTORY. Original R56 failures retained. R59 adds a separate controlled deferred response captured before revocation and released only after403/HISTORY: this still fails, independently proving the stale-metadata race rather than discarding it as fixture error.",
-    "R64 initial fast multi-stage setup hit the guest one-second write-burst limiter before the final send (429 rather than authorization403); clears only that synthetic actor write-burst row immediately before the authorization probe, retaining all durable messages/quota. Stranger send correctly conceals an unknown conversation with404, not403; expectation aligned to established route contract, still asserts no message. No production code or permission assertion weakened."
+    "R64 initial fast multi-stage setup hit the guest one-second write-burst limiter before the final send (429 rather than authorization403); clears only that synthetic actor write-burst row immediately before the authorization probe, retaining all durable messages/quota. Stranger send correctly conceals an unknown conversation with404, not403; expectation aligned to established route contract, still asserts no message. No production code or permission assertion weakened.",
+    "R65 copied helper imported unused describe (lint corrected). Initial four hidden-group setup failures omitted required messages.created_at; added clock_timestamp and completed JOIN/membership/message sequence before final execution. No production assertions weakened. R65 verifies each rejected malformed output still increments both active daily/monthly used money by exactly20 times actual provider-call count, rather than merely seeing a KNOWN row."
   ]
 }
