@@ -71,6 +71,11 @@ export const socialOperations = [
     success: { status: 200, data: ReconnectState }, errors: ['NOT_FOUND'],
   }),
   op({
+    operationId: 'getBlock', method: 'GET', path: '/blocks/{subjectId}', summary: 'Own block state and revision; never reveals the other member choice',
+    auth: 'session', write: 'read', ifMatch: false, params: Subject,
+    success: { status: 200, data: BlockState }, errors: ['NOT_FOUND', 'FORBIDDEN'],
+  }),
+  op({
     operationId: 'block', method: 'PUT', path: '/blocks/{subjectId}', summary: 'Block; clears both consents, keeps shared group',
     auth: 'session', write: 'idempotencyKey', ifMatch: true, params: Subject,
     success: { status: 200, data: BlockState }, errors: ['NOT_FOUND', 'FORBIDDEN'],

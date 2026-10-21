@@ -40,6 +40,7 @@ export const OPERATIONS = {
   reviewPerson: { method: 'PUT', path: '/v1/meals/{mealId}/reviews/{subjectId}', pathParams: ['mealId', 'subjectId'], auth: 'session', write: 'idempotencyKey', ifMatch: true, successStatus: 200, list: false, hasBody: true },
   selectReconnect: { method: 'PUT', path: '/v1/meals/{mealId}/reconnect/{subjectId}', pathParams: ['mealId', 'subjectId'], auth: 'session', write: 'idempotencyKey', ifMatch: true, successStatus: 200, list: false, hasBody: true },
   revokeConnection: { method: 'POST', path: '/v1/connections/{subjectId}/revoke', pathParams: ['subjectId'], auth: 'session', write: 'idempotencyKey', ifMatch: true, successStatus: 200, list: false, hasBody: false },
+  getBlock: { method: 'GET', path: '/v1/blocks/{subjectId}', pathParams: ['subjectId'], auth: 'session', write: 'read', ifMatch: false, successStatus: 200, list: false, hasBody: false },
   block: { method: 'PUT', path: '/v1/blocks/{subjectId}', pathParams: ['subjectId'], auth: 'session', write: 'idempotencyKey', ifMatch: true, successStatus: 200, list: false, hasBody: false },
   unblock: { method: 'DELETE', path: '/v1/blocks/{subjectId}', pathParams: ['subjectId'], auth: 'session', write: 'idempotencyKey', ifMatch: true, successStatus: 200, list: false, hasBody: false },
   getDirect: { method: 'GET', path: '/v1/connections/{subjectId}/conversation', pathParams: ['subjectId'], auth: 'session', write: 'read', ifMatch: false, successStatus: 200, list: false, hasBody: false },

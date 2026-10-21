@@ -46,9 +46,9 @@ describe('registry matches the reviewed API contract', () => {
     }
   });
 
-  it('adds only the export download route described in prose', () => {
+  it('keeps additional reviewed operations explicitly enumerated', () => {
     const extra = all.map((d) => d.operationId).filter((id) => !documented.some((d) => d.id === id));
-    expect(extra.sort()).toEqual(['markConversationRead', 'getClassification', 'getExport', 'createGuestSession', 'readAIPreferences', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'readAI', 'activityAI', 'resetAI', 'requestAI', 'pollAI', 'validateAIDraft'].sort());
+    expect(extra.sort()).toEqual(['getBlock', 'markConversationRead', 'getClassification', 'getExport', 'createGuestSession', 'readAIPreferences', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'readAI', 'activityAI', 'resetAI', 'requestAI', 'pollAI', 'validateAIDraft'].sort());
     expect(doc).toContain('GET /admin/exports/:id');
   });
 

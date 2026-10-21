@@ -548,3 +548,11 @@
 - 原Native56再约末步失败实为HTTP429（requestId37f989d8-baa3-4964-ac94-5f9d70bd5eea），PG零新consent符合拒绝，非500或既有pair重建缺陷。QA在正常下一配额窗口Native57只重试choice成功，未重复出席/评分/公评；原失败保留，不改生产服务。
 - 新独立API回归覆盖旧饭局双方出席/互选、撤回、block/unblock后epoch3旧consent全撤、新饭局双方出席再互选200/OPEN和两条新basis consent。root复跑1/1绿，agent API类型/lint绿，仅新增测试，不动原rig。
 - ee971b4远端CI已成功。QA报告F42实际取消零写入、HOST absent、SELF present优先及再HOST不覆盖通过，最终关闭/完整旅程范围以QA正式归档为准；第三B API隐私探针两阶段通过不冒生产隐私全部关闭。clone工具仍只准备/自建测试，等待安全checkpoint。
+
+
+## QA-F44 原生拉黑与解除入口
+
+- QA正式cd69公开主页/Settings原始surface确认正常UI缺Block/Unblock；本片只PublicProfile接MemberSafety，不扩Settings列表、不改已有撤回。合同原无读取本人block状态，新增getBlock GET /blocks/{subjectId}只读本人方向和latest revision，单SQL快照不撕裂；self403/目标非ACTIVE404，不泄对方拉黑，不建pair或业务记录，写合同不变。生成OpenAPI/client artifact同步，显式额外read白名单新增getBlock（不加入mutation集合）。
+- 原生先GET真实state再呈Block/Unblock，两动作独立确认；取消零写，初始read失败显式Reload阻mutation；409关闭旧确认、GET权威刷新并重新确认，不按currentVersion猜blocked；普通error留Modal/保意图，actor/target/sessiongeneration护栏拒晚响应、reload单飞。解除明确不恢复旧同意，不改后端consent权限。
+- root冻结core:check及unit365/DB147/API203/release23全绿，日志/private/tmp/fancy-f44-frozen-{check,core}.log；原生42套292项/type/lint绿，新增12项红绿及实际Profile入口测试，日志/private/tmp/fancy-f44-native-{full,type,lint}.log。文档/diff另验，未改Web。此前合同read白名单遗漏红及root一次批量替换误入mutation白名单红已修正为精确read增量，未放宽mutation协议断言。正式SHA还须独立正常签名包和匹配新GET后端实际QA，组件绿不抢关F44。
+- QA已明确safecheckpoint原61973/PID63824固定2026-10-24T01:10Z暂停业务/时钟，尚未执行source连接/sidecar。阶段1同库方案只/tmp自建库准备：禁AI lifecycle全库recover/worker/迁移/drop，精确新staff及family预检、clock一致、有限CSV/privatehash；旧19d只有snapshot读取无创建API，创建新封存需另审极窄sealer步骤，不冒正常API已支持或把缺夹具归用户阻塞。

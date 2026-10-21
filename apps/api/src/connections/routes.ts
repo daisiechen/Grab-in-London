@@ -26,6 +26,15 @@ export function registerConnectionRoutes(app:FastifyInstance,deps:AppDeps) {
  defineWrite(app,deps,'revokeConnection',async({request,auth,ifMatch},tx)=>{
   const {subjectId}=request.params as {subjectId:string};const {pair,now}=await lockConnection(tx,auth.userId,subjectId);const before=await connectionState(tx.client,pair,auth.userId,subjectId);if(ifMatch!==before.version)throw new DomainError('VERSION_CONFLICT','Your connection changed.',{currentVersion:before.version});await clearPairConsents(tx,pair,now);const data=await connectionState(tx.client,pair,auth.userId,subjectId);return {data,version:data.version,resourceId:pair.id};
  },(auth,{request})=>replayAllowed(auth.userId,(request.params as {subjectId:string}).subjectId,'revokeConnection',request.headers['idempotency-key']));
+ defineRoute(app,deps,'getBlock',async({request,auth})=>{
+  const {subjectId}=request.params as {subjectId:string};
+  if(subjectId===auth!.userId)throw new DomainError('FORBIDDEN','Choose another member.');
+  // One MVCC statement keeps own active state and revision consistent across block/unblock.
+  // Only target ACTIVE existence is projected: no profile or reverse-direction choice.
+  const {rows:[row]}=await deps.pool.query<{blocked:boolean;version:string}>(`SELECT EXISTS(SELECT 1 FROM blocks b WHERE b.blocker=$1 AND b.blocked=u.id) AS blocked,COALESCE((SELECT r.version FROM block_revisions r WHERE r.blocker=$1 AND r.blocked=u.id ORDER BY r.version DESC LIMIT 1),0)::text AS version FROM users u WHERE u.id=$2 AND u.status='ACTIVE'`,[auth!.userId,subjectId]);
+  if(!row)throw new DomainError('NOT_FOUND','This member is unavailable.');
+  return {data:{subjectId,blocked:row.blocked,version:row.version},version:row.version};
+ });
  for(const [operation,blocked] of [['block',true],['unblock',false]] as const)defineWrite(app,deps,operation,async({request,auth,ifMatch},tx)=>{const {subjectId}=request.params as {subjectId:string};const {pair,now}=await lockConnection(tx,auth.userId,subjectId);const data=await setBlock(tx,pair,auth.userId,subjectId,blocked,ifMatch,now);return {data,version:data.version,resourceId:pair.id};},(auth,{request})=>replayAllowed(auth.userId,(request.params as {subjectId:string}).subjectId,operation,request.headers['idempotency-key']));
  defineRoute(app,deps,'getDirect',async({request,auth})=>{
   const {subjectId}=request.params as {subjectId:string};const users=[auth!.userId,subjectId].sort();
