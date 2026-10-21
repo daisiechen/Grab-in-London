@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "observations": [
+    {
+      "id": "B8-T001",
+      "status": "passed",
+      "title": "Product questionnaire blank factors No clear and Yes persistence",
+      "steps": [
+        "B7 guest: blank Save rejects; factors-only Venue+Cost saves with no radio selected.",
+        "Save No then reload: No checked. Clear and save then reload: both unchecked and factors retained.",
+        "Finally save Yes with Venue+Cost. Already-attended actor: no-attendance and seven-day eligibility remain untested."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b8-survey-yes-factors.jpg"
+      ],
+      "testedCommit": "4a0c66f838cb73aa5ac9e2a2ac74662ce2462c11",
+      "environment": "Dedicated temporary real PG; frozen Node/DB clock and real browser. Local synthetic IDP/staff MFA/mail/Places; no live provider claim."
+    },
+    {
+      "id": "B8-T002",
+      "status": "passed",
+      "title": "Same B7 meal actual Admin trace with separate score and survey",
+      "steps": [
+        "Preserve API/PG and advance fixture clock to 2026-10-23T19:00Z. Same frozen archive Admin, synthetic local staff MFA.",
+        "Overview weekly present2 coverage2/2; immature14/30day cohorts dash0/0. Supply qualified1/1 canceled0/1 completed1.",
+        "Exact meal2ff6200b-a688-4421-b133-c064fa456503 detail contains host44f4ac1a-1ee8-4b2b-a65f-9322b402e183 and guest2e86cbdb-51e8-40d5-ae0e-bf543c2cd6f7, both present SELF; guest sourceDifference yes matches HOST absent conflict.",
+        "Retention scorecoverage2/2 with scores3 and5 one each; independent questionnaireYes1/1 Venue1 Cost1. Exports/fullfilters/allpages still pending."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b8-admin-same-meal-attendance.jpg",
+        "evidence/2026-10-21/b8-admin-score-survey-separated.jpg"
+      ],
+      "testedCommit": "4a0c66f838cb73aa5ac9e2a2ac74662ce2462c11",
+      "environment": "Dedicated temporary real PG; frozen Node/DB clock and real browser. Local synthetic IDP/staff MFA/mail/Places; no live provider claim."
+    }
+  ]
+}
