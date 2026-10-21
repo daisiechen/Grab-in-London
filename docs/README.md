@@ -101,3 +101,5 @@
 - QA R98: [mail fault injection and F19 original red](qa/evidence/2026-10-21/r98-mail-dead-letter.md).
 
 - QA R104/R105: [F19 closure and actual notification matrix](qa/evidence/2026-10-21/r104-r105-mail-closure.md).
+
+- QA R107: [creation and exact publication boundaries](qa/evidence/2026-10-21/r107-create-boundaries.md).

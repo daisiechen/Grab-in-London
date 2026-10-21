@@ -14,10 +14,10 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 138 |
+| PASS | 139 |
 | FAIL | 0 |
 | BLOCKED | 12 |
-| NOT_RUN | 67 |
+| NOT_RUN | 66 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实环境、原生runtime/设备/签名或政策批准证据；本地恢复与分步删除现已复验通过，不能再笼统视为外部阻塞。FAIL优先于未完成的后续步骤。
@@ -131,6 +131,8 @@
 | R103 | 退出码0；3/3通过，失败0，1个测试文件 | `68374a9` |
 | R104 | 退出码0；6/6通过，失败0，2个测试文件 | `cd66d87` |
 | R105 | 退出码0；10/10通过，失败0，2个测试文件 | `cd66d87` |
+| R106 | 退出码1；9/10通过，失败1，1个测试文件 | `c2d5b0d` |
+| R107 | 退出码0；10/10通过，失败0，1个测试文件 | `c2d5b0d` |
 
 R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯函数探针；R5复跑分页修复回归，R6是QA第二批6项独立P0探针；R7/R8为QA-F01修复的API/Web及iOS组件定向复跑；R9是第三批12项独立边界探针，R10/R11复跑解除准备，R12为QA新增真实备份中E0导出的恢复后撤销分支；R13为饭后及群/私聊权限独立探针；R14保留QA-F03修前2失败，R15为0518d45修后的12项独立探针复验，R16为身份模块26项受影响HTTP回归（包括fresh会话下未来proof拒绝），不能删除修前结果或把历史失败当当前通过；R17为举报本人回执及撤授权重放3项独立HTTP/PG探针，撤session/DELETING状态通过受控数据库夹具设置。R18为安排锁、历史截止补算、开始名单及预约隔离6项独立PG/HTTP探针，删除仅屏障状态，完整删除名单断言仍未通过。R19/R20独立定向复跑5a37fdc关闭顺序单测及真实PG负载退出，未替代远端CI结果。R21为删除实际HTTP/本地purge、故障rollback及用户锁消息/审批竞态5项独立探针，生产日志脱敏仍待完整捕获。R22为ac09af4固定版本的11项独立受控AI/controller/HTTP探针，仅035/036/037具完整预期证据；R23为该版本Claude发现修复28项API/DB独立定向复验。R24保留QA-F04修前停用后仍发布失败；R25为8e2b908修后7项独立停用/费用/reaper探针，R26为22项受影响DB回归，F04定向关闭而043仍有未测断言。R27保留QA-F05修前Web失败，T001另为已分类夹具错误；R28/R29为f298048独立session/PG及Web组件各3项，R30为iOS manager17项定向回归；F05在NEW与TTL/偏好删除差异范围关闭。R31为公开DTO/后台角色/CSV授权及跨快照游标和大序号4项独立HTTP/PG探针，公式转义另覆盖formatter，不声称Excel实际执行。R32保留QA-F06 CLI入口失败，R33保留QA-F07原生协议失败；R34/R35固定b76c593独立8+32项验证CLI修复，R36固定1080993独立iOS49项验证桥接修复。完整加入用户路径仍NOT_RUN，不据组件通过升级。不能将这些数量相加当作独立业务用例数；R5与R1有重复，R2也不是原生设备验收。逐项测试名、状态、时间和命令见[机器证据](evidence/2026-10-21/automated-runs.json)。R4是质量检查而非业务用例。
 
@@ -199,7 +201,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-DISCOVERY-009 · 坐标区域边界 | NOT_RUN | 本地生产实现尚需实际执行：同一坐标命中两polygon边界 → 无区域坐标。尚缺逐项证据：固定areaCode排序决定唯一归属；无匹配unknown不默认Soho。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-CREATE-001 · 创建四步与返回保稿 | PASS | B3先前真实四步输入和Review未确认拒绝保留；正式Web980c8ed B4原条款返回路径两入口均Step4，false/true确认各自保留、餐厅显示仅RAM且不自动发布。返回安排/介绍/费用原字段不变，成功发布后同账号新Create无餐厅/时间、默认4不复用旧2。R90原QA组件与创建回归30项绿，R86/R87及B3原红保留。API8387580非AI核心未变；无真实外订。；证据 B3-T004, B4-T002, B4-T005, R90-T018 |
 | QA-CREATE-002 · 外订声明与预算 | PASS | B3真实UI：倒置预算拒绝，£20–35到店付说明及0应用收费，不勾外订不能继续。B4在已确认4人声明后返回改2人，旧声明清空、文案同步2人、Continue要求重新确认；本人再次明确确认才可进Review。Web980c8ed/API8387580固定快照，无真实订位。；证据 B3-T004, B4-T004 |
-| QA-CREATE-003 · 人数范围 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：输入minimum2/capacity2、3/4、6/6 → 尝试1/4、5/4、3/7、小数。当前仍缺：合法范围可继续且含host；非法拒绝且保留其他草稿。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
+| QA-CREATE-003 · 人数范围 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：输入minimum2/capacity2、3/4、6/6 → 尝试1/4、5/4、3/7、小数。当前仍缺：合法范围可继续且含host；非法拒绝且保留其他草稿。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 R107 actual API accepts2/2,3/4,6/6 and exactly one HOST_CONFIRMED seat; rejects1/4,5/4,3/7 and fractional minimum/capacity422 with no published attempt. Actual four-step editor invalid input and other draft persistence not yet verified; NOT_RUN retained.；证据 R107-T001, R107-T002, R107-T003, R107-T004, R107-T005, R107-T006, R107-T007, R107-T008 |
 | QA-CREATE-004 · 时间菜单恢复 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：开时间菜单 → 键盘上下选择 → Escape和点外部 → 切餐厅。当前仍缺：菜单在手机边界内且聚焦选中项；取消保持旧值；不可用时段清除并说明。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
 | QA-DB-001 · 最后一席双审批 | PASS | 第二批QA独立探针在04cb601以真实隔离PG执行，完整预期核对通过；消息HTML显示另有B1纯文本浏览器证据。；证据 R6-T001 |
 | QA-DB-002 · 锁等待跨截止 | PASS | 真实PG双连接确认审批已在截止前等待行锁；持锁至DB时钟越过截止后释放，HTTP409，EXPIRED及insufficient事实提交，无新增席位。；证据 R9-T011 |
@@ -354,7 +356,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-API-008 · 五分钟再次认证 | PASS | QA-F03在0518d45修复，修前1秒/299秒HTTP反例已通过；另以可控锁后Tx.effectiveNow和真实HTTP/PG分别验证LINK/DELETE 299999/300000/300001ms及未来authTime，拒绝无删除受理或关联身份写入。未用真实供应商。；证据 R15-T001, R15-T002, R15-T003, R15-T004, R15-T005, R15-T006, R15-T007, R15-T008, R15-T009, R15-T010, R15-T011, R15-T012 |
 | QA-API-009 · 空壳身份迁移 | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R1-T414 |
 | QA-API-010 · 支持CLI回调 | PASS | QA-F06在b76c593修复。独立8auth探针含登记127.0.0.1固定path、非法host/scheme/path/port/query/hash/userinfo拒绝、provider直接/v1核心callback、303原state、60秒PKCE handoff错码/过期/消费拒绝、15min access无refresh；合成CLI凭据每次重查case/MFA/role。R35另独立32项含真实loopback listener联调。非真实浏览器/提供方MFA或上线验收。；证据 R34-T004, R34-T005, R34-T006, R34-T007, R34-T008 |
-| QA-DB-012 · 截止字段发布边界 | NOT_RUN | start−30分钟允许、−29分钟/过去截止拒绝；未精确构造effectiveNow等号及验证服务端默认start−60分钟。 |
+| QA-DB-012 · 截止字段发布边界 | PASS | Allowed unit variant: actual production validateArrangement supplied effectiveNow close-1ms accepts, exact close rejects error.code VALIDATION_FAILED; start-30min accepts/start-29min rejects. Actual client defaultClose suggests60min and rolls00:30 to previous23:30. No claim DB clock globally frozen or full UI journey; precise function validation only, as planned api_db_or_unit method.；证据 R107-T009, R107-T010 |
 | QA-DB-013 · 开始前修改与旧job | NOT_RUN | 本地生产实现尚需实际执行：无guest时改starts/closes → 运行旧dueAt job及新dueAt job。尚缺逐项证据：新安排重新校验且声明stale；旧job不得错误取消新时点场；每有效计划只一事实。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-DB-014 · host不能退本人席位 | PASS | 第二批QA独立探针在04cb601以真实隔离PG执行，完整预期核对通过；消息HTML显示另有B1纯文本浏览器证据。；证据 R6-T005 |
 | QA-DB-015 · 状态分区与历史轮次 | NOT_RUN | 本地生产实现尚需实际执行：构造host/confirmed/declined/expired/withdrawn/个人退出/整场取消/已结束名单。尚缺逐项证据：逐项核对API§6五分区；允许有意交集；EXPIRED不伪装整场取消；轮次分别显示。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |

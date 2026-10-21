@@ -16,8 +16,8 @@
     "nativeRuntimeCheck20261021": "Read-only simctl outside sandbox confirms installed iOS27.0/27.1 runtimes and available shutdown iPhone simulators. Sandboxed service refusal is not missing-runtime proof. Build/launch and real native journey remain unexecuted."
   },
   "counts": {
-    "NOT_RUN": 67,
-    "PASS": 138,
+    "NOT_RUN": 66,
+    "PASS": 139,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -3471,7 +3471,16 @@
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
-      "evidence": [],
+      "evidence": [
+        "R107-T001",
+        "R107-T002",
+        "R107-T003",
+        "R107-T004",
+        "R107-T005",
+        "R107-T006",
+        "R107-T007",
+        "R107-T008"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T080",
         "R1-T081",
@@ -3525,7 +3534,7 @@
         "合法范围可继续且含host",
         "非法拒绝且保留其他草稿"
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：输入minimum2/capacity2、3/4、6/6 → 尝试1/4、5/4、3/7、小数。当前仍缺：合法范围可继续且含host；非法拒绝且保留其他草稿。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：输入minimum2/capacity2、3/4、6/6 → 尝试1/4、5/4、3/7、小数。当前仍缺：合法范围可继续且含host；非法拒绝且保留其他草稿。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 R107 actual API accepts2/2,3/4,6/6 and exactly one HOST_CONFIRMED seat; rejects1/4,5/4,3/7 and fractional minimum/capacity422 with no published attempt. Actual four-step editor invalid input and other draft persistence not yet verified; NOT_RUN retained."
     },
     {
       "id": "QA-CREATE-004",
@@ -19839,8 +19848,11 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R107-T009",
+        "R107-T010"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T150",
         "R1-T151",
@@ -19892,13 +19904,19 @@
         "R2-T036",
         "R2-T037"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "前者允许",
-        "后两者拒绝",
-        "未选时默认start−60min"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "start−30分钟允许、−29分钟/过去截止拒绝；未精确构造effectiveNow等号及验证服务端默认start−60分钟。"
+      "remainingExpected": [],
+      "actual": "Allowed unit variant: actual production validateArrangement supplied effectiveNow close-1ms accepts, exact close rejects error.code VALIDATION_FAILED; start-30min accepts/start-29min rejects. Actual client defaultClose suggests60min and rolls00:30 to previous23:30. No claim DB clock globally frozen or full UI journey; precise function validation only, as planned api_db_or_unit method.",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "start−30分钟允许、−29分钟/过去截止拒绝；未精确构造effectiveNow等号及验证服务端默认start−60分钟。"
+        }
+      ]
     },
     {
       "id": "QA-DB-013",
@@ -22298,7 +22316,7 @@
     "userAuthorizedMessaging": true,
     "status": "remaining_local_execution_in_progress",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
-    "latestFeedback": "QA-F19 CLOSED_TARGETED_QA by original probe+matrix6 and mail safety10 in fixed cd66d87 archive; NOTIFY001/002 PASS. Original R98 failure and QA fixture corrections retained. Native build still in progress; no overall release pass."
+    "latestFeedback": "R107 exact publication deadline function/default suggestion boundaries PASS DB012; legal/illegal sizes API8green but CREATE003 editor preservation still NOT_RUN. Native build progressing, no release pass."
   },
   "blockerTriage": "原14条中供应商分步删除和恢复删除台账两条已转本地执行并通过；其余12条缺真实环境/许可/批准证据，各项可本地准备部分已继续推进，不能视为12个未修代码故障。"
 }
