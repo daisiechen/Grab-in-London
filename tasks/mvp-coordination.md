@@ -437,3 +437,13 @@
 - 新3动态高度0/64/96回归修前undefined红、修后绿；既有chat与analytics自有测试只补导航context mock。全量原生与core:check结果在冻结后记录；组件配置证明不代替真实几何与消息验收。原Chat17精确Message selector失败与真实顶部遮挡分别处理，不把选择器失败冒认消息产品缺陷。
 - 原生83df实际Apply15已由QA完成保留身份恢复、标题避让、编辑返回保稿及显式提交到pending；这不意味着未执行的直接键盘提交路径或F37已关闭。QA继续主acfe饭局Web主持/Native加入申请审批与双端消息，未移交staff克隆，61973/时钟/设备由QA独占。dc09848政策草稿及其CI成功不等于政策获批。
 - 冻结四文件根核对：全iOS38套/259项、core:check、自有文档结构3项及diff检查全部通过（/private/tmp/fancy-f37-ios-tests.log、fancy-f37-check.log、fancy-f37-documentation.log）；未修改后端/Web，沿用其上批验证，不冒称全层重跑。root持串行Git窗口，仅四原生文件与本记录提交推送，正式SHA后独立正常签名构建交QA，不安装或抢其设备。
+
+- F37正式611a90e正常签名Release构建完成，独立191源与归档逐字一致且构建后无漂移；/private/tmp/fancy-native-f37-611a90e/ENTRY-F37.md仅指当前f37证据，build/deepstrict0。binary f6e897805f0a2f5f663bcde1efb14e719f09504c8cd99c2cf6b0f2d4e33c114a，Hermes3ab9145c1829c05c59eac6c47e64f13d9f69ee7a974a03f5d7c641d7a8046c2e。已交QA自行选安全安装时机，root未操作设备/时钟。
+
+## QA-F38 Web聊天读取失败不得伪装空记录（2026-10-21）
+
+- QA R187受控429实际ChatPage显示SAY HELLO且无可见读错误；跨端主饭局PG已有原生消息，冻结clock累积限流是夹具条件，读取错误伪空才是通用产品缺陷。QA推进新窗口后实际Web读到原生消息并显式回复，PG两条各一sender，不将先前selector/429误称消息丢失。
+- 仅ChatPage和自有read-error.unit.test：独立readError/首次Loading，首次成功读取后才允许真empty；LIVE错误保原自动退避、旧消息/输入草稿、不自动重发，成功仅清读错误不吞发送错误；403进入HISTORY仍终态，失败可见且显式HISTORY-only单飞重试，不重启LIVE。
+- 自有3修前红→绿、原QA probe1与完整inbox21通过；根全Web/admin311通过但QA-owned OTP重发1失败（找不到Resend code），保/private/tmp/fancy-f38-clients-final.log并交QA核计时，不改QA脚本或声称全量绿。Web生产构建与core:check通过。QA仍持第四批Git窗口，生产本切片尚待其释放后提交与独立正式SHA复验。
+- QA已定位OTP探针base取早于异步响应启动countdown，满载提前检查；仅受控Date.now从render前固定，同一spy推进，原30秒/过期/保邮箱断言不放宽。独立全Web/admin R188当前冻结工作树312通过/0失败，root只读JSON核success=true；前次311/1保历史。此增量仍待正式SHA，不提前关闭F38。
+- QA随后正式611a Chat19实际iOS27.0保留账号冷启动1PASS，191源/binary/Hermes核对；title.y189.667与Leave.y178均在nav.bottom170以下，截图直接视觉无重叠，冷载读回两条持久消息，原83df重叠图保留。F37由QA定向关闭，不扩为整个原生旅程或生产发布通过。

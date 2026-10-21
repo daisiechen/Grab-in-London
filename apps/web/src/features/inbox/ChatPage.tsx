@@ -46,6 +46,9 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
   const [meal, setMeal] = useState<MealDetail['meal'] | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [hasRead,setHasRead]=useState(false);
+  const [readError,setReadError]=useState('');
+  const [readingHistory,setReadingHistory]=useState(false);
+  const historyReadInFlight=useRef(false);
   const [mode, setMode] = useState<Mode>('LIVE');
   const [olderCursor, setOlderCursor] = useState<string | null>(null);
   const [text, setText] = useState(() => loadDraft<{ text: string }>(`message:${conversationId}`)?.text ?? '');
@@ -76,19 +79,21 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
     if(rendered)setRenderedThrough(previous=>maxSeq(previous,rendered));
   }, []);
 
-  const toHistory = useCallback(async () => {
-    if (historyOnly.current) return;
-    historyOnly.current = true;
-    poller.current?.stop();
-    setMode('HISTORY');
+  const readHistory = useCallback(async () => {
+    if(historyReadInFlight.current)return;
+    historyReadInFlight.current=true;setReadingHistory(true);setReadError('');
     try {
-      const res = await api.client.call('readMessages', { params: { conversationId }, query: { mode: 'HISTORY' } });
-      absorb(res.data, res.page.scannedThroughSeq);
-      if (!loadedFirst.current) { loadedFirst.current = true; setOlderCursor(res.page.nextCursor); }
-    } catch {
-      /* the archive itself may be unavailable; already-shown authorised messages stay */
-    }
-  }, [absorb, api, conversationId]);
+      const res=await api.client.call('readMessages',{params:{conversationId},query:{mode:'HISTORY'}});
+      absorb(res.data,res.page.scannedThroughSeq);
+      if(!loadedFirst.current){loadedFirst.current=true;setOlderCursor(res.page.nextCursor);}
+    }catch(e){setReadError('Couldn’t load messages. '+errorMessage(e));}
+    finally{historyReadInFlight.current=false;setReadingHistory(false);}
+  },[absorb,api,conversationId]);
+  const toHistory = useCallback(async () => {
+    if(historyOnly.current)return;
+    historyOnly.current=true;poller.current?.stop();setMode('HISTORY');
+    await readHistory();
+  },[readHistory]);
 
   // Effects run after this batch is committed to the DOM. No acknowledgement while hidden,
   // and a failed write is never optimistically reflected or automatically retried.
@@ -128,11 +133,14 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
           query: { mode: 'LIVE', ...(after.current ? { afterSeq: after.current } : {}) },
         });
         if (historyOnly.current) return 'stop';
+        setReadError('');
         absorb(res.data, res.page.scannedThroughSeq);
         if (!loadedFirst.current) { loadedFirst.current = true; setOlderCursor(res.page.nextCursor); }
         return 'continue';
       } catch (e) {
+        if(historyOnly.current)return 'stop';
         if (e instanceof ApiError && e.status === 403) { void toHistory(); return 'stop'; }
+        setReadError('Couldn’t load messages. '+errorMessage(e)+(e instanceof ApiError&&(e.status===401||e.status===404)?'':' Retrying automatically.'));
         if (e instanceof ApiError && (e.status === 401 || e.status === 404)) return 'stop';
         throw e;
       }
@@ -246,7 +254,10 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
           </Notice>
         )}
         {olderCursor && <TextAction onClick={() => void loadOlder()}>Load earlier messages</TextAction>}
-        {!messages.length && <p className="chat-date">{canSend ? 'SAY HELLO' : 'NO MESSAGES'}</p>}
+        {!hasRead&&!readError&&<p role="status">Loading messages…</p>}
+        <FormError>{readError}</FormError>
+        {historyOnly.current&&readError&&<TextAction disabled={readingHistory} onClick={()=>void readHistory()}>Retry loading messages</TextAction>}
+        {hasRead&&!readError&&!messages.length && <p className="chat-date">{canSend ? 'SAY HELLO' : 'NO MESSAGES'}</p>}
         {messages.map((m) => {
           const day = londonDay(m.createdAt);
           const sep = day !== lastDay ? <p className="chat-date">{longDate(day).toUpperCase()}</p> : null;
