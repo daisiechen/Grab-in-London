@@ -461,4 +461,5 @@
 - QA正式Native611a Host28主持反向饭局e0af2bf6-41e9-4d8b-ae79-310b7ab3d095批准第二轮后，聊天仅Leave group且原生没有dissolveGroup调用，缺PRD已要求的主持解散路径。后端既有主持授权/版本CAS/永久解散接口不改，不把host离群当解散。
 - 最小ChatScreen+自有chat-dissolve测试：getMeal.meal.host.id与当前session比对才提供主持解散独立确认，未知/失败不猜权限；当前版本与独立intent key，成功cache/history/停止poll，未发文字可见保留且不重放。409关闭旧确认并权威重读inbox，失败阻旧版本/显式单飞Reload；成功更新后要求再点入口和确认，发现已解散立即只读。普通失败在确认Modal内显示，保草稿与重试意图；保现消息/键盘/底部safearea。
 - 本轮不改API/群授权/申请；QA保持61973、clock与设备独占，待正式SHA正常签名独立归档构建，仅交包不安装。现自有业务回归与全原生验证进行中，冻结后记录实际结果，目标关闭仍由QA真实主持/全体只读复验。
-- 冻结后全iOS39套/266项、类型、全apps/ios lint、core:check及两文件diff检查通过（/private/tmp/fancy-f40-{ios-tests,types,lint,check}.log）；自有7项覆盖guest/host lookup失败、取消/确认、409新版/刷新失败显式恢复/已解散、普通失败Modal与保稿。QA明确短借Git仅三文件，推送核SHA后归还；F39同时由QA正式R191两项及实际四群中性标签复验关闭，原红保留。
+- 冻结后全iOS39套/266项、类型、全apps/ios lint及两文件diff检查通过（/private/tmp/fancy-f40-{ios-tests,types,lint,check}.log）；自有7项覆盖guest/host lookup失败、取消/确认、409新版/刷新失败显式恢复/已解散、普通失败Modal与保稿。QA明确短借Git仅三文件，推送核SHA后归还；F39同时由QA正式R191两项及实际四群中性标签复验关闭，原红保留。
+- 更正统一检查结果：core:check的类型/生成/lint通过，最后密钥扫描因本机新apps/web/.env.local中的供应商Key退出1；该文件git check-ignore确认排除，不读取/输出Key、不删除配置或放宽scanner。正式4945453完整git archive隔离副本再运行原扫描零发现通过，证明提交源码不含此本机配置；不将工作树整套core:check误称绿。上述原提交记录的误记在本次更正，实际日志保留。
