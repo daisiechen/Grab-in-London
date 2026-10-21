@@ -10261,6 +10261,7 @@
             "in": "query",
             "required": false,
             "schema": {
+              "pattern": "^([a-z0-9]+(-[a-z0-9]+)*)(,([a-z0-9]+(-[a-z0-9]+)*))*$",
               "maxLength": 400,
               "type": "string"
             }
@@ -10270,7 +10271,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "maxLength": 40,
+              "pattern": "^(en|zh)(,(en|zh))?$",
               "type": "string"
             }
           },
@@ -10297,7 +10298,17 @@
             "in": "query",
             "required": false,
             "schema": {
+              "pattern": "^[a-z0-9_-]+(,[a-z0-9_-]+)*$",
               "maxLength": 200,
+              "type": "string"
+            }
+          },
+          {
+            "name": "segments",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "pattern": "^(new|existing)(,(new|existing))?$",
               "type": "string"
             }
           }
@@ -10459,9 +10470,36 @@
             "in": "path",
             "required": true,
             "schema": {
-              "pattern": "^[a-z][a-zA-Z0-9_.]*$",
-              "maxLength": 80,
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "weekly",
+                "activation",
+                "retention",
+                "coverage",
+                "discovery7",
+                "impressionNoApply",
+                "applications",
+                "approved",
+                "confirmed",
+                "applicationAttendance",
+                "approval",
+                "discovery",
+                "formation",
+                "cancellation",
+                "mealsWithAttendance",
+                "feedback",
+                "survey",
+                "laterOpportunity",
+                "missingRequired",
+                "duplicates",
+                "excluded",
+                "receiveLatencyP90",
+                "meals",
+                "applications",
+                "cohort.users",
+                "attendance",
+                "quality.events"
+              ]
             }
           },
           {
@@ -10505,6 +10543,7 @@
             "in": "query",
             "required": false,
             "schema": {
+              "pattern": "^([a-z0-9]+(-[a-z0-9]+)*)(,([a-z0-9]+(-[a-z0-9]+)*))*$",
               "maxLength": 400,
               "type": "string"
             }
@@ -10514,7 +10553,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "maxLength": 40,
+              "pattern": "^(en|zh)(,(en|zh))?$",
               "type": "string"
             }
           },
@@ -10541,8 +10580,95 @@
             "in": "query",
             "required": false,
             "schema": {
+              "pattern": "^[a-z0-9_-]+(,[a-z0-9_-]+)*$",
               "maxLength": 200,
               "type": "string"
+            }
+          },
+          {
+            "name": "segments",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "pattern": "^(new|existing)(,(new|existing))?$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "mealId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cohortWeek",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "attendanceStatus",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "present",
+                "absent",
+                "unknown"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "minLength": 1,
+              "maxLength": 80,
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "occurredAt",
+                "startsAt",
+                "appliedAt",
+                "area",
+                "status"
+              ]
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
             }
           },
           {
@@ -10923,8 +11049,7 @@
                     "type": "string"
                   },
                   "metric": {
-                    "pattern": "^[a-z][a-zA-Z0-9_.]*$",
-                    "maxLength": 80,
+                    "pattern": "^(summary\\.(overview|journey|supply|retention|quality)|weekly|activation|retention|coverage|discovery7|impressionNoApply|applications|approved|confirmed|applicationAttendance|approval|discovery|formation|cancellation|mealsWithAttendance|feedback|survey|laterOpportunity|missingRequired|duplicates|excluded|receiveLatencyP90|meals|applications|cohort\\.users|attendance|quality\\.events)$",
                     "type": "string"
                   },
                   "filters": {
@@ -10940,11 +11065,12 @@
                         "type": "string"
                       },
                       "areas": {
+                        "pattern": "^([a-z0-9]+(-[a-z0-9]+)*)(,([a-z0-9]+(-[a-z0-9]+)*))*$",
                         "maxLength": 400,
                         "type": "string"
                       },
                       "languages": {
-                        "maxLength": 40,
+                        "pattern": "^(en|zh)(,(en|zh))?$",
                         "type": "string"
                       },
                       "budgetBands": {
@@ -10956,8 +11082,55 @@
                         "type": "string"
                       },
                       "sources": {
+                        "pattern": "^[a-z0-9_-]+(,[a-z0-9_-]+)*$",
                         "maxLength": 200,
                         "type": "string"
+                      },
+                      "segments": {
+                        "pattern": "^(new|existing)(,(new|existing))?$",
+                        "type": "string"
+                      },
+                      "mealId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "userId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "cohortWeek": {
+                        "format": "date",
+                        "type": "string"
+                      },
+                      "attendanceStatus": {
+                        "type": "string",
+                        "enum": [
+                          "present",
+                          "absent",
+                          "unknown"
+                        ]
+                      },
+                      "q": {
+                        "minLength": 1,
+                        "maxLength": 80,
+                        "type": "string"
+                      },
+                      "sort": {
+                        "type": "string",
+                        "enum": [
+                          "occurredAt",
+                          "startsAt",
+                          "appliedAt",
+                          "area",
+                          "status"
+                        ]
+                      },
+                      "order": {
+                        "type": "string",
+                        "enum": [
+                          "asc",
+                          "desc"
+                        ]
                       }
                     }
                   }
@@ -10971,7 +11144,7 @@
     "/v1/admin/exports/{exportId}": {
       "get": {
         "operationId": "getExport",
-        "summary": "Stream the CSV after re-checking role and privacy epoch",
+        "summary": "Stream text/csv (header lines: snapshotId, asOf, canonical filters, definitionVersion; formula-injection safe) after re-checking role and privacy epoch",
         "parameters": [
           {
             "name": "exportId",
@@ -11118,6 +11291,152 @@
       }
     },
     "/v1/admin/classifications/{userId}": {
+      "get": {
+        "operationId": "getClassification",
+        "summary": "Current classification and revision (for If-Match)",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Classification"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_REQUEST"
+            ]
+          },
+          "401": {
+            "description": "AUTH_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "FORBIDDEN, REAUTH_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "FORBIDDEN",
+              "REAUTH_REQUIRED"
+            ]
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "NOT_FOUND"
+            ]
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "VALIDATION_FAILED"
+            ]
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "RATE_LIMITED"
+            ]
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INTERNAL_ERROR"
+            ]
+          }
+        },
+        "x-auth": "staff",
+        "x-write-protocol": "read",
+        "x-if-match": false,
+        "x-roles": [
+          "data_admin"
+        ],
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "bearer": []
+          }
+        ]
+      },
       "put": {
         "operationId": "classifyUser",
         "summary": "data_admin sets regular/test/staff",

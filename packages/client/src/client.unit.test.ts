@@ -46,6 +46,18 @@ describe('createApiClient', () => {
     expect(calls[0]!.init.headers).not.toHaveProperty('x-csrf-token');
   });
 
+  it('keeps the query string when URLSearchParams has no size property (React Native polyfill)', async () => {
+    const { calls, fetch } = capture(ok(200, { data: [], page: { nextCursor: null, hasMore: false }, meta: { requestId: 'r', serverNow: '2026-10-21T10:00:00Z' } }));
+    const descriptor = Object.getOwnPropertyDescriptor(URLSearchParams.prototype, 'size')!;
+    Object.defineProperty(URLSearchParams.prototype, 'size', { configurable: true, get: () => undefined });
+    try {
+      await createApiClient({ baseUrl: '', credentials: { kind: 'none' }, fetch }).call('discoverMeals', { query: { timeOfDay: 'dinner' } });
+    } finally {
+      Object.defineProperty(URLSearchParams.prototype, 'size', descriptor);
+    }
+    expect(calls[0]!.url).toBe('/v1/meals?timeOfDay=dinner');
+  });
+
   it('refuses to send a write without its key, version or path parameter', async () => {
     const { calls, fetch } = capture(ok(200, {}));
     const client = createApiClient({ baseUrl: '', credentials: { kind: 'none' }, fetch });
@@ -104,5 +116,20 @@ describe('withRetry', () => {
     await expect(withRetry(async () => { k++; throw new ApiError({ status: 503, code: 'PROVIDER_UNAVAILABLE', message: 'down' }); }, { sleep, maxAttempts: 3, baseDelayMs: 100 })).rejects.toMatchObject({ code: 'PROVIDER_UNAVAILABLE' });
     expect(k).toBe(3);
     expect(sleeps.slice(2)).toEqual([100, 200]);
+  });
+
+  it('honours a long server Retry-After but caps locally computed backoff at 30s', async () => {
+    const sleeps: number[] = [];
+    const sleep = async (ms: number) => { sleeps.push(ms); };
+    let n = 0;
+    await withRetry(async () => {
+      if (++n === 1) throw new ApiError({ status: 429, code: 'RATE_LIMITED', message: 'slow down', retryAfterSeconds: 120 });
+      return 'ok';
+    }, { sleep });
+    expect(sleeps).toEqual([120_000]);
+    sleeps.length = 0;
+    await expect(withRetry(async () => { throw new ApiError({ status: 503, code: 'PROVIDER_UNAVAILABLE', message: 'down' }); }, { sleep, maxAttempts: 5, baseDelayMs: 20_000 }))
+      .rejects.toMatchObject({ code: 'PROVIDER_UNAVAILABLE' });
+    expect(sleeps).toEqual([20_000, 30_000, 30_000, 30_000]);
   });
 });

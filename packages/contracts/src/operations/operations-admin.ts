@@ -1,7 +1,7 @@
 import { DecimalString, Enum, Instant, Obj, T, Text, Uuid } from '../schema.ts';
 import { Cursor, Limit } from '../common.ts';
 import {
-  ADMIN_PAGES, ATTENDANCE_VALUES, CLASSIFICATIONS, CLIENT_EVENT_TYPES, REPORT_REASONS, REPORT_TARGET_TYPES, SUPPORT_CASE_STATUSES,
+  ADMIN_DRILLDOWN_SORTS, ADMIN_DRILLDOWN_TARGETS, ADMIN_PAGES, ATTENDANCE_VALUES, CLASSIFICATIONS, CLIENT_EVENT_TYPES, REPORT_REASONS, REPORT_TARGET_TYPES, SUPPORT_CASE_STATUSES,
 } from '../dictionaries.ts';
 import {
   AdminPageData, AttendanceCorrection, Classification, DeletionStatus, DrilldownRow, ExportTicket, IngestResult, Notification,
@@ -15,12 +15,25 @@ const ReceiptToken = T.String({ pattern: '^[A-Za-z0-9_-]{43}$' });
 const AdminFilters = {
   from: T.Optional(T.String({ format: 'date' })),
   to: T.Optional(T.String({ format: 'date' })),
-  areas: T.Optional(T.String({ maxLength: 400 })),
-  languages: T.Optional(T.String({ maxLength: 40 })),
+  areas: T.Optional(T.String({ pattern: '^([a-z0-9]+(-[a-z0-9]+)*)(,([a-z0-9]+(-[a-z0-9]+)*))*$', maxLength: 400 })),
+  languages: T.Optional(T.String({ pattern: '^(en|zh)(,(en|zh))?$' })),
   budgetBands: T.Optional(T.String({ pattern: '^(0-20|20-30|30-40|40\\+|unknown)(,(0-20|20-30|30-40|40\\+|unknown))*$' })),
   sizes: T.Optional(T.String({ pattern: '^([2-6]|7\\+)(,([2-6]|7\\+))*$' })),
-  sources: T.Optional(T.String({ maxLength: 200 })),
+  sources: T.Optional(T.String({ pattern: '^[a-z0-9_-]+(,[a-z0-9_-]+)*$', maxLength: 200 })),
+  segments: T.Optional(T.String({ pattern: '^(new|existing)(,(new|existing))?$' })),
 };
+/** Row filters, search and server-side sort for drill-down lists (UI never filters raw rows). */
+const DrilldownRowQuery = {
+  mealId: T.Optional(Uuid),
+  userId: T.Optional(Uuid),
+  cohortWeek: T.Optional(T.String({ format: 'date' })),
+  attendanceStatus: T.Optional(Enum(['present', 'absent', 'unknown'] as const)),
+  q: T.Optional(T.String({ minLength: 1, maxLength: 80 })),
+  sort: T.Optional(Enum(ADMIN_DRILLDOWN_SORTS)),
+  order: T.Optional(Enum(['asc', 'desc'] as const)),
+};
+/** A metric/list id, or `summary.<page>` for the page summary export (admin PRD §3.1). */
+const ExportScope = T.String({ pattern: `^(summary\\.(${ADMIN_PAGES.join('|')})|${ADMIN_DRILLDOWN_TARGETS.map((k) => k.replace('.', '\\.')).join('|')})$` });
 const ClientEvent = Obj({
   eventId: Uuid,
   type: Enum(CLIENT_EVENT_TYPES),
@@ -95,20 +108,26 @@ export const operationsAdmin = [
   op({
     operationId: 'adminDrilldown', method: 'GET', path: '/admin/drilldowns/{metric}', summary: 'De-identified source rows for a metric',
     auth: 'staff', roles: ['analyst', 'data_admin'], write: 'read', ifMatch: false,
-    params: Obj({ metric: T.String({ pattern: '^[a-z][a-zA-Z0-9_.]*$', maxLength: 80 }) }),
-    query: Obj({ snapshotId: Uuid, filterHash: T.String({ pattern: '^[0-9a-f]{64}$' }), ...AdminFilters, cursor: T.Optional(Cursor), limit: T.Optional(Limit) }),
+    params: Obj({ metric: Enum(ADMIN_DRILLDOWN_TARGETS) }),
+    query: Obj({ snapshotId: Uuid, filterHash: T.String({ pattern: '^[0-9a-f]{64}$' }), ...AdminFilters, ...DrilldownRowQuery, cursor: T.Optional(Cursor), limit: T.Optional(Limit) }),
     success: { status: 200, data: DrilldownRow, list: true }, errors: ['NOT_FOUND', 'SNAPSHOT_REVOKED'],
   }),
   op({
     operationId: 'adminExport', method: 'POST', path: '/admin/exports', summary: 'Create a short-lived CSV export of the same snapshot',
     auth: 'staff', roles: ['analyst', 'data_admin'], write: 'idempotencyKey', ifMatch: false,
-    body: Obj({ snapshotId: Uuid, metric: T.String({ pattern: '^[a-z][a-zA-Z0-9_.]*$', maxLength: 80 }), filters: Obj(AdminFilters) }),
+    body: Obj({ snapshotId: Uuid, metric: ExportScope, filters: Obj({ ...AdminFilters, ...DrilldownRowQuery }) }),
     success: { status: 201, data: ExportTicket }, errors: ['NOT_FOUND', 'SNAPSHOT_REVOKED'],
   }),
   op({
-    operationId: 'getExport', method: 'GET', path: '/admin/exports/{exportId}', summary: 'Stream the CSV after re-checking role and privacy epoch',
+    operationId: 'getExport', method: 'GET', path: '/admin/exports/{exportId}',
+    summary: 'Stream text/csv (header lines: snapshotId, asOf, canonical filters, definitionVersion; formula-injection safe) after re-checking role and privacy epoch',
     auth: 'staff', roles: ['analyst', 'data_admin'], write: 'read', ifMatch: false, params: Obj({ exportId: Uuid }),
     success: { status: 200 }, errors: ['NOT_FOUND', 'SNAPSHOT_REVOKED'],
+  }),
+  op({
+    operationId: 'getClassification', method: 'GET', path: '/admin/classifications/{userId}', summary: 'Current classification and revision (for If-Match)',
+    auth: 'staff', roles: ['data_admin'], write: 'read', ifMatch: false, params: Obj({ userId: Uuid }),
+    success: { status: 200, data: Classification }, errors: ['NOT_FOUND'],
   }),
   op({
     operationId: 'classifyUser', method: 'PUT', path: '/admin/classifications/{userId}', summary: 'data_admin sets regular/test/staff',

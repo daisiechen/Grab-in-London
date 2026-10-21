@@ -58,6 +58,7 @@ export const OPERATIONS = {
   adminDrilldown: { method: 'GET', path: '/v1/admin/drilldowns/{metric}', pathParams: ['metric'], auth: 'staff', write: 'read', ifMatch: false, successStatus: 200, list: true, hasBody: false },
   adminExport: { method: 'POST', path: '/v1/admin/exports', pathParams: [], auth: 'staff', write: 'idempotencyKey', ifMatch: false, successStatus: 201, list: false, hasBody: true },
   getExport: { method: 'GET', path: '/v1/admin/exports/{exportId}', pathParams: ['exportId'], auth: 'staff', write: 'read', ifMatch: false, successStatus: 200, list: false, hasBody: false },
+  getClassification: { method: 'GET', path: '/v1/admin/classifications/{userId}', pathParams: ['userId'], auth: 'staff', write: 'read', ifMatch: false, successStatus: 200, list: false, hasBody: false },
   classifyUser: { method: 'PUT', path: '/v1/admin/classifications/{userId}', pathParams: ['userId'], auth: 'staff', write: 'idempotencyKey', ifMatch: true, successStatus: 200, list: false, hasBody: true },
   ingestEvents: { method: 'POST', path: '/v1/analytics/events', pathParams: [], auth: 'optionalSession', write: 'resourceKey', ifMatch: false, successStatus: 200, list: false, hasBody: true },
 } as const;

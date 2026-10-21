@@ -90,3 +90,33 @@ export const CLIENT_EVENT_TYPES = [
 export const MEAL_ACTIONS = [
   'APPLY', 'WITHDRAW', 'LEAVE', 'EDIT', 'CANCEL', 'DECLARE_BOOKING', 'REVIEW_APPLICATIONS', 'OPEN_GROUP', 'POST_MEAL',
 ] as const;
+
+/**
+ * Admin key registry shared by the five pages and the snapshot worker (T21): metric cards, chart
+ * series and drill-down lists per page. Ids follow the prototype (admin/src/metrics.ts) and the
+ * measurement contract v4 rows; formulas live in the worker, never in the UI.
+ */
+export const ADMIN_PAGE_KEYS = {
+  overview: { metrics: ['weekly', 'activation', 'retention', 'coverage'], series: ['weekly.trend'] },
+  journey: {
+    metrics: ['discovery7', 'impressionNoApply', 'applications', 'approved', 'confirmed', 'applicationAttendance', 'approval'],
+    series: ['funnel.join', 'funnel.create', 'browse.people', 'features.usage'],
+  },
+  supply: {
+    metrics: ['discovery', 'formation', 'cancellation', 'coverage', 'mealsWithAttendance'],
+    series: ['area.compare', 'cancellation.reasons', 'attendance.distribution'],
+  },
+  retention: {
+    metrics: ['retention', 'activation', 'feedback', 'survey', 'laterOpportunity'],
+    series: ['cohort.retention', 'rating.distribution', 'survey.reasons'],
+  },
+  quality: { metrics: ['missingRequired', 'duplicates', 'excluded', 'receiveLatencyP90'], series: ['quality.sources'] },
+} as const satisfies Record<(typeof ADMIN_PAGES)[number], { metrics: readonly string[]; series: readonly string[] }>;
+
+/** Drill-down targets: every metric id plus the source lists the pages open in drawers. */
+export const ADMIN_LISTS = ['meals', 'applications', 'cohort.users', 'attendance', 'quality.events'] as const;
+export const ADMIN_METRIC_IDS = [...new Set(Object.values(ADMIN_PAGE_KEYS).flatMap((p) => [...p.metrics]))];
+export const ADMIN_DRILLDOWN_TARGETS = [...ADMIN_METRIC_IDS, ...ADMIN_LISTS];
+/** User segment filter (prototype `segment`): joined inside the date range vs before it. */
+export const ADMIN_SEGMENTS = ['new', 'existing'] as const;
+export const ADMIN_DRILLDOWN_SORTS = ['occurredAt', 'startsAt', 'appliedAt', 'area', 'status'] as const;

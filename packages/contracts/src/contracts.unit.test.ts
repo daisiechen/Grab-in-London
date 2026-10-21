@@ -6,7 +6,7 @@ import { ERROR_CODES, ERROR_STATUS } from './errors.ts';
 import { errorsFor, type OperationDef } from './operation.ts';
 import { operations, operationsById } from './registry.ts';
 import { buildClientMetadata, buildOpenApi } from './openapi.ts';
-import { ADMIN_PAGES, CUISINES, DIETARY, MOODS, SURVEY_REASONS } from './dictionaries.ts';
+import { ADMIN_DRILLDOWN_TARGETS, ADMIN_PAGE_KEYS, ADMIN_PAGES, CUISINES, DIETARY, MOODS, SURVEY_REASONS } from './dictionaries.ts';
 import { isAllowedReturnTarget } from './return-target.ts';
 import { normalizeHostDeclarations } from './declarations.ts';
 import { CliCredentials, IosCredentials, ReturnTarget } from './operations/auth.ts';
@@ -34,7 +34,7 @@ describe('registry matches the reviewed API contract', () => {
 
   it('adds only the export download route described in prose', () => {
     const extra = all.map((d) => d.operationId).filter((id) => !documented.some((d) => d.id === id));
-    expect(extra).toEqual(['getExport']);
+    expect(extra.sort()).toEqual(['getClassification', 'getExport']);
     expect(doc).toContain('GET /admin/exports/:id');
   });
 
@@ -171,6 +171,29 @@ describe('schemas reject unknown fields', () => {
     const page = validator(byId('adminPage')!.params!);
     for (const slug of ADMIN_PAGES) expect(page({ page: slug })).toBe(true);
     expect(page({ page: 'users' })).toBe(false);
+  });
+
+  it('registers metric/series keys for exactly the five pages, including every prototype metric id', () => {
+    expect(Object.keys(ADMIN_PAGE_KEYS)).toEqual([...ADMIN_PAGES]);
+    const prototypeIds = [...read('admin/src/metrics.ts').matchAll(/^\s+id: "([a-zA-Z0-9]+)",$/gm)].map((m) => m[1]);
+    expect(prototypeIds.length).toBe(11);
+    for (const id of prototypeIds) expect(ADMIN_DRILLDOWN_TARGETS, id).toContain(id);
+  });
+
+  it('accepts the admin segment filter, drill-down row filters and summary exports only', () => {
+    const page = validator(byId('adminPage')!.query!);
+    const snapshotId = '6a1f6c32-6c4e-4c4d-9a51-6c1d0e5f9b11';
+    expect(page({ snapshotId, segments: 'new,existing', languages: 'zh', budgetBands: '20-30,40+' })).toBe(true);
+    expect(page({ snapshotId, segments: 'returning' })).toBe(false);
+    const drill = validator(byId('adminDrilldown')!.params!);
+    expect(drill({ metric: 'cohort.users' })).toBe(true);
+    expect(drill({ metric: 'made_up_metric' })).toBe(false);
+    const drillQuery = validator(byId('adminDrilldown')!.query!);
+    expect(drillQuery({ snapshotId, filterHash: 'a'.repeat(64), attendanceStatus: 'unknown', sort: 'startsAt', order: 'desc', q: 'Soho' })).toBe(true);
+    expect(drillQuery({ snapshotId, filterHash: 'a'.repeat(64), sort: 'email' })).toBe(false);
+    const exportBody = validator(byId('adminExport')!.body!);
+    for (const metric of ['summary.overview', 'retention', 'cohort.users']) expect(exportBody({ snapshotId, metric, filters: {} }), metric).toBe(true);
+    for (const metric of ['summary.users', 'cohortXusers', 'retention;DROP']) expect(exportBody({ snapshotId, metric, filters: {} }), metric).toBe(false);
   });
 
   it('pins survey reasons, P-05 dictionaries and moods to the reviewed contracts', () => {

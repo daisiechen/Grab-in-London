@@ -40,7 +40,9 @@ export function createApiClient(options: ClientOptions): ApiClient {
       }
       const search = new URLSearchParams();
       for (const [key, value] of Object.entries(req.query ?? {})) if (value !== undefined && value !== null) search.set(key, String(value));
-      const url = base + path + (search.size ? `?${search}` : '');
+      // toString() rather than .size: React Native's URLSearchParams polyfill lacks .size.
+      const qs = search.toString();
+      const url = base + path + (qs ? `?${qs}` : '');
 
       const headers: Record<string, string> = { accept: 'application/json' };
       if (meta.hasBody) headers['content-type'] = 'application/json';
@@ -94,8 +96,9 @@ export async function withRetry<T>(
       return await attempt();
     } catch (error) {
       if (!(error instanceof ApiError) || !error.retryable || n >= maxAttempts) throw error;
-      const delay = error.retryAfterSeconds !== undefined ? error.retryAfterSeconds * 1000 : baseDelayMs * 2 ** (n - 1);
-      await sleep(Math.min(delay, 30_000));
+      // A server-requested Retry-After is honoured in full; only our own backoff is capped at 30s.
+      const delay = error.retryAfterSeconds !== undefined ? error.retryAfterSeconds * 1000 : Math.min(baseDelayMs * 2 ** (n - 1), 30_000);
+      await sleep(delay);
     }
   }
 }

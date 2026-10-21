@@ -279,6 +279,7 @@ export const SnapshotInfo = Obj({
 export const Ratio = Obj({ numerator: T.Integer({ minimum: 0 }), denominator: T.Integer({ minimum: 0 }) });
 
 /** Metric values are always numerator/denominator pairs so 0 denominators render “—” client-side. */
+/** `metrics`/`series` keys must come from ADMIN_PAGE_KEYS[page] (checked server-side and in tests). */
 export const AdminPageData = Obj({
   page: Enum(ADMIN_PAGES),
   snapshot: SnapshotInfo,
