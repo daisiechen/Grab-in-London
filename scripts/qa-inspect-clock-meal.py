@@ -42,15 +42,24 @@ if len(names) != 1 or not re.fullmatch(r'fancy_test_[a-z0-9_]+', names[0]):
 # Only the explicitly named meal's sealed marks/roster/jobs. No session, email, text or query columns.
 sql = f"""BEGIN READ ONLY;
 SELECT json_build_object('ownedClockDatabaseVerified',true,'mealId','{meal}',
- 'meal',(SELECT row_to_json(x) FROM (SELECT id,status,version,head,minimum,capacity FROM meals WHERE id='{meal}'::uuid) x),
+ 'meal',(SELECT row_to_json(x) FROM (SELECT id,status,version,head,minimum,capacity,cancel_reason FROM meals WHERE id='{meal}'::uuid) x),
  'applications',(SELECT coalesce(json_agg(x ORDER BY x.id),'[]'::json) FROM (SELECT id,user_id,round,state,version FROM applications WHERE meal_id='{meal}'::uuid) x),
  'seats',(SELECT coalesce(json_agg(x ORDER BY x.seq),'[]'::json) FROM (SELECT seq,type,user_id FROM seat_events WHERE meal_id='{meal}'::uuid) x),
+ 'conversations',(SELECT coalesce(json_agg(x ORDER BY x.id),'[]'::json) FROM (SELECT id,kind,version,head,dissolved_at,dissolved_seq FROM conversations WHERE meal_id='{meal}'::uuid) x),
  'groupMemberships',(SELECT coalesce(json_agg(x ORDER BY x.user_id,x.join_seq),'[]'::json) FROM (SELECT m.user_id,m.join_seq,m.leave_seq FROM membership_intervals m JOIN conversations c ON c.id=m.conversation_id WHERE c.meal_id='{meal}'::uuid) x),
  'messageRefs',(SELECT coalesce(json_agg(x ORDER BY x.seq),'[]'::json) FROM (SELECT msg.id,msg.seq,msg.sender_id FROM messages msg JOIN conversations c ON c.id=msg.conversation_id WHERE c.meal_id='{meal}'::uuid) x),
  'notifications',(SELECT coalesce(json_agg(x ORDER BY x.id),'[]'::json) FROM (SELECT id,event_id,recipient_id,channel,template FROM notifications WHERE refs->>'mealId'='{meal}') x),
+ 'emailOutbox',(SELECT coalesce(json_agg(x ORDER BY x.id),'[]'::json) FROM (SELECT id,event_id,recipient_id,channel,template,status,attempts FROM outbox WHERE payload->>'mealId'='{meal}') x),
  'messageCount',(SELECT count(*) FROM messages m JOIN conversations c ON c.id=m.conversation_id WHERE c.meal_id='{meal}'::uuid),
  'marks',(SELECT coalesce(json_agg(x ORDER BY x.kind),'[]'::json) FROM (SELECT kind,due_at FROM lifecycle_marks WHERE meal_id='{meal}'::uuid) x),
  'startRoster',(SELECT coalesce(json_agg(x ORDER BY x.user_id),'[]'::json) FROM (SELECT user_id,starts_at FROM start_roster WHERE meal_id='{meal}'::uuid) x),
+ 'attendanceRevisions',(SELECT coalesce(json_agg(x ORDER BY x.subject_id,x.version),'[]'::json) FROM (SELECT id,subject_id,source,value,version,actor_id FROM attendance_revisions WHERE meal_id='{meal}'::uuid) x),
+ 'experienceRevisions',(SELECT coalesce(json_agg(x ORDER BY x.user_id,x.revision),'[]'::json) FROM (SELECT id,user_id,score,revision FROM experience_revisions WHERE meal_id='{meal}'::uuid) x),
+ 'publicReviewRefs',(SELECT coalesce(json_agg(x ORDER BY x.author_id,x.subject_id,x.revision),'[]'::json) FROM (SELECT id,author_id,subject_id,revision FROM public_review_revisions WHERE meal_id='{meal}'::uuid) x),
+ 'pairConsentRefs',(SELECT coalesce(json_agg(x ORDER BY x.user_id,x.epoch),'[]'::json) FROM (SELECT id,pair_id,user_id,epoch,revision,revoked_at FROM pair_consents WHERE basis_meal_id='{meal}'::uuid) x),
+ 'pairMetadata',(SELECT coalesce(json_agg(x ORDER BY x.id),'[]'::json) FROM (SELECT id,low_user,high_user,consent_epoch,version FROM user_pairs WHERE id IN (SELECT pair_id FROM pair_consents WHERE basis_meal_id='{meal}'::uuid)) x),
+ 'directConversations',(SELECT coalesce(json_agg(x ORDER BY x.id),'[]'::json) FROM (SELECT id,pair_id,version,head FROM conversations WHERE kind='DIRECT' AND pair_id IN (SELECT pair_id FROM pair_consents WHERE basis_meal_id='{meal}'::uuid)) x),
+ 'directMessageRefs',(SELECT coalesce(json_agg(x ORDER BY x.seq),'[]'::json) FROM (SELECT msg.id,msg.seq,msg.sender_id FROM messages msg JOIN conversations c ON c.id=msg.conversation_id WHERE c.kind='DIRECT' AND c.pair_id IN (SELECT pair_id FROM pair_consents WHERE basis_meal_id='{meal}'::uuid)) x),
  'jobs',(SELECT coalesce(json_agg(x ORDER BY x.kind),'[]'::json) FROM (SELECT kind,state,due_at,attempts FROM jobs WHERE resource_id='{meal}'::uuid AND kind IN ('meal.close','meal.start','meal.end')) x));
 COMMIT;"""
 print(json.dumps(json.loads(query(names[0], sql)), indent=2))

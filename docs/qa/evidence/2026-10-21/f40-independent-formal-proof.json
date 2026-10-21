@@ -1,0 +1,10 @@
+{
+  "sourceCommit": "0dbcfed85c50bf6b0ffd76cd86770b8ad47d13bc",
+  "sourceFilesMatchedAgainstGit": 192,
+  "installedAppHashes": {
+    "Fancy": "40bcf3cd4dae37b4d17dfac00d0086bd6fdd49d5c0d3ff54515e58c3fea99067",
+    "main.jsbundle": "d410d6b9741e7fbd2c50a1af276dce4d9c588bc2cdb0f45253ae6935f2e3ffa4"
+  },
+  "firstInstallSetupFailure": "Native34 xctestrun dependent product path still pointed to611a; installedbinary+Hermes identifiedoldformalapp, corrected beforeNative35. No false productregression claim.",
+  "runtime": "actual isolated iOS27.0 simulator; same retained synthetic account/PG/API61973; normal automatic signing; no credential read/reset"
+}

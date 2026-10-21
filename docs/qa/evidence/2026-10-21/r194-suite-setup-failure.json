@@ -1,0 +1,6 @@
+{
+  "run": "R194",
+  "attemptedMissingPath": "apps/ios/src/features/inbox/inbox.test.tsx",
+  "result": "ENOENT: nonexistent QA-selected second test path; four actual refresh assertions passed; corrected R19513/0 separately preserved.",
+  "classification": "QA command setup failure, not product regression"
+}

@@ -1,0 +1,19 @@
+{
+  "script": "scripts/qa-inspect-clock-meal.py",
+  "sha256": "4e42cd2e80b1d1be3fb73c4e22cd7f34f8dd346d57373589922e053366a4734b",
+  "scope": "OwnedPID63824, guarded disposableclockPG, default_transaction_read_only=on, noauth/session/body/querytext columns",
+  "checks": [
+    {
+      "status": "PASS",
+      "actual": "Actual named-meal readonly query verifies attendance3, experience2, publicreviewrefs2, single-sidedconsent1/DM0 before explicit other-side UI choice; later mutual checkpoint captured separately. No bodies or credentials read."
+    },
+    {
+      "status": "PASS",
+      "actual": "WithoutFANCY_QA_LOCAL_FIXTURE=1 processrejectsbeforeDBconnection."
+    },
+    {
+      "status": "PASS",
+      "actual": "PythoncompilationwithQAprivate/tmpcache succeeded; initialsystemcachepermissionfailurewasQAsetupanddidnotmodifycode."
+    }
+  ]
+}

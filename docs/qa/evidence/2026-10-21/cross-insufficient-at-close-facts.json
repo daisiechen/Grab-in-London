@@ -1,0 +1,158 @@
+{
+  "ownedClockDatabaseVerified": true,
+  "mealId": "5b8d682f-cfda-493d-8d0f-cc58a37d7533",
+  "meal": {
+    "id": "5b8d682f-cfda-493d-8d0f-cc58a37d7533",
+    "status": "CANCELLED",
+    "version": 4,
+    "head": 5,
+    "minimum": 3,
+    "capacity": 3,
+    "cancel_reason": "insufficient"
+  },
+  "applications": [
+    {
+      "id": "549288bf-0c24-4d66-83ce-f88ae0905b6f",
+      "user_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "round": 1,
+      "state": "CONFIRMED",
+      "version": 2
+    }
+  ],
+  "seats": [
+    {
+      "seq": 1,
+      "type": "HOST_CONFIRMED",
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583"
+    },
+    {
+      "seq": 3,
+      "type": "GUEST_CONFIRMED",
+      "user_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50"
+    }
+  ],
+  "conversations": [
+    {
+      "id": "2552ba50-70a1-411e-9a8b-81fb05c835e5",
+      "kind": "GROUP",
+      "version": 3,
+      "head": 2,
+      "dissolved_at": null,
+      "dissolved_seq": null
+    }
+  ],
+  "groupMemberships": [
+    {
+      "user_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "join_seq": 2,
+      "leave_seq": null
+    },
+    {
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "join_seq": 1,
+      "leave_seq": null
+    }
+  ],
+  "messageRefs": [],
+  "notifications": [
+    {
+      "id": "391e181c-3727-4c93-868a-ce859d2f0ec8",
+      "event_id": "3873bae5-e9b7-4d8f-842a-35271b1729a2",
+      "recipient_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "channel": "IN_APP",
+      "template": "meal_cancelled"
+    },
+    {
+      "id": "45e123ec-f256-49e7-aef6-274a76413a63",
+      "event_id": "c262de4a-2b71-419c-9d50-9853bd9e004b",
+      "recipient_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "channel": "IN_APP",
+      "template": "application_approved"
+    },
+    {
+      "id": "814ff192-fe57-4cbf-83e3-fb3576fb53c9",
+      "event_id": "3873bae5-e9b7-4d8f-842a-35271b1729a2",
+      "recipient_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "channel": "IN_APP",
+      "template": "meal_cancelled"
+    },
+    {
+      "id": "d28b996e-0f36-47ef-acb7-7dd90767d7f7",
+      "event_id": "446e5911-bd65-488b-9e10-3e77bfea59a9",
+      "recipient_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "channel": "IN_APP",
+      "template": "booking_updated"
+    },
+    {
+      "id": "e81dd9c0-5692-4be6-a89f-b597298ccd42",
+      "event_id": "446e5911-bd65-488b-9e10-3e77bfea59a9",
+      "recipient_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "channel": "IN_APP",
+      "template": "booking_updated"
+    },
+    {
+      "id": "e8af4626-ab69-4f3f-8083-b808526bc65a",
+      "event_id": "e61147ba-0810-4279-ad30-cd9fb39a2c0e",
+      "recipient_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "channel": "IN_APP",
+      "template": "application_submitted"
+    }
+  ],
+  "emailOutbox": [
+    {
+      "id": "299a3f79-fe96-44c2-8a3e-795d81a2a21b",
+      "event_id": "3873bae5-e9b7-4d8f-842a-35271b1729a2",
+      "recipient_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "channel": "EMAIL",
+      "template": "meal_cancelled",
+      "status": "PENDING",
+      "attempts": 0
+    },
+    {
+      "id": "774aa833-8e8d-4841-9130-6f88e3568589",
+      "event_id": "3873bae5-e9b7-4d8f-842a-35271b1729a2",
+      "recipient_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "channel": "EMAIL",
+      "template": "meal_cancelled",
+      "status": "PENDING",
+      "attempts": 0
+    },
+    {
+      "id": "824a8892-9b4c-4b6b-9792-9c99650acb29",
+      "event_id": "c262de4a-2b71-419c-9d50-9853bd9e004b",
+      "recipient_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "channel": "EMAIL",
+      "template": "application_approved",
+      "status": "PENDING",
+      "attempts": 0
+    }
+  ],
+  "messageCount": 0,
+  "marks": [
+    {
+      "kind": "CLOSE",
+      "due_at": "2026-10-22T19:00:00+01:00"
+    }
+  ],
+  "startRoster": [],
+  "jobs": [
+    {
+      "kind": "meal.close",
+      "state": "DONE",
+      "due_at": "2026-10-22T19:00:00+01:00",
+      "attempts": 1
+    },
+    {
+      "kind": "meal.end",
+      "state": "PENDING",
+      "due_at": "2026-10-22T22:00:00+01:00",
+      "attempts": 0
+    },
+    {
+      "kind": "meal.start",
+      "state": "PENDING",
+      "due_at": "2026-10-22T20:00:00+01:00",
+      "attempts": 0
+    }
+  ]
+}

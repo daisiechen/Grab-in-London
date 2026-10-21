@@ -1,0 +1,118 @@
+{
+  "observations": [
+    {
+      "id": "B18-O001",
+      "status": "passed",
+      "title": "F40 formal native host explicit dissolution keeps unsent text",
+      "testedCommit": "0dbcfed85c50bf6b0ffd76cd86770b8ad47d13bc",
+      "environment": "Actual iOS27.0 isolated simulator Release/XCUITest plus IABWeb2debc60, API19d/same real isolated PG, synthetic providers and controlled clock",
+      "steps": [
+        "Independentlycompare192trackedsourcehashestoGitandarchive; actualinstalledbinary40bc/Hermesd410match. Native34wrongdependentpathinstalledold611a andisretainedasQAsetupfailure,correctedbefore35.",
+        "Native35actualhostwritesdraft-opensDissolve-Keepgroup retainsdraft,nooperation-Confirmdissolution succeeds; terminalreadonly/noeditor,unsentdraftvisible. PGconversationdissolvedseq8/messagecountstill3, draftnot sent."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f40-independent-formal-proof.json",
+        "evidence/2026-10-21/native-dissolve35-xcui.swift",
+        "evidence/2026-10-21/f40-native-dissolved-kept-draft.png",
+        "evidence/2026-10-21/cross-reverse-dissolved-facts.json"
+      ]
+    },
+    {
+      "id": "B18-O002",
+      "status": "passed",
+      "title": "Both client directions remain authorized union history after dissolution",
+      "testedCommit": "0dbcfed85c50bf6b0ffd76cd86770b8ad47d13bc",
+      "environment": "Actual iOS27.0 isolated simulator Release/XCUITest plus IABWeb2debc60, API19d/same real isolated PG, synthetic providers and controlled clock",
+      "steps": [
+        "Native33 beforedissolution provedownold+Webnewvisible,absencegapexcluded; Native36/37/38coldguest afterWebhostdissolution preserveold+new/noGap/noeditor/noLeaveorDissolve.",
+        "Webguest afterNativehostdissolve showsold+newauthorizedmessages,noabsencegap,readonly/noeditor/noreopenaction. Native38manualpullthenhostcoldreadonlyalsoverified. UnderlyingmealOPEN/currentseatretained; dissolutiondoesnotcancelmeal.",
+        "Thesearecompleteenduserassertion slices; fullJOURNEY003 remainsNR untilsharedfacts/adminpreconditionreceipt."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-union33-xcui.swift",
+        "evidence/2026-10-21/native-readonly37-xcui.swift",
+        "evidence/2026-10-21/native-inbox38-xcui.swift",
+        "evidence/2026-10-21/native-guest-dissolved-union-readonly.png",
+        "evidence/2026-10-21/native-host-cold-dissolved-readonly.png",
+        "evidence/2026-10-21/native-host-dissolved-web-guest-readonly.jpg",
+        "evidence/2026-10-21/cross-native-cancel-dissolved-facts.json",
+        "evidence/2026-10-21/cross-reverse-dissolved-facts.json"
+      ]
+    },
+    {
+      "id": "B18-O003",
+      "status": "passed",
+      "title": "F38 real initial read429 is visible and recovers without quota bypass",
+      "testedCommit": "2debc60ba399953c3b78f80762a9b6cb76e31d4b",
+      "environment": "Actual iOS27.0 isolated simulator Release/XCUITest plus IABWeb2debc60, API19d/same real isolated PG, synthetic providers and controlled clock",
+      "steps": [
+        "FreshactualWebgroup3870read429shows Couldnotloadmessages/Too manyattempts/retryingautomatically,notSAYHELLO/empty. ExistingmessagesarephysicallypersistedinPG.",
+        "Advanceownedclocklegitimatelytonewcurrentwindow, reloadrestoresmessages; noquotaedit/noautoresend."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f38-real-rate-limit-visible-error.jpg",
+        "evidence/2026-10-21/cross-native-cancel-dissolved-facts.json"
+      ]
+    },
+    {
+      "id": "B18-O004",
+      "status": "failed",
+      "title": "F41 native Inbox cache invalidation loses list after chat return",
+      "testedCommit": "0dbcfed85c50bf6b0ffd76cd86770b8ad47d13bc",
+      "environment": "Actual iOS27.0 isolated simulator Release/XCUITest plus IABWeb2debc60, API19d/same real isolated PG, synthetic providers and controlled clock",
+      "steps": [
+        "ColdInboxhasgroups; opengroup/readack; BackandexplicitInboxtabshowsChats0/Applications0 withnoloading/error,norecoveryover8seconds. Native36/37failedhostlookup retained.",
+        "ChatreadAckcache.delete(inbox), InboxmounteduseQueryreload effectdoesnotdependoncachemissing/focus. Sameexistinggroupsrestoreonactualpullrefresh38."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f41-native-inbox-empty-after-return.png",
+        "evidence/2026-10-21/native-readonly37-xcui.swift",
+        "evidence/2026-10-21/native-inbox38-xcui.swift"
+      ]
+    },
+    {
+      "id": "B18-O005",
+      "status": "passed",
+      "title": "F41 explicit pull recovery proves data not deleted",
+      "testedCommit": "0dbcfed85c50bf6b0ffd76cd86770b8ad47d13bc",
+      "environment": "Actual iOS27.0 isolated simulator Release/XCUITest plus IABWeb2debc60, API19d/same real isolated PG, synthetic providers and controlled clock",
+      "steps": [
+        "Native38captureszeroInboxafterread, explicitlypullsrefresh, originalgroupsreturn; hostgroupcoldreadonly,noeditor/noLeave/Dissolve andremoteearliermessageverified.",
+        "ManualrecoverydoesnotcloseF41automaticreturnfailure."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-inbox38-xcui.swift",
+        "evidence/2026-10-21/native-host-cold-dissolved-readonly.png"
+      ]
+    },
+    {
+      "id": "B18-O006",
+      "status": "passed",
+      "title": "Native39 creates isolated normal meal for reverse happy path",
+      "testedCommit": "0dbcfed85c50bf6b0ffd76cd86770b8ad47d13bc",
+      "environment": "Actual iOS27.0 isolated simulator Release/XCUITest plus IABWeb2debc60, API19d/same real isolated PG, synthetic providers and controlled clock",
+      "steps": [
+        "Actualnormalfour-stepnativeCreateusingNorth,Sat24Oct00:00,min2/cap2,budget15-30,explicitbooking/reviewpublish. Webdiscoverdetailshows57c7b03f matchinghost/description/schedule andonehostseat.",
+        "Webguestexplicitlyappliesuniquely;pendingandnoearlygroup assumed. Approval/attendance/enduserfeedback/adminnotyetclaimed."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-create39-xcui.swift"
+      ]
+    },
+    {
+      "id": "B18-O007",
+      "status": "passed",
+      "title": "F41 original native automatic Inbox return regression fixed",
+      "testedCommit": "042bc79321ec3f6be4de2d235264d128d06b0540",
+      "environment": "Actual iOS27.0 dedicated simulator normal signed Release; API19d real local PG and synthetic auth",
+      "steps": [
+        "Native43 repeats originalNative41: open normal group, read two persisted remote messages, Back and Inbox; five groups automatically restored without manual pull.",
+        "Independent R19513/0. Actual installed binary SHA256 4bdc20c9dc80306a90b1e43240e886cc817a546de8723da5fa63ae12d76b371d and Hermes6ef376ff46ddd92f38a1d1821ea02ea0c45d03e254b143c4fb8bb7fd95e49e4a. Historical red retained."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-inbox43-xcui.swift",
+        "evidence/2026-10-21/f41-native-inbox-return-restored.png"
+      ]
+    }
+  ]
+}

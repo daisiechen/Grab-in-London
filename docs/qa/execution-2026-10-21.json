@@ -18,9 +18,8 @@
   },
   "counts": {
     "PASS": 193,
-    "NOT_RUN": 12,
-    "BLOCKED": 11,
-    "FAIL": 1
+    "NOT_RUN": 13,
+    "BLOCKED": 11
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
@@ -59,7 +58,8 @@
     "browserObservationsB15": "evidence/2026-10-21/browser-b15.json",
     "browserObservationsB16": "evidence/2026-10-21/browser-b16.json",
     "nativeFormalRuntimeReview": "evidence/2026-10-21/native-formal-runtime-review.json",
-    "browserObservationsB17": "evidence/2026-10-21/browser-b17.json"
+    "browserObservationsB17": "evidence/2026-10-21/browser-b17.json",
+    "browserObservationsB18": "evidence/2026-10-21/browser-b18.json"
   },
   "cases": [
     {
@@ -17036,9 +17036,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "NOT_RUN",
       "evidence": [
-        "B17-O005"
+        "B18-O001",
+        "B18-O002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -17354,11 +17355,9 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "席位和群分别变化",
-        "只读已授权union历史",
-        "解散不可重开"
+        "Both client directions now prove seat/group independence, authorized historical union and terminal dissolution; complete shared-environment receipt/admin precondition still pending."
       ],
-      "actual": "Native24 real four-step publish and Native25 host approval/reconfirmation; Web guest cancellation retains group send then explicit leave yields read-only earlier message. NewF39: fresh Inbox falsely claims Seat confirmed after cancellation; original complete Web slice retained, remaining native guest cancellation/rejoin/dissolve and role-swap paths pending. Native27 sends absence gap; Native28 approves round2 and sends new segment. Actual Web shows old+new authorized messages and excludes gap. F39 formal2debc60 independent2/0 and actualneutralrow; F40 actualNativehost lacks required dissolve action, remainsFAIL. Native guest cancellation direction on separate3870 fixture underway.",
+      "actual": "F39/F40 targetedclosed. Native0db35 actualhost Keepgroup preservesdraft/no write, explicitdissolve makesbothreadonly; samePGdissolvedseq8/messageCount3 provesdraftunsent. Native33/36/37 guestold+new/noabsencegap/noeditor passed; Native38 manualInboxpull restoreshostcoldreadonly/noReopen. Webhost independentlydissolvesnativeguest group3870, samePGdissolvedseq9/messageCount4; doesnotcancelmeal/changecurrentseats. FullcaseheldNOT_RUN untilsharedfactsreceipt/adminprecondition, not inflated fromtests. F41generalInboxreturn separate.",
       "history": [
         {
           "status": "NOT_RUN",
@@ -18695,7 +18694,7 @@
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
       "evidence": [
-        "R189-T001"
+        "B18-O007"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -19016,14 +19015,12 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "原稿/目标保留但不自动重放写",
-        "403转历史",
-        "410清旧缓存选新snapshot",
-        "无假成功"
+        "Complete remaining abnormal journey assertions and shared environment/admin trace; targeted F41 return regression alone is not whole-case acceptance."
       ],
-      "actual": "F38 targeted fixed-SHA3919465 independent R189:7PASS/0FAIL proves visible initial429, retained messages/composer, terminal403 fencing and HISTORY-only retry; originalR187 failure retained. Full cross-client abnormal journey and remaining snapshot410 assertions still require execution.",
+      "actual": "F41 targeted closed at042bc79: Native43 repeats originalNative41 read-chat/Back/Inbox probe and automatically restores five groups without pull; R19513/0. Original36/37/41 reds and manual38 recovery retained. F38 real429 visible/recovery also passed. Other full abnormal path assertions remain NOT_RUN.",
       "defectIds": [
-        "QA-F38"
+        "QA-F38",
+        "QA-F41"
       ]
     },
     {
@@ -22599,7 +22596,8 @@
     "QA-F37": "CLOSED_TARGETED_QA",
     "QA-F38": "CLOSED_TARGETED_QA",
     "QA-F39": "CLOSED_TARGETED_QA",
-    "QA-F40": "OPEN"
+    "QA-F40": "CLOSED_TARGETED_QA",
+    "QA-F41": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -22615,5 +22613,5 @@
     "本地AI生命周期/重装及AI完整用户路径由开发落实受控服务夹具；后台/支持以明确复制receipt或同环境实际事实核对，不能仅因缺夹具而交给用户。",
     "真实供应商、账号Key、付款/部署/保留政策及真实发行设备仅保留必要外部门槛，不以本地mock或模拟器关闭。"
   ],
-  "currentExecutionSlice": "Web2debc60/API19d/Native611a same isolated PG. F38 formalR1897/0 targetedclosed; F39 originalR192red/formalR1912/0 and actualneutralrow passed. Native reverse create/approve/reapply and Web history-union/gap exclusion executed; newF40 nativehost missingdissolve handedoff, JOURNEY003FAIL. Mainacfe remains normal and untouched. Native31actualcancelthenSend/Leave passed; Native32historynogapandround2pendingpassed. R193formalF40components16/0, realruntime pending. Workingtreecorecheckscanner blocked by otherowner gitignored localconfig; frozenpublishablearchive scan separatelyclear, not wholeworkingtreecheckPASS."
+  "currentExecutionSlice": "F41 formal042bc79 actualNative43 automaticInboxreturn5 and R19513/0 targetedclosed; source193 and installedbinary/Hermes verified. MainactualNative44/46 and Webhost report/experience/publicreference completed; single-sidedchoice PG1/noDM and Webnoindication, explicitotherchoice then mutualconnection; privatechat verification ongoing. Fulljourneys remainNOT_RUN pending remaining assertions/admintrace. Syntheticproviders, actualiOS27.0 simulator/Web2debc60/API19d/samePG."
 }

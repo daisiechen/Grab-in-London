@@ -21156,6 +21156,174 @@
           "durationMs": 4
         }
       ]
+    },
+    {
+      "id": "R194",
+      "testedCommit": "042bc79321ec3f6be4de2d235264d128d06b0540",
+      "command": "pnpm --dir apps/ios test --runInBand --runTestsByPath src/features/inbox/inbox-refresh.test.tsx src/features/inbox/inbox.test.tsx --json (second QA path does not exist; setup failure)",
+      "startedAt": "2026-10-21T22:07:43.572000+00:00",
+      "exitCode": 1,
+      "passed": 4,
+      "failed": 0,
+      "total": 4,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R194-T001",
+          "run": "R194",
+          "path": "apps/ios/src/features/inbox/inbox-refresh.test.tsx",
+          "title": "refetches mounted invalidated inbox on focus after session validation without displaying false zero counts",
+          "status": "passed",
+          "durationMs": 130
+        },
+        {
+          "id": "R194-T002",
+          "run": "R194",
+          "path": "apps/ios/src/features/inbox/inbox-refresh.test.tsx",
+          "title": "shows forbidden reload failure and permits an explicit retry without looping or writing",
+          "status": "passed",
+          "durationMs": 10
+        },
+        {
+          "id": "R194-T003",
+          "run": "R194",
+          "path": "apps/ios/src/features/inbox/inbox-refresh.test.tsx",
+          "title": "shows a focus validation outage without issuing an unauthorized inbox refetch",
+          "status": "passed",
+          "durationMs": 6
+        },
+        {
+          "id": "R194-T004",
+          "run": "R194",
+          "path": "apps/ios/src/features/inbox/inbox-refresh.test.tsx",
+          "title": "never repopulates conversation cache from a read completed after session expiry",
+          "status": "passed",
+          "durationMs": 3
+        }
+      ],
+      "suiteLoadFailures": [
+        {
+          "path": "docs/qa/evidence/2026-10-21/r194-suite-setup-failure.json",
+          "message": "QA passed nonexistent second path to Jest; ENOENT suite setup. Existing refresh suite4passed; separate corrected R19513/0."
+        }
+      ]
+    },
+    {
+      "id": "R195",
+      "testedCommit": "042bc79321ec3f6be4de2d235264d128d06b0540",
+      "command": "pnpm --dir apps/ios test --runInBand --runTestsByPath src/features/inbox/inbox-refresh.test.tsx src/features/inbox/chat.test.tsx --json --outputFile=/private/tmp/fancy-r195.json",
+      "startedAt": "2026-10-21T22:08:09.245000+00:00",
+      "exitCode": 0,
+      "passed": 13,
+      "failed": 0,
+      "total": 13,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R195-T001",
+          "run": "R195",
+          "path": "apps/ios/src/features/inbox/inbox-refresh.test.tsx",
+          "title": "refetches mounted invalidated inbox on focus after session validation without displaying false zero counts",
+          "status": "passed",
+          "durationMs": 110
+        },
+        {
+          "id": "R195-T002",
+          "run": "R195",
+          "path": "apps/ios/src/features/inbox/inbox-refresh.test.tsx",
+          "title": "shows forbidden reload failure and permits an explicit retry without looping or writing",
+          "status": "passed",
+          "durationMs": 9
+        },
+        {
+          "id": "R195-T003",
+          "run": "R195",
+          "path": "apps/ios/src/features/inbox/inbox-refresh.test.tsx",
+          "title": "shows a focus validation outage without issuing an unauthorized inbox refetch",
+          "status": "passed",
+          "durationMs": 6
+        },
+        {
+          "id": "R195-T004",
+          "run": "R195",
+          "path": "apps/ios/src/features/inbox/inbox-refresh.test.tsx",
+          "title": "never repopulates conversation cache from a read completed after session expiry",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R195-T005",
+          "run": "R195",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "InboxScreen separates chats from pending applications and keeps pending requests visible",
+          "status": "passed",
+          "durationMs": 16
+        },
+        {
+          "id": "R195-T006",
+          "run": "R195",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) drops messages and compose drafts across logout and another account sign-in",
+          "status": "passed",
+          "durationMs": 56
+        },
+        {
+          "id": "R195-T007",
+          "run": "R195",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) polls LIVE in the foreground, pauses in the background and catches up on resume",
+          "status": "passed",
+          "durationMs": 8
+        },
+        {
+          "id": "R195-T008",
+          "run": "R195",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) a failed send stays visible with Retry (same clientMessageId); there is no automatic resend",
+          "status": "passed",
+          "durationMs": 66
+        },
+        {
+          "id": "R195-T009",
+          "run": "R195",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) 403 while polling switches to read-only history and stops polling",
+          "status": "passed",
+          "durationMs": 6
+        },
+        {
+          "id": "R195-T010",
+          "run": "R195",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) a dissolved group loads HISTORY once and never polls",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R195-T011",
+          "run": "R195",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) leaving the group needs confirmation and sends If-Match",
+          "status": "passed",
+          "durationMs": 15
+        },
+        {
+          "id": "R195-T012",
+          "run": "R195",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) renders message bodies as plain text",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R195-T013",
+          "run": "R195",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "acknowledges only rendered foreground progress and stops acknowledgements in background",
+          "status": "passed",
+          "durationMs": 4
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -21208,7 +21376,7 @@
     "apps/web/src/features/create/qa-independent-terms-return.unit.test.tsx": "20811ac0b0f9c787f4d26569f1b5f10b9e1979b4583deeac3669b0a5466f9498",
     "scripts/qa-browser-extra-applicant.mjs": "f6654ae9a9ed43cf44c2f55e1adc51b61815ebb179cfb126c6bc5f2a9eaf31fe",
     "scripts/qa-independent-direct-title.api.test.ts": "9c41ed304cba4d0d87bc567cbe24f0b07b20fbccd9636655f8b6a3067227a642",
-    "scripts/qa-inspect-clock-meal.py": "c9b3a65f14fbc3ba9d7aeb215307688e9c351676557e728a2cf38c70547be3bc",
+    "scripts/qa-inspect-clock-meal.py": "4e42cd2e80b1d1be3fb73c4e22cd7f34f8dd346d57373589922e053366a4734b",
     "scripts/qa-direct-browser-fixture.ts": "20b7b8b17491210e330579f8054c8a5c49df7598ac1b099477be29f61d3a60ed",
     "scripts/qa-independent-survey-boundaries.api.test.ts": "8f9c8f9cb7570c201e73af554cbb21876440c123e352b4629672eda94dc74811",
     "scripts/qa-independent-draft-authorization.api.test.ts": "d990daf9f3b83d95a4d0137eaea969358d0e810221fdbe1cb0ee1b7dd43370ee",
