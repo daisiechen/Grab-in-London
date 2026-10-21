@@ -412,3 +412,9 @@
 - 每张后续页card只记录app-owned来源签名cursor，返回同canonicalfilters取对应页且仍含selected才恢复；cursor无效/权限变或已无该meal仅一次首屏回退，最多2请求，不单取getMeal造card绕筛选。离线/503保原错误，来源页nextCursor继续Showmore；应用新筛选清区域/选择/cursor。签名权威仍在API，不将客户端形状校验当授权。
 - 原首批list/areas两红保留，修后自有14+原Discover9+F17来源12共35相关回归通过。根全Web/admin297、Web生产构建、core:check及Python77全部通过（/private/tmp/fancy-f33-{clients,build,check,python}.log）。后端/原生未改，沿用最近已验证层，不冒称本批重跑。
 - QA b19bf59冻结原证据后明确释放root窗口，本切片六文件+本记录独立提交，不混研究；正式SHA交QA固定版本真实浏览器筛选/区域/卡片及后续页返回复验，开发不抢先关闭F33或完整旅程。
+
+## QA-F34 生产Web紧凑时间菜单（2026-10-21）
+
+- QA核主PRD337紧凑菜单已在ce74研发基线，非仅Demo豁免；生产原select缺交互。仅steps接线与专用TimePicker组件/CSS/自有测试四文件，仍48半小时计划时间、不校验供应商库存；160px触发/菜单、箭头内缩16、最高224内部滚动，portal约束手机边界，已选/空00聚焦、方向/Home/End/Enter、Escape/外部关闭及焦点恢复，无新增包或通用框架。
+- 自有3+原Create17相关20项通过，真实隔离Chrome61981生产组件/CSS测得160宽/224高、选中19:30自动focus与内部scroll、键盘00:30/归焦、Esc/Outside及320/144视口无溢出。该证据仅组件真实浏览器，不冒完整Create旅程通过；正式交QA独立集成复验。
+- F34–36最终冻结整合Web/admin306、iOS256、Web生产构建及core:check通过（/private/tmp/fancy-f34-f35-{clients,build}-final.log、fancy-f36-ios.log、fancy-f34-f36-check-final.log）。自有文档结构3项绿；全Python77两项QA probe/reportR176等WIP一致性失败原fancy-f34-f36-python.log保留，不改QA证据或冒全绿。三切片分别提交，root持串行窗口，仅各白名单与记录，不混研究。

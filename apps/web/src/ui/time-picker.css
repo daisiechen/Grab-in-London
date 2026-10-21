@@ -1,0 +1,6 @@
+.time-picker-trigger{position:relative;width:160px;max-width:100%;min-height:44px;text-align:left;padding:10px 40px 10px 12px;border:1px solid var(--line,#d7d5d0);border-radius:8px;background:var(--surface,#fff);color:inherit;font:inherit;cursor:pointer}
+.time-picker-trigger>svg{position:absolute;right:16px;top:50%;transform:translateY(-50%);pointer-events:none}
+.time-picker-menu{position:fixed;z-index:1000;box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;border:1px solid var(--line,#d7d5d0);border-radius:8px;background:var(--surface,#fff);box-shadow:0 4px 16px #0002;padding:4px}
+.time-picker-menu>[role=option]{display:block;width:100%;min-height:36px;padding:8px 12px;border:0;border-radius:4px;text-align:left;font:inherit;color:inherit;background:transparent;cursor:pointer}
+.time-picker-menu>[role=option].active{background:var(--soft,#f0eee8);outline:2px solid var(--ink,#222);outline-offset:-2px}
+.time-picker-menu>[aria-selected=true]{font-weight:600}

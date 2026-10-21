@@ -1,3 +1,4 @@
+import {TimePicker} from '../../ui/TimePicker.tsx';
 import { CUISINES, DIETARY, LANGUAGES, MOODS, type CuisineCode, type DietaryCode, type LanguageCode, type MoodCode } from '@fancy/contracts';
 import { longDate } from '../../lib/format.ts';
 import { ChoiceGroup, Field } from '../../ui/components.tsx';
@@ -46,10 +47,7 @@ export function ArrangeStep({ draft, update, lockedVenue }: StepProps) {
       </fieldset>
       <Field label="Time" hint="London time. This is your planned meeting time; confirm opening hours and book with the restaurant separately.">
         {(p) => (
-          <select {...p} value={draft.time} onChange={(e) => schedule({ time: e.target.value })}>
-            <option value="">Choose a time</option>
-            {HALF_HOUR_SLOTS.map((s) => <option key={s} value={s}>{s}</option>)}
-          </select>
+          <TimePicker {...p} value={draft.time} options={HALF_HOUR_SLOTS} onChange={time=>schedule({time})}/>
         )}
       </Field>
       <h2>Applications close</h2>
