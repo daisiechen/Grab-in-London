@@ -31,7 +31,11 @@ export async function lockMeal(tx:Tx,mealId:string,actorId:string,extraUserIds:s
  if(!hint)throw new DomainError('NOT_FOUND','Meal not found.');
  const users=[...new Set([actorId,...extraUserIds])].sort();
  const active=await tx.locks.lock<{id:string;status:string}>('users',users,'share','id,status');
- if(active.length!==users.length || active.some(u=>u.status!=='ACTIVE'))throw new DomainError('AUTH_REQUIRED','Your session is no longer valid.');
+ if(!active.some(u=>u.id===actorId&&u.status==='ACTIVE'))throw new DomainError('AUTH_REQUIRED','Your session is no longer valid.');
+ // Extra users are applicants in host decisions. Their account state is a business failure,
+ // never evidence that the caller's own session expired. Authorize before exposing that state.
+ if(extraUserIds.length&&hint.host_id!==actorId)throw new DomainError('FORBIDDEN','Only the host can decide this application.');
+ if(active.length!==users.length||active.some(u=>u.status!=='ACTIVE'))throw new DomainError('NOT_FOUND','This participant is unavailable.');
  const [meal]=await tx.locks.lock<MealRow>('meals',[mealId],'update','*');
  if(!meal)throw new DomainError('NOT_FOUND','Meal not found.');
  if(hint.conversation_id)await tx.locks.lock('conversations',[hint.conversation_id],'update');
