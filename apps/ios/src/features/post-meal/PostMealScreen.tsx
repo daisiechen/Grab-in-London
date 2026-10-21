@@ -1,5 +1,5 @@
 import { SessionScope } from '../auth/SessionScope.tsx';
-import { useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ApiError, type ResponseOf } from '@fancy/client';
@@ -10,6 +10,7 @@ import { ChoiceGroup } from '../../ui/ChoiceGroup.tsx';
 import { Field } from '../../ui/Field.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
 import { Screen } from '../../ui/Screen.tsx';
+import {Sheet} from '../../ui/Sheet.tsx';
 import { Body, Heading, SectionTitle } from '../../ui/Text.tsx';
 
 type State = ResponseOf<'postMealState'>['data'];
@@ -36,14 +37,29 @@ export function PostMealScreen() {
 function PostMealScreenContent() {
   const { mealId } = useLocalSearchParams<{ mealId: string }>();
   const id = String(mealId);
-  const { api, newId } = useServices();
+  const { api, newId,cache,session:manager } = useServices();
   const session = useSessionState();
   const router = useRouter();
-  const q = useQuery<State>(`postMeal:${id}`, async () => (await api.call('postMealState', { params: { mealId: id } })).data);
+  const q = useQuery<State>(session.status==='signedIn'?`postMeal:${id}`:null, async () => {const generation=manager.generation;const result=await api.call('postMealState', { params: { mealId: id } });manager.assertGeneration(generation);return result.data;});
   const [message, setMessage] = useState<{ text: string; tone: 'error' | 'info' } | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [score, setScore] = useState<string | null>(null);
   const [reviews, setReviews] = useState<Record<string, string>>({});
+  const scope=useMemo(()=>({active:true}),[id,manager.generation]);
+  const scopeRef=useRef(scope);scopeRef.current=scope;
+  useEffect(()=>{scope.active=true;return()=>{scope.active=false;};},[scope]);
+  const [host,setHost]=useState<{mealId:string;id:string}|null>(null);
+  const [hostChoices,setHostChoices]=useState<Record<string,'present'|'absent'>>({});
+  const [pendingHost,setPendingHost]=useState<{subjectId:string;value:'present'|'absent';version:string}|null>(null);
+  const [hostError,setHostError]=useState<string|null>(null);
+  const [hostBlocked,setHostBlocked]=useState(false);
+  const [hostReloading,setHostReloading]=useState(false);
+  const readingHost=useRef(false),writingHost=useRef(false);
+  useEffect(()=>{let active=true;setHost(null);setPendingHost(null);setHostChoices({});setHostBlocked(false);
+    if(session.status!=='signedIn')return()=>{active=false;};
+    void api.call('getMeal',{params:{mealId:id}}).then(res=>{if(active&&scope.active&&scopeRef.current===scope)setHost({mealId:res.data.meal.id,id:res.data.meal.host.id});}).catch(()=>{if(active&&scope.active&&scopeRef.current===scope)setHost(null);});
+    return()=>{active=false;};
+  },[api,id,scope,session.status]);
   const keys = useRef(new Map<string, string>());
   const key = (intent: string) => {
     if (!keys.current.has(intent)) keys.current.set(intent, newId());
@@ -56,6 +72,8 @@ function PostMealScreenContent() {
   const nameOf = (subjectId: string) => (subjectId === meId ? 'You' : s.eligibleMembers.find((m) => m.id === subjectId)?.displayName ?? 'Member');
   const myAttendance = s.attendance.find((a) => a.subjectId === meId);
   const attended = myAttendance?.value === 'present';
+  const isHost=host?.mealId===id&&host.id===meId;
+  const current=()=>scope.active&&scopeRef.current===scope;
 
   const run = async (intent: string, op: (k: string) => Promise<unknown>, success: string) => {
     setBusy(intent);
@@ -75,6 +93,31 @@ function PostMealScreenContent() {
     } finally {
       setBusy(null);
     }
+  };
+
+
+  const reloadHostAttendance=async(success='Attendance changed. Review the refreshed facts and confirm again.')=>{
+    if(readingHost.current)return;readingHost.current=true;setHostReloading(true);
+    const generation=manager.generation;
+    try{const fresh=(await api.call('postMealState',{params:{mealId:id}})).data;
+      if(!current()||manager.generation!==generation)return;
+      if(fresh.mealId!==id)throw new Error('MEAL_CHANGED');
+      cache.set(`postMeal:${id}`,fresh);setHostBlocked(false);setMessage({text:success,tone:'info'});
+    }catch{if(current()&&manager.generation===generation){setHostBlocked(true);setMessage({text:'We couldn’t refresh attendance. Reload attendance before confirming another report.',tone:'error'});}}
+    finally{readingHost.current=false;if(current()&&manager.generation===generation)setHostReloading(false);}
+  };
+  const reportGuest=async()=>{
+    if(!pendingHost||!isHost||!s.windowOpen||hostBlocked||writingHost.current||busy!==null||pendingHost.subjectId===meId||!s.eligibleMembers.some(m=>m.id===pendingHost.subjectId))return;
+    const pending=pendingHost,generation=manager.generation;const intent=`host-att:${pending.subjectId}:${pending.value}:${pending.version}`;
+    writingHost.current=true;setBusy(intent);setHostError(null);
+    try{const updated=(await api.call('reportAttendance',{params:{mealId:id,subjectId:pending.subjectId},body:{value:pending.value},ifMatch:pending.version,idempotencyKey:key(intent)})).data;
+      if(!current()||manager.generation!==generation)return;
+      keys.current.delete(intent);cache.set(`postMeal:${id}`,{...s,attendance:s.attendance.map(a=>a.subjectId===updated.subjectId?updated:a)});setPendingHost(null);
+      await reloadHostAttendance('Host report saved. Each member’s own report takes priority.');
+    }catch(error){if(!current()||manager.generation!==generation)return;
+      if(error instanceof ApiError&&error.kind==='conflict'){keys.current.delete(intent);setPendingHost(null);setHostBlocked(true);await reloadHostAttendance();}
+      else{if(error instanceof ApiError&&!error.retryable)keys.current.delete(intent);setHostError('We couldn’t save this host report. Your selection is kept.');}
+    }finally{writingHost.current=false;if(current()&&manager.generation===generation)setBusy(null);}
   };
 
   return (
@@ -98,6 +141,24 @@ function PostMealScreenContent() {
           ) : null}
         </View>
       ))}
+
+      {isHost&&s.windowOpen?<View style={{gap:8}}>
+        <SectionTitle>Report your table’s attendance</SectionTitle>
+        <Body muted>Report facts, not ratings. Each member’s own report takes priority over your host report. Unreported attendance stays unknown.</Body>
+        {hostBlocked?<TextAction label="Reload attendance" disabled={hostReloading||busy!==null} onPress={()=>void reloadHostAttendance()}/>:null}
+        {s.eligibleMembers.filter(m=>m.id!==meId).map(member=>{const a=s.attendance.find(row=>row.subjectId===member.id);if(!a)return null;return <View key={member.id} style={{gap:6}}>
+          <Body>{`${member.displayName} · Your host report: ${a.hostValue==='present'?'came':a.hostValue==='absent'?'didn’t come':'not reported'}`}</Body>
+          <ChoiceGroup<'present'|'absent'> label={`Host report for ${member.displayName}`} value={hostChoices[member.id]??null} options={[["present",`${member.displayName} came`],["absent",`${member.displayName} didn’t come`]]} onChange={value=>setHostChoices(previous=>({...previous,[member.id]:value}))}/>
+          <Primary secondary label={`Review attendance for ${member.displayName}`} disabled={!hostChoices[member.id]||busy!==null||hostBlocked||hostReloading} onPress={()=>{const value=hostChoices[member.id];if(value){setHostError(null);setPendingHost({subjectId:member.id,value,version:a.version});}}}/>
+        </View>;})}
+      </View>:null}
+      <Sheet visible={pendingHost!==null} title={`Report attendance for ${pendingHost?nameOf(pendingHost.subjectId):'member'}?`} onClose={()=>setPendingHost(null)}>
+        <Body>{pendingHost?`${nameOf(pendingHost.subjectId)} ${pendingHost.value==='present'?'came':'didn’t come'}.`:'Review this fact.'}</Body>
+        <Body>This saves your host report only. The member’s own report takes priority. This is separate from ratings.</Body>
+        <FormMessage message={hostError}/>
+        <Primary secondary label="Keep editing" onPress={()=>setPendingHost(null)}/>
+        <Primary label="Confirm attendance report" disabled={busy!==null||hostBlocked||!s.windowOpen} onPress={()=>void reportGuest()}/>
+      </Sheet>
 
       {attended && s.windowOpen ? (
         <>

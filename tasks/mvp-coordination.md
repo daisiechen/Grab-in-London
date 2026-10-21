@@ -517,3 +517,12 @@
 - 回执与outbox状态同事务清claim/lease，先于send响应或UNKNOWN查询返回的旧writer无权覆写；24h/8次转DEAD后晚到的权威sent仍可纠正为SENT，保原死信原因/告警，delivered/bounced先到DEAD不复活发送。没有事件/404/lookup timeout仍不能NOT_SENT或自动重发UNKNOWN。
 - Root main给持久请求指纹加sessionSecret HMAC而非可直接字典比对的email请求SHA；rotation下旧marker不匹配保持UNKNOWN/拒重发，不宣称匿名化或永久保留批准。另将独立Management适配实际注入deletion steps，Apple仍不可用；保显式policy版本+accountDeletionApproved声明gate，缺配不完成删除。
 - 独立新增17API/30unit/20DB含callback早到/HTTP丢响应、lease排队过期、晚DEAD/乱序、schema parity通过；根最终core:check/unit360/DB135/API195/release23及Web/Adminbuild绿见同批日志。未给现QA或真实联调库apply迁移、未发真实邮件/配置外部webhook。真实收件、签名来源及bounce联调仍待部署/secret/明确测试发信授权，不冒集成闭环。
+
+
+## QA-F42 原生主持人报告其他成员出席
+
+- QA与静态PRD/API对照确认原生只有本人自报，缺主持人对其他start-roster成员的事实报告入口；Web已有。仅PostMealScreen与自有host-attendance回归：权威getMeal.host绑定meal/session，在windowOpen对eligible其他成员提供默认未选的present/absent与独立确认，明确SELF优先且不是评分；不改后端授权、体验评分或公开再约语义。
+- 按attendance.version及独立意图写入，成功刷新而不丢体验/参考草稿；409关闭旧确认，保选择/只读重取，失败阻旧版本直至显式Reload再确认；普通失败Modal可见。初始postMeal/hostlookup仅signedIn并校验generation/scope，晚响应不回灌私有cache；不用修通用hook来扩大本片。
+- 新10项红绿涵host/guest/unknown/window/SELF、409版本与刷新失败/关闭窗口、Modal失败、保其他草稿与lateexpiry；全iOS41套280项/type/全目录lint/diff绿（/private/tmp/fancy-f42-{ios-tests,types,lint}.log）。根最终corecheck/unit360/DB135/API195/release23/Web+Adminbuild绿见同批provider记录。正式SHA独立正常签名包再交QA实际饭后host/guest复验，不以组件冒实机通过。
+- F41已由QA正式042bc Native43原始自动返回探针及R19513项通过定向关闭：实际安装binary/Hermes与193源核对，ColdInbox→读持久消息→Back/Inbox自动恢复5群，无manualpull；原红与下拉手动恢复证据保留。完整JOURNEY003仍不抢先结论。
+- 用户随后批准删除受理/完成通知专用verified邮箱加密副本最长7天，到期/密钥不可用/供应商抑制降级匿名回执，不绕抑制/不营销；该具体通知规则不代替全部G-PRIVACY批准。已交独立owner准备最小scope继续实现。Google登录用户选择现在本人完成，未将未来操作当已登录。
