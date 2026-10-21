@@ -31,6 +31,15 @@ async function open(){await userEvent.click(screen.getByRole('button',{name:'Ask
 async function send(text='Find a relaxed meal this Friday.'){await userEvent.type(screen.getByRole('textbox',{name:'Ask Fancy'}),text);await userEvent.click(screen.getByRole('button',{name:'Send to Fancy'}));}
 
 describe('Ask Fancy production UI with isolated mock transport',()=>{
+ it('clears only the assistant unsent text on New conversation and preserves the business editor',async()=>{
+  const stub=baseStub(),apply=vi.fn();renderAssistant(stub,<Editor apply={apply} initial="Keep the business draft."/>);await open();await send();await screen.findByText('Here is a suggestion for you to review.');
+  await userEvent.type(screen.getByRole('textbox',{name:'Ask Fancy'}),'Discard this assistant draft.');
+  await userEvent.click(screen.getByRole('button',{name:'New conversation'}));await screen.findByText('A new conversation. Your saved preferences are kept.');
+  expect((screen.getByRole('textbox',{name:'Ask Fancy'}) as HTMLTextAreaElement).value).toBe('');
+  await userEvent.click(screen.getByRole('button',{name:'Close assistant'}));
+  expect((screen.getByRole('textbox',{name:'Original editor'}) as HTMLTextAreaElement).value).toBe('Keep the business draft.');expect(apply).not.toHaveBeenCalled();
+  expect(stub.callsTo('resetAI')[0]!.body).toMatchObject({reason:'NEW'});
+ });
  it('keeps the approved assistant home and sends a real typed request only after an explicit user action',async()=>{
   const stub=baseStub();renderAssistant(stub);await open();expect(screen.getByText('What sounds good?')).toBeTruthy();expect(stub.callsTo('bootstrapAI')).toHaveLength(0);
   await send();await screen.findByText('Here is a suggestion for you to review.');

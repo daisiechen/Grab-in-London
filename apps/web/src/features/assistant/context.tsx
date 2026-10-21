@@ -93,7 +93,7 @@ export function AssistantProvider({children}:{children:ReactNode}) {
  },[api,activity,handleError]);
  const newConversation=useCallback(async()=>{
   const current=sessionRef.current;setError('');
-  try{if(current)await api.client.call('resetAI',{params:{sessionId:current.sessionId},body:{generation:current.generation,reason:'NEW'},idempotencyKey:newIntentKey()});clearConversation('A new conversation. Your saved preferences are kept.');}catch(e){handleError(e);}
+  try{if(current)await api.client.call('resetAI',{params:{sessionId:current.sessionId},body:{generation:current.generation,reason:'NEW'},idempotencyKey:newIntentKey()});setInputState('');clearConversation('A new conversation. Your saved preferences are kept.');}catch(e){handleError(e);}
  },[api,clearConversation,handleError]);
  const showPreferences=useCallback(async()=>{setManage(true);setError('');activity();await readPreferences();},[activity,readPreferences]);
  const savePreferences=useCallback(async(fields:PreferenceFields,proposal?:{id:string;preferenceVersion:string})=>{

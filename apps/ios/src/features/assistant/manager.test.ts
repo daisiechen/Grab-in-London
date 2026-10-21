@@ -47,6 +47,13 @@ it('expires exactly at TTL and preserves unsent text and confirmed guest prefere
  await h.manager.continue();expect(h.manager.getSnapshot().phase).toBe('idle');
  await h.manager.newConversation();expect(h.manager.getSnapshot().preferences).toEqual(emptyPreferences());
 });
+it('clears assistant input on NEW without applying or clearing the registered business editor',async()=>{
+ const h=setup();await h.manager.continue();const apply=jest.fn();
+ h.manager.registerEditor({key:'form',kind:'APPLICATION',targetId:'meal',current:()=>({text:'Keep the business draft',version:'2'}),apply});
+ h.manager.setText('Discard this assistant draft');await h.manager.newConversation();
+ expect(h.manager.getSnapshot().text).toBe('');expect(apply).not.toHaveBeenCalled();
+ expect(h.call.mock.calls.find(c=>c[0]==='resetAI')?.[1]).toMatchObject({body:{reason:'NEW'}});
+});
 it('requires replacement confirmation and rejects edits during validation without applying',async()=>{
  const h=setup();await h.manager.continue();let version='1';const apply=jest.fn();
  const draft={id:'draft',kind:'APPLICATION',targetId:'meal',editorVersion:'1',text:'Candidate',fields:null} as unknown as AIDraft;

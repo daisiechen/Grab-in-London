@@ -178,3 +178,8 @@
 - 独立QA在159b0e8发现挂起provider调用期间关闭预算，旧请求仍SUCCEEDED并发布；原失败由QA保存，不改其脚本/结论。开发补生产DB回归，修前3失败/18通过：reserve后停用仍dispatch，以及用量已settle后停用仍发布SUCCEEDED/NEEDS_INPUT。
 - dispatch在原call→period锁序下重读enabled；停用则CANCELLED且只释放未发出的预留。最终finish在发布事务按调用涉及period排序FOR SHARE，停用则FAILED/UNAVAILABLE，不执行RAM发布且释放成功轮预留。该锁保持至事务结束，防止settle与publish间的停用漏检；已发生的供应商费用仍KNOWN并如实入账，不以停用退款或重试。
 - 修后原kernel21项通过；再补确定性真实PG并发：operator持预算UPDATE且停用，finish等待该锁，停用提交后拒绝发布，kernel最终22项通过。完整core unit212/DB110/API130/release11及core:check通过（完整DB运行在最后并发测试加入前，额外一项单独验证通过），日志/private/tmp/fancy-f04-{red,green,fence,core,check}.log。未修改AI预算50元/月或外部启用门槛；缺陷关闭由独立QA在固定新SHA复验后记录。
+
+## QA-F05 新建助手会话未清输入修复（2026-10-21 10:29 London）
+
+- 独立QA在361e85e真实Web组件发现NEW成功后未发送文字仍保留。开发补原组件回归修前1失败/14通过；仅在NEW成功分支清input，不改通用clearConversation，TTL及偏好删除仍保留助手草稿，业务编辑器保持原内容且未调用apply。iOS原本NEW已清text，新增保护性回归而无生产逻辑变更。
+- 修后生产Web单文件15项通过；全Web/后台218项（含QA工作树独立2项）及iOS181项通过，双端typecheck/限定eslint/Web生产build通过。首次绿色复验因modal使外部业务editor不可访问，测试改为先Close assistant再检查业务editor；该测试夹具错误不是新增产品缺陷。日志/private/tmp/fancy-f05-{red,green,clients-final,build}.log。QA独立探针由QA持有，缺陷待固定修复SHA复验关闭，不将本轮组件计数折算完整用例通过。
