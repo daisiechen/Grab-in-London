@@ -1,0 +1,7 @@
+QA-F20 source: native-owner actual Release simulator launch report, runtime log supplied and read by independent QA. Exact tested source SHA pending owner confirmation.
+Observed retained original runtime errors:
+TypeError: Cannot read property defineProperty of undefined
+Unhandled JS Exception: TypeError: Cannot read property defineProperty of undefined
+RCTFatalException: Unhandled JS Exception
+
+Temporary TypeBox-only CJS resolver reportedly reaches Discover. Not yet formal fixed source/rebuild acceptance; no QA native interaction or whole journey proof. No credentials or raw provider logs copied.

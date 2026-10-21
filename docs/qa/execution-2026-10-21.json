@@ -16,8 +16,8 @@
     "nativeRuntimeCheck20261021": "Read-only simctl outside sandbox confirms installed iOS27.0/27.1 runtimes and available shutdown iPhone simulators. Sandboxed service refusal is not missing-runtime proof. Build/launch and real native journey remain unexecuted."
   },
   "counts": {
-    "NOT_RUN": 64,
-    "PASS": 141,
+    "NOT_RUN": 63,
+    "PASS": 142,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -13448,8 +13448,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R111-T001",
+        "R111-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -13556,14 +13559,20 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "游客上下文凭据撤销",
-        "不迁入A",
-        "A原偏好保留",
-        "新游客独立主体"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2,
+        3
       ],
-      "actual": "本地生产实现尚需实际执行：游客确认偏好后登录A → 再退出重新游客。尚缺逐项证据：游客上下文凭据撤销；不迁入A；A原偏好保留；新游客独立主体。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Planned api_db_or_unit method, independent real PG/core HTTP Web-cookie and native bearer/PKCE handoff. Pre-existing account identities and confirmed preferences explicitly seeded through PreferenceService, no OTP cooldown/time edits. Guest submits confirmed soft fields with private marker, completed turn readable before login; login revokes old guest/session410, existing account turns empty and saved fields/version1 unchanged. Native guest remains valid through OTP verification, then revoked atomically by actual handoff exchange. Account logout followed by mint/boot yields different guest token/subject and empty turns; no guest preferences persisted. Native transport API proof only, no running App/Keychain/actual device/UI claim; cross-client journeys remain NOT_RUN.",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：游客确认偏好后登录A → 再退出重新游客。尚缺逐项证据：游客上下文凭据撤销；不迁入A；A原偏好保留；新游客独立主体。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+        }
+      ]
     },
     {
       "id": "QA-AI-034",
@@ -16423,7 +16432,7 @@
       "remainingExpected": [
         "Actual native device Web/iOS role-swapped full journey remains unexecuted."
       ],
-      "actual": "B7 complete real Web lifecycle/postmeal and B8 same-meal Admin trace passed in explicit local fixture. F18 fixed2b9449a independently API2+boundary8 and actual browser Inbox/header/send/reload passed B9. Historical reds retained in history and run bundles. Original cross-client precondition requires actual Web/iOS role swap; no native-device proof yet, so NOT_RUN rather than whole-case PASS. B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations.",
+      "actual": "B7 complete real Web lifecycle/postmeal and B8 same-meal Admin trace passed in explicit local fixture. F18 fixed2b9449a independently API2+boundary8 and actual browser Inbox/header/send/reload passed B9. Historical reds retained in history and run bundles. Original cross-client precondition requires actual Web/iOS role swap; no native-device proof yet, so NOT_RUN rather than whole-case PASS. B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations. Native first-launch F20 reported by native owner and log corroborated; temporary TypeBox resolver screen exists, formal fix/rebuild/interaction not yet accepted. QA has not operated native App; retain NOT_RUN and full native role-swap requirement.",
       "defectIds": [
         "QA-F18"
       ],
@@ -16793,7 +16802,7 @@
       "remainingExpected": [
         "Original plan requires actual Web/iOS role-swapped journey. Complete B7 Web proof remains valid; native journey not yet executed."
       ],
-      "actual": "B7统一4a0c66f新隔离场从真实UI创建4步/餐厅确认/最低2上限2/截止/Review发布，guest主动申请hostApprove首客锁安排、声明stale后本人重报；同场真实worker截止达标/开始封存2人/结束Completed。默认双方Unknown，GuestSELFpresent后Host报其absent不覆盖，freshGuest仍Attendedyourreport。无应用支付/库存依赖；明确fixture时钟与供应商边界，不代表真实自然时间/外部订位或原生验收。 Original cross-client precondition audit corrects whole-case PASS to NOT_RUN: B7 Web lifecycle proof retained, actual iOS role swap missing. No product regression inferred.",
+      "actual": "B7统一4a0c66f新隔离场从真实UI创建4步/餐厅确认/最低2上限2/截止/Review发布，guest主动申请hostApprove首客锁安排、声明stale后本人重报；同场真实worker截止达标/开始封存2人/结束Completed。默认双方Unknown，GuestSELFpresent后Host报其absent不覆盖，freshGuest仍Attendedyourreport。无应用支付/库存依赖；明确fixture时钟与供应商边界，不代表真实自然时间/外部订位或原生验收。 Original cross-client precondition audit corrects whole-case PASS to NOT_RUN: B7 Web lifecycle proof retained, actual iOS role swap missing. No product regression inferred. Native first-launch F20 reported by native owner and log corroborated; temporary TypeBox resolver screen exists, formal fix/rebuild/interaction not yet accepted. QA has not operated native App; retain NOT_RUN and full native role-swap requirement.",
       "relatedBrowserEvidence": [
         "B1"
       ],
@@ -22327,14 +22336,16 @@
     "QA-F16": "CLOSED_TARGETED_QA",
     "QA-F17": "CLOSED_TARGETED_QA",
     "QA-F18": "CLOSED_TARGETED_QA",
-    "QA-F19": "CLOSED_TARGETED_QA"
+    "QA-F19": "CLOSED_TARGETED_QA",
+    "QA-F20": "OPEN",
+    "QA-F21": "OPEN"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
     "userAuthorizedMessaging": true,
     "status": "remaining_local_execution_in_progress",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
-    "latestFeedback": "R109 independent DST/week/continuous-duration and nearest-rank/terminal-pending fixtures4PASS; METRIC015/017 complete. Native toolchain build continues; no native run or release pass."
+    "latestFeedback": "R111 Web-cookie/native-bearer guest→account→logout→newguest API isolation2PASS, AI033 mapped via planned API method. Actual native App journey still unexecuted pending build. Native owner actual Release startup fatal independently corroborated by QA runtime log read; F20 OPEN, exact source baseline/formal Metro fix pending. Temporary Discover screen not native journey PASS. F21 separate native consent/statusbar overlap directly visually corroborated from supplied original screen; formal source/fix pending."
   },
   "blockerTriage": "原14条中供应商分步删除和恢复删除台账两条已转本地执行并通过；其余12条缺真实环境/许可/批准证据，各项可本地准备部分已继续推进，不能视为12个未修代码故障。"
 }

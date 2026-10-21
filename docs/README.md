@@ -105,3 +105,9 @@
 - QA R107: [creation and exact publication boundaries](qa/evidence/2026-10-21/r107-create-boundaries.md).
 
 - QA R109: [independent DST and quantile reconciliation](qa/evidence/2026-10-21/r109-dst-quantiles.md).
+
+- QA R111: [P0 guest login isolation](qa/evidence/2026-10-21/r111-guest-login-isolation.md).
+
+- QA F20: [native original first-launch failure evidence](qa/evidence/2026-10-21/native-first-launch-crash.txt).
+
+- QA F21: [native consent safe-area original screenshot](qa/evidence/2026-10-21/native-consent-safe-area-original.png).
