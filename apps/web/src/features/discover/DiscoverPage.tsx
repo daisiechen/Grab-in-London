@@ -1,6 +1,8 @@
+import {ApiError} from '@fancy/client';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTelemetry } from '../../api/telemetry.tsx';
 import { ObservedMeal } from './ObservedMeal.tsx';
+import {discoverReturn,selectedArea,selectedCard,sourcePageCursor} from './returnContext.ts';
 import { GoogleMap } from '../maps/GoogleMap.tsx';
 import { useSearchParams } from 'react-router';
 import { CUISINES, DIETARY, LANGUAGES, MOODS, type CuisineCode, type DietaryCode, type LanguageCode, type MoodCode } from '@fancy/contracts';
@@ -20,7 +22,7 @@ import {
 } from './filters.ts';
 
 type SheetKind = '' | 'date' | 'size' | 'filters';
-interface Results { meals: Meal[]; nextCursor: string | null; requestId:string; key:string }
+interface Results { meals: Meal[]; nextCursor: string | null; requestId:string; key:string; sourceCursor:string|null }
 
 const BUDGETS: Array<readonly [string, string]> = [['', 'Any budget'], ['2000', 'Up to £20'], ['3000', 'Up to £30'], ['4000', 'Up to £40'], ['6000', 'Up to £60']];
 
@@ -40,18 +42,32 @@ export function DiscoverPage() {
   const [params, setParams] = useSearchParams();
   const applied = useMemo(() => parseFilters(params), [params]);
   const view = params.get('view') === 'areas' ? 'areas' : params.get('view')==='map'?'map':'list';
-  const queryKey = `${telemetry.enabled?`analytics-${telemetry.generation}`:'private'}:${filtersToParams(applied).toString()}`;
+  const restoreCursor=selectedCard(params.get('selected'))?sourcePageCursor(params.get('pageCursor')):null;
+  const queryKey = `${telemetry.enabled?`analytics-${telemetry.generation}`:'private'}:${filtersToParams(applied).toString()}:${restoreCursor??''}`;
   const [sheet, setSheet] = useState<SheetKind>('');
   const [pending, setPending] = useState<Filters>(applied);
-  const [extra, setExtra] = useState<{ key: string; meals: Meal[]; nextCursor: string | null; proofs:Record<string,string>; requests:string[] } | null>(null);
+  const [extra, setExtra] = useState<{ key: string; meals: Meal[]; nextCursor: string | null; proofs:Record<string,string>; requests:string[]; cursors:Record<string,string|null> } | null>(null);
   const [moreError, setMoreError] = useState('');
-  const [area, setArea] = useState<string | null>(null);
-  const [selectedMeal,setSelectedMeal]=useState<string|null>(null);
+  const area=selectedArea(params.get('area'));
+  const selectedMeal=selectedCard(params.get('selected'));
+  const setUi=(key:'area'|'selected',value:string|null)=>{const next=new URLSearchParams(params);if(value)next.set(key,value);else next.delete(key);setParams(next,{replace:true});};
+  const setArea=(value:string|null)=>setUi('area',value);
+  const setSelectedMeal=(value:string|null)=>setUi('selected',value);
+  const detailReturn=(id:string)=>{const next=new URLSearchParams(params);next.set('selected',id);const cursor=extra?.key===queryKey&&id in extra.cursors?extra.cursors[id]:results.data?.sourceCursor;if(cursor)next.set('pageCursor',cursor);else next.delete('pageCursor');return discoverReturn('/discover?'+next.toString());};
   const pendingFilterEvents=useRef<{key:string;filters:string[]}|null>(null);
 
   const results = useQuery<Results>(`discover:${queryKey}`, async (c) => {
+    if(restoreCursor){
+      try{
+        const restored=await c.call('discoverMeals',{query:filtersToQuery(applied,restoreCursor)});
+        if(restored.data.some(meal=>meal.id===selectedMeal))return {meals:restored.data,nextCursor:restored.page.nextCursor,requestId:restored.meta.requestId,key:queryKey,sourceCursor:restoreCursor};
+      }catch(error){
+        // Shape is not authorization: only the API can reject an obsolete/foreign signed cursor.
+        if(!(error instanceof ApiError)||!['VALIDATION_FAILED','FORBIDDEN','AUTH_REQUIRED'].includes(error.code))throw error;
+      }
+    }
     const res = await c.call('discoverMeals', { query: filtersToQuery(applied) });
-    return { meals: res.data, nextCursor: res.page.nextCursor,requestId:res.meta.requestId,key:queryKey };
+    return { meals: res.data, nextCursor: res.page.nextCursor,requestId:res.meta.requestId,key:queryKey,sourceCursor:null };
   });
   useEffect(()=>{
     if(!telemetry.enabled)return;
@@ -75,10 +91,10 @@ export function DiscoverPage() {
   const open = (kind: SheetKind) => { setPending(applied); setSheet(kind); };
   const apply = (next: Filters) => {
     const dimensions=[['area','areaCodes'],['dates','dates'],['languages','languages'],['capacity','tableSizes'],['budget','budgetMaxPence'],['cuisine','cuisineCodes'],['dietary','dietaryCodes']] as const;
-    pendingFilterEvents.current=telemetry.enabled?{key:`analytics-${telemetry.generation}:${filtersToParams(next).toString()}`,filters:dimensions.filter(([,key])=>JSON.stringify(next[key])!==JSON.stringify(applied[key])).map(([name])=>name)}:null;
+    pendingFilterEvents.current=telemetry.enabled?{key:`analytics-${telemetry.generation}:${filtersToParams(next).toString()}:`,filters:dimensions.filter(([,key])=>JSON.stringify(next[key])!==JSON.stringify(applied[key])).map(([name])=>name)}:null;
     setSheet('');
-    setArea(null);
-    setParams(filtersToParams(next, params));
+    const base=new URLSearchParams(params);base.delete('area');base.delete('selected');base.delete('pageCursor');
+    setParams(filtersToParams(next, base));
   };
   const setView = (v: 'list' | 'areas'|'map') => {
     const p = new URLSearchParams(params);
@@ -90,7 +106,7 @@ export function DiscoverPage() {
     setMoreError('');
     try {
       const res = await api.client.call('discoverMeals', { query: filtersToQuery(applied, nextCursor) });
-      setExtra({ key: queryKey, meals: [...(extra?.key === queryKey ? extra.meals : []), ...res.data], nextCursor: res.page.nextCursor,proofs:{...(extra?.key===queryKey?extra.proofs:{}),...Object.fromEntries(res.data.map(m=>[m.id,res.meta.requestId]))},requests:[...(extra?.key===queryKey?extra.requests:[]),res.meta.requestId] });
+      setExtra({ key: queryKey, meals: [...(extra?.key === queryKey ? extra.meals : []), ...res.data], nextCursor: res.page.nextCursor,proofs:{...(extra?.key===queryKey?extra.proofs:{}),...Object.fromEntries(res.data.map(m=>[m.id,res.meta.requestId]))},requests:[...(extra?.key===queryKey?extra.requests:[]),res.meta.requestId],cursors:{...(extra?.key===queryKey?extra.cursors:{}),...Object.fromEntries(res.data.map(m=>[m.id,nextCursor]))} });
     } catch (e) {
       setMoreError(errorMessage(e));
     }
@@ -129,7 +145,7 @@ export function DiscoverPage() {
       <div className="list-content">
         {view==='map'&&<>
           <GoogleMap label="Meal map" points={meals.flatMap(m=>m.venue.location?[{id:m.id,title:m.title,location:m.venue.location}]:[])} selected={selectedMeal} onSelect={setSelectedMeal} appliedBounds={applied.bounds} onSearch={bounds=>apply({...applied,bounds})}/>
-          {selected&&<ObservedMeal key={selected.id} meal={selected} requestId={proofFor(selected.id)}><MealCard meal={selected} compact/></ObservedMeal>}
+          {selected&&<ObservedMeal key={selected.id} meal={selected} requestId={proofFor(selected.id)}><MealCard meal={selected} compact backTo={detailReturn(selected.id)}/></ObservedMeal>}
           {!!meals.length&&meals.some(m=>!m.venue.location)&&<p className="muted">Meals without verified restaurant coordinates remain in the list.</p>}
         </>}
         {results.error && !results.data ? (
@@ -154,7 +170,7 @@ export function DiscoverPage() {
               </>
             )}
             {view === 'list' && <div className="section-heading"><h2>A seat for you</h2><span>{meals.length} meals</span></div>}
-            {shown.map((m) => <ObservedMeal key={m.id} meal={m} requestId={proofFor(m.id)}><MealCard meal={m} compact /></ObservedMeal>)}
+            {shown.map((m) => <ObservedMeal key={m.id} meal={m} requestId={proofFor(m.id)}><MealCard meal={m} compact backTo={detailReturn(m.id)} /></ObservedMeal>)}
             {!meals.length && (
               <div className="empty">
                 <MagnifyingGlassIcon />

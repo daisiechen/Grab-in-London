@@ -1,3 +1,4 @@
+import {mealReturn} from '../discover/returnContext.ts';
 import { useState } from 'react';
 import { useRenderedEvent } from '../../api/telemetry.tsx';
 import {useLocation,useParams} from 'react-router';
@@ -19,7 +20,7 @@ export function PublicProfilePage() {
   const source:unknown=useLocation().state;
   const candidate=source&&typeof source==='object'&&'backTo'in source?source.backTo:null;
   const backTo=typeof candidate==='string'&&/^\/meals\/[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(candidate)?candidate:'/discover';
-  const mealBackTo=source&&typeof source==='object'&&'mealBackTo'in source&&source.mealBackTo==='/meals?section=HOSTING'?'/meals?section=HOSTING':'/discover';
+  const mealBackTo=mealReturn(source&&typeof source==='object'&&'mealBackTo'in source?source.mealBackTo:null);
   const { api } = useApi();
   const viewer = useSignedIn();
   const q = useQuery<ProfileData>(`profile:${userId}`, async (c) => (await c.call('getPublicProfile', { params: { userId } })).data);

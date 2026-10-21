@@ -405,3 +405,10 @@
 - 原R168重跑先红，最终两文件冻结；root完整API/check/Python验证后单独提交。命名锁更改不声称旧新程序混跑期间绝对配额，发布时应统一协议版本。
 - F31真实浏览器HTTP合成授权页被生产HTTPS保护正确拒绝，先前HTTPsmoke不等同完整浏览器取消通过。只读未见现有可信本机TLS/tunnel，未读key/安装trust/外网暴露；保API/组件证据，浏览器段待执行，不放宽HTTPS检查。
 - 根冻结API178及core:check、自有文档结构3项通过（/private/tmp/fancy-f32-{api,check,documentation}.log）。全Python77两项QA证据并行更新一致性失败（probe hash/报告184与187状态快照未同步），原fancy-f32-python.log保留；不改QA证据或冒全绿。root持串行窗口，仅OTP两文件与本记录提交，独测需用实际锁等待调度在正式SHA复验并保R168原红。
+
+## QA-F33 发现页详情返回上下文（2026-10-21）
+
+- QA B15/R171真实/Discover languages=en→详情Back丢筛选，默认硬Discover。仅Discover/Card/Detail/Profile及小型returnContext白名单helper+自有测试六文件：内部/discover规范filters/view/area/selected UUID，Hosting精确来源优先/默认不变，未知参数剥离/外部路径与hash拒绝，不存供应商展示数据。
+- 每张后续页card只记录app-owned来源签名cursor，返回同canonicalfilters取对应页且仍含selected才恢复；cursor无效/权限变或已无该meal仅一次首屏回退，最多2请求，不单取getMeal造card绕筛选。离线/503保原错误，来源页nextCursor继续Showmore；应用新筛选清区域/选择/cursor。签名权威仍在API，不将客户端形状校验当授权。
+- 原首批list/areas两红保留，修后自有14+原Discover9+F17来源12共35相关回归通过。根全Web/admin297、Web生产构建、core:check及Python77全部通过（/private/tmp/fancy-f33-{clients,build,check,python}.log）。后端/原生未改，沿用最近已验证层，不冒称本批重跑。
+- QA b19bf59冻结原证据后明确释放root窗口，本切片六文件+本记录独立提交，不混研究；正式SHA交QA固定版本真实浏览器筛选/区域/卡片及后续页返回复验，开发不抢先关闭F33或完整旅程。

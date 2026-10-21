@@ -1,3 +1,4 @@
+import {mealReturn} from '../discover/returnContext.ts';
 import { Link,useLocation,useParams } from 'react-router';
 import { useRenderedEvent } from '../../api/telemetry.tsx';
 import { ArrowRightIcon, CalendarIcon, ChatBubbleIcon, ExternalLinkIcon, InfoCircledIcon, PersonIcon, SewingPinIcon } from '@radix-ui/react-icons';
@@ -19,7 +20,7 @@ import {
 export function MealDetailPage() {
   const { mealId = '' } = useParams();
   const source:unknown=useLocation().state;
-  const backTo=source&&typeof source==='object'&&'backTo'in source&&source.backTo==='/meals?section=HOSTING'?'/meals?section=HOSTING':'/discover';
+  const backTo=mealReturn(source&&typeof source==='object'&&'backTo'in source?source.backTo:null);
   const profileSource={backTo:`/meals/${mealId}`,mealBackTo:backTo};
   const signedIn = useSignedIn();
   const q = useQuery<MealDetail>(`meal:${mealId}:${signedIn?.user.id ?? 'guest'}`, async (c) => (await c.call('getMeal', { params: { mealId } })).data);
