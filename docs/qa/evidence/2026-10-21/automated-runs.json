@@ -12349,6 +12349,89 @@
           "durationMs": 6.965832999999975
         }
       ]
+    },
+    {
+      "id": "R66",
+      "testedCommit": "a1120ae7fa2747f6aa1489ad538a0cb28d5a5555",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-provider-lock.api.test.ts",
+      "startedAt": "2026-10-21T13:46:07.459000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R66-T001",
+          "run": "R66",
+          "path": "scripts/qa-independent-provider-lock.api.test.ts",
+          "title": "QA-F12 delayed restaurant provider during an edit does not hold the meal lock on another connection",
+          "status": "failed",
+          "durationMs": 103.27608399999997,
+          "failureSummary": "AssertionError: expected '55P03' to be 'ACQUIRED' // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "R67",
+      "testedCommit": "a1120ae7fa2747f6aa1489ad538a0cb28d5a5555 + concurrent F12 candidate (QA fixture cleanup regression only)",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-availability.api.test.ts",
+      "startedAt": "2026-10-21T13:47:35.680000+00:00",
+      "exitCode": 0,
+      "passed": 6,
+      "failed": 0,
+      "total": 6,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R67-T001",
+          "run": "R67",
+          "path": "scripts/qa-independent-ai-availability.api.test.ts",
+          "title": "QA-AI-043 none does not dispatch and leaves business and preference deletion usable",
+          "status": "passed",
+          "durationMs": 348.54475
+        },
+        {
+          "id": "R67-T002",
+          "run": "R67",
+          "path": "scripts/qa-independent-ai-availability.api.test.ts",
+          "title": "QA-AI-043 missing-day does not dispatch and leaves business and preference deletion usable",
+          "status": "passed",
+          "durationMs": 237.38633399999992
+        },
+        {
+          "id": "R67-T003",
+          "run": "R67",
+          "path": "scripts/qa-independent-ai-availability.api.test.ts",
+          "title": "QA-AI-043 missing-month does not dispatch and leaves business and preference deletion usable",
+          "status": "passed",
+          "durationMs": 224.61404100000004
+        },
+        {
+          "id": "R67-T004",
+          "run": "R67",
+          "path": "scripts/qa-independent-ai-availability.api.test.ts",
+          "title": "QA-AI-043 missing-call-cap does not dispatch and leaves business and preference deletion usable",
+          "status": "passed",
+          "durationMs": 226.91204199999993
+        },
+        {
+          "id": "R67-T005",
+          "run": "R67",
+          "path": "scripts/qa-independent-ai-availability.api.test.ts",
+          "title": "QA-AI-043 disabled-budget does not dispatch and leaves business and preference deletion usable",
+          "status": "passed",
+          "durationMs": 221.13091599999984
+        },
+        {
+          "id": "R67-T006",
+          "run": "R67",
+          "path": "scripts/qa-independent-ai-availability.api.test.ts",
+          "title": "QA-AI-027 disabled provider still lets only the owner read/delete preferences and retains submitted meal",
+          "status": "passed",
+          "durationMs": 227.80475
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -12377,7 +12460,7 @@
     "scripts/qa-independent-logout.api.test.ts": "d8d9a10e85f0b2e4458c50bda8567aacb83b7248baafe3da41ca0b617dd6f413",
     "scripts/qa-independent-start-boundary.api.test.ts": "898d3b13a3371901024a724d94c11587364e23b69d026b8ecb114613e543ff63",
     "scripts/qa-independent-single-consent.api.test.ts": "4628c470beb0da63f4d8a3a7e3a77421398a31f72f6cd1b808aed35a120a4401",
-    "scripts/qa-independent-ai-availability.api.test.ts": "f209a10f0aaf9bdfb9c13377aa3c32df191f8bd21b4d832c23d9d9844afcb7fd",
+    "scripts/qa-independent-ai-availability.api.test.ts": "b582a2c76334686985827aab6df41a90b3bea5c02ba8361001b8bf8767ad5103",
     "scripts/qa-independent-guest-quota.api.test.ts": "f5fb3657f33e89eb3edc1864b1776d1222c8c51c1f8ec702a668a6d2bd018bb9",
     "scripts/qa-independent-london-quota.api.test.ts": "a10b8fd693e443478808da252cd8ec423956a8769353f031d2cc1a64282930b6",
     "scripts/qa-independent-ai-crash.api.test.ts": "906bed2171239dcde79c7c50ad1c446e3f3746b5fd2ae898924dc5155dbe14a3",
@@ -12390,7 +12473,8 @@
     "scripts/qa-independent-snapshot-race.api.test.ts": "2f71df1295860e2dfcc2df39890c6f9ba1f4c7627877573cff175b2b2334102a",
     "apps/admin/src/state/qa-independent-revocation.unit.test.tsx": "e2999aca140d3f9bdb9f2f88319e44a1e9c99884da300a701967d05f74c01c09",
     "scripts/qa-independent-ai-group-permissions.api.test.ts": "67ded17c812c8d5fa85aebdeb3c0849e7691b7b4a81900c9cfd4df6f5631638f",
-    "scripts/qa-independent-ai-hostile.api.test.ts": "4583366343408eab5952f0dc8e1b333376a65c4a01a484fdf87943133f9d5234"
+    "scripts/qa-independent-ai-hostile.api.test.ts": "4583366343408eab5952f0dc8e1b333376a65c4a01a484fdf87943133f9d5234",
+    "scripts/qa-independent-provider-lock.api.test.ts": "e5bc76e651eccec34cb774662a0c78b2b6f95b39130242ae16faf7a4c95aac87"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console.",
   "runtimeSnapshotVerification": {
@@ -12459,6 +12543,7 @@
     "R49 initial NEW/reset request omitted contract-required explicit idempotency intent key and returned422 before quota assertions. Added required UUID header; quota and source/CSRF assertions unchanged. Fixed guest expiry validated as exactly24h in DB; expiry path advanced by changing only synthetic credential expires_at to past, not waiting24h. This verifies refresh/NEW cannot renew it but cookie clearing can create a fresh quota subject, an explicit known bypass boundary.",
     "R56 initial DIRECT assertion used GROUP read-only wording (QA fixture mismatch), and current-metadata test unconditionally returned stale canSend=true. R57 uses the correct group/direct wording and current canSend projection; allows repeated HISTORY reads but forbids LIVE after HISTORY. Original R56 failures retained. R59 adds a separate controlled deferred response captured before revocation and released only after403/HISTORY: this still fails, independently proving the stale-metadata race rather than discarding it as fixture error.",
     "R64 initial fast multi-stage setup hit the guest one-second write-burst limiter before the final send (429 rather than authorization403); clears only that synthetic actor write-burst row immediately before the authorization probe, retaining all durable messages/quota. Stranger send correctly conceals an unknown conversation with404, not403; expectation aligned to established route contract, still asserts no message. No production code or permission assertion weakened.",
-    "R65 copied helper imported unused describe (lint corrected). Initial four hidden-group setup failures omitted required messages.created_at; added clock_timestamp and completed JOIN/membership/message sequence before final execution. No production assertions weakened. R65 verifies each rejected malformed output still increments both active daily/monthly used money by exactly20 times actual provider-call count, rather than merely seeing a KNOWN row."
+    "R65 copied helper imported unused describe (lint corrected). Initial four hidden-group setup failures omitted required messages.created_at; added clock_timestamp and completed JOIN/membership/message sequence before final execution. No production assertions weakened. R65 verifies each rejected malformed output still increments both active daily/monthly used money by exactly20 times actual provider-call count, rather than merely seeing a KNOWN row.",
+    "R67 QA-only cleanup: createHarness.close captures the original app, so a rebuilt disabled-config app also needs explicit close before original close/drop. Corrected wrapper and six availability assertions still pass. This stops its own lifecycle timer before pool drop; no production assertion changed. Concurrent F12 candidate files are explicitly not treated as accepted by this run."
   ]
 }

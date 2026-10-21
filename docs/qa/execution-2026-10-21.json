@@ -15,9 +15,10 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 94,
+    "NOT_RUN": 93,
     "PASS": 111,
-    "BLOCKED": 12
+    "BLOCKED": 12,
+    "FAIL": 1
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
@@ -14954,8 +14955,10 @@
       "priority": "P0",
       "plannedStage": "review",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "R66-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T242",
         "R1-T243",
@@ -15020,15 +15023,19 @@
         "R1-T566",
         "R1-T567",
         "R1-T568",
-        "R1-T569"
+        "R1-T569",
+        "R66-T001"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "固定user→meal→pair→conversation→AI→privacy最终锁",
-        "网络不在长事务",
-        "拿锁后DB时钟"
+        "固定user→meal→pair→conversation→AI→privacy最终锁（全写命令审阅尚未完成）",
+        "网络不在长事务（已复现餐厅提供方等待时持有meal行锁）",
+        "拿锁后DB时钟（全写命令审阅尚未完成）"
       ],
-      "actual": "本地生产实现尚需实际执行：审阅所有写命令/删除/支持/AI提交 → 注入反向加锁与provider延迟。尚缺逐项证据：固定user→meal→pair→conversation→AI→privacy最终锁；网络不在长事务；拿锁后DB时钟。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "R66独立实际HTTP/PG故障注入：无成员饭局PATCH description，控制Places.details挂起；第二真实连接SELECT同meal FOR UPDATE NOWAIT得55P03，而要求可取得锁。释放提供方后PATCH200，证明业务输入合法但等待外部依赖期间持有meal锁。源码editArrangement在lockMeal及DB时钟后await venues.details；publish也在业务事务内等待，但未外推为已动态证实持meal锁。登记QA-F12 S2/P1。其余全写命令锁顺序/时钟审阅仍缺，不因局部修复自动给本条PASS。",
+      "defectIds": [
+        "QA-F12"
+      ]
     },
     {
       "id": "QA-CODE-004",
@@ -21771,7 +21778,8 @@
     "QA-F08": "CLOSED_TARGETED_QA",
     "QA-F09": "CLOSED_TARGETED_QA",
     "QA-F10": "CLOSED_TARGETED_QA",
-    "QA-F11": "CLOSED_TARGETED_QA"
+    "QA-F11": "CLOSED_TARGETED_QA",
+    "QA-F12": "OPEN"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
