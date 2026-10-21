@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 134,
-    "PASS": 71,
+    "NOT_RUN": 131,
+    "PASS": 74,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -4061,8 +4061,14 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R18-T003",
+        "R18-T004",
+        "R18-T005",
+        "R21-T001",
+        "R21-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T150",
         "R1-T151",
@@ -4115,15 +4121,20 @@
         "R2-T037",
         "R18-T003",
         "R18-T004",
-        "R18-T005"
+        "R18-T005",
+        "R18-T003",
+        "R18-T004",
+        "R18-T005",
+        "R21-T001",
+        "R21-T002"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "前两者排除",
-        "后者保留资格",
-        "删除不抹他人名单"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "R18三项独立PG探针已验证LEFT恰好start−1ms/start时排除、start+1ms保留，host及另一guest不受影响；置该guest DELETING重算名单不抹他人。完整删除worker执行后的名单保留仍未证实，保持NOT_RUN。"
+      "remainingExpected": [],
+      "actual": "组合独立证据：R18分别LEFT start−1ms/0/+1ms重建名单为排除/排除/保留；R21实际HTTP删除及本地worker清理后历史席位/封存名单/出席完整保留，不抹他人资格。外部供应商未完成不影响本地历史事实断言。"
     },
     {
       "id": "QA-DB-011",
@@ -6232,8 +6243,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R21-T004",
+        "R21-T005"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T162",
         "R1-T163",
@@ -6255,15 +6269,17 @@
         "R1-T506",
         "R1-T536",
         "R1-T537",
-        "R1-T538"
+        "R1-T538",
+        "R21-T004",
+        "R21-T005"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "202前撤全部session/公开资料/联系",
-        "未来host取消、成员退出、pending撤回",
-        "提交后无新业务写"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "真实HTTP删除202后未来host场取消、成员退席、pending撤回，全部活跃session撤销、mutual consent撤销及公开资料404。真实PG用户锁中先排队删除再消息/审批，两者拒绝且无新消息或批准席位；身份/餐厅为test适配器。"
     },
     {
       "id": "QA-PRIVACY-003",
@@ -6294,7 +6310,8 @@
         "R1-T506",
         "R1-T536",
         "R1-T537",
-        "R1-T538"
+        "R1-T538",
+        "R21-T003"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -6302,7 +6319,7 @@
         "已撤session仍可凭receipt查最小状态",
         "token不在URL/log"
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "actual": "R21-T003真实DB trigger注入删除事务500，用户/epoch/饭局/receipt及session整体rollback；移除注入后重试202并丢弃响应，以预存receipt无session查最小3字段。token不在响应和调用URL。test logger为silent，生产日志脱敏仍需捕获验证，保留NOT_RUN。"
     },
     {
       "id": "QA-PRIVACY-004",
@@ -6310,8 +6327,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R21-T001",
+        "R21-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T162",
         "R1-T163",
@@ -6333,14 +6353,16 @@
         "R1-T506",
         "R1-T536",
         "R1-T537",
-        "R1-T538"
+        "R1-T538",
+        "R21-T001",
+        "R21-T002"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "不抹他人出席/业务成团",
-        "仅删除者身份及贡献按政策清理"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "开始后分别删除host/guest：真实HTTP受理再运行本地purge，席位/已封名单/双方出席原行不变，场仍OPEN不虚假取消；删除者消息正文脱敏/资料删除，另一人资料与消息保持。远端Unavailable，receipt诚实NEEDS_SUPPORT，不冒称最终完成。"
     },
     {
       "id": "QA-PRIVACY-005",
@@ -21214,7 +21236,8 @@
       }
     ],
     "initialDocumentationFailure": "新增浏览器证据未直接列入docs/README.md；补索引后69项通过，未删除或降低断言。",
-    "remoteCI": "f27c17d远端CI run39567618348失败：load退出时lifecycle sweep仍在途。开发5a37fdc修复后QA独立R19关闭顺序unit与R20真实PG load均退出0，无未处理异常；新远端CI尚待实际结果，不能称已绿。"
+    "remoteCI": "f27c17d run39567618348失败历史保留；5a37fdc修复后独立R19/R20通过。QA通过GitHub只读API核实bf297d9 run39568947238 completed/success（https://github.com/daisiechen/Grab-in-London/actions/runs/39568947238）；5a37fdc自身run被后续push取消，不算通过。",
+    "claudeCrossReview": "开发会话报告Claude只读审查至bf297d9，无写入和测试复现；6项静态发现待开发验证筛选，非6项已复现缺陷，不构成Claude动态测试或完整交叉签收。"
   },
   "lastTargetedCommit": "0518d45f89a392c716debc87ba9e23b27d26b5e2",
   "defectStatus": {

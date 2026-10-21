@@ -8061,6 +8061,59 @@
           "durationMs": 478.56879200000003
         }
       ]
+    },
+    {
+      "id": "R21",
+      "testedCommit": "bf297d9bfae50274b6f292cbaafd15fe2d40c4d7",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-deletion.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-deletion-complete.json",
+      "startedAt": "2026-10-21T08:29:13.678000+00:00",
+      "exitCode": 0,
+      "passed": 5,
+      "failed": 0,
+      "total": 5,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R21-T001",
+          "run": "R21",
+          "path": "scripts/qa-independent-deletion.api.test.ts",
+          "title": "independent deletion end-to-end local boundary QA-PRIVACY-004 deleting started HOST preserves shared facts through actual local purge",
+          "status": "passed",
+          "durationMs": 152.982125
+        },
+        {
+          "id": "R21-T002",
+          "run": "R21",
+          "path": "scripts/qa-independent-deletion.api.test.ts",
+          "title": "independent deletion end-to-end local boundary QA-PRIVACY-004 deleting started GUEST preserves shared facts through actual local purge",
+          "status": "passed",
+          "durationMs": 21.520208000000025
+        },
+        {
+          "id": "R21-T003",
+          "run": "R21",
+          "path": "scripts/qa-independent-deletion.api.test.ts",
+          "title": "independent deletion end-to-end local boundary QA-PRIVACY-003 transaction failure rolls back barrier and receipt; retry survives discarded response",
+          "status": "passed",
+          "durationMs": 41.38479200000006
+        },
+        {
+          "id": "R21-T004",
+          "run": "R21",
+          "path": "scripts/qa-independent-deletion.api.test.ts",
+          "title": "independent deletion end-to-end local boundary QA-PRIVACY-002 deletion commits future host cancel member exit and pending withdrawal before response",
+          "status": "passed",
+          "durationMs": 46.867500000000064
+        },
+        {
+          "id": "R21-T005",
+          "run": "R21",
+          "path": "scripts/qa-independent-deletion.api.test.ts",
+          "title": "independent deletion user-lock queue QA-PRIVACY-002 queued deletion wins over later message and approval and revokes mutual contacts",
+          "status": "passed",
+          "durationMs": 39.974583999999936
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -8073,7 +8126,8 @@
     "scripts/qa-independent-reauth.api.test.ts": "ad5695f82a87bc7a565081bc9f1590225cb0427c1087d594df86e365803bc027",
     "scripts/qa-independent-reauth-boundary.api.test.ts": "4e81f45d1d77c294b7d43c457c796900c1318d1e0d7d682bea839b2c6e35839c",
     "scripts/qa-independent-report.api.test.ts": "8cfd630617d7e3ae17bf6f60e88b9f7361f111c2d1063fab85c663383a667580",
-    "scripts/qa-independent-lifecycle.api.test.ts": "b2b53564813bdb53df5f490b261be9805636fc7bf3072d500e139bb35b2e1b22"
+    "scripts/qa-independent-lifecycle.api.test.ts": "b2b53564813bdb53df5f490b261be9805636fc7bf3072d500e139bb35b2e1b22",
+    "scripts/qa-independent-deletion.api.test.ts": "f5b80d51aa793891640c5d96e623d3638693a32b13eebaa7ad21e21394a72750"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。",
   "runtimeSnapshotVerification": {
@@ -8103,6 +8157,10 @@
     {
       "run": "R19",
       "detail": "首次误选--project api执行.unit.test.ts，0测试exit1；不计证据。改为unit实际1项通过。R20实际PG负载测试退出0且无未处理错误；不代表远端CI已通过。"
+    },
+    {
+      "run": "R21",
+      "detail": "首4项通过。并发夹具先在饭前调用互选被正确拒绝，改为饭后合法窗口；FOR UPDATE holder会先阻断幂等FK的KEY SHARE，改为NO KEY UPDATE后实际观察删除业务UPDATE锁等待，再启动消息/审批，最终5项通过。均为QA前置修正，未放宽产品断言。日志在test环境silent，未将其算生产日志脱敏证据。"
     }
   ]
 }
