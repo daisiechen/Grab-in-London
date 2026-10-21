@@ -368,3 +368,10 @@
 - 页面与完整eligible统计分开：统计独立批次500遍历、同DB readNow与请求RAM provider缓存，复用原投影/资格/筛选，不拿截断页当全体数量；仍不写business_events或meal物理状态。不扩myMeals/供应商架构。
 - 自有原红首批应空却返回501；修后新3+原meals9/analytics1共13API绿，根原独测probe1绿（/private/tmp/fancy-f27-original.log）。覆盖同毫秒微秒游标、满页不跳行、exact500空终页、筛选篡改、统计完整501；根首轮API165绿/1失败来自新增微秒夹具未同步scheduled_end违反meals_check2，原日志fancy-f27-api.log保留，修正合法fixture并冻结后完整重跑，不改生产约束。
 - 最终冻结根API166、core:check、scope lint及Python77通过（/private/tmp/fancy-f27-{api-frozen,check,python}.log），原probe1绿。QA明确释放Git窗口，仅routes、新自有测试与本记录提交；F24–26独立复验仍由QA决定，不提前改结论。其他核心层及客户端未改，沿用最近已验证结果，不重复声称本批重跑。
+
+## QA-F28 CSV测试数据来源标识（2026-10-21）
+
+- QA原R152确认snapshot/asOf/filterHash/定义版和隐私字段正确，但fixture CSV无合成标志。仅CSV增加服务端白名单dataSource/environment；任何已验证test/fixture/outbox_test/mock适配器标synthetic_fixture，真实production为production，其余non_production，不把staging真实数据谎称合成，disabled AI不误判。
+- 不接受客户端source，不导出adapter名称/Key/原配置，不改导出隐私与快照绑定。来源标识说明当前服务端环境，未声称新增逐行历史数据血缘系统。自有真实PG修前一红/三绿，修后5unit/4API及原ADMIN004探针绿；根整合验证后仅exports模块三文件与本记录提交，QA及研究文件保留。
+- 原生官方headless XCUITest已实际exit0：隔离设备Decline→Discover→Profile→登录→邮箱输入精确回显，入口/private/tmp/fancy-xcui-probe/ENTRY.md，binary来自冻结5b且hash匹配，不冒新SHA完整旅程。新跨端19d受控时钟API61973/origin localhost5177已交QA，旧5b证据保留；正式匹配19d binary另用独立DerivedData构建中，不覆盖QA设备状态。
+- 根unit301/API166/原QA metrics矩阵13及core:check全部通过（/private/tmp/fancy-f28-{unit,api,original,check}.log）。全Python77有两项QA快照一致性失败（probe已改/报告R142等仍更新中），原日志fancy-f28-python.log保留；自有文档结构/引用验证单独通过fancy-f28-documentation.log，不改QA证据或声称全77通过。QA明确让root先提交此生产切片、其批收束后自行再验证。

@@ -16,6 +16,13 @@ const TTL_MS=15*60_000;
 type Page=keyof typeof ADMIN_PAGE_KEYS;
 type ExportBody=Static<OperationById<'adminExport'>['body']>;
 
+/** Provenance comes only from validated server configuration, never export input. */
+export function exportProvenance(config:Pick<AppDeps['config'],'environment'|'adapters'>):{environment:AppDeps['config']['environment'];dataSource:'synthetic_fixture'|'production'|'non_production'}{
+  const a=config.adapters;
+  const synthetic=a.AUTH_ADAPTER==='test'||a.PLACES_ADAPTER==='fixture'||a.MAIL_ADAPTER==='outbox_test'||a.AI_PROVIDER==='mock';
+  return {environment:config.environment,dataSource:synthetic?'synthetic_fixture':config.environment==='production'?'production':'non_production'};
+}
+
 /** RFC4180 quoting and spreadsheet formula suppression apply to every string cell. */
 export function csvCell(value:unknown):string{
   let text=value===null||value===undefined?'':String(value);
@@ -62,7 +69,8 @@ export function registerExportRoutes(app:FastifyInstance,deps:AppDeps){
     // Uses exactly the same filter canonicalizer and sealed source facts as the visible page.
     const loaded=await loadAdminSnapshot(deps.pool,query);
     const report={snapshot:loaded.snapshot,filterHash:loaded.filterHash,...loaded.calculated.summaries[page]};
-    const rows:unknown[][]=[['snapshotId',report.snapshot.id],['asOf',report.snapshot.asOf],['filters',JSON.stringify(canonicalFilters(query))],['filterHash',report.filterHash],['definitionVersion',report.snapshot.definitionVersion],[],['metric','value','numerator','denominator']];
+    const provenance=exportProvenance(deps.config);
+    const rows:unknown[][]=[['dataSource',provenance.dataSource],['environment',provenance.environment],['snapshotId',report.snapshot.id],['asOf',report.snapshot.asOf],['filters',JSON.stringify(canonicalFilters(query))],['filterHash',report.filterHash],['definitionVersion',report.snapshot.definitionVersion],[],['metric','value','numerator','denominator']];
     if(body.metric.startsWith('summary.')){
       // Do not silently omit unsupported page metrics in an apparently complete summary.
       for(const [key,value] of Object.entries(report.metrics))rows.push(metricRow(key,value,key in loaded.calculated.rows));

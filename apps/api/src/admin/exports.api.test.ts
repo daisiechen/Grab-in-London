@@ -25,6 +25,7 @@ describe('private short-lived CSV exports',()=>{
   const result=await create(a.b,id,'formation',filters,key);expect(result.statusCode,result.body).toBe(201);
   const ticket=json(result).data;expect(json(await create(a.b,id,'formation',filters,key)).data).toEqual(ticket);
   const csv=await a.b.request('GET',`/v1/admin/exports/${ticket.exportId}`);expect(csv.statusCode,csv.body).toBe(200);
+  expect(csv.body).toContain('"dataSource","synthetic_fixture"');expect(csv.body).toContain('"environment","test"');
   expect(csv.headers['content-type']).toContain('text/csv');expect(csv.headers['cache-control']).toBe('private, no-store');
   const page=await readAdminPage(h.db.pool,'supply',{snapshotId:id,...filters});
   expect(csv.body).toContain(`"snapshotId","${id}"`);expect(csv.body).toContain(`"filterHash","${page.filterHash}"`);expect(csv.body).toContain('"formation","","0","0"');
