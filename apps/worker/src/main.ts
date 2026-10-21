@@ -1,9 +1,11 @@
+import {admitResendDispatch} from '../../api/src/mail/receipts.ts';
 import {recoveryReady} from '../../api/src/recovery/replay.ts';
-import {randomUUID} from 'node:crypto';
+import {randomUUID,createHmac} from 'node:crypto';
 import {loadConfig,type CoreConfig} from '@fancy/config';
 import {createPool,type Pool} from '@fancy/db';
 import {sealSourceSnapshot} from '../../api/src/admin/snapshots.ts';
-import {UnavailableDeletionSteps} from './deletion/provider.ts';
+import {UnavailableDeletionStep,type DeletionSteps} from './deletion/provider.ts';
+import {Auth0DeletionStep} from './deletion/auth0.ts';
 import {deletionHandler} from './handlers/deletion.ts';
 import {lifecycleHandler} from './handlers/lifecycle.ts';
 import {mailDelivery,logMailDead,UnavailableMailProvider,type MailProvider} from './mail/delivery.ts';
@@ -11,9 +13,17 @@ import {ResendMailProvider} from './mail/resend-provider.ts';
 import {createRunner,idle} from './runner/runner.ts';
 
 /** Configuration selection never performs I/O; absent credentials remain fail-closed. */
-export function mailProviderFor(config:CoreConfig):MailProvider {
- if(config.adapters.MAIL_ADAPTER==='provider'&&config.resend)return new ResendMailProvider({...config.resend,webOrigin:config.webOrigin});
+export function mailProviderFor(config:CoreConfig,pool?:Pool):MailProvider {
+ if(config.adapters.MAIL_ADAPTER==='provider'&&config.resend)return new ResendMailProvider({...config.resend,webOrigin:config.webOrigin,onDispatch:(input)=>pool?admitResendDispatch(pool,{...input,payloadSha256:createHmac('sha256',config.sessionSecret).update(input.payloadSha256).digest('hex')}):Promise.resolve(false)});
  return new UnavailableMailProvider();
+}
+
+export function deletionStepsFor(pool:Pool,config:CoreConfig):DeletionSteps{
+ return {auth0:config.adapters.AUTH_ADAPTER==='auth0'&&config.auth0Management?new Auth0DeletionStep(pool,config.auth0Management):new UnavailableDeletionStep(),apple:new UnavailableDeletionStep()};
+}
+/** Explicit operator declaration, independent of credentials; this does not certify policy content. */
+export function deletionPolicyApproved(config:CoreConfig):boolean{
+ return !!config.privacyPolicyVersion&&config.retentionPolicy?.accountDeletionApproved===true;
 }
 
 /** One runtime owns job leases; external integrations remain unavailable until configured. */
@@ -21,9 +31,9 @@ export function createWorkerRuntime(pool:Pool,config:CoreConfig){
  const lifecycle=lifecycleHandler(pool);
  const runner=createRunner({pool,owner:`fancy-worker:${randomUUID()}`,handlers:{
   'meal.close':lifecycle,'meal.start':lifecycle,'meal.end':lifecycle,
-  'account.purge':deletionHandler(pool,new UnavailableDeletionSteps()),
+  'account.purge':deletionHandler(pool,deletionStepsFor(pool,config),deletionPolicyApproved(config)),
  },onDead:(job,errorCode)=>console.error(JSON.stringify({event:'job_dead',...job,errorCode}))});
- const mail=mailDelivery(pool,mailProviderFor(config),config.environment,{onDead:logMailDead});
+ const mail=mailDelivery(pool,mailProviderFor(config,pool),config.environment,{onDead:logMailDead});
  let lastSnapshot=0;
  async function tick(){
   if(!await recoveryReady(pool))return {claimed:0,done:0,retried:0,dead:0,lost:0};

@@ -508,3 +508,12 @@
 - 新管理配置两键须配对且domain受限，值不回显；缺配保不可用。Apple独立Unavailable，缺APPLE行/空grant/404都不是从未Apple授权的证明；保本地identity到真正remote与policy完成，不标完整删除已通过。另新增可选RESEND_WEBHOOK_SECRET严格canonical有界Svix配置，未配置不启webhook，配置存在不当作真实回调通过。
 - 自有Auth010unit+新2/原5真实PG回归17项及类型/lint通过；覆盖精确归属、token生命周期/权限、丢DELETE响应后重启幂等404恢复/Apple仍Support。全批根core:check、unit360、DB135、API195、release23、Web/Adminbuild全部绿（/private/tmp/fancy-providers-f42-{check,core,webbuild,adminbuild}.log）。原生F42另280项绿，未重跑未改Web组件层，不冒全端真实验收。
 - 只检查私有配置键是否存在：当前Management两键、Resend webhook secret、AI bundle与policy声明仍未保存，真实操作待对应配置/人工批准，账号已具备不等同这些新增最小权限设置已完成。没有读取/输出值，没有真实管理API删除或发信。
+
+
+## Resend签名回执与UNKNOWN持久恢复
+
+- 新0024迁移/Drizzle列一致：供应商消息一对一outbox映射、dispatch admission/HMAC指纹与仅有限事件ID/type/hash/times回执，不存raw/email/body。Worker当前claim/未过期lease才可登记发送尝试并外呼，失效/失败zero fetch；标记本身不是wire已发生证明，结合受验回执才认定供应商结果。
+- 发信tag仅outbox_id UUID；独立封装raw-body parser只作用/v1/webhooks/resend，Svix原始bytes HMAC/timingSafeEqual/单一headers/±5分钟签名attempt时间、有限body与事件/UUID严格验证；缺配置不注册，不削弱普通API JSON/Origin/身份校验。svix-id同hash幂等、异hash/跨outbox providerID冲突拒；乱序delivered/bounced独立记录，仅email.sent升SENT。
+- 回执与outbox状态同事务清claim/lease，先于send响应或UNKNOWN查询返回的旧writer无权覆写；24h/8次转DEAD后晚到的权威sent仍可纠正为SENT，保原死信原因/告警，delivered/bounced先到DEAD不复活发送。没有事件/404/lookup timeout仍不能NOT_SENT或自动重发UNKNOWN。
+- Root main给持久请求指纹加sessionSecret HMAC而非可直接字典比对的email请求SHA；rotation下旧marker不匹配保持UNKNOWN/拒重发，不宣称匿名化或永久保留批准。另将独立Management适配实际注入deletion steps，Apple仍不可用；保显式policy版本+accountDeletionApproved声明gate，缺配不完成删除。
+- 独立新增17API/30unit/20DB含callback早到/HTTP丢响应、lease排队过期、晚DEAD/乱序、schema parity通过；根最终core:check/unit360/DB135/API195/release23及Web/Adminbuild绿见同批日志。未给现QA或真实联调库apply迁移、未发真实邮件/配置外部webhook。真实收件、签名来源及bounce联调仍待部署/secret/明确测试发信授权，不冒集成闭环。

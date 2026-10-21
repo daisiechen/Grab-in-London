@@ -1,3 +1,4 @@
+import {registerResendWebhook} from '../mail/webhook.ts';
 import { recoveryReady } from '../recovery/replay.ts';
 import { registerProfileRoutes } from '../profiles/routes.ts';
 import { registerSurveyRoutes } from '../surveys/routes.ts';
@@ -83,6 +84,7 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   registerAdminRoutes(app, deps);
   registerExportRoutes(app, deps);
   registerAnalyticsIngest(app, deps);
+  registerResendWebhook(app,deps);
   registerSupportRoutes(app, deps);
   const assistant = new AssistantController({ allowedAreas: [], ...deps.assistant, pool: deps.pool, sessions: new SessionService(deps.pool, deps.assistantRuntime), secret: deps.config.sessionSecret,
     venueDisplay:async venueRef=>{

@@ -9,7 +9,7 @@ describe('Resend sending-only production transport',()=>{
   const fetcher=vi.fn<typeof fetch>(async()=>Response.json({id})),provider=new ResendMailProvider({...options,fetch:fetcher});
   expect(provider.kind).toBe('real');expect(await provider.send(input)).toEqual({status:'SENT',providerId:id});expect(fetcher).toHaveBeenCalledTimes(1);
   const [url,init]=fetcher.mock.calls[0]!;expect(url).toBe('https://api.resend.com/emails');expect(init?.method).toBe('POST');expect(init?.redirect).toBe('error');expect(init?.headers).toMatchObject({'Idempotency-Key':id});
-  const body=JSON.parse(String(init?.body));expect(body.to).toEqual([input.email]);expect(body.subject).toBe('Your Fancy application was approved');expect(body.text).toContain('https://fancy.example/meals/'+mealId);expect(body).not.toHaveProperty('reply_to');
+  const body=JSON.parse(String(init?.body));expect(body.to).toEqual([input.email]);expect(body.tags).toEqual([{name:'outbox_id',value:id}]);expect(JSON.stringify(body.tags)).not.toContain(input.email);expect(body.subject).toBe('Your Fancy application was approved');expect(body.text).toContain('https://fancy.example/meals/'+mealId);expect(body).not.toHaveProperty('reply_to');
   await provider.send(input);expect(fetcher.mock.calls[1]![1]?.body).toBe(init?.body);expect(fetcher.mock.calls[1]![1]?.headers).toEqual(init?.headers);
  });
  it('does not call any API or infer NOT_SENT for an unknown lookup',async()=>{
@@ -42,4 +42,12 @@ describe('Resend sending-only production transport',()=>{
   expect(()=>new ResendMailProvider({...options,apiKey:''})).toThrow('Invalid mail provider configuration');
   expect(()=>new ResendMailProvider({...options,webOrigin:'http://127.0.0.1:5174'})).not.toThrow();
  });
+});
+it('requires current claim admission when configured and excludes the fencing token from provider data',async()=>{
+ const fetcher=vi.fn<typeof fetch>(async()=>Response.json({id})),claimToken='dcb0544f-16c3-4342-a8b0-ef909159ddee';
+ for(const onDispatch of [vi.fn(async()=>false),vi.fn(async()=>{throw Error('PRIVATE_ADMISSION_FAULT');})]){
+  const provider=new ResendMailProvider({...options,fetch:fetcher,onDispatch});expect(await provider.send({...input,claimToken})).toEqual({status:'UNKNOWN'});
+ }
+ expect(fetcher).not.toHaveBeenCalled();const admission=vi.fn(async()=>true),provider=new ResendMailProvider({...options,fetch:fetcher,onDispatch:admission});expect(await provider.send(input)).toEqual({status:'UNKNOWN'});expect(admission).not.toHaveBeenCalled();
+ expect((await provider.send({...input,claimToken})).status).toBe('SENT');expect(admission).toHaveBeenCalledWith({outboxId:id,claimToken,payloadSha256:expect.stringMatching(/^[0-9a-f]{64}$/)});expect(JSON.stringify(fetcher.mock.calls)).not.toContain(claimToken);
 });

@@ -3,7 +3,7 @@ import type {Pool} from 'pg';
 export type DeliveryOutcome={status:'SENT';providerId:string}|{status:'UNKNOWN'}|{status:'RETRY'};
 export interface MailProvider {
  kind:'test'|'real'|'unavailable';
- send(input:{idempotencyKey:string;email:string;template:string;refs:Record<string,string>}):Promise<DeliveryOutcome>;
+ send(input:{idempotencyKey:string;email:string;template:string;refs:Record<string,string>;claimToken?:string}):Promise<DeliveryOutcome>;
  /** NOT_SENT is only valid with provider-authoritative proof, never a lookup timeout/not-found. */
  lookup(idempotencyKey:string):Promise<DeliveryOutcome|{status:'NOT_SENT'}>;
 }
@@ -53,7 +53,7 @@ export function mailDelivery(pool:Pool,provider:MailProvider,environment:'develo
    }else{
     const {rows:[contact]}=await pool.query<{email:string}>(`SELECT c.email FROM private_contact c JOIN users u ON u.id=c.user_id WHERE c.user_id=$1 AND u.status='ACTIVE'`,[row.recipient_id]);
     if(!contact){await markDead(row.id,token,'RECIPIENT_UNAVAILABLE');continue;}
-    try{outcome=await provider.send({idempotencyKey:row.id,email:contact.email,template:row.template,refs:row.payload});}catch{outcome={status:'UNKNOWN'};}
+    try{outcome=await provider.send({idempotencyKey:row.id,email:contact.email,template:row.template,refs:row.payload,claimToken:row.claim_token});}catch{outcome={status:'UNKNOWN'};}
    }
    const status=outcome.status==='SENT'?'SENT':outcome.status==='UNKNOWN'?'UNKNOWN':outcome.status==='NOT_SENT'?'PENDING':'FAILED';
    await pool.query(`UPDATE outbox SET status=$3,provider_id=$4,claim_token=NULL,lease_until=NULL,updated_at=clock_timestamp(),next_attempt_at=clock_timestamp()+make_interval(secs=>$5),last_error_code=$6 WHERE id=$1 AND claim_token=$2`,[row.id,token,status,outcome.status==='SENT'?outcome.providerId:null,Math.min(3600,30*2**Math.max(row.attempts,row.lookup_attempts)),status==='SENT'?null:status==='UNKNOWN'?'PROVIDER_UNKNOWN_OUTCOME':'PROVIDER_UNAVAILABLE']);

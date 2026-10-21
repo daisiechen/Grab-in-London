@@ -15,3 +15,4 @@ export * from './post-meal.ts';
 export * from './deletions.ts';
 export * from './exports.ts';
 export * from './admin-snapshots.ts';
+export * from './mail-receipts.ts';

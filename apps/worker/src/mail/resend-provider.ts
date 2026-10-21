@@ -1,3 +1,4 @@
+import {createHash} from 'node:crypto';
 import type {DeliveryOutcome,MailProvider} from './delivery.ts';
 
 interface ResendOptions {
@@ -7,6 +8,7 @@ interface ResendOptions {
  webOrigin:string;
  fetch?:typeof fetch;
  timeoutMs?:number;
+ onDispatch?:(input:{outboxId:string;claimToken:string;payloadSha256:string})=>Promise<boolean>;
 }
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const REF_KEYS=new Set(['mealId','applicationId','conversationId','deletionId']);
@@ -41,7 +43,11 @@ export class ResendMailProvider implements MailProvider {
   if(!template||!UUID.test(input.idempotencyKey)||typeof input.email!=='string'||input.email.length>320||!/^[^\s@<>]+@[^\s@<>]+$/.test(input.email)||Object.entries(input.refs).some(([key,value])=>!REF_KEYS.has(key)||typeof value!=='string'||!UUID.test(value)))return {status:'RETRY'};
   const path=template.deletion?'/settings/deletion':input.refs.mealId?'/meals/'+input.refs.mealId:'/inbox';
   const link=new URL(path,this.origin).href;
-  const body=JSON.stringify({from:this.options.from,to:[input.email],subject:template.subject,text:template.message+'\n\n'+link,html:'<p>'+escapeHtml(template.message)+'</p><p><a href="'+escapeHtml(link)+'">Open Fancy</a></p>'});
+  const body=JSON.stringify({from:this.options.from,to:[input.email],subject:template.subject,tags:[{name:'outbox_id',value:input.idempotencyKey}],text:template.message+'\n\n'+link,html:'<p>'+escapeHtml(template.message)+'</p><p><a href="'+escapeHtml(link)+'">Open Fancy</a></p>'});
+  if(this.options.onDispatch){
+   if(!input.claimToken||!UUID.test(input.claimToken))return {status:'UNKNOWN'};
+   try{if(!await this.options.onDispatch({outboxId:input.idempotencyKey,claimToken:input.claimToken,payloadSha256:createHash('sha256').update(body).digest('hex')}))return {status:'UNKNOWN'};}catch{return {status:'UNKNOWN'};}
+  }
   let response:Response;
   try{response=await this.doFetch('https://api.resend.com/emails',{method:'POST',redirect:'error',headers:{Authorization:'Bearer '+this.options.apiKey,'Content-Type':'application/json','Idempotency-Key':input.idempotencyKey},body,signal:AbortSignal.timeout(this.options.timeoutMs??10000)});}catch{return {status:'UNKNOWN'};}
   // A response rejecting admission is retryable by the existing bounded delivery policy.
