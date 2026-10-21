@@ -15,9 +15,9 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 163,
+    "NOT_RUN": 165,
     "PASS": 40,
-    "BLOCKED": 14
+    "BLOCKED": 12
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
@@ -6200,7 +6200,7 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "BLOCKED",
+      "status": "NOT_RUN",
       "evidence": [],
       "relatedAutomatedAssertions": [
         "R1-T162",
@@ -6230,7 +6230,15 @@
         "回执显示PROCESSING/NEEDS_SUPPORT而非COMPLETED",
         "步骤幂等且不影响他人数据"
       ],
-      "actual": "本地仅受控adapter，没有真实供应商删除流程及失败回执环境。"
+      "actual": "纠正分类：Auth0/Apple撤销失败与重试可用受控provider失效注入验证，不必先拿真实账号；原外部阻塞理由过宽。改为NOT_RUN，开发补可重复失败/恢复夹具，QA验证回执不假完成、幂等和不影响他人；真实供应商联调另属G-AUTH/G-PRIVACY。",
+      "history": [
+        {
+          "status": "BLOCKED",
+          "actual": "本地仅受控adapter，没有真实供应商删除流程及失败回执环境。",
+          "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        }
+      ],
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
     },
     {
       "id": "QA-PRIVACY-008",
@@ -6238,7 +6246,7 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "BLOCKED",
+      "status": "NOT_RUN",
       "evidence": [],
       "relatedAutomatedAssertions": [
         "R1-T162",
@@ -6269,7 +6277,15 @@
         "撤销导出/身份不复活",
         "有恢复时间和最小审计"
       ],
-      "actual": "没有隔离的备份恢复演练环境；单元测试不证明恢复后删除台账先于流量。"
+      "actual": "纠正分类：可在可销毁本地PG恢复旧备份并重放删除台账，未准备隔离演练不应笼统归为用户外部依赖。改为NOT_RUN，开发准备恢复/ready屏障及演练入口，QA独立检验身份/导出不复活、时长及审计；线上恢复另属G-HOST。",
+      "history": [
+        {
+          "status": "BLOCKED",
+          "actual": "没有隔离的备份恢复演练环境；单元测试不证明恢复后删除台账先于流量。",
+          "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        }
+      ],
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
     },
     {
       "id": "QA-METRIC-001",
@@ -12698,7 +12714,15 @@
         "重装先清旧token",
         "RAM丢失410不从日志恢复，未发字保留"
       ],
-      "actual": "没有可操作的iOS原生安装/重装设备；Jest不能证明Keychain与冷启动。"
+      "actual": "缺少实际iOS安装/重装及Keychain冷启动证据。先由开发确认可用模拟器/设备与工具链；可先测install-marker逻辑。既有Xcode许可/签名需用户操作时按原授权跳过，不能用Jest代替原生验收。",
+      "history": [
+        {
+          "status": "BLOCKED",
+          "actual": "没有可操作的iOS原生安装/重装设备；Jest不能证明Keychain与冷启动。",
+          "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        }
+      ],
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
     },
     {
       "id": "QA-AI-035",
@@ -14630,7 +14654,15 @@
         "真实提供方有效及PKCE/回调/身份映射证据",
         "模拟按钮/Expo Go不能替代"
       ],
-      "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。"
+      "actual": "缺真实EMAIL/Google/Apple身份提供方、回调/PKCE及映射联调证据。开发先核对已有配置及本地回调测试，只有确实缺账号/域名配置/凭据时列明用户操作；不发真实身份请求替代授权。",
+      "history": [
+        {
+          "status": "BLOCKED",
+          "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。",
+          "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        }
+      ],
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
     },
     {
       "id": "QA-GATE-002",
@@ -14647,7 +14679,15 @@
         "地址坐标服务端验证",
         "Google地图/照片署名、许可表及缓存符合已批准配置"
       ],
-      "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。"
+      "actual": "缺真实Google Places/地图key与Map ID配置下的placeId、坐标、署名和许可验收证据。开发先做适配及失效/缺配置回退测试，并列出真实配置依赖。",
+      "history": [
+        {
+          "status": "BLOCKED",
+          "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。",
+          "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        }
+      ],
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
     },
     {
       "id": "QA-GATE-003",
@@ -14664,7 +14704,15 @@
         "实际收件箱可追踪去重",
         "provider accepted不能单独通过"
       ],
-      "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。"
+      "actual": "缺真实邮件提供方与收件箱接收、去重及渠道矩阵证据。本地outbox/失败恢复可继续测；开发核对发送域/提供方和可用测试收件箱，缺账号配置才列用户依赖。",
+      "history": [
+        {
+          "status": "BLOCKED",
+          "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。",
+          "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        }
+      ],
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
     },
     {
       "id": "QA-GATE-004",
@@ -14680,7 +14728,15 @@
         "原生证据包含构建号/OS/设备",
         "WebView或DOM测试不能充当iOS完成"
       ],
-      "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。"
+      "actual": "缺原生iOS构建号/OS/设备的双端实际路径证据。开发先核对可用工具链和原生构建准备；Xcode许可、Apple/Expo签名与设备操作按原需用户范围列明，Jest不关闭此门槛。",
+      "history": [
+        {
+          "status": "BLOCKED",
+          "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。",
+          "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        }
+      ],
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
     },
     {
       "id": "QA-GATE-005",
@@ -14696,7 +14752,15 @@
         "有责任人批准及实际执行证据",
         "无凭据/生产原文进公开仓库"
       ],
-      "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。"
+      "actual": "缺保留期限、备份和供应商删除政策的批准及真实执行证据。故障注入和本地删除屏障不需政策批准可先测；开发整理待批准政策差异与真实适配缺口，不笼统等待。",
+      "history": [
+        {
+          "status": "BLOCKED",
+          "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。",
+          "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        }
+      ],
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
     },
     {
       "id": "QA-GATE-006",
@@ -14712,7 +14776,15 @@
         "记录p95/错误率/worker延迟及实测RPO/RTO对比24h/4h设计目标",
         "API1副本Recreate无重叠，旧AI410保未发字"
       ],
-      "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。"
+      "actual": "缺目标部署环境下100并发/1000账号/10000消息负载、恢复及Recreate无重叠证据。开发可先提供隔离本机负载/恢复演练和配置检查；原睡前指示仅授权首尔只读，不能擅自安装部署。",
+      "history": [
+        {
+          "status": "BLOCKED",
+          "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。",
+          "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        }
+      ],
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
     },
     {
       "id": "QA-GATE-007",
@@ -14730,7 +14802,15 @@
         "P95≤10秒、30秒终结",
         "保留逐样本实际偏差"
       ],
-      "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。"
+      "actual": "缺DeepSeek真实模型样本、零容忍、人工可用率及延迟评测证据。开发可先完成固定样本集/评测脚本；真实调用须已安全配置Key、核实model/价格并守人民币50月上限。",
+      "history": [
+        {
+          "status": "BLOCKED",
+          "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。",
+          "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        }
+      ],
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
     },
     {
       "id": "QA-GATE-008",
@@ -14747,7 +14827,15 @@
         "第三方边界有明确批准",
         "未闭合不向真实用户开放"
       ],
-      "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。"
+      "actual": "缺DeepSeek账户地区/留存和第三方数据边界的核实与批准。开发先核对官方资料/参数差异，不能继承OpenAI store:false或把该参数当零留存凭据；账户/政策批准事项单列。",
+      "history": [
+        {
+          "status": "BLOCKED",
+          "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。",
+          "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        }
+      ],
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
     },
     {
       "id": "QA-GATE-009",
@@ -14765,7 +14853,15 @@
         "未批准金额保持关闭",
         "最终CNY等值不超过人民币50/月；不是域名/签名/其他云资源或自动充值授权"
       ],
-      "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。"
+      "actual": "缺真实usage/账单与call账本对照证据。并发人民币50预留已有本地通过证据；开发可预备对账脚本，真实账单必须来自已批准配置，不扩大金额或开自动充值。",
+      "history": [
+        {
+          "status": "BLOCKED",
+          "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。",
+          "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        }
+      ],
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
     },
     {
       "id": "QA-JOURNEY-001",
@@ -20548,7 +20644,15 @@
         "不静默沿用旧供应商model/参数或留存声明",
         "全量原质量/延迟/零容忍门槛保持；真实可用性未测则G-AI-MODEL未关闭"
       ],
-      "actual": "DeepSeek真实样本评测与延迟门槛尚未执行；mock响应仅证明本地适配边界。"
+      "actual": "与G-AI-MODEL重叠的DeepSeek替换准入用例，缺真实样本/质量/延迟证据，并非独立第14个故障；本地适配、失效关闭和固定样本准备先行。",
+      "history": [
+        {
+          "status": "BLOCKED",
+          "actual": "DeepSeek真实样本评测与延迟门槛尚未执行；mock响应仅证明本地适配边界。",
+          "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        }
+      ],
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
     },
     {
       "id": "QA-AI-051",
@@ -20794,7 +20898,15 @@
         "只用已验证适配参数；不支持能力显式阻塞/ADR替代",
         "不能继承其他供应商数据承诺或用无效参数关闭G-AI-DATA"
       ],
-      "actual": "供应商参数、留存及数据政策需要真实适配核验与批准；没有继承其他供应商承诺。"
+      "actual": "本地可先测DeepSeek响应schema、拒答、usage、token上限及无效参数，不应全部等待真实Key；账户地区/留存核实和G-AI-DATA批准证据仍缺，由开发明确可执行部分与外部依赖。",
+      "history": [
+        {
+          "status": "BLOCKED",
+          "actual": "供应商参数、留存及数据政策需要真实适配核验与批准；没有继承其他供应商承诺。",
+          "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        }
+      ],
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
     }
   ],
   "deliveryValidation": {
@@ -20823,5 +20935,6 @@
     "status": "remaining_local_execution_in_progress",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
     "latestFeedback": "QA-F01 targeted fix verified; original complete journey remains unexecuted; no release pass"
-  }
+  },
+  "blockerTriage": "原14条是重叠的用例/门槛，不是14个已复现缺陷；2条本地可测项改为NOT_RUN，其余12逐条细化缺失证据与可先做部分，已直接交开发落实。"
 }
