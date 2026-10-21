@@ -105,3 +105,29 @@ export使用0600且拒绝覆盖；只导出ID、接受时刻和回执hash，不�
 输出p95、错误率和观测到的worker延迟；这里不是持续压测或生产SLO证明。24小时RPO/4小时RTO目标仍须真实备份频率、独立台账持久化和首尔恢复计时验证。
 
 CI备份工具使用同一个固定PG17服务镜像生成pg_dump/pg_restore wrapper（`infra/scripts/ci-pg-clients.sh`），不假定host有PG17客户端。依据[GitHub Ubuntu runner清单](https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md)，其host预装版本不能直接等同本项目PG17。wrapper只适用于Linux CI的host网络和/tmp共享，已做参数/空格路径回归；真实CI结果仍单独核查。
+
+## 固定时钟的本地生命周期验收
+
+仅用于另起的空合成库，不接已有或外部数据库。启动前先停止旧 rig（会销毁旧库）；旧截图可保留，但必须在新 clock rig 重新创建并审批同一场饭局，再完成其后续旅程。时钟模式同时要求显式本地开关、时钟开关和本次新建空 `fancy_test_*` 库，拒绝 `FANCY_TEST_DATABASE_URL`，也拒绝 production/staging 环境。
+
+```sh
+source infra/dev-env.sh
+fancy_clock_start=$(node -e 'console.log(new Date(Date.now()+5*60*1000).toISOString())')
+FANCY_LOCAL_ACCEPTANCE=1 FANCY_LOCAL_CLOCK=1 FANCY_LOCAL_CLOCK_START="$fancy_clock_start" FANCY_LOCAL_STAFF_FIXTURE=1 node infra/local-acceptance.ts
+```
+
+起点须晚于本次启动的真实时间、且不超过未来30天（避免迁移已写的 coverage 元数据倒序）；上述命令选未来5分钟。饭局的截止和开始时间均应在该起点之后。Node 和本 rig 全部数据库池连接（包括 worker）固定在该 instant；真实等待不会使业务时间前进。所有已有 timestamp DEFAULT 在**该临时库**内改指 fixture clock，源码迁移不变；运行时代码的 `clock_timestamp()` 与快照 `transaction_timestamp()` 经过同一固定值，额外覆盖 `now()`/`statement_timestamp()`。已核运行 SQL 无 `CURRENT_TIMESTAMP`/`CURRENT_DATE` 特殊语法依赖；不宣称任意未来 SQL 都会自动兼容。
+
+在运行 API 的终端输入一行严格 JSON，UTC、固定三位毫秒，不附其它字段：
+
+```json
+{"advanceTo":"2026-10-24T16:59:59.999Z"}
+```
+
+示例日期须替换为**实际饭局响应中的 UTC closesAt/startsAt/scheduledEndAt**，不要把 London local time 当 UTC，跨夏令时尤其如此。只允许严格向前，且距起点不超过30天；无效命令会显示 `COMMAND REJECTED; current=...`，不会改变时刻。每次推进先阻止新 HTTP 并排空在途请求，停止并等待当前 worker tick，再提交数据库时刻、更新 Node、执行一批 due jobs（本次同步最多10个 job），最后恢复 worker 和 HTTP。clock marker 只证明时刻已推进，不保证整个队列处理完成；恢复后的 worker 会继续轮询处理。QA 必须轮询目标饭局的 lifecycle 状态、start roster 和饭后 window，直到对应检查点的预期状态成立，再采集证据；不能仅等待固定秒数或看到 marker 就认定全部完成。若 drain/worker/数据库失败，保持入口关闭并输出 `STOPPED; current=...; reset required`，不会误称未推进；此时应停止并重新创建空 rig，不能继续复用不确定状态。
+
+建议检查点为截止前1毫秒/恰好截止、开始前1毫秒/恰好开始、结束前1毫秒/恰好结束。每一步确认终端 clock marker，再刷新页面并记录同一个 meal ID；饭局、席位事件和 job 的业务时间不被改写。结束后通过原 UI 申报出席、评分、互评、互选。正常会话期限不延长：Web 7天 idle/30天 absolute，跨越期限会真实返回401，应重新用 OTP 登录；OTP重发窗口及短期票据同样不会因真实等待自动恢复。
+
+**固定时钟也固定生产限流窗口。** 写入仍为10次/秒 burst、60次/分钟；Inbox/消息轮询仍为每账号每资源40次/分钟。真实浏览器轮询一段时间后可能429，等待真实一分钟不会恢复。远离生命周期边界时，可按终端指令推进1秒或60秒进入新窗口后继续；恰好边界前停止无关页面轮询，只进行少量必要请求，然后推进下一检查点。不要关闭、调高或清空生产限流。
+
+浏览器本身保持真实时钟。本模式只证明由服务端返回的 meal 状态、roster、饭后 window 和权限路径；浏览器本地倒计时、OTP倒计时、客户端日期校验、AI TTL/后台独立扫除器不算本轮通过。`setTimeout`、worker轮询和超时计时仍为真实时间；AI无可用模型端口，也不把它当作可控生命周期集成。正常退出会恢复本进程 Date 并清理临时数据库；主机时钟、生产代码、真实服务均不更改。

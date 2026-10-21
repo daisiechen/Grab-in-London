@@ -280,3 +280,12 @@
 - 创建发布、编辑保存及无改动确认返回详情时，携带精确Hosting来源；详情只接受该精确来源，其他来源保持原Discover默认。Host头像/姓名进入公开资料仅传原meal路径及已验证父级；资料页只接受严格UUID饭局路径，Back还原原详情及其Hosting来源。外部地址/任意路径/尾缀参数等拒绝，PageHeader仅加可选透传state属性，不造通用导航框架、不存供应商信息。
 - 自有12路由测试修前5红/7来源白名单fallback绿，修后12绿；相关create/meals/profile五文件43项通过（含QA条款原探针不改），类型/lint/build通过。仅六个生产/自有测试文件及本记录另批提交；F16已aa52dc8独立提交同步，F16/F17正式关闭仍由QA固定SHA复验决定。
 - 根Web/后台274项、core:check、Web生产构建及Python71通过，日志/private/tmp/fancy-f17-{clients,check,build,python}.log。后端与原生无改动，沿用最近已验证结果，不声称本切片重跑无关层。QA独占文件及研究修改均保留。
+
+## 本地固定时钟生命周期验收入口（2026-10-21）
+
+- QA B6已在真实时钟浏览器完成申请/批准与首guest锁安排，但未来饭局无法立即验收截止/开始/结束/出席。既有rig无时钟钩子，不能单独改DB时刻或改业务日期冒完整旅程；另起空合成库重新走同一场全过程，保留旧B6现场证据。
+- 入口显式要求本地模式+clock开关及本次新建loopback fancy_test_*空库，拒外部DB、production/staging和过去起点。只在该临时库安装时钟函数并重绑迁移已有timestamp DEFAULT，全部API/worker pool及本进程Node Date使用同一固定instant；原迁移/生产代码/主机时钟/业务日期/会话TTL不改，显式Date解析与真实timer/performance不改。
+- stdin仅接受单调、有限范围的严格UTC JSON；阻新HTTP、排空在途、停止并等待worker后才推进DB/Node并处理一批due jobs，失败保持入口关闭并报告实际时刻要求重置。非法输入不推进。退出nested finally依次清理app、时钟pool、临时DB及PG，恢复进程Date；migration失败也尝试停止PG。
+- 负责人真实PG/API定向7项通过，根全release18项通过（/private/tmp/fancy-clock-release.log）：四连接/默认值与Node一致、真实timer、drain、推进中途失败、正常会话到期、原40poll限流429后只推进60秒恢复且保留旧桶；生产worker/HTTP同一meal ID走close/start/end的-1ms/exact边界、roster2、双方SELF出席、互选OPEN，最终业务日期原样。
+- 浏览器仍真实钟，此入口只验server主导meal/postmeal/session路径；客户端倒计时/日期校验与独立AI sweep TTL不纳入通过。推进marker不等同所有后台job完成，必须观察目标物化状态；限流窗口冻结时需在安全余量内推进1秒/60秒，不禁用或清桶。命令与限制见infra/README.md，QA正式浏览器复验仍独立执行。
+- 根core:check及Python71通过（/private/tmp/fancy-clock-check.log、fancy-clock-python.log），无生产/客户端修改，不声称本批重跑这些业务层。QA在91cdaf1完成真实钟Web取消席位/独立退群/重新申请批准/历史间隙不可见/解散后只读完整路径，当前132 PASS /73 NOT_RUN /12 BLOCKED，无当前FAIL，并明确释放Git窗口。新clock入口正式提交后另起固定SHA环境，不篡改旧B6现场。

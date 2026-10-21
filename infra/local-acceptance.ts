@@ -1,4 +1,6 @@
 /** Disposable local integration rig. Never deploy this test identity provider. */
+import {createInterface} from 'node:readline';
+import {advanceRigClock,createLocalClock,localClockGate,parseClockCommand,type LocalClock} from './local-clock.ts';
 import type {IdentityProvider} from '../apps/api/src/identity/provider.ts';
 import {randomBytes,randomUUID} from 'node:crypto';
 import {loadConfig} from '../packages/config/src/index.ts';
@@ -41,20 +43,52 @@ export async function seedLocalStaff(app:Awaited<ReturnType<typeof buildServer>>
  // Remove only the consumed bootstrap OTP, so it does not consume the first browser resend window.
  await pool.query(`DELETE FROM auth_transactions WHERE id=$1 AND kind='EMAIL_OTP' AND consumed_at IS NOT NULL`,[start.json().data.challengeId]);
 }
+async function runClockRig(clock:LocalClock,gate:ReturnType<typeof localClockGate>,runtime:ReturnType<typeof createWorkerRuntime>){
+ let stopped=false,abort=new AbortController(),worker=runtime.run(abort.signal),queued=Promise.resolve();
+ let finish!:()=>void;const done=new Promise<void>(resolve=>{finish=resolve;});
+ const watch=()=>{void worker.catch(()=>{stopped=true;gate.block();process.exitCode=1;finish();});};watch();
+ const reader=createInterface({input:process.stdin,terminal:false});
+ const close=()=>{stopped=true;reader.close();finish();};process.once('SIGINT',close);process.once('SIGTERM',close);
+ reader.on('line',line=>{
+  queued=queued.then(async()=>{
+   if(stopped)return;let transition=false;
+   try{
+    const value=parseClockCommand(line);clock.validateAdvanceTo(value);transition=true;
+    await advanceRigClock(clock,gate,{stop:async()=>{abort.abort();await worker;},tick:()=>runtime.tick(),start:()=>{abort=new AbortController();worker=runtime.run(abort.signal);watch();}},value);
+    console.warn(`FIXED LOCAL CLOCK ${clock.now()}`);
+   }catch{
+    if(transition){stopped=true;gate.block();abort.abort();process.exitCode=1;console.warn(`LOCAL CLOCK STOPPED; current=${clock.now()}; reset required`);finish();}
+    else console.warn(`LOCAL CLOCK COMMAND REJECTED; current=${clock.now()}`);
+   }
+  });
+ });
+ try{await done;}finally{stopped=true;reader.close();await queued;abort.abort();await worker.catch(()=>undefined);process.removeListener('SIGINT',close);process.removeListener('SIGTERM',close);}
+}
 async function main(){
  assertLocal(process.env);
- const pg=await startPostgres17(),db=await createMigratedDatabase(pg.url,migrate),stop=new AbortController();
+ if(process.env.FANCY_LOCAL_CLOCK==='1'&&process.env.FANCY_TEST_DATABASE_URL)throw new Error('Clock rig requires a new disposable PostgreSQL cluster');
+ const pg=await startPostgres17();
+ let cleanupDb:Awaited<ReturnType<typeof createMigratedDatabase>>|undefined;
+ let clock:LocalClock|undefined;let app:Awaited<ReturnType<typeof buildServer>>|undefined;
+ try{
+ const db=await createMigratedDatabase(pg.url,migrate);cleanupDb=db;
+ if(process.env.FANCY_LOCAL_CLOCK==='1')clock=await createLocalClock(db,process.env);
+ const pool=clock?.pool??db.pool;
  const config=loadConfig({ENVIRONMENT:'development',DATABASE_URL:db.url,AUTH_ADAPTER:'test',PLACES_ADAPTER:'fixture',MAIL_ADAPTER:'outbox_test',AI_PROVIDER:'mock',WEB_ORIGIN,SESSION_SECRET:randomBytes(32).toString('hex'),IOS_REDIRECT_URI:'fancy://auth/callback'});
  const identity=localFixtureIdentity(process.env);
- const app=await buildServer({config,pool:db.pool,identity,publicOrigin:config.webOrigin});
- try{
-  await seedLocalStaff(app,db.pool,process.env);
+ app=await buildServer({config,pool,identity,publicOrigin:config.webOrigin});
+ const gate=clock?localClockGate(app):undefined;
+  await seedLocalStaff(app,pool,process.env);
   await app.listen({port:3000,host:'127.0.0.1'});
-  const worker=createWorkerRuntime(db.pool,config).run(stop.signal);
-  const close=()=>stop.abort();process.once('SIGINT',close);process.once('SIGTERM',close);
   console.warn('LOCAL FIXTURE ACCEPTANCE ONLY: API 127.0.0.1:3000; Web/Admin serially 127.0.0.1:5174; email code 000000. No real email, maps, identity or AI integration.');
   if(process.env.FANCY_LOCAL_STAFF_FIXTURE==='1')console.warn(`SYNTHETIC STAFF ONLY: ${LOCAL_STAFF_EMAIL}; analyst/data_admin; fixture MFA, not real MFA.`);
-  await worker;
- }finally{await app.close();await db.drop();await pg.stop();}
+  if(clock&&gate){
+   console.warn(`FIXED LOCAL CLOCK ${clock.now()}; stdin: {"advanceTo":"YYYY-MM-DDTHH:mm:ss.sssZ"}. Browser clock remains real.`);
+   await runClockRig(clock,gate,createWorkerRuntime(pool,config));
+  }else{
+   const stop=new AbortController(),close=()=>stop.abort();process.once('SIGINT',close);process.once('SIGTERM',close);
+   try{await createWorkerRuntime(pool,config).run(stop.signal);}finally{process.removeListener('SIGINT',close);process.removeListener('SIGTERM',close);}
+  }
+ }finally{try{await app?.close();}finally{try{await clock?.close();}finally{try{await cleanupDb?.drop();}finally{await pg.stop();}}}}
 }
 if(import.meta.main)await main();
