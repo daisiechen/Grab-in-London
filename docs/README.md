@@ -81,3 +81,5 @@
 - [2026-10-20 App修订与验证](delivery/fancy-app-readiness-2026-10-20.zh-CN.md)：恢复版上的必要局部修订及B-01—B-11映射；不是双端独立复评通过结论。
 
 - [B3固定源码浏览器走查](qa/evidence/2026-10-21/browser-b3.zh-CN.md)、[结构化浏览器观察](qa/evidence/2026-10-21/browser-b3.json)：本地合成身份/餐厅与真实API/PG；[资料门槛](qa/evidence/2026-10-21/b3-profile-confirmation-gate.jpg)、[条款返回](qa/evidence/2026-10-21/b3-terms-return-arrange.jpg)、[发布详情](qa/evidence/2026-10-21/b3-published-meal.jpg)、[公开资料来源](qa/evidence/2026-10-21/b3-public-profile-origin.jpg)。
+
+- [B4认证回流与导航复验](qa/evidence/2026-10-21/browser-b4.zh-CN.md)、[逐项观察](qa/evidence/2026-10-21/browser-b4.json)：[未发稿](qa/evidence/2026-10-21/b4-auth-return-unsent.jpg)、[Pending卡片](qa/evidence/2026-10-21/b4-pending-inbox.jpg)、[条款返回](qa/evidence/2026-10-21/b4-terms-return-fixed.jpg)、[公开资料返回](qa/evidence/2026-10-21/b4-public-profile-origin-fixed.jpg)、[编辑回Hosting](qa/evidence/2026-10-21/b4-edit-hosting-fixed.jpg)、[退出刷新](qa/evidence/2026-10-21/b4-logout-refresh.jpg)。

@@ -15,9 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 79,
-    "PASS": 124,
-    "FAIL": 2,
+    "NOT_RUN": 78,
+    "PASS": 127,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -26,7 +25,9 @@
     "defects": "defects-2026-10-21.zh-CN.md",
     "B2": "evidence/2026-10-21/browser-journey.zh-CN.md",
     "browserObservations": "evidence/2026-10-21/browser-b3.json",
-    "B3": "evidence/2026-10-21/browser-b3.zh-CN.md"
+    "B3": "evidence/2026-10-21/browser-b3.zh-CN.md",
+    "browserObservationsB4": "evidence/2026-10-21/browser-b4.json",
+    "B4": "evidence/2026-10-21/browser-b4.zh-CN.md"
   },
   "cases": [
     {
@@ -36,7 +37,9 @@
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
-      "evidence": [],
+      "evidence": [
+        "B4-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T001",
         "R1-T002",
@@ -139,7 +142,7 @@
         "受限动作进入认证",
         "没有自动申请或创建"
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：Explore tables first → 浏览地图、详情及公开主页 → 分别点Create/Apply/Meals/Inbox。当前仍缺：公开路径可达；受限动作进入认证；没有自动申请或创建。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：Explore tables first → 浏览地图、详情及公开主页 → 分别点Create/Apply/Meals/Inbox。当前仍缺：公开路径可达；受限动作进入认证；没有自动申请或创建。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B4补充实际游客详情→Apply未发草稿→认证→已有账号免补资料回原草稿，明确第二次Send后Pending/Inbox3卡、无自动席位/群。完整剩余预期仍见remainingExpected。"
     },
     {
       "id": "QA-AUTH-002",
@@ -604,8 +607,10 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "B4-T006"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T001",
         "R1-T002",
@@ -702,15 +707,22 @@
         "R2-T166",
         "R2-T167"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "取消保持登录",
-        "确认变游客",
-        "刷新不冒称真实持久登录"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：登录后取消一次Sign out → 再次确认退出 → 刷新。当前仍缺：取消保持登录；确认变游客；刷新不冒称真实持久登录。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。",
+      "remainingExpected": [],
+      "actual": "B4真实IAB两次合成账号：Sign out弹确认，Stay signed in保持原账号；明确确认后回认证页，再reload仍认证页，不恢复离开账号。Web980c8ed/API8387580本地实际session；不是外部IdP持久登录/真实设备声明。",
       "relatedBrowserEvidence": [
         "B1"
+      ],
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：登录后取消一次Sign out → 再次确认退出 → 刷新。当前仍缺：取消保持登录；确认变游客；刷新不冒称真实持久登录。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。",
+          "reason": "R90 and B4 independent formal navigation regression"
+        }
       ]
     },
     {
@@ -3244,11 +3256,12 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": [
-        "B3-T002",
-        "R86-T001",
-        "R87-T001"
+        "B3-T004",
+        "B4-T002",
+        "B4-T005",
+        "R90-T018"
       ],
       "relatedAutomatedAssertions": [
         "R1-T080",
@@ -3298,12 +3311,13 @@
         "R2-T143",
         "R2-T144"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "条款Back to review需回Review而非Arrange",
-        "修后重复返回、显式确认发布及新草稿清空"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "B3真实四步/预算/声明/Review门禁及返回字段保留已走查；进入条款再Back to review实际Step1，QA-F16。独立组件R86/R87同红，未用通过的表单片段覆盖整条。",
+      "remainingExpected": [],
+      "actual": "B3先前真实四步输入和Review未确认拒绝保留；正式Web980c8ed B4原条款返回路径两入口均Step4，false/true确认各自保留、餐厅显示仅RAM且不自动发布。返回安排/介绍/费用原字段不变，成功发布后同账号新Create无餐厅/时间、默认4不复用旧2。R90原QA组件与创建回归30项绿，R86/R87及B3原红保留。API8387580非AI核心未变；无真实外订。",
       "relatedBrowserEvidence": [
         "B1"
       ],
@@ -3312,6 +3326,11 @@
           "status": "NOT_RUN",
           "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：逐步输入 → Review返回Arrange → 取消退出后重开。当前仍缺：返回保持本次输入；未Review确认不能发布；新发布后新草稿不复用旧值。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。",
           "reason": "B3 browser and R86-R89 targeted verification"
+        },
+        {
+          "status": "FAIL",
+          "actual": "B3真实四步/预算/声明/Review门禁及返回字段保留已走查；进入条款再Back to review实际Step1，QA-F16。独立组件R86/R87同红，未用通过的表单片段覆盖整条。",
+          "reason": "R90 and B4 independent formal navigation regression"
         }
       ],
       "defectIds": [
@@ -3324,8 +3343,11 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "B3-T004",
+        "B4-T004"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T080",
         "R1-T081",
@@ -3374,15 +3396,22 @@
         "R2-T143",
         "R2-T144"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "确认未做不可继续",
-        "预算与到店付说明明确",
-        "安排改变旧声明需重做"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：不勾外订确认尝试继续 → 勾选 → 改变人数后检查声明。当前仍缺：确认未做不可继续；预算与到店付说明明确；安排改变旧声明需重做。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。",
+      "remainingExpected": [],
+      "actual": "B3真实UI：倒置预算拒绝，£20–35到店付说明及0应用收费，不勾外订不能继续。B4在已确认4人声明后返回改2人，旧声明清空、文案同步2人、Continue要求重新确认；本人再次明确确认才可进Review。Web980c8ed/API8387580固定快照，无真实订位。",
       "relatedBrowserEvidence": [
         "B1"
+      ],
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：不勾外订确认尝试继续 → 勾选 → 改变人数后检查声明。当前仍缺：确认未做不可继续；预算与到店付说明明确；安排改变旧声明需重做。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。",
+          "reason": "R90 and B4 independent formal navigation regression"
+        }
       ]
     },
     {
@@ -15841,7 +15870,9 @@
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
-      "evidence": [],
+      "evidence": [
+        "B4-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T054",
         "R1-T055",
@@ -16209,7 +16240,7 @@
         "出席才反馈",
         "后台同一事实可追溯"
       ],
-      "actual": "QA-F07在1080993定向修复关闭：R36独立49项含QA自有Google/Apple code-state→core JSON→handoff、错state、JSON LINK_REQUIRED，以及OAuth/email reauth与切账号晚到响应。仅解除iOS登录必要前置失败；原加入者完整Web/iOS跨端后半程及后台同事实核账仍未跑完，保留NOT_RUN。",
+      "actual": "QA-F07在1080993定向修复关闭：R36独立49项含QA自有Google/Apple code-state→core JSON→handoff、错state、JSON LINK_REQUIRED，以及OAuth/email reauth与切账号晚到响应。仅解除iOS登录必要前置失败；原加入者完整Web/iOS跨端后半程及后台同事实核账仍未跑完，保留NOT_RUN。 B4补充实际游客详情→Apply未发草稿→认证→已有账号免补资料回原草稿，明确第二次Send后Pending/Inbox3卡、无自动席位/群。完整剩余预期仍见remainingExpected。",
       "defectIds": [
         "QA-F07"
       ],
@@ -16233,10 +16264,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "NOT_RUN",
       "evidence": [
-        "B3-T003",
-        "B3-T004"
+        "B3-T004",
+        "B4-T003"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -16554,7 +16585,7 @@
         "host报告不压self",
         "不默认所有人出席"
       ],
-      "actual": "B3主持者真实浏览器创建发布成功；但发布后详情Back指向Discover而非Hosting，详情进入host公开页后Back亦丢原meal，QA-F17。审批/成团/出席/结束尚未完成，不授整条PASS。",
+      "actual": "F17正式Web980c8ed B4真实Publish/Edit无修改/改标题均回Hosting，avatar/name公开资料返回原meal和父级，Discover来源不变，R90导航安全回归通过。主持创建发布实际完成但审批/首guest锁安排/host与self出席优先级/完整结束路径仍缺，整条NOT_RUN，不用局部修复授完整路径PASS。",
       "relatedBrowserEvidence": [
         "B1"
       ],
@@ -16563,6 +16594,11 @@
           "status": "NOT_RUN",
           "actual": "浏览器发布/审批/首guest锁安排/餐厅声明stale已验证；host报告和self优先的浏览器后半程未执行。",
           "reason": "B3 browser and R86-R89 targeted verification"
+        },
+        {
+          "status": "FAIL",
+          "actual": "B3主持者真实浏览器创建发布成功；但发布后详情Back指向Discover而非Hosting，详情进入host公开页后Back亦丢原meal，QA-F17。审批/成团/出席/结束尚未完成，不授整条PASS。",
+          "reason": "R90 and B4 independent formal navigation regression"
         }
       ],
       "defectIds": [
@@ -22042,8 +22078,8 @@
     "QA-F13": "CLOSED_TARGETED_QA",
     "QA-F14": "CLOSED_TARGETED_QA",
     "QA-F15": "CLOSED_TARGETED_QA",
-    "QA-F16": "OPEN",
-    "QA-F17": "OPEN"
+    "QA-F16": "CLOSED_TARGETED_QA",
+    "QA-F17": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",

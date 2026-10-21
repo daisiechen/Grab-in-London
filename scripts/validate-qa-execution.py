@@ -27,8 +27,7 @@ def validate(data=None):
             for t in r['assertions']:
                 assert not Path(t['path']).is_absolute() and '..' not in Path(t['path']).parts
                 assert (ROOT/t['path']).is_file(), t['path']
-    browser_path=data.get('evidenceCatalog',{}).get('browserObservations')
-    if browser_path:
+    for browser_path in [v for k,v in data.get('evidenceCatalog',{}).items() if k.startswith('browserObservations')]:
         browser=json.loads((ROOT/'docs/qa'/browser_path).read_text())
         for item in browser['observations']:
             assert item['id'] not in assertions and item['status'] in ('passed','failed')

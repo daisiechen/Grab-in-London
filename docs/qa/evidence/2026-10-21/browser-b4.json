@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "observations": [
+    {
+      "id": "B4-T001",
+      "status": "passed",
+      "title": "Existing account login returns unsent application without auto-submit",
+      "steps": [
+        "Guest types73-character synthetic application then Send enters sign-in",
+        "Existing seeded account OTP000000 returns original Apply with all73characters and Send still explicit",
+        "Only next Send creates Pending; Inbox shows3 pending cards, no group admission"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b4-auth-return-unsent.jpg",
+        "evidence/2026-10-21/b4-pending-inbox.jpg"
+      ],
+      "testedCommit": "980c8edd634bd212a92cfac46d54cf562c8480e4",
+      "environment": "IAB; Web fixed980c8ed archive; API/PG/worker fixed8387580 retained synthetic data. Core meals/profiles/identity/contracts/db/config diff between snapshots empty; F15 server AI change not exercised here. First authentication-return capture preceded frontend switch on8387580, same non-AI authentication code."
+    },
+    {
+      "id": "B4-T002",
+      "status": "passed",
+      "title": "F16 both terms return controls preserve Review and confirmations",
+      "steps": [
+        "At Review confirmation false, cancellation terms then Back to review returns Step4 with restaurant display and all fields",
+        "Tick Review then read terms, header Back returns Step4 checked true",
+        "No autoPublish; subsequent explicit Publish creates meal"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b4-terms-return-fixed.jpg"
+      ],
+      "testedCommit": "980c8edd634bd212a92cfac46d54cf562c8480e4",
+      "environment": "IAB; Web fixed980c8ed archive; API/PG/worker fixed8387580 retained synthetic data. Core meals/profiles/identity/contracts/db/config diff between snapshots empty; F15 server AI change not exercised here. First authentication-return capture preceded frontend switch on8387580, same non-AI authentication code."
+    },
+    {
+      "id": "B4-T003",
+      "status": "passed",
+      "title": "F17 safe navigation origin after publish edit and host profile",
+      "steps": [
+        "Publish points detail Back to /meals?section=HOSTING",
+        "Host avatar and name independently return public profile Back to original meal, then still original Hosting",
+        "Actual Back renders Hosting pressed with new meal",
+        "Edit unchanged and title-only saved both Back Hosting; Discover-opened detail still Back Discover"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b4-public-profile-origin-fixed.jpg",
+        "evidence/2026-10-21/b4-edit-hosting-fixed.jpg"
+      ],
+      "testedCommit": "980c8edd634bd212a92cfac46d54cf562c8480e4",
+      "environment": "IAB; Web fixed980c8ed archive; API/PG/worker fixed8387580 retained synthetic data. Core meals/profiles/identity/contracts/db/config diff between snapshots empty; F15 server AI change not exercised here. First authentication-return capture preceded frontend switch on8387580, same non-AI authentication code."
+    },
+    {
+      "id": "B4-T004",
+      "status": "passed",
+      "title": "Changing capacity invalidates old booking declaration",
+      "steps": [
+        "Budget20/35 and booking confirmed for4",
+        "Return Arrange change4to2, minimum clamps2",
+        "Costs checkbox now2people unchecked; Continue rejects until explicit new confirmation"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b4-terms-return-fixed.jpg"
+      ],
+      "testedCommit": "980c8edd634bd212a92cfac46d54cf562c8480e4",
+      "environment": "IAB; Web fixed980c8ed archive; API/PG/worker fixed8387580 retained synthetic data. Core meals/profiles/identity/contracts/db/config diff between snapshots empty; F15 server AI change not exercised here. First authentication-return capture preceded frontend switch on8387580, same non-AI authentication code."
+    },
+    {
+      "id": "B4-T005",
+      "status": "passed",
+      "title": "New draft after publish does not reuse published arrangement",
+      "steps": [
+        "After successful publish and edit, same account Create again has No restaurant chosen yet",
+        "Time empty and default capacity4 instead of previous2",
+        "R90 also verifies clear draft and confirmation boundary"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b4-edit-hosting-fixed.jpg"
+      ],
+      "testedCommit": "980c8edd634bd212a92cfac46d54cf562c8480e4",
+      "environment": "IAB; Web fixed980c8ed archive; API/PG/worker fixed8387580 retained synthetic data. Core meals/profiles/identity/contracts/db/config diff between snapshots empty; F15 server AI change not exercised here. First authentication-return capture preceded frontend switch on8387580, same non-AI authentication code."
+    },
+    {
+      "id": "B4-T006",
+      "status": "passed",
+      "title": "Cancel logout remains signed in; confirmed logout stays logged out after refresh",
+      "steps": [
+        "Settings Sign out then Stay signed in retains synthetic account email",
+        "Sign out confirmed leads auth entry",
+        "Reload stays auth entry and does not restore departed account"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b4-logout-refresh.jpg"
+      ],
+      "testedCommit": "980c8edd634bd212a92cfac46d54cf562c8480e4",
+      "environment": "IAB; Web fixed980c8ed archive; API/PG/worker fixed8387580 retained synthetic data. Core meals/profiles/identity/contracts/db/config diff between snapshots empty; F15 server AI change not exercised here. First authentication-return capture preceded frontend switch on8387580, same non-AI authentication code."
+    }
+  ]
+}

@@ -14004,6 +14004,259 @@
           "durationMs": 6.407792000000086
         }
       ]
+    },
+    {
+      "id": "R90",
+      "testedCommit": "980c8edd634bd212a92cfac46d54cf562c8480e4",
+      "command": "pnpm exec vitest run --project web apps/web/src/features/create/qa-independent-terms-return.unit.test.tsx apps/web/src/features/create/create.unit.test.tsx apps/web/src/features/meals/source-navigation.unit.test.tsx",
+      "startedAt": "2026-10-21T15:33:04.556000+00:00",
+      "exitCode": 0,
+      "passed": 30,
+      "failed": 0,
+      "total": 30,
+      "suiteFiles": 3,
+      "assertions": [
+        {
+          "id": "R90-T001",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) returns from cancellation terms to the same Review with transient display and unchanged confirmation (false)",
+          "status": "passed",
+          "durationMs": 271.32408399999997
+        },
+        {
+          "id": "R90-T002",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) returns from cancellation terms to the same Review with transient display and unchanged confirmation (true)",
+          "status": "passed",
+          "durationMs": 185.00574999999992
+        },
+        {
+          "id": "R90-T003",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) keeps direct public terms access free of create draft initialization and create API calls",
+          "status": "passed",
+          "durationMs": 7.461583000000019
+        },
+        {
+          "id": "R90-T004",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) converts pounds to integer pence without float maths",
+          "status": "passed",
+          "durationMs": 0.09741699999995035
+        },
+        {
+          "id": "R90-T005",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) defaults the deadline to 60 minutes earlier on the wall clock, across midnight",
+          "status": "passed",
+          "durationMs": 0.15516700000011951
+        },
+        {
+          "id": "R90-T006",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) requires the deadline at least 30 minutes before the meal",
+          "status": "passed",
+          "durationMs": 0.09445800000003146
+        },
+        {
+          "id": "R90-T007",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) never builds a body without both explicit confirmations",
+          "status": "passed",
+          "durationMs": 0.08970899999985704
+        },
+        {
+          "id": "R90-T008",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) maps time errors only by the exact start/close field keys",
+          "status": "passed",
+          "durationMs": 0.06637500000010732
+        },
+        {
+          "id": "R90-T009",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) edit patch contains only changed fields",
+          "status": "passed",
+          "durationMs": 0.11541600000009566
+        },
+        {
+          "id": "R90-T010",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal flow (T07) requires explicit ticks and publishes an external pay-at-venue meal",
+          "status": "passed",
+          "durationMs": 127.11804200000006
+        },
+        {
+          "id": "R90-T011",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal flow (T07) asks BST or GMT for a repeated London time and resubmits as a new intent with that offset",
+          "status": "passed",
+          "durationMs": 110.98787500000003
+        },
+        {
+          "id": "R90-T012",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal flow (T07) applies a BST/GMT choice to the deadline when the server names `close`",
+          "status": "passed",
+          "durationMs": 106.76141600000005
+        },
+        {
+          "id": "R90-T013",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal flow (T07) treats a nonexistent London time as an error and returns to the time step",
+          "status": "passed",
+          "durationMs": 82.28587500000003
+        },
+        {
+          "id": "R90-T014",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal flow (T07) a guest is asked to sign in and the draft is kept",
+          "status": "passed",
+          "durationMs": 5.4067499999998745
+        },
+        {
+          "id": "R90-T015",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal flow (T07) an incomplete profile goes through the gate before publishing, keeping the draft",
+          "status": "passed",
+          "durationMs": 70.59358399999996
+        },
+        {
+          "id": "R90-T016",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "edit meal (T07) shows the permanent lock instead of the form once arrangements are locked",
+          "status": "passed",
+          "durationMs": 6.665166999999883
+        },
+        {
+          "id": "R90-T017",
+          "run": "R90",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "edit meal (T07) PATCHes only the changed fields with If-Match",
+          "status": "passed",
+          "durationMs": 111.30595800000015
+        },
+        {
+          "id": "R90-T018",
+          "run": "R90",
+          "path": "apps/web/src/features/create/qa-independent-terms-return.unit.test.tsx",
+          "title": "QA-F16 Back to review returns to Review with the same unsubmitted draft and no create call",
+          "status": "passed",
+          "durationMs": 173.42058300000008
+        },
+        {
+          "id": "R90-T019",
+          "run": "R90",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation sets the Hosting source after an actual explicit publish flow",
+          "status": "passed",
+          "durationMs": 197.22175000000004
+        },
+        {
+          "id": "R90-T020",
+          "run": "R90",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation sets the Hosting source after editing arrangements (changed=false)",
+          "status": "passed",
+          "durationMs": 39.44633399999998
+        },
+        {
+          "id": "R90-T021",
+          "run": "R90",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation sets the Hosting source after editing arrangements (changed=true)",
+          "status": "passed",
+          "durationMs": 65.12583400000005
+        },
+        {
+          "id": "R90-T022",
+          "run": "R90",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation returns a newly published meal detail to Hosting and retains that source through its host profile",
+          "status": "passed",
+          "durationMs": 49.809625000000096
+        },
+        {
+          "id": "R90-T023",
+          "run": "R90",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation returns an ordinary meal host profile to that meal while keeping the detail Discover fallback",
+          "status": "passed",
+          "durationMs": 43.722834000000034
+        },
+        {
+          "id": "R90-T024",
+          "run": "R90",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation rejects unsupported detail return source https://outside.invalid",
+          "status": "passed",
+          "durationMs": 16.668583000000012
+        },
+        {
+          "id": "R90-T025",
+          "run": "R90",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation rejects unsupported detail return source //outside.invalid",
+          "status": "passed",
+          "durationMs": 15.720166999999947
+        },
+        {
+          "id": "R90-T026",
+          "run": "R90",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation rejects unsupported detail return source /settings/deletion",
+          "status": "passed",
+          "durationMs": 16.561666999999943
+        },
+        {
+          "id": "R90-T027",
+          "run": "R90",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation rejects unsupported detail return source /meals?section=APPLICATIONS",
+          "status": "passed",
+          "durationMs": 16.219708000000082
+        },
+        {
+          "id": "R90-T028",
+          "run": "R90",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation rejects unsupported public-profile return source https://outside.invalid",
+          "status": "passed",
+          "durationMs": 9.786415999999917
+        },
+        {
+          "id": "R90-T029",
+          "run": "R90",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation rejects unsupported public-profile return source /meals/33333333-3333-4333-8333-333333333333?redirect=outside",
+          "status": "passed",
+          "durationMs": 8.546790999999985
+        },
+        {
+          "id": "R90-T030",
+          "run": "R90",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation rejects unsupported public-profile return source /meals/not-a-uuid",
+          "status": "passed",
+          "durationMs": 8.211249999999836
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
