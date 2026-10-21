@@ -102,3 +102,5 @@
 - `core:check`、unit151/DB101/API96/release10、Web+后台211/iOS169（25 suites）、Python64、Web/admin builds均通过；最后原生no-cookie变更单独10API通过。Hermes导出1535modules/约3.3MB成功，不是原生签名安装。详情及本机日志见 [本地自测报告](../docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md)。报告/任务更新后重跑Python文档验证。
 - 本机fixture环境已按最终后端重新启动，API3000与临时PG/worker；入口与固定OTP见运行说明。没有首尔部署或真实供应商调用。独立测试交接将固定最终文档提交SHA，不能把自动化计数视为217条用例全部通过。
 - Claude当前09:10 London限额恢复，已停止原任务自动续写；现有heartbeat保留恢复后只读交叉审查，不重启旧写入任务。等待独测及真实外部门槛，完整任务不批量标done。
+
+- 独测已正式发出并收到确认：被测交接提交 `8ba6fc7c9974cf6be1ac06d8b16e0380fb3beced` 与远端一致。06:41 London「测试- MVP+AI」回复已开始固定版本并按217条用例优先执行权限、并发、隐私、费用与核心路径。报告/缺陷待独立执行，本记录不是独测通过结论。`docs/README.md` 索引所有权交回QA会话；协调负责人继续生产代码修复，避免并行写入。现有heartbeat已更新为跟进独测和09:15 Claude只读交叉检查，不重复启动测试。
