@@ -12,7 +12,7 @@ import { FormMessage } from '../../ui/FormMessage.tsx';
 import { Body, Heading } from '../../ui/Text.tsx';
 import { colors, radius, spacing, type } from '../../ui/tokens.ts';
 import { rememberReturnTo } from '../auth/intent.ts';
-import { applicationLabel } from '../meals/format.ts';
+import { applicationLabel, whenLabel } from '../meals/format.ts';
 
 export type InboxItem = ResponseOf<'inbox'>['data'][number];
 export type Conversation = NonNullable<InboxItem['conversation']>;
@@ -74,7 +74,8 @@ function SignedInInbox() {
               {item.unreadCount ? <Text style={styles.badge}>{`${item.unreadCount} new`}</Text> : null}
             </Pressable>
           ) : (
-            <Pressable accessibilityRole="button" accessibilityLabel={applicationLabel(item.application ?? null)} style={styles.row} onPress={() => item.application && router.push(`/meals/${item.application.mealId}`)}>
+            <Pressable accessibilityRole="button" accessibilityLabel={item.applicationMeal?`${item.applicationMeal.title}, ${whenLabel(item.applicationMeal.startsAt)} London, hosted by ${item.applicationMeal.hostDisplayName}, ${applicationLabel(item.application ?? null)}`:applicationLabel(item.application ?? null)} style={styles.row} onPress={() => item.application && router.push(`/meals/${item.application.mealId}`)}>
+              {item.applicationMeal && <><Text style={styles.title}>{item.applicationMeal.title}</Text><Text style={styles.meta}>{whenLabel(item.applicationMeal.startsAt)} · London</Text><Text style={styles.meta}>Hosted by {item.applicationMeal.hostDisplayName}</Text></>}
               <Text style={styles.title}>{applicationLabel(item.application ?? null)}</Text>
               <Text style={styles.meta}>{item.application?.state === 'PENDING' ? 'Your host reviews each request. A pending request doesn’t hold a seat.' : 'View the meal for details.'}</Text>
             </Pressable>

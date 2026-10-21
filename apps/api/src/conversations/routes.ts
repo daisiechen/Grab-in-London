@@ -8,6 +8,7 @@ import { defineRoute, defineWrite } from '../http/routes.ts';
 import type { AppDeps } from '../http/context.ts';
 import { allocateMessageSeq, dissolveConversation, leaveConversation } from '../membership/intervals.ts';
 import { assertDirectAuthorized, directLockPlan } from '../connections/service.ts';
+import { londonTime } from '../meals/time.ts';
 import { applicationDto } from '../meals/read.ts';
 
 interface ConversationRow { id: string; kind: 'GROUP' | 'DIRECT'; meal_id: string | null; pair_id: string | null; version: string; head: string; dissolved_at: Date | null; title: string | null; host_id: string | null }
@@ -63,7 +64,9 @@ export function registerConversationRoutes(app: FastifyInstance, deps: AppDeps) 
     const data = await Promise.all(page.map(async (item) => {
       if(item.kind==='application'){
         const {rows:[application]}=await deps.pool.query(`SELECT * FROM applications WHERE id=$1 AND user_id=$2`,[item.id,auth!.userId]);
-        return {application:await applicationDto(deps.pool,application,true),lastMessage:null,unreadCount:0};
+        const {rows:[meal]}=await deps.pool.query(`SELECT m.title,m.starts_at,u.status,p.display_name FROM meals m JOIN users u ON u.id=m.host_id LEFT JOIN profiles p ON p.user_id=u.id WHERE m.id=$1`,[application.meal_id]);
+        const applicationMeal={title:meal.status==='ACTIVE'?meal.title:'Meal unavailable',startsAt:londonTime(meal.starts_at),hostDisplayName:meal.status==='ACTIVE'?(meal.display_name??'Fancy member'):'Deleted member'};
+        return {application:await applicationDto(deps.pool,application,true),applicationMeal,lastMessage:null,unreadCount:0};
       }
       const c=await conversation(deps.pool,item.id,auth!.userId);
       const {rows:[current]}=await deps.pool.query(`SELECT EXISTS(SELECT 1 FROM membership_intervals WHERE conversation_id=$1 AND user_id=$2 AND leave_seq IS NULL) AS active`,[c.id,auth!.userId]);

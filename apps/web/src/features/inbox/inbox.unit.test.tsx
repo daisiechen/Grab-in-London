@@ -143,6 +143,20 @@ describe('group chat (T12)', () => {
 });
 
 describe('inbox list (T12)', () => {
+  it('QA-F01 distinguishes two pending meals by title, London time, host and correct application link',async()=>{
+    const first=meal(),second=meal({id:'16161616-1616-4161-8161-161616161616',title:'Saturday brunch'});
+    const s=createFetchStub({getSession:()=>ok(session()),inbox:()=>page([first,second].map((m,index)=>({lastMessage:null,unreadCount:0,application:{id:index?'17171717-1717-4171-8171-171717171717':APPLICATION_ID,mealId:m.id,version:'1',round:1,state:'PENDING',createdAt:'2026-10-20T10:00:00Z',message:'PRIVATE INTRODUCTION'},applicationMeal:{title:m.title,startsAt:{...m.startsAt,localDate:index?'2026-10-24':'2026-10-23',localTime:index?'12:30':'18:00'},hostDisplayName:index?'Emma Hill':'Maya Chen'}})))});
+    renderApp(s.fetch,'/inbox');await screen.findByText('Your table is taking shape.');await userEvent.click(screen.getByRole('tab',{name:'Applications'}));
+    const cards=screen.getAllByRole('article');expect(cards).toHaveLength(2);
+    for(const [index,m] of [first,second].entries()){
+      expect(within(cards[index]!).getByText(m.title)).toBeTruthy();
+      expect(within(cards[index]!).getByText(index?'Sat 24 Oct · 12:30 London time':'Fri 23 Oct · 18:00 London time')).toBeTruthy();
+      expect(within(cards[index]!).getByText(index?'Hosted by Emma Hill':'Hosted by Maya Chen')).toBeTruthy();
+      expect(within(cards[index]!).getByRole('link',{name:'View application'}).getAttribute('href')).toBe(`/meals/${m.id}/apply`);
+    }
+    expect(screen.queryByText('PRIVATE INTRODUCTION')).toBeNull();
+  });
+
   it('shows conversations beyond the first server page', async () => {
     const s = createFetchStub({
       getSession: () => ok(session()),

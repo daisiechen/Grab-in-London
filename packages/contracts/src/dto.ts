@@ -175,6 +175,7 @@ export const Conversation = Obj({
 });
 
 export const InboxItem = Obj({
+  applicationMeal: T.Optional(Obj({ title: T.String({ maxLength: 80 }), startsAt: ZonedTime, hostDisplayName: T.String({ maxLength: 40 }) })),
   conversation: T.Optional(Conversation),
   lastMessage: T.Union([Obj({ seq: DecimalString, preview: T.String({ maxLength: 200 }), createdAt: Instant }), T.Null()]),
   unreadCount: T.Integer({ minimum: 0 }),

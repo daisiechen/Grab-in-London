@@ -36,12 +36,15 @@ describe('InboxScreen', () => {
     await signIn(app, me());
     app.mock.on('GET', '/v1/inbox', page([
       { conversation: conversation(), lastMessage: { seq: '12', preview: 'See you there', createdAt: '2026-10-21T10:00:00Z' }, unreadCount: 2 },
-      { lastMessage: null, unreadCount: 0, application: application() },
+      { lastMessage: null, unreadCount: 0, application: application(),applicationMeal:{title:'Pending dinner table',startsAt:{instant:'2026-10-23T17:00:00Z',localDate:'2026-10-23',localTime:'18:00',timeZone:'Europe/London',utcOffsetMinutes:60},hostDisplayName:'Maya Chen'} },
     ]));
     await renderApp(app, <InboxScreen />);
     expect(await screen.findByRole('button', { name: 'Sunday dinner, 2 unread' })).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole('radio', { name: 'Applications & next steps · 1' }));
-    await fireEvent.press(screen.getByRole('button', { name: 'Application pending' }));
+    expect(screen.getByText('Pending dinner table')).toBeOnTheScreen();
+    expect(screen.getByText(/18:00 BST.*London/)).toBeOnTheScreen();
+    expect(screen.getByText('Hosted by Maya Chen')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: /Pending dinner table,.*hosted by Maya Chen, Application pending/ }));
     expect(mockRouter.push).toHaveBeenCalledWith(`/meals/${MEAL_ID}`);
     expect(app.services.cache.get(conversationKey(CONVERSATION_ID))).toMatchObject({ title: 'Sunday dinner' });
   });

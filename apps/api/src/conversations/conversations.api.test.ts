@@ -61,3 +61,27 @@ describe('conversation interval API', () => {
     expect(json(await read(guest.b,id)).data).toHaveLength(3);
   });
 });
+
+
+describe('QA-F01 application meal summary',()=>{
+ it('returns matching public metadata for two pending meals, masks deleted hosts and does not add private fields',async()=>{
+  const first=await setup(),second=await setup(),applicant=await member();
+  const meals:string[]=[];
+  for(const [index,fixture] of [first,second].entries()){
+   const {rows:[c]}=await h.db.pool.query('SELECT meal_id FROM conversations WHERE id=$1',[fixture.id]);meals.push(c.meal_id);
+   await h.db.pool.query(`UPDATE meals SET title=$2,starts_at=$3::timestamptz,closes_at=$3::timestamptz-interval '1 hour',scheduled_end_at=$3::timestamptz+interval '2 hours',start_local_date=($3::timestamptz AT TIME ZONE 'Europe/London')::date,start_local_time=to_char($3::timestamptz AT TIME ZONE 'Europe/London','HH24:MI'),close_local_date=(($3::timestamptz-interval '1 hour') AT TIME ZONE 'Europe/London')::date,close_local_time=to_char(($3::timestamptz-interval '1 hour') AT TIME ZONE 'Europe/London','HH24:MI') WHERE id=$1`,[c.meal_id,index?'Saturday brunch':'Friday dinner',index?'2030-01-02T12:30:00Z':'2030-01-01T18:00:00Z']);
+   await h.db.pool.query(`INSERT INTO profiles(user_id,display_name) VALUES($1,$2) ON CONFLICT(user_id) DO UPDATE SET display_name=EXCLUDED.display_name`,[fixture.host.id,index?'Emma Hill':'Maya Chen']);
+   await h.db.pool.query(`INSERT INTO applications(meal_id,user_id,round,state,message) VALUES($1,$2,1,'PENDING','Private QA applicant introduction')`,[c.meal_id,applicant.id]);
+  }
+  const response=await applicant.b.request('GET','/v1/inbox');expect(response.statusCode,response.body).toBe(200);
+  const items=json(response).data;expect(items).toHaveLength(2);
+  for(const [index,id] of meals.entries()){
+   const item=items.find((i:{application:{mealId:string}})=>i.application.mealId===id);
+   expect(item.applicationMeal).toMatchObject({title:index?'Saturday brunch':'Friday dinner',hostDisplayName:index?'Emma Hill':'Maya Chen',startsAt:{localTime:index?'12:30':'18:00',timeZone:'Europe/London'}});
+   expect(Object.keys(item.applicationMeal).sort()).toEqual(['hostDisplayName','startsAt','title']);expect(item.conversation).toBeUndefined();
+  }
+  await h.db.pool.query(`UPDATE users SET status='DELETING' WHERE id=$1`,[first.host.id]);
+  const deleted=json(await applicant.b.request('GET','/v1/inbox')).data.find((i:{application:{mealId:string}})=>i.application.mealId===meals[0]);
+  expect(deleted.applicationMeal).toMatchObject({title:'Meal unavailable',hostDisplayName:'Deleted member'});
+ });
+});

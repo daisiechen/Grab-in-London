@@ -8,6 +8,7 @@ import type { InboxItem } from '../../api/conversations.ts';
 import { readInbox } from '../../api/conversations.ts';
 import { signInPath } from '../../lib/returnTo.ts';
 import { FormError, Loading, Primary, PrimaryLink } from '../../ui/components.tsx';
+import { zonedLabel } from '../../lib/format.ts';
 import { applicationLabels } from '../meals/present.ts';
 
 type Tab = 'chats' | 'applications';
@@ -115,6 +116,7 @@ export function InboxPage() {
               const pending = a.state === 'PENDING';
               return (
                 <article className="inbox-progress-card" key={a.id} aria-label={`Application ${applicationLabels[a.state]}`}>
+                  {item.applicationMeal && <><h3>{item.applicationMeal.title}</h3><p>{zonedLabel(item.applicationMeal.startsAt)}</p><p>Hosted by {item.applicationMeal.hostDisplayName}</p></>}
                   <div className="application-track" aria-label={pending ? 'Applied; awaiting host approval; then group chat' : applicationLabels[a.state]}>
                     <span className="done"><CheckIcon />Applied</span>
                     <span className={pending ? '' : 'done'}>{pending ? <PersonIcon /> : <CheckIcon />}Host decision</span>

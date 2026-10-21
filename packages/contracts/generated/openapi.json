@@ -16462,6 +16462,28 @@
           "unreadCount"
         ],
         "properties": {
+          "applicationMeal": {
+            "additionalProperties": false,
+            "type": "object",
+            "required": [
+              "title",
+              "startsAt",
+              "hostDisplayName"
+            ],
+            "properties": {
+              "title": {
+                "maxLength": 80,
+                "type": "string"
+              },
+              "startsAt": {
+                "$ref": "#/components/schemas/ZonedTime"
+              },
+              "hostDisplayName": {
+                "maxLength": 40,
+                "type": "string"
+              }
+            }
+          },
           "conversation": {
             "additionalProperties": false,
             "type": "object",
