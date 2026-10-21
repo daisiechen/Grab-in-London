@@ -6,7 +6,6 @@ import { DomainError } from '../common/errors.ts';
 import { registerLockTable } from '../common/locks.ts';
 import { loadMe } from '../identity/me.ts';
 import { createGroupConversation,joinConversation } from '../membership/intervals.ts';
-import type { VenueService } from '../venues/service.ts';
 import { advanceLifecycle,cancelMealState,loadSeatEvents,mealFact,rosterAt,type MealRow } from './lifecycle.ts';
 import { arrangementHash } from './read.ts';
 import { resolveLondonTime,type TimeInput } from './time.ts';
@@ -52,13 +51,18 @@ export async function addSeat(tx:Tx,meal:MealRow,userId:string,applicationId:str
  return eventId;
 }
 async function schedule(tx:Tx,meal:MealRow){for(const [kind,dueAt] of [['meal.close',meal.closes_at],['meal.start',meal.starts_at],['meal.end',meal.scheduled_end_at]] as const){await cancelPendingJobs(tx.client,kind,meal.id);await enqueueJob(tx.client,{kind,resourceId:meal.id,dueAt});}}
-export async function publishMeal(tx:Tx,actorId:string,input:CreateMealInput,venues:VenueService) {
- input={...input,title:input.title.trim(),description:input.description.trim()};
- const {rows:[venue]}=await tx.client.query<{place_id:string;area_code:string}>(`SELECT place_id,area_code FROM venues WHERE id=$1`,[input.venueRef]);
+export interface VerifiedVenue {venueRef:string;placeId:string}
+async function checkedVenue(tx:Tx,venueRef:string,verified:VerifiedVenue){
+ const {rows:[venue]}=await tx.client.query<{place_id:string;area_code:string}>(`SELECT place_id,area_code FROM venues WHERE id=$1`,[venueRef]);
  if(!venue)throw new DomainError('NOT_FOUND','Confirm a restaurant first.');
- await venues.details(venue.place_id);
+ if(verified.venueRef!==venueRef||verified.placeId!==venue.place_id)throw new DomainError('STATE_CONFLICT','The restaurant changed. Refresh and try again.');
+ return venue;
+}
+export async function publishMeal(tx:Tx,actorId:string,input:CreateMealInput,verified:VerifiedVenue) {
+ input={...input,title:input.title.trim(),description:input.description.trim()};
  await lockActiveActor(tx,actorId);
  const now=await tx.effectiveNow();await requireProfile(tx,actorId);
+ const venue=await checkedVenue(tx,input.venueRef,verified);
  const {start,close}=validateArrangement(input,now);
  const {rows:[existing]}=await tx.client.query(`SELECT id FROM meals WHERE host_id=$1 AND attempt_id=$2`,[actorId,input.attemptId]);
  if(existing)throw new DomainError('STATE_CONFLICT','This publishing attempt already created a meal.');
@@ -70,7 +74,7 @@ export async function publishMeal(tx:Tx,actorId:string,input:CreateMealInput,ven
  await tx.client.query(`INSERT INTO booking_declarations(meal_id,revision,reported_by,declared_count,reported_at,status,arrangement_hash) VALUES($1,1,$2,1,$3,'REPORTED_CONFIRMED',$4)`,[meal!.id,actorId,now,arrangementHash(meal!,1)]);
  return {meal:meal!,now};
 }
-export async function editArrangement(tx:Tx,mealId:string,actorId:string,expected:string|null,patch:Partial<Arrangement>,venues:VenueService) {
+export async function editArrangement(tx:Tx,mealId:string,actorId:string,expected:string|null,patch:Partial<Arrangement>,verified:VerifiedVenue) {
  const {meal,now}=await lockMeal(tx,mealId,actorId);if(meal.host_id!==actorId)throw new DomainError('FORBIDDEN','Only the host can edit this meal.');
  openMeal(meal);checkVersion(meal.version,expected);
  if(meal.arrangement_locked_at)throw new DomainError('ARRANGEMENT_LOCKED','The arrangement is locked after the first guest is approved.');
@@ -78,7 +82,8 @@ export async function editArrangement(tx:Tx,mealId:string,actorId:string,expecte
  const full:Arrangement={venueRef:meal.venue_ref,title:meal.title,description:meal.description,start:{localDate:meal.start_local_date,localTime:meal.start_local_time,timeZone:'Europe/London',utcOffsetMinutes:meal.start_offset},close:{localDate:meal.close_local_date,localTime:meal.close_local_time,timeZone:'Europe/London',utcOffsetMinutes:meal.close_offset},minimum:meal.minimum,capacity:meal.capacity,budgetMinPence:meal.budget_min_pence,budgetMaxPence:meal.budget_max_pence,languages:meal.languages,mood:meal.mood,cuisineCode:meal.cuisine_code,dietaryCodes:meal.dietary_codes,...patch};
  full.title=full.title.trim();full.description=full.description.trim();
  const {start,close}=validateArrangement(full,now);
- const {rows:[venue]}=await tx.client.query<{place_id:string;area_code:string}>(`SELECT place_id,area_code FROM venues WHERE id=$1`,[full.venueRef]);if(!venue)throw new DomainError('NOT_FOUND','Restaurant not found.');await venues.details(venue.place_id);
+ const venue=await checkedVenue(tx,full.venueRef,verified);
+ await requireProfile(tx,actorId);
  const {rows:[updated]}=await tx.client.query<MealRow>(`UPDATE meals SET venue_ref=$2,title=$3,description=$4,starts_at=$5,closes_at=$6,scheduled_end_at=$5::timestamptz+interval '2 hours',start_local_date=$7,start_local_time=$8,start_offset=$9,close_local_date=$10,close_local_time=$11,close_offset=$12,minimum=$13,capacity=$14,budget_min_pence=$15,budget_max_pence=$16,languages=$17,mood=$18,area_code=$19,cuisine_code=$20,dietary_codes=$21,version=version+1 WHERE id=$1 RETURNING *`,[mealId,full.venueRef,full.title,full.description,start.instant,close.instant,start.localDate,start.localTime,start.utcOffsetMinutes,close.localDate,close.localTime,close.utcOffsetMinutes,full.minimum,full.capacity,full.budgetMinPence,full.budgetMaxPence,full.languages,full.mood,venue.area_code,full.cuisineCode??null,full.dietaryCodes??null]);
  await schedule(tx,updated!);await mealFact(tx,updated!,'meal.edited',now,actorId);return {meal:updated!,now};
 }

@@ -23,10 +23,9 @@ export function registerVenueRoutes(app: FastifyInstance, deps: AppDeps, service
     const result = await service.search(input);
     return { data: result.places, page: { nextCursor: result.nextCursor === null ? null : encodeCursor(deps.config.sessionSecret, scope, result.nextCursor), hasMore: result.nextCursor !== null } };
   });
-  defineWrite(app, deps, 'confirmVenue', async ({ request, auth }, tx) => {
+  defineWrite<string>(app, deps, 'confirmVenue', async ({ auth, prepared }, tx) => {
     await lockActiveActor(tx, auth.userId);
-    const { placeId } = request.body as { placeId: string };
-    const data = await service.confirm(placeId, tx.client);
+    const data = await service.confirmVerified(prepared, tx.client);
     return { data, resourceId: data.venueRef };
-  });
+  },undefined,async({request})=>{const {placeId}=request.body as {placeId:string};const place=await service.details(placeId);if(place.placeId!==placeId)throw new DomainError('STATE_CONFLICT','Restaurant verification changed.');return placeId;});
 }

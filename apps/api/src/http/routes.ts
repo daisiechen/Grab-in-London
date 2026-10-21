@@ -36,7 +36,7 @@ export interface HandlerContext {
 }
 
 type Handler = (ctx: HandlerContext) => Promise<HandlerResult>;
-type WriteHandler = (ctx: HandlerContext & { auth: AuthContext }, tx: Tx) => Promise<HandlerResult>;
+type WriteHandler<P> = (ctx: HandlerContext & { auth: AuthContext; prepared:P }, tx: Tx) => Promise<HandlerResult>;
 
 function envelopeSchema(def: OperationDef) {
   if (!def.success.data) return undefined;
@@ -85,6 +85,13 @@ async function preflight(def: OperationDef, request: FastifyRequest, deps: AppDe
   return { auth, ifMatch };
 }
 
+function restoreRetryAfter(reply:FastifyReply,body:unknown){
+ if(body&&typeof body==='object'&&'error' in body){
+  const error=body.error;
+  if(error&&typeof error==='object'&&'retryAfterSeconds' in error&&typeof error.retryAfterSeconds==='number')reply.header('retry-after',String(error.retryAfterSeconds));
+ }
+}
+
 const routePath = (def: OperationDef) => '/v1' + def.path.replace(/\{([A-Za-z]+)\}/g, ':$1');
 
 function schemaFor(def: OperationDef) {
@@ -131,7 +138,7 @@ export function defineRawRoute(app: FastifyInstance, deps: AppDeps, id: Operatio
  * transaction, seal success or DomainError with the business commit, replay only after the actor
  * is still allowed, release the claim on unexpected failure.
  */
-export function defineWrite(app: FastifyInstance, deps: AppDeps, id: OperationId, handler: WriteHandler, stillAuthorized?: (auth: AuthContext, context: HandlerContext) => Promise<boolean>): void {
+export function defineWrite<P=undefined>(app: FastifyInstance, deps: AppDeps, id: OperationId, handler: WriteHandler<P>, stillAuthorized?: (auth: AuthContext, context: HandlerContext) => Promise<boolean>, prepare?: (ctx:HandlerContext & {auth:AuthContext})=>Promise<P>): void {
   const def = operationsById[id];
   if (def.write !== 'idempotencyKey' || (def.auth !== 'session' && def.auth !== 'staff')) throw new Error(`${id} is not an authenticated idempotent write`);
   app.route({
@@ -158,25 +165,37 @@ export function defineWrite(app: FastifyInstance, deps: AppDeps, id: OperationId
           if (stillAuthorized && !(await stillAuthorized(actor, { request, reply, deps, auth: actor, ifMatch }))) return false;
           return rows[0]!.same_epoch || await ownerOnlyReplay(deps.pool, id, actor.userId, claim, request.params);
         });
+        restoreRetryAfter(reply,replay.body);
         reply.header('idempotent-replay', 'true');
         return reply.status(replay.status).send(replay.body);
       }
-      let after: HandlerResult['after'];
+      // External work happens after replay resolution and before opening a business transaction.
+      // Known rejections still enter the short sealing transaction below; unexpected failures
+      // release the intent through the existing outer error policy.
+      let prepared:P|undefined;let preparationFailed=false;let preparationError:unknown;
+      if(prepare)try{prepared=await prepare({request,reply,deps,auth:actor,ifMatch});}catch(error){preparationFailed=true;preparationError=error;}
       try {
-        const { status, body } = await withTransaction(deps.pool, async (tx) => {
+        const { status, body, after } = await withTransaction(deps.pool, async (tx) => {
           try {
-            const result = await handler({ request, reply, deps, auth: actor, ifMatch }, tx);
-            after = result.after;
+            if(preparationFailed)throw preparationError;
+            const result = await handler({ request, reply, deps, auth: actor, ifMatch, prepared:prepared as P }, tx);
             const status = result.status ?? def.success.status;
             const body = envelope(request, result);
             await completeIntent(tx.client, claim, { status, body, resourceId: result.resourceId ?? null });
-            return { status, body };
+            return { status, body, after:result.after };
           } catch (error) {
-            if (error instanceof DomainError && error.status < 500) await completeIntent(tx.client, claim, { status: error.status, body: domainErrorBody(request, error) });
+            if (error instanceof DomainError && error.status < 500) {
+              const body=domainErrorBody(request,error);
+              await completeIntent(tx.client,claim,{status:error.status,body});
+              // Return the exact sealed rejection. Throwing into the global error handler would
+              // generate a second serverNow, making the first response differ from its replay.
+              return {status:error.status,body,after:undefined};
+            }
             throw error;
           }
         }, { commitOnDomainError: true });
         after?.(reply);
+        restoreRetryAfter(reply,body);
         return reply.status(status).send(body);
       } catch (error) {
         if (!(error instanceof DomainError) || error.status >= 500) await releaseIntent(deps.pool, claim).catch(() => undefined);

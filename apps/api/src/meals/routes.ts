@@ -7,7 +7,7 @@ import { DomainError } from '../common/errors.ts';
 import type { VenueService } from '../venues/service.ts';
 import { validateSearch } from '../venues/provider.ts';
 import { applyForMeal,leaveConfirmed,withdrawPending } from './applications.ts';
-import { approveApplication,cancelByHost,declareBooking,editArrangement,publishMeal,type Arrangement,type CreateMealInput } from './commands.ts';
+import { approveApplication,cancelByHost,declareBooking,editArrangement,publishMeal,type Arrangement,type CreateMealInput,type VerifiedVenue } from './commands.ts';
 import { applicationDto,mealDto,parseCursor } from './read.ts';
 import { loadSeatEvents,rosterAt,type MealRow } from './lifecycle.ts';
 import {hasAnalyticsConsent,recordDiscoveryOutcome} from '../admin/ingest.ts';
@@ -20,8 +20,20 @@ export function registerMealRoutes(app:FastifyInstance,deps:AppDeps,venues:Venue
   return {encode:(key:string)=>encodeCursor(deps.config.sessionSecret,scope,key),decode:(cursor:string)=>decodeCursor(deps.config.sessionSecret,scope,cursor)};
  }
 
- defineWrite(app,deps,'createMeal',async({request,auth},tx)=>{const {meal,now}=await publishMeal(tx,auth.userId,request.body as CreateMealInput,venues);return {data:await mealDto(tx.client,meal,now,venues,auth.userId,false),version:meal.version,resourceId:meal.id};});
- defineWrite(app,deps,'editMeal',async({request,auth,ifMatch},tx)=>{const {meal,now}=await editArrangement(tx,(request.params as {mealId:string}).mealId,auth.userId,ifMatch,request.body as Partial<Arrangement>,venues);return {data:await mealDto(tx.client,meal,now,venues,auth.userId,false),version:meal.version,resourceId:meal.id};});
+ async function verifyVenue(venueRef:string){
+  const {rows:[venue]}=await deps.pool.query<{place_id:string}>(`SELECT place_id FROM venues WHERE id=$1`,[venueRef]);
+  if(!venue)throw new DomainError('NOT_FOUND','Confirm a restaurant first.');
+  const place=await venues.details(venue.place_id);
+  if(place.placeId!==venue.place_id)throw new DomainError('STATE_CONFLICT','Restaurant verification changed.');
+  return {venueRef,placeId:venue.place_id};
+ }
+ defineWrite<VerifiedVenue>(app,deps,'createMeal',async({request,auth,prepared},tx)=>{const {meal,now}=await publishMeal(tx,auth.userId,request.body as CreateMealInput,prepared);return {data:await mealDto(tx.client,meal,now,venues,auth.userId,false),version:meal.version,resourceId:meal.id};},undefined,async({request})=>verifyVenue((request.body as CreateMealInput).venueRef));
+ defineWrite<VerifiedVenue>(app,deps,'editMeal',async({request,auth,ifMatch,prepared},tx)=>{const {meal,now}=await editArrangement(tx,(request.params as {mealId:string}).mealId,auth.userId,ifMatch,request.body as Partial<Arrangement>,prepared);return {data:await mealDto(tx.client,meal,now,venues,auth.userId,false),version:meal.version,resourceId:meal.id};},undefined,async({request,auth})=>{
+  const {rows:[meal]}=await deps.pool.query<{venue_ref:string;host_id:string}>(`SELECT venue_ref,host_id FROM meals WHERE id=$1`,[(request.params as {mealId:string}).mealId]);
+  if(!meal)throw new DomainError('NOT_FOUND','Meal not found.');
+  if(meal.host_id!==auth.userId)throw new DomainError('FORBIDDEN','Only the host can edit this meal.');
+  return verifyVenue((request.body as Partial<Arrangement>).venueRef??meal.venue_ref);
+ });
  defineWrite(app,deps,'declareBooking',async({request,auth,ifMatch},tx)=>{const {meal,now}=await declareBooking(tx,(request.params as {mealId:string}).mealId,auth.userId,ifMatch,request.body as {status:string;count:number});return {data:await mealDto(tx.client,meal,now,venues,auth.userId,false),version:meal.version,resourceId:meal.id};});
  defineWrite(app,deps,'cancelMeal',async({request,auth,ifMatch},tx)=>{const {meal,now}=await cancelByHost(tx,(request.params as {mealId:string}).mealId,auth.userId,ifMatch,(request.body as {reason:string}).reason);return {data:await mealDto(tx.client,meal,now,venues,auth.userId,false),version:meal.version,resourceId:meal.id};});
  defineWrite(app,deps,'applyMeal',async({request,auth},tx)=>{const data=await applyForMeal(tx,(request.params as {mealId:string}).mealId,auth.userId,(request.body as {message:string}).message);return {data:await applicationDto(tx.client,data,true),version:String(data.version),resourceId:data.id};});

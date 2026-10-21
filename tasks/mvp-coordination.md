@@ -228,3 +228,12 @@
 - 当前挂载聊天页用同步单调HISTORY围栏，403、发送403或退出/解散先置位停止轮询，再读一次授权HISTORY；旧元数据成功/失败与晚到LIVE结果不再改状态，分页使用HISTORY，发送同步拒绝。围栏只属于当前挂载会话，新路由实例可正常LIVE，不改后端授权或原生轮询。
 - 自有前红13项中1失败（重复HISTORY），修后自有14及QA独立3全部通过；新挂载授权会话恢复LIVE及编辑器回归通过。根Web/后台247项整合通过；记录/private/tmp/fancy-f11-clients.log。QA已明确释放提交窗口，开发仅提交ChatPage、自有测试和本记录，保留研究修改；正式修复SHA交独立QA复验。
 - 全仓core:check、Python70项及Web生产构建通过（/private/tmp/fancy-f11-check.log、/private/tmp/fancy-f11-python.log、/private/tmp/fancy-f11-build.log）。原生和后端无修改，沿用前批通过结果，不冒称重跑。
+
+## QA-F12 地点查询移出业务事务（2026-10-21）
+
+- QA在a1120ae的真实HTTP/PG探针挂起description-only编辑的地点查询，第二连接取得meal FOR UPDATE NOWAIT返回55P03，放行后PATCH200。原红在2125ca9保留，当前111 PASS /93 NOT_RUN /1 FAIL /12 BLOCKED。没有把未动态验证的publish描述为持meal锁；源码另确认confirmVenue持actor锁等待同类外部查询。
+- fresh intent在幂等重放分支之后、业务事务之前查询地点，只传本次请求RAM中的venueRef/placeId；create/edit/confirm事务内不访问供应商。锁内重新校验活动账号、资料、版本、截止时间、安排状态和地点引用，写DTO继续不含供应商展示数据。description-only编辑仍真实查询地点，不绕过QA探针前置。
+- 已知4xx准备失败进入短事务封存，重放不调用供应商；临时5xx释放claim，可同key恢复。整合精确比较发现原通用错误路径封存与首次HTTP各生成serverNow，可能差1ms；保留精确断言，修为首次返回同一封存正文，并保留首次/重放Retry-After。受控时钟每次序列化推进1ms的回归修前红、修后绿。
+- 自有锁/重验/重放11项与关联API组合26项通过；根独测原挂起探针1项通过（默认工程不收集scripts，使用/private/tmp/fancy-f12-probe.config.mts显式运行，未改QA文件或仓库测试配置）。首轮整合unit246/DB111/API156/release11及core:check通过；日志/private/tmp/fancy-f12-{core,unit-final,api-final,release,check-final,original-probe}.log。仅最终冻结版本交独立QA正式关闭，CODE003整条仍需完整命令审阅。
+- 通用错误直接返回还需隔离重试副作用：受控pool首次COMMIT抛40001、第二次handler业务拒绝，旧after闭包会错误执行上一次成功动作；确定性测试修前红。改为每次事务返回自己的after，拒绝为undefined，只执行最终成功提交的返回值。该回归使用受控数据库接口，不冒称真实PG并发；真实PG地点回归11项仍通过。最终七个生产/自有测试文件及本记录按白名单提交，不含QA或研究文件。
+- 最终冻结版本unit247/API156/core:check及Python70通过，日志/private/tmp/fancy-f12-{unit-sealed,api-sealed,check-sealed,python}.log；DB111/release11沿用本批上述无变更层已通过结果。Web/原生未改，不冒称本批重复客户端测试；缺陷关闭与整条CODE003结论由QA持有。

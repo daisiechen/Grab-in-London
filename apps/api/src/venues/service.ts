@@ -25,8 +25,13 @@ export class VenueService {
   async confirm(placeId: string, client: Pick<PoolClient, 'query'>) {
     // Never trust client-supplied name/address/coordinates. Revalidate on every fresh intent.
     const place = await this.details(placeId);
-    const reference = await this.references.findOrCreate(place.placeId, client);
+    return this.confirmVerified(place.placeId,client);
+  }
+  /** Only called after request-scoped provider verification, inside the actor-locked transaction. */
+  async confirmVerified(placeId:string,client:Pick<PoolClient,'query'>){
+    validatePlaceId(placeId);
+    const reference = await this.references.findOrCreate(placeId, client);
     // Idempotency envelopes are durable: exclude all provider display content from this write.
-    return { ...reference, placeId: place.placeId, available: true, name: null, address: null, location: null, attributions: [], displayExpiresAt: null };
+    return { ...reference, placeId, available: true, name: null, address: null, location: null, attributions: [], displayExpiresAt: null };
   }
 }
