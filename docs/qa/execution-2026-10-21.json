@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 126,
-    "PASS": 79,
+    "NOT_RUN": 121,
+    "PASS": 84,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -10678,8 +10678,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R22-T005",
+        "R29-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -10785,15 +10788,17 @@
         "R2-T061",
         "R2-T062",
         "R2-T063",
-        "R22-T005"
+        "R22-T005",
+        "R22-T005",
+        "R29-T001"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "EDITOR_CONFLICT或确认保留/替换",
-        "取消保持v2",
-        "不能静默覆盖/追加"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "R22独立controller/PG已覆盖部分：editorVersion变更冲突，显式确认后同稿重复转入无业务写；尚缺浏览器取消替换保留v2。 保持NOT_RUN，不按自动化数授整条PASS。"
+      "remainingExpected": [],
+      "actual": "独立Web生成后关闭助手编辑v2，重开Continue并取消替换，v2保留且无transfer/apply；R22服务端版本冲突、显式确认及重复转入证据互补，不能静默覆盖或追加。"
     },
     {
       "id": "QA-AI-017",
@@ -12146,8 +12151,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R28-T002",
+        "R29-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -12252,15 +12260,17 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R28-T002",
+        "R29-T002"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "前可Continue",
-        "等号新generation清临时条件/草稿",
-        "保留账号偏好和未发文字"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "runtime时钟+真实PG：TTL前1ms可读，恰好1800000ms无需后台timer即失效并abort，临时text/条件/artifact不可恢复；新会话空，保存账号偏好原行不变。Web组件精确TTL保留助手及业务未发文字。"
     },
     {
       "id": "QA-AI-029",
@@ -12268,8 +12278,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R28-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -12374,15 +12386,16 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R28-T001"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "仅真实活动续期",
-        "重复event不续时",
-        "DB30秒flush不使用flush时刻延长TTL"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "真实SessionService/PG+受控时钟：SEND/EDIT/显式操作续期；重复eventId、read不续时，HEARTBEAT拒绝；EDIT不足30秒不flush，到30秒写实际观察activityAt及expiry，非flush当前时刻。"
     },
     {
       "id": "QA-AI-030",
@@ -12390,8 +12403,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R29-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -12496,14 +12511,37 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R27-T002",
+        "R29-T002",
+        "R29-T003",
+        "R30-T001",
+        "R30-T002",
+        "R30-T003",
+        "R30-T004",
+        "R30-T005",
+        "R30-T006",
+        "R30-T007",
+        "R30-T008",
+        "R30-T009",
+        "R30-T010",
+        "R30-T011",
+        "R30-T012",
+        "R30-T013",
+        "R30-T014",
+        "R30-T015",
+        "R30-T016",
+        "R30-T017"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "New清助手未发字但保留账号偏好/业务编辑器",
-        "TTL保留两类未发字"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "f298048修复：独立Web NEW清助手未发字但不清业务编辑器、不写偏好；恰好TTL保留两类未发字。R29-T003另证删除偏好仍保留两输入；R30 iOS manager17项通过，不是真机。",
+      "defectIds": [
+        "QA-F05"
+      ]
     },
     {
       "id": "QA-AI-031",
@@ -12511,8 +12549,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R28-T003"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -12617,15 +12657,16 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R28-T003"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "刷新撤旧并新建",
-        "sessionId单独不能访问",
-        "正文不跨设备同步或持久化"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "真实SessionService刷新带旧revokeHandle使旧会话失效；新会话及另一设备正文空。仅sessionId或错误device proof拒绝，DB元数据无正文及明文device token。仅本地设备绑定范围。"
     },
     {
       "id": "QA-AI-032",
@@ -21285,7 +21326,8 @@
     "QA-F01": "CLOSED_TARGETED_QA",
     "QA-F02": "FIX_VERIFIED_COMPONENT",
     "QA-F03": "CLOSED_TARGETED_QA",
-    "QA-F04": "CLOSED_TARGETED_QA"
+    "QA-F04": "CLOSED_TARGETED_QA",
+    "QA-F05": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",

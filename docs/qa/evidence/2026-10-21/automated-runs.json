@@ -8748,6 +8748,260 @@
           "durationMs": 5.653625000000034
         }
       ]
+    },
+    {
+      "id": "R27",
+      "testedCommit": "361e85ecd6a2aea81313954dd1b789495e35642b",
+      "command": "pnpm exec vitest run --project web apps/web/src/features/assistant/qa-independent-session.unit.test.tsx --reporter=json --outputFile=/private/tmp/fancy-independent-ai-ui-repro.json",
+      "startedAt": "2026-10-21T09:26:09.645000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 2,
+      "total": 2,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R27-T001",
+          "run": "R27",
+          "path": "apps/web/src/features/assistant/qa-independent-session.unit.test.tsx",
+          "title": "independent QA assistant editor and expiry QA-AI-016 explicit Keep my text preserves edited v2 without transfer or append",
+          "status": "failed",
+          "durationMs": 195.12341700000002,
+          "failureSummary": "Error: Unable to perform pointer interaction as the element has `pointer-events: none`:"
+        },
+        {
+          "id": "R27-T002",
+          "run": "R27",
+          "path": "apps/web/src/features/assistant/qa-independent-session.unit.test.tsx",
+          "title": "independent QA assistant editor and expiry QA-AI-030 NEW clears assistant unsent text while TTL preserves both editors; neither alters saved preferences",
+          "status": "failed",
+          "durationMs": 1171.596,
+          "failureSummary": "AssertionError: expected 'New must clear this unsent text.' to be '' // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "R28",
+      "testedCommit": "f298048c00b8b394a246a34de5fd3ee073e9c4f9",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-session.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-ai-session-f298048.json",
+      "startedAt": "2026-10-21T09:30:01.926000+00:00",
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R28-T001",
+          "run": "R28",
+          "path": "scripts/qa-independent-ai-session.api.test.ts",
+          "title": "independent AI session time and device proofs QA-AI-029 real activity only; duplicate events and reads do not renew, edit flush stores observed activity rather than DB flush time",
+          "status": "passed",
+          "durationMs": 12.083416999999997
+        },
+        {
+          "id": "R28-T002",
+          "run": "R28",
+          "path": "scripts/qa-independent-ai-session.api.test.ts",
+          "title": "independent AI session time and device proofs QA-AI-028 exact TTL expires without a background timer and destroys text conditions artifacts and in-flight signal",
+          "status": "passed",
+          "durationMs": 5.7181659999999965
+        },
+        {
+          "id": "R28-T003",
+          "run": "R28",
+          "path": "scripts/qa-independent-ai-session.api.test.ts",
+          "title": "independent AI session time and device proofs QA-AI-031 refresh revokes previous handle, single session ID cannot read and text never persists or appears on a second device",
+          "status": "passed",
+          "durationMs": 5.5667080000000055
+        }
+      ]
+    },
+    {
+      "id": "R29",
+      "testedCommit": "f298048c00b8b394a246a34de5fd3ee073e9c4f9",
+      "command": "pnpm exec vitest run --project web apps/web/src/features/assistant/qa-independent-session.unit.test.tsx --reporter=json --outputFile=/private/tmp/fancy-independent-ai-ui-f298048.json",
+      "startedAt": "2026-10-21T09:29:58.882000+00:00",
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R29-T001",
+          "run": "R29",
+          "path": "apps/web/src/features/assistant/qa-independent-session.unit.test.tsx",
+          "title": "independent QA assistant editor and expiry QA-AI-016 explicit Keep my text preserves edited v2 without transfer or append",
+          "status": "passed",
+          "durationMs": 380.36237500000004
+        },
+        {
+          "id": "R29-T002",
+          "run": "R29",
+          "path": "apps/web/src/features/assistant/qa-independent-session.unit.test.tsx",
+          "title": "independent QA assistant editor and expiry QA-AI-030 NEW clears assistant unsent text while TTL preserves both editors; neither alters saved preferences",
+          "status": "passed",
+          "durationMs": 296.622875
+        },
+        {
+          "id": "R29-T003",
+          "run": "R29",
+          "path": "apps/web/src/features/assistant/qa-independent-session.unit.test.tsx",
+          "title": "independent QA deletion keeps unsent text QA-F05 deleting preferences retains assistant and business unsent text",
+          "status": "passed",
+          "durationMs": 161.7733340000002
+        }
+      ]
+    },
+    {
+      "id": "R30",
+      "testedCommit": "f298048c00b8b394a246a34de5fd3ee073e9c4f9",
+      "command": "pnpm --filter @fancy/ios exec jest src/features/assistant/manager.test.ts --runInBand --json --outputFile=/private/tmp/fancy-independent-ios-f298048.json",
+      "startedAt": "2026-10-21T09:30:03.180000+00:00",
+      "exitCode": 0,
+      "passed": 17,
+      "failed": 0,
+      "total": 17,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R30-T001",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "recovers a temporary guest read failure on explicit retry without discarding its revocation identity",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R30-T002",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "retries failed credential persistence before bootstrap without minting another guest",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R30-T003",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "retries the same request intent and sends only explicitly confirmed guest preferences",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R30-T004",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "single-flights bootstrap and ignores a response after account isolation",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R30-T005",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "expires exactly at TTL and preserves unsent text and confirmed guest preferences",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R30-T006",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "clears assistant input on NEW without applying or clearing the registered business editor",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R30-T007",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "requires replacement confirmation and rejects edits during validation without applying",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R30-T008",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "does not apply a late answer while closed, and never implicitly sends editor content",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R30-T009",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "releases MEAL context on blur before asking from a page without explicit context",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R30-T010",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "does not let a retired focus cleanup erase the new page context",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R30-T011",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "restores the same fixed-expiry guest across managers and NEW",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R30-T012",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "cold-starts with no AI transcript or device token and only continues after an explicit action using the fixed-expiry guest",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R30-T013",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "treats a server RAM-loss 410 as expired without automatic regeneration and keeps local unsent text and confirmed preferences",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R30-T014",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "creates a new subject only after the fixed 24h expiry",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R30-T015",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "clears the secure guest record on login without retaining AI content",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R30-T016",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "fails closed on secure read or write failure without sending assistant requests or minting retries",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R30-T017",
+          "run": "R30",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "blocks future guest bootstrap if account-transition secure deletion fails",
+          "status": "passed",
+          "durationMs": 3
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -8764,7 +9018,9 @@
     "scripts/qa-independent-deletion.api.test.ts": "f5b80d51aa793891640c5d96e623d3638693a32b13eebaa7ad21e21394a72750",
     "scripts/qa-independent-ai.api.test.ts": "d40130cdcef33492250e0b0c85becad66975579640bc51e5bd3ed522998276ec",
     "scripts/qa-independent-ai-http.api.test.ts": "41e3b9942e8d5f8193f36c49a7f1b17386e09b8ceaa5220ba2747b978790f312",
-    "scripts/qa-independent-ai-budget.api.test.ts": "7d7064a23115ea75243e97bd0e1ca423ecc5f63a9af199bfb785cf43a2593ae4"
+    "scripts/qa-independent-ai-budget.api.test.ts": "7d7064a23115ea75243e97bd0e1ca423ecc5f63a9af199bfb785cf43a2593ae4",
+    "apps/web/src/features/assistant/qa-independent-session.unit.test.tsx": "8382dada4f38db9d53988c7739db587207674e011ec606aaca940f96c39426c1",
+    "scripts/qa-independent-ai-session.api.test.ts": "8910212437dc6e1484f1778200517e03a6731ca5a7c35bf6583628991b680ff3"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。",
   "runtimeSnapshotVerification": {
@@ -8806,6 +9062,10 @@
     {
       "run": "R24",
       "detail": "首轮第2call测试把全局累计call_cap置1，导致连第1call也拒绝；改为calls+1仅放行一个新增call后通过。人工停用后仍发布缺陷原断言未改，重跑稳定失败。实际解析call费用20 microCNY保留。"
+    },
+    {
+      "run": "R27",
+      "detail": "T001为QA夹具在modal打开时操作背景editor被pointer-events阻挡，不是产品缺陷；改为关闭助手、等待launcher焦点恢复、编辑v2再打开Continue后独立通过，原失败仍保留但不据此登记产品FAIL。T002为真实QA-F05：NEW成功后助手未发文字未清，原断言未放宽。"
     }
   ]
 }
