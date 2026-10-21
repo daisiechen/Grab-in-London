@@ -14,10 +14,10 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 144 |
+| PASS | 145 |
 | FAIL | 0 |
 | BLOCKED | 12 |
-| NOT_RUN | 61 |
+| NOT_RUN | 60 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实环境、原生runtime/设备/签名或政策批准证据；本地恢复与分步删除现已复验通过，不能再笼统视为外部阻塞。FAIL优先于未完成的后续步骤。
@@ -140,6 +140,7 @@
 | R112 | 退出码0；7/7通过，失败0，1个测试文件 | `9df9ab0` |
 | R113 | 退出码1；7/7通过，失败0，2个测试文件 | `5b26fb3` |
 | R114 | 退出码0；10/10通过，失败0，2个测试文件 | `5b26fb3` |
+| R115 | 退出码0；2/2通过，失败0，1个测试文件 | `e775bef` |
 
 R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯函数探针；R5复跑分页修复回归，R6是QA第二批6项独立P0探针；R7/R8为QA-F01修复的API/Web及iOS组件定向复跑；R9是第三批12项独立边界探针，R10/R11复跑解除准备，R12为QA新增真实备份中E0导出的恢复后撤销分支；R13为饭后及群/私聊权限独立探针；R14保留QA-F03修前2失败，R15为0518d45修后的12项独立探针复验，R16为身份模块26项受影响HTTP回归（包括fresh会话下未来proof拒绝），不能删除修前结果或把历史失败当当前通过；R17为举报本人回执及撤授权重放3项独立HTTP/PG探针，撤session/DELETING状态通过受控数据库夹具设置。R18为安排锁、历史截止补算、开始名单及预约隔离6项独立PG/HTTP探针，删除仅屏障状态，完整删除名单断言仍未通过。R19/R20独立定向复跑5a37fdc关闭顺序单测及真实PG负载退出，未替代远端CI结果。R21为删除实际HTTP/本地purge、故障rollback及用户锁消息/审批竞态5项独立探针，生产日志脱敏仍待完整捕获。R22为ac09af4固定版本的11项独立受控AI/controller/HTTP探针，仅035/036/037具完整预期证据；R23为该版本Claude发现修复28项API/DB独立定向复验。R24保留QA-F04修前停用后仍发布失败；R25为8e2b908修后7项独立停用/费用/reaper探针，R26为22项受影响DB回归，F04定向关闭而043仍有未测断言。R27保留QA-F05修前Web失败，T001另为已分类夹具错误；R28/R29为f298048独立session/PG及Web组件各3项，R30为iOS manager17项定向回归；F05在NEW与TTL/偏好删除差异范围关闭。R31为公开DTO/后台角色/CSV授权及跨快照游标和大序号4项独立HTTP/PG探针，公式转义另覆盖formatter，不声称Excel实际执行。R32保留QA-F06 CLI入口失败，R33保留QA-F07原生协议失败；R34/R35固定b76c593独立8+32项验证CLI修复，R36固定1080993独立iOS49项验证桥接修复。完整加入用户路径仍NOT_RUN，不据组件通过升级。不能将这些数量相加当作独立业务用例数；R5与R1有重复，R2也不是原生设备验收。逐项测试名、状态、时间和命令见[机器证据](evidence/2026-10-21/automated-runs.json)。R4是质量检查而非业务用例。
 
@@ -244,7 +245,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-POST-005 · self优先与unknown | PASS | 第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。；证据 R13-T021 |
 | QA-POST-006 · 评分范围与upsert | PASS | 第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。；证据 R13-T022 |
 | QA-POST-007 · 无资格和自评 | PASS | 第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。；证据 R13-T029 |
-| QA-POST-008 · 公评双盲与到期发布 | NOT_RUN | 本地生产实现尚需实际执行：A给B公评 → B未提交 → 到end+7d → 另一场双方提前提交。尚缺逐项证据：单方到期前不公开；到期或双方提交可公开；单方再约始终不公开。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-POST-008 · 公评双盲与到期发布 | PASS | R115 independent real-PostgreSQL production API/projection probes: unilateral reference is absent at end+7d-1ms and published exactly at end+7d; reciprocal references publish both sides before deadline. Public rows contain no consent/reconnect fields; non-selecting member sees selected=false/CLOSED and no other-authored private review. Synthetic local data and injected projection time; not native UI or real-provider evidence.；证据 R115-T001, R115-T002 |
 | QA-POST-009 · 资格修订传播 | NOT_RUN | 本地生产实现尚需实际执行：先评分/公评/互选 → 支持合法纠错present→absent→present。尚缺逐项证据：新有效投影重算；不合格公评撤公开、评分退出统计、唯一依据私聊停止；恢复不重复计数。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-POST-010 · 支持窗与最小权限 | NOT_RUN | 本地生产实现尚需实际执行：end+7d−1ms支持修订 → 等号有MFA/case/reason/version再修订 → analyst尝试。尚缺逐项证据：窗内409 CORRECTION_WINDOW_OPEN；等号合法修订且有审计；analyst拒绝，不读聊天。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-SURVEY-001 · 全空与仅因素 | PASS | R96 independent real PG/API: no-attendance actor blank422/company-only null; explicitfalse vs clear-null immutable revisions; duplicate/unknown/case/empty factors422, seven unique enumerated factors accepted. Eight-day-old completed meal score5 remains exactly one revision after expired score update409 and independent survey save200; no mealId accepted and no again/reasons in postmeal DTO. B8 real browser persistence and separate same-meal Admin score/survey evidence reused. R95 fixture setup failure permanently retained, not product failure.；证据 R96-T001, B8-T001, B8-T002 |

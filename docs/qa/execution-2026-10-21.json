@@ -17,8 +17,8 @@
     "nativeRuntimeEvidence20261021": "Native owner actual headless Release install/launch and first-screen evidence independently reviewed by QA, F20 exact red874/fixed9df, F21 formal5b source-equivalent AppRoot and Metro matched. No independent native taps or complete role journey; root complete5b archive rebuild pending when reviewed."
   },
   "counts": {
-    "NOT_RUN": 61,
-    "PASS": 144,
+    "NOT_RUN": 60,
+    "PASS": 145,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -6267,8 +6267,11 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R115-T001",
+        "R115-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T132",
         "R1-T133",
@@ -6304,13 +6307,13 @@
         "R2-T003",
         "R2-T004"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "单方到期前不公开",
-        "到期或双方提交可公开",
-        "单方再约始终不公开"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：A给B公评 → B未提交 → 到end+7d → 另一场双方提前提交。尚缺逐项证据：单方到期前不公开；到期或双方提交可公开；单方再约始终不公开。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "R115 independent real-PostgreSQL production API/projection probes: unilateral reference is absent at end+7d-1ms and published exactly at end+7d; reciprocal references publish both sides before deadline. Public rows contain no consent/reconnect fields; non-selecting member sees selected=false/CLOSED and no other-authored private review. Synthetic local data and injected projection time; not native UI or real-provider evidence."
     },
     {
       "id": "QA-POST-009",
@@ -22369,7 +22372,7 @@
     "userAuthorizedMessaging": true,
     "status": "remaining_local_execution_in_progress",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
-    "latestFeedback": "F20 exact874 red/9df fixed actual Release startup and F21 formal5b source-equivalent actual safe-area screen independently reviewed alongside R1127/R11410 and real bundle proof. Targeted defects closed, original reds retained. Native interactions/role-swap journeys still NOT_RUN; case counts144/61/12 unchanged."
+    "latestFeedback": "R115 POST-008 independent API/real-PG publication projections passed 2/2; exact deadline and reciprocal publication plus one-sided consent privacy covered. Counts145/60/12. Native interactive handoff remains pending."
   },
   "blockerTriage": "原14条中供应商分步删除和恢复删除台账两条已转本地执行并通过；其余12条缺真实环境/许可/批准证据，各项可本地准备部分已继续推进，不能视为12个未修代码故障。"
 }

@@ -15458,6 +15458,35 @@
           "durationMs": 0
         }
       ]
+    },
+    {
+      "id": "R115",
+      "testedCommit": "e775bef72868a6461dda28c6e47aaed22814b58e",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-post-chat.api.test.ts -t 'QA independent blind publication deadline' --reporter=json",
+      "startedAt": "2026-10-21T18:45:36.149000+00:00",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "total": 2,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R115-T001",
+          "run": "R115",
+          "path": "scripts/qa-independent-post-chat.api.test.ts",
+          "title": "QA independent blind publication deadline QA-POST-008 unilateral review stays private at deadline minus 1ms and publishes at equality without exposing one-sided consent",
+          "status": "passed",
+          "durationMs": 148.9426249999999
+        },
+        {
+          "id": "R115-T002",
+          "run": "R115",
+          "path": "scripts/qa-independent-post-chat.api.test.ts",
+          "title": "QA independent blind publication deadline QA-POST-008 reciprocal reviews publish both before deadline and expose no reconnection fields",
+          "status": "passed",
+          "durationMs": 23.507541999999944
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -15466,7 +15495,7 @@
     "scripts/qa-independent.config.ts": "f3b9fbb48db6a8136ff32a750f34d2b61c0cde4c4b1fb61499be374e549161ed",
     "scripts/qa-independent-round3.api.test.ts": "6b0f5d6bc03216b5a2377270f5e425d6fa79c5b65eabe476fffd8682a592ecb7",
     "scripts/qa-independent-restore.api.test.ts": "be3dd382409f020801bd97444357bba6a7f5b6a896716f4f3f332e421d0e762e",
-    "scripts/qa-independent-post-chat.api.test.ts": "2feb9b5bec808a58e3c572de080881f134e79be6ea66d0259770b3cbd359d961",
+    "scripts/qa-independent-post-chat.api.test.ts": "e84806df3afb11c0f2018e5df76bb4c16fe9789fd9466fa832b9df5467353673",
     "scripts/qa-independent-reauth.api.test.ts": "ad5695f82a87bc7a565081bc9f1590225cb0427c1087d594df86e365803bc027",
     "scripts/qa-independent-reauth-boundary.api.test.ts": "4e81f45d1d77c294b7d43c457c796900c1318d1e0d7d682bea839b2c6e35839c",
     "scripts/qa-independent-report.api.test.ts": "8cfd630617d7e3ae17bf6f60e88b9f7361f111c2d1063fab85c663383a667580",

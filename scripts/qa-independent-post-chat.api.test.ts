@@ -6,7 +6,7 @@ import {withTransaction,type Tx} from '../apps/api/src/common/transaction.ts';
 import {lockPostMeal} from '../apps/api/src/post-meal/lock.ts';
 import {assertWindow,assertRoster,recordAttendanceRevision} from '../apps/api/src/post-meal/attendance.ts';
 import {rateExperience} from '../apps/api/src/post-meal/experience.ts';
-import {reviewPerson} from '../apps/api/src/post-meal/reviews.ts';
+import {publishedReviewsForProfile,reviewPerson} from '../apps/api/src/post-meal/reviews.ts';
 import {lockConnection,selectPair} from '../apps/api/src/connections/service.ts';
 import {createGroupConversation,joinConversation} from '../apps/api/src/membership/intervals.ts';
 let h:Harness;
@@ -99,5 +99,34 @@ describe('QA independent hidden intervals and revocation ordering',()=>{
  it('QA-POST-007 outsider cancelled unknown and self review cannot manufacture qualification',async()=>{
   for(const condition of['outsider','unknown','cancelled']){const f=await fixture(condition!=='unknown');if(condition==='cancelled')await h.db.pool.query("UPDATE meals SET status='CANCELLED',cancel_reason='host' WHERE id=$1",[f.m]);const person=condition==='outsider'?f.outsider:f.guest,before=await snapshot(f.m);for(const[path,body]of[[`/v1/meals/${f.m}/experience`,{score:5}],[`/v1/meals/${f.m}/reviews/${f.host.id}`,{body:'Not a qualified public review.'}],[`/v1/meals/${f.m}/reconnect/${f.host.id}`,{selected:true}]]as const){const r=await person.b.request('PUT',path,{body,headers:headers()});expect([403,409],r.body).toContain(r.statusCode);}expect(await snapshot(f.m)).toEqual(before);}
   const f=await fixture();const r=await f.host.b.request('PUT',`/v1/meals/${f.m}/reviews/${f.host.id}`,{body:{body:'Self reference must not be accepted.'},headers:headers()});expect(r.statusCode,r.body).toBe(403);expect((await h.db.pool.query('SELECT count(*)::int n FROM public_review_revisions WHERE meal_id=$1',[f.m])).rows[0].n).toBe(0);
+ });
+});
+
+
+describe('QA independent blind publication deadline',()=>{
+ it('QA-POST-008 unilateral review stays private at deadline minus 1ms and publishes at equality without exposing one-sided consent',async()=>{
+  const f=await fixture(),deadline=new Date(+f.end+7*86400_000);
+  const review=await f.host.b.request('PUT',`/v1/meals/${f.m}/reviews/${f.guest.id}`,{body:{body:'Independent unilateral reference.'},headers:headers()});
+  expect(review.statusCode,review.body).toBe(200);expect(json(review).data.visibility).toBe('PENDING');
+  expect((await select(f.host.b,f.m,f.guest.id)).statusCode).toBe(200);
+  expect(await publishedReviewsForProfile(h.db.pool,f.guest.id,new Date(+deadline-1))).toEqual([]);
+  const published=await publishedReviewsForProfile(h.db.pool,f.guest.id,deadline);
+  expect(published).toHaveLength(1);expect(published[0]).toMatchObject({body:'Independent unilateral reference.',publishedAt:deadline.toISOString()});
+  expect(JSON.stringify(published)).not.toMatch(/selected|consent|WAITING|reconnect/);
+  expect(await publishedReviewsForProfile(h.db.pool,f.host.id,deadline)).toEqual([]);
+  const state=json(await f.guest.b.request('GET',`/v1/meals/${f.m}/post-meal`)).data;
+  expect(state.reconnect.find((r:{subjectId:string})=>r.subjectId===f.host.id)).toEqual({subjectId:f.host.id,selected:false,version:'0',connection:'CLOSED'});
+  expect(state.reviews).toEqual([]);
+ });
+ it('QA-POST-008 reciprocal reviews publish both before deadline and expose no reconnection fields',async()=>{
+  const f=await fixture();
+  for(const [author,subject] of [[f.host,f.guest],[f.guest,f.host]]){
+   const r=await author.b.request('PUT',`/v1/meals/${f.m}/reviews/${subject.id}`,{body:{body:'Independent mutual reference.'},headers:headers()});expect(r.statusCode,r.body).toBe(200);
+  }
+  for(const person of [f.host,f.guest]){
+   const rows=await publishedReviewsForProfile(h.db.pool,person.id,new Date());expect(rows).toHaveLength(1);
+   expect(new Date(rows[0]!.publishedAt).getTime()).toBeLessThan(+f.end+7*86400_000);
+   expect(JSON.stringify(rows)).not.toMatch(/selected|consent|WAITING|reconnect/);
+  }
  });
 });
