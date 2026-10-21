@@ -4,9 +4,16 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./postgres": "./src/postgres/index.ts"
+    "./postgres": "./src/postgres/index.ts",
+    "./db": "./src/db/index.ts"
   },
-  "scripts": { "typecheck": "tsc -p tsconfig.json" },
-  "dependencies": { "pg": "8.23.1" },
-  "devDependencies": { "@types/pg": "8.23.1" }
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "pg": "8.23.1"
+  },
+  "devDependencies": {
+    "@types/pg": "8.23.1"
+  }
 }

@@ -12,3 +12,8 @@ fi
 if [ -z "${FANCY_PG_BIN:-}" ] && [ -x "$HOME/.local/share/fancy-pg17/pgsql/bin/postgres" ]; then
   export FANCY_PG_BIN="$HOME/.local/share/fancy-pg17/pgsql/bin"
 fi
+# If /usr/bin/git is unusable (e.g. Xcode installed but its license not yet accepted, exit 69),
+# fall back to the Command Line Tools git without touching xcode-select or licenses.
+if ! git --version >/dev/null 2>&1 && [ -x /Library/Developer/CommandLineTools/usr/bin/git ]; then
+  export PATH="/Library/Developer/CommandLineTools/usr/bin:$PATH"
+fi

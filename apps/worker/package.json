@@ -1,0 +1,15 @@
+{
+  "name": "@fancy/worker",
+  "private": true,
+  "type": "module",
+  "scripts": { "typecheck": "tsc -p tsconfig.json" },
+  "dependencies": {
+    "@fancy/config": "workspace:*",
+    "@fancy/db": "workspace:*",
+    "pg": "8.23.1"
+  },
+  "devDependencies": {
+    "@fancy/testkit": "workspace:*",
+    "@types/pg": "8.23.1"
+  }
+}

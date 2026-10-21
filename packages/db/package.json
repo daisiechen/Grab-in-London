@@ -1,0 +1,21 @@
+{
+  "name": "@fancy/db",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "migrate": "node src/migrate-cli.ts"
+  },
+  "dependencies": {
+    "drizzle-orm": "0.45.4",
+    "pg": "8.23.1"
+  },
+  "devDependencies": {
+    "@fancy/testkit": "workspace:*",
+    "@types/pg": "8.23.1"
+  }
+}

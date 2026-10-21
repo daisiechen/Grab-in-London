@@ -1,12 +1,7 @@
 import type { TestProject } from 'vitest/node';
 import { startPostgres17 } from './server.ts';
 
-declare module 'vitest' {
-  export interface ProvidedContext {
-    pgServerUrl: string;
-    pgVersionNum: number;
-  }
-}
+import './context.ts';
 
 /** One PostgreSQL 17 server per db test run; each test file creates its own database. */
 export default async function setup(project: TestProject) {
