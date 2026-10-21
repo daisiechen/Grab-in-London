@@ -1,3 +1,4 @@
+import {REMOVED_SUPPORT_TEXT,casePrivateTextHidden,reportPrivateTextHidden,supportRelatedUserIds} from './privacy.ts';
 import { randomBytes } from 'node:crypto';
 import type { Pool, PoolClient } from 'pg';
 import type { FastifyInstance } from 'fastify';
@@ -10,21 +11,23 @@ import type { AppDeps } from '../http/context.ts';
 import { lockPostMeal } from '../post-meal/lock.ts';
 import { recordAttendanceRevision } from '../post-meal/attendance.ts';
 import { invalidateIneligiblePairs } from '../connections/service.ts';
-const reportDto = (r: Record<string, unknown>) => ({ id:r.id, receipt:r.receipt, targetType:r.target_type, status:r.status, publicOutcome:r.public_outcome, createdAt:(r.created_at as Date).toISOString() });
+const reportDto = (r: Record<string, unknown>) => ({ id:r.id, receipt:r.receipt, targetType:r.target_type, status:r.status, publicOutcome:r.privacy_redacted?null:r.public_outcome, createdAt:(r.created_at as Date).toISOString() });
 const notificationDto = (r: Record<string, unknown>) => { const refs = r.refs as Record<string,string>; return { id:r.id,template:r.template,createdAt:(r.created_at as Date).toISOString(),readAt:(r.read_at as Date | null)?.toISOString() ?? null,mealId:refs.mealId ?? null,applicationId:refs.applicationId ?? null,conversationId:refs.conversationId ?? null }; };
 async function caseFor(db: Pool | PoolClient, caseId: string, actor: string,lockGrant=false) {
-  const { rows:[r] } = await db.query(`SELECT c.* FROM support_cases c JOIN support_case_grants g ON g.case_id=c.id AND g.user_id=$2 WHERE c.id=$1${lockGrant?' FOR SHARE OF c,g':''}`,[caseId,actor]);
+  const { rows:[r] } = await db.query(`SELECT c.*,${casePrivateTextHidden} AS privacy_redacted FROM support_cases c JOIN support_case_grants g ON g.case_id=c.id AND g.user_id=$2 WHERE c.id=$1${lockGrant?' FOR SHARE OF c,g':''}`,[caseId,actor]);
   if(!r) throw new DomainError('NOT_FOUND','Case not found.'); return r;
 }
-const caseDto = (r: Record<string, unknown>) => ({ id:r.id,version:r.version,status:r.status,reportId:r.report_id,targetType:r.target_type,targetId:r.target_id,details:r.details,createdAt:(r.created_at as Date).toISOString() });
+const caseDto = (r: Record<string, unknown>) => ({ id:r.id,version:r.version,status:r.status,reportId:r.report_id,targetType:r.target_type,targetId:r.target_id,details:r.privacy_redacted?REMOVED_SUPPORT_TEXT:r.details,createdAt:(r.created_at as Date).toISOString() });
 export function registerSupportRoutes(app: FastifyInstance, deps: AppDeps) {
   defineWrite(app,deps,'correctAttendance',async({request,auth},tx)=>{
     const caseId=(request.params as {caseId:string}).caseId;
     const body=request.body as {mealId:string;subjectId:string;value:'present'|'absent';expectedVersion:string;reason:string};
     const supportCase=await caseFor(tx.client,caseId,auth.userId);
+    if(supportCase.privacy_redacted)throw new DomainError('FORBIDDEN','This case no longer has available evidence for a correction.');
     if(supportCase.target_type!=='MEAL'||supportCase.target_id!==body.mealId)throw new DomainError('FORBIDDEN','This case does not authorize a correction for that meal.');
     const {meal,now,pairs}=await lockPostMeal(tx,body.mealId,auth.userId,body.subjectId,async()=>{
       const current=await caseFor(tx.client,caseId,auth.userId,true);
+      if(current.privacy_redacted)throw new DomainError('FORBIDDEN','This case no longer has available evidence for a correction.');
       if(current.target_type!=='MEAL'||current.target_id!==body.mealId)throw new DomainError('FORBIDDEN','This case does not authorize a correction for that meal.');
     });
     const attendance=await recordAttendanceRevision(tx,meal,body.subjectId,'SUPPORT',body.value,auth.userId,body.expectedVersion,now,body.reason);
@@ -47,7 +50,12 @@ export function registerSupportRoutes(app: FastifyInstance, deps: AppDeps) {
     if(!row)throw new DomainError('NOT_FOUND','Notification not found.');return {data:notificationDto(row),resourceId:row.id};
   });
   defineWrite(app,deps,'createReport',async({request,auth},tx)=>{
-    await lockActiveActor(tx,auth.userId);const body=request.body as {targetType:'USER'|'MEAL'|'MESSAGE';targetId:string;reason:string;details:string};
+    const body=request.body as {targetType:'USER'|'MEAL'|'MESSAGE';targetId:string;reason:string;details:string};
+    const ownerSql=body.targetType==='USER'?`SELECT id AS user_id FROM users WHERE id=$1`:body.targetType==='MEAL'?`SELECT host_id AS user_id FROM meals WHERE id=$1`:`SELECT sender_id AS user_id FROM messages WHERE id=$1`;
+    const {rows:[owner]}=await tx.client.query<{user_id:string}>(ownerSql,[body.targetId]);
+    const actors=await tx.locks.lock<{id:string;status:string}>('users',[auth.userId,...(owner?[owner.user_id]:[])],'share','id,status');
+    if(!actors.some(u=>u.id===auth.userId&&u.status==='ACTIVE'))throw new DomainError('AUTH_REQUIRED','Your session is no longer valid.');
+    if(!owner||!actors.some(u=>u.id===owner.user_id&&u.status==='ACTIVE'))throw new DomainError('NOT_FOUND','This content is unavailable.');
     const sql=body.targetType==='USER'?`SELECT id FROM users WHERE id=$1 AND status='ACTIVE'`:body.targetType==='MEAL'?`SELECT m.id FROM meals m JOIN users u ON u.id=m.host_id WHERE m.id=$1 AND u.status='ACTIVE'`:`SELECT msg.id FROM messages msg WHERE msg.id=$1 AND EXISTS(SELECT 1 FROM membership_intervals i WHERE i.conversation_id=msg.conversation_id AND i.user_id=$2 AND i.join_seq<msg.seq AND (i.leave_seq IS NULL OR msg.seq<i.leave_seq))`;
     const target=await tx.client.query(sql,body.targetType==='MESSAGE'?[body.targetId,auth.userId]:[body.targetId]);
     if(!target.rowCount)throw new DomainError('NOT_FOUND','This content is unavailable.');
@@ -58,19 +66,23 @@ export function registerSupportRoutes(app: FastifyInstance, deps: AppDeps) {
     return {data:reportDto(r),resourceId:r.id};
   });
   defineRoute(app,deps,'reportStatus',async({request,auth})=>{
-    const {reportId}=request.params as {reportId:string};const {rows:[r]}=await deps.pool.query(`SELECT * FROM reports WHERE id=$1 AND reporter_id=$2`,[reportId,auth!.userId]);if(!r)throw new DomainError('NOT_FOUND','Report not found.');return {data:reportDto(r)};
+    const {reportId}=request.params as {reportId:string};const {rows:[r]}=await deps.pool.query(`SELECT r.*,${reportPrivateTextHidden} AS privacy_redacted FROM reports r WHERE r.id=$1 AND r.reporter_id=$2`,[reportId,auth!.userId]);if(!r)throw new DomainError('NOT_FOUND','Report not found.');return {data:reportDto(r)};
   });
   defineRoute(app,deps,'supportCase',async({request,auth})=>{
     const r=await caseFor(deps.pool,(request.params as {caseId:string}).caseId,auth!.userId);
     await appendAudit(deps.pool as unknown as PoolClient,{actorKind:'SUPPORT',actorId:auth!.userId,action:'support.case_viewed',aggregateType:'case',aggregateId:r.id,requestId:request.id});return {data:caseDto(r)};
   });
   defineWrite(app,deps,'resolveCase',async({request,auth,ifMatch},tx)=>{
-    await lockActiveActor(tx,auth.userId);const id=(request.params as {caseId:string}).caseId;await caseFor(tx.client,id,auth.userId,true);
+    const id=(request.params as {caseId:string}).caseId;
+    const related=await supportRelatedUserIds(tx.client,id);
+    const actors=await tx.locks.lock<{id:string;status:string}>('users',[auth.userId,...related],'share','id,status');
+    if(!actors.some(u=>u.id===auth.userId&&u.status==='ACTIVE'))throw new DomainError('AUTH_REQUIRED','Your session is no longer valid.');
+    const current=await caseFor(tx.client,id,auth.userId,true);
     const body=request.body as {status:string;publicOutcome:string|null;reason:string};
     const {rows:[r]}=await tx.client.query(`UPDATE support_cases SET status=$2,version=version+1 WHERE id=$1 AND version=$3 RETURNING *`,[id,body.status,ifMatch]);
     if(!r)throw new DomainError('VERSION_CONFLICT','The case changed. Reload it.');
-    if(r.report_id)await tx.client.query(`UPDATE reports SET status=$2,public_outcome=$3 WHERE id=$1`,[r.report_id,body.status==='RESOLVED'?'RESPONDED':'IN_REVIEW',body.publicOutcome]);
-    await appendAudit(tx.client,{actorKind:'SUPPORT',actorId:auth.userId,action:'support.case_resolved',aggregateType:'case',aggregateId:id,reason:body.reason,requestId:request.id});return {data:caseDto(r),version:r.version,resourceId:id};
+    if(r.report_id)await tx.client.query(`UPDATE reports SET status=$2,public_outcome=$3 WHERE id=$1`,[r.report_id,body.status==='RESOLVED'?'RESPONDED':'IN_REVIEW',current.privacy_redacted?null:body.publicOutcome]);
+    await appendAudit(tx.client,{actorKind:'SUPPORT',actorId:auth.userId,action:'support.case_resolved',aggregateType:'case',aggregateId:id,reason:current.privacy_redacted?'PRIVACY_REDACTED':body.reason,requestId:request.id});return {data:caseDto(await caseFor(tx.client,id,auth.userId)),version:r.version,resourceId:id};
   },async(auth,{request})=>{
     const {rows}=await deps.pool.query(`SELECT 1 FROM support_case_grants WHERE case_id=$1 AND user_id=$2`,[(request.params as {caseId:string}).caseId,auth.userId]);return rows.length===1;
   });

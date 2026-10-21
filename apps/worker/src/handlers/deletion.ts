@@ -1,3 +1,4 @@
+import {purgeKnownSupportText} from '../../../api/src/support/privacy.ts';
 import type {Pool} from 'pg';
 import {withTransaction} from '../../../api/src/common/transaction.ts';
 import type {JobHandler} from '../runner/runner.ts';
@@ -22,8 +23,9 @@ export function deletionHandler(pool:Pool,provider:DeletionProvider|DeletionStep
    const [user]=await tx.locks.lock<{id:string;status:string}>('users',[hint.user_id],'update','id,status');
    if(!user||user.status==='ACTIVE')throw Object.assign(new Error('Invalid deletion barrier'),{code:'DELETION_BARRIER_MISSING'});
    const {rows:[receipt]}=await tx.client.query(`SELECT * FROM deletion_requests WHERE id=$1 FOR UPDATE`,[job.resourceId]);
-   if(!receipt||receipt.status==='COMPLETED'||receipt.provider_steps.local==='COMPLETED')return;
+   if(!receipt||receipt.status==='COMPLETED'||(receipt.provider_steps.local==='COMPLETED'&&receipt.provider_steps.supportText==='KNOWN_LINKS_REDACTED'))return;
    await tx.client.query(`SET LOCAL fancy.privacy_purge='on'`);
+   await purgeKnownSupportText(tx.client,hint.user_id);
    await tx.client.query(`DELETE FROM profiles WHERE user_id=$1`,[hint.user_id]);
    await tx.client.query(`DELETE FROM product_surveys WHERE user_id=$1`,[hint.user_id]);
    await tx.client.query(`DELETE FROM private_contact WHERE user_id=$1`,[hint.user_id]);
@@ -44,7 +46,7 @@ export function deletionHandler(pool:Pool,provider:DeletionProvider|DeletionStep
    await tx.client.query(`DELETE FROM roles WHERE user_id=$1`,[hint.user_id]);
    await tx.client.query(`DELETE FROM support_case_grants WHERE user_id=$1`,[hint.user_id]);
    await tx.client.query(`UPDATE outbox SET status='DEAD',last_error_code='RECIPIENT_UNAVAILABLE',claim_token=NULL,lease_until=NULL WHERE recipient_id=$1 AND status<>'SENT'`,[hint.user_id]);
-   await tx.client.query(`UPDATE deletion_requests SET status='PROCESSING',provider_steps=provider_steps||'{"local":"COMPLETED"}'::jsonb WHERE id=$1`,[job.resourceId]);
+   await tx.client.query(`UPDATE deletion_requests SET status='PROCESSING',provider_steps=provider_steps||'{"local":"COMPLETED","supportText":"KNOWN_LINKS_REDACTED","supportTextScope":"UNSTRUCTURED_ASSOCIATIONS_UNVERIFIED"}'::jsonb WHERE id=$1`,[job.resourceId]);
   });
   // Remote calls are outside SQL locks. They use the stable deletion ID for provider dedupe.
   let remote:'COMPLETED'|'NEEDS_SUPPORT';
