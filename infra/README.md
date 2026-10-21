@@ -74,3 +74,5 @@ export使用0600且拒绝覆盖；只导出ID、接受时刻和回执hash，不�
 负载前置使用1000合成账号、10000合成消息，100并发（25消息读取+75资料读取）走真实HTTP处理器/PG，但Fastify inject不包含TLS、网络和首尔资源竞争。
 最初对同一账号发100次消息读取触发40/min限流；调整为混合合法请求，不关闭或提高限流。
 输出p95、错误率和观测到的worker延迟；这里不是持续压测或生产SLO证明。24小时RPO/4小时RTO目标仍须真实备份频率、独立台账持久化和首尔恢复计时验证。
+
+CI备份工具使用同一个固定PG17服务镜像生成pg_dump/pg_restore wrapper（`infra/scripts/ci-pg-clients.sh`），不假定host有PG17客户端。依据[GitHub Ubuntu runner清单](https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md)，其host预装版本不能直接等同本项目PG17。wrapper只适用于Linux CI的host网络和/tmp共享，已做参数/空格路径回归；真实CI结果仍单独核查。
