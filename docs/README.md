@@ -37,6 +37,8 @@
 
 ## 发布与验收
 
+- [MVP与AI测试计划](qa/test-plan.zh-CN.md)、[测试用例目录](qa/test-cases.zh-CN.md)、[结构化用例](qa/test-cases.json)与[Claude协作及差异登记](qa/collaboration-and-gaps.zh-CN.md)：覆盖PRD、双端Demo、技术包的待执行验收，区分模拟、待实现和真实门槛。
+
 - [2026-10-21双端独立复评](reviews/development-readiness-2026-10-21.zh-CN.md)：固定bbadfed基线，逐项核对B-01—B-11；当时核心双端可进入方案设计、AI范围待定；新增FR-13和本轮决定另由上列AI复评承接。
 
 - [2026-10-21最新交互修订](delivery/fancy-picker-refinement-2026-10-21.zh-CN.md)：取消手动新增与Profile返回、紧凑时间菜单及Google餐厅照片来源规则，覆盖v12的相应设计。
