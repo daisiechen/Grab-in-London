@@ -17,8 +17,8 @@
     "nativeRuntimeEvidence20261021": "Native owner actual headless Release install/launch and first-screen evidence independently reviewed by QA, F20 exact red874/fixed9df, F21 formal5b source-equivalent AppRoot and Metro matched. No independent native taps or complete role journey; root complete5b archive rebuild pending when reviewed."
   },
   "counts": {
-    "NOT_RUN": 21,
-    "PASS": 184,
+    "NOT_RUN": 16,
+    "PASS": 189,
     "FAIL": 1,
     "BLOCKED": 11
   },
@@ -54,7 +54,9 @@
     "browserObservationsCodeReview": "evidence/2026-10-21/code-review-observations.json",
     "nativeFormalReview": "evidence/2026-10-21/native-formal-5b-review.json",
     "browserObservationsB14": "evidence/2026-10-21/browser-b14.json",
-    "nativeIndependentXcui": "evidence/2026-10-21/native-independent-xcui.json"
+    "nativeIndependentXcui": "evidence/2026-10-21/native-independent-xcui.json",
+    "browserObservationsCodeTrust": "evidence/2026-10-21/code-trust-logging-review.json",
+    "browserObservationsB15": "evidence/2026-10-21/browser-b15.json"
   },
   "cases": [
     {
@@ -405,10 +407,10 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": [
-        "R166-T002",
-        "R166-T003"
+        "R170-T002",
+        "R170-T003"
       ],
       "relatedAutomatedAssertions": [
         "R1-T001",
@@ -506,13 +508,13 @@
         "R2-T166",
         "R2-T167"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "取消不产生申请",
-        "饭局目标保留",
-        "完成后仍需主动提交"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "Original canceled OAuth Google/Apple return component loses saved meal apply target: retry hardcodes Discover. No auto application assertion passes; exact target preservation fails. Owner notified, formal fix/original replay pending.",
+      "remainingExpected": [],
+      "actual": "F31 formalf796 actual React cancellation Google/Apple retains exact allowed apply target; explicit email retry reaches same meal editor, no apply call before Send. Planned browser_or_unit component scope satisfied. Separate actual-browser portal attempt rejected insecure authorization URL correctly; no real provider/browser provider-loop claim.",
       "defectIds": [
         "QA-F31"
       ]
@@ -2703,8 +2705,11 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "B15-O001",
+        "R171-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T071",
         "R1-T072",
@@ -2761,7 +2766,10 @@
         "列表同集合",
         "返回保留筛选区域和卡片"
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：选区域并翻卡 → 切列表 → 进详情及头像 → 返回。当前仍缺：地图数为饭局数非人数；列表同集合；返回保留筛选区域和卡片。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+      "actual": "Actual browser and actual router component reproduce losing language/bounds/view/area context on detail Back. Minimal formal repair and independent exact path replay pending; map/provider gate not used to hide this local defect.",
+      "defectIds": [
+        "QA-F33"
+      ]
     },
     {
       "id": "QA-DISCOVERY-002",
@@ -15476,23 +15484,14 @@
       "priority": "P0",
       "plannedStage": "review",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
-        "R70-T001",
-        "R71-T001",
-        "R71-T002",
-        "R71-T003",
-        "R71-T004",
-        "R71-T005",
-        "R71-T006",
-        "R71-T007",
-        "R71-T008",
-        "R71-T009",
-        "R71-T010",
-        "R71-T011",
-        "R71-T012",
-        "R71-T013",
-        "R71-T014"
+        "CR2-O003",
+        "R148-T001",
+        "R148-T002",
+        "R156-T002",
+        "R164-T001",
+        "R172-T001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T242",
@@ -15576,14 +15575,15 @@
         "R71-T013",
         "R71-T014"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "固定user→meal→pair→conversation→AI→privacy最终锁（全写命令审阅尚未完成）",
-        "拿锁后DB时钟（全写命令审阅尚未完成）"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "F12修复761304c：独立R70原provider挂起/NOWAIT探针通过；R71 create/edit/confirm等待无actor/meal锁，成功/404重放不依赖provider，503同key恢复；准备期间version/venue/profile/actor/deadline变化均拒绝且无改写。已知拒绝首次/封存同JSON和Retry-After、COMMIT40001重试后不运行旧attempt after也通过。F12 targeted关闭、R66原红保留；全写命令锁顺序及DB时钟审阅尚未完成，本CODE003回NOT_RUN而非PASS。",
+      "remainingExpected": [],
+      "actual": "Write/auth/schema source inventory reviewed with original developer, independently corroborated by route sweep, exact current-state/lock-time/provider barriers and repaired F29/F30/F32 original counterexamples. Review PASS is bounded source/test review, not all services or native end-to-end release acceptance.",
       "defectIds": [
-        "QA-F12"
+        "QA-F32"
       ]
     },
     {
@@ -15592,11 +15592,14 @@
       "priority": "P0",
       "plannedStage": "review",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
+        "CR2-O003",
         "R148-T001",
         "R148-T002",
-        "R164-T001"
+        "R156-T002",
+        "R164-T001",
+        "R172-T001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T242",
@@ -15664,14 +15667,14 @@
         "R1-T568",
         "R1-T569"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "服务端独立校验",
-        "不信actorId",
-        "禁止整行序列化",
-        "错误不泄密"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2,
+        3
       ],
-      "actual": "F30 original dual HTTP queue fixed on3b322cb: after DELETE202/DELETING, LINK403/no new GOOGLE identity. Contract inventory+unauthenticated routing verified; full authorized-role/DTO audit remains to be consolidated.",
+      "remainingExpected": [],
+      "actual": "Write/auth/schema source inventory reviewed with original developer, independently corroborated by route sweep, exact current-state/lock-time/provider barriers and repaired F29/F30/F32 original counterexamples. Review PASS is bounded source/test review, not all services or native end-to-end release acceptance.",
       "defectIds": [
         "QA-F30"
       ]
@@ -15772,8 +15775,11 @@
       "priority": "P0",
       "plannedStage": "review",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
+        "CR2-O001",
+        "R74-T001",
+        "R74-T002",
         "R143-T001"
       ],
       "relatedAutomatedAssertions": [
@@ -15844,13 +15850,13 @@
         "R68-T001",
         "R69-T001"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "无OTP/token/email/chat/AI原文/偏好值",
-        "仅允许最小元数据",
-        "合成评测原文另隔离"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "F26 targeted original RootLayout callback independently fixed on19d: raw private Error never logged. Remaining whole logging/evaluation source inventory not yet accepted; originalR139 red retained in runs.",
+      "remainingExpected": [],
+      "actual": "Independent source inventory of production logging and separate synthetic evaluation artifacts plus actual sentinel logging regressions verified; no real-provider quality gate inferred.",
       "defectIds": [
         "QA-F26"
       ],
@@ -15868,8 +15874,12 @@
       "priority": "P0",
       "plannedStage": "review",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "CR2-O002",
+        "R156-T002",
+        "R164-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T242",
         "R1-T243",
@@ -15936,13 +15946,13 @@
         "R1-T568",
         "R1-T569"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "关键DB用双连接barrier",
-        "mock不关闭真实门槛",
-        "断言来自需求，不降低标准掩盖缺陷"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：审查skip/only、无断言、过度mock、随机sleep和截图更新 → 重跑最小反例。尚缺逐项证据：关键DB用双连接barrier；mock不关闭真实门槛；断言来自需求，不降低标准掩盖缺陷。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent trust audit preserves real two-connection counterexamples, scheduling/fixture corrections and all real provider/native boundaries. F32 remains product failure; trust review PASS does not mean all product tests pass."
     },
     {
       "id": "QA-GATE-001",

@@ -14,10 +14,10 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 184 |
+| PASS | 189 |
 | FAIL | 1 |
 | BLOCKED | 11 |
-| NOT_RUN | 21 |
+| NOT_RUN | 16 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实环境、原生runtime/设备/签名或政策批准证据；本地恢复与分步删除现已复验通过，不能再笼统视为外部阻塞。FAIL优先于未完成的后续步骤。
@@ -192,6 +192,13 @@
 | R164 | 退出码0；1/1通过，失败0，1个测试文件 | `3b322cb` |
 | R165 | 退出码0；1/1通过，失败0，1个测试文件 | `3b322cb` |
 | R166 | 退出码1；1/3通过，失败2，1个测试文件 | `3b322cb` |
+| R167 | 退出码1；0/1通过，失败1，1个测试文件 | `f796428` |
+| R168 | 退出码1；0/1通过，失败1，1个测试文件 | `f796428` |
+| R169 | 退出码0；3/3通过，失败0，1个测试文件 | `f796428` |
+| R170 | 退出码0；3/3通过，失败0，1个测试文件 | `f796428` |
+| R171 | 退出码1；0/1通过，失败1，1个测试文件 | `9e169ff` |
+| R172 | 退出码0；1/1通过，失败0，1个测试文件 | `9e169ff` |
+| R173 | 退出码0；15/15通过，失败0，2个测试文件 | `9e169ff` |
 
 R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯函数探针；R5复跑分页修复回归，R6是QA第二批6项独立P0探针；R7/R8为QA-F01修复的API/Web及iOS组件定向复跑；R9是第三批12项独立边界探针，R10/R11复跑解除准备，R12为QA新增真实备份中E0导出的恢复后撤销分支；R13为饭后及群/私聊权限独立探针；R14保留QA-F03修前2失败，R15为0518d45修后的12项独立探针复验，R16为身份模块26项受影响HTTP回归（包括fresh会话下未来proof拒绝），不能删除修前结果或把历史失败当当前通过；R17为举报本人回执及撤授权重放3项独立HTTP/PG探针，撤session/DELETING状态通过受控数据库夹具设置。R18为安排锁、历史截止补算、开始名单及预约隔离6项独立PG/HTTP探针，删除仅屏障状态，完整删除名单断言仍未通过。R19/R20独立定向复跑5a37fdc关闭顺序单测及真实PG负载退出，未替代远端CI结果。R21为删除实际HTTP/本地purge、故障rollback及用户锁消息/审批竞态5项独立探针，生产日志脱敏仍待完整捕获。R22为ac09af4固定版本的11项独立受控AI/controller/HTTP探针，仅035/036/037具完整预期证据；R23为该版本Claude发现修复28项API/DB独立定向复验。R24保留QA-F04修前停用后仍发布失败；R25为8e2b908修后7项独立停用/费用/reaper探针，R26为22项受影响DB回归，F04定向关闭而043仍有未测断言。R27保留QA-F05修前Web失败，T001另为已分类夹具错误；R28/R29为f298048独立session/PG及Web组件各3项，R30为iOS manager17项定向回归；F05在NEW与TTL/偏好删除差异范围关闭。R31为公开DTO/后台角色/CSV授权及跨快照游标和大序号4项独立HTTP/PG探针，公式转义另覆盖formatter，不声称Excel实际执行。R32保留QA-F06 CLI入口失败，R33保留QA-F07原生协议失败；R34/R35固定b76c593独立8+32项验证CLI修复，R36固定1080993独立iOS49项验证桥接修复。完整加入用户路径仍NOT_RUN，不据组件通过升级。不能将这些数量相加当作独立业务用例数；R5与R1有重复，R2也不是原生设备验收。逐项测试名、状态、时间和命令见[机器证据](evidence/2026-10-21/automated-runs.json)。R4是质量检查而非业务用例。
 
@@ -218,7 +225,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-AUTH-001 · 游客浏览与敏感入口门禁 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：Explore tables first → 浏览地图、详情及公开主页 → 分别点Create/Apply/Meals/Inbox。当前仍缺：公开路径可达；受限动作进入认证；没有自动申请或创建。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B4补充实际游客详情→Apply未发草稿→认证→已有账号免补资料回原草稿，明确第二次Send后Pending/Inbox3卡、无自动席位/群。完整剩余预期仍见remainingExpected。 B5补齐实际游客Meals/Inbox认证门禁，无离开账号私有记录；公开详情可达、Create/Apply已有实际证据，live地图及欢迎Explore入口完整路径仍未验，不授PASS。；证据 B4-T001, B5-T005 |
 | QA-AUTH-002 · 邮箱失败与恢复 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：输入非法邮箱 → 改为 qa@example.invalid → 输入错误验证码再输入123456。当前仍缺：非法邮箱不能继续；错误码不登录；合法示例码回到初始操作且标为模拟。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
 | QA-AUTH-003 · 验证码过期和重发 | PASS | Actual Web component server-derived30s cooldown/expiry error and explicit resend preserve email/new challenge/clear code, plus real PG exact300000ms expiry rejection and fresh adapter-issued OTP success. No real mail provider claim.；证据 R162-T001, R165-T001 |
-| QA-AUTH-004 · 供应商取消回流 | FAIL | Original canceled OAuth Google/Apple return component loses saved meal apply target: retry hardcodes Discover. No auto application assertion passes; exact target preservation fails. Owner notified, formal fix/original replay pending.；证据 R166-T002, R166-T003 |
+| QA-AUTH-004 · 供应商取消回流 | PASS | F31 formalf796 actual React cancellation Google/Apple retains exact allowed apply target; explicit email retry reaches same meal editor, no apply call before Send. Planned browser_or_unit component scope satisfied. Separate actual-browser portal attempt rejected insecure authorization URL correctly; no real provider/browser provider-loop claim.；证据 R170-T002, R170-T003 |
 | QA-AUTH-005 · 资料门槛 | PASS | B3固定8387580实际IAB：资料各缺项就地拒绝，合成完整资料成功返回原Create，随后饭局host公开投影与昵称/bio/English/Food录入一致；不公开email。一次London life未选导致提交拒绝，重新明确选择后正常保存，无稳定丢字段缺陷。仅本地fixture身份，非真实供应商。；证据 B3-T001 |
 | QA-AUTH-006 · 退出及刷新边界 | PASS | B4真实IAB两次合成账号：Sign out弹确认，Stay signed in保持原账号；明确确认后回认证页，再reload仍认证页，不恢复离开账号。Web980c8ed/API8387580本地实际session；不是外部IdP持久登录/真实设备声明。；证据 B4-T006 |
 | QA-INPUT-001 · 姓名长度1 | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R3-T001 |
@@ -249,7 +256,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-AUTH-012 · CSRF与开放重定向 | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R1-T402, R1-T406 |
 | QA-AUTH-013 · refresh轮换重用 | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R1-T411 |
 | QA-AUTH-014 · 退出后缓存和深链 | PASS | 独立真实PG/API：设备logout204撤销family及cookie；捕获cookie重放session、私密messages深链、旧clientMessageId及新写均401且DB消息数不增加；另一合法设备session200且消息201。R45 Web11项清除查询缓存、持久草稿及组件RAM，失联退出和迟到session也不恢复私密状态；R46原生session26项含SecureStore/cache清理。完整覆盖本条api_db_or_unit方法的三项预期；不等同真实浏览器全程或原生设备验收。；证据 R44-T001, R45-T001, R45-T002, R45-T003, R45-T004, R45-T005, R45-T006, R45-T007, R45-T008, R45-T009, R45-T010, R45-T011, R46-T001, R46-T002, R46-T003, R46-T004, R46-T005, R46-T006, R46-T007, R46-T008, R46-T009, R46-T010, R46-T011, R46-T012, R46-T013, R46-T014, R46-T015, R46-T016, R46-T017, R46-T018, R46-T019, R46-T020, R46-T021, R46-T022, R46-T023, R46-T024, R46-T025, R46-T026 |
-| QA-DISCOVERY-001 · 地图列表与返回保持 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：选区域并翻卡 → 切列表 → 进详情及头像 → 返回。当前仍缺：地图数为饭局数非人数；列表同集合；返回保留筛选区域和卡片。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
+| QA-DISCOVERY-001 · 地图列表与返回保持 | FAIL | Actual browser and actual router component reproduce losing language/bounds/view/area context on detail Back. Minimal formal repair and independent exact path replay pending; map/provider gate not used to hide this local defect.；证据 B15-O001, R171-T001 |
 | QA-DISCOVERY-002 · 日期OR与跨字段AND | PASS | B5 Web980c8ed/API8387580固定本地合成环境。实际IAB两个不连续日期23/25取并集为2场，加入2人和English交集只Sunday；未应用Englishoff/Chineseon按Escape关闭后仍原1场，重新打开仍Englishtrue/Chinesefalse。未使用页面计算作预期，按已知四场日期/人数/语言/预算fixture核对；不代Google Maps真实服务。；证据 B5-T001 |
 | QA-DISCOVERY-003 · 空结果恢复 | PASS | B5 Web980c8ed/API8387580固定本地合成环境。实际无场次Thu22显示0/No meals found，无伪推荐；Clear filters恢复原4个已知mealId。未使用页面计算作预期，按已知四场日期/人数/语言/预算fixture核对；不代Google Maps真实服务。；证据 B5-T002 |
 | QA-DISCOVERY-004 · 地图拖动与点选 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：拖动地图后点击标记 → Search this area → 再点餐厅候选。当前仍缺：拖动不误触详情；已选位置与预览分开；确认前不改创建草稿。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
@@ -387,11 +394,11 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-AI-045 · 长度token及deadline | PASS | F10修复49d22b6正式独立R54原两探针及新增恢复路径3项通过：真实paste2001完整保留、inline报错、空白0请求、原文首尾空白2001不能trim绕过、缩短2000后明确发送一次；R55 iOS manager/widget24项包含原文保留/长度/恢复通过，非真机。R53服务器空白/2000/2001、16001输入token、真实适配器输出2001tokens安全失败且计费、deadline≤30秒；R25超时及迟到不发布复用。R52两项原红永久保留。；证据 R53-T001, R53-T002, R53-T003, R25-T002, R54-T001, R54-T002, R54-T003, R55-T001, R55-T002, R55-T003, R55-T004, R55-T005, R55-T006, R55-T007, R55-T008, R55-T009, R55-T010, R55-T011, R55-T012, R55-T013, R55-T014, R55-T015, R55-T016, R55-T017, R55-T018, R55-T019, R55-T020, R55-T021, R55-T022, R55-T023, R55-T024 |
 | QA-CODE-001 · 生产隔离 | PASS | 正式26317f8独立R74通过：生产/staging拒测试适配及固定OTP；AST检查六端与生产包无旧Demo/shared权威、模拟键盘付款依赖。隔离副本语义破坏OpenAPI/SDK均使真实生成检查失败，恢复通过，原artifact字节不变；四端API/Web/iOS/admin typecheck通过，共享workspace client/contracts。；证据 R74-T003, R74-T004 |
 | QA-CODE-002 · 数据库真约束 | PASS | R79隔离真实PG直接SQL：活跃申请partial unique拒23505、人数7 CHECK拒23514、非法host FK拒23503、重复message拒23505，原meal不变。空库先首迁移后植入version7用户，升级全部迁移并重跑no-op；附加失败迁移建表/改用户后除零，整迁移回滚，用户仍version7、半表不存在、迁移台账不增、随后正式迁移可重跑。验证失败迁移回滚与前向升级兼容，未声称支持任意生产降级。；证据 R79-T001, R79-T002 |
-| QA-CODE-003 · 事务与锁顺序 | NOT_RUN | F12修复761304c：独立R70原provider挂起/NOWAIT探针通过；R71 create/edit/confirm等待无actor/meal锁，成功/404重放不依赖provider，503同key恢复；准备期间version/venue/profile/actor/deadline变化均拒绝且无改写。已知拒绝首次/封存同JSON和Retry-After、COMMIT40001重试后不运行旧attempt after也通过。F12 targeted关闭、R66原红保留；全写命令锁顺序及DB时钟审阅尚未完成，本CODE003回NOT_RUN而非PASS。；证据 R70-T001, R71-T001, R71-T002, R71-T003, R71-T004, R71-T005, R71-T006, R71-T007, R71-T008, R71-T009, R71-T010, R71-T011, R71-T012, R71-T013, R71-T014 |
-| QA-CODE-004 · 权限和响应schema | NOT_RUN | F30 original dual HTTP queue fixed on3b322cb: after DELETE202/DELETING, LINK403/no new GOOGLE identity. Contract inventory+unauthenticated routing verified; full authorized-role/DTO audit remains to be consolidated.；证据 R148-T001, R148-T002, R164-T001 |
+| QA-CODE-003 · 事务与锁顺序 | PASS | Write/auth/schema source inventory reviewed with original developer, independently corroborated by route sweep, exact current-state/lock-time/provider barriers and repaired F29/F30/F32 original counterexamples. Review PASS is bounded source/test review, not all services or native end-to-end release acceptance.；证据 CR2-O003, R148-T001, R148-T002, R156-T002, R164-T001, R172-T001 |
+| QA-CODE-004 · 权限和响应schema | PASS | Write/auth/schema source inventory reviewed with original developer, independently corroborated by route sweep, exact current-state/lock-time/provider barriers and repaired F29/F30/F32 original counterexamples. Review PASS is bounded source/test review, not all services or native end-to-end release acceptance.；证据 CR2-O003, R148-T001, R148-T002, R156-T002, R164-T001, R172-T001 |
 | QA-CODE-005 · SDK契约漂移 | PASS | 正式26317f8独立R74通过：生产/staging拒测试适配及固定OTP；AST检查六端与生产包无旧Demo/shared权威、模拟键盘付款依赖。隔离副本语义破坏OpenAPI/SDK均使真实生成检查失败，恢复通过，原artifact字节不变；四端API/Web/iOS/admin typecheck通过，共享workspace client/contracts。；证据 R74-T005 |
-| QA-CODE-006 · 日志与存储泄露 | NOT_RUN | F26 targeted original RootLayout callback independently fixed on19d: raw private Error never logged. Remaining whole logging/evaluation source inventory not yet accepted; originalR139 red retained in runs.；证据 R143-T001 |
-| QA-CODE-007 · 测试可信度 | NOT_RUN | 本地生产实现尚需实际执行：审查skip/only、无断言、过度mock、随机sleep和截图更新 → 重跑最小反例。尚缺逐项证据：关键DB用双连接barrier；mock不关闭真实门槛；断言来自需求，不降低标准掩盖缺陷。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-CODE-006 · 日志与存储泄露 | PASS | Independent source inventory of production logging and separate synthetic evaluation artifacts plus actual sentinel logging regressions verified; no real-provider quality gate inferred.；证据 CR2-O001, R74-T001, R74-T002, R143-T001 |
+| QA-CODE-007 · 测试可信度 | PASS | Independent trust audit preserves real two-connection counterexamples, scheduling/fixture corrections and all real provider/native boundaries. F32 remains product failure; trust review PASS does not mean all product tests pass.；证据 CR2-O002, R156-T002, R164-T001 |
 | QA-GATE-001 · G-AUTH真实三方式 | BLOCKED | 缺真实EMAIL/Google/Apple身份提供方、回调/PKCE及映射联调证据。开发先核对已有配置及本地回调测试，只有确实缺账号/域名配置/凭据时列明用户操作；不发真实身份请求替代授权。 |
 | QA-GATE-002 · G-PLACES任意餐厅 | BLOCKED | 缺真实Google Places/地图key与Map ID配置下的placeId、坐标、署名和许可验收证据。开发先做适配及失效/缺配置回退测试，并列出真实配置依赖。 |
 | QA-GATE-003 · G-MAIL真实收件箱 | BLOCKED | 缺真实邮件提供方与收件箱接收、去重及渠道矩阵证据。本地outbox/失败恢复可继续测；开发核对发送域/提供方和可用测试收件箱，缺账号配置才列用户依赖。 |

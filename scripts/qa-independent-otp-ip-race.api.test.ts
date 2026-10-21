@@ -1,0 +1,12 @@
+/** Same-IP quota check: actual first count is held while the second waits on the shared quota lock; no mocked rows. */
+import {randomUUID} from 'node:crypto';
+import {afterAll,beforeAll,expect,inject,it,vi} from 'vitest';
+import {Browser,createHarness,type Harness} from '../apps/api/src/test/harness.ts';
+let h:Harness;beforeAll(async()=>{h=await createHarness(inject('pgServerUrl'));});afterAll(async()=>h.close());
+it('QA-CODE-003 QA-AUTH-003 different emails sharing one IP cannot both exceed five OTP challenges',async()=>{
+ const b=new Browser(h),start=()=>b.request('POST','/v1/auth/email/start',{body:{clientRequestId:randomUUID(),email:`qa-ip-${randomUUID()}@example.invalid`,client:'WEB'}});
+ for(let i=0;i<4;i++)expect((await start()).statusCode).toBe(201);
+ const connect=h.db.pool.connect.bind(h.db.pool),pids=new Set<number>();let arrived=0,release:()=>void=()=>{};const gate=new Promise<void>(r=>{release=r;});let ready:()=>void=()=>{};const firstReady=new Promise<void>(r=>{ready=r;});const provider=vi.spyOn(h.idp,'startEmailOtp');
+ const spy=vi.spyOn(h.db.pool,'connect').mockImplementation((...args:unknown[])=>{if(typeof args[0]==='function')return Reflect.apply(connect,h.db.pool,args);return (async()=>{const c=await connect();return new Proxy(c,{get(target,key){if(key==='query')return async(...args:unknown[])=>{const result=await Reflect.apply(target.query,target,args);if(typeof args[0]==='string'&&args[0].includes('AS by_email')){pids.add((await target.query('SELECT pg_backend_pid() pid')).rows[0].pid);if(++arrived===1){ready();await gate;}}return result;};const v=Reflect.get(target,key,target);return typeof v==='function'?v.bind(target):v;}});})();});
+ try{const first=start();await firstReady;const second=start();let waiting=false;for(let i=0;i<200;i++){const q=await h.db.pool.query("SELECT count(*)::int n FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%pg_advisory_xact_lock%'");if(q.rows[0].n===1){waiting=true;break;}await new Promise<void>(r=>setTimeout(r,5));}release();const results=await Promise.all([first,second]);expect(waiting).toBe(true);expect(provider).toHaveBeenCalledTimes(1);expect(pids.size).toBe(2);expect(results.map(r=>r.statusCode).sort()).toEqual([201,429]);expect((await h.db.pool.query("SELECT count(*)::int n FROM auth_transactions WHERE kind='EMAIL_OTP'")).rows[0].n).toBe(5);}finally{release();spy.mockRestore();provider.mockRestore();}
+});

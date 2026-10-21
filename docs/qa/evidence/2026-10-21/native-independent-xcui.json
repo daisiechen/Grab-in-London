@@ -48,6 +48,21 @@
       "result": "UNRESOLVED",
       "app": "formal19d Release",
       "actual": "Server clock aligned to real UTC+20sec; Try again still unavailable. Developer safe diagnostic build pending isolated install. No product root cause asserted."
+    },
+    {
+      "id": "NATIVE-DIAGNOSTIC7",
+      "result": "UNRESOLVED",
+      "actual": "Temporary diagnostic1 real restore+Tryagain: readRefresh.failed before any HTTP; no raw error captured. Test failed after46.5sec; xcodebuild residual was later terminated without resetting simulator."
+    },
+    {
+      "id": "NATIVE-DIAGNOSTIC8",
+      "result": "UNRESOLVED",
+      "actual": "Temporary diagnostic2 getItem.started→getItem.failed both cold/retry. No parse or invalidDelete stage; no raw credential read. Fixed-stage metadata saved separately."
+    },
+    {
+      "id": "NATIVE-SIGNCHECK9",
+      "result": "UNRESOLVED",
+      "actual": "Same diagnostic2 JS/resources, only native ad-hoc signing bytes changed to5b-like identifier/empty entitlements. Actual getItem still failed; signature hypothesis unconfirmed. No full native journey PASS."
     }
   ],
   "limits": [

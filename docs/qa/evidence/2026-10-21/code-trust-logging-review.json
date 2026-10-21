@@ -1,0 +1,65 @@
+{
+  "sourceCommit": "f796428f157d3245e61a5a18943369d5eb680a24",
+  "fileSha256": {
+    "apps/api/src/http/logging.ts": "8080c1042dd76b25746f096bb9315409a71f81cbdfecb8007e1d3c10a2d01864",
+    "apps/api/src/http/errors.ts": "f4f9fbb68805234f9b421e65a40aa3e418d6b5e39b613195de6a755afe6d0a4d",
+    "apps/ios/app/_layout.tsx": "c83b1be544bf8489cd93fc8e5fb8f042a419c4beb072171cf28a500c6de53f63",
+    "apps/worker/src/runner/runner.ts": "a4e5651f552aff7466e05cd537bee0a3b6e97672886bd99b56bd4e896857c751",
+    "apps/worker/src/mail/delivery.ts": "f135929a2ebcc618d4b609a6dbe4f0c04678515711613d649934cdd1f12f191a",
+    "packages/testkit/src/ai-evals/README.md": "afb9f12f0eeaa9ba2f9d502ec6798bf03a6d6de4ecef38f3dd41984e226c6f4b",
+    "packages/testkit/src/ai-evals/runner.ts": "c676cd51ea6ce4445adfe10f279297114466b071c240907c90817898255ee6c4",
+    "scripts/qa-independent-session-lock-upgrade.api.test.ts": "3386ec283d304a28660123e9082dbb94d7618fe3caf38321d045deb5ed7f8386",
+    "scripts/qa-independent-link-deletion-race.api.test.ts": "c7c81eaab7b91413cb24d340b47e342789cacc782ad796d3dcf9cb97219c359c",
+    "scripts/qa-independent-otp-ip-race.api.test.ts": "c25afdfe83a88bcd75efbae9611cd6a17578919125fea3a4fe8dbeb95681959b",
+    "apps/api/src/identity/routes.ts": "b732067e0371e0cb700fd76e0fa94c0017ee71e1055d3359f551908e2c01a16b"
+  },
+  "observations": [
+    {
+      "id": "CR2-O001",
+      "status": "passed",
+      "title": "QA-CODE-006 runtime logs and isolated synthetic eval artifacts source inventory",
+      "testedCommit": "f796428f157d3245e61a5a18943369d5eb680a24",
+      "environment": "Read-only production source review plus existing independent R74/R98/R143; no real credential or provider call",
+      "steps": [
+        "API request serializer excludes query/headers/body, bounded error labels only, fixed redacted message/empty stack; R74 actual Pino sentinel regression retained.",
+        "Native root uses fixed LOCAL_SIGN_OUT_CLEANUP_FAILED and R143 actual callback rejects raw injected private Error; worker dead-letter reprojects IDs/finite enum/counters only, R98 producer fault evidence retained.",
+        "Evaluation corpus and runner are separate testkit synthetic-only artifacts; offline validator explicitly keeps REAL_PROVIDER_NOT_RUN and never opens live capture without evidence/approval. Source grep runtime console/request logger sinks reviewed; no production raw AI/chat/preferences sink observed."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/code-trust-logging-review.json"
+      ]
+    },
+    {
+      "id": "CR2-O002",
+      "status": "passed",
+      "title": "QA-CODE-007 tests retain counterexamples and distinguish real barriers from mocks",
+      "testedCommit": "f796428f157d3245e61a5a18943369d5eb680a24",
+      "environment": "Read-only test/source inventory and actual R154/R156/R158/R164/R168 independent real PG execution",
+      "steps": [
+        "Inspected tracked app/package/infra and QA test skip/only/todo search: no active selective skip/only marker found. Standard tests assert behavior; no screenshot baseline update used to conceal failures.",
+        "Real backend-count barriers reproduced F29 and F30; corrected exclusive-lock retest observes second PG lock wait before first release. F32 original two real PG counts independently exposes quota race; remains open rather than suppressed.",
+        "Test-only IdP/Places/mail/mock AI are explicitly labeled; 11 external gates retained, native failures stay unaccepted and 217 frozen cases never inferred from assertion count.",
+        "QA setup errors remain as R155/157/R160/163/R167; timeout is not fixed by raising limits. XCTest 0.15s character pacing is input delivery only, readiness uses explicit predicates."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/code-trust-logging-review.json"
+      ]
+    },
+    {
+      "id": "CR2-O003",
+      "status": "passed",
+      "title": "QA-CODE-003/004 complete write/auth/schema inventory and corrected races",
+      "testedCommit": "9e169ffef8d90a3041597918052ef21e511774fd",
+      "environment": "Joint source inventory plus QA independent real PG and contract sweeps, not every possible interleaving proof",
+      "steps": [
+        "Reviewed framework preflight/current actor/origin-CSRF/MFA/role/If-Match, raw idempotency seal before wire serializer, per-handler DTO projection and raw CSV boundary. Contract-wide route registration/protected unauthenticated sweep R148 retained.",
+        "Business27 defineWrite commands plus message/read/analytics incidental writes, identity credential protocols, every AI protocol phase and worker lifecycle/deletion/mail/snapshot inventory retained with lock/time/provider boundaries. Actor is server session identity; allowedActions is display only.",
+        "F29 metadata upgrade, F30 post-delete LINK authority/ticket lock order, F32 sharedIP quota races found and repaired; QA original reds retained and exact success/barrier expectations replayed. R173 provider waits hold no business actor/meal lock, schema/error/replay regression retained.",
+        "No generic whole-row success sealing assumed safe merely because HTTP serializer hides fields; producer DTOs and own/contact/private application projections reviewed against route-specific intended recipient. Remaining real supplier in-flight mail/remote revocation and worker deployment supervisor explicitly outside local acceptance."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/write-path-review.md"
+      ]
+    }
+  ]
+}

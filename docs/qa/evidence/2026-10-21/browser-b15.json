@@ -1,0 +1,19 @@
+{
+  "observations": [
+    {
+      "id": "B15-O001",
+      "status": "failed",
+      "title": "QA-DISCOVERY-001 actual Back discards English applied filter",
+      "testedCommit": "19d1fb9784c4727e664c026c4a0bd6c29eb7b5cb",
+      "environment": "Actual frozen Web5177/API61973 synthetic isolated local PG; relevant sources unchanged at9e",
+      "steps": [
+        "Open /discover?languages=en: More filters1active, synthetic cross-client meal1result.",
+        "Open meal detail; Back href is /discover.",
+        "Click Back, wait Fancy a bite heading: actualURL /discover and More filters has no active count. No original meal mutation."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/discovery-back-loses-filter.jpg"
+      ]
+    }
+  ]
+}

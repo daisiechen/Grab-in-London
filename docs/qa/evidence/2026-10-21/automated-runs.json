@@ -17529,6 +17529,300 @@
           "failureSummary": "AssertionError: expected '/sign-in?returnTo=%2Fdiscover' to be '/sign-in?returnTo=%2Fmeals%2F33333333…' // Object.is equality"
         }
       ]
+    },
+    {
+      "id": "R167",
+      "testedCommit": "f796428f157d3245e61a5a18943369d5eb680a24",
+      "command": "OTP IP quota QA connect proxy failed callback overload; timeout setup not product red",
+      "startedAt": "2026-10-21T20:05:21.078000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R167-T001",
+          "run": "R167",
+          "path": "scripts/qa-independent-otp-ip-race.api.test.ts",
+          "title": "QA-CODE-003 QA-AUTH-003 different emails sharing one IP cannot both exceed five OTP challenges",
+          "status": "failed",
+          "durationMs": 30008.415375,
+          "failureSummary": "Error: Test timed out in 30000ms.\nIf this is a long-running test, pass a timeout value as the last argument or configure it globally with \"testTimeout\"."
+        }
+      ]
+    },
+    {
+      "id": "R168",
+      "testedCommit": "f796428f157d3245e61a5a18943369d5eb680a24",
+      "command": "OTP IP quota real dual backend post-count barrier original F32 red",
+      "startedAt": "2026-10-21T20:06:17.655000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R168-T001",
+          "run": "R168",
+          "path": "scripts/qa-independent-otp-ip-race.api.test.ts",
+          "title": "QA-CODE-003 QA-AUTH-003 different emails sharing one IP cannot both exceed five OTP challenges",
+          "status": "failed",
+          "durationMs": 114.85387500000002,
+          "failureSummary": "AssertionError: expected [ 201, 201 ] to deeply equal [ 201, 429 ]"
+        }
+      ]
+    },
+    {
+      "id": "R169",
+      "testedCommit": "f796428f157d3245e61a5a18943369d5eb680a24",
+      "command": "F31 original canceled Google Apple exact target component retest",
+      "startedAt": "2026-10-21T20:06:39.301000+00:00",
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R169-T001",
+          "run": "R169",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-003 expired code rejects and explicit post-cooldown resend preserves email with fresh challenge",
+          "status": "passed",
+          "durationMs": 218.27987500000006
+        },
+        {
+          "id": "R169-T002",
+          "run": "R169",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-004 GOOGLE cancelled OAuth retains exact meal apply target without submitting application",
+          "status": "passed",
+          "durationMs": 13.351583000000005
+        },
+        {
+          "id": "R169-T003",
+          "run": "R169",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-004 APPLE cancelled OAuth retains exact meal apply target without submitting application",
+          "status": "passed",
+          "durationMs": 9.29566699999998
+        }
+      ]
+    },
+    {
+      "id": "R170",
+      "testedCommit": "f796428f157d3245e61a5a18943369d5eb680a24",
+      "command": "F31 original cancellation plus completed explicit email retry returns same meal without automatic apply",
+      "startedAt": "2026-10-21T20:08:49.147000+00:00",
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R170-T001",
+          "run": "R170",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-003 expired code rejects and explicit post-cooldown resend preserves email with fresh challenge",
+          "status": "passed",
+          "durationMs": 211.05041600000004
+        },
+        {
+          "id": "R170-T002",
+          "run": "R170",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-004 GOOGLE cancelled OAuth retains exact meal apply target without submitting application",
+          "status": "passed",
+          "durationMs": 142.4605419999998
+        },
+        {
+          "id": "R170-T003",
+          "run": "R170",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-004 APPLE cancelled OAuth retains exact meal apply target without submitting application",
+          "status": "passed",
+          "durationMs": 117.31170900000006
+        }
+      ]
+    },
+    {
+      "id": "R171",
+      "testedCommit": "9e169ffef8d90a3041597918052ef21e511774fd",
+      "command": "original F33 actual Discover detail Back loses filters bounds view and selected area",
+      "startedAt": "2026-10-21T20:12:19.048000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R171-T001",
+          "run": "R171",
+          "path": "apps/web/src/features/discover/qa-independent-return.unit.test.tsx",
+          "title": "QA-DISCOVERY-001 detail Back restores applied filters bounds view and selected area card",
+          "status": "failed",
+          "durationMs": 223.8006670000001,
+          "failureSummary": "TestingLibraryElementError: Unable to find an accessible element with the role \"button\" and name \"More filters, 1 active\"\n\nHere are the accessible roles:\n\n  complementary:\n\n  Name \"Optional analytics\":\n  \u001b[36m<aside\u001b[39m\n    \u001b[33maria-label\u001b[39m=\u001b[32m\"Optional analytics\"\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"body-pad\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  --------------------------------------------------\n  heading:\n\n  Name \"Help improve Fancy\":\n  \u001b[36m<h2 />\u001b[39m\n\n  Name \"Fancy a bite?\":\n  \u001b[36m<h1 />\u001b[39m\n\n  Name \"A seat for you\":\n  \u001b[36m<h2 />\u001b[39m\n\n  Name \"QA Hackney table\":\n  \u001b[36m<h3 />\u001b[39m\n\n  Name \"QA Soho table\":\n  \u001b[36m<h3 />\u001b[39m\n\n  --------------------------------------------------\n  paragraph:\n\n  Name \"\":\n  \u001b[36m<p />\u001b[39m\n\n  Name \"\":\n  \u001b[36m<p\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"tagline\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"\":\n  \u001b[36m<p\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"venue-name\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"\":\n  \u001b[36m<p />\u001b[39m\n\n  Name \"\":\n  \u001b[36m<p />\u001b[39m\n\n  Name \"\":\n  \u001b[36m<p />\u001b[39m\n\n  Name \"\":\n  \u001b[36m<p />\u001b[39m\n\n  Name \"\":\n  \u001b[36m<p\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"card-caption\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"\":\n  \u001b[36m<p\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"venue-name\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"\":\n  \u001b[36m<p />\u001b[39m\n\n  Name \"\":\n  \u001b[36m<p />\u001b[39m\n\n  Name \"\":\n  \u001b[36m<p />\u001b[39m\n\n  Name \"\":\n  \u001b[36m<p />\u001b[39m\n\n  Name \"\":\n  \u001b[36m<p\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"card-caption\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  --------------------------------------------------\n  button:\n\n  Name \"Allow analytics\":\n  \u001b[36m<button\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"primary secondary\"\u001b[39m\n    \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"Decline analytics\":\n  \u001b[36m<button\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"primary secondary\"\u001b[39m\n    \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"London\":\n  \u001b[36m<button\u001b[39m\n    \u001b[33mclass\u001b[39m=\u001b[32m\"city\"\u001b[39m\n    \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n  \u001b[36m/>\u001b[39m\n\n  Name \"Filter by date\":\n  \u001b[36m<button\u001b[39m\n    \u001b[33maria-label\u001b[39m=\u001b[32m\"Filter by date\"\u001b[39m\n    \u001b[33mtype\u001b[39m"
+        }
+      ]
+    },
+    {
+      "id": "R172",
+      "testedCommit": "9e169ffef8d90a3041597918052ef21e511774fd",
+      "command": "F32 real quota lock wait replay one new provider call statuses201/429 total5",
+      "startedAt": "2026-10-21T20:12:56.824000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R172-T001",
+          "run": "R172",
+          "path": "scripts/qa-independent-otp-ip-race.api.test.ts",
+          "title": "QA-CODE-003 QA-AUTH-003 different emails sharing one IP cannot both exceed five OTP challenges",
+          "status": "passed",
+          "durationMs": 103.53091600000005
+        }
+      ]
+    },
+    {
+      "id": "R173",
+      "testedCommit": "9e169ffef8d90a3041597918052ef21e511774fd",
+      "command": "targeted existing actual PG provider-lock and OTP quota regression",
+      "startedAt": "2026-10-21T20:13:59.878000+00:00",
+      "exitCode": 0,
+      "passed": 15,
+      "failed": 0,
+      "total": 15,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R173-T001",
+          "run": "R173",
+          "path": "apps/api/src/identity/otp-ip-quota.api.test.ts",
+          "title": "serializes different emails at the same IP quota and sends exactly one fifth challenge",
+          "status": "passed",
+          "durationMs": 130.24529199999984
+        },
+        {
+          "id": "R173-T002",
+          "run": "R173",
+          "path": "apps/api/src/identity/otp-ip-quota.api.test.ts",
+          "title": "same email and request ID across IPs dedupe under the email lock without a second provider send",
+          "status": "passed",
+          "durationMs": 3.595500000000129
+        },
+        {
+          "id": "R173-T003",
+          "run": "R173",
+          "path": "apps/api/src/identity/otp-ip-quota.api.test.ts",
+          "title": "unrelated IP and email can proceed while a quota is held",
+          "status": "passed",
+          "durationMs": 3.3990420000000086
+        },
+        {
+          "id": "R173-T004",
+          "run": "R173",
+          "path": "apps/api/src/identity/otp-ip-quota.api.test.ts",
+          "title": "provider delivery begins after quota transaction releases both advisory locks",
+          "status": "passed",
+          "durationMs": 1.7492919999999685
+        },
+        {
+          "id": "R173-T005",
+          "run": "R173",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "delayed restaurant provider during an edit does not hold the meal lock on another connection",
+          "status": "passed",
+          "durationMs": 118.52500000000009
+        },
+        {
+          "id": "R173-T006",
+          "run": "R173",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "confirmation waits outside actor transaction; success and provider404 replay without any provider dependency",
+          "status": "passed",
+          "durationMs": 15.224083000000064
+        },
+        {
+          "id": "R173-T007",
+          "run": "R173",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "provider503 releases intent so same key can recover",
+          "status": "passed",
+          "durationMs": 8.130167000000029
+        },
+        {
+          "id": "R173-T008",
+          "run": "R173",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "rechecks version after a paused edit and commits no edited description",
+          "status": "passed",
+          "durationMs": 14.118750000000091
+        },
+        {
+          "id": "R173-T009",
+          "run": "R173",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "rechecks venue after a paused edit and commits no edited description",
+          "status": "passed",
+          "durationMs": 13.123499999999922
+        },
+        {
+          "id": "R173-T010",
+          "run": "R173",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "rechecks profile after a paused edit and commits no edited description",
+          "status": "passed",
+          "durationMs": 12.047667000000047
+        },
+        {
+          "id": "R173-T011",
+          "run": "R173",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "rechecks actor after a paused edit and commits no edited description",
+          "status": "passed",
+          "durationMs": 8.733042000000069
+        },
+        {
+          "id": "R173-T012",
+          "run": "R173",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "rechecks deadline after a paused edit and commits no edited description",
+          "status": "passed",
+          "durationMs": 9.5787499999999
+        },
+        {
+          "id": "R173-T013",
+          "run": "R173",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "publish verification holds no actor lock, then create and edit success replay with provider unavailable",
+          "status": "passed",
+          "durationMs": 13.693041999999878
+        },
+        {
+          "id": "R173-T014",
+          "run": "R173",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "seals one rejection body even when each error serialization crosses a controlled millisecond",
+          "status": "passed",
+          "durationMs": 6.044500000000198
+        },
+        {
+          "id": "R173-T015",
+          "run": "R173",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "sealed rate limit first response and replay preserve Retry-After",
+          "status": "passed",
+          "durationMs": 4.440082999999959
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -17605,7 +17899,9 @@
     "scripts/qa-independent-tonight.api.test.ts": "27a0b42b3be4701307dcaaeb9a285a867e897b15057ef450284852f499040d79",
     "scripts/qa-independent-session-lock-upgrade.api.test.ts": "3386ec283d304a28660123e9082dbb94d7618fe3caf38321d045deb5ed7f8386",
     "scripts/qa-independent-link-deletion-race.api.test.ts": "c7c81eaab7b91413cb24d340b47e342789cacc782ad796d3dcf9cb97219c359c",
-    "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx": "0f02889acb9be8d464fe2dcd58858878778a771d775a1816c1104fa3a6380575"
+    "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx": "54a360239f5e63cff35a75c836d7d87dfffe039364c4906d69021513a5cdc66b",
+    "scripts/qa-independent-otp-ip-race.api.test.ts": "b9f8fe6486aac5c18a4c7f3fcdb4ecbbd8dbcfaff3804096bff2f997614ffdb1",
+    "apps/web/src/features/discover/qa-independent-return.unit.test.tsx": "7c6b19e0eff1419fafaee12b8d42b10117dc7faa9025d04bc09dd469e46f7abb"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console. R68/R69 valid TestIDP OAuth callback200 captured actual non-silent child stdout only in parent RAM. Metadata contains only leak booleans, never credential strings or raw logs. R69 aggregates code/state/email checks without stopping at the first boolean failure. R72 mutates semantic OpenAPI/SDK artifacts only in an owned temporary contracts copy, requires the real checker fail1 and restore0, and verifies original workspace bytes untouched. Static cases remain NOT_RUN until fixed committed handoff recheck.",
   "runtimeSnapshotVerification": {

@@ -1,0 +1,14 @@
+{"stage": "restore.started", "name": "unknown", "domain": "unknown", "code": null}
+{"stage": "marker.started", "name": "unknown", "domain": "unknown", "code": null}
+{"stage": "marker.present", "name": "unknown", "domain": "unknown", "code": null}
+{"stage": "readRefresh.started", "name": "unknown", "domain": "unknown", "code": null}
+{"stage": "getItem.started", "name": "unknown", "domain": "unknown", "code": null}
+{"stage": "getItem.failed", "name": "Error", "domain": "unknown", "code": null}
+{"stage": "readRefresh.failed", "name": "Error", "domain": "unknown", "code": null}
+{"stage": "restore.failed", "name": "Error", "domain": "unknown", "code": null}
+{"stage": "restore.started", "name": "unknown", "domain": "unknown", "code": null}
+{"stage": "readRefresh.started", "name": "unknown", "domain": "unknown", "code": null}
+{"stage": "getItem.started", "name": "unknown", "domain": "unknown", "code": null}
+{"stage": "getItem.failed", "name": "Error", "domain": "unknown", "code": null}
+{"stage": "readRefresh.failed", "name": "Error", "domain": "unknown", "code": null}
+{"stage": "restore.failed", "name": "Error", "domain": "unknown", "code": null}
