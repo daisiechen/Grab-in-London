@@ -25,6 +25,8 @@
 
 ## 发布与验收
 
+- [2026-10-21双端独立复评](reviews/development-readiness-2026-10-21.zh-CN.md)：固定bbadfed基线，逐项核对B-01—B-11；核心双端可进入方案设计，真实AI范围仍待决定。
+
 - [2026-10-21最新交互修订](delivery/fancy-picker-refinement-2026-10-21.zh-CN.md)：取消手动新增与Profile返回、紧凑时间菜单及Google餐厅照片来源规则，覆盖v12的相应设计。
 
 - [2026-10-21选店与创建修订](delivery/fancy-restaurant-picker-2026-10-21.zh-CN.md)：任意餐厅Demo、Google Places正式规格、时间下拉、条款与返回路径。
