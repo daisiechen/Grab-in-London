@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { AppState, StyleSheet, View } from 'react-native';
 import { Primary } from './ui/Button.tsx';
 import { Body } from './ui/Text.tsx';
+import {AssistantWidget} from './features/assistant/AssistantWidget.tsx';
 import { colors } from './ui/tokens.ts';
 import { ServicesProvider, useSessionState, type Services } from './services.tsx';
 
@@ -19,6 +20,7 @@ export function AppRoot({ services, children }: { services: Services; children: 
     <ServicesProvider services={services}>
       <SessionBanner services={services} />
       {children}
+      <AssistantWidget />
     </ServicesProvider>
   );
 }

@@ -1,3 +1,5 @@
+import {useAssistantContext} from '../assistant/hooks.ts';
+import {NativeMap,type Bounds} from '../maps/NativeMap.tsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -26,10 +28,10 @@ const SIZE_OPTIONS = [2, 3, 4, 5, 6] as const;
 
 /**
  * Discover list with the prototype's draft/apply filters. The same query backs the map once the
- * Google Maps SDK is approved (G-PLACES); until then there is no illustrative map.
+ * Google native Maps SDK is configured; otherwise lists remain available.
  */
 export function DiscoverScreen() {
-  const { api, now } = useServices();
+  const { api, now,assistant } = useServices();
   const router = useRouter();
   const today = londonToday(now());
   const [applied, setApplied] = useState<Filters>(emptyFilters);
@@ -40,6 +42,15 @@ export function DiscoverScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const requestId = useRef(0);
+  const [mapMode,setMapMode]=useState(false);
+  const [pendingBounds,setPendingBounds]=useState<Bounds|null>(null);
+  const [bounds,setBounds]=useState<Bounds|null>(null);
+  useAssistantContext({sourcePage:'DISCOVER',appliedFilters:{
+    ...(applied.dates.length?{dates:applied.dates}:{}),...(applied.tableSizes.length?{tableSizes:applied.tableSizes}:{}),
+    ...(applied.budgetMaxPence!==null?{budgetMaxPence:applied.budgetMaxPence}:{}),...(applied.languages.length?{languages:applied.languages}:{}),
+    ...(applied.moods.length?{moods:applied.moods}:{}),...(applied.cuisineCodes.length?{cuisineCodes:applied.cuisineCodes}:{}),...(applied.dietaryCodes.length?{dietaryCodes:applied.dietaryCodes}:{}),
+    ...(applied.timeOfDay!=='any'?{timeOfDay:applied.timeOfDay}:{}),...(applied.keyword.trim()?{keyword:applied.keyword.trim()}:{}),...(bounds?{bounds}:{}),
+  }});
 
   const load = useCallback(
     async (filters: Filters, after: string | null) => {
@@ -47,8 +58,9 @@ export function DiscoverScreen() {
       setLoading(true);
       setError(null);
       try {
-        const res = await api.call('discoverMeals', { query: toQuery(filters, after ?? undefined) });
+        const res = await api.call('discoverMeals', { query: {...toQuery(filters, after ?? undefined),...(bounds??{})} });
         if (id !== requestId.current) return;
+        assistant.observeAreas(res.data.map(m=>m.areaCode));
         setMeals((prev) => (after ? [...prev, ...res.data] : res.data));
         setCursor(res.page.hasMore ? res.page.nextCursor : null);
       } catch (e) {
@@ -58,7 +70,7 @@ export function DiscoverScreen() {
         if (id === requestId.current) setLoading(false);
       }
     },
-    [api],
+    [api,bounds,assistant],
   );
 
   useEffect(() => {
@@ -94,6 +106,12 @@ export function DiscoverScreen() {
               <Primary secondary label={sizeLabel} onPress={() => open('size')} />
               <Primary secondary label={count ? `Filters · ${count}` : 'Filters'} onPress={() => open('filters')} />
             </ScrollView>
+            <Primary secondary label={mapMode?'Show list':'Show map'} onPress={()=>setMapMode(p=>!p)}/>
+            {mapMode?<>
+              <NativeMap points={meals.flatMap(m=>m.venue.available&&m.venue.location?[{id:m.id,title:m.title,lat:m.venue.location.lat,lng:m.venue.location.lng,attributions:m.venue.attributions.map(a=>a.text)}]:[])} onSelect={id=>router.push(`/meals/${id}`)} onMove={setPendingBounds}/>
+              <Primary secondary label="Search this area" disabled={!pendingBounds} onPress={()=>{if(pendingBounds)setBounds(pendingBounds);}}/>
+              {bounds?<TextAction label="Clear map area" onPress={()=>setBounds(null)}/>:null}
+            </>:null}
             <FormMessage message={error} />
             {error ? <Primary secondary label="Try again" onPress={() => void load(applied, null)} /> : null}
           </View>

@@ -1,3 +1,4 @@
+import {memoryGuestCredentialStore,type GuestCredentialStore} from '../features/assistant/guest-store.ts';
 import type { ReactElement } from 'react';
 import { render } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -16,15 +17,15 @@ export interface TestApp {
   openAuthSession: jest.Mock<Promise<WebBrowserAuthSessionResult>, [string, string]>;
 }
 
-export function createTestApp(opts: { now?: () => number } = {}): TestApp {
+export function createTestApp(opts: { now?: () => number;guestStore?:GuestCredentialStore;installMarker?:import('../features/auth/credential-store.ts').InstallMarker } = {}): TestApp {
   const mock = createMockFetch();
   const store = memoryStore();
   const openAuthSession = jest.fn<Promise<WebBrowserAuthSessionResult>, [string, string]>(async () => ({ type: WebBrowserResultType.CANCEL }));
   const services = createServices({
     baseUrl: 'http://api.test',
     fetch: mock.fetch,
-    store,
-    installMarker: null,
+    store,guestStore:opts.guestStore??memoryGuestCredentialStore(),
+    installMarker: opts.installMarker??null,
     openAuthSession,
     createChallenge: async () => ({ verifier: 'V'.repeat(43), challenge: 'C'.repeat(43) }),
     newId: seqId,

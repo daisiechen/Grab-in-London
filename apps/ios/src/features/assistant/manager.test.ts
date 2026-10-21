@@ -1,0 +1,93 @@
+import {memoryGuestCredentialStore,type GuestCredentialStore} from './guest-store.ts';
+import type {ApiClient} from '@fancy/client';
+import type {SessionManager} from '../auth/session.ts';
+import {AssistantManager,emptyPreferences,type AIDraft} from './manager.ts';
+import {deferred,flush} from '../../test/deferred.ts';
+function setup(guestStore:GuestCredentialStore=memoryGuestCredentialStore()){
+ let now=0;let serial=0;let listener=()=>{};let actor='guest';
+ const responses=new Map<string,()=>Promise<unknown>>();
+ const call=jest.fn(async(op:string,args:unknown)=>{void args;return responses.get(op)?.()??{data:{}};});
+ const auth={getState:()=>actor==='guest'?{status:'signedOut'}:{status:'signedIn',session:{user:{id:actor}}},subscribe:(fn:()=>void)=>{listener=fn;return()=>{};}} as unknown as SessionManager;
+ const manager=new AssistantManager({guestStore,auth,api:{call} as unknown as ApiClient,newId:()=>`id-${++serial}`,now:()=>now,randomBytes:n=>new Uint8Array(n)});
+ responses.set('createGuestSession',async()=>({data:{guestToken:'synthetic-guest-fixture',expiresAt:new Date(86400000).toISOString()}}));
+ responses.set('bootstrapAI',async()=>({data:{sessionId:'session-1',generation:'1',deviceToken:'synthetic-device-fixture',revokeHandle:'revoke',expiresAt:new Date(now+1800000).toISOString()}}));
+ responses.set('readAI',async()=>({data:{turns:[],latestRequestId:null,expiresAt:new Date(now+1800000).toISOString()}}));
+ responses.set('requestAI',async()=>{throw new Error('offline fixture');});
+ manager.open();
+ return {manager,call,responses,time:(n:number)=>{now=n;},actor:(id:string)=>{actor=id;listener();}};
+}
+it('retries the same request intent and sends only explicitly confirmed guest preferences',async()=>{
+ const h=setup();const prefs={...emptyPreferences(),budgetMaxPence:2000};
+ await h.manager.savePreferences(prefs);h.manager.setText('Find a table');await h.manager.send();await h.manager.retry();
+ const calls=h.call.mock.calls.filter(c=>c[0]==='requestAI');expect(calls).toHaveLength(2);expect(calls[1]?.[1]).toEqual(calls[0]?.[1]);
+ expect(calls[0]?.[1]).toMatchObject({body:{guestPreferences:prefs,input:'Find a table'}});expect(h.manager.getSnapshot().text).toBe('Find a table');
+});
+it('single-flights bootstrap and ignores a response after account isolation',async()=>{
+ const h=setup();const pending=deferred<unknown>();h.responses.set('bootstrapAI',()=>pending.promise);
+ const a=h.manager.continue();const b=h.manager.continue();await flush();
+ expect(h.call.mock.calls.filter(c=>c[0]==='bootstrapAI')).toHaveLength(1);
+ h.actor('account-two');pending.resolve({data:{sessionId:'old',generation:'1',deviceToken:'old',expiresAt:new Date(1800000).toISOString()}});await Promise.all([a,b]);
+ expect(h.manager.deviceToken).toBeNull();expect(h.manager.getSnapshot().open).toBe(false);
+});
+it('expires exactly at TTL and preserves unsent text and confirmed guest preferences',async()=>{
+ const h=setup();await h.manager.savePreferences({...emptyPreferences(),tableSizes:[2]});await h.manager.continue();h.manager.setText('Unsent');h.time(1800000);h.manager.tick();
+ expect(h.manager.getSnapshot()).toMatchObject({phase:'expired',text:'Unsent',preferences:{tableSizes:[2]}});
+ await h.manager.continue();expect(h.manager.getSnapshot().phase).toBe('idle');
+ await h.manager.newConversation();expect(h.manager.getSnapshot().preferences).toEqual(emptyPreferences());
+});
+it('requires replacement confirmation and rejects edits during validation without applying',async()=>{
+ const h=setup();await h.manager.continue();let version='1';const apply=jest.fn();
+ const draft={id:'draft',kind:'APPLICATION',targetId:'meal',editorVersion:'1',text:'Candidate',fields:null} as unknown as AIDraft;
+ h.manager.registerEditor({key:'form',kind:'APPLICATION',targetId:'meal',current:()=>({text:'My text',version}),apply});
+ await expect(h.manager.transfer(draft,false)).rejects.toThrow('Confirm replacement');
+ expect(h.call.mock.calls.filter(c=>c[0]==='validateAIDraft')).toHaveLength(0);
+ const wait=deferred<unknown>();h.responses.set('validateAIDraft',()=>wait.promise);const transfer=h.manager.transfer(draft,true);version='2';wait.resolve({data:draft});
+ await expect(transfer).rejects.toMatchObject({code:'EDITOR_CONFLICT'});expect(apply).not.toHaveBeenCalled();
+});
+it('does not apply a late answer while closed, and never implicitly sends editor content',async()=>{
+ const h=setup();const pending=deferred<unknown>();h.responses.set('requestAI',()=>pending.promise);
+ h.manager.registerEditor({key:'form',kind:'CREATE',targetId:null,current:()=>({text:'Private unfinished form',version:'7'}),apply:jest.fn()});
+ h.manager.setContext({sourcePage:'CREATE'});h.manager.setText('Help me draft');const send=h.manager.send();await flush();h.manager.close();
+ pending.resolve({data:{requestId:'request',state:'SUCCEEDED',result:{replyText:'Late',cards:[]}}});await send;
+ expect(h.manager.getSnapshot().result).toBeNull();expect(h.manager.getSnapshot().text).toBe('Help me draft');
+ const request=h.call.mock.calls.find(c=>c[0]==='requestAI')?.[1] as {body:Record<string,unknown>};expect(request.body.editorText).toBeUndefined();expect(request.body.editorVersion).toBe('7');
+});
+it('releases MEAL context on blur before asking from a page without explicit context',async()=>{
+ const h=setup();const blur=h.manager.setContext({sourcePage:'MEAL',explicitMealId:'old-meal',explicitMealIds:['old-meal']});
+ blur();h.manager.setText('Find dinner');await h.manager.send();
+ const request=h.call.mock.calls.find(c=>c[0]==='requestAI')?.[1] as {body:Record<string,unknown>};
+ expect(request.body.sourcePage).toBe('DISCOVER');expect(request.body.explicitMealId).toBeUndefined();expect(request.body.explicitMealIds).toBeUndefined();
+});
+it('does not let a retired focus cleanup erase the new page context',()=>{
+ const h=setup();const blurMeal=h.manager.setContext({sourcePage:'MEAL',explicitMealId:'old-meal'});
+ const blurChat=h.manager.setContext({sourcePage:'INBOX',explicitConversationId:'current-group'});blurMeal();
+ expect(h.manager.contextValue).toEqual({sourcePage:'INBOX',explicitConversationId:'current-group'});
+ blurChat();expect(h.manager.contextValue).toEqual({sourcePage:'DISCOVER'});
+});
+it('restores the same fixed-expiry guest across managers and NEW',async()=>{
+ const store=memoryGuestCredentialStore();const first=setup(store);await first.manager.continue();const token=first.manager.credential;
+ const stored=await store.read();expect(stored).toEqual({token,expiresAt:86400000});
+ await first.manager.newConversation();expect(first.manager.credential).toBe(token);expect(await store.read()).toEqual(stored);
+ const second=setup(store);await second.manager.continue();expect(second.manager.credential).toBe(token);
+ expect(second.call.mock.calls.some(c=>c[0]==='createGuestSession')).toBe(false);expect(await store.read()).toEqual(stored);
+});
+it('creates a new subject only after the fixed 24h expiry',async()=>{
+ const store=memoryGuestCredentialStore();await store.write({token:'synthetic-expired-fixture',expiresAt:86400000});const h=setup(store);h.time(86400000);
+ h.responses.set('createGuestSession',async()=>({data:{guestToken:'synthetic-new-fixture',expiresAt:new Date(172800000).toISOString()}}));
+ await h.manager.continue();expect(h.manager.credential).toBe('synthetic-new-fixture');expect(h.call.mock.calls.filter(c=>c[0]==='createGuestSession')).toHaveLength(1);
+});
+it('clears the secure guest record on login without retaining AI content',async()=>{
+ const store=memoryGuestCredentialStore();const h=setup(store);await h.manager.continue();h.manager.setText('private');h.actor('logged-in');await flush();
+ expect(await store.read()).toBeNull();expect(h.manager.credential).toBeNull();expect(h.manager.getSnapshot().text).toBe('');
+});
+it('fails closed on secure read or write failure without sending assistant requests or minting retries',async()=>{
+ const readFailure:GuestCredentialStore={read:async()=>{throw new Error('locked');},write:jest.fn(),clear:jest.fn()};
+ const h=setup(readFailure);await h.manager.continue();await h.manager.continue();expect(h.call).not.toHaveBeenCalled();
+ const writeFailure:GuestCredentialStore={read:async()=>null,write:async()=>{throw new Error('locked');},clear:async()=>{}};
+ const w=setup(writeFailure);await w.manager.continue();await w.manager.continue();expect(w.call.mock.calls.map(c=>c[0])).toEqual(['createGuestSession']);expect(w.manager.credential).toBeNull();
+});
+it('blocks future guest bootstrap if account-transition secure deletion fails',async()=>{
+ const store=memoryGuestCredentialStore();const h=setup({...store,clear:async()=>{throw new Error('locked deletion');}});
+ await h.manager.continue();h.actor('account');await flush();h.actor('guest');await flush();h.call.mockClear();
+ await h.manager.continue();expect(h.call).not.toHaveBeenCalled();expect(h.manager.credential).toBeNull();expect(h.manager.getSnapshot().phase).toBe('error');
+});

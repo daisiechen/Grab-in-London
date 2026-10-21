@@ -1,5 +1,6 @@
+import {useAssistantContext,useAssistantEditor} from '../assistant/hooks.ts';
 import { SessionScope } from '../auth/SessionScope.tsx';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Keyboard } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ApiError, type ResponseOf } from '@fancy/client';
@@ -35,6 +36,9 @@ function ApplyScreenContent() {
   const [draft, setDraft] = useState<ApplyDraft>(() => drafts.get<ApplyDraft>(applyDraftKey(id)) ?? { message: '', key: newId(), keyFor: '' });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const editorVersion=useRef(0);
+  useAssistantContext({sourcePage:'MEAL',explicitMealId:id});
+  useAssistantEditor({key:`apply:${id}`,kind:'APPLICATION',targetId:id,current:()=>({text:draft.message,version:String(editorVersion.current)}),apply:d=>{if(d.text!==null){editorVersion.current++;setDraft({message:d.text,key:newId(),keyFor:''});}}});
 
   useEffect(() => {
     drafts.set(applyDraftKey(id), draft);
@@ -85,7 +89,7 @@ function ApplyScreenContent() {
       <Heading>Pull up a chair.</Heading>
       <Body>{`Tell ${meal.host.displayName} a little about yourself and why you’d like to join.`}</Body>
       <Body>{`${meal.title} · ${whenLabel(meal.startsAt)} · ${seatsLabel(meal)}`}</Body>
-      <Field label="Your introduction" hint="20–300 characters. Your host will see this with your profile." value={draft.message} onChangeText={(message) => setDraft({ ...draft, message })} maxLength={300} multiline />
+      <Field label="Your introduction" hint="20–300 characters. Your host will see this with your profile." value={draft.message} onChangeText={(message) => {editorVersion.current++;setDraft({ ...draft, message });}} maxLength={300} multiline />
       <Body>{`${me.displayName ?? 'Your profile'}`}</Body>
       <TextAction label="Edit profile" onPress={() => router.push('/profile-edit')} />
       {!me.profileGate.profileComplete ? <Body muted>Complete your profile before applying.</Body> : null}

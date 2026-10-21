@@ -100,3 +100,32 @@ and navigation, actual OAuth/email, native Maps/Places and cross-end API flows r
 The map surface is pending the native map integration. Dual-proof `LINK_REQUIRED` completion and
 reauth completion require server protocol agreement. A07 AI assistant is not implemented; no AI
 operation exists in the current shared SDK contract. No fake AI response is substituted.
+
+### Ask Fancy and native map implementation
+
+Ask Fancy uses the generated API operations. Only the anonymous guest bearer and its
+fixed 24-hour expiresAt are stored in this-install SecureStore. AI device/session credentials,
+conversation text, confirmed guest preferences and assistant drafts remain RAM-only.
+Shared installation initialization clears old refresh and guest records before creating the
+sandbox marker. Locked, corrupt or failed guest storage blocks AI requests rather than
+creating a replacement subject. Retrying an uncertain request reuses its request ID. Exact idle
+expiry preserves unsent input; NEW clears guest preferences. Account changes clear local
+assistant state and delete the guest SecureStore record. Native login passes the restored
+guest bearer only to verifyEmail/exchangeHandoff for atomic server revocation; other core
+operations never receive this bearer. Active AI sessions also attempt revocation with captured
+old guest credentials. If offline,
+server TTL limits the unreachable session. Backgrounded/closed views ignore late answers.
+
+Application, create-meal and live group-chat editors register only while focused. Transferring
+a candidate validates server permissions and the current editor version, asks before replacing
+existing text, checks again after the request, and never submits/publishes/sends the form.
+Messages acknowledge only active viewability progress, with monotonic high water marks and
+no automatic acknowledgement retry loop.
+
+Google Places results use the Google native map provider only. Set the separate, bundle-visible
+`EXPO_PUBLIC_GOOGLE_MAPS_IOS_KEY` restricted to the iOS bundle ID and Maps SDK for iOS.
+`app.config.js` configures the react-native-maps native plugin; this requires a new development
+build. Missing key, Expo Go, or missing Google native module shows the list fallback. The
+private server Places key must never be reused here. Google SDK/native rendering, device
+installation, Apple signing, real DeepSeek credentials/pricing/token counting and real model
+acceptance remain external gates; Jest native substitutes and JS export do not verify them.

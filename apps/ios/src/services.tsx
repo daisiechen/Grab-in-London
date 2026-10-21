@@ -1,3 +1,4 @@
+import {secureGuestCredentialStore,type GuestCredentialStore} from './features/assistant/guest-store.ts';
 import { createContext, useContext, useSyncExternalStore, type ReactNode } from 'react';
 import { createApiClient, newIntentKey, type ApiClient } from '@fancy/client';
 import { QueryCache } from './api/cache.ts';
@@ -8,8 +9,10 @@ import { clearPendingLink } from './features/auth/link.ts';
 import { createAppChallenge, type AppChallengePair } from './features/auth/pkce.ts';
 import type { WebBrowserAuthSessionResult } from 'expo-web-browser';
 import * as ExpoCrypto from 'expo-crypto';
+import {AssistantManager} from './features/assistant/manager.ts';
 
 export interface Services {
+  assistant:AssistantManager;
   session: SessionManager;
   /** Authenticated client (refresh + single replay on 401). Use for every feature call. */
   api: ApiClient;
@@ -28,6 +31,7 @@ export interface Services {
 export interface ServiceConfig {
   baseUrl: string;
   fetch?: typeof fetch;
+  guestStore?:GuestCredentialStore;
   store: CredentialStore;
   installMarker: InstallMarker | null;
   openAuthSession: Services['openAuthSession'];
@@ -44,22 +48,37 @@ export function createServices(config: ServiceConfig): Services {
   const onSessionEnd = new Set<() => void>();
   const newId = config.newId ?? newIntentKey;
   const now = config.now ?? Date.now;
-  const base = (accessToken: () => string | null) =>
-    createApiClient({ baseUrl: config.baseUrl, credentials: { kind: 'bearer', accessToken }, ...(config.fetch ? { fetch: config.fetch } : {}) });
+  const aiHolder:{manager?:AssistantManager}={};
+  const base = (accessToken: () => string | null,loginGuest=false) =>
+    createApiClient({ baseUrl: config.baseUrl, credentials: { kind: 'bearer', accessToken },headers:op=>loginGuest&&(op==='verifyEmail'||op==='exchangeHandoff')&&!accessToken()&&aiHolder.manager?.credential?{authorization:`Bearer ${aiHolder.manager.credential}`}:{}, ...(config.fetch ? { fetch: config.fetch } : {}) });
+  const guestStore=config.guestStore??secureGuestCredentialStore();
+  let installation:Promise<void>|null=null;
+  const ensureInstallation=()=>installation??=(async()=>{if(config.installMarker&&!(await config.installMarker.isPresent())){await config.store.clear();await guestStore.clear();await config.installMarker.set();}})();
+  const installedGuestStore:GuestCredentialStore={read:async()=>{await ensureInstallation();return guestStore.read();},write:async value=>{await ensureInstallation();await guestStore.write(value);},clear:()=>guestStore.clear()};
   const holder: { session?: SessionManager } = {};
-  const raw = base(() => holder.session?.accessToken() ?? null);
+  const transport = base(() => holder.session?.accessToken() ?? null,true);
+  const raw:ApiClient={async call(op,request){if((op==='verifyEmail'||op==='exchangeHandoff')&&!holder.session?.accessToken())await aiHolder.manager?.restoreIdentity();return transport.call(op,request);}};
   const session = new SessionManager({
     api: raw,
     withToken: (token) => base(() => token),
     store: config.store,
-    installMarker: config.installMarker,
+    installMarker:config.installMarker?{isPresent:async()=>{await ensureInstallation();return true;},set:async()=>{await ensureInstallation();}}:null,
     newId,
     now,
     onClear: [() => cache.clear(), () => drafts.clear(), clearReturnTo, clearPendingLink, () => { for (const clear of onSessionEnd) clear(); }],
     ...(config.onClearError ? { onClearError: config.onClearError } : {}),
   });
   holder.session = session;
+  const aiRaw=createApiClient({baseUrl:config.baseUrl,credentials:{kind:'bearer',accessToken:()=>session.accessToken()??aiHolder.manager?.credential??null},
+    headers:()=>aiHolder.manager?.deviceToken?{'ai-device-token':aiHolder.manager.deviceToken}:{},...(config.fetch?{fetch:config.fetch}:{})});
+  const assistant=new AssistantManager({guestStore:installedGuestStore,revokeGuest:async(old,credential)=>{
+    const retired=createApiClient({baseUrl:config.baseUrl,credentials:{kind:'bearer',accessToken:()=>credential},headers:()=>({'ai-device-token':old.deviceToken}),...(config.fetch?{fetch:config.fetch}:{})});
+    await retired.call('resetAI',{params:{sessionId:old.sessionId},body:{generation:old.generation,reason:'ACCOUNT_CHANGE'},idempotencyKey:newId()});
+  },auth:session,api:sessionClient(aiRaw,session),newId,now,randomBytes:config.randomBytes??((n)=>ExpoCrypto.getRandomBytes(n))});
+  aiHolder.manager=assistant;
+  onSessionEnd.add(()=>assistant.clear());
   return {
+    assistant,
     session,
     api: sessionClient(raw, session),
     cache,

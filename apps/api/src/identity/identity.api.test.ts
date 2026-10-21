@@ -245,6 +245,16 @@ describe('S04 iOS handoff and refresh rotation', () => {
   }
   const exchange = (code: string, appVerifier: string) => h.app.inject({ method: 'POST', url: '/v1/auth/handoff', payload: { clientRequestId: randomUUID(), code, appVerifier } });
 
+  it('atomically revokes the native guest credential when a verified handoff becomes a user session',async()=>{
+    const minted=await h.app.inject({method:'POST',url:'/v1/guest-sessions',payload:{clientRequestId:randomUUID(),client:'IOS'}});
+    expect(minted.statusCode).toBe(201);const guest=minted.json().data.guestToken;
+    const login=await iosSignIn();
+    const result=await h.app.inject({method:'POST',url:'/v1/auth/handoff',headers:{authorization:`Bearer ${guest}`},payload:{clientRequestId:randomUUID(),code:login.response.json().data.handoffCode,appVerifier:login.verifier}});
+    expect(result.statusCode,result.body).toBe(200);
+    const reuse=await h.app.inject({method:'POST',url:'/v1/ai/sessions',headers:{authorization:`Bearer ${guest}`,'idempotency-key':randomUUID()},payload:{deviceChallenge:randomToken(32)}});
+    expect(reuse.statusCode,reuse.body).toBe(410);
+  });
+
   it('returns a one-time handoff code bound to the app challenge, never a session cookie', async () => {
     const { verifier, response } = await iosSignIn();
     expect(response.headers['set-cookie']).toBeUndefined();

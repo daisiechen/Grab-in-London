@@ -154,3 +154,11 @@ describe('poller lifecycle races', () => {
     expect(h.pending()).toHaveLength(0);
   });
 });
+
+it('rejects a previous foreground lifetime response even after resume',async()=>{
+ const old=deferred<{messages:PolledMessage[];nextCursor:null;hasMore:boolean}>();
+ const h=harness([()=>old.promise,msgs('20')]);h.poller.resume();h.poller.pause();h.poller.resume();
+ old.resolve({messages:[{id:'old',seq:'10'}],nextCursor:null,hasMore:false});await flush();
+ expect(h.received).toEqual([]);expect(h.pending().map(t=>t.ms)).toContain(0);
+ await h.fire();expect(h.received).toEqual(['20']);
+});

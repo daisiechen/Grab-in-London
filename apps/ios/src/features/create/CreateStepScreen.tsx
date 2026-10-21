@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import {NativeMap} from '../maps/NativeMap.tsx';
+import {useAssistantContext,useAssistantEditor} from '../assistant/hooks.ts';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Keyboard, ScrollView, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ApiError, type ResponseOf, type TimeChoice } from '@fancy/client';
@@ -28,11 +30,15 @@ type Candidate = ResponseOf<'searchVenues'>['data'][number];
 
 function useCreateDraft(): [CreateDraft, (patch: Partial<CreateDraft>) => void] {
   const { drafts, newId } = useServices();
-  const [draft, setDraft] = useState<CreateDraft>(() => drafts.get<CreateDraft>(CREATE_DRAFT_KEY) ?? emptyDraft(newId()));
-  useEffect(() => {
-    drafts.set(CREATE_DRAFT_KEY, draft);
-  }, [drafts, draft]);
-  return [draft, (patch) => setDraft((d) => updateDraft(d, patch))];
+  const [fallback]=useState(()=>emptyDraft(newId()));
+  const draft=useSyncExternalStore(cb=>drafts.subscribe(cb),()=>drafts.get<CreateDraft>(CREATE_DRAFT_KEY)??fallback);
+  useEffect(()=>{if(!drafts.get(CREATE_DRAFT_KEY))drafts.set(CREATE_DRAFT_KEY,fallback);},[drafts,fallback]);
+  const update=(patch:Partial<CreateDraft>)=>{
+    drafts.set('create:editor-version',(drafts.get<number>('create:editor-version')??0)+1);
+    drafts.set(CREATE_DRAFT_KEY,updateDraft(drafts.get<CreateDraft>(CREATE_DRAFT_KEY)??fallback,patch));
+  };
+  useAssistantEditor({key:'create',kind:'CREATE',targetId:null,current:()=>({text:[draft.title,draft.description].filter(Boolean).join('\n'),version:String(drafts.get<number>('create:editor-version')??0)}),apply:d=>{if(d.fields)update({title:d.fields.title,description:d.fields.description});}});
+  return [draft,update];
 }
 
 /** Four-step Create (Arrange / Introduce / Costs / Review); native back keeps the in-memory draft. */
@@ -54,6 +60,7 @@ function CreateStep({ step }: { step: Step }) {
   const services = useServices();
   const router = useRouter();
   const [draft, update] = useCreateDraft();
+  useAssistantContext({sourcePage:'CREATE'});
   const [error, setError] = useState<string | null>(null);
   const today = londonToday(services.now());
 
@@ -133,6 +140,8 @@ function VenuePicker({ draft, update }: Part) {
       <Primary secondary label="Search" onPress={() => void search()} />
       <FormMessage message={issue} />
       {results?.length === 0 ? <Body muted>No restaurants found. Try another name. Your current choice is kept.</Body> : null}
+      {results?.length?<Body muted>Google Maps</Body>:null}
+      {results?.some(c=>c.location)?<NativeMap label="Restaurant choices" points={results.flatMap(c=>c.location?[{id:c.placeId,title:c.name,lat:c.location.lat,lng:c.location.lng,attributions:c.attributions.map(a=>a.text)}]:[])} onSelect={id=>{const candidate=results.find(c=>c.placeId===id);if(candidate&&busy===null)void choose(candidate);}}/>:null}
       {results?.map((c) => (
         <View key={c.placeId} style={{ gap: 2 }}>
           <Primary secondary label={`Choose ${c.name}`} busy={busy === c.placeId} disabled={busy !== null} onPress={() => void choose(c)} />

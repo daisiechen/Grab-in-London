@@ -8,5 +8,6 @@ module.exports = {
   transformIgnorePatterns: [
     'node_modules/(?!(?:\\.pnpm/)?(?:(?:jest-)?react-native|@react-native(?:-community)?|expo(?:nent)?|@expo(?:nent)?|@expo-google-fonts|react-navigation|@react-navigation))',
   ],
+  setupFilesAfterEnv:['<rootDir>/src/test/native-maps.ts'],
   clearMocks: true,
 };

@@ -7,7 +7,8 @@ export interface PolledMessage {
 
 export interface PollerDeps<M extends PolledMessage> {
   /** LIVE read after `afterSeq` (null = latest window). Must follow pages internally or return hasMore. */
-  fetchAfter: (afterSeq: string | null, cursor: string | null) => Promise<{ messages: M[]; nextCursor: string | null; hasMore: boolean }>;
+  fetchAfter: (afterSeq: string | null, cursor: string | null) => Promise<{ messages: M[]; nextCursor: string | null; hasMore: boolean; scannedThroughSeq?: string }>;
+  onPage?: (page: {messages:M[];scannedThroughSeq?:string}) => void;
   onMessages: (messages: M[]) => void;
   /** 403: membership interval ended — stop polling and sending, switch the screen to HISTORY. */
   onForbidden: () => void;
@@ -40,6 +41,7 @@ export class MessagePoller<M extends PolledMessage> {
   private running = false;
   private inFlight = false;
   private failures = 0;
+  private epoch = 0;
   private stopped = false;
   private readonly deps: PollerDeps<M>;
   private readonly setTimer: (fn: () => void, ms: number) => unknown;
@@ -72,6 +74,7 @@ export class MessagePoller<M extends PolledMessage> {
 
   /** Background/blurred: no requests until resume(). */
   pause(): void {
+    this.epoch++;
     this.running = false;
     this.cancel();
   }
@@ -109,6 +112,7 @@ export class MessagePoller<M extends PolledMessage> {
   private async tick(): Promise<void> {
     if (!this.isRunning || this.inFlight) return;
     this.inFlight = true;
+    const epoch=this.epoch;
     let retryAfterMs: number | null = null;
     try {
       // Keep afterSeq fixed while following a cursor: the cursor is bound to the original query.
@@ -116,7 +120,8 @@ export class MessagePoller<M extends PolledMessage> {
       let cursor: string | null = null;
       for (let page = 0; page < MAX_PAGES_PER_TICK; page++) {
         const res = await this.deps.fetchAfter(after, cursor);
-        if (!this.isRunning) return;
+        if (!this.isRunning || epoch!==this.epoch) return;
+        this.deps.onPage?.(res);
         const fresh = res.messages.filter((m) => !this.lastSeq || compareSeq(m.seq, this.lastSeq) > 0).sort((a, b) => compareSeq(a.seq, b.seq));
         if (fresh.length) {
           this.lastSeq = fresh[fresh.length - 1]!.seq;
@@ -129,7 +134,7 @@ export class MessagePoller<M extends PolledMessage> {
       this.deps.onError(null);
     } catch (e) {
       // A retired screen/session must never react to an old request (including a late 401).
-      if (!this.isRunning) return;
+      if (!this.isRunning || epoch!==this.epoch) return;
       const error = e instanceof ApiError ? e : new ApiError({ status: 0, code: 'NETWORK_ERROR', message: String(e) });
       if (error.kind === 'forbidden' || error.kind === 'not_found' || error.kind === 'gone') {
         this.stop();
@@ -146,6 +151,7 @@ export class MessagePoller<M extends PolledMessage> {
       this.deps.onError(error);
     } finally {
       this.inFlight = false;
+      if(this.isRunning && epoch!==this.epoch)this.schedule(0);
     }
     this.schedule(retryAfterMs ?? this.nextDelay());
   }

@@ -16,6 +16,7 @@ const message = (seq: string, body = `hello ${seq}`) => ({ id: `00000000-0000-40
 
 let appStateListener: ((s: AppStateStatus) => void) | null = null;
 beforeEach(() => {
+  Object.defineProperty(AppState,'currentState',{value:'active',writable:true,configurable:true});
   resetRouter();
   routeParams.current = { conversationId: CONVERSATION_ID };
   appStateListener = null;
@@ -169,4 +170,17 @@ describe('ChatScreen (S14)', () => {
     expect(merged.map((m) => m.seq)).toEqual(['1', '2']);
     expect(merged[0]?.body).toBe('<b>hi</b>');
   });
+});
+
+it('acknowledges only rendered foreground progress and stops acknowledgements in background',async()=>{
+ const app=createTestApp();await signIn(app,me());app.services.cache.set(conversationKey(CONVERSATION_ID),conversation());
+ app.mock.on('GET',MSG_PATH,page([message('11')]));
+ app.mock.on('POST',`/v1/conversations/${CONVERSATION_ID}/read`,ok({throughSeq:'11'}));
+ await renderApp(app,<ChatScreen/>);await screen.findByText('hello 11');
+ expect(app.mock.calls.filter(c=>c.method==='POST')).toHaveLength(1); // authentication handoff only
+ await fireEvent(screen.getByTestId('chat-messages'),'viewableItemsChanged',{viewableItems:[{isViewable:true,item:message('11')}]});
+ await waitFor(()=>expect(app.mock.calls.filter(c=>c.path.endsWith('/read'))).toHaveLength(1));
+ await act(async()=>{appStateListener?.('background');});
+ await fireEvent(screen.getByTestId('chat-messages'),'viewableItemsChanged',{viewableItems:[{isViewable:true,item:message('12')}]});
+ expect(app.mock.calls.filter(c=>c.path.endsWith('/read'))).toHaveLength(1);
 });

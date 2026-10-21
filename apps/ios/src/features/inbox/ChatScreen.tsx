@@ -1,3 +1,5 @@
+import {useAssistantContext,useAssistantEditor} from '../assistant/hooks.ts';
+import {ReadAcknowledger} from './read-ack.ts';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -58,6 +60,7 @@ function AuthenticatedChatScreen() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [outgoing, setOutgoing] = useState<Outgoing[]>([]);
   const [text, setText] = useState('');
+  const editorVersion=useRef(0);
   const [readOnly, setReadOnly] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -66,6 +69,12 @@ function AuthenticatedChatScreen() {
   const signedIn = state.status === 'signedIn';
   const live = !!conversation && conversation.canSend && !conversation.dissolved && !readOnly;
   const leaveKey = useRef(newId());
+  useAssistantContext({sourcePage:'INBOX',...(conversation?.kind==='GROUP'?{explicitConversationId:id}:{})});
+  useAssistantEditor({key:`chat:${id}`,kind:'GROUP',targetId:id,current:()=>({text,version:String(editorVersion.current)}),apply:d=>{if(conversation?.kind==='GROUP'&&live&&d.text!==null){editorVersion.current++;setText(d.text);}}});
+  const readAck=useMemo(()=>new ReadAcknowledger(async throughSeq=>{await api.call('markConversationRead',{params:{conversationId:id},body:{throughSeq}});cache.delete('inbox');}),[api,cache,id]);
+  const viewable=useRef((info:{viewableItems:Array<{isViewable:boolean;item:Message}>})=>{void readAck.presented(info.viewableItems.filter(i=>i.isViewable).map(i=>i.item.seq));});
+  viewable.current=info=>{void readAck.presented(info.viewableItems.filter(i=>i.isViewable).map(i=>i.item.seq));};
+  const onViewable=useCallback((info:{viewableItems:Array<{isViewable:boolean;item:Message}>})=>viewable.current(info),[]);
 
   // CONTRACT GAP: no getConversation operation; metadata comes from the Inbox list.
   useEffect(() => {
@@ -91,8 +100,9 @@ function AuthenticatedChatScreen() {
       new MessagePoller<Message>({
         fetchAfter: async (afterSeq, cursor) => {
           const res = await api.call('readMessages', { params: { conversationId: id }, query: { mode: 'LIVE', ...(afterSeq ? { afterSeq } : {}), ...(cursor ? { cursor } : {}), limit: 50 } });
-          return { messages: res.data, nextCursor: res.page.nextCursor, hasMore: res.page.hasMore };
+          return { messages: res.data, scannedThroughSeq:res.page.scannedThroughSeq??res.data.at(-1)?.seq??'0', nextCursor: res.page.nextCursor, hasMore: res.page.hasMore };
         },
+        onPage:page=>readAck.scannedThrough(page.scannedThroughSeq??'0',page.messages.at(-1)?.seq??null),
         onMessages: (m) => setMessages((cur) => mergeMessages(cur, m)),
         onForbidden: () => {
           setReadOnly(true);
@@ -101,7 +111,7 @@ function AuthenticatedChatScreen() {
         onSignedOut: () => setNotice('Please sign in again to keep chatting.'),
         onError: (e) => setNotice(e ? 'Reconnecting… Messages will appear when you’re back online.' : null),
       }),
-    [api, id],
+    [api, id,readAck],
   );
   useEffect(() => () => poller.stop(), [poller]);
 
@@ -120,14 +130,18 @@ function AuthenticatedChatScreen() {
   // Foreground + focused + live → poll; anything else → paused. Resume triggers an immediate catch-up.
   useFocusEffect(
     useCallback(() => {
-      if (!live || !signedIn) return undefined;
-      poller.resume();
-      const sub = AppState.addEventListener('change', (next) => (next === 'active' ? poller.resume() : poller.pause()));
+      if (!signedIn) return undefined;
+      readAck.setActive(AppState.currentState==='active');
+      if(live&&AppState.currentState==='active')poller.resume();
+      const sub = AppState.addEventListener('change', (next) => {
+        readAck.setActive(next==='active');
+        if(next==='active'&&live)poller.resume();else poller.pause();
+      });
       return () => {
         sub.remove();
-        poller.pause();
+        poller.pause();readAck.setActive(false);
       };
-    }, [live, signedIn, poller]),
+    }, [live, signedIn, poller,readAck]),
   );
 
   const send = async (item: Outgoing) => {
@@ -154,7 +168,7 @@ function AuthenticatedChatScreen() {
     if (!body) return;
     if (body.length > 2000) return setNotice('Messages can be up to 2,000 characters.');
     const item: Outgoing = { clientMessageId: newId(), body, status: 'sending' };
-    setText('');
+    editorVersion.current++;setText('');
     setOutgoing((cur) => [...cur, item]);
     void send(item);
   };
@@ -190,6 +204,9 @@ function AuthenticatedChatScreen() {
         <FormMessage message={loadError} />
         <FormMessage message={notice} tone="info" />
         <FlatList
+          testID="chat-messages"
+          onViewableItemsChanged={onViewable}
+          viewabilityConfig={{itemVisiblePercentThreshold:80}}
           data={messages}
           keyExtractor={(m) => m.id}
           contentContainerStyle={styles.pad}
@@ -221,7 +238,7 @@ function AuthenticatedChatScreen() {
         />
         {live ? (
           <View style={styles.composer}>
-            <TextInput accessibilityLabel="Message" value={text} onChangeText={setText} placeholder="Message" placeholderTextColor={colors.muted} multiline maxLength={2000} style={styles.input} />
+            <TextInput accessibilityLabel="Message" value={text} onChangeText={value=>{editorVersion.current++;setText(value);}} placeholder="Message" placeholderTextColor={colors.muted} multiline maxLength={2000} style={styles.input} />
             <Primary label="Send" disabled={!text.trim()} onPress={submit} />
           </View>
         ) : conversation ? (

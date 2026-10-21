@@ -4,7 +4,7 @@ import { DomainError } from '../common/errors.ts';
 import { appendAudit } from '@fancy/db';
 import { withTransaction } from '../common/transaction.ts';
 import { lockActiveActor } from '../common/actor.ts';
-import { invalidateUserAI } from '../assistant/invalidate.ts';
+import { invalidateUserAI,revokeGuestAI } from '../assistant/invalidate.ts';
 import type { AppDeps } from '../http/context.ts';
 import { defineRoute, defineWrite } from '../http/routes.ts';
 import { assertWebOrigin, cookieOptions, keyedHash, LINK_BINDER_COOKIE, OAUTH_BINDER_COOKIE, SESSION_COOKIE } from '../http/security.ts';
@@ -219,6 +219,8 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
         // A wrong verifier burns the code: the handoff is single-use for its rightful app only.
         throw new DomainError('STATE_CONFLICT', 'This sign-in could not be verified. Please start again.');
       }
+      const guest=/^Bearer ([A-Za-z0-9_-]{43})$/.exec(request.headers.authorization??'');
+      if(guest&&deps.assistantRuntime)await revokeGuestAI(tx.client,deps.assistantRuntime,guest[1]!);
       const now = await tx.effectiveNow();
       const { familyId, credentials } = await issueNativeCredentials(tx.client, row.user_id, row.client, String(row.provider_state.amr).split(' '), now);
       if (row.provider_state.origin) await tx.client.query(`UPDATE auth_transactions SET result_family_id = $2 WHERE id = $1`, [row.provider_state.origin, familyId]);

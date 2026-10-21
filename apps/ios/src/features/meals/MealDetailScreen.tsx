@@ -1,3 +1,4 @@
+import {useAssistantContext} from '../assistant/hooks.ts';
 import { useState } from 'react';
 import { ActivityIndicator, Linking, Pressable, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -25,6 +26,7 @@ export const mealKey = (id: string) => `meal:${id}`;
 export function MealDetailScreen() {
   const { mealId } = useLocalSearchParams<{ mealId: string }>();
   const id = String(mealId);
+  useAssistantContext({sourcePage:'MEAL',explicitMealId:id});
   const { api, newId } = useServices();
   const router = useRouter();
   const gate = useAuthGate();

@@ -1,3 +1,4 @@
+import {useAssistantContext} from '../../assistant/hooks.ts';
 import { useRouter } from 'expo-router';
 import { Primary } from '../../../ui/Button.tsx';
 import { Screen } from '../../../ui/Screen.tsx';
@@ -9,6 +10,7 @@ import { ProfileView } from './ProfileView.tsx';
 /** Profile tab: own profile when signed in; guests are invited to sign in (no private data shown). */
 export function MyProfileScreen() {
   const state = useSessionState();
+  useAssistantContext({sourcePage:'PROFILE'});
   const router = useRouter();
   if (state.status !== 'signedIn') {
     return (
