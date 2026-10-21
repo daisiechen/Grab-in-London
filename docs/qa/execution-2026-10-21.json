@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 131,
-    "PASS": 74,
+    "NOT_RUN": 128,
+    "PASS": 77,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -10415,7 +10415,8 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R22-T002"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -10423,7 +10424,7 @@
         "外订到店付不索预付",
         "失败保留未知"
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "actual": "R22独立controller/PG已覆盖部分：本人PENDING/CONFIRMED/DECLINED/WITHDRAWN enum，不读本人/他人私人留言；尚缺状态API故障保留未知完整路径。 保持NOT_RUN，不按自动化数授整条PASS。"
     },
     {
       "id": "QA-AI-014",
@@ -10537,7 +10538,8 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R22-T003"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -10545,7 +10547,7 @@
         "转入同份替换不追加",
         "只有本人提交创建一申请"
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "actual": "R22独立controller/PG已覆盖部分：生成草稿无业务写，取消后转入拒绝；尚缺浏览器同draft反复转入和本人Submit恰好一申请。 保持NOT_RUN，不按自动化数授整条PASS。"
     },
     {
       "id": "QA-AI-015",
@@ -10659,7 +10661,8 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R22-T004"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -10667,7 +10670,7 @@
         "外订/条款/Review不勾",
         "无自动发布"
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "actual": "R22独立controller/PG已覆盖部分：生成仅title/description、无自动发布；尚缺真实Create转入/Review前checkbox及留空状态。 保持NOT_RUN，不按自动化数授整条PASS。"
     },
     {
       "id": "QA-AI-016",
@@ -10781,7 +10784,8 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R22-T005"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -10789,7 +10793,7 @@
         "取消保持v2",
         "不能静默覆盖/追加"
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "actual": "R22独立controller/PG已覆盖部分：editorVersion变更冲突，显式确认后同稿重复转入无业务写；尚缺浏览器取消替换保留v2。 保持NOT_RUN，不按自动化数授整条PASS。"
     },
     {
       "id": "QA-AI-017",
@@ -11390,7 +11394,8 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R22-T011"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -11398,7 +11403,7 @@
         "业务写spy0",
         "无他人资料/隐藏数据"
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "actual": "R22独立controller/PG已覆盖部分：tool注入/虚构职业拒绝，无业务写；尚缺他人ID、群正文、未知URL完整矩阵。 保持NOT_RUN，不按自动化数授整条PASS。"
     },
     {
       "id": "QA-AI-022",
@@ -11512,7 +11517,8 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R22-T011"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -11520,7 +11526,7 @@
         "无可操作残片和业务写",
         "实际费用仍计"
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "actual": "R22独立controller/PG已覆盖部分：多余tool与虚构职业/已付款整轮失败无残片；尚缺不存在ID、金额错误全矩阵及实际费用仍计断言。 保持NOT_RUN，不按自动化数授整条PASS。"
     },
     {
       "id": "QA-AI-023",
@@ -13003,8 +13009,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R22-T006"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -13109,15 +13117,16 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R22-T006"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "最多1个在途",
-        "另一被限流/冲突且不加call",
-        "会话也1在途"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "既有同requestId及额度并发通过；尚未单独补充不同requestId竞争同主体在途位的独立场景。"
+      "remainingExpected": [],
+      "actual": "隔离真实PG+受控provider：账号49成功轮前置，两设备与同会话不同requestId争最后名额，仅一个PENDING；其他AI_CONFLICT，provider只调用一次。NEEDS_INPUT结算后50轮，继续请求AI_QUOTA_EXCEEDED且无新call。"
     },
     {
       "id": "QA-AI-036",
@@ -13125,8 +13134,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R22-T001",
+        "R22-T007"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -13231,15 +13243,17 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R22-T001",
+        "R22-T007"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "不重复call或扣轮",
-        "改body409",
-        "清除后410而非再生成"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "真实HTTP并发同requestId同body均202且provider只调1次，结束后重放不调模型/扣轮；改body409 AI_CONFLICT，显式NEW清RAM后原请求410；Controller另验证runtime.shutdown后不重生成。quota仅successes1/reserved0。"
     },
     {
       "id": "QA-AI-037",
@@ -13247,8 +13261,13 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R22-T006",
+        "R22-T008",
+        "R22-T009",
+        "R22-T010"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -13353,15 +13372,19 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R22-T006",
+        "R22-T008",
+        "R22-T009",
+        "R22-T010"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "原子预留不超50",
-        "有效NEEDS_INPUT与SUCCEEDED扣1",
-        "FAILED/SUPERSEDED不扣"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "真实PG原子预留第50轮，跨设备不超50；受控provider分别NEEDS_INPUT/SUCCEEDED扣1，FAILED与偏好删除导致SUPERSEDED不扣，所有reserved回0。重复finish不重复结算；无真实模型费用调用。"
     },
     {
       "id": "QA-AI-038",
@@ -21237,7 +21260,7 @@
     ],
     "initialDocumentationFailure": "新增浏览器证据未直接列入docs/README.md；补索引后69项通过，未删除或降低断言。",
     "remoteCI": "f27c17d run39567618348失败历史保留；5a37fdc修复后独立R19/R20通过。QA通过GitHub只读API核实bf297d9 run39568947238 completed/success（https://github.com/daisiechen/Grab-in-London/actions/runs/39568947238）；5a37fdc自身run被后续push取消，不算通过。",
-    "claudeCrossReview": "开发会话报告Claude只读审查至bf297d9，无写入和测试复现；6项静态发现待开发验证筛选，非6项已复现缺陷，不构成Claude动态测试或完整交叉签收。"
+    "claudeCrossReview": "Claude只读发现由开发筛选复现后提交至ac09af4；QA独立R23重跑代理、owner重放、acceptedAt恢复/快照、删除旧申请、支持文本屏障API/DB 28项通过。不是Claude动态执行或双方全签；原生iOS与真实供应商门槛不变。"
   },
   "lastTargetedCommit": "0518d45f89a392c716debc87ba9e23b27d26b5e2",
   "defectStatus": {

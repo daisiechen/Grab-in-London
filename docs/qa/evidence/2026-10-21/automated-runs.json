@@ -8114,6 +8114,344 @@
           "durationMs": 39.974583999999936
         }
       ]
+    },
+    {
+      "id": "R22",
+      "testedCommit": "ac09af4",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai.api.test.ts scripts/qa-independent-ai-http.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-ai-ac09af4.json",
+      "startedAt": "2026-10-21T09:04:34.982000+00:00",
+      "exitCode": 0,
+      "passed": 11,
+      "failed": 0,
+      "total": 11,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R22-T001",
+          "run": "R22",
+          "path": "scripts/qa-independent-ai-http.api.test.ts",
+          "title": "QA-AI-036 real HTTP duplicate once changed body409 reset then410 and one successful turn",
+          "status": "passed",
+          "durationMs": 143.89812500000005
+        },
+        {
+          "id": "R22-T002",
+          "run": "R22",
+          "path": "scripts/qa-independent-ai.api.test.ts",
+          "title": "independent AI controlled-provider safety QA-AI-013 explains only latest own enum across all application states, not private introductions or others",
+          "status": "passed",
+          "durationMs": 56.533292000000074
+        },
+        {
+          "id": "R22-T003",
+          "run": "R22",
+          "path": "scripts/qa-independent-ai.api.test.ts",
+          "title": "independent AI controlled-provider safety QA-AI-014 application draft never applies and a cancelled target cannot transfer",
+          "status": "passed",
+          "durationMs": 13.413665999999921
+        },
+        {
+          "id": "R22-T004",
+          "run": "R22",
+          "path": "scripts/qa-independent-ai.api.test.ts",
+          "title": "independent AI controlled-provider safety QA-AI-015 create candidate has only title/description and no booking terms venue or automatic publication",
+          "status": "passed",
+          "durationMs": 8.678416999999968
+        },
+        {
+          "id": "R22-T005",
+          "run": "R22",
+          "path": "scripts/qa-independent-ai.api.test.ts",
+          "title": "independent AI controlled-provider safety QA-AI-016 changed nonempty editor needs explicit replacement and repeated transfer never submits",
+          "status": "passed",
+          "durationMs": 10.392207999999982
+        },
+        {
+          "id": "R22-T006",
+          "run": "R22",
+          "path": "scripts/qa-independent-ai.api.test.ts",
+          "title": "independent AI controlled-provider safety QA-AI-035/037 final successful slot is single flight across devices and clarification consumes it once",
+          "status": "passed",
+          "durationMs": 13.254500000000007
+        },
+        {
+          "id": "R22-T007",
+          "run": "R22",
+          "path": "scripts/qa-independent-ai.api.test.ts",
+          "title": "independent AI controlled-provider safety QA-AI-036 duplicate same request calls once, changed payload conflicts and cleared RAM never regenerates",
+          "status": "passed",
+          "durationMs": 9.120416000000091
+        },
+        {
+          "id": "R22-T008",
+          "run": "R22",
+          "path": "scripts/qa-independent-ai.api.test.ts",
+          "title": "independent AI terminal quota accounting and invalid output QA-AI-037 SUCCEEDED final slot settles exactly 1 successful turn",
+          "status": "passed",
+          "durationMs": 11.53758300000004
+        },
+        {
+          "id": "R22-T009",
+          "run": "R22",
+          "path": "scripts/qa-independent-ai.api.test.ts",
+          "title": "independent AI terminal quota accounting and invalid output QA-AI-037 FAILED final slot settles exactly 0 successful turn",
+          "status": "passed",
+          "durationMs": 5.2268340000000535
+        },
+        {
+          "id": "R22-T010",
+          "run": "R22",
+          "path": "scripts/qa-independent-ai.api.test.ts",
+          "title": "independent AI terminal quota accounting and invalid output QA-AI-037 superseded pending result refunds success slot without publishing late provider data",
+          "status": "passed",
+          "durationMs": 4.753959000000009
+        },
+        {
+          "id": "R22-T011",
+          "run": "R22",
+          "path": "scripts/qa-independent-ai.api.test.ts",
+          "title": "independent AI terminal quota accounting and invalid output QA-AI-021/022 model tool injection and fabricated author identity produce no actionable result or business writes",
+          "status": "passed",
+          "durationMs": 9.045041999999967
+        }
+      ]
+    },
+    {
+      "id": "R23",
+      "testedCommit": "ac09af4",
+      "command": "pnpm exec vitest run --project api --project db apps/api/src/http/proxy.api.test.ts apps/api/src/http/owner-replay.api.test.ts apps/api/src/recovery apps/api/src/admin/retain-unrelated.api.test.ts apps/api/src/meals/deleted-applicant.api.test.ts apps/api/src/support/privacy.api.test.ts apps/worker/src/handlers/support-privacy.db.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-cr-ac09af4.json",
+      "startedAt": "2026-10-21T09:04:38.194000+00:00",
+      "exitCode": 0,
+      "passed": 28,
+      "failed": 0,
+      "total": 28,
+      "suiteFiles": 9,
+      "assertions": [
+        {
+          "id": "R23-T001",
+          "run": "R23",
+          "path": "apps/api/src/admin/retain-unrelated.api.test.ts",
+          "title": "strictly pre-account snapshots survive an unrelated deletion keeps the S0/E0 page and CSV byte-for-byte while S1/E1 are revoked; stale or ambiguous proofs never lift",
+          "status": "passed",
+          "durationMs": 410.425833
+        },
+        {
+          "id": "R23-T002",
+          "run": "R23",
+          "path": "apps/api/src/http/owner-replay.api.test.ts",
+          "title": "replays the identical own survey after unrelated deletion without another business write",
+          "status": "passed",
+          "durationMs": 363.18604200000004
+        },
+        {
+          "id": "R23-T003",
+          "run": "R23",
+          "path": "apps/api/src/http/owner-replay.api.test.ts",
+          "title": "replays only the applicant-owned application and rejects third-person or newly added fields",
+          "status": "passed",
+          "durationMs": 119.30237499999998
+        },
+        {
+          "id": "R23-T004",
+          "run": "R23",
+          "path": "apps/api/src/http/proxy.api.test.ts",
+          "title": "keeps otp quotas independent through an explicitly trusted proxy",
+          "status": "passed",
+          "durationMs": 284.7716670000002
+        },
+        {
+          "id": "R23-T005",
+          "run": "R23",
+          "path": "apps/api/src/http/proxy.api.test.ts",
+          "title": "keeps guest quotas independent through an explicitly trusted proxy",
+          "status": "passed",
+          "durationMs": 19.251666999999998
+        },
+        {
+          "id": "R23-T006",
+          "run": "R23",
+          "path": "apps/api/src/http/proxy.api.test.ts",
+          "title": "keeps receipt quotas independent through an explicitly trusted proxy",
+          "status": "passed",
+          "durationMs": 12.20458399999984
+        },
+        {
+          "id": "R23-T007",
+          "run": "R23",
+          "path": "apps/api/src/http/proxy.api.test.ts",
+          "title": "ignores spoofed forwarding headers from an untrusted otp peer",
+          "status": "passed",
+          "durationMs": 13.818749999999909
+        },
+        {
+          "id": "R23-T008",
+          "run": "R23",
+          "path": "apps/api/src/http/proxy.api.test.ts",
+          "title": "ignores spoofed forwarding headers from an untrusted guest peer",
+          "status": "passed",
+          "durationMs": 15.328125
+        },
+        {
+          "id": "R23-T009",
+          "run": "R23",
+          "path": "apps/api/src/http/proxy.api.test.ts",
+          "title": "ignores spoofed forwarding headers from an untrusted receipt peer",
+          "status": "passed",
+          "durationMs": 14.627375000000029
+        },
+        {
+          "id": "R23-T010",
+          "run": "R23",
+          "path": "apps/api/src/http/proxy.api.test.ts",
+          "title": "distrusts forwarded addresses by default, reproducing the shared proxy quota until explicitly configured",
+          "status": "passed",
+          "durationMs": 70.17054099999996
+        },
+        {
+          "id": "R23-T011",
+          "run": "R23",
+          "path": "apps/api/src/http/proxy.api.test.ts",
+          "title": "stops at the nearest untrusted hop rather than trusting a forged leftmost address",
+          "status": "passed",
+          "durationMs": 7.773749999999836
+        },
+        {
+          "id": "R23-T012",
+          "run": "R23",
+          "path": "apps/api/src/http/proxy.api.test.ts",
+          "title": "uses a declared 503 contract code while recovery verification blocks API traffic",
+          "status": "passed",
+          "durationMs": 0.7188329999999041
+        },
+        {
+          "id": "R23-T013",
+          "run": "R23",
+          "path": "apps/api/src/meals/deleted-applicant.api.test.ts",
+          "title": "unavailable applicant never invalidates the active host session APPROVE on an old deleted-applicant row returns a business 404 while host remains signed in",
+          "status": "passed",
+          "durationMs": 389.651333
+        },
+        {
+          "id": "R23-T014",
+          "run": "R23",
+          "path": "apps/api/src/meals/deleted-applicant.api.test.ts",
+          "title": "unavailable applicant never invalidates the active host session DECLINE on an old deleted-applicant row returns a business 404 while host remains signed in",
+          "status": "passed",
+          "durationMs": 40.506999999999834
+        },
+        {
+          "id": "R23-T015",
+          "run": "R23",
+          "path": "apps/api/src/meals/deleted-applicant.api.test.ts",
+          "title": "unavailable applicant never invalidates the active host session still returns AUTH_REQUIRED for an inactive actor at the command barrier and HTTP authentication boundary",
+          "status": "passed",
+          "durationMs": 19.226167000000032
+        },
+        {
+          "id": "R23-T016",
+          "run": "R23",
+          "path": "apps/api/src/recovery/replay-timing.api.test.ts",
+          "title": "replay uses original deletion acceptance time across meal start cancels a host meal accepted before start even though recovery is after start, without inventing a start roster",
+          "status": "passed",
+          "durationMs": 404.09925
+        },
+        {
+          "id": "R23-T017",
+          "run": "R23",
+          "path": "apps/api/src/recovery/replay-timing.api.test.ts",
+          "title": "replay uses original deletion acceptance time across meal start removes a guest at original acceptance and retains the other two historical start participants on catch-up",
+          "status": "passed",
+          "durationMs": 39.414833000000044
+        },
+        {
+          "id": "R23-T018",
+          "run": "R23",
+          "path": "apps/api/src/recovery/replay-timing.api.test.ts",
+          "title": "replay uses original deletion acceptance time across meal start preserves genuinely started history when the original acceptance was after meal start",
+          "status": "passed",
+          "durationMs": 32.88054199999988
+        },
+        {
+          "id": "R23-T019",
+          "run": "R23",
+          "path": "apps/api/src/recovery/replay-timing.api.test.ts",
+          "title": "replay uses original deletion acceptance time across meal start rejects invalid calendar/expiry, future acceptance and acceptance before account creation before replaying facts",
+          "status": "passed",
+          "durationMs": 15.974333000000115
+        },
+        {
+          "id": "R23-T020",
+          "run": "R23",
+          "path": "apps/api/src/recovery/restart.api.test.ts",
+          "title": "QA-AI-034 new process runtime rejects old RAM session over actual HTTP boundary with same database",
+          "status": "passed",
+          "durationMs": 984.6620419999999
+        },
+        {
+          "id": "R23-T021",
+          "run": "R23",
+          "path": "apps/api/src/recovery/restore.api.test.ts",
+          "title": "QA-PRIVACY-008 actual pg_dump/pg_restore refuses traffic until independent deletion ledger replay",
+          "status": "passed",
+          "durationMs": 827.4226250000002
+        },
+        {
+          "id": "R23-T022",
+          "run": "R23",
+          "path": "apps/api/src/support/privacy.api.test.ts",
+          "title": "synchronous support free-text deletion projection hides old granted case and report outcome immediately when reporter association becomes DELETING",
+          "status": "passed",
+          "durationMs": 375.9200000000001
+        },
+        {
+          "id": "R23-T023",
+          "run": "R23",
+          "path": "apps/api/src/support/privacy.api.test.ts",
+          "title": "synchronous support free-text deletion projection hides old granted case and report outcome immediately when USER association becomes DELETING",
+          "status": "passed",
+          "durationMs": 46.489667000000054
+        },
+        {
+          "id": "R23-T024",
+          "run": "R23",
+          "path": "apps/api/src/support/privacy.api.test.ts",
+          "title": "synchronous support free-text deletion projection hides old granted case and report outcome immediately when MEAL association becomes DELETING",
+          "status": "passed",
+          "durationMs": 46.50524999999993
+        },
+        {
+          "id": "R23-T025",
+          "run": "R23",
+          "path": "apps/api/src/support/privacy.api.test.ts",
+          "title": "synchronous support free-text deletion projection hides old granted case and report outcome immediately when MESSAGE association becomes DELETING",
+          "status": "passed",
+          "durationMs": 22.03583299999991
+        },
+        {
+          "id": "R23-T026",
+          "run": "R23",
+          "path": "apps/api/src/support/privacy.api.test.ts",
+          "title": "synchronous support free-text deletion projection leaves a proven unrelated active case readable and rejects a new report against a deleting target",
+          "status": "passed",
+          "durationMs": 10.244083000000046
+        },
+        {
+          "id": "R23-T027",
+          "run": "R23",
+          "path": "apps/api/src/support/privacy.api.test.ts",
+          "title": "queues resolution behind a target deletion user barrier and cannot write back free outcome/reason",
+          "status": "passed",
+          "durationMs": 16.72991699999966
+        },
+        {
+          "id": "R23-T028",
+          "run": "R23",
+          "path": "apps/worker/src/handlers/support-privacy.db.test.ts",
+          "title": "purges both known support copies, copied reasons and public outcomes without altering facts or unrelated text; repeated purge is stable",
+          "status": "passed",
+          "durationMs": 190.29787499999986
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -8127,7 +8465,9 @@
     "scripts/qa-independent-reauth-boundary.api.test.ts": "4e81f45d1d77c294b7d43c457c796900c1318d1e0d7d682bea839b2c6e35839c",
     "scripts/qa-independent-report.api.test.ts": "8cfd630617d7e3ae17bf6f60e88b9f7361f111c2d1063fab85c663383a667580",
     "scripts/qa-independent-lifecycle.api.test.ts": "b2b53564813bdb53df5f490b261be9805636fc7bf3072d500e139bb35b2e1b22",
-    "scripts/qa-independent-deletion.api.test.ts": "f5b80d51aa793891640c5d96e623d3638693a32b13eebaa7ad21e21394a72750"
+    "scripts/qa-independent-deletion.api.test.ts": "f5b80d51aa793891640c5d96e623d3638693a32b13eebaa7ad21e21394a72750",
+    "scripts/qa-independent-ai.api.test.ts": "d40130cdcef33492250e0b0c85becad66975579640bc51e5bd3ed522998276ec",
+    "scripts/qa-independent-ai-http.api.test.ts": "41e3b9942e8d5f8193f36c49a7f1b17386e09b8ceaa5220ba2747b978790f312"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。",
   "runtimeSnapshotVerification": {
@@ -8161,6 +8501,10 @@
     {
       "run": "R21",
       "detail": "首4项通过。并发夹具先在饭前调用互选被正确拒绝，改为饭后合法窗口；FOR UPDATE holder会先阻断幂等FK的KEY SHARE，改为NO KEY UPDATE后实际观察删除业务UPDATE锁等待，再启动消息/审批，最终5项通过。均为QA前置修正，未放宽产品断言。日志在test环境silent，未将其算生产日志脱敏证据。"
+    },
+    {
+      "run": "R22",
+      "detail": "中间预跑遇QA根脚本workspace alias未解析、HTTP预算SQL别名错误、缺intent key，均纠正且未计产品缺陷；SEARCH输入含dinner但mock未给timeOfDay得到正确NEEDS_INPUT，成功轮夹具改无歧义Find meals。中间11项在62371cc通过后，按最终ac09af4重新跑11项作为正式证据。脚本默认lint忽略，另用eslint --no-ignore验证。真实供应商未调用。"
     }
   ]
 }

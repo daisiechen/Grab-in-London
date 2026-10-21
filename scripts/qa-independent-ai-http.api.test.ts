@@ -1,0 +1,17 @@
+/** Independent HTTP proof of requestId replay, 409 changed payload and 410 cleared RAM. */
+import {randomBytes,randomUUID} from 'node:crypto';
+import {afterAll,beforeAll,expect,inject,it} from 'vitest';
+import {mockProvider} from '../packages/assistant/src/index.ts';
+import {BudgetLedger} from '../apps/api/src/assistant/budget.ts';
+import {createHarness,json,type Harness} from '../apps/api/src/test/harness.ts';
+let h:Harness,calls=0;
+beforeAll(async()=>{
+ h=await createHarness(inject('pgServerUrl'),{allowedAreas:[],provider:mockProvider('test',async()=>{calls++;return {parsed:{intent:'SEARCH',patches:[],mealIds:[]},usage:{inputTokens:10,outputTokens:10},providerRequestId:`qa-${randomUUID()}`};}),price:{version:'qa-only-not-real-price',verified:true,inputMicroCnyPerMillion:1_000_000n,outputMicroCnyPerMillion:1_000_000n,validUntil:Date.now()+60_000},countInputTokens:()=>1024});
+ const {rows:[p]}=await h.db.pool.query("SELECT 'D:'||to_char(clock_timestamp() AT TIME ZONE 'Europe/London','YYYY-MM-DD') AS day_period,'M:'||to_char(clock_timestamp() AT TIME ZONE 'Europe/London','YYYY-MM') AS month_period");const ledger=new BudgetLedger(h.db.pool);await ledger.configure(p.day_period,10_000_000n,100,true);await ledger.configure(p.month_period,10_000_000n,100,true);
+});afterAll(async()=>h.close());
+it('QA-AI-036 real HTTP duplicate once changed body409 reset then410 and one successful turn',async()=>{
+ const guest=await h.app.inject({method:'POST',url:'/v1/guest-sessions',payload:{clientRequestId:randomUUID(),client:'IOS'}});expect(guest.statusCode).toBe(201);const bearer={authorization:`Bearer ${json(guest).data.guestToken}`};const boot=await h.app.inject({method:'POST',url:'/v1/ai/sessions',headers:{...bearer,'idempotency-key':randomUUID()},payload:{deviceChallenge:randomBytes(32).toString('base64url')}});expect(boot.statusCode,boot.body).toBe(201);const s=json(boot).data,requestId=randomUUID(),headers={...bearer,'ai-device-token':s.deviceToken,'idempotency-key':requestId};const body={requestId,generation:s.generation,input:'Find meals',sourcePage:'DISCOVER',queryVersion:'0',preferenceVersion:'0',contextVersion:'0'};const send=(payload=body)=>h.app.inject({method:'POST',url:`/v1/ai/sessions/${s.sessionId}/requests`,headers,payload});
+ const concurrent=await Promise.all([send(),send()]);expect(concurrent.map(r=>r.statusCode)).toEqual([202,202]);const until=Date.now()+5000;for(;;){const status=await h.app.inject({method:'GET',url:`/v1/ai/requests/${requestId}?sessionId=${s.sessionId}&generation=${s.generation}`,headers});expect(status.statusCode,status.body).toBe(200);if(json(status).data.state!=='PENDING'){expect(json(status).data.state).toBe('SUCCEEDED');break;}if(Date.now()>until)throw Error('mock did not finish');await new Promise<void>(r=>setImmediate(r));}
+ expect((await send()).statusCode).toBe(202);const changed=await send({...body,input:'Changed body'});expect(changed.statusCode,changed.body).toBe(409);expect(json(changed).error.code).toBe('AI_CONFLICT');expect(calls).toBe(1);
+ const reset=await h.app.inject({method:'DELETE',url:`/v1/ai/sessions/${s.sessionId}`,headers,payload:{generation:s.generation,reason:'NEW'}});expect(reset.statusCode,reset.body).toBe(204);const cleared=await send();expect(cleared.statusCode,cleared.body).toBe(410);expect(calls).toBe(1);expect((await h.db.pool.query('SELECT successes,reserved_success_slots FROM ai_quota')).rows).toEqual([{successes:1,reserved_success_slots:0}]);
+});
