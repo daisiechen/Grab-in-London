@@ -11010,6 +11010,74 @@
           "durationMs": 1083.438625
         }
       ]
+    },
+    {
+      "id": "R52",
+      "testedCommit": "e8844dee3977c7de6c5680d4c3bbc7c377fde53b",
+      "command": "pnpm exec vitest run --project web apps/web/src/features/assistant/qa-independent-length.unit.test.tsx",
+      "startedAt": "2026-10-21T12:59:51.718000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 2,
+      "total": 2,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R52-T001",
+          "run": "R52",
+          "path": "apps/web/src/features/assistant/qa-independent-length.unit.test.tsx",
+          "title": "QA-F10 pasted 2001-character original is preserved instead of silently truncated",
+          "status": "failed",
+          "durationMs": 92.66220800000008,
+          "failureSummary": "AssertionError: expected 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…' to be 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…' // Object.is equality"
+        },
+        {
+          "id": "R52-T002",
+          "run": "R52",
+          "path": "apps/web/src/features/assistant/qa-independent-length.unit.test.tsx",
+          "title": "QA-F10 an overlong controlled editor value gets a visible inline error without losing text or requesting AI",
+          "status": "failed",
+          "durationMs": 1040.333583,
+          "failureSummary": "Error: Unable to find role=\"alert\""
+        }
+      ]
+    },
+    {
+      "id": "R53",
+      "testedCommit": "e8844dee3977c7de6c5680d4c3bbc7c377fde53b",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-limits.api.test.ts",
+      "startedAt": "2026-10-21T13:01:41.645000+00:00",
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R53-T001",
+          "run": "R53",
+          "path": "scripts/qa-independent-ai-limits.api.test.ts",
+          "title": "QA-AI-045 blank and 2001 characters do not dispatch; exactly2000 is admitted with at most30s durable deadline",
+          "status": "passed",
+          "durationMs": 26.81645900000001
+        },
+        {
+          "id": "R53-T002",
+          "run": "R53",
+          "path": "scripts/qa-independent-ai-limits.api.test.ts",
+          "title": "QA-AI-045 input token16001 fails before provider dispatch and releases successful slot",
+          "status": "passed",
+          "durationMs": 13.067250000000001
+        },
+        {
+          "id": "R53-T003",
+          "run": "R53",
+          "path": "scripts/qa-independent-ai-limits.api.test.ts",
+          "title": "QA-AI-045 actual adapter rejects output2001tokens, charges known usage and exposes no actionable fragment",
+          "status": "passed",
+          "durationMs": 15.241582999999991
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -11042,7 +11110,9 @@
     "scripts/qa-independent-guest-quota.api.test.ts": "f5fb3657f33e89eb3edc1864b1776d1222c8c51c1f8ec702a668a6d2bd018bb9",
     "scripts/qa-independent-london-quota.api.test.ts": "a10b8fd693e443478808da252cd8ec423956a8769353f031d2cc1a64282930b6",
     "scripts/qa-independent-ai-crash.api.test.ts": "906bed2171239dcde79c7c50ad1c446e3f3746b5fd2ae898924dc5155dbe14a3",
-    "scripts/qa-ai-crash-child.ts": "aa1ee0de811e6c961535a0fc46c8c2aa0932195f856a0ada390074218b8971a4"
+    "scripts/qa-ai-crash-child.ts": "aa1ee0de811e6c961535a0fc46c8c2aa0932195f856a0ada390074218b8971a4",
+    "apps/web/src/features/assistant/qa-independent-length.unit.test.tsx": "27870258d564549e713a79a51d42bd018447a2fe4d051ded9457b467bb34b0c9",
+    "scripts/qa-independent-ai-limits.api.test.ts": "a8df504a862789ca31e92b1bdca21c5f0b14bec6443b0c6eb8156eefb1d0156a"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed.",
   "runtimeSnapshotVerification": {

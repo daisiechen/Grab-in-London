@@ -15,9 +15,10 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 105,
+    "NOT_RUN": 104,
     "PASS": 100,
-    "BLOCKED": 12
+    "BLOCKED": 12,
+    "FAIL": 1
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
@@ -14436,8 +14437,15 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "R52-T001",
+        "R52-T002",
+        "R53-T001",
+        "R53-T002",
+        "R53-T003",
+        "R25-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -14542,16 +14550,22 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R52-T001",
+        "R52-T002",
+        "R53-T001",
+        "R53-T002",
+        "R53-T003",
+        "R25-T002"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "空白不发",
-        "2000可受理2001保留原文报错",
-        "上限前拒绝/安全失败",
-        "30秒内终结不输出部分可用草稿"
+        "2000可受理2001保留原文报错"
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "actual": "R52 Web两个独立失败：userEvent粘贴2001字符被maxlength静默裁至2000；强制完整2001状态后Send静默返回，无输入区缩短提示。违反PRD513/方案44，登记QA-F10。R53真实PG服务器三项已通过：空白/2001不dispatch、2000成功且durable deadline≤30秒；token16001在dispatch前失败；真实DeepSeek适配器+受控fetch拒绝output2001，整轮无可操作片段并按已知usage2011结算。R25超时reaper/迟到结果不发布证据复用。待Web/iOS修复及正常恢复定向验收；不把native maxlength静态风险称真机复现。",
+      "defectIds": [
+        "QA-F10"
+      ]
     },
     {
       "id": "QA-CODE-001",
@@ -21537,7 +21551,8 @@
     "QA-F06": "CLOSED_TARGETED_QA",
     "QA-F07": "CLOSED_TARGETED_QA",
     "QA-F08": "CLOSED_TARGETED_QA",
-    "QA-F09": "CLOSED_TARGETED_QA"
+    "QA-F09": "CLOSED_TARGETED_QA",
+    "QA-F10": "OPEN"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
