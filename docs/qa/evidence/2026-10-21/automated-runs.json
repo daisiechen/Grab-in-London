@@ -15487,6 +15487,628 @@
           "durationMs": 23.507541999999944
         }
       ]
+    },
+    {
+      "id": "R116",
+      "testedCommit": "b332b705e28b552eba15ba2c5b54f402954372eb",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-search-matrix.api.test.ts",
+      "startedAt": "2026-10-21T18:51:40.534000+00:00",
+      "exitCode": 1,
+      "passed": 4,
+      "failed": 12,
+      "total": 16,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R116-T001",
+          "run": "R116",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-003 CLEAR survives later UNSET and suppresses saved budget ranking without mutating page filters",
+          "status": "failed",
+          "durationMs": 14.280750000000012,
+          "failureSummary": "error: new row for relation \"meals\" violates check constraint \"meals_check2\""
+        },
+        {
+          "id": "R116-T002",
+          "run": "R116",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-004 only table size changes while prior explicit area/date remain and capacity includes host",
+          "status": "passed",
+          "durationMs": 42.20875000000001
+        },
+        {
+          "id": "R116-T003",
+          "run": "R116",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-005 the soft winner at source position21 is ranked before truncating20 and cards cap3",
+          "status": "failed",
+          "durationMs": 6.999540999999965,
+          "failureSummary": "error: new row for relation \"meals\" violates check constraint \"meals_check2\""
+        },
+        {
+          "id": "R116-T004",
+          "run": "R116",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-006 unknown diet is excluded by vegan hard but remains eligible under Any with zero vegan soft match",
+          "status": "passed",
+          "durationMs": 24.531834000000003
+        },
+        {
+          "id": "R116-T005",
+          "run": "R116",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-007 Spanish alone clarifies before an explicit language Spanish becomes es",
+          "status": "failed",
+          "durationMs": 11.630374999999958,
+          "failureSummary": "AssertionError: expected 'NEEDS_INPUT' to be 'SUCCEEDED' // Object.is equality"
+        },
+        {
+          "id": "R116-T006",
+          "run": "R116",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-008 cheaper must offer a budget clarification without changing existing area/date/budget",
+          "status": "passed",
+          "durationMs": 9.876707999999951
+        },
+        {
+          "id": "R116-T007",
+          "run": "R116",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-046 PENDING exclusion and explicit own state explanation",
+          "status": "passed",
+          "durationMs": 10.841916999999967
+        },
+        {
+          "id": "R116-T008",
+          "run": "R116",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-046 CONFIRMED exclusion and explicit own state explanation",
+          "status": "failed",
+          "durationMs": 0.2630419999999276,
+          "failureSummary": "error: update or delete on table \"meals\" violates foreign key constraint \"applications_meal_id_fkey\" on table \"applications\""
+        },
+        {
+          "id": "R116-T009",
+          "run": "R116",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-046 DECLINED exclusion and explicit own state explanation",
+          "status": "failed",
+          "durationMs": 0.2644999999999982,
+          "failureSummary": "error: update or delete on table \"meals\" violates foreign key constraint \"applications_meal_id_fkey\" on table \"applications\""
+        },
+        {
+          "id": "R116-T010",
+          "run": "R116",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-046 WITHDRAWN exclusion and explicit own state explanation",
+          "status": "failed",
+          "durationMs": 2.3202499999999873,
+          "failureSummary": "error: update or delete on table \"meals\" violates foreign key constraint \"applications_meal_id_fkey\" on table \"applications\""
+        },
+        {
+          "id": "R116-T011",
+          "run": "R116",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-047 exactly one unknown-soft candidate yields exactly that card and no invented IDs",
+          "status": "failed",
+          "durationMs": 2.0663749999999936,
+          "failureSummary": "error: update or delete on table \"meals\" violates foreign key constraint \"applications_meal_id_fkey\" on table \"applications\""
+        },
+        {
+          "id": "R116-T012",
+          "run": "R116",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-048 no current explicit target clarifies in current input language: Explain this meal",
+          "status": "failed",
+          "durationMs": 1.6042080000000851,
+          "failureSummary": "error: update or delete on table \"meals\" violates foreign key constraint \"applications_meal_id_fkey\" on table \"applications\""
+        },
+        {
+          "id": "R116-T013",
+          "run": "R116",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-048 no current explicit target clarifies in current input language: 解释这顿饭",
+          "status": "failed",
+          "durationMs": 1.669208000000026,
+          "failureSummary": "error: update or delete on table \"meals\" violates foreign key constraint \"applications_meal_id_fkey\" on table \"applications\""
+        },
+        {
+          "id": "R116-T014",
+          "run": "R116",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-049 APPLICATION length301 cannot produce transferable content",
+          "status": "failed",
+          "durationMs": 1.5021249999999782,
+          "failureSummary": "error: update or delete on table \"meals\" violates foreign key constraint \"applications_meal_id_fkey\" on table \"applications\""
+        },
+        {
+          "id": "R116-T015",
+          "run": "R116",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-049 CREATE_TITLE length81 cannot produce transferable content",
+          "status": "failed",
+          "durationMs": 1.5337919999999485,
+          "failureSummary": "error: update or delete on table \"meals\" violates foreign key constraint \"applications_meal_id_fkey\" on table \"applications\""
+        },
+        {
+          "id": "R116-T016",
+          "run": "R116",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-049 CREATE_DESCRIPTION length1001 cannot produce transferable content",
+          "status": "failed",
+          "durationMs": 1.473875000000021,
+          "failureSummary": "error: update or delete on table \"meals\" violates foreign key constraint \"applications_meal_id_fkey\" on table \"applications\""
+        }
+      ]
+    },
+    {
+      "id": "R117",
+      "testedCommit": "b332b705e28b552eba15ba2c5b54f402954372eb",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-search-matrix.api.test.ts",
+      "startedAt": "2026-10-21T18:52:12.382000+00:00",
+      "exitCode": 1,
+      "passed": 14,
+      "failed": 2,
+      "total": 16,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R117-T001",
+          "run": "R117",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-003 CLEAR survives later UNSET and suppresses saved budget ranking without mutating page filters",
+          "status": "passed",
+          "durationMs": 66.88575000000003
+        },
+        {
+          "id": "R117-T002",
+          "run": "R117",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-004 only table size changes while prior explicit area/date remain and capacity includes host",
+          "status": "passed",
+          "durationMs": 26.03449999999998
+        },
+        {
+          "id": "R117-T003",
+          "run": "R117",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-005 the soft winner at source position21 is ranked before truncating20 and cards cap3",
+          "status": "passed",
+          "durationMs": 21.489125
+        },
+        {
+          "id": "R117-T004",
+          "run": "R117",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-006 unknown diet is excluded by vegan hard but remains eligible under Any with zero vegan soft match",
+          "status": "passed",
+          "durationMs": 22.539875000000052
+        },
+        {
+          "id": "R117-T005",
+          "run": "R117",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-007 Spanish alone clarifies before an explicit language Spanish becomes es",
+          "status": "failed",
+          "durationMs": 17.63154099999997,
+          "failureSummary": "AssertionError: expected 'NEEDS_INPUT' to be 'SUCCEEDED' // Object.is equality"
+        },
+        {
+          "id": "R117-T006",
+          "run": "R117",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-008 cheaper must offer a budget clarification without changing existing area/date/budget",
+          "status": "passed",
+          "durationMs": 17.424750000000017
+        },
+        {
+          "id": "R117-T007",
+          "run": "R117",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-046 PENDING exclusion and explicit own state explanation",
+          "status": "passed",
+          "durationMs": 16.565166999999974
+        },
+        {
+          "id": "R117-T008",
+          "run": "R117",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-046 CONFIRMED exclusion and explicit own state explanation",
+          "status": "passed",
+          "durationMs": 19.460375
+        },
+        {
+          "id": "R117-T009",
+          "run": "R117",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-046 DECLINED exclusion and explicit own state explanation",
+          "status": "passed",
+          "durationMs": 16.894916999999964
+        },
+        {
+          "id": "R117-T010",
+          "run": "R117",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-046 WITHDRAWN exclusion and explicit own state explanation",
+          "status": "passed",
+          "durationMs": 18.732124999999996
+        },
+        {
+          "id": "R117-T011",
+          "run": "R117",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-047 exactly one unknown-soft candidate yields exactly that card and no invented IDs",
+          "status": "passed",
+          "durationMs": 13.9993750000001
+        },
+        {
+          "id": "R117-T012",
+          "run": "R117",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-048 no current explicit target clarifies in current input language: Explain this meal",
+          "status": "passed",
+          "durationMs": 24.84045900000001
+        },
+        {
+          "id": "R117-T013",
+          "run": "R117",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-048 no current explicit target clarifies in current input language: 解释这顿饭",
+          "status": "failed",
+          "durationMs": 16.398000000000025,
+          "failureSummary": "AssertionError: expected 'Please confirm the date, area, budget…' to match /[\\u4e00-\\u9fff]/"
+        },
+        {
+          "id": "R117-T014",
+          "run": "R117",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-049 APPLICATION length301 cannot produce transferable content",
+          "status": "passed",
+          "durationMs": 16.808750000000032
+        },
+        {
+          "id": "R117-T015",
+          "run": "R117",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-049 CREATE_TITLE length81 cannot produce transferable content",
+          "status": "passed",
+          "durationMs": 13.578875000000039
+        },
+        {
+          "id": "R117-T016",
+          "run": "R117",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-049 CREATE_DESCRIPTION length1001 cannot produce transferable content",
+          "status": "passed",
+          "durationMs": 14.96020800000008
+        }
+      ]
+    },
+    {
+      "id": "R118",
+      "testedCommit": "b332b705e28b552eba15ba2c5b54f402954372eb",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-support-propagation.api.test.ts",
+      "startedAt": "2026-10-21T18:52:57.744000+00:00",
+      "exitCode": 1,
+      "passed": 1,
+      "failed": 1,
+      "total": 2,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R118-T001",
+          "run": "R118",
+          "path": "scripts/qa-independent-support-propagation.api.test.ts",
+          "title": "QA-POST-009 actual support present absent present recomputes fresh statistics/public references and closes sole-basis direct without duplicate ratings",
+          "status": "failed",
+          "durationMs": 148.00712499999997,
+          "failureSummary": "AssertionError: expected undefined to deeply equal { numerator: 1, denominator: 2 }"
+        },
+        {
+          "id": "R118-T002",
+          "run": "R118",
+          "path": "scripts/qa-independent-support-propagation.api.test.ts",
+          "title": "QA-POST-010 support correction deadline minus1 rejects and equality records revision/audit atomically; analyst denied even with MFA and case grant",
+          "status": "passed",
+          "durationMs": 24.772875
+        }
+      ]
+    },
+    {
+      "id": "R119",
+      "testedCommit": "b332b705e28b552eba15ba2c5b54f402954372eb",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-support-propagation.api.test.ts",
+      "startedAt": "2026-10-21T18:53:42.926000+00:00",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "total": 2,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R119-T001",
+          "run": "R119",
+          "path": "scripts/qa-independent-support-propagation.api.test.ts",
+          "title": "QA-POST-009 actual support present absent present recomputes fresh statistics/public references and closes sole-basis direct without duplicate ratings",
+          "status": "passed",
+          "durationMs": 168.69825000000003
+        },
+        {
+          "id": "R119-T002",
+          "run": "R119",
+          "path": "scripts/qa-independent-support-propagation.api.test.ts",
+          "title": "QA-POST-010 support correction deadline minus1 rejects and equality records revision/audit atomically; analyst denied even with MFA and case grant",
+          "status": "passed",
+          "durationMs": 19.038374999999974
+        }
+      ]
+    },
+    {
+      "id": "R120",
+      "testedCommit": "b332b705e28b552eba15ba2c5b54f402954372eb",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-metrics-matrix.api.test.ts",
+      "startedAt": "2026-10-21T18:54:56.052000+00:00",
+      "exitCode": 1,
+      "passed": 4,
+      "failed": 2,
+      "total": 6,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R120-T001",
+          "run": "R120",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-011 ratings are person-meal submissions while survey is one latest user with independent multi-select factors",
+          "status": "passed",
+          "durationMs": 2.577042000000006
+        },
+        {
+          "id": "R120-T002",
+          "run": "R120",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-012 exclusive GBP bands handle exact upper boundaries and language OR without duplicate meals",
+          "status": "passed",
+          "durationMs": 0.812958999999978
+        },
+        {
+          "id": "R120-T003",
+          "run": "R120",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-008 meeting recruitment minimum and cancellation are independent facts",
+          "status": "passed",
+          "durationMs": 0.15274999999996908
+        },
+        {
+          "id": "R120-T004",
+          "run": "R120",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-002 actual ingress accepts once duplicates once and rejects forged business success without metric effects",
+          "status": "failed",
+          "durationMs": 88.023125,
+          "failureSummary": "TypeError: Cannot read properties of undefined (reading 'results')"
+        },
+        {
+          "id": "R120-T005",
+          "run": "R120",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-003 late received event enters S1 but cannot alter sealed S0",
+          "status": "passed",
+          "durationMs": 8.175666999999976
+        },
+        {
+          "id": "R120-T006",
+          "run": "R120",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-013 classification excludes the account contribution and hosted meal only in rebuilt snapshots then restores without rewriting S0",
+          "status": "failed",
+          "durationMs": 54.512833,
+          "failureSummary": "AssertionError: {\"error\":{\"code\":\"VERSION_CONFLICT\",\"message\":\"This classification changed. Reload before saving.\",\"currentVersion\":\"2\"},\"meta\":{\"requestId\":\"2c8bf61a-4487-4716-b598-ceba262497ab\",\"serverNow\":\"2026-10-21T18:54:57.273Z\"}}: expected 409 to be 200 // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "R121",
+      "testedCommit": "b332b705e28b552eba15ba2c5b54f402954372eb",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-metrics-matrix.api.test.ts",
+      "startedAt": "2026-10-21T18:55:24.184000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 0,
+      "total": 0,
+      "suiteFiles": 1,
+      "assertions": [],
+      "suiteLoadFailures": [
+        {
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "message": "Cannot find package '@fancy/config' imported from /Users/daisie.chen/Desktop/AI/约饭App/scripts/qa-independent-metrics-matrix.api.test.ts"
+        }
+      ]
+    },
+    {
+      "id": "R122",
+      "testedCommit": "b332b705e28b552eba15ba2c5b54f402954372eb",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-metrics-matrix.api.test.ts",
+      "startedAt": "2026-10-21T18:56:10.219000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 0,
+      "total": 0,
+      "suiteFiles": 1,
+      "assertions": [],
+      "suiteLoadFailures": [
+        {
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "message": "Method 'POST' already declared for route '/v1/analytics/events'"
+        }
+      ]
+    },
+    {
+      "id": "R123",
+      "testedCommit": "b332b705e28b552eba15ba2c5b54f402954372eb",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-search-matrix.api.test.ts -t QA-AI-049 (parallel uncommitted F22/F23 production fixes present; draft length implementation unchanged)",
+      "startedAt": "2026-10-21T18:56:47.660000+00:00",
+      "exitCode": 0,
+      "passed": 4,
+      "failed": 0,
+      "total": 4,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R123-T001",
+          "run": "R123",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-049 APPLICATION length301 cannot produce transferable content",
+          "status": "passed",
+          "durationMs": 40.424125000000004
+        },
+        {
+          "id": "R123-T002",
+          "run": "R123",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-049 CREATE_TITLE length81 cannot produce transferable content",
+          "status": "passed",
+          "durationMs": 25.639207999999996
+        },
+        {
+          "id": "R123-T003",
+          "run": "R123",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-049 CREATE_DESCRIPTION length1001 cannot produce transferable content",
+          "status": "passed",
+          "durationMs": 19.72437500000001
+        },
+        {
+          "id": "R123-T004",
+          "run": "R123",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-049 group 1001 rejects; application300 group1000 create80/1000 remain within original editor limits",
+          "status": "passed",
+          "durationMs": 9.318583999999987
+        }
+      ]
+    },
+    {
+      "id": "R124",
+      "testedCommit": "b332b705e28b552eba15ba2c5b54f402954372eb",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-metrics-matrix.api.test.ts",
+      "startedAt": "2026-10-21T18:57:17.889000+00:00",
+      "exitCode": 1,
+      "passed": 5,
+      "failed": 1,
+      "total": 6,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R124-T001",
+          "run": "R124",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-011 ratings are person-meal submissions while survey is one latest user with independent multi-select factors",
+          "status": "passed",
+          "durationMs": 2.5722500000000537
+        },
+        {
+          "id": "R124-T002",
+          "run": "R124",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-012 exclusive GBP bands handle exact upper boundaries and language OR without duplicate meals",
+          "status": "passed",
+          "durationMs": 0.8034580000000915
+        },
+        {
+          "id": "R124-T003",
+          "run": "R124",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-008 meeting recruitment minimum and cancellation are independent facts",
+          "status": "passed",
+          "durationMs": 0.18870800000001964
+        },
+        {
+          "id": "R124-T004",
+          "run": "R124",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-002 actual ingress accepts once duplicates once and rejects forged business success without metric effects",
+          "status": "failed",
+          "durationMs": 94.20633300000009,
+          "failureSummary": "AssertionError: {\"error\":{\"code\":\"VALIDATION_FAILED\",\"message\":\"Some fields need attention.\",\"fieldErrors\":{\"body.events.0.type\":\"must be equal to one of the allowed values\"}},\"meta\":{\"requestId\":\"f4718fa4-2a6c-4c52-9321-714029276326\",\"serverNow\":\"2026-10-21T18:57:18.975Z\"}}: expected 422 to be 200 // Object.is equality"
+        },
+        {
+          "id": "R124-T005",
+          "run": "R124",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-003 late received event enters S1 but cannot alter sealed S0",
+          "status": "passed",
+          "durationMs": 8.490290999999957
+        },
+        {
+          "id": "R124-T006",
+          "run": "R124",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-013 classification excludes the account contribution and hosted meal only in rebuilt snapshots then restores without rewriting S0",
+          "status": "passed",
+          "durationMs": 59.63308399999994
+        }
+      ]
+    },
+    {
+      "id": "R125",
+      "testedCommit": "b332b705e28b552eba15ba2c5b54f402954372eb",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-metrics-matrix.api.test.ts (parallel uncommitted assistant-only fixes; metrics source unchanged)",
+      "startedAt": "2026-10-21T18:57:49.558000+00:00",
+      "exitCode": 0,
+      "passed": 6,
+      "failed": 0,
+      "total": 6,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R125-T001",
+          "run": "R125",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-011 ratings are person-meal submissions while survey is one latest user with independent multi-select factors",
+          "status": "passed",
+          "durationMs": 2.483833000000004
+        },
+        {
+          "id": "R125-T002",
+          "run": "R125",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-012 exclusive GBP bands handle exact upper boundaries and language OR without duplicate meals",
+          "status": "passed",
+          "durationMs": 0.7754159999999501
+        },
+        {
+          "id": "R125-T003",
+          "run": "R125",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-008 meeting recruitment minimum and cancellation are independent facts",
+          "status": "passed",
+          "durationMs": 0.14008400000000165
+        },
+        {
+          "id": "R125-T004",
+          "run": "R125",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-002 actual ingress accepts once duplicates once and rejects forged business success without metric effects",
+          "status": "passed",
+          "durationMs": 97.62770799999998
+        },
+        {
+          "id": "R125-T005",
+          "run": "R125",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-003 late received event enters S1 but cannot alter sealed S0",
+          "status": "passed",
+          "durationMs": 6.0075409999999465
+        },
+        {
+          "id": "R125-T006",
+          "run": "R125",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-013 classification excludes the account contribution and hosted meal only in rebuilt snapshots then restores without rewriting S0",
+          "status": "passed",
+          "durationMs": 54.95104200000003
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -15551,7 +16173,10 @@
     "scripts/qa-verify-native-bundle.py": "dd29cb2b09b384d9d407d9f673f980a158a1f566c18c910705b79b2c434f9171",
     "tests/test_native_bundle_probe.py": "f19f61699e3328c6433fac86de0a3bfc1ee360649f7f1b2d9aeffc3d44aa58e9",
     "scripts/qa-ai-browser-fixture.ts": "01c817782db9839b17904db9035052ef09bbf0c50b1269ef0a942a61200ffccc",
-    "scripts/qa-inspect-ai-writes.py": "4568f5c5325eb40e1895fefc49ef87fb18974ac3a5ce1ac4df2f74189ba80857"
+    "scripts/qa-inspect-ai-writes.py": "4568f5c5325eb40e1895fefc49ef87fb18974ac3a5ce1ac4df2f74189ba80857",
+    "scripts/qa-independent-ai-search-matrix.api.test.ts": "481400be52ae63d2abfa3fa4b4576733c19611538af3f0d4a49c9ff054297cdf",
+    "scripts/qa-independent-support-propagation.api.test.ts": "08d793622ea3d9dbfba5862cd44ba08e3c917fd918bad8c8a6a1d0397b601ad3",
+    "scripts/qa-independent-metrics-matrix.api.test.ts": "686e68d85b1825a3df83cb038efb930c1a65201a05de93724a5be7f9aac398cd"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console. R68/R69 valid TestIDP OAuth callback200 captured actual non-silent child stdout only in parent RAM. Metadata contains only leak booleans, never credential strings or raw logs. R69 aggregates code/state/email checks without stopping at the first boolean failure. R72 mutates semantic OpenAPI/SDK artifacts only in an owned temporary contracts copy, requires the real checker fail1 and restore0, and verifies original workspace bytes untouched. Static cases remain NOT_RUN until fixed committed handoff recheck.",
   "runtimeSnapshotVerification": {
@@ -15635,6 +16260,9 @@
     "F20 bundle verifier initially treated Metro virtual app?ctx source as a physical file. Corrected verification to skip generated context modules only, retain exact byte check for all106 physical app sources; negative ESM/stale-source controls pass. Actual CJS-only bundle verified independently. No runtime conclusion from export.",
     "B11 API launched without tty so stdin observer unavailable; kept healthy fixture and used separate guarded readonly PID/PG/qa_business_probe inspector. Actual UI Continueconversation needed to restore candidate after reopening assistant; fresh DOM guided action, no product failure or relaxed expectation.",
     "R113 bare node Jest launch lacked standard pnpm package-resolution environment and safe-area suite did not load; R114 standard documented pnpm package test command executes all10green, no dependency installation/config change or relaxed assertion. Native owner actual release proof remains separately attributed.",
-    "QA validator now explicitly retains suiteLoadFailures separately from assertion failures. A Jest suite that cannot load can exit1 with seven other tests passed and zero failed assertions; no invented failed test or false exit0. Three negative/positive verifier tests enforce this distinction."
+    "QA validator now explicitly retains suiteLoadFailures separately from assertion failures. A Jest suite that cannot load can exit1 with seven other tests passed and zero failed assertions; no invented failed test or false exit0. Three negative/positive verifier tests enforce this distinction.",
+    "R116 retained: QA fixture shifted starts_at without matching scheduled_end_at and deleted meals with applications; R117 fixes only fixture time invariants/isolation. R117 retains two actual product failures F22/F23. Later removal of unused helper and control-character regex are lint-only.",
+    "R118 retained incorrect QA overview.feedback lookup; R119 reads production loadAdminSnapshot.calculated and both support cases pass.",
+    "R120 retained QA ingress status assumption/global classification CAS assumption; R121 wrong workspace alias and R122 duplicate route registration are suite-load failures, not product defects. R124 requires200 for forged unknown enum but production correctly rejects at schema422; R125 explicitly asserts422 and zero business effects."
   ]
 }

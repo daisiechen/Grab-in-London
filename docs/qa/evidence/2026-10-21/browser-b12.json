@@ -1,0 +1,22 @@
+{
+  "observations": [
+    {
+      "id": "B12-O001",
+      "status": "passed",
+      "title": "QA-CREATE-003 real Web capacity boundaries preserve draft and prevent invalid minimum choices",
+      "testedCommit": "cb9257e487700d85829068d06f6267217d25b880",
+      "environment": "B11 real Web localhost5176/API3102/fresh PG; fixture Places/TestIDP/control model; no publication",
+      "steps": [
+        "Existing min3 cap4 review draft retained title/description restaurant/date/time/budget.",
+        "Arrange capacity2 restricts minimum to2; no below2/above6 capacity choices; cannot select min>capacity.",
+        "Capacity6/min6 can Continue; existing AI title/description, English and mood remain unchanged.",
+        "Back Arrange shows5 guests+you, selected future date/time and confirmed fixture venue; original final review confirmation remains unchecked, no publication.",
+        "False isVisible probe for plural1 guests was a tester wording lookup, not a product assertion; observed UI uses appropriate singular.",
+        "R107 real API invalid range/decimals422 guards unchanged; retain those API assertions alongside actual UI preventive controls."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/create-people-six-preserved.jpg"
+      ]
+    }
+  ]
+}

@@ -17,8 +17,9 @@
     "nativeRuntimeEvidence20261021": "Native owner actual headless Release install/launch and first-screen evidence independently reviewed by QA, F20 exact red874/fixed9df, F21 formal5b source-equivalent AppRoot and Metro matched. No independent native taps or complete role journey; root complete5b archive rebuild pending when reviewed."
   },
   "counts": {
-    "NOT_RUN": 60,
-    "PASS": 145,
+    "NOT_RUN": 43,
+    "PASS": 160,
+    "FAIL": 2,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -47,7 +48,8 @@
     "browserObservationsB11": "evidence/2026-10-21/browser-b11.json",
     "B11": "evidence/2026-10-21/browser-b11.zh-CN.md",
     "nativeRuntimeReview": "evidence/2026-10-21/native-f20-f21-owner-runtime-review.json",
-    "nativeClosureReview": "evidence/2026-10-21/native-f20-f21-closure.md"
+    "nativeClosureReview": "evidence/2026-10-21/native-f20-f21-closure.md",
+    "browserObservationsB12": "evidence/2026-10-21/browser-b12.json"
   },
   "cases": [
     {
@@ -3477,8 +3479,9 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
+        "B12-O001",
         "R107-T001",
         "R107-T002",
         "R107-T003",
@@ -3486,7 +3489,9 @@
         "R107-T005",
         "R107-T006",
         "R107-T007",
-        "R107-T008"
+        "R107-T008",
+        "R107-T009",
+        "R107-T010"
       ],
       "relatedAutomatedAssertions": [
         "R1-T080",
@@ -3536,12 +3541,12 @@
         "R2-T143",
         "R2-T144"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "合法范围可继续且含host",
-        "非法拒绝且保留其他草稿"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：输入minimum2/capacity2、3/4、6/6 → 尝试1/4、5/4、3/7、小数。当前仍缺：合法范围可继续且含host；非法拒绝且保留其他草稿。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 R107 actual API accepts2/2,3/4,6/6 and exactly one HOST_CONFIRMED seat; rejects1/4,5/4,3/7 and fractional minimum/capacity422 with no published attempt. Actual four-step editor invalid input and other draft persistence not yet verified; NOT_RUN retained."
+      "remainingExpected": [],
+      "actual": "B12 actual production Web prevents invalid size/minimum choices at2/6 boundaries, preserves other draft fields; R107 independently verifies invalid actual API inputs422 without publish. Local real PG, fixture venue; not native or real restaurant booking."
     },
     {
       "id": "QA-CREATE-004",
@@ -6321,8 +6326,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R119-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T132",
         "R1-T133",
@@ -6358,13 +6365,13 @@
         "R2-T003",
         "R2-T004"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "新有效投影重算",
-        "不合格公评撤公开、评分退出统计、唯一依据私聊停止",
-        "恢复不重复计数"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：先评分/公评/互选 → 支持合法纠错present→absent→present。尚缺逐项证据：新有效投影重算；不合格公评撤公开、评分退出统计、唯一依据私聊停止；恢复不重复计数。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent R119 real PG and production support HTTP checks. Exact7d boundary uses production domain commands under injected effectiveNow, equality audit in same transaction; real HTTP role/MFA/case granted analyst cannot correct or read group history. Qualification loss changes fresh sealed metrics/public reviews and closes sole-basis direct; restoration does not duplicate ratings or restore consent."
     },
     {
       "id": "QA-POST-010",
@@ -6372,8 +6379,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R119-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T132",
         "R1-T133",
@@ -6409,13 +6418,13 @@
         "R2-T003",
         "R2-T004"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "窗内409 CORRECTION_WINDOW_OPEN",
-        "等号合法修订且有审计",
-        "analyst拒绝，不读聊天"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：end+7d−1ms支持修订 → 等号有MFA/case/reason/version再修订 → analyst尝试。尚缺逐项证据：窗内409 CORRECTION_WINDOW_OPEN；等号合法修订且有审计；analyst拒绝，不读聊天。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent R119 real PG and production support HTTP checks. Exact7d boundary uses production domain commands under injected effectiveNow, equality audit in same transaction; real HTTP role/MFA/case granted analyst cannot correct or read group history. Qualification loss changes fresh sealed metrics/public reviews and closes sole-basis direct; restoration does not duplicate ratings or restore consent."
     },
     {
       "id": "QA-SURVEY-001",
@@ -6986,8 +6995,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R125-T004"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -7027,12 +7038,12 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "首条accepted第二duplicate",
-        "伪业务成功rejected且不进指标"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "本地生产实现尚需实际执行：同eventId投递两次 → 客户端发送application_success。尚缺逐项证据：首条accepted第二duplicate；伪业务成功rejected且不进指标。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "R125 independent production metrics hand-calculated facts / real PG+HTTP snapshot checks. Dedup and forged success rejection, immutable S0/late S1, person-meal vs latest-user survey factors, classification exclusion/restoration each verified by the named assertion. No real telemetry deployment claim."
     },
     {
       "id": "QA-METRIC-003",
@@ -7040,8 +7051,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R125-T005"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -7081,13 +7094,13 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "S0排除",
-        "S1可纳入",
-        "S0不可变"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：occurredAt<asOf但receivedAt>asOf → 构建S0和晚S1。尚缺逐项证据：S0排除；S1可纳入；S0不可变。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "R125 independent production metrics hand-calculated facts / real PG+HTTP snapshot checks. Dedup and forged success rejection, immutable S0/late S1, person-meal vs latest-user survey factors, classification exclusion/restoration each verified by the named assertion. No real telemetry deployment claim."
     },
     {
       "id": "QA-METRIC-004",
@@ -7526,8 +7539,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R125-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -7567,13 +7582,13 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "评分2人次、问卷1用户",
-        "因素可多选比例不要求100%",
-        "不按单场星级切问卷"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：A两场评分1和5，问卷Yes且cost+venue → 导出。尚缺逐项证据：评分2人次、问卷1用户；因素可多选比例不要求100%；不按单场星级切问卷。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "R125 independent production metrics hand-calculated facts / real PG+HTTP snapshot checks. Dedup and forged success rejection, immutable S0/late S1, person-meal vs latest-user survey factors, classification exclusion/restoration each verified by the named assertion. No real telemetry deployment claim."
     },
     {
       "id": "QA-METRIC-012",
@@ -7636,8 +7651,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R125-T006"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -7677,13 +7694,13 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "新快照排除A贡献及其host整场",
-        "正式host他人事实保留",
-        "恢复重新构建，旧快照不常规改写"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：data_admin将A regular→test→regular → 含host和参与记录。尚缺逐项证据：新快照排除A贡献及其host整场；正式host他人事实保留；恢复重新构建，旧快照不常规改写。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "R125 independent production metrics hand-calculated facts / real PG+HTTP snapshot checks. Dedup and forged success rejection, immutable S0/late S1, person-meal vs latest-user survey factors, classification exclusion/restoration each verified by the named assertion. No real telemetry deployment claim."
     },
     {
       "id": "QA-METRIC-014",
@@ -9601,8 +9618,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R117-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -9709,13 +9728,13 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "budget hard和soft均不恢复",
-        "其他条件保留",
-        "Discover UI不改"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：先hard35 → 不限预算 → 下一轮仅改日期。尚缺逐项证据：budget hard和soft均不恢复；其他条件保留；Discover UI不改。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim."
     },
     {
       "id": "QA-AI-004",
@@ -9723,8 +9742,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R117-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -9831,12 +9852,12 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "Soho/日期保留",
-        "仅人数改变且含host"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "本地生产实现尚需实际执行：已确认Soho/周五 → 下一轮只说4人。尚缺逐项证据：Soho/日期保留；仅人数改变且含host。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim."
     },
     {
       "id": "QA-AI-005",
@@ -9844,8 +9865,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R117-T003"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -9952,13 +9975,13 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "先全集合hard过滤及排序再top20",
-        "最优不被先截断",
-        "卡片≤3"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：将soft最优场放初始顺序第21 → 请求推荐。尚缺逐项证据：先全集合hard过滤及排序再top20；最优不被先截断；卡片≤3。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim."
     },
     {
       "id": "QA-AI-006",
@@ -9966,8 +9989,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R117-T004"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -10074,13 +10099,13 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "hard不命中U",
-        "Any下U可出现且soft0分",
-        "无过敏保证"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：U饮食null → hard vegan后再Any并保存vegan偏好。尚缺逐项证据：hard不命中U；Any下U可出现且soft0分；无过敏保证。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim."
     },
     {
       "id": "QA-AI-007",
@@ -10088,8 +10113,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "R117-T005"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -10201,7 +10228,10 @@
         "第一轮最少澄清不自选菜系",
         "明确后使用es语言"
       ],
-      "actual": "本地生产实现尚需实际执行：输入Spanish → 再明确language Spanish。尚缺逐项证据：第一轮最少澄清不自选菜系；明确后使用es语言。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "Independent R117 actual production controller failure, sent to development owner; current fixes not yet accepted. Original red retained. Explicit language Spanish still NEEDS_INPUT.",
+      "defectIds": [
+        "QA-F22"
+      ]
     },
     {
       "id": "QA-AI-008",
@@ -10209,8 +10239,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R117-T006"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -10317,12 +10349,12 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "提出预算候选待确认",
-        "不直接换日期/区域或偷偷降低预算"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "本地生产实现尚需实际执行：当前hard区域Soho/日期周五 → 输入便宜一点。尚缺逐项证据：提出预算候选待确认；不直接换日期/区域或偷偷降低预算。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim."
     },
     {
       "id": "QA-AI-009",
@@ -20477,8 +20509,13 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R117-T007",
+        "R117-T008",
+        "R117-T009",
+        "R117-T010"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -20585,13 +20622,13 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "不作为可新加入结果",
-        "明确解释可读本人状态",
-        "withdrawn可按新轮规则重新推荐"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：A对不同场为pending/confirmed/declined → 明确查找再明确解释这些场。尚缺逐项证据：不作为可新加入结果；明确解释可读本人状态；withdrawn可按新轮规则重新推荐。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim."
     },
     {
       "id": "QA-AI-047",
@@ -20599,8 +20636,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R117-T011"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -20707,12 +20746,12 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "仅1张卡不凑数",
-        "不自造ID或把低soft未知当排除"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "本地生产实现尚需实际执行：可见合格集合只有1场 → 查询推荐。尚缺逐项证据：仅1张卡不凑数；不自造ID或把低soft未知当排除。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim."
     },
     {
       "id": "QA-AI-048",
@@ -20720,8 +20759,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "R117-T013"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -20834,7 +20875,10 @@
         "旧选中不自动当当前明确对象",
         "按当前输入语言回复"
       ],
-      "actual": "本地生产实现尚需实际执行：用户英文/中文问这顿饭但无明确mealId → Discover旧选中M。尚缺逐项证据：先要求选择目标；旧选中不自动当当前明确对象；按当前输入语言回复。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "Independent R117 actual production controller failure, sent to development owner; current fixes not yet accepted. Original red retained. Chinese missing-target request gets English clarification; stale target correctly not reused.",
+      "defectIds": [
+        "QA-F23"
+      ]
     },
     {
       "id": "QA-AI-049",
@@ -20842,8 +20886,13 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R123-T001",
+        "R123-T002",
+        "R123-T003",
+        "R123-T004"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -20950,13 +20999,13 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "不产生超核心限制可提交内容",
-        "校验拒绝/安全失败",
-        "不可凭PRD AI上限500绕过申请300"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：申请输出301字 → 创建标题81/说明1001 → 群草稿1001 → 转入原编辑器。尚缺逐项证据：不产生超核心限制可提交内容；校验拒绝/安全失败；不可凭PRD AI上限500绕过申请300。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent R123 four assertions: application301, create81/1001 and group1001 rejected; exact300/80/1000/1000 allowed in core validator. Failed generation has no transfer artifact or business writes; no editor bypass. Controlled model and real PG for controller cases; pure core group boundary."
     },
     {
       "id": "QA-JOURNEY-010",
@@ -22365,14 +22414,16 @@
     "QA-F18": "CLOSED_TARGETED_QA",
     "QA-F19": "CLOSED_TARGETED_QA",
     "QA-F20": "CLOSED_TARGETED_QA",
-    "QA-F21": "CLOSED_TARGETED_QA"
+    "QA-F21": "CLOSED_TARGETED_QA",
+    "QA-F22": "OPEN",
+    "QA-F23": "OPEN"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
     "userAuthorizedMessaging": true,
     "status": "remaining_local_execution_in_progress",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
-    "latestFeedback": "R115 POST-008 independent API/real-PG publication projections passed 2/2; exact deadline and reciprocal publication plus one-sided consent privacy covered. Counts145/60/12. Native interactive handoff remains pending."
+    "latestFeedback": "R117 two stable AI language defects F22/F23 handed to developer. R119 support propagation/exact window2green; R123 core draft boundaries4green. Other local work continues; no user approval needed for these fixes."
   },
   "blockerTriage": "原14条中供应商分步删除和恢复删除台账两条已转本地执行并通过；其余12条缺真实环境/许可/批准证据，各项可本地准备部分已继续推进，不能视为12个未修代码故障。"
 }

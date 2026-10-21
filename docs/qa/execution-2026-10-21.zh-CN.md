@@ -1,6 +1,6 @@
 # 独立QA执行报告 · 2026-10-21
 
-**结论：部分执行，尚不能完成整体验收；不构成发布通过。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18, QA-F19, QA-F20, QA-F21；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
+**结论：本轮不通过，存在未闭环缺陷：QA-F22, QA-F23。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18, QA-F19, QA-F20, QA-F21；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
 
 原测试计划基线4659fdb；被测交接`8ba6fc7c9974cf6be1ac06d8b16e0380fb3beced`，业务代码`8bc1e9280153491b6a63c68cd6ba6a49f8061978`。Inbox分页修复在`cd66d87a153b3171cebbe7ae74680eceb356aed1`仅做定向复验；QA-F01及第二批P0探针在04cb601验证，第三批边界、删除/恢复和适配在d4582f7及后续仅CI增量版本定向验证，具体版本见运行表；更早证据沿用对应固定基线。
 
@@ -14,10 +14,10 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 145 |
-| FAIL | 0 |
+| PASS | 160 |
+| FAIL | 2 |
 | BLOCKED | 12 |
-| NOT_RUN | 60 |
+| NOT_RUN | 43 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实环境、原生runtime/设备/签名或政策批准证据；本地恢复与分步删除现已复验通过，不能再笼统视为外部阻塞。FAIL优先于未完成的后续步骤。
@@ -141,6 +141,16 @@
 | R113 | 退出码1；7/7通过，失败0，2个测试文件 | `5b26fb3` |
 | R114 | 退出码0；10/10通过，失败0，2个测试文件 | `5b26fb3` |
 | R115 | 退出码0；2/2通过，失败0，1个测试文件 | `e775bef` |
+| R116 | 退出码1；4/16通过，失败12，1个测试文件 | `b332b70` |
+| R117 | 退出码1；14/16通过，失败2，1个测试文件 | `b332b70` |
+| R118 | 退出码1；1/2通过，失败1，1个测试文件 | `b332b70` |
+| R119 | 退出码0；2/2通过，失败0，1个测试文件 | `b332b70` |
+| R120 | 退出码1；4/6通过，失败2，1个测试文件 | `b332b70` |
+| R121 | 退出码1；0/0通过，失败0，1个测试文件 | `b332b70` |
+| R122 | 退出码1；0/0通过，失败0，1个测试文件 | `b332b70` |
+| R123 | 退出码0；4/4通过，失败0，1个测试文件 | `b332b70` |
+| R124 | 退出码1；5/6通过，失败1，1个测试文件 | `b332b70` |
+| R125 | 退出码0；6/6通过，失败0，1个测试文件 | `b332b70` |
 
 R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯函数探针；R5复跑分页修复回归，R6是QA第二批6项独立P0探针；R7/R8为QA-F01修复的API/Web及iOS组件定向复跑；R9是第三批12项独立边界探针，R10/R11复跑解除准备，R12为QA新增真实备份中E0导出的恢复后撤销分支；R13为饭后及群/私聊权限独立探针；R14保留QA-F03修前2失败，R15为0518d45修后的12项独立探针复验，R16为身份模块26项受影响HTTP回归（包括fresh会话下未来proof拒绝），不能删除修前结果或把历史失败当当前通过；R17为举报本人回执及撤授权重放3项独立HTTP/PG探针，撤session/DELETING状态通过受控数据库夹具设置。R18为安排锁、历史截止补算、开始名单及预约隔离6项独立PG/HTTP探针，删除仅屏障状态，完整删除名单断言仍未通过。R19/R20独立定向复跑5a37fdc关闭顺序单测及真实PG负载退出，未替代远端CI结果。R21为删除实际HTTP/本地purge、故障rollback及用户锁消息/审批竞态5项独立探针，生产日志脱敏仍待完整捕获。R22为ac09af4固定版本的11项独立受控AI/controller/HTTP探针，仅035/036/037具完整预期证据；R23为该版本Claude发现修复28项API/DB独立定向复验。R24保留QA-F04修前停用后仍发布失败；R25为8e2b908修后7项独立停用/费用/reaper探针，R26为22项受影响DB回归，F04定向关闭而043仍有未测断言。R27保留QA-F05修前Web失败，T001另为已分类夹具错误；R28/R29为f298048独立session/PG及Web组件各3项，R30为iOS manager17项定向回归；F05在NEW与TTL/偏好删除差异范围关闭。R31为公开DTO/后台角色/CSV授权及跨快照游标和大序号4项独立HTTP/PG探针，公式转义另覆盖formatter，不声称Excel实际执行。R32保留QA-F06 CLI入口失败，R33保留QA-F07原生协议失败；R34/R35固定b76c593独立8+32项验证CLI修复，R36固定1080993独立iOS49项验证桥接修复。完整加入用户路径仍NOT_RUN，不据组件通过升级。不能将这些数量相加当作独立业务用例数；R5与R1有重复，R2也不是原生设备验收。逐项测试名、状态、时间和命令见[机器证据](evidence/2026-10-21/automated-runs.json)。R4是质量检查而非业务用例。
 
@@ -209,7 +219,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-DISCOVERY-009 · 坐标区域边界 | NOT_RUN | 本地生产实现尚需实际执行：同一坐标命中两polygon边界 → 无区域坐标。尚缺逐项证据：固定areaCode排序决定唯一归属；无匹配unknown不默认Soho。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-CREATE-001 · 创建四步与返回保稿 | PASS | B3先前真实四步输入和Review未确认拒绝保留；正式Web980c8ed B4原条款返回路径两入口均Step4，false/true确认各自保留、餐厅显示仅RAM且不自动发布。返回安排/介绍/费用原字段不变，成功发布后同账号新Create无餐厅/时间、默认4不复用旧2。R90原QA组件与创建回归30项绿，R86/R87及B3原红保留。API8387580非AI核心未变；无真实外订。；证据 B3-T004, B4-T002, B4-T005, R90-T018 |
 | QA-CREATE-002 · 外订声明与预算 | PASS | B3真实UI：倒置预算拒绝，£20–35到店付说明及0应用收费，不勾外订不能继续。B4在已确认4人声明后返回改2人，旧声明清空、文案同步2人、Continue要求重新确认；本人再次明确确认才可进Review。Web980c8ed/API8387580固定快照，无真实订位。；证据 B3-T004, B4-T004 |
-| QA-CREATE-003 · 人数范围 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：输入minimum2/capacity2、3/4、6/6 → 尝试1/4、5/4、3/7、小数。当前仍缺：合法范围可继续且含host；非法拒绝且保留其他草稿。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 R107 actual API accepts2/2,3/4,6/6 and exactly one HOST_CONFIRMED seat; rejects1/4,5/4,3/7 and fractional minimum/capacity422 with no published attempt. Actual four-step editor invalid input and other draft persistence not yet verified; NOT_RUN retained.；证据 R107-T001, R107-T002, R107-T003, R107-T004, R107-T005, R107-T006, R107-T007, R107-T008 |
+| QA-CREATE-003 · 人数范围 | PASS | B12 actual production Web prevents invalid size/minimum choices at2/6 boundaries, preserves other draft fields; R107 independently verifies invalid actual API inputs422 without publish. Local real PG, fixture venue; not native or real restaurant booking.；证据 B12-O001, R107-T001, R107-T002, R107-T003, R107-T004, R107-T005, R107-T006, R107-T007, R107-T008, R107-T009, R107-T010 |
 | QA-CREATE-004 · 时间菜单恢复 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：开时间菜单 → 键盘上下选择 → Escape和点外部 → 切餐厅。当前仍缺：菜单在手机边界内且聚焦选中项；取消保持旧值；不可用时段清除并说明。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
 | QA-DB-001 · 最后一席双审批 | PASS | 第二批QA独立探针在04cb601以真实隔离PG执行，完整预期核对通过；消息HTML显示另有B1纯文本浏览器证据。；证据 R6-T001 |
 | QA-DB-002 · 锁等待跨截止 | PASS | 真实PG双连接确认审批已在截止前等待行锁；持锁至DB时钟越过截止后释放，HTTP409，EXPIRED及insufficient事实提交，无新增席位。；证据 R9-T011 |
@@ -246,8 +256,8 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-POST-006 · 评分范围与upsert | PASS | 第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。；证据 R13-T022 |
 | QA-POST-007 · 无资格和自评 | PASS | 第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。；证据 R13-T029 |
 | QA-POST-008 · 公评双盲与到期发布 | PASS | R115 independent real-PostgreSQL production API/projection probes: unilateral reference is absent at end+7d-1ms and published exactly at end+7d; reciprocal references publish both sides before deadline. Public rows contain no consent/reconnect fields; non-selecting member sees selected=false/CLOSED and no other-authored private review. Synthetic local data and injected projection time; not native UI or real-provider evidence.；证据 R115-T001, R115-T002 |
-| QA-POST-009 · 资格修订传播 | NOT_RUN | 本地生产实现尚需实际执行：先评分/公评/互选 → 支持合法纠错present→absent→present。尚缺逐项证据：新有效投影重算；不合格公评撤公开、评分退出统计、唯一依据私聊停止；恢复不重复计数。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-POST-010 · 支持窗与最小权限 | NOT_RUN | 本地生产实现尚需实际执行：end+7d−1ms支持修订 → 等号有MFA/case/reason/version再修订 → analyst尝试。尚缺逐项证据：窗内409 CORRECTION_WINDOW_OPEN；等号合法修订且有审计；analyst拒绝，不读聊天。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-POST-009 · 资格修订传播 | PASS | Independent R119 real PG and production support HTTP checks. Exact7d boundary uses production domain commands under injected effectiveNow, equality audit in same transaction; real HTTP role/MFA/case granted analyst cannot correct or read group history. Qualification loss changes fresh sealed metrics/public reviews and closes sole-basis direct; restoration does not duplicate ratings or restore consent.；证据 R119-T001 |
+| QA-POST-010 · 支持窗与最小权限 | PASS | Independent R119 real PG and production support HTTP checks. Exact7d boundary uses production domain commands under injected effectiveNow, equality audit in same transaction; real HTTP role/MFA/case granted analyst cannot correct or read group history. Qualification loss changes fresh sealed metrics/public reviews and closes sole-basis direct; restoration does not duplicate ratings or restore consent.；证据 R119-T002 |
 | QA-SURVEY-001 · 全空与仅因素 | PASS | R96 independent real PG/API: no-attendance actor blank422/company-only null; explicitfalse vs clear-null immutable revisions; duplicate/unknown/case/empty factors422, seven unique enumerated factors accepted. Eight-day-old completed meal score5 remains exactly one revision after expired score update409 and independent survey save200; no mealId accepted and no again/reasons in postmeal DTO. B8 real browser persistence and separate same-meal Admin score/survey evidence reused. R95 fixture setup failure permanently retained, not product failure.；证据 R96-T001, B8-T001, B8-T002 |
 | QA-SURVEY-002 · No与清除不同 | PASS | R96 independent real PG/API: no-attendance actor blank422/company-only null; explicitfalse vs clear-null immutable revisions; duplicate/unknown/case/empty factors422, seven unique enumerated factors accepted. Eight-day-old completed meal score5 remains exactly one revision after expired score update409 and independent survey save200; no mealId accepted and no again/reasons in postmeal DTO. B8 real browser persistence and separate same-meal Admin score/survey evidence reused. R95 fixture setup failure permanently retained, not product failure.；证据 R96-T002, B8-T001, B8-T002 |
 | QA-SURVEY-003 · 问卷与单场分离 | PASS | R96 independent real PG/API: no-attendance actor blank422/company-only null; explicitfalse vs clear-null immutable revisions; duplicate/unknown/case/empty factors422, seven unique enumerated factors accepted. Eight-day-old completed meal score5 remains exactly one revision after expired score update409 and independent survey save200; no mealId accepted and no again/reasons in postmeal DTO. B8 real browser persistence and separate same-meal Admin score/survey evidence reused. R95 fixture setup failure permanently retained, not product failure.；证据 R96-T003, B8-T001, B8-T002 |
@@ -260,8 +270,8 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-PRIVACY-007 · 供应商删除分步失败 | PASS | 生产worker+真实PG受控Auth0/Apple逐步故障、进程重建恢复、稳定幂等键及他人数据保留通过；仍不关闭真实供应商撤销门槛。；证据 R10-T050, R10-T051, R10-T052, R10-T053, R10-T054 |
 | QA-PRIVACY-008 · 备份恢复删除台账 | PASS | QA扩展实际pg_dump/pg_restore：闸门在重放前阻API/worker，原receipt/身份失效及他人保留；备份前真实可下载E0恢复重放后由仍有效analyst会话读得410 SNAPSHOT_REVOKED且无CSV；重复重放和审计/时长通过。线上台账持久化/漏项检测仍属G-HOST。；证据 R12-T001 |
 | QA-METRIC-001 · 零分母 | NOT_RUN | 本地生产实现尚需实际执行：无任何成熟申请/明确问卷答案，查询比率与CSV。尚缺逐项证据：分母0→null/—而非0%；CSV与页面同值同单位。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations.；证据 B10-T002 |
-| QA-METRIC-002 · 重复事件与伪成功 | NOT_RUN | 本地生产实现尚需实际执行：同eventId投递两次 → 客户端发送application_success。尚缺逐项证据：首条accepted第二duplicate；伪业务成功rejected且不进指标。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-METRIC-003 · 迟到接收 | NOT_RUN | 本地生产实现尚需实际执行：occurredAt<asOf但receivedAt>asOf → 构建S0和晚S1。尚缺逐项证据：S0排除；S1可纳入；S0不可变。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-METRIC-002 · 重复事件与伪成功 | PASS | R125 independent production metrics hand-calculated facts / real PG+HTTP snapshot checks. Dedup and forged success rejection, immutable S0/late S1, person-meal vs latest-user survey factors, classification exclusion/restoration each verified by the named assertion. No real telemetry deployment claim.；证据 R125-T004 |
+| QA-METRIC-003 · 迟到接收 | PASS | R125 independent production metrics hand-calculated facts / real PG+HTTP snapshot checks. Dedup and forged success rejection, immutable S0/late S1, person-meal vs latest-user survey factors, classification exclusion/restoration each verified by the named assertion. No real telemetry deployment claim.；证据 R125-T005 |
 | QA-METRIC-004 · 首次申请14天等号 | PASS | R82 独立手算fixture：首申请10月1日12Z，14天-1ms observing分母0、等号成熟1/1；同用户后续申请不替全历史first，选期排除历史first时不回捞较晚申请。直接调用现生产metrics函数并检查明细行/手算分子分母；不是页面计算作oracle，不代表CSV或浏览器全链路。；证据 R82-T001 |
 | QA-METRIC-005 · 30天复赴约窗口 | PASS | R82 独立手算fixture：另场延迟0不复赴约，30天恰好纳入、30天+1ms不纳入；同meal两次出席revision仍只一场，重复率0/1。直接调用现生产metrics函数并检查明细行/手算分子分母；不是页面计算作oracle，不代表CSV或浏览器全链路。；证据 R82-T002 |
 | QA-METRIC-006 · 申请出席成熟26小时 | PASS | R82 独立手算fixture：start10月1日18Z/end20Z，26小时-1ms分母0、等号1/1；start+24h仍未成熟，使用end+24h。直接调用现生产metrics函数并检查明细行/手算分子分母；不是页面计算作oracle，不代表CSV或浏览器全链路。；证据 R82-T003 |
@@ -269,9 +279,9 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-METRIC-008 · 成团与取消分开 | NOT_RUN | 本地生产实现尚需实际执行：M开始前peak3/min3后来取消 → N正式host+2测试成员。尚缺逐项证据：M可招募达标但取消；N测试成员不能撑成团；不把招募达标叫实际举行。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-METRIC-009 · 问卷最新再筛 | PASS | R83独立手算：A9月25Yes、10月2No，asOf10月18查9月不回捞旧Yes；asOf9月30可见Yes有效1/1。B null+venue只有未答行且不入分母；全期A No分母1分子0，与B null严格区分。直接现行metrics函数，页面/CSV全链路另列。；证据 R83-T001 |
 | QA-METRIC-010 · 问卷独立过滤 | NOT_RUN | 本地生产实现尚需实际执行：日期/分群固定 → 改变饭局区域、语言、人数、预算。尚缺逐项证据：问卷样本和值均不变；UI/CSV声明surveyScope。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations.；证据 B10-T002, B10-T001 |
-| QA-METRIC-011 · 评分和问卷粒度 | NOT_RUN | 本地生产实现尚需实际执行：A两场评分1和5，问卷Yes且cost+venue → 导出。尚缺逐项证据：评分2人次、问卷1用户；因素可多选比例不要求100%；不按单场星级切问卷。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-METRIC-011 · 评分和问卷粒度 | PASS | R125 independent production metrics hand-calculated facts / real PG+HTTP snapshot checks. Dedup and forged success rejection, immutable S0/late S1, person-meal vs latest-user survey factors, classification exclusion/restoration each verified by the named assertion. No real telemetry deployment claim.；证据 R125-T001 |
 | QA-METRIC-012 · 预算互斥分段 | NOT_RUN | 本地生产实现尚需实际执行：max20/20.01/30/30.01/40/40.01/unknown各1场 → 选择各分段及并集。尚缺逐项证据：每场只落一个预算段；unknown独列；双语并集无重复。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-METRIC-013 · 测试员工分类恢复 | NOT_RUN | 本地生产实现尚需实际执行：data_admin将A regular→test→regular → 含host和参与记录。尚缺逐项证据：新快照排除A贡献及其host整场；正式host他人事实保留；恢复重新构建，旧快照不常规改写。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-METRIC-013 · 测试员工分类恢复 | PASS | R125 independent production metrics hand-calculated facts / real PG+HTTP snapshot checks. Dedup and forged success rejection, immutable S0/late S1, person-meal vs latest-user survey factors, classification exclusion/restoration each verified by the named assertion. No real telemetry deployment claim.；证据 R125-T006 |
 | QA-METRIC-014 · 删除后peak重算 | NOT_RUN | 本地生产实现尚需实际执行：正式3席/min3已发生业务达标 → 删除1用户 → 新快照。尚缺逐项证据：分析peak=2；用户贡献从分子分母退出；原业务成团事实不改。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-METRIC-015 · London周跨DST | PASS | Independent hand-computable fixed-asOf fixtures R109, actual production calculateMetrics. London2026-10-25 00:30Z and01:30Z both local01:30 and oneSunday; weekly keysOct19 forSunday thenOct26 forMonday, unique counts2 and1. Across fallback14-day maturity exactUTC ms and30-day repeat exactUTC accepted while+1h excluded. Exact plan1/2/3/10 and alternate1/2/4/10 yield nearest-rankP50=2/P90=10; later duplicate approval does not shift first decision, withdrawals/expiry/cancel have no decision duration, only one live pending; cancelled meal and exactclose pending excluded. This is independent fixture reconciliation, not page/network/native proof.；证据 R109-T001, R109-T002 |
 | QA-METRIC-016 · 同快照全链路 | NOT_RUN | 本地生产实现尚需实际执行：固定S0+filterHash翻页/下钻/CSV → 期间产生S1。尚缺逐项证据：本次链路仍S0+原filters+v4；显式切换才S1。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations.；证据 B10-T002 |
@@ -291,12 +301,12 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-NOTIFY-003 · 通知隐私 | NOT_RUN | 申请正文随机marker在通知及outbox中不存在；未同轮覆盖举报/私聊/单方再约正文和三元唯一约束。 R98 private body injected into disposable outbox rejected DEAD/INVALID_PAYLOAD with provider dispatch0 and no body in captured warn/error. Full producer matrix and event-recipient-channel uniqueness remain pending. R104 actual matrix outbox refs contain only IDs and event-recipient-channel unique; raw chat body never emailed, invalid raw body rejected, safe dead-letter events verified R105. Full one-sided reconnect/report-content producer privacy scenario remains not independently complete; NOT_RUN retained.；证据 R98-T002, R104-T004, R104-T005, R104-T006, R104-T001, R104-T002, R104-T003 |
 | QA-AI-001 · 偏好仅排序 | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R1-T471, R1-T310 |
 | QA-AI-002 · 显式预算是hard | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R1-T471, R1-T310 |
-| QA-AI-003 · CLEAR持续抑制 | NOT_RUN | 本地生产实现尚需实际执行：先hard35 → 不限预算 → 下一轮仅改日期。尚缺逐项证据：budget hard和soft均不恢复；其他条件保留；Discover UI不改。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-AI-004 · UNSET不是CLEAR | NOT_RUN | 本地生产实现尚需实际执行：已确认Soho/周五 → 下一轮只说4人。尚缺逐项证据：Soho/日期保留；仅人数改变且含host。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-AI-005 · 完整集合先排序 | NOT_RUN | 本地生产实现尚需实际执行：将soft最优场放初始顺序第21 → 请求推荐。尚缺逐项证据：先全集合hard过滤及排序再top20；最优不被先截断；卡片≤3。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-AI-006 · unknown饮食与soft | NOT_RUN | 本地生产实现尚需实际执行：U饮食null → hard vegan后再Any并保存vegan偏好。尚缺逐项证据：hard不命中U；Any下U可出现且soft0分；无过敏保证。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-AI-007 · Spanish歧义 | NOT_RUN | 本地生产实现尚需实际执行：输入Spanish → 再明确language Spanish。尚缺逐项证据：第一轮最少澄清不自选菜系；明确后使用es语言。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-AI-008 · 便宜些需确认 | NOT_RUN | 本地生产实现尚需实际执行：当前hard区域Soho/日期周五 → 输入便宜一点。尚缺逐项证据：提出预算候选待确认；不直接换日期/区域或偷偷降低预算。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-AI-003 · CLEAR持续抑制 | PASS | Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim.；证据 R117-T001 |
+| QA-AI-004 · UNSET不是CLEAR | PASS | Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim.；证据 R117-T002 |
+| QA-AI-005 · 完整集合先排序 | PASS | Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim.；证据 R117-T003 |
+| QA-AI-006 · unknown饮食与soft | PASS | Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim.；证据 R117-T004 |
+| QA-AI-007 · Spanish歧义 | FAIL | Independent R117 actual production controller failure, sent to development owner; current fixes not yet accepted. Original red retained. Explicit language Spanish still NEEDS_INPUT.；证据 R117-T005 |
+| QA-AI-008 · 便宜些需确认 | PASS | Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim.；证据 R117-T006 |
 | QA-AI-009 · 日期自然周 | NOT_RUN | 本地生产实现尚需实际执行：冻结London周一2026-10-19 → 分别本周五/下周五/未指定日期。尚缺逐项证据：周五10-23、下周五10-30；默认7日10-19到10-25且显示日期窗口。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-AI-010 · 今晚和DST | NOT_RUN | 本地生产实现尚需实际执行：冻结今晚18点后 → 输入今晚 → 再输入秋季重复01:30/春季不存在时间。尚缺逐项证据：仅当日18:00—23:59未来场；歧义先选偏移/不存在报错，无可提交错误时点。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-AI-011 · 无结果与不可用 | NOT_RUN | 本地生产实现尚需实际执行：hard预算不足返回0 → 注入discovery失败 → 未知金额场。尚缺逐项证据：0说明无匹配；失败显示不可用不谎称0结果；未知金额不称预算内。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
@@ -371,10 +381,10 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-CHAT-010 · JOIN消息LEAVE提交顺序 | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R1-T530, R1-T531, R1-T529 |
 | QA-CHAT-011 · 单方同意投影 | PASS | 真实PG双连接及事务barrier：A单方选择在未提交时暂停，B的post-meal/profile/inbox与选择前完全一致；主动回滚后consents为0且投影不变。随后通过真实API提交A选择得WAITING，B仍无变化且DM404，只有A本人selected=true。全库notifications/outbox计数不变。analyst+MFA建立真实snapshot，源facts及supply/非空meal drilldown均不含pairId/selected/reconnect。覆盖本条API/DB方法预期，不涉及真实邮件发送或原生设备。；证据 R47-T001 |
 | QA-CHAT-012 · 消息输入边界 | PASS | 第二批QA独立探针在04cb601以真实隔离PG执行，完整预期核对通过；消息HTML显示另有B1纯文本浏览器证据。；证据 R6-T004 |
-| QA-AI-046 · 已有申请不再推荐 | NOT_RUN | 本地生产实现尚需实际执行：A对不同场为pending/confirmed/declined → 明确查找再明确解释这些场。尚缺逐项证据：不作为可新加入结果；明确解释可读本人状态；withdrawn可按新轮规则重新推荐。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-AI-047 · 结果不足三张 | NOT_RUN | 本地生产实现尚需实际执行：可见合格集合只有1场 → 查询推荐。尚缺逐项证据：仅1张卡不凑数；不自造ID或把低soft未知当排除。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-AI-048 · 当日与未确认目标 | NOT_RUN | 本地生产实现尚需实际执行：用户英文/中文问这顿饭但无明确mealId → Discover旧选中M。尚缺逐项证据：先要求选择目标；旧选中不自动当当前明确对象；按当前输入语言回复。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-AI-049 · 创建与群草稿长度 | NOT_RUN | 本地生产实现尚需实际执行：申请输出301字 → 创建标题81/说明1001 → 群草稿1001 → 转入原编辑器。尚缺逐项证据：不产生超核心限制可提交内容；校验拒绝/安全失败；不可凭PRD AI上限500绕过申请300。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-AI-046 · 已有申请不再推荐 | PASS | Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim.；证据 R117-T007, R117-T008, R117-T009, R117-T010 |
+| QA-AI-047 · 结果不足三张 | PASS | Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim.；证据 R117-T011 |
+| QA-AI-048 · 当日与未确认目标 | FAIL | Independent R117 actual production controller failure, sent to development owner; current fixes not yet accepted. Original red retained. Chinese missing-target request gets English clarification; stale target correctly not reused.；证据 R117-T013 |
+| QA-AI-049 · 创建与群草稿长度 | PASS | Independent R123 four assertions: application301, create81/1001 and group1001 rejected; exact300/80/1000/1000 allowed in core validator. Failed generation has no transfer artifact or business writes; no editor bypass. Controlled model and real PG for controller cases; pure core group boundary.；证据 R123-T001, R123-T002, R123-T003, R123-T004 |
 | QA-JOURNEY-010 · 截止不足通知路径 | NOT_RUN | 本地生产实现尚需实际执行：H创建min3 → 仅A确认 → 到截止 → 查站内及邮件 → 群发消息。尚缺逐项证据：原因insufficient；当前成员通知各一次；群仍可发言；无退款承诺。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-JOURNEY-011 · 支持纠错全路径 | NOT_RUN | 本地生产实现尚需实际执行：CLI OAuth+MFA→授权case→end+7d纠错→新快照→私聊重验→审计。尚缺逐项证据：逐步权限重验；保留原报告；新资格传播，旧普通快照不改；不开放全表/消息正文。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-JOURNEY-012 · 后台分析分类路径 | NOT_RUN | 本地生产实现尚需实际执行：分析者过滤S0下钻CSV → data_admin改分类生成S1 → 显式切换。尚缺逐项证据：旧链路S0一致；分类不改登录权限；新快照排除测试贡献且保留筛选。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |

@@ -117,3 +117,5 @@
 - QA B11: [real AI editor report](qa/evidence/2026-10-21/browser-b11.zh-CN.md), [observations](qa/evidence/2026-10-21/browser-b11.json), [DB checkpoints](qa/evidence/2026-10-21/b11-business-write-checkpoints.json), [transferred unsent](qa/evidence/2026-10-21/b11-ai-application-transferred-unsent.jpg), [explicit pending](qa/evidence/2026-10-21/b11-ai-explicit-application-pending.jpg), [create text](qa/evidence/2026-10-21/b11-ai-create-title-description.jpg), [booking unchecked](qa/evidence/2026-10-21/b11-ai-create-booking-unchecked.jpg), [Review blocked](qa/evidence/2026-10-21/b11-ai-create-review-unchecked-blocked.jpg).
 
 - QA F20/F21 closure: [review](qa/evidence/2026-10-21/native-f20-f21-closure.md), [machine provenance](qa/evidence/2026-10-21/native-f20-f21-owner-runtime-review.json), [formal9df native screen](qa/evidence/2026-10-21/native-f20-9df-fixed.png), [formal5b source-equivalent safe-area screen](qa/evidence/2026-10-21/native-f21-formal-source-equivalent.png).
+
+- QA B12: [creation capacity boundary observations](qa/evidence/2026-10-21/browser-b12.json), [preserved six-person draft](qa/evidence/2026-10-21/create-people-six-preserved.jpg).
