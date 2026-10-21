@@ -42,6 +42,12 @@ describe('Resend runtime configuration',()=>{
   });
 });
 
+it('keeps real AI disabled without an explicit bundle path and never treats a key as approval',()=>{
+  expect(loadConfig(local).aiBundleFile).toBeNull();
+  expect(loadConfig({...local,AI_BUNDLE_FILE:'/private/runtime/ai-approved.json'}).aiBundleFile).toBe('/private/runtime/ai-approved.json');
+  expect(()=>loadConfig({...local,AI_BUNDLE_FILE:'relative/ai.json'})).toThrow(/AI_BUNDLE_FILE/);
+});
+
 describe('trusted reverse proxies', () => {
   it('defaults to no forwarded-header trust and accepts only explicit address ranges', () => {
     expect(loadConfig(local).trustedProxyCidrs).toEqual([]);

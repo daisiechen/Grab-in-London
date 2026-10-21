@@ -6,6 +6,7 @@
  */
 
 import { isIP } from 'node:net';
+import { isAbsolute } from 'node:path';
 
 export const ENVIRONMENTS = ['development', 'test', 'staging', 'production'] as const;
 export type Environment = (typeof ENVIRONMENTS)[number];
@@ -39,6 +40,7 @@ export const CONFIG_KEYS = [
   'AUTH0_CLIENT_SECRET',
   'GOOGLE_MAPS_API_KEY',
   'DEEPSEEK_API_KEY',
+  'AI_BUNDLE_FILE',
   'RESEND_API_KEY',
   'RESEND_FROM',
   'ANALYTICS_COVERAGE_START',
@@ -67,6 +69,8 @@ export interface CoreConfig {
   googleMapsApiKey: string | null;
   /** Secret storage only; enabling calls additionally requires a verified integration bundle. */
   deepseekApiKey: string | null;
+  /** Private reviewed model/data/cost artifact; a credential alone never enables AI. */
+  aiBundleFile:string|null;
   /** Sending-only credentials; absent configuration keeps business mail unavailable. */
   resend: {apiKey:string;from:string}|null;
   /** Operator-confirmed first coverage of the deployed API + both client SDKs. */
@@ -175,6 +179,8 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
     else auth0 = { domain, clientId, clientSecret };
   }
   const port = Number(value('PORT') ?? '3000');
+  const aiBundleFile=value('AI_BUNDLE_FILE')??null;
+  if(aiBundleFile&&(!isAbsolute(aiBundleFile)||/\p{Cc}/u.test(aiBundleFile)))issues.push('AI_BUNDLE_FILE must be an absolute artifact path');
   const resendKey=value('RESEND_API_KEY'),resendFrom=value('RESEND_FROM');
   let resend:CoreConfig['resend']=null;
   if(resendKey||resendFrom){
@@ -224,6 +230,7 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
     iosRedirectUri,
     googleMapsApiKey: value('GOOGLE_MAPS_API_KEY') ?? null,
     deepseekApiKey: value('DEEPSEEK_API_KEY') ?? null,
+    aiBundleFile,
     resend,
     analyticsCoverageStart,
     auth0,

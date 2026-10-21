@@ -1,0 +1,4 @@
+import {it,expect,vi} from 'vitest';
+import {syntheticSpikePlan,syntheticEvalMaximumPlan} from './call-plan.ts';
+it('plans six exact synthetic calls without any transport and sums integer bounds',()=>{const fetch=vi.spyOn(globalThis,'fetch').mockImplementation(()=>{throw Error('NO_NETWORK');});try{const p=syntheticSpikePlan(0);expect(p.exactPlannedCalls).toBe(6);expect(p.readyToSend).toBe(false);expect(p.calls).toHaveLength(6);expect(p.calls.every(c=>/^[0-9a-f]{64}$/.test(c.payloadSha256))).toBe(true);expect(BigInt(p.maxMicroCny)).toBe(p.calls.reduce((n,c)=>n+BigInt(c.maxMicroCny),0n));expect(fetch).not.toHaveBeenCalled();expect(()=>syntheticSpikePlan(16000)).toThrow();}finally{fetch.mockRestore();}});
+it('budgets every one of 120 maximum slots independently, never assumes a shared input allowance',()=>{expect(syntheticEvalMaximumPlan()).toMatchObject({cases:60,maxCallSlots:120,actualCalls:0,perCallMaxMicroCny:'48000',maxMicroCny:'5760000',readyToSend:false});});

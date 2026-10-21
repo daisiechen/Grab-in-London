@@ -1,3 +1,4 @@
+import {productionAssistantBundle} from './assistant/production-bundle.ts';
 // API process entry: `node apps/api/src/main.ts` with configuration from the environment.
 import { ConfigError, loadConfig, type CoreConfig } from '@fancy/config';
 import { createPool } from '@fancy/db';
@@ -24,7 +25,8 @@ if (import.meta.main) {
     throw error;
   }
   const pool = createPool(config.databaseUrl, { application: 'fancy-api' });
-  const app = await buildServer({ config, pool, identity: identityProviderFor(config), publicOrigin: config.webOrigin,
+  const assistant=await productionAssistantBundle({bundleFile:config.aiBundleFile,apiKey:config.deepseekApiKey,provider:config.adapters.AI_PROVIDER});
+  const app = await buildServer({ config, pool, identity: identityProviderFor(config), publicOrigin: config.webOrigin, ...(assistant?{assistant}:{}),
     ...(config.adapters.PLACES_ADAPTER === 'google' && config.googleMapsApiKey ? { placesProvider: new GooglePlacesProvider(config.googleMapsApiKey) } : {}) });
   await app.listen({ port: config.port, host: '127.0.0.1' });
 }

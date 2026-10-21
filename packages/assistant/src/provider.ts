@@ -12,6 +12,14 @@ export class ProviderError extends Error {
   }
 }
 
+/** Single wire-payload source shared by dispatch, admission and offline call plans. */
+export function buildDeepSeekPayload(model:string,req:Pick<ModelInput,'schema'|'input'|'maxOutputTokens'>){
+  return {model,stream:false,thinking:{type:'disabled' as const},max_tokens:req.maxOutputTokens,response_format:{type:'json_object' as const},messages:[
+    {role:'system' as const,content:`Return one JSON object conforming to this JSON schema. No tools or business actions. Schema: ${JSON.stringify(req.schema)}`},
+    {role:'user' as const,content:req.input},
+  ]};
+}
+
 /** No default model/price/credentials. Integration remains disabled until the real gates pass. */
 export function deepSeekProvider(config: {
   apiKey: string; model: string; modelVerified: boolean; priceVersion: string; enabled: boolean;
@@ -33,11 +41,7 @@ export function deepSeekProvider(config: {
       const response = await (config.fetch ?? fetch)('https://api.deepseek.com/chat/completions', {
         method: 'POST', signal: controller.signal, redirect:'error',
         headers: { authorization: `Bearer ${config.apiKey}`, 'content-type': 'application/json' },
-        body: JSON.stringify({ model: config.model, stream: false, thinking: { type: 'disabled' }, max_tokens: req.maxOutputTokens,
-          response_format: { type: 'json_object' }, messages: [
-            { role: 'system', content: `Return one JSON object conforming to this JSON schema. No tools or business actions. Schema: ${JSON.stringify(req.schema)}` },
-            { role: 'user', content: req.input },
-          ] }),
+        body: JSON.stringify(buildDeepSeekPayload(config.model,req)),
       });
       if (!response.ok) throw new ProviderError('PROVIDER_UNAVAILABLE');
       const raw:unknown=await response.json();

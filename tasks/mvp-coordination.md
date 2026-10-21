@@ -485,3 +485,11 @@
 - 新infra/real-integration.ts默认dry-run，显式real模式及QA释放5174双闸才启动；只白名单读取root私有配置，不输出值，强制Auth0/Google、禁AI与业务mail worker。创建自有临时PG17/新DB，拒绝继承QA既有DATABASE_URL，API随机loopback端口，Web5174同源代理精确Origin。
 - Web子进程仅最小系统环境与APIorigin，浏览器公开Key仍由现web.env.local加载；不继承root服务端凭据。清理只自建API/Web/PG/DB。4项红绿+infra类型/lint与实际dry-run退出0，仅公开plan，无外呼/用户/OTP/业务邮件。根整合release23/check通过覆盖冻结文件。
 - QA已明确旧B7仅Admin Vite PID71240/5174可释放；root只读ps/cwd核对应/private/tmp/fancy-qa-4a0c66f-yxsch6uh/apps/admin，不停61971/PG/tab4；当前61973/5177与设备时钟继续QA独占。真实启动与登录/地图/创建全链仍待随后执行，不将dry-run冒真实联调通过。
+
+
+## DeepSeek生产接线与有界离线计划
+
+- 补API main实际注入provider/price/counter：只有显式AI_BUNDLE_FILE私有绝对路径、DeepSeek模式/Key、固定模型版本/峰值人民币价格、实际公开artifact哈希/性质、MODEL/DATA/COST三份有效审批证据全部通过才构建，否则继续不可用；程序不自写审批、不自动初始化预算、不把Key当通过证明。
+- 官方Flash1017同commit四公开文件哈希固定，byte-BPE无normalizer扩张且256单字节覆盖；共用实际发送payload与完整schema/system/user/JSON-mode模板做UTF8保守界，再要求COST单独证明托管端额外输入上界，缺证不默认0。不把公开模板证明泛化为API隐藏提示已验证；真实alias漂移/数据条款/质量评测仍须实证。
+- pure dry-plan无Key/env/network：固定6条中英合成spike只列payload hash/上界费用，不发送；60样本最多120内部调用槽，每call16000输入/2000输出按峰值2/8元每百万tokens合计最高5.76元，纠正曾误按两次累计输入的3.84元估算。不是已花费或实际调用数；人民币50/月仍不变。
+- 根冻结core:check、unit334、API178通过（/private/tmp/fancy-ai-f41-{check,unit,api}.log），相关66回归及assistant/API/testkit类型/lint绿；实际官方artifact加明确临时SYNTHETIC审批夹具正路径/错hash核查零network，夹具已删，不是真审批。未启用真实AI或关闭MODEL/DATA/COST门槛。资料来源：官方api-docs.deepseek.com pricing/ChatCompletions/token_usage与deepseek-ai官方HF固定commit，见代码PUBLIC_ARTIFACTS。
