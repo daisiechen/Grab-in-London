@@ -1,6 +1,7 @@
 import '../postgres/context.ts';
 import pg from 'pg';
 import { createIsolatedDatabase } from '../postgres/server.ts';
+import { trackPoolDrain } from './drain.ts';
 
 export interface MigratedDatabase {
   url: string;
@@ -15,6 +16,7 @@ export async function createMigratedDatabase(serverUrl: string, migrate: (url: s
   const db = await createIsolatedDatabase(serverUrl);
   await migrate(db.url);
   const pool = new pg.Pool({ connectionString: db.url, max: 20 });
+  const drainPool = trackPoolDrain(pool);
   const clients: pg.Client[] = [];
   return {
     url: db.url,
@@ -28,7 +30,7 @@ export async function createMigratedDatabase(serverUrl: string, migrate: (url: s
     },
     async drop() {
       for (const c of clients) await c.end().catch(() => undefined);
-      await pool.end();
+      await drainPool();
       await db.drop();
     },
   };
