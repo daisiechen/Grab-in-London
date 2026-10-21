@@ -12,7 +12,7 @@ import {Body,Heading} from '../../ui/Text.tsx';
 import {colors,radius} from '../../ui/tokens.ts';
 import {PreferencesView} from './PreferencesView.tsx';
 import {useAssistantState} from './hooks.ts';
-import type {AIDraft} from './manager.ts';
+import {ASSISTANT_INPUT_MAX,OVERLONG_INPUT_MESSAGE,type AIDraft} from './manager.ts';
 
 /** Native floating entry + modal; shares the approved green/peach tokens and existing Sheet. */
 export function AssistantWidget(){
@@ -46,13 +46,13 @@ export function AssistantWidget(){
       {s.view==='chat'?<>
        {s.turns.map((turn,i)=><View key={i} style={[styles.turn,turn.role==='user'&&styles.mine]}><Body>{turn.text}</Body></View>)}
        {s.phase==='processing'?<View accessibilityRole="alert"><Body>Thinking… You can close this panel and continue later.</Body></View>:null}
-       <Field label="Ask Fancy a question" value={s.text} maxLength={2000} multiline onChangeText={text=>{
+       <Field label="Ask Fancy a question" value={s.text} error={s.text.length>ASSISTANT_INPUT_MAX?OVERLONG_INPUT_MESSAGE:null} multiline onChangeText={text=>{
         assistant.setText(text);
         // Only real edits renew activity; rendering, polling and panel opening do not.
         if(!editTimer.current)editTimer.current=setTimeout(()=>{editTimer.current=null;void assistant.edited();},1000);
        }}/>
        {assistant.contextValue.sourcePage==='CREATE'||assistant.contextValue.explicitConversationId||assistant.contextValue.explicitMealId?<CheckRow label="Include the text in this form for polishing" checked={includeEditor} onChange={setIncludeEditor}/>:null}
-       <Primary label="Ask" disabled={!s.text.trim()||s.phase==='processing'} busy={s.phase==='loading'} onPress={()=>void assistant.send(includeEditor)}/>
+       <Primary label="Ask" disabled={!s.text.trim()||s.text.length>ASSISTANT_INPUT_MAX||s.phase==='processing'} busy={s.phase==='loading'} onPress={()=>void assistant.send(includeEditor)}/>
       </>:null}
       {s.result?.cards.map(card=><Primary key={card.mealId} secondary label={`${card.title} · up to £${card.budgetMaxPence/100} · ${card.capacity} people`} onPress={()=>{assistant.close();router.push(`/meals/${card.mealId}`);}}/>)}
       {s.result?.comparison?.map(card=><View key={card.mealId} style={styles.turn}><Body>{`${card.title} · ${card.status}\n${card.startsAt}\nUp to £${card.budgetMaxPence/100} · ${card.capacity} people`}</Body><TextAction label={`Open ${card.title}`} onPress={()=>{assistant.close();router.push(`/meals/${card.mealId}`);}}/></View>)}

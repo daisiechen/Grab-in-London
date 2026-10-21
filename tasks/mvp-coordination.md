@@ -213,3 +213,11 @@
 - 根补真实PG native-link协议：新Google身份匹配email→LINK_REQUIRED无第二user→原身份IOS email登录proof/handoff→错误new verifier409、正确links200、同key重放200、新key消费409，最终两identity仍原user；无后端逻辑、schema或SessionManager放宽。
 - 首批冻结整合Web/后台228、iOS219；其后补旧409/503/成功响应及定时器不得清新票据、终态可取消回归，最终Web/后台235、iOS227（含新增QA独立探针）、全API145通过。core:check、Web类型/lint/build及原生Hermes导出通过；Python70最终复验一度因QA报告R39基线展示未刷新而失败，QA已按真实fb26b28+dirty源码hash修正（R40原生仍360d1fe），validator及Python70通过，未改产品断言。unit243/DB111/release11沿用上一无变更层已通过结果，未冒称本批重复运行这些层。日志/private/tmp/fancy-f09-{clients-final,check-final,python-final,web-build,api}.log、/private/tmp/fancy-native-link-api.log及/private/tmp/fancy-ios-f09-export.log。原生已单独360d1fe提交；Web和运行记录随后按白名单交付。QA独立动态复验需最终SHA，真实双provider/设备未验收。
 - Claude重新核验游客撤销静态疑点后明确撤回L3：exchangeHandoff已有revokeGuestAI且更新guest_sessions.revoked_at，与登录兑换同事务提交/回滚；未凭静态误报擅改现有原子撤销。CLI新账号/业务令牌范围两项仅记无越权的策略观察，不额外改变已批准权限合同。
+
+## QA-F10 超长助手输入保留与提示（2026-10-21）
+
+- 独立QA在e8844dee复现Web粘贴2001字符被maxlength截断，以及完整超长状态发送静默返回无提示；原两红由QA在f5a0143保留。当前100 PASS /104 NOT_RUN /1 FAIL /12 BLOCKED；没有把开发绿色测试代替独立关闭。
+- Web与原生移除输入框2000硬截断，全文保留并在现有输入区提示缩短；发送前按原文长度拒绝超限，不允许首尾空白经trim绕过。空白不请求、2000字符允许、缩短后清长度错误且可正常发送；trim仅用于既有发送文本与空白判定。原生无真实设备粘贴验收声明。
+- Web自有及QA探针21项、原生定向24项通过；根整合Web/后台241项、iOS233项及Web生产构建通过。日志/private/tmp/fancy-f10-web-final.log、/private/tmp/fancy-f10-ios.log、/private/tmp/fancy-f10-build-final.log。后端/契约未修改，不重复声称本批运行核心unit/DB/API/release。
+- QA明确释放Git窗口后开发仅提交双端七个生产/自有测试文件和本记录，保留QA文件与研究修改。正式修复SHA交独立QA复验，AI045及F10关闭结论由QA持有。
+- 全仓core:check及Python70项通过（/private/tmp/fancy-f10-check.log、/private/tmp/fancy-f10-python.log），包含生成契约一致性、类型、lint和密钥扫描；不等同真实供应商或设备验收。

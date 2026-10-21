@@ -8,7 +8,7 @@ import {ConfirmSheet} from '../../ui/ConfirmSheet.tsx';
 import {ChoiceGroup,Field,FormError,Primary,TextAction} from '../../ui/components.tsx';
 import {poundsToPence,penceToPounds} from '../create/model.ts';
 import {areaName} from '../meals/present.ts';
-import {useAssistant} from './context.tsx';
+import {ASSISTANT_INPUT_LIMIT_ERROR,useAssistant} from './context.tsx';
 import type {AIDraft,AIResult,PreferenceFields} from './model.ts';
 import './assistant.css';
 
@@ -68,7 +68,7 @@ export function AssistantPanel(){
    {a.home||!a.turns.length?<div className="assistant-welcome"><span className="assistant-eyebrow">YOUR NEXT GOOD MEAL</span><h2>What sounds good?</h2><p>Tell me when, where and what you’d like to spend. Or let’s get your own table started.</p>{a.turns.length>0&&<button type="button" className="assistant-continue" onClick={()=>void a.continueConversation()}><strong>Continue conversation <ArrowRightIcon/></strong><span>{a.busy?'Your request is still being checked.':'Pick up where you left off.'}</span></button>}<div className="assistant-prompts">{prompts.map(prompt=><button type="button" key={prompt} disabled={a.busy} onClick={()=>void a.send(prompt)}>{prompt}<ArrowRightIcon/></button>)}</div><p className="assistant-note">Conversations restart after 30 minutes without activity. Saved account preferences stay until you delete them.</p></div>:a.turns.map(turn=><article className="assistant-turn" key={turn.id}><span className="assistant-eyebrow">You</span><p className="assistant-question">{turn.input}</p>{turn.status?.result&&<Result result={turn.status.result} onReplace={setReplace}/>}<FormError>{turn.error}</FormError>{turn.status?.state==='PENDING'&&<p className="assistant-processing" role="status"><ReloadIcon/>Fancy is working on your request…</p>}</article>)}
   </div>
   <form noValidate className="assistant-composer" onSubmit={send}>
-   <Field label="Ask Fancy">{props=><textarea className="resize-none" {...props} value={a.input} onChange={e=>a.setInput(e.target.value)} maxLength={2000} rows={3} placeholder="A relaxed dinner on Friday, around £30…"/>}</Field>
+   <Field label="Ask Fancy" error={a.input.length>2000?ASSISTANT_INPUT_LIMIT_ERROR:undefined}>{props=><textarea className="resize-none" {...props} value={a.input} onChange={e=>a.setInput(e.target.value)} rows={3} placeholder="A relaxed dinner on Friday, around £30…"/>}</Field>
    {a.editor?.text.trim()&&<label className="assistant-editor-consent"><input type="checkbox" checked={includeEditor} onChange={e=>setIncludeEditor(e.target.checked)}/>Include my current editor text for this request</label>}
    <div className="assistant-send-row"><small>{a.input.length}/2000</small><button type="submit" className="assistant-send" disabled={a.busy||!a.input.trim()} aria-label="Send to Fancy">{a.busy?'Working…':'Send'}<PaperPlaneIcon/></button></div>
   </form>

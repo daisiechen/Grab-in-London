@@ -1,6 +1,6 @@
 /** Mock transport UI evidence only; never a real-model or external-provider acceptance claim. */
 import {useState} from 'react';
-import {act,screen,waitFor} from '@testing-library/react';
+import {act,fireEvent,screen,waitFor} from '@testing-library/react';
 import {userEvent} from '@testing-library/user-event';
 import {describe,expect,it,vi} from 'vitest';
 import {renderWithProviders} from '../../test/render.tsx';
@@ -31,6 +31,27 @@ async function open(){await userEvent.click(screen.getByRole('button',{name:'Ask
 async function send(text='Find a relaxed meal this Friday.'){await userEvent.type(screen.getByRole('textbox',{name:'Ask Fancy'}),text);await userEvent.click(screen.getByRole('button',{name:'Send to Fancy'}));}
 
 describe('Ask Fancy production UI with isolated mock transport',()=>{
+ it('keeps a 2001-character paste intact, explains the limit and permits a shortened 2000-character request',async()=>{
+  const stub=baseStub();renderAssistant(stub);await open();const field=screen.getByRole('textbox',{name:'Ask Fancy'}),text='x'.repeat(2000)+'Z';
+  await userEvent.click(field);await userEvent.paste(text);
+  expect((field as HTMLTextAreaElement).value).toBe(text);
+  await userEvent.click(screen.getByRole('button',{name:'Send to Fancy'}));
+  expect((await screen.findByRole('alert')).textContent).toMatch(/shorten|2,000/i);expect(stub.callsTo('requestAI')).toHaveLength(0);
+  fireEvent.change(field,{target:{value:'x'.repeat(2000)}});await userEvent.click(screen.getByRole('button',{name:'Send to Fancy'}));
+  await waitFor(()=>expect(stub.callsTo('requestAI')).toHaveLength(1));expect((stub.callsTo('requestAI')[0]!.body as {input:string}).input).toHaveLength(2000);
+ });
+ it('never sends whitespace-only input',async()=>{
+  const stub=baseStub();renderAssistant(stub);await open();fireEvent.change(screen.getByRole('textbox',{name:'Ask Fancy'}),{target:{value:'   \n  '}});
+  fireEvent.submit(screen.getByRole('textbox',{name:'Ask Fancy'}).closest('form')!);expect(stub.callsTo('requestAI')).toHaveLength(0);
+ });
+ it.each([' '+ 'x'.repeat(2000),'x'.repeat(2000)+' '])('counts edge whitespace toward the limit and keeps all original text',async(text)=>{
+  const stub=baseStub();renderAssistant(stub);await open();const field=screen.getByRole('textbox',{name:'Ask Fancy'});
+  fireEvent.change(field,{target:{value:text}});await userEvent.click(screen.getByRole('button',{name:'Send to Fancy'}));
+  expect((await screen.findByRole('alert')).textContent).toMatch(/shorten|2,000/i);
+  expect((field as HTMLTextAreaElement).value).toBe(text);expect(stub.callsTo('requestAI')).toHaveLength(0);
+  fireEvent.change(field,{target:{value:' '+ 'x'.repeat(1999)}});await userEvent.click(screen.getByRole('button',{name:'Send to Fancy'}));
+  await waitFor(()=>expect(stub.callsTo('requestAI')).toHaveLength(1));
+ });
  it('clears only the assistant unsent text on New conversation and preserves the business editor',async()=>{
   const stub=baseStub(),apply=vi.fn();renderAssistant(stub,<Editor apply={apply} initial="Keep the business draft."/>);await open();await send();await screen.findByText('Here is a suggestion for you to review.');
   await userEvent.type(screen.getByRole('textbox',{name:'Ask Fancy'}),'Discard this assistant draft.');

@@ -132,3 +132,11 @@ it('blocks future guest bootstrap if account-transition secure deletion fails',a
  await h.manager.continue();h.actor('account');await flush();h.actor('guest');await flush();h.call.mockClear();
  await h.manager.continue();expect(h.call).not.toHaveBeenCalled();expect(h.manager.credential).toBeNull();expect(h.manager.getSnapshot().phase).toBe('error');
 });
+it.each(['x'.repeat(2001),' '+'x'.repeat(2000),'','  \n  '])('keeps invalid question text verbatim and sends no request (case %#)',async input=>{
+ const h=setup();h.manager.setText(input);await h.manager.send();expect(h.manager.getSnapshot().text).toBe(input);expect(h.call).not.toHaveBeenCalled();
+});
+it('accepts exactly 2000 characters and recovers after shortening overlong input',async()=>{
+ const h=setup();h.manager.setText('x'.repeat(2001));await h.manager.send();expect(h.manager.getSnapshot().error).not.toBeNull();
+ h.manager.setText('x'.repeat(2000));expect(h.manager.getSnapshot().error).toBeNull();await h.manager.send();
+ const calls=h.call.mock.calls.filter(c=>c[0]==='requestAI');expect(calls).toHaveLength(1);expect(calls[0]?.[1]).toMatchObject({body:{input:'x'.repeat(2000)}});
+});

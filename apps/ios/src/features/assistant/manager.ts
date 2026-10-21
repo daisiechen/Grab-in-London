@@ -12,6 +12,8 @@ export interface AssistantState {
  error:string|null;result:AIResult|null;turns:Array<{role:'user'|'assistant';text:string}>;
  preferences:Preferences;preferenceVersion:string;expiresAt:number|null;
 }
+export const ASSISTANT_INPUT_MAX=2000;
+export const OVERLONG_INPUT_MESSAGE='Shorten this question to 2,000 characters or fewer. Your text is kept.';
 export const emptyPreferences=():Preferences=>({areas:[],budgetMaxPence:null,tableSizes:[],dietaryCodes:[],languages:[],moods:[]});
 const initial=():AssistantState=>({open:false,view:'home',phase:'idle',text:'',error:null,result:null,turns:[],preferences:emptyPreferences(),preferenceVersion:'0',expiresAt:null});
 const message=(e:unknown)=>e instanceof ApiError
@@ -57,7 +59,7 @@ export class AssistantManager {
  open(){this.presentation++;this.set({open:true,view:'home',error:null});}
  close(){this.presentation++;this.set({open:false});}
  pause(){this.presentation++;}
- setText(text:string){this.set({text});}
+ setText(text:string){this.set({text,...(this.state.error===OVERLONG_INPUT_MESSAGE||this.state.error==='Use 1–2,000 characters.'?{error:null}:{})});}
  async edited(){
   if(!this.session||this.state.phase==='expired')return;
   const epoch=this.epoch;
@@ -132,7 +134,7 @@ export class AssistantManager {
  async send(includeEditorText=false){
   this.tick();if(this.state.phase==='processing'||this.state.phase==='loading')return;
   if(this.context.unsupportedFilters){this.set({error:'Ask Fancy can’t apply the current map, time-of-day or text-search filter yet. Clear that filter before asking.',phase:'error'});return;}
-  const input=this.state.text.trim();if(!input||input.length>2000){this.set({error:'Use 1–2,000 characters.'});return;}
+  const input=this.state.text.trim();if(this.state.text.length>ASSISTANT_INPUT_MAX){this.set({error:OVERLONG_INPUT_MESSAGE});return;}if(!input){this.set({error:'Use 1–2,000 characters.'});return;}
   const epoch=this.epoch;const presentation=this.presentation;this.set({view:'chat',phase:'loading',error:null});
   try{
    await this.bootstrap();this.guard(epoch);const s=this.session!;

@@ -7,6 +7,8 @@ import {LivePoller} from '../../lib/poller.ts';
 import {usePollerDeps} from '../../lib/pollerContext.tsx';
 import {assistantError,emptyPreferences,routeContext,secretToken,type AIDraft,type AISession,type AIStatus,type AssistantEditor,type AssistantTurn,type PreferenceFields,type Preferences} from './model.ts';
 
+export const ASSISTANT_INPUT_LIMIT_ERROR='Please shorten your message to 2,000 characters or fewer. Your text is kept.';
+
 interface AssistantContextValue {
  open:boolean;home:boolean;manage:boolean;input:string;turns:AssistantTurn[];busy:boolean;error:string;notice:string;session:AISession|null;preferences:Preferences;preferencesBusy:boolean;editor:AssistantEditor|null;
  show:()=>void;close:()=>void;continueConversation:()=>Promise<void>;goHome:()=>void;showPreferences:()=>Promise<void>;setInput:(text:string)=>void;send:(input?:string,includeEditor?:boolean,mealIds?:string[])=>Promise<void>;newConversation:()=>Promise<void>;
@@ -45,7 +47,7 @@ export function AssistantProvider({children}:{children:ReactNode}) {
   const current=sessionRef.current;if(!current||Date.parse(current.expiresAt)<=Date.now())return;
   const gen=generation.current;void api.client.call('activityAI',{params:{sessionId:current.sessionId},body:{generation:current.generation,activityType:kind,activityEventId:newIntentKey()},idempotencyKey:newIntentKey()}).then(({data})=>{if(valid(gen)&&sessionRef.current?.sessionId===current.sessionId){const next={...current,expiresAt:data.expiresAt};sessionRef.current=next;setSession(next);}}).catch(e=>{if(valid(gen))handleError(e);});
  },[api,handleError]);
- const setInput=useCallback((text:string)=>{setInputState(text);if(Date.now()-lastEdit.current>1000){lastEdit.current=Date.now();activity('EDIT');}},[activity]);
+ const setInput=useCallback((text:string)=>{setInputState(text);if(text.length<=2000)setError(previous=>previous===ASSISTANT_INPUT_LIMIT_ERROR?'':previous);if(Date.now()-lastEdit.current>1000){lastEdit.current=Date.now();activity('EDIT');}},[activity]);
  const applyStatus=useCallback((status:AIStatus)=>{
   if(status.sessionId!==sessionRef.current?.sessionId||status.generation!==sessionRef.current.generation)return;
   setTurns(previous=>previous.map(t=>t.id===status.requestId?{...t,status,error:status.state==='FAILED'?'Fancy could not finish this request. You can retry it.':status.state==='SUPERSEDED'?'Your context changed. Please ask again.':null}:t));
@@ -72,7 +74,8 @@ export function AssistantProvider({children}:{children:ReactNode}) {
   try{const {data}=await api.client.call('readAIPreferences',{});if(valid(gen))setPreferences(data);}catch(e){if(valid(gen))handleError(e);}finally{if(valid(gen))setPreferencesBusy(false);}
  },[api,state.status,handleError]);
  const send=useCallback(async(explicitInput?:string,includeEditor=false,mealIds?:string[])=>{
-  const text=(explicitInput??input).trim();if(!text||text.length>2000||busy)return;
+  const original=explicitInput??input;const text=original.trim();if(!text||busy)return;
+  if(original.length>2000){setError(ASSISTANT_INPUT_LIMIT_ERROR);return;}
   const gen=generation.current;setBusy(true);setError('');setNotice('');setHome(false);setManage(false);
   try{
    const current=await ensureSession();if(!valid(gen))return;
