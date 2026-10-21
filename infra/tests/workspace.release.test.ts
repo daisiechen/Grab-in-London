@@ -35,8 +35,8 @@ describe('workspace boundaries', () => {
     for (const [name, command] of Object.entries(scripts)) {
       expect(command, name).not.toMatch(/passWithNoTests|\|\|\s*true|exit 0/);
     }
-    for (const layer of ['unit', 'db', 'api', 'release']) expect(scripts[`core:test:${layer}`]).toBe(`vitest run --project ${layer}`);
-    for (const layer of ['web', 'ios']) expect(scripts[`core:test:${layer}`]).toMatch(/^node infra\/scripts\/not-implemented\.mjs /);
+    for (const layer of ['unit', 'db', 'api', 'release', 'web']) expect(scripts[`core:test:${layer}`]).toBe(`vitest run --project ${layer}`);
+    expect(scripts['core:test:ios']).toBe('pnpm --filter @fancy/ios test');
   });
 
   it('fails unimplemented test layers instead of reporting success', () => {

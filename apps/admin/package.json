@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "pnpm run typecheck && vite build",
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.node.json",
-    "test": "vitest run --config ../../vitest.config.ts --project admin"
+    "test": "cd ../.. && vitest run --project admin"
   },
   "dependencies": {
     "@fancy/client": "workspace:*",
