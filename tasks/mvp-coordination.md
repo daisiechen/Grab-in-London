@@ -423,3 +423,9 @@
 
 - QA B11真实North18:30→South仅预览仍North18:30正确，确认UseSouth后旧Time未清。仅CreatePage中央update及独立venue-change测试：已选地点身份确变才清time/startOffset/closeOffset、预约声明与Review；同placeId显示更新/ref刷新保持有效时间确认，初选不误清，预览/取消不触父草稿，日期/标题/人数/费用可复用字段保持。
 - 自有修前两红/两绿，修后4+原Create17共21绿；QA真实父组件原反例另有工作树绿，正式关闭仍按提交SHA复验。F34先b9a7f9e独立推送，本切片仅CreatePage/新自有测试+记录；最终整合306/256/build/check及文档范围见本批F34，不因分commit重复声称重跑。
+
+## QA-F36 原生内部页面避让导航头（2026-10-21）
+
+- QA Apply13真实标题Y127与native导航头116–170重叠，独立于首屏F21；5b/19d Screen/Apply字节相同。仅Screen的ScrollView显式contentInsetAdjustmentBehavior automatic，让UIKit按真实header调整，不硬编码高度/重复safearea，不改AppRoot/键盘/OS设置。
+- 新自有回归修前undefined红、修后绿，根全iOS256/type/整目录lint通过；保interactive dismissal/handled taps/KAV原配置。此测试证明配置，不单独证明几何视觉；正式SHA独立正常签名Release构建后交QA实际标题/滚动/提交复验，现键盘问题不另凭自动化手势失败认定根因。
+- F35先386e600同步，本切片仅Screen+自有inset测试与记录；三切片最终整合结果见F34记录。正常Xcode签名19d已实际恢复到Apply表单，新的正式SHA构建仍需保留自动Simulated.xcent与Mach-O entitlement，旧5b/19d及诊断产物不覆盖、QA设备状态不抢。

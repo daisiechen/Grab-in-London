@@ -8,7 +8,7 @@ export function Screen({ children, footer, testID }: { children: ReactNode; foot
   return (
     <SafeAreaView style={styles.safe} edges={['bottom']} testID={testID}>
       <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" keyboardDismissMode="interactive">
+        <ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" keyboardDismissMode="interactive">
           {children}
         </ScrollView>
         {footer ? <View style={styles.footer}>{footer}</View> : null}
