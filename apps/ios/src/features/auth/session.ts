@@ -323,6 +323,7 @@ export function sessionClient(raw: ApiClient, session: SessionManager): ApiClien
         throw error;
       }
       session.assertGeneration(generation);
+      const sentToken = session.accessToken();
       try {
         const response = await raw.call(operationId, request);
         session.assertGeneration(generation);
@@ -333,15 +334,17 @@ export function sessionClient(raw: ApiClient, session: SessionManager): ApiClien
           if (error instanceof ApiError && error.kind === 'auth' && session.getState().status === 'signedIn') await session.expire();
           throw error;
         }
-        await session.refresh();
+        // A concurrent request may have already rotated the token while this 401 was in flight.
+        if (session.accessToken() === sentToken) await session.refresh();
         session.assertGeneration(generation);
+        const retryToken = session.accessToken();
         try {
           const response = await raw.call(operationId, request);
           session.assertGeneration(generation);
           return response;
         } catch (retryError) {
           session.assertGeneration(generation);
-          if (retryError instanceof ApiError && retryError.kind === 'auth') await session.expire();
+          if (retryError instanceof ApiError && retryError.kind === 'auth' && session.accessToken() === retryToken) await session.expire();
           throw retryError;
         }
       }

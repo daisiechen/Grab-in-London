@@ -16,6 +16,18 @@ function setup(guestStore:GuestCredentialStore=memoryGuestCredentialStore()){
  manager.open();
  return {manager,call,responses,time:(n:number)=>{now=n;},actor:(id:string)=>{actor=id;listener();}};
 }
+it('recovers a temporary guest read failure on explicit retry without discarding its revocation identity',async()=>{
+ const read=jest.fn().mockRejectedValueOnce(new Error('locked')).mockResolvedValue({token:'existing-guest',expiresAt:86400000});
+ const h=setup({read,write:jest.fn(),clear:jest.fn()});
+ await expect(h.manager.restoreIdentity()).rejects.toThrow('locked');
+ await expect(h.manager.restoreIdentity()).resolves.toBeUndefined();
+ expect(h.manager.credential).toBe('existing-guest');expect(h.call).not.toHaveBeenCalled();
+});
+it('retries failed credential persistence before bootstrap without minting another guest',async()=>{
+ const store=memoryGuestCredentialStore(),write=jest.fn().mockRejectedValueOnce(new Error('locked')).mockImplementation(value=>store.write(value));
+ const h=setup({...store,write});await h.manager.continue();await h.manager.continue();
+ expect(h.manager.getSnapshot().phase).toBe('idle');expect(h.call.mock.calls.filter(c=>c[0]==='createGuestSession')).toHaveLength(1);
+});
 it('retries the same request intent and sends only explicitly confirmed guest preferences',async()=>{
  const h=setup();const prefs={...emptyPreferences(),budgetMaxPence:2000};
  await h.manager.savePreferences(prefs);h.manager.setText('Find a table');await h.manager.send();await h.manager.retry();

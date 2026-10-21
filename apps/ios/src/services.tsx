@@ -56,7 +56,11 @@ export function createServices(config: ServiceConfig): Services {
     createApiClient({ baseUrl: config.baseUrl, credentials: { kind: 'bearer', accessToken },headers:op=>({...analyticsHolder.manager?.headersFor(op),...(loginGuest&&(op==='verifyEmail'||op==='exchangeHandoff')&&!accessToken()&&aiHolder.manager?.credential?{authorization:`Bearer ${aiHolder.manager.credential}`}:{})}), ...(config.fetch ? { fetch: config.fetch } : {}) });
   const guestStore=config.guestStore??secureGuestCredentialStore();
   let installation:Promise<void>|null=null;
-  const ensureInstallation=()=>installation??=(async()=>{if(config.installMarker&&!(await config.installMarker.isPresent())){await config.store.clear();await guestStore.clear();await config.installMarker.set();}})();
+  const ensureInstallation=()=>{
+    if(installation)return installation;
+    const job=(async()=>{if(config.installMarker&&!(await config.installMarker.isPresent())){await config.store.clear();await guestStore.clear();await config.installMarker.set();}})();
+    installation=job;void job.catch(()=>{if(installation===job)installation=null;});return job;
+  };
   const installedGuestStore:GuestCredentialStore={read:async()=>{await ensureInstallation();return guestStore.read();},write:async value=>{await ensureInstallation();await guestStore.write(value);},clear:()=>guestStore.clear()};
   const holder: { session?: SessionManager } = {};
   const transport = base(() => holder.session?.accessToken() ?? null,true);

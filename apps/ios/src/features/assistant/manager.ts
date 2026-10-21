@@ -25,7 +25,7 @@ const message=(e:unknown)=>e instanceof ApiError
 
 /** Only the fixed-TTL guest identity is persisted. All AI content/device state remains RAM-only. */
 export class AssistantManager {
- private guestLoaded=false;private storageFailure:unknown=null;private storageTail:Promise<void>=Promise.resolve();
+ private guestLoaded=false;private failedStorage:(()=>Promise<void>)|null=null;private storageTail:Promise<void>=Promise.resolve();
  private state=initial();private readonly listeners=new Set<()=>void>();private epoch=0;private presentation=0;
  private session:ResponseOf<'bootstrapAI'>['data']|null=null;private guest:{token:string;expiresAt:number}|null=null;
  private guestIntent:string|null=null;private bootChallenge:string|null=null;private bootKey:string|null=null;
@@ -88,16 +88,21 @@ export class AssistantManager {
   const job=this.createSession();this.booting=job;try{await job;}finally{if(this.booting===job)this.booting=null;}
  }
  private async storage(action:()=>Promise<void>){
-  const task=this.storageTail.then(action);this.storageTail=task.catch(e=>{this.storageFailure=e;});await task;
+  const task=this.storageTail.then(async()=>{await action();this.failedStorage=null;});
+  this.storageTail=task.catch(()=>{this.failedStorage=action;this.guestLoaded=false;});await task;
  }
  async restoreIdentity(){await this.restoreGuest(this.epoch);}
  private async restoreGuest(epoch:number){
-  await this.storageTail;this.guard(epoch);if(this.storageFailure)throw this.storageFailure;if(this.guestLoaded)return;
+  await this.storageTail;this.guard(epoch);
+  // Retry a failed write/clear before reading or creating any guest. In particular, a failed
+  // account-transition clear must never resurrect the old guest identity.
+  if(this.failedStorage){await this.storage(this.failedStorage);this.guard(epoch);}
+  if(this.guestLoaded)return;
   try{const stored=await this.deps.guestStore.read();this.guard(epoch);
    if(stored&&stored.expiresAt>this.deps.now())this.guest=stored;
    else if(stored)await this.storage(()=>this.deps.guestStore.clear());
    this.guard(epoch);this.guestLoaded=true;
-  }catch(e){this.storageFailure=e;throw e;}
+  }catch(e){this.guestLoaded=false;throw e;}
  }
  private async createSession(){
   const epoch=this.epoch;

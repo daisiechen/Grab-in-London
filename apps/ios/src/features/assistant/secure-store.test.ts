@@ -10,10 +10,16 @@ it('serialises only the fixed-expiry guest credential, never AI conversation fie
  await store.write({token:'synthetic-guest-only',expiresAt:86400000,transcript:'DO_NOT_PERSIST',deviceToken:'DO_NOT_PERSIST'} as {token:string;expiresAt:number});
  expect(SecureStore.setItemAsync).toHaveBeenCalledWith('fancy.assistant.guest.v1',JSON.stringify({token:'synthetic-guest-only',expiresAt:86400000}),options);
 });
-it('uses the same this-device-only accessibility for read and delete and propagates locked/corrupt storage',async()=>{
+it('uses the same this-device-only accessibility and propagates locked reads while removing corrupt storage',async()=>{
  const store=secureGuestCredentialStore();jest.mocked(SecureStore.getItemAsync).mockResolvedValueOnce(JSON.stringify({token:'synthetic-guest-only',expiresAt:86400000}));
  await expect(store.read()).resolves.toEqual({token:'synthetic-guest-only',expiresAt:86400000});expect(SecureStore.getItemAsync).toHaveBeenCalledWith('fancy.assistant.guest.v1',options);
  await store.clear();expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith('fancy.assistant.guest.v1',options);
  jest.mocked(SecureStore.getItemAsync).mockRejectedValueOnce(new Error('Keychain locked'));await expect(store.read()).rejects.toThrow('Keychain locked');
- jest.mocked(SecureStore.getItemAsync).mockResolvedValueOnce('{corrupt');await expect(store.read()).rejects.toThrow();
+ jest.mocked(SecureStore.getItemAsync).mockResolvedValueOnce('{corrupt');await expect(store.read()).resolves.toBeNull();
+ expect(SecureStore.deleteItemAsync).toHaveBeenCalledTimes(2);
+});
+it('does not bypass a failed corrupt-record deletion',async()=>{
+ jest.mocked(SecureStore.getItemAsync).mockResolvedValueOnce('{corrupt');
+ jest.mocked(SecureStore.deleteItemAsync).mockRejectedValueOnce(new Error('locked deletion'));
+ await expect(secureGuestCredentialStore().read()).rejects.toThrow('locked deletion');
 });

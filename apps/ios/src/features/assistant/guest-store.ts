@@ -4,7 +4,15 @@ export interface GuestCredentialStore {read():Promise<GuestCredential|null>;writ
 const KEY='fancy.assistant.guest.v1';
 const OPTIONS:SecureStore.SecureStoreOptions={keychainAccessible:SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY};
 export function secureGuestCredentialStore():GuestCredentialStore{return {
- async read(){const raw=await SecureStore.getItemAsync(KEY,OPTIONS);if(!raw)return null;const value:unknown=JSON.parse(raw);if(!value||typeof value!=='object'||!('token'in value)||typeof value.token!=='string'||!value.token||!('expiresAt'in value)||typeof value.expiresAt!=='number'||!Number.isFinite(value.expiresAt))throw new Error('Invalid guest credential');return {token:value.token,expiresAt:value.expiresAt};},
+ async read(){
+  const raw=await SecureStore.getItemAsync(KEY,OPTIONS);if(!raw)return null;
+  let value:unknown;try{value=JSON.parse(raw);}catch{/* Invalid local data has no usable credential. */}
+  if(!value||typeof value!=='object'||!('token'in value)||typeof value.token!=='string'||!value.token||!('expiresAt'in value)||typeof value.expiresAt!=='number'||!Number.isFinite(value.expiresAt)){
+   // A locked/read-failed Keychain never reaches here. Clearing must succeed before proceeding.
+   await SecureStore.deleteItemAsync(KEY,OPTIONS);return null;
+  }
+  return {token:value.token,expiresAt:value.expiresAt};
+ },
  async write(value){await SecureStore.setItemAsync(KEY,JSON.stringify({token:value.token,expiresAt:value.expiresAt}),OPTIONS);},
  async clear(){await SecureStore.deleteItemAsync(KEY,OPTIONS);},
 };}

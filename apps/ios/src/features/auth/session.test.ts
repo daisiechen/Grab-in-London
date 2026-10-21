@@ -19,6 +19,35 @@ function setup(opts: { stored?: boolean; now?: () => number; marker?: { present:
   return { mock, store, manager, raw, cleared, marker };
 }
 
+it('reuses the already rotated access token when an older concurrent 401 arrives late',async()=>{
+ const {manager,mock,raw}=setup();
+ mock.on('POST','/v1/auth/handoff',ok(credentials()));mock.on('GET','/v1/auth/session',ok(sessionInfo()));
+ await manager.completeHandoff(HANDOFF,'v'.repeat(43));
+ const held=deferred<MockReply>();
+ mock.on('GET','/v1/me',()=>held.promise,1);
+ mock.on('GET','/v1/me',fail(401,'AUTH_REQUIRED'),1);
+ mock.on('GET','/v1/me',ok({id:'self'}));
+ mock.on('POST','/v1/auth/refresh',ok(credentials(ACCESS_2,REFRESH_2)));
+ const api=sessionClient(raw,manager),late=api.call('getMe',{});await flush();
+ await api.call('getMe',{});held.resolve(fail(401,'AUTH_REQUIRED'));await late;
+ expect(mock.callsTo('POST','/v1/auth/refresh')).toHaveLength(1);
+ expect(manager.getState().status).toBe('signedIn');
+});
+it('does not expire a newer rotated session when a retried request returns a stale 401',async()=>{
+ const {manager,mock,raw}=setup();
+ mock.on('POST','/v1/auth/handoff',ok(credentials()));mock.on('GET','/v1/auth/session',ok(sessionInfo()));
+ await manager.completeHandoff(HANDOFF,'v'.repeat(43));
+ const held=deferred<MockReply>();
+ mock.on('GET','/v1/me',fail(401,'AUTH_REQUIRED'),1);mock.on('GET','/v1/me',()=>held.promise);
+ mock.on('POST','/v1/auth/refresh',ok(credentials(ACCESS_2,REFRESH_2)),1);
+ mock.on('POST','/v1/auth/refresh',ok(credentials('access-token-three-00000000000000000000','refresh-token-three-0000000000000000000')));
+ const request=sessionClient(raw,manager).call('getMe',{});await flush();
+ const rejected=expect(request).rejects.toMatchObject({status:401});
+ await manager.refresh();held.resolve(fail(401,'AUTH_REQUIRED'));await rejected;
+ expect(manager.getState().status).toBe('signedIn');
+ expect(manager.accessToken()).toBe('access-token-three-00000000000000000000');
+});
+
 describe('SessionManager restore (QA-AUTH-006 / QA-AUTH-013)', () => {
   it('stays unavailable when protected storage cannot be read and retries safely', async () => {
     const { manager, store } = setup();
