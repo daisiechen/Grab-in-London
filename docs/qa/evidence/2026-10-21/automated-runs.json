@@ -10841,6 +10841,43 @@
           "durationMs": 0
         }
       ]
+    },
+    {
+      "id": "R47",
+      "testedCommit": "1974180de401e89a215197b63a4cbc594b1ce7f8",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-start-boundary.api.test.ts scripts/qa-independent-single-consent.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-start-consent.json",
+      "startedAt": "2026-10-21T12:33:54.181000+00:00",
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "total": 3,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R47-T001",
+          "run": "R47",
+          "path": "scripts/qa-independent-single-consent.api.test.ts",
+          "title": "QA-CHAT-011 uncommitted rolled-back and committed one-sided consent reveal no recipient signal",
+          "status": "passed",
+          "durationMs": 210.59620900000004
+        },
+        {
+          "id": "R47-T002",
+          "run": "R47",
+          "path": "scripts/qa-independent-start-boundary.api.test.ts",
+          "title": "QA-DB-008 queued cancel and leave at startsAt+0ms preserve start roster and use separate support intake",
+          "status": "passed",
+          "durationMs": 213.36508300000003
+        },
+        {
+          "id": "R47-T003",
+          "run": "R47",
+          "path": "scripts/qa-independent-start-boundary.api.test.ts",
+          "title": "QA-DB-008 queued cancel and leave at startsAt+1ms preserve start roster and use separate support intake",
+          "status": "passed",
+          "durationMs": 45.80704100000003
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -10866,7 +10903,9 @@
     "apps/api/src/identity/qa-independent-auth0.unit.test.ts": "bd95da9ca9d7afbc2cad0432f04c74867965af9e898a5a4c9da4a7aba77852cd",
     "apps/web/src/features/auth/qa-independent-link.unit.test.tsx": "67fe69e71a4d799dcf40363b43ce1e0f40486dd22cf0071d765e40510688839a",
     "apps/ios/src/features/auth/qa-independent-link.test.ts": "174a6d0031318bea6335108060cd53618becedaa78f8c8f52486c62c847bf6d0",
-    "scripts/qa-independent-logout.api.test.ts": "d8d9a10e85f0b2e4458c50bda8567aacb83b7248baafe3da41ca0b617dd6f413"
+    "scripts/qa-independent-logout.api.test.ts": "d8d9a10e85f0b2e4458c50bda8567aacb83b7248baafe3da41ca0b617dd6f413",
+    "scripts/qa-independent-start-boundary.api.test.ts": "898d3b13a3371901024a724d94c11587364e23b69d026b8ecb114613e543ff63",
+    "scripts/qa-independent-single-consent.api.test.ts": "4628c470beb0da63f4d8a3a7e3a77421398a31f72f6cd1b808aed35a120a4401"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled.",
   "runtimeSnapshotVerification": {
@@ -10929,6 +10968,7 @@
       "run": "R36",
       "detail": "LINK_REQUIRED扩展探针曾后注册mock.on却未覆盖先注册成功路由，导致得到signedIn；修为setup(outcome)单一路由后4项过。该次是QA夹具，不是新产品缺陷。R33原provider code/state失败不删除。"
     },
-    "R44 initial QA fixture selected email from identities (no such column). Corrected to private_contact per migration; no production change or assertion weakening. Intermediate logout-only pass is superseded by final two-case R44. R44 rate recovery sleep is controlled: verifies Retry-After milliseconds then clears only synthetic actor rate buckets rather than waiting wall-clock; real API limiter and SDK retry execute."
+    "R44 initial QA fixture selected email from identities (no such column). Corrected to private_contact per migration; no production change or assertion weakening. Intermediate logout-only pass is superseded by final two-case R44. R44 rate recovery sleep is controlled: verifies Retry-After milliseconds then clears only synthetic actor rate buckets rather than waiting wall-clock; real API limiter and SDK retry execute.",
+    "R47 setup: SQL quote escaping initially prevented collection (0 tests); corrected and linted. Booking declaration fixture used invalid CONFIRMED, causing two DB CHECK failures before target command; corrected to contracted REPORTED_CONFIRMED. Single-consent fixture initially lacked a public-complete profile (404 before selection); completed profiles before baseline. All business assertions retained; these are QA setup failures, not production defects. Final R47 executes 3/3 on real isolated PostgreSQL. Start clock injected only after command locks; blocker waits for both backend Lock states, not a fixed sleep as proof. Recipient reads during uncommitted consent use a second DB connection and a controlled promise barrier, followed by rollback and committed API selection."
   ]
 }

@@ -14,10 +14,10 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 93 |
+| PASS | 95 |
 | FAIL | 0 |
 | BLOCKED | 12 |
-| NOT_RUN | 112 |
+| NOT_RUN | 110 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实环境、原生runtime/设备/签名或政策批准证据；本地恢复与分步删除现已复验通过，不能再笼统视为外部阻塞。FAIL优先于未完成的后续步骤。
@@ -72,6 +72,7 @@
 | R44 | 退出码0；2/2通过，失败0，1个测试文件 | `b3adefe` |
 | R45 | 退出码0；11/11通过，失败0，2个测试文件 | `b3adefe` |
 | R46 | 退出码0；26/26通过，失败0，1个测试文件 | `b3adefe` |
+| R47 | 退出码0；3/3通过，失败0，2个测试文件 | `1974180` |
 
 R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯函数探针；R5复跑分页修复回归，R6是QA第二批6项独立P0探针；R7/R8为QA-F01修复的API/Web及iOS组件定向复跑；R9是第三批12项独立边界探针，R10/R11复跑解除准备，R12为QA新增真实备份中E0导出的恢复后撤销分支；R13为饭后及群/私聊权限独立探针；R14保留QA-F03修前2失败，R15为0518d45修后的12项独立探针复验，R16为身份模块26项受影响HTTP回归（包括fresh会话下未来proof拒绝），不能删除修前结果或把历史失败当当前通过；R17为举报本人回执及撤授权重放3项独立HTTP/PG探针，撤session/DELETING状态通过受控数据库夹具设置。R18为安排锁、历史截止补算、开始名单及预约隔离6项独立PG/HTTP探针，删除仅屏障状态，完整删除名单断言仍未通过。R19/R20独立定向复跑5a37fdc关闭顺序单测及真实PG负载退出，未替代远端CI结果。R21为删除实际HTTP/本地purge、故障rollback及用户锁消息/审批竞态5项独立探针，生产日志脱敏仍待完整捕获。R22为ac09af4固定版本的11项独立受控AI/controller/HTTP探针，仅035/036/037具完整预期证据；R23为该版本Claude发现修复28项API/DB独立定向复验。R24保留QA-F04修前停用后仍发布失败；R25为8e2b908修后7项独立停用/费用/reaper探针，R26为22项受影响DB回归，F04定向关闭而043仍有未测断言。R27保留QA-F05修前Web失败，T001另为已分类夹具错误；R28/R29为f298048独立session/PG及Web组件各3项，R30为iOS manager17项定向回归；F05在NEW与TTL/偏好删除差异范围关闭。R31为公开DTO/后台角色/CSV授权及跨快照游标和大序号4项独立HTTP/PG探针，公式转义另覆盖formatter，不声称Excel实际执行。R32保留QA-F06 CLI入口失败，R33保留QA-F07原生协议失败；R34/R35固定b76c593独立8+32项验证CLI修复，R36固定1080993独立iOS49项验证桥接修复。完整加入用户路径仍NOT_RUN，不据组件通过升级。不能将这些数量相加当作独立业务用例数；R5与R1有重复，R2也不是原生设备验收。逐项测试名、状态、时间和命令见[机器证据](evidence/2026-10-21/automated-runs.json)。R4是质量检查而非业务用例。
 
@@ -149,7 +150,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-DB-005 · 撤回与拒绝不同终局 | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R1-T421 |
 | QA-DB-006 · 先批准再全部退出 | PASS | 真实HTTP批准/退出后，arrangement_locked_at保持原值；容量、餐厅、开始时间、预算、截止和饮食六类PATCH各409 ARRANGEMENT_LOCKED，整行不变，席位回到仅host。；证据 R18-T001 |
 | QA-DB-007 · 开始前跌破minimum | PASS | 第三批独立探针在d4582f7匹配源码完成；命令时钟精确边界及真实PG副作用按本条预期核对通过。；证据 R9-T004 |
-| QA-DB-008 · 开始后主持取消 | NOT_RUN | R9开始后cancel/leave拒绝与已封存名单保持通过；尚未完成独立支持路径联合验收，完整case仍NOT_RUN。 |
+| QA-DB-008 · 开始后主持取消 | PASS | 真实PostgreSQL：H及A/B/C四人minimum3/capacity4，在startsAt精确0及+1ms分别以holder行锁同时阻塞host cancel与guest leave，观测两个不同backend均Lock等待后释放；二者均DEADLINE_PASSED。开始名单及全部seat_events逐行不变、无meal.cancelled事实；普通状态仍OPEN。MEAL report201并创建独立support_case，受理后开始资格不变；仅证明支持受理而非裁决完成。受控领域时钟在拿锁后注入，非真实2030年运行。；证据 R47-T002, R47-T003 |
 | QA-DB-009 · 迟到worker按历史重放 | PASS | 隔离PG历史恢复夹具：截止时2人不足minimum3，截止后追加第三人；end后真实事务lockMeal补算仍按closesAt取消，事件effective_at恰为截止，不产start/end或名单。重试事件/通知/outbox不增。仅锁后时钟受控，未做真实worker进程停机演练。；证据 R18-T002 |
 | QA-DB-010 · 退出恰好开始 | PASS | 组合独立证据：R18分别LEFT start−1ms/0/+1ms重建名单为排除/排除/保留；R21实际HTTP删除及本地worker清理后历史席位/封存名单/出席完整保留，不抹他人资格。外部供应商未完成不影响本地历史事实断言。；证据 R18-T003, R18-T004, R18-T005, R21-T001, R21-T002 |
 | QA-DB-011 · 预约失败独立 | PASS | 真实事务FAILED声明不取消场/群；新增席位后HTTP再声明错误人数1，201但stale=true，仍OPEN且群未关闭。需更新由正式contract的stale字段表示，原状态保留REPORTED_CONFIRMED（host自报），无PROVIDER_CONFIRMED假成功。；证据 R18-T006 |
@@ -300,7 +301,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-DB-014 · host不能退本人席位 | PASS | 第二批QA独立探针在04cb601以真实隔离PG执行，完整预期核对通过；消息HTML显示另有B1纯文本浏览器证据。；证据 R6-T005 |
 | QA-DB-015 · 状态分区与历史轮次 | NOT_RUN | 相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。 |
 | QA-CHAT-010 · JOIN消息LEAVE提交顺序 | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R1-T530, R1-T531, R1-T529 |
-| QA-CHAT-011 · 单方同意投影 | NOT_RUN | 相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。 |
+| QA-CHAT-011 · 单方同意投影 | PASS | 真实PG双连接及事务barrier：A单方选择在未提交时暂停，B的post-meal/profile/inbox与选择前完全一致；主动回滚后consents为0且投影不变。随后通过真实API提交A选择得WAITING，B仍无变化且DM404，只有A本人selected=true。全库notifications/outbox计数不变。analyst+MFA建立真实snapshot，源facts及supply/非空meal drilldown均不含pairId/selected/reconnect。覆盖本条API/DB方法预期，不涉及真实邮件发送或原生设备。；证据 R47-T001 |
 | QA-CHAT-012 · 消息输入边界 | PASS | 第二批QA独立探针在04cb601以真实隔离PG执行，完整预期核对通过；消息HTML显示另有B1纯文本浏览器证据。；证据 R6-T004 |
 | QA-AI-046 · 已有申请不再推荐 | NOT_RUN | 相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。 |
 | QA-AI-047 · 结果不足三张 | NOT_RUN | 相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。 |

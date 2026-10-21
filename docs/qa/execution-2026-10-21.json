@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 112,
-    "PASS": 93,
+    "NOT_RUN": 110,
+    "PASS": 95,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -4008,8 +4008,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R47-T002",
+        "R47-T003"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T150",
         "R1-T151",
@@ -4060,15 +4063,17 @@
         "R2-T035",
         "R2-T036",
         "R2-T037",
-        "R9-T005"
+        "R9-T005",
+        "R47-T002",
+        "R47-T003"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "不改变已发生资格",
-        "拒绝普通取消/退出",
-        "支持路径单独受理"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "R9开始后cancel/leave拒绝与已封存名单保持通过；尚未完成独立支持路径联合验收，完整case仍NOT_RUN。"
+      "remainingExpected": [],
+      "actual": "真实PostgreSQL：H及A/B/C四人minimum3/capacity4，在startsAt精确0及+1ms分别以holder行锁同时阻塞host cancel与guest leave，观测两个不同backend均Lock等待后释放；二者均DEADLINE_PASSED。开始名单及全部seat_events逐行不变、无meal.cancelled事实；普通状态仍OPEN。MEAL report201并创建独立support_case，受理后开始资格不变；仅证明支持受理而非裁决完成。受控领域时钟在拿锁后注入，非真实2030年运行。"
     },
     {
       "id": "QA-DB-009",
@@ -19433,8 +19438,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R47-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T047",
         "R1-T048",
@@ -19509,14 +19516,15 @@
         "R5-T008",
         "R5-T009",
         "R5-T010",
-        "R5-T011"
+        "R5-T011",
+        "R47-T001"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "B不能推断A单方同意",
-        "后台/通知无私密选择"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "真实PG双连接及事务barrier：A单方选择在未提交时暂停，B的post-meal/profile/inbox与选择前完全一致；主动回滚后consents为0且投影不变。随后通过真实API提交A选择得WAITING，B仍无变化且DM404，只有A本人selected=true。全库notifications/outbox计数不变。analyst+MFA建立真实snapshot，源facts及supply/非空meal drilldown均不含pairId/selected/reconnect。覆盖本条API/DB方法预期，不涉及真实邮件发送或原生设备。"
     },
     {
       "id": "QA-CHAT-012",
