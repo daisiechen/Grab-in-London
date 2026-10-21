@@ -556,3 +556,12 @@
 - 原生先GET真实state再呈Block/Unblock，两动作独立确认；取消零写，初始read失败显式Reload阻mutation；409关闭旧确认、GET权威刷新并重新确认，不按currentVersion猜blocked；普通error留Modal/保意图，actor/target/sessiongeneration护栏拒晚响应、reload单飞。解除明确不恢复旧同意，不改后端consent权限。
 - root冻结core:check及unit365/DB147/API203/release23全绿，日志/private/tmp/fancy-f44-frozen-{check,core}.log；原生42套292项/type/lint绿，新增12项红绿及实际Profile入口测试，日志/private/tmp/fancy-f44-native-{full,type,lint}.log。文档/diff另验，未改Web。此前合同read白名单遗漏红及root一次批量替换误入mutation白名单红已修正为精确read增量，未放宽mutation协议断言。正式SHA还须独立正常签名包和匹配新GET后端实际QA，组件绿不抢关F44。
 - QA已明确safecheckpoint原61973/PID63824固定2026-10-24T01:10Z暂停业务/时钟，尚未执行source连接/sidecar。阶段1同库方案只/tmp自建库准备：禁AI lifecycle全库recover/worker/迁移/drop，精确新staff及family预检、clock一致、有限CSV/privatehash；旧19d只有snapshot读取无创建API，创建新封存需另审极窄sealer步骤，不冒正常API已支持或把缺夹具归用户阻塞。
+
+
+## F44隔离实测准备与后台同库前置
+
+- QA正式B19 c480b802已push并释放Git窗口，193PASS/12NOT_RUN/1FAIL(F44)/11BLOCKED；该SHA远端CI成功。F44本地修复不抢关。QA第二专用sim D92E76C4-9333-4FC7-8B53-E681DA73C055只由QA安装操作；原E770、61973/PID63824、原PG和2026-10-24T01:10检查点继续冻结。
+- 新F44独立2005991完整archive/API62044只用于targeted，新PG合成completed双方SELFpresent饭局/唯一DM/共享群，tmpfactory剥AI生命周期与worker，正常OTP/退出；不冒原J004同库通过。初版fixedclock落后真实测试会令native15min token假过期，QA未安装登录前已准只重建OWN62044，用真实当前UTC+2h安全时间及正常+61s cooldown，保旧元数据历史、不清OTP/配额、不改TTL；新IDs/clock/stop以重新发布ENTRY为准。197源逐字一致，正常签名API62044包编译中，未安装。
+- 同库阶段1临时工具/private/tmp/fancy-admin-sidecar/ENTRY.md已冻并交QA审核，source连接0/CLI拒执行。自有PG核63表，明确16类新staff/auth/TEST分类/角色/框架限流/新snapshot/CSV metadata delta；旧业务、sealed facts、旧session及AI pending/budget不变。正常logout会新增仅新staff的ai_subjects，不冒AI全表零写。staff正常OTP→自身TEST→logout204，sidecar停止并只close自身listener/pool；QA将来用原正常clock协议+60s至01:11并对比业务/待发通知、出新checkpoint，才RAM receipt重attach/正常browser登录。当前尚未执行原clock推进或source接入。
+- 原19d无createSnapshot HTTP；新封存是显式fixture operator直接现sealer新UUID，不改旧facts，不冒正常产品API或启全worker。原buildServer自动AI recover已从tmpfactory剥离；严格新staff/family预检在authenticate前拒原tokens，独立browser context，clock mismatch503，OWNstop不drop。阶段2/3仍待精确ID白名单。
+- AI3102/PID42728只读核script qa-ai-browser-fixture.ts，server/identity/assistant routes/controller/assistant合同五文件逐字匹配cb9257e，不泛化全archive。TestIdentity OTP/guest/IOS入口和controlled固定文本provider，只有自有PG synthetic价格/预算；本轮未发模型请求/OTP或预算写入、不停服务（SIGTERM会drop其OWNDB）。后续AI原生候选等F44后再排，不抢Xcode或改原环境。
