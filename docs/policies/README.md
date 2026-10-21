@@ -8,9 +8,9 @@
 
 ## 申请进度
 
-按用户本轮报告：Google Cloud项目已创建且账单已关联；Apple Developer已付款等待审核；Auth0 UK开发租户已建立；DeepSeek Key已在本机保存。以上不是服务配置或真实联调通过证据。域名尚未购买，邮件注册待域名决定。支持收件邮箱已私下提供，此公开仓库不保存个人邮箱或付款/身份资料。
+按用户本轮报告：Google Cloud项目已创建且账单已关联；Apple Developer已付款等待审核；Auth0 UK开发租户已建立；DeepSeek Key已在本机保存。以上不是服务配置或真实联调通过证据。域名fancyabite.uk已购买一年；Resend已注册，mail.fancyabite.uk已完成DNS验证；平台配置状态见[交接记录](../delivery/platform-configuration-2026-10-21.zh-CN.md)。支持收件邮箱已私下提供，此公开仓库不保存个人邮箱或付款/身份资料。
 
-Cloudflare已登录页面2026-10-21显示：fancyabite.uk首年及续费US$5.30，fancyabite.app首年US$8.20/续费US$14.20；价格为搜索页报价，最终以结账为准。推荐前者对应“Fancy a bite?”，末尾有e；用户输入的fancyabit.uk不等同于此候选，未确认购买。域名可注册不证明商标可用。
+Cloudflare已登录页面2026-10-21显示：fancyabite.uk首年及续费US$5.30，fancyabite.app首年US$8.20/续费US$14.20；价格为搜索页报价，最终以结账为准。推荐前者对应“Fancy a bite?”，末尾有e；此前输入的fancyabit.uk不等同于此候选；用户后续已确认购买fancyabite.uk一年。域名可注册不证明商标可用。
 
 ## 发布前必须关闭
 
