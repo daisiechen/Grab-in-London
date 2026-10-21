@@ -1,0 +1,34 @@
+{
+  "name": "@fancy/web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "pnpm run typecheck && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.node.json",
+    "test": "vitest run --config ../../vitest.config.ts --project web"
+  },
+  "dependencies": {
+    "@fancy/client": "workspace:*",
+    "@fancy/contracts": "workspace:*",
+    "@radix-ui/react-dialog": "1.1.19",
+    "@radix-ui/react-icons": "1.3.2",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "react-router": "8.4.0"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.8",
+    "@types/node": "24.19.2",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.1.2",
+    "jsdom": "30.1.2",
+    "typescript": "5.9.3",
+    "vite": "8.3.4",
+    "vitest": "5.0.5"
+  }
+}

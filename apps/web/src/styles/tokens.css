@@ -1,0 +1,17 @@
+/* Visual tokens from demo/DESIGN.md frontmatter and demo/src/prototype.css (.grab-app). */
+:root {
+  --forest: #123f35;
+  --ink: #10241f;
+  --muted: #6c746f;
+  --line: #e4e7e2;
+  --surface: #f5f6f1;
+  --peach: #ffb49b;
+  --danger: #a93b32;
+  --radius: 11px;
+  --radius-sm: 7px;
+  --radius-lg: 19px;
+  --page-gutter: 21px;
+  --nav-height: 71px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+}

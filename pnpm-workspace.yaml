@@ -3,3 +3,8 @@
 packages:
   - apps/*
   - packages/*
+# Install scripts are denied unless reviewed. Both below ship prebuilt binaries via optional
+# dependencies (watch-mode / resolver helpers for the iOS jest toolchain).
+allowBuilds:
+  '@parcel/watcher': false
+  unrs-resolver: false
