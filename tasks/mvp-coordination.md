@@ -297,3 +297,10 @@
 - 自有真实PG四项修前两红、修后全绿，关联19项通过；根完整API160项通过（/private/tmp/fancy-f18-api.log）。覆盖双方分别看到对方、发送后重取、匿名/外人禁止、删除申请后profile尚存即隐藏及GROUP不变。独立原探针另用临时配置显式运行，不改变仓库收集配置。
 - 保留B7固定时钟现场，未重启API或重写同场业务时间；新代码与旧运行环境不混称浏览器修复通过。正式关闭需QA对提交SHA独立复验；提交等待QA释放索引窗口，研究修改及QA文件不混入。
 - 根独立原探针2项、core:check及Python71通过，日志/private/tmp/fancy-f18-{probe,check,python}.log；客户端无修改，沿用最近已验证客户端层，不声称本批重跑Web/原生或真实供应商。
+
+## 原生模拟器与本地API地址接线（2026-10-21）
+
+- 独测及原生负责人提升只读simctl已确认iOS27.0/27.1和iPhone18 Pro可用，普通沙箱连接错误不代表缺runtime。临时副本prebuild成功，实际Xcode构建退出65因缺Pods，尚无App运行/跨端角色互换证据；不以Jest替代，不改真实设备/供应商门槛。
+- README已有EXPO_PUBLIC_API_BASE_URL，但原app.config.js未接到Constants.extra.apiBaseUrl；仅将该显式环境值接入extra，未设或空值保持原3000与其他extra/plugins。新增配置回归修前一红、修后两绿，根原生244项通过（/private/tmp/fancy-ios-api-config-tests.log）。不改config.ts或生产身份/网络授权。
+- 负责人在/private/tmp隔离CocoaPods/生成工程，独立合成API61973、新临时PG，不重启B7 API61971/PG/Admin5174。系统Ruby2.6首轮原生扩展缺SDK config.h，继续隔离依赖方案；构建产物和工具依赖不进仓库。实际启动与QA跨端验收仍待完成。
+- 本切片根core:check及Python71通过（/private/tmp/fancy-ios-api-config-{check,python}.log）；仅app.config.js、config.test.ts与本记录提交，邮件F19另批，QA及研究文件保留。配置生效需后续构建/启动验证，不冒称模拟器验收通过。
