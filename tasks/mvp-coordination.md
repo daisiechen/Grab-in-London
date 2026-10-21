@@ -478,3 +478,10 @@
 - 新ResendMailProvider仅固定官方HTTPS POST/有限超时/禁止redirect和SDK重试，outbox UUID作供应商幂等键、固定模板与白名单UUID深链，无用户正文/原始错误日志。发送接受需有效provider UUID；5xx/408/409/传输或畸形响应保UNKNOWN，不将超时/404当NOT_SENT；Sending-only Key不假设有读取权限，lookup当前严格UNKNOWN零网络。
 - CoreConfig新增RESEND_API_KEY/RESEND_FROM配对验证，值不回显；Worker显式provider且完整配置才选真实适配，缺配/测试模式仍不可用。新增合成测试16 transport+3selection与config合计47绿，worker类型/lint绿，根整合322/23/check结果见上；未启动真实Worker/未发送邮件，不声称投递或UNKNOWN完整恢复已通过。
 - 待后续薄切片：持久供应商回执/签名webhook恢复与退信状态、Auth0 Management最小权限撤销、删除通知隐私保留。不能因Sending Key已配置而编造按idempotency-key查询或扩授权；真实邮件接线与最终验收分别记录。
+
+
+## 隔离真实身份与地图联调入口
+
+- 新infra/real-integration.ts默认dry-run，显式real模式及QA释放5174双闸才启动；只白名单读取root私有配置，不输出值，强制Auth0/Google、禁AI与业务mail worker。创建自有临时PG17/新DB，拒绝继承QA既有DATABASE_URL，API随机loopback端口，Web5174同源代理精确Origin。
+- Web子进程仅最小系统环境与APIorigin，浏览器公开Key仍由现web.env.local加载；不继承root服务端凭据。清理只自建API/Web/PG/DB。4项红绿+infra类型/lint与实际dry-run退出0，仅公开plan，无外呼/用户/OTP/业务邮件。根整合release23/check通过覆盖冻结文件。
+- QA已明确旧B7仅Admin Vite PID71240/5174可释放；root只读ps/cwd核对应/private/tmp/fancy-qa-4a0c66f-yxsch6uh/apps/admin，不停61971/PG/tab4；当前61973/5177与设备时钟继续QA独占。真实启动与登录/地图/创建全链仍待随后执行，不将dry-run冒真实联调通过。
