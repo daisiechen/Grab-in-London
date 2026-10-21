@@ -43,6 +43,7 @@
 - [MVP 本地自测与独测交接](delivery/mvp-local-selftest-2026-10-21.zh-CN.md)：本机验证、精确版本、模拟与真实边界及待用户操作。
 
 - [MVP与AI测试计划](qa/test-plan.zh-CN.md)、[测试用例目录](qa/test-cases.zh-CN.md)、[结构化用例](qa/test-cases.json)与[Claude协作及差异登记](qa/collaboration-and-gaps.zh-CN.md)：覆盖PRD、双端Demo、技术包的待执行验收，区分模拟、待实现和真实门槛。
+- [独立QA部分执行报告](qa/execution-2026-10-21.zh-CN.md)、[逐条执行记录](qa/execution-2026-10-21.json)、[缺陷登记](qa/defects-2026-10-21.zh-CN.md)、[浏览器执行证据](qa/evidence/2026-10-21/browser-journey.zh-CN.md)与[逐项自动化证据](qa/evidence/2026-10-21/automated-runs.json)：交接8ba6fc7及Inbox修复071ecd7的本地证据；保留未执行及真实外部门槛，不代表217条全通过。
 
 - [2026-10-21双端独立复评](reviews/development-readiness-2026-10-21.zh-CN.md)：固定bbadfed基线，逐项核对B-01—B-11；当时核心双端可进入方案设计、AI范围待定；新增FR-13和本轮决定另由上列AI复评承接。
 

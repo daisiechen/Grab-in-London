@@ -1,0 +1,32 @@
+Browser tab: 74633020, Title: "Fancy", URL: "http://127.0.0.1:5174/inbox/9715b86b-2bae-4d65-b994-d09b8626095c".
+1 AXWebArea Fancy, URL: 127.0.0.1:5174/inbox/9715b86b-2bae-4d65-b994-d09b8626095c
+	2 container root
+		3 container
+			4 container Optional analytics
+				5 heading Help improve Fancy, Value: 2
+					6 text Help improve Fancy
+				7 text Allow optional usage analytics, including meal views and discovery results? We don’t collect message text or search keywords. You can decline and keep using Fancy.
+				8 button Allow analytics
+				9 button Decline analytics
+			66 container
+				67 link Description: Back, Value: 127.0.0.1:5174/inbox
+				68 text Independent QA Friday supper
+				69 button Group settings
+					70 image
+			71 image
+			72 container
+				73 text Fri 23 Oct  ·  18:00
+			74 text [Fixture] Fancy North Kitchen
+			81 text WED 21 OCT
+			82 container
+				83 text You  ·  07:21
+			84 text <b>QA synthetic greeting</b>
+			76 container
+				77 text Message
+				78 text entry area (settable) Message, ID: composer
+				79 button (disabled) Send message
+					80 image
+			64 pop up button Description: Ask Fancy, ID: fancy-assistant-launcher
+			65 button Tuck Fancy to edge
+
+The focused UI element is 1 AXWebArea Fancy, URL: 127.0.0.1:5174/inbox/9715b86b-2bae-4d65-b994-d09b8626095c

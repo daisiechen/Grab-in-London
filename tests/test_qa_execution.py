@@ -1,0 +1,38 @@
+"""Prevent unsupported full-pass, missing cases, and invalid execution references."""
+import copy
+import importlib.util
+import json
+from pathlib import Path
+import subprocess
+import unittest
+ROOT=Path(__file__).resolve().parents[1]
+spec=importlib.util.spec_from_file_location('qa_execution',ROOT/'scripts/validate-qa-execution.py')
+validator=importlib.util.module_from_spec(spec)
+spec.loader.exec_module(validator)
+class QAExecutionTest(unittest.TestCase):
+    def setUp(self):self.data=json.loads((ROOT/'docs/qa/execution-2026-10-21.json').read_text())
+    def test_all_planned_cases_have_honest_dispositions(self):
+        counts=validator.validate(self.data)
+        self.assertEqual(sum(counts.values()),217)
+        self.assertGreater(counts['NOT_RUN'],0)
+        self.assertGreater(counts['BLOCKED'],0)
+    def test_related_passed_suite_cannot_earn_case_pass(self):
+        c=next(c for c in self.data['cases'] if c['status']=='NOT_RUN' and c['relatedAutomatedAssertions'])
+        c['status']='PASS';c['evidence']=[]
+        with self.assertRaises(AssertionError):validator.validate(self.data)
+    def test_missing_case_unknown_evidence_changed_plan_rejected(self):
+        for mutation in ('missing','evidence','plan'):
+            data=copy.deepcopy(self.data)
+            if mutation=='missing':data['cases'].pop()
+            if mutation=='evidence':data['cases'][0]['evidence']=['nonexistent']
+            if mutation=='plan':data['planSha256']='0'*64
+            with self.assertRaises(AssertionError):validator.validate(data)
+    def test_false_complete_partial_case_rejected(self):
+        c=next(c for c in self.data['cases'] if c['status']=='PASS')
+        c['coveredExpectedIndexes']=[]
+        with self.assertRaises(AssertionError):validator.validate(self.data)
+    def test_report_is_reproducible(self):
+        p=ROOT/'docs/qa/execution-2026-10-21.zh-CN.md';before=p.read_bytes()
+        subprocess.run(['python3',str(ROOT/'scripts/render-qa-execution.py')],check=True,cwd=ROOT)
+        self.assertEqual(before,p.read_bytes())
+if __name__=='__main__':unittest.main()

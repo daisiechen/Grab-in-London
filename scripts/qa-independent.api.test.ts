@@ -1,0 +1,40 @@
+/** QA-owned probes against the fixed handoff; no production writes outside isolated test databases. */
+import {randomUUID} from 'node:crypto';
+import {afterAll,beforeAll,describe,expect,inject,it} from 'vitest';
+import {Browser,createHarness,json,type Harness} from '../apps/api/src/test/harness.ts';
+import {resolveLondonTime} from '../apps/api/src/meals/time.ts';
+import {assertFreshAuth} from '../apps/api/src/identity/reauth.ts';
+let h:Harness;
+beforeAll(async()=>{h=await createHarness(inject('pgServerUrl'));});afterAll(async()=>h.close());
+const headers=(version?:string)=>({'idempotency-key':randomUUID(),...(version?{'if-match':`"${version}"`}:{})});
+async function actor(complete=true){const b=new Browser(h),{body}=await b.signInWithEmail(`${randomUUID()}@example.invalid`);const id=body.data.session.user.id as string;if(complete){const response=await b.request('PATCH','/v1/me',{body:{displayName:'QA User',bio:'Independent QA synthetic profile for isolated tests.',languages:['en'],lifeStatus:'NEW_TO_LONDON',interests:['FOOD'],ageConfirmedVersion:'2026-10-21',communityAcceptedVersion:'2026-10-21'},headers:headers('1')});expect(response.statusCode,response.body).toBe(200);}return {b,id};}
+async function create(b:Browser,override:Record<string,unknown>={}){const v=await b.request('POST','/v1/venues/confirm',{body:{placeId:'fixture_fancy_north'},headers:headers()});expect(v.statusCode,v.body).toBe(200);const input={venueRef:json(v).data.venueRef,title:'QA independent test table',description:'Synthetic independent QA meal with no real customers.',start:{localDate:'2026-10-23',localTime:'18:00',timeZone:'Europe/London',utcOffsetMinutes:60},close:{localDate:'2026-10-23',localTime:'17:00',timeZone:'Europe/London',utcOffsetMinutes:60},minimum:2,capacity:3,budgetMinPence:2000,budgetMaxPence:3500,languages:['en','zh'],mood:'EASY_CONVERSATION',bookingMode:'EXTERNAL_PAY_AT_VENUE',attemptId:randomUUID(),bookingDeclarationConfirmed:true,reviewConfirmed:true,termsVersion:'2026-10-21',...override};return b.request('POST','/v1/meals',{body:input,headers:headers()});}
+const lengths=[['displayName',2,40,1],['bio',20,1000,5],['title',5,80,9],['description',20,1000,13],['message',20,300,17]] as const;
+describe('independent field-boundary API and persistence',()=>{
+ for(const [field,min,max,startId] of lengths){
+  for(const [offset,length,valid] of [[0,min-1,false],[1,min,true],[2,max,true],[3,max+1,false]] as const){
+   it(`QA-INPUT-${String(startId+offset).padStart(3,'0')} ${field} ${length} chars valid=${valid}`,async()=>{
+    const a=await actor();let response;
+    const eventsBefore=Number((await h.db.pool.query('SELECT count(*) n FROM business_events WHERE actor_id=$1',[a.id])).rows[0].n);
+    if(field==='displayName'||field==='bio')response=await a.b.request('PATCH','/v1/me',{body:{[field]:'x'.repeat(length)},headers:headers('2')});
+    else if(field==='title'||field==='description')response=await create(a.b,{[field]:'x'.repeat(length)});
+    else{const host=await actor();const m=await create(host.b);expect(m.statusCode,m.body).toBe(201);response=await a.b.request('POST',`/v1/meals/${json(m).data.id}/applications`,{body:{message:'x'.repeat(length)},headers:headers()});}
+    expect(response.statusCode,response.body).toBe(valid?(field==='displayName'||field==='bio'?200:201):422);
+    if(!valid){const table=field==='message'?'applications':field==='title'||field==='description'?'meals':'profiles';const column=field==='displayName'?'display_name':field;expect((await h.db.pool.query(`SELECT count(*)::int n FROM ${table} WHERE ${column}=$1`,['x'.repeat(length)])).rows[0].n).toBe(0);}
+    else{expect(response.body).toContain('x'.repeat(length));const table=field==='message'?'applications':field==='title'||field==='description'?'meals':'profiles';const column=field==='displayName'?'display_name':field;const idColumn=table==='profiles'?'user_id':'id';const id=table==='profiles'?a.id:json(response).data.id;expect((await h.db.pool.query(`SELECT count(*)::int n FROM ${table} WHERE ${idColumn}=$1 AND ${column}=$2`,[id,'x'.repeat(length)])).rows[0].n).toBe(1);}
+    if(!valid)expect(Number((await h.db.pool.query('SELECT count(*) n FROM business_events WHERE actor_id=$1',[a.id])).rows[0].n)).toBe(eventsBefore);
+   });
+  }
+ }
+});
+describe('independent safety and temporal oracles',()=>{
+ it('QA-API-008 299999 accepted and 300000/300001 rejected without future-time loophole',()=>{const auth=new Date('2026-10-21T06:00:00Z');expect(()=>assertFreshAuth(auth,new Date(+auth+299999))).not.toThrow();for(const ms of [300000,300001,-1])expect(()=>assertFreshAuth(auth,new Date(+auth+ms))).toThrow(expect.objectContaining({code:'REAUTH_REQUIRED'}));});
+ it('QA-TIME-004 ambiguity is rejected with two actual UTC choices',()=>{try{resolveLondonTime({localDate:'2026-10-25',localTime:'01:30',timeZone:'Europe/London'});throw new Error('unexpected success');}catch(e){expect(e).toMatchObject({code:'TIME_AMBIGUOUS'});}});
+ it('QA-TIME-005 BST repeated hour has independent expected UTC',()=>{expect(resolveLondonTime({localDate:'2026-10-25',localTime:'01:30',timeZone:'Europe/London',utcOffsetMinutes:60}).instant).toBe('2026-10-25T00:30:00.000Z');});
+ it('QA-TIME-006 GMT repeated hour has independent expected UTC',()=>{expect(resolveLondonTime({localDate:'2026-10-25',localTime:'01:30',timeZone:'Europe/London',utcOffsetMinutes:0}).instant).toBe('2026-10-25T01:30:00.000Z');});
+ it('QA-TIME-007 nonexistent wall time cannot normalize silently',()=>{for(const offset of [undefined,0,60])expect(()=>resolveLondonTime({localDate:'2027-03-28',localTime:'01:30',timeZone:'Europe/London',utcOffsetMinutes:offset})).toThrow(expect.objectContaining({code:'TIME_NONEXISTENT'}));});
+ it('QA-API-003 profile status and privileged attributes cannot be changed by client payload',async()=>{const a=await actor();for(const field of ['status','roles','reportedAt','actorId']){const response=await a.b.request('PATCH','/v1/me',{body:{[field]:field==='roles'?['support']:'DELETED'},headers:headers('2')});expect(response.statusCode,response.body).toBe(422);}expect((await h.db.pool.query('SELECT status FROM users WHERE id=$1',[a.id])).rows[0].status).toBe('ACTIVE');});
+ it('QA-DB-012 accepts closes=start-30min but rejects -29min and current/past deadline',async()=>{for(const [time,ok] of [['17:30',true],['17:31',false]] as const){const a=await actor();const r=await create(a.b,{close:{localDate:'2026-10-23',localTime:time,timeZone:'Europe/London',utcOffsetMinutes:60}});expect(r.statusCode,r.body).toBe(ok?201:422);}const a=await actor();const r=await create(a.b,{close:{localDate:'2026-10-20',localTime:'17:00',timeZone:'Europe/London',utcOffsetMinutes:60}});expect(r.statusCode,r.body).toBe(422);});
+ it('QA-API-007 PATCH missing If-Match is 428 and has no profile revision',async()=>{const a=await actor();const r=await a.b.request('PATCH','/v1/me',{body:{displayName:'Unauthorized revision'},headers:headers()});expect(r.statusCode,r.body).toBe(428);expect(json(r).error.code).toBe('PRECONDITION_REQUIRED');expect(json(await a.b.request('GET','/v1/me')).data.version).toBe('2');});
+ it('QA-NOTIFY-003 critical notification storage contains IDs but never applicant message text',async()=>{const host=await actor(),guest=await actor();const m=await create(host.b);expect(m.statusCode,m.body).toBe(201);const marker='QA_PRIVATE_MESSAGE_'+randomUUID();const applied=await guest.b.request('POST',`/v1/meals/${json(m).data.id}/applications`,{body:{message:marker},headers:headers()});expect(applied.statusCode,applied.body).toBe(201);const a=json(applied).data;const approved=await host.b.request('POST',`/v1/applications/${a.id}/decision`,{body:{decision:'APPROVE'},headers:headers('1')});expect(approved.statusCode,approved.body).toBe(200);const notes=await h.db.pool.query('SELECT row_to_json(n)::text body FROM notifications n');const mail=await h.db.pool.query('SELECT row_to_json(o)::text body FROM outbox o');expect(JSON.stringify([...notes.rows,...mail.rows])).not.toContain(marker);expect(mail.rowCount).toBeGreaterThan(0);});
+});

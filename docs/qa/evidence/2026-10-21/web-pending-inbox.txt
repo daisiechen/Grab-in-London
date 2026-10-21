@@ -1,0 +1,3 @@
+Browser tab: 74633018, Title: "Fancy", URL: "http://127.0.0.1:5174/inbox".
+There has been no change in the accessibility tree.
+The focused UI element is 71 tab (selected, settable, boolean) Applications, Value: 1, ID: inbox-applications-tab
