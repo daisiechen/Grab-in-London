@@ -47,7 +47,7 @@ export function applyPlan(plan:QueryPlan,input:string,applied:HardFilters,previo
   const hard={...applied,...previous.hard} as HardFilters;const explicit={...previous.hard};const cleared=new Set(previous.cleared);
   for(const field of cleared)delete (hard as Record<string,unknown>)[field];
   let clarification=false;
-  if(/\bspanish\b|西班牙/.test(input.toLowerCase())&&!/spanish (food|cuisine|language)|speak spanish|西班牙菜|西班牙语/i.test(input))clarification=true;
+  if(/\bspanish\b|西班牙/.test(input.toLowerCase())&&!/\bspanish\s+(food|cuisine|language)\b|\blanguage(?:\s*:\s*|\s+)spanish\b|\bspeak\s+spanish\b|西班牙菜|西班牙语/i.test(input))clarification=true;
   for(const p of plan.patches){
     const source=p.source.toLowerCase();
     if(p.op==='CLEAR'){

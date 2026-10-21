@@ -328,3 +328,11 @@
 - 精确9df9ab0归档加唯一AppRoot生产差异实际Release成功，PID41469持续，API61973 GET /v1/meals 200且runtime无fatal。根直接查看/private/tmp/fancy-f21-native-screen.png确认19:21状态栏与标题分离；构建/runtime为/private/tmp/fancy-f21-native-{build,runtime}.log，不称完整交互旅程通过。repo与ASCII副本AppRoot哈希一致，正式SHA仍交QA复验。
 - F20另已精确87434e3无Metro归档重建并launch复现defineProperty/RCTFatal（/private/tmp/fancy-f20-87434e3-red-runtime.log）；精确9df9ab0归档无F21重建运行持续Discover（/private/tmp/fancy-f20-9df9ab0-native-screen.png及同前缀build/runtime）。不再依赖首次未记SHA旧红，正式关闭结论仍由QA持有。
 - 根最终iOS254、core:check及Python74通过（/private/tmp/fancy-f21-{ios,check,python}.log）。后端/Web未改，沿用最近已验证层；仅AppRoot、自有safe-area测试及本记录提交，等待QA B11窗口释放。实际修复关闭由QA按正式SHA独立决定。
+
+## QA-F22 明确Spanish语言条件（2026-10-21）
+
+- QA固定b332b705原R117矩阵14绿/2红中，先Spanish追问后明确language Spanish仍NEEDS_INPUT。仅query正则支持language Spanish/冒号/空白及词边界，原Spanish language/speak Spanish/中文保持；单独Spanish继续澄清，菜系与语言来源证据不放宽。
+- 自有新增前三例修前红，修后query17绿，原QA-AI007真实PG绿。根完整unit292通过（/private/tmp/fancy-f22-unit-listener.log）；普通沙箱CLI本地OAuth监听4红保留在fancy-f22-unit.log，允许loopback后原样全绿，不改测试掩盖环境。
+- query与controller F23由不同唯一owner分别冻结，根整合DB/API/原独测matrix及全仓检查后各自切片提交，不混QA或研究文件。正式关闭仍交QA固定SHA决定。
+- 根冻结整合DB127/API160及当前独测矩阵17项通过（/private/tmp/fancy-f22-f23-{db,api,original-matrix}.log），core:check通过。该矩阵在QA原R117后新增一项，严格记录本次17，不覆盖原红。Python77在QA并行更新证据时两项一致性失败（probe变更/报告尚未同步），原日志fancy-f22-f23-python.log保留，待QA批冻结后原样复跑，开发不替QA改证据。
+- QA在ef40e7c冻结原红及支持/指标/创建证据后释放窗口；根原样复跑Python77全绿（/private/tmp/fancy-f22-f23-python-frozen.log），原并行快照失败记录保留。本次仅F22两文件与记录先提交，F23另切片，独测正式状态160 PASS /43 NOT_RUN /2 FAIL /12 BLOCKED，开发不抢先关闭。

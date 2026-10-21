@@ -65,3 +65,18 @@ describe('cannot silently relax an explicit condition',()=>{
   }
  });
 });
+
+it.each(['language Spanish','language: Spanish','LANGUAGE   Spanish','Spanish language','speak Spanish','西班牙语'])('accepts explicit Spanish communication language without a second ambiguity prompt: %s',input=>{
+ const p=validatePlan(plan([patch('languages',['es'],input)]),input);
+ const query=applyPlan(p,input,{}, {hard:{},cleared:[]},[],now);
+ expect(query.clarification).toBe(false);expect(query.conditions.hard).toEqual({languages:['es']});
+});
+it('keeps plain Spanish ambiguous and preserves cuisine and exact-source guards',()=>{
+ for(const input of ['Spanish','Spanish please','西班牙']){
+  const p=validatePlan(plan([]),input);expect(applyPlan(p,input,{}, {hard:{},cleared:[]},[],now).clarification).toBe(true);
+ }
+ const cuisine='Spanish cuisine';const p=validatePlan(plan([patch('cuisineCodes',['SPANISH'],cuisine)]),cuisine);
+ const query=applyPlan(p,cuisine,{}, {hard:{},cleared:[]},[],now);expect(query.clarification).toBe(false);expect(query.conditions.hard).toEqual({cuisineCodes:['SPANISH']});
+ expect(()=>validatePlan(plan([patch('languages',['es'],'language Spanish')]),'Spanish')).toThrow('AI_CONFLICT');
+ const wrong='language French';expect(()=>applyPlan(validatePlan(plan([patch('languages',['es'],wrong)]),wrong),wrong,{}, {hard:{},cleared:[]},[],now)).toThrow('AI_CONFLICT');
+});
