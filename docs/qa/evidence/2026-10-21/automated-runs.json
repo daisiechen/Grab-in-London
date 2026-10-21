@@ -12432,6 +12432,233 @@
           "durationMs": 227.80475
         }
       ]
+    },
+    {
+      "id": "R68",
+      "testedCommit": "2125ca9f83f9e309461b58f0fda72210fb0ad8f3 + F12 candidate (HTTP logger unchanged)",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-oauth-logs.api.test.ts (initial code assertion)",
+      "startedAt": "2026-10-21T13:58:30.613000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R68-T001",
+          "run": "R68",
+          "path": "scripts/qa-independent-oauth-logs.api.test.ts",
+          "title": "QA-F13 a real successful OAuth callback does not put its code state or private email in the actual log stream",
+          "status": "failed",
+          "durationMs": 612.7998339999999,
+          "failureSummary": "AssertionError: expected true to be false // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "R69",
+      "testedCommit": "761304c19b644762f2c74f72fc9cd5dd88427ae2",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-oauth-logs.api.test.ts (boolean leak matrix)",
+      "startedAt": "2026-10-21T13:59:18.573000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R69-T001",
+          "run": "R69",
+          "path": "scripts/qa-independent-oauth-logs.api.test.ts",
+          "title": "QA-F13 a real successful OAuth callback does not put its code state or private email in the actual log stream",
+          "status": "failed",
+          "durationMs": 610.780084,
+          "failureSummary": "AssertionError: expected { code: true, state: true, …(1) } to deeply equal { code: false, state: false, …(1) }"
+        }
+      ]
+    },
+    {
+      "id": "R70",
+      "testedCommit": "761304c19b644762f2c74f72fc9cd5dd88427ae2",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-provider-lock.api.test.ts",
+      "startedAt": "2026-10-21T13:59:22.331000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R70-T001",
+          "run": "R70",
+          "path": "scripts/qa-independent-provider-lock.api.test.ts",
+          "title": "QA-F12 delayed restaurant provider during an edit does not hold the meal lock on another connection",
+          "status": "passed",
+          "durationMs": 96.104917
+        }
+      ]
+    },
+    {
+      "id": "R71",
+      "testedCommit": "761304c19b644762f2c74f72fc9cd5dd88427ae2 + concurrent F13 logger candidate (provider/transaction code unchanged)",
+      "command": "pnpm exec vitest run --project api --project unit apps/api/src/meals/provider-lock.api.test.ts apps/api/src/http/routes-retry.unit.test.ts apps/api/src/http/owner-replay.api.test.ts",
+      "startedAt": "2026-10-21T14:00:18.138000+00:00",
+      "exitCode": 0,
+      "passed": 14,
+      "failed": 0,
+      "total": 14,
+      "suiteFiles": 3,
+      "assertions": [
+        {
+          "id": "R71-T001",
+          "run": "R71",
+          "path": "apps/api/src/http/routes-retry.unit.test.ts",
+          "title": "COMMIT serialization retry followed by a sealed rejection never runs an earlier attempt after callback",
+          "status": "passed",
+          "durationMs": 41.757542
+        },
+        {
+          "id": "R71-T002",
+          "run": "R71",
+          "path": "apps/api/src/http/owner-replay.api.test.ts",
+          "title": "replays the identical own survey after unrelated deletion without another business write",
+          "status": "passed",
+          "durationMs": 131.34795800000006
+        },
+        {
+          "id": "R71-T003",
+          "run": "R71",
+          "path": "apps/api/src/http/owner-replay.api.test.ts",
+          "title": "replays only the applicant-owned application and rejects third-person or newly added fields",
+          "status": "passed",
+          "durationMs": 56.08791599999995
+        },
+        {
+          "id": "R71-T004",
+          "run": "R71",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "delayed restaurant provider during an edit does not hold the meal lock on another connection",
+          "status": "passed",
+          "durationMs": 101.46720900000003
+        },
+        {
+          "id": "R71-T005",
+          "run": "R71",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "confirmation waits outside actor transaction; success and provider404 replay without any provider dependency",
+          "status": "passed",
+          "durationMs": 12.846041000000014
+        },
+        {
+          "id": "R71-T006",
+          "run": "R71",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "provider503 releases intent so same key can recover",
+          "status": "passed",
+          "durationMs": 8.142582999999945
+        },
+        {
+          "id": "R71-T007",
+          "run": "R71",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "rechecks version after a paused edit and commits no edited description",
+          "status": "passed",
+          "durationMs": 12.509457999999995
+        },
+        {
+          "id": "R71-T008",
+          "run": "R71",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "rechecks venue after a paused edit and commits no edited description",
+          "status": "passed",
+          "durationMs": 12.99758399999996
+        },
+        {
+          "id": "R71-T009",
+          "run": "R71",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "rechecks profile after a paused edit and commits no edited description",
+          "status": "passed",
+          "durationMs": 10.97462500000006
+        },
+        {
+          "id": "R71-T010",
+          "run": "R71",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "rechecks actor after a paused edit and commits no edited description",
+          "status": "passed",
+          "durationMs": 9.341832999999951
+        },
+        {
+          "id": "R71-T011",
+          "run": "R71",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "rechecks deadline after a paused edit and commits no edited description",
+          "status": "passed",
+          "durationMs": 10.974208999999973
+        },
+        {
+          "id": "R71-T012",
+          "run": "R71",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "publish verification holds no actor lock, then create and edit success replay with provider unavailable",
+          "status": "passed",
+          "durationMs": 14.319500000000062
+        },
+        {
+          "id": "R71-T013",
+          "run": "R71",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "seals one rejection body even when each error serialization crosses a controlled millisecond",
+          "status": "passed",
+          "durationMs": 6.211416999999983
+        },
+        {
+          "id": "R71-T014",
+          "run": "R71",
+          "path": "apps/api/src/meals/provider-lock.api.test.ts",
+          "title": "sealed rate limit first response and replay preserve Retry-After",
+          "status": "passed",
+          "durationMs": 4.843042000000082
+        }
+      ]
+    },
+    {
+      "id": "R72",
+      "testedCommit": "761304c19b644762f2c74f72fc9cd5dd88427ae2 + F13 logger candidate (preliminary static inventory)",
+      "command": "pnpm exec vitest run --project unit apps/api/src/test/qa-independent-assets.unit.test.ts",
+      "startedAt": "2026-10-21T14:02:48.715000+00:00",
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R72-T001",
+          "run": "R72",
+          "path": "apps/api/src/test/qa-independent-assets.unit.test.ts",
+          "title": "QA-CODE-001 staging and production reject each test adapter and fixed OTP without connecting any provider",
+          "status": "passed",
+          "durationMs": 1.4377910000000043
+        },
+        {
+          "id": "R72-T002",
+          "run": "R72",
+          "path": "apps/api/src/test/qa-independent-assets.unit.test.ts",
+          "title": "QA-CODE-001 current production app import graph never depends on the legacy Demo/shared/admin prototype or mock keyboard/payment module",
+          "status": "passed",
+          "durationMs": 201.851833
+        },
+        {
+          "id": "R72-T003",
+          "run": "R72",
+          "path": "apps/api/src/test/qa-independent-assets.unit.test.ts",
+          "title": "QA-CODE-005 isolated semantic OpenAPI and SDK metadata drift both fail the real checker; restore passes without touching workspace artifacts",
+          "status": "passed",
+          "durationMs": 1258.232792
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -12474,9 +12701,12 @@
     "apps/admin/src/state/qa-independent-revocation.unit.test.tsx": "e2999aca140d3f9bdb9f2f88319e44a1e9c99884da300a701967d05f74c01c09",
     "scripts/qa-independent-ai-group-permissions.api.test.ts": "67ded17c812c8d5fa85aebdeb3c0849e7691b7b4a81900c9cfd4df6f5631638f",
     "scripts/qa-independent-ai-hostile.api.test.ts": "4583366343408eab5952f0dc8e1b333376a65c4a01a484fdf87943133f9d5234",
-    "scripts/qa-independent-provider-lock.api.test.ts": "e5bc76e651eccec34cb774662a0c78b2b6f95b39130242ae16faf7a4c95aac87"
+    "scripts/qa-independent-provider-lock.api.test.ts": "e5bc76e651eccec34cb774662a0c78b2b6f95b39130242ae16faf7a4c95aac87",
+    "scripts/qa-independent-oauth-logs.api.test.ts": "964a8f69e64f19bbca47dd4c7019056237344b739773fbe84bf378552c34e75f",
+    "scripts/qa-oauth-log-child.ts": "2407272b1de6534c7670b8fdf5e9f91104f3c82de14c5767835eda48d50d91d9",
+    "apps/api/src/test/qa-independent-assets.unit.test.ts": "d74cde8973e70c2274453d08a2a9db3c08d5f4014588bde4eb4c8a4293f3f6c1"
   },
-  "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console.",
+  "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console. R68/R69 valid TestIDP OAuth callback200 captured actual non-silent child stdout only in parent RAM. Metadata contains only leak booleans, never credential strings or raw logs. R69 aggregates code/state/email checks without stopping at the first boolean failure. R72 mutates semantic OpenAPI/SDK artifacts only in an owned temporary contracts copy, requires the real checker fail1 and restore0, and verifies original workspace bytes untouched. Static cases remain NOT_RUN until fixed committed handoff recheck.",
   "runtimeSnapshotVerification": {
     "commit": "d4582f7e5e4f52e43cb1d49a06622b98c8c10ad6",
     "comparedFiles": 555,

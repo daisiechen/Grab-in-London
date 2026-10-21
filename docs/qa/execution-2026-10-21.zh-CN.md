@@ -1,6 +1,6 @@
 # 独立QA执行报告 · 2026-10-21
 
-**结论：本轮不通过，存在未闭环缺陷：QA-F12。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
+**结论：本轮不通过，存在未闭环缺陷：QA-F13。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
 
 原测试计划基线4659fdb；被测交接`8ba6fc7c9974cf6be1ac06d8b16e0380fb3beced`，业务代码`8bc1e9280153491b6a63c68cd6ba6a49f8061978`。Inbox分页修复在`071ecd7cbd012cb7c49d4b907ec768f90409a3f6`仅做定向复验；QA-F01及第二批P0探针在04cb601验证，第三批边界、删除/恢复和适配在d4582f7及后续仅CI增量版本定向验证，具体版本见运行表；更早证据沿用对应固定基线。
 
@@ -93,6 +93,11 @@
 | R65 | 退出码0；16/16通过，失败0，1个测试文件 | `f1c4e16` |
 | R66 | 退出码1；0/1通过，失败1，1个测试文件 | `a1120ae` |
 | R67 | 退出码0；6/6通过，失败0，1个测试文件 | `a1120ae` |
+| R68 | 退出码1；0/1通过，失败1，1个测试文件 | `2125ca9` |
+| R69 | 退出码1；0/1通过，失败1，1个测试文件 | `761304c` |
+| R70 | 退出码0；1/1通过，失败0，1个测试文件 | `761304c` |
+| R71 | 退出码0；14/14通过，失败0，3个测试文件 | `761304c` |
+| R72 | 退出码0；3/3通过，失败0，1个测试文件 | `761304c` |
 
 R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯函数探针；R5复跑分页修复回归，R6是QA第二批6项独立P0探针；R7/R8为QA-F01修复的API/Web及iOS组件定向复跑；R9是第三批12项独立边界探针，R10/R11复跑解除准备，R12为QA新增真实备份中E0导出的恢复后撤销分支；R13为饭后及群/私聊权限独立探针；R14保留QA-F03修前2失败，R15为0518d45修后的12项独立探针复验，R16为身份模块26项受影响HTTP回归（包括fresh会话下未来proof拒绝），不能删除修前结果或把历史失败当当前通过；R17为举报本人回执及撤授权重放3项独立HTTP/PG探针，撤session/DELETING状态通过受控数据库夹具设置。R18为安排锁、历史截止补算、开始名单及预约隔离6项独立PG/HTTP探针，删除仅屏障状态，完整删除名单断言仍未通过。R19/R20独立定向复跑5a37fdc关闭顺序单测及真实PG负载退出，未替代远端CI结果。R21为删除实际HTTP/本地purge、故障rollback及用户锁消息/审批竞态5项独立探针，生产日志脱敏仍待完整捕获。R22为ac09af4固定版本的11项独立受控AI/controller/HTTP探针，仅035/036/037具完整预期证据；R23为该版本Claude发现修复28项API/DB独立定向复验。R24保留QA-F04修前停用后仍发布失败；R25为8e2b908修后7项独立停用/费用/reaper探针，R26为22项受影响DB回归，F04定向关闭而043仍有未测断言。R27保留QA-F05修前Web失败，T001另为已分类夹具错误；R28/R29为f298048独立session/PG及Web组件各3项，R30为iOS manager17项定向回归；F05在NEW与TTL/偏好删除差异范围关闭。R31为公开DTO/后台角色/CSV授权及跨快照游标和大序号4项独立HTTP/PG探针，公式转义另覆盖formatter，不声称Excel实际执行。R32保留QA-F06 CLI入口失败，R33保留QA-F07原生协议失败；R34/R35固定b76c593独立8+32项验证CLI修复，R36固定1080993独立iOS49项验证桥接修复。完整加入用户路径仍NOT_RUN，不据组件通过升级。不能将这些数量相加当作独立业务用例数；R5与R1有重复，R2也不是原生设备验收。逐项测试名、状态、时间和命令见[机器证据](evidence/2026-10-21/automated-runs.json)。R4是质量检查而非业务用例。
 
@@ -286,12 +291,12 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-AI-043 · 未配置预算和停用 | PASS | R48真实PG/API五种配置：预算全缺、缺日、缺月、调用上限未配置（configure拒绝且不保存）、预算停用，均FAILED/无可用结果且provider计数0，ai_calls0、quota成功/占位0。每种情况下本人偏好GET/DELETE与已建饭局GET/PATCH仍成功。R25在途及结算后停用不发布证据复用，已核8e2b908至739d6da AI生产源码无变化；不重复已通过整套。；证据 R48-T001, R48-T002, R48-T003, R48-T004, R48-T005, R25-T001, R25-T004 |
 | QA-AI-044 · 对账权限与幂等 | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R1-T490 |
 | QA-AI-045 · 长度token及deadline | PASS | F10修复49d22b6正式独立R54原两探针及新增恢复路径3项通过：真实paste2001完整保留、inline报错、空白0请求、原文首尾空白2001不能trim绕过、缩短2000后明确发送一次；R55 iOS manager/widget24项包含原文保留/长度/恢复通过，非真机。R53服务器空白/2000/2001、16001输入token、真实适配器输出2001tokens安全失败且计费、deadline≤30秒；R25超时及迟到不发布复用。R52两项原红永久保留。；证据 R53-T001, R53-T002, R53-T003, R25-T002, R54-T001, R54-T002, R54-T003, R55-T001, R55-T002, R55-T003, R55-T004, R55-T005, R55-T006, R55-T007, R55-T008, R55-T009, R55-T010, R55-T011, R55-T012, R55-T013, R55-T014, R55-T015, R55-T016, R55-T017, R55-T018, R55-T019, R55-T020, R55-T021, R55-T022, R55-T023, R55-T024 |
-| QA-CODE-001 · 生产隔离 | NOT_RUN | 本地生产实现尚需实际执行：检查生产构建环境变量和imports → 尝试启用TEST_AUTH/FIXTURE_PLACES/固定OTP/review工具。尚缺逐项证据：生产启动拒绝fixture；不整体迁移5300行原型、模拟键盘/付款及旧shared权威。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-CODE-001 · 生产隔离 | NOT_RUN | R72初步静态与隔离变异检查3项通过，Web/iOS/admin及API当前typecheck通过；但涉及F13未提交logger候选的源码盘点，待正式SHA再固定复验。仍未授予本用例PASS，具体待覆盖预期见remainingExpected。 |
 | QA-CODE-002 · 数据库真约束 | NOT_RUN | 本地生产实现尚需实际执行：迁移空库/升级库 → 直接SQL插重复活跃申请、越界人数、重复message和非法FK。尚缺逐项证据：Postgres CHECK/partial unique/FK真实拒绝；不只靠TS类型；迁移回滚兼容不丢数据。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-CODE-003 · 事务与锁顺序 | FAIL | R66独立实际HTTP/PG故障注入：无成员饭局PATCH description，控制Places.details挂起；第二真实连接SELECT同meal FOR UPDATE NOWAIT得55P03，而要求可取得锁。释放提供方后PATCH200，证明业务输入合法但等待外部依赖期间持有meal锁。源码editArrangement在lockMeal及DB时钟后await venues.details；publish也在业务事务内等待，但未外推为已动态证实持meal锁。登记QA-F12 S2/P1。其余全写命令锁顺序/时钟审阅仍缺，不因局部修复自动给本条PASS。；证据 R66-T001 |
+| QA-CODE-003 · 事务与锁顺序 | NOT_RUN | F12修复761304c：独立R70原provider挂起/NOWAIT探针通过；R71 create/edit/confirm等待无actor/meal锁，成功/404重放不依赖provider，503同key恢复；准备期间version/venue/profile/actor/deadline变化均拒绝且无改写。已知拒绝首次/封存同JSON和Retry-After、COMMIT40001重试后不运行旧attempt after也通过。F12 targeted关闭、R66原红保留；全写命令锁顺序及DB时钟审阅尚未完成，本CODE003回NOT_RUN而非PASS。；证据 R70-T001, R71-T001, R71-T002, R71-T003, R71-T004, R71-T005, R71-T006, R71-T007, R71-T008, R71-T009, R71-T010, R71-T011, R71-T012, R71-T013, R71-T014 |
 | QA-CODE-004 · 权限和响应schema | NOT_RUN | 本地生产实现尚需实际执行：检查所有route的认证、角色、输入/响应schema → 绕过allowedActions直接请求。尚缺逐项证据：服务端独立校验；不信actorId；禁止整行序列化；错误不泄密。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-CODE-005 · SDK契约漂移 | NOT_RUN | core:check生成物漂移检查通过；尚未在隔离副本制造漂移，验证负向失败。 |
-| QA-CODE-006 · 日志与存储泄露 | NOT_RUN | secret scan通过，但不等于实际日志全路径及运行时存储字段审计完成。 |
+| QA-CODE-005 · SDK契约漂移 | NOT_RUN | R72初步静态与隔离变异检查3项通过，Web/iOS/admin及API当前typecheck通过；但涉及F13未提交logger候选的源码盘点，待正式SHA再固定复验。仍未授予本用例PASS，具体待覆盖预期见remainingExpected。 |
+| QA-CODE-006 · 日志与存储泄露 | FAIL | 新增QA-F13：实际Node API子进程启用原Fastify/Pino info管道，合法TestIDP GOOGLE回调200，父进程内存捕获日志code=true/state=true/email=false。默认req.url原样记录GET callback query，header redact不覆盖URL。所有凭据为合成，原日志未输出或公开，仅记录布尔泄露结果。R61 receipt POST及异常消息日志检查仍局部通过，不外推OAuth路径；待修复及完整日志/存储审阅。；证据 R68-T001, R69-T001 |
 | QA-CODE-007 · 测试可信度 | NOT_RUN | 本地生产实现尚需实际执行：审查skip/only、无断言、过度mock、随机sleep和截图更新 → 重跑最小反例。尚缺逐项证据：关键DB用双连接barrier；mock不关闭真实门槛；断言来自需求，不降低标准掩盖缺陷。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-GATE-001 · G-AUTH真实三方式 | BLOCKED | 缺真实EMAIL/Google/Apple身份提供方、回调/PKCE及映射联调证据。开发先核对已有配置及本地回调测试，只有确实缺账号/域名配置/凭据时列明用户操作；不发真实身份请求替代授权。 |
 | QA-GATE-002 · G-PLACES任意餐厅 | BLOCKED | 缺真实Google Places/地图key与Map ID配置下的placeId、坐标、署名和许可验收证据。开发先做适配及失效/缺配置回退测试，并列出真实配置依赖。 |

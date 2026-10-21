@@ -14865,7 +14865,7 @@
         "生产启动拒绝fixture",
         "不整体迁移5300行原型、模拟键盘/付款及旧shared权威"
       ],
-      "actual": "本地生产实现尚需实际执行：检查生产构建环境变量和imports → 尝试启用TEST_AUTH/FIXTURE_PLACES/固定OTP/review工具。尚缺逐项证据：生产启动拒绝fixture；不整体迁移5300行原型、模拟键盘/付款及旧shared权威。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "R72初步静态与隔离变异检查3项通过，Web/iOS/admin及API当前typecheck通过；但涉及F13未提交logger候选的源码盘点，待正式SHA再固定复验。仍未授予本用例PASS，具体待覆盖预期见remainingExpected。"
     },
     {
       "id": "QA-CODE-002",
@@ -14955,9 +14955,23 @@
       "priority": "P0",
       "plannedStage": "review",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "NOT_RUN",
       "evidence": [
-        "R66-T001"
+        "R70-T001",
+        "R71-T001",
+        "R71-T002",
+        "R71-T003",
+        "R71-T004",
+        "R71-T005",
+        "R71-T006",
+        "R71-T007",
+        "R71-T008",
+        "R71-T009",
+        "R71-T010",
+        "R71-T011",
+        "R71-T012",
+        "R71-T013",
+        "R71-T014"
       ],
       "relatedAutomatedAssertions": [
         "R1-T242",
@@ -15024,15 +15038,29 @@
         "R1-T567",
         "R1-T568",
         "R1-T569",
-        "R66-T001"
+        "R66-T001",
+        "R70-T001",
+        "R71-T001",
+        "R71-T002",
+        "R71-T003",
+        "R71-T004",
+        "R71-T005",
+        "R71-T006",
+        "R71-T007",
+        "R71-T008",
+        "R71-T009",
+        "R71-T010",
+        "R71-T011",
+        "R71-T012",
+        "R71-T013",
+        "R71-T014"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
         "固定user→meal→pair→conversation→AI→privacy最终锁（全写命令审阅尚未完成）",
-        "网络不在长事务（已复现餐厅提供方等待时持有meal行锁）",
         "拿锁后DB时钟（全写命令审阅尚未完成）"
       ],
-      "actual": "R66独立实际HTTP/PG故障注入：无成员饭局PATCH description，控制Places.details挂起；第二真实连接SELECT同meal FOR UPDATE NOWAIT得55P03，而要求可取得锁。释放提供方后PATCH200，证明业务输入合法但等待外部依赖期间持有meal锁。源码editArrangement在lockMeal及DB时钟后await venues.details；publish也在业务事务内等待，但未外推为已动态证实持meal锁。登记QA-F12 S2/P1。其余全写命令锁顺序/时钟审阅仍缺，不因局部修复自动给本条PASS。",
+      "actual": "F12修复761304c：独立R70原provider挂起/NOWAIT探针通过；R71 create/edit/confirm等待无actor/meal锁，成功/404重放不依赖provider，503同key恢复；准备期间version/venue/profile/actor/deadline变化均拒绝且无改写。已知拒绝首次/封存同JSON和Retry-After、COMMIT40001重试后不运行旧attempt after也通过。F12 targeted关闭、R66原红保留；全写命令锁顺序及DB时钟审阅尚未完成，本CODE003回NOT_RUN而非PASS。",
       "defectIds": [
         "QA-F12"
       ]
@@ -15199,7 +15227,7 @@
         "漂移被检查捕获",
         "Web/iOS/admin共享同一DTO与错误类型"
       ],
-      "actual": "core:check生成物漂移检查通过；尚未在隔离副本制造漂移，验证负向失败。"
+      "actual": "R72初步静态与隔离变异检查3项通过，Web/iOS/admin及API当前typecheck通过；但涉及F13未提交logger候选的源码盘点，待正式SHA再固定复验。仍未授予本用例PASS，具体待覆盖预期见remainingExpected。"
     },
     {
       "id": "QA-CODE-006",
@@ -15207,8 +15235,11 @@
       "priority": "P0",
       "plannedStage": "review",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "R68-T001",
+        "R69-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T242",
         "R1-T243",
@@ -15273,15 +15304,20 @@
         "R1-T566",
         "R1-T567",
         "R1-T568",
-        "R1-T569"
+        "R1-T569",
+        "R68-T001",
+        "R69-T001"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "无OTP/token/email/chat/AI原文/偏好值",
-        "仅允许最小元数据",
-        "合成评测原文另隔离"
+        "无OTP/token/email/chat/AI原文/偏好值（OAuth code/state已实际进入日志）",
+        "仅允许最小元数据（原始req.url含敏感query）",
+        "合成评测原文另隔离（全面日志/存储审阅尚待）"
       ],
-      "actual": "secret scan通过，但不等于实际日志全路径及运行时存储字段审计完成。"
+      "actual": "新增QA-F13：实际Node API子进程启用原Fastify/Pino info管道，合法TestIDP GOOGLE回调200，父进程内存捕获日志code=true/state=true/email=false。默认req.url原样记录GET callback query，header redact不覆盖URL。所有凭据为合成，原日志未输出或公开，仅记录布尔泄露结果。R61 receipt POST及异常消息日志检查仍局部通过，不外推OAuth路径；待修复及完整日志/存储审阅。",
+      "defectIds": [
+        "QA-F13"
+      ]
     },
     {
       "id": "QA-CODE-007",
@@ -21779,7 +21815,8 @@
     "QA-F09": "CLOSED_TARGETED_QA",
     "QA-F10": "CLOSED_TARGETED_QA",
     "QA-F11": "CLOSED_TARGETED_QA",
-    "QA-F12": "OPEN"
+    "QA-F12": "CLOSED_TARGETED_QA",
+    "QA-F13": "OPEN"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
