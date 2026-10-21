@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 139,
-    "PASS": 66,
+    "NOT_RUN": 137,
+    "PASS": 68,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -6178,8 +6178,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R17-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T162",
         "R1-T163",
@@ -6201,15 +6203,16 @@
         "R1-T506",
         "R1-T536",
         "R1-T537",
-        "R1-T538"
+        "R1-T538",
+        "R17-T001"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "A只见已收到/处理中/已回复允许结果",
-        "B拒绝",
-        "无假称已经处理或通知带正文"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "隔离HTTP+真实PG独立执行：举报本人回执RECEIVED→IN_REVIEW→RESPONDED，其他主体猜ID404；所有本人回执及双方通知无私密正文，无虚构已处理状态。支持访问仅用于合成case授权，未发生真实投诉处理。"
     },
     {
       "id": "QA-PRIVACY-002",
@@ -18059,8 +18062,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R17-T002",
+        "R17-T003"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T242",
         "R1-T243",
@@ -18179,13 +18185,15 @@
         "R3-T026",
         "R3-T027",
         "R3-T028",
-        "R3-T029"
+        "R3-T029",
+        "R17-T002",
+        "R17-T003"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "不能用旧响应取私密数据或恢复业务权限"
+      "coveredExpectedIndexes": [
+        0
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "独立HTTP+PG：成功缓存响应后撤case grant、撤support角色、撤session family及actor置DELETING均拒绝同key重放，不泄露旧回执/私密内容、不新增举报或重复改case。撤session与DELETING用受控DB夹具，不代替完整退出/删除用户路径。"
     },
     {
       "id": "QA-API-007",

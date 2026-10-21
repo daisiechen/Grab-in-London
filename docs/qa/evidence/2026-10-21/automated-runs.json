@@ -7921,6 +7921,43 @@
           "durationMs": 6.813333000000057
         }
       ]
+    },
+    {
+      "id": "R17",
+      "testedCommit": "2f665ece5920c2d9d5aadba023cb234019978829",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-report.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-report-fixed.json",
+      "startedAt": "2026-10-21T08:11:14.628000+00:00",
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R17-T001",
+          "run": "R17",
+          "path": "scripts/qa-independent-report.api.test.ts",
+          "title": "independent report privacy and revoked replay QA-PRIVACY-001 receipt moves RECEIVED IN_REVIEW RESPONDED without exposing report details or notifying the target",
+          "status": "passed",
+          "durationMs": 141.83333400000004
+        },
+        {
+          "id": "R17-T002",
+          "run": "R17",
+          "path": "scripts/qa-independent-report.api.test.ts",
+          "title": "independent report privacy and revoked replay QA-API-006 cached support response cannot bypass grant removal or role removal",
+          "status": "passed",
+          "durationMs": 16.935999999999922
+        },
+        {
+          "id": "R17-T003",
+          "run": "R17",
+          "path": "scripts/qa-independent-report.api.test.ts",
+          "title": "independent report privacy and revoked replay QA-API-006 cached own report cannot bypass session family revocation or deleting actor",
+          "status": "passed",
+          "durationMs": 22.529457999999977
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -7931,7 +7968,8 @@
     "scripts/qa-independent-restore.api.test.ts": "be3dd382409f020801bd97444357bba6a7f5b6a896716f4f3f332e421d0e762e",
     "scripts/qa-independent-post-chat.api.test.ts": "2feb9b5bec808a58e3c572de080881f134e79be6ea66d0259770b3cbd359d961",
     "scripts/qa-independent-reauth.api.test.ts": "ad5695f82a87bc7a565081bc9f1590225cb0427c1087d594df86e365803bc027",
-    "scripts/qa-independent-reauth-boundary.api.test.ts": "4e81f45d1d77c294b7d43c457c796900c1318d1e0d7d682bea839b2c6e35839c"
+    "scripts/qa-independent-reauth-boundary.api.test.ts": "4e81f45d1d77c294b7d43c457c796900c1318d1e0d7d682bea839b2c6e35839c",
+    "scripts/qa-independent-report.api.test.ts": "8cfd630617d7e3ae17bf6f60e88b9f7361f111c2d1063fab85c663383a667580"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。",
   "runtimeSnapshotVerification": {
@@ -7949,6 +7987,10 @@
   },
   "scriptSetupCorrections": [
     "R12初次根目录包别名无法加载，0测试，属于QA脚本导入错误而非产品失败；改用相对源码导入后1项实际执行通过。",
-    "R13首次25/26：QA误认为消息client key按会话唯一；核对正式data-and-command-contract§1为unique(sender_id,client_message_id)后改为严格断言跨会话409且不泄露原ID/正文，并核验新key可发；29项最终通过。产品行为未修改。"
+    "R13首次25/26：QA误认为消息client key按会话唯一；核对正式data-and-command-contract§1为unique(sender_id,client_message_id)后改为严格断言跨会话409且不泄露原ID/正文，并核验新key可发；29项最终通过。产品行为未修改。",
+    {
+      "run": "R17",
+      "detail": "首次QA夹具仅写session revoked_at触发数据库撤销原因一致性约束；修正为同时写LOGOUT后3项通过。该失败为夹具错误，未进入产品撤权请求，不计产品缺陷。SESSION/DELETING状态通过数据库受控设置，非完整退出/删除用户路径。"
+    }
   ]
 }
