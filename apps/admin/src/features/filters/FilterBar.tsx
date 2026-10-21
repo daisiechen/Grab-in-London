@@ -3,7 +3,7 @@ import { FilterPopover, MultiSelect } from '../../components/controls.tsx';
 import { Icon } from '../../components/Icon.tsx';
 import type { Translate } from '../../i18n.ts';
 import {
-  advancedCount, checkDates, effectiveDates, rangeEnding, SEGMENTS_SUPPORTED, SET_FIELDS,
+  advancedCount, checkDates, emptyFilters, LEGACY_BUDGET_SUPPORTED, effectiveDates, rangeEnding, SEGMENTS_SUPPORTED, SET_FIELDS,
   type AdminFilters, type BudgetBand, type DateCheck, type LanguageFilter, type SetField, type SizeFilter,
 } from '../../state/filters.ts';
 
@@ -40,7 +40,7 @@ export function FilterBar({ t, filters, snapshotDay, route, onChange }: {
   const labels = optionLabels(t);
   const names = fieldNames(t);
   const range = (days: number) => onChange({ ...filters, ...rangeEnding(snapshotDay, days) });
-  const reset = () => onChange({ from: '', to: '', areas: [], sources: [], segments: [], languages: [], sizes: [], budgetBands: [] });
+  const reset = () => onChange(emptyFilters());
   const display = (field: SetField, value: string) =>
     (field === 'languages' || field === 'sizes' || field === 'budgetBands' || field === 'segments'
       ? (labels[field] as [string, string][]).find(([k]) => k === value)?.[1]
@@ -93,7 +93,18 @@ export function FilterBar({ t, filters, snapshotDay, route, onChange }: {
             <Icon name="close" size={12} />
           </button>
         ))}
+        {filters.legacyBudgetMax && (
+          <button className="filter-chip" aria-label={`${t('移除筛选', 'Remove filter')}: ${t('旧预算上限', 'Legacy budget cap')}`} onClick={() => onChange({ ...filters, legacyBudgetMax: null })}>
+            {t('预算', 'Budget')}: ≤ £{filters.legacyBudgetMax}
+            <Icon name="close" size={12} />
+          </button>
+        )}
       </div>
+      {filters.legacyBudgetMax && !LEGACY_BUDGET_SUPPORTED && (
+        <p className="inline-error" role="alert">
+          {t('旧链接的预算上限（≤ £' + filters.legacyBudgetMax + '）尚未被服务端支持，当前数值未按该条件筛选。', 'The legacy budget cap (≤ £' + filters.legacyBudgetMax + ') is not yet supported by the server; numbers shown are not filtered by it.')}
+        </p>
+      )}
       {dirty && !error && <p className="draft-note">{t('日期尚未应用，图表仍使用上次范围。', 'Dates not applied; charts still use the previous range.')}</p>}
       {error && (
         <p className="inline-error" role="alert">

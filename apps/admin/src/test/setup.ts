@@ -7,6 +7,9 @@ if (typeof HTMLDialogElement !== 'undefined' && !HTMLDialogElement.prototype.sho
   HTMLDialogElement.prototype.close = function close(this: HTMLDialogElement) { this.removeAttribute('open'); };
 }
 
+// Test-only shim: jsdom logs 'not implemented' for scrollTo.
+window.scrollTo = (() => undefined) as typeof window.scrollTo;
+
 afterEach(() => {
   cleanup();
   history.replaceState(null, '', '/');

@@ -1,14 +1,19 @@
-import { useCallback, useState } from 'react';
-import type { AdminApi, AdminPageName } from './api/admin-api.ts';
+import { ADMIN_DRILLDOWN_TARGETS } from '@fancy/contracts';
+import { useCallback, useEffect, useState } from 'react';
+import type { AdminApi, AdminPageName, DrilldownTarget } from './api/admin-api.ts';
 import { DetailDialog } from './components/DetailDialog.tsx';
 import { Icon } from './components/Icon.tsx';
-import { findMetric, MetricDefinition, MetricDictionary, metricCopy } from './features/dictionary/MetricDictionary.tsx';
+import { listTitle, metricTitle } from './dictionary/labels.ts';
+import { findMetric, MetricDefinition } from './features/dictionary/MetricDictionary.tsx';
+import { DrilldownTable, type Binding } from './features/drilldown/DrilldownTable.tsx';
+import { ExportButton } from './features/exports/ExportButton.tsx';
 import { FilterBar } from './features/filters/FilterBar.tsx';
 import { SnapshotPicker } from './features/snapshot/SnapshotPicker.tsx';
 import { FailureScreen } from './features/status/FailureScreen.tsx';
 import { formatLondonTime, makeT, type Language, type Translate } from './i18n.ts';
+import { openRow, PageBody, type Detail } from './pages/pages.tsx';
 import { ConsoleProvider, useConsole } from './state/console.tsx';
-import type { AdminFilters } from './state/filters.ts';
+import { emptyFilters, type AdminFilters } from './state/filters.ts';
 import { PAGES, useUrlState } from './state/url.ts';
 
 const navNames = (t: Translate): Record<AdminPageName, string> => ({
@@ -37,15 +42,25 @@ export default function App({ api }: { api: AdminApi }) {
   );
 }
 
+/** Detail drawer entries carry the binding they were opened with, so nested paging never changes snapshot. */
+type OpenDetail = Detail & { binding: Binding | null };
+
 function Shell({ lang, page, filters, setLang, setFilters, go }: {
   lang: Language; page: AdminPageName; filters: AdminFilters;
   setLang(lang: Language): void; setFilters(filters: AdminFilters): void; go(page: AdminPageName): void;
 }) {
   const t = makeT(lang);
   const c = useConsole();
-  const [metricId, setMetricId] = useState<string | null>(null);
+  const [details, setDetails] = useState<OpenDetail[]>([]);
+  const [evidence, setEvidence] = useState('all');
   const nav = navNames(t);
-  const metric = metricId ? findMetric(metricId) : undefined;
+  const binding: Binding | null = c.binding?.filterHash ? { snapshotId: c.binding.snapshotId, filterHash: c.binding.filterHash, query: c.binding.query } : null;
+  const open = (detail: Detail) => setDetails((prev) => [...prev, { ...detail, binding }]);
+  const close = () => setDetails([]);
+  const detail = details.at(-1);
+
+  // Changing page or snapshot closes drawers (their binding belongs to the previous view).
+  useEffect(() => { setDetails([]); window.scrollTo?.({ top: 0 }); }, [page, c.snapshot?.id]);
 
   return (
     <div className="app-shell">
@@ -88,17 +103,15 @@ function Shell({ lang, page, filters, setLang, setFilters, go }: {
               <h1>{nav[page]}<span className="heading-dot">.</span></h1>
               <p>{descriptions(t)[page]}</p>
             </div>
-            {/* G5 pending: export scope (summary.<page> or metric) not yet in the contract. */}
-            <button className="button export-button" disabled title={t('导出范围待接口契约确认', 'Export scope pending API contract')}>
-              <Icon name="download" size={17} />{t('导出指标', 'Export metrics')}
-            </button>
+            <ExportButton scope={`summary.${page}`} binding={c.gate.status === 'ready' && c.pageState.status === 'ready' ? binding : null} t={t} />
           </div>
           {c.gate.status === 'failed' ? (
             <FailureScreen failure={c.gate.failure} t={t} onRetry={() => location.reload()} />
           ) : c.gate.status === 'loading' ? (
             <p role="status">{t('正在验证访问权限…', 'Checking access…')}</p>
           ) : (
-            <Body t={t} lang={lang} page={page} filters={filters} setFilters={setFilters} go={go} openMetric={setMetricId} />
+            <Body t={t} lang={lang} page={page} filters={filters} setFilters={setFilters} go={go} binding={binding}
+              open={open} evidence={evidence} setEvidence={setEvidence} />
           )}
           <footer className="page-footer">
             <span>Fancy · {t('让真实见面成为迭代的起点', 'Build from real meetings')}</span>
@@ -107,18 +120,45 @@ function Shell({ lang, page, filters, setLang, setFilters, go }: {
         </main>
       </div>
       <SnapshotPicker t={t} lang={lang} />
-      {metric && (
-        <DetailDialog t={t} title={metricCopy(metric, 'title', lang)} onClose={() => setMetricId(null)}>
-          <MetricDefinition metric={metric} t={t} lang={lang} definitionVersion={c.snapshot?.definitionVersion ?? null} />
+      {detail && c.gate.status === 'ready' && (
+        <DetailDialog t={t} onClose={close} {...(details.length > 1 ? { onBack: () => setDetails((prev) => prev.slice(0, -1)) } : {})}
+          title={detail.kind === 'metric' ? metricTitle(t, detail.id) : detail.title}>
+          <DetailContent key={details.length} detail={detail} t={t} lang={lang} open={open} />
         </DetailDialog>
       )}
     </div>
   );
 }
 
-function Body({ t, lang, page, filters, setFilters, go, openMetric }: {
-  t: Translate; lang: Language; page: AdminPageName; filters: AdminFilters;
-  setFilters(filters: AdminFilters): void; go(page: AdminPageName): void; openMetric(id: string): void;
+function DetailContent({ detail, t, lang, open }: { detail: OpenDetail; t: Translate; lang: Language; open(d: Detail): void }) {
+  const c = useConsole();
+  const metric = detail.kind === 'metric' ? findMetric(detail.id) : undefined;
+  const target: DrilldownTarget | null = detail.kind === 'list' ? detail.target
+    : (ADMIN_DRILLDOWN_TARGETS as readonly string[]).includes(detail.id) ? (detail.id as DrilldownTarget) : null;
+  const rows = detail.kind === 'list' ? detail.rows : {};
+  return (
+    <>
+      {metric && <MetricDefinition metric={metric} t={t} lang={lang} definitionVersion={c.snapshot?.definitionVersion ?? null} />}
+      {detail.kind === 'list' && (
+        <p className="method-note">{t('匿名业务编号；不展示联系方式、聊天内容或私密互选。', 'Pseudonymous business ID. Contact details, chat content and private choices are omitted.')}</p>
+      )}
+      {detail.binding && target ? (
+        <>
+          <h3>{listTitle(t, target)}</h3>
+          <DrilldownTable target={target} binding={detail.binding} rows={rows} caption={listTitle(t, target)} t={t} lang={lang}
+            onRow={(row) => openRow({ open, t }, row.attributes)} />
+          <ExportButton scope={target} binding={detail.binding} rows={rows} t={t} className="text-button" label={t('导出此明细', 'Export these records')} />
+        </>
+      ) : target && (
+        <p className="method-note">{t('快照数据加载后可查看来源明细。', 'Source records are available once snapshot data has loaded.')}</p>
+      )}
+    </>
+  );
+}
+
+function Body({ t, lang, page, filters, setFilters, go, binding, open, evidence, setEvidence }: {
+  t: Translate; lang: Language; page: AdminPageName; filters: AdminFilters; setFilters(filters: AdminFilters): void;
+  go(page: AdminPageName): void; binding: Binding | null; open(d: Detail): void; evidence: string; setEvidence(v: string): void;
 }) {
   const c = useConsole();
   if (!c.snapshot || !c.snapshotDay) {
@@ -134,6 +174,7 @@ function Body({ t, lang, page, filters, setFilters, go, openMetric }: {
     );
   }
   const ps = c.pageState;
+  const reset = () => setFilters(emptyFilters());
   return (
     <>
       <FilterBar t={t} filters={filters} snapshotDay={c.snapshotDay} route={page} onChange={setFilters} />
@@ -153,14 +194,12 @@ function Body({ t, lang, page, filters, setFilters, go, openMetric }: {
       )}
       {ps.status === 'failed' ? (
         <FailureScreen failure={ps.failure} t={t} onRetry={() => void c.refreshSnapshots()} />
-      ) : ps.status !== 'ready' ? (
+      ) : ps.status !== 'ready' || !binding ? (
         <p role="status">{t('正在加载快照数据…', 'Loading snapshot data…')}</p>
       ) : (
         <section aria-label={t('页面内容', 'Page content')} data-snapshot={ps.data.snapshot.id} data-filter-hash={ps.data.filterHash}>
-          {/* G3/G4 pending: per-page metric/series keys and drilldown list keys are not in the contract yet,
-              so no page body is rendered rather than inventing keys. */}
-          <p className="method-note">{t('本页图表待指标键契约（G3/G4）确认后接入。', 'Charts for this page connect once the metric key contract (G3/G4) lands.')}</p>
-          {page === 'quality' && <MetricDictionary t={t} lang={lang} onOpen={openMetric} />}
+          <PageBody page={page} data={ps.data} binding={binding} t={t} lang={lang} open={open} go={go} reset={reset}
+            evidence={evidence} setEvidence={setEvidence} openMetric={(id) => open({ kind: 'metric', id })} />
         </section>
       )}
     </>

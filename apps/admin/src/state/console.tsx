@@ -11,6 +11,7 @@ export type PageState =
   | { status: 'failed'; failure: Failure };
 
 export interface ConsoleState {
+  api: AdminApi;
   /** Session/role gate: a blocking failure hides every data surface. */
   gate: { status: 'loading' } | { status: 'ready' } | { status: 'failed'; failure: Failure };
   session: SessionInfo | null;
@@ -143,6 +144,7 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
 
   const newest = newestSealed(snapshots.filter((s) => !revoked.has(s.id)));
   const value: ConsoleState = {
+    api,
     gate,
     session,
     snapshots,

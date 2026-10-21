@@ -15,14 +15,14 @@ export type ExportScope = RequestOf<'adminExport'>['body']['metric'];
 export type RowQuery = Omit<NonNullable<RequestOf<'adminDrilldown'>['query']>, 'snapshotId' | 'filterHash' | 'cursor' | 'limit' | keyof FilterQuery>;
 
 /**
- * The admin console's only data path: typed SDK calls to the API. No fixtures, no local metric
+ * The admin console's only data path: typed SDK calls to the API. No canned sample data, no local metric
  * computation and no browser-side persistence of business data.
  */
 export interface AdminApi {
   session(): Promise<SessionInfo>;
   snapshots(): Promise<SnapshotInfo[]>;
   page(page: AdminPageName, snapshotId: string, query: FilterQuery): Promise<AdminPageData>;
-  drilldown(metric: DrilldownTarget, snapshotId: string, filterHash: string, query: FilterQuery, rows?: RowQuery, cursor?: string): Promise<DrilldownPage>;
+  drilldown(metric: DrilldownTarget, snapshotId: string, filterHash: string, query: FilterQuery, rows?: RowQuery, page?: { cursor?: string | undefined; limit?: number }): Promise<DrilldownPage>;
   /** One user intent = one idempotency key; the caller keeps it for retries of the same intent. */
   createExport(input: { snapshotId: string; metric: ExportScope; filters: FilterQuery & RowQuery }, idempotencyKey?: string): Promise<ExportTicket>;
   downloadExport(exportId: string): Promise<string>;
@@ -57,10 +57,10 @@ export function createAdminApi(options: AdminApiOptions = {}): AdminApi {
       const { data } = await client.call('adminPage', { params: { page }, query: { snapshotId, ...query } });
       return data;
     },
-    drilldown(metric, snapshotId, filterHash, query, rows = {}, cursor) {
+    drilldown(metric, snapshotId, filterHash, query, rows = {}, page = {}) {
       return client.call('adminDrilldown', {
         params: { metric },
-        query: { snapshotId, filterHash, ...query, ...rows, ...(cursor ? { cursor } : {}) },
+        query: { snapshotId, filterHash, ...query, ...rows, ...(page.cursor ? { cursor: page.cursor } : {}), ...(page.limit ? { limit: page.limit } : {}) },
       });
     },
     async createExport(input, idempotencyKey = newIntentKey()) {

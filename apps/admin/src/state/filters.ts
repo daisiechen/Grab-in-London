@@ -25,7 +25,17 @@ export interface AdminFilters {
   languages: LanguageFilter[];
   sizes: SizeFilter[];
   budgetBands: BudgetBand[];
+  /**
+   * Legacy prototype threshold link (`budget=25`/`budget=30` meaning ≤ £25 / ≤ £30). Measurement contract §5
+   * keeps its threshold meaning; the API param (budgetUpToPence) is pending, so it is preserved in the URL,
+   * shown as a chip with a not-applied warning, and NOT sent or approximated by bands.
+   */
+  legacyBudgetMax: LegacyBudgetMax | null;
 }
+export const LEGACY_BUDGET_MAX = ['25', '30'] as const;
+export type LegacyBudgetMax = (typeof LEGACY_BUDGET_MAX)[number];
+/** Pending contract param: the legacy threshold cannot be sent yet. */
+export const LEGACY_BUDGET_SUPPORTED = false;
 
 export type SetField = 'areas' | 'sources' | 'segments' | 'languages' | 'sizes' | 'budgetBands';
 export const SET_FIELDS: readonly SetField[] = ['areas', 'sources', 'segments', 'languages', 'sizes', 'budgetBands'];
@@ -34,7 +44,7 @@ export const SET_FIELDS: readonly SetField[] = ['areas', 'sources', 'segments', 
 export const SEGMENTS_SUPPORTED = true;
 
 export const emptyFilters = (): AdminFilters => ({
-  from: '', to: '', areas: [], sources: [], segments: [], languages: [], sizes: [], budgetBands: [],
+  from: '', to: '', areas: [], sources: [], segments: [], languages: [], sizes: [], budgetBands: [], legacyBudgetMax: null,
 });
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -63,8 +73,6 @@ const legacyLanguages = (values: string[]): string[] => values.flatMap((v): read
 });
 const legacySizes = (values: string[]): string[] =>
   values.flatMap((v) => (v === 'duo' ? ['2'] : v === 'group' ? ['3', '4', '5', '6'] : [v]));
-/** Old "≤ £30" equals the [0,20]∪(20,30] bands; "≤ £25" has no exact band and is dropped (reported as gap G7). */
-const legacyBudgets = (values: string[]): string[] => values.flatMap((v) => (v === '30' ? ['0-20', '20-30'] : [v]));
 
 export interface UrlState {
   filters: AdminFilters;
@@ -89,7 +97,8 @@ export function parseSearch(search: string): UrlState {
     segments: ordered(SEGMENTS, list(pick('segments', 'segment'))),
     languages: ordered(LANGUAGE_FILTERS, legacyLanguages(list(pick('languages', 'language')))),
     sizes: ordered(SIZE_FILTERS, legacySizes(list(pick('sizes', 'size')))),
-    budgetBands: ordered(BUDGET_BANDS, legacyBudgets(list(pick('budgetBands', 'budget')))),
+    budgetBands: ordered(BUDGET_BANDS, list(pick('budgetBands', 'budget'))),
+    legacyBudgetMax: params.has('budgetBands') ? null : (LEGACY_BUDGET_MAX.find((v) => list(params.get('budget')).includes(v)) ?? null),
   };
   const snapshot = params.get('snapshot');
   return { filters, lang: params.get('lang') === 'en' ? 'en' : 'zh', snapshotId: snapshot && UUID.test(snapshot) ? snapshot.toLowerCase() : null };
@@ -100,6 +109,7 @@ export function toSearch({ filters, lang, snapshotId }: UrlState): string {
   const params = new URLSearchParams();
   if (filters.from && filters.to) { params.set('from', filters.from); params.set('to', filters.to); }
   for (const field of SET_FIELDS) if (filters[field].length) params.set(field, filters[field].join(','));
+  if (filters.legacyBudgetMax) params.set('budget', filters.legacyBudgetMax);
   params.set('lang', lang);
   if (snapshotId) params.set('snapshot', snapshotId);
   return `?${params}`;
