@@ -304,3 +304,11 @@
 - README已有EXPO_PUBLIC_API_BASE_URL，但原app.config.js未接到Constants.extra.apiBaseUrl；仅将该显式环境值接入extra，未设或空值保持原3000与其他extra/plugins。新增配置回归修前一红、修后两绿，根原生244项通过（/private/tmp/fancy-ios-api-config-tests.log）。不改config.ts或生产身份/网络授权。
 - 负责人在/private/tmp隔离CocoaPods/生成工程，独立合成API61973、新临时PG，不重启B7 API61971/PG/Admin5174。系统Ruby2.6首轮原生扩展缺SDK config.h，继续隔离依赖方案；构建产物和工具依赖不进仓库。实际启动与QA跨端验收仍待完成。
 - 本切片根core:check及Python71通过（/private/tmp/fancy-ios-api-config-{check,python}.log）；仅app.config.js、config.test.ts与本记录提交，邮件F19另批，QA及研究文件保留。配置生效需后续构建/启动验证，不冒称模拟器验收通过。
+
+## QA-F19 邮件死信告警接线（2026-10-21）
+
+- QA固定cc489ef真实临时PG/受控MailProvider原R98两绿一红：8次耗尽转DEAD正确但无告警；原红由68374a9保留。未找到独立SQL监控入口，不将已有job_dead误称邮件覆盖。
+- mailDelivery仅成功转DEAD的UPDATE RETURNING赢家调用onDead，默认及worker显式接同一安全sink，输出mail_dead/outboxId/内部errorCode/attempts/lookupAttempts，不序列化邮箱、recipient、template、正文、refs或供应商异常。后续tick/并发tick不重复，异步observer失败用同安全元数据回退，不撤回已提交DEAD或重发。
+- 8次发送/8次查询/满24小时、非法payload和不可用收件人均覆盖；provider未配置时仍观察历史耗尽但不dispatch新邮件。有效UNKNOWN lookup lease不因第8次已领取被另tick提前转DEAD，未知结果仍只查询，权威NOT_SENT才允许同ID重试。
+- 自有修前5红，修后邮件10项及根完整DB126项通过（/private/tmp/fancy-f19-db.log）；根显式复跑QA原probe3项通过（/private/tmp/fancy-f19-probe.log），未改QA文件/测试收集配置。仅delivery、main、自有dead-letter测试与本记录切片；正式关闭仍交QA固定SHA独立复验，不代表真实邮件供应商告警平台已配置。
+- 最终冻结根core:check、release18及Python71通过（/private/tmp/fancy-f19-{check,release,python}.log）；客户端与API业务未改，沿用最近已验证结果，不冒称本切片重跑。原生配置6b308ce另批已推送，模拟器实际构建仍由原生负责人继续。QA文件及研究修改保留。

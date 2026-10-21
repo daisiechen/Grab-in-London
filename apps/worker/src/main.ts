@@ -6,7 +6,7 @@ import {sealSourceSnapshot} from '../../api/src/admin/snapshots.ts';
 import {UnavailableDeletionSteps} from './deletion/provider.ts';
 import {deletionHandler} from './handlers/deletion.ts';
 import {lifecycleHandler} from './handlers/lifecycle.ts';
-import {mailDelivery,UnavailableMailProvider} from './mail/delivery.ts';
+import {mailDelivery,logMailDead,UnavailableMailProvider} from './mail/delivery.ts';
 import {createRunner,idle} from './runner/runner.ts';
 
 /** One runtime owns job leases; external integrations remain unavailable until configured. */
@@ -16,7 +16,7 @@ export function createWorkerRuntime(pool:Pool,config:CoreConfig){
   'meal.close':lifecycle,'meal.start':lifecycle,'meal.end':lifecycle,
   'account.purge':deletionHandler(pool,new UnavailableDeletionSteps()),
  },onDead:(job,errorCode)=>console.error(JSON.stringify({event:'job_dead',...job,errorCode}))});
- const mail=mailDelivery(pool,new UnavailableMailProvider(),config.environment);
+ const mail=mailDelivery(pool,new UnavailableMailProvider(),config.environment,{onDead:logMailDead});
  let lastSnapshot=0;
  async function tick(){
   if(!await recoveryReady(pool))return {claimed:0,done:0,retried:0,dead:0,lost:0};
