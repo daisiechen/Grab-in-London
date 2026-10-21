@@ -375,3 +375,11 @@
 - 不接受客户端source，不导出adapter名称/Key/原配置，不改导出隐私与快照绑定。来源标识说明当前服务端环境，未声称新增逐行历史数据血缘系统。自有真实PG修前一红/三绿，修后5unit/4API及原ADMIN004探针绿；根整合验证后仅exports模块三文件与本记录提交，QA及研究文件保留。
 - 原生官方headless XCUITest已实际exit0：隔离设备Decline→Discover→Profile→登录→邮箱输入精确回显，入口/private/tmp/fancy-xcui-probe/ENTRY.md，binary来自冻结5b且hash匹配，不冒新SHA完整旅程。新跨端19d受控时钟API61973/origin localhost5177已交QA，旧5b证据保留；正式匹配19d binary另用独立DerivedData构建中，不覆盖QA设备状态。
 - 根unit301/API166/原QA metrics矩阵13及core:check全部通过（/private/tmp/fancy-f28-{unit,api,original,check}.log）。全Python77有两项QA快照一致性失败（probe已改/报告R142等仍更新中），原日志fancy-f28-python.log保留；自有文档结构/引用验证单独通过fancy-f28-documentation.log，不改QA证据或声称全77通过。QA明确让root先提交此生产切片、其批收束后自行再验证。
+
+## QA-F29 AI会话活动锁升级（2026-10-21）
+
+- QA R154使用真实不同PG backend，仅spy暂停已执行原validate的连接，复现同session两activity从meta SHARE升级UPDATE导致40P01；不是mock SQL。原红保留QA文件。本切片仅sessions.ts及自有session-lock-upgrade.db.test.ts，由原AI owner唯一负责。
+- activity/reset在activeSubject→preferenceEpoch后直接取meta UPDATE再privacy SHARE/RAM校验；纯read和finish默认meta SHARE，不更改用户/偏好/隐私屏障。避免先共享后升级，不靠允许死锁或吞错误兜底。
+- 自有真实双连接：第一完成实际validate后持锁，第二在pg_stat_activity观察到meta FOR UPDATE等待，释放第一后两成功；activity/activity、activity/reset及双read共享并发3项与原privacy-review4项共7绿。旧QA spy若丢新增参数/强制两排他validate同时到达，须由QA调整调度观测位置并保原红，不能为迎合探针放松生产锁。
+- 根完整DB/API与core:check整合验证中，代码冻结后分别记录结果；不将新的统一写锁泛化为所有AI并发均无死锁。完整只读写入口审阅已另交QA临时清单，静态候选/真实证据与外部门槛明确区分。
+- 根最终DB133/API166、core:check及本轮文档结构3项通过（/private/tmp/fancy-f29-{db,api,check,documentation}.log）。QA证据仍并行更新，未重跑或冒称全77一致性绿；该批冻结后由QA补其完整验证。root沿用QA明确保留的提交窗口，仅两生产/自有测试文件与本记录提交，不混QA/research，正式SHA交QA独立复验。

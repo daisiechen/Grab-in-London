@@ -60,7 +60,7 @@ export class SessionService {
   }
   async activity(id: string, binding: SessionBinding, eventId: string, kind: 'SEND' | 'EDIT' | 'EXPLICIT_ACTION') {
     return transaction(this.pool, async (c) => {
-      await this.validate(c, id, binding);
+      await this.validate(c, id, binding, 'UPDATE');
       const expiresAt = this.runtime.activity(id, binding, eventId, kind);
       const activityAt = expiresAt - SESSION_TTL_MS;
       // Flush the actual observed activity instant; the flush clock never renews TTL.
@@ -70,15 +70,16 @@ export class SessionService {
   }
   async reset(id: string, binding: SessionBinding) {
     return transaction(this.pool, async (c) => {
-      await this.validate(c,id,binding);
+      await this.validate(c,id,binding,'UPDATE');
       this.runtime.destroy(id);
       await c.query(`UPDATE ai_session_meta SET status='INVALIDATED',generation=generation+1 WHERE id=$1`,[id]);
     });
   }
-  async validate(c: PoolClient, id: string, binding: SessionBinding) {
+  async validate(c: PoolClient, id: string, binding: SessionBinding, metaLock: 'SHARE' | 'UPDATE' = 'SHARE') {
     await activeSubject(c, binding.subject);
     const epoch = await preferenceEpoch(c, binding.subject);
-    const { rows: [row] } = await c.query(`SELECT subject,device_hash,generation::text,preference_epoch::text,privacy_epoch::text,status FROM ai_session_meta WHERE id=$1 FOR SHARE`,[id]);
+    // Writers acquire exclusive metadata authority before privacy/RAM validation; never upgrade SHARE.
+    const { rows: [row] } = await c.query(`SELECT subject,device_hash,generation::text,preference_epoch::text,privacy_epoch::text,status FROM ai_session_meta WHERE id=$1 FOR ${metaLock}`, [id]);
     if (!row || row.subject!==binding.subject || row.device_hash!==tokenHash(binding.deviceToken)) throw new AssistantError('AI_SESSION_EXPIRED');
     const {rows:[privacy]}=await c.query(`SELECT epoch::text FROM privacy_control WHERE id=1 FOR SHARE`);
     if(row.privacy_epoch!==privacy?.epoch){this.runtime.destroy(id);throw new AssistantError('AI_SESSION_EXPIRED');}
