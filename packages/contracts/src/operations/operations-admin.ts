@@ -21,6 +21,8 @@ const AdminFilters = {
   sizes: T.Optional(T.String({ pattern: '^([2-6]|7\\+)(,([2-6]|7\\+))*$' })),
   sources: T.Optional(T.String({ pattern: '^[a-z0-9_-]+(,[a-z0-9_-]+)*$', maxLength: 200 })),
   segments: T.Optional(T.String({ pattern: '^(new|existing)(,(new|existing))?$' })),
+  /** Legacy `≤£25/≤£30` links keep their threshold meaning (measurement contract §5); exclusive with budgetBands. */
+  budgetUpToPence: T.Optional(T.Integer({ minimum: 1, maximum: 2147483647 })),
 };
 /** Row filters, search and server-side sort for drill-down lists (UI never filters raw rows). */
 const DrilldownRowQuery = {

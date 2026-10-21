@@ -10311,6 +10311,16 @@
               "pattern": "^(new|existing)(,(new|existing))?$",
               "type": "string"
             }
+          },
+          {
+            "name": "budgetUpToPence",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "maximum": 2147483647,
+              "type": "integer"
+            }
           }
         ],
         "responses": {
@@ -10592,6 +10602,16 @@
             "schema": {
               "pattern": "^(new|existing)(,(new|existing))?$",
               "type": "string"
+            }
+          },
+          {
+            "name": "budgetUpToPence",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "maximum": 2147483647,
+              "type": "integer"
             }
           },
           {
@@ -11089,6 +11109,11 @@
                       "segments": {
                         "pattern": "^(new|existing)(,(new|existing))?$",
                         "type": "string"
+                      },
+                      "budgetUpToPence": {
+                        "minimum": 1,
+                        "maximum": 2147483647,
+                        "type": "integer"
                       },
                       "mealId": {
                         "format": "uuid",
@@ -14172,11 +14197,70 @@
           }
         }
       },
+      "SnapshotDimensions": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "areas",
+          "sources"
+        ],
+        "properties": {
+          "areas": {
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "additionalProperties": false,
+              "type": "object",
+              "required": [
+                "code",
+                "label"
+              ],
+              "properties": {
+                "code": {
+                  "pattern": "^[a-z0-9_-]+$",
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                "label": {
+                  "minLength": 1,
+                  "maxLength": 120,
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "sources": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "additionalProperties": false,
+              "type": "object",
+              "required": [
+                "code",
+                "label"
+              ],
+              "properties": {
+                "code": {
+                  "pattern": "^[a-z0-9_-]+$",
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                "label": {
+                  "minLength": 1,
+                  "maxLength": 120,
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
       "SnapshotInfo": {
         "additionalProperties": false,
         "type": "object",
         "required": [
           "id",
+          "dimensions",
           "asOf",
           "createdAt",
           "definitionVersion",
@@ -14187,6 +14271,9 @@
           "id": {
             "format": "uuid",
             "type": "string"
+          },
+          "dimensions": {
+            "$ref": "#/components/schemas/SnapshotDimensions"
           },
           "asOf": {
             "format": "date-time",

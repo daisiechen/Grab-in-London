@@ -185,6 +185,8 @@ describe('schemas reject unknown fields', () => {
     const snapshotId = '6a1f6c32-6c4e-4c4d-9a51-6c1d0e5f9b11';
     expect(page({ snapshotId, segments: 'new,existing', languages: 'zh', budgetBands: '20-30,40+' })).toBe(true);
     expect(page({ snapshotId, segments: 'returning' })).toBe(false);
+    expect(page({ snapshotId, budgetUpToPence: 2500 })).toBe(true);
+    expect(page({ snapshotId, budgetUpToPence: 0 })).toBe(false);
     const drill = validator(byId('adminDrilldown')!.params!);
     expect(drill({ metric: 'cohort.users' })).toBe(true);
     expect(drill({ metric: 'made_up_metric' })).toBe(false);

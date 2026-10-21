@@ -267,8 +267,17 @@ export const AttendanceCorrection = Obj({
   correctedAt: Instant,
 });
 
+const DimensionOption = Obj({ code: T.String({ pattern: '^[a-z0-9_-]+$', maxLength: 64 }), label: T.String({ minLength: 1, maxLength: 120 }) });
+
+/** Filter options as they exist in this sealed snapshot, so choices always match the pinned data. */
+export const SnapshotDimensions = Obj({
+  areas: T.Array(DimensionOption, { maxItems: 200 }),
+  sources: T.Array(DimensionOption, { maxItems: 50 }),
+});
+
 export const SnapshotInfo = Obj({
   id: Uuid,
+  dimensions: SnapshotDimensions,
   asOf: Instant,
   createdAt: Instant,
   definitionVersion: T.String({ maxLength: 20 }),
