@@ -2,10 +2,35 @@
 import json
 import hashlib
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+# Commit in which Codex and Claude accepted the reviewed design snapshot.
+ACCEPTED_SNAPSHOT = '4659fdb3b5e4779157ac45058cbf5134aea1b4d2'
+# Execution-state files: status and completion records may evolve after acceptance.
+EXECUTION_STATE_FILES = {'tasks/plan.md', 'tasks/todo.md'}
+
+
+def git(*args):
+    return subprocess.run(['git', *args], cwd=ROOT, capture_output=True, check=True).stdout
+
+
+def task_blocks(text):
+    return {block.split()[0]: block for block in re.split(r'^## ', text, flags=re.M)[1:]}
+
+
+def design_fields(block):
+    """Task definition without the mutable status value and completion record."""
+    lines = []
+    for line in block.split('\n'):
+        if line.startswith('- 完成记录：'):
+            break
+        if line.startswith('- 状态：'):
+            line = '- 状态：*；' + line.split('；', 1)[1]
+        lines.append(line)
+    return '\n'.join(lines).rstrip()
 
 
 def task_graph(text):
@@ -49,10 +74,17 @@ class CorePlanTest(unittest.TestCase):
             status = re.search(r'状态：([^；]+)', block).group(1)
             self.assertIn(status, ('todo', 'in_progress', 'blocked_external',
                                    'blocked_requirement', 'done'))
+            record = block.split('完成记录：', 1)[1]
             if status == 'done':
-                record = block.split('完成记录：', 1)[1]
                 self.assertNotIn('未实施', record)
-                self.assertRegex(record, r'\b[0-9a-f]{7,40}\b')
+                commits = re.findall(r'commit ([0-9a-f]{7,40})', record)
+                self.assertTrue(commits, 'done needs commit evidence')
+                for commit in commits:
+                    git('rev-parse', '--verify', '--quiet', commit + '^{commit}')
+                for field in ('命令', '结果', '证据'):
+                    self.assertIn(field, record)
+            if status == 'blocked_external':
+                self.assertRegex(record, r'G-[A-Z-]+', 'blocked_external must name its gate')
 
     def test_dependency_checker_rejects_cycles_and_unknown_tasks(self):
         for graph in ({'T00': ['T01'], 'T01': ['T00']}, {'T00': ['T99']}):
@@ -90,12 +122,34 @@ class CorePlanTest(unittest.TestCase):
         manifest = json.loads((ROOT / 'docs/engineering/review-manifest.json').read_text())
         self.assertIn(manifest['status'], ('candidate', 'accepted'))
         self.assertEqual(len(manifest['reviewedFiles']), 10)
+        self.assertEqual(manifest['status'], 'accepted')
         for relative, expected in manifest['reviewedFiles'].items():
             path = (ROOT / relative).resolve()
             self.assertTrue(path.is_relative_to(ROOT))
             self.assertRegex(expected, r'^[0-9a-f]{64}$')
-            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), expected,
-                             'Handoff changed after review: ' + relative)
+            accepted = git('show', f'{ACCEPTED_SNAPSHOT}:{relative}')
+            self.assertEqual(hashlib.sha256(accepted).hexdigest(), expected,
+                             'Accepted snapshot does not match manifest: ' + relative)
+            if relative not in EXECUTION_STATE_FILES:
+                self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), expected,
+                                 'Technical design changed after review: ' + relative)
+
+    def test_execution_state_only_changes_status_and_records(self):
+        accepted = task_blocks(git('show', f'{ACCEPTED_SNAPSHOT}:tasks/todo.md').decode())
+        current = task_blocks((ROOT / 'tasks/todo.md').read_text())
+        self.assertEqual(set(current), set(accepted))
+        for task_id, block in accepted.items():
+            self.assertEqual(design_fields(current[task_id]), design_fields(block),
+                             'Task definition drifted from accepted design: ' + task_id)
+        self.assertEqual((ROOT / 'tasks/plan.md').read_bytes(),
+                         git('show', f'{ACCEPTED_SNAPSHOT}:tasks/plan.md'))
+
+    def test_design_drift_detector_ignores_only_mutable_fields(self):
+        block = 'T99 x\n\n- 状态：todo；依赖：T00。\n- 文件：a\n- 完成记录：未实施\n'
+        changed_state = block.replace('todo', 'done').replace('未实施', 'commit abc1234')
+        self.assertEqual(design_fields(block), design_fields(changed_state))
+        self.assertNotEqual(design_fields(block), design_fields(block.replace('T00', 'T01')))
+        self.assertNotEqual(design_fields(block), design_fields(block.replace('文件：a', '文件：b')))
 
     def test_task_entry_links_and_no_unresolved_encoding(self):
         for path in list((ROOT / 'docs/engineering').glob('*.md')) + list((ROOT / 'tasks').glob('*.md')):

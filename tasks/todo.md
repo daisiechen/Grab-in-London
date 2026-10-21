@@ -1,10 +1,12 @@
 # 核心执行任务 v1
 
-所有任务当前均为`todo`，尚未实施。依据[入口](plan.md)及技术包；列出的路径是目标写入范围，不是已存在文件。每片一个负责人，单次提交保持可验证；测试文件随对应切片创建。新证据文档若放docs/，同提交补docs/README.md。T03外部spike可与T02并行研究，写入/集成仍串行。
+> 执行状态说明（2026-10-21起，Claude为本表唯一写入者）：`docs/engineering/review-manifest.json`固定的是提交`4659fdb`中已共同审查的设计快照，不随执行更新；本表仅“状态”值与“完成记录”随实施演进，任务定义/依赖/文件/验收/验证保持快照原文，由`tests/test_core_plan.py`对照该提交校验。执行环境与命令见本表末“执行环境”。
+
+初始全部任务为`todo`。依据[入口](plan.md)及技术包；列出的路径是目标写入范围，不是已存在文件。每片一个负责人，单次提交保持可验证；测试文件随对应切片创建。新证据文档若放docs/，同提交补docs/README.md。T03外部spike可与T02并行研究，写入/集成仍串行。
 
 ## T00 工作区与验证骨架
 
-- 状态：todo；依赖：无。
+- 状态：in_progress；依赖：无。
 - 文件：`package.json`, `pnpm-workspace.yaml`, `infra/compose.yml`, `packages/testkit/`；相应测试就近创建。
 - 验收：建立独立core脚本和Postgres17测试DB；保留demo/admin原入口和锁文件；生产fixture配置启动即失败。
 - 验证：`core:check / core:test:release`。
