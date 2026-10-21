@@ -27,6 +27,21 @@ const production = {
   RETENTION_POLICY_JSON: '{"deletedAccountDays":30}',
 };
 
+describe('Resend runtime configuration',()=>{
+  it('keeps mail unavailable until both private sending settings are supplied',()=>{
+    expect(loadConfig(local).resend).toBeNull();
+    const apiKey=['synthetic','resend','credential'].join('-');
+    expect(loadConfig({...local,MAIL_ADAPTER:'provider',RESEND_API_KEY:apiKey,RESEND_FROM:'Fancy <noreply@mail.example.test>'}).resend).toEqual({apiKey,from:'Fancy <noreply@mail.example.test>'});
+  });
+  it('rejects incomplete or header-injected settings without exposing values',()=>{
+    const sentinel=['synthetic','private','sentinel'].join('-');
+    for(const extra of [{RESEND_API_KEY:sentinel},{RESEND_FROM:'noreply@example.test'},{RESEND_API_KEY:sentinel,RESEND_FROM:'sender@example.test\r\nBcc:other@example.test'},{RESEND_API_KEY:'bad key',RESEND_FROM:'sender@example.test'}]){
+      let message='';try{loadConfig({...local,...extra});}catch(error){message=(error as Error).message;}
+      expect(message).toContain('RESEND_');expect(message).not.toContain(sentinel);expect(message).not.toContain('Bcc:');
+    }
+  });
+});
+
 describe('trusted reverse proxies', () => {
   it('defaults to no forwarded-header trust and accepts only explicit address ranges', () => {
     expect(loadConfig(local).trustedProxyCidrs).toEqual([]);

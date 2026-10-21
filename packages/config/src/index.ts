@@ -39,6 +39,8 @@ export const CONFIG_KEYS = [
   'AUTH0_CLIENT_SECRET',
   'GOOGLE_MAPS_API_KEY',
   'DEEPSEEK_API_KEY',
+  'RESEND_API_KEY',
+  'RESEND_FROM',
   'ANALYTICS_COVERAGE_START',
   'PORT',
   'PRIVACY_POLICY_VERSION',
@@ -65,6 +67,8 @@ export interface CoreConfig {
   googleMapsApiKey: string | null;
   /** Secret storage only; enabling calls additionally requires a verified integration bundle. */
   deepseekApiKey: string | null;
+  /** Sending-only credentials; absent configuration keeps business mail unavailable. */
+  resend: {apiKey:string;from:string}|null;
   /** Operator-confirmed first coverage of the deployed API + both client SDKs. */
   analyticsCoverageStart: string | null;
   port: number;
@@ -171,6 +175,13 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
     else auth0 = { domain, clientId, clientSecret };
   }
   const port = Number(value('PORT') ?? '3000');
+  const resendKey=value('RESEND_API_KEY'),resendFrom=value('RESEND_FROM');
+  let resend:CoreConfig['resend']=null;
+  if(resendKey||resendFrom){
+    if(!resendKey||!resendFrom)issues.push('RESEND_API_KEY and RESEND_FROM must be supplied together');
+    else if(resendKey.length>4096||/[\p{Cc}\s]/u.test(resendKey)||resendFrom.length>320||/\p{Cc}/u.test(resendFrom)||!/^(?:[^<>\r\n]+ <[^\s@<>]+@[^\s@<>]+>|[^\s@<>]+@[^\s@<>]+)$/.test(resendFrom))issues.push('RESEND_API_KEY or RESEND_FROM is invalid');
+    else resend={apiKey:resendKey,from:resendFrom};
+  }
   if (!Number.isInteger(port) || port < 1 || port > 65535) issues.push('PORT must be a TCP port');
   const privacyPolicyVersion = value('PRIVACY_POLICY_VERSION') ?? null;
   let retentionPolicy: Record<string, unknown> | null = null;
@@ -213,6 +224,7 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
     iosRedirectUri,
     googleMapsApiKey: value('GOOGLE_MAPS_API_KEY') ?? null,
     deepseekApiKey: value('DEEPSEEK_API_KEY') ?? null,
+    resend,
     analyticsCoverageStart,
     auth0,
     port,

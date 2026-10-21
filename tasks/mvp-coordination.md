@@ -471,3 +471,10 @@
 - 三负责人并行：root负责共享config/扫描保护/集成与Git；venues_backend独占Resend适配器与worker接线；web_takeover独占新infra真实联调入口及就近验证；ios_takeover完成F40后核AI生产bundle/计数与离线调用计划。QA的docs/qa/脚本/索引和当前61973/5177/device/clock保留，旧B7仅5174前端已由QA明确释放，切换须先核PID/cwd且不停61971/PG/tab4。
 - 运行配置产生的新本地dotenv本应Git忽略，原扫描器将其计入公开源码检查。仅明确Git忽略且未跟踪的.env/.env.*配置可排除，模板与已跟踪配置/其它ignored源码仍扫描，Git查询不确定则继续扫描。新Git夹具验证忽略私有配置不读、force-track后照常捕获、其它ignored源码仍捕获；不删真实Key/不放宽模式/不回显值。
 - 冻结本批根core:check、unit322、release23全部通过（/private/tmp/fancy-external-{check-final,unit-final,release-frozen}.log）。此前并行mail synthetic字面量触发扫描的红保留，测试fixture已按repo模式parts构造，非实际凭据。三切片将分别提交，不混QA/research。
+
+
+## 真实邮件发送适配与配置接线
+
+- 新ResendMailProvider仅固定官方HTTPS POST/有限超时/禁止redirect和SDK重试，outbox UUID作供应商幂等键、固定模板与白名单UUID深链，无用户正文/原始错误日志。发送接受需有效provider UUID；5xx/408/409/传输或畸形响应保UNKNOWN，不将超时/404当NOT_SENT；Sending-only Key不假设有读取权限，lookup当前严格UNKNOWN零网络。
+- CoreConfig新增RESEND_API_KEY/RESEND_FROM配对验证，值不回显；Worker显式provider且完整配置才选真实适配，缺配/测试模式仍不可用。新增合成测试16 transport+3selection与config合计47绿，worker类型/lint绿，根整合322/23/check结果见上；未启动真实Worker/未发送邮件，不声称投递或UNKNOWN完整恢复已通过。
+- 待后续薄切片：持久供应商回执/签名webhook恢复与退信状态、Auth0 Management最小权限撤销、删除通知隐私保留。不能因Sending Key已配置而编造按idempotency-key查询或扩授权；真实邮件接线与最终验收分别记录。
