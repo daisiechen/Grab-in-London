@@ -7,7 +7,7 @@
     "node": ">=24.0.0 <25"
   },
   "scripts": {
-    "core:check": "pnpm -r --workspace-concurrency=1 run typecheck && tsc -p infra/tsconfig.json && eslint --max-warnings=0 . && node infra/scripts/secret-scan.mjs .",
+    "core:check": "pnpm -r --workspace-concurrency=1 run typecheck && tsc -p infra/tsconfig.json && pnpm --filter @fancy/contracts run check:generated && eslint --max-warnings=0 . && node infra/scripts/secret-scan.mjs .",
     "core:test:unit": "vitest run --project unit",
     "core:test:db": "vitest run --project db",
     "core:test:api": "node infra/scripts/not-implemented.mjs core:test:api T04",

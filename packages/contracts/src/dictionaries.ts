@@ -1,0 +1,92 @@
+/**
+ * Versioned dictionaries shared by host forms, discovery filters, analytics and AI validation.
+ * Values come from the existing prototype options (demo/src/Prototype.tsx) and data contract §5–6;
+ * adding a value is a contract change and must be registered and tested here.
+ */
+export const DICTIONARY_VERSION = '2026-10-21.1';
+
+export const LANGUAGES = { en: 'English', zh: 'Chinese', fr: 'French', es: 'Spanish', hi: 'Hindi' } as const;
+export type LanguageCode = keyof typeof LANGUAGES;
+export const LANGUAGE_CODES = Object.keys(LANGUAGES) as LanguageCode[];
+
+/** Explicit legacy label mapping; never split arbitrary strings at runtime. */
+export const LEGACY_LANGUAGE_LABELS: Readonly<Record<string, readonly LanguageCode[]>> = {
+  English: ['en'],
+  Mandarin: ['zh'],
+  Chinese: ['zh'],
+  中文: ['zh'],
+  French: ['fr'],
+  Spanish: ['es'],
+  Hindi: ['hi'],
+  'English & Mandarin': ['en', 'zh'],
+  'English & French': ['en', 'fr'],
+};
+
+export const MOODS = {
+  EASY_CONVERSATION: 'Easy conversation',
+  FOOD_DISCOVERIES: 'Food discoveries',
+  TRAVEL_CULTURE: 'Travel & culture',
+} as const;
+export type MoodCode = keyof typeof MOODS;
+
+/** P-05: host-declared, optional; null means not provided. Not inferred from Places or names. */
+export const CUISINES = { EUROPEAN: 'European', JAPANESE: 'Japanese', SPANISH: 'Spanish', CHINESE: 'Chinese' } as const;
+export type CuisineCode = keyof typeof CUISINES;
+export const DIETARY = { VEGETARIAN_OPTIONS: 'Vegetarian options', VEGAN: 'Vegan' } as const;
+export type DietaryCode = keyof typeof DIETARY;
+
+export const LIFE_STATUSES = {
+  NEW_TO_LONDON: 'New to London',
+  MAKING_LONDON_HOME: 'Making London home',
+  LIVING_AND_WORKING: 'Living and working in London',
+  STUDYING: 'Studying in London',
+  VISITING: 'Visiting London',
+} as const;
+export type LifeStatusCode = keyof typeof LIFE_STATUSES;
+
+export const INTERESTS = {
+  FOOD: 'Food', PHOTOGRAPHY: 'Photography', TRAVEL: 'Travel', DESIGN: 'Design', BOOKS: 'Books',
+  CINEMA: 'Cinema', WALKING: 'Walking', COOKING: 'Cooking', MUSIC: 'Music', ART: 'Art', SPORT: 'Sport',
+} as const;
+export type InterestCode = keyof typeof INTERESTS;
+
+/** ProductSurvey factors — measurement contract v4 §ProductSurvey, fixed order. */
+export const SURVEY_REASONS = ['company', 'conversation', 'coordination', 'expectations', 'venue', 'cost', 'other'] as const;
+/** The five existing admin pages (admin/src/App.tsx); no new pages. */
+export const ADMIN_PAGES = ['overview', 'journey', 'supply', 'retention', 'quality'] as const;
+export const CLASSIFICATIONS = ['regular', 'test', 'staff'] as const;
+export const ROLES = ['analyst', 'data_admin', 'support'] as const;
+
+export const MEAL_STATUSES = ['OPEN', 'CANCELLED', 'COMPLETED'] as const;
+export const CANCEL_REASONS = ['host', 'booking', 'other', 'insufficient'] as const;
+/** Reasons a host may submit; `insufficient` is system-only. */
+export const HOST_CANCEL_REASONS = ['host', 'booking', 'other'] as const;
+export const APPLICATION_STATES = ['PENDING', 'CONFIRMED', 'DECLINED', 'WITHDRAWN', 'EXPIRED', 'CANCELLED'] as const;
+export const BOOKING_DECLARATION_STATUSES = ['REPORTED_CONFIRMED', 'NEEDS_UPDATE', 'FAILED', 'CANCELLED'] as const;
+export const BOOKING_MODES = ['EXTERNAL_PAY_AT_VENUE'] as const;
+export const MY_MEAL_SECTIONS = ['UPCOMING', 'APPLICATIONS', 'HOSTING', 'PAST', 'CANCELLED'] as const;
+export const TIME_OF_DAY = ['any', 'lunch', 'dinner'] as const;
+export const ATTENDANCE_VALUES = ['present', 'absent'] as const;
+export const ATTENDANCE_SOURCES = ['SELF', 'HOST', 'SUPPORT'] as const;
+export const CONNECTION_STATES = ['OPEN', 'WAITING', 'CLOSED'] as const;
+export const REPORT_TARGET_TYPES = ['USER', 'MEAL', 'MESSAGE'] as const;
+/** The prototype collects one private free-text concern; finer reasons need a product decision. */
+export const REPORT_REASONS = ['private_concern'] as const;
+export const REPORT_STATUSES = ['RECEIVED', 'IN_REVIEW', 'RESPONDED'] as const;
+export const DELETION_STATUSES = ['PENDING', 'PROCESSING', 'COMPLETED', 'NEEDS_SUPPORT'] as const;
+export const SUPPORT_CASE_STATUSES = ['OPEN', 'IN_REVIEW', 'RESOLVED'] as const;
+export const AUTH_PROVIDERS = ['GOOGLE', 'APPLE'] as const;
+export const CLIENT_KINDS = ['WEB', 'IOS', 'SUPPORT_CLI'] as const;
+export const CONVERSATION_KINDS = ['GROUP', 'DIRECT'] as const;
+export const MESSAGE_READ_MODES = ['HISTORY', 'LIVE'] as const;
+
+/** Client-observed analytics events only; business success comes from server facts (C-01, T20). */
+export const CLIENT_EVENT_TYPES = [
+  'discovery_results', 'discovery_failed', 'meal_impression', 'detail_view', 'create_started',
+  'create_arranged', 'form_error', 'filter_applied', 'map_opened', 'profile_view', 'chat_opened',
+] as const;
+
+/** Server-computed hints only; the server re-validates every action. */
+export const MEAL_ACTIONS = [
+  'APPLY', 'WITHDRAW', 'LEAVE', 'EDIT', 'CANCEL', 'DECLARE_BOOKING', 'REVIEW_APPLICATIONS', 'OPEN_GROUP', 'POST_MEAL',
+] as const;

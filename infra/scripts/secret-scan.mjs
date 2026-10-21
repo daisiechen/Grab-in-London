@@ -42,7 +42,7 @@ export function scan(root) {
   return findings;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.main) {
   const findings = scan(process.argv[2] ?? '.');
   if (findings.length) {
     console.error('Possible secrets found:\n' + findings.join('\n'));

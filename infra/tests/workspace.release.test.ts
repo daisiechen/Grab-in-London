@@ -64,6 +64,20 @@ describe('environment template and secrets', () => {
     }
     expect(scan(ROOT)).toEqual([]);
   });
+
+  it('exits non-zero from the CLI when a secret is present', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'fancy-scan-cli-'));
+    try {
+      mkdirSync(join(dir, 'infra'), { recursive: true });
+      writeFileSync(join(dir, 'infra/k.pem'), '-----BEGIN ' + 'PRIVATE KEY-----\n');
+      const planted = node(['infra/scripts/secret-scan.mjs', dir]);
+      expect(planted.status).toBe(1);
+      expect(planted.stderr).toContain('infra/k.pem: private key');
+      expect(node(['infra/scripts/secret-scan.mjs', '.']).status).toBe(0);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
 });
 
 describe('startup preflight', () => {

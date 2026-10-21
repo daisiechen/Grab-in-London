@@ -1,0 +1,11 @@
+{
+  "name": "@fancy/client",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "typecheck": "tsc -p tsconfig.json" },
+  "dependencies": {
+    "@fancy/contracts": "workspace:*",
+    "@sinclair/typebox": "0.34.52"
+  }
+}
