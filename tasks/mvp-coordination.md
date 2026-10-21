@@ -312,3 +312,11 @@
 - 8次发送/8次查询/满24小时、非法payload和不可用收件人均覆盖；provider未配置时仍观察历史耗尽但不dispatch新邮件。有效UNKNOWN lookup lease不因第8次已领取被另tick提前转DEAD，未知结果仍只查询，权威NOT_SENT才允许同ID重试。
 - 自有修前5红，修后邮件10项及根完整DB126项通过（/private/tmp/fancy-f19-db.log）；根显式复跑QA原probe3项通过（/private/tmp/fancy-f19-probe.log），未改QA文件/测试收集配置。仅delivery、main、自有dead-letter测试与本记录切片；正式关闭仍交QA固定SHA独立复验，不代表真实邮件供应商告警平台已配置。
 - 最终冻结根core:check、release18及Python71通过（/private/tmp/fancy-f19-{check,release,python}.log）；客户端与API业务未改，沿用最近已验证结果，不冒称本切片重跑。原生配置6b308ce另批已推送，模拟器实际构建仍由原生负责人继续。QA文件及研究修改保留。
+
+## 原生实际构建与TypeBox首开崩溃（2026-10-21）
+
+- 负责人已在/private/tmp隔离编译现代Ruby3.4.11、CocoaPods1.16.2并完成Pods安装；ASCII副本消除中文路径编码错误，仅OpenSSL库目录避免DYLD误引curl证书路径，未关闭TLS或猴补SDK。Debug与Release真实Xcode构建成功，simctl实际安装启动；Simulator图形壳不可用仍限制交互旅程，不再以runtime/Pods缺失作为旧阻塞。
+- 未修复Release首开真实崩溃：TypeBox ESM导出的Object变量被提升，Metro CommonJS shim调用Object.defineProperty时得到undefined。仅Metro对@sinclair/typebox及其子路径选择官方CJS require条件，其他模块原context透传；不改共享schema、SDK或业务逻辑。自有resolver回归覆盖根/子路径与相似包名不误匹配。
+- 临时相同修复重新Release成功，Discover首屏持续显示，独立合成API61973收到App GET /v1/meals 200。根直接检查/private/tmp/fancy-ios-typebox-screen.png确认实际画面，同时统计授权标题与状态栏重叠另交QA核证，不混入模块解析修复。API/PG独立，QA B7现场不动。
+- 上述实际运行来自临时副本，正式提交SHA需独立复验，不作为完整Web/iOS角色互换通过；根原生251项通过（/private/tmp/fancy-ios-metro-tests.log），其余最终验证及QA原红登记后提交。临时入口/private/tmp/fancy-ios-native-entry.txt，构建/private/tmp/fancy-ios-native-release-typebox.log，原崩溃/private/tmp/fancy-ios-runtime.log。
+- 正式Metro两文件冻结后根core:check及Python71通过（/private/tmp/fancy-ios-metro-{check,python}.log）；负责人已逐字同步当前源码到ASCII临时副本重建，安装/启动结果另交QA。QA在87434e3保留F20原崩溃与F21安全区独立缺陷，释放提交窗口；原红准确源码基线仍待负责人确认，不推测。组件测试/首屏截图均不替代原生交互旅程。
