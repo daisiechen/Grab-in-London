@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 121,
-    "PASS": 84,
+    "NOT_RUN": 117,
+    "PASS": 88,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -7941,8 +7941,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R31-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T242",
         "R1-T243",
@@ -8061,15 +8063,16 @@
         "R3-T026",
         "R3-T027",
         "R3-T028",
-        "R3-T029"
+        "R3-T029",
+        "R31-T001"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "仅公开DTO",
-        "他人私密资源404/403",
-        "不序列化email/contact/消息/偏好/行程"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "游客/他人令牌读取公开profile与meal时profile键严格在公开白名单；私密邮箱/消息/举报及敏感字段不序列化。猜授权群历史和别人举报回执403/404；别人申请ID与主体不出现在自己的列表。合成身份、真实HTTP/PG。"
     },
     {
       "id": "QA-API-002",
@@ -8077,8 +8080,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R31-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T242",
         "R1-T243",
@@ -8197,15 +8202,16 @@
         "R3-T026",
         "R3-T027",
         "R3-T028",
-        "R3-T029"
+        "R3-T029",
+        "R31-T002"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "analyst拒绝",
-        "管理员成功但不改变业务权限",
-        "support不能全表读取"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "真实HTTP/PG：analyst改classification拒绝，data_admin+MFA/reason/version成功且有审计，但被标staff者无role/不能读后台，data_admin不能越权取消他人饭局。support无全表case接口且不能读分析/分类，仅case授权范围。"
     },
     {
       "id": "QA-API-003",
@@ -8357,8 +8363,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R31-T004"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T242",
         "R1-T243",
@@ -8477,15 +8485,16 @@
         "R3-T026",
         "R3-T027",
         "R3-T028",
-        "R3-T029"
+        "R3-T029",
+        "R31-T004"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "篡改拒绝",
-        "seq以字符串往返不丢精度",
-        "分页上限生效"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "真实HTTP/PG：snapshot cursor换主体/limit及篡改拒绝，真实meals下钻cursor用于另一snapshot拒绝422；列表和消息limit101拒绝。head大于2^53时发消息/读LIVE/扫描位置以十进制字符串准确往返，无Number精度损失。"
     },
     {
       "id": "QA-API-005",
@@ -8493,8 +8502,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R31-T003"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T242",
         "R1-T243",
@@ -8613,15 +8624,16 @@
         "R3-T026",
         "R3-T027",
         "R3-T028",
-        "R3-T029"
+        "R3-T029",
+        "R31-T003"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "CSV转义不执行公式",
-        "每次下载重新校验role/epoch",
-        "无私密字段"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "真实csvCell对=、+、-、@及空白/控制字符前缀加公式抑制并RFC quoting；真实CSV下载private no-store、无合成私密字段，换actor404、撤role/MFA403、隐私epoch变更410且非CSV。formatter断言非实际Excel执行，下载始终重新鉴权。"
     },
     {
       "id": "QA-NOTIFY-001",

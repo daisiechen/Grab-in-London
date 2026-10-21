@@ -9002,6 +9002,51 @@
           "durationMs": 3
         }
       ]
+    },
+    {
+      "id": "R31",
+      "testedCommit": "2462b970e6cc1a0b976602f2989a76265bda995e",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-access.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-access-complete.json",
+      "startedAt": "2026-10-21T09:43:07.057000+00:00",
+      "exitCode": 0,
+      "passed": 4,
+      "failed": 0,
+      "total": 4,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R31-T001",
+          "run": "R31",
+          "path": "scripts/qa-independent-access.api.test.ts",
+          "title": "independent public versus staff access QA-API-001 public projections omit private contacts applications messages and preferences; guessed private resources deny",
+          "status": "passed",
+          "durationMs": 204.90312499999993
+        },
+        {
+          "id": "R31-T002",
+          "run": "R31",
+          "path": "scripts/qa-independent-access.api.test.ts",
+          "title": "independent public versus staff access QA-API-002 analyst cannot classify; data_admin with reason/version succeeds but gains no meal permissions; support has only granted cases",
+          "status": "passed",
+          "durationMs": 32.81574999999998
+        },
+        {
+          "id": "R31-T003",
+          "run": "R31",
+          "path": "scripts/qa-independent-access.api.test.ts",
+          "title": "independent public versus staff access QA-API-005 formula cells escape every dangerous prefix and real download rechecks role MFA and snapshot epoch",
+          "status": "passed",
+          "durationMs": 23.876166000000012
+        },
+        {
+          "id": "R31-T004",
+          "run": "R31",
+          "path": "scripts/qa-independent-access.api.test.ts",
+          "title": "independent cursor and sequence transport QA-API-004 tampered and foreign cursor reject; sequence above 2^53 round-trips as string and limits enforce",
+          "status": "passed",
+          "durationMs": 49.66724999999997
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -9020,7 +9065,8 @@
     "scripts/qa-independent-ai-http.api.test.ts": "41e3b9942e8d5f8193f36c49a7f1b17386e09b8ceaa5220ba2747b978790f312",
     "scripts/qa-independent-ai-budget.api.test.ts": "7d7064a23115ea75243e97bd0e1ca423ecc5f63a9af199bfb785cf43a2593ae4",
     "apps/web/src/features/assistant/qa-independent-session.unit.test.tsx": "8382dada4f38db9d53988c7739db587207674e011ec606aaca940f96c39426c1",
-    "scripts/qa-independent-ai-session.api.test.ts": "8910212437dc6e1484f1778200517e03a6731ca5a7c35bf6583628991b680ff3"
+    "scripts/qa-independent-ai-session.api.test.ts": "8910212437dc6e1484f1778200517e03a6731ca5a7c35bf6583628991b680ff3",
+    "scripts/qa-independent-access.api.test.ts": "be6bfd2b89278cb935dda6258bdb8372a4f06a60805ace1967351bb52f6cac42"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。",
   "runtimeSnapshotVerification": {
@@ -9066,6 +9112,10 @@
     {
       "run": "R27",
       "detail": "T001为QA夹具在modal打开时操作背景editor被pointer-events阻挡，不是产品缺陷；改为关闭助手、等待launcher焦点恢复、编辑v2再打开Continue后独立通过，原失败仍保留但不据此登记产品FAIL。T002为真实QA-F05：NEW成功后助手未发文字未清，原断言未放宽。"
+    },
+    {
+      "run": "R31",
+      "detail": "跨快照下钻首前置使用未来饭局，正式meals指标仅纳入已开始场而无分页cursor；改为已开始合成数据后seal，4项全过，不修改成熟度规则。CSV公式转义为真实formatter单元断言，下载授权/epoch为真实HTTP；未把formatter等同Excel实际执行。"
     }
   ]
 }
