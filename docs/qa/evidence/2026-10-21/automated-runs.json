@@ -11703,6 +11703,232 @@
           "failureSummary": "AssertionError: expected [ 'LIVE', 'HISTORY' ] to not include 'LIVE'"
         }
       ]
+    },
+    {
+      "id": "R60",
+      "testedCommit": "5676dde3263f4f713a066300998531252334d33f",
+      "command": "pnpm exec vitest run --project web apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx apps/web/src/features/inbox/inbox.unit.test.tsx apps/web/src/lib/poller.unit.test.ts",
+      "startedAt": "2026-10-21T13:14:22.462000+00:00",
+      "exitCode": 0,
+      "passed": 24,
+      "failed": 0,
+      "total": 24,
+      "suiteFiles": 3,
+      "assertions": [
+        {
+          "id": "R60-T001",
+          "run": "R60",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) polls immediately and then every 2 s while visible",
+          "status": "passed",
+          "durationMs": 6.894125000000031
+        },
+        {
+          "id": "R60-T002",
+          "run": "R60",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) backs off 2/4/8/16/30 s on consecutive failures, caps at 30 s, and resets after success",
+          "status": "passed",
+          "durationMs": 17.751082999999994
+        },
+        {
+          "id": "R60-T003",
+          "run": "R60",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) adds up to +20% jitter",
+          "status": "passed",
+          "durationMs": 0.14608300000008967
+        },
+        {
+          "id": "R60-T004",
+          "run": "R60",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) pauses while hidden and re-checks auth before catching up on return",
+          "status": "passed",
+          "durationMs": 7.418332999999961
+        },
+        {
+          "id": "R60-T005",
+          "run": "R60",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) stops for good when the resume auth check fails",
+          "status": "passed",
+          "durationMs": 7.2007919999999785
+        },
+        {
+          "id": "R60-T006",
+          "run": "R60",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) a tick returning stop (403 → HISTORY) ends polling",
+          "status": "passed",
+          "durationMs": 3.619792000000075
+        },
+        {
+          "id": "R60-T007",
+          "run": "R60",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) does not start while hidden, and starts polling when shown",
+          "status": "passed",
+          "durationMs": 5.83179199999995
+        },
+        {
+          "id": "R60-T008",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "message helpers finds older conversation metadata after five inbox pages",
+          "status": "passed",
+          "durationMs": 2.793457999999987
+        },
+        {
+          "id": "R60-T009",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "message helpers fails closed instead of hanging or treating an incomplete inbox as complete",
+          "status": "passed",
+          "durationMs": 0.5948750000000018
+        },
+        {
+          "id": "R60-T010",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "message helpers orders by bigint seq and de-duplicates by id",
+          "status": "passed",
+          "durationMs": 0.3240419999999631
+        },
+        {
+          "id": "R60-T011",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) keeps HISTORY terminal when a pre-revocation metadata refresh completes late",
+          "status": "passed",
+          "durationMs": 47.098708999999985
+        },
+        {
+          "id": "R60-T012",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) starts LIVE normally for a newly mounted authorized conversation after the previous one became HISTORY",
+          "status": "passed",
+          "durationMs": 25.627958000000035
+        },
+        {
+          "id": "R60-T013",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) polls LIVE every 2 s with afterSeq and renders text, never HTML",
+          "status": "passed",
+          "durationMs": 20.635042
+        },
+        {
+          "id": "R60-T014",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) a 403 stops LIVE polling, removes the composer and reads HISTORY",
+          "status": "passed",
+          "durationMs": 17.98950000000002
+        },
+        {
+          "id": "R60-T015",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) read-only conversations never poll LIVE",
+          "status": "passed",
+          "durationMs": 9.465332999999987
+        },
+        {
+          "id": "R60-T016",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) retries a send with the same clientMessageId and clears the composer on success",
+          "status": "passed",
+          "durationMs": 132.46129200000007
+        },
+        {
+          "id": "R60-T017",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) keeps unsent text when sending is refused",
+          "status": "passed",
+          "durationMs": 63.9279580000001
+        },
+        {
+          "id": "R60-T018",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) leaving the group is confirmed, uses the conversation version and ends LIVE",
+          "status": "passed",
+          "durationMs": 58.018833000000086
+        },
+        {
+          "id": "R60-T019",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "inbox list (T12) QA-F01 distinguishes two pending meals by title, London time, host and correct application link",
+          "status": "passed",
+          "durationMs": 23.367250000000013
+        },
+        {
+          "id": "R60-T020",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "inbox list (T12) shows conversations beyond the first server page",
+          "status": "passed",
+          "durationMs": 9.834667000000081
+        },
+        {
+          "id": "R60-T021",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "inbox list (T12) separates meal groups, personal chats and application progress",
+          "status": "passed",
+          "durationMs": 19.129083000000037
+        },
+        {
+          "id": "R60-T022",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx",
+          "title": "QA-CHAT-009 GROUP hides polling, backs off to30s, authenticates before catchup and never sends retained text after403",
+          "status": "passed",
+          "durationMs": 295.3131249999999
+        },
+        {
+          "id": "R60-T023",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx",
+          "title": "QA-CHAT-009 DIRECT hides polling, backs off to30s, authenticates before catchup and never sends retained text after403",
+          "status": "passed",
+          "durationMs": 179.51695799999993
+        },
+        {
+          "id": "R60-T024",
+          "run": "R60",
+          "path": "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx",
+          "title": "QA-CHAT-009 metadata captured before revocation cannot restart LIVE after a terminal403",
+          "status": "passed",
+          "durationMs": 19.150041999999985
+        }
+      ]
+    },
+    {
+      "id": "R61",
+      "testedCommit": "1253409647a63b39a7465e4a7c7e4422f99fa345 (API sources identical through 5676dde)",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-deletion-logs.api.test.ts",
+      "startedAt": "2026-10-21T13:14:06.696000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R61-T001",
+          "run": "R61",
+          "path": "scripts/qa-independent-deletion-logs.api.test.ts",
+          "title": "QA-PRIVACY-003 real fault500 rollback then lost202 receipt survives session revocation without receipt/access secrets in logs or URLs",
+          "status": "passed",
+          "durationMs": 637.616917
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -11738,9 +11964,11 @@
     "scripts/qa-ai-crash-child.ts": "aa1ee0de811e6c961535a0fc46c8c2aa0932195f856a0ada390074218b8971a4",
     "apps/web/src/features/assistant/qa-independent-length.unit.test.tsx": "378d50911dd819dee96eb24b4102e06be357510e3d85ca55417fd933f03321ef",
     "scripts/qa-independent-ai-limits.api.test.ts": "a8df504a862789ca31e92b1bdca21c5f0b14bec6443b0c6eb8156eefb1d0156a",
-    "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx": "8fc38f1e09b54c4107f6dc338be803c24bdb81ce79a8920872ff7fab2690a1c8"
+    "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx": "8fc38f1e09b54c4107f6dc338be803c24bdb81ce79a8920872ff7fab2690a1c8",
+    "scripts/qa-independent-deletion-logs.api.test.ts": "2c9e2ec6c136d48e45e85ab2ecd2c359f65c01446b87e70f621d8e7a1f131cd4",
+    "scripts/qa-deletion-log-child.ts": "802a845b48bf184645d73d8a3bc78939e5f43bbfec25fe44951e47f342f979be"
   },
-  "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed.",
+  "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim.",
   "runtimeSnapshotVerification": {
     "commit": "d4582f7e5e4f52e43cb1d49a06622b98c8c10ad6",
     "comparedFiles": 555,
