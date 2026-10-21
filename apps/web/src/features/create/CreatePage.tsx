@@ -91,9 +91,13 @@ function CreateFlow({terms}:{terms:boolean}) {
 
   const update = (patch: Partial<MealDraft>) => {
     begin();
-    setDraft((d) => ({ ...d, ...patch, ...('reviewConfirmed' in patch ? {} : { reviewConfirmed: false }), ...(touchesBooking(patch) ? { bookingConfirmed: false } : {}) }));
+    setDraft((d) => {
+      const changedVenue=!!d.venue&&'venue'in patch&&!sameVenue(d.venue,patch.venue??null);
+      const displayRefresh=Object.keys(patch).every(key=>key==='venue')&&!!d.venue&&!!patch.venue&&sameVenue(d.venue,patch.venue);
+      return {...d,...patch,...(changedVenue?{time:'',startOffset:null,closeOffset:null}:{}),...('reviewConfirmed'in patch||displayRefresh?{}:{reviewConfirmed:false}),...(touchesBooking(patch)&&!displayRefresh?{bookingConfirmed:false}:{})};
+    });
     setError('');
-    if ('date' in patch || 'time' in patch || 'closeDate' in patch || 'closeTime' in patch) setAmbiguity(null);
+    if ('date' in patch || 'time' in patch || 'closeDate' in patch || 'closeTime' in patch || ('venue'in patch&&draft.venue&&!sameVenue(draft.venue,patch.venue??null))) setAmbiguity(null);
   };
 
   const next = () => {
@@ -217,3 +221,6 @@ function CreateFlow({terms}:{terms:boolean}) {
 
 /** The host's booking declaration is about this venue, size and time; changing them needs a new tick. */
 const touchesBooking = (patch: Partial<MealDraft>) => ['venue', 'capacity', 'date', 'time'].some((k) => k in patch);
+
+/** Provider display refreshes do not change the selected restaurant's verified identity. */
+const sameVenue=(a:MealDraft['venue'],b:MealDraft['venue'])=>!!a&&!!b&&(a.placeId&&b.placeId?a.placeId===b.placeId:a.venueRef===b.venueRef);

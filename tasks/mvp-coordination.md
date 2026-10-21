@@ -418,3 +418,8 @@
 - QA核主PRD337紧凑菜单已在ce74研发基线，非仅Demo豁免；生产原select缺交互。仅steps接线与专用TimePicker组件/CSS/自有测试四文件，仍48半小时计划时间、不校验供应商库存；160px触发/菜单、箭头内缩16、最高224内部滚动，portal约束手机边界，已选/空00聚焦、方向/Home/End/Enter、Escape/外部关闭及焦点恢复，无新增包或通用框架。
 - 自有3+原Create17相关20项通过，真实隔离Chrome61981生产组件/CSS测得160宽/224高、选中19:30自动focus与内部scroll、键盘00:30/归焦、Esc/Outside及320/144视口无溢出。该证据仅组件真实浏览器，不冒完整Create旅程通过；正式交QA独立集成复验。
 - F34–36最终冻结整合Web/admin306、iOS256、Web生产构建及core:check通过（/private/tmp/fancy-f34-f35-{clients,build}-final.log、fancy-f36-ios.log、fancy-f34-f36-check-final.log）。自有文档结构3项绿；全Python77两项QA probe/reportR176等WIP一致性失败原fancy-f34-f36-python.log保留，不改QA证据或冒全绿。三切片分别提交，root持串行窗口，仅各白名单与记录，不混研究。
+
+## QA-F35 确认换餐厅后清旧时间（2026-10-21）
+
+- QA B11真实North18:30→South仅预览仍North18:30正确，确认UseSouth后旧Time未清。仅CreatePage中央update及独立venue-change测试：已选地点身份确变才清time/startOffset/closeOffset、预约声明与Review；同placeId显示更新/ref刷新保持有效时间确认，初选不误清，预览/取消不触父草稿，日期/标题/人数/费用可复用字段保持。
+- 自有修前两红/两绿，修后4+原Create17共21绿；QA真实父组件原反例另有工作树绿，正式关闭仍按提交SHA复验。F34先b9a7f9e独立推送，本切片仅CreatePage/新自有测试+记录；最终整合306/256/build/check及文档范围见本批F34，不因分commit重复声称重跑。
