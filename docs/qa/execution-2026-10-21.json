@@ -11,16 +11,16 @@
     "places": "fixture",
     "mail": "test outbox, no real recipient",
     "ai": "mock, no real provider calls",
-    "browser": "Chrome local production Web 127.0.0.1:5174; sequential account switch, not two devices",
-    "ios": "Actual headless Release XCUITest on isolated iOS27.0 simulator: OTP/profile success; formal19d restore investigation ongoing. No complete native journey claim.",
+    "browser": "Actual IAB Web frozen snapshots; per-observation version matrix. Tabs on same hostname share cookies across ports; rigs tested sequentially after explicit reauth, not falsely treated as isolated sessions.",
+    "ios": "Independent actual headless Release XCUITest on isolated iOS27.0 simulator; current native611a/source191 matched. OTP/profile, cold restore, application pending/no-seat/no-chat, approvals and persistent cross-client messages verified. Full remaining native role-swap/lifecycle paths still pending.",
     "nativeRuntimeCheck20261021": "Available iOS27.0/27.1 runtimes and dedicated simulator; actual build/install/launch and XCTest interact successfully. Historical empty device/GUI assumptions superseded.",
-    "nativeRuntimeEvidence20261021": "Native owner actual headless Release install/launch and first-screen evidence independently reviewed by QA, F20 exact red874/fixed9df, F21 formal5b source-equivalent AppRoot and Metro matched. No independent native taps or complete role journey; root complete5b archive rebuild pending when reviewed."
+    "nativeRuntimeEvidence20261021": "Native83df/611a normal Xcode simulated entitlement and source/binary independently verified; actual QA taps passed. Earlier CODE_SIGNING_ALLOWED=NO artifacts failed getItem-34018, preserved as setup/build evidence; no missing-runtime/license blocker remains."
   },
   "counts": {
-    "NOT_RUN": 16,
-    "PASS": 189,
-    "FAIL": 1,
-    "BLOCKED": 11
+    "PASS": 193,
+    "NOT_RUN": 12,
+    "BLOCKED": 11,
+    "FAIL": 1
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
@@ -56,7 +56,9 @@
     "browserObservationsB14": "evidence/2026-10-21/browser-b14.json",
     "nativeIndependentXcui": "evidence/2026-10-21/native-independent-xcui.json",
     "browserObservationsCodeTrust": "evidence/2026-10-21/code-trust-logging-review.json",
-    "browserObservationsB15": "evidence/2026-10-21/browser-b15.json"
+    "browserObservationsB15": "evidence/2026-10-21/browser-b15.json",
+    "browserObservationsB16": "evidence/2026-10-21/browser-b16.json",
+    "nativeFormalRuntimeReview": "evidence/2026-10-21/native-formal-runtime-review.json"
   },
   "cases": [
     {
@@ -65,10 +67,10 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
-        "B4-T001",
-        "B5-T005"
+        "B5-T005",
+        "R186-T004"
       ],
       "relatedAutomatedAssertions": [
         "R1-T001",
@@ -166,13 +168,24 @@
         "R2-T166",
         "R2-T167"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "公开路径可达",
-        "受限动作进入认证",
-        "没有自动申请或创建"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：Explore tables first → 浏览地图、详情及公开主页 → 分别点Create/Apply/Meals/Inbox。当前仍缺：公开路径可达；受限动作进入认证；没有自动申请或创建。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B4补充实际游客详情→Apply未发草稿→认证→已有账号免补资料回原草稿，明确第二次Send后Pending/Inbox3卡、无自动席位/群。完整剩余预期仍见remainingExpected。 B5补齐实际游客Meals/Inbox认证门禁，无离开账号私有记录；公开详情可达、Create/Apply已有实际证据，live地图及欢迎Explore入口完整路径仍未验，不授PASS。"
+      "remainingExpected": [],
+      "actual": "Actual public Discover/detail/profile and private Meals/Inbox/Create/Apply gates verified; R186 actual guest Map/list fallback remains public and never writes. Fixture Google integration remains GATE002, not inferred live.",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：Explore tables first → 浏览地图、详情及公开主页 → 分别点Create/Apply/Meals/Inbox。当前仍缺：公开路径可达；受限动作进入认证；没有自动申请或创建。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B4补充实际游客详情→Apply未发草稿→认证→已有账号免补资料回原草稿，明确第二次Send后Pending/Inbox3卡、无自动席位/群。完整剩余预期仍见remainingExpected。 B5补齐实际游客Meals/Inbox认证门禁，无离开账号私有记录；公开详情可达、Create/Apply已有实际证据，live地图及欢迎Explore入口完整路径仍未验，不授PASS。",
+          "evidence": [
+            "B4-T001",
+            "B5-T005"
+          ],
+          "reason": "Fourth QA batch actual/targeted verification; historical evidence retained"
+        }
+      ]
     },
     {
       "id": "QA-AUTH-002",
@@ -180,8 +193,11 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "B16-O004",
+        "B4-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T001",
         "R1-T002",
@@ -278,13 +294,21 @@
         "R2-T166",
         "R2-T167"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "非法邮箱不能继续",
-        "错误码不登录",
-        "合法示例码回到初始操作且标为模拟"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：输入非法邮箱 → 改为 qa@example.invalid → 输入错误验证码再输入123456。当前仍缺：非法邮箱不能继续；错误码不登录；合法示例码回到初始操作且标为模拟。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+      "remainingExpected": [],
+      "actual": "Actual native invalid-email/wrong-OTP rejection, explicit fixture correct-code recovery plus actual Web return to unsent initial application. Fixture OTP/IdP explicitly marked simulated in environment/evidence; real provider gate remains open.",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：输入非法邮箱 → 改为 qa@example.invalid → 输入错误验证码再输入123456。当前仍缺：非法邮箱不能继续；错误码不登录；合法示例码回到初始操作且标为模拟。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。",
+          "evidence": [],
+          "reason": "Fourth QA batch actual/targeted verification; historical evidence retained"
+        }
+      ]
     },
     {
       "id": "QA-AUTH-003",
@@ -2705,10 +2729,11 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": [
-        "B15-O001",
-        "R171-T001"
+        "B16-O001",
+        "R182-T001",
+        "R185-T001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T071",
@@ -2760,15 +2785,26 @@
         "R2-T147",
         "R2-T148"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "地图数为饭局数非人数",
-        "列表同集合",
-        "返回保留筛选区域和卡片"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "Actual browser and actual router component reproduce losing language/bounds/view/area context on detail Back. Minimal formal repair and independent exact path replay pending; map/provider gate not used to hide this local defect.",
+      "remainingExpected": [],
+      "actual": "F33 actual browser filter/selected return plus actual router bounds/areas/card/profile path and controlled SDK two-meal/five-person map/list equality. Planned browser_or_unit scope; no live Google SDK certification.",
       "defectIds": [
         "QA-F33"
+      ],
+      "history": [
+        {
+          "status": "FAIL",
+          "actual": "Actual browser and actual router component reproduce losing language/bounds/view/area context on detail Back. Minimal formal repair and independent exact path replay pending; map/provider gate not used to hide this local defect.",
+          "evidence": [
+            "B15-O001",
+            "R171-T001"
+          ],
+          "reason": "Fourth QA batch actual/targeted verification; historical evidence retained"
+        }
       ]
     },
     {
@@ -2925,8 +2961,12 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "B14-O001",
+        "B16-O003",
+        "R185-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T071",
         "R1-T072",
@@ -2977,13 +3017,21 @@
         "R2-T147",
         "R2-T148"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "拖动不误触详情",
-        "已选位置与预览分开",
-        "确认前不改创建草稿"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：拖动地图后点击标记 → Search this area → 再点餐厅候选。当前仍缺：拖动不误触详情；已选位置与预览分开；确认前不改创建草稿。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+      "remainingExpected": [],
+      "actual": "Actual app GoogleMap/Discover with controlled SDK: camera idle changes only pending viewport, explicit Search this area applies, pin preview makes no detail/confirm/create call. Actual restaurant preview does not alter confirmed draft before Use. No real Google physical-device gesture claim; GATE002 stays blocked.",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：拖动地图后点击标记 → Search this area → 再点餐厅候选。当前仍缺：拖动不误触详情；已选位置与预览分开；确认前不改创建草稿。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。",
+          "evidence": [],
+          "reason": "Fourth QA batch actual/targeted verification; historical evidence retained"
+        }
+      ]
     },
     {
       "id": "QA-DISCOVERY-005",
@@ -3591,8 +3639,13 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "B16-O002",
+        "B16-O003",
+        "R183-T001",
+        "R183-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T080",
         "R1-T081",
@@ -3641,13 +3694,21 @@
         "R2-T143",
         "R2-T144"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "菜单在手机边界内且聚焦选中项",
-        "取消保持旧值",
-        "不可用时段清除并说明"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：开时间菜单 → 键盘上下选择 → Escape和点外部 → 切餐厅。当前仍缺：菜单在手机边界内且聚焦选中项；取消保持旧值；不可用时段清除并说明。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+      "remainingExpected": [],
+      "actual": "F34/F35 formal actual Create and390/320 browser:48 slots,160x224 internal scroll/selected focus, keyboard and outside cancel preserve value; confirmed different venue clears time/declarations and explains required re-selection. Current PRD uses all48 planned slots, not obsolete supplier inventory filtering.",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：开时间菜单 → 键盘上下选择 → Escape和点外部 → 切餐厅。当前仍缺：菜单在手机边界内且聚焦选中项；取消保持旧值；不可用时段清除并说明。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。",
+          "evidence": [],
+          "reason": "Fourth QA batch actual/targeted verification; historical evidence retained"
+        }
+      ]
     },
     {
       "id": "QA-DB-001",
@@ -16974,7 +17035,7 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "PASS",
+      "status": "NOT_RUN",
       "evidence": [
         "B6-T002"
       ],
@@ -17287,18 +17348,26 @@
         "R5-T010",
         "R5-T011"
       ],
-      "coveredExpectedIndexes": [
-        0,
-        1,
-        2
+      "coveredExpectedIndexes": [],
+      "remainingExpected": [
+        "席位和群分别变化",
+        "只读已授权union历史",
+        "解散不可重开"
       ],
-      "remainingExpected": [],
-      "actual": "B6实际IAB从Round1获准→本人取消席位后仍发送群消息→本人另退群只读→主动重申Round2待审→H批准重入→host解散。离群间隔GAP由仍授权host发送，返回guest只见离群前旧消息与重入后AFTER_REJOIN、GAP0，解散后Message0，刷新仍只读且无重新开启控件。全部使用真实本地API/PG、模拟身份/餐厅，非iOS原生/真实服务。",
+      "actual": "B6 Web cancellation/seat/group union-history/dissolution slice remains valid, but frozen case requires native/Web role swap too. Native half is now locally executable and being completed on a separate meal to preserve main happy path; no external dependency claimed.",
       "history": [
         {
           "status": "NOT_RUN",
           "actual": "本地生产实现尚需实际执行：成员获准→本人退席位→仍群聊→主动退群→重申获准→解散。尚缺逐项证据：席位和群分别变化；只读已授权union历史；解散不可重开。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
           "reason": "B6 complete real-browser seat/group independence journey"
+        },
+        {
+          "status": "PASS",
+          "actual": "B6实际IAB从Round1获准→本人取消席位后仍发送群消息→本人另退群只读→主动重申Round2待审→H批准重入→host解散。离群间隔GAP由仍授权host发送，返回guest只见离群前旧消息与重入后AFTER_REJOIN、GAP0，解散后Message0，刷新仍只读且无重新开启控件。全部使用真实本地API/PG、模拟身份/餐厅，非iOS原生/真实服务。",
+          "evidence": [
+            "B6-T002"
+          ],
+          "reason": "Correct scope: B6 proves Web slice only; frozen cross-client role-swap preconditions not completed"
         }
       ]
     },
@@ -18616,8 +18685,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "R187-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T054",
         "R1-T055",
@@ -18934,7 +19005,10 @@
         "410清旧缓存选新snapshot",
         "无假成功"
       ],
-      "actual": "本地生产实现尚需实际执行：申请编辑中401→登录 → 审批409 → 群403 → 后台snapshot410 → 断网恢复。尚缺逐项证据：原稿/目标保留但不自动重放写；403转历史；410清旧缓存选新snapshot；无假成功。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "F38 first message-read429 is hidden as SAY HELLO empty state; independent original R187 red. Owner working-tree fix passes R188 but formal commit and targeted/browser recheck pending; other full path assertions remain unexecuted.",
+      "defectIds": [
+        "QA-F38"
+      ]
     },
     {
       "id": "QA-JOURNEY-009",
@@ -22465,7 +22539,8 @@
       "status": "completed",
       "conclusion": "success",
       "url": "https://github.com/daisiechen/Grab-in-London/actions/runs/39581746626"
-    }
+    },
+    "documentationTests": "77 Python documentation/configuration tests; current batch independently rerun after freeze."
   },
   "lastTargetedCommit": "0518d45f89a392c716debc87ba9e23b27d26b5e2",
   "defectStatus": {
@@ -22492,10 +22567,21 @@
     "QA-F21": "CLOSED_TARGETED_QA",
     "QA-F22": "CLOSED_TARGETED_QA",
     "QA-F23": "CLOSED_TARGETED_QA",
-    "QA-F24": "OPEN",
-    "QA-F25": "OPEN",
-    "QA-F26": "OPEN",
-    "QA-F27": "OPEN"
+    "QA-F24": "CLOSED_TARGETED_QA",
+    "QA-F25": "CLOSED_TARGETED_QA",
+    "QA-F26": "CLOSED_TARGETED_QA",
+    "QA-F27": "CLOSED_TARGETED_QA",
+    "QA-F28": "CLOSED_TARGETED_QA",
+    "QA-F29": "CLOSED_TARGETED_QA",
+    "QA-F30": "CLOSED_TARGETED_QA",
+    "QA-F31": "CLOSED_TARGETED_QA",
+    "QA-F32": "CLOSED_TARGETED_QA",
+    "QA-F33": "CLOSED_TARGETED_QA",
+    "QA-F34": "CLOSED_TARGETED_QA",
+    "QA-F35": "CLOSED_TARGETED_QA",
+    "QA-F36": "CLOSED_TARGETED_QA",
+    "QA-F37": "CLOSED_TARGETED_QA",
+    "QA-F38": "OPEN"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -22504,5 +22590,12 @@
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
     "latestFeedback": "F22/F23 independently closed on61ff R12617green; F24 mapping/F25 date-window/F26 native raw-error log/F27 discovery scan limit open with developer owners. Local execution continues; native headless XCTest smoke now owner-proven and full journeys pending."
   },
-  "blockerTriage": "原14条中供应商分步删除和恢复删除台账两条已转本地执行并通过；其余12条缺真实环境/许可/批准证据，各项可本地准备部分已继续推进，不能视为12个未修代码故障。"
+  "blockerTriage": "当前11条外部门槛仍缺真实供应商/真实设备发行/部署或政策批准；AI034已转本地NOT_RUN，模拟器、runtime、正常签名和原生UI已实际可运行。原14条中的两项本地隐私/恢复已通过，不能重列待修。当前FAIL为F38显示问题由开发修复，不需用户确认；剩余本地双端完整旅程继续推进。",
+  "nextExecution": [
+    "完成F38正式修复的独立定向/真实错误态复验，保首次失败与QA夹具错误。",
+    "继续现有同餐局原生/Web完整旅程并互换角色；单独场景执行退席位/退群/重入/解散，避免污染正常路径一次性事实。",
+    "本地AI生命周期/重装及AI完整用户路径由开发落实受控服务夹具；后台/支持以明确复制receipt或同环境实际事实核对，不能仅因缺夹具而交给用户。",
+    "真实供应商、账号Key、付款/部署/保留政策及真实发行设备仅保留必要外部门槛，不以本地mock或模拟器关闭。"
+  ],
+  "currentExecutionSlice": "当前实际矩阵：Web83df（F33/34/35）+原生83df→611a（正常签名/真实XCTest）+API19d/隔离PG。F38首次读取错误原反例仍FAIL；R188含原开发未提交修复只作工作树验证。B16记录实际跨端申请/待审/批准/双向消息，完整角色互换和后续旅程仍未授PASS。"
 }

@@ -17,10 +17,13 @@ command = subprocess.check_output(['/bin/ps', '-p', pid, '-o', 'command='], text
 if 'infra/local-acceptance.ts' not in command:
     raise SystemExit('Not the disposable local acceptance API')
 connections = subprocess.check_output(['/usr/sbin/lsof', '-a', '-p', pid, '-nP', '-iTCP'], text=True)
+listeners = set(re.findall(r":(\d+)\s+\(LISTEN\)", connections))
+if not listeners:
+    raise SystemExit("Owned API listener not observed")
 ports = collections.Counter()
 for line in connections.splitlines():
     m = re.search(r'127\.0\.0\.1:(\d+)->127\.0\.0\.1:(\d+) \(ESTABLISHED\)', line)
-    if m and m[1] != '3000':
+    if m and m[1] not in listeners:
         ports[m[2]] += 1
 if len(ports) != 1:
     raise SystemExit('Cannot uniquely identify the owned loopback PG connection')
@@ -39,6 +42,13 @@ if len(names) != 1 or not re.fullmatch(r'fancy_test_[a-z0-9_]+', names[0]):
 # Only the explicitly named meal's sealed marks/roster/jobs. No session, email, text or query columns.
 sql = f"""BEGIN READ ONLY;
 SELECT json_build_object('ownedClockDatabaseVerified',true,'mealId','{meal}',
+ 'meal',(SELECT row_to_json(x) FROM (SELECT id,status,version,head,minimum,capacity FROM meals WHERE id='{meal}'::uuid) x),
+ 'applications',(SELECT coalesce(json_agg(x ORDER BY x.id),'[]'::json) FROM (SELECT id,user_id,round,state,version FROM applications WHERE meal_id='{meal}'::uuid) x),
+ 'seats',(SELECT coalesce(json_agg(x ORDER BY x.seq),'[]'::json) FROM (SELECT seq,type,user_id FROM seat_events WHERE meal_id='{meal}'::uuid) x),
+ 'groupMemberships',(SELECT coalesce(json_agg(x ORDER BY x.user_id,x.join_seq),'[]'::json) FROM (SELECT m.user_id,m.join_seq,m.leave_seq FROM membership_intervals m JOIN conversations c ON c.id=m.conversation_id WHERE c.meal_id='{meal}'::uuid) x),
+ 'messageRefs',(SELECT coalesce(json_agg(x ORDER BY x.seq),'[]'::json) FROM (SELECT msg.id,msg.seq,msg.sender_id FROM messages msg JOIN conversations c ON c.id=msg.conversation_id WHERE c.meal_id='{meal}'::uuid) x),
+ 'notifications',(SELECT coalesce(json_agg(x ORDER BY x.id),'[]'::json) FROM (SELECT id,event_id,recipient_id,channel,template FROM notifications WHERE refs->>'mealId'='{meal}') x),
+ 'messageCount',(SELECT count(*) FROM messages m JOIN conversations c ON c.id=m.conversation_id WHERE c.meal_id='{meal}'::uuid),
  'marks',(SELECT coalesce(json_agg(x ORDER BY x.kind),'[]'::json) FROM (SELECT kind,due_at FROM lifecycle_marks WHERE meal_id='{meal}'::uuid) x),
  'startRoster',(SELECT coalesce(json_agg(x ORDER BY x.user_id),'[]'::json) FROM (SELECT user_id,starts_at FROM start_roster WHERE meal_id='{meal}'::uuid) x),
  'jobs',(SELECT coalesce(json_agg(x ORDER BY x.kind),'[]'::json) FROM (SELECT kind,state,due_at,attempts FROM jobs WHERE resource_id='{meal}'::uuid AND kind IN ('meal.close','meal.start','meal.end')) x));

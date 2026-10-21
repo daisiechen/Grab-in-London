@@ -1,0 +1,46 @@
+{
+  "scope": "Independent retained-data actual Release runtime review; no real-device or external-provider certification",
+  "builds": [
+    {
+      "sourceCommit": "83dfde329d0f34d09833ae18dc4d30168daea01b",
+      "sourceFilesMatchedAgainstGit": 190,
+      "binarySha256": "dfc1cd565ddd310296a278411c80b2f7d4fdbe3dd9ba322c9526b5a84ca68ed2",
+      "hermesSha256": "3080f2e31b98bddf594c260143edfe9bf58d57e5a24c653e09615f490047927e",
+      "actualRuns": [
+        "Apply15 PASS",
+        "Pending16 PASS",
+        "Chat18 PASS with Web/PG confirmation"
+      ],
+      "limits": [
+        "Apply15 uses Back/reenter unsent draft before Send; direct keyboard scroll not certified",
+        "Chat17 layout original red retained; exact Message selector was separate QA setup"
+      ]
+    },
+    {
+      "sourceCommit": "611a90e672f818c9562abf743bf38dddf5f9c643",
+      "sourceFilesMatchedAgainstGit": 191,
+      "binarySha256": "f6e897805f0a2f5f663bcde1efb14e719f09504c8cd99c2cf6b0f2d4e33c114a",
+      "hermesSha256": "3ab9145c1829c05c59eac6c47e64f13d9f69ee7a974a03f5d7c641d7a8046c2e",
+      "actualRuns": [
+        "Chat19 PASS coldrestore; remote two messages; native header geometry"
+      ]
+    }
+  ],
+  "device": {
+    "id": "E770649D-8AED-4B78-AEFE-DB0BB85B4BB7",
+    "os": "iOS27.0",
+    "model": "iPhone18Pro simulator"
+  },
+  "server": "frozen local API19d on61973/real PG/synthetic providers",
+  "signingEvidence": "Normal Xcode automatic simulated entitlement/linker section; no hand-authored access groups. Former CODE_SIGNING_ALLOWED=NO candidates failed SecItemCopyMatching-34018; signature-only outer ad-hoc copy did not resolve; no Keychain value read or data reset.",
+  "crossClientFacts": {
+    "mealId": "acfe9e54-d6d7-4c63-81b6-f6aae4e53610",
+    "hostId": "fc2e9e2a-20db-41db-936f-2c1493315583",
+    "guestId": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+    "applicationId": "ffceafab-1a8a-43d2-be05-dca1529f1b83",
+    "groupId": "06cbc092-d158-404c-afd1-368de46e1459",
+    "messageCount": 2,
+    "onePerSender": true
+  },
+  "fullJourneyAccepted": false
+}

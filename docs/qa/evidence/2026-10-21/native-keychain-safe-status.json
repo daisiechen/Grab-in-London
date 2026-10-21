@@ -1,0 +1,19 @@
+{
+  "kind": "read-only fixed metadata projection",
+  "device": "E770649D-8AED-4B78-AEFE-DB0BB85B4BB7",
+  "diagnosticRun": "Diag10",
+  "fancyPID": 95132,
+  "window": "2026-10-21 21:16:20+0100 to 21:17:20+0100",
+  "selection": "Fancy exact processIdentifier 95132 OR securityd event containing exact Fancy PID 95132; no other application logs",
+  "pairs": [
+    {"fancySecItemCopyMatching": "2026-10-21 21:16:25.517638+0100", "directlyPIDLinkedSecurityd": "2026-10-21 21:16:25.523570+0100", "securitydPID": 57729, "OSStatus": -34018},
+    {"fancySecItemCopyMatching": "2026-10-21 21:16:27.926355+0100", "directlyPIDLinkedSecurityd": "2026-10-21 21:16:27.926900+0100", "securitydPID": 57729, "OSStatus": -34018}
+  ],
+  "symbol": "errSecMissingEntitlement",
+  "scope": "getItem failed, no parse/delete or refresh HTTP on the observed attempts",
+  "conclusion": "Keychain operation rejected for missing required entitlement; exact absent entitlement/signing configuration requires separate verification",
+  "notClaimed": ["credential corruption", "wrong API", "specific keychain access-group value", "real device signing behavior"],
+  "rawLogsSaved": false,
+  "keychainContentRead": false,
+  "deviceActions": false
+}

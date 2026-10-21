@@ -1,0 +1,43 @@
+{
+  "testedCommit": "83dfde329d0f34d09833ae18dc4d30168daea01b",
+  "at390": {
+    "focus": "18:30",
+    "menu": {
+      "bottom": 671.9375,
+      "clientHeight": 222,
+      "height": 224,
+      "left": 21,
+      "overflow": "auto",
+      "right": 181,
+      "scrollHeight": 1750,
+      "top": 447.9375,
+      "width": 160
+    },
+    "options": 48,
+    "viewport": {
+      "height": 844,
+      "width": 390
+    }
+  },
+  "at320": {
+    "focus": "19:00",
+    "menu": {
+      "bottom": 671.984375,
+      "height": 224,
+      "left": 21,
+      "right": 181,
+      "top": 447.984375,
+      "width": 160
+    },
+    "viewport": {
+      "height": 844,
+      "width": 320
+    }
+  },
+  "keyboard": {
+    "cancel": "18:30",
+    "choose": "19:00",
+    "outsideClose": "19:00"
+  },
+  "environment": "Actual production Create UI; local synthetic API19d. Prior measurement on non-selected tab1280 excluded from mobile claim."
+}

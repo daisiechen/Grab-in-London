@@ -1,0 +1,14 @@
+{"stage": "restore.started", "name": "unknown", "domain": "unknown", "code": null, "stringCodeCategory": "unknown"}
+{"stage": "marker.started", "name": "unknown", "domain": "unknown", "code": null, "stringCodeCategory": "unknown"}
+{"stage": "marker.present", "name": "unknown", "domain": "unknown", "code": null, "stringCodeCategory": "unknown"}
+{"stage": "readRefresh.started", "name": "unknown", "domain": "unknown", "code": null, "stringCodeCategory": "unknown"}
+{"stage": "getItem.started", "name": "unknown", "domain": "unknown", "code": null, "stringCodeCategory": "unknown"}
+{"stage": "getItem.failed", "name": "Error", "domain": "unknown", "code": null, "stringCodeCategory": "keychain"}
+{"stage": "readRefresh.failed", "name": "Error", "domain": "unknown", "code": null, "stringCodeCategory": "keychain"}
+{"stage": "restore.failed", "name": "Error", "domain": "unknown", "code": null, "stringCodeCategory": "keychain"}
+{"stage": "restore.started", "name": "unknown", "domain": "unknown", "code": null, "stringCodeCategory": "unknown"}
+{"stage": "readRefresh.started", "name": "unknown", "domain": "unknown", "code": null, "stringCodeCategory": "unknown"}
+{"stage": "getItem.started", "name": "unknown", "domain": "unknown", "code": null, "stringCodeCategory": "unknown"}
+{"stage": "getItem.failed", "name": "Error", "domain": "unknown", "code": null, "stringCodeCategory": "keychain"}
+{"stage": "readRefresh.failed", "name": "Error", "domain": "unknown", "code": null, "stringCodeCategory": "keychain"}
+{"stage": "restore.failed", "name": "Error", "domain": "unknown", "code": null, "stringCodeCategory": "keychain"}

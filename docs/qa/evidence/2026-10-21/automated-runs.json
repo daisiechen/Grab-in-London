@@ -17823,6 +17823,3058 @@
           "durationMs": 4.440082999999959
         }
       ]
+    },
+    {
+      "id": "R176",
+      "testedCommit": "f7bb95eb0fe951295fe9b88fe43ba9dbc76a528c",
+      "command": "F35 independent actual create component candidate; QA accessible child-text whitespace mismatch",
+      "startedAt": "2026-10-21T20:30:16.468000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R176-T001",
+          "run": "R176",
+          "path": "apps/web/src/features/create/qa-independent-venue-reset.unit.test.tsx",
+          "title": "QA-CREATE-004 preview preserves old time but explicit different venue confirmation clears time and both declarations",
+          "status": "failed",
+          "durationMs": 1131.974458,
+          "failureSummary": "Error: Unable to find role=\"button\" and name \"South South fixture street\"\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<aside\u001b[39m\n        \u001b[33maria-label\u001b[39m=\u001b[32m\"Optional analytics\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"body-pad\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<h2>\u001b[39m\n          \u001b[0mHelp improve Fancy\u001b[0m\n        \u001b[36m</h2>\u001b[39m\n        \u001b[36m<p>\u001b[39m\n          \u001b[0mAllow optional usage analytics, including meal views and discovery results? We don’t collect message text or search keywords. You can decline and keep using Fancy.\u001b[0m\n        \u001b[36m</p>\u001b[39m\n        \u001b[36m<button\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"primary secondary\"\u001b[39m\n          \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mAllow analytics\u001b[0m\n        \u001b[36m</button>\u001b[39m\n        \u001b[36m<button\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"primary secondary\"\u001b[39m\n          \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mDecline analytics\u001b[0m\n        \u001b[36m</button>\u001b[39m\n      \u001b[36m</aside>\u001b[39m\n      \u001b[36m<main\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-main no-nav\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"body-pad create-flow\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33maria-label\u001b[39m=\u001b[32m\"Step 1 of 4\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"create-progress\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<button\u001b[39m\n              \u001b[33maria-current\u001b[39m=\u001b[32m\"step\"\u001b[39m\n              \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span>\u001b[39m\n                \u001b[0m1\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[0mArrange\u001b[0m\n            \u001b[36m</button>\u001b[39m\n            \u001b[36m<button\u001b[39m\n              \u001b[33mdisabled\u001b[39m=\u001b[32m\"\"\u001b[39m\n              \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span>\u001b[39m\n                \u001b[0m2\u001b[0m\n            "
+        }
+      ]
+    },
+    {
+      "id": "R174",
+      "testedCommit": "f7bb95eb0fe951295fe9b88fe43ba9dbc76a528c",
+      "command": "Web QA OTP/cancel return and guest public map fallback",
+      "startedAt": "2026-10-21T20:18:58.382000+00:00",
+      "exitCode": 0,
+      "passed": 4,
+      "failed": 0,
+      "total": 4,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R174-T001",
+          "run": "R174",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-003 expired code rejects and explicit post-cooldown resend preserves email with fresh challenge",
+          "status": "passed",
+          "durationMs": 200.60333300000002
+        },
+        {
+          "id": "R174-T002",
+          "run": "R174",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-004 GOOGLE cancelled OAuth retains exact meal apply target without submitting application",
+          "status": "passed",
+          "durationMs": 140.15837499999998
+        },
+        {
+          "id": "R174-T003",
+          "run": "R174",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-004 APPLE cancelled OAuth retains exact meal apply target without submitting application",
+          "status": "passed",
+          "durationMs": 119.44045800000004
+        },
+        {
+          "id": "R174-T004",
+          "run": "R174",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-001 guest can open public map/list fallback without signing in or automatic writes",
+          "status": "passed",
+          "durationMs": 35.112707999999884
+        }
+      ],
+      "environmentNote": "Relevant Web source matches specified tested commit; unrelated concurrent native/docs changes are not claimed tested by this Web slice."
+    },
+    {
+      "id": "R175",
+      "testedCommit": "f7bb95eb0fe951295fe9b88fe43ba9dbc76a528c",
+      "command": "F33 original Discover Back repair",
+      "startedAt": "2026-10-21T20:20:18.592000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R175-T001",
+          "run": "R175",
+          "path": "apps/web/src/features/discover/qa-independent-return.unit.test.tsx",
+          "title": "QA-DISCOVERY-001 detail Back restores applied filters bounds view and selected area card",
+          "status": "passed",
+          "durationMs": 218.38970800000004
+        }
+      ],
+      "environmentNote": "Relevant Web source matches specified tested commit; unrelated concurrent native/docs changes are not claimed tested by this Web slice."
+    },
+    {
+      "id": "R177",
+      "testedCommit": "f7bb95eb0fe951295fe9b88fe43ba9dbc76a528c",
+      "command": "F35 targeted current working-tree green; formal386e verification supersedes",
+      "startedAt": "2026-10-21T20:30:44.029000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R177-T001",
+          "run": "R177",
+          "path": "apps/web/src/features/create/qa-independent-venue-reset.unit.test.tsx",
+          "title": "QA-CREATE-004 preview preserves old time but explicit different venue confirmation clears time and both declarations",
+          "status": "passed",
+          "durationMs": 284.8711669999999
+        }
+      ],
+      "environmentNote": "Concurrent owner working-tree CreatePage repair, no formal claim until R183. Original unchanged f7 fails R181."
+    },
+    {
+      "id": "R178",
+      "testedCommit": "f7bb95eb0fe951295fe9b88fe43ba9dbc76a528c",
+      "command": "archive setup failure no test executed",
+      "startedAt": "2026-10-21T20:31:14.026251+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 0,
+      "total": 0,
+      "suiteFiles": 1,
+      "assertions": [],
+      "suiteLoadFailures": [
+        {
+          "path": "apps/web/src/features/create/qa-independent-venue-reset.unit.test.tsx",
+          "message": "QA archive setup: relative copy source absent, then pnpm refused external modules symlink; no test executed/no modules removed"
+        }
+      ]
+    },
+    {
+      "id": "R179",
+      "testedCommit": "f7bb95eb0fe951295fe9b88fe43ba9dbc76a528c",
+      "command": "archive setup failure no test executed",
+      "startedAt": "2026-10-21T20:31:25.898130+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 0,
+      "total": 0,
+      "suiteFiles": 1,
+      "assertions": [],
+      "suiteLoadFailures": [
+        {
+          "path": "apps/web/src/features/create/qa-independent-venue-reset.unit.test.tsx",
+          "message": "QA archive setup: pnpm refused modules symlink outside archive; no test executed/no modules removed"
+        }
+      ]
+    },
+    {
+      "id": "R180",
+      "testedCommit": "f7bb95eb0fe951295fe9b88fe43ba9dbc76a528c",
+      "command": "archive config load setup failure no test executed",
+      "startedAt": "2026-10-21T20:31:46.196121+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 0,
+      "total": 0,
+      "suiteFiles": 1,
+      "assertions": [],
+      "suiteLoadFailures": [
+        {
+          "path": "apps/web/src/features/create/qa-independent-venue-reset.unit.test.tsx",
+          "message": "QA archive setup: direct Vitest could not load unrelated Admin config without its dependencies symlink; no test executed"
+        }
+      ]
+    },
+    {
+      "id": "R181",
+      "testedCommit": "f7bb95eb0fe951295fe9b88fe43ba9dbc76a528c",
+      "command": "F35 original real f7 archive with identical canonical QA probe; normalized test path only",
+      "startedAt": "2026-10-21T20:32:00.227000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R181-T001",
+          "run": "R181",
+          "path": "apps/web/src/features/create/qa-independent-venue-reset.unit.test.tsx",
+          "title": "QA-CREATE-004 preview preserves old time but explicit different venue confirmation clears time and both declarations",
+          "status": "failed",
+          "durationMs": 269.289166,
+          "failureSummary": "AssertionError: expected { …(20) } to match object { time: '', …(7) }\n(20 matching properties omitted from actual)"
+        }
+      ],
+      "environmentNote": "Identical QA test copied into frozen f7 archive. Dependency symlinks only; no shared production checkout rollback. Canonical test filename normalized for public evidence; raw original JSON retained locally."
+    },
+    {
+      "id": "R182",
+      "testedCommit": "83dfde329d0f34d09833ae18dc4d30168daea01b",
+      "command": "F33 original router plus host-profile return and existing maps/context regressions",
+      "startedAt": "2026-10-21T20:33:03.994000+00:00",
+      "exitCode": 0,
+      "passed": 20,
+      "failed": 0,
+      "total": 20,
+      "suiteFiles": 3,
+      "assertions": [
+        {
+          "id": "R182-T001",
+          "run": "R182",
+          "path": "apps/web/src/features/discover/qa-independent-return.unit.test.tsx",
+          "title": "QA-DISCOVERY-001 detail Back restores applied filters bounds view and selected area card",
+          "status": "passed",
+          "durationMs": 187.21129099999996
+        },
+        {
+          "id": "R182-T002",
+          "run": "R182",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "returns to the applied Discover filters and list context through meal and host profile",
+          "status": "passed",
+          "durationMs": 164.35524999999996
+        },
+        {
+          "id": "R182-T003",
+          "run": "R182",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "returns to the applied Discover filters and areas context through meal and host profile",
+          "status": "passed",
+          "durationMs": 108.66866600000014
+        },
+        {
+          "id": "R182-T004",
+          "run": "R182",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "returns to the applied Discover filters and map context through meal and host profile",
+          "status": "passed",
+          "durationMs": 80.69391599999994
+        },
+        {
+          "id": "R182-T005",
+          "run": "R182",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "rejects unsupported Discover source https://evil.example/discover?languages=en",
+          "status": "passed",
+          "durationMs": 0.13316600000007384
+        },
+        {
+          "id": "R182-T006",
+          "run": "R182",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "rejects unsupported Discover source //evil.example/discover",
+          "status": "passed",
+          "durationMs": 0.06887499999993452
+        },
+        {
+          "id": "R182-T007",
+          "run": "R182",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "rejects unsupported Discover source /discover/other?languages=en",
+          "status": "passed",
+          "durationMs": 0.06895900000017718
+        },
+        {
+          "id": "R182-T008",
+          "run": "R182",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "rejects unsupported Discover source /discover?languages=en#outside",
+          "status": "passed",
+          "durationMs": 0.03791599999999562
+        },
+        {
+          "id": "R182-T009",
+          "run": "R182",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "rejects unsupported Discover source /settings/deletion",
+          "status": "passed",
+          "durationMs": 0.03679199999987759
+        },
+        {
+          "id": "R182-T010",
+          "run": "R182",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "canonicalizes only supported filter/UI values and retains validated viewport bounds",
+          "status": "passed",
+          "durationMs": 0.40083400000003166
+        },
+        {
+          "id": "R182-T011",
+          "run": "R182",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "restores a selected later-page card through its signed source cursor and continues from that page",
+          "status": "passed",
+          "durationMs": 95.68537500000002
+        },
+        {
+          "id": "R182-T012",
+          "run": "R182",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "falls back once to the current first page when the selected source is expired",
+          "status": "passed",
+          "durationMs": 20.173999999999978
+        },
+        {
+          "id": "R182-T013",
+          "run": "R182",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "falls back once to the current first page when the selected source is removed",
+          "status": "passed",
+          "durationMs": 18.71658400000001
+        },
+        {
+          "id": "R182-T014",
+          "run": "R182",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "does not hide a source-page service outage behind an unfiltered fallback",
+          "status": "passed",
+          "durationMs": 13.348416999999927
+        },
+        {
+          "id": "R182-T015",
+          "run": "R182",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "keeps an offline source-page failure visible without querying the first page",
+          "status": "passed",
+          "durationMs": 13.337332999999944
+        },
+        {
+          "id": "R182-T016",
+          "run": "R182",
+          "path": "apps/web/src/features/maps/maps.unit.test.tsx",
+          "title": "configured Google Maps boundary (mock SDK evidence) does not request Google scripts when no browser key is configured",
+          "status": "passed",
+          "durationMs": 16.22229200000004
+        },
+        {
+          "id": "R182-T017",
+          "run": "R182",
+          "path": "apps/web/src/features/maps/maps.unit.test.tsx",
+          "title": "configured Google Maps boundary (mock SDK evidence) rejects a demo Map ID in production instead of using a demonstration setup",
+          "status": "passed",
+          "durationMs": 1.1137499999999818
+        },
+        {
+          "id": "R182-T018",
+          "run": "R182",
+          "path": "apps/web/src/features/maps/maps.unit.test.tsx",
+          "title": "configured Google Maps boundary (mock SDK evidence) keeps camera movement pending until Search this area and independently selects accessible pins",
+          "status": "passed",
+          "durationMs": 44.896833000000015
+        },
+        {
+          "id": "R182-T019",
+          "run": "R182",
+          "path": "apps/web/src/features/maps/maps.unit.test.tsx",
+          "title": "configured Google Maps boundary (mock SDK evidence) round-trips explicit bounds and clears them while preserving other applied filters",
+          "status": "passed",
+          "durationMs": 0.3871669999999767
+        },
+        {
+          "id": "R182-T020",
+          "run": "R182",
+          "path": "apps/web/src/features/maps/maps.unit.test.tsx",
+          "title": "configured Google Maps boundary (mock SDK evidence) shows an unavailable state when provider authentication fails after script loading",
+          "status": "passed",
+          "durationMs": 2.583499999999958
+        }
+      ],
+      "environmentNote": "Relevant Web source matches specified tested commit; unrelated concurrent native/docs changes are not claimed tested by this Web slice."
+    },
+    {
+      "id": "R183",
+      "testedCommit": "83dfde329d0f34d09833ae18dc4d30168daea01b",
+      "command": "formal83df actual Create time menu and changed-venue reset",
+      "startedAt": "2026-10-21T20:34:53.106000+00:00",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "total": 2,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R183-T001",
+          "run": "R183",
+          "path": "apps/web/src/features/create/qa-independent-time-picker.unit.test.tsx",
+          "title": "QA-CREATE-004 actual Create planned-time menu has48 slots selected focus keyboard cancel choose and outside close",
+          "status": "passed",
+          "durationMs": 171.19629199999997
+        },
+        {
+          "id": "R183-T002",
+          "run": "R183",
+          "path": "apps/web/src/features/create/qa-independent-venue-reset.unit.test.tsx",
+          "title": "QA-CREATE-004 preview preserves old time but explicit different venue confirmation clears time and both declarations",
+          "status": "passed",
+          "durationMs": 168.79591600000003
+        }
+      ]
+    },
+    {
+      "id": "R184",
+      "testedCommit": "f7bb95eb0fe951295fe9b88fe43ba9dbc76a528c",
+      "command": "F34 original real f7 archive with identical canonical QA probe; native select lacks controlled listbox; normalized path only",
+      "startedAt": "2026-10-21T20:35:04.811000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R184-T001",
+          "run": "R184",
+          "path": "apps/web/src/features/create/qa-independent-time-picker.unit.test.tsx",
+          "title": "QA-CREATE-004 actual Create planned-time menu has48 slots selected focus keyboard cancel choose and outside close",
+          "status": "failed",
+          "durationMs": 1085.1495409999998,
+          "failureSummary": "Error: Unable to find role=\"listbox\" and name \"Time\"\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"app\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<aside\u001b[39m\n        \u001b[33maria-label\u001b[39m=\u001b[32m\"Optional analytics\"\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"body-pad\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<h2>\u001b[39m\n          \u001b[0mHelp improve Fancy\u001b[0m\n        \u001b[36m</h2>\u001b[39m\n        \u001b[36m<p>\u001b[39m\n          \u001b[0mAllow optional usage analytics, including meal views and discovery results? We don’t collect message text or search keywords. You can decline and keep using Fancy.\u001b[0m\n        \u001b[36m</p>\u001b[39m\n        \u001b[36m<button\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"primary secondary\"\u001b[39m\n          \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mAllow analytics\u001b[0m\n        \u001b[36m</button>\u001b[39m\n        \u001b[36m<button\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"primary secondary\"\u001b[39m\n          \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mDecline analytics\u001b[0m\n        \u001b[36m</button>\u001b[39m\n      \u001b[36m</aside>\u001b[39m\n      \u001b[36m<main\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"app-main no-nav\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"body-pad create-flow\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33maria-label\u001b[39m=\u001b[32m\"Step 1 of 4\"\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"create-progress\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<button\u001b[39m\n              \u001b[33maria-current\u001b[39m=\u001b[32m\"step\"\u001b[39m\n              \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span>\u001b[39m\n                \u001b[0m1\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[0mArrange\u001b[0m\n            \u001b[36m</button>\u001b[39m\n            \u001b[36m<button\u001b[39m\n              \u001b[33mdisabled\u001b[39m=\u001b[32m\"\"\u001b[39m\n              \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span>\u001b[39m\n                \u001b[0m2\u001b[0m\n              \u001b[36m</span>\u001b[39m\n "
+        }
+      ],
+      "environmentNote": "Identical QA test copied into frozen f7 archive. Dependency symlinks only; no shared production checkout rollback. Canonical test filename normalized for public evidence; raw original JSON retained locally."
+    },
+    {
+      "id": "R185",
+      "testedCommit": "83dfde329d0f34d09833ae18dc4d30168daea01b",
+      "command": "actual Discover+GoogleMap with controlled SDK two meals vs five people; no real Google request",
+      "startedAt": "2026-10-21T20:52:53.426000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R185-T001",
+          "run": "R185",
+          "path": "apps/web/src/features/discover/qa-independent-map.unit.test.tsx",
+          "title": "QA-DISCOVERY-001 QA-DISCOVERY-004 two meals not five people share map/list; camera movement and pin preview never open detail automatically",
+          "status": "passed",
+          "durationMs": 155.11187499999994
+        }
+      ],
+      "environmentNote": "Relevant Web source matches specified tested commit; unrelated concurrent native/docs changes are not claimed tested by this Web slice."
+    },
+    {
+      "id": "R186",
+      "testedCommit": "83dfde329d0f34d09833ae18dc4d30168daea01b",
+      "command": "all five QA-owned Web slices,8 exact behavioral checks, type-safe fixture shape",
+      "startedAt": "2026-10-21T20:54:40.561000+00:00",
+      "exitCode": 0,
+      "passed": 8,
+      "failed": 0,
+      "total": 8,
+      "suiteFiles": 5,
+      "assertions": [
+        {
+          "id": "R186-T001",
+          "run": "R186",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-003 expired code rejects and explicit post-cooldown resend preserves email with fresh challenge",
+          "status": "passed",
+          "durationMs": 568.280209
+        },
+        {
+          "id": "R186-T002",
+          "run": "R186",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-004 GOOGLE cancelled OAuth retains exact meal apply target without submitting application",
+          "status": "passed",
+          "durationMs": 216.41570899999988
+        },
+        {
+          "id": "R186-T003",
+          "run": "R186",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-004 APPLE cancelled OAuth retains exact meal apply target without submitting application",
+          "status": "passed",
+          "durationMs": 161.65149999999994
+        },
+        {
+          "id": "R186-T004",
+          "run": "R186",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-001 guest can open public map/list fallback without signing in or automatic writes",
+          "status": "passed",
+          "durationMs": 48.75937500000009
+        },
+        {
+          "id": "R186-T005",
+          "run": "R186",
+          "path": "apps/web/src/features/create/qa-independent-time-picker.unit.test.tsx",
+          "title": "QA-CREATE-004 actual Create planned-time menu has48 slots selected focus keyboard cancel choose and outside close",
+          "status": "passed",
+          "durationMs": 508.49758299999985
+        },
+        {
+          "id": "R186-T006",
+          "run": "R186",
+          "path": "apps/web/src/features/create/qa-independent-venue-reset.unit.test.tsx",
+          "title": "QA-CREATE-004 preview preserves old time but explicit different venue confirmation clears time and both declarations",
+          "status": "passed",
+          "durationMs": 518.8862079999999
+        },
+        {
+          "id": "R186-T007",
+          "run": "R186",
+          "path": "apps/web/src/features/discover/qa-independent-map.unit.test.tsx",
+          "title": "QA-DISCOVERY-001 QA-DISCOVERY-004 two meals not five people share map/list; camera movement and pin preview never open detail automatically",
+          "status": "passed",
+          "durationMs": 520.9385000000002
+        },
+        {
+          "id": "R186-T008",
+          "run": "R186",
+          "path": "apps/web/src/features/discover/qa-independent-return.unit.test.tsx",
+          "title": "QA-DISCOVERY-001 detail Back restores applied filters bounds view and selected area card",
+          "status": "passed",
+          "durationMs": 585.5325830000002
+        }
+      ],
+      "environmentNote": "Relevant Web source matches specified tested commit; unrelated concurrent native/docs changes are not claimed tested by this Web slice."
+    },
+    {
+      "id": "R187",
+      "testedCommit": "83dfde329d0f34d09833ae18dc4d30168daea01b",
+      "command": "original F38 first read429 renders empty SAY HELLO and hides read failure",
+      "startedAt": "2026-10-21T21:00:41.539000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R187-T001",
+          "run": "R187",
+          "path": "apps/web/src/features/inbox/qa-independent-read-error.unit.test.tsx",
+          "title": "QA-JOURNEY-008 initial message rate limit remains a visible read failure and never claims an empty history",
+          "status": "failed",
+          "durationMs": 48.26116699999989,
+          "failureSummary": "AssertionError: expected <p class=\"chat-date\"></p> to be null"
+        }
+      ],
+      "environmentNote": "Relevant Web source matches specified tested commit; unrelated concurrent native/docs changes are not claimed tested by this Web slice."
+    },
+    {
+      "id": "R188",
+      "testedCommit": "611a90e672f818c9562abf743bf38dddf5f9c643",
+      "command": "pnpm exec vitest run --project web --project admin --reporter=json --outputFile=/private/tmp/fancy-qa-r188.json",
+      "startedAt": "2026-10-21T21:05:57.669000+00:00",
+      "exitCode": 0,
+      "passed": 312,
+      "failed": 0,
+      "total": 312,
+      "suiteFiles": 50,
+      "assertions": [
+        {
+          "id": "R188-T001",
+          "run": "R188",
+          "path": "apps/web/src/api/private-scope.unit.test.tsx",
+          "title": "private component state ownership across Web session boundaries destroys local message, selection, query cache and persisted draft when account identity changes",
+          "status": "passed",
+          "durationMs": 234.69666699999993
+        },
+        {
+          "id": "R188-T002",
+          "run": "R188",
+          "path": "apps/web/src/api/private-scope.unit.test.tsx",
+          "title": "private component state ownership across Web session boundaries preserves the same account local draft during profile/session refreshes",
+          "status": "passed",
+          "durationMs": 156.56295899999986
+        },
+        {
+          "id": "R188-T003",
+          "run": "R188",
+          "path": "apps/web/src/api/private-scope.unit.test.tsx",
+          "title": "private component state ownership across Web session boundaries destroys local component state after a server 401",
+          "status": "passed",
+          "durationMs": 135.7157920000002
+        },
+        {
+          "id": "R188-T004",
+          "run": "R188",
+          "path": "apps/web/src/api/private-scope.unit.test.tsx",
+          "title": "private component state ownership across Web session boundaries destroys local component state after logout even if the server is unavailable",
+          "status": "passed",
+          "durationMs": 111.80254100000002
+        },
+        {
+          "id": "R188-T005",
+          "run": "R188",
+          "path": "apps/web/src/api/private-scope.unit.test.tsx",
+          "title": "private component state ownership across Web session boundaries destroys local component state on deletion acceptance even before navigating away",
+          "status": "passed",
+          "durationMs": 119.815292
+        },
+        {
+          "id": "R188-T006",
+          "run": "R188",
+          "path": "apps/web/src/api/qa-independent-exposure.unit.test.tsx",
+          "title": "QA-METRIC-018 49percent/999ms/background interruption emit nothing; continuous50percent1000ms emits once",
+          "status": "passed",
+          "durationMs": 274.54320899999993
+        },
+        {
+          "id": "R188-T007",
+          "run": "R188",
+          "path": "apps/web/src/api/qa-independent-exposure.unit.test.tsx",
+          "title": "QA-METRIC-018 closed meal cannot start an impression observer",
+          "status": "passed",
+          "durationMs": 72.88716700000009
+        },
+        {
+          "id": "R188-T008",
+          "run": "R188",
+          "path": "apps/web/src/api/session.unit.test.tsx",
+          "title": "SessionProvider signs in from GET /auth/session and sends the CSRF token on writes",
+          "status": "passed",
+          "durationMs": 137.8795419999999
+        },
+        {
+          "id": "R188-T009",
+          "run": "R188",
+          "path": "apps/web/src/api/session.unit.test.tsx",
+          "title": "SessionProvider treats 401 from getSession as a guest and keeps a guest’s drafts for sign-in",
+          "status": "passed",
+          "durationMs": 6.000958999999966
+        },
+        {
+          "id": "R188-T010",
+          "run": "R188",
+          "path": "apps/web/src/api/session.unit.test.tsx",
+          "title": "SessionProvider a network failure while re-checking does not sign a signed-in user out",
+          "status": "passed",
+          "durationMs": 19.063542000000098
+        },
+        {
+          "id": "R188-T011",
+          "run": "R188",
+          "path": "apps/web/src/api/session.unit.test.tsx",
+          "title": "SessionProvider ignores a getSession response that arrives after logout (auth generation)",
+          "status": "passed",
+          "durationMs": 50.289375000000064
+        },
+        {
+          "id": "R188-T012",
+          "run": "R188",
+          "path": "apps/web/src/api/session.unit.test.tsx",
+          "title": "SessionProvider clears caches and drafts on logout even when the server call fails",
+          "status": "passed",
+          "durationMs": 64.3766250000001
+        },
+        {
+          "id": "R188-T013",
+          "run": "R188",
+          "path": "apps/web/src/api/session.unit.test.tsx",
+          "title": "SessionProvider a 401 from any call clears the session and private state",
+          "status": "passed",
+          "durationMs": 15.831624999999804
+        },
+        {
+          "id": "R188-T014",
+          "run": "R188",
+          "path": "apps/web/src/api/telemetry-sources.unit.test.tsx",
+          "title": "analytics source presentations records actual detail presentation after consent without description or venue display",
+          "status": "passed",
+          "durationMs": 283.138417
+        },
+        {
+          "id": "R188-T015",
+          "run": "R188",
+          "path": "apps/web/src/api/telemetry-sources.unit.test.tsx",
+          "title": "analytics source presentations records a public profile only once it is displayed, without profile text",
+          "status": "passed",
+          "durationMs": 76.80008300000009
+        },
+        {
+          "id": "R188-T016",
+          "run": "R188",
+          "path": "apps/web/src/api/telemetry-sources.unit.test.tsx",
+          "title": "analytics source presentations sends fixed form failure metadata and never advances arranged for an invalid form",
+          "status": "passed",
+          "durationMs": 221.1914999999999
+        },
+        {
+          "id": "R188-T017",
+          "run": "R188",
+          "path": "apps/web/src/api/telemetry-sources.unit.test.tsx",
+          "title": "analytics source presentations records arranged after actual arrange validation using the persisted business attempt ID",
+          "status": "passed",
+          "durationMs": 171.6227080000001
+        },
+        {
+          "id": "R188-T018",
+          "run": "R188",
+          "path": "apps/web/src/api/telemetry-sources.unit.test.tsx",
+          "title": "analytics source presentations records a changed filter only after the result succeeds and excludes raw keyword input",
+          "status": "passed",
+          "durationMs": 353.04099999999994
+        },
+        {
+          "id": "R188-T019",
+          "run": "R188",
+          "path": "apps/web/src/api/telemetry-sources.unit.test.tsx",
+          "title": "analytics source presentations drops unrecognised validation copy rather than sending arbitrary text",
+          "status": "passed",
+          "durationMs": 0.23845800000003692
+        },
+        {
+          "id": "R188-T020",
+          "run": "R188",
+          "path": "apps/web/src/api/telemetry-sources.unit.test.tsx",
+          "title": "analytics source presentations does not treat old visible results as a successful filter result when the new request fails",
+          "status": "passed",
+          "durationMs": 215.0119169999998
+        },
+        {
+          "id": "R188-T021",
+          "run": "R188",
+          "path": "apps/web/src/api/telemetry-sources.unit.test.tsx",
+          "title": "analytics source presentations records an authorised empty group opening without recording messages or fabricating a map view",
+          "status": "passed",
+          "durationMs": 83.20483300000024
+        },
+        {
+          "id": "R188-T022",
+          "run": "R188",
+          "path": "apps/web/src/api/telemetry.unit.test.tsx",
+          "title": "optional analytics defaults to disabled, establishes consent with an empty batch, then refetches discovery with enabled header",
+          "status": "passed",
+          "durationMs": 286.2722910000001
+        },
+        {
+          "id": "R188-T023",
+          "run": "R188",
+          "path": "apps/web/src/api/telemetry.unit.test.tsx",
+          "title": "optional analytics allows browsing after decline even when withdrawal delivery fails",
+          "status": "passed",
+          "durationMs": 56.33733399999983
+        },
+        {
+          "id": "R188-T024",
+          "run": "R188",
+          "path": "apps/web/src/api/telemetry.unit.test.tsx",
+          "title": "optional analytics keeps collection disabled while bootstrap is unresolved",
+          "status": "passed",
+          "durationMs": 103.04408399999988
+        },
+        {
+          "id": "R188-T025",
+          "run": "R188",
+          "path": "apps/web/src/api/telemetry.unit.test.tsx",
+          "title": "optional analytics withdraws immediately and obtains a fresh discovery proof after a later explicit opt-in",
+          "status": "passed",
+          "durationMs": 162.1831669999999
+        },
+        {
+          "id": "R188-T026",
+          "run": "R188",
+          "path": "apps/web/src/api/telemetry.unit.test.tsx",
+          "title": "optional analytics records only a continuous foreground second at half visibility, bound to the response request ID",
+          "status": "passed",
+          "durationMs": 87.56108300000005
+        },
+        {
+          "id": "R188-T027",
+          "run": "R188",
+          "path": "apps/web/src/api/useQuery.unit.test.tsx",
+          "title": "private query clearing discards a read that resolves after logout cleared the cache",
+          "status": "passed",
+          "durationMs": 25.847624999999994
+        },
+        {
+          "id": "R188-T028",
+          "run": "R188",
+          "path": "apps/web/src/api/webApi.unit.test.ts",
+          "title": "Intent (one user intent = one Idempotency-Key) reuses the key across transient retries of the same body",
+          "status": "passed",
+          "durationMs": 1.7382499999999936
+        },
+        {
+          "id": "R188-T029",
+          "run": "R188",
+          "path": "apps/web/src/api/webApi.unit.test.ts",
+          "title": "Intent (one user intent = one Idempotency-Key) keeps the key when the user retries after a network failure with the same body",
+          "status": "passed",
+          "durationMs": 0.5447090000000117
+        },
+        {
+          "id": "R188-T030",
+          "run": "R188",
+          "path": "apps/web/src/api/webApi.unit.test.ts",
+          "title": "Intent (one user intent = one Idempotency-Key) starts a new intent after a business rejection, a changed body, or success",
+          "status": "passed",
+          "durationMs": 0.23120799999992414
+        },
+        {
+          "id": "R188-T031",
+          "run": "R188",
+          "path": "apps/web/src/api/webApi.unit.test.ts",
+          "title": "web transport account lifetime rejects late private success and never lets an old 401 clear a newer session",
+          "status": "passed",
+          "durationMs": 5.686667000000057
+        },
+        {
+          "id": "R188-T032",
+          "run": "R188",
+          "path": "apps/web/src/app/App.unit.test.tsx",
+          "title": "App shell renders the bottom navigation with the prototype tabs and an unknown-route page",
+          "status": "passed",
+          "durationMs": 113.6719159999999
+        },
+        {
+          "id": "R188-T033",
+          "run": "R188",
+          "path": "apps/web/src/lib/lib.unit.test.ts",
+          "title": "safeReturnTo keeps allow-listed /meals/abc/apply",
+          "status": "passed",
+          "durationMs": 0.9107500000000073
+        },
+        {
+          "id": "R188-T034",
+          "run": "R188",
+          "path": "apps/web/src/lib/lib.unit.test.ts",
+          "title": "safeReturnTo keeps allow-listed /discover?dates=2026-10-23",
+          "status": "passed",
+          "durationMs": 0.12316599999996924
+        },
+        {
+          "id": "R188-T035",
+          "run": "R188",
+          "path": "apps/web/src/lib/lib.unit.test.ts",
+          "title": "safeReturnTo keeps allow-listed /profile/edit",
+          "status": "passed",
+          "durationMs": 0.07329100000004019
+        },
+        {
+          "id": "R188-T036",
+          "run": "R188",
+          "path": "apps/web/src/lib/lib.unit.test.ts",
+          "title": "safeReturnTo rejects //evil.example",
+          "status": "passed",
+          "durationMs": 0.08162499999991724
+        },
+        {
+          "id": "R188-T037",
+          "run": "R188",
+          "path": "apps/web/src/lib/lib.unit.test.ts",
+          "title": "safeReturnTo rejects https://evil.example/meals",
+          "status": "passed",
+          "durationMs": 0.06837499999994634
+        },
+        {
+          "id": "R188-T038",
+          "run": "R188",
+          "path": "apps/web/src/lib/lib.unit.test.ts",
+          "title": "safeReturnTo rejects /\\evil",
+          "status": "passed",
+          "durationMs": 0.05233299999997598
+        },
+        {
+          "id": "R188-T039",
+          "run": "R188",
+          "path": "apps/web/src/lib/lib.unit.test.ts",
+          "title": "safeReturnTo rejects /admin",
+          "status": "passed",
+          "durationMs": 0.05016699999998764
+        },
+        {
+          "id": "R188-T040",
+          "run": "R188",
+          "path": "apps/web/src/lib/lib.unit.test.ts",
+          "title": "safeReturnTo rejects /meals/../admin",
+          "status": "passed",
+          "durationMs": 0.041249999999990905
+        },
+        {
+          "id": "R188-T041",
+          "run": "R188",
+          "path": "apps/web/src/lib/lib.unit.test.ts",
+          "title": "safeReturnTo rejects javascript:alert(1)",
+          "status": "passed",
+          "durationMs": 0.05416700000000674
+        },
+        {
+          "id": "R188-T042",
+          "run": "R188",
+          "path": "apps/web/src/lib/lib.unit.test.ts",
+          "title": "safeReturnTo rejects ",
+          "status": "passed",
+          "durationMs": 0.08304199999997763
+        },
+        {
+          "id": "R188-T043",
+          "run": "R188",
+          "path": "apps/web/src/lib/lib.unit.test.ts",
+          "title": "safeReturnTo rejects null",
+          "status": "passed",
+          "durationMs": 0.04483400000003712
+        },
+        {
+          "id": "R188-T044",
+          "run": "R188",
+          "path": "apps/web/src/lib/lib.unit.test.ts",
+          "title": "safeReturnTo encodes the target into the sign-in path",
+          "status": "passed",
+          "durationMs": 0.0648750000000291
+        },
+        {
+          "id": "R188-T045",
+          "run": "R188",
+          "path": "apps/web/src/lib/lib.unit.test.ts",
+          "title": "format formats pence as GBP like the prototype",
+          "status": "passed",
+          "durationMs": 0.4048330000000533
+        },
+        {
+          "id": "R188-T046",
+          "run": "R188",
+          "path": "apps/web/src/lib/lib.unit.test.ts",
+          "title": "format renders London calendar dates without the device time zone",
+          "status": "passed",
+          "durationMs": 3.3945830000000115
+        },
+        {
+          "id": "R188-T047",
+          "run": "R188",
+          "path": "apps/web/src/lib/lib.unit.test.ts",
+          "title": "format labels BST/GMT only on clock-change days",
+          "status": "passed",
+          "durationMs": 0.27016600000001745
+        },
+        {
+          "id": "R188-T048",
+          "run": "R188",
+          "path": "apps/web/src/lib/lib.unit.test.ts",
+          "title": "drafts round-trips and clears all private state",
+          "status": "passed",
+          "durationMs": 0.3731669999999667
+        },
+        {
+          "id": "R188-T049",
+          "run": "R188",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) polls immediately and then every 2 s while visible",
+          "status": "passed",
+          "durationMs": 7.331082999999921
+        },
+        {
+          "id": "R188-T050",
+          "run": "R188",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) backs off 2/4/8/16/30 s on consecutive failures, caps at 30 s, and resets after success",
+          "status": "passed",
+          "durationMs": 22.930500000000052
+        },
+        {
+          "id": "R188-T051",
+          "run": "R188",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) adds up to +20% jitter",
+          "status": "passed",
+          "durationMs": 0.5198330000000624
+        },
+        {
+          "id": "R188-T052",
+          "run": "R188",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) pauses while hidden and re-checks auth before catching up on return",
+          "status": "passed",
+          "durationMs": 8.831875000000082
+        },
+        {
+          "id": "R188-T053",
+          "run": "R188",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) stops for good when the resume auth check fails",
+          "status": "passed",
+          "durationMs": 7.395750000000021
+        },
+        {
+          "id": "R188-T054",
+          "run": "R188",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) a tick returning stop (403 → HISTORY) ends polling",
+          "status": "passed",
+          "durationMs": 4.112375000000043
+        },
+        {
+          "id": "R188-T055",
+          "run": "R188",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) does not start while hidden, and starts polling when shown",
+          "status": "passed",
+          "durationMs": 6.4962920000000395
+        },
+        {
+          "id": "R188-T056",
+          "run": "R188",
+          "path": "apps/web/src/ui/TimePicker.unit.test.tsx",
+          "title": "opens 48 half-hour options at midnight without committing and closes on Escape",
+          "status": "passed",
+          "durationMs": 182.230459
+        },
+        {
+          "id": "R188-T057",
+          "run": "R188",
+          "path": "apps/web/src/ui/TimePicker.unit.test.tsx",
+          "title": "focuses the selection and supports arrows Home End Enter without losing the chosen value",
+          "status": "passed",
+          "durationMs": 126.961458
+        },
+        {
+          "id": "R188-T058",
+          "run": "R188",
+          "path": "apps/web/src/ui/TimePicker.unit.test.tsx",
+          "title": "closes on outside pointer and Tab without changing the current selection",
+          "status": "passed",
+          "durationMs": 60.38383399999998
+        },
+        {
+          "id": "R188-T059",
+          "run": "R188",
+          "path": "apps/web/src/features/apply/apply.unit.test.tsx",
+          "title": "apply (T09) validates length, sends once with an Idempotency-Key and shows the pending status",
+          "status": "passed",
+          "durationMs": 1141.9845829999997
+        },
+        {
+          "id": "R188-T060",
+          "run": "R188",
+          "path": "apps/web/src/features/apply/apply.unit.test.tsx",
+          "title": "apply (T09) a guest’s introduction survives the sign-in detour and is not auto-submitted",
+          "status": "passed",
+          "durationMs": 1107.007959
+        },
+        {
+          "id": "R188-T061",
+          "run": "R188",
+          "path": "apps/web/src/features/apply/apply.unit.test.tsx",
+          "title": "apply (T09) restores the draft on return and still waits for the user to press Send",
+          "status": "passed",
+          "durationMs": 36.18591599999991
+        },
+        {
+          "id": "R188-T062",
+          "run": "R188",
+          "path": "apps/web/src/features/apply/apply.unit.test.tsx",
+          "title": "apply (T09) explains a final decline and keeps the text",
+          "status": "passed",
+          "durationMs": 421.436291
+        },
+        {
+          "id": "R188-T063",
+          "run": "R188",
+          "path": "apps/web/src/features/apply/apply.unit.test.tsx",
+          "title": "apply (T09) a server PROFILE_INCOMPLETE sends the user through the profile gate",
+          "status": "passed",
+          "durationMs": 262.07245799999964
+        },
+        {
+          "id": "R188-T064",
+          "run": "R188",
+          "path": "apps/web/src/features/apply/apply.unit.test.tsx",
+          "title": "apply (T09) withdraws a pending request after confirmation using the application version",
+          "status": "passed",
+          "durationMs": 76.51841599999989
+        },
+        {
+          "id": "R188-T065",
+          "run": "R188",
+          "path": "apps/web/src/features/apply/apply.unit.test.tsx",
+          "title": "apply (T09) a confirmed guest can cancel their place (meal version), with no refund/payment wording",
+          "status": "passed",
+          "durationMs": 73.16516599999977
+        },
+        {
+          "id": "R188-T066",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport keeps a 2001-character paste intact, explains the limit and permits a shortened 2000-character request",
+          "status": "passed",
+          "durationMs": 419.39258400000017
+        },
+        {
+          "id": "R188-T067",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport never sends whitespace-only input",
+          "status": "passed",
+          "durationMs": 60.90962500000023
+        },
+        {
+          "id": "R188-T068",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport counts edge whitespace toward the limit and keeps all original text",
+          "status": "passed",
+          "durationMs": 233.73108300000013
+        },
+        {
+          "id": "R188-T069",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport counts edge whitespace toward the limit and keeps all original text",
+          "status": "passed",
+          "durationMs": 415.106041
+        },
+        {
+          "id": "R188-T070",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport clears only the assistant unsent text on New conversation and preserves the business editor",
+          "status": "passed",
+          "durationMs": 589.3467500000002
+        },
+        {
+          "id": "R188-T071",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport keeps the approved assistant home and sends a real typed request only after an explicit user action",
+          "status": "passed",
+          "durationMs": 234.961542
+        },
+        {
+          "id": "R188-T072",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport stops polling while closed and shows a completed closed-period request only after Continue",
+          "status": "passed",
+          "durationMs": 446.0619999999999
+        },
+        {
+          "id": "R188-T073",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport requires explicit editor-text consent and a replacement confirmation, and only changes the original editor",
+          "status": "passed",
+          "durationMs": 1019.0905419999999
+        },
+        {
+          "id": "R188-T074",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport leaves a stale or unauthorized draft in the original editor unchanged",
+          "status": "passed",
+          "durationMs": 210.24983299999985
+        },
+        {
+          "id": "R188-T075",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport keeps preference read/write/delete usable independently of model availability",
+          "status": "passed",
+          "durationMs": 311.86620799999946
+        },
+        {
+          "id": "R188-T076",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport uses guest preferences as soft input without changing applied hard filters or saving account data",
+          "status": "passed",
+          "durationMs": 269.1949169999998
+        },
+        {
+          "id": "R188-T077",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport does not append a late old-generation response after New conversation",
+          "status": "passed",
+          "durationMs": 230.38137500000084
+        },
+        {
+          "id": "R188-T078",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries fences first-send bootstrap across a pause (foreground before bootstrap=false)",
+          "status": "passed",
+          "durationMs": 184.36250000000018
+        },
+        {
+          "id": "R188-T079",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries fences first-send bootstrap across a pause (foreground before bootstrap=true)",
+          "status": "passed",
+          "durationMs": 168.2955410000004
+        },
+        {
+          "id": "R188-T080",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries holds an in-flight result offscreen until foreground epoch verification (changed=false)",
+          "status": "passed",
+          "durationMs": 191.94237499999963
+        },
+        {
+          "id": "R188-T081",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries holds an in-flight result offscreen until foreground epoch verification (changed=true)",
+          "status": "passed",
+          "durationMs": 202.09983399999965
+        },
+        {
+          "id": "R188-T082",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries holds polling and requests behind one foreground preference check without renewing activity",
+          "status": "passed",
+          "durationMs": 197.72541700000056
+        },
+        {
+          "id": "R188-T083",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries keeps unsent text and blocks sends, draft validation and activity while foreground checks are offline",
+          "status": "passed",
+          "durationMs": 244.47749999999996
+        },
+        {
+          "id": "R188-T084",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries discards a late foreground preference response after independent preference deletion",
+          "status": "passed",
+          "durationMs": 197.409584
+        },
+        {
+          "id": "R188-T085",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries does not let a response from an earlier foreground check unlock a newer background pause",
+          "status": "passed",
+          "durationMs": 178.35370799999964
+        },
+        {
+          "id": "R188-T086",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries checks foreground epoch after a completed turn (panel closed=false) and keeps unsent input without activity",
+          "status": "passed",
+          "durationMs": 180.37462500000038
+        },
+        {
+          "id": "R188-T087",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries checks foreground epoch after a completed turn (panel closed=true) and keeps unsent input without activity",
+          "status": "passed",
+          "durationMs": 260.59529099999963
+        },
+        {
+          "id": "R188-T088",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries expires local conversation content at the boundary and preserves unsent user input",
+          "status": "passed",
+          "durationMs": 269.93945800000074
+        },
+        {
+          "id": "R188-T089",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries reuses the same request id for an explicit retry after an unknown transport outcome and never retries the model automatically",
+          "status": "passed",
+          "durationMs": 165.91191700000127
+        },
+        {
+          "id": "R188-T090",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries preserves a newly edited unsent question while an earlier send is waiting for acknowledgement",
+          "status": "passed",
+          "durationMs": 214.91833299999962
+        },
+        {
+          "id": "R188-T091",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries transfers a CREATE candidate only through its matching original editor",
+          "status": "passed",
+          "durationMs": 178.77962500000103
+        },
+        {
+          "id": "R188-T092",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries transfers a GROUP candidate only through its matching original editor",
+          "status": "passed",
+          "durationMs": 231.48204199999964
+        },
+        {
+          "id": "R188-T093",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries sends selected meal ids explicitly for comparison without submitting a meal action",
+          "status": "passed",
+          "durationMs": 212.98654200000055
+        },
+        {
+          "id": "R188-T094",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "assistant keyboard ownership returns focus to the launcher after Escape closes the controlled sheet",
+          "status": "passed",
+          "durationMs": 98.79620900000009
+        },
+        {
+          "id": "R188-T095",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/context-filters.unit.test.ts",
+          "title": "assistant applied discovery filters preserves map, keyword, time and other hard filters together",
+          "status": "passed",
+          "durationMs": 1.32224999999994
+        },
+        {
+          "id": "R188-T096",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/context-filters.unit.test.ts",
+          "title": "assistant applied discovery filters does not attach discovery filters from another page or invent an any time restriction",
+          "status": "passed",
+          "durationMs": 0.37087499999995543
+        },
+        {
+          "id": "R188-T097",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/editor-integration.unit.test.tsx",
+          "title": "actual Web editor and message-read integration acknowledges only after rendering, increases throughSeq monotonically and never loops on a failed acknowledgement",
+          "status": "passed",
+          "durationMs": 118.95654200000001
+        },
+        {
+          "id": "R188-T098",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/editor-integration.unit.test.tsx",
+          "title": "actual Web editor and message-read integration does not acknowledge a late response in a hidden tab and acknowledges after it becomes visible",
+          "status": "passed",
+          "durationMs": 27.094791999999984
+        },
+        {
+          "id": "R188-T099",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/editor-integration.unit.test.tsx",
+          "title": "actual Web editor and message-read integration loads the new meal editor state instead of carrying an introduction to a different target",
+          "status": "passed",
+          "durationMs": 397.2935000000001
+        },
+        {
+          "id": "R188-T100",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/qa-independent-length.unit.test.tsx",
+          "title": "QA-F10 pasted 2001-character original is preserved instead of silently truncated",
+          "status": "passed",
+          "durationMs": 400.4678329999999
+        },
+        {
+          "id": "R188-T101",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/qa-independent-length.unit.test.tsx",
+          "title": "QA-F10 an overlong controlled editor value gets a visible inline error without losing text or requesting AI",
+          "status": "passed",
+          "durationMs": 94.84504200000015
+        },
+        {
+          "id": "R188-T102",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/qa-independent-length.unit.test.tsx",
+          "title": "QA-F10 blank sends nothing, raw edge whitespace cannot bypass2000 and shortening to2000 resumes one explicit request",
+          "status": "passed",
+          "durationMs": 129.52195800000004
+        },
+        {
+          "id": "R188-T103",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/qa-independent-session.unit.test.tsx",
+          "title": "independent QA assistant editor and expiry QA-AI-016 explicit Keep my text preserves edited v2 without transfer or append",
+          "status": "passed",
+          "durationMs": 1258.5455830000003
+        },
+        {
+          "id": "R188-T104",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/qa-independent-session.unit.test.tsx",
+          "title": "independent QA assistant editor and expiry QA-AI-030 NEW clears assistant unsent text while TTL preserves both editors; neither alters saved preferences",
+          "status": "passed",
+          "durationMs": 953.343167
+        },
+        {
+          "id": "R188-T105",
+          "run": "R188",
+          "path": "apps/web/src/features/assistant/qa-independent-session.unit.test.tsx",
+          "title": "independent QA deletion keeps unsent text QA-F05 deleting preferences retains assistant and business unsent text",
+          "status": "passed",
+          "durationMs": 368.43108299999994
+        },
+        {
+          "id": "R188-T106",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) explicitly verifies the original identity then connects with its proof, never automatically",
+          "status": "passed",
+          "durationMs": 792.774167
+        },
+        {
+          "id": "R188-T107",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) verifies, refreshes the session and returns to the allow-listed page",
+          "status": "passed",
+          "durationMs": 335.6690830000002
+        },
+        {
+          "id": "R188-T108",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) never sends or follows a non-allow-listed return target",
+          "status": "passed",
+          "durationMs": 756.3444589999999
+        },
+        {
+          "id": "R188-T109",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) sends an incomplete profile through the gate with the original return path",
+          "status": "passed",
+          "durationMs": 308.70708399999967
+        },
+        {
+          "id": "R188-T110",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) shows the resend countdown from the server clock and disables resend",
+          "status": "passed",
+          "durationMs": 129.47420899999997
+        },
+        {
+          "id": "R188-T111",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) rejects malformed emails before calling the API",
+          "status": "passed",
+          "durationMs": 101.98687500000005
+        },
+        {
+          "id": "R188-T112",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) explains rate limits with the provider’s Retry-After",
+          "status": "passed",
+          "durationMs": 115.2844170000003
+        },
+        {
+          "id": "R188-T113",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) distinguishes a wrong code from an expired/exhausted challenge",
+          "status": "passed",
+          "durationMs": 192.9733329999999
+        },
+        {
+          "id": "R188-T114",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) LINK_REQUIRED issues no session and never merges automatically",
+          "status": "passed",
+          "durationMs": 159.86712499999976
+        },
+        {
+          "id": "R188-T115",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) ignores an old 200 response after a new linking ticket has replaced it",
+          "status": "passed",
+          "durationMs": 19.853415999999925
+        },
+        {
+          "id": "R188-T116",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) ignores an old 409 response after a new linking ticket has replaced it",
+          "status": "passed",
+          "durationMs": 24.207916999999725
+        },
+        {
+          "id": "R188-T117",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) ignores an old 503 response after a new linking ticket has replaced it",
+          "status": "passed",
+          "durationMs": 17.717625000000226
+        },
+        {
+          "id": "R188-T118",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) isolates a replacement confirmation component from the previous in-flight attempt",
+          "status": "passed",
+          "durationMs": 14.40679099999943
+        },
+        {
+          "id": "R188-T119",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) ignores the old expiry callback after a new ticket replaces the confirmed flow",
+          "status": "passed",
+          "durationMs": 28.713542000000416
+        },
+        {
+          "id": "R188-T120",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) allows cancel after its own expiry while the link request remains in flight",
+          "status": "passed",
+          "durationMs": 47.88000000000011
+        },
+        {
+          "id": "R188-T121",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) survives a full-page original OAuth return, keeps proof in RAM and retries only explicitly with the same key",
+          "status": "passed",
+          "durationMs": 41.41120899999987
+        },
+        {
+          "id": "R188-T122",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) ends a confirmed OAuth link on ACCOUNT_LINK_CONFLICT without another attempt",
+          "status": "passed",
+          "durationMs": 55.35108299999956
+        },
+        {
+          "id": "R188-T123",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) ends a confirmed OAuth link on LINK_TICKET_INVALID without another attempt",
+          "status": "passed",
+          "durationMs": 59.64458300000024
+        },
+        {
+          "id": "R188-T124",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) cancels a confirmed link without consuming it on the server",
+          "status": "passed",
+          "durationMs": 35.53845799999999
+        },
+        {
+          "id": "R188-T125",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) refuses confirmation after private session state has been cleared",
+          "status": "passed",
+          "durationMs": 29.306957999999213
+        },
+        {
+          "id": "R188-T126",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) redirects to the provider, then completes on /auth/callback back to the saved page",
+          "status": "passed",
+          "durationMs": 54.784208000000035
+        },
+        {
+          "id": "R188-T127",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) refuses a non-https authorization URL",
+          "status": "passed",
+          "durationMs": 35.50579199999993
+        },
+        {
+          "id": "R188-T128",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/linkPending.unit.test.ts",
+          "title": "persists only a short-lived tab ticket and expected transaction id, never the completed proof",
+          "status": "passed",
+          "durationMs": 1.8133329999999432
+        },
+        {
+          "id": "R188-T129",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/linkPending.unit.test.ts",
+          "title": "fails safely when same-tab storage is blocked instead of pretending an OAuth continuation can survive",
+          "status": "passed",
+          "durationMs": 0.7286669999999731
+        },
+        {
+          "id": "R188-T130",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/linkPending.unit.test.ts",
+          "title": "rejects expired, malformed, unbounded or expanded stored data and session clearing ends the flow",
+          "status": "passed",
+          "durationMs": 0.9851249999999254
+        },
+        {
+          "id": "R188-T131",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/oauth-return.unit.test.tsx",
+          "title": "preserves the meal return target after GOOGLE cancellation and explicit retry",
+          "status": "passed",
+          "durationMs": 345.9162920000001
+        },
+        {
+          "id": "R188-T132",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/oauth-return.unit.test.tsx",
+          "title": "preserves the meal return target after APPLE cancellation and explicit retry",
+          "status": "passed",
+          "durationMs": 340.49245799999994
+        },
+        {
+          "id": "R188-T133",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/oauth-return.unit.test.tsx",
+          "title": "keeps an external stored return target out of the retry link",
+          "status": "passed",
+          "durationMs": 26.407541000000037
+        },
+        {
+          "id": "R188-T134",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/qa-independent-link.unit.test.tsx",
+          "title": "QA-F09 late rejection from an older link cannot erase a newer pending request",
+          "status": "passed",
+          "durationMs": 71.60287500000004
+        },
+        {
+          "id": "R188-T135",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-003 expired code rejects and explicit post-cooldown resend preserves email with fresh challenge",
+          "status": "passed",
+          "durationMs": 611.304167
+        },
+        {
+          "id": "R188-T136",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-004 GOOGLE cancelled OAuth retains exact meal apply target without submitting application",
+          "status": "passed",
+          "durationMs": 610.84175
+        },
+        {
+          "id": "R188-T137",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-004 APPLE cancelled OAuth retains exact meal apply target without submitting application",
+          "status": "passed",
+          "durationMs": 316.12862499999983
+        },
+        {
+          "id": "R188-T138",
+          "run": "R188",
+          "path": "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx",
+          "title": "QA-AUTH-001 guest can open public map/list fallback without signing in or automatic writes",
+          "status": "passed",
+          "durationMs": 127.4752080000003
+        },
+        {
+          "id": "R188-T139",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) returns from cancellation terms to the same Review with transient display and unchanged confirmation (false)",
+          "status": "passed",
+          "durationMs": 1107.188
+        },
+        {
+          "id": "R188-T140",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) returns from cancellation terms to the same Review with transient display and unchanged confirmation (true)",
+          "status": "passed",
+          "durationMs": 556.5890410000002
+        },
+        {
+          "id": "R188-T141",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) keeps direct public terms access free of create draft initialization and create API calls",
+          "status": "passed",
+          "durationMs": 23.301750000000084
+        },
+        {
+          "id": "R188-T142",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) converts pounds to integer pence without float maths",
+          "status": "passed",
+          "durationMs": 0.11941600000000108
+        },
+        {
+          "id": "R188-T143",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) defaults the deadline to 60 minutes earlier on the wall clock, across midnight",
+          "status": "passed",
+          "durationMs": 0.18441699999993943
+        },
+        {
+          "id": "R188-T144",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) requires the deadline at least 30 minutes before the meal",
+          "status": "passed",
+          "durationMs": 0.09787499999993088
+        },
+        {
+          "id": "R188-T145",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) never builds a body without both explicit confirmations",
+          "status": "passed",
+          "durationMs": 0.10337500000014188
+        },
+        {
+          "id": "R188-T146",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) maps time errors only by the exact start/close field keys",
+          "status": "passed",
+          "durationMs": 0.07120799999984229
+        },
+        {
+          "id": "R188-T147",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal model (T07) edit patch contains only changed fields",
+          "status": "passed",
+          "durationMs": 0.1427920000000995
+        },
+        {
+          "id": "R188-T148",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal flow (T07) requires explicit ticks and publishes an external pay-at-venue meal",
+          "status": "passed",
+          "durationMs": 341.924125
+        },
+        {
+          "id": "R188-T149",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal flow (T07) asks BST or GMT for a repeated London time and resubmits as a new intent with that offset",
+          "status": "passed",
+          "durationMs": 447.1268339999997
+        },
+        {
+          "id": "R188-T150",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal flow (T07) applies a BST/GMT choice to the deadline when the server names `close`",
+          "status": "passed",
+          "durationMs": 828.9258329999993
+        },
+        {
+          "id": "R188-T151",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal flow (T07) treats a nonexistent London time as an error and returns to the time step",
+          "status": "passed",
+          "durationMs": 282.9807920000003
+        },
+        {
+          "id": "R188-T152",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal flow (T07) a guest is asked to sign in and the draft is kept",
+          "status": "passed",
+          "durationMs": 13.954749999999876
+        },
+        {
+          "id": "R188-T153",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "create meal flow (T07) an incomplete profile goes through the gate before publishing, keeping the draft",
+          "status": "passed",
+          "durationMs": 155.20858399999997
+        },
+        {
+          "id": "R188-T154",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "edit meal (T07) shows the permanent lock instead of the form once arrangements are locked",
+          "status": "passed",
+          "durationMs": 16.067124999999578
+        },
+        {
+          "id": "R188-T155",
+          "run": "R188",
+          "path": "apps/web/src/features/create/create.unit.test.tsx",
+          "title": "edit meal (T07) PATCHes only the changed fields with If-Match",
+          "status": "passed",
+          "durationMs": 252.46395799999937
+        },
+        {
+          "id": "R188-T156",
+          "run": "R188",
+          "path": "apps/web/src/features/create/qa-independent-terms-return.unit.test.tsx",
+          "title": "QA-F16 Back to review returns to Review with the same unsubmitted draft and no create call",
+          "status": "passed",
+          "durationMs": 392.01737500000013
+        },
+        {
+          "id": "R188-T157",
+          "run": "R188",
+          "path": "apps/web/src/features/create/qa-independent-time-picker.unit.test.tsx",
+          "title": "QA-CREATE-004 actual Create planned-time menu has48 slots selected focus keyboard cancel choose and outside close",
+          "status": "passed",
+          "durationMs": 358.31537500000013
+        },
+        {
+          "id": "R188-T158",
+          "run": "R188",
+          "path": "apps/web/src/features/create/qa-independent-venue-reset.unit.test.tsx",
+          "title": "QA-CREATE-004 preview preserves old time but explicit different venue confirmation clears time and both declarations",
+          "status": "passed",
+          "durationMs": 396.690708
+        },
+        {
+          "id": "R188-T159",
+          "run": "R188",
+          "path": "apps/web/src/features/create/venue-change.unit.test.tsx",
+          "title": "clears the meeting time and confirmations only when a different verified restaurant is confirmed",
+          "status": "passed",
+          "durationMs": 196.94941599999993
+        },
+        {
+          "id": "R188-T160",
+          "run": "R188",
+          "path": "apps/web/src/features/create/venue-change.unit.test.tsx",
+          "title": "preview and cancel preserve the complete existing draft",
+          "status": "passed",
+          "durationMs": 118.94520899999998
+        },
+        {
+          "id": "R188-T161",
+          "run": "R188",
+          "path": "apps/web/src/features/create/venue-change.unit.test.tsx",
+          "title": "same-place display refresh preserves time and valid confirmations",
+          "status": "passed",
+          "durationMs": 68.85633299999995
+        },
+        {
+          "id": "R188-T162",
+          "run": "R188",
+          "path": "apps/web/src/features/create/venue-change.unit.test.tsx",
+          "title": "initial venue selection keeps a previously entered meeting time",
+          "status": "passed",
+          "durationMs": 54.083458000000064
+        },
+        {
+          "id": "R188-T163",
+          "run": "R188",
+          "path": "apps/web/src/features/host/host.unit.test.tsx",
+          "title": "host decisions (T10) approves with Application.version and refreshes the list",
+          "status": "passed",
+          "durationMs": 147.23908299999994
+        },
+        {
+          "id": "R188-T164",
+          "run": "R188",
+          "path": "apps/web/src/features/host/host.unit.test.tsx",
+          "title": "host decisions (T10) on MEAL_FULL shows the reason, refreshes, and does not retry the decision",
+          "status": "passed",
+          "durationMs": 67.61008300000003
+        },
+        {
+          "id": "R188-T165",
+          "run": "R188",
+          "path": "apps/web/src/features/host/host.unit.test.tsx",
+          "title": "host decisions (T10) declining is final and needs confirmation",
+          "status": "passed",
+          "durationMs": 85.13379200000008
+        },
+        {
+          "id": "R188-T166",
+          "run": "R188",
+          "path": "apps/web/src/features/host/host.unit.test.tsx",
+          "title": "host decisions (T10) cancels the whole meal with a host reason and the meal version",
+          "status": "passed",
+          "durationMs": 108.41270800000007
+        },
+        {
+          "id": "R188-T167",
+          "run": "R188",
+          "path": "apps/web/src/features/host/host.unit.test.tsx",
+          "title": "host decisions (T10) reports a booking status for the current confirmed count and flags stale reports",
+          "status": "passed",
+          "durationMs": 60.47712499999989
+        },
+        {
+          "id": "R188-T168",
+          "run": "R188",
+          "path": "apps/web/src/features/host/host.unit.test.tsx",
+          "title": "host decisions (T10) hides decisions once the server no longer allows reviewing",
+          "status": "passed",
+          "durationMs": 19.61591700000008
+        },
+        {
+          "id": "R188-T169",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/discover.unit.test.tsx",
+          "title": "discover filters (T08) drops unknown values from links and serialises comma lists",
+          "status": "passed",
+          "durationMs": 1.76987500000007
+        },
+        {
+          "id": "R188-T170",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/discover.unit.test.tsx",
+          "title": "discover filters (T08) round-trips through the URL while keeping unrelated params",
+          "status": "passed",
+          "durationMs": 0.23820800000009967
+        },
+        {
+          "id": "R188-T171",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/discover.unit.test.tsx",
+          "title": "discover filters (T08) builds London calendar dates across the October clock change",
+          "status": "passed",
+          "durationMs": 2.0317079999999805
+        },
+        {
+          "id": "R188-T172",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/discover.unit.test.tsx",
+          "title": "Discover page (T08) lets guests browse the public projection",
+          "status": "passed",
+          "durationMs": 159.39429200000006
+        },
+        {
+          "id": "R188-T173",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/discover.unit.test.tsx",
+          "title": "Discover page (T08) applies pending filters only on “Show meals”; closing discards them",
+          "status": "passed",
+          "durationMs": 374.0256669999999
+        },
+        {
+          "id": "R188-T174",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/discover.unit.test.tsx",
+          "title": "Discover page (T08) restores applied filters from the URL (back navigation)",
+          "status": "passed",
+          "durationMs": 78.59579099999996
+        },
+        {
+          "id": "R188-T175",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/discover.unit.test.tsx",
+          "title": "Discover page (T08) groups the same results by area",
+          "status": "passed",
+          "durationMs": 108.67679199999998
+        },
+        {
+          "id": "R188-T176",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/discover.unit.test.tsx",
+          "title": "Discover page (T08) loads further pages with the opaque cursor",
+          "status": "passed",
+          "durationMs": 124.73458299999993
+        },
+        {
+          "id": "R188-T177",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/discover.unit.test.tsx",
+          "title": "Discover page (T08) shows a retryable error when discovery fails",
+          "status": "passed",
+          "durationMs": 33.65929200000005
+        },
+        {
+          "id": "R188-T178",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/qa-independent-map.unit.test.tsx",
+          "title": "QA-DISCOVERY-001 QA-DISCOVERY-004 two meals not five people share map/list; camera movement and pin preview never open detail automatically",
+          "status": "passed",
+          "durationMs": 359.8629159999999
+        },
+        {
+          "id": "R188-T179",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/qa-independent-return.unit.test.tsx",
+          "title": "QA-DISCOVERY-001 detail Back restores applied filters bounds view and selected area card",
+          "status": "passed",
+          "durationMs": 439.74345900000003
+        },
+        {
+          "id": "R188-T180",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "returns to the applied Discover filters and list context through meal and host profile",
+          "status": "passed",
+          "durationMs": 427.7880419999999
+        },
+        {
+          "id": "R188-T181",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "returns to the applied Discover filters and areas context through meal and host profile",
+          "status": "passed",
+          "durationMs": 256.180916
+        },
+        {
+          "id": "R188-T182",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "returns to the applied Discover filters and map context through meal and host profile",
+          "status": "passed",
+          "durationMs": 193.65379199999984
+        },
+        {
+          "id": "R188-T183",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "rejects unsupported Discover source https://evil.example/discover?languages=en",
+          "status": "passed",
+          "durationMs": 0.21229199999993398
+        },
+        {
+          "id": "R188-T184",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "rejects unsupported Discover source //evil.example/discover",
+          "status": "passed",
+          "durationMs": 0.17066700000009405
+        },
+        {
+          "id": "R188-T185",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "rejects unsupported Discover source /discover/other?languages=en",
+          "status": "passed",
+          "durationMs": 0.09875000000010914
+        },
+        {
+          "id": "R188-T186",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "rejects unsupported Discover source /discover?languages=en#outside",
+          "status": "passed",
+          "durationMs": 0.06829199999992852
+        },
+        {
+          "id": "R188-T187",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "rejects unsupported Discover source /settings/deletion",
+          "status": "passed",
+          "durationMs": 0.06037500000002183
+        },
+        {
+          "id": "R188-T188",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "canonicalizes only supported filter/UI values and retains validated viewport bounds",
+          "status": "passed",
+          "durationMs": 0.89975000000004
+        },
+        {
+          "id": "R188-T189",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "restores a selected later-page card through its signed source cursor and continues from that page",
+          "status": "passed",
+          "durationMs": 212.63199999999983
+        },
+        {
+          "id": "R188-T190",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "falls back once to the current first page when the selected source is expired",
+          "status": "passed",
+          "durationMs": 57.9576669999999
+        },
+        {
+          "id": "R188-T191",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "falls back once to the current first page when the selected source is removed",
+          "status": "passed",
+          "durationMs": 28.909041999999772
+        },
+        {
+          "id": "R188-T192",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "does not hide a source-page service outage behind an unfiltered fallback",
+          "status": "passed",
+          "durationMs": 23.431417000000238
+        },
+        {
+          "id": "R188-T193",
+          "run": "R188",
+          "path": "apps/web/src/features/discover/return-context.unit.test.tsx",
+          "title": "keeps an offline source-page failure visible without querying the first page",
+          "status": "passed",
+          "durationMs": 30.528833999999733
+        },
+        {
+          "id": "R188-T194",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "message helpers finds older conversation metadata after five inbox pages",
+          "status": "passed",
+          "durationMs": 5.351249999999936
+        },
+        {
+          "id": "R188-T195",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "message helpers fails closed instead of hanging or treating an incomplete inbox as complete",
+          "status": "passed",
+          "durationMs": 1.680833000000007
+        },
+        {
+          "id": "R188-T196",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "message helpers orders by bigint seq and de-duplicates by id",
+          "status": "passed",
+          "durationMs": 0.4297909999999092
+        },
+        {
+          "id": "R188-T197",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) keeps HISTORY terminal when a pre-revocation metadata refresh completes late",
+          "status": "passed",
+          "durationMs": 178.67533300000002
+        },
+        {
+          "id": "R188-T198",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) starts LIVE normally for a newly mounted authorized conversation after the previous one became HISTORY",
+          "status": "passed",
+          "durationMs": 64.21395799999982
+        },
+        {
+          "id": "R188-T199",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) polls LIVE every 2 s with afterSeq and renders text, never HTML",
+          "status": "passed",
+          "durationMs": 40.96183300000007
+        },
+        {
+          "id": "R188-T200",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) a 403 stops LIVE polling, removes the composer and reads HISTORY",
+          "status": "passed",
+          "durationMs": 28.917374999999993
+        },
+        {
+          "id": "R188-T201",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) read-only conversations never poll LIVE",
+          "status": "passed",
+          "durationMs": 15.955875000000106
+        },
+        {
+          "id": "R188-T202",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) retries a send with the same clientMessageId and clears the composer on success",
+          "status": "passed",
+          "durationMs": 284.57458299999985
+        },
+        {
+          "id": "R188-T203",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) keeps unsent text when sending is refused",
+          "status": "passed",
+          "durationMs": 86.15987499999983
+        },
+        {
+          "id": "R188-T204",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) leaving the group is confirmed, uses the conversation version and ends LIVE",
+          "status": "passed",
+          "durationMs": 121.28979200000003
+        },
+        {
+          "id": "R188-T205",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "inbox list (T12) QA-F01 distinguishes two pending meals by title, London time, host and correct application link",
+          "status": "passed",
+          "durationMs": 47.171875
+        },
+        {
+          "id": "R188-T206",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "inbox list (T12) shows conversations beyond the first server page",
+          "status": "passed",
+          "durationMs": 17.37087500000007
+        },
+        {
+          "id": "R188-T207",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "inbox list (T12) separates meal groups, personal chats and application progress",
+          "status": "passed",
+          "durationMs": 44.50624999999991
+        },
+        {
+          "id": "R188-T208",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/qa-independent-read-error.unit.test.tsx",
+          "title": "QA-JOURNEY-008 initial message rate limit remains a visible read failure and never claims an empty history",
+          "status": "passed",
+          "durationMs": 68.68341599999997
+        },
+        {
+          "id": "R188-T209",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx",
+          "title": "QA-CHAT-009 GROUP hides polling, backs off to30s, authenticates before catchup and never sends retained text after403",
+          "status": "passed",
+          "durationMs": 610.6759589999999
+        },
+        {
+          "id": "R188-T210",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx",
+          "title": "QA-CHAT-009 DIRECT hides polling, backs off to30s, authenticates before catchup and never sends retained text after403",
+          "status": "passed",
+          "durationMs": 244.2972920000002
+        },
+        {
+          "id": "R188-T211",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx",
+          "title": "QA-CHAT-009 metadata captured before revocation cannot restart LIVE after a terminal403",
+          "status": "passed",
+          "durationMs": 21.110916999999972
+        },
+        {
+          "id": "R188-T212",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/read-error.unit.test.tsx",
+          "title": "shows first-read loading then failure, preserves backoff, and shows empty only after successful recovery",
+          "status": "passed",
+          "durationMs": 92.23674999999992
+        },
+        {
+          "id": "R188-T213",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/read-error.unit.test.tsx",
+          "title": "keeps existing messages and unsent composer text during a later read failure",
+          "status": "passed",
+          "durationMs": 274.0171670000001
+        },
+        {
+          "id": "R188-T214",
+          "run": "R188",
+          "path": "apps/web/src/features/inbox/read-error.unit.test.tsx",
+          "title": "keeps HISTORY terminal when its read fails and permits only an explicit HISTORY retry",
+          "status": "passed",
+          "durationMs": 80.76566700000012
+        },
+        {
+          "id": "R188-T215",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/meals.unit.test.tsx",
+          "title": "meal detail (T08) shows host-declared cuisine/dietary as “Not provided” when unknown, pay-at-venue only",
+          "status": "passed",
+          "durationMs": 130.26312499999995
+        },
+        {
+          "id": "R188-T216",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/meals.unit.test.tsx",
+          "title": "meal detail (T08) labels declared values and a stale host booking report",
+          "status": "passed",
+          "durationMs": 38.17395799999997
+        },
+        {
+          "id": "R188-T217",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/meals.unit.test.tsx",
+          "title": "meal detail (T08) follows allowedActions: host sees management, not Apply",
+          "status": "passed",
+          "durationMs": 123.43824999999993
+        },
+        {
+          "id": "R188-T218",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/meals.unit.test.tsx",
+          "title": "meal detail (T08) shows the signed-in user’s own progress and the cancellation reason",
+          "status": "passed",
+          "durationMs": 36.296957999999904
+        },
+        {
+          "id": "R188-T219",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/meals.unit.test.tsx",
+          "title": "meal detail (T08) never shows provider venue data when it is unavailable",
+          "status": "passed",
+          "durationMs": 23.801999999999907
+        },
+        {
+          "id": "R188-T220",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/meals.unit.test.tsx",
+          "title": "my meals (T08) loads each private section and shows prototype empty states",
+          "status": "passed",
+          "durationMs": 133.86816699999986
+        },
+        {
+          "id": "R188-T221",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/meals.unit.test.tsx",
+          "title": "my meals (T08) asks guests to sign in and makes no private request",
+          "status": "passed",
+          "durationMs": 50.43404200000009
+        },
+        {
+          "id": "R188-T222",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation sets the Hosting source after an actual explicit publish flow",
+          "status": "passed",
+          "durationMs": 637.0394999999999
+        },
+        {
+          "id": "R188-T223",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation sets the Hosting source after editing arrangements (changed=false)",
+          "status": "passed",
+          "durationMs": 114.24679200000037
+        },
+        {
+          "id": "R188-T224",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation sets the Hosting source after editing arrangements (changed=true)",
+          "status": "passed",
+          "durationMs": 215.1951250000002
+        },
+        {
+          "id": "R188-T225",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation returns a newly published meal detail to Hosting and retains that source through its host profile",
+          "status": "passed",
+          "durationMs": 160.66699999999992
+        },
+        {
+          "id": "R188-T226",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation returns an ordinary meal host profile to that meal while keeping the detail Discover fallback",
+          "status": "passed",
+          "durationMs": 510.00383299999976
+        },
+        {
+          "id": "R188-T227",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation rejects unsupported detail return source https://outside.invalid",
+          "status": "passed",
+          "durationMs": 234.86175000000003
+        },
+        {
+          "id": "R188-T228",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation rejects unsupported detail return source //outside.invalid",
+          "status": "passed",
+          "durationMs": 71.43733299999985
+        },
+        {
+          "id": "R188-T229",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation rejects unsupported detail return source /settings/deletion",
+          "status": "passed",
+          "durationMs": 96.66854199999989
+        },
+        {
+          "id": "R188-T230",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation rejects unsupported detail return source /meals?section=APPLICATIONS",
+          "status": "passed",
+          "durationMs": 61.255375000000186
+        },
+        {
+          "id": "R188-T231",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation rejects unsupported public-profile return source https://outside.invalid",
+          "status": "passed",
+          "durationMs": 34.64599999999973
+        },
+        {
+          "id": "R188-T232",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation rejects unsupported public-profile return source /meals/33333333-3333-4333-8333-333333333333?redirect=outside",
+          "status": "passed",
+          "durationMs": 27.769999999999982
+        },
+        {
+          "id": "R188-T233",
+          "run": "R188",
+          "path": "apps/web/src/features/meals/source-navigation.unit.test.tsx",
+          "title": "source-specific meal and host profile navigation rejects unsupported public-profile return source /meals/not-a-uuid",
+          "status": "passed",
+          "durationMs": 28.73412499999995
+        },
+        {
+          "id": "R188-T234",
+          "run": "R188",
+          "path": "apps/web/src/features/post-meal/postMeal.unit.test.tsx",
+          "title": "attendance status (T13) keeps unknown separate from absent and explains SELF priority",
+          "status": "passed",
+          "durationMs": 2.99191600000006
+        },
+        {
+          "id": "R188-T235",
+          "run": "R188",
+          "path": "apps/web/src/features/post-meal/postMeal.unit.test.tsx",
+          "title": "post-meal page (T13/T14/T15) reports own attendance with If-Match \"0\" on the first write, with no default selection",
+          "status": "passed",
+          "durationMs": 305.9391249999999
+        },
+        {
+          "id": "R188-T236",
+          "run": "R188",
+          "path": "apps/web/src/features/post-meal/postMeal.unit.test.tsx",
+          "title": "post-meal page (T13/T14/T15) rates 1–5 privately only when attended, using the experience revision",
+          "status": "passed",
+          "durationMs": 84.45687500000008
+        },
+        {
+          "id": "R188-T237",
+          "run": "R188",
+          "path": "apps/web/src/features/post-meal/postMeal.unit.test.tsx",
+          "title": "post-meal page (T13/T14/T15) closed window: no attendance controls, support correction hint",
+          "status": "passed",
+          "durationMs": 23.396625000000085
+        },
+        {
+          "id": "R188-T238",
+          "run": "R188",
+          "path": "apps/web/src/features/post-meal/postMeal.unit.test.tsx",
+          "title": "post-meal page (T13/T14/T15) saves a public reference and shows it as pending until mutual or 7 days",
+          "status": "passed",
+          "durationMs": 187.19658299999992
+        },
+        {
+          "id": "R188-T239",
+          "run": "R188",
+          "path": "apps/web/src/features/post-meal/postMeal.unit.test.tsx",
+          "title": "post-meal page (T13/T14/T15) a reconnect choice stays private: WAITING never reveals the other side",
+          "status": "passed",
+          "durationMs": 78.19404099999997
+        },
+        {
+          "id": "R188-T240",
+          "run": "R188",
+          "path": "apps/web/src/features/post-meal/postMeal.unit.test.tsx",
+          "title": "post-meal page (T13/T14/T15) a mutual connection opens the direct conversation; withdrawing needs confirmation",
+          "status": "passed",
+          "durationMs": 109.43433400000004
+        },
+        {
+          "id": "R188-T241",
+          "run": "R188",
+          "path": "apps/web/src/features/post-meal/postMeal.unit.test.tsx",
+          "title": "post-meal page (T13/T14/T15) “Say hello” resolves the direct conversation and navigates to it",
+          "status": "passed",
+          "durationMs": 41.14737500000001
+        },
+        {
+          "id": "R188-T242",
+          "run": "R188",
+          "path": "apps/web/src/features/post-meal/postMeal.unit.test.tsx",
+          "title": "post-meal page (T13/T14/T15) the host can report others; each member’s own report still wins",
+          "status": "passed",
+          "durationMs": 70.85829199999989
+        },
+        {
+          "id": "R188-T243",
+          "run": "R188",
+          "path": "apps/web/src/features/post-meal/postMeal.unit.test.tsx",
+          "title": "post-meal page (T13/T14/T15) shows server rejections instead of assuming eligibility",
+          "status": "passed",
+          "durationMs": 46.34258299999988
+        },
+        {
+          "id": "R188-T244",
+          "run": "R188",
+          "path": "apps/web/src/features/post-meal/postMeal.unit.test.tsx",
+          "title": "report and block (T15/T18) reports privately with a receipt, then blocks with confirmation",
+          "status": "passed",
+          "durationMs": 273.233917
+        },
+        {
+          "id": "R188-T245",
+          "run": "R188",
+          "path": "apps/web/src/features/post-meal/postMeal.unit.test.tsx",
+          "title": "report and block (T15/T18) own profile has no report/block entry",
+          "status": "passed",
+          "durationMs": 11.064041999999972
+        },
+        {
+          "id": "R188-T246",
+          "run": "R188",
+          "path": "apps/web/src/features/profile/profile.unit.test.tsx",
+          "title": "profile gate (T05) requires the 18+/community acknowledgement before any write",
+          "status": "passed",
+          "durationMs": 509.019583
+        },
+        {
+          "id": "R188-T247",
+          "run": "R188",
+          "path": "apps/web/src/features/profile/profile.unit.test.tsx",
+          "title": "profile gate (T05) saves with If-Match and consent versions, then returns without replaying the interrupted action",
+          "status": "passed",
+          "durationMs": 319.89983299999994
+        },
+        {
+          "id": "R188-T248",
+          "run": "R188",
+          "path": "apps/web/src/features/profile/profile.unit.test.tsx",
+          "title": "profile gate (T05) on VERSION_CONFLICT reloads the profile and keeps the user’s edits",
+          "status": "passed",
+          "durationMs": 77.86670800000002
+        },
+        {
+          "id": "R188-T249",
+          "run": "R188",
+          "path": "apps/web/src/features/profile/profile.unit.test.tsx",
+          "title": "profile gate (T05) maps server field errors onto fields",
+          "status": "passed",
+          "durationMs": 34.844750000000204
+        },
+        {
+          "id": "R188-T250",
+          "run": "R188",
+          "path": "apps/web/src/features/profile/profile.unit.test.tsx",
+          "title": "profile gate (T05) sends a guest to sign-in with the edit page as return target",
+          "status": "passed",
+          "durationMs": 15.151250000000346
+        },
+        {
+          "id": "R188-T251",
+          "run": "R188",
+          "path": "apps/web/src/features/profile/profile.unit.test.tsx",
+          "title": "public profile (T05) renders the public projection for guests with published references only",
+          "status": "passed",
+          "durationMs": 15.518667000000278
+        },
+        {
+          "id": "R188-T252",
+          "run": "R188",
+          "path": "apps/web/src/features/settings/deletion.unit.test.tsx",
+          "title": "account deletion does not show a previous account receipt as the newly signed-in account deletion state",
+          "status": "passed",
+          "durationMs": 140.83379200000013
+        },
+        {
+          "id": "R188-T253",
+          "run": "R188",
+          "path": "apps/web/src/features/settings/deletion.unit.test.tsx",
+          "title": "account deletion persists a 256-bit receipt before the destructive request, clears private state, and checks with a body only",
+          "status": "passed",
+          "durationMs": 86.10866699999997
+        },
+        {
+          "id": "R188-T254",
+          "run": "R188",
+          "path": "apps/web/src/features/settings/deletion.unit.test.tsx",
+          "title": "account deletion does not automatically delete after reauthentication is required",
+          "status": "passed",
+          "durationMs": 48.62670900000012
+        },
+        {
+          "id": "R188-T255",
+          "run": "R188",
+          "path": "apps/web/src/features/settings/deletion.unit.test.tsx",
+          "title": "account deletion never requests deletion when receipt persistence fails",
+          "status": "passed",
+          "durationMs": 82.05158299999994
+        },
+        {
+          "id": "R188-T256",
+          "run": "R188",
+          "path": "apps/web/src/features/settings/deletion.unit.test.tsx",
+          "title": "account deletion retains the receipt when clearing private drafts",
+          "status": "passed",
+          "durationMs": 0.6096250000000509
+        },
+        {
+          "id": "R188-T257",
+          "run": "R188",
+          "path": "apps/web/src/features/settings/deletion.unit.test.tsx",
+          "title": "account deletion persists venue identity without provider display fields in a create draft",
+          "status": "passed",
+          "durationMs": 0.26766700000007404
+        },
+        {
+          "id": "R188-T258",
+          "run": "R188",
+          "path": "apps/web/src/features/settings/settings.unit.test.tsx",
+          "title": "product survey rejects an empty survey and saves factors independently of again, with revision and intent",
+          "status": "passed",
+          "durationMs": 246.63758299999995
+        },
+        {
+          "id": "R188-T259",
+          "run": "R188",
+          "path": "apps/web/src/features/settings/settings.unit.test.tsx",
+          "title": "product survey preserves local answers after a revision conflict and retries with the current version",
+          "status": "passed",
+          "durationMs": 78.30820799999992
+        },
+        {
+          "id": "R188-T260",
+          "run": "R188",
+          "path": "apps/web/src/features/venues/venues.unit.test.tsx",
+          "title": "VenuePicker (T06) retains transient search display when confirmation only returns durable place identity",
+          "status": "passed",
+          "durationMs": 248.832584
+        },
+        {
+          "id": "R188-T261",
+          "run": "R188",
+          "path": "apps/web/src/features/venues/venues.unit.test.tsx",
+          "title": "VenuePicker (T06) confirms by placeId only and shows the server-confirmed details",
+          "status": "passed",
+          "durationMs": 124.64029099999993
+        },
+        {
+          "id": "R188-T262",
+          "run": "R188",
+          "path": "apps/web/src/features/venues/venues.unit.test.tsx",
+          "title": "VenuePicker (T06) keeps the confirmed restaurant when searching again, and offers no manual entry",
+          "status": "passed",
+          "durationMs": 156.80229099999997
+        },
+        {
+          "id": "R188-T263",
+          "run": "R188",
+          "path": "apps/web/src/features/venues/venues.unit.test.tsx",
+          "title": "VenuePicker (T06) reports provider outages without a fallback",
+          "status": "passed",
+          "durationMs": 43.739915999999994
+        },
+        {
+          "id": "R188-T264",
+          "run": "R188",
+          "path": "apps/web/src/features/venues/venues.unit.test.tsx",
+          "title": "VenuePicker (T06) marks a venue whose display data is unavailable",
+          "status": "passed",
+          "durationMs": 2.568125000000009
+        },
+        {
+          "id": "R188-T265",
+          "run": "R188",
+          "path": "apps/web/src/features/maps/maps.unit.test.tsx",
+          "title": "configured Google Maps boundary (mock SDK evidence) does not request Google scripts when no browser key is configured",
+          "status": "passed",
+          "durationMs": 15.838540999999964
+        },
+        {
+          "id": "R188-T266",
+          "run": "R188",
+          "path": "apps/web/src/features/maps/maps.unit.test.tsx",
+          "title": "configured Google Maps boundary (mock SDK evidence) rejects a demo Map ID in production instead of using a demonstration setup",
+          "status": "passed",
+          "durationMs": 1.1873339999999644
+        },
+        {
+          "id": "R188-T267",
+          "run": "R188",
+          "path": "apps/web/src/features/maps/maps.unit.test.tsx",
+          "title": "configured Google Maps boundary (mock SDK evidence) keeps camera movement pending until Search this area and independently selects accessible pins",
+          "status": "passed",
+          "durationMs": 102.75183299999992
+        },
+        {
+          "id": "R188-T268",
+          "run": "R188",
+          "path": "apps/web/src/features/maps/maps.unit.test.tsx",
+          "title": "configured Google Maps boundary (mock SDK evidence) round-trips explicit bounds and clears them while preserving other applied filters",
+          "status": "passed",
+          "durationMs": 0.4549579999999196
+        },
+        {
+          "id": "R188-T269",
+          "run": "R188",
+          "path": "apps/web/src/features/maps/maps.unit.test.tsx",
+          "title": "configured Google Maps boundary (mock SDK evidence) shows an unavailable state when provider authentication fails after script loading",
+          "status": "passed",
+          "durationMs": 6.8310410000000275
+        },
+        {
+          "id": "R188-T270",
+          "run": "R188",
+          "path": "apps/admin/src/App.unit.test.tsx",
+          "title": "admin shell shows exactly the five existing pages and binds the page request to one snapshot + canonical filters",
+          "status": "passed",
+          "durationMs": 267.53316599999994
+        },
+        {
+          "id": "R188-T271",
+          "run": "R188",
+          "path": "apps/admin/src/App.unit.test.tsx",
+          "title": "admin shell keeps filters and page in the URL when switching language",
+          "status": "passed",
+          "durationMs": 208.07999999999993
+        },
+        {
+          "id": "R188-T272",
+          "run": "R188",
+          "path": "apps/admin/src/App.unit.test.tsx",
+          "title": "admin shell offers area/source options from the pinned snapshot and sends their codes",
+          "status": "passed",
+          "durationMs": 219.07454100000018
+        },
+        {
+          "id": "R188-T273",
+          "run": "R188",
+          "path": "apps/admin/src/App.unit.test.tsx",
+          "title": "admin shell sends a legacy ≤ £25 link as budgetUpToPence; choosing bands replaces it",
+          "status": "passed",
+          "durationMs": 164.49775
+        },
+        {
+          "id": "R188-T274",
+          "run": "R188",
+          "path": "apps/admin/src/App.unit.test.tsx",
+          "title": "admin shell applies dates only on Apply and rejects an end after the snapshot",
+          "status": "passed",
+          "durationMs": 480.9870410000003
+        },
+        {
+          "id": "R188-T275",
+          "run": "R188",
+          "path": "apps/admin/src/App.unit.test.tsx",
+          "title": "admin shell 401 shows a sign-in prompt and no data surfaces",
+          "status": "passed",
+          "durationMs": 16.69729200000029
+        },
+        {
+          "id": "R188-T276",
+          "run": "R188",
+          "path": "apps/admin/src/App.unit.test.tsx",
+          "title": "admin shell 403 on the snapshot list shows no-access without data",
+          "status": "passed",
+          "durationMs": 22.00808300000017
+        },
+        {
+          "id": "R188-T277",
+          "run": "R188",
+          "path": "apps/admin/src/App.unit.test.tsx",
+          "title": "admin shell 410 clears the page, drops the snapshot from the URL and asks for a new one",
+          "status": "passed",
+          "durationMs": 219.97125000000005
+        },
+        {
+          "id": "R188-T278",
+          "run": "R188",
+          "path": "apps/admin/src/App.unit.test.tsx",
+          "title": "admin shell keeps the bound snapshot when a newer one exists and switches only on request",
+          "status": "passed",
+          "durationMs": 113.83512500000006
+        },
+        {
+          "id": "R188-T279",
+          "run": "R188",
+          "path": "apps/admin/src/App.unit.test.tsx",
+          "title": "admin shell shows \"no snapshot\" without numbers when none is sealed",
+          "status": "passed",
+          "durationMs": 16.962750000000142
+        },
+        {
+          "id": "R188-T280",
+          "run": "R188",
+          "path": "apps/admin/src/App.unit.test.tsx",
+          "title": "admin shell metric dictionary dialog closes on Escape and returns focus to its trigger",
+          "status": "passed",
+          "durationMs": 171.6423749999999
+        },
+        {
+          "id": "R188-T281",
+          "run": "R188",
+          "path": "apps/admin/src/guard.unit.test.ts",
+          "title": "no fixtures or client-side business computation in production code scans a non-empty production source set",
+          "status": "passed",
+          "durationMs": 7.1369170000000395
+        },
+        {
+          "id": "R188-T282",
+          "run": "R188",
+          "path": "apps/admin/src/guard.unit.test.ts",
+          "title": "no fixtures or client-side business computation in production code detects identifiers but ignores UI copy",
+          "status": "passed",
+          "durationMs": 0.6103339999999662
+        },
+        {
+          "id": "R188-T283",
+          "run": "R188",
+          "path": "apps/admin/src/guard.unit.test.ts",
+          "title": "no fixtures or client-side business computation in production code contains no prototype fixtures",
+          "status": "passed",
+          "durationMs": 0.6709160000000338
+        },
+        {
+          "id": "R188-T284",
+          "run": "R188",
+          "path": "apps/admin/src/guard.unit.test.ts",
+          "title": "no fixtures or client-side business computation in production code contains no the prototype SNAPSHOT constant",
+          "status": "passed",
+          "durationMs": 0.49250000000006366
+        },
+        {
+          "id": "R188-T285",
+          "run": "R188",
+          "path": "apps/admin/src/guard.unit.test.ts",
+          "title": "no fixtures or client-side business computation in production code contains no prototype analytics/metric formulas",
+          "status": "passed",
+          "durationMs": 0.45045900000013717
+        },
+        {
+          "id": "R188-T286",
+          "run": "R188",
+          "path": "apps/admin/src/guard.unit.test.ts",
+          "title": "no fixtures or client-side business computation in production code contains no imports from the read-only prototype",
+          "status": "passed",
+          "durationMs": 0.3608750000000782
+        },
+        {
+          "id": "R188-T287",
+          "run": "R188",
+          "path": "apps/admin/src/guard.unit.test.ts",
+          "title": "no fixtures or client-side business computation in production code contains no browser storage of business data",
+          "status": "passed",
+          "durationMs": 0.39712500000018736
+        },
+        {
+          "id": "R188-T288",
+          "run": "R188",
+          "path": "apps/admin/src/guard.unit.test.ts",
+          "title": "no fixtures or client-side business computation in production code contains no review/demo scenario switching",
+          "status": "passed",
+          "durationMs": 0.4150409999999738
+        },
+        {
+          "id": "R188-T289",
+          "run": "R188",
+          "path": "apps/admin/src/api/failure.unit.test.ts",
+          "title": "toFailure maps status/code to UI failure kinds",
+          "status": "passed",
+          "durationMs": 7.771125000000211
+        },
+        {
+          "id": "R188-T290",
+          "run": "R188",
+          "path": "apps/admin/src/api/failure.unit.test.ts",
+          "title": "toFailure treats only auth/role failures as blocking",
+          "status": "passed",
+          "durationMs": 0.2961250000000746
+        },
+        {
+          "id": "R188-T291",
+          "run": "R188",
+          "path": "apps/admin/src/state/filters.unit.test.ts",
+          "title": "URL filter codec round-trips canonical keys, language and snapshot",
+          "status": "passed",
+          "durationMs": 5.90095899999983
+        },
+        {
+          "id": "R188-T292",
+          "run": "R188",
+          "path": "apps/admin/src/state/filters.unit.test.ts",
+          "title": "URL filter codec accepts prototype legacy links (start/end, \"all\", single values, old labels)",
+          "status": "passed",
+          "durationMs": 0.559291999999914
+        },
+        {
+          "id": "R188-T293",
+          "run": "R188",
+          "path": "apps/admin/src/state/filters.unit.test.ts",
+          "title": "URL filter codec drops unknown values and invalid or reversed dates",
+          "status": "passed",
+          "durationMs": 0.20158300000002782
+        },
+        {
+          "id": "R188-T294",
+          "run": "R188",
+          "path": "apps/admin/src/state/filters.unit.test.ts",
+          "title": "URL filter codec serialises only non-empty sets",
+          "status": "passed",
+          "durationMs": 0.10941700000012133
+        },
+        {
+          "id": "R188-T295",
+          "run": "R188",
+          "path": "apps/admin/src/state/filters.unit.test.ts",
+          "title": "dates against the snapshot validates missing, reversed and after-snapshot ranges",
+          "status": "passed",
+          "durationMs": 0.14216700000019955
+        },
+        {
+          "id": "R188-T296",
+          "run": "R188",
+          "path": "apps/admin/src/state/filters.unit.test.ts",
+          "title": "dates against the snapshot defaults to 28 inclusive days ending at the snapshot day",
+          "status": "passed",
+          "durationMs": 0.1466659999998683
+        },
+        {
+          "id": "R188-T297",
+          "run": "R188",
+          "path": "apps/admin/src/state/filters.unit.test.ts",
+          "title": "contract query builds a canonical, order-independent query with comma sets",
+          "status": "passed",
+          "durationMs": 0.1609169999999267
+        },
+        {
+          "id": "R188-T298",
+          "run": "R188",
+          "path": "apps/admin/src/state/qa-independent-revocation.unit.test.tsx",
+          "title": "QA-PRIVACY-005 410 clears current and other cached snapshot data and requires a fresh server read",
+          "status": "passed",
+          "durationMs": 202.55270799999994
+        },
+        {
+          "id": "R188-T299",
+          "run": "R188",
+          "path": "apps/admin/src/pages/pages.unit.test.tsx",
+          "title": "page bodies render server values only labels the latest visible week and warns when it is clipped or still in progress",
+          "status": "passed",
+          "durationMs": 346.79337499999997
+        },
+        {
+          "id": "R188-T300",
+          "run": "R188",
+          "path": "apps/admin/src/pages/pages.unit.test.tsx",
+          "title": "page bodies render server values only shows form errors by fixed step and field and opens snapshot-bound source rows",
+          "status": "passed",
+          "durationMs": 278.8470829999999
+        },
+        {
+          "id": "R188-T301",
+          "run": "R188",
+          "path": "apps/admin/src/pages/pages.unit.test.tsx",
+          "title": "page bodies render server values only overview: ratio with zero denominator is \"—\", numbers and the trend come from the snapshot",
+          "status": "passed",
+          "durationMs": 120.05987500000015
+        },
+        {
+          "id": "R188-T302",
+          "run": "R188",
+          "path": "apps/admin/src/pages/pages.unit.test.tsx",
+          "title": "page bodies render server values only shows an empty state (no stale charts) when the snapshot has no data for the filters",
+          "status": "passed",
+          "durationMs": 96.80704099999957
+        },
+        {
+          "id": "R188-T303",
+          "run": "R188",
+          "path": "apps/admin/src/pages/pages.unit.test.tsx",
+          "title": "page bodies render server values only renders server decision P90/P50 in hours and keeps a true zero pending count distinct from null waiting time",
+          "status": "passed",
+          "durationMs": 532.762459
+        },
+        {
+          "id": "R188-T304",
+          "run": "R188",
+          "path": "apps/admin/src/pages/pages.unit.test.tsx",
+          "title": "page bodies render server values only does not draw a line across missing trend periods",
+          "status": "passed",
+          "durationMs": 86.4072500000002
+        },
+        {
+          "id": "R188-T305",
+          "run": "R188",
+          "path": "apps/admin/src/pages/pages.unit.test.tsx",
+          "title": "page bodies render server values only retention: unmatured cohorts show \"Observing\", cohort week opens the cohort users drilldown",
+          "status": "passed",
+          "durationMs": 203.83208300000024
+        },
+        {
+          "id": "R188-T306",
+          "run": "R188",
+          "path": "apps/admin/src/pages/pages.unit.test.tsx",
+          "title": "drilldowns stay on one snapshot + filter hash supply meal list: attendance filter, server paging and nested meal evidence",
+          "status": "passed",
+          "durationMs": 464.96683399999984
+        },
+        {
+          "id": "R188-T307",
+          "run": "R188",
+          "path": "apps/admin/src/pages/pages.unit.test.tsx",
+          "title": "drilldowns stay on one snapshot + filter hash a 410 during a drilldown clears data and opens the snapshot picker",
+          "status": "passed",
+          "durationMs": 111.12483300000031
+        },
+        {
+          "id": "R188-T308",
+          "run": "R188",
+          "path": "apps/admin/src/pages/pages.unit.test.tsx",
+          "title": "export (T23) exports the page summary for the same snapshot and filters, then downloads the server CSV",
+          "status": "passed",
+          "durationMs": 103.37729199999967
+        },
+        {
+          "id": "R188-T309",
+          "run": "R188",
+          "path": "apps/admin/src/pages/pages.unit.test.tsx",
+          "title": "export (T23) a revoked snapshot fails the export and asks for a new snapshot",
+          "status": "passed",
+          "durationMs": 208.65029200000026
+        },
+        {
+          "id": "R188-T310",
+          "run": "R188",
+          "path": "apps/admin/src/pages/pages.unit.test.tsx",
+          "title": "classification (data_admin only, server-enforced) analysts see no form",
+          "status": "passed",
+          "durationMs": 110.94550000000027
+        },
+        {
+          "id": "R188-T311",
+          "run": "R188",
+          "path": "apps/admin/src/pages/pages.unit.test.tsx",
+          "title": "classification (data_admin only, server-enforced) requires a reason, sends If-Match + idempotency key, and announces the pending snapshot",
+          "status": "passed",
+          "durationMs": 1092.2424999999998
+        },
+        {
+          "id": "R188-T312",
+          "run": "R188",
+          "path": "apps/admin/src/pages/pages.unit.test.tsx",
+          "title": "classification (data_admin only, server-enforced) a version conflict reloads the current revision instead of overwriting",
+          "status": "passed",
+          "durationMs": 236.8878340000001
+        }
+      ],
+      "environmentNote": "Independent full client run312/0. Owner working-tree F38 ChatPage/read-error repair included, source hashes below; not formal F38 acceptance. QA Date.now fixed before countdown creation after owner full run311/1 exposed setup race; original owner log preserved locally.",
+      "workingTreeSourceSha256": {
+        "apps/web/src/features/inbox/ChatPage.tsx": "9bf1724715b9075ff4e71469e91ddb4df3b69cae38a64c8e730a6f2656f69f84",
+        "apps/web/src/features/inbox/read-error.unit.test.tsx": "7a323d5e453e20c6b4e614ecc2626cb835fbd63c96e6cf7aa3af7476aaf24e90"
+      }
     }
   ],
   "qaProbeSourceSha256": {
@@ -17875,7 +20927,7 @@
     "apps/web/src/features/create/qa-independent-terms-return.unit.test.tsx": "20811ac0b0f9c787f4d26569f1b5f10b9e1979b4583deeac3669b0a5466f9498",
     "scripts/qa-browser-extra-applicant.mjs": "f6654ae9a9ed43cf44c2f55e1adc51b61815ebb179cfb126c6bc5f2a9eaf31fe",
     "scripts/qa-independent-direct-title.api.test.ts": "9c41ed304cba4d0d87bc567cbe24f0b07b20fbccd9636655f8b6a3067227a642",
-    "scripts/qa-inspect-clock-meal.py": "5b1e1427870f0a5952c19006b6b5ddee4b2084f4d56f930e9c23c9428c0227da",
+    "scripts/qa-inspect-clock-meal.py": "c9b3a65f14fbc3ba9d7aeb215307688e9c351676557e728a2cf38c70547be3bc",
     "scripts/qa-direct-browser-fixture.ts": "20b7b8b17491210e330579f8054c8a5c49df7598ac1b099477be29f61d3a60ed",
     "scripts/qa-independent-survey-boundaries.api.test.ts": "8f9c8f9cb7570c201e73af554cbb21876440c123e352b4629672eda94dc74811",
     "scripts/qa-independent-draft-authorization.api.test.ts": "d990daf9f3b83d95a4d0137eaea969358d0e810221fdbe1cb0ee1b7dd43370ee",
@@ -17899,9 +20951,13 @@
     "scripts/qa-independent-tonight.api.test.ts": "27a0b42b3be4701307dcaaeb9a285a867e897b15057ef450284852f499040d79",
     "scripts/qa-independent-session-lock-upgrade.api.test.ts": "3386ec283d304a28660123e9082dbb94d7618fe3caf38321d045deb5ed7f8386",
     "scripts/qa-independent-link-deletion-race.api.test.ts": "c7c81eaab7b91413cb24d340b47e342789cacc782ad796d3dcf9cb97219c359c",
-    "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx": "54a360239f5e63cff35a75c836d7d87dfffe039364c4906d69021513a5cdc66b",
+    "apps/web/src/features/auth/qa-independent-otp.unit.test.tsx": "15857c0c5493f51759a63a3293a20590318dc76245ca69e771cd9070e651f228",
     "scripts/qa-independent-otp-ip-race.api.test.ts": "b9f8fe6486aac5c18a4c7f3fcdb4ecbbd8dbcfaff3804096bff2f997614ffdb1",
-    "apps/web/src/features/discover/qa-independent-return.unit.test.tsx": "7c6b19e0eff1419fafaee12b8d42b10117dc7faa9025d04bc09dd469e46f7abb"
+    "apps/web/src/features/discover/qa-independent-return.unit.test.tsx": "8e3002f794aec9a93a71cc681b95f3abebd4c958ce7a2250da4dce0e4d4fe9e0",
+    "apps/web/src/features/discover/qa-independent-map.unit.test.tsx": "e001472685b47428c349592865209dadbb7259f58446e7b2a7649e6ddd46246e",
+    "apps/web/src/features/create/qa-independent-time-picker.unit.test.tsx": "3a7e240e3223143aee404d85311d77ea326bcfae23bb3cae1735095bef571429",
+    "apps/web/src/features/create/qa-independent-venue-reset.unit.test.tsx": "a937371da042850e1fd1338f77f7379e3120843806d42417161b34d6a0f750d8",
+    "apps/web/src/features/inbox/qa-independent-read-error.unit.test.tsx": "b338fa2cea745b3bed84f14a5cd6dd1aba37079c7cee9a7aa93d2d11e613c62c"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console. R68/R69 valid TestIDP OAuth callback200 captured actual non-silent child stdout only in parent RAM. Metadata contains only leak booleans, never credential strings or raw logs. R69 aggregates code/state/email checks without stopping at the first boolean failure. R72 mutates semantic OpenAPI/SDK artifacts only in an owned temporary contracts copy, requires the real checker fail1 and restore0, and verifies original workspace bytes untouched. Static cases remain NOT_RUN until fixed committed handoff recheck.",
   "runtimeSnapshotVerification": {

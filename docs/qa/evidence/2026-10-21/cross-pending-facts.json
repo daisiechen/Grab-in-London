@@ -1,0 +1,58 @@
+{
+  "ownedClockDatabaseVerified": true,
+  "mealId": "acfe9e54-d6d7-4c63-81b6-f6aae4e53610",
+  "meal": {
+    "id": "acfe9e54-d6d7-4c63-81b6-f6aae4e53610",
+    "status": "OPEN",
+    "version": 1,
+    "head": 2,
+    "minimum": 2,
+    "capacity": 2
+  },
+  "applications": [
+    {
+      "id": "ffceafab-1a8a-43d2-be05-dca1529f1b83",
+      "user_id": "d50902da-c74a-4f79-9e70-7e72c61d0c50",
+      "round": 1,
+      "state": "PENDING",
+      "version": 1
+    }
+  ],
+  "seats": [
+    {
+      "seq": 1,
+      "type": "HOST_CONFIRMED",
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583"
+    }
+  ],
+  "groupMemberships": [
+    {
+      "user_id": "fc2e9e2a-20db-41db-936f-2c1493315583",
+      "join_seq": 1,
+      "leave_seq": null
+    }
+  ],
+  "messageCount": 0,
+  "marks": [],
+  "startRoster": [],
+  "jobs": [
+    {
+      "kind": "meal.close",
+      "state": "PENDING",
+      "due_at": "2026-10-22T18:00:00+01:00",
+      "attempts": 0
+    },
+    {
+      "kind": "meal.end",
+      "state": "PENDING",
+      "due_at": "2026-10-22T21:00:00+01:00",
+      "attempts": 0
+    },
+    {
+      "kind": "meal.start",
+      "state": "PENDING",
+      "due_at": "2026-10-22T19:00:00+01:00",
+      "attempts": 0
+    }
+  ]
+}

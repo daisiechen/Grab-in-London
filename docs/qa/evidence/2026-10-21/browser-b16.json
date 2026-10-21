@@ -1,0 +1,140 @@
+{
+  "observations": [
+    {
+      "id": "B16-O001",
+      "status": "passed",
+      "title": "F33 actual fixed Discover Back retains English and selected meal",
+      "testedCommit": "f7bb95eb0fe951295fe9b88fe43ba9dbc76a528c",
+      "environment": "Actual IAB Web83df/API19d real isolated local PG; synthetic identity/Places/mail, no real providers",
+      "steps": [
+        "Actual /discover?languages=en→meal→Back returns /discover?languages=en&selected=acfe9e54-d6d7-4c63-81b6-f6aae4e53610; active filter count1.",
+        "R182 stronger actual router covers bounds/areas/selected card and host profile return; controlled maps integration preserves meal/list collection."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/discovery-back-fixed-filter.jpg"
+      ]
+    },
+    {
+      "id": "B16-O002",
+      "status": "passed",
+      "title": "F34 real mobile menu and native keyboard events",
+      "testedCommit": "83dfde329d0f34d09833ae18dc4d30168daea01b",
+      "environment": "Actual IAB Web83df/API19d real isolated local PG; synthetic identity/Places/mail, no real providers",
+      "steps": [
+        "Actual selected disposable tab8 at390x844:48options, selected18:30 focused, width160/height224, internal scroll1750 vs222 client height, rect21..181 within390.",
+        "Down+Escape preserves18:30/menu0; Down+Return chooses19:00; outside click closes/menu0 retaining19:00.",
+        "At320x844 menu160x224 remains21..181; viewport reset. Earlier nonselected-tab1280 measurement excluded; prior AI/Admin tabs retained after cleanup auto-review rejection."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/create-time-menu-390.jpg",
+        "evidence/2026-10-21/create-time-menu-measurements.json"
+      ]
+    },
+    {
+      "id": "B16-O003",
+      "status": "passed",
+      "title": "F35 actual confirmed different venue clears time and explains re-selection",
+      "testedCommit": "83dfde329d0f34d09833ae18dc4d30168daea01b",
+      "environment": "Actual IAB Web83df/API19d real isolated local PG; synthetic identity/Places/mail, no real providers",
+      "steps": [
+        "North+Sat24+18:30+capacity6/min6; preview South retains18:30.",
+        "UseSouth changes confirmed venue and Time becomes Choose a time; Continue rejects with Choose a planned time in half-hour steps.",
+        "R183 actual CreatePage proves booking/review reset and other draft fields preserved; no publish."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/create-venue-reset-fixed.jpg"
+      ]
+    },
+    {
+      "id": "B16-O004",
+      "status": "passed",
+      "title": "Actual native invalid email wrong OTP and fixture correct-code recovery",
+      "testedCommit": "5b26fb3f633d19ca1deaf3e588ed16dc56836be5",
+      "environment": "Actual headless native5b on isolated iOS27.0 simulator/API19d synthetic OTP, no real mail",
+      "steps": [
+        "Independent Auth1 88.406sec: invalid email rejected,111111 rejected, explicit local fixture000000 reaches profile setup.",
+        "Profile2 68.993sec completes explicit fictional profile/community confirmation. B4-T001 actual existing-account code recovery returns initial unsent application without sending.",
+        "This record explicitly marks fixture OTP/IdP simulation; no production provider/login success claim."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-independent-xcui.json",
+        "evidence/2026-10-21/native-auth-xcui.swift",
+        "evidence/2026-10-21/native-profile-xcui.swift"
+      ]
+    },
+    {
+      "id": "B16-O005",
+      "status": "passed",
+      "title": "F36 formal native heading avoids real navigation header and restores retained account",
+      "testedCommit": "83dfde329d0f34d09833ae18dc4d30168daea01b",
+      "environment": "Actual IAB Web83df/API19d real isolated local PG; synthetic identity/Places/mail, no real providers",
+      "steps": [
+        "Independent190 tracked source hashes match git83df; App binarydfc1cd56/Hermes3080f2e3 independently rehashed before install.",
+        "Apply15 real XCTest1PASS64.88sec: heading minY385.6667 >= navbar maxY364.6667. Actual screenshots inspected; optional analytics banner explains absolute origin difference from old screenshot.",
+        "Native original Apply12–14 failed attempts retained; formal19d normal signing restores while NO-signing builds failed getItem-34018. No credentials/raw errors read; no old data reset.",
+        "Applied unsent message survives Back/detail/reenter exactly; explicit Send yields Application pending. This route does not assert direct keyboard-scroll submission passed."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-apply-header-original.png",
+        "evidence/2026-10-21/native-apply-header-fixed.png",
+        "evidence/2026-10-21/native-application-pending.png",
+        "evidence/2026-10-21/native-apply15-xcui.swift",
+        "evidence/2026-10-21/native-keychain-safe-status.json"
+      ]
+    },
+    {
+      "id": "B16-O006",
+      "status": "passed",
+      "title": "Actual pending state has one application one host seat and no guest group",
+      "testedCommit": "83dfde329d0f34d09833ae18dc4d30168daea01b",
+      "environment": "Actual IAB Web83df/API19d real isolated local PG; synthetic identity/Places/mail, no real providers",
+      "steps": [
+        "Native Pending16 real XCTest1PASS24.607sec: Chats0, Applications-and-next-steps1, actual pending card, no group before approval.",
+        "Readonly named-meal facts: one PENDING app round1; one HOST seat; group membership host only; no message.",
+        "Web actual host sees one matching introduction/1of2 and approves explicitly;2of2, key arrangements locked, reservation stale; explicit report updates booking for2."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-pending-no-group.png",
+        "evidence/2026-10-21/native-pending16-xcui.swift",
+        "evidence/2026-10-21/cross-pending-facts.json",
+        "evidence/2026-10-21/cross-web-pending-one-seat.jpg",
+        "evidence/2026-10-21/cross-web-approved-arrangement-locked.jpg"
+      ]
+    },
+    {
+      "id": "B16-O007",
+      "status": "passed",
+      "title": "Actual native/Web group exchange persisted once per sender",
+      "testedCommit": "83dfde329d0f34d09833ae18dc4d30168daea01b",
+      "environment": "Actual IAB Web83df/API19d real isolated local PG; synthetic identity/Places/mail, no real providers",
+      "steps": [
+        "Chat17 no send: QA exact Message selector failed because native label Message Message; original source retained.",
+        "Chat18 prefix selector real Send; native text visible, then readonly messageCount1.",
+        "Frozen window created valid429 after accumulated real polls; no rate rows deleted/limits disabled. Clock moved into new window, actual Web then reads native message. Web explicit reply visible once.",
+        "Readonly final facts: one application CONFIRMED round1, two seat events, two memberships, two messages with distinct IDs, one per sender. Not merely optimistic bubble."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-chat18-xcui.swift",
+        "evidence/2026-10-21/cross-web-native-message-exchange.jpg",
+        "evidence/2026-10-21/cross-exchange-facts.json"
+      ]
+    },
+    {
+      "id": "B16-O008",
+      "status": "passed",
+      "title": "F37 formal native Chat header and Leave group avoid navigation bar",
+      "testedCommit": "611a90e672f818c9562abf743bf38dddf5f9c643",
+      "environment": "Actual isolated iOS27.0 Release/Fastify19d real PG;191 source hashes and formal binary independently verified",
+      "steps": [
+        "Chat19 real XCTest1PASS: title minY189.6667 and Leave minY178 both below navigation maxY170.",
+        "Actual original and fixed screenshots directly visually inspected; Back/Leave/composer preserved, both remote messages visible after cold restore.",
+        "No credential/data reset; original83df Chat17 red layout screenshot retained; original Message-selector failure is QA setup, not product messaging failure."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-chat-header-original.png",
+        "evidence/2026-10-21/native-chat-header-fixed.png",
+        "evidence/2026-10-21/native-chat19-xcui.swift"
+      ]
+    }
+  ]
+}
