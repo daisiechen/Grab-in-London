@@ -146,3 +146,11 @@
 - QA真实HTTP/PG独立探针发现窗口重复毫秒→秒换算，300000ms实际变成0.3秒。开发新增1s/299s/300s/301s/未来1s回归，旧版3失败/23通过（有效proof被拒与未来proof被接受），保留 `/private/tmp/fancy-f03-red.log`。
 - 修复去掉SQL时间单位换算，读取已消费且属于当前family的proof，在所有用户锁获取之后用同一effectiveNow对session authTime及proof consumed_at调用共用assertFreshAuth；严格0≤age<300000。没有放宽窗口或接受未来时间。
 - 修后身份API26通过，API类型、限定lint及diff检查通过；全API105项/24文件整合通过（`/private/tmp/fancy-f03-api-all.log`），协调任务文档验证通过。QA-F03由独立QA持有，待其新提交定向复验后关闭。QA已明确本轮Git index由开发串行独占，未暂存QA报告/脚本。
+
+
+## Claude只读交叉检查启动与CI退出竞态修复（2026-10-21 09:21 London）
+
+- Mac解锁后，原Claude桌面 `local_dcb878d4-b44f-459f-b1b6-8dd287faf119` 恢复可操作；移除旧开发排队指令，自动继续仍关闭，重新发送仅只读审查当前main的任务。UI已显示repo/handover/身份/删除恢复/AI/客户端审查计划运行；未恢复旧子任务或写入，审查结论尚待返回。
+- 远端 `f27c17d` Actions run39567618348/job119113614631实际failure：105项API断言均通过，但load场次退出时报57P01未处理异常。日志指出其超过1秒，触发后台deadline sweep。审查发现onClose仅清timer而不等待正在进行的sweep，是可独立复现的退出竞态。
+- 新受控promise单测在旧逻辑FAIL，修复改为清timer→等待当前sweep→shutdown/recover；同一API生命周期不会在pool关闭后继续其定时任务。修后单测1、全API105、API类型/lint通过；远端CI需对应新提交复验，暂不声称已经绿。
+- 用户已完成Xcode首次配置：checkFirstLaunchStatus退出0；只读host simctl查询退出0但devices为空、runtimes为空。旧许可69已解除；需安装运行时或配置实际iPhone/签名。没有代接受协议或安装组件。
