@@ -541,3 +541,10 @@
 - 官方email.suppressed仅受验签名及dispatch/provider映射接受，停止本目的两通知并清密文，不存reason原文/email；统一envelope再按ID锁outbox，回执清claim围栏旧writer。DB锁后复查TTL，剩余时长保守转performance期限，在Resend admission后fetch前再查。DB与HTTP不可能原子，不能撤回有效期内已发请求；物理清理依服务运行，停机不保证168h瞬时清，恢复仍拒超期发送。
 - root冻结core:check退出0，unit364/DB147/API199/release23全通过，日志/private/tmp/fancy-deletion-mail-frozen-{check,core}.log；文档3/diff绿。首次未提权有4项CLI loopback环境红，保留fancy-deletion-mail-final-core日志；未改断言，允许本机监听的完整重跑全绿。定向DB33/API22/unit33覆盖DST、双连接锁等待、抑制/到期、缺key与恢复。未改Web/native，未重跑未变UI全量。
 - 未生成或保存真实加密key、未配置真实webhook、未发真实邮件或远端删除；迁移仅新测试库，不动QA及真实联调库。QA继续DM撤回/F42；clone工具仅准备和自建库验证，尚无安全checkpoint，禁止源61973导出/复制。整体生产验收未闭环。
+
+
+## QA-F43 候选归类为限流恢复
+
+- 原Native56再约末步失败实为HTTP429（requestId37f989d8-baa3-4964-ac94-5f9d70bd5eea），PG零新consent符合拒绝，非500或既有pair重建缺陷。QA在正常下一配额窗口Native57只重试choice成功，未重复出席/评分/公评；原失败保留，不改生产服务。
+- 新独立API回归覆盖旧饭局双方出席/互选、撤回、block/unblock后epoch3旧consent全撤、新饭局双方出席再互选200/OPEN和两条新basis consent。root复跑1/1绿，agent API类型/lint绿，仅新增测试，不动原rig。
+- ee971b4远端CI已成功。QA报告F42实际取消零写入、HOST absent、SELF present优先及再HOST不覆盖通过，最终关闭/完整旅程范围以QA正式归档为准；第三B API隐私探针两阶段通过不冒生产隐私全部关闭。clone工具仍只准备/自建测试，等待安全checkpoint。
