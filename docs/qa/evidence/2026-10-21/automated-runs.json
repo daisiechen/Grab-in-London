@@ -7958,6 +7958,109 @@
           "durationMs": 22.529457999999977
         }
       ]
+    },
+    {
+      "id": "R18",
+      "testedCommit": "f27c17d4007a5a5a8b4700c0cb20919a54afdc1b",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-lifecycle.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-lifecycle-fixed.json",
+      "startedAt": "2026-10-21T08:19:41.192000+00:00",
+      "exitCode": 0,
+      "passed": 6,
+      "failed": 0,
+      "total": 6,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R18-T001",
+          "run": "R18",
+          "path": "scripts/qa-independent-lifecycle.api.test.ts",
+          "title": "independent persistent arrangement and historical lifecycle QA-DB-006 leaving every guest never unlocks any critical arrangement field",
+          "status": "passed",
+          "durationMs": 209.1171250000001
+        },
+        {
+          "id": "R18-T002",
+          "run": "R18",
+          "path": "scripts/qa-independent-lifecycle.api.test.ts",
+          "title": "independent persistent arrangement and historical lifecycle QA-DB-009 delayed catchup after end cancels at historical close despite a later third confirmation and retries once",
+          "status": "passed",
+          "durationMs": 29.598375000000033
+        },
+        {
+          "id": "R18-T003",
+          "run": "R18",
+          "path": "scripts/qa-independent-lifecycle.api.test.ts",
+          "title": "independent persistent arrangement and historical lifecycle QA-DB-010 sealed roster LEFT at start -1ms retains guest=false",
+          "status": "passed",
+          "durationMs": 27.126333000000045
+        },
+        {
+          "id": "R18-T004",
+          "run": "R18",
+          "path": "scripts/qa-independent-lifecycle.api.test.ts",
+          "title": "independent persistent arrangement and historical lifecycle QA-DB-010 sealed roster LEFT at start 0ms retains guest=false",
+          "status": "passed",
+          "durationMs": 24.300832999999898
+        },
+        {
+          "id": "R18-T005",
+          "run": "R18",
+          "path": "scripts/qa-independent-lifecycle.api.test.ts",
+          "title": "independent persistent arrangement and historical lifecycle QA-DB-010 sealed roster LEFT at start 1ms retains guest=true",
+          "status": "passed",
+          "durationMs": 23.639208000000053
+        },
+        {
+          "id": "R18-T006",
+          "run": "R18",
+          "path": "scripts/qa-independent-lifecycle.api.test.ts",
+          "title": "independent persistent arrangement and historical lifecycle QA-DB-011 wrong headcount declaration is stale and never claims provider confirmed booking",
+          "status": "passed",
+          "durationMs": 27.171291999999994
+        }
+      ]
+    },
+    {
+      "id": "R19",
+      "testedCommit": "5a37fdcb4f0025442c3702d9d3128ed722eb37ba",
+      "command": "pnpm exec vitest run --project unit apps/api/src/assistant/lifecycle.unit.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-shutdown-fixed.json",
+      "startedAt": "2026-10-21T08:22:44.297000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R19-T001",
+          "run": "R19",
+          "path": "apps/api/src/assistant/lifecycle.unit.test.ts",
+          "title": "drains the in-flight deadline sweep before closing or recovering database state",
+          "status": "passed",
+          "durationMs": 1.9700419999999994
+        }
+      ]
+    },
+    {
+      "id": "R20",
+      "testedCommit": "5a37fdcb4f0025442c3702d9d3128ed722eb37ba",
+      "command": "pnpm exec vitest run --project api infra/tests/load.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-load-exit.json",
+      "startedAt": "2026-10-21T08:22:54.845000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R20-T001",
+          "run": "R20",
+          "path": "infra/tests/load.api.test.ts",
+          "title": "G-HOST preparation: 100 concurrent real API reads with 1000 accounts and 10000 messages",
+          "status": "passed",
+          "durationMs": 478.56879200000003
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -7969,7 +8072,8 @@
     "scripts/qa-independent-post-chat.api.test.ts": "2feb9b5bec808a58e3c572de080881f134e79be6ea66d0259770b3cbd359d961",
     "scripts/qa-independent-reauth.api.test.ts": "ad5695f82a87bc7a565081bc9f1590225cb0427c1087d594df86e365803bc027",
     "scripts/qa-independent-reauth-boundary.api.test.ts": "4e81f45d1d77c294b7d43c457c796900c1318d1e0d7d682bea839b2c6e35839c",
-    "scripts/qa-independent-report.api.test.ts": "8cfd630617d7e3ae17bf6f60e88b9f7361f111c2d1063fab85c663383a667580"
+    "scripts/qa-independent-report.api.test.ts": "8cfd630617d7e3ae17bf6f60e88b9f7361f111c2d1063fab85c663383a667580",
+    "scripts/qa-independent-lifecycle.api.test.ts": "b2b53564813bdb53df5f490b261be9805636fc7bf3072d500e139bb35b2e1b22"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。",
   "runtimeSnapshotVerification": {
@@ -7991,6 +8095,14 @@
     {
       "run": "R17",
       "detail": "首次QA夹具仅写session revoked_at触发数据库撤销原因一致性约束；修正为同时写LOGOUT后3项通过。该失败为夹具错误，未进入产品撤权请求，不计产品缺陷。SESSION/DELETING状态通过数据库受控设置，非完整退出/删除用户路径。"
+    },
+    {
+      "run": "R18",
+      "detail": "首轮QA将退出写于2030未来但用当前HTTP读席位，且错把声明成功码201写成200；分别改为真实HTTP当前退出与正式契约201后6项通过。未改产品阈值。DB009历史事件和DB010 LEFT为受控PG恢复夹具，锁后effectiveNow受控；非实际worker停机/完整删除流程。"
+    },
+    {
+      "run": "R19",
+      "detail": "首次误选--project api执行.unit.test.ts，0测试exit1；不计证据。改为unit实际1项通过。R20实际PG负载测试退出0且无未处理错误；不代表远端CI已通过。"
     }
   ]
 }

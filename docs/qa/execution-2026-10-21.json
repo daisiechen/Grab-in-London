@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 137,
-    "PASS": 68,
+    "NOT_RUN": 134,
+    "PASS": 71,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -3778,8 +3778,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R18-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T150",
         "R1-T151",
@@ -3829,14 +3831,15 @@
         "R2-T034",
         "R2-T035",
         "R2-T036",
-        "R2-T037"
+        "R2-T037",
+        "R18-T001"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "arrangement_locked_at不清",
-        "所有关键字段仍拒绝更改"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "真实HTTP批准/退出后，arrangement_locked_at保持原值；容量、餐厅、开始时间、预算、截止和饮食六类PATCH各409 ARRANGEMENT_LOCKED，整行不变，席位回到仅host。"
     },
     {
       "id": "QA-DB-007",
@@ -3988,8 +3991,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R18-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T150",
         "R1-T151",
@@ -4039,15 +4044,16 @@
         "R2-T034",
         "R2-T035",
         "R2-T036",
-        "R2-T037"
+        "R2-T037",
+        "R18-T002"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "按closesAt历史取消",
-        "不以恢复时现人数补成团",
-        "任务重试不重复事件"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "隔离PG历史恢复夹具：截止时2人不足minimum3，截止后追加第三人；end后真实事务lockMeal补算仍按closesAt取消，事件effective_at恰为截止，不产start/end或名单。重试事件/通知/outbox不增。仅锁后时钟受控，未做真实worker进程停机演练。"
     },
     {
       "id": "QA-DB-010",
@@ -4106,7 +4112,10 @@
         "R2-T034",
         "R2-T035",
         "R2-T036",
-        "R2-T037"
+        "R2-T037",
+        "R18-T003",
+        "R18-T004",
+        "R18-T005"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -4114,7 +4123,7 @@
         "后者保留资格",
         "删除不抹他人名单"
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "actual": "R18三项独立PG探针已验证LEFT恰好start−1ms/start时排除、start+1ms保留，host及另一guest不受影响；置该guest DELETING重算名单不抹他人。完整删除worker执行后的名单保留仍未证实，保持NOT_RUN。"
     },
     {
       "id": "QA-DB-011",
@@ -4122,8 +4131,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R18-T006"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T150",
         "R1-T151",
@@ -4174,15 +4185,16 @@
         "R2-T035",
         "R2-T036",
         "R2-T037",
-        "R9-T006"
+        "R9-T006",
+        "R18-T006"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "不自动cancel或关闭群",
-        "人数变化声明NEEDS_UPDATE",
-        "无供应商已订位假成功"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "R9验证FAILED不取消场/群和人数变动stale；未按原步骤再声明错误人数并核验有效NEEDS_UPDATE呈现，完整case仍NOT_RUN。"
+      "remainingExpected": [],
+      "actual": "真实事务FAILED声明不取消场/群；新增席位后HTTP再声明错误人数1，201但stale=true，仍OPEN且群未关闭。需更新由正式contract的stale字段表示，原状态保留REPORTED_CONFIRMED（host自报），无PROVIDER_CONFIRMED假成功。"
     },
     {
       "id": "QA-TIME-001",
@@ -21201,7 +21213,8 @@
         "passed": 70
       }
     ],
-    "initialDocumentationFailure": "新增浏览器证据未直接列入docs/README.md；补索引后69项通过，未删除或降低断言。"
+    "initialDocumentationFailure": "新增浏览器证据未直接列入docs/README.md；补索引后69项通过，未删除或降低断言。",
+    "remoteCI": "f27c17d远端CI run39567618348失败：load退出时lifecycle sweep仍在途。开发5a37fdc修复后QA独立R19关闭顺序unit与R20真实PG load均退出0，无未处理异常；新远端CI尚待实际结果，不能称已绿。"
   },
   "lastTargetedCommit": "0518d45f89a392c716debc87ba9e23b27d26b5e2",
   "defectStatus": {
