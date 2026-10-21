@@ -27,17 +27,14 @@ import cookie from '@fastify/cookie';
 import { latestMigration } from '@fancy/db';
 import type { AppDeps } from './context.ts';
 import { errorBody, errorHandler } from './errors.ts';
+import { apiLoggerOptions } from './logging.ts';
 import { validatorCompiler } from './validation.ts';
 import { registerIdentityRoutes } from '../identity/routes.ts';
 
 export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   deps.assistantRuntime ??= new AssistantRuntime();
   const app = Fastify({
-    logger: {
-      level: deps.config.environment === 'test' ? 'silent' : deps.config.logLevel,
-      // Credentials, codes and message bodies never reach logs.
-      redact: { paths: ['req.headers.authorization', 'req.headers.cookie', 'req.headers["x-csrf-token"]', 'req.headers["ai-device-token"]', 'res.headers["set-cookie"]'], remove: true },
-    },
+    logger: apiLoggerOptions(deps.config.environment === 'test' ? 'silent' : deps.config.logLevel),
     genReqId: () => randomUUID(),
     bodyLimit: 64 * 1024,
     trustProxy: deps.config.trustedProxyCidrs.length ? deps.config.trustedProxyCidrs : false,

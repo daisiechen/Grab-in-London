@@ -237,3 +237,10 @@
 - 自有锁/重验/重放11项与关联API组合26项通过；根独测原挂起探针1项通过（默认工程不收集scripts，使用/private/tmp/fancy-f12-probe.config.mts显式运行，未改QA文件或仓库测试配置）。首轮整合unit246/DB111/API156/release11及core:check通过；日志/private/tmp/fancy-f12-{core,unit-final,api-final,release,check-final,original-probe}.log。仅最终冻结版本交独立QA正式关闭，CODE003整条仍需完整命令审阅。
 - 通用错误直接返回还需隔离重试副作用：受控pool首次COMMIT抛40001、第二次handler业务拒绝，旧after闭包会错误执行上一次成功动作；确定性测试修前红。改为每次事务返回自己的after，拒绝为undefined，只执行最终成功提交的返回值。该回归使用受控数据库接口，不冒称真实PG并发；真实PG地点回归11项仍通过。最终七个生产/自有测试文件及本记录按白名单提交，不含QA或研究文件。
 - 最终冻结版本unit247/API156/core:check及Python70通过，日志/private/tmp/fancy-f12-{unit-sealed,api-sealed,check-sealed,python}.log；DB111/release11沿用本批上述无变更层已通过结果。Web/原生未改，不冒称本批重复客户端测试；缺陷关闭与整条CODE003结论由QA持有。
+
+## QA-F13 OAuth请求日志查询串脱敏（2026-10-21）
+
+- QA在761304c用合法合成Google OAuth回调与真实非silent Fastify/Pino info子进程，证明默认req.url写出原始授权码。原始捕获只保父进程RAM，证据只记布尔；没有真实Key/账号/外网。PRIVACY003先前通过仅覆盖删除receipt POST，不代表回调日志安全。
+- 生产server统一使用请求日志白名单：仅method、无query/fragment的路径、连接信息；不序列化headers/body/raw对象，保留reqId及响应耗时。业务request.url不改，回调仍能解析原始code/state。错误序列化丢弃提供方原message/stack/cause与附带请求，只保有限name/code及固定占位。
+- 真实Pino定向2项修前红/修后绿；根显式运行独立OAuth/删除receipt子进程探针2项通过（/private/tmp/fancy-f13-probes.config.mts及fancy-f13-probes.log），未改QA探针/仓库收集配置且未打印原日志。仅三个生产/自有测试文件及本记录交付；固定提交由独立QA复验后决定F13关闭，CODE006全路径审计不由局部通过代替。
+- 根工作树unit252（包含QA并行自有assets三项，不混入生产提交）、API156、core:check和Python70通过，日志/private/tmp/fancy-f13-{unit,api,check,python}.log。后端业务/DB和客户端未改，不冒称本批重跑无关层；提交需等QA明确释放Git窗口。
