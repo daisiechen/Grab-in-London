@@ -17,10 +17,13 @@ def validate(data=None):
         assert hashlib.sha256((ROOT/path).read_bytes()).hexdigest()==digest, 'QA probe changed after run'
     assertions={t['id']:t for r in runs for t in r.get('assertions',[])}
     for r in runs:
-        assert r['exitCode']==0
+        assert r['exitCode'] in (0,1)
         if 'assertions' in r:
             assert r['total']==len(r['assertions'])
             assert r['passed']==sum(t['status']=='passed' for t in r['assertions'])
+            failed=sum(t['status']=='failed' for t in r['assertions'])
+            assert r.get('failed',0)==failed
+            assert (r['exitCode']==0)==(failed==0), 'runner outcome does not match preserved assertions'
             for t in r['assertions']:
                 assert not Path(t['path']).is_absolute() and '..' not in Path(t['path']).parts
                 assert (ROOT/t['path']).is_file(), t['path']

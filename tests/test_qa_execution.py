@@ -31,6 +31,16 @@ class QAExecutionTest(unittest.TestCase):
         c=next(c for c in self.data['cases'] if c['status']=='PASS')
         c['coveredExpectedIndexes']=[]
         with self.assertRaises(AssertionError):validator.validate(self.data)
+    def test_preserved_failed_run_cannot_be_presented_as_a_case_pass(self):
+        bundle=json.loads((ROOT/'docs/qa/evidence/2026-10-21/automated-runs.json').read_text())
+        failed=[a for r in bundle['runs'] for a in r.get('assertions',[]) if a['status']=='failed']
+        self.assertGreaterEqual(len(failed),2)
+        c=next(c for c in self.data['cases'] if c['id']=='QA-API-008')
+        plan=json.loads((ROOT/'docs/qa/test-cases.json').read_text())
+        expected=next(c for c in plan['cases'] if c['id']=='QA-API-008')['expected']
+        c.update(status='PASS',evidence=[failed[0]['id']],remainingExpected=[],coveredExpectedIndexes=list(range(len(expected))))
+        with self.assertRaises(AssertionError):validator.validate(self.data)
+
     def test_report_is_reproducible(self):
         p=ROOT/'docs/qa/execution-2026-10-21.zh-CN.md';before=p.read_bytes()
         subprocess.run(['python3',str(ROOT/'scripts/render-qa-execution.py')],check=True,cwd=ROOT)

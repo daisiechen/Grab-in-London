@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 153,
-    "PASS": 52,
+    "NOT_RUN": 139,
+    "PASS": 66,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -4722,8 +4722,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R13-T027"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T047",
         "R1-T048",
@@ -4800,13 +4802,19 @@
         "R5-T010",
         "R5-T011"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "仅M1/M3",
-        "不泄露M2正文/发送者/数量",
-        "scannedThroughSeq推进不死循环"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-CHAT-003",
@@ -4814,8 +4822,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R13-T026"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T047",
         "R1-T048",
@@ -4892,13 +4902,19 @@
         "R5-T010",
         "R5-T011"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "退群不退席位",
-        "HISTORY可读，LIVE写拒绝",
-        "解散不可重新开放"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-CHAT-004",
@@ -4906,8 +4922,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R13-T023"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T047",
         "R1-T048",
@@ -4984,12 +5002,18 @@
         "R5-T010",
         "R5-T011"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "正常发送",
-        "不因饭局终态误关群"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-CHAT-005",
@@ -4997,8 +5021,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R13-T024"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T047",
         "R1-T048",
@@ -5075,13 +5101,19 @@
         "R5-T010",
         "R5-T011"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "不重复消息",
-        "不同body409",
-        "不借唯一键读取他会话响应"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-CHAT-006",
@@ -5089,8 +5121,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R13-T028"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T047",
         "R1-T048",
@@ -5167,13 +5201,19 @@
         "R5-T010",
         "R5-T011"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "锁序决定可观察顺序",
-        "撤回提交之后无新消息",
-        "双方consent清空"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-CHAT-007",
@@ -5181,8 +5221,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R13-T025"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T047",
         "R1-T048",
@@ -5259,13 +5301,19 @@
         "R5-T010",
         "R5-T011"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "解除后仍不可发送",
-        "双方重新选才恢复",
-        "共享群不受影响"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-CHAT-008",
@@ -5461,8 +5509,14 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R13-T001",
+        "R13-T002",
+        "R13-T003",
+        "R13-T004",
+        "R13-T005"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T132",
         "R1-T133",
@@ -5498,12 +5552,18 @@
         "R2-T003",
         "R2-T004"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "自助提交均拒绝",
-        "不写修订与业务成功事件"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-POST-002",
@@ -5511,8 +5571,14 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R13-T006",
+        "R13-T007",
+        "R13-T008",
+        "R13-T009",
+        "R13-T010"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T132",
         "R1-T133",
@@ -5548,11 +5614,17 @@
         "R2-T003",
         "R2-T004"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "允许且版本增加一次"
+      "coveredExpectedIndexes": [
+        0
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-POST-003",
@@ -5560,8 +5632,14 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R13-T011",
+        "R13-T012",
+        "R13-T013",
+        "R13-T014",
+        "R13-T015"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T132",
         "R1-T133",
@@ -5597,11 +5675,17 @@
         "R2-T003",
         "R2-T004"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "允许且版本增加一次"
+      "coveredExpectedIndexes": [
+        0
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-POST-004",
@@ -5609,8 +5693,14 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R13-T016",
+        "R13-T017",
+        "R13-T018",
+        "R13-T019",
+        "R13-T020"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T132",
         "R1-T133",
@@ -5646,12 +5736,18 @@
         "R2-T003",
         "R2-T004"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "自助提交均拒绝",
-        "不写修订与业务成功事件"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-POST-005",
@@ -5659,8 +5755,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R13-T021"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T132",
         "R1-T133",
@@ -5696,12 +5794,18 @@
         "R2-T003",
         "R2-T004"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "A有效absent且保留两来源",
-        "B unknown不当absent或第四冲突态"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-POST-006",
@@ -5709,8 +5813,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R13-T022"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T132",
         "R1-T133",
@@ -5746,13 +5852,19 @@
         "R2-T003",
         "R2-T004"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "仅1/5合法",
-        "每人每场一个最新有效评分",
-        "保留版本不重复计数"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-POST-007",
@@ -5760,8 +5872,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R13-T029"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T132",
         "R1-T133",
@@ -5797,12 +5911,18 @@
         "R2-T003",
         "R2-T004"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "均拒绝",
-        "不得从历史样例补资格"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第四批独立真实PG/HTTP及精确命令时钟探针按完整预期通过；四个饭后窗口各覆盖SELF/HOST/体验/公评/再约五种操作。消息key按正式sender级唯一契约核验，撤回/发送使用真实双连接锁屏障两顺序。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-POST-008",
@@ -12830,7 +12950,7 @@
         "重装先清旧token",
         "RAM丢失410不从日志恢复，未发字保留"
       ],
-      "actual": "R11 iOS冷启动/Continue、410保未发字、SecureStore等16组件项以及R10新API runtime旧session410通过；Xcode许可未接受导致simctl69，真实重装/Keychain仍缺，保持BLOCKED。",
+      "actual": "原生实测仍缺。开发已核验用户完成Xcode首次配置，checkFirstLaunchStatus退出0，不能再以旧许可69阻塞；获准只读host枚举devices为空，runtime准备尚待核对。现有Jest/SecureStore/重启410证据只证明组件与服务端，不等于真实设备或模拟器重装通过。",
       "history": [
         {
           "status": "BLOCKED",
@@ -14844,7 +14964,7 @@
         "原生证据包含构建号/OS/设备",
         "WebView或DOM测试不能充当iOS完成"
       ],
-      "actual": "缺原生iOS构建号/OS/设备的双端实际路径证据。开发先核对可用工具链和原生构建准备；Xcode许可、Apple/Expo签名与设备操作按原需用户范围列明，Jest不关闭此门槛。",
+      "actual": "原生实测仍缺。开发已核验用户完成Xcode首次配置，checkFirstLaunchStatus退出0，不能再以旧许可69阻塞；获准只读host枚举devices为空，runtime准备尚待核对。现有Jest/SecureStore/重启410证据只证明组件与服务端，不等于真实设备或模拟器重装通过。",
       "history": [
         {
           "status": "BLOCKED",
@@ -18209,8 +18329,21 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R15-T001",
+        "R15-T002",
+        "R15-T003",
+        "R15-T004",
+        "R15-T005",
+        "R15-T006",
+        "R15-T007",
+        "R15-T008",
+        "R15-T009",
+        "R15-T010",
+        "R15-T011",
+        "R15-T012"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T242",
         "R1-T243",
@@ -18331,13 +18464,35 @@
         "R3-T028",
         "R3-T029"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "299999毫秒：通过再次认证新鲜度校验；其他条件满足时允许操作",
-        "300000和300001毫秒：再次认证无效，拒绝敏感操作并要求重新认证（REAUTH_REQUIRED）；无删除受理或身份关联写入",
-        "有效条件为0≤effectiveNow−authTime<300000毫秒；未来authTime不能绕过校验"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "独立纯函数准确验证299999/300000/300001和未来authTime；尚未把这四个时钟值分别注入删除和关联HTTP事务并核查副作用。"
+      "remainingExpected": [],
+      "actual": "QA-F03在0518d45修复，修前1秒/299秒HTTP反例已通过；另以可控锁后Tx.effectiveNow和真实HTTP/PG分别验证LINK/DELETE 299999/300000/300001ms及未来authTime，拒绝无删除受理或关联身份写入。未用真实供应商。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "独立纯函数准确验证299999/300000/300001和未来authTime；尚未把这四个时钟值分别注入删除和关联HTTP事务并核查副作用。"
+        },
+        {
+          "status": "FAIL",
+          "actual": "QA-F03：真实HTTP关联原方法proof在1秒及299秒便被403拒绝；0秒与301秒对照符合预期。SQL和调用端两次/1000令proof仅约0.3秒有效。五分钟共同校验函数虽正确，此关联HTTP分支不符合已批准窗口。精确299999/300000/300001两敏感路径仍待补齐。",
+          "evidence": [
+            "R14-T001",
+            "R14-T002",
+            "R14-T003",
+            "R14-T004"
+          ],
+          "defectIds": [
+            "QA-F03"
+          ]
+        }
+      ],
+      "defectIds": [
+        "QA-F03"
+      ]
     },
     {
       "id": "QA-API-009",
@@ -21026,7 +21181,7 @@
     }
   ],
   "deliveryValidation": {
-    "commitBeforeQADelivery": "29a78cf310cd027bfaff15b421dffa9250a009b0",
+    "commitBeforeQADelivery": "0518d45f89a392c716debc87ba9e23b27d26b5e2",
     "checks": [
       {
         "command": "pnpm core:check",
@@ -21035,15 +21190,16 @@
       {
         "command": "python3 -m unittest discover -s tests",
         "exitCode": 0,
-        "passed": 69
+        "passed": 70
       }
     ],
     "initialDocumentationFailure": "新增浏览器证据未直接列入docs/README.md；补索引后69项通过，未删除或降低断言。"
   },
-  "lastTargetedCommit": "29a78cf310cd027bfaff15b421dffa9250a009b0",
+  "lastTargetedCommit": "0518d45f89a392c716debc87ba9e23b27d26b5e2",
   "defectStatus": {
     "QA-F01": "CLOSED_TARGETED_QA",
-    "QA-F02": "FIX_VERIFIED_COMPONENT"
+    "QA-F02": "FIX_VERIFIED_COMPONENT",
+    "QA-F03": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
