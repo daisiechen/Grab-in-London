@@ -14,10 +14,10 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 127 |
+| PASS | 131 |
 | FAIL | 0 |
 | BLOCKED | 12 |
-| NOT_RUN | 78 |
+| NOT_RUN | 74 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实环境、原生runtime/设备/签名或政策批准证据；本地恢复与分步删除现已复验通过，不能再笼统视为外部阻塞。FAIL优先于未完成的后续步骤。
@@ -139,7 +139,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 
 | 用例 | 状态 | 结果或剩余工作 |
 |---|---|---|
-| QA-AUTH-001 · 游客浏览与敏感入口门禁 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：Explore tables first → 浏览地图、详情及公开主页 → 分别点Create/Apply/Meals/Inbox。当前仍缺：公开路径可达；受限动作进入认证；没有自动申请或创建。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B4补充实际游客详情→Apply未发草稿→认证→已有账号免补资料回原草稿，明确第二次Send后Pending/Inbox3卡、无自动席位/群。完整剩余预期仍见remainingExpected。；证据 B4-T001 |
+| QA-AUTH-001 · 游客浏览与敏感入口门禁 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：Explore tables first → 浏览地图、详情及公开主页 → 分别点Create/Apply/Meals/Inbox。当前仍缺：公开路径可达；受限动作进入认证；没有自动申请或创建。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B4补充实际游客详情→Apply未发草稿→认证→已有账号免补资料回原草稿，明确第二次Send后Pending/Inbox3卡、无自动席位/群。完整剩余预期仍见remainingExpected。 B5补齐实际游客Meals/Inbox认证门禁，无离开账号私有记录；公开详情可达、Create/Apply已有实际证据，live地图及欢迎Explore入口完整路径仍未验，不授PASS。；证据 B4-T001, B5-T005 |
 | QA-AUTH-002 · 邮箱失败与恢复 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：输入非法邮箱 → 改为 qa@example.invalid → 输入错误验证码再输入123456。当前仍缺：非法邮箱不能继续；错误码不登录；合法示例码回到初始操作且标为模拟。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
 | QA-AUTH-003 · 验证码过期和重发 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：控制Demo时钟，签发后5分钟验证 → 尝试30秒内重发 → 冷却后重发。当前仍缺：到期拒绝；冷却说明明确；新轮可继续且不丢邮箱。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
 | QA-AUTH-004 · 供应商取消回流 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：在Apply触发Google/Apple模拟 → 取消 → 重新完成登录。当前仍缺：取消不产生申请；饭局目标保留；完成后仍需主动提交。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
@@ -174,13 +174,13 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-AUTH-013 · refresh轮换重用 | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R1-T411 |
 | QA-AUTH-014 · 退出后缓存和深链 | PASS | 独立真实PG/API：设备logout204撤销family及cookie；捕获cookie重放session、私密messages深链、旧clientMessageId及新写均401且DB消息数不增加；另一合法设备session200且消息201。R45 Web11项清除查询缓存、持久草稿及组件RAM，失联退出和迟到session也不恢复私密状态；R46原生session26项含SecureStore/cache清理。完整覆盖本条api_db_or_unit方法的三项预期；不等同真实浏览器全程或原生设备验收。；证据 R44-T001, R45-T001, R45-T002, R45-T003, R45-T004, R45-T005, R45-T006, R45-T007, R45-T008, R45-T009, R45-T010, R45-T011, R46-T001, R46-T002, R46-T003, R46-T004, R46-T005, R46-T006, R46-T007, R46-T008, R46-T009, R46-T010, R46-T011, R46-T012, R46-T013, R46-T014, R46-T015, R46-T016, R46-T017, R46-T018, R46-T019, R46-T020, R46-T021, R46-T022, R46-T023, R46-T024, R46-T025, R46-T026 |
 | QA-DISCOVERY-001 · 地图列表与返回保持 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：选区域并翻卡 → 切列表 → 进详情及头像 → 返回。当前仍缺：地图数为饭局数非人数；列表同集合；返回保留筛选区域和卡片。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
-| QA-DISCOVERY-002 · 日期OR与跨字段AND | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：选两个不连续日期 → 加语言及人数 → Apply → 关闭未应用的新改动。当前仍缺：日期取并集且维度交集；取消草稿不改变已应用条件。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
-| QA-DISCOVERY-003 · 空结果恢复 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：选无场次未来日期 → Clear filters。当前仍缺：显示真实空态；清除恢复结果而非伪造推荐。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
+| QA-DISCOVERY-002 · 日期OR与跨字段AND | PASS | B5 Web980c8ed/API8387580固定本地合成环境。实际IAB两个不连续日期23/25取并集为2场，加入2人和English交集只Sunday；未应用Englishoff/Chineseon按Escape关闭后仍原1场，重新打开仍Englishtrue/Chinesefalse。未使用页面计算作预期，按已知四场日期/人数/语言/预算fixture核对；不代Google Maps真实服务。；证据 B5-T001 |
+| QA-DISCOVERY-003 · 空结果恢复 | PASS | B5 Web980c8ed/API8387580固定本地合成环境。实际无场次Thu22显示0/No meals found，无伪推荐；Clear filters恢复原4个已知mealId。未使用页面计算作预期，按已知四场日期/人数/语言/预算fixture核对；不代Google Maps真实服务。；证据 B5-T002 |
 | QA-DISCOVERY-004 · 地图拖动与点选 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：拖动地图后点击标记 → Search this area → 再点餐厅候选。当前仍缺：拖动不误触详情；已选位置与预览分开；确认前不改创建草稿。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
 | QA-DISCOVERY-005 · 选店无结果与旧选中 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：先选现有示例餐厅 → 搜索不存在名称 → 关闭搜索。当前仍缺：无手动新增假餐厅入口；旧确认选择保留；未确认候选不可发布。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
-| QA-DISCOVERY-006 · 预算上限和双语去重 | NOT_RUN | 本地生产实现尚需实际执行：依次上限20/30/40筛选 → 双语任一/两种语言筛选。尚缺逐项证据：预算比较max而非min/平均；双语一次命中不重复。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-DISCOVERY-006 · 预算上限和双语去重 | PASS | B5 Web980c8ed/API8387580固定本地合成环境。4场min20/max35，上限20/30均0、40为4，排除按min或平均27.5比较。English或Chinese并集4个唯一href，Chinese单独只双语场1次，不重复计同场。未使用页面计算作预期，按已知四场日期/人数/语言/预算fixture核对；不代Google Maps真实服务。；证据 B5-T003 |
 | QA-DISCOVERY-007 · 分页扫描无副作用 | NOT_RUN | 本地生产实现尚需实际执行：worker暂停跨截止 → GET列表/详情 → 记录DB写计数和锁。尚缺逐项证据：到期不可申请；GET无写和行锁；≤100页/≤500扫描且nextCursor不谎报结束。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-DISCOVERY-008 · 未提供菜系饮食 | NOT_RUN | 本地生产实现尚需实际执行：host字段null → 选具体菜系/饮食 → 再Any。尚缺逐项证据：具体hard排除unknown；Any保留；显示host声明而非过敏保证。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-DISCOVERY-008 · 未提供菜系饮食 | PASS | B5 Web980c8ed/API8387580固定本地合成环境。host未提供菜系/饮食，Japanese或Vegan具体hard各0、Any恢复4；详情两字段Not provided，筛选与详情均host声明且无过敏保证。未使用页面计算作预期，按已知四场日期/人数/语言/预算fixture核对；不代Google Maps真实服务。；证据 B5-T004 |
 | QA-DISCOVERY-009 · 坐标区域边界 | NOT_RUN | 本地生产实现尚需实际执行：同一坐标命中两polygon边界 → 无区域坐标。尚缺逐项证据：固定areaCode排序决定唯一归属；无匹配unknown不默认Soho。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-CREATE-001 · 创建四步与返回保稿 | PASS | B3先前真实四步输入和Review未确认拒绝保留；正式Web980c8ed B4原条款返回路径两入口均Step4，false/true确认各自保留、餐厅显示仅RAM且不自动发布。返回安排/介绍/费用原字段不变，成功发布后同账号新Create无餐厅/时间、默认4不复用旧2。R90原QA组件与创建回归30项绿，R86/R87及B3原红保留。API8387580非AI核心未变；无真实外订。；证据 B3-T004, B4-T002, B4-T005, R90-T018 |
 | QA-CREATE-002 · 外订声明与预算 | PASS | B3真实UI：倒置预算拒绝，£20–35到店付说明及0应用收费，不勾外订不能继续。B4在已确认4人声明后返回改2人，旧声明清空、文案同步2人、Continue要求重新确认；本人再次明确确认才可进Review。Web980c8ed/API8387580固定快照，无真实订位。；证据 B3-T004, B4-T004 |

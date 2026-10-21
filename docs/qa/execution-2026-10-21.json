@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 78,
-    "PASS": 127,
+    "NOT_RUN": 74,
+    "PASS": 131,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -27,7 +27,9 @@
     "browserObservations": "evidence/2026-10-21/browser-b3.json",
     "B3": "evidence/2026-10-21/browser-b3.zh-CN.md",
     "browserObservationsB4": "evidence/2026-10-21/browser-b4.json",
-    "B4": "evidence/2026-10-21/browser-b4.zh-CN.md"
+    "B4": "evidence/2026-10-21/browser-b4.zh-CN.md",
+    "browserObservationsB5": "evidence/2026-10-21/browser-b5.json",
+    "B5": "evidence/2026-10-21/browser-b5.zh-CN.md"
   },
   "cases": [
     {
@@ -38,7 +40,8 @@
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
       "evidence": [
-        "B4-T001"
+        "B4-T001",
+        "B5-T005"
       ],
       "relatedAutomatedAssertions": [
         "R1-T001",
@@ -142,7 +145,7 @@
         "受限动作进入认证",
         "没有自动申请或创建"
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：Explore tables first → 浏览地图、详情及公开主页 → 分别点Create/Apply/Meals/Inbox。当前仍缺：公开路径可达；受限动作进入认证；没有自动申请或创建。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B4补充实际游客详情→Apply未发草稿→认证→已有账号免补资料回原草稿，明确第二次Send后Pending/Inbox3卡、无自动席位/群。完整剩余预期仍见remainingExpected。"
+      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：Explore tables first → 浏览地图、详情及公开主页 → 分别点Create/Apply/Meals/Inbox。当前仍缺：公开路径可达；受限动作进入认证；没有自动申请或创建。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B4补充实际游客详情→Apply未发草稿→认证→已有账号免补资料回原草稿，明确第二次Send后Pending/Inbox3卡、无自动席位/群。完整剩余预期仍见remainingExpected。 B5补齐实际游客Meals/Inbox认证门禁，无离开账号私有记录；公开详情可达、Create/Apply已有实际证据，live地图及欢迎Explore入口完整路径仍未验，不授PASS。"
     },
     {
       "id": "QA-AUTH-002",
@@ -2732,8 +2735,10 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "B5-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T071",
         "R1-T072",
@@ -2784,12 +2789,19 @@
         "R2-T147",
         "R2-T148"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "日期取并集且维度交集",
-        "取消草稿不改变已应用条件"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：选两个不连续日期 → 加语言及人数 → Apply → 关闭未应用的新改动。当前仍缺：日期取并集且维度交集；取消草稿不改变已应用条件。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+      "remainingExpected": [],
+      "actual": "B5 Web980c8ed/API8387580固定本地合成环境。实际IAB两个不连续日期23/25取并集为2场，加入2人和English交集只Sunday；未应用Englishoff/Chineseon按Escape关闭后仍原1场，重新打开仍Englishtrue/Chinesefalse。未使用页面计算作预期，按已知四场日期/人数/语言/预算fixture核对；不代Google Maps真实服务。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：选两个不连续日期 → 加语言及人数 → Apply → 关闭未应用的新改动。当前仍缺：日期取并集且维度交集；取消草稿不改变已应用条件。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。",
+          "reason": "B5 independently executed real browser filters"
+        }
+      ]
     },
     {
       "id": "QA-DISCOVERY-003",
@@ -2797,8 +2809,10 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "B5-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T071",
         "R1-T072",
@@ -2849,12 +2863,19 @@
         "R2-T147",
         "R2-T148"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "显示真实空态",
-        "清除恢复结果而非伪造推荐"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：选无场次未来日期 → Clear filters。当前仍缺：显示真实空态；清除恢复结果而非伪造推荐。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+      "remainingExpected": [],
+      "actual": "B5 Web980c8ed/API8387580固定本地合成环境。实际无场次Thu22显示0/No meals found，无伪推荐；Clear filters恢复原4个已知mealId。未使用页面计算作预期，按已知四场日期/人数/语言/预算fixture核对；不代Google Maps真实服务。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：选无场次未来日期 → Clear filters。当前仍缺：显示真实空态；清除恢复结果而非伪造推荐。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。",
+          "reason": "B5 independently executed real browser filters"
+        }
+      ]
     },
     {
       "id": "QA-DISCOVERY-004",
@@ -2994,8 +3015,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "B5-T003"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T071",
         "R1-T072",
@@ -3046,12 +3069,19 @@
         "R2-T147",
         "R2-T148"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "预算比较max而非min/平均",
-        "双语一次命中不重复"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "本地生产实现尚需实际执行：依次上限20/30/40筛选 → 双语任一/两种语言筛选。尚缺逐项证据：预算比较max而非min/平均；双语一次命中不重复。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "B5 Web980c8ed/API8387580固定本地合成环境。4场min20/max35，上限20/30均0、40为4，排除按min或平均27.5比较。English或Chinese并集4个唯一href，Chinese单独只双语场1次，不重复计同场。未使用页面计算作预期，按已知四场日期/人数/语言/预算fixture核对；不代Google Maps真实服务。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：依次上限20/30/40筛选 → 双语任一/两种语言筛选。尚缺逐项证据：预算比较max而非min/平均；双语一次命中不重复。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
+          "reason": "B5 independently executed real browser filters"
+        }
+      ]
     },
     {
       "id": "QA-DISCOVERY-007",
@@ -3125,8 +3155,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "B5-T004"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T071",
         "R1-T072",
@@ -3177,13 +3209,20 @@
         "R2-T147",
         "R2-T148"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "具体hard排除unknown",
-        "Any保留",
-        "显示host声明而非过敏保证"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：host字段null → 选具体菜系/饮食 → 再Any。尚缺逐项证据：具体hard排除unknown；Any保留；显示host声明而非过敏保证。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "B5 Web980c8ed/API8387580固定本地合成环境。host未提供菜系/饮食，Japanese或Vegan具体hard各0、Any恢复4；详情两字段Not provided，筛选与详情均host声明且无过敏保证。未使用页面计算作预期，按已知四场日期/人数/语言/预算fixture核对；不代Google Maps真实服务。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：host字段null → 选具体菜系/饮食 → 再Any。尚缺逐项证据：具体hard排除unknown；Any保留；显示host声明而非过敏保证。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
+          "reason": "B5 independently executed real browser filters"
+        }
+      ]
     },
     {
       "id": "QA-DISCOVERY-009",

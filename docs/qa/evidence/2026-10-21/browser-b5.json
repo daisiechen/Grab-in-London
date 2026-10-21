@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "observations": [
+    {
+      "id": "B5-T001",
+      "status": "passed",
+      "title": "Date OR and dimension AND; cancelled draft does not change applied filters",
+      "steps": [
+        "Guest real Discover has4 seeded meals",
+        "Fri23 and Sun25 noncontinuous dates return2 named meals, excluding bothSaturday meals",
+        "Add table2 and English returns onlySunday2-personmeal",
+        "Stage Englishoff/Chineseon then Escape: previous1meal remains; reopen Englishtrue/Chinesefalse"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b5-filter-intersection.jpg"
+      ],
+      "testedCommit": "980c8edd634bd212a92cfac46d54cf562c8480e4",
+      "environment": "Real IAB/Web980c8ed archive, API/Postgres/worker8387580 archive; local TestIDP/Places/mail fixtures, core relevant domains unchanged. Four synthetic meals, no live maps/vendor/native claim."
+    },
+    {
+      "id": "B5-T002",
+      "status": "passed",
+      "title": "True empty result and clear recovery",
+      "steps": [
+        "Choose Thu22 with no fixture meals, result0 with No meals found and no fabricated recommendation",
+        "Clear filters restores all4 original meal IDs"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b5-empty-real-results.jpg"
+      ],
+      "testedCommit": "980c8edd634bd212a92cfac46d54cf562c8480e4",
+      "environment": "Real IAB/Web980c8ed archive, API/Postgres/worker8387580 archive; local TestIDP/Places/mail fixtures, core relevant domains unchanged. Four synthetic meals, no live maps/vendor/native claim."
+    },
+    {
+      "id": "B5-T003",
+      "status": "passed",
+      "title": "Budget max and bilingual OR uniqueness",
+      "steps": [
+        "All4meals min20/max35; Up20→0,Up30→0,Up40→4",
+        "URL budgetMaxPence=2000/3000/4000 confirms actual applied uppercap",
+        "English+Chinese yields4 distinct meal hrefs once each",
+        "Chinesealone yields onlybilingual Saturday dinner once"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b5-chinese-unique-result.jpg"
+      ],
+      "testedCommit": "980c8edd634bd212a92cfac46d54cf562c8480e4",
+      "environment": "Real IAB/Web980c8ed archive, API/Postgres/worker8387580 archive; local TestIDP/Places/mail fixtures, core relevant domains unchanged. Four synthetic meals, no live maps/vendor/native claim."
+    },
+    {
+      "id": "B5-T004",
+      "status": "passed",
+      "title": "Unknown cuisine and dietary excluded by hard conditions, retained by Any",
+      "steps": [
+        "4meals declared cuisine/dietary null/Not provided",
+        "Japanesehard→0;clear→4;Veganhard→0;clear→4",
+        "Dialog says host-provided not allergy guarantee and unknown does not match",
+        "Actual detail shows Not provided twice and Declared byhost not allergy guarantee"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b5-unknown-vegan-excluded.jpg"
+      ],
+      "testedCommit": "980c8edd634bd212a92cfac46d54cf562c8480e4",
+      "environment": "Real IAB/Web980c8ed archive, API/Postgres/worker8387580 archive; local TestIDP/Places/mail fixtures, core relevant domains unchanged. Four synthetic meals, no live maps/vendor/native claim."
+    },
+    {
+      "id": "B5-T005",
+      "status": "passed",
+      "title": "Guest private gates tested without exposing departed account",
+      "steps": [
+        "Loggedout guest publicly opens Discover/detail/profile",
+        "Meals shows Sign in with returnTo meals and no private records",
+        "Inbox shows Sign in with returnTo inbox and no private cards/chat",
+        "EarlierB3Create gate/B4ApplySendauth preserve unsent rather than auto-submit; live map remains outside testedfixture"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b5-guest-inbox-gate.jpg"
+      ],
+      "testedCommit": "980c8edd634bd212a92cfac46d54cf562c8480e4",
+      "environment": "Real IAB/Web980c8ed archive, API/Postgres/worker8387580 archive; local TestIDP/Places/mail fixtures, core relevant domains unchanged. Four synthetic meals, no live maps/vendor/native claim."
+    }
+  ]
+}
