@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 165,
-    "PASS": 40,
+    "NOT_RUN": 153,
+    "PASS": 52,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -3483,8 +3483,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R9-T011"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T150",
         "R1-T151",
@@ -3534,14 +3536,21 @@
         "R2-T034",
         "R2-T035",
         "R2-T036",
-        "R2-T037"
+        "R2-T037",
+        "R9-T011"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "以取得锁后时钟裁定拒绝",
-        "EXPIRED及不足取消补齐仍提交"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "真实PG双连接确认审批已在截止前等待行锁；持锁至DB时钟越过截止后释放，HTTP409，EXPIRED及insufficient事实提交，无新增席位。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-DB-003",
@@ -3549,8 +3558,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R9-T012"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T150",
         "R1-T151",
@@ -3600,15 +3611,22 @@
         "R2-T034",
         "R2-T035",
         "R2-T036",
-        "R2-T037"
+        "R2-T037",
+        "R9-T012"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "审批409",
-        "生命周期补齐不因业务409回滚",
-        "非预期异常则整体回滚"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第三批独立探针在d4582f7匹配源码完成；命令时钟精确边界及真实PG副作用按本条预期核对通过。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-DB-004",
@@ -3826,8 +3844,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R9-T004"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T150",
         "R1-T151",
@@ -3877,15 +3897,22 @@
         "R2-T034",
         "R2-T035",
         "R2-T036",
-        "R2-T037"
+        "R2-T037",
+        "R9-T004"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "本次退出同事务整场取消",
-        "群成员不受影响",
-        "通知不重复"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第三批独立探针在d4582f7匹配源码完成；命令时钟精确边界及真实PG副作用按本条预期核对通过。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-DB-008",
@@ -3944,7 +3971,8 @@
         "R2-T034",
         "R2-T035",
         "R2-T036",
-        "R2-T037"
+        "R2-T037",
+        "R9-T005"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -3952,7 +3980,7 @@
         "拒绝普通取消/退出",
         "支持路径单独受理"
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "actual": "R9开始后cancel/leave拒绝与已封存名单保持通过；尚未完成独立支持路径联合验收，完整case仍NOT_RUN。"
     },
     {
       "id": "QA-DB-009",
@@ -4145,7 +4173,8 @@
         "R2-T034",
         "R2-T035",
         "R2-T036",
-        "R2-T037"
+        "R2-T037",
+        "R9-T006"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -4153,7 +4182,7 @@
         "人数变化声明NEEDS_UPDATE",
         "无供应商已订位假成功"
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "actual": "R9验证FAILED不取消场/群和人数变动stale；未按原步骤再声明错误人数并核验有效NEEDS_UPDATE呈现，完整case仍NOT_RUN。"
     },
     {
       "id": "QA-TIME-001",
@@ -4161,8 +4190,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R9-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T334",
         "R1-T335",
@@ -4199,13 +4230,20 @@
         "R3-T026",
         "R3-T027",
         "R3-T028",
-        "R3-T029"
+        "R3-T029",
+        "R9-T001"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "可申请和审批一次"
+      "coveredExpectedIndexes": [
+        0
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第三批独立探针在d4582f7匹配源码完成；命令时钟精确边界及真实PG副作用按本条预期核对通过。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-TIME-002",
@@ -4213,8 +4251,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R9-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T334",
         "R1-T335",
@@ -4251,15 +4291,22 @@
         "R3-T026",
         "R3-T027",
         "R3-T028",
-        "R3-T029"
+        "R3-T029",
+        "R9-T002"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "申请审批均拒绝",
-        "待审EXPIRED",
-        "不增加席位"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第三批独立探针在d4582f7匹配源码完成；命令时钟精确边界及真实PG副作用按本条预期核对通过。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-TIME-003",
@@ -4267,8 +4314,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R9-T003"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T334",
         "R1-T335",
@@ -4305,15 +4354,22 @@
         "R3-T026",
         "R3-T027",
         "R3-T028",
-        "R3-T029"
+        "R3-T029",
+        "R9-T003"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "申请审批均拒绝",
-        "待审EXPIRED",
-        "不增加席位"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第三批独立探针在d4582f7匹配源码完成；命令时钟精确边界及真实PG副作用按本条预期核对通过。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-TIME-004",
@@ -4321,8 +4377,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R9-T009"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T334",
         "R1-T335",
@@ -4359,14 +4417,21 @@
         "R3-T026",
         "R3-T027",
         "R3-T028",
-        "R3-T029"
+        "R3-T029",
+        "R9-T009"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "要求选择BST或GMT",
-        "不自动提交UTC"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "resolveLondonTime歧义拒绝通过；尚未分别对创建的开始/截止字段执行HTTP变体。"
+      "remainingExpected": [],
+      "actual": "独立HTTP分别覆盖start与close墙钟字段；BST/GMT落库UTC逐字匹配oracle，歧义/春季空缺422且无饭局落库。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "resolveLondonTime歧义拒绝通过；尚未分别对创建的开始/截止字段执行HTTP变体。"
+        }
+      ]
     },
     {
       "id": "QA-TIME-005",
@@ -4374,8 +4439,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R9-T007"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T334",
         "R1-T335",
@@ -4412,13 +4479,20 @@
         "R3-T026",
         "R3-T027",
         "R3-T028",
-        "R3-T029"
+        "R3-T029",
+        "R9-T007"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "UTC=2026-10-25T00:30:00Z"
+      "coveredExpectedIndexes": [
+        0
       ],
-      "actual": "独立UTC oracle验证BST=00:30Z；尚未分别对开始/截止字段执行HTTP变体。"
+      "remainingExpected": [],
+      "actual": "独立HTTP分别覆盖start与close墙钟字段；BST/GMT落库UTC逐字匹配oracle，歧义/春季空缺422且无饭局落库。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "独立UTC oracle验证BST=00:30Z；尚未分别对开始/截止字段执行HTTP变体。"
+        }
+      ]
     },
     {
       "id": "QA-TIME-006",
@@ -4426,8 +4500,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R9-T008"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T334",
         "R1-T335",
@@ -4464,13 +4540,20 @@
         "R3-T026",
         "R3-T027",
         "R3-T028",
-        "R3-T029"
+        "R3-T029",
+        "R9-T008"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "UTC=2026-10-25T01:30:00Z"
+      "coveredExpectedIndexes": [
+        0
       ],
-      "actual": "独立UTC oracle验证GMT=01:30Z；尚未分别对开始/截止字段执行HTTP变体。"
+      "remainingExpected": [],
+      "actual": "独立HTTP分别覆盖start与close墙钟字段；BST/GMT落库UTC逐字匹配oracle，歧义/春季空缺422且无饭局落库。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "独立UTC oracle验证GMT=01:30Z；尚未分别对开始/截止字段执行HTTP变体。"
+        }
+      ]
     },
     {
       "id": "QA-TIME-007",
@@ -4478,8 +4561,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R9-T010"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T334",
         "R1-T335",
@@ -4516,14 +4601,21 @@
         "R3-T026",
         "R3-T027",
         "R3-T028",
-        "R3-T029"
+        "R3-T029",
+        "R9-T010"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "422",
-        "不平移到02:30"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "不存在墙钟在无偏移/0/60均拒绝；未额外核查两个HTTP字段的422及无写入。"
+      "remainingExpected": [],
+      "actual": "独立HTTP分别覆盖start与close墙钟字段；BST/GMT落库UTC逐字匹配oracle，歧义/春季空缺422且无饭局落库。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "不存在墙钟在无偏移/0/60均拒绝；未额外核查两个HTTP字段的422及无写入。"
+        }
+      ]
     },
     {
       "id": "QA-CHAT-001",
@@ -6200,8 +6292,14 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R10-T050",
+        "R10-T051",
+        "R10-T052",
+        "R10-T053",
+        "R10-T054"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T162",
         "R1-T163",
@@ -6223,19 +6321,28 @@
         "R1-T506",
         "R1-T536",
         "R1-T537",
-        "R1-T538"
+        "R1-T538",
+        "R10-T050",
+        "R10-T051",
+        "R10-T052",
+        "R10-T053",
+        "R10-T054"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "回执显示PROCESSING/NEEDS_SUPPORT而非COMPLETED",
-        "步骤幂等且不影响他人数据"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "纠正分类：Auth0/Apple撤销失败与重试可用受控provider失效注入验证，不必先拿真实账号；原外部阻塞理由过宽。改为NOT_RUN，开发补可重复失败/恢复夹具，QA验证回执不假完成、幂等和不影响他人；真实供应商联调另属G-AUTH/G-PRIVACY。",
+      "remainingExpected": [],
+      "actual": "生产worker+真实PG受控Auth0/Apple逐步故障、进程重建恢复、稳定幂等键及他人数据保留通过；仍不关闭真实供应商撤销门槛。",
       "history": [
         {
           "status": "BLOCKED",
           "actual": "本地仅受控adapter，没有真实供应商删除流程及失败回执环境。",
           "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        },
+        {
+          "status": "NOT_RUN",
+          "actual": "纠正分类：Auth0/Apple撤销失败与重试可用受控provider失效注入验证，不必先拿真实账号；原外部阻塞理由过宽。改为NOT_RUN，开发补可重复失败/恢复夹具，QA验证回执不假完成、幂等和不影响他人；真实供应商联调另属G-AUTH/G-PRIVACY。"
         }
       ],
       "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
@@ -6246,8 +6353,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R12-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T162",
         "R1-T163",
@@ -6269,20 +6378,26 @@
         "R1-T506",
         "R1-T536",
         "R1-T537",
-        "R1-T538"
+        "R1-T538",
+        "R10-T049",
+        "R12-T001"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "台账先于流量",
-        "撤销导出/身份不复活",
-        "有恢复时间和最小审计"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "纠正分类：可在可销毁本地PG恢复旧备份并重放删除台账，未准备隔离演练不应笼统归为用户外部依赖。改为NOT_RUN，开发准备恢复/ready屏障及演练入口，QA独立检验身份/导出不复活、时长及审计；线上恢复另属G-HOST。",
+      "remainingExpected": [],
+      "actual": "QA扩展实际pg_dump/pg_restore：闸门在重放前阻API/worker，原receipt/身份失效及他人保留；备份前真实可下载E0恢复重放后由仍有效analyst会话读得410 SNAPSHOT_REVOKED且无CSV；重复重放和审计/时长通过。线上台账持久化/漏项检测仍属G-HOST。",
       "history": [
         {
           "status": "BLOCKED",
           "actual": "没有隔离的备份恢复演练环境；单元测试不证明恢复后删除台账先于流量。",
           "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        },
+        {
+          "status": "NOT_RUN",
+          "actual": "纠正分类：可在可销毁本地PG恢复旧备份并重放删除台账，未准备隔离演练不应笼统归为用户外部依赖。改为NOT_RUN，开发准备恢复/ready屏障及演练入口，QA独立检验身份/导出不复活、时长及审计；线上恢复另属G-HOST。"
         }
       ],
       "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
@@ -12706,7 +12821,8 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R10-T048"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -12714,7 +12830,7 @@
         "重装先清旧token",
         "RAM丢失410不从日志恢复，未发字保留"
       ],
-      "actual": "缺少实际iOS安装/重装及Keychain冷启动证据。先由开发确认可用模拟器/设备与工具链；可先测install-marker逻辑。既有Xcode许可/签名需用户操作时按原授权跳过，不能用Jest代替原生验收。",
+      "actual": "R11 iOS冷启动/Continue、410保未发字、SecureStore等16组件项以及R10新API runtime旧session410通过；Xcode许可未接受导致simctl69，真实重装/Keychain仍缺，保持BLOCKED。",
       "history": [
         {
           "status": "BLOCKED",
@@ -14776,7 +14892,7 @@
         "记录p95/错误率/worker延迟及实测RPO/RTO对比24h/4h设计目标",
         "API1副本Recreate无重叠，旧AI410保未发字"
       ],
-      "actual": "缺目标部署环境下100并发/1000账号/10000消息负载、恢复及Recreate无重叠证据。开发可先提供隔离本机负载/恢复演练和配置检查；原睡前指示仅授权首尔只读，不能擅自安装部署。",
+      "actual": "实际本地PG恢复闸门及删除台账演练通过；目标托管恢复/持久化独立台账、100并发网络/部署Recreate证据仍缺，不以Fastify inject代表目标环境。",
       "history": [
         {
           "status": "BLOCKED",
@@ -14802,7 +14918,7 @@
         "P95≤10秒、30秒终结",
         "保留逐样本实际偏差"
       ],
-      "actual": "缺DeepSeek真实模型样本、零容忍、人工可用率及延迟评测证据。开发可先完成固定样本集/评测脚本；真实调用须已安全配置Key、核实model/价格并守人民币50月上限。",
+      "actual": "R10评测准备13项和60中英固定样本已核验；默认不读Key不联网、无真实捕获时NOT_RUN/BLOCKED。真实DeepSeek质量/人工可用率/延迟未测，不关闭门槛。",
       "history": [
         {
           "status": "BLOCKED",
@@ -14827,7 +14943,7 @@
         "第三方边界有明确批准",
         "未闭合不向真实用户开放"
       ],
-      "actual": "缺DeepSeek账户地区/留存和第三方数据边界的核实与批准。开发先核对官方资料/参数差异，不能继承OpenAI store:false或把该参数当零留存凭据；账户/政策批准事项单列。",
+      "actual": "已提供官方参数/政策核查ADR并独立复跑本地适配边界；真实账户/留存及第三方数据批准仍缺，不继承其他供应商承诺。",
       "history": [
         {
           "status": "BLOCKED",
@@ -20644,7 +20760,7 @@
         "不静默沿用旧供应商model/参数或留存声明",
         "全量原质量/延迟/零容忍门槛保持；真实可用性未测则G-AI-MODEL未关闭"
       ],
-      "actual": "与G-AI-MODEL重叠的DeepSeek替换准入用例，缺真实样本/质量/延迟证据，并非独立第14个故障；本地适配、失效关闭和固定样本准备先行。",
+      "actual": "DeepSeek本地适配34项及评测准备13项独立复跑通过；真实样本与延迟门槛尚缺，不能用受控响应关闭真实模型准入。",
       "history": [
         {
           "status": "BLOCKED",
@@ -20898,7 +21014,7 @@
         "只用已验证适配参数；不支持能力显式阻塞/ADR替代",
         "不能继承其他供应商数据承诺或用无效参数关闭G-AI-DATA"
       ],
-      "actual": "本地可先测DeepSeek响应schema、拒答、usage、token上限及无效参数，不应全部等待真实Key；账户地区/留存核实和G-AI-DATA批准证据仍缺，由开发明确可执行部分与外部依赖。",
+      "actual": "DeepSeek仅允许官方JSON/nonthinking白名单、拒store/tools、usage含reasoning计费/token上限等34项受控适配通过；真实账户地区/留存批准证据仍缺。",
       "history": [
         {
           "status": "BLOCKED",
@@ -20910,7 +21026,7 @@
     }
   ],
   "deliveryValidation": {
-    "commitBeforeQADelivery": "04cb601c5486b33acb2d7968642bab209806ce91",
+    "commitBeforeQADelivery": "29a78cf310cd027bfaff15b421dffa9250a009b0",
     "checks": [
       {
         "command": "pnpm core:check",
@@ -20924,7 +21040,7 @@
     ],
     "initialDocumentationFailure": "新增浏览器证据未直接列入docs/README.md；补索引后69项通过，未删除或降低断言。"
   },
-  "lastTargetedCommit": "04cb601c5486b33acb2d7968642bab209806ce91",
+  "lastTargetedCommit": "29a78cf310cd027bfaff15b421dffa9250a009b0",
   "defectStatus": {
     "QA-F01": "CLOSED_TARGETED_QA",
     "QA-F02": "FIX_VERIFIED_COMPONENT"
@@ -20936,5 +21052,5 @@
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
     "latestFeedback": "QA-F01 targeted fix verified; original complete journey remains unexecuted; no release pass"
   },
-  "blockerTriage": "原14条是重叠的用例/门槛，不是14个已复现缺陷；2条本地可测项改为NOT_RUN，其余12逐条细化缺失证据与可先做部分，已直接交开发落实。"
+  "blockerTriage": "原14条中供应商分步删除和恢复删除台账两条已转本地执行并通过；其余12条缺真实环境/许可/批准证据，各项可本地准备部分已继续推进，不能视为12个未修代码故障。"
 }

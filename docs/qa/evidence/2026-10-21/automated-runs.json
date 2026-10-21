@@ -6563,12 +6563,766 @@
           "durationMs": 3
         }
       ]
+    },
+    {
+      "id": "R9",
+      "testedCommit": "d4582f7e5e4f52e43cb1d49a06622b98c8c10ad6",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-round3.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-round3.json",
+      "startedAt": "2026-10-21T07:40:23.374000+00:00",
+      "exitCode": 0,
+      "passed": 12,
+      "total": 12,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R9-T001",
+          "run": "R9",
+          "path": "scripts/qa-independent-round3.api.test.ts",
+          "title": "independent fixed command clock with real PostgreSQL QA-TIME-001 apply and approve at close -1ms",
+          "status": "passed",
+          "durationMs": 167.75358300000005
+        },
+        {
+          "id": "R9-T002",
+          "run": "R9",
+          "path": "scripts/qa-independent-round3.api.test.ts",
+          "title": "independent fixed command clock with real PostgreSQL QA-TIME-002 apply and approve at close 0ms",
+          "status": "passed",
+          "durationMs": 27.238415999999916
+        },
+        {
+          "id": "R9-T003",
+          "run": "R9",
+          "path": "scripts/qa-independent-round3.api.test.ts",
+          "title": "independent fixed command clock with real PostgreSQL QA-TIME-003 apply and approve at close 1ms",
+          "status": "passed",
+          "durationMs": 21.442041000000017
+        },
+        {
+          "id": "R9-T004",
+          "run": "R9",
+          "path": "scripts/qa-independent-round3.api.test.ts",
+          "title": "independent fixed command clock with real PostgreSQL QA-DB-007 post-close exit below minimum cancels once and preserves group membership",
+          "status": "passed",
+          "durationMs": 37.13554199999999
+        },
+        {
+          "id": "R9-T005",
+          "run": "R9",
+          "path": "scripts/qa-independent-round3.api.test.ts",
+          "title": "independent fixed command clock with real PostgreSQL QA-DB-008 after start ordinary cancel and leave reject without changing sealed eligibility",
+          "status": "passed",
+          "durationMs": 16.362792000000013
+        },
+        {
+          "id": "R9-T006",
+          "run": "R9",
+          "path": "scripts/qa-independent-round3.api.test.ts",
+          "title": "independent fixed command clock with real PostgreSQL QA-DB-011 booking failure does not cancel meal or group and changed headcount makes declaration stale",
+          "status": "passed",
+          "durationMs": 29.583833000000027
+        },
+        {
+          "id": "R9-T007",
+          "run": "R9",
+          "path": "scripts/qa-independent-round3.api.test.ts",
+          "title": "independent real HTTP begin and deadline DST fields QA-TIME-005 start and close use the independently expected instant",
+          "status": "passed",
+          "durationMs": 36.404957999999965
+        },
+        {
+          "id": "R9-T008",
+          "run": "R9",
+          "path": "scripts/qa-independent-round3.api.test.ts",
+          "title": "independent real HTTP begin and deadline DST fields QA-TIME-006 start and close use the independently expected instant",
+          "status": "passed",
+          "durationMs": 17.235082999999918
+        },
+        {
+          "id": "R9-T009",
+          "run": "R9",
+          "path": "scripts/qa-independent-round3.api.test.ts",
+          "title": "independent HTTP invalid wall times never persist meals QA-TIME-004 both start and close require explicit autumn BST/GMT choice",
+          "status": "passed",
+          "durationMs": 17.272333000000003
+        },
+        {
+          "id": "R9-T010",
+          "run": "R9",
+          "path": "scripts/qa-independent-round3.api.test.ts",
+          "title": "independent HTTP invalid wall times never persist meals QA-TIME-007 neither start nor close spring gap silently shifts, for any supplied offset",
+          "status": "passed",
+          "durationMs": 40.528375000000096
+        },
+        {
+          "id": "R9-T011",
+          "run": "R9",
+          "path": "scripts/qa-independent-round3.api.test.ts",
+          "title": "independent real lock wait and transactional refusal QA-DB-002 approval waits across actual DB deadline and commits expiry instead of stale-clock approval",
+          "status": "passed",
+          "durationMs": 1023.493417
+        },
+        {
+          "id": "R9-T012",
+          "run": "R9",
+          "path": "scripts/qa-independent-round3.api.test.ts",
+          "title": "independent real lock wait and transactional refusal QA-DB-003 unexpected error rolls back lifecycle catchup while an expected 409 preserves it",
+          "status": "passed",
+          "durationMs": 39.365332999999964
+        }
+      ]
+    },
+    {
+      "id": "R10",
+      "testedCommit": "d4582f7e5e4f52e43cb1d49a06622b98c8c10ad6",
+      "command": "pnpm exec vitest run --project db --project api --project unit apps/worker/src/deletion apps/worker/src/handlers/deletion.db.test.ts apps/worker/src/handlers/deletion-review.db.test.ts apps/api/src/recovery/restore.api.test.ts apps/api/src/recovery/restart.api.test.ts packages/assistant/src/provider.unit.test.ts packages/testkit/src/ai-evals/runner.unit.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-unblocking.json",
+      "startedAt": "2026-10-21T07:40:26.716000+00:00",
+      "exitCode": 0,
+      "passed": 57,
+      "total": 57,
+      "suiteFiles": 7,
+      "assertions": [
+        {
+          "id": "R10-T001",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation uses only the allowlisted official JSON/nonthinking parameters, never OpenAI store or tools",
+          "status": "passed",
+          "durationMs": 11.672166000000004
+        },
+        {
+          "id": "R10-T002",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation rejects length without a usable result, retaining known usage",
+          "status": "passed",
+          "durationMs": 0.5189159999999902
+        },
+        {
+          "id": "R10-T003",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation rejects content_filter without a usable result, retaining known usage",
+          "status": "passed",
+          "durationMs": 0.18604200000000048
+        },
+        {
+          "id": "R10-T004",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation rejects tool_calls without a usable result, retaining known usage",
+          "status": "passed",
+          "durationMs": 0.16275000000000261
+        },
+        {
+          "id": "R10-T005",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation rejects insufficient_system_resource without a usable result, retaining known usage",
+          "status": "passed",
+          "durationMs": 0.15762500000001012
+        },
+        {
+          "id": "R10-T006",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation rejects aborted without a usable result, retaining known usage",
+          "status": "passed",
+          "durationMs": 0.1358330000000052
+        },
+        {
+          "id": "R10-T007",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation rejects empty, partial or nonobject JSON ()",
+          "status": "passed",
+          "durationMs": 0.1444580000000002
+        },
+        {
+          "id": "R10-T008",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation rejects empty, partial or nonobject JSON (   )",
+          "status": "passed",
+          "durationMs": 0.1081659999999971
+        },
+        {
+          "id": "R10-T009",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation rejects empty, partial or nonobject JSON ({)",
+          "status": "passed",
+          "durationMs": 0.17070800000000474
+        },
+        {
+          "id": "R10-T010",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation rejects empty, partial or nonobject JSON (null)",
+          "status": "passed",
+          "durationMs": 0.2030419999999964
+        },
+        {
+          "id": "R10-T011",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation rejects empty, partial or nonobject JSON ([])",
+          "status": "passed",
+          "durationMs": 0.1215830000000011
+        },
+        {
+          "id": "R10-T012",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation rejects empty, partial or nonobject JSON (\"refused\")",
+          "status": "passed",
+          "durationMs": 0.12949999999999307
+        },
+        {
+          "id": "R10-T013",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation rejects unexpected refusal/tool messages even with stop ({\"refusal\":\"denied\"})",
+          "status": "passed",
+          "durationMs": 0.10658299999998633
+        },
+        {
+          "id": "R10-T014",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation rejects unexpected refusal/tool messages even with stop ({\"tool_calls\":[{\"function\":{\"name\":\"apply\"}}]})",
+          "status": "passed",
+          "durationMs": 0.07545799999999758
+        },
+        {
+          "id": "R10-T015",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation never guesses missing or invalid usage (undefined)",
+          "status": "passed",
+          "durationMs": 0.08729099999999335
+        },
+        {
+          "id": "R10-T016",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation never guesses missing or invalid usage ({\"prompt_tokens\":-1,\"completion_tokens\":3})",
+          "status": "passed",
+          "durationMs": 0.0678750000000008
+        },
+        {
+          "id": "R10-T017",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation never guesses missing or invalid usage ({\"prompt_tokens\":1.1,\"completion_tokens\":3})",
+          "status": "passed",
+          "durationMs": 0.0654169999999965
+        },
+        {
+          "id": "R10-T018",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation never guesses missing or invalid usage ({\"prompt_tokens\":10,\"completion_tokens\":\"3\"})",
+          "status": "passed",
+          "durationMs": 0.11087500000000716
+        },
+        {
+          "id": "R10-T019",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation never guesses missing or invalid usage ({\"prompt_tokens\":1,\"completion_tokens\":9007199254740992})",
+          "status": "passed",
+          "durationMs": 0.07804199999999639
+        },
+        {
+          "id": "R10-T020",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation retains full billed completion tokens including reasoning in usage and rejects output overflow",
+          "status": "passed",
+          "durationMs": 0.08875000000000455
+        },
+        {
+          "id": "R10-T021",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation does not retry HTTP 400 or expose provider diagnostics",
+          "status": "passed",
+          "durationMs": 0.09004200000001106
+        },
+        {
+          "id": "R10-T022",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation does not retry HTTP 401 or expose provider diagnostics",
+          "status": "passed",
+          "durationMs": 0.07383300000000759
+        },
+        {
+          "id": "R10-T023",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation does not retry HTTP 402 or expose provider diagnostics",
+          "status": "passed",
+          "durationMs": 0.0750409999999988
+        },
+        {
+          "id": "R10-T024",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation does not retry HTTP 429 or expose provider diagnostics",
+          "status": "passed",
+          "durationMs": 0.08583299999999383
+        },
+        {
+          "id": "R10-T025",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation does not retry HTTP 500 or expose provider diagnostics",
+          "status": "passed",
+          "durationMs": 0.0921249999999958
+        },
+        {
+          "id": "R10-T026",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation does not retry HTTP 503 or expose provider diagnostics",
+          "status": "passed",
+          "durationMs": 0.06395799999999952
+        },
+        {
+          "id": "R10-T027",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation does not send an already cancelled/expired/noninteger request",
+          "status": "passed",
+          "durationMs": 0.24129100000000392
+        },
+        {
+          "id": "R10-T028",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation preserves known usage when completion arrives after deadline",
+          "status": "passed",
+          "durationMs": 0.1004999999999967
+        },
+        {
+          "id": "R10-T029",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "DeepSeek official chat transport: QA-AI-050/052 local preparation prices the candidate at uncached peak CNY with no silent off-peak/cache discount",
+          "status": "passed",
+          "durationMs": 0.05508299999999622
+        },
+        {
+          "id": "R10-T030",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "rejects malformed top-level provider envelope (null) with unknown cost",
+          "status": "passed",
+          "durationMs": 0.07545799999999758
+        },
+        {
+          "id": "R10-T031",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "rejects malformed top-level provider envelope (undefined) with unknown cost",
+          "status": "passed",
+          "durationMs": 0.05258399999999597
+        },
+        {
+          "id": "R10-T032",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "rejects malformed top-level provider envelope (42) with unknown cost",
+          "status": "passed",
+          "durationMs": 0.049875000000000114
+        },
+        {
+          "id": "R10-T033",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "rejects missing provider identity with known usage instead of inventing one",
+          "status": "passed",
+          "durationMs": 0.07524999999999693
+        },
+        {
+          "id": "R10-T034",
+          "run": "R10",
+          "path": "packages/assistant/src/provider.unit.test.ts",
+          "title": "aborts dispatched transport on caller cancellation and retains unknown sent cost without retry",
+          "status": "passed",
+          "durationMs": 0.125
+        },
+        {
+          "id": "R10-T035",
+          "run": "R10",
+          "path": "packages/testkit/src/ai-evals/runner.unit.test.ts",
+          "title": "fixed sixty-sample evaluation preparation freezes 20/10/10/10/10 cases, 30 English and 30 Chinese without duplicate IDs",
+          "status": "passed",
+          "durationMs": 1.0700829999999968
+        },
+        {
+          "id": "R10-T036",
+          "run": "R10",
+          "path": "packages/testkit/src/ai-evals/runner.unit.test.ts",
+          "title": "fixed sixty-sample evaluation preparation defaults to NOT_RUN without reading a key or making network calls; cannot claim quality",
+          "status": "passed",
+          "durationMs": 0.7836670000000083
+        },
+        {
+          "id": "R10-T037",
+          "run": "R10",
+          "path": "packages/testkit/src/ai-evals/runner.unit.test.ts",
+          "title": "fixed sixty-sample evaluation preparation runs the injected local harness with bounded five concurrency but never closes the real gate",
+          "status": "passed",
+          "durationMs": 1.403499999999994
+        },
+        {
+          "id": "R10-T038",
+          "run": "R10",
+          "path": "packages/testkit/src/ai-evals/runner.unit.test.ts",
+          "title": "fixed sixty-sample evaluation preparation sanitizes evaluator failures rather than persisting private error traces",
+          "status": "passed",
+          "durationMs": 1.53370799999999
+        },
+        {
+          "id": "R10-T039",
+          "run": "R10",
+          "path": "packages/testkit/src/ai-evals/runner.unit.test.ts",
+          "title": "fixed sixty-sample evaluation preparation rejects incomplete, duplicate, altered or malformed captures",
+          "status": "passed",
+          "durationMs": 0.5912090000000063
+        },
+        {
+          "id": "R10-T040",
+          "run": "R10",
+          "path": "packages/testkit/src/ai-evals/runner.unit.test.ts",
+          "title": "fixed sixty-sample evaluation preparation requires real provenance approvals, instrumented evidence and human draft review",
+          "status": "passed",
+          "durationMs": 2.481042000000002
+        },
+        {
+          "id": "R10-T041",
+          "run": "R10",
+          "path": "packages/testkit/src/ai-evals/runner.unit.test.ts",
+          "title": "fixed sixty-sample evaluation preparation fails even one zero-tolerance violation: hardConditions",
+          "status": "passed",
+          "durationMs": 1.4412090000000006
+        },
+        {
+          "id": "R10-T042",
+          "run": "R10",
+          "path": "packages/testkit/src/ai-evals/runner.unit.test.ts",
+          "title": "fixed sixty-sample evaluation preparation fails even one zero-tolerance violation: accountIsolation",
+          "status": "passed",
+          "durationMs": 0.8449999999999989
+        },
+        {
+          "id": "R10-T043",
+          "run": "R10",
+          "path": "packages/testkit/src/ai-evals/runner.unit.test.ts",
+          "title": "fixed sixty-sample evaluation preparation fails even one zero-tolerance violation: noBusinessWrites",
+          "status": "passed",
+          "durationMs": 0.8416250000000076
+        },
+        {
+          "id": "R10-T044",
+          "run": "R10",
+          "path": "packages/testkit/src/ai-evals/runner.unit.test.ts",
+          "title": "fixed sixty-sample evaluation preparation fails even one zero-tolerance violation: noInventedIdentityOrStatus",
+          "status": "passed",
+          "durationMs": 0.8652500000000032
+        },
+        {
+          "id": "R10-T045",
+          "run": "R10",
+          "path": "packages/testkit/src/ai-evals/runner.unit.test.ts",
+          "title": "fixed sixty-sample evaluation preparation keeps intent/field and usable draft thresholds at ninety percent",
+          "status": "passed",
+          "durationMs": 1.5263330000000082
+        },
+        {
+          "id": "R10-T046",
+          "run": "R10",
+          "path": "packages/testkit/src/ai-evals/runner.unit.test.ts",
+          "title": "fixed sixty-sample evaluation preparation validates actual draft length instead of trusting claimed length fields",
+          "status": "passed",
+          "durationMs": 0.8352919999999955
+        },
+        {
+          "id": "R10-T047",
+          "run": "R10",
+          "path": "packages/testkit/src/ai-evals/runner.unit.test.ts",
+          "title": "fixed sixty-sample evaluation preparation requires observed overlapping five calls, P95 ≤10s and all terminal ≤30s",
+          "status": "passed",
+          "durationMs": 3.0053330000000074
+        },
+        {
+          "id": "R10-T048",
+          "run": "R10",
+          "path": "apps/api/src/recovery/restart.api.test.ts",
+          "title": "QA-AI-034 new process runtime rejects old RAM session over actual HTTP boundary with same database",
+          "status": "passed",
+          "durationMs": 367.6806250000001
+        },
+        {
+          "id": "R10-T049",
+          "run": "R10",
+          "path": "apps/api/src/recovery/restore.api.test.ts",
+          "title": "QA-PRIVACY-008 actual pg_dump/pg_restore refuses traffic until independent deletion ledger replay",
+          "status": "passed",
+          "durationMs": 407.46895800000016
+        },
+        {
+          "id": "R10-T050",
+          "run": "R10",
+          "path": "apps/worker/src/deletion/provider.db.test.ts",
+          "title": "QA-PRIVACY-007 production deletion handler with injected provider steps Auth0 failure never completes, preserves remote lookup identities, and a restarted handler resumes with stable step keys",
+          "status": "passed",
+          "durationMs": 25.340416000000005
+        },
+        {
+          "id": "R10-T051",
+          "run": "R10",
+          "path": "apps/worker/src/deletion/provider.db.test.ts",
+          "title": "QA-PRIVACY-007 production deletion handler with injected provider steps Apple failure preserves the completed Auth0 checkpoint and recovery skips that step after process reconstruction",
+          "status": "passed",
+          "durationMs": 10.432165999999938
+        },
+        {
+          "id": "R10-T052",
+          "run": "R10",
+          "path": "apps/worker/src/deletion/provider.db.test.ts",
+          "title": "QA-PRIVACY-007 production deletion handler with injected provider steps a timed-out remote success is retried with the same key, produces one remote effect, and still cannot bypass retention approval",
+          "status": "passed",
+          "durationMs": 8.530624999999986
+        },
+        {
+          "id": "R10-T053",
+          "run": "R10",
+          "path": "apps/worker/src/deletion/provider.db.test.ts",
+          "title": "QA-PRIVACY-007 production deletion handler with injected provider steps refuses remote work without the matching accepted deletion/local purge barrier and fails closed when unconfigured",
+          "status": "passed",
+          "durationMs": 4.040042000000085
+        },
+        {
+          "id": "R10-T054",
+          "run": "R10",
+          "path": "apps/worker/src/deletion/provider.db.test.ts",
+          "title": "QA-PRIVACY-007 production deletion handler with injected provider steps an older overlapping timeout cannot overwrite another confirmed step completion",
+          "status": "passed",
+          "durationMs": 2.2616669999999885
+        },
+        {
+          "id": "R10-T055",
+          "run": "R10",
+          "path": "apps/worker/src/handlers/deletion-review.db.test.ts",
+          "title": "purge shared historical records without rewriting other users facts physically removes deleted-user text and reviews while retaining other authors messages, seat/roster/attendance and interval sequences",
+          "status": "passed",
+          "durationMs": 30.905667000000108
+        },
+        {
+          "id": "R10-T056",
+          "run": "R10",
+          "path": "apps/worker/src/handlers/deletion.db.test.ts",
+          "title": "resumable account purge physically erases local private data while honestly stopping at missing provider/policy gates",
+          "status": "passed",
+          "durationMs": 15.17166700000007
+        },
+        {
+          "id": "R10-T057",
+          "run": "R10",
+          "path": "apps/worker/src/handlers/deletion.db.test.ts",
+          "title": "resumable account purge resumes safely and marks completed only after both provider revocation and retention approval",
+          "status": "passed",
+          "durationMs": 6.3282500000000255
+        }
+      ]
+    },
+    {
+      "id": "R11",
+      "testedCommit": "d4582f7e5e4f52e43cb1d49a06622b98c8c10ad6",
+      "command": "pnpm --filter @fancy/ios exec jest src/features/assistant/secure-store.test.ts src/features/assistant/manager.test.ts --ci --json --outputFile=/private/tmp/fancy-independent-ios-recovery.json",
+      "startedAt": "2026-10-21T07:40:24.547000+00:00",
+      "exitCode": 0,
+      "passed": 16,
+      "total": 16,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R11-T001",
+          "run": "R11",
+          "path": "apps/ios/src/features/assistant/secure-store.test.ts",
+          "title": "serialises only the fixed-expiry guest credential, never AI conversation fields",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R11-T002",
+          "run": "R11",
+          "path": "apps/ios/src/features/assistant/secure-store.test.ts",
+          "title": "uses the same this-device-only accessibility for read and delete and propagates locked/corrupt storage",
+          "status": "passed",
+          "durationMs": 4
+        },
+        {
+          "id": "R11-T003",
+          "run": "R11",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "retries the same request intent and sends only explicitly confirmed guest preferences",
+          "status": "passed",
+          "durationMs": 5
+        },
+        {
+          "id": "R11-T004",
+          "run": "R11",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "single-flights bootstrap and ignores a response after account isolation",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R11-T005",
+          "run": "R11",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "expires exactly at TTL and preserves unsent text and confirmed guest preferences",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R11-T006",
+          "run": "R11",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "requires replacement confirmation and rejects edits during validation without applying",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R11-T007",
+          "run": "R11",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "does not apply a late answer while closed, and never implicitly sends editor content",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R11-T008",
+          "run": "R11",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "releases MEAL context on blur before asking from a page without explicit context",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R11-T009",
+          "run": "R11",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "does not let a retired focus cleanup erase the new page context",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R11-T010",
+          "run": "R11",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "restores the same fixed-expiry guest across managers and NEW",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R11-T011",
+          "run": "R11",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "cold-starts with no AI transcript or device token and only continues after an explicit action using the fixed-expiry guest",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R11-T012",
+          "run": "R11",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "treats a server RAM-loss 410 as expired without automatic regeneration and keeps local unsent text and confirmed preferences",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R11-T013",
+          "run": "R11",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "creates a new subject only after the fixed 24h expiry",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R11-T014",
+          "run": "R11",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "clears the secure guest record on login without retaining AI content",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R11-T015",
+          "run": "R11",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "fails closed on secure read or write failure without sending assistant requests or minting retries",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R11-T016",
+          "run": "R11",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "blocks future guest bootstrap if account-transition secure deletion fails",
+          "status": "passed",
+          "durationMs": 2
+        }
+      ]
+    },
+    {
+      "id": "R12",
+      "testedCommit": "29a78cf310cd027bfaff15b421dffa9250a009b0",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-restore.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-restore-export.json",
+      "startedAt": "2026-10-21T07:45:56.772000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R12-T001",
+          "run": "R12",
+          "path": "scripts/qa-independent-restore.api.test.ts",
+          "title": "QA-PRIVACY-008 independent restore keeps a real exported E0 revoked and original deletion receipt stable",
+          "status": "passed",
+          "durationMs": 431.86416599999995
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
     "scripts/qa-independent.api.test.ts": "a6bc024027d80956a9ffeed9b32feddd64402c57d95e050037d6f7d08b84be43",
     "scripts/qa-independent-round2.api.test.ts": "6f4878a814294bea1aeb1392da3fd6c559454012d676a76e066eec4f6c1587b3",
-    "scripts/qa-independent.config.ts": "f3b9fbb48db6a8136ff32a750f34d2b61c0cde4c4b1fb61499be374e549161ed"
+    "scripts/qa-independent.config.ts": "f3b9fbb48db6a8136ff32a750f34d2b61c0cde4c4b1fb61499be374e549161ed",
+    "scripts/qa-independent-round3.api.test.ts": "6b0f5d6bc03216b5a2377270f5e425d6fa79c5b65eabe476fffd8682a592ecb7",
+    "scripts/qa-independent-restore.api.test.ts": "be3dd382409f020801bd97444357bba6a7f5b6a896716f4f3f332e421d0e762e"
   },
-  "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。"
+  "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。",
+  "runtimeSnapshotVerification": {
+    "commit": "d4582f7e5e4f52e43cb1d49a06622b98c8c10ad6",
+    "comparedFiles": 555,
+    "runtimeMatches": true,
+    "beforeAfterRunDifferences": [
+      "infra/tests/ci-pg-clients.release.test.ts",
+      "infra/scripts/ci-pg-clients.sh"
+    ],
+    "nonRuntimeDifferenceAgainstCommit": [
+      "infra/README.md"
+    ],
+    "note": "运行前后源指纹比对；555个已提交SUT文件与d4582f7逐个Git blob比较，仅后续CI说明README有差异；新增两CI文件不在本次unit/db/api/ios导入路径。R12在后续仅CI增量提交运行。固定命令时钟探针不用于证明DB时钟来源；DB002另用实际DB时钟和双连接行锁。"
+  },
+  "scriptSetupCorrections": [
+    "R12初次根目录包别名无法加载，0测试，属于QA脚本导入错误而非产品失败；改用相对源码导入后1项实际执行通过。"
+  ]
 }

@@ -131,3 +131,11 @@
 - 最终核心整合unit198、DB106、API100、release10通过；core:check、Web+后台215/iOS173通过。最后补充恢复回执原有效期/政策后定向恢复复跑；QA已串行补两份新文档索引并交回本批暂存；Python69项最终通过，限定lint与diff检查通过。QA脚本及报告保留独占，本轮不替其改case结论。
 
 - 解除准备代码与文档已提交 `d4582f7` 并核对本地/远端一致，已即时发QA定向复验命令与真实边界。另补CI固定PG17客户端容器wrapper及参数回归，避免恢复测试依赖未声明的host pg_dump；这不改生产runtime，真实CI另查。
+
+
+## 独立QA本地删除/恢复复验通过（2026-10-21）
+
+- QA即时独立复验 `d4582f7` runtime：删除/恢复/DeepSeek准备定向57项、iOS冷启动/SecureStore16项、第三批P0边界12项均通过；这些测试数量不直接折算完整case数。
+- QA另建真实pg_dump/pg_restore探针，备份前生成并可下载CSV E0，台账重放后用仍有效analyst会话读取E0实际返回410 SNAPSHOT_REVOKED且非CSV；保留原receipt/身份/快照/他人数据/幂等断言。
+- QA-PRIVACY-007/008在本地验收范围PASS；未关闭Auth0/Apple真实远端撤销、生产独立台账持久化或G-HOST部署门槛。原217条当前52 PASS /153 NOT_RUN /12 BLOCKED；DB008支持联合路径与DB011错误人数声明分支仍未完整验证。
+- QA正在单独冻结、验证和提交执行报告及探针。协调会话不改其报告/脚本；精确证据提交以QA后续记录为准。
