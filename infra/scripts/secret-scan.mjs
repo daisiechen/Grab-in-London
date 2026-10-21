@@ -1,5 +1,6 @@
 // Fails when a likely credential appears in production workspace sources.
 import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { join, relative } from 'node:path';
 
 const PATTERNS = [
@@ -13,6 +14,16 @@ const PATTERNS = [
 const SCANNED = ['apps', 'packages', 'infra'];
 const SKIP = new Set(['node_modules', 'dist', '.turbo', 'coverage']);
 
+// Private runtime dotenv files are deliberately kept outside the public source tree.
+// Never exempt a tracked file, a template, or anything on an inconclusive Git check.
+function ignoredPrivateEnvironment(root, path, name) {
+  if (name === '.env.example' || !(name === '.env' || name.startsWith('.env.'))) return false;
+  const file = relative(root, path);
+  const tracked = spawnSync('git', ['ls-files', '--error-unmatch', '--', file], { cwd: root, stdio: 'ignore' });
+  if (tracked.status !== 1) return false;
+  return spawnSync('git', ['check-ignore', '--quiet', '--', file], { cwd: root, stdio: 'ignore' }).status === 0;
+}
+
 export function scan(root) {
   const findings = [];
   const walk = (dir) => {
@@ -21,6 +32,7 @@ export function scan(root) {
     for (const name of entries) {
       if (SKIP.has(name)) continue;
       const path = join(dir, name);
+      if (ignoredPrivateEnvironment(root, path, name)) continue;
       const stat = statSync(path);
       if (stat.isDirectory()) walk(path);
       else if (stat.size < 1_000_000) {

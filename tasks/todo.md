@@ -45,12 +45,14 @@
 
 ## T03 真实身份可行性spike
 
-- 状态：blocked_external；依赖：T01。
+- 状态：in_progress；依赖：T01。
 - 文件：`docs/engineering/evidence/auth-spike.md`, `packages/testkit/providers/`；相应测试就近创建。
 - 验收：核实Auth0邮箱OTP/Google/Apple和禁自动合并；Expo开发构建回调与双身份证明；删除Auth0及Apple revoke/SMTP能力写证据，失败不假完成。
 - 验证：`真实租户+开发构建手工证据 S03`。
 - 外部依赖/证据：G-AUTH/G-IOS；无凭据则blocked_external，可继续T04 fake合约。
 - 完成记录：G-AUTH/G-IOS/G-AI-KEY 等真实外部门槛未配置，按用户要求先跳过；不购买额度、不代接受许可，继续其它本地开发。真实租户、开发构建或60样本评测尚未执行。
+
+- 完成记录：2026-10-21用户确认除Apple Developer待审外外部资源已就绪，恢复实际接入实施；资源与真实联调分别记录，见平台配置交接及mvp-coordination最新切片。账号未配置的旧阻塞说明仅作历史，不再据此跳过可执行开发；真实模型/身份验收尚待证据。
 
 ## T04 会话与身份API
 
@@ -317,12 +319,14 @@ T02创建runner与通用通知表，T27仅扩运行/恢复；T31创建生命周�
 
 ## A00 真实模型与数据/成本spike
 
-- 状态：blocked_external；依赖：T01。
+- 状态：in_progress；依赖：T01。
 - 文件：`packages/testkit/model-provider/`, `docs/engineering/evidence/ai-spike.md`；相应测试就近创建。
 - 验收：核查固定snapshot/schema/usage/30秒终结；store与供应商实际留存分开，默认无预算不启用；真实账户评测证据。
 - 验证：`真实provider合成输入测试；G-AI-MODEL/DATA/COST，无凭据标blocked_external`。
 - 外部依赖/证据：按[AI方案](../docs/engineering/ai-development-plan.zh-CN.md)；没有真实门槛证据不能done真实集成。
 - 完成记录：G-AUTH/G-IOS/G-AI-KEY 等真实外部门槛未配置，按用户要求先跳过；不购买额度、不代接受许可，继续其它本地开发。真实租户、开发构建或60样本评测尚未执行。
+
+- 完成记录：2026-10-21用户确认除Apple Developer待审外外部资源已就绪，恢复实际接入实施；资源与真实联调分别记录，见平台配置交接及mvp-coordination最新切片。账号未配置的旧阻塞说明仅作历史，不再据此跳过可执行开发；真实模型/身份验收尚待证据。
 
 ## A01 AI契约、偏好与版本CAS
 

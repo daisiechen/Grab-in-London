@@ -463,3 +463,11 @@
 - 本轮不改API/群授权/申请；QA保持61973、clock与设备独占，待正式SHA正常签名独立归档构建，仅交包不安装。现自有业务回归与全原生验证进行中，冻结后记录实际结果，目标关闭仍由QA真实主持/全体只读复验。
 - 冻结后全iOS39套/266项、类型、全apps/ios lint及两文件diff检查通过（/private/tmp/fancy-f40-{ios-tests,types,lint,check}.log）；自有7项覆盖guest/host lookup失败、取消/确认、409新版/刷新失败显式恢复/已解散、普通失败Modal与保稿。QA明确短借Git仅三文件，推送核SHA后归还；F39同时由QA正式R191两项及实际四群中性标签复验关闭，原红保留。
 - 更正统一检查结果：core:check的类型/生成/lint通过，最后密钥扫描因本机新apps/web/.env.local中的供应商Key退出1；该文件git check-ignore确认排除，不读取/输出Key、不删除配置或放宽scanner。正式4945453完整git archive隔离副本再运行原扫描零发现通过，证明提交源码不含此本机配置；不将工作树整套core:check误称绿。上述原提交记录的误记在本次更正，实际日志保留。
+
+
+## 外部资源就绪后恢复遗留接入（2026-10-21）
+
+- 用户明确除Apple Developer仍待审核，当前外部依赖已完成，授权补齐遗留开发；不再把旧无账号作为停工理由。资源真源见平台配置交接，T03/A00恢复in_progress；不把账号/Key存在等同真实功能通过。首尔目前授权仍只读，实际安装部署另协调。
+- 三负责人并行：root负责共享config/扫描保护/集成与Git；venues_backend独占Resend适配器与worker接线；web_takeover独占新infra真实联调入口及就近验证；ios_takeover完成F40后核AI生产bundle/计数与离线调用计划。QA的docs/qa/脚本/索引和当前61973/5177/device/clock保留，旧B7仅5174前端已由QA明确释放，切换须先核PID/cwd且不停61971/PG/tab4。
+- 运行配置产生的新本地dotenv本应Git忽略，原扫描器将其计入公开源码检查。仅明确Git忽略且未跟踪的.env/.env.*配置可排除，模板与已跟踪配置/其它ignored源码仍扫描，Git查询不确定则继续扫描。新Git夹具验证忽略私有配置不读、force-track后照常捕获、其它ignored源码仍捕获；不删真实Key/不放宽模式/不回显值。
+- 冻结本批根core:check、unit322、release23全部通过（/private/tmp/fancy-external-{check-final,unit-final,release-frozen}.log）。此前并行mail synthetic字面量触发扫描的红保留，测试fixture已按repo模式parts构造，非实际凭据。三切片将分别提交，不混QA/research。

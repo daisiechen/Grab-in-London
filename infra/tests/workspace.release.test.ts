@@ -56,6 +56,21 @@ describe('workspace boundaries', () => {
 });
 
 describe('environment template and secrets', () => {
+  it('keeps ignored private dotenv outside source scanning but detects tracked dotenv and other ignored source secrets', () => {
+    const dir=mkdtempSync(join(tmpdir(),'fancy-scan-private-'));
+    try{
+      execFileSync('git',['init','--quiet'],{cwd:dir});
+      mkdirSync(join(dir,'apps/web'),{recursive:true});
+      writeFileSync(join(dir,'.gitignore'),'apps/web/.env.local\napps/web/ignored.ts\n');
+      const planted='AKIA'+'ABCDEFGHIJKLMNOP';
+      writeFileSync(join(dir,'apps/web/.env.local'),planted);
+      expect(scan(dir)).toEqual([]);
+      writeFileSync(join(dir,'apps/web/ignored.ts'),planted);
+      expect(scan(dir)).toEqual(['apps/web/ignored.ts: AWS access key']);
+      execFileSync('git',['add','--force','apps/web/.env.local'],{cwd:dir});
+      expect(scan(dir)).toEqual(['apps/web/.env.local: AWS access key','apps/web/ignored.ts: AWS access key']);
+    }finally{rmSync(dir,{recursive:true,force:true});}
+  });
   it('lists exactly the configuration keys with no values', () => {
     const lines = read('.env.example').split('\n').filter((l) => l && !l.startsWith('#'));
     expect(lines).toEqual(CONFIG_KEYS.map((key) => `${key}=`));
