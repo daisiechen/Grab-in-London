@@ -183,3 +183,11 @@
 
 - 独立QA在361e85e真实Web组件发现NEW成功后未发送文字仍保留。开发补原组件回归修前1失败/14通过；仅在NEW成功分支清input，不改通用clearConversation，TTL及偏好删除仍保留助手草稿，业务编辑器保持原内容且未调用apply。iOS原本NEW已清text，新增保护性回归而无生产逻辑变更。
 - 修后生产Web单文件15项通过；全Web/后台218项（含QA工作树独立2项）及iOS181项通过，双端typecheck/限定eslint/Web生产build通过。首次绿色复验因modal使外部业务editor不可访问，测试改为先Close assistant再检查业务editor；该测试夹具错误不是新增产品缺陷。日志/private/tmp/fancy-f05-{red,green,clients-final,build}.log。QA独立探针由QA持有，缺陷待固定修复SHA复验关闭，不将本轮组件计数折算完整用例通过。
+
+## QA-F06 Support CLI 认证合同补齐（2026-10-21 11:04 London）
+
+- QA在291e115发现SUPPORT_CLI合法startOAuth被本地硬编码403；正式合同§7已要求该客户端，不能当真实供应商配置阻塞。增量start字段loopbackRedirectUri在CLI必填，固定raw `http://127.0.0.1:<1024..65535>/auth/callback`，其它client拒绝；每次start登记入原事务，无新数据库迁移或角色授予。原不带登记请求修后422，不伪报201。
+- CLI provider直接回同源核心 `/v1/auth/oauth/callback`（Web原/auth/callback为SPA，不能用于CLI303浏览器导航）。核心验证provider后仅向登记loopback回code/state，60秒PKCE绑定交接；15分钟opaque access无refresh。LINK_REQUIRED仅浏览器错误，无ticket/长期token出URL，不影响浏览器原会话。契约/生成OpenAPI登记字段、303及错误分支，不改批准技术包。
+- CLI默认同一进程浏览器认证后执行一条stdin命令，token仅RAM不写文件/argv/输出；显式安全注入旧token仅保留运维/测试兼容。原始本机HTTP path/host/origin/method/state/重复参数均校验，官方OS浏览器handler不用shell，超时退出关闭listener，无自动写重试。真实供应商回调名单/MFA及case grant仍待配置。
+- CLI18unit、后端identity+support41API及根真实HTTP listener→核心回调→PKCE兑换→session读取/无权限拒绝联调1通过。完整核心unit232/DB111/API144/release11、冻结前core:check以及最终API/contracts/CLI typecheck、限定eslint、generated检查通过；日志/private/tmp/fancy-f06-{core,api,http-loopback,check}.log。独立QA正式复验需固定新SHA，R32原失败保留。
+- 同时只读复核发现原生OAuth code/state未交core兑换，以及删除reauth误等handoff，属于另一本地桥接缺口（候选QA-F07）。已分配原生负责人最小修复并与本批分开提交，未以缺Key/真机免验，不在本批宣称iOS OAuth已闭环。

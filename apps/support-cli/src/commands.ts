@@ -1,4 +1,5 @@
 import { ApiError, createApiClient, type ApiClient, type RequestOf } from '@fancy/client';
+import { browserLogin, LoginError, type LoginOptions } from './auth.ts';
 
 export const MAX_INPUT_BYTES = 16_384;
 export class InputError extends Error {}
@@ -37,15 +38,19 @@ export function parseCommand(argv: readonly string[], input: string): Command {
   return { kind: 'correct-attendance', ...common, mealId: uuid(p.mealId), subjectId: uuid(p.subjectId), value: p.value };
 }
 
-export function clientFromEnvironment(env: Readonly<Record<string, string | undefined>>, fetcher?: typeof fetch): ApiClient {
-  const token = env.FANCY_SUPPORT_TOKEN;
-  if (!token || token.length > 8192 || /\s/.test(token)) throw new InputError('Missing credentials.');
+export function apiOriginFromEnvironment(env: Readonly<Record<string, string | undefined>>): string {
   let url: URL;
   try { url = new URL(env.FANCY_API_URL ?? ''); } catch { throw new InputError('Invalid API origin.'); }
   const local = ['127.0.0.1', '[::1]', 'localhost'].includes(url.hostname);
   if ((url.protocol !== 'https:' && !(url.protocol === 'http:' && local)) || url.username || url.password || url.search || url.hash || url.pathname !== '/') throw new InputError('Invalid API origin.');
+  return url.origin;
+}
+export function clientFromEnvironment(env: Readonly<Record<string, string | undefined>>, fetcher?: typeof fetch): ApiClient {
+  const token = env.FANCY_SUPPORT_TOKEN;
+  if (!token || token.length > 8192 || /\s/.test(token)) throw new InputError('Missing credentials.');
+  const origin = apiOriginFromEnvironment(env);
   const transport = fetcher ?? fetch;
-  return createApiClient({ baseUrl: url.origin, credentials: { kind: 'bearer', accessToken: () => token }, fetch: (target, init) => transport(target, { ...init, redirect: 'error' }) });
+  return createApiClient({ baseUrl: origin, credentials: { kind: 'bearer', accessToken: () => token }, fetch: (target, init) => transport(target, { ...init, redirect: 'error' }) });
 }
 
 /** One request per invocation. Never use withRetry for support writes. */
@@ -65,6 +70,7 @@ export async function execute(command: Command, client: ApiClient): Promise<unkn
 
 /** No message/stack/requestId/fieldErrors/body echo: all can contain private data. */
 export function safeFailure(error: unknown): string {
+  if (error instanceof LoginError) return error.message;
   if (error instanceof InputError) return 'Invalid command, JSON input or environment configuration. See README.';
   if (error instanceof ApiError) {
     if (error.kind === 'auth') return 'Authentication required. Obtain a new access token through the approved MFA login.';
@@ -75,10 +81,11 @@ export function safeFailure(error: unknown): string {
   return 'Request failed. No automatic retry. No private error details were printed.';
 }
 
-export async function run(argv: readonly string[], input: string, env: Readonly<Record<string, string | undefined>>, io: { out: (value: string) => void; error: (value: string) => void }, fetcher?: typeof fetch): Promise<number> {
+export async function run(argv: readonly string[], input: string, env: Readonly<Record<string, string | undefined>>, io: { out: (value: string) => void; error: (value: string) => void }, fetcher?: typeof fetch, loginOptions?: Omit<LoginOptions, 'fetch'>): Promise<number> {
   try {
     const command = parseCommand(argv, input);
-    const output = await execute(command, clientFromEnvironment(env, fetcher));
+    const credentials = env.FANCY_SUPPORT_TOKEN ? env : { ...env, FANCY_SUPPORT_TOKEN: (await browserLogin(apiOriginFromEnvironment(env), { ...loginOptions, ...(fetcher ? { fetch: fetcher } : {}) })).accessToken };
+    const output = await execute(command, clientFromEnvironment(credentials, fetcher));
     io.out(JSON.stringify(output));
     return 0;
   } catch (error) { io.error(safeFailure(error)); return error instanceof InputError ? 2 : 1; }

@@ -12,6 +12,8 @@ const Client = Enum(CLIENT_KINDS);
  */
 export const ReturnTarget = T.String({ pattern: RETURN_TARGET_PATTERN, maxLength: 300 });
 const AppChallenge = T.String({ pattern: '^[A-Za-z0-9_-]{43,128}$' });
+/** Per-start CLI registration only; runtime also verifies the parsed port and client kind. */
+export const LoopbackRedirectUri = T.String({ maxLength: 100, pattern: '^http://127\\.0\\.0\\.1:[1-9][0-9]{3,4}/auth/callback$' });
 const AccessToken = T.String({ minLength: 32, maxLength: 512 });
 /** iOS: 15-minute access token (memory) + rotating 30-day refresh token (Keychain). */
 export const IosCredentials = Obj({
@@ -59,16 +61,16 @@ export const authOperations = [
   op({
     operationId: 'startOAuth', method: 'POST', path: '/auth/oauth/start', summary: 'Begin Google/Apple sign-in',
     auth: 'public', write: 'clientRequestId', ifMatch: false,
-    body: Obj({ clientRequestId: ClientRequestId, provider: Enum(AUTH_PROVIDERS), client: Client, returnTarget: T.Optional(ReturnTarget), appChallenge: T.Optional(AppChallenge) }),
+    body: Obj({ clientRequestId: ClientRequestId, provider: Enum(AUTH_PROVIDERS), client: Client, returnTarget: T.Optional(ReturnTarget), appChallenge: T.Optional(AppChallenge), loopbackRedirectUri: T.Optional(LoopbackRedirectUri) }),
     success: { status: 201, data: Obj({ authorizationUrl: T.String({ format: 'uri', maxLength: 4000 }), stateTransactionId: Uuid }) },
-    errors: ['PROVIDER_UNAVAILABLE'],
+    errors: ['FORBIDDEN', 'PROVIDER_UNAVAILABLE'],
   }),
   op({
     operationId: 'oauthCallback', method: 'GET', path: '/auth/oauth/callback', summary: 'Provider redirect target',
     auth: 'public', write: 'read', ifMatch: false,
     query: Obj({ code: T.Optional(T.String({ maxLength: 4000 })), state: T.String({ minLength: 1, maxLength: 512 }), error: T.Optional(T.String({ maxLength: 200 })) }),
     success: { status: 200, data: AuthOutcome },
-    errors: ['STATE_CONFLICT', 'PROVIDER_UNAVAILABLE'],
+    errors: ['FORBIDDEN', 'STATE_CONFLICT', 'PROVIDER_UNAVAILABLE'],
   }),
   op({
     operationId: 'exchangeHandoff', method: 'POST', path: '/auth/handoff', summary: 'iOS/CLI: redeem a one-time handoff code',

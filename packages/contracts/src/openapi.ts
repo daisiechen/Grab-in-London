@@ -60,6 +60,10 @@ export function buildOpenApi(): Json {
       ? { description: 'No content' }
       : body ? { description: 'Success', content: { 'application/json': { schema: body } } }
       : { description: 'Success', content: { 'text/csv': { schema: { type: 'string' } } } };
+    if(def.operationId==='oauthCallback')responses['303']={
+      description:'SUPPORT_CLI only: registered IPv4 loopback callback with a 60-second PKCE-bound handoff code and start transaction state; no access or refresh token.',
+      headers:{Location:{required:true,schema:{type:'string',format:'uri'}},'Cache-Control':{schema:{type:'string',const:'no-store'}},'Referrer-Policy':{schema:{type:'string',const:'no-referrer'}}},
+    };
     const byStatus = new Map<number, string[]>();
     for (const code of codes) byStatus.set(ERROR_STATUS[code], [...(byStatus.get(ERROR_STATUS[code]) ?? []), code]);
     for (const [status, list] of [...byStatus].sort((a, b) => a[0] - b[0])) {

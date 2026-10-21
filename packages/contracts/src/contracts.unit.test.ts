@@ -9,7 +9,7 @@ import { buildClientMetadata, buildOpenApi } from './openapi.ts';
 import { ADMIN_DRILLDOWN_TARGETS, ADMIN_PAGE_KEYS, ADMIN_PAGES, CUISINES, DIETARY, MOODS, SURVEY_REASONS } from './dictionaries.ts';
 import { isAllowedReturnTarget } from './return-target.ts';
 import { normalizeHostDeclarations } from './declarations.ts';
-import { CliCredentials, IosCredentials, ReturnTarget } from './operations/auth.ts';
+import { CliCredentials, IosCredentials, ReturnTarget, LoopbackRedirectUri } from './operations/auth.ts';
 import { validator } from './test-ajv.ts';
 
 const ROOT = join(import.meta.dirname, '../../..');
@@ -17,6 +17,20 @@ const read = (p: string) => readFileSync(join(ROOT, p), 'utf8');
 const all = operations as readonly OperationDef[];
 const byId = (id: string) => operationsById[id as keyof typeof operationsById];
 const normalisePath = (p: string) => p.replace(/[:{][a-zA-Z]+}?/g, '{}');
+
+describe('support CLI loopback registration shape',()=>{
+  const check=validator(LoopbackRedirectUri);
+  it('accepts an explicit IPv4 loopback port and the fixed callback path',()=>{
+    expect(check('http://127.0.0.1:53217/auth/callback')).toBe(true);
+  });
+  it.each(['http://localhost:53217/auth/callback','http://127.0.0.2:53217/auth/callback','https://127.0.0.1:53217/auth/callback','http://127.0.0.1:80/auth/callback','http://127.0.0.1:53217/other','http://user@127.0.0.1:53217/auth/callback','http://127.0.0.1:53217/auth/callback?next=evil','http://127.0.0.1:53217/auth/callback#secret'])('rejects non-registered callback shape %s',value=>{
+    expect(check(value)).toBe(false);
+  });
+  it('documents the browser-only CLI handoff redirect without changing native credential DTOs',()=>{
+    const spec=buildOpenApi() as {paths:Record<string,Record<string,{responses:Record<string,unknown>}>>};
+    expect(spec.paths['/v1/auth/oauth/callback']!.get!.responses).toHaveProperty('303');
+  });
+});
 
 describe('registry matches the reviewed API contract', () => {
   const doc = read('docs/engineering/api-and-client-contract.zh-CN.md');

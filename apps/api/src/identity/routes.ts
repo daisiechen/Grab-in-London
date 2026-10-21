@@ -93,7 +93,7 @@ async function startOtp(deps: AppDeps, request: FastifyRequest, o: { clientReque
 }
 
 /** Creates an OAUTH transaction; Web transactions are bound to this browser by a cookie. */
-async function startOAuthTx(deps: AppDeps, o: { provider: 'GOOGLE' | 'APPLE'; client: AuthTxRow['client']; purpose: 'LOGIN' | 'REAUTH'; userId: string | null; familyId: string | null; returnTarget: string | null; appChallenge: string | null }) {
+async function startOAuthTx(deps: AppDeps, o: { provider: 'GOOGLE' | 'APPLE'; client: AuthTxRow['client']; purpose: 'LOGIN' | 'REAUTH'; userId: string | null; familyId: string | null; returnTarget: string | null; appChallenge: string | null; loopbackRedirectUri?: string }) {
   const redirectUri = redirectUriFor(deps, o.client);
   const state = randomToken();
   const nonce = randomToken();
@@ -103,7 +103,7 @@ async function startOAuthTx(deps: AppDeps, o: { provider: 'GOOGLE' | 'APPLE'; cl
     `INSERT INTO auth_transactions (kind, purpose, client, user_id, secret_hash, binder_hash, app_challenge, provider, provider_state, return_target, expires_at)
      VALUES ('OAUTH', $1, $2, $3, $4, $5, $6, $7, $8, $9, clock_timestamp() + make_interval(secs => $10::double precision / 1000)) RETURNING id, expires_at`,
     [o.purpose, o.client, o.userId, sha256Hex(state), binder && sha256Hex(binder), o.appChallenge, o.provider,
-      JSON.stringify({ nonce, verifier, redirectUri, ...(o.familyId ? { familyId: o.familyId } : {}) }), o.returnTarget, OAUTH_TTL_MS],
+      JSON.stringify({ nonce, verifier, redirectUri, ...(o.loopbackRedirectUri ? { loopbackRedirectUri: o.loopbackRedirectUri } : {}), ...(o.familyId ? { familyId: o.familyId } : {}) }), o.returnTarget, OAUTH_TTL_MS],
   );
   const authorizationUrl = deps.identity.authorizationUrl({ provider: o.provider, state, nonce, codeChallenge: pkceChallenge(verifier), redirectUri, forceLogin: o.purpose === 'REAUTH' });
   return { id: rows[0].id as string, expiresAt: (rows[0].expires_at as Date).toISOString(), authorizationUrl, binder };
@@ -111,11 +111,24 @@ async function startOAuthTx(deps: AppDeps, o: { provider: 'GOOGLE' | 'APPLE'; cl
 
 function redirectUriFor(deps: AppDeps, client: AuthTxRow['client']): string {
   if (client === 'WEB') return `${deps.config.webOrigin}/auth/callback`;
+  // CLI must navigate through the HTTP callback, never the SPA's fetch-based callback bridge.
+  if (client === 'SUPPORT_CLI') return `${deps.config.webOrigin}/v1/auth/oauth/callback`;
   if (client === 'IOS') {
     if (!deps.config.iosRedirectUri) throw new DomainError('FORBIDDEN', 'iOS sign-in is not configured.');
     return deps.config.iosRedirectUri;
   }
-  throw new DomainError('FORBIDDEN', 'Support CLI sign-in is not available yet.');
+  throw new DomainError('FORBIDDEN', 'Sign-in is not available for this client.');
+}
+
+function cliLoopback(client: AuthTxRow['client'], uri: string | undefined): string | undefined {
+  if (client !== 'SUPPORT_CLI') {
+    if (uri !== undefined) throw new DomainError('VALIDATION_FAILED', 'Loopback redirects are only available to the support CLI.');
+    return undefined;
+  }
+  // Match the raw input, before URL normalization can hide userinfo/encoded paths/alternate IPs.
+  const match = typeof uri === 'string' ? /^http:\/\/127\.0\.0\.1:([1-9][0-9]{3,4})\/auth\/callback$/.exec(uri) : null;
+  if (!match || Number(match[1]) < 1024 || Number(match[1]) > 65535) throw new DomainError('VALIDATION_FAILED', 'A registered local support CLI callback is required.');
+  return uri;
 }
 
 /** Atomically consumes a transaction; a second use (replay/race) gets STATE_CONFLICT. */
@@ -125,6 +138,8 @@ async function consume(deps: AppDeps, id: string): Promise<void> {
 }
 
 async function finish(deps: AppDeps, row: AuthTxRow, identity: VerifiedIdentity, request: FastifyRequest) {
+  // Browser cookies are not the CLI identity and must not switch/revoke a browser account.
+  if (row.client === 'SUPPORT_CLI') return withTransaction(deps.pool, (tx) => completeAuthentication(deps, tx, row, identity, null));
   const current = await authFromRequest(deps, request);
   const bearerGuest=/^Bearer ([A-Za-z0-9_-]{43})$/.exec(request.headers.authorization??'')?.[1];
   const guestToken=request.cookies['__Host-fancy_guest']??bearerGuest;
@@ -174,10 +189,11 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
   });
 
   defineRoute(app, deps, 'startOAuth', async ({ request, reply }) => {
-    const body = asBody<{ provider: 'GOOGLE' | 'APPLE'; client: AuthTxRow['client']; returnTarget?: string; appChallenge?: string }>(request);
+    const body = asBody<{ provider: 'GOOGLE' | 'APPLE'; client: AuthTxRow['client']; returnTarget?: string; appChallenge?: string; loopbackRedirectUri?: string }>(request);
     if (body.client === 'WEB') assertWebOrigin(request, deps.config.webOrigin);
     if (body.client !== 'WEB' && !body.appChallenge) throw new DomainError('VALIDATION_FAILED', 'appChallenge is required for native sign-in.', { fieldErrors: { 'body.appChallenge': 'Required' } });
-    const started = await startOAuthTx(deps, { provider: body.provider, client: body.client, purpose: 'LOGIN', userId: null, familyId: null, returnTarget: checkReturnTarget(body.returnTarget), appChallenge: body.appChallenge ?? null });
+    const loopbackRedirectUri = cliLoopback(body.client, body.loopbackRedirectUri);
+    const started = await startOAuthTx(deps, { provider: body.provider, client: body.client, purpose: 'LOGIN', userId: null, familyId: null, returnTarget: checkReturnTarget(body.returnTarget), appChallenge: body.appChallenge ?? null, ...(loopbackRedirectUri ? { loopbackRedirectUri } : {}) });
     if (started.binder) reply.setCookie(OAUTH_BINDER_COOKIE, started.binder, cookieOptions(OAUTH_TTL_MS / 1000));
     return { data: { authorizationUrl: started.authorizationUrl, stateTransactionId: started.id } };
   });
@@ -196,10 +212,16 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
       if (!binder || sha256Hex(binder) !== row.binder_hash) throw new DomainError('STATE_CONFLICT', 'Finish sign-in in the browser where you started it.');
     }
     await consume(deps, row.id);
-    reply.clearCookie(OAUTH_BINDER_COOKIE, { path: '/' });
+    if (row.binder_hash) reply.clearCookie(OAUTH_BINDER_COOKIE, { path: '/' });
     if (query.error || !query.code) throw new DomainError('STATE_CONFLICT', 'Sign-in was cancelled.');
     const identity = await callProvider(() => deps.identity.exchangeAuthorizationCode({ provider: row.provider, code: query.code!, codeVerifier: row.provider_state.verifier!, redirectUri: row.provider_state.redirectUri!, nonce: row.provider_state.nonce! }));
-    return finish(deps, row, identity, request);
+    const result = await finish(deps, row, identity, request);
+    if (row.client !== 'SUPPORT_CLI') return result;
+    const data = result.data as { outcome?: string; handoffCode?: string } | undefined;
+    if (data?.outcome !== 'AUTHENTICATED' || !data.handoffCode) throw new DomainError('FORBIDDEN', 'Use an identity already linked to your support account.');
+    const location = new URL(cliLoopback(row.client, row.provider_state.loopbackRedirectUri)!);
+    location.search = new URLSearchParams({ code: data.handoffCode, state: row.id }).toString();
+    return { status: 303, after: (response) => { response.header('location', location.toString()); response.header('cache-control', 'no-store'); response.header('referrer-policy', 'no-referrer'); } };
   });
 
   defineRoute(app, deps, 'exchangeHandoff', async ({ request }) => {

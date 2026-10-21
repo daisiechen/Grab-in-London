@@ -480,6 +480,19 @@
               "INVALID_REQUEST"
             ]
           },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "FORBIDDEN"
+            ]
+          },
           "422": {
             "description": "VALIDATION_FAILED",
             "content": {
@@ -575,6 +588,11 @@
                   },
                   "appChallenge": {
                     "pattern": "^[A-Za-z0-9_-]{43,128}$",
+                    "type": "string"
+                  },
+                  "loopbackRedirectUri": {
+                    "maxLength": 100,
+                    "pattern": "^http://127\\.0\\.0\\.1:[1-9][0-9]{3,4}/auth/callback$",
                     "type": "string"
                   }
                 }
@@ -733,6 +751,30 @@
               }
             }
           },
+          "303": {
+            "description": "SUPPORT_CLI only: registered IPv4 loopback callback with a 60-second PKCE-bound handoff code and start transaction state; no access or refresh token.",
+            "headers": {
+              "Location": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                }
+              },
+              "Referrer-Policy": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-referrer"
+                }
+              }
+            }
+          },
           "400": {
             "description": "INVALID_REQUEST",
             "content": {
@@ -744,6 +786,19 @@
             },
             "x-error-codes": [
               "INVALID_REQUEST"
+            ]
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "FORBIDDEN"
             ]
           },
           "409": {
