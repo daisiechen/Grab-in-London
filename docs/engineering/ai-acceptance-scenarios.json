@@ -1,0 +1,225 @@
+{
+  "schemaVersion": 1,
+  "status": "planned_not_executed",
+  "evaluationSampleMinimum": 60,
+  "scenarios": [
+    {
+      "id": "AI-S01",
+      "prdAcceptanceIds": [
+        "AC-AI01",
+        "AC-AI02"
+      ],
+      "taskIds": [
+        "A04",
+        "A08"
+      ],
+      "precondition": "固定业务fixture和冻结模型/prompt/schema；相应真实或受控失败环境",
+      "action": "保存预算35，本轮仅周五Soho/本轮35以内/不限预算",
+      "assertion": "45场仅在第一种可出现；hard显式排除，CLEAR不恢复旧预算soft，其他条件保留"
+    },
+    {
+      "id": "AI-S02",
+      "prdAcceptanceIds": [
+        "AC-AI03",
+        "AC-AI04"
+      ],
+      "taskIds": [
+        "A04",
+        "A08"
+      ],
+      "precondition": "固定业务fixture和冻结模型/prompt/schema；相应真实或受控失败环境",
+      "action": "host饮食/菜系为null或明确值，hard筛选/soft偏好/排序>20场",
+      "assertion": "unknown不命中特定hard，不被soft排除；完整集合先排名再20候选/3卡，字段来自host声明"
+    },
+    {
+      "id": "AI-S03",
+      "prdAcceptanceIds": [
+        "AC-AI01",
+        "AC-AI15"
+      ],
+      "taskIds": [
+        "A04",
+        "A08"
+      ],
+      "precondition": "固定业务fixture和冻结模型/prompt/schema；相应真实或受控失败环境",
+      "action": "中英下周五/今晚/Spanish/便宜些/重复BST-GMT时刻",
+      "assertion": "按FR13日期/P03；无法唯一解释先澄清，不自填可提交错误时间/预算"
+    },
+    {
+      "id": "AI-S04",
+      "prdAcceptanceIds": [
+        "AC-AI10",
+        "AC-AI14"
+      ],
+      "taskIds": [
+        "A01",
+        "A06",
+        "A08"
+      ],
+      "precondition": "固定业务fixture和冻结模型/prompt/schema；相应真实或受控失败环境",
+      "action": "普通查询→提案→确认保存；他设备CAS冲突；模型停用删除",
+      "assertion": "不自动记忆；版本冲突重核；本人删除独立可用，游客登录不迁入"
+    },
+    {
+      "id": "AI-S05",
+      "prdAcceptanceIds": [
+        "AC-AI11",
+        "AC-AI12"
+      ],
+      "taskIds": [
+        "A02",
+        "A06",
+        "A07",
+        "A08"
+      ],
+      "precondition": "固定业务fixture和冻结模型/prompt/schema；相应真实或受控失败环境",
+      "action": "关闭/编辑/心跳/刷新/NEW及恰好30分钟",
+      "assertion": "真实活动才续期，NEW/TTL未发文字处理不同；旧generation迟到丢弃，不跨设备对话"
+    },
+    {
+      "id": "AI-S06",
+      "prdAcceptanceIds": [
+        "AC-AI10",
+        "AC-AI14"
+      ],
+      "taskIds": [
+        "A02",
+        "A08"
+      ],
+      "precondition": "固定业务fixture和冻结模型/prompt/schema；相应真实或受控失败环境",
+      "action": "偏好删除/账户删除与模型结果并发，API重启",
+      "assertion": "user/epoch屏障阻止旧结果提交，RAM清无DB原文，重启无日志恢复"
+    },
+    {
+      "id": "AI-S07",
+      "prdAcceptanceIds": [
+        "AC-AI15"
+      ],
+      "taskIds": [
+        "A03",
+        "A08"
+      ],
+      "precondition": "固定业务fixture和冻结模型/prompt/schema；相应真实或受控失败环境",
+      "action": "多端同主体同时发送、同requestId重复/不同payload",
+      "assertion": "最多1在途；重试不加call/额度，改payload409；成功或有效澄清扣1，失败不扣；同guest多tab/刷新/NEW不重置guest每日额度，清cookie或24h到期才新主体；匿名Origin/CSRF错误拒绝"
+    },
+    {
+      "id": "AI-S08",
+      "prdAcceptanceIds": [
+        "AC-AI12",
+        "AC-AI15"
+      ],
+      "taskIds": [
+        "A03",
+        "A08"
+      ],
+      "precondition": "固定业务fixture和冻结模型/prompt/schema；相应真实或受控失败环境",
+      "action": "并发争最后成功轮/最后全局预算，跨午夜与DST",
+      "assertion": "原子预留无超限，London受理日归属；两内部call全计费，金额未配置拒新call；无预算角色/无账单引用不能reconcile，重复对账不重复释放，UNKNOWN不盲猜0"
+    },
+    {
+      "id": "AI-S09",
+      "prdAcceptanceIds": [
+        "AC-AI12",
+        "AC-AI15"
+      ],
+      "taskIds": [
+        "A03",
+        "A08"
+      ],
+      "precondition": "固定业务fixture和冻结模型/prompt/schema；相应真实或受控失败环境",
+      "action": "provider超时/UNKNOWN/进程崩溃、返回usage",
+      "assertion": "30秒内终结，UNKNOWN保留上界费用不自动重发；用户成功轮释放且实际成本保留"
+    },
+    {
+      "id": "AI-S10",
+      "prdAcceptanceIds": [
+        "AC-AI10",
+        "AC-AI14"
+      ],
+      "taskIds": [
+        "A01",
+        "A02",
+        "A07",
+        "A08"
+      ],
+      "precondition": "固定业务fixture和冻结模型/prompt/schema；相应真实或受控失败环境",
+      "action": "A与B账户/多设备，偏好替换删除及logout",
+      "assertion": "身份隔离、CAS、旧值不入新上下文；logout不删账号偏好；account delete清全部"
+    },
+    {
+      "id": "AI-S11",
+      "prdAcceptanceIds": [
+        "AC-AI05",
+        "AC-AI13"
+      ],
+      "taskIds": [
+        "A04",
+        "A08"
+      ],
+      "precondition": "固定业务fixture和冻结模型/prompt/schema；相应真实或受控失败环境",
+      "action": "伪造ID/描述注入/索取群消息和单方再约/状态不可读",
+      "assertion": "无隐藏投影、无tool写调用，事实不能确认则说明，规则模板不把pending说approved"
+    },
+    {
+      "id": "AI-S12",
+      "prdAcceptanceIds": [
+        "AC-AI06",
+        "AC-AI07",
+        "AC-AI09"
+      ],
+      "taskIds": [
+        "A05",
+        "A06",
+        "A08"
+      ],
+      "precondition": "固定业务fixture和冻结模型/prompt/schema；相应真实或受控失败环境",
+      "action": "申请创建草稿重复生成/转入，原编辑器有文字",
+      "assertion": "生成转入无业务写，保留或显式替换，不追加；place/外订/条款未确认不能默认勾"
+    },
+    {
+      "id": "AI-S13",
+      "prdAcceptanceIds": [
+        "AC-AI08",
+        "AC-AI09"
+      ],
+      "taskIds": [
+        "A05",
+        "A06",
+        "A08"
+      ],
+      "precondition": "固定业务fixture和冻结模型/prompt/schema；相应真实或受控失败环境",
+      "action": "群草稿生成/转入/Send各阶段退群/解散，cancel meal但仍群成员",
+      "assertion": "分别重新鉴权，退群禁新写，cancel不等于退群；不读取聊天正文"
+    },
+    {
+      "id": "AI-S14",
+      "prdAcceptanceIds": [
+        "AC-AI11",
+        "AC-AI12",
+        "AC-AI14"
+      ],
+      "taskIds": [
+        "A07",
+        "A08"
+      ],
+      "precondition": "固定业务fixture和冻结模型/prompt/schema；相应真实或受控失败环境",
+      "action": "iOS冷启动/后台/恢复/断网/键盘/偏好跨Web删除",
+      "assertion": "TTL未过且RAM在可Continue，否则解释失效；不清业务草稿，旧偏好不继续提交；重装install marker缺失先清Keychain旧AI/guest token，禁止恢复旧对话"
+    },
+    {
+      "id": "AI-S15",
+      "prdAcceptanceIds": [
+        "AC-AI01—AC-AI15"
+      ],
+      "taskIds": [
+        "A00",
+        "A08",
+        "A09"
+      ],
+      "precondition": "固定业务fixture和冻结模型/prompt/schema；相应真实或受控失败环境",
+      "action": "真实provider执行60合成中英样本及联合发布检查",
+      "assertion": "四项零容忍、90%质量、5并发P95≤10秒/30秒终结、费用和数据门槛证据；Mock不替代；API固定1副本Recreate，重启/发布旧会话410且未发文字保留，重叠副本配置阻止发布"
+    }
+  ]
+}

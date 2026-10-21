@@ -23,9 +23,21 @@
 - 用户端：[模块说明](../demo/README.md)、[设计规范](../demo/DESIGN.md)、[交互契约](../demo/UX-CONTRACT.md)、[组件说明](../demo/src/mobile/COMPONENTS.md)。
 - 管理端：[模块说明](../admin/README.md)、[设计规范](../admin/DESIGN.md)、[交互契约](../admin/UX-CONTRACT.md)。模块说明就近维护，不另建副本。
 
+- [真实AI研发准入复评](reviews/ai-development-readiness-2026-10-21.zh-CN.md)：保留AI-B01/02发现与用户P-04/05决定；需求决策已明确，原PRD/Demo回填待原会话。
+
+## 核心开发执行方案
+
+- [核心架构与决策](engineering/core-development-plan.zh-CN.md)：非AI业务核心的待实施技术基线；与本包真实AI方案共同交付。
+- [数据与命令契约](engineering/data-and-command-contract.zh-CN.md)：事务、历史资格、消息区间、删除及快照。
+- [API与客户端契约](engineering/api-and-client-contract.zh-CN.md)：接口、权限、Web/iOS与后台适配、通知渠道。
+- [验证与发布](engineering/validation-and-release.zh-CN.md)及[场景清单](engineering/acceptance-scenarios.json)：待实施业务验收与真实外部门槛。
+- [真实AI技术方案](engineering/ai-development-plan.zh-CN.md)与[AI场景](engineering/ai-acceptance-scenarios.json)：只读检索/草稿、偏好/短期会话、费用硬闸、真实评测与接入门槛。
+- [共同审查记录](engineering/collaborative-review.zh-CN.md)：精确版本、双方意见、关闭情况及适用边界；[哈希清单](engineering/review-manifest.json)固定10份认可文件。
+- [Claude执行入口](../tasks/plan.md)与[唯一任务表](../tasks/todo.md)：43个切片，当前均未实施。
+
 ## 发布与验收
 
-- [2026-10-21双端独立复评](reviews/development-readiness-2026-10-21.zh-CN.md)：固定bbadfed基线，逐项核对B-01—B-11；核心双端可进入方案设计，真实AI范围仍待决定。
+- [2026-10-21双端独立复评](reviews/development-readiness-2026-10-21.zh-CN.md)：固定bbadfed基线，逐项核对B-01—B-11；当时核心双端可进入方案设计、AI范围待定；新增FR-13和本轮决定另由上列AI复评承接。
 
 - [2026-10-21最新交互修订](delivery/fancy-picker-refinement-2026-10-21.zh-CN.md)：取消手动新增与Profile返回、紧凑时间菜单及Google餐厅照片来源规则，覆盖v12的相应设计。
 

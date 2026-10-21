@@ -1,0 +1,311 @@
+{
+  "schemaVersion": 1,
+  "status": "planned_not_executed",
+  "scenarios": [
+    {
+      "id": "S01",
+      "taskIds": [
+        "T10",
+        "T11"
+      ],
+      "precondition": "锁等待跨截止",
+      "action": "占meal锁、审批事务等待，越过closesAt再释放",
+      "assertion": "拒绝审批，补齐EXPIRED和不足人数取消已提交，不能now()错判"
+    },
+    {
+      "id": "S02",
+      "taskIds": [
+        "T10"
+      ],
+      "precondition": "最后一席双审批",
+      "action": "两个连接同时批准不同pending",
+      "assertion": "仅一个CONFIRMED，无超售，无重复JOIN/outbox"
+    },
+    {
+      "id": "S03",
+      "taskIds": [
+        "T03",
+        "T04",
+        "T24"
+      ],
+      "precondition": "真实身份及同邮箱",
+      "action": "OTP/Google/Apple登录并尝试同邮箱关联",
+      "assertion": "provider有效、回流绑定PKCE；双proof前不静默合并；Expo开发构建有证据；同邮箱新身份LINK_REQUIRED不建重复账户，provisional双proof迁映射/撤旧session，非空两账户ACCOUNT_LINK_CONFLICT不承诺支持合并；linkTicket10分钟/绑定challenge/一次消费，过期重放拒绝且不签新session"
+    },
+    {
+      "id": "S04",
+      "taskIds": [
+        "T04",
+        "T24"
+      ],
+      "precondition": "会话攻击与退出",
+      "action": "CSRF、换state、重复handoff/refresh、退出重放",
+      "assertion": "拒绝伪造，refresh重用撤family，token不在URL/log/cache"
+    },
+    {
+      "id": "S05",
+      "taskIds": [
+        "T05",
+        "T08",
+        "T24"
+      ],
+      "precondition": "游客与私密资料",
+      "action": "游客/别的用户查看、申请前补资料并回流",
+      "assertion": "公开白名单，私密404/403，草稿保持且不自动申请"
+    },
+    {
+      "id": "S06",
+      "taskIds": [
+        "T06",
+        "T25"
+      ],
+      "precondition": "真实地点和许可",
+      "action": "任意伦敦候选confirm，provider失败/缓存到期",
+      "assertion": "不信客户端地址，无手填假成功，地图照片署名/许可字段有证据"
+    },
+    {
+      "id": "S07",
+      "taskIds": [
+        "T07",
+        "T25"
+      ],
+      "precondition": "DST",
+      "action": "伦敦2026-10-25 01:30无偏移/选60/选0；2027-03-28 01:30",
+      "assertion": "歧义给两候选，选项UTC相差1h，不存在422；start/close相同校验"
+    },
+    {
+      "id": "S08",
+      "taskIds": [
+        "T10"
+      ],
+      "precondition": "安排锁",
+      "action": "批准第1guest后全部退出再编辑关键字段",
+      "assertion": "永久锁仍在；人数变预约声明stale，不能平台假订位"
+    },
+    {
+      "id": "S09",
+      "taskIds": [
+        "T08",
+        "T31"
+      ],
+      "precondition": "列表生命周期",
+      "action": "worker停止后跨截止读取发现/详情",
+      "assertion": "GET纯projectLifecycle，DB写入数为0、无行锁等待，截止过期不可申请；筛选双语en/zh各命中去重、预算£20/30/40边界、多日期OR、五分区归属正确"
+    },
+    {
+      "id": "S10",
+      "taskIds": [
+        "T09",
+        "T25"
+      ],
+      "precondition": "申请多轮与重试",
+      "action": "withdraw后重申；decline后重申；同key重试/变body",
+      "assertion": "新轮次独立，decline终局，重试不重复，变body409"
+    },
+    {
+      "id": "S11",
+      "taskIds": [
+        "T10",
+        "T25"
+      ],
+      "precondition": "取消与人数",
+      "action": "截止通过后开始前退出跌破min；开始后host取消",
+      "assertion": "前者即时取消，后者拒绝，群不关闭，通知不重复"
+    },
+    {
+      "id": "S12",
+      "taskIds": [
+        "T11",
+        "T31"
+      ],
+      "precondition": "迟到历史名单",
+      "action": "worker跨截止开始结束后恢复，期间有退出",
+      "assertion": "按计划时点历史重建，不能用当前名单补成团"
+    },
+    {
+      "id": "S13",
+      "taskIds": [
+        "T11",
+        "T31"
+      ],
+      "precondition": "等号和开始后删除",
+      "action": "退出有效时刻等于startsAt；开始后删host",
+      "assertion": "等号排除，开始后保留其他人资格，不改过去人数"
+    },
+    {
+      "id": "S14",
+      "taskIds": [
+        "T12",
+        "T26",
+        "T30"
+      ],
+      "precondition": "群历史区间",
+      "action": "JOIN→message→LEAVE→隐藏message→重入→message",
+      "assertion": "只见授权union；LIVE退群拒绝，HISTORY仍可读；序号提交一致不漏读"
+    },
+    {
+      "id": "S15",
+      "taskIds": [
+        "T12"
+      ],
+      "precondition": "取消结束解散",
+      "action": "取消/结束后发群消息，再host解散",
+      "assertion": "前两者允许，解散后只读不可重开，席位不变"
+    },
+    {
+      "id": "S16",
+      "taskIds": [
+        "T13"
+      ],
+      "precondition": "出席优先与窗口",
+      "action": "self/host冲突，end−1/end/end+7d提交",
+      "assertion": "self优先；unknown不当absent；半开窗口正确"
+    },
+    {
+      "id": "S17",
+      "taskIds": [
+        "T13",
+        "T21"
+      ],
+      "precondition": "评分与成熟",
+      "action": "资格unknown→present→纠错absent；asOf跨end+24h",
+      "assertion": "评分仅有效present，修订不重复，成熟结果仍随新快照纠错"
+    },
+    {
+      "id": "S18",
+      "taskIds": [
+        "T14"
+      ],
+      "precondition": "公评发布",
+      "action": "单方提交→对方提交；资格纠错",
+      "assertion": "互评前隐藏或7d后公开；无资格撤公开，不泄再约"
+    },
+    {
+      "id": "S19",
+      "taskIds": [
+        "T15",
+        "T26"
+      ],
+      "precondition": "撤回和拉黑",
+      "action": "双方互选后并发发消息/撤回；解除拉黑",
+      "assertion": "同锁确定顺序，撤后不能新发、旧历史只读；双方重选才恢复"
+    },
+    {
+      "id": "S20",
+      "taskIds": [
+        "T15",
+        "T18"
+      ],
+      "precondition": "多个出席依据",
+      "action": "两共同饭局其一被支持纠错，另一仍有效",
+      "assertion": "保留可发送；唯一依据失效则禁新发；支持访问审计不读私密"
+    },
+    {
+      "id": "S21",
+      "taskIds": [
+        "T16",
+        "T21",
+        "T26"
+      ],
+      "precondition": "Survey独立",
+      "action": "只选因素保存/全空保存；最新答案在日期外旧在日期内",
+      "assertion": "去重七枚举，null非No，全空拒绝；不回捞旧版本、不受meal过滤"
+    },
+    {
+      "id": "S22",
+      "taskIds": [
+        "T17",
+        "T27"
+      ],
+      "precondition": "通知失败与重启",
+      "action": "审批提交后worker崩溃/邮件UNKNOWN/重复领取",
+      "assertion": "站内存在、席位成功；outbox唯一、UNKNOWN可核对，死信告警"
+    },
+    {
+      "id": "S23",
+      "taskIds": [
+        "T18"
+      ],
+      "precondition": "支持最小权限",
+      "action": "非support/无case/无reason纠错；本人查询举报",
+      "assertion": "越权拒绝，MFA+case+版本审计，报告人仅见允许状态；窗内纠错409 CORRECTION_WINDOW_OPEN，恰好end+7d名单内未取消允许"
+    },
+    {
+      "id": "S24",
+      "taskIds": [
+        "T19",
+        "T26"
+      ],
+      "precondition": "删除并发屏障",
+      "action": "发送/审批与删除并发，开始前主持/参与多个meal",
+      "assertion": "成功202前撤session/公开身份/联系和未来席位；rollback不假受理；receipt可查；包含仅PENDING场次WITHDRAWN，审批锁申请人ACTIVE；202响应丢失预存receipt仍能查询"
+    },
+    {
+      "id": "S25",
+      "taskIds": [
+        "T23",
+        "T27"
+      ],
+      "precondition": "删除快照恢复",
+      "action": "旧snapshot/CSV准备后删除主体；备份恢复",
+      "assertion": "旧受影响snapshot全410缓存导出失效；先重放删除台账才开放，下载副本不作远程删除承诺；删除用户贡献退出新快照但其他人/场次不抹除；并发旧MVCC构建发布epoch不符重建，禁止复活主体；删前peak3/min3，删后新分析peak2但原业务成团事实不改"
+    },
+    {
+      "id": "S26",
+      "taskIds": [
+        "T20"
+      ],
+      "precondition": "事件身份和同意",
+      "action": "重复eventId/无consent匿名关联/客户端伪业务success",
+      "assertion": "重复不计、无授权不关联、伪造拒绝；环境隔离"
+    },
+    {
+      "id": "S27",
+      "taskIds": [
+        "T21",
+        "T22"
+      ],
+      "precondition": "指标和快照",
+      "action": "手算fixture含多申请/host/迟到/修订/跨周/DST",
+      "assertion": "契约逐项分子分母正确；同视图输入、普通旧snapshot不变，新snapshot更新"
+    },
+    {
+      "id": "S28",
+      "taskIds": [
+        "T22",
+        "T23"
+      ],
+      "precondition": "后台一份快照",
+      "action": "过滤→下钻→分页→CSV；测试分类新revision",
+      "assertion": "same snapshot/filter/definition；data_admin独占分类，旧快照不常规改写"
+    },
+    {
+      "id": "S29",
+      "taskIds": [
+        "T27"
+      ],
+      "precondition": "上线环境和恢复",
+      "action": "fixture env生产启动/DB恢复/兼容迁移回滚",
+      "assertion": "fixture启动失败，worker租约不重复，恢复时间实测且隐私台账优先"
+    },
+    {
+      "id": "S30",
+      "taskIds": [
+        "T28",
+        "T29"
+      ],
+      "precondition": "真实跨端闭环",
+      "action": "两真实账号Web/iOS申请批准群聊饭后到后台",
+      "assertion": "六外部门槛证据闭合，原生/收件箱有效；AI未验收则完整产品发布仍blocked"
+    },
+    {
+      "id": "S31",
+      "taskIds": [
+        "T32"
+      ],
+      "precondition": "P-05已确认host填写允许未提供",
+      "action": "host选菜系/饮食或null，筛选明确值/Any，再尝试批准后编辑",
+      "assertion": "同一版本字典；unknown只在Any命中，特定条件排除unknown；显示host声明非过敏保证；首guest后不可改；旧sample不自动填声明"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "status": "accepted",
+  "repositoryBase": "97fb772043538f38ef40753c5bee5c5610946677",
+  "productBaseline": "ce74f803121de64335db318a34f2e7447e3b1c0b",
+  "reviewedFiles": {
+    "docs/engineering/core-development-plan.zh-CN.md": "e9c1576852dbd05b53d165e57281dfb5b78961acbf59faafe327d441857a4ef2",
+    "docs/engineering/data-and-command-contract.zh-CN.md": "a903277abf63c77d1dcf9b1d9ab033a3fdd62b6a05e574980a6945f1447473ef",
+    "docs/engineering/api-and-client-contract.zh-CN.md": "1da659e8dd2e89578b0af9161bdcd4a9b4fbd543ecd008a2c3c61cebcaf5d5ea",
+    "docs/engineering/validation-and-release.zh-CN.md": "4af4ee3cfe03310501c79469f32a6f82c1fbba08681b6aa82aaca72a0c5f2353",
+    "docs/engineering/ai-development-plan.zh-CN.md": "dd1be848cf4f4b737d0c6d9ca435febb57873c2c5cd84891894a7abafd2a7915",
+    "docs/engineering/acceptance-scenarios.json": "127bdd747447e3b1f9ac552eae09d272ac1c39d99c7212378f529cd369363afb",
+    "docs/engineering/ai-acceptance-scenarios.json": "b27449f87d8c18768149678e5c5194423e8f370cbdf46535715f478039aaf6e0",
+    "tasks/plan.md": "25b12bef1d3a8c5f1991a14278c4808289b5f0c61bb0d469c4f52d6b9507b171",
+    "tasks/todo.md": "0ff055dce6c17024ff2223b4481f69b8d979b35fde8b42d619ee101cd60fd028",
+    "docs/reviews/ai-development-readiness-2026-10-21.zh-CN.md": "91c36c4179bc919ac0e284893067c84659ff77377b9117cbb44dd0795b1063a0"
+  },
+  "acceptedAt": "2026-10-21T00:40:00Z",
+  "reviewers": [
+    "Codex",
+    "Claude Code"
+  ],
+  "scope": "technical_design_not_implementation"
+}
