@@ -15289,6 +15289,175 @@
           "durationMs": 0
         }
       ]
+    },
+    {
+      "id": "R113",
+      "testedCommit": "5b26fb3f633d19ca1deaf3e588ed16dc56836be5",
+      "command": "Direct node Jest runner; safe-area suite failed to load @babel/runtime, resolver7 passed",
+      "startedAt": "2026-10-21T18:36:54.358000+00:00",
+      "exitCode": 1,
+      "passed": 7,
+      "failed": 0,
+      "total": 7,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R113-T001",
+          "run": "R113",
+          "path": "apps/ios/src/metro-resolver.test.ts",
+          "title": "native schema package resolution @sinclair/typebox uses the official CommonJS export before Metro transforms it",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R113-T002",
+          "run": "R113",
+          "path": "apps/ios/src/metro-resolver.test.ts",
+          "title": "native schema package resolution @sinclair/typebox/value uses the official CommonJS export before Metro transforms it",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R113-T003",
+          "run": "R113",
+          "path": "apps/ios/src/metro-resolver.test.ts",
+          "title": "native schema package resolution @sinclair/typebox/compiler uses the official CommonJS export before Metro transforms it",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R113-T004",
+          "run": "R113",
+          "path": "apps/ios/src/metro-resolver.test.ts",
+          "title": "native schema package resolution react preserves the original resolver context",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R113-T005",
+          "run": "R113",
+          "path": "apps/ios/src/metro-resolver.test.ts",
+          "title": "native schema package resolution @sinclair/typebox-extra preserves the original resolver context",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R113-T006",
+          "run": "R113",
+          "path": "apps/ios/src/metro-resolver.test.ts",
+          "title": "native schema package resolution @fancy/contracts preserves the original resolver context",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R113-T007",
+          "run": "R113",
+          "path": "apps/ios/src/metro-resolver.test.ts",
+          "title": "native schema package resolution preserves Expo defaults",
+          "status": "passed",
+          "durationMs": 0
+        }
+      ],
+      "setupFailure": "Direct node runner skipped standard pnpm package resolution environment: Cannot find module @babel/runtime/helpers/interopRequireDefault. Safe-area suite did not execute; original failure retained. No production dependency or expected behavior changed.",
+      "suiteLoadFailures": [
+        {
+          "path": "apps/ios/src/app-root-safe-area.test.tsx",
+          "message": "Cannot find module @babel/runtime/helpers/interopRequireDefault under bare node runner; suite did not execute. Standard pnpm package test succeeds unchanged."
+        }
+      ]
+    },
+    {
+      "id": "R114",
+      "testedCommit": "5b26fb3f633d19ca1deaf3e588ed16dc56836be5",
+      "command": "pnpm --filter @fancy/ios test --runInBand --runTestsByPath src/app-root-safe-area.test.tsx src/metro-resolver.test.ts",
+      "startedAt": "2026-10-21T18:37:19.963000+00:00",
+      "exitCode": 0,
+      "passed": 10,
+      "failed": 0,
+      "total": 10,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R114-T001",
+          "run": "R114",
+          "path": "apps/ios/src/app-root-safe-area.test.tsx",
+          "title": "application notices safe area initial analytics choice shares a top and horizontal safe area outside navigation",
+          "status": "passed",
+          "durationMs": 122
+        },
+        {
+          "id": "R114-T002",
+          "run": "R114",
+          "path": "apps/ios/src/app-root-safe-area.test.tsx",
+          "title": "application notices safe area declining keeps the collapsed preferences control in the same safe region",
+          "status": "passed",
+          "durationMs": 7
+        },
+        {
+          "id": "R114-T003",
+          "run": "R114",
+          "path": "apps/ios/src/app-root-safe-area.test.tsx",
+          "title": "application notices safe area unavailable-session banner shares that region instead of adding another top inset",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R114-T004",
+          "run": "R114",
+          "path": "apps/ios/src/metro-resolver.test.ts",
+          "title": "native schema package resolution @sinclair/typebox uses the official CommonJS export before Metro transforms it",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R114-T005",
+          "run": "R114",
+          "path": "apps/ios/src/metro-resolver.test.ts",
+          "title": "native schema package resolution @sinclair/typebox/value uses the official CommonJS export before Metro transforms it",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R114-T006",
+          "run": "R114",
+          "path": "apps/ios/src/metro-resolver.test.ts",
+          "title": "native schema package resolution @sinclair/typebox/compiler uses the official CommonJS export before Metro transforms it",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R114-T007",
+          "run": "R114",
+          "path": "apps/ios/src/metro-resolver.test.ts",
+          "title": "native schema package resolution react preserves the original resolver context",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R114-T008",
+          "run": "R114",
+          "path": "apps/ios/src/metro-resolver.test.ts",
+          "title": "native schema package resolution @sinclair/typebox-extra preserves the original resolver context",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R114-T009",
+          "run": "R114",
+          "path": "apps/ios/src/metro-resolver.test.ts",
+          "title": "native schema package resolution @fancy/contracts preserves the original resolver context",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R114-T010",
+          "run": "R114",
+          "path": "apps/ios/src/metro-resolver.test.ts",
+          "title": "native schema package resolution preserves Expo defaults",
+          "status": "passed",
+          "durationMs": 0
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -15435,6 +15604,8 @@
     "R106 error-code/message matcher mismatch corrected to exact error.code VALIDATION_FAILED, original boundary unchanged. R10710green. No UI draft-preservation claim from API/functions.",
     "R108 initially covered alternate1/2/4/10 quantiles. Re-read frozen plan exact1/2/3/10 and expanded R109 to both data vectors, unchanged P50=2 P90=10. No prior failure or threshold adjustment.",
     "F20 bundle verifier initially treated Metro virtual app?ctx source as a physical file. Corrected verification to skip generated context modules only, retain exact byte check for all106 physical app sources; negative ESM/stale-source controls pass. Actual CJS-only bundle verified independently. No runtime conclusion from export.",
-    "B11 API launched without tty so stdin observer unavailable; kept healthy fixture and used separate guarded readonly PID/PG/qa_business_probe inspector. Actual UI Continueconversation needed to restore candidate after reopening assistant; fresh DOM guided action, no product failure or relaxed expectation."
+    "B11 API launched without tty so stdin observer unavailable; kept healthy fixture and used separate guarded readonly PID/PG/qa_business_probe inspector. Actual UI Continueconversation needed to restore candidate after reopening assistant; fresh DOM guided action, no product failure or relaxed expectation.",
+    "R113 bare node Jest launch lacked standard pnpm package-resolution environment and safe-area suite did not load; R114 standard documented pnpm package test command executes all10green, no dependency installation/config change or relaxed assertion. Native owner actual release proof remains separately attributed.",
+    "QA validator now explicitly retains suiteLoadFailures separately from assertion failures. A Jest suite that cannot load can exit1 with seven other tests passed and zero failed assertions; no invented failed test or false exit0. Three negative/positive verifier tests enforce this distinction."
   ]
 }

@@ -13,7 +13,8 @@
     "ai": "mock, no real provider calls",
     "browser": "Chrome local production Web 127.0.0.1:5174; sequential account switch, not two devices",
     "ios": "Jest only, no native device acceptance",
-    "nativeRuntimeCheck20261021": "Read-only simctl outside sandbox confirms installed iOS27.0/27.1 runtimes and available shutdown iPhone simulators. Sandboxed service refusal is not missing-runtime proof. Build/launch and real native journey remain unexecuted."
+    "nativeRuntimeCheck20261021": "Read-only simctl outside sandbox confirms installed iOS27.0/27.1 runtimes and available shutdown iPhone simulators. Sandboxed service refusal is not missing-runtime proof. Build/launch and real native journey remain unexecuted.",
+    "nativeRuntimeEvidence20261021": "Native owner actual headless Release install/launch and first-screen evidence independently reviewed by QA, F20 exact red874/fixed9df, F21 formal5b source-equivalent AppRoot and Metro matched. No independent native taps or complete role journey; root complete5b archive rebuild pending when reviewed."
   },
   "counts": {
     "NOT_RUN": 61,
@@ -44,7 +45,9 @@
     "F20BundleProof": "evidence/2026-10-21/f20-independent-bundle-proof.json",
     "F20BuildReview": "evidence/2026-10-21/f20-independent-build-review.md",
     "browserObservationsB11": "evidence/2026-10-21/browser-b11.json",
-    "B11": "evidence/2026-10-21/browser-b11.zh-CN.md"
+    "B11": "evidence/2026-10-21/browser-b11.zh-CN.md",
+    "nativeRuntimeReview": "evidence/2026-10-21/native-f20-f21-owner-runtime-review.json",
+    "nativeClosureReview": "evidence/2026-10-21/native-f20-f21-closure.md"
   },
   "cases": [
     {
@@ -22358,15 +22361,15 @@
     "QA-F17": "CLOSED_TARGETED_QA",
     "QA-F18": "CLOSED_TARGETED_QA",
     "QA-F19": "CLOSED_TARGETED_QA",
-    "QA-F20": "OPEN",
-    "QA-F21": "OPEN"
+    "QA-F20": "CLOSED_TARGETED_QA",
+    "QA-F21": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
     "userAuthorizedMessaging": true,
     "status": "remaining_local_execution_in_progress",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
-    "latestFeedback": "B11 real Web+core PG AI application/create expected boundaries complete; AI014/015 PASS, no paid-model/native claim. F20/F21 still awaiting formal native replay."
+    "latestFeedback": "F20 exact874 red/9df fixed actual Release startup and F21 formal5b source-equivalent actual safe-area screen independently reviewed alongside R1127/R11410 and real bundle proof. Targeted defects closed, original reds retained. Native interactions/role-swap journeys still NOT_RUN; case counts144/61/12 unchanged."
   },
   "blockerTriage": "原14条中供应商分步删除和恢复删除台账两条已转本地执行并通过；其余12条缺真实环境/许可/批准证据，各项可本地准备部分已继续推进，不能视为12个未修代码故障。"
 }

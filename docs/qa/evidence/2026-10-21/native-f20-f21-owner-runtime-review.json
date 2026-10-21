@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "provenance": "Native owner executed headless Release builds/launches; independent QA read logs, inspected original screenshots and matched source bytes. QA did not tap native App.",
+  "f20": {
+    "redRuntime": {
+      "sha256": "92790a5c2adf7faac2668e18397b587584e4916cb5d04fb465170ac0127b6c2d",
+      "fatalMarkers": 18,
+      "buildSucceeded": false,
+      "installedAndOpened": false
+    },
+    "fixedBuild": {
+      "sha256": "b0fd243bb212c4815075620967c89d83363d4c7bcf8e1c4c54808f19d860a6c6",
+      "fatalMarkers": 0,
+      "buildSucceeded": true,
+      "installedAndOpened": true
+    },
+    "fixedRuntime": {
+      "sha256": "7d88989c03c979ab3aa698a8aa485aa5938c3dcdda9829012f319da23860175f",
+      "fatalMarkers": 0,
+      "buildSucceeded": false,
+      "installedAndOpened": false
+    },
+    "redCommit": "87434e3cf4cb91f7956a714bdcb086f5d9298364",
+    "fixedCommit": "9df9ab0dd2ad67aa0a830bd5b6122bead4fc6258",
+    "fixedScreen": "native-f20-9df-fixed.png",
+    "visualObservation": "Real Discover page and optional consent visible; F21 status-bar overlap still present as expected before separate fix."
+  },
+  "f21": {
+    "fixedBuild": {
+      "sha256": "a6726629f9a3162179d5986a4801e3d48dac6647ceb49de59e2adf2b60407dd7",
+      "fatalMarkers": 0,
+      "buildSucceeded": true,
+      "installedAndOpened": true
+    },
+    "fixedRuntime": {
+      "sha256": "adbd0ecc1fd433e273825238d80fedfbbdac24d998dbe1595b1f5bf64ce5f032",
+      "fatalMarkers": 0,
+      "buildSucceeded": false,
+      "installedAndOpened": false
+    },
+    "formalCommit": "5b26fb3f633d19ca1deaf3e588ed16dc56836be5",
+    "actualBuildScope": "9df9ab0 full archive plus sole runtime-source AppRoot patch, byte-identical to formal5b production files. Owner separately rebuilding complete5b archive; do not claim that rebuild already finished.",
+    "fixedScreen": "native-f21-formal-source-equivalent.png",
+    "visualObservation": "Heading Help improve Fancy now below system time/status bar, no overlap. No claim of navigation/consent interaction or other device sizes.",
+    "verifiedFormalSourceSha256": {
+      "apps/ios/src/AppRoot.tsx": "a326b6565eb4526e33fff27575e84e01874237db5b08f9c4816d64bb621262cf",
+      "apps/ios/metro.config.js": "b48f769f38d1f89b73df05d3a6008c5e6a868ce67cf673fafe8c8ed592f1d4ee"
+    }
+  }
+}

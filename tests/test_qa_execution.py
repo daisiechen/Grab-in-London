@@ -16,6 +16,14 @@ class QAExecutionTest(unittest.TestCase):
         self.assertEqual(sum(counts.values()),217)
         self.assertGreater(counts['NOT_RUN'],0)
         self.assertGreater(counts['BLOCKED'],0)
+    def test_suite_load_failure_preserves_nonzero_exit_without_invented_test_failures(self):
+        run={'exitCode':1,'suiteLoadFailures':[{'path':'apps/ios/src/app-root-safe-area.test.tsx','message':'Synthetic dependency load failure'}]}
+        validator.validate_run_outcome(run,0)
+    def test_suite_load_failure_cannot_be_reported_as_success(self):
+        run={'exitCode':0,'suiteLoadFailures':[{'path':'apps/ios/src/app-root-safe-area.test.tsx','message':'Synthetic dependency load failure'}]}
+        with self.assertRaises(AssertionError):validator.validate_run_outcome(run,0)
+    def test_nonzero_runner_requires_preserved_failure_evidence(self):
+        with self.assertRaises(AssertionError):validator.validate_run_outcome({'exitCode':1},0)
     def test_related_passed_suite_cannot_earn_case_pass(self):
         c=next(c for c in self.data['cases'] if c['status']=='NOT_RUN' and c['relatedAutomatedAssertions'])
         c['status']='PASS';c['evidence']=[]

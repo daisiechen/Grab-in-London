@@ -4,6 +4,15 @@ import hashlib
 import json
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
+def validate_run_outcome(run, failed):
+    suite_failures=run.get('suiteLoadFailures',[])
+    assert isinstance(suite_failures,list)
+    for failure in suite_failures:
+        path=Path(failure['path'])
+        assert not path.is_absolute() and '..' not in path.parts and (ROOT/path).is_file()
+        assert isinstance(failure.get('message'),str) and failure['message'].strip()
+    assert (run['exitCode']==0)==(failed==0 and not suite_failures), 'runner outcome does not match preserved assertions/suite-load failures'
+
 def validate(data=None):
     data=data or json.loads((ROOT/'docs/qa/execution-2026-10-21.json').read_text())
     raw=(ROOT/'docs/qa/test-cases.json').read_bytes()
@@ -23,7 +32,7 @@ def validate(data=None):
             assert r['passed']==sum(t['status']=='passed' for t in r['assertions'])
             failed=sum(t['status']=='failed' for t in r['assertions'])
             assert r.get('failed',0)==failed
-            assert (r['exitCode']==0)==(failed==0), 'runner outcome does not match preserved assertions'
+            validate_run_outcome(r,failed)
             for t in r['assertions']:
                 assert not Path(t['path']).is_absolute() and '..' not in Path(t['path']).parts
                 assert (ROOT/t['path']).is_file(), t['path']
