@@ -526,3 +526,9 @@
 - 新10项红绿涵host/guest/unknown/window/SELF、409版本与刷新失败/关闭窗口、Modal失败、保其他草稿与lateexpiry；全iOS41套280项/type/全目录lint/diff绿（/private/tmp/fancy-f42-{ios-tests,types,lint}.log）。根最终corecheck/unit360/DB135/API195/release23/Web+Adminbuild绿见同批provider记录。正式SHA独立正常签名包再交QA实际饭后host/guest复验，不以组件冒实机通过。
 - F41已由QA正式042bc Native43原始自动返回探针及R19513项通过定向关闭：实际安装binary/Hermes与193源核对，ColdInbox→读持久消息→Back/Inbox自动恢复5群，无manualpull；原红与下拉手动恢复证据保留。完整JOURNEY003仍不抢先结论。
 - 用户随后批准删除受理/完成通知专用verified邮箱加密副本最长7天，到期/密钥不可用/供应商抑制降级匿名回执，不绕抑制/不营销；该具体通知规则不代替全部G-PRIVACY批准。已交独立owner准备最小scope继续实现。Google登录用户选择现在本人完成，未将未来操作当已登录。
+
+
+## 删除通知专用加密配置准备
+
+- 按用户批准的两类删除通知最长7天方案，新增独立DELETION_MAIL_KEY_VERSION/DELETION_MAIL_KEYS_JSON配置：默认null，不生成或复用session/provider密钥；版本与1至8把canonical base64 32字节AES密钥严格校验，错误不回显值。仅配置准备，不代表通知已实现、真实发信授权或完整隐私门槛批准。
+- config33项、配置类型/lint、workspace release11项及diff验证通过；实际私有配置未修改。加密envelope、生产者/过期清理/发送目的校验仍由唯一owner实施，尚未闭环。QA已提交22e665f并明确释放Git窗口；F42正式cd69正常签名包已交QA实际验收，不将构建当功能通过。

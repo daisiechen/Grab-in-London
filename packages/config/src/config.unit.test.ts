@@ -177,3 +177,25 @@ describe('loadConfig', () => {
     }
   });
 });
+
+
+describe('purpose isolated deletion mail key ring',()=>{
+  it('defaults to anonymous receipts and accepts versioned canonical AES keys',()=>{
+    expect(loadConfig(local).deletionMailEncryption).toBeNull();
+    const keys={v1:Buffer.alloc(32,3).toString('base64')};
+    expect(loadConfig({...local,DELETION_MAIL_KEY_VERSION:'v1',DELETION_MAIL_KEYS_JSON:JSON.stringify(keys)}).deletionMailEncryption).toEqual({currentVersion:'v1',keys});
+  });
+  it('rejects missing versions, invalid lengths and malformed rings without printing secrets',()=>{
+    const sentinel=['synthetic','invalid','private'].join('-');
+    for(const extra of [
+      {DELETION_MAIL_KEY_VERSION:'v1'},
+      {DELETION_MAIL_KEYS_JSON:sentinel},
+      {DELETION_MAIL_KEY_VERSION:'v1',DELETION_MAIL_KEYS_JSON:JSON.stringify({v2:Buffer.alloc(32).toString('base64')})},
+      {DELETION_MAIL_KEY_VERSION:'v1',DELETION_MAIL_KEYS_JSON:JSON.stringify({v1:sentinel})},
+      {DELETION_MAIL_KEY_VERSION:'v1',DELETION_MAIL_KEYS_JSON:'[]'},
+    ]){
+      let message='';try{loadConfig({...local,...extra});}catch(error){message=(error as Error).message;}
+      expect(message).toContain('DELETION_MAIL_');expect(message).not.toContain(sentinel);
+    }
+  });
+});

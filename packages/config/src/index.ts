@@ -46,6 +46,8 @@ export const CONFIG_KEYS = [
   'RESEND_API_KEY',
   'RESEND_FROM',
   'RESEND_WEBHOOK_SECRET',
+  'DELETION_MAIL_KEY_VERSION',
+  'DELETION_MAIL_KEYS_JSON',
   'ANALYTICS_COVERAGE_START',
   'PORT',
   'PRIVACY_POLICY_VERSION',
@@ -78,6 +80,7 @@ export interface CoreConfig {
   /** Sending-only credentials; absent configuration keeps business mail unavailable. */
   resend: {apiKey:string;from:string}|null;
   resendWebhookSecret:string|null;
+  deletionMailEncryption:{currentVersion:string;keys:Readonly<Record<string,string>>}|null;
   /** Operator-confirmed first coverage of the deployed API + both client SDKs. */
   analyticsCoverageStart: string | null;
   port: number;
@@ -200,6 +203,21 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
     const encoded=resendWebhookSecret.slice(6),decoded=resendWebhookSecret.length<=350?Buffer.from(encoded,'base64'):Buffer.alloc(0);
     if(!/^whsec_[A-Za-z0-9+/]+={0,2}$/.test(resendWebhookSecret)||decoded.length<32||decoded.length>256||decoded.toString('base64')!==encoded)issues.push('RESEND_WEBHOOK_SECRET must be a bounded canonical signing key');
   }
+  let deletionMailEncryption:CoreConfig['deletionMailEncryption']=null;
+  const deletionVersion=value('DELETION_MAIL_KEY_VERSION'),deletionKeys=value('DELETION_MAIL_KEYS_JSON');
+  if(deletionVersion||deletionKeys){
+    try{
+      if(!deletionVersion||!deletionKeys||deletionKeys.length>4096||!/^[a-zA-Z0-9_-]{1,32}$/.test(deletionVersion))throw new Error();
+      const parsed:unknown=JSON.parse(deletionKeys);
+      if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw new Error();
+      const entries=Object.entries(parsed);
+      if(entries.length<1||entries.length>8||!Object.hasOwn(parsed,deletionVersion))throw new Error();
+      for(const [version,key] of entries){
+        if(!/^[a-zA-Z0-9_-]{1,32}$/.test(version)||typeof key!=='string'||key.length!==44||Buffer.from(key,'base64').length!==32||Buffer.from(key,'base64').toString('base64')!==key)throw new Error();
+      }
+      deletionMailEncryption={currentVersion:deletionVersion,keys:Object.freeze(Object.fromEntries(entries))};
+    }catch{issues.push('DELETION_MAIL_KEY_VERSION and DELETION_MAIL_KEYS_JSON must define a bounded canonical encryption key ring');}
+  }
   let resend:CoreConfig['resend']=null;
   if(resendKey||resendFrom){
     if(!resendKey||!resendFrom)issues.push('RESEND_API_KEY and RESEND_FROM must be supplied together');
@@ -252,6 +270,7 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
     aiBundleFile,
     resend,
     resendWebhookSecret,
+    deletionMailEncryption,
     analyticsCoverageStart,
     auth0,
     port,
