@@ -15,10 +15,9 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 71,
+    "NOT_RUN": 72,
     "PASS": 133,
-    "BLOCKED": 12,
-    "FAIL": 1
+    "BLOCKED": 12
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
@@ -36,7 +35,9 @@
     "browserObservationsB7": "evidence/2026-10-21/browser-b7.json",
     "B7": "evidence/2026-10-21/browser-b7.zh-CN.md",
     "browserObservationsB8": "evidence/2026-10-21/browser-b8.json",
-    "B8": "evidence/2026-10-21/browser-b8.zh-CN.md"
+    "B8": "evidence/2026-10-21/browser-b8.zh-CN.md",
+    "browserObservationsB9": "evidence/2026-10-21/browser-b9.json",
+    "B9": "evidence/2026-10-21/browser-b9.zh-CN.md"
   },
   "cases": [
     {
@@ -15924,16 +15925,16 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "NOT_RUN",
       "evidence": [
         "B7-T001",
         "B7-T002",
         "B7-T003",
         "B7-T004",
-        "B7-T005",
-        "R92-T001",
-        "R92-T002",
-        "B8-T002"
+        "B8-T002",
+        "B9-T001",
+        "R93-T001",
+        "R93-T002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -16296,10 +16297,9 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "F18私聊目标身份需可识别，原API双向targettitle红",
-        "后台同meal/application/attendance/score事实追溯尚未实际核账"
+        "Actual native device Web/iOS role-swapped full journey remains unexecuted."
       ],
-      "actual": "B7同一新场已从创建/游客申请认证补资料保稿、筛选往返、明确Send Pending/hostApprove/本人群消息，走到物理结束后SELF出席/私人评分/双盲评价发布/互选及明确一条DM。Host不覆盖SELF、单方再约不泄漏均实证。新增F18私聊header仅Conversation，R91/R92双actor均红；后台同事实核账未完成。因此整条FAIL，不能以主链局部成功授PASS。 B8: exact same meal/host/guest Admin trace complete, SELF present2/2 and guest source conflict, scores3/5 separate from surveyYes1/1. F18 fixed browser retest pending; FAIL retained.",
+      "actual": "B7 complete real Web lifecycle/postmeal and B8 same-meal Admin trace passed in explicit local fixture. F18 fixed2b9449a independently API2+boundary8 and actual browser Inbox/header/send/reload passed B9. Historical reds retained in history and run bundles. Original cross-client precondition requires actual Web/iOS role swap; no native-device proof yet, so NOT_RUN rather than whole-case PASS.",
       "defectIds": [
         "QA-F18"
       ],
@@ -16324,6 +16324,23 @@
           "status": "NOT_RUN",
           "actual": "B3-B6真实Web已覆盖游客筛选/详情、Apply认证回流保稿、已有账号免补资料、明确Send Pending、H批准、A群消息；没有自动席位或自动发送。独立取消/退群/重申/解散全路径另JOURNEY003 PASS。尚未同一场走完结束SELF出席→评分/公评/再约→后台核账，整体NOT_RUN。",
           "reason": "B7 same-meal controlled-clock physical lifecycle and postmeal; F18 target display independently red"
+        },
+        {
+          "status": "FAIL",
+          "actual": "B7同一新场已从创建/游客申请认证补资料保稿、筛选往返、明确Send Pending/hostApprove/本人群消息，走到物理结束后SELF出席/私人评分/双盲评价发布/互选及明确一条DM。Host不覆盖SELF、单方再约不泄漏均实证。新增F18私聊header仅Conversation，R91/R92双actor均红；后台同事实核账未完成。因此整条FAIL，不能以主链局部成功授PASS。 B8: exact same meal/host/guest Admin trace complete, SELF present2/2 and guest source conflict, scores3/5 separate from surveyYes1/1. F18 fixed browser retest pending; FAIL retained.",
+          "evidence": [
+            "B7-T001",
+            "B7-T002",
+            "B7-T003",
+            "B7-T004",
+            "B7-T005",
+            "R92-T001",
+            "R92-T002",
+            "B8-T002"
+          ],
+          "defectIds": [
+            "QA-F18"
+          ]
         }
       ]
     },
@@ -22169,7 +22186,7 @@
     "QA-F15": "CLOSED_TARGETED_QA",
     "QA-F16": "CLOSED_TARGETED_QA",
     "QA-F17": "CLOSED_TARGETED_QA",
-    "QA-F18": "OPEN"
+    "QA-F18": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",

@@ -14319,6 +14319,112 @@
           "failureSummary": "DIRECT title is generic Conversation instead of current actor's peer public display name."
         }
       ]
+    },
+    {
+      "id": "R93",
+      "testedCommit": "2b9449a6102f53e0fbbda709be07908c1100df04",
+      "command": "independent direct-title probe",
+      "startedAt": "2026-10-21T16:36:42.148000+00:00",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "total": 2,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R93-T001",
+          "run": "R93",
+          "path": "scripts/qa-independent-direct-title.api.test.ts",
+          "title": "QA-F18 direct target public name is actor-relative for host in conversation and Inbox",
+          "status": "passed",
+          "durationMs": 156.57795900000008
+        },
+        {
+          "id": "R93-T002",
+          "run": "R93",
+          "path": "scripts/qa-independent-direct-title.api.test.ts",
+          "title": "QA-F18 direct target public name is actor-relative for guest in conversation and Inbox",
+          "status": "passed",
+          "durationMs": 32.706290999999965
+        }
+      ]
+    },
+    {
+      "id": "R94",
+      "testedCommit": "2b9449a6102f53e0fbbda709be07908c1100df04",
+      "command": "direct-title boundaries and conversations API",
+      "startedAt": "2026-10-21T16:36:42.869000+00:00",
+      "exitCode": 0,
+      "passed": 8,
+      "failed": 0,
+      "total": 8,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R94-T001",
+          "run": "R94",
+          "path": "apps/api/src/conversations/conversations.api.test.ts",
+          "title": "conversation interval API dedupes only the same authorized message, rejects key changes and outsiders, keeps text literal",
+          "status": "passed",
+          "durationMs": 136.12974999999994
+        },
+        {
+          "id": "R94-T002",
+          "run": "R94",
+          "path": "apps/api/src/conversations/conversations.api.test.ts",
+          "title": "conversation interval API retains authorized history, excludes leave/rejoin gaps and refuses replay after leaving",
+          "status": "passed",
+          "durationMs": 39.631834000000026
+        },
+        {
+          "id": "R94-T003",
+          "run": "R94",
+          "path": "apps/api/src/conversations/conversations.api.test.ts",
+          "title": "conversation interval API paginates live delivery without advancing past undelivered messages, scopes signed cursors and dissolves terminally",
+          "status": "passed",
+          "durationMs": 29.566041999999925
+        },
+        {
+          "id": "R94-T004",
+          "run": "R94",
+          "path": "apps/api/src/conversations/conversations.api.test.ts",
+          "title": "QA-F01 application meal summary returns matching public metadata for two pending meals, masks deleted hosts and does not add private fields",
+          "status": "passed",
+          "durationMs": 24.605834000000073
+        },
+        {
+          "id": "R94-T005",
+          "run": "R94",
+          "path": "apps/api/src/conversations/direct-title.api.test.ts",
+          "title": "DIRECT inbox title names the current actor peer and matches detail in both directions after sending and reloading",
+          "status": "passed",
+          "durationMs": 175.54049999999995
+        },
+        {
+          "id": "R94-T006",
+          "run": "R94",
+          "path": "apps/api/src/conversations/direct-title.api.test.ts",
+          "title": "anonymous and outsider clients cannot discover peers or a DIRECT history",
+          "status": "passed",
+          "durationMs": 24.283915999999977
+        },
+        {
+          "id": "R94-T007",
+          "run": "R94",
+          "path": "apps/api/src/conversations/direct-title.api.test.ts",
+          "title": "accepted peer deletion masks a still-present profile immediately and preserves the same read-only history fallback after purge status",
+          "status": "passed",
+          "durationMs": 31.809582999999975
+        },
+        {
+          "id": "R94-T008",
+          "run": "R94",
+          "path": "apps/api/src/conversations/direct-title.api.test.ts",
+          "title": "GROUP continues to use its meal title and DIRECT title never contains private contact fields",
+          "status": "passed",
+          "durationMs": 29.234500000000025
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -14371,7 +14477,8 @@
     "apps/web/src/features/create/qa-independent-terms-return.unit.test.tsx": "20811ac0b0f9c787f4d26569f1b5f10b9e1979b4583deeac3669b0a5466f9498",
     "scripts/qa-browser-extra-applicant.mjs": "f6654ae9a9ed43cf44c2f55e1adc51b61815ebb179cfb126c6bc5f2a9eaf31fe",
     "scripts/qa-independent-direct-title.api.test.ts": "9c41ed304cba4d0d87bc567cbe24f0b07b20fbccd9636655f8b6a3067227a642",
-    "scripts/qa-inspect-clock-meal.py": "5b1e1427870f0a5952c19006b6b5ddee4b2084f4d56f930e9c23c9428c0227da"
+    "scripts/qa-inspect-clock-meal.py": "5b1e1427870f0a5952c19006b6b5ddee4b2084f4d56f930e9c23c9428c0227da",
+    "scripts/qa-direct-browser-fixture.ts": "20b7b8b17491210e330579f8054c8a5c49df7598ac1b099477be29f61d3a60ed"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console. R68/R69 valid TestIDP OAuth callback200 captured actual non-silent child stdout only in parent RAM. Metadata contains only leak booleans, never credential strings or raw logs. R69 aggregates code/state/email checks without stopping at the first boolean failure. R72 mutates semantic OpenAPI/SDK artifacts only in an owned temporary contracts copy, requires the real checker fail1 and restore0, and verifies original workspace bytes untouched. Static cases remain NOT_RUN until fixed committed handoff recheck.",
   "runtimeSnapshotVerification": {
@@ -14446,6 +14553,7 @@
     "CODE002 first suite could not import pg from root (0 tests); reused existing testkit database pool, preserving SQL/rollback assertions. Final R79 2 passed.",
     "F16 R86 final return assertion independently red; removed unsupported Testing Library exact options after tsc, unchanged names/assertions. R87 same product failure with clean Web typecheck. Browser B3 also reproduces on fixed archive.",
     "Extra applicant fixture node --check and explicit opt-in rejection passed; initial guard shell test omitted Node from PATH and made no request, corrected to discovered absolute Node runtime without weakening guard. Script actual local HTTP run created one Pending actor only.",
-    "B7 read-only inspector first selected jobs.status; schema is jobs.state, corrected SELECT only. Python py_compile attempted host cache outside allowed root; AST parse without writes and explicit no-opt-in rejection passed. No business data changed."
+    "B7 read-only inspector first selected jobs.status; schema is jobs.state, corrected SELECT only. Python py_compile attempted host cache outside allowed root; AST parse without writes and explicit no-opt-in rejection passed. No business data changed.",
+    "F18 browser fixture setup: link each workspace dependency directory in fixed archive; seed both SELF attendance reports before either reconnect choice. First incorrect-order attempt received expected403 and was discarded with its disposable DB; not a product failure."
   ]
 }

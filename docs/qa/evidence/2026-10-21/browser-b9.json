@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "observations": [
+    {
+      "id": "B9-T001",
+      "status": "passed",
+      "title": "F18 fixed exact target visible in Inbox and direct header after send and reload",
+      "testedCommit": "2b9449a6102f53e0fbbda709be07908c1100df04",
+      "environment": "Fixed git archive Web/API, fresh temporary PG, loopback3101 + localhost5176 isolated cookies; past completed meal and mutual pair seeded. Synthetic OTP000000; target-only regression, not a new full journey.",
+      "steps": [
+        "Actual synthetic sender login in real browser returns Inbox card QA Target Peer.",
+        "Open exact card: header QA Target Peer and initially empty composer.",
+        "Explicitly send one QA_F18_FIXED_TARGET_ONE_EXPLICIT_HELLO; reload retains target title and exactly one visible message.",
+        "Original independent API actor-relative2 and boundary8 green R93/R94; B7-T005/R91/R92 original reds preserved."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b9-f18-fixed-target-reload.jpg"
+      ]
+    }
+  ]
+}
