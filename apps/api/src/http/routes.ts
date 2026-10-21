@@ -14,6 +14,7 @@ import type { AppDeps, AuthContext } from './context.ts';
 import { domainErrorBody } from './errors.ts';
 import { assertCsrf, assertWebOrigin, SESSION_COOKIE } from './security.ts';
 import { enforceRateLimit } from './rate-limit.ts';
+import { ownerOnlyReplay } from '../common/owner-replay.ts';
 
 export interface HandlerResult {
   status?: number;
@@ -152,8 +153,10 @@ export function defineWrite(app: FastifyInstance, deps: AppDeps, id: OperationId
       });
       if (claim.kind === 'replay') {
         const replay = await replayIfAuthorized(claim, async () => {
-          const { rows } = await deps.pool.query(`SELECT 1 FROM users WHERE id = $1 AND status = 'ACTIVE' AND (SELECT epoch FROM privacy_control WHERE id=1)=$2`, [actor.userId, claim.privacyEpoch]);
-          return rows.length === 1 && (stillAuthorized ? await stillAuthorized(actor, { request, reply, deps, auth: actor, ifMatch }) : true);
+          const { rows } = await deps.pool.query<{ same_epoch: boolean }>(`SELECT (SELECT epoch FROM privacy_control WHERE id=1)=$2 AS same_epoch FROM users WHERE id=$1 AND status='ACTIVE'`, [actor.userId, claim.privacyEpoch]);
+          if (rows.length !== 1) return false;
+          if (stillAuthorized && !(await stillAuthorized(actor, { request, reply, deps, auth: actor, ifMatch }))) return false;
+          return rows[0]!.same_epoch || await ownerOnlyReplay(deps.pool, id, actor.userId, claim, request.params);
         });
         reply.header('idempotent-replay', 'true');
         return reply.status(replay.status).send(replay.body);
