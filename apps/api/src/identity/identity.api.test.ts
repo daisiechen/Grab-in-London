@@ -348,6 +348,17 @@ describe('S03 identity linking without silent merge', () => {
     expect(await q(`SELECT action FROM audit_events WHERE aggregate_id = $1`, [userId])).toEqual([{ action: 'identity.linked' }]);
   });
 
+  for(const ageMs of [1000,299000,300000,301000,-1000])it(`QA-F03 proof age ${ageMs}ms uses the five-minute boundary independently of fresh session auth`,async()=>{
+    const address=email();await new Browser(h).signInWithEmail(address);
+    const b=new Browser(h),{cb}=await linkRequired(b,address);
+    await q(`UPDATE auth_transactions SET created_at=created_at-interval '1 minute' WHERE kind='EMAIL_OTP'`);
+    const proof=(await b.signInWithEmail(address)).body.data.authProof;
+    await q(`UPDATE auth_transactions SET consumed_at=clock_timestamp()-make_interval(secs=>$2::double precision/1000) WHERE id=$1`,[proof,ageMs]);
+    const result=await link(b,{linkTicket:json(cb).data.linkTicket,originalChallengeProof:proof});
+    expect(result.statusCode,result.body).toBe(ageMs>=0&&ageMs<300000?200:403);
+    if(ageMs<0||ageMs>=300000){expect(json(result).error.code).toBe('REAUTH_REQUIRED');expect(await q(`SELECT 1 FROM identities WHERE user_id=(SELECT user_id FROM auth_transactions WHERE id=$1) AND provider='GOOGLE'`,[proof])).toHaveLength(0);}
+  });
+
   it('rejects tickets from another browser, expired tickets and stale re-authentication', async () => {
     const address = email();
     await new Browser(h).signInWithEmail(address);

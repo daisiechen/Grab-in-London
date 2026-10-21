@@ -12,7 +12,7 @@ import { completeAuthentication, type AuthTxRow } from './flows.ts';
 import { sessionInfo } from './me.ts';
 import { ProviderRejectedError, ProviderUnavailableError, type IdentityProvider, type VerifiedIdentity } from './provider.ts';
 import { isProvisionalShell } from './resolve.ts';
-import { assertFreshAuth, REAUTH_WINDOW_MS } from './reauth.ts';
+import { assertFreshAuth } from './reauth.ts';
 import { authenticateToken, issueNativeCredentials, revokeAllForUser, revokeFamily, rotateRefresh } from './sessions.ts';
 import { normalizeEmail, pkceChallenge, randomToken, sha256Hex, verifyPkce } from './tokens.ts';
 
@@ -277,9 +277,9 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
       ? (() => { const b = request.cookies[LINK_BINDER_COOKIE]; return !!b && sha256Hex(b) === ticket.binder_hash; })()
       : !!body.appVerifier && verifyPkce(body.appVerifier, ticket.app_challenge);
     if (!bound) throw new DomainError('LINK_TICKET_INVALID', 'Finish linking on the device where you started.');
-    const { rows: [proof] } = await tx.client.query(
-      `SELECT 1 FROM auth_transactions WHERE id = $1 AND result_family_id = $2 AND consumed_at > clock_timestamp() - make_interval(secs => $3::double precision / 1000)`,
-      [body.originalChallengeProof, auth.familyId, REAUTH_WINDOW_MS / 1000],
+    const { rows: [proof] } = await tx.client.query<{consumed_at:Date}>(
+      `SELECT consumed_at FROM auth_transactions WHERE id = $1 AND result_family_id = $2 AND consumed_at IS NOT NULL`,
+      [body.originalChallengeProof, auth.familyId],
     );
     if (!proof) throw new DomainError('REAUTH_REQUIRED', 'Please sign in with your original method again to link this account.');
 
@@ -291,7 +291,9 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
     // Re-read under the user locks: the mapping must not have moved since discovery.
     const { rows: [recheck] } = await tx.client.query<{ user_id: string }>(`SELECT user_id FROM identities WHERE issuer = $1 AND subject = $2`, [issuer, subject]);
     if ((recheck?.user_id ?? null) !== (mapped?.user_id ?? null)) throw Object.assign(new Error('identity mapping changed'), { code: '40001' });
-    assertFreshAuth(auth.authTime, await tx.effectiveNow(), 'Please sign in again to link this account.');
+    const now=await tx.effectiveNow();
+    assertFreshAuth(auth.authTime, now, 'Please sign in again to link this account.');
+    assertFreshAuth(proof.consumed_at, now, 'Please sign in with your original method again to link this account.');
     if (!mapped) {
       await tx.client.query(`INSERT INTO identities (user_id, issuer, subject, provider, email_verified) VALUES ($1, $2, $3, $4, $5)`,
         [auth.userId, issuer, subject, ticket.provider, ticket.provider_state.emailVerified === 'true']);

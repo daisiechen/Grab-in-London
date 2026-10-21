@@ -139,3 +139,10 @@
 - QA另建真实pg_dump/pg_restore探针，备份前生成并可下载CSV E0，台账重放后用仍有效analyst会话读取E0实际返回410 SNAPSHOT_REVOKED且非CSV；保留原receipt/身份/快照/他人数据/幂等断言。
 - QA-PRIVACY-007/008在本地验收范围PASS；未关闭Auth0/Apple真实远端撤销、生产独立台账持久化或G-HOST部署门槛。原217条当前52 PASS /153 NOT_RUN /12 BLOCKED；DB008支持联合路径与DB011错误人数声明分支仍未完整验证。
 - QA正在单独冻结、验证和提交执行报告及探针。协调会话不改其报告/脚本；精确证据提交以QA后续记录为准。
+
+
+## QA-F03 身份关联proof窗口修复（2026-10-21）
+
+- QA真实HTTP/PG独立探针发现窗口重复毫秒→秒换算，300000ms实际变成0.3秒。开发新增1s/299s/300s/301s/未来1s回归，旧版3失败/23通过（有效proof被拒与未来proof被接受），保留 `/private/tmp/fancy-f03-red.log`。
+- 修复去掉SQL时间单位换算，读取已消费且属于当前family的proof，在所有用户锁获取之后用同一effectiveNow对session authTime及proof consumed_at调用共用assertFreshAuth；严格0≤age<300000。没有放宽窗口或接受未来时间。
+- 修后身份API26通过，API类型、限定lint及diff检查通过；全API105项/24文件整合通过（`/private/tmp/fancy-f03-api-all.log`），协调任务文档验证通过。QA-F03由独立QA持有，待其新提交定向复验后关闭。QA已明确本轮Git index由开发串行独占，未暂存QA报告/脚本。
