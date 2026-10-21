@@ -1,0 +1,20 @@
+import {afterEach,expect,it,vi} from 'vitest';
+import {act,render,screen,fireEvent,waitFor} from '@testing-library/react';
+import {ApiProvider} from '../../api/ApiProvider.tsx';
+import {testApi} from '../../test/render.tsx';
+import {createFetchStub,fail} from '../../test/fetchStub.ts';
+import {LinkConfirmation} from './LinkConfirmation.tsx';
+import {rememberLinkTicket,continueLink,pendingLink,clearLinkTicket} from './completeSignIn.ts';
+afterEach(clearLinkTicket);
+it('QA-F09 late rejection from an older link cannot erase a newer pending request',async()=>{
+ let release!:()=>void;const gate=new Promise<void>(resolve=>{release=resolve;});
+ const stub=createFetchStub({linkIdentity:async()=>{await gate;return fail(409,'ACCOUNT_LINK_CONFLICT');}});
+ rememberLinkTicket('o'.repeat(43),new Date(Date.now()+600000).toISOString());continueLink();
+ const original=pendingLink()!;
+ render(<ApiProvider api={testApi(stub.fetch)}><LinkConfirmation pending={original} proof="66666666-6666-4666-8666-666666666666" onDone={vi.fn()} onCancel={vi.fn()} onReverify={vi.fn()}/></ApiProvider>);
+ fireEvent.click(screen.getByRole('button',{name:'Connect this sign-in method'}));
+ await waitFor(()=>expect(stub.callsTo('linkIdentity')).toHaveLength(1));
+ rememberLinkTicket('n'.repeat(43),new Date(Date.now()+600000).toISOString());
+ await act(async()=>{release();await gate;});
+ expect(pendingLink()?.ticket).toBe('n'.repeat(43));
+});

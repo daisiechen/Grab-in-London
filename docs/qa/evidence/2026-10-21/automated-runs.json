@@ -10031,6 +10031,465 @@
           "durationMs": 104.58625
         }
       ]
+    },
+    {
+      "id": "R39",
+      "testedCommit": "fb26b28880fd963a82d029a6f3be958370cfd213 + uncommitted Web historical component ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc",
+      "command": "pnpm exec vitest run --project web apps/web/src/features/auth/qa-independent-link.unit.test.tsx (isolated historical Web component)",
+      "startedAt": "2026-10-21T12:04:26.908000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R39-T001",
+          "run": "R39",
+          "path": "apps/web/src/features/auth/qa-independent-link.unit.test.tsx",
+          "title": "QA-F09 late rejection from an older link cannot erase a newer pending request",
+          "status": "failed",
+          "durationMs": 57.08999999999992,
+          "failureSummary": "AssertionError: expected undefined to be 'nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn…' // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "R40",
+      "testedCommit": "360d1fe06521c4a2745c0d47973ec81e5b1e8ad2",
+      "command": "pnpm --filter @fancy/ios exec jest src/features/auth/qa-independent-link.test.ts src/features/auth/link.test.ts src/features/auth/screens/link-screen.test.tsx --runInBand --json --outputFile=/private/tmp/fancy-f09-native-after.json",
+      "startedAt": "2026-10-21T12:05:25.175000+00:00",
+      "exitCode": 0,
+      "passed": 20,
+      "failed": 0,
+      "total": 20,
+      "suiteFiles": 3,
+      "assertions": [
+        {
+          "id": "R40-T001",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/qa-independent-link.test.ts",
+          "title": "QA-F09 proof age 299999 uses strict less-than five minutes",
+          "status": "passed",
+          "durationMs": 5
+        },
+        {
+          "id": "R40-T002",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/qa-independent-link.test.ts",
+          "title": "QA-F09 proof age 300000 uses strict less-than five minutes",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R40-T003",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/qa-independent-link.test.ts",
+          "title": "QA-F09 proof age 300001 uses strict less-than five minutes",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R40-T004",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/qa-independent-link.test.ts",
+          "title": "QA-F09 ticket expires at exactly ten minutes even with fresh proof",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R40-T005",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/qa-independent-link.test.ts",
+          "title": "QA-F09 network retry keeps both proofs and the same intent, without automatic submission",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R40-T006",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/qa-independent-link.test.ts",
+          "title": "QA-F09 late success cannot clear replacement pending identity",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R40-T007",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/qa-independent-link.test.ts",
+          "title": "QA-F09 late conflict cannot clear replacement pending identity",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R40-T008",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/qa-independent-link.test.ts",
+          "title": "QA-F09 late network cannot clear replacement pending identity",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R40-T009",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/screens/link-screen.test.tsx",
+          "title": "original Google login retains core proof and routes to explicit link confirmation before profile/business",
+          "status": "passed",
+          "durationMs": 117
+        },
+        {
+          "id": "R40-T010",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/screens/link-screen.test.tsx",
+          "title": "OTP preserves new-identity verifier and original-identity proof from core JSON",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R40-T011",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/screens/link-screen.test.tsx",
+          "title": "confirmation makes no request until pressed, then revalidates; cancellation erases RAM secrets",
+          "status": "passed",
+          "durationMs": 4
+        },
+        {
+          "id": "R40-T012",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/screens/link-screen.test.tsx",
+          "title": "provider cancellation clears the pending link; ticket and proof never enter credential storage",
+          "status": "passed",
+          "durationMs": 4
+        },
+        {
+          "id": "R40-T013",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/screens/link-screen.test.tsx",
+          "title": "unmounted confirmation cannot navigate a later link flow",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R40-T014",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/link.test.ts",
+          "title": "keeps bounded RAM ticket and refuses absent or expired proof",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R40-T015",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/link.test.ts",
+          "title": "submits both real proofs only explicitly and preserves exactly the same intent on network retry",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R40-T016",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/link.test.ts",
+          "title": "wrong account proof refusal and session end clear the pending secret",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R40-T017",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/link.test.ts",
+          "title": "five minute proof needs a real new login; generation mismatch cannot submit",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R40-T018",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/link.test.ts",
+          "title": "late conflict cannot clear a replacement ticket or report success",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R40-T019",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/link.test.ts",
+          "title": "late network cannot clear a replacement ticket or report success",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R40-T020",
+          "run": "R40",
+          "path": "apps/ios/src/features/auth/link.test.ts",
+          "title": "late success cannot clear a replacement ticket or report success",
+          "status": "passed",
+          "durationMs": 0
+        }
+      ]
+    },
+    {
+      "id": "R41",
+      "testedCommit": "360d1fe06521c4a2745c0d47973ec81e5b1e8ad2 + isolated historical Web component ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc",
+      "command": "pnpm exec vitest run --project web apps/web/src/features/auth/qa-independent-link.unit.test.tsx (historical component, corrected act completion)",
+      "startedAt": "2026-10-21T12:07:26.510000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R41-T001",
+          "run": "R41",
+          "path": "apps/web/src/features/auth/qa-independent-link.unit.test.tsx",
+          "title": "QA-F09 late rejection from an older link cannot erase a newer pending request",
+          "status": "failed",
+          "durationMs": 56.439750000000004,
+          "failureSummary": "AssertionError: expected undefined to be 'nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn…' // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "R42",
+      "testedCommit": "6272e9d24f7f29e3811c207f1aca1ca3b7a3cd4b",
+      "command": "pnpm exec vitest run --project web apps/web/src/features/auth/qa-independent-link.unit.test.tsx apps/web/src/features/auth/linkPending.unit.test.ts apps/web/src/features/auth/auth.unit.test.tsx",
+      "startedAt": "2026-10-21T12:10:03.875000+00:00",
+      "exitCode": 0,
+      "passed": 26,
+      "failed": 0,
+      "total": 26,
+      "suiteFiles": 3,
+      "assertions": [
+        {
+          "id": "R42-T001",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) explicitly verifies the original identity then connects with its proof, never automatically",
+          "status": "passed",
+          "durationMs": 289.47299999999996
+        },
+        {
+          "id": "R42-T002",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) verifies, refreshes the session and returns to the allow-listed page",
+          "status": "passed",
+          "durationMs": 105.29966699999989
+        },
+        {
+          "id": "R42-T003",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) never sends or follows a non-allow-listed return target",
+          "status": "passed",
+          "durationMs": 98.90795800000001
+        },
+        {
+          "id": "R42-T004",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) sends an incomplete profile through the gate with the original return path",
+          "status": "passed",
+          "durationMs": 100.7344579999999
+        },
+        {
+          "id": "R42-T005",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) shows the resend countdown from the server clock and disables resend",
+          "status": "passed",
+          "durationMs": 63.49841599999991
+        },
+        {
+          "id": "R42-T006",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) rejects malformed emails before calling the API",
+          "status": "passed",
+          "durationMs": 55.006583999999975
+        },
+        {
+          "id": "R42-T007",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) explains rate limits with the provider’s Retry-After",
+          "status": "passed",
+          "durationMs": 61.42945800000007
+        },
+        {
+          "id": "R42-T008",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) distinguishes a wrong code from an expired/exhausted challenge",
+          "status": "passed",
+          "durationMs": 104.81891599999994
+        },
+        {
+          "id": "R42-T009",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "email OTP sign-in (T05) LINK_REQUIRED issues no session and never merges automatically",
+          "status": "passed",
+          "durationMs": 90.49737499999992
+        },
+        {
+          "id": "R42-T010",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) ignores an old 200 response after a new linking ticket has replaced it",
+          "status": "passed",
+          "durationMs": 15.376582999999982
+        },
+        {
+          "id": "R42-T011",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) ignores an old 409 response after a new linking ticket has replaced it",
+          "status": "passed",
+          "durationMs": 13.984874999999874
+        },
+        {
+          "id": "R42-T012",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) ignores an old 503 response after a new linking ticket has replaced it",
+          "status": "passed",
+          "durationMs": 13.597332999999935
+        },
+        {
+          "id": "R42-T013",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) isolates a replacement confirmation component from the previous in-flight attempt",
+          "status": "passed",
+          "durationMs": 8.967624999999998
+        },
+        {
+          "id": "R42-T014",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) ignores the old expiry callback after a new ticket replaces the confirmed flow",
+          "status": "passed",
+          "durationMs": 7.85545900000011
+        },
+        {
+          "id": "R42-T015",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) allows cancel after its own expiry while the link request remains in flight",
+          "status": "passed",
+          "durationMs": 26.633499999999913
+        },
+        {
+          "id": "R42-T016",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) survives a full-page original OAuth return, keeps proof in RAM and retries only explicitly with the same key",
+          "status": "passed",
+          "durationMs": 22.800874999999905
+        },
+        {
+          "id": "R42-T017",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) ends a confirmed OAuth link on ACCOUNT_LINK_CONFLICT without another attempt",
+          "status": "passed",
+          "durationMs": 26.757458000000042
+        },
+        {
+          "id": "R42-T018",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) ends a confirmed OAuth link on LINK_TICKET_INVALID without another attempt",
+          "status": "passed",
+          "durationMs": 27.333167000000003
+        },
+        {
+          "id": "R42-T019",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) cancels a confirmed link without consuming it on the server",
+          "status": "passed",
+          "durationMs": 13.09395900000004
+        },
+        {
+          "id": "R42-T020",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) refuses confirmation after private session state has been cleared",
+          "status": "passed",
+          "durationMs": 14.865999999999985
+        },
+        {
+          "id": "R42-T021",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) redirects to the provider, then completes on /auth/callback back to the saved page",
+          "status": "passed",
+          "durationMs": 21.061124999999947
+        },
+        {
+          "id": "R42-T022",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/auth.unit.test.tsx",
+          "title": "OAuth sign-in (T05) refuses a non-https authorization URL",
+          "status": "passed",
+          "durationMs": 13.633165999999846
+        },
+        {
+          "id": "R42-T023",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/linkPending.unit.test.ts",
+          "title": "persists only a short-lived tab ticket and expected transaction id, never the completed proof",
+          "status": "passed",
+          "durationMs": 1.721708000000035
+        },
+        {
+          "id": "R42-T024",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/linkPending.unit.test.ts",
+          "title": "fails safely when same-tab storage is blocked instead of pretending an OAuth continuation can survive",
+          "status": "passed",
+          "durationMs": 0.7048340000000053
+        },
+        {
+          "id": "R42-T025",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/linkPending.unit.test.ts",
+          "title": "rejects expired, malformed, unbounded or expanded stored data and session clearing ends the flow",
+          "status": "passed",
+          "durationMs": 0.9603330000001051
+        },
+        {
+          "id": "R42-T026",
+          "run": "R42",
+          "path": "apps/web/src/features/auth/qa-independent-link.unit.test.tsx",
+          "title": "QA-F09 late rejection from an older link cannot erase a newer pending request",
+          "status": "passed",
+          "durationMs": 50.54737499999999
+        }
+      ]
+    },
+    {
+      "id": "R43",
+      "testedCommit": "360d1fe06521c4a2745c0d47973ec81e5b1e8ad2",
+      "command": "pnpm exec vitest run --project api apps/api/src/identity/native-link.api.test.ts",
+      "startedAt": "2026-10-21T12:09:27.853000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R43-T001",
+          "run": "R43",
+          "path": "apps/api/src/identity/native-link.api.test.ts",
+          "title": "links a native new-identity ticket only after original-identity login and its own PKCE proof",
+          "status": "passed",
+          "durationMs": 138.50458300000003
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -10053,9 +10512,11 @@
     "scripts/qa-independent-access.api.test.ts": "be6bfd2b89278cb935dda6258bdb8372a4f06a60805ace1967351bb52f6cac42",
     "scripts/qa-independent-auth-protocol.api.test.ts": "5f86f768740c0ad39228d81cdef12a2f55da5d6db6446359442719d708aec835",
     "apps/ios/src/features/auth/qa-independent-oauth.test.ts": "b9a279faea7b109da69c30634fe35b2f705ed0a0f7d92ad3d5d28aafdb45bdd0",
-    "apps/api/src/identity/qa-independent-auth0.unit.test.ts": "bd95da9ca9d7afbc2cad0432f04c74867965af9e898a5a4c9da4a7aba77852cd"
+    "apps/api/src/identity/qa-independent-auth0.unit.test.ts": "bd95da9ca9d7afbc2cad0432f04c74867965af9e898a5a4c9da4a7aba77852cd",
+    "apps/web/src/features/auth/qa-independent-link.unit.test.tsx": "67fe69e71a4d799dcf40363b43ce1e0f40486dd22cf0071d765e40510688839a",
+    "apps/ios/src/features/auth/qa-independent-link.test.ts": "174a6d0031318bea6335108060cd53618becedaa78f8c8f52486c62c847bf6d0"
   },
-  "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls.",
+  "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled.",
   "runtimeSnapshotVerification": {
     "commit": "d4582f7e5e4f52e43cb1d49a06622b98c8c10ad6",
     "comparedFiles": 555,
