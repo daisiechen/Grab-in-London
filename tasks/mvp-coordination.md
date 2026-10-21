@@ -565,3 +565,12 @@
 - 同库阶段1临时工具/private/tmp/fancy-admin-sidecar/ENTRY.md已冻并交QA审核，source连接0/CLI拒执行。自有PG核63表，明确16类新staff/auth/TEST分类/角色/框架限流/新snapshot/CSV metadata delta；旧业务、sealed facts、旧session及AI pending/budget不变。正常logout会新增仅新staff的ai_subjects，不冒AI全表零写。staff正常OTP→自身TEST→logout204，sidecar停止并只close自身listener/pool；QA将来用原正常clock协议+60s至01:11并对比业务/待发通知、出新checkpoint，才RAM receipt重attach/正常browser登录。当前尚未执行原clock推进或source接入。
 - 原19d无createSnapshot HTTP；新封存是显式fixture operator直接现sealer新UUID，不改旧facts，不冒正常产品API或启全worker。原buildServer自动AI recover已从tmpfactory剥离；严格新staff/family预检在authenticate前拒原tokens，独立browser context，clock mismatch503，OWNstop不drop。阶段2/3仍待精确ID白名单。
 - AI3102/PID42728只读核script qa-ai-browser-fixture.ts，server/identity/assistant routes/controller/assistant合同五文件逐字匹配cb9257e，不泛化全archive。TestIdentity OTP/guest/IOS入口和controlled固定文本provider，只有自有PG synthetic价格/预算；本轮未发模型请求/OTP或预算写入、不停服务（SIGTERM会drop其OWNDB）。后续AI原生候选等F44后再排，不抢Xcode或改原环境。
+
+
+## F44 独立真实UI定向通过与同库工具审查边界
+
+- QA报告Native61取消Block及63取消Unblock五facts不变；62确认Block为1block/1revision、epoch2旧双方consent撤销，DM两旧消息只读，共享群仍可编辑且原membership/message refs不变；64确认Unblock后0block/2revision末项false，旧consents仍撤销、DM仍只读/群可编辑。2005991的197源、实际安装binary/Hermes一致，API3/native12定向回归。F44仅新62044/新PG/第二sim CLOSED_TARGETED_QA，原J004完整旅程转NOT_RUN保剩余sameDB/全链前置，以QA正式归档为准；setup红留存，不拿后验修正的selector/类型断言错误当产品错误。
+- 最终F44匹配包正常签名Releasearm64/deepstrict0，binary2b8dba59047e0b0132b5fbcf920596df51b95f993850ae84eac416d3dca50c10/Hermes2b313e5e0de067d33da45133815347ef6cc7ee4ad7b6e7170974c35e50e121fa。当前OWN API62044 PID80077，futurefixed2026-10-22T01:20:33.806Z，ENTRY-F44-RIG.md为准；旧77194仅核实OWN后重建保历史，原61973未动。后续新001/AI用例不在本次定向结论范围。
+- QA发现sidecar复制运行archive遗留local-acceptance端口adaptation及非Git ENTRY，已恢复正式git19d且保前红history：1231regular+4tracked symlink逐Git一致，runtime无原server/lifecycle/localacceptance。精确更正：offline-test自建库seed确import旧httpserver，不能说所有test导入图无server。QA隔离copy自有PG复跑通过。
+- root按已审observer有限只读source核PID63824唯一API/PG、五合成饭局、23迁移逐正式19d校验/PG17/exact01:10，生成0600本地trust descriptor，不读env/.pgpass/Key/正文；因此root只读source连接已发生，不能继续称全系统source0。没有source业务写、bootstrap或clockadvance。descriptor只版本/head metadata不冒全facts证明；新runner须17表同RR只读count/rowdigest基线，正常bootstrap/logoutclose→QA合法+60s/newcheckpoint→RAMreceipt重attach。
+- QA独审factory/descriptor通过，operator仅mock不足真实SQL，root要求新增真实自有PG整链与PGPASSFILE/devnull及白名单env防隐式凭据；默认仍不执行source。专用f44-admin.localhost Origin实际IAB新host非认证marker隔离验证通过，具体52045代理/CSRF仍待正常登录200。Admin无登录表单，准备明确临时QA身份portal走正常OTP/logout，不injectcookies/不擅补staffprofile；无cookie session-read可落正常401但原cookie/bearer仍预检拒，改动重冻审核。原01:10继续冻结。
