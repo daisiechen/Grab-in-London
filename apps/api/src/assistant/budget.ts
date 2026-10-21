@@ -41,8 +41,18 @@ export class BudgetLedger {
   }
   /** Only the caller winning this CAS may issue network I/O. Never retry after dispatch. */
   async dispatch(callId: string): Promise<boolean> {
-    const { rowCount } = await this.pool.query(`UPDATE ai_calls SET state='IN_FLIGHT',version=version+1 WHERE call_id=$1 AND state='RESERVED'`, [callId]);
-    return rowCount === 1;
+    return transaction(this.pool,async c=>{
+      const call=await this.lockCall(c,callId);
+      if(call.state!=='RESERVED')return false;
+      const budgets=await this.lockPeriods(c,call);
+      if(budgets.length!==2||budgets.some(b=>!b.enabled)){
+        await c.query(`UPDATE ai_budget SET reserved_micro_cny=reserved_micro_cny-$2,version=version+1 WHERE period=ANY($1::text[])`,[periods(call),call.max_micro_cny]);
+        await c.query(`UPDATE ai_calls SET state='CANCELLED',actual_micro_cny=0,version=version+1 WHERE call_id=$1`,[callId]);
+        return false;
+      }
+      await c.query(`UPDATE ai_calls SET state='IN_FLIGHT',version=version+1 WHERE call_id=$1`,[callId]);
+      return true;
+    });
   }
   async cancelBeforeDispatch(callId: string): Promise<boolean> {
     return transaction(this.pool, async (c) => {

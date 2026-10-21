@@ -172,3 +172,9 @@
 - CR-04对已知举报人/目标/主持人/消息作者关联，读取即时遮罩、处理锁关联用户后重读、worker清双正文/理由/公开结果/精确审计关联出勤理由和幂等响应副本。保留IDs/事实/幂等键；旧NEEDS_SUPPORT本地已完成但缺文本步骤也补清。未知正文提及和已完成历史记录受控backfill仍需政策/实际数据评估，默认policy未批准仍NEEDS_SUPPORT。
 - 整合发现另一个测试清库竞态：pg-pool.end可早于底层socket end回调完成，force drop导致57P01；受控单测修前FAIL，测试工具改为等待实际客户端end后再清库。没有吞掉数据库错误。修后全量core unit212/DB107/API130/release11、Web+后台215/iOS180通过，core:check通过。日志/private/tmp/fancy-cr-final-{check,core,clients}.log。最终提交后交独立QA复验，不将本轮自动化计数折算217条全通过；最新提交远端CI需另查。
 - 用户重启后已实际读到Claude补审结果；其原会话保持只读、不恢复旧写入任务。Xcode许可完成但host尚无simulator runtime/device；账号/真实Key/首尔部署/政策门槛仍保留。
+
+## QA-F04 人工停用预算后晚发布修复（2026-10-21 10:12 London）
+
+- 独立QA在159b0e8发现挂起provider调用期间关闭预算，旧请求仍SUCCEEDED并发布；原失败由QA保存，不改其脚本/结论。开发补生产DB回归，修前3失败/18通过：reserve后停用仍dispatch，以及用量已settle后停用仍发布SUCCEEDED/NEEDS_INPUT。
+- dispatch在原call→period锁序下重读enabled；停用则CANCELLED且只释放未发出的预留。最终finish在发布事务按调用涉及period排序FOR SHARE，停用则FAILED/UNAVAILABLE，不执行RAM发布且释放成功轮预留。该锁保持至事务结束，防止settle与publish间的停用漏检；已发生的供应商费用仍KNOWN并如实入账，不以停用退款或重试。
+- 修后原kernel21项通过；再补确定性真实PG并发：operator持预算UPDATE且停用，finish等待该锁，停用提交后拒绝发布，kernel最终22项通过。完整core unit212/DB110/API130/release11及core:check通过（完整DB运行在最后并发测试加入前，额外一项单独验证通过），日志/private/tmp/fancy-f04-{red,green,fence,core,check}.log。未修改AI预算50元/月或外部启用门槛；缺陷关闭由独立QA在固定新SHA复验后记录。

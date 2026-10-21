@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, describe, expect, inject, it } from 'vitest';
 import { migrate } from '@fancy/db';
-import { createMigratedDatabase, type MigratedDatabase } from '@fancy/testkit/db';
+import { createMigratedDatabase, waitForLockWaiters, type MigratedDatabase } from '@fancy/testkit/db';
 import { AssistantRuntime, ProviderError, emptyPreferences } from '../../../../packages/assistant/src/index.ts';
 import { BudgetLedger } from './budget.ts';
 import { PreferenceService } from './preferences.ts';
@@ -30,6 +30,13 @@ const configure = async (cap=100n) => { await ledger.configure(day,cap,100,true)
 const totals = async () => (await db.pool.query(`SELECT used_micro_cny::text used,reserved_micro_cny::text reserved,enabled,calls FROM ai_budget WHERE period=$1`,[month])).rows[0];
 
 describe('concurrent CNY budget admission', () => {
+  it('cancels an undispatched reservation when an operator disables either budget period', async () => {
+    await configure();const r=reservation();await ledger.reserve(r);
+    await db.pool.query('UPDATE ai_budget SET enabled=false WHERE period=$1',[day]);
+    expect(await ledger.dispatch(r.callId)).toBe(false);
+    expect(await totals()).toMatchObject({used:'0',reserved:'0'});
+    expect((await db.pool.query('SELECT state FROM ai_calls WHERE call_id=$1',[r.callId])).rows[0].state).toBe('CANCELLED');
+  });
   it('admits only one request competing for the final global budget, counting both periods', async () => {
     await configure();
     const results=await Promise.allSettled([ledger.reserve(reservation()),ledger.reserve(reservation())]);
@@ -147,6 +154,35 @@ describe('persistent request dedup and lifecycle',()=>{
     const s=await sessions.create(subject); const binding={subject,deviceToken:s.deviceToken,generation:1,preferenceEpoch:'0'};
     return {runtime,sessions,s,binding,requests:new RequestService(db.pool,sessions,'synthetic-test-hmac-key-at-least-32-bytes')};
   };
+  it.each(['SUCCEEDED','NEEDS_INPUT'] as const)('fences %s publication after settled usage when the budget is stopped',async(state)=>{
+    await configure();const h=await make();const id=randomUUID();await h.requests.accept(h.s.id,h.binding,id,{});
+    const r={...reservation(),requestId:id};await ledger.reserve(r);await ledger.dispatch(r.callId);
+    await ledger.settle(r.callId,20n,{inputTokens:10,outputTokens:10,providerRequestId:'synthetic-stopped-call'});
+    await db.pool.query('UPDATE ai_budget SET enabled=false WHERE period=$1',[month]);
+    let published=false;
+    await h.requests.finish(subject,id,state,null,async()=>{published=true;});
+    expect(published).toBe(false);
+    expect((await db.pool.query('SELECT state,error_code FROM ai_requests WHERE request_id=$1',[id])).rows[0]).toEqual({state:'FAILED',error_code:'UNAVAILABLE'});
+    expect((await db.pool.query('SELECT successes,reserved_success_slots FROM ai_quota WHERE subject=$1',[subject])).rows[0]).toMatchObject({successes:0,reserved_success_slots:0});
+    expect(await totals()).toMatchObject({used:'20',reserved:'0',enabled:false});
+    expect((await db.pool.query('SELECT state FROM ai_calls WHERE call_id=$1',[r.callId])).rows[0].state).toBe('KNOWN');
+  });
+  it('waits for a concurrent operator stop to commit before deciding publication',async()=>{
+    await configure();const h=await make();const id=randomUUID();await h.requests.accept(h.s.id,h.binding,id,{});
+    const r={...reservation(),requestId:id};await ledger.reserve(r);await ledger.dispatch(r.callId);
+    await ledger.settle(r.callId,20n,{inputTokens:10,outputTokens:10,providerRequestId:'synthetic-concurrent-stop'});
+    const operator=await db.connect();await operator.query('BEGIN');
+    let published=false;let finishing:Promise<boolean>|undefined;
+    try{
+      await operator.query('UPDATE ai_budget SET enabled=false WHERE period=$1',[day]);
+      finishing=h.requests.finish(subject,id,'SUCCEEDED',null,async()=>{published=true;});
+      await waitForLockWaiters(db.pool,1);
+      await operator.query('COMMIT');await finishing;
+    }finally{await operator.query('ROLLBACK');await finishing;}
+    expect(published).toBe(false);
+    expect((await db.pool.query('SELECT state FROM ai_requests WHERE request_id=$1',[id])).rows[0].state).toBe('FAILED');
+    expect(await totals()).toMatchObject({used:'20',reserved:'0'});
+  });
   it('core deletion barrier clears RAM, refunds undispatched cost and keeps in-flight UNKNOWN liability',async()=>{
     await configure();const h=await make();const id=randomUUID();await h.requests.accept(h.s.id,h.binding,id,{});
     const first={...reservation(),requestId:id,maxMicroCny:30n};const second={...reservation(),requestId:id,maxMicroCny:40n};

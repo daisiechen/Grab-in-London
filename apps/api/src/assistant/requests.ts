@@ -78,9 +78,17 @@ export class RequestService {
         valid=valid&&session?.privacy_epoch===privacy?.epoch;
         if(!valid){final='SUPERSEDED';errorCode='SUPERSEDED';}
         else {
-          if(!validateAndPublish)throw new AssistantError('AI_UNAVAILABLE');
-          // Required callback validates RAM generation/TTL + source authorization before publishing.
-          await validateAndPublish(c);
+          // Settlement is deliberately separate: actual provider liability must survive a stop.
+          // Hold every call period through publication so an operator's committed stop wins,
+          // including one occurring after settlement but before finish begins.
+          const {rows:callPeriods}=await c.query<{period:string}>(`SELECT day_period AS period FROM ai_calls WHERE subject=$1 AND request_id=$2 UNION SELECT month_period FROM ai_calls WHERE subject=$1 AND request_id=$2`,[subject,requestId]);
+          const {rows:budgets}=await c.query<{enabled:boolean}>(`SELECT enabled FROM ai_budget WHERE period=ANY($1::text[]) ORDER BY period FOR SHARE`,[callPeriods.map(p=>p.period)]);
+          if(budgets.length!==callPeriods.length||budgets.some(b=>!b.enabled)){final='FAILED';errorCode='UNAVAILABLE';}
+          else {
+            if(!validateAndPublish)throw new AssistantError('AI_UNAVAILABLE');
+            // Required callback validates RAM generation/TTL + source authorization before publishing.
+            await validateAndPublish(c);
+          }
         }
       }
       const successful=final==='SUCCEEDED'||final==='NEEDS_INPUT';
