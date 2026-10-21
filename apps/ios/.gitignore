@@ -1,0 +1,8 @@
+# Expo local state and generated native projects (prebuild output is not committed; CNG).
+.expo/
+expo-env.d.ts
+/ios/
+/android/
+*.ipa
+*.app
+coverage/

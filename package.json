@@ -15,7 +15,7 @@
     "core:test:ios": "node infra/scripts/not-implemented.mjs core:test:ios T24",
     "core:test:release": "vitest run --project release",
     "core:test": "pnpm core:test:unit && pnpm core:test:db && pnpm core:test:api && pnpm core:test:release",
-    "core:test:clients": "vitest run --project web --project admin"
+    "core:test:clients": "vitest run --project web --project admin && pnpm --filter @fancy/ios test"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
