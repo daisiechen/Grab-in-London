@@ -6,7 +6,7 @@ import { DomainError } from '../common/errors.ts';
 import type { AppDeps } from '../http/context.ts';
 import { defineRoute, defineWrite } from '../http/routes.ts';
 import type { VenueSearch } from './provider.ts';
-import type { VenueService } from './service.ts';
+import type { PreparedVenueConfirmation,VenueService } from './service.ts';
 
 export function registerVenueRoutes(app: FastifyInstance, deps: AppDeps, service: VenueService): void {
   defineRoute(app, deps, 'searchVenues', async ({ request }) => {
@@ -23,9 +23,9 @@ export function registerVenueRoutes(app: FastifyInstance, deps: AppDeps, service
     const result = await service.search(input);
     return { data: result.places, page: { nextCursor: result.nextCursor === null ? null : encodeCursor(deps.config.sessionSecret, scope, result.nextCursor), hasMore: result.nextCursor !== null } };
   });
-  defineWrite<string>(app, deps, 'confirmVenue', async ({ auth, prepared }, tx) => {
+  defineWrite<PreparedVenueConfirmation>(app, deps, 'confirmVenue', async ({ auth, prepared }, tx) => {
     await lockActiveActor(tx, auth.userId);
     const data = await service.confirmVerified(prepared, tx.client);
     return { data, resourceId: data.venueRef };
-  },undefined,async({request})=>{const {placeId}=request.body as {placeId:string};const place=await service.details(placeId);if(place.placeId!==placeId)throw new DomainError('STATE_CONFLICT','Restaurant verification changed.');return placeId;});
+  },undefined,async({request})=>service.prepareConfirmation((request.body as {placeId:string}).placeId,deps.pool));
 }

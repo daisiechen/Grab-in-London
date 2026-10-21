@@ -342,3 +342,11 @@
 - QA原R117先明确解释饭局M，下一中文请求未附当前mealId时没有复用M，但错误固定英文回复。仅EXPLAIN无当前ids分支将本轮input交澄清helper，含中文使用中文提示；英文保持原回复，不从历史/editor/偏好猜语言，不扩其他reply本地化。
 - 自有明确M→中文无目标→英文无目标修前中文红、修后controller真实PG14绿；三轮只有各自原解析provider一次，缺目标cards空且不含旧标题、业务行不增。源码两文件冻结后与F22整合根DB127/API160/独测当前矩阵17、unit292、core:check及冻结Python77均通过，日志见本轮F22记录；无需为仅分commit重复相同冻结层。
 - F22先e355584独立推送核SHA，本切片仅controller与自有DB测试及本记录，不混QA/研究。正式关闭交QA最终SHA独立复验，不声称真实模型或完整原生交互通过。
+
+## QA-F24 版本化区域映射与快照边界（2026-10-21）
+
+- QA确认Places确认仅持久化unknown，缺数据契约§areaCode本地算法；真实GeoJSON来源许可仍外部门槛，不能替代本地实现。新增可注入Polygon/MultiPolygon、version与单调revision，纯合成几何覆盖共享边/孔边包含、孔内部排除、重叠按code排序首项、无匹配unknown；校验有限2D坐标、闭环、拓扑及code长度，不接受未切割跨反经线配置。
+- provider已验证坐标只在prepare RAM映射，外部查询仍在业务事务外；数据库仅app-owned code/version/revision。新增0023迁移不改旧迁移，无dataset默认unknown/null/0；真实fixture数据只允许dev/test。CAS基线+单调revision防旧在途/旧部署覆盖，拒同revision不同mapping，默认0不抹新版。
+- 同venueRef编辑保留meal原区域快照，实际换venue才用新区域，避免仅改文案暗改统计维度。十三生产/自有测试文件由backend唯一负责，web只读交叉审无新P1/P2，提出code64长度问题已修正；真实London覆盖不作通过声明。
+- 自有15unit、26关联API与10迁移DB通过；根冻结整合全core unit298/DB130/API163/release18通过（/private/tmp/fancy-f24-f26-core.log），core:check通过（/private/tmp/fancy-f24-f26-check.log）。F25/F26分别冻结另批提交；F27新发现页切片尚未加入上述冻结整合，不混称其通过。
+- QA在bf5031a保留F24–F27原红并释放Git窗口，根冻结Python77通过（/private/tmp/fancy-f24-f26-python.log），独测正式172 PASS /29 NOT_RUN /4 FAIL /12 BLOCKED；开发不抢先关闭。F24只十三文件+本记录提交，其他生产切片和研究/QA修改不混入。

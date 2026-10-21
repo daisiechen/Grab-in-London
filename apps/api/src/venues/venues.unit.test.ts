@@ -13,7 +13,7 @@ describe('Places server adapter', () => {
   it('refuses fixture mode in production and staging at both provider and service boundaries', () => {
     expect(() => new FixturePlacesProvider('production')).toThrow();
     expect(() => new FixturePlacesProvider('staging')).toThrow();
-    expect(() => new VenueService('production', new FixturePlacesProvider('test'), { findOrCreate: async () => reference })).toThrow();
+    expect(() => new VenueService('production', new FixturePlacesProvider('test'), {current:async()=>null, findOrCreate: async () => reference })).toThrow();
   });
   it('uses explicit masks, server header key, restaurant filtering and bounds without exposing key in URL', async () => {
     const fetcher = mockFetch({ places: [googlePlace, { ...googlePlace, id: 'closed', businessStatus: 'CLOSED_PERMANENTLY' }, { ...googlePlace, id: 'other', types: ['park'] }], nextPageToken: 'next_token' });
@@ -30,13 +30,13 @@ describe('Places server adapter', () => {
   });
   it('details freshly queries provider; unknown/closed IDs cannot be confirmed or persisted', async () => {
     const fetcher = mockFetch(googlePlace);
-    const repository = { findOrCreate: vi.fn(async () => reference) };
+    const repository = {current:async()=>null, findOrCreate: vi.fn(async () => reference) };
     const service = new VenueService('test', new GooglePlacesProvider('key', fetcher), repository);
     await service.details('ChIJ_test');
     const venue = await service.confirm('ChIJ_test', client);
     expect(fetcher).toHaveBeenCalledTimes(2);
     expect(venue).toEqual({ ...reference, placeId: 'ChIJ_test', available: true, name: null, address: null, location: null, attributions: [], displayExpiresAt: null });
-    expect(repository.findOrCreate).toHaveBeenCalledWith('ChIJ_test', client);
+    expect(repository.findOrCreate).toHaveBeenCalledWith('ChIJ_test', client,{placeId:'ChIJ_test',baseline:null,areaCode:'unknown',areaVersion:null,areaRevision:0});
     fetcher.mockResolvedValue(new Response('{}', { status: 404 }));
     await expect(service.confirm('unknown', client)).rejects.toMatchObject({ code: 'NOT_FOUND' });
     expect(repository.findOrCreate).toHaveBeenCalledTimes(1);

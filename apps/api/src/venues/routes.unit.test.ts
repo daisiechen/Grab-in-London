@@ -20,7 +20,7 @@ async function appForSearch() {
   const config = loadConfig({ ENVIRONMENT: 'test', DATABASE_URL: 'postgres://localhost/unused', AUTH_ADAPTER: 'test', PLACES_ADAPTER: 'fixture', MAIL_ADAPTER: 'outbox_test', AI_PROVIDER: 'mock', WEB_ORIGIN: 'http://localhost:5174', SESSION_SECRET: 'venues-unit-test-secret-0123456789abcdef' });
   const pool = new Pool({ connectionString: config.databaseUrl });
   app.addHook('onClose', async () => { await pool.end(); });
-  const service = new VenueService('test', new FixturePlacesProvider('test'), { findOrCreate: async () => { throw new Error('No writes expected'); } });
+  const service = new VenueService('test', new FixturePlacesProvider('test'), {current:async()=>null, findOrCreate: async () => { throw new Error('No writes expected'); } });
   registerVenueRoutes(app, { config, pool, identity: new TestIdentityProvider('test'), publicOrigin: config.webOrigin }, service);
   return app;
 }

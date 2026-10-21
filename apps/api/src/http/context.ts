@@ -1,6 +1,7 @@
 import type { Pool } from 'pg';
 import type { CoreConfig } from '@fancy/config';
 import type { IdentityProvider } from '../identity/provider.ts';
+import type {AreaPolygons} from '../venues/areas.ts';
 import type { PlacesProvider } from '../venues/provider.ts';
 import type { AssistantRuntime, ModelProvider, ModelInput } from '../../../../packages/assistant/src/index.ts';
 import type {VerifiedPrice} from '../assistant/provider-call.ts';
@@ -23,6 +24,8 @@ export interface AppDeps {
   /** Server origin used to build provider redirect URIs (e.g. https://app.example). */
   publicOrigin: string;
   placesProvider?: PlacesProvider;
+  /** Explicit source/licence-verified area data; absent remains unknown. Fixtures are test/dev only. */
+  areaPolygons?:AreaPolygons;
   assistantRuntime?: AssistantRuntime;
   /** Explicit verified integration bundle; absent means model unavailable. Never infer
    * approval or prices merely from the existence of a provider credential. */

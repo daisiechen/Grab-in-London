@@ -73,7 +73,7 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   const places = deps.placesProvider ?? (deps.config.adapters.PLACES_ADAPTER === 'fixture'
     ? new FixturePlacesProvider(deps.config.environment) : new UnavailablePlacesProvider());
   const venues = new VenueService(deps.config.environment, places,
-    new PostgresVenueReferences(places.kind === 'fixture' ? 'fixture' : 'google'));
+    new PostgresVenueReferences(places.kind === 'fixture' ? 'fixture' : 'google'),deps.areaPolygons);
   registerVenueRoutes(app, deps, venues);
   registerMealRoutes(app, deps, venues);
   registerConversationRoutes(app, deps);
