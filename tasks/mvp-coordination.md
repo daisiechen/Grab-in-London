@@ -266,3 +266,10 @@
 - 在既有actor SHARE提交屏障内复核用户版本及同一四字段，生成中变化则SUPERSEDED无草稿发布。通用draft反编造校验不放宽：只将明确授权bio纳入原同句事实依据，姓名含职业不能授权编造职业，完成付款/订位等仍拒绝。原QA020与hostile矩阵20项由负责人复跑绿，前红/私有字段/下一普通轮不继承等断言保留。
 - 根完整核心unit281/DB119/API156/release13通过（/private/tmp/fancy-f15-core.log）；仅controller/context与两个自有测试及本记录提交，QA/研究文件不混入。正式F15关闭仍需QA固定SHA独立复验，不代表真实模型或部署验收。
 - 根显式临时配置复跑QA完整hostile矩阵20项、全仓core:check及Python70通过（/private/tmp/fancy-f15-qa-hostile.log、fancy-f15-check.log、fancy-f15-python.log）。客户端无修改，沿用F14已通过结果，不重复声称本批重跑客户端层。
+
+## QA-F16 创建Review阅读条款后恢复原步骤（2026-10-21）
+
+- 独立QA固定8387580真实浏览器走四步Review→cancellation terms→Back to review回到Arrange，venueRef仍在但供应商展示被持久草稿规则剥离，不能称业务数据丢失。QA另有同路径组件原红；资料保存疑点经重选London life后成功，未稳定复现，不作生产修复。
+- /create与/create/terms使用同一创建流程owner，条款往返保持原内存步骤、未发布文字和供应商展示；不将供应商资料放history.state、全局缓存或持久存储。直接公开访问条款仍不初始化私有草稿或CREATE编辑器/启动埋点。发布校验和显式确认不变，不自动同意或发布。
+- 自有真实路由回归与QA原探针共18项，涵盖Back to review/页头Back、Review确认false/true原样、0createMeal、持久草稿只存地点ID且展示字段null；根Web/后台262、core:check及Web生产构建通过（/private/tmp/fancy-f16-{clients,check,build}.log）。仅CreatePage、app/routes、自有create测试与本记录切片，F17导航来源另批；需QA释放Git窗口后提交固定SHA独立复验。
+- QA在bda0547提交B3真实浏览器F16/F17原红与结构化观察后释放Git窗口；F15在492db55独立20+32项复验targeted关闭，资料门槛完整用例通过。当前124 PASS /79 NOT_RUN /2 FAIL（F16/F17）/12 BLOCKED。Python71通过（含QA新增浏览器证据校验测试），F17自有路由下一切片两红不混入F16提交或其262项整合快照。

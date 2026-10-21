@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { createFetchStub, fail, ok, type RecordedCall } from '../../test/fetchStub.ts';
+import { createFetchStub,fail,ok,page,type RecordedCall } from '../../test/fetchStub.ts';
 import { renderApp } from '../../test/render.tsx';
 import { MEAL_ID, VENUE_REF, meal, session } from '../../test/fixtures.ts';
 import { loadDraft, saveDraft } from '../../lib/drafts.ts';
@@ -30,6 +30,21 @@ async function toReview() {
 }
 
 describe('create meal model (T07)', () => {
+  it.each([false,true])('returns from cancellation terms to the same Review with transient display and unchanged confirmation (%s)',async(confirmed)=>{
+    const stub=createStub(()=>ok(meal(),201));stub.on('searchVenues',()=>page([{placeId:venue.placeId,name:venue.name,address:venue.address,location:null,attributions:[],areaCode:'soho'}]));stub.on('confirmVenue',()=>ok({...venue,name:null,address:null}));
+    saveDraft('create',complete({venue:null,bookingConfirmed:false}));renderApp(stub.fetch,'/create');
+    await userEvent.type(await screen.findByRole('searchbox',{name:'Search restaurants'}),'Dishoom');await userEvent.click(screen.getByRole('button',{name:'Search'}));
+    await userEvent.click(await screen.findByRole('button',{name:/Dishoom/}));await userEvent.click(screen.getByRole('button',{name:'Use Dishoom'}));
+    await userEvent.click(screen.getByRole('button',{name:/Continue/}));await userEvent.click(screen.getByRole('button',{name:/Continue/}));await userEvent.click(screen.getByRole('checkbox',{name:/I have a reservation/}));await userEvent.click(screen.getByRole('button',{name:/Continue/}));
+    await screen.findByRole('heading',{name:'Ready to bring people together?'});if(confirmed)await userEvent.click(screen.getByRole('checkbox',{name:/checked the arrangements/}));await userEvent.click(screen.getByRole('link',{name:'cancellation terms'}));await screen.findByRole('heading',{name:'Cancellation terms'});
+    await userEvent.click(screen.getByRole('link',{name:confirmed?'Back':'Back to review'}));expect(await screen.findByRole('heading',{name:'Ready to bring people together?'})).toBeTruthy();
+    expect(screen.getByText(/Dishoom · 22 Kingly/)).toBeTruthy();expect((screen.getByRole('checkbox',{name:/checked the arrangements/}) as HTMLInputElement).checked).toBe(confirmed);expect(stub.callsTo('createMeal')).toHaveLength(0);
+    expect(loadDraft<MealDraft>('create')?.venue).toMatchObject({venueRef:VENUE_REF,name:null,address:null});
+  });
+  it('keeps direct public terms access free of create draft initialization and create API calls',async()=>{
+    const stub=createFetchStub({getSession:()=>fail(401,'AUTH_REQUIRED')});renderApp(stub.fetch,'/create/terms');
+    expect(await screen.findByRole('heading',{name:'Cancellation terms'})).toBeTruthy();expect(loadDraft('create')).toBeNull();expect(stub.callsTo('createMeal')).toHaveLength(0);expect(stub.callsTo('ingestEvents')).toHaveLength(0);
+  });
   it('converts pounds to integer pence without float maths', () => {
     expect(poundsToPence('25')).toBe(2500);
     expect(poundsToPence('25.5')).toBe(2550);

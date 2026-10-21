@@ -2,7 +2,7 @@ import { useAssistantEditor, useAssistantEditorRevision } from '../assistant/ind
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTelemetry } from '../../api/telemetry.tsx';
 import { serverValidationMetrics,validationMetric } from './validationMetrics.ts';
-import { Link, useNavigate } from 'react-router';
+import { Link,useLocation,useNavigate } from 'react-router';
 import { ApiError, type TimeChoice } from '@fancy/client';
 import { LANGUAGES, MOODS } from '@fancy/contracts';
 import { ArrowRightIcon, CheckIcon } from '@radix-ui/react-icons';
@@ -19,6 +19,7 @@ import { useActionGate } from '../auth/gate.ts';
 import { cuisineLabel, dietaryLabel } from '../meals/present.ts';
 import { ArrangeStep, CostsStep, IntroduceStep } from './steps.tsx';
 import { newDraft, poundsToPence, timeFieldOf, toCreateBody, validateStep, type MealDraft, type Step } from './model.ts';
+import {TermsPage} from './TermsPage.tsx';
 
 const STEPS = ['Arrange', 'Introduce', 'Costs', 'Review'] as const;
 const HEADINGS = ['A place at your table.', 'Good company starts here.', 'Keep things clear.', 'Ready to bring people together?'];
@@ -38,6 +39,15 @@ interface Ambiguity { field: 'start' | 'close'; choices: TimeChoice[] }
  * ticks both confirmations and presses Publish.
  */
 export function CreatePage() {
+  const terms=useLocation().pathname==='/create/terms';
+  const started=useRef(!terms);
+  if(!terms)started.current=true;
+  // Direct public terms access never initializes a private draft. An in-flow detour keeps
+  // this same mounted owner, including its transient provider display and explicit ticks.
+  return started.current?<CreateFlow terms={terms}/>:<TermsPage/>;
+}
+
+function CreateFlow({terms}:{terms:boolean}) {
   const { api, cache } = useApi();
   const { state } = useSession();
   const gate = useActionGate();
@@ -55,16 +65,18 @@ export function CreatePage() {
     const key=`${telemetry.generation}:${draft.attemptId}`;
     if(telemetry.enabled&&document.visibilityState==='visible'&&!started.current.has(key)){started.current.add(key);telemetry.emit('create_started',{attemptId:draft.attemptId});}
   };
-  useEffect(()=>{if(state.status==='signed-in')begin();},[state.status,telemetry.enabled,telemetry.generation,draft.attemptId]);
+  useEffect(()=>{if(!terms&&state.status==='signed-in')begin();},[terms,state.status,telemetry.enabled,telemetry.generation,draft.attemptId]);
   const arrangedEvent=()=>{
     begin();const key=`${telemetry.generation}:${draft.attemptId}`;
     if(telemetry.enabled&&document.visibilityState==='visible'&&!arranged.current.has(key)){arranged.current.add(key);telemetry.emit('create_arranged',{attemptId:draft.attemptId});}
   };
   const formError=(s:Step,issue:string)=>{begin();const properties=validationMetric(draft.attemptId,s,issue);if(properties)telemetry.emit('form_error',properties);};
 
-  useEffect(() => { saveDraft('create', draft); }, [draft]);
+  useEffect(() => { if(!terms)saveDraft('create', draft); }, [draft,terms]);
   const editorVersion = useAssistantEditorRevision(JSON.stringify(draft));
-  useAssistantEditor(state.status === 'signed-in' && !busy ? { kind: 'CREATE', targetId: null, version: editorVersion, text: [draft.title,draft.description].filter(Boolean).join('\n'), apply: (candidate) => { if(candidate.fields){setDraft(previous=>({...previous,...candidate.fields,bookingConfirmed:false,reviewConfirmed:false}));setStep(1);setError('');} } } : null);
+  useAssistantEditor(!terms&&state.status === 'signed-in' && !busy ? { kind: 'CREATE', targetId: null, version: editorVersion, text: [draft.title,draft.description].filter(Boolean).join('\n'), apply: (candidate) => { if(candidate.fields){setDraft(previous=>({...previous,...candidate.fields,bookingConfirmed:false,reviewConfirmed:false}));setStep(1);setError('');} } } : null);
+
+  if(terms)return <TermsPage/>;
 
   if (state.status === 'loading') return <Loading />;
   if (state.status === 'guest') {

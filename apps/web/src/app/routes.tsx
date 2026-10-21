@@ -11,7 +11,6 @@ import { DiscoverPage } from '../features/discover/DiscoverPage.tsx';
 import { MealDetailPage } from '../features/meals/MealDetailPage.tsx';
 import { MyMealsPage } from '../features/meals/MyMealsPage.tsx';
 import { CreatePage } from '../features/create/CreatePage.tsx';
-import { TermsPage } from '../features/create/TermsPage.tsx';
 import { EditMealPage } from '../features/create/EditMealPage.tsx';
 import { ApplyPage } from '../features/apply/ApplyPage.tsx';
 import { HostPage } from '../features/host/HostPage.tsx';
@@ -33,7 +32,7 @@ export const appRoutes: AppRoute[] = [
   { path: '/meals/:mealId/apply', element: <ApplyPage /> },
   { path: '/meals/:mealId/host', element: <HostPage /> },
   { path: '/create', element: <CreatePage /> },
-  { path: '/create/terms', element: <TermsPage /> },
+  { path: '/create/terms', element: <CreatePage /> },
   { path: '/inbox', element: <InboxPage /> },
   { path: '/inbox/:conversationId', element: <ChatPage /> },
   { path: '/profile', element: <ProfilePage /> },
