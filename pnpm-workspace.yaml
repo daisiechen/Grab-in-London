@@ -1,0 +1,5 @@
+# Production workspace only. demo/ and admin/ keep their own lockfiles and
+# entry points and are intentionally not members.
+packages:
+  - apps/*
+  - packages/*

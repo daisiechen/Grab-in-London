@@ -1,0 +1,12 @@
+# Local Postgres 17 for development/tests only. No real credentials.
+# Tests can use it via FANCY_TEST_DATABASE_URL=postgres://fancy:fancy@127.0.0.1:55417/postgres
+services:
+  postgres:
+    image: postgres:17.11-bookworm
+    environment:
+      POSTGRES_USER: fancy
+      POSTGRES_PASSWORD: fancy
+      POSTGRES_DB: postgres
+    ports:
+      - "127.0.0.1:55417:5432"
+    command: ["postgres", "-c", "fsync=off", "-c", "full_page_writes=off"]
