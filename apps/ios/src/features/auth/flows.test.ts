@@ -65,7 +65,7 @@ describe('signInWithProvider (system browser + handoff)', () => {
     mock.on('POST', '/v1/auth/oauth/start', ok({ authorizationUrl: 'https://auth.example.test/a?state=provider-state', stateTransactionId: CHALLENGE_ID }, 201));
     mock.on('GET','/v1/auth/oauth/callback',ok({outcome:'LINK_REQUIRED',linkTicket:'t'.repeat(40),expiresAt:'2026-10-21T10:10:00Z'}));
     const result = await signInWithProvider('GOOGLE', { ...deps, redirectUrl: REDIRECT, openAuthSession: async () => ({ type: 'success', url: `${REDIRECT}?code=provider-code&state=provider-state` }) });
-    expect(result).toEqual({ kind: 'linkRequired', linkTicket: 't'.repeat(40), expiresAt: '2026-10-21T10:10:00Z' });
+    expect(result).toEqual({ kind: 'linkRequired', linkTicket: 't'.repeat(40), expiresAt: '2026-10-21T10:10:00Z', appVerifier:PAIR.verifier });
     expect(manager.getState().status).not.toBe('signedIn');
   });
 

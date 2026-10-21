@@ -11,7 +11,7 @@ import { useServices } from '../../../services.tsx';
 import { AUTH_REDIRECT_URL } from '../../../config.ts';
 import { signInWithProvider, type Provider } from '../oauth.ts';
 import { useFinishSignIn } from '../useAuthGate.ts';
-import { setPendingLink } from '../link.ts';
+import { clearPendingLink, getPendingLink, setPendingLink } from '../link.ts';
 
 /** Account stage of the prototype BrandEntrance, with real system-browser providers. */
 export function SignInScreen() {
@@ -23,22 +23,30 @@ export function SignInScreen() {
   const [showTerms, setShowTerms] = useState(false);
 
   const provider = async (p: Provider) => {
+    const generation=services.session.generation;
     setBusy(p);
     setIssue(null);
     const result = await signInWithProvider(p, { ...services, redirectUrl: AUTH_REDIRECT_URL });
     setBusy(null);
-    if (result.kind === 'signedIn') finish(result.session);
+    if(generation!==services.session.generation)return;
+    if (result.kind === 'signedIn') finish(result.session,result.authProof);
     else if (result.kind === 'linkRequired') {
-      setPendingLink({ linkTicket: result.linkTicket, expiresAt: result.expiresAt });
+      if(getPendingLink(services.now())){
+        clearPendingLink();
+        setIssue("Use the sign-in method already linked to your original account. Start again.");
+        return;
+      }
+      setPendingLink({linkTicket:result.linkTicket,appVerifier:result.appVerifier,expiresAt:result.expiresAt},services.now(),services.newId());
       router.push('/link-required');
-    } else if (result.kind === 'failed') setIssue(result.message);
+    } else if(result.kind==='cancelled')clearPendingLink();
+    else if (result.kind === 'failed') setIssue(result.message);
   };
 
   return (
     <Screen testID="sign-in">
       <Eyebrow>YOUR NEXT TABLE STARTS HERE</Eyebrow>
       <Heading>Good to meet you.</Heading>
-      <Body>Join a table, or come back for another.</Body>
+      <Body>{getPendingLink(services.now())?"Sign in using the method already linked to your original account, then confirm the link.":"Join a table, or come back for another."}</Body>
       <View style={{ gap: 10 }}>
         <Primary label="Continue with email" onPress={() => router.push('/email')} disabled={busy !== null} />
         <Primary secondary label="Continue with Google" busy={busy === 'GOOGLE'} disabled={busy !== null} onPress={() => void provider('GOOGLE')} />
@@ -46,7 +54,7 @@ export function SignInScreen() {
       </View>
       <FormMessage message={issue} />
       <TextAction label="Privacy & community principles" onPress={() => setShowTerms(true)} />
-      <TextAction label="Keep exploring without an account" onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
+      <TextAction label="Keep exploring without an account" onPress={() => {clearPendingLink();if(router.canGoBack())router.back();else router.replace('/');}} />
       <Body muted>{BRAND_COPY.slogan}</Body>
       <Sheet visible={showTerms} title="Community & privacy principles" onClose={() => setShowTerms(false)}>
         <Body>Adults 18+ meet for friendship over meals. Respect boundaries and dietary needs. No harassment or unsolicited pitches.</Body>

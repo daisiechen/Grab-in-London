@@ -9,7 +9,7 @@ import { Body, Eyebrow, Heading } from '../../../ui/Text.tsx';
 import { useServices } from '../../../services.tsx';
 import { startEmailChallenge, verifyEmailCode, type Challenge } from '../otp.ts';
 import { useFinishSignIn } from '../useAuthGate.ts';
-import { setPendingLink } from '../link.ts';
+import { clearPendingLink, getPendingLink, setPendingLink } from '../link.ts';
 
 /** Email + six-digit code stages; resend cooldown and expiry come from the server challenge. */
 export function EmailScreen() {
@@ -46,13 +46,20 @@ export function EmailScreen() {
 
   const verify = async () => {
     if (!challenge) return;
+    const generation=services.session.generation;
     Keyboard.dismiss();
     setBusy(true);
     const res = await verifyEmailCode(services, challenge, code, services.now());
     setBusy(false);
-    if (res.kind === 'signedIn') return finish(res.session);
+    if(generation!==services.session.generation)return;
+    if (res.kind === 'signedIn') return finish(res.session,res.authProof);
     if (res.kind === 'linkRequired') {
-      setPendingLink({ linkTicket: res.linkTicket, expiresAt: res.expiresAt });
+      if(getPendingLink(services.now())){
+        clearPendingLink();
+        setIssue({text:"Use the sign-in method already linked to your original account. Start again.",tone:"error"});
+        return;
+      }
+      setPendingLink({linkTicket:res.linkTicket,appVerifier:res.appVerifier,expiresAt:res.expiresAt},services.now(),services.newId());
       return router.push('/link-required');
     }
     if (res.kind === 'retry' || res.kind === 'failed') setIssue({ text: res.message, tone: 'error' });
@@ -83,6 +90,7 @@ export function EmailScreen() {
           />
         </View>
       )}
+      {getPendingLink(services.now())?<TextAction label="Cancel account link" disabled={busy} onPress={()=>{clearPendingLink();router.replace('/sign-in');}}/>:null}
       <FormMessage message={issue?.text ?? null} tone={issue?.tone ?? 'error'} />
     </Screen>
   );

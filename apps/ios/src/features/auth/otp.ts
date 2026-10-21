@@ -53,14 +53,17 @@ export async function verifyEmailCode(
   const invalid = validateCode(code);
   if (invalid) return { kind: 'retry', message: invalid, restart: false };
   if (now >= challenge.expiresAt) return { kind: 'retry', message: 'This code has expired. Request a new code.', restart: true };
+  const generation=deps.session.generation;
   try {
     const pair = await deps.createChallenge();
+    deps.session.assertGeneration(generation);
     const res = await deps.api.call('verifyEmail', { body: { clientRequestId: deps.newId(), challengeId: challenge.challengeId, code, appChallenge: pair.challenge } });
+    deps.session.assertGeneration(generation);
     const outcome = res.data;
-    if (outcome.outcome === 'LINK_REQUIRED') return { kind: 'linkRequired', linkTicket: outcome.linkTicket, expiresAt: outcome.expiresAt };
+    if (outcome.outcome === 'LINK_REQUIRED') return { kind: 'linkRequired', linkTicket: outcome.linkTicket, expiresAt: outcome.expiresAt, appVerifier:pair.verifier };
     if (!outcome.handoffCode) return { kind: 'failed', message: 'Sign-in didn’t finish. Please try again.' };
     const session = await deps.session.completeHandoff(outcome.handoffCode, pair.verifier);
-    return { kind: 'signedIn', session };
+    return { kind: 'signedIn', session, authProof:outcome.authProof };
   } catch (error) {
     if (error instanceof StaleSessionError) return { kind: 'cancelled' };
     // A lost response after the server consumed the code cannot be replayed (API §7): the server

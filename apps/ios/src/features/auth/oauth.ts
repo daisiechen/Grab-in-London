@@ -7,8 +7,8 @@ import { authErrorMessage } from './messages.ts';
 export type Provider = 'GOOGLE' | 'APPLE';
 
 export type SignInResult =
-  | { kind: 'signedIn'; session: SessionInfo }
-  | { kind: 'linkRequired'; linkTicket: string; expiresAt: string | null }
+  | { kind: 'signedIn'; session: SessionInfo; authProof: string }
+  | { kind: 'linkRequired'; linkTicket: string; expiresAt: string | null; appVerifier: string }
   | { kind: 'cancelled' }
   | { kind: 'failed'; message: string };
 
@@ -68,10 +68,10 @@ export async function signInWithProvider(provider: Provider, deps: OAuthDeps): P
     const callback=await deps.api.call('oauthCallback',{query:{code:parsed.code,state:parsed.state}});
     deps.session.assertGeneration(generation);
     const outcome=callback.data;
-    if(outcome.outcome==='LINK_REQUIRED')return {kind:'linkRequired',linkTicket:outcome.linkTicket,expiresAt:outcome.expiresAt};
+    if(outcome.outcome==='LINK_REQUIRED')return {kind:'linkRequired',linkTicket:outcome.linkTicket,expiresAt:outcome.expiresAt,appVerifier:pair.verifier};
     if(!outcome.handoffCode)return {kind:'failed',message:'Sign-in didn’t finish. Please try again.'};
     const session = await deps.session.completeHandoff(outcome.handoffCode, pair.verifier);
-    return { kind: 'signedIn', session };
+    return { kind: 'signedIn', session, authProof: outcome.authProof };
   } catch (error) {
     if (error instanceof StaleSessionError) return { kind: 'cancelled' };
     return { kind: 'failed', message: authErrorMessage(error) };

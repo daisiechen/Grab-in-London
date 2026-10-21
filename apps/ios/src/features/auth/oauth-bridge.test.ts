@@ -29,7 +29,7 @@ it.each([
 });
 it('accepts LINK_REQUIRED only from core JSON and never mints a session',async()=>{
  const app=fixture();app.mock.on('GET','/v1/auth/oauth/callback',ok({outcome:'LINK_REQUIRED',linkTicket:'synthetic-link-ticket',expiresAt:'2026-10-21T10:10:00Z'}));
- expect(await signInWithProvider('GOOGLE',{...app.services,redirectUrl:redirect})).toEqual({kind:'linkRequired',linkTicket:'synthetic-link-ticket',expiresAt:'2026-10-21T10:10:00Z'});expect(app.mock.callsTo('POST','/v1/auth/handoff')).toHaveLength(0);
+ expect(await signInWithProvider('GOOGLE',{...app.services,redirectUrl:redirect})).toEqual({kind:'linkRequired',linkTicket:'synthetic-link-ticket',expiresAt:'2026-10-21T10:10:00Z',appVerifier:'V'.repeat(43)});expect(app.mock.callsTo('POST','/v1/auth/handoff')).toHaveLength(0);
 });
 it('does not redeem a handoff if provider verification fails at core',async()=>{
  const app=fixture();app.mock.on('GET','/v1/auth/oauth/callback',fail(409,'STATE_CONFLICT'));

@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
 import { useRouter } from 'expo-router';
-import { useSessionState } from '../../services.tsx';
+import { useServices, useSessionState } from '../../services.tsx';
 import { rememberReturnTo, takeReturnTo } from './intent.ts';
+import { acceptLinkProof, clearPendingLink, getPendingLink } from './link.ts';
 import type { SessionInfo } from './session.ts';
 
 /**
@@ -25,12 +26,18 @@ export function useAuthGate() {
 
 /** After a successful sign-in: complete the profile gate first, then return to the remembered target. */
 export function useFinishSignIn() {
+  const services=useServices();
   const router = useRouter();
   return useCallback(
-    (session: SessionInfo) => {
+    (session: SessionInfo, authProof?:string) => {
+      if(getPendingLink(services.now())){
+        if(authProof&&acceptLinkProof(session,authProof,services.session.generation,services.now(),services.newId())){router.replace('/link-required');return;}
+        clearPendingLink();
+        router.replace('/link-required');return;
+      }
       if (!session.user.profileGate.profileComplete) router.replace('/profile-setup');
       else router.replace(takeReturnTo('/') as never);
     },
-    [router],
+    [router,services],
   );
 }
