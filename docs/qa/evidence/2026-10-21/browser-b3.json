@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "observations": [
+    {
+      "id": "B3-T001",
+      "status": "passed",
+      "title": "Synthetic real-browser profile gate and saved public projection",
+      "steps": [
+        "Empty profile reports missing name,bio,London life,language,interest,acknowledgement",
+        "With other fields valid, absent name/bio/language/interest/ack separately rejected; London life absence also rejected before final save",
+        "Complete synthetic profile saves and returns to Create; published meal host public page matches name,bio,English,Food"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b3-profile-confirmation-gate.jpg",
+        "evidence/2026-10-21/b3-public-profile-origin.jpg"
+      ],
+      "testedCommit": "8387580156d53eed2936f7650ccc71dbe8319e0f",
+      "environment": "Fixed git-archive source in isolated temporary directory; real local API/Postgres/worker and IAB; TestIDP/Places/mail fixtures; no live vendor or native device."
+    },
+    {
+      "id": "B3-T002",
+      "status": "failed",
+      "title": "F16 terms Back to review resets creation step",
+      "steps": [
+        "Enter four real UI steps with synthetic restaurant/date/title/budget",
+        "Unchecked final Review rejected; Arrange back retains draft",
+        "Review cancellation terms then Back to review yields Step1 with Step2/3/4 disabled"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b3-terms-return-arrange.jpg"
+      ],
+      "testedCommit": "8387580156d53eed2936f7650ccc71dbe8319e0f",
+      "environment": "Fixed git-archive source in isolated temporary directory; real local API/Postgres/worker and IAB; TestIDP/Places/mail fixtures; no live vendor or native device."
+    },
+    {
+      "id": "B3-T003",
+      "status": "failed",
+      "title": "F17 published detail and public profile lose navigation origin",
+      "steps": [
+        "Publish synthetic meal from Create; detail Back href is /discover rather than Hosting",
+        "Click host public profile from meal; public-profile Back href is /discover rather than originating meal"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b3-published-meal.jpg",
+        "evidence/2026-10-21/b3-public-profile-origin.jpg"
+      ],
+      "testedCommit": "8387580156d53eed2936f7650ccc71dbe8319e0f",
+      "environment": "Fixed git-archive source in isolated temporary directory; real local API/Postgres/worker and IAB; TestIDP/Places/mail fixtures; no live vendor or native device."
+    },
+    {
+      "id": "B3-T004",
+      "status": "passed",
+      "title": "Synthetic host publishes only after explicit booking and Review confirmation",
+      "steps": [
+        "Inverted budget30/20 rejected",
+        "Valid20/35 without reservation confirmation rejected",
+        "Unchecked final Review rejected",
+        "Explicit confirmations publish meal; detail shows20-35GBP,4includinghost,min3,external payment,host-reported reservation and no in-app payment"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b3-published-meal.jpg"
+      ],
+      "testedCommit": "8387580156d53eed2936f7650ccc71dbe8319e0f",
+      "environment": "Fixed git-archive source in isolated temporary directory; real local API/Postgres/worker and IAB; TestIDP/Places/mail fixtures; no live vendor or native device."
+    }
+  ]
+}

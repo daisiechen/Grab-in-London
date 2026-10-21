@@ -79,3 +79,5 @@
 - [Agent 协作与配置边界](agent-collaboration.md)：共用规则、桌面可见评审、文件职责与 Git 交付。
 
 - [2026-10-20 App修订与验证](delivery/fancy-app-readiness-2026-10-20.zh-CN.md)：恢复版上的必要局部修订及B-01—B-11映射；不是双端独立复评通过结论。
+
+- [B3固定源码浏览器走查](qa/evidence/2026-10-21/browser-b3.zh-CN.md)、[结构化浏览器观察](qa/evidence/2026-10-21/browser-b3.json)：本地合成身份/餐厅与真实API/PG；[资料门槛](qa/evidence/2026-10-21/b3-profile-confirmation-gate.jpg)、[条款返回](qa/evidence/2026-10-21/b3-terms-return-arrange.jpg)、[发布详情](qa/evidence/2026-10-21/b3-published-meal.jpg)、[公开资料来源](qa/evidence/2026-10-21/b3-public-profile-origin.jpg)。

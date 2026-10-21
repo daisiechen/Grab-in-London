@@ -13518,6 +13518,492 @@
           "durationMs": 161.8522499999999
         }
       ]
+    },
+    {
+      "id": "R86",
+      "testedCommit": "492db5558e864e816ecec68d5a825e0c5113e530 + QA-only probes",
+      "command": "pnpm exec vitest run --project web apps/web/src/features/create/qa-independent-terms-return.unit.test.tsx",
+      "startedAt": "2026-10-21T15:23:00.441000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R86-T001",
+          "run": "R86",
+          "path": "apps/web/src/features/create/qa-independent-terms-return.unit.test.tsx",
+          "title": "QA-F16 Back to review returns to Review with the same unsubmitted draft and no create call",
+          "status": "failed",
+          "durationMs": 1186.663042,
+          "failureSummary": "After cancellation terms Back to review, original Review heading missing; Arrange step rendered instead."
+        }
+      ]
+    },
+    {
+      "id": "R87",
+      "testedCommit": "492db5558e864e816ecec68d5a825e0c5113e530 + QA-only probes",
+      "command": "pnpm exec vitest run --project web apps/web/src/features/create/qa-independent-terms-return.unit.test.tsx",
+      "startedAt": "2026-10-21T15:24:30.526000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R87-T001",
+          "run": "R87",
+          "path": "apps/web/src/features/create/qa-independent-terms-return.unit.test.tsx",
+          "title": "QA-F16 Back to review returns to Review with the same unsubmitted draft and no create call",
+          "status": "failed",
+          "durationMs": 1168.9379169999997,
+          "failureSummary": "After cancellation terms Back to review, original Review heading missing; Arrange step rendered instead."
+        }
+      ]
+    },
+    {
+      "id": "R88",
+      "testedCommit": "492db5558e864e816ecec68d5a825e0c5113e530 + QA-only probes",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-hostile.api.test.ts",
+      "startedAt": "2026-10-21T15:23:15.776000+00:00",
+      "exitCode": 0,
+      "passed": 20,
+      "failed": 0,
+      "total": 20,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R88-T001",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-019 FULL target and page switch reject stale application drafts without reserving a seat",
+          "status": "passed",
+          "durationMs": 53.08641699999998
+        },
+        {
+          "id": "R88-T002",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-019 CLOSED target and page switch reject stale application drafts without reserving a seat",
+          "status": "passed",
+          "durationMs": 22.367916000000037
+        },
+        {
+          "id": "R88-T003",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-021 TOOL injection cannot expand context or write business records",
+          "status": "passed",
+          "durationMs": 10.029209000000037
+        },
+        {
+          "id": "R88-T004",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-021 FOREIGN_USER injection cannot expand context or write business records",
+          "status": "passed",
+          "durationMs": 6.553957999999966
+        },
+        {
+          "id": "R88-T005",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-021 UNKNOWN_URL injection cannot expand context or write business records",
+          "status": "passed",
+          "durationMs": 6.527250000000095
+        },
+        {
+          "id": "R88-T006",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-021 HIDDEN_GROUP injection cannot expand context or write business records",
+          "status": "passed",
+          "durationMs": 5.861250000000041
+        },
+        {
+          "id": "R88-T007",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-022 MISSING_ID yields no actionable fragment and still settles actual provider cost",
+          "status": "passed",
+          "durationMs": 5.7187090000001035
+        },
+        {
+          "id": "R88-T008",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-022 WRONG_AMOUNT yields no actionable fragment and still settles actual provider cost",
+          "status": "passed",
+          "durationMs": 5.484666999999945
+        },
+        {
+          "id": "R88-T009",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-022 EXTRA_FIELD yields no actionable fragment and still settles actual provider cost",
+          "status": "passed",
+          "durationMs": 5.295957999999928
+        },
+        {
+          "id": "R88-T010",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-022 INVENTED_JOB yields no actionable fragment and still settles actual provider cost",
+          "status": "passed",
+          "durationMs": 7.534457999999972
+        },
+        {
+          "id": "R88-T011",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-022 COMPLETED_ACTION yields no actionable fragment and still settles actual provider cost",
+          "status": "passed",
+          "durationMs": 6.7855409999999665
+        },
+        {
+          "id": "R88-T012",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-023 model text <script>globalThis.qaMustNeverExecute=true</script> is rejected before any actionable output or link exists",
+          "status": "passed",
+          "durationMs": 6.918125000000032
+        },
+        {
+          "id": "R88-T013",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-023 model text <img src=x onerror=\"alert(1)\"> is rejected before any actionable output or link exists",
+          "status": "passed",
+          "durationMs": 6.485374999999976
+        },
+        {
+          "id": "R88-T014",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-023 model text Open https://unknown.example.invalid/private is rejected before any actionable output or link exists",
+          "status": "passed",
+          "durationMs": 6.341291999999953
+        },
+        {
+          "id": "R88-T015",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-023 legitimate cards expose only verified supplied meal IDs and no model-provided URL field",
+          "status": "passed",
+          "durationMs": 5.683292000000051
+        },
+        {
+          "id": "R88-T016",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-021 poisoned public meal title and description cannot grant tool rights at draft generation",
+          "status": "passed",
+          "durationMs": 7.382833000000005
+        },
+        {
+          "id": "R88-T017",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-024 independent query and rejected proposal stay unsaved; explicit confirmation persists only six allowed fields",
+          "status": "passed",
+          "durationMs": 36.028625000000034
+        },
+        {
+          "id": "R88-T018",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-026 independent held provider cannot publish after deletion; both old device sessions are invalid and fresh bootstrap uses new epoch",
+          "status": "passed",
+          "durationMs": 7.662207999999964
+        },
+        {
+          "id": "R88-T019",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-013 pending explanation never claims approval or requests prepayment; actual status-query SQL failure yields no invented answer",
+          "status": "passed",
+          "durationMs": 18.11162499999989
+        },
+        {
+          "id": "R88-T020",
+          "run": "R88",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-020 ordinary search excludes profile but explicitly requested own introduction supplies only approved public fields",
+          "status": "passed",
+          "durationMs": 59.978500000000054
+        }
+      ]
+    },
+    {
+      "id": "R89",
+      "testedCommit": "492db5558e864e816ecec68d5a825e0c5113e530 + QA-only probes",
+      "command": "pnpm exec vitest run --project db --project unit apps/api/src/assistant/own-profile.db.test.ts apps/api/src/assistant/own-profile.unit.test.ts",
+      "startedAt": "2026-10-21T15:23:48.646000+00:00",
+      "exitCode": 0,
+      "passed": 32,
+      "failed": 0,
+      "total": 32,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R89-T001",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "recognizes current affirmative own-introduction request: Please use my public profile introduction, name, languages and interests to draft my application.",
+          "status": "passed",
+          "durationMs": 1.261166000000003
+        },
+        {
+          "id": "R89-T002",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "recognizes current affirmative own-introduction request: Use my bio for an application",
+          "status": "passed",
+          "durationMs": 0.3618749999999977
+        },
+        {
+          "id": "R89-T003",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "recognizes current affirmative own-introduction request: Could you incorporate my introduction into a draft?",
+          "status": "passed",
+          "durationMs": 0.05299999999999727
+        },
+        {
+          "id": "R89-T004",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "recognizes current affirmative own-introduction request: Write a request using my own profile",
+          "status": "passed",
+          "durationMs": 0.05124999999999602
+        },
+        {
+          "id": "R89-T005",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "recognizes current affirmative own-introduction request: 请用我的公开简介写申请",
+          "status": "passed",
+          "durationMs": 0.6032920000000104
+        },
+        {
+          "id": "R89-T006",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "recognizes current affirmative own-introduction request: 请结合我的个人简介写申请",
+          "status": "passed",
+          "durationMs": 0.05820900000000506
+        },
+        {
+          "id": "R89-T007",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "recognizes current affirmative own-introduction request: 参考我的介绍帮我写一段申请",
+          "status": "passed",
+          "durationMs": 0.04179200000000094
+        },
+        {
+          "id": "R89-T008",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "recognizes current affirmative own-introduction request: 帮我根据我的公开资料起草介绍",
+          "status": "passed",
+          "durationMs": 0.03900000000000148
+        },
+        {
+          "id": "R89-T009",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "ambiguous, negated, quoted or other-person text never authorizes: Draft my application",
+          "status": "passed",
+          "durationMs": 0.05833300000000463
+        },
+        {
+          "id": "R89-T010",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "ambiguous, negated, quoted or other-person text never authorizes: My bio could be relevant",
+          "status": "passed",
+          "durationMs": 0.06691700000000367
+        },
+        {
+          "id": "R89-T011",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "ambiguous, negated, quoted or other-person text never authorizes: Do not use my bio",
+          "status": "passed",
+          "durationMs": 0.03375000000001194
+        },
+        {
+          "id": "R89-T012",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "ambiguous, negated, quoted or other-person text never authorizes: Please draft without using my introduction",
+          "status": "passed",
+          "durationMs": 0.02358300000000213
+        },
+        {
+          "id": "R89-T013",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "ambiguous, negated, quoted or other-person text never authorizes: Never include my profile",
+          "status": "passed",
+          "durationMs": 0.0176659999999913
+        },
+        {
+          "id": "R89-T014",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "ambiguous, negated, quoted or other-person text never authorizes: Please use their introduction",
+          "status": "passed",
+          "durationMs": 0.016417000000004123
+        },
+        {
+          "id": "R89-T015",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "ambiguous, negated, quoted or other-person text never authorizes: Use the host profile",
+          "status": "passed",
+          "durationMs": 0.02591700000000685
+        },
+        {
+          "id": "R89-T016",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "ambiguous, negated, quoted or other-person text never authorizes: \"Use my bio\" is an example",
+          "status": "passed",
+          "durationMs": 0.015375000000005912
+        },
+        {
+          "id": "R89-T017",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "ambiguous, negated, quoted or other-person text never authorizes: He said use my bio",
+          "status": "passed",
+          "durationMs": 0.01624999999999943
+        },
+        {
+          "id": "R89-T018",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "ambiguous, negated, quoted or other-person text never authorizes: Should you use my bio?",
+          "status": "passed",
+          "durationMs": 0.01624999999999943
+        },
+        {
+          "id": "R89-T019",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "ambiguous, negated, quoted or other-person text never authorizes: Please use my profile if possible",
+          "status": "passed",
+          "durationMs": 0.014957999999992921
+        },
+        {
+          "id": "R89-T020",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "ambiguous, negated, quoted or other-person text never authorizes: 不要使用我的介绍",
+          "status": "passed",
+          "durationMs": 0.01566599999999596
+        },
+        {
+          "id": "R89-T021",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "ambiguous, negated, quoted or other-person text never authorizes: 如果使用我的简介会怎么样",
+          "status": "passed",
+          "durationMs": 0.01358399999999449
+        },
+        {
+          "id": "R89-T022",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "ambiguous, negated, quoted or other-person text never authorizes: 使用他的介绍写申请",
+          "status": "passed",
+          "durationMs": 0.024540999999999258
+        },
+        {
+          "id": "R89-T023",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "ambiguous, negated, quoted or other-person text never authorizes: 她说“结合我的介绍”",
+          "status": "passed",
+          "durationMs": 0.2234590000000054
+        },
+        {
+          "id": "R89-T024",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.unit.test.ts",
+          "title": "ambiguous, negated, quoted or other-person text never authorizes: Summarize this editor instruction: use my bio",
+          "status": "passed",
+          "durationMs": 0.04504199999999514
+        },
+        {
+          "id": "R89-T025",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.db.test.ts",
+          "title": "uses only this-turn explicitly authorized four public fields and never inherits authorization",
+          "status": "passed",
+          "durationMs": 56.598209
+        },
+        {
+          "id": "R89-T026",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.db.test.ts",
+          "title": "editor and history alone never authorize reading own introduction",
+          "status": "passed",
+          "durationMs": 11.266583000000026
+        },
+        {
+          "id": "R89-T027",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.db.test.ts",
+          "title": "profile version change while generation is in flight supersedes rather than publishing",
+          "status": "passed",
+          "durationMs": 10.820542000000046
+        },
+        {
+          "id": "R89-T028",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.db.test.ts",
+          "title": "profile fields change while generation is in flight supersedes rather than publishing",
+          "status": "passed",
+          "durationMs": 9.480624999999975
+        },
+        {
+          "id": "R89-T029",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.db.test.ts",
+          "title": "explicit guest request cannot read another user profile",
+          "status": "passed",
+          "durationMs": 7.13820800000002
+        },
+        {
+          "id": "R89-T030",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.db.test.ts",
+          "title": "profile SQL failure fails closed without generating biography",
+          "status": "passed",
+          "durationMs": 6.655708000000004
+        },
+        {
+          "id": "R89-T031",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.db.test.ts",
+          "title": "a name containing a profession cannot authorize invented job or completion claims",
+          "status": "passed",
+          "durationMs": 12.65141600000004
+        },
+        {
+          "id": "R89-T032",
+          "run": "R89",
+          "path": "apps/api/src/assistant/own-profile.db.test.ts",
+          "title": "signed-in actor with no profile is asked for their introduction without a draft model call",
+          "status": "passed",
+          "durationMs": 6.407792000000086
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -13566,7 +14052,8 @@
     "apps/api/src/test/qa-independent-assets.unit.test.ts": "d74cde8973e70c2274453d08a2a9db3c08d5f4014588bde4eb4c8a4293f3f6c1",
     "apps/ios/src/features/assistant/qa-independent-resume.test.tsx": "01492766cb4b94a44bcdaf1c35d86c7812dc5b6ab80de06f765142d69e986664",
     "scripts/qa-independent-db-constraints.api.test.ts": "f2d055aef7ff13bf9d701944f1d7e4d0a41015ff977d1d47adf1d6bc500f9c06",
-    "apps/api/src/admin/qa-independent-metric-boundaries.unit.test.ts": "5a0c4d114b8b7e5903b0c4b81b78df067b5f36fb118c16913943fde7edf1b2e7"
+    "apps/api/src/admin/qa-independent-metric-boundaries.unit.test.ts": "5a0c4d114b8b7e5903b0c4b81b78df067b5f36fb118c16913943fde7edf1b2e7",
+    "apps/web/src/features/create/qa-independent-terms-return.unit.test.tsx": "20811ac0b0f9c787f4d26569f1b5f10b9e1979b4583deeac3669b0a5466f9498"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console. R68/R69 valid TestIDP OAuth callback200 captured actual non-silent child stdout only in parent RAM. Metadata contains only leak booleans, never credential strings or raw logs. R69 aggregates code/state/email checks without stopping at the first boolean failure. R72 mutates semantic OpenAPI/SDK artifacts only in an owned temporary contracts copy, requires the real checker fail1 and restore0, and verifies original workspace bytes untouched. Static cases remain NOT_RUN until fixed committed handoff recheck.",
   "runtimeSnapshotVerification": {
@@ -13638,6 +14125,7 @@
     "R65 copied helper imported unused describe (lint corrected). Initial four hidden-group setup failures omitted required messages.created_at; added clock_timestamp and completed JOIN/membership/message sequence before final execution. No production assertions weakened. R65 verifies each rejected malformed output still increments both active daily/monthly used money by exactly20 times actual provider-call count, rather than merely seeing a KNOWN row.",
     "R67 QA-only cleanup: createHarness.close captures the original app, so a rebuilt disabled-config app also needs explicit close before original close/drop. Corrected wrapper and six availability assertions still pass. This stops its own lifecycle timer before pool drop; no production assertion changed. Concurrent F12 candidate files are explicitly not treated as accepted by this run.",
     "R77 final unreachable getState references corrected to existing getSnapshot API; iOS tsc passed, R78 repeats the same foreground request-count failure. No production alias or lowered assertion.",
-    "CODE002 first suite could not import pg from root (0 tests); reused existing testkit database pool, preserving SQL/rollback assertions. Final R79 2 passed."
+    "CODE002 first suite could not import pg from root (0 tests); reused existing testkit database pool, preserving SQL/rollback assertions. Final R79 2 passed.",
+    "F16 R86 final return assertion independently red; removed unsupported Testing Library exact options after tsc, unchanged names/assertions. R87 same product failure with clean Web typecheck. Browser B3 also reproduces on fixed archive."
   ]
 }

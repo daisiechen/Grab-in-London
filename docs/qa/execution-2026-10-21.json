@@ -15,16 +15,18 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 82,
-    "PASS": 122,
-    "FAIL": 1,
+    "NOT_RUN": 79,
+    "PASS": 124,
+    "FAIL": 2,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
     "B1": "evidence/2026-10-21/browser-journey.zh-CN.md",
     "defects": "defects-2026-10-21.zh-CN.md",
-    "B2": "evidence/2026-10-21/browser-journey.zh-CN.md"
+    "B2": "evidence/2026-10-21/browser-journey.zh-CN.md",
+    "browserObservations": "evidence/2026-10-21/browser-b3.json",
+    "B3": "evidence/2026-10-21/browser-b3.zh-CN.md"
   },
   "cases": [
     {
@@ -481,8 +483,10 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "B3-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T001",
         "R1-T002",
@@ -579,13 +583,20 @@
         "R2-T166",
         "R2-T167"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "缺项就地提示",
-        "全部合法才完成",
-        "公开主页与录入一致"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：留空姓名/介绍/兴趣/语言/生活状态/18+或社区确认，逐项尝试提交 → 补齐。当前仍缺：缺项就地提示；全部合法才完成；公开主页与录入一致。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+      "remainingExpected": [],
+      "actual": "B3固定8387580实际IAB：资料各缺项就地拒绝，合成完整资料成功返回原Create，随后饭局host公开投影与昵称/bio/English/Food录入一致；不公开email。一次London life未选导致提交拒绝，重新明确选择后正常保存，无稳定丢字段缺陷。仅本地fixture身份，非真实供应商。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：留空姓名/介绍/兴趣/语言/生活状态/18+或社区确认，逐项尝试提交 → 补齐。当前仍缺：缺项就地提示；全部合法才完成；公开主页与录入一致。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。",
+          "reason": "B3 browser and R86-R89 targeted verification"
+        }
+      ]
     },
     {
       "id": "QA-AUTH-006",
@@ -3233,8 +3244,12 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "B3-T002",
+        "R86-T001",
+        "R87-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T080",
         "R1-T081",
@@ -3285,13 +3300,22 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "返回保持本次输入",
-        "未Review确认不能发布",
-        "新发布后新草稿不复用旧值"
+        "条款Back to review需回Review而非Arrange",
+        "修后重复返回、显式确认发布及新草稿清空"
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：逐步输入 → Review返回Arrange → 取消退出后重开。当前仍缺：返回保持本次输入；未Review确认不能发布；新发布后新草稿不复用旧值。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。",
+      "actual": "B3真实四步/预算/声明/Review门禁及返回字段保留已走查；进入条款再Back to review实际Step1，QA-F16。独立组件R86/R87同红，未用通过的表单片段覆盖整条。",
       "relatedBrowserEvidence": [
         "B1"
+      ],
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：逐步输入 → Review返回Arrange → 取消退出后重开。当前仍缺：返回保持本次输入；未Review确认不能发布；新发布后新草稿不复用旧值。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。",
+          "reason": "B3 browser and R86-R89 targeted verification"
+        }
+      ],
+      "defectIds": [
+        "QA-F16"
       ]
     },
     {
@@ -11462,9 +11486,42 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": [
-        "R81-T001"
+        "R88-T020",
+        "R89-T001",
+        "R89-T002",
+        "R89-T003",
+        "R89-T004",
+        "R89-T005",
+        "R89-T006",
+        "R89-T007",
+        "R89-T008",
+        "R89-T009",
+        "R89-T010",
+        "R89-T011",
+        "R89-T012",
+        "R89-T013",
+        "R89-T014",
+        "R89-T015",
+        "R89-T016",
+        "R89-T017",
+        "R89-T018",
+        "R89-T019",
+        "R89-T020",
+        "R89-T021",
+        "R89-T022",
+        "R89-T023",
+        "R89-T024",
+        "R89-T025",
+        "R89-T026",
+        "R89-T027",
+        "R89-T028",
+        "R89-T029",
+        "R89-T030",
+        "R89-T031",
+        "R89-T032",
+        "R85-T008"
       ],
       "relatedAutomatedAssertions": [
         "R1-T094",
@@ -11572,17 +11629,22 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "显式请求后仅该次读取本人昵称/介绍/语言/兴趣四字段；不读其他用户或私有字段",
-        "编辑器文字明确润色同意后才提供；普通后续查询不继承额外资料"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "R81真实PG与受控provider：普通SEARCH未上传本人profile通过；明确要求结合本人公开介绍/昵称/语言/兴趣写申请，草稿成功但provider输入没有本人bio/name/兴趣，仅通用草稿，QA-F15。私有background/email合成canary预置，完整白名单/后续不继承断言尚未运行到，保留待验。",
+      "remainingExpected": [],
+      "actual": "正式492db55：R88独立原020及hostile20项通过，R89本人资料保护32项通过。普通查询不读、当次明确本人请求才四公开字段、后续普通查询不继承；否定/引用/他人/模糊/editor/history不授资料权限，guest/缺资料澄清、SQL失败无生成、版本/字段在途变化SUPERSEDED，私有background/email不进provider，职业/完成承诺不借昵称绕过guard。复用R85显式编辑器同意回归，未同意不上传；R81修前红保留。",
       "history": [
         {
           "status": "NOT_RUN",
           "actual": "本地生产实现尚需实际执行：普通查询后明确要求结合本人介绍，再明确润色编辑器。尚缺逐项证据：普通查询无资料/未发稿；仅显式请求才包含白名单本人字段或该次编辑文字。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
           "reason": "R81 independently reproduces missing explicitly authorized own-profile context"
+        },
+        {
+          "status": "FAIL",
+          "actual": "R81真实PG与受控provider：普通SEARCH未上传本人profile通过；明确要求结合本人公开介绍/昵称/语言/兴趣写申请，草稿成功但provider输入没有本人bio/name/兴趣，仅通用草稿，QA-F15。私有background/email合成canary预置，完整白名单/后续不继承断言尚未运行到，保留待验。",
+          "reason": "B3 browser and R86-R89 targeted verification"
         }
       ],
       "defectIds": [
@@ -16171,8 +16233,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "B3-T003",
+        "B3-T004"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T054",
         "R1-T055",
@@ -16489,9 +16554,19 @@
         "host报告不压self",
         "不默认所有人出席"
       ],
-      "actual": "浏览器发布/审批/首guest锁安排/餐厅声明stale已验证；host报告和self优先的浏览器后半程未执行。",
+      "actual": "B3主持者真实浏览器创建发布成功；但发布后详情Back指向Discover而非Hosting，详情进入host公开页后Back亦丢原meal，QA-F17。审批/成团/出席/结束尚未完成，不授整条PASS。",
       "relatedBrowserEvidence": [
         "B1"
+      ],
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "浏览器发布/审批/首guest锁安排/餐厅声明stale已验证；host报告和self优先的浏览器后半程未执行。",
+          "reason": "B3 browser and R86-R89 targeted verification"
+        }
+      ],
+      "defectIds": [
+        "QA-F17"
       ]
     },
     {
@@ -21966,7 +22041,9 @@
     "QA-F12": "CLOSED_TARGETED_QA",
     "QA-F13": "CLOSED_TARGETED_QA",
     "QA-F14": "CLOSED_TARGETED_QA",
-    "QA-F15": "OPEN"
+    "QA-F15": "CLOSED_TARGETED_QA",
+    "QA-F16": "OPEN",
+    "QA-F17": "OPEN"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",

@@ -27,6 +27,16 @@ def validate(data=None):
             for t in r['assertions']:
                 assert not Path(t['path']).is_absolute() and '..' not in Path(t['path']).parts
                 assert (ROOT/t['path']).is_file(), t['path']
+    browser_path=data.get('evidenceCatalog',{}).get('browserObservations')
+    if browser_path:
+        browser=json.loads((ROOT/'docs/qa'/browser_path).read_text())
+        for item in browser['observations']:
+            assert item['id'] not in assertions and item['status'] in ('passed','failed')
+            assert item['steps'] and len(item['testedCommit'])==40
+            for artifact in item['artifacts']:
+                assert not Path(artifact).is_absolute() and '..' not in Path(artifact).parts
+                assert (ROOT/'docs/qa'/artifact).is_file()
+            assertions[item['id']]=item
     for c in rows:
         assert c['status'] in ('PASS','FAIL','BLOCKED','NOT_RUN','N/A') and c['actual']
         assert c['title']==plan[c['id']]['title']

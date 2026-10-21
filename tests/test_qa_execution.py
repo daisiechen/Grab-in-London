@@ -41,6 +41,13 @@ class QAExecutionTest(unittest.TestCase):
         c.update(status='PASS',evidence=[failed[0]['id']],remainingExpected=[],coveredExpectedIndexes=list(range(len(expected))))
         with self.assertRaises(AssertionError):validator.validate(self.data)
 
+    def test_failed_browser_observation_cannot_earn_case_pass(self):
+        c=next(c for c in self.data['cases'] if c['id']=='QA-CREATE-001')
+        plan=json.loads((ROOT/'docs/qa/test-cases.json').read_text())
+        expected=next(p for p in plan['cases'] if p['id']==c['id'])['expected']
+        c.update(status='PASS',evidence=['B3-T002'],remainingExpected=[],coveredExpectedIndexes=list(range(len(expected))))
+        with self.assertRaises(AssertionError):validator.validate(self.data)
+
     def test_report_is_reproducible(self):
         p=ROOT/'docs/qa/execution-2026-10-21.zh-CN.md';before=p.read_bytes()
         subprocess.run(['python3',str(ROOT/'scripts/render-qa-execution.py')],check=True,cwd=ROOT)
