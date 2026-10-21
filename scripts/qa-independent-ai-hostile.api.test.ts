@@ -113,3 +113,23 @@ it('QA-AI-026 independent held provider cannot publish after deletion; both old 
   expect(h.runtime.read(next.id,{...h.b,deviceToken:next.deviceToken,preferenceEpoch:'2'}).messages).toEqual([]);expect(await h.c.preferences.read(userId)).toMatchObject({fields:emptyPreferences(),epoch:'2'});
  }finally{release();}
 });
+
+it('QA-AI-013 pending explanation never claims approval or requests prepayment; actual status-query SQL failure yields no invented answer',async()=>{
+ const m=await meal(),h=await setup([plan('EXPLAIN',[],[m]),plan('EXPLAIN',[],[m])]);
+ await db.pool.query("INSERT INTO applications(meal_id,user_id,round,state,message) VALUES($1,$2,1,'PENDING','PRIVATE_PENDING_APPLICATION_MESSAGE')",[m,userId]);
+ const before=await noWrites(),first=await h.run(h.turn('Was my request approved and do I need to pay now?',{explicitMealId:m}));
+ expect(first.state).toBe('SUCCEEDED');expect(first.result!.replyText).toContain('PENDING');expect(first.result!.replyText).toContain('does not reserve a seat');expect(first.result!.replyText).not.toMatch(/approved|confirmed|pay now|prepay|payment required/i);expect(h.captured.join('')).not.toContain('PRIVATE_PENDING_APPLICATION_MESSAGE');
+ await db.pool.query('ALTER TABLE applications RENAME TO qa_temporarily_unavailable_applications');
+ try{const failed=await h.run(h.turn('Is my application approved now?',{explicitMealId:m}));expect(failed.state).toBe('FAILED');expect(failed.result).toBeNull();}finally{await db.pool.query('ALTER TABLE qa_temporarily_unavailable_applications RENAME TO applications');}
+ expect(await noWrites()).toEqual(before);
+});
+
+it('QA-AI-020 ordinary search excludes profile but explicitly requested own introduction supplies only approved public fields',async()=>{
+ const m=await meal(),h=await setup([plan('SEARCH'),plan('DRAFT_APPLICATION'),{text:'I would enjoy joining your table for friendly conversation.'}]);
+ const bio='PUBLIC_BIO_CANARY enjoys food and meeting new neighbours.',name='QA Public Name';
+ await db.pool.query("INSERT INTO profiles(user_id,display_name,bio,languages,interests,background) VALUES($1,$2,$3,ARRAY['en'],ARRAY['FOOD'],$4)",[userId,name,bio,JSON.stringify({privateNote:'PRIVATE_PROFILE_BACKGROUND'})]);
+ await db.pool.query('INSERT INTO private_contact(user_id,email,email_verified_at) VALUES($1,$2,clock_timestamp())',[userId,'private-context-canary@example.invalid']);
+ const ordinary=await h.run(h.turn('Find meals'));expect(ordinary.state).toBe('SUCCEEDED');expect(h.captured.join('')).not.toContain(bio);expect(h.captured.join('')).not.toContain(name);
+ const drafted=await h.run(h.turn('Please use my public profile introduction, name, languages and interests to draft my application.',{explicitMealId:m,editorVersion:'0'}));expect(drafted.state).toBe('SUCCEEDED');
+ const input=h.captured.slice(1).join('');expect(input).toContain(bio);expect(input).toContain(name);expect(input).toContain('FOOD');expect(input).not.toContain('PRIVATE_PROFILE_BACKGROUND');expect(input).not.toContain('private-context-canary@example.invalid');
+});

@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 90,
-    "PASS": 114,
+    "NOT_RUN": 82,
+    "PASS": 122,
     "FAIL": 1,
     "BLOCKED": 12
   },
@@ -6941,8 +6941,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R82-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -6982,13 +6984,20 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "前者观察中不入分母",
-        "等号成熟",
-        "首次从全历史求而非选期首条"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：首申请10月1日12Z → 首次出席14天内 → asOf=10月15日12Z−1ms/等号。尚缺逐项证据：前者观察中不入分母；等号成熟；首次从全历史求而非选期首条。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "R82 独立手算fixture：首申请10月1日12Z，14天-1ms observing分母0、等号成熟1/1；同用户后续申请不替全历史first，选期排除历史first时不回捞较晚申请。直接调用现生产metrics函数并检查明细行/手算分子分母；不是页面计算作oracle，不代表CSV或浏览器全链路。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：首申请10月1日12Z → 首次出席14天内 → asOf=10月15日12Z−1ms/等号。尚缺逐项证据：前者观察中不入分母；等号成熟；首次从全历史求而非选期首条。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
+          "reason": "R82 independently hand-calculated boundary fixtures"
+        }
+      ]
     },
     {
       "id": "QA-METRIC-005",
@@ -6996,8 +7005,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R82-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -7037,12 +7048,19 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "0不算后续，30天算，超过不算",
-        "同场重复不算回访"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "本地生产实现尚需实际执行：首出席后0、30天、30天+1ms分别出席另一场 → 再设同mealId重复。尚缺逐项证据：0不算后续，30天算，超过不算；同场重复不算回访。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "R82 独立手算fixture：另场延迟0不复赴约，30天恰好纳入、30天+1ms不纳入；同meal两次出席revision仍只一场，重复率0/1。直接调用现生产metrics函数并检查明细行/手算分子分母；不是页面计算作oracle，不代表CSV或浏览器全链路。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：首出席后0、30天、30天+1ms分别出席另一场 → 再设同mealId重复。尚缺逐项证据：0不算后续，30天算，超过不算；同场重复不算回访。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
+          "reason": "R82 independently hand-calculated boundary fixtures"
+        }
+      ]
     },
     {
       "id": "QA-METRIC-006",
@@ -7050,8 +7068,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R82-T003"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -7091,13 +7111,20 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "前不成熟",
-        "等号纳入申请结果分母",
-        "不错误用start+24h"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：start=10月1日18Z、end20Z → asOf10月2日20Z−1ms/等号。尚缺逐项证据：前不成熟；等号纳入申请结果分母；不错误用start+24h。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "R82 独立手算fixture：start10月1日18Z/end20Z，26小时-1ms分母0、等号1/1；start+24h仍未成熟，使用end+24h。直接调用现生产metrics函数并检查明细行/手算分子分母；不是页面计算作oracle，不代表CSV或浏览器全链路。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：start=10月1日18Z、end20Z → asOf10月2日20Z−1ms/等号。尚缺逐项证据：前不成熟；等号纳入申请结果分母；不错误用start+24h。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
+          "reason": "R82 independently hand-calculated boundary fixtures"
+        }
+      ]
     },
     {
       "id": "QA-METRIC-007",
@@ -7105,8 +7132,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R82-T004"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -7146,13 +7175,20 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "分母按四轮",
-        "出席仅r2计1",
-        "拒绝/撤回/取消仍保留适用分母"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：A撤回r1重申r2并出席 → B被拒r3 → M取消申请r4。尚缺逐项证据：分母按四轮；出席仅r2计1；拒绝/撤回/取消仍保留适用分母。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "R82 独立四轮fixture：撤回r1、确认并出席r2、B拒绝r3、另一取消场r4；结果分母4分子1，仅r2行计出席，所有适用轮次分母保留。直接调用现生产metrics函数并检查明细行/手算分子分母；不是页面计算作oracle，不代表CSV或浏览器全链路。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：A撤回r1重申r2并出席 → B被拒r3 → M取消申请r4。尚缺逐项证据：分母按四轮；出席仅r2计1；拒绝/撤回/取消仍保留适用分母。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
+          "reason": "R82 independently hand-calculated boundary fixtures"
+        }
+      ]
     },
     {
       "id": "QA-METRIC-008",
@@ -7215,8 +7251,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R83-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -7256,13 +7294,20 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "前者不回捞9月旧答",
-        "后者Yes有效",
-        "null只计未答不计No"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：A9月25Yes，10月2No → asOf10月18查9月 → 再asOf9月30。尚缺逐项证据：前者不回捞9月旧答；后者Yes有效；null只计未答不计No。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "R83独立手算：A9月25Yes、10月2No，asOf10月18查9月不回捞旧Yes；asOf9月30可见Yes有效1/1。B null+venue只有未答行且不入分母；全期A No分母1分子0，与B null严格区分。直接现行metrics函数，页面/CSV全链路另列。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：A9月25Yes，10月2No → asOf10月18查9月 → 再asOf9月30。尚缺逐项证据：前者不回捞9月旧答；后者Yes有效；null只计未答不计No。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
+          "reason": "R83 independent latest-asOf survey fixture"
+        }
+      ]
     },
     {
       "id": "QA-METRIC-010",
@@ -10534,8 +10579,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R80-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -10643,13 +10690,20 @@
         "R2-T063",
         "R22-T002"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "pending不称批准",
-        "外订到店付不索预付",
-        "失败保留未知"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "R22独立controller/PG已覆盖部分：本人PENDING/CONFIRMED/DECLINED/WITHDRAWN enum，不读本人/他人私人留言；尚缺状态API故障保留未知完整路径。 保持NOT_RUN，不按自动化数授整条PASS。"
+      "remainingExpected": [],
+      "actual": "R80受控provider+真实PG：本人PENDING申请询问批准/付款，结果仅PENDING且不保留座位，不称批准/已确认/预付款要求；私有申请正文不传模型。隔离数据库临时重命名applications注入真实状态SQL读取失败，结果FAILED且result=null，不生成已知状态；finally恢复表名，业务行数不变。服务端实现范围，不代表真实模型供应商评测。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "R22独立controller/PG已覆盖部分：本人PENDING/CONFIRMED/DECLINED/WITHDRAWN enum，不读本人/他人私人留言；尚缺状态API故障保留未知完整路径。 保持NOT_RUN，不按自动化数授整条PASS。",
+          "reason": "R80 independent real SQL status read failure"
+        }
+      ]
     },
     {
       "id": "QA-AI-014",
@@ -11408,8 +11462,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "R81-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -11518,10 +11574,20 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "普通查询无资料/未发稿",
-        "仅显式请求才包含白名单本人字段或该次编辑文字"
+        "显式请求后仅该次读取本人昵称/介绍/语言/兴趣四字段；不读其他用户或私有字段",
+        "编辑器文字明确润色同意后才提供；普通后续查询不继承额外资料"
       ],
-      "actual": "本地生产实现尚需实际执行：普通查询后明确要求结合本人介绍，再明确润色编辑器。尚缺逐项证据：普通查询无资料/未发稿；仅显式请求才包含白名单本人字段或该次编辑文字。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "R81真实PG与受控provider：普通SEARCH未上传本人profile通过；明确要求结合本人公开介绍/昵称/语言/兴趣写申请，草稿成功但provider输入没有本人bio/name/兴趣，仅通用草稿，QA-F15。私有background/email合成canary预置，完整白名单/后续不继承断言尚未运行到，保留待验。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：普通查询后明确要求结合本人介绍，再明确润色编辑器。尚缺逐项证据：普通查询无资料/未发稿；仅显式请求才包含白名单本人字段或该次编辑文字。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
+          "reason": "R81 independently reproduces missing explicitly authorized own-profile context"
+        }
+      ],
+      "defectIds": [
+        "QA-F15"
+      ]
     },
     {
       "id": "QA-AI-021",
@@ -12182,11 +12248,29 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": [
         "R76-T001",
-        "R77-T001",
-        "R78-T001"
+        "R84-T003",
+        "R84-T026",
+        "R84-T027",
+        "R84-T028",
+        "R84-T029",
+        "R84-T030",
+        "R84-T031",
+        "R84-T032",
+        "R84-T033",
+        "R85-T013",
+        "R85-T014",
+        "R85-T015",
+        "R85-T016",
+        "R85-T017",
+        "R85-T018",
+        "R85-T019",
+        "R85-T020",
+        "R85-T021",
+        "R85-T022",
+        "R85-T032"
       ],
       "relatedAutomatedAssertions": [
         "R1-T094",
@@ -12294,17 +12378,23 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "iOS恢复前台先同步epoch并清旧结果；离线不继续AI",
-        "客户端未发文字仍保留；Web对应恢复路径待独立核查"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "R76真实PG/受控挂起provider：删除偏好epoch1→2、两个旧session失效、旧RAM上下文/草稿不可读、迟到结果SUPERSEDED，新bootstrap epoch2空上下文均通过。R77真实AssistantWidget组件AppState background→active：服务器准备epoch2删除响应，但readAIPreferences仍仅首次1次，旧上下文继续显示。QA-F14交接开发；不是服务端删除失败，不代表原生设备验收。",
+      "remainingExpected": [],
+      "actual": "R76真实PG双旧session/挂起provider删除屏障通过；正式ec379b0独立R84原生组件/manager33项及R85 Web定向通过，原R77/R78保持失败历史。原QA foreground probe不改断言转绿：恢复读偏好epoch，变更清旧上下文，未发文字保留；未变epoch可恢复、校验期间隐藏旧值、离线阻请求/转入、晚响应不能覆盖新账号/NEW/再次后台、无activity隐式续TTL。Web visibility/focus同类回归与原QA偏好删除双编辑未发文字通过。组件模拟传输，不授原生设备/真实供应商门槛。",
       "history": [
         {
           "status": "NOT_RUN",
           "actual": "本地生产实现尚需实际执行：provider挂起 → 删偏好 → 放行旧响应 → 另一设备恢复。尚缺逐项证据：epoch升、旧引用RAM清、旧结果SUPERSEDED不发布；他端先同步；未发文字保留。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
           "reason": "R76 server deletion green; R77 native foreground independently red"
+        },
+        {
+          "status": "FAIL",
+          "actual": "R76真实PG/受控挂起provider：删除偏好epoch1→2、两个旧session失效、旧RAM上下文/草稿不可读、迟到结果SUPERSEDED，新bootstrap epoch2空上下文均通过。R77真实AssistantWidget组件AppState background→active：服务器准备epoch2删除响应，但readAIPreferences仍仅首次1次，旧上下文继续显示。QA-F14交接开发；不是服务端删除失败，不代表原生设备验收。",
+          "reason": "Formal ec379b0 independent original foreground probe and affected regression"
         }
       ],
       "defectIds": [
@@ -14905,8 +14995,11 @@
       "priority": "P0",
       "plannedStage": "review",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R79-T001",
+        "R79-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T242",
         "R1-T243",
@@ -14973,13 +15066,20 @@
         "R1-T568",
         "R1-T569"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "Postgres CHECK/partial unique/FK真实拒绝",
-        "不只靠TS类型",
-        "迁移回滚兼容不丢数据"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：迁移空库/升级库 → 直接SQL插重复活跃申请、越界人数、重复message和非法FK。尚缺逐项证据：Postgres CHECK/partial unique/FK真实拒绝；不只靠TS类型；迁移回滚兼容不丢数据。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "R79隔离真实PG直接SQL：活跃申请partial unique拒23505、人数7 CHECK拒23514、非法host FK拒23503、重复message拒23505，原meal不变。空库先首迁移后植入version7用户，升级全部迁移并重跑no-op；附加失败迁移建表/改用户后除零，整迁移回滚，用户仍version7、半表不存在、迁移台账不增、随后正式迁移可重跑。验证失败迁移回滚与前向升级兼容，未声称支持任意生产降级。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：迁移空库/升级库 → 直接SQL插重复活跃申请、越界人数、重复message和非法FK。尚缺逐项证据：Postgres CHECK/partial unique/FK真实拒绝；不只靠TS类型；迁移回滚兼容不丢数据。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
+          "reason": "R79 independent direct SQL and seeded migration upgrade/rollback"
+        }
+      ]
     },
     {
       "id": "QA-CODE-003",
@@ -21865,7 +21965,8 @@
     "QA-F11": "CLOSED_TARGETED_QA",
     "QA-F12": "CLOSED_TARGETED_QA",
     "QA-F13": "CLOSED_TARGETED_QA",
-    "QA-F14": "OPEN"
+    "QA-F14": "CLOSED_TARGETED_QA",
+    "QA-F15": "OPEN"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",

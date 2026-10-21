@@ -12831,6 +12831,693 @@
           "failureSummary": "Foreground event did not re-read account preferences: expected calls > 1, actual 1; old preference context was not invalidated."
         }
       ]
+    },
+    {
+      "id": "R79",
+      "testedCommit": "04f219dd9dd7c046f68fcdf638d7416621b0791a; concurrent client-only F14 edits do not change DB migrations",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-db-constraints.api.test.ts",
+      "startedAt": "2026-10-21T14:24:45.388000+00:00",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "total": 2,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R79-T001",
+          "run": "R79",
+          "path": "scripts/qa-independent-db-constraints.api.test.ts",
+          "title": "QA-CODE-002 direct SQL rejects active duplicate application, invalid capacity, foreign keys and duplicate message without TypeScript guards",
+          "status": "passed",
+          "durationMs": 18.599999999999966
+        },
+        {
+          "id": "R79-T002",
+          "run": "R79",
+          "path": "scripts/qa-independent-db-constraints.api.test.ts",
+          "title": "QA-CODE-002 empty migration and seeded upgrade preserve data across a failed future migration and subsequent retry",
+          "status": "passed",
+          "durationMs": 197.756375
+        }
+      ]
+    },
+    {
+      "id": "R80",
+      "testedCommit": "04f219dd9dd7c046f68fcdf638d7416621b0791a; concurrent client-only F14 edits do not change server controller",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-hostile.api.test.ts -t 'QA-AI-013'",
+      "startedAt": "2026-10-21T14:26:36.444000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "excludedByNameFilter": 18,
+      "assertions": [
+        {
+          "id": "R80-T001",
+          "run": "R80",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-013 pending explanation never claims approval or requests prepayment; actual status-query SQL failure yields no invented answer",
+          "status": "passed",
+          "durationMs": 42.71666699999997
+        }
+      ]
+    },
+    {
+      "id": "R81",
+      "testedCommit": "04f219dd9dd7c046f68fcdf638d7416621b0791a; concurrent client-only F14 edits do not change server controller",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-hostile.api.test.ts -t 'QA-AI-020'",
+      "startedAt": "2026-10-21T14:28:11.531000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "excludedByNameFilter": 19,
+      "assertions": [
+        {
+          "id": "R81-T001",
+          "run": "R81",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-020 ordinary search excludes profile but explicitly requested own introduction supplies only approved public fields",
+          "status": "failed",
+          "durationMs": 90.95962500000007,
+          "failureSummary": "Explicit own public-profile request produced a generic draft; provider input lacked the synthetic public biography canary."
+        }
+      ]
+    },
+    {
+      "id": "R82",
+      "testedCommit": "04f219dd9dd7c046f68fcdf638d7416621b0791a; metrics.ts/contracts unchanged in concurrent working tree",
+      "command": "pnpm exec vitest run --project unit apps/api/src/admin/qa-independent-metric-boundaries.unit.test.ts",
+      "startedAt": "2026-10-21T14:31:05.960000+00:00",
+      "exitCode": 0,
+      "passed": 4,
+      "failed": 0,
+      "total": 4,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R82-T001",
+          "run": "R82",
+          "path": "apps/api/src/admin/qa-independent-metric-boundaries.unit.test.ts",
+          "title": "QA-METRIC-004 independent 14-day equality and all-history first application",
+          "status": "passed",
+          "durationMs": 10.719042000000002
+        },
+        {
+          "id": "R82-T002",
+          "run": "R82",
+          "path": "apps/api/src/admin/qa-independent-metric-boundaries.unit.test.ts",
+          "title": "QA-METRIC-005 independent repeat attendance excludes zero delay and same meal; includes 30 days and excludes 30 days plus 1ms",
+          "status": "passed",
+          "durationMs": 1.6559590000000242
+        },
+        {
+          "id": "R82-T003",
+          "run": "R82",
+          "path": "apps/api/src/admin/qa-independent-metric-boundaries.unit.test.ts",
+          "title": "QA-METRIC-006 independent application maturity is start plus 26h at exact millisecond",
+          "status": "passed",
+          "durationMs": 0.7408340000000067
+        },
+        {
+          "id": "R82-T004",
+          "run": "R82",
+          "path": "apps/api/src/admin/qa-independent-metric-boundaries.unit.test.ts",
+          "title": "QA-METRIC-007 independent four rounds retain withdrawn declined and cancelled denominators with attendance only credited to r2",
+          "status": "passed",
+          "durationMs": 0.47895799999997735
+        }
+      ]
+    },
+    {
+      "id": "R83",
+      "testedCommit": "04f219dd9dd7c046f68fcdf638d7416621b0791a; metrics.ts/contracts unchanged in concurrent working tree",
+      "command": "pnpm exec vitest run --project unit apps/api/src/admin/qa-independent-metric-boundaries.unit.test.ts -t 'QA-METRIC-009'",
+      "startedAt": "2026-10-21T14:32:34.966000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "excludedByNameFilter": 4,
+      "assertions": [
+        {
+          "id": "R83-T001",
+          "run": "R83",
+          "path": "apps/api/src/admin/qa-independent-metric-boundaries.unit.test.ts",
+          "title": "QA-METRIC-009 independent survey selects latest asOf answer before date filtering; null remains unanswered",
+          "status": "passed",
+          "durationMs": 9.535333000000008
+        }
+      ]
+    },
+    {
+      "id": "R84",
+      "testedCommit": "ec379b0426aba700011b7de69dead6bde7483f8e",
+      "command": "pnpm --filter @fancy/ios exec jest src/features/assistant/qa-independent-resume.test.tsx src/features/assistant/manager.test.ts src/features/assistant/widget.test.tsx --runInBand",
+      "startedAt": "2026-10-21T14:33:19.125000+00:00",
+      "exitCode": 0,
+      "passed": 33,
+      "failed": 0,
+      "total": 33,
+      "suiteFiles": 3,
+      "assertions": [
+        {
+          "id": "R84-T001",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/widget.test.tsx",
+          "title": "opens an explicit assistant entry without creating an identity or sending anything",
+          "status": "passed",
+          "durationMs": 157
+        },
+        {
+          "id": "R84-T002",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/widget.test.tsx",
+          "title": "keeps overlong native input with inline shortening guidance and recovers at 2000 characters",
+          "status": "passed",
+          "durationMs": 26
+        },
+        {
+          "id": "R84-T003",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/qa-independent-resume.test.tsx",
+          "title": "QA-AI-026 foreground validates account preference epoch before retaining old assistant context and preserves unsent text",
+          "status": "passed",
+          "durationMs": 21
+        },
+        {
+          "id": "R84-T004",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "recovers a temporary guest read failure on explicit retry without discarding its revocation identity",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R84-T005",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "retries failed credential persistence before bootstrap without minting another guest",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T006",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "retries the same request intent and sends only explicitly confirmed guest preferences",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R84-T007",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "single-flights bootstrap and ignores a response after account isolation",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R84-T008",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "expires exactly at TTL and preserves unsent text and confirmed guest preferences",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T009",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "clears assistant input on NEW without applying or clearing the registered business editor",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R84-T010",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "requires replacement confirmation and rejects edits during validation without applying",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R84-T011",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "does not apply a late answer while closed, and never implicitly sends editor content",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T012",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "releases MEAL context on blur before asking from a page without explicit context",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T013",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "does not let a retired focus cleanup erase the new page context",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T014",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "restores the same fixed-expiry guest across managers and NEW",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T015",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "cold-starts with no AI transcript or device token and only continues after an explicit action using the fixed-expiry guest",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R84-T016",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "treats a server RAM-loss 410 as expired without automatic regeneration and keeps local unsent text and confirmed preferences",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T017",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "creates a new subject only after the fixed 24h expiry",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T018",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "clears the secure guest record on login without retaining AI content",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R84-T019",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "fails closed on secure read or write failure without sending assistant requests or minting retries",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R84-T020",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "blocks future guest bootstrap if account-transition secure deletion fails",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R84-T021",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "keeps invalid question text verbatim and sends no request (case 0)",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T022",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "keeps invalid question text verbatim and sends no request (case 1)",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T023",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "keeps invalid question text verbatim and sends no request (case 2)",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T024",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "keeps invalid question text verbatim and sends no request (case 3)",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T025",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "accepts exactly 2000 characters and recovers after shortening overlong input",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T026",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "validates remote epoch on foreground, clears old context and keeps unsent input",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T027",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "hides old state while resume verification is pending; deduplicates concurrent resume reads",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T028",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "fails closed offline on resume and blocks old context, draft transfer and provider requests",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R84-T029",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "does not apply a late foreground verification after account",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T030",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "does not apply a late foreground verification after new",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T031",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "does not apply a late foreground verification after pause",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T032",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "a second pause fences an old resume; a second active event performs a new verification",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R84-T033",
+          "run": "R84",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "does not let an awaiting send resume into account B after account A verification completes late",
+          "status": "passed",
+          "durationMs": 0
+        }
+      ]
+    },
+    {
+      "id": "R85",
+      "testedCommit": "ec379b0426aba700011b7de69dead6bde7483f8e",
+      "command": "pnpm exec vitest run --project web apps/web/src/features/assistant/assistant.unit.test.tsx apps/web/src/features/assistant/qa-independent-session.unit.test.tsx",
+      "startedAt": "2026-10-21T14:33:19.080000+00:00",
+      "exitCode": 0,
+      "passed": 32,
+      "failed": 0,
+      "total": 32,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R85-T001",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport keeps a 2001-character paste intact, explains the limit and permits a shortened 2000-character request",
+          "status": "passed",
+          "durationMs": 127.95529099999999
+        },
+        {
+          "id": "R85-T002",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport never sends whitespace-only input",
+          "status": "passed",
+          "durationMs": 22.92841599999997
+        },
+        {
+          "id": "R85-T003",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport counts edge whitespace toward the limit and keeps all original text",
+          "status": "passed",
+          "durationMs": 52.074792
+        },
+        {
+          "id": "R85-T004",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport counts edge whitespace toward the limit and keeps all original text",
+          "status": "passed",
+          "durationMs": 42.82987500000013
+        },
+        {
+          "id": "R85-T005",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport clears only the assistant unsent text on New conversation and preserves the business editor",
+          "status": "passed",
+          "durationMs": 217.72704199999998
+        },
+        {
+          "id": "R85-T006",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport keeps the approved assistant home and sends a real typed request only after an explicit user action",
+          "status": "passed",
+          "durationMs": 88.99466599999982
+        },
+        {
+          "id": "R85-T007",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport stops polling while closed and shows a completed closed-period request only after Continue",
+          "status": "passed",
+          "durationMs": 114.6395
+        },
+        {
+          "id": "R85-T008",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport requires explicit editor-text consent and a replacement confirmation, and only changes the original editor",
+          "status": "passed",
+          "durationMs": 139.79833299999996
+        },
+        {
+          "id": "R85-T009",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport leaves a stale or unauthorized draft in the original editor unchanged",
+          "status": "passed",
+          "durationMs": 76.25212499999998
+        },
+        {
+          "id": "R85-T010",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport keeps preference read/write/delete usable independently of model availability",
+          "status": "passed",
+          "durationMs": 149.36024999999995
+        },
+        {
+          "id": "R85-T011",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport uses guest preferences as soft input without changing applied hard filters or saving account data",
+          "status": "passed",
+          "durationMs": 131.03429200000005
+        },
+        {
+          "id": "R85-T012",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy production UI with isolated mock transport does not append a late old-generation response after New conversation",
+          "status": "passed",
+          "durationMs": 126.8054169999998
+        },
+        {
+          "id": "R85-T013",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries fences first-send bootstrap across a pause (foreground before bootstrap=false)",
+          "status": "passed",
+          "durationMs": 107.12112500000012
+        },
+        {
+          "id": "R85-T014",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries fences first-send bootstrap across a pause (foreground before bootstrap=true)",
+          "status": "passed",
+          "durationMs": 93.44570900000008
+        },
+        {
+          "id": "R85-T015",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries holds an in-flight result offscreen until foreground epoch verification (changed=false)",
+          "status": "passed",
+          "durationMs": 97.39166600000044
+        },
+        {
+          "id": "R85-T016",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries holds an in-flight result offscreen until foreground epoch verification (changed=true)",
+          "status": "passed",
+          "durationMs": 87.40745800000013
+        },
+        {
+          "id": "R85-T017",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries holds polling and requests behind one foreground preference check without renewing activity",
+          "status": "passed",
+          "durationMs": 92.71300000000019
+        },
+        {
+          "id": "R85-T018",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries keeps unsent text and blocks sends, draft validation and activity while foreground checks are offline",
+          "status": "passed",
+          "durationMs": 105.93304200000011
+        },
+        {
+          "id": "R85-T019",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries discards a late foreground preference response after independent preference deletion",
+          "status": "passed",
+          "durationMs": 91.18195800000012
+        },
+        {
+          "id": "R85-T020",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries does not let a response from an earlier foreground check unlock a newer background pause",
+          "status": "passed",
+          "durationMs": 92.43833300000006
+        },
+        {
+          "id": "R85-T021",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries checks foreground epoch after a completed turn (panel closed=false) and keeps unsent input without activity",
+          "status": "passed",
+          "durationMs": 94.75391600000012
+        },
+        {
+          "id": "R85-T022",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries checks foreground epoch after a completed turn (panel closed=true) and keeps unsent input without activity",
+          "status": "passed",
+          "durationMs": 135.23854100000017
+        },
+        {
+          "id": "R85-T023",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries expires local conversation content at the boundary and preserves unsent user input",
+          "status": "passed",
+          "durationMs": 198.16987500000005
+        },
+        {
+          "id": "R85-T024",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries reuses the same request id for an explicit retry after an unknown transport outcome and never retries the model automatically",
+          "status": "passed",
+          "durationMs": 96.29154100000005
+        },
+        {
+          "id": "R85-T025",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries preserves a newly edited unsent question while an earlier send is waiting for acknowledgement",
+          "status": "passed",
+          "durationMs": 120.64091700000017
+        },
+        {
+          "id": "R85-T026",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries transfers a CREATE candidate only through its matching original editor",
+          "status": "passed",
+          "durationMs": 84.02462500000001
+        },
+        {
+          "id": "R85-T027",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries transfers a GROUP candidate only through its matching original editor",
+          "status": "passed",
+          "durationMs": 79.57870899999989
+        },
+        {
+          "id": "R85-T028",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "Ask Fancy expiry, retries and typed draft boundaries sends selected meal ids explicitly for comparison without submitting a meal action",
+          "status": "passed",
+          "durationMs": 102.10200000000032
+        },
+        {
+          "id": "R85-T029",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/assistant.unit.test.tsx",
+          "title": "assistant keyboard ownership returns focus to the launcher after Escape closes the controlled sheet",
+          "status": "passed",
+          "durationMs": 79.10500000000002
+        },
+        {
+          "id": "R85-T030",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/qa-independent-session.unit.test.tsx",
+          "title": "independent QA assistant editor and expiry QA-AI-016 explicit Keep my text preserves edited v2 without transfer or append",
+          "status": "passed",
+          "durationMs": 390.557458
+        },
+        {
+          "id": "R85-T031",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/qa-independent-session.unit.test.tsx",
+          "title": "independent QA assistant editor and expiry QA-AI-030 NEW clears assistant unsent text while TTL preserves both editors; neither alters saved preferences",
+          "status": "passed",
+          "durationMs": 276.087583
+        },
+        {
+          "id": "R85-T032",
+          "run": "R85",
+          "path": "apps/web/src/features/assistant/qa-independent-session.unit.test.tsx",
+          "title": "independent QA deletion keeps unsent text QA-F05 deleting preferences retains assistant and business unsent text",
+          "status": "passed",
+          "durationMs": 161.8522499999999
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -12872,12 +13559,14 @@
     "scripts/qa-independent-snapshot-race.api.test.ts": "2f71df1295860e2dfcc2df39890c6f9ba1f4c7627877573cff175b2b2334102a",
     "apps/admin/src/state/qa-independent-revocation.unit.test.tsx": "e2999aca140d3f9bdb9f2f88319e44a1e9c99884da300a701967d05f74c01c09",
     "scripts/qa-independent-ai-group-permissions.api.test.ts": "67ded17c812c8d5fa85aebdeb3c0849e7691b7b4a81900c9cfd4df6f5631638f",
-    "scripts/qa-independent-ai-hostile.api.test.ts": "1cf023ce52a6e19740c0e6124d19fb86bff8ebb13887a4aab14a7938e2d5661e",
+    "scripts/qa-independent-ai-hostile.api.test.ts": "b3d46acf6cf9b7d9a98cf63c9a96cf5b062e3570929e00f2e8a96d61fed49675",
     "scripts/qa-independent-provider-lock.api.test.ts": "e5bc76e651eccec34cb774662a0c78b2b6f95b39130242ae16faf7a4c95aac87",
     "scripts/qa-independent-oauth-logs.api.test.ts": "30dd3835dc27e9a64a251dfab9a653b188c0dfdbd5ef379620435cf3a6376700",
     "scripts/qa-oauth-log-child.ts": "2407272b1de6534c7670b8fdf5e9f91104f3c82de14c5767835eda48d50d91d9",
     "apps/api/src/test/qa-independent-assets.unit.test.ts": "d74cde8973e70c2274453d08a2a9db3c08d5f4014588bde4eb4c8a4293f3f6c1",
-    "apps/ios/src/features/assistant/qa-independent-resume.test.tsx": "01492766cb4b94a44bcdaf1c35d86c7812dc5b6ab80de06f765142d69e986664"
+    "apps/ios/src/features/assistant/qa-independent-resume.test.tsx": "01492766cb4b94a44bcdaf1c35d86c7812dc5b6ab80de06f765142d69e986664",
+    "scripts/qa-independent-db-constraints.api.test.ts": "f2d055aef7ff13bf9d701944f1d7e4d0a41015ff977d1d47adf1d6bc500f9c06",
+    "apps/api/src/admin/qa-independent-metric-boundaries.unit.test.ts": "5a0c4d114b8b7e5903b0c4b81b78df067b5f36fb118c16913943fde7edf1b2e7"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console. R68/R69 valid TestIDP OAuth callback200 captured actual non-silent child stdout only in parent RAM. Metadata contains only leak booleans, never credential strings or raw logs. R69 aggregates code/state/email checks without stopping at the first boolean failure. R72 mutates semantic OpenAPI/SDK artifacts only in an owned temporary contracts copy, requires the real checker fail1 and restore0, and verifies original workspace bytes untouched. Static cases remain NOT_RUN until fixed committed handoff recheck.",
   "runtimeSnapshotVerification": {
@@ -12948,6 +13637,7 @@
     "R64 initial fast multi-stage setup hit the guest one-second write-burst limiter before the final send (429 rather than authorization403); clears only that synthetic actor write-burst row immediately before the authorization probe, retaining all durable messages/quota. Stranger send correctly conceals an unknown conversation with404, not403; expectation aligned to established route contract, still asserts no message. No production code or permission assertion weakened.",
     "R65 copied helper imported unused describe (lint corrected). Initial four hidden-group setup failures omitted required messages.created_at; added clock_timestamp and completed JOIN/membership/message sequence before final execution. No production assertions weakened. R65 verifies each rejected malformed output still increments both active daily/monthly used money by exactly20 times actual provider-call count, rather than merely seeing a KNOWN row.",
     "R67 QA-only cleanup: createHarness.close captures the original app, so a rebuilt disabled-config app also needs explicit close before original close/drop. Corrected wrapper and six availability assertions still pass. This stops its own lifecycle timer before pool drop; no production assertion changed. Concurrent F12 candidate files are explicitly not treated as accepted by this run.",
-    "R77 final unreachable getState references corrected to existing getSnapshot API; iOS tsc passed, R78 repeats the same foreground request-count failure. No production alias or lowered assertion."
+    "R77 final unreachable getState references corrected to existing getSnapshot API; iOS tsc passed, R78 repeats the same foreground request-count failure. No production alias or lowered assertion.",
+    "CODE002 first suite could not import pg from root (0 tests); reused existing testkit database pool, preserving SQL/rollback assertions. Final R79 2 passed."
   ]
 }

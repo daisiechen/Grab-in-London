@@ -1,6 +1,6 @@
 # 独立QA执行报告 · 2026-10-21
 
-**结论：本轮不通过，存在未闭环缺陷：QA-F14。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
+**结论：本轮不通过，存在未闭环缺陷：QA-F15。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
 
 原测试计划基线4659fdb；被测交接`8ba6fc7c9974cf6be1ac06d8b16e0380fb3beced`，业务代码`8bc1e9280153491b6a63c68cd6ba6a49f8061978`。Inbox分页修复在`071ecd7cbd012cb7c49d4b907ec768f90409a3f6`仅做定向复验；QA-F01及第二批P0探针在04cb601验证，第三批边界、删除/恢复和适配在d4582f7及后续仅CI增量版本定向验证，具体版本见运行表；更早证据沿用对应固定基线。
 
@@ -14,10 +14,10 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 114 |
+| PASS | 122 |
 | FAIL | 1 |
 | BLOCKED | 12 |
-| NOT_RUN | 90 |
+| NOT_RUN | 82 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实环境、原生runtime/设备/签名或政策批准证据；本地恢复与分步删除现已复验通过，不能再笼统视为外部阻塞。FAIL优先于未完成的后续步骤。
@@ -104,6 +104,13 @@
 | R76 | 退出码0；1/1通过，失败0，1个测试文件 | `8e94ab3` |
 | R77 | 退出码1；0/1通过，失败1，1个测试文件 | `8e94ab3` |
 | R78 | 退出码1；0/1通过，失败1，1个测试文件 | `8e94ab3` |
+| R79 | 退出码0；2/2通过，失败0，1个测试文件 | `04f219d` |
+| R80 | 退出码0；1/1通过，失败0，1个测试文件 | `04f219d` |
+| R81 | 退出码1；0/1通过，失败1，1个测试文件 | `04f219d` |
+| R82 | 退出码0；4/4通过，失败0，1个测试文件 | `04f219d` |
+| R83 | 退出码0；1/1通过，失败0，1个测试文件 | `04f219d` |
+| R84 | 退出码0；33/33通过，失败0，3个测试文件 | `ec379b0` |
+| R85 | 退出码0；32/32通过，失败0，2个测试文件 | `ec379b0` |
 
 R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯函数探针；R5复跑分页修复回归，R6是QA第二批6项独立P0探针；R7/R8为QA-F01修复的API/Web及iOS组件定向复跑；R9是第三批12项独立边界探针，R10/R11复跑解除准备，R12为QA新增真实备份中E0导出的恢复后撤销分支；R13为饭后及群/私聊权限独立探针；R14保留QA-F03修前2失败，R15为0518d45修后的12项独立探针复验，R16为身份模块26项受影响HTTP回归（包括fresh会话下未来proof拒绝），不能删除修前结果或把历史失败当当前通过；R17为举报本人回执及撤授权重放3项独立HTTP/PG探针，撤session/DELETING状态通过受控数据库夹具设置。R18为安排锁、历史截止补算、开始名单及预约隔离6项独立PG/HTTP探针，删除仅屏障状态，完整删除名单断言仍未通过。R19/R20独立定向复跑5a37fdc关闭顺序单测及真实PG负载退出，未替代远端CI结果。R21为删除实际HTTP/本地purge、故障rollback及用户锁消息/审批竞态5项独立探针，生产日志脱敏仍待完整捕获。R22为ac09af4固定版本的11项独立受控AI/controller/HTTP探针，仅035/036/037具完整预期证据；R23为该版本Claude发现修复28项API/DB独立定向复验。R24保留QA-F04修前停用后仍发布失败；R25为8e2b908修后7项独立停用/费用/reaper探针，R26为22项受影响DB回归，F04定向关闭而043仍有未测断言。R27保留QA-F05修前Web失败，T001另为已分类夹具错误；R28/R29为f298048独立session/PG及Web组件各3项，R30为iOS manager17项定向回归；F05在NEW与TTL/偏好删除差异范围关闭。R31为公开DTO/后台角色/CSV授权及跨快照游标和大序号4项独立HTTP/PG探针，公式转义另覆盖formatter，不声称Excel实际执行。R32保留QA-F06 CLI入口失败，R33保留QA-F07原生协议失败；R34/R35固定b76c593独立8+32项验证CLI修复，R36固定1080993独立iOS49项验证桥接修复。完整加入用户路径仍NOT_RUN，不据组件通过升级。不能将这些数量相加当作独立业务用例数；R5与R1有重复，R2也不是原生设备验收。逐项测试名、状态、时间和命令见[机器证据](evidence/2026-10-21/automated-runs.json)。R4是质量检查而非业务用例。
 
@@ -225,12 +232,12 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-METRIC-001 · 零分母 | NOT_RUN | 本地生产实现尚需实际执行：无任何成熟申请/明确问卷答案，查询比率与CSV。尚缺逐项证据：分母0→null/—而非0%；CSV与页面同值同单位。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-METRIC-002 · 重复事件与伪成功 | NOT_RUN | 本地生产实现尚需实际执行：同eventId投递两次 → 客户端发送application_success。尚缺逐项证据：首条accepted第二duplicate；伪业务成功rejected且不进指标。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-METRIC-003 · 迟到接收 | NOT_RUN | 本地生产实现尚需实际执行：occurredAt<asOf但receivedAt>asOf → 构建S0和晚S1。尚缺逐项证据：S0排除；S1可纳入；S0不可变。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-METRIC-004 · 首次申请14天等号 | NOT_RUN | 本地生产实现尚需实际执行：首申请10月1日12Z → 首次出席14天内 → asOf=10月15日12Z−1ms/等号。尚缺逐项证据：前者观察中不入分母；等号成熟；首次从全历史求而非选期首条。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-METRIC-005 · 30天复赴约窗口 | NOT_RUN | 本地生产实现尚需实际执行：首出席后0、30天、30天+1ms分别出席另一场 → 再设同mealId重复。尚缺逐项证据：0不算后续，30天算，超过不算；同场重复不算回访。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-METRIC-006 · 申请出席成熟26小时 | NOT_RUN | 本地生产实现尚需实际执行：start=10月1日18Z、end20Z → asOf10月2日20Z−1ms/等号。尚缺逐项证据：前不成熟；等号纳入申请结果分母；不错误用start+24h。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-METRIC-007 · 申请轮次归因 | NOT_RUN | 本地生产实现尚需实际执行：A撤回r1重申r2并出席 → B被拒r3 → M取消申请r4。尚缺逐项证据：分母按四轮；出席仅r2计1；拒绝/撤回/取消仍保留适用分母。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-METRIC-004 · 首次申请14天等号 | PASS | R82 独立手算fixture：首申请10月1日12Z，14天-1ms observing分母0、等号成熟1/1；同用户后续申请不替全历史first，选期排除历史first时不回捞较晚申请。直接调用现生产metrics函数并检查明细行/手算分子分母；不是页面计算作oracle，不代表CSV或浏览器全链路。；证据 R82-T001 |
+| QA-METRIC-005 · 30天复赴约窗口 | PASS | R82 独立手算fixture：另场延迟0不复赴约，30天恰好纳入、30天+1ms不纳入；同meal两次出席revision仍只一场，重复率0/1。直接调用现生产metrics函数并检查明细行/手算分子分母；不是页面计算作oracle，不代表CSV或浏览器全链路。；证据 R82-T002 |
+| QA-METRIC-006 · 申请出席成熟26小时 | PASS | R82 独立手算fixture：start10月1日18Z/end20Z，26小时-1ms分母0、等号1/1；start+24h仍未成熟，使用end+24h。直接调用现生产metrics函数并检查明细行/手算分子分母；不是页面计算作oracle，不代表CSV或浏览器全链路。；证据 R82-T003 |
+| QA-METRIC-007 · 申请轮次归因 | PASS | R82 独立四轮fixture：撤回r1、确认并出席r2、B拒绝r3、另一取消场r4；结果分母4分子1，仅r2行计出席，所有适用轮次分母保留。直接调用现生产metrics函数并检查明细行/手算分子分母；不是页面计算作oracle，不代表CSV或浏览器全链路。；证据 R82-T004 |
 | QA-METRIC-008 · 成团与取消分开 | NOT_RUN | 本地生产实现尚需实际执行：M开始前peak3/min3后来取消 → N正式host+2测试成员。尚缺逐项证据：M可招募达标但取消；N测试成员不能撑成团；不把招募达标叫实际举行。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-METRIC-009 · 问卷最新再筛 | NOT_RUN | 本地生产实现尚需实际执行：A9月25Yes，10月2No → asOf10月18查9月 → 再asOf9月30。尚缺逐项证据：前者不回捞9月旧答；后者Yes有效；null只计未答不计No。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-METRIC-009 · 问卷最新再筛 | PASS | R83独立手算：A9月25Yes、10月2No，asOf10月18查9月不回捞旧Yes；asOf9月30可见Yes有效1/1。B null+venue只有未答行且不入分母；全期A No分母1分子0，与B null严格区分。直接现行metrics函数，页面/CSV全链路另列。；证据 R83-T001 |
 | QA-METRIC-010 · 问卷独立过滤 | NOT_RUN | 本地生产实现尚需实际执行：日期/分群固定 → 改变饭局区域、语言、人数、预算。尚缺逐项证据：问卷样本和值均不变；UI/CSV声明surveyScope。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-METRIC-011 · 评分和问卷粒度 | NOT_RUN | 本地生产实现尚需实际执行：A两场评分1和5，问卷Yes且cost+venue → 导出。尚缺逐项证据：评分2人次、问卷1用户；因素可多选比例不要求100%；不按单场星级切问卷。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-METRIC-012 · 预算互斥分段 | NOT_RUN | 本地生产实现尚需实际执行：max20/20.01/30/30.01/40/40.01/unknown各1场 → 选择各分段及并集。尚缺逐项证据：每场只落一个预算段；unknown独列；双语并集无重复。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
@@ -264,20 +271,20 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-AI-010 · 今晚和DST | NOT_RUN | 本地生产实现尚需实际执行：冻结今晚18点后 → 输入今晚 → 再输入秋季重复01:30/春季不存在时间。尚缺逐项证据：仅当日18:00—23:59未来场；歧义先选偏移/不存在报错，无可提交错误时点。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-AI-011 · 无结果与不可用 | NOT_RUN | 本地生产实现尚需实际执行：hard预算不足返回0 → 注入discovery失败 → 未知金额场。尚缺逐项证据：0说明无匹配；失败显示不可用不谎称0结果；未知金额不称预算内。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-AI-012 · 只比较明确三场 | NOT_RUN | 本地生产实现尚需实际执行：选择3个公开候选 → 再指定第四/未知mealId/隐藏场。尚缺逐项证据：≤3按同快照事实比较；无权对象拒绝不回显；不读取人格或行程。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-AI-013 · 解释本人状态 | NOT_RUN | R22独立controller/PG已覆盖部分：本人PENDING/CONFIRMED/DECLINED/WITHDRAWN enum，不读本人/他人私人留言；尚缺状态API故障保留未知完整路径。 保持NOT_RUN，不按自动化数授整条PASS。 |
+| QA-AI-013 · 解释本人状态 | PASS | R80受控provider+真实PG：本人PENDING申请询问批准/付款，结果仅PENDING且不保留座位，不称批准/已确认/预付款要求；私有申请正文不传模型。隔离数据库临时重命名applications注入真实状态SQL读取失败，结果FAILED且result=null，不生成已知状态；finally恢复表名，业务行数不变。服务端实现范围，不代表真实模型供应商评测。；证据 R80-T001 |
 | QA-AI-014 · 申请草稿无副作用 | NOT_RUN | R22独立controller/PG已覆盖部分：生成草稿无业务写，取消后转入拒绝；尚缺浏览器同draft反复转入和本人Submit恰好一申请。 保持NOT_RUN，不按自动化数授整条PASS。 |
 | QA-AI-015 · 创建草稿不默认同意 | NOT_RUN | R22独立controller/PG已覆盖部分：生成仅title/description、无自动发布；尚缺真实Create转入/Review前checkbox及留空状态。 保持NOT_RUN，不按自动化数授整条PASS。 |
 | QA-AI-016 · 非空编辑器冲突 | PASS | 独立Web生成后关闭助手编辑v2，重开Continue并取消替换，v2保留且无transfer/apply；R22服务端版本冲突、显式确认及重复转入证据互补，不能静默覆盖或追加。；证据 R22-T005, R29-T001 |
 | QA-AI-017 · 生成转入发送三次鉴权 | PASS | 真实PG/HTTP三阶段：生成GROUP草稿无消息写，provider完整输入未含已发送群正文sentinel；退群后转入409 TARGET_CHANGED，再请求生成SUPERSEDED且无结果。另一群先生成并转入200，仍无消息写；随后主持明确解散，旧转入文字Send403且消息数0。各阶段服务器独立鉴权，不把AI生成/转入视作发送；只使用计数mock provider，不是真实模型或系统浏览器。；证据 R64-T001 |
 | QA-AI-018 · 取消饭局仍可协调 | PASS | 真实PG/HTTP：主持取消未来饭局但未退群/解散；成员仍可生成GROUP草稿并转入，两个AI阶段消息数均0；只有本人随后显式POST消息才201且恰好1条。非成员发送隐藏404且无额外消息，conversation.dissolved_at仍null。饭局取消未被误当作群权限撤销，发送仍依成员授权。；证据 R64-T002 |
 | QA-AI-019 · 目标切换与过期卡片 | PASS | 真实PG/controller FULL/CLOSED两分支：M1生成申请草稿不写业务，切M2转入TARGET_CHANGED；M1被其他人填满或截止后，原M1草稿转入也TARGET_CHANGED。随后SEARCH不再给M1可申请卡，手工填席后业务计数在AI操作期间不变，旧draft无占位。容量/截止检查不依赖人为递增meal.version，验证实时条件。；证据 R65-T001, R65-T002 |
-| QA-AI-020 · 最小上下文 | NOT_RUN | 本地生产实现尚需实际执行：普通查询后明确要求结合本人介绍，再明确润色编辑器。尚缺逐项证据：普通查询无资料/未发稿；仅显式请求才包含白名单本人字段或该次编辑文字。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-AI-020 · 最小上下文 | FAIL | R81真实PG与受控provider：普通SEARCH未上传本人profile通过；明确要求结合本人公开介绍/昵称/语言/兴趣写申请，草稿成功但provider输入没有本人bio/name/兴趣，仅通用草稿，QA-F15。私有background/email合成canary预置，完整白名单/后续不继承断言尚未运行到，保留待验。；证据 R81-T001 |
 | QA-AI-021 · 注入与伪身份 | PASS | 五项真实PG/受控provider矩阵：unknown tool、foreign user额外字段、未知URL拒绝；非成员试图给hidden group起草SUPERSEDED；带ignore-rules标题/描述的公开meal进入第二阶段时，模型额外tool/userId字段仍整轮拒绝。provider捕获输入无数据库中的private_contact秘密或隐藏群正文，生成/查询/拒绝前后application/message/meal计数不变，不扩大DTO或业务权限。；证据 R65-T003, R65-T004, R65-T005, R65-T006, R65-T016 |
 | QA-AI-022 · 模型虚构与无效schema | PASS | 五项矩阵：不存在meal ID被事实源拒绝（SUPERSEDED），£30却返回999900金额、extra field、虚构工作/已订位、已付款/已批准等均FAILED且result null，无业务写和可操作残片。每次实际模型调用ai_calls KNOWN20，日/月used金额增量均精确等于调用数×20，包括无效结果，非真实供应商计费验收。；证据 R65-T007, R65-T008, R65-T009, R65-T010, R65-T011 |
 | QA-AI-023 · 纯文本输出 | PASS | 三种模型文本script、img/onerror、未知https URL在草稿校验时整轮FAILED/result null，无业务写；未把脚本文字eval，global sentinel不存在。合法解释控制组仅返回已显式供给、源端存在的meal UUID，cards无url/href模型字段。按本条api_db_or_unit方法验证“拒绝”分支，不把服务器拒绝说成浏览器已执行恶意脚本。；证据 R65-T012, R65-T013, R65-T014, R65-T015 |
 | QA-AI-024 · 确认记忆与日期排除 | PASS | R75真实PG+受控provider：预算/日期查询、生成提案均保持已存偏好原值；confirmation=false拒绝且下一查询成功，重新生成再显式确认才CAS写入version2。提案过滤日期，直接夹带dates/rawText也拒绝；DB仅六字段偏好，无日期/原查询，申请/消息/meal均无写入。16条其他测试由名称过滤排除，不计本次通过。；证据 R75-T001 |
 | QA-AI-025 · 跨设备CAS | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R1-T494 |
-| QA-AI-026 · 删除偏好与迟到结果 | FAIL | R76真实PG/受控挂起provider：删除偏好epoch1→2、两个旧session失效、旧RAM上下文/草稿不可读、迟到结果SUPERSEDED，新bootstrap epoch2空上下文均通过。R77真实AssistantWidget组件AppState background→active：服务器准备epoch2删除响应，但readAIPreferences仍仅首次1次，旧上下文继续显示。QA-F14交接开发；不是服务端删除失败，不代表原生设备验收。；证据 R76-T001, R77-T001, R78-T001 |
+| QA-AI-026 · 删除偏好与迟到结果 | PASS | R76真实PG双旧session/挂起provider删除屏障通过；正式ec379b0独立R84原生组件/manager33项及R85 Web定向通过，原R77/R78保持失败历史。原QA foreground probe不改断言转绿：恢复读偏好epoch，变更清旧上下文，未发文字保留；未变epoch可恢复、校验期间隐藏旧值、离线阻请求/转入、晚响应不能覆盖新账号/NEW/再次后台、无activity隐式续TTL。Web visibility/focus同类回归与原QA偏好删除双编辑未发文字通过。组件模拟传输，不授原生设备/真实供应商门槛。；证据 R76-T001, R84-T003, R84-T026, R84-T027, R84-T028, R84-T029, R84-T030, R84-T031, R84-T032, R84-T033, R85-T013, R85-T014, R85-T015, R85-T016, R85-T017, R85-T018, R85-T019, R85-T020, R85-T021, R85-T022, R85-T032 |
 | QA-AI-027 · 模型停用仍删偏好 | PASS | 真实server AI_PROVIDER=disabled（实际配置名，不虚构AI_ENABLED），请求503且provider未依赖；A本人偏好可读删，未登录401。B伪造userId仅返回B空偏好、以A版本删得409、猜目标路径404，A偏好不变。合成IOS A/B bearer也按owner隔离；IOS A删除后第二Web cookie视图字段清空且epoch同步，Web本人重新确认/删除仍可用。已提交饭局保留。只核HTTP/PG身份及多端会话语义，不冒称系统浏览器、原生设备或Keychain验证。；证据 R48-T006 |
 | QA-AI-028 · 恰好30分钟 | PASS | runtime时钟+真实PG：TTL前1ms可读，恰好1800000ms无需后台timer即失效并abort，临时text/条件/artifact不可恢复；新会话空，保存账号偏好原行不变。Web组件精确TTL保留助手及业务未发文字。；证据 R28-T002, R29-T002 |
 | QA-AI-029 · 活动真实性与重放 | PASS | 真实SessionService/PG+受控时钟：SEND/EDIT/显式操作续期；重复eventId、read不续时，HEARTBEAT拒绝；EDIT不足30秒不flush，到30秒写实际观察activityAt及expiry，非flush当前时刻。；证据 R28-T001 |
@@ -298,7 +305,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-AI-044 · 对账权限与幂等 | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R1-T490 |
 | QA-AI-045 · 长度token及deadline | PASS | F10修复49d22b6正式独立R54原两探针及新增恢复路径3项通过：真实paste2001完整保留、inline报错、空白0请求、原文首尾空白2001不能trim绕过、缩短2000后明确发送一次；R55 iOS manager/widget24项包含原文保留/长度/恢复通过，非真机。R53服务器空白/2000/2001、16001输入token、真实适配器输出2001tokens安全失败且计费、deadline≤30秒；R25超时及迟到不发布复用。R52两项原红永久保留。；证据 R53-T001, R53-T002, R53-T003, R25-T002, R54-T001, R54-T002, R54-T003, R55-T001, R55-T002, R55-T003, R55-T004, R55-T005, R55-T006, R55-T007, R55-T008, R55-T009, R55-T010, R55-T011, R55-T012, R55-T013, R55-T014, R55-T015, R55-T016, R55-T017, R55-T018, R55-T019, R55-T020, R55-T021, R55-T022, R55-T023, R55-T024 |
 | QA-CODE-001 · 生产隔离 | PASS | 正式26317f8独立R74通过：生产/staging拒测试适配及固定OTP；AST检查六端与生产包无旧Demo/shared权威、模拟键盘付款依赖。隔离副本语义破坏OpenAPI/SDK均使真实生成检查失败，恢复通过，原artifact字节不变；四端API/Web/iOS/admin typecheck通过，共享workspace client/contracts。；证据 R74-T003, R74-T004 |
-| QA-CODE-002 · 数据库真约束 | NOT_RUN | 本地生产实现尚需实际执行：迁移空库/升级库 → 直接SQL插重复活跃申请、越界人数、重复message和非法FK。尚缺逐项证据：Postgres CHECK/partial unique/FK真实拒绝；不只靠TS类型；迁移回滚兼容不丢数据。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-CODE-002 · 数据库真约束 | PASS | R79隔离真实PG直接SQL：活跃申请partial unique拒23505、人数7 CHECK拒23514、非法host FK拒23503、重复message拒23505，原meal不变。空库先首迁移后植入version7用户，升级全部迁移并重跑no-op；附加失败迁移建表/改用户后除零，整迁移回滚，用户仍version7、半表不存在、迁移台账不增、随后正式迁移可重跑。验证失败迁移回滚与前向升级兼容，未声称支持任意生产降级。；证据 R79-T001, R79-T002 |
 | QA-CODE-003 · 事务与锁顺序 | NOT_RUN | F12修复761304c：独立R70原provider挂起/NOWAIT探针通过；R71 create/edit/confirm等待无actor/meal锁，成功/404重放不依赖provider，503同key恢复；准备期间version/venue/profile/actor/deadline变化均拒绝且无改写。已知拒绝首次/封存同JSON和Retry-After、COMMIT40001重试后不运行旧attempt after也通过。F12 targeted关闭、R66原红保留；全写命令锁顺序及DB时钟审阅尚未完成，本CODE003回NOT_RUN而非PASS。；证据 R70-T001, R71-T001, R71-T002, R71-T003, R71-T004, R71-T005, R71-T006, R71-T007, R71-T008, R71-T009, R71-T010, R71-T011, R71-T012, R71-T013, R71-T014 |
 | QA-CODE-004 · 权限和响应schema | NOT_RUN | 本地生产实现尚需实际执行：检查所有route的认证、角色、输入/响应schema → 绕过allowedActions直接请求。尚缺逐项证据：服务端独立校验；不信actorId；禁止整行序列化；错误不泄密。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-CODE-005 · SDK契约漂移 | PASS | 正式26317f8独立R74通过：生产/staging拒测试适配及固定OTP；AST检查六端与生产包无旧Demo/shared权威、模拟键盘付款依赖。隔离副本语义破坏OpenAPI/SDK均使真实生成检查失败，恢复通过，原artifact字节不变；四端API/Web/iOS/admin typecheck通过，共享workspace client/contracts。；证据 R74-T005 |
