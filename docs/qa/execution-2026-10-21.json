@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 128,
-    "PASS": 77,
+    "NOT_RUN": 126,
+    "PASS": 79,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -13635,8 +13635,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R25-T003",
+        "R25-T005"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -13741,15 +13744,18 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R24-T003",
+        "R25-T003",
+        "R25-T005"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "每call先原子预留",
-        "第2预算不足不发网络",
-        "无超hardCap/漏解析费用"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "R25独立controller+真实PG：新增call名额仅1时解析call结算20microCNY、第2call预算拒绝不进入provider且无草稿；另两subject并发争最后3024microCNY最高费用预留，仅一个provider被调用，另一个FAILED，所有账本used+reserved不超cap，解析用量不丢失。"
     },
     {
       "id": "QA-AI-041",
@@ -13863,7 +13869,9 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R25-T006",
+        "R25-T007"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -13871,7 +13879,7 @@
         "失败照实际结算",
         "用户成功轮及在途位释放"
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "actual": "R25独立provider故障注入：timeout无usage→UNKNOWN/max3024保留，失败有usage→KNOWN/20结算，均FAILED/no结果且quota successes0/reserved0；调用restart恢复方法后原call不可dispatch/请求重放不重发。尚未实际杀API进程重启，保留NOT_RUN。"
     },
     {
       "id": "QA-AI-042",
@@ -13879,8 +13887,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R24-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -13985,14 +13995,16 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R24-T002",
+        "R25-T002"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "发布须CAS仍PENDING",
-        "迟到丢弃、不扣成功轮、不恢复正文"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "受控provider已在途，真实PG deadline置过去并先运行expireDeadlines将PENDING→FAILED；随后释放成功结果，费用照结算KNOWN但请求仍FAILED、result null、quota successes0/reserved0。迟到finish返回false且不调用publish回调。"
     },
     {
       "id": "QA-AI-043",
@@ -14106,7 +14118,10 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R24-T001",
+        "R25-T001",
+        "R25-T004"
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -14114,7 +14129,10 @@
         "在途结果停止发布",
         "业务路径和偏好删除可用"
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "actual": "QA-F04在8e2b908定向修复关闭：R25人工在途停用与KNOWN结算后发布前停用均无结果发布/no成功轮，费用20保留；R26另有真实UPDATE预算锁等待屏障。原R24失败永久保留，尚缺未配置day/month/call cap及停用时业务/偏好删除的完整组合，整条仍NOT_RUN。",
+      "defectIds": [
+        "QA-F04"
+      ]
     },
     {
       "id": "QA-AI-044",
@@ -21266,7 +21284,8 @@
   "defectStatus": {
     "QA-F01": "CLOSED_TARGETED_QA",
     "QA-F02": "FIX_VERIFIED_COMPONENT",
-    "QA-F03": "CLOSED_TARGETED_QA"
+    "QA-F03": "CLOSED_TARGETED_QA",
+    "QA-F04": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",

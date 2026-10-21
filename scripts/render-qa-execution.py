@@ -6,7 +6,7 @@ def render():
     p=json.loads((ROOT/'docs/qa/execution-2026-10-21.json').read_text())
     runs=json.loads((ROOT/'docs/qa/evidence/2026-10-21/automated-runs.json').read_text())['runs']
     lines=['# 独立QA执行报告 · 2026-10-21','',
-    ('**结论：本轮不通过，QA-F03身份关联证明提前失效待修复。**' if p.get('defectStatus',{}).get('QA-F03')=='OPEN' else '**结论：部分执行，尚不能完成整体验收；不构成发布通过。**')+' QA-F01和QA-F03定向修复已关闭，QA-F02组件回归通过；保留修前失败历史和未执行断言。','',
+    ('**结论：本轮不通过，存在未闭环缺陷：'+', '.join(k for k,v in p.get('defectStatus',{}).items() if v=='OPEN')+'。**' if any(v=='OPEN' for v in p.get('defectStatus',{}).values()) else '**结论：部分执行，尚不能完成整体验收；不构成发布通过。**')+' QA-F01和QA-F03定向修复已关闭，QA-F02组件回归通过；保留修前失败历史和未执行断言。','',
     f"原测试计划基线4659fdb；被测交接`{p['baselineCommit']}`，业务代码`{p['codeBaselineCommit']}`。Inbox分页修复在`{p['fixVerificationCommit']}`仅做定向复验；QA-F01及第二批P0探针在04cb601验证，第三批边界、删除/恢复和适配在d4582f7及后续仅CI增量版本定向验证，具体版本见运行表；更早证据沿用对应固定基线。",'',
     '## 阻塞澄清与跟进','',p.get('blockerTriage',''),'',
     '15分钟仅为兜底唤醒，无项目规定；发现问题直接交开发、有修复即复验，不等待定时周期。原14条已逐条交原开发会话处理，两条本地删除/恢复用例已通过，其余本地准备继续推进。','',
@@ -17,7 +17,7 @@ def render():
     for r in runs:
         result=f"{r['passed']}/{r['total']}通过，失败{r.get('failed',0)}，{r['suiteFiles']}个测试文件" if 'total' in r else r['result']
         lines.append(f"| {r['id']} | 退出码{r['exitCode']}；{result} | `{r['testedCommit'][:7]}` |")
-    lines+=['','R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯函数探针；R5复跑分页修复回归，R6是QA第二批6项独立P0探针；R7/R8为QA-F01修复的API/Web及iOS组件定向复跑；R9是第三批12项独立边界探针，R10/R11复跑解除准备，R12为QA新增真实备份中E0导出的恢复后撤销分支；R13为饭后及群/私聊权限独立探针；R14保留QA-F03修前2失败，R15为0518d45修后的12项独立探针复验，R16为身份模块26项受影响HTTP回归（包括fresh会话下未来proof拒绝），不能删除修前结果或把历史失败当当前通过；R17为举报本人回执及撤授权重放3项独立HTTP/PG探针，撤session/DELETING状态通过受控数据库夹具设置。R18为安排锁、历史截止补算、开始名单及预约隔离6项独立PG/HTTP探针，删除仅屏障状态，完整删除名单断言仍未通过。R19/R20独立定向复跑5a37fdc关闭顺序单测及真实PG负载退出，未替代远端CI结果。R21为删除实际HTTP/本地purge、故障rollback及用户锁消息/审批竞态5项独立探针，生产日志脱敏仍待完整捕获。R22为ac09af4固定版本的11项独立受控AI/controller/HTTP探针，仅035/036/037具完整预期证据；R23为该版本Claude发现修复28项API/DB独立定向复验。不能将这些数量相加当作独立业务用例数；R5与R1有重复，R2也不是原生设备验收。逐项测试名、状态、时间和命令见[机器证据](evidence/2026-10-21/automated-runs.json)。R4是质量检查而非业务用例。','',
+    lines+=['','R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯函数探针；R5复跑分页修复回归，R6是QA第二批6项独立P0探针；R7/R8为QA-F01修复的API/Web及iOS组件定向复跑；R9是第三批12项独立边界探针，R10/R11复跑解除准备，R12为QA新增真实备份中E0导出的恢复后撤销分支；R13为饭后及群/私聊权限独立探针；R14保留QA-F03修前2失败，R15为0518d45修后的12项独立探针复验，R16为身份模块26项受影响HTTP回归（包括fresh会话下未来proof拒绝），不能删除修前结果或把历史失败当当前通过；R17为举报本人回执及撤授权重放3项独立HTTP/PG探针，撤session/DELETING状态通过受控数据库夹具设置。R18为安排锁、历史截止补算、开始名单及预约隔离6项独立PG/HTTP探针，删除仅屏障状态，完整删除名单断言仍未通过。R19/R20独立定向复跑5a37fdc关闭顺序单测及真实PG负载退出，未替代远端CI结果。R21为删除实际HTTP/本地purge、故障rollback及用户锁消息/审批竞态5项独立探针，生产日志脱敏仍待完整捕获。R22为ac09af4固定版本的11项独立受控AI/controller/HTTP探针，仅035/036/037具完整预期证据；R23为该版本Claude发现修复28项API/DB独立定向复验。R24保留QA-F04修前停用后仍发布失败；R25为8e2b908修后7项独立停用/费用/reaper探针，R26为22项受影响DB回归，F04定向关闭而043仍有未测断言。不能将这些数量相加当作独立业务用例数；R5与R1有重复，R2也不是原生设备验收。逐项测试名、状态、时间和命令见[机器证据](evidence/2026-10-21/automated-runs.json)。R4是质量检查而非业务用例。','',
     '曾以错误的pnpm参数调用iOS测试，得到“No tests found”且退出0；该次不计入证据。更正为Jest exec后实际169项通过。部分初始命令误命中Xcode shim并返回69；通过既有infra/dev-env.sh选择工具链后执行，未修改系统许可。','',
     '本地隔离PostgreSQL是真数据库；身份、餐厅、邮件及AI为test/fixture/mock。没有调用真实外部服务。既有研究文档未提交修改不属于测试基线，本轮不暂存。截图和快照仅包含合成测试资料；原始token、验证码、日志及本机凭据不发布。','',
     '交付验证：当前修复基线另跑core:check退出0；Python文档/配置测试70项通过（其中QA相关12项）。新增证据最初漏列文档索引，补全后通过，未放宽测试；新增验证确保历史失败证据不能授予case PASS。','',

@@ -8452,6 +8452,302 @@
           "durationMs": 190.29787499999986
         }
       ]
+    },
+    {
+      "id": "R24",
+      "testedCommit": "159b0e850092d02d91c71e88972602fa003deb62",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-budget.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-ai-budget-repro.json",
+      "startedAt": "2026-10-21T09:09:31.856000+00:00",
+      "exitCode": 1,
+      "passed": 2,
+      "failed": 1,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R24-T001",
+          "run": "R24",
+          "path": "scripts/qa-independent-ai-budget.api.test.ts",
+          "title": "independent budget shutdown and deadline races QA-AI-043 manual budget disable while provider is in flight blocks late publication",
+          "status": "failed",
+          "durationMs": 29.40983300000005,
+          "failureSummary": "AssertionError: expected 'SUCCEEDED' not to be 'SUCCEEDED' // Object.is equality"
+        },
+        {
+          "id": "R24-T002",
+          "run": "R24",
+          "path": "scripts/qa-independent-ai-budget.api.test.ts",
+          "title": "independent budget shutdown and deadline races QA-AI-042 deadline reaper wins before late provider success without republishing or charging successful turn",
+          "status": "passed",
+          "durationMs": 40.71833299999997
+        },
+        {
+          "id": "R24-T003",
+          "run": "R24",
+          "path": "scripts/qa-independent-ai-budget.api.test.ts",
+          "title": "independent budget shutdown and deadline races QA-AI-040 second internal call cannot dispatch when call cap only admits parsing, and parsing cost remains charged",
+          "status": "passed",
+          "durationMs": 103.58112500000004
+        }
+      ]
+    },
+    {
+      "id": "R25",
+      "testedCommit": "8e2b908d41f5aed664c51b271b0fee8612fcf1f6",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-budget.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-ai-budget-8e2b908.json",
+      "startedAt": "2026-10-21T09:13:51.761000+00:00",
+      "exitCode": 0,
+      "passed": 7,
+      "failed": 0,
+      "total": 7,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R25-T001",
+          "run": "R25",
+          "path": "scripts/qa-independent-ai-budget.api.test.ts",
+          "title": "independent budget shutdown and deadline races QA-AI-043 manual budget disable while provider is in flight blocks late publication",
+          "status": "passed",
+          "durationMs": 26.672000000000025
+        },
+        {
+          "id": "R25-T002",
+          "run": "R25",
+          "path": "scripts/qa-independent-ai-budget.api.test.ts",
+          "title": "independent budget shutdown and deadline races QA-AI-042 deadline reaper wins before late provider success without republishing or charging successful turn",
+          "status": "passed",
+          "durationMs": 13.558875
+        },
+        {
+          "id": "R25-T003",
+          "run": "R25",
+          "path": "scripts/qa-independent-ai-budget.api.test.ts",
+          "title": "independent budget shutdown and deadline races QA-AI-040 second internal call cannot dispatch when call cap only admits parsing, and parsing cost remains charged",
+          "status": "passed",
+          "durationMs": 8.613499999999988
+        },
+        {
+          "id": "R25-T004",
+          "run": "R25",
+          "path": "scripts/qa-independent-ai-budget.api.test.ts",
+          "title": "independent publication stop fence QA-F04 budget disabled after usage settlement but before finish cannot publish",
+          "status": "passed",
+          "durationMs": 8.260457999999971
+        },
+        {
+          "id": "R25-T005",
+          "run": "R25",
+          "path": "scripts/qa-independent-ai-budget.api.test.ts",
+          "title": "independent global monetary admission and failure usage QA-AI-040 two subjects compete for one maximum-cost monetary reservation with only one provider dispatch",
+          "status": "passed",
+          "durationMs": 1011.675208
+        },
+        {
+          "id": "R25-T006",
+          "run": "R25",
+          "path": "scripts/qa-independent-ai-budget.api.test.ts",
+          "title": "independent global monetary admission and failure usage QA-AI-041 failed provider knownUsage=false retains liability without successful turn or resend",
+          "status": "passed",
+          "durationMs": 9.155291000000034
+        },
+        {
+          "id": "R25-T007",
+          "run": "R25",
+          "path": "scripts/qa-independent-ai-budget.api.test.ts",
+          "title": "independent global monetary admission and failure usage QA-AI-041 failed provider knownUsage=true retains liability without successful turn or resend",
+          "status": "passed",
+          "durationMs": 5.695707999999968
+        }
+      ]
+    },
+    {
+      "id": "R26",
+      "testedCommit": "8e2b908d41f5aed664c51b271b0fee8612fcf1f6",
+      "command": "pnpm exec vitest run --project db apps/api/src/assistant/kernel.db.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-kernel-8e2b908.json",
+      "startedAt": "2026-10-21T09:13:55.551000+00:00",
+      "exitCode": 0,
+      "passed": 22,
+      "failed": 0,
+      "total": 22,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R26-T001",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "concurrent CNY budget admission cancels an undispatched reservation when an operator disables either budget period",
+          "status": "passed",
+          "durationMs": 13.125042000000008
+        },
+        {
+          "id": "R26-T002",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "concurrent CNY budget admission admits only one request competing for the final global budget, counting both periods",
+          "status": "passed",
+          "durationMs": 10.202208999999982
+        },
+        {
+          "id": "R26-T003",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "concurrent CNY budget admission same callId is admitted exactly once across concurrent API callers and dispatch CAS",
+          "status": "passed",
+          "durationMs": 7.575166999999965
+        },
+        {
+          "id": "R26-T004",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "concurrent CNY budget admission requires explicit daily/monthly approvals and never permits above CNY50 cap",
+          "status": "passed",
+          "durationMs": 6.107665999999995
+        },
+        {
+          "id": "R26-T005",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "concurrent CNY budget admission settles actual usage once, releases the difference, and fences cancellation after dispatch",
+          "status": "passed",
+          "durationMs": 7.422041999999976
+        },
+        {
+          "id": "R26-T006",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "concurrent CNY budget admission cancels only undispatched reservations and releases them once",
+          "status": "passed",
+          "durationMs": 7.672958999999992
+        },
+        {
+          "id": "R26-T007",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "concurrent CNY budget admission restart preserves maximum UNKNOWN liability and refuses resend or automatic zero settlement",
+          "status": "passed",
+          "durationMs": 8.00645800000001
+        },
+        {
+          "id": "R26-T008",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "concurrent CNY budget admission dedicated MFA reconciliation uses CAS and an idempotency key; ordinary support cannot release funds",
+          "status": "passed",
+          "durationMs": 10.539916000000005
+        },
+        {
+          "id": "R26-T009",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "concurrent CNY budget admission records unexpected actual overrun and disables further calls rather than concealing cost",
+          "status": "passed",
+          "durationMs": 6.690084000000013
+        },
+        {
+          "id": "R26-T010",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "budgeted provider dispatch calls once after durable admission, settles known usage, and retains timeout uncertainty",
+          "status": "passed",
+          "durationMs": 9.616708000000017
+        },
+        {
+          "id": "R26-T011",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "confirmed preference CAS and invalidation prelock is read-only: rejected authorization may commit without erasing RAM or metadata",
+          "status": "passed",
+          "durationMs": 5.725416999999993
+        },
+        {
+          "id": "R26-T012",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "confirmed preference CAS and invalidation only one concurrent replacement wins; deletion increments a tombstone and aborts RAM",
+          "status": "passed",
+          "durationMs": 10.549041999999986
+        },
+        {
+          "id": "R26-T013",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "confirmed preference CAS and invalidation rejects unconfirmed or unknown fields without saving",
+          "status": "passed",
+          "durationMs": 4.5265830000000165
+        },
+        {
+          "id": "R26-T014",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "persistent request dedup and lifecycle fences SUCCEEDED publication after settled usage when the budget is stopped",
+          "status": "passed",
+          "durationMs": 10.725333000000035
+        },
+        {
+          "id": "R26-T015",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "persistent request dedup and lifecycle fences NEEDS_INPUT publication after settled usage when the budget is stopped",
+          "status": "passed",
+          "durationMs": 10.27637500000003
+        },
+        {
+          "id": "R26-T016",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "persistent request dedup and lifecycle waits for a concurrent operator stop to commit before deciding publication",
+          "status": "passed",
+          "durationMs": 22.315458999999976
+        },
+        {
+          "id": "R26-T017",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "persistent request dedup and lifecycle core deletion barrier clears RAM, refunds undispatched cost and keeps in-flight UNKNOWN liability",
+          "status": "passed",
+          "durationMs": 11.662458000000015
+        },
+        {
+          "id": "R26-T018",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "persistent request dedup and lifecycle admits one same-id request across concurrent callers, stores only HMAC and rejects changed payload",
+          "status": "passed",
+          "durationMs": 8.301750000000027
+        },
+        {
+          "id": "R26-T019",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "persistent request dedup and lifecycle reserves the final user successful turn once and counts success only on validated publish",
+          "status": "passed",
+          "durationMs": 10.03774999999996
+        },
+        {
+          "id": "R26-T020",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "persistent request dedup and lifecycle preference deletion invalidates an in-flight result and refunds only its success slot",
+          "status": "passed",
+          "durationMs": 7.607083999999986
+        },
+        {
+          "id": "R26-T021",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "persistent request dedup and lifecycle timeout/restart release slots exactly once without replaying work",
+          "status": "passed",
+          "durationMs": 8.350416999999993
+        },
+        {
+          "id": "R26-T022",
+          "run": "R26",
+          "path": "apps/api/src/assistant/kernel.db.test.ts",
+          "title": "persistent request dedup and lifecycle guest identity survives AI NEW/bootstrap and has fixed nonrolling 24h expiry",
+          "status": "passed",
+          "durationMs": 5.653625000000034
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -8467,7 +8763,8 @@
     "scripts/qa-independent-lifecycle.api.test.ts": "b2b53564813bdb53df5f490b261be9805636fc7bf3072d500e139bb35b2e1b22",
     "scripts/qa-independent-deletion.api.test.ts": "f5b80d51aa793891640c5d96e623d3638693a32b13eebaa7ad21e21394a72750",
     "scripts/qa-independent-ai.api.test.ts": "d40130cdcef33492250e0b0c85becad66975579640bc51e5bd3ed522998276ec",
-    "scripts/qa-independent-ai-http.api.test.ts": "41e3b9942e8d5f8193f36c49a7f1b17386e09b8ceaa5220ba2747b978790f312"
+    "scripts/qa-independent-ai-http.api.test.ts": "41e3b9942e8d5f8193f36c49a7f1b17386e09b8ceaa5220ba2747b978790f312",
+    "scripts/qa-independent-ai-budget.api.test.ts": "7d7064a23115ea75243e97bd0e1ca423ecc5f63a9af199bfb785cf43a2593ae4"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。",
   "runtimeSnapshotVerification": {
@@ -8505,6 +8802,10 @@
     {
       "run": "R22",
       "detail": "中间预跑遇QA根脚本workspace alias未解析、HTTP预算SQL别名错误、缺intent key，均纠正且未计产品缺陷；SEARCH输入含dinner但mock未给timeOfDay得到正确NEEDS_INPUT，成功轮夹具改无歧义Find meals。中间11项在62371cc通过后，按最终ac09af4重新跑11项作为正式证据。脚本默认lint忽略，另用eslint --no-ignore验证。真实供应商未调用。"
+    },
+    {
+      "run": "R24",
+      "detail": "首轮第2call测试把全局累计call_cap置1，导致连第1call也拒绝；改为calls+1仅放行一个新增call后通过。人工停用后仍发布缺陷原断言未改，重跑稳定失败。实际解析call费用20 microCNY保留。"
     }
   ]
 }
