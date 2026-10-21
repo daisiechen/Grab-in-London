@@ -12,6 +12,8 @@
 - `docs/research/competitive-landscape.zh-CN.md` 是启动前其他会话改动，禁止混入本轮提交。
 - 并行会话「测试- MVP+AI」负责 `docs/qa/`、`tests/test_qa_cases.py`、相关测试用例脚本及 `docs/README.md`；Claude 开发会话只读这些产物。需要更新索引时串行交接。
 
+用户睡前再次授权：需要本人开通、付款、Key、许可或操作的事项先跳过，其他开发、自测继续；自测通过后交独立测试。Claude 已实际启动三个后台子任务：`Web client implementation (apps/web)`、`iOS Expo client (apps/ios)`、`Admin console (apps/admin)`。各子任务仅写自己的 `apps/` 目录，不提交或推送，不写根锁文件；Claude 主任务继续后端与数据库，串行处理依赖安装、根测试配置、任务状态与 Git 集成。接口契约已建立，客户端可先按 SDK 和隔离 mock 验证，但后端联调、真实登录、真机仍须分别验收，不能因客户端代码出现就提前关闭完整任务。
+
 ## 用户已明确的资源决定
 
 | 项目 | 已确认 | 待确认或待用户操作 |
@@ -52,5 +54,7 @@
 - Codex 独立执行原有 Python 仓库检查：56 项通过。
 - Codex 独立执行 Demo 领域与助手及旧后台分析单测：94 项通过。这些仅证明既有原型回归，不证明生产 MVP 实现正确或外部门槛关闭。
 - T00 提交 `a1da509` 后，Codex 独立运行 `source infra/dev-env.sh && pnpm core:check && pnpm core:test`：check、11 项配置单测、4 项真实 PostgreSQL 17 测试、8 项发布检查通过。首次普通沙箱运行因回环端口 `listen EPERM` 失败，获准监听后重跑通过；没有更改断言或跳过数据库测试。并行测试用例包落地后，63 项 Python 仓库验证通过。
+- T01 实现提交 `c34d9c4`、状态提交 `91d7a7b` 后，Codex 独立复跑生成漂移/类型/lint/扫描检查、60 项单测、4 项真实 PostgreSQL 测试、9 项发布检查及 64 项 Python 验证，均通过。CLI 刷新令牌、协议相对回跳、可选 host 声明三个审查问题已由 Claude 修复并加入测试。T00 扫描入口曾在中文目录下静默跳过，T01 已修复并增加真实 CLI 非零退出回归；旧 T00 检查结果不单独证明该入口执行过。
+- Xcode 后续已安装但许可尚未接受，默认 `/usr/bin/git` 因而报退出码 69。已核实旧 Command Line Tools Git 可运行，Claude 正在给开发环境脚本补相应 PATH 回退，不代用户接受许可或更改系统 `xcode-select`。Xcode 首次启动、许可及原生构建留待用户清醒后操作。
 - 当前没有三端完整实现通过验收的证据；后续以唯一任务表及对应版本实测为准。
 - 窗口控制曾出现 `noWindowsAvailable`，用户重新打开后已恢复。Claude 已回复确认 DeepSeek 与人民币 50 元/月及测试交接决定，并开始更新 provider 配置；后续服务器只读核查结果仍需同步给执行会话。
