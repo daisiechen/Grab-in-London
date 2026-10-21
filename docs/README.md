@@ -99,3 +99,5 @@
 - QA R96/R97: [survey and draft authorization boundaries](qa/evidence/2026-10-21/r96-r97-boundaries.md).
 
 - QA R98: [mail fault injection and F19 original red](qa/evidence/2026-10-21/r98-mail-dead-letter.md).
+
+- QA R104/R105: [F19 closure and actual notification matrix](qa/evidence/2026-10-21/r104-r105-mail-closure.md).

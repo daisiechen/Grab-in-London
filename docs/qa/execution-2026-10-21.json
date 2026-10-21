@@ -4,7 +4,7 @@
   "planSha256": "1565470e4e019874c89017407b787a396f6045675d72454e4c9fe15cc505634b",
   "baselineCommit": "8ba6fc7c9974cf6be1ac06d8b16e0380fb3beced",
   "codeBaselineCommit": "8bc1e9280153491b6a63c68cd6ba6a49f8061978",
-  "fixVerificationCommit": "071ecd7cbd012cb7c49d4b907ec768f90409a3f6",
+  "fixVerificationCommit": "cd66d87a153b3171cebbe7ae74680eceb356aed1",
   "environment": {
     "database": "real fresh migrated local PostgreSQL per harness",
     "identity": "test adapter; fixture Web OTP",
@@ -16,9 +16,8 @@
     "nativeRuntimeCheck20261021": "Read-only simctl outside sandbox confirms installed iOS27.0/27.1 runtimes and available shutdown iPhone simulators. Sandboxed service refusal is not missing-runtime proof. Build/launch and real native journey remain unexecuted."
   },
   "counts": {
-    "NOT_RUN": 68,
-    "PASS": 136,
-    "FAIL": 1,
+    "NOT_RUN": 67,
+    "PASS": 138,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -9054,8 +9053,15 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R104-T004",
+        "R104-T005",
+        "R104-T006",
+        "R104-T001",
+        "R104-T002",
+        "R104-T003"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T417",
         "R1-T418",
@@ -9112,14 +9118,21 @@
         "R3-T028",
         "R3-T029"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "审批/拒绝/过期申请人站内+邮件",
-        "整场取消H及当前P/C",
-        "W/L不邮件",
-        "消息只有站内未读"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2,
+        3
       ],
-      "actual": "本地生产实现尚需实际执行：批准/拒绝/过期P → 取消M → 发群/私聊 → 查看outbox及站内。尚缺逐项证据：审批/拒绝/过期申请人站内+邮件；整场取消H及当前P/C；W/L不邮件；消息只有站内未读。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "R104 fixed formal cd66d87 archive, actual API publish/apply/approve/decline/withdraw/leave/message/cancel and lifecycle worker: approved/declined requester in-app+email; cancelled only host/current pending/confirmed, excludes withdrawn/left; qualified close expires pending once in-app+email; message creates unread1 with no email. Actual approved seat and in-app notice remain when provider throws/UNKNOWN. UNKNOWN lookup timeout never resends; authoritative NOT_SENT alone permits same-ID retry. Original F19 red R98 retained; corrected original probe green, plus R10510 safety tests: exhaustion/age, concurrency one event, active lookup lease, observer fallback, runtime wiring. Only controlled provider/log alert proved; external mail/alert platform remains separate gate.",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：批准/拒绝/过期P → 取消M → 发群/私聊 → 查看outbox及站内。尚缺逐项证据：审批/拒绝/过期申请人站内+邮件；整场取消H及当前P/C；W/L不邮件；消息只有站内未读。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
+          "evidence": []
+        }
+      ]
     },
     {
       "id": "QA-NOTIFY-002",
@@ -9127,10 +9140,14 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": [
-        "R98-T001",
-        "R98-T003"
+        "R104-T004",
+        "R104-T005",
+        "R104-T006",
+        "R104-T001",
+        "R104-T002",
+        "R104-T003"
       ],
       "relatedAutomatedAssertions": [
         "R1-T417",
@@ -9188,16 +9205,25 @@
         "R3-T028",
         "R3-T029"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "Mail failure must not roll back actual seat/in-app notification (dedicated end-to-end proof pending).",
-        "Exhausted retries require observable dead-letter alert; QA-F19 red."
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "R98 real temporary PG controlled mail provider: UNKNOWN lookup timeout never resends; authoritative NOT_SENT permits next same-ID retry. Exhausted attempts8 row becomes DEAD/RETRY_EXHAUSTED and sends0, but no observable warning/error alarm or wired observer. QA-F19 OPEN. Actual seat transaction failure independence and complete notification matrix still pending.",
+      "remainingExpected": [],
+      "actual": "R104 fixed formal cd66d87 archive, actual API publish/apply/approve/decline/withdraw/leave/message/cancel and lifecycle worker: approved/declined requester in-app+email; cancelled only host/current pending/confirmed, excludes withdrawn/left; qualified close expires pending once in-app+email; message creates unread1 with no email. Actual approved seat and in-app notice remain when provider throws/UNKNOWN. UNKNOWN lookup timeout never resends; authoritative NOT_SENT alone permits same-ID retry. Original F19 red R98 retained; corrected original probe green, plus R10510 safety tests: exhaustion/age, concurrency one event, active lookup lease, observer fallback, runtime wiring. Only controlled provider/log alert proved; external mail/alert platform remains separate gate.",
       "history": [
         {
           "status": "NOT_RUN",
           "actual": "UNKNOWN保留/查询和无凭据不发送的数据库测试通过；未完整执行重试尽头dead-letter及告警链路。"
+        },
+        {
+          "status": "FAIL",
+          "actual": "R98 real temporary PG controlled mail provider: UNKNOWN lookup timeout never resends; authoritative NOT_SENT permits next same-ID retry. Exhausted attempts8 row becomes DEAD/RETRY_EXHAUSTED and sends0, but no observable warning/error alarm or wired observer. QA-F19 OPEN. Actual seat transaction failure independence and complete notification matrix still pending.",
+          "evidence": [
+            "R98-T001",
+            "R98-T003"
+          ]
         }
       ],
       "defectIds": [
@@ -9212,7 +9238,13 @@
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
       "evidence": [
-        "R98-T002"
+        "R98-T002",
+        "R104-T004",
+        "R104-T005",
+        "R104-T006",
+        "R104-T001",
+        "R104-T002",
+        "R104-T003"
       ],
       "relatedAutomatedAssertions": [
         "R1-T417",
@@ -9275,7 +9307,7 @@
         "邮件无申请/消息/举报正文/单方再约",
         "通知唯一event+recipient+channel"
       ],
-      "actual": "申请正文随机marker在通知及outbox中不存在；未同轮覆盖举报/私聊/单方再约正文和三元唯一约束。 R98 private body injected into disposable outbox rejected DEAD/INVALID_PAYLOAD with provider dispatch0 and no body in captured warn/error. Full producer matrix and event-recipient-channel uniqueness remain pending."
+      "actual": "申请正文随机marker在通知及outbox中不存在；未同轮覆盖举报/私聊/单方再约正文和三元唯一约束。 R98 private body injected into disposable outbox rejected DEAD/INVALID_PAYLOAD with provider dispatch0 and no body in captured warn/error. Full producer matrix and event-recipient-channel uniqueness remain pending. R104 actual matrix outbox refs contain only IDs and event-recipient-channel unique; raw chat body never emailed, invalid raw body rejected, safe dead-letter events verified R105. Full one-sided reconnect/report-content producer privacy scenario remains not independently complete; NOT_RUN retained."
     },
     {
       "id": "QA-AI-001",
@@ -22259,14 +22291,14 @@
     "QA-F16": "CLOSED_TARGETED_QA",
     "QA-F17": "CLOSED_TARGETED_QA",
     "QA-F18": "CLOSED_TARGETED_QA",
-    "QA-F19": "OPEN"
+    "QA-F19": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
     "userAuthorizedMessaging": true,
     "status": "remaining_local_execution_in_progress",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
-    "latestFeedback": "QA-F19 mail dead-letter alarm independently red R98; original developer assigned venues_backend; target fix and retest pending. Native prebuild succeeded but Pods build setup in progress, not absent runtime/signing proof."
+    "latestFeedback": "QA-F19 CLOSED_TARGETED_QA by original probe+matrix6 and mail safety10 in fixed cd66d87 archive; NOTIFY001/002 PASS. Original R98 failure and QA fixture corrections retained. Native build still in progress; no overall release pass."
   },
   "blockerTriage": "原14条中供应商分步删除和恢复删除台账两条已转本地执行并通过；其余12条缺真实环境/许可/批准证据，各项可本地准备部分已继续推进，不能视为12个未修代码故障。"
 }
