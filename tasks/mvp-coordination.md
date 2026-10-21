@@ -356,3 +356,8 @@
 - 原R131默认搜索仅显示next 7 days，不提供实际伦敦起止。仅SEARCH默认分支从一个MATERIALIZED DB clock快照得到七个YYYY-MM-DD，初查与提交复验共用同一数组，成功与无结果均显示含首尾的实际窗口；不写hardconditions，不改变自然周/显式日期和即时资格判断。
 - 自有新增三项修前三红、修后controller PG17绿，含真实DB从午夜前推进两秒后初查/finish日期仍一致；根原QA搜索矩阵22绿（/private/tmp/fancy-f25-original-matrix.log）。全core/check/Python77为F24–F26冻结整合结果，见本批记录，不将分commit误当代码变动重跑。
 - F24先8c3a947独立同步，本切片仅controller、自有DB测试与本记录；正式缺陷关闭交QA固定SHA复验，不含F27后续分页改动。
+
+## QA-F26 原生清理异常日志最小化（2026-10-21）
+
+- QA动态render真实RootLayout并调用createServices捕获的onClearError，R139证明原console.warn记录原Error中的合成私密标记；R138未await render为QA夹具错误，原记录保留。本切片仅删除原error参数并输出固定LOCAL_SIGN_OUT_CLEANUP_FAILED，不序列化message/stack/cause或原始对象。
+- 根原QA动态探针1绿、全原生255绿（/private/tmp/fancy-f26-{original,ios}.log），全core/check/Python77已在本批冻结整合通过。QA拥有动态测试文件，生产仅_layout.tsx一行及本记录另commit，不混QA文件，正式关闭由QA固定SHA复验。

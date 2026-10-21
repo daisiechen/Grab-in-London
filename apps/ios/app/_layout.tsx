@@ -18,7 +18,7 @@ export default function RootLayout() {
       store: secureCredentialStore(),
       installMarker: sandboxInstallMarker(),
       openAuthSession: (url, redirectUrl) => WebBrowser.openAuthSessionAsync(url, redirectUrl, { preferEphemeralSession: true }),
-      onClearError: (error) => console.warn('Local sign-out clean-up failed', error),
+      onClearError: () => console.warn('LOCAL_SIGN_OUT_CLEANUP_FAILED'),
     }),
   );
   return (
