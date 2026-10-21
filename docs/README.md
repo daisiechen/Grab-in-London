@@ -113,3 +113,5 @@
 - QA F21: [native consent safe-area original screenshot](qa/evidence/2026-10-21/native-consent-safe-area-original.png).
 
 - QA F20 formal build: [review](qa/evidence/2026-10-21/f20-independent-build-review.md), [machine bundle proof](qa/evidence/2026-10-21/f20-independent-bundle-proof.json).
+
+- QA B11: [real AI editor report](qa/evidence/2026-10-21/browser-b11.zh-CN.md), [observations](qa/evidence/2026-10-21/browser-b11.json), [DB checkpoints](qa/evidence/2026-10-21/b11-business-write-checkpoints.json), [transferred unsent](qa/evidence/2026-10-21/b11-ai-application-transferred-unsent.jpg), [explicit pending](qa/evidence/2026-10-21/b11-ai-explicit-application-pending.jpg), [create text](qa/evidence/2026-10-21/b11-ai-create-title-description.jpg), [booking unchecked](qa/evidence/2026-10-21/b11-ai-create-booking-unchecked.jpg), [Review blocked](qa/evidence/2026-10-21/b11-ai-create-review-unchecked-blocked.jpg).

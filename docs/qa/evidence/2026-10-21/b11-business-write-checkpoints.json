@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "testedCommit": "cb9257e487700d85829068d06f6267217d25b880",
+  "method": "AFTER INSERT UPDATE DELETE on six watched business tables plus separate read-only aggregate inspector. Metadata only; no message/application body or credentials.",
+  "watchedTables": [
+    "meals",
+    "applications",
+    "seat_events",
+    "messages",
+    "notifications",
+    "outbox"
+  ],
+  "phases": {
+    "before": {
+      "ownedDisposableFixtureVerified": true,
+      "mealId": "7d501e3b-c0bc-4ae5-a067-4aafbce9ca23",
+      "targetExists": true,
+      "writes": [],
+      "targetApplications": 0,
+      "targetSeats": 1,
+      "meals": 1,
+      "messages": 0
+    },
+    "generated": {
+      "ownedDisposableFixtureVerified": true,
+      "mealId": "7d501e3b-c0bc-4ae5-a067-4aafbce9ca23",
+      "targetExists": true,
+      "writes": [],
+      "targetApplications": 0,
+      "targetSeats": 1,
+      "meals": 1,
+      "messages": 0
+    },
+    "transferred": {
+      "ownedDisposableFixtureVerified": true,
+      "mealId": "7d501e3b-c0bc-4ae5-a067-4aafbce9ca23",
+      "targetExists": true,
+      "writes": [],
+      "targetApplications": 0,
+      "targetSeats": 1,
+      "meals": 1,
+      "messages": 0
+    },
+    "submitted": {
+      "ownedDisposableFixtureVerified": true,
+      "mealId": "7d501e3b-c0bc-4ae5-a067-4aafbce9ca23",
+      "targetExists": true,
+      "writes": [
+        {
+          "table_name": "applications",
+          "operation": "INSERT",
+          "n": 1
+        },
+        {
+          "table_name": "meals",
+          "operation": "UPDATE",
+          "n": 1
+        },
+        {
+          "table_name": "notifications",
+          "operation": "INSERT",
+          "n": 1
+        }
+      ],
+      "targetApplications": 1,
+      "targetSeats": 1,
+      "meals": 1,
+      "messages": 0
+    },
+    "create-review": {
+      "ownedDisposableFixtureVerified": true,
+      "mealId": "7d501e3b-c0bc-4ae5-a067-4aafbce9ca23",
+      "targetExists": true,
+      "writes": [
+        {
+          "table_name": "applications",
+          "operation": "INSERT",
+          "n": 1
+        },
+        {
+          "table_name": "meals",
+          "operation": "UPDATE",
+          "n": 1
+        },
+        {
+          "table_name": "notifications",
+          "operation": "INSERT",
+          "n": 1
+        }
+      ],
+      "targetApplications": 1,
+      "targetSeats": 1,
+      "meals": 1,
+      "messages": 0
+    }
+  }
+}

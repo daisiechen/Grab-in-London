@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "observations": [
+    {
+      "id": "B11-T001",
+      "title": "Actual Web AI application generation replacement replay and explicit single submission",
+      "steps": [
+        "Dedicated frozen Web/API temporary PG, seeded host/guest/futuremeal via real core commands; probe installed only after seed.",
+        "Guest original unsent74chars -> email000000 -> sameApply original74 preserved. Before writes0/applications0/hostseat1.",
+        "Actual AskFancy generate candidate with include-editor checkboxoff: original text remains and generation watched business writes0.",
+        "Useinapplication -> Keepmytext cancels; explicitReplace transfers69char candidate, noappend. Reopen assistant -> Continueconversation -> samecandidate Use+Replace again remains exactly69chars, watchedwrites0.",
+        "Only actual original editor Sendrequest creates Pending. Refresh retains Pending; physical applicationsINSERT1, mealUPDATE1, notificationINSERT1, applicationcount1 and seat1, messages0."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b11-ai-application-transferred-unsent.jpg",
+        "evidence/2026-10-21/b11-ai-explicit-application-pending.jpg",
+        "evidence/2026-10-21/b11-business-write-checkpoints.json"
+      ],
+      "status": "passed",
+      "testedCommit": "cb9257e487700d85829068d06f6267217d25b880",
+      "environment": "Actual dedicated real browser/Web/coreAPI and new temporary PG; controlled deterministic mock model with synthetic verified budget, fixture IDP/Places/mail only. Real clock, no paid/live model or native App proof. PG probe metadata only; separate readonly inspector."
+    },
+    {
+      "id": "B11-T002",
+      "title": "Actual Web AI create draft leaves manual venue time booking and final terms unconfirmed",
+      "steps": [
+        "Empty real Create Arrange starts with no venue/date/time. Actual AskFancy requests CREATE text candidate; Useinmealform transfers title/description and opensIntroduce, no business publish.",
+        "Previousstep toArrange confirms No restaurant chosen and Chooseatime selected/dateunset. Continue rejects Choose a restaurant from search results.",
+        "Only tester explicitly searches fixtureFancy, previews and Use confirms restaurant, selectsSat24 and18:30; Introduce retains exact AI title/description; tester selectsmood.",
+        "Costs both budgets initiallyempty and reservation checkboxfalse. Fill15/30 and Continue still rejects until tester explicit reservation check.",
+        "Review checkbox for arrangements/cancellation terms remainsfalse. Explicit Publish without checking rejects, not fake success. Final physical observer unchanged from previous single application, totalmeals1/messages0, no new seat/application."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b11-ai-create-title-description.jpg",
+        "evidence/2026-10-21/b11-ai-create-booking-unchecked.jpg",
+        "evidence/2026-10-21/b11-ai-create-review-unchecked-blocked.jpg",
+        "evidence/2026-10-21/b11-business-write-checkpoints.json"
+      ],
+      "status": "passed",
+      "testedCommit": "cb9257e487700d85829068d06f6267217d25b880",
+      "environment": "Actual dedicated real browser/Web/coreAPI and new temporary PG; controlled deterministic mock model with synthetic verified budget, fixture IDP/Places/mail only. Real clock, no paid/live model or native App proof. PG probe metadata only; separate readonly inspector."
+    }
+  ]
+}
