@@ -12741,6 +12741,28 @@
           "durationMs": 838.1720829999999
         }
       ]
+    },
+    {
+      "id": "R75",
+      "testedCommit": "e66c5e6d44153f352c14b15b6a2194706896865d + QA-only preference probe",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-hostile.api.test.ts -t 'QA-AI-024'",
+      "startedAt": "2026-10-21T14:18:05.154000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "excludedByNameFilter": 16,
+      "assertions": [
+        {
+          "id": "R75-T001",
+          "run": "R75",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-024 independent query and rejected proposal stay unsaved; explicit confirmation persists only six allowed fields",
+          "status": "passed",
+          "durationMs": 58.22179199999999
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -12782,7 +12804,7 @@
     "scripts/qa-independent-snapshot-race.api.test.ts": "2f71df1295860e2dfcc2df39890c6f9ba1f4c7627877573cff175b2b2334102a",
     "apps/admin/src/state/qa-independent-revocation.unit.test.tsx": "e2999aca140d3f9bdb9f2f88319e44a1e9c99884da300a701967d05f74c01c09",
     "scripts/qa-independent-ai-group-permissions.api.test.ts": "67ded17c812c8d5fa85aebdeb3c0849e7691b7b4a81900c9cfd4df6f5631638f",
-    "scripts/qa-independent-ai-hostile.api.test.ts": "4583366343408eab5952f0dc8e1b333376a65c4a01a484fdf87943133f9d5234",
+    "scripts/qa-independent-ai-hostile.api.test.ts": "a9e74fb3326d1957ff24b47bc176a1bc2e376e828bb30d14fb19d9cc72f9eb43",
     "scripts/qa-independent-provider-lock.api.test.ts": "e5bc76e651eccec34cb774662a0c78b2b6f95b39130242ae16faf7a4c95aac87",
     "scripts/qa-independent-oauth-logs.api.test.ts": "30dd3835dc27e9a64a251dfab9a653b188c0dfdbd5ef379620435cf3a6376700",
     "scripts/qa-oauth-log-child.ts": "2407272b1de6534c7670b8fdf5e9f91104f3c82de14c5767835eda48d50d91d9",

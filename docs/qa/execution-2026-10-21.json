@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 92,
-    "PASS": 113,
+    "NOT_RUN": 91,
+    "PASS": 114,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -11927,8 +11927,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R75-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -12035,13 +12037,20 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "前两步不持久写",
-        "确认只存允许字段不含日期/原文",
-        "拒绝不影响查找"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：普通查询预算/日期 → 生成偏好提案 → 拒绝 → 重新明确Confirm。尚缺逐项证据：前两步不持久写；确认只存允许字段不含日期/原文；拒绝不影响查找。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "R75真实PG+受控provider：预算/日期查询、生成提案均保持已存偏好原值；confirmation=false拒绝且下一查询成功，重新生成再显式确认才CAS写入version2。提案过滤日期，直接夹带dates/rawText也拒绝；DB仅六字段偏好，无日期/原查询，申请/消息/meal均无写入。16条其他测试由名称过滤排除，不计本次通过。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：普通查询预算/日期 → 生成偏好提案 → 拒绝 → 重新明确Confirm。尚缺逐项证据：前两步不持久写；确认只存允许字段不含日期/原文；拒绝不影响查找。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
+          "reason": "R75 independent controlled-provider / real PG preference confirmation"
+        }
+      ]
     },
     {
       "id": "QA-AI-025",

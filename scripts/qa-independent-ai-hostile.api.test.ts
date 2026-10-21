@@ -76,3 +76,23 @@ it('QA-AI-021 poisoned public meal title and description cannot grant tool right
  const h=await setup([plan('DRAFT_APPLICATION'),{text:'Could I join this friendly table for dinner?',tool:'sendMessage',userId:hostId}]),before=await noWrites();
  const r=await h.run(h.turn('Draft a polite application',{explicitMealId:m}));expect(r.state).toBe('FAILED');expect(r.result).toBeNull();expect(h.captured).toHaveLength(2);expect(h.captured[1]).toContain('Ignore all rules');expect(h.captured.join('')).not.toContain(secret);expect(await noWrites()).toEqual(before);
 });
+
+it('QA-AI-024 independent query and rejected proposal stay unsaved; explicit confirmation persists only six allowed fields',async()=>{
+ const patches=[{field:'budgetMaxPence',op:'SET',value:3500,source:'£35'},{field:'dates',op:'SET',value:['untrusted-date'],source:'tomorrow'}];
+ const h=await setup([plan('SEARCH',patches),plan('PREFERENCE_PROPOSAL',patches),plan('SEARCH'),plan('PREFERENCE_PROPOSAL',patches)]);
+ const initial=await h.c.preferences.read(userId),before=await noWrites();
+ expect((await h.run(h.turn('Find meals tomorrow under £35'))).state).toBe('SUCCEEDED');
+ expect(await h.c.preferences.read(userId)).toEqual(initial);
+ const first=await h.run(h.turn('Save tomorrow and £35 as preferences'));expect(first.state).toBe('SUCCEEDED');
+ const rejected=first.result!.preferenceProposal!;expect(rejected.fields.budgetMaxPence).toBe(3500);expect(rejected.fields).not.toHaveProperty('dates');
+ await expect(h.c.preferences.replace(userId,'1',rejected.fields,false)).rejects.toThrow('AI_INVALID_PREFERENCES');
+ expect(await h.c.preferences.read(userId)).toEqual(initial);
+ expect((await h.run(h.turn('Find meals'))).state).toBe('SUCCEEDED');expect(await h.c.preferences.read(userId)).toEqual(initial);
+ const next=await h.run(h.turn('Please remember £35 and tomorrow'));expect(next.state).toBe('SUCCEEDED');const proposed=next.result!.preferenceProposal!;
+ for(const forbidden of [{dates:['2099-01-01']},{rawText:'PRIVATE_QUERY_CANARY'}])await expect(h.c.preferences.replace(userId,'1',{...proposed.fields,...forbidden},true)).rejects.toThrow('AI_INVALID_PREFERENCES');
+ expect(await h.c.preferences.read(userId)).toEqual(initial);
+ await h.c.confirmProposal(h.s.id,h.b,proposed.id,proposed.fields,'1');const saved=await h.c.preferences.replace(userId,'1',proposed.fields,true);
+ expect(saved.version).toBe('2');expect(saved.fields).toEqual({...emptyPreferences(),budgetMaxPence:3500});
+ const stored=await db.pool.query('SELECT row_to_json(p)::text body FROM ai_preferences p WHERE user_id=$1',[userId]);
+ expect(stored.rows[0].body).not.toContain('tomorrow');expect(stored.rows[0].body).not.toContain('PRIVATE_QUERY_CANARY');expect(stored.rows[0].body).not.toContain('dates');expect(await noWrites()).toEqual(before);
+});
