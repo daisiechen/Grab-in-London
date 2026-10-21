@@ -14,10 +14,10 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 103 |
+| PASS | 105 |
 | FAIL | 0 |
 | BLOCKED | 12 |
-| NOT_RUN | 102 |
+| NOT_RUN | 100 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实环境、原生runtime/设备/签名或政策批准证据；本地恢复与分步删除现已复验通过，不能再笼统视为外部阻塞。FAIL优先于未完成的后续步骤。
@@ -87,6 +87,8 @@
 | R59 | 退出码1；2/3通过，失败1，1个测试文件 | `49d22b6` |
 | R60 | 退出码0；24/24通过，失败0，3个测试文件 | `5676dde` |
 | R61 | 退出码0；1/1通过，失败0，1个测试文件 | `1253409` |
+| R62 | 退出码0；2/2通过，失败0，1个测试文件 | `94f5c36` |
+| R63 | 退出码0；26/26通过，失败0，3个测试文件 | `94f5c36` |
 
 R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯函数探针；R5复跑分页修复回归，R6是QA第二批6项独立P0探针；R7/R8为QA-F01修复的API/Web及iOS组件定向复跑；R9是第三批12项独立边界探针，R10/R11复跑解除准备，R12为QA新增真实备份中E0导出的恢复后撤销分支；R13为饭后及群/私聊权限独立探针；R14保留QA-F03修前2失败，R15为0518d45修后的12项独立探针复验，R16为身份模块26项受影响HTTP回归（包括fresh会话下未来proof拒绝），不能删除修前结果或把历史失败当当前通过；R17为举报本人回执及撤授权重放3项独立HTTP/PG探针，撤session/DELETING状态通过受控数据库夹具设置。R18为安排锁、历史截止补算、开始名单及预约隔离6项独立PG/HTTP探针，删除仅屏障状态，完整删除名单断言仍未通过。R19/R20独立定向复跑5a37fdc关闭顺序单测及真实PG负载退出，未替代远端CI结果。R21为删除实际HTTP/本地purge、故障rollback及用户锁消息/审批竞态5项独立探针，生产日志脱敏仍待完整捕获。R22为ac09af4固定版本的11项独立受控AI/controller/HTTP探针，仅035/036/037具完整预期证据；R23为该版本Claude发现修复28项API/DB独立定向复验。R24保留QA-F04修前停用后仍发布失败；R25为8e2b908修后7项独立停用/费用/reaper探针，R26为22项受影响DB回归，F04定向关闭而043仍有未测断言。R27保留QA-F05修前Web失败，T001另为已分类夹具错误；R28/R29为f298048独立session/PG及Web组件各3项，R30为iOS manager17项定向回归；F05在NEW与TTL/偏好删除差异范围关闭。R31为公开DTO/后台角色/CSV授权及跨快照游标和大序号4项独立HTTP/PG探针，公式转义另覆盖formatter，不声称Excel实际执行。R32保留QA-F06 CLI入口失败，R33保留QA-F07原生协议失败；R34/R35固定b76c593独立8+32项验证CLI修复，R36固定1080993独立iOS49项验证桥接修复。完整加入用户路径仍NOT_RUN，不据组件通过升级。不能将这些数量相加当作独立业务用例数；R5与R1有重复，R2也不是原生设备验收。逐项测试名、状态、时间和命令见[机器证据](evidence/2026-10-21/automated-runs.json)。R4是质量检查而非业务用例。
 
@@ -201,8 +203,8 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-PRIVACY-002 · 删除同步屏障 | PASS | 真实HTTP删除202后未来host场取消、成员退席、pending撤回，全部活跃session撤销、mutual consent撤销及公开资料404。真实PG用户锁中先排队删除再消息/审批，两者拒绝且无新消息或批准席位；身份/餐厅为test适配器。；证据 R21-T004, R21-T005 |
 | QA-PRIVACY-003 · 删除失败与丢响应 | PASS | R21真实DB删除journal故障500，user/epoch/meal/receipt/session整体回滚，移除后202丢响应、撤session仍凭预存receipt查最小三字段证据沿用。R61补实际非silent Fastify/Pino管道：子进程中故障异常故意含合成receipt秘密，捕获实际stdout含unexpected error及请求完成；500后ACTIVE/session200，重试202后session401，receipt POST200只含completedAt/requestedAt/status。receipt/accessToken均不在日志，所有调用URL无query，响应不含token。仅日志内存脱敏检查，不发布原始日志、不关闭部署日志运输/真实provider门槛。；证据 R21-T003, R61-T001 |
 | QA-PRIVACY-004 · 开始后删除 | PASS | 开始后分别删除host/guest：真实HTTP受理再运行本地purge，席位/已封名单/双方出席原行不变，场仍OPEN不虚假取消；删除者消息正文脱敏/资料删除，另一人资料与消息保持。远端Unavailable，receipt诚实NEEDS_SUPPORT，不冒称最终完成。；证据 R21-T001, R21-T002 |
-| QA-PRIVACY-005 · 快照导出撤销 | NOT_RUN | 本地生产实现尚需实际执行：S0生成CSV后删A → 查图/下钻/分页/下载E0。尚缺逐项证据：受影响整份S0均410；旧缓存清除；无长期公开下载；不承诺抹掉已下载文件。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-PRIVACY-006 · MVCC构建与删除竞争 | NOT_RUN | 本地生产实现尚需实际执行：构建读旧epoch → 删除提交 → 旧构建尝试SEALED。尚缺逐项证据：旧构建不能发布；重算新snapshot；无删除主体复活。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-PRIVACY-005 · 快照导出撤销 | PASS | 真实S0/E0先CSV200并保留本地bytes；删除A202后五页overview/journey/supply/retention/quality、下钻首/旧cursor后页、E0下载及再导出均410。下载需要session/MFA（无session401）、private no-store，ticket期限≤15分钟，无公开长期URL。本地已取CSV哈希不变，明确服务器撤销不能抹已下载副本。R63自有ConsoleProvider探针先缓存A111/B222，再410清当前及所有缓存、picker打开、重新选未撤A必须网络重取333；实际App410清URL/页面及export处理回归也通过。仅本地HTTP/组件，非部署验收。；证据 R62-T002, R63-T008, R63-T012, R63-T021, R63-T023 |
+| QA-PRIVACY-006 · MVCC构建与删除竞争 | PASS | 真实PG两连接：A主持未来M、确认N、pendingQ及开始后R；RR构建同事务显式读旧epoch后暂停原privacy FOR SHARE发送。普通删除HTTP202提交且epoch已升，再释放未改写的原SQL，PostgreSQL40001拒绝旧构建且snapshot行数不增加。重新构建成功；新snapshot_subjects及users/applications/seats/attendance/experiences/rosters均无删除A，公开profile404/session401；物理共享R的start_roster仍保留A历史资格，未复活身份。；证据 R62-T001 |
 | QA-PRIVACY-007 · 供应商删除分步失败 | PASS | 生产worker+真实PG受控Auth0/Apple逐步故障、进程重建恢复、稳定幂等键及他人数据保留通过；仍不关闭真实供应商撤销门槛。；证据 R10-T050, R10-T051, R10-T052, R10-T053, R10-T054 |
 | QA-PRIVACY-008 · 备份恢复删除台账 | PASS | QA扩展实际pg_dump/pg_restore：闸门在重放前阻API/worker，原receipt/身份失效及他人保留；备份前真实可下载E0恢复重放后由仍有效analyst会话读得410 SNAPSHOT_REVOKED且无CSV；重复重放和审计/时长通过。线上台账持久化/漏项检测仍属G-HOST。；证据 R12-T001 |
 | QA-METRIC-001 · 零分母 | NOT_RUN | 本地生产实现尚需实际执行：无任何成熟申请/明确问卷答案，查询比率与CSV。尚缺逐项证据：分母0→null/—而非0%；CSV与页面同值同单位。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |

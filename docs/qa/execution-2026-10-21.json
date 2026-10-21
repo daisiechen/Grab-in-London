@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 102,
-    "PASS": 103,
+    "NOT_RUN": 100,
+    "PASS": 105,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -6568,8 +6568,14 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R62-T002",
+        "R63-T008",
+        "R63-T012",
+        "R63-T021",
+        "R63-T023"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T162",
         "R1-T163",
@@ -6591,16 +6597,21 @@
         "R1-T506",
         "R1-T536",
         "R1-T537",
-        "R1-T538"
+        "R1-T538",
+        "R62-T002",
+        "R63-T008",
+        "R63-T012",
+        "R63-T021",
+        "R63-T023"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "受影响整份S0均410",
-        "旧缓存清除",
-        "无长期公开下载",
-        "不承诺抹掉已下载文件"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2,
+        3
       ],
-      "actual": "本地生产实现尚需实际执行：S0生成CSV后删A → 查图/下钻/分页/下载E0。尚缺逐项证据：受影响整份S0均410；旧缓存清除；无长期公开下载；不承诺抹掉已下载文件。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "真实S0/E0先CSV200并保留本地bytes；删除A202后五页overview/journey/supply/retention/quality、下钻首/旧cursor后页、E0下载及再导出均410。下载需要session/MFA（无session401）、private no-store，ticket期限≤15分钟，无公开长期URL。本地已取CSV哈希不变，明确服务器撤销不能抹已下载副本。R63自有ConsoleProvider探针先缓存A111/B222，再410清当前及所有缓存、picker打开、重新选未撤A必须网络重取333；实际App410清URL/页面及export处理回归也通过。仅本地HTTP/组件，非部署验收。"
     },
     {
       "id": "QA-PRIVACY-006",
@@ -6608,8 +6619,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R62-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T162",
         "R1-T163",
@@ -6631,15 +6644,16 @@
         "R1-T506",
         "R1-T536",
         "R1-T537",
-        "R1-T538"
+        "R1-T538",
+        "R62-T001"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "旧构建不能发布",
-        "重算新snapshot",
-        "无删除主体复活"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：构建读旧epoch → 删除提交 → 旧构建尝试SEALED。尚缺逐项证据：旧构建不能发布；重算新snapshot；无删除主体复活。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "真实PG两连接：A主持未来M、确认N、pendingQ及开始后R；RR构建同事务显式读旧epoch后暂停原privacy FOR SHARE发送。普通删除HTTP202提交且epoch已升，再释放未改写的原SQL，PostgreSQL40001拒绝旧构建且snapshot行数不增加。重新构建成功；新snapshot_subjects及users/applications/seats/attendance/experiences/rosters均无删除A，公开profile404/session401；物理共享R的start_roster仍保留A历史资格，未复活身份。"
     },
     {
       "id": "QA-PRIVACY-007",
