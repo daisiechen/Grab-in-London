@@ -97,3 +97,5 @@
 - QA B10: [report](qa/evidence/2026-10-21/browser-b10.zh-CN.md), [observations](qa/evidence/2026-10-21/browser-b10.json), [application](qa/evidence/2026-10-21/b10-admin-application-trace.jpg), [empty](qa/evidence/2026-10-21/b10-admin-empty-not-zero.jpg), [filter independence](qa/evidence/2026-10-21/b10-admin-language-no-meal-survey-retained.jpg), [quality CSV](qa/evidence/2026-10-21/b10-export-quality.csv), [overview CSV](qa/evidence/2026-10-21/b10-export-overview.csv), [empty CSV](qa/evidence/2026-10-21/b10-export-empty.csv).
 
 - QA R96/R97: [survey and draft authorization boundaries](qa/evidence/2026-10-21/r96-r97-boundaries.md).
+
+- QA R98: [mail fault injection and F19 original red](qa/evidence/2026-10-21/r98-mail-dead-letter.md).

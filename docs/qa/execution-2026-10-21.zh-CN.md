@@ -1,6 +1,6 @@
 # 独立QA执行报告 · 2026-10-21
 
-**结论：部分执行，尚不能完成整体验收；不构成发布通过。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
+**结论：本轮不通过，存在未闭环缺陷：QA-F19。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
 
 原测试计划基线4659fdb；被测交接`8ba6fc7c9974cf6be1ac06d8b16e0380fb3beced`，业务代码`8bc1e9280153491b6a63c68cd6ba6a49f8061978`。Inbox分页修复在`071ecd7cbd012cb7c49d4b907ec768f90409a3f6`仅做定向复验；QA-F01及第二批P0探针在04cb601验证，第三批边界、删除/恢复和适配在d4582f7及后续仅CI增量版本定向验证，具体版本见运行表；更早证据沿用对应固定基线。
 
@@ -15,9 +15,9 @@
 | 状态 | 数量 |
 |---|---:|
 | PASS | 136 |
-| FAIL | 0 |
+| FAIL | 1 |
 | BLOCKED | 12 |
-| NOT_RUN | 69 |
+| NOT_RUN | 68 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实环境、原生runtime/设备/签名或政策批准证据；本地恢复与分步删除现已复验通过，不能再笼统视为外部阻塞。FAIL优先于未完成的后续步骤。
@@ -123,6 +123,7 @@
 | R95 | 退出码1；2/3通过，失败1，1个测试文件 | `61853fd` |
 | R96 | 退出码0；3/3通过，失败0，1个测试文件 | `61853fd` |
 | R97 | 退出码0；3/3通过，失败0，1个测试文件 | `61853fd` |
+| R98 | 退出码1；2/3通过，失败1，1个测试文件 | `cc489ef` |
 
 R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯函数探针；R5复跑分页修复回归，R6是QA第二批6项独立P0探针；R7/R8为QA-F01修复的API/Web及iOS组件定向复跑；R9是第三批12项独立边界探针，R10/R11复跑解除准备，R12为QA新增真实备份中E0导出的恢复后撤销分支；R13为饭后及群/私聊权限独立探针；R14保留QA-F03修前2失败，R15为0518d45修后的12项独立探针复验，R16为身份模块26项受影响HTTP回归（包括fresh会话下未来proof拒绝），不能删除修前结果或把历史失败当当前通过；R17为举报本人回执及撤授权重放3项独立HTTP/PG探针，撤session/DELETING状态通过受控数据库夹具设置。R18为安排锁、历史截止补算、开始名单及预约隔离6项独立PG/HTTP探针，删除仅屏障状态，完整删除名单断言仍未通过。R19/R20独立定向复跑5a37fdc关闭顺序单测及真实PG负载退出，未替代远端CI结果。R21为删除实际HTTP/本地purge、故障rollback及用户锁消息/审批竞态5项独立探针，生产日志脱敏仍待完整捕获。R22为ac09af4固定版本的11项独立受控AI/controller/HTTP探针，仅035/036/037具完整预期证据；R23为该版本Claude发现修复28项API/DB独立定向复验。R24保留QA-F04修前停用后仍发布失败；R25为8e2b908修后7项独立停用/费用/reaper探针，R26为22项受影响DB回归，F04定向关闭而043仍有未测断言。R27保留QA-F05修前Web失败，T001另为已分类夹具错误；R28/R29为f298048独立session/PG及Web组件各3项，R30为iOS manager17项定向回归；F05在NEW与TTL/偏好删除差异范围关闭。R31为公开DTO/后台角色/CSV授权及跨快照游标和大序号4项独立HTTP/PG探针，公式转义另覆盖formatter，不声称Excel实际执行。R32保留QA-F06 CLI入口失败，R33保留QA-F07原生协议失败；R34/R35固定b76c593独立8+32项验证CLI修复，R36固定1080993独立iOS49项验证桥接修复。完整加入用户路径仍NOT_RUN，不据组件通过升级。不能将这些数量相加当作独立业务用例数；R5与R1有重复，R2也不是原生设备验收。逐项测试名、状态、时间和命令见[机器证据](evidence/2026-10-21/automated-runs.json)。R4是质量检查而非业务用例。
 
@@ -269,8 +270,8 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-API-004 · 游标篡改和大序号 | PASS | 真实HTTP/PG：snapshot cursor换主体/limit及篡改拒绝，真实meals下钻cursor用于另一snapshot拒绝422；列表和消息limit101拒绝。head大于2^53时发消息/读LIVE/扫描位置以十进制字符串准确往返，无Number精度损失。；证据 R31-T004 |
 | QA-API-005 · CSV注入与下载授权 | PASS | 真实csvCell对=、+、-、@及空白/控制字符前缀加公式抑制并RFC quoting；真实CSV下载private no-store、无合成私密字段，换actor404、撤role/MFA403、隐私epoch变更410且非CSV。formatter断言非实际Excel执行，下载始终重新鉴权。；证据 R31-T003 |
 | QA-NOTIFY-001 · 渠道收件人矩阵 | NOT_RUN | 本地生产实现尚需实际执行：批准/拒绝/过期P → 取消M → 发群/私聊 → 查看outbox及站内。尚缺逐项证据：审批/拒绝/过期申请人站内+邮件；整场取消H及当前P/C；W/L不邮件；消息只有站内未读。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-NOTIFY-002 · 邮件失败不回滚席位 | NOT_RUN | UNKNOWN保留/查询和无凭据不发送的数据库测试通过；未完整执行重试尽头dead-letter及告警链路。 |
-| QA-NOTIFY-003 · 通知隐私 | NOT_RUN | 申请正文随机marker在通知及outbox中不存在；未同轮覆盖举报/私聊/单方再约正文和三元唯一约束。 |
+| QA-NOTIFY-002 · 邮件失败不回滚席位 | FAIL | R98 real temporary PG controlled mail provider: UNKNOWN lookup timeout never resends; authoritative NOT_SENT permits next same-ID retry. Exhausted attempts8 row becomes DEAD/RETRY_EXHAUSTED and sends0, but no observable warning/error alarm or wired observer. QA-F19 OPEN. Actual seat transaction failure independence and complete notification matrix still pending.；证据 R98-T001, R98-T003 |
+| QA-NOTIFY-003 · 通知隐私 | NOT_RUN | 申请正文随机marker在通知及outbox中不存在；未同轮覆盖举报/私聊/单方再约正文和三元唯一约束。 R98 private body injected into disposable outbox rejected DEAD/INVALID_PAYLOAD with provider dispatch0 and no body in captured warn/error. Full producer matrix and event-recipient-channel uniqueness remain pending.；证据 R98-T002 |
 | QA-AI-001 · 偏好仅排序 | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R1-T471, R1-T310 |
 | QA-AI-002 · 显式预算是hard | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R1-T471, R1-T310 |
 | QA-AI-003 · CLEAR持续抑制 | NOT_RUN | 本地生产实现尚需实际执行：先hard35 → 不限预算 → 下一轮仅改日期。尚缺逐项证据：budget hard和soft均不恢复；其他条件保留；Discover UI不改。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |

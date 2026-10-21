@@ -16,8 +16,9 @@
     "nativeRuntimeCheck20261021": "Read-only simctl outside sandbox confirms installed iOS27.0/27.1 runtimes and available shutdown iPhone simulators. Sandboxed service refusal is not missing-runtime proof. Build/launch and real native journey remain unexecuted."
   },
   "counts": {
-    "NOT_RUN": 69,
+    "NOT_RUN": 68,
     "PASS": 136,
+    "FAIL": 1,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -9126,8 +9127,11 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "R98-T001",
+        "R98-T003"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T417",
         "R1-T418",
@@ -9186,11 +9190,19 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "席位/站内已成立",
-        "UNKNOWN先查询/提供方同幂等ID",
-        "重试尽头dead-letter告警"
+        "Mail failure must not roll back actual seat/in-app notification (dedicated end-to-end proof pending).",
+        "Exhausted retries require observable dead-letter alert; QA-F19 red."
       ],
-      "actual": "UNKNOWN保留/查询和无凭据不发送的数据库测试通过；未完整执行重试尽头dead-letter及告警链路。"
+      "actual": "R98 real temporary PG controlled mail provider: UNKNOWN lookup timeout never resends; authoritative NOT_SENT permits next same-ID retry. Exhausted attempts8 row becomes DEAD/RETRY_EXHAUSTED and sends0, but no observable warning/error alarm or wired observer. QA-F19 OPEN. Actual seat transaction failure independence and complete notification matrix still pending.",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "UNKNOWN保留/查询和无凭据不发送的数据库测试通过；未完整执行重试尽头dead-letter及告警链路。"
+        }
+      ],
+      "defectIds": [
+        "QA-F19"
+      ]
     },
     {
       "id": "QA-NOTIFY-003",
@@ -9199,7 +9211,9 @@
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
-      "evidence": [],
+      "evidence": [
+        "R98-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T417",
         "R1-T418",
@@ -9261,7 +9275,7 @@
         "邮件无申请/消息/举报正文/单方再约",
         "通知唯一event+recipient+channel"
       ],
-      "actual": "申请正文随机marker在通知及outbox中不存在；未同轮覆盖举报/私聊/单方再约正文和三元唯一约束。"
+      "actual": "申请正文随机marker在通知及outbox中不存在；未同轮覆盖举报/私聊/单方再约正文和三元唯一约束。 R98 private body injected into disposable outbox rejected DEAD/INVALID_PAYLOAD with provider dispatch0 and no body in captured warn/error. Full producer matrix and event-recipient-channel uniqueness remain pending."
     },
     {
       "id": "QA-AI-001",
@@ -22244,14 +22258,15 @@
     "QA-F15": "CLOSED_TARGETED_QA",
     "QA-F16": "CLOSED_TARGETED_QA",
     "QA-F17": "CLOSED_TARGETED_QA",
-    "QA-F18": "CLOSED_TARGETED_QA"
+    "QA-F18": "CLOSED_TARGETED_QA",
+    "QA-F19": "OPEN"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
     "userAuthorizedMessaging": true,
     "status": "remaining_local_execution_in_progress",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
-    "latestFeedback": "R96 survey3 PASS/R97 draft3 targeted PASS. Host JOURNEY002 corrected to NOT_RUN for original actual native role-swap precondition. Runtime available on unsandboxed read; developer asked for local simulator build/config."
+    "latestFeedback": "QA-F19 mail dead-letter alarm independently red R98; original developer assigned venues_backend; target fix and retest pending. Native prebuild succeeded but Pods build setup in progress, not absent runtime/signing proof."
   },
   "blockerTriage": "原14条中供应商分步删除和恢复删除台账两条已转本地执行并通过；其余12条缺真实环境/许可/批准证据，各项可本地准备部分已继续推进，不能视为12个未修代码故障。"
 }
