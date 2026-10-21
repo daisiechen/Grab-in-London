@@ -15,10 +15,9 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 93,
-    "PASS": 111,
-    "BLOCKED": 12,
-    "FAIL": 1
+    "NOT_RUN": 92,
+    "PASS": 113,
+    "BLOCKED": 12
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
@@ -14792,8 +14791,11 @@
       "priority": "P0",
       "plannedStage": "review",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R74-T003",
+        "R74-T004"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T242",
         "R1-T243",
@@ -14860,12 +14862,19 @@
         "R1-T568",
         "R1-T569"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "生产启动拒绝fixture",
-        "不整体迁移5300行原型、模拟键盘/付款及旧shared权威"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "R72初步静态与隔离变异检查3项通过，Web/iOS/admin及API当前typecheck通过；但涉及F13未提交logger候选的源码盘点，待正式SHA再固定复验。仍未授予本用例PASS，具体待覆盖预期见remainingExpected。"
+      "remainingExpected": [],
+      "actual": "正式26317f8独立R74通过：生产/staging拒测试适配及固定OTP；AST检查六端与生产包无旧Demo/shared权威、模拟键盘付款依赖。隔离副本语义破坏OpenAPI/SDK均使真实生成检查失败，恢复通过，原artifact字节不变；四端API/Web/iOS/admin typecheck通过，共享workspace client/contracts。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "R72初步静态与隔离变异检查3项通过，Web/iOS/admin及API当前typecheck通过；但涉及F13未提交logger候选的源码盘点，待正式SHA再固定复验。仍未授予本用例PASS，具体待覆盖预期见remainingExpected。",
+          "reason": "Formal F13 fix and independent R73/R74 verification"
+        }
+      ]
     },
     {
       "id": "QA-CODE-002",
@@ -15154,8 +15163,10 @@
       "priority": "P0",
       "plannedStage": "review",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R74-T005"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T242",
         "R1-T243",
@@ -15222,12 +15233,19 @@
         "R1-T568",
         "R1-T569"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "漂移被检查捕获",
-        "Web/iOS/admin共享同一DTO与错误类型"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "R72初步静态与隔离变异检查3项通过，Web/iOS/admin及API当前typecheck通过；但涉及F13未提交logger候选的源码盘点，待正式SHA再固定复验。仍未授予本用例PASS，具体待覆盖预期见remainingExpected。"
+      "remainingExpected": [],
+      "actual": "正式26317f8独立R74通过：生产/staging拒测试适配及固定OTP；AST检查六端与生产包无旧Demo/shared权威、模拟键盘付款依赖。隔离副本语义破坏OpenAPI/SDK均使真实生成检查失败，恢复通过，原artifact字节不变；四端API/Web/iOS/admin typecheck通过，共享workspace client/contracts。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "R72初步静态与隔离变异检查3项通过，Web/iOS/admin及API当前typecheck通过；但涉及F13未提交logger候选的源码盘点，待正式SHA再固定复验。仍未授予本用例PASS，具体待覆盖预期见remainingExpected。",
+          "reason": "Formal F13 fix and independent R73/R74 verification"
+        }
+      ]
     },
     {
       "id": "QA-CODE-006",
@@ -15235,10 +15253,10 @@
       "priority": "P0",
       "plannedStage": "review",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "NOT_RUN",
       "evidence": [
-        "R68-T001",
-        "R69-T001"
+        "R73-T001",
+        "R73-T002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T242",
@@ -15310,13 +15328,20 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "无OTP/token/email/chat/AI原文/偏好值（OAuth code/state已实际进入日志）",
-        "仅允许最小元数据（原始req.url含敏感query）",
-        "合成评测原文另隔离（全面日志/存储审阅尚待）"
+        "无OTP/token/email/chat/AI原文/偏好值",
+        "仅允许最小元数据",
+        "合成评测原文另隔离"
       ],
-      "actual": "新增QA-F13：实际Node API子进程启用原Fastify/Pino info管道，合法TestIDP GOOGLE回调200，父进程内存捕获日志code=true/state=true/email=false。默认req.url原样记录GET callback query，header redact不覆盖URL。所有凭据为合成，原日志未输出或公开，仅记录布尔泄露结果。R61 receipt POST及异常消息日志检查仍局部通过，不外推OAuth路径；待修复及完整日志/存储审阅。",
+      "actual": "F13在正式26317f8独立R73实际Node OAuth及receipt/故障日志2项通过；code/state/email不泄漏，业务callback200，requestId/path/耗时保留。R74真实Pino serializer回归通过。R68/R69修前失败保留。全面日志、客户端存储及隔离评测原文审阅尚未完成，整条NOT_RUN。",
       "defectIds": [
         "QA-F13"
+      ],
+      "history": [
+        {
+          "status": "FAIL",
+          "actual": "新增QA-F13：实际Node API子进程启用原Fastify/Pino info管道，合法TestIDP GOOGLE回调200，父进程内存捕获日志code=true/state=true/email=false。默认req.url原样记录GET callback query，header redact不覆盖URL。所有凭据为合成，原日志未输出或公开，仅记录布尔泄露结果。R61 receipt POST及异常消息日志检查仍局部通过，不外推OAuth路径；待修复及完整日志/存储审阅。",
+          "reason": "Formal F13 fix and independent R73/R74 verification"
+        }
       ]
     },
     {
@@ -21816,7 +21841,7 @@
     "QA-F10": "CLOSED_TARGETED_QA",
     "QA-F11": "CLOSED_TARGETED_QA",
     "QA-F12": "CLOSED_TARGETED_QA",
-    "QA-F13": "OPEN"
+    "QA-F13": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",

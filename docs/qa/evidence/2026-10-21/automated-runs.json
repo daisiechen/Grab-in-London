@@ -12659,6 +12659,88 @@
           "durationMs": 1258.232792
         }
       ]
+    },
+    {
+      "id": "R73",
+      "testedCommit": "26317f8b21a50f24a11d168151269b9cd2435e8f",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-oauth-logs.api.test.ts scripts/qa-independent-deletion-logs.api.test.ts",
+      "startedAt": "2026-10-21T14:10:25.841000+00:00",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "total": 2,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R73-T001",
+          "run": "R73",
+          "path": "scripts/qa-independent-deletion-logs.api.test.ts",
+          "title": "QA-PRIVACY-003 real fault500 rollback then lost202 receipt survives session revocation without receipt/access secrets in logs or URLs",
+          "status": "passed",
+          "durationMs": 768.58675
+        },
+        {
+          "id": "R73-T002",
+          "run": "R73",
+          "path": "scripts/qa-independent-oauth-logs.api.test.ts",
+          "title": "QA-F13 a real successful OAuth callback does not put its code state or private email in the actual log stream",
+          "status": "passed",
+          "durationMs": 804.0542500000001
+        }
+      ]
+    },
+    {
+      "id": "R74",
+      "testedCommit": "26317f8b21a50f24a11d168151269b9cd2435e8f",
+      "command": "pnpm exec vitest run --project unit apps/api/src/http/logging.unit.test.ts apps/api/src/test/qa-independent-assets.unit.test.ts",
+      "startedAt": "2026-10-21T14:10:27.014000+00:00",
+      "exitCode": 0,
+      "passed": 5,
+      "failed": 0,
+      "total": 5,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R74-T001",
+          "run": "R74",
+          "path": "apps/api/src/http/logging.unit.test.ts",
+          "title": "real info logs preserve request correlation and latency but exclude callback queries and credentials",
+          "status": "passed",
+          "durationMs": 64.70974999999999
+        },
+        {
+          "id": "R74-T002",
+          "run": "R74",
+          "path": "apps/api/src/http/logging.unit.test.ts",
+          "title": "real Pino error serializer drops raw message, stack, cause and attached callback URL",
+          "status": "passed",
+          "durationMs": 0.7319170000000099
+        },
+        {
+          "id": "R74-T003",
+          "run": "R74",
+          "path": "apps/api/src/test/qa-independent-assets.unit.test.ts",
+          "title": "QA-CODE-001 staging and production reject each test adapter and fixed OTP without connecting any provider",
+          "status": "passed",
+          "durationMs": 1.8074169999999867
+        },
+        {
+          "id": "R74-T004",
+          "run": "R74",
+          "path": "apps/api/src/test/qa-independent-assets.unit.test.ts",
+          "title": "QA-CODE-001 current production app import graph never depends on the legacy Demo/shared/admin prototype or mock keyboard/payment module",
+          "status": "passed",
+          "durationMs": 284.90454200000005
+        },
+        {
+          "id": "R74-T005",
+          "run": "R74",
+          "path": "apps/api/src/test/qa-independent-assets.unit.test.ts",
+          "title": "QA-CODE-005 isolated semantic OpenAPI and SDK metadata drift both fail the real checker; restore passes without touching workspace artifacts",
+          "status": "passed",
+          "durationMs": 838.1720829999999
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -12702,7 +12784,7 @@
     "scripts/qa-independent-ai-group-permissions.api.test.ts": "67ded17c812c8d5fa85aebdeb3c0849e7691b7b4a81900c9cfd4df6f5631638f",
     "scripts/qa-independent-ai-hostile.api.test.ts": "4583366343408eab5952f0dc8e1b333376a65c4a01a484fdf87943133f9d5234",
     "scripts/qa-independent-provider-lock.api.test.ts": "e5bc76e651eccec34cb774662a0c78b2b6f95b39130242ae16faf7a4c95aac87",
-    "scripts/qa-independent-oauth-logs.api.test.ts": "964a8f69e64f19bbca47dd4c7019056237344b739773fbe84bf378552c34e75f",
+    "scripts/qa-independent-oauth-logs.api.test.ts": "30dd3835dc27e9a64a251dfab9a653b188c0dfdbd5ef379620435cf3a6376700",
     "scripts/qa-oauth-log-child.ts": "2407272b1de6534c7670b8fdf5e9f91104f3c82de14c5767835eda48d50d91d9",
     "apps/api/src/test/qa-independent-assets.unit.test.ts": "d74cde8973e70c2274453d08a2a9db3c08d5f4014588bde4eb4c8a4293f3f6c1"
   },

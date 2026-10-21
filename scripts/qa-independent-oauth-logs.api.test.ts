@@ -11,5 +11,7 @@ it('QA-F13 a real successful OAuth callback does not put its code state or priva
  const done=once(child,'exit');try{
   child.send({url:db.url});const[code]=await done;expect(code,errors.join('').split('\n')[0]).toBe(0);const result=messages.find(m=>m.event==='done');expect(result?.status).toBe(200);
   const raw=logs.join('');expect(raw).toContain('/v1/auth/oauth/callback');expect({code:raw.includes(String(result?.code)),state:raw.includes(String(result?.state)),email:raw.includes(String(result?.email))}).toEqual({code:false,state:false,email:false});
+  const lines=raw.split('\n').filter(Boolean).map(line=>JSON.parse(line) as {req?:{url?:string};reqId?:string;responseTime?:number});
+  expect(lines.some(line=>typeof line.reqId==='string'&&line.reqId.length>0)).toBe(true);expect(lines.some(line=>typeof line.responseTime==='number')).toBe(true);expect(lines.some(line=>line.req?.url==='/v1/auth/oauth/callback')).toBe(true);
  }finally{if(child.exitCode===null&&child.signalCode===null){child.kill('SIGKILL');await done;}}
 });
