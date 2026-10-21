@@ -119,7 +119,7 @@ function CreateFlow({terms}:{terms:boolean}) {
       clearDraft('create');
       cache.delete('myMeals');
       notify('Meal published.');
-      navigate(`/meals/${res.data.id}`, { replace: true });
+      navigate(`/meals/${res.data.id}`, { replace: true,state:{backTo:'/meals?section=HOSTING'} });
     } catch (e) {
       if (gate.handle(e, '/create')) return;
       const field = e instanceof ApiError ? timeFieldOf(e.fieldErrors) : null;

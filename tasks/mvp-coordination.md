@@ -273,3 +273,10 @@
 - /create与/create/terms使用同一创建流程owner，条款往返保持原内存步骤、未发布文字和供应商展示；不将供应商资料放history.state、全局缓存或持久存储。直接公开访问条款仍不初始化私有草稿或CREATE编辑器/启动埋点。发布校验和显式确认不变，不自动同意或发布。
 - 自有真实路由回归与QA原探针共18项，涵盖Back to review/页头Back、Review确认false/true原样、0createMeal、持久草稿只存地点ID且展示字段null；根Web/后台262、core:check及Web生产构建通过（/private/tmp/fancy-f16-{clients,check,build}.log）。仅CreatePage、app/routes、自有create测试与本记录切片，F17导航来源另批；需QA释放Git窗口后提交固定SHA独立复验。
 - QA在bda0547提交B3真实浏览器F16/F17原红与结构化观察后释放Git窗口；F15在492db55独立20+32项复验targeted关闭，资料门槛完整用例通过。当前124 PASS /79 NOT_RUN /2 FAIL（F16/F17）/12 BLOCKED。Python71通过（含QA新增浏览器证据校验测试），F17自有路由下一切片两红不混入F16提交或其262项整合快照。
+
+## QA-F17 发布/保存与公开资料的返回来源（2026-10-21）
+
+- QA固定8387580真实浏览器发布后详情Back指向Discover，从饭局进入Host公开资料后Back也指向Discover；PRD要求发布/保存详情父级为Meals/Hosting，参与者公开资料返回原饭局。原B3红及截图保留在bda0547，未借本修复改顶层本人Profile返回规则。
+- 创建发布、编辑保存及无改动确认返回详情时，携带精确Hosting来源；详情只接受该精确来源，其他来源保持原Discover默认。Host头像/姓名进入公开资料仅传原meal路径及已验证父级；资料页只接受严格UUID饭局路径，Back还原原详情及其Hosting来源。外部地址/任意路径/尾缀参数等拒绝，PageHeader仅加可选透传state属性，不造通用导航框架、不存供应商信息。
+- 自有12路由测试修前5红/7来源白名单fallback绿，修后12绿；相关create/meals/profile五文件43项通过（含QA条款原探针不改），类型/lint/build通过。仅六个生产/自有测试文件及本记录另批提交；F16已aa52dc8独立提交同步，F16/F17正式关闭仍由QA固定SHA复验决定。
+- 根Web/后台274项、core:check、Web生产构建及Python71通过，日志/private/tmp/fancy-f17-{clients,check,build,python}.log。后端与原生无改动，沿用最近已验证结果，不声称本切片重跑无关层。QA独占文件及研究修改均保留。

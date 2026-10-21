@@ -71,13 +71,13 @@ export function EditMealPage() {
     const max = poundsToPence(draft.budgetMax);
     if (min === null || max === null || min <= 0 || max < min) { setError('Enter a valid budget per person.'); return; }
     const body = editPatch(before, draft);
-    if (!body) { navigate(`/meals/${mealId}`); return; }
+    if (!body) { navigate(`/meals/${mealId}`,{state:{backTo:'/meals?section=HOSTING'}}); return; }
     setBusy(true);
     try {
       await intent.run({ body, v: meal.version }, (key) => api.client.call('editMeal', { params: { mealId }, body, ifMatch: meal.version, idempotencyKey: key }));
       cache.delete(`meal:${mealId}`);
       notify('Meal updated.');
-      navigate(`/meals/${mealId}`, { replace: true });
+      navigate(`/meals/${mealId}`, { replace: true,state:{backTo:'/meals?section=HOSTING'} });
     } catch (e) {
       if (e instanceof ApiError && (e.code === 'VERSION_CONFLICT' || e.code === 'ARRANGEMENT_LOCKED')) await q.reload();
       setError(errorMessage(e));

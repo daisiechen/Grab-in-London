@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRenderedEvent } from '../../api/telemetry.tsx';
-import { useParams } from 'react-router';
+import {useLocation,useParams} from 'react-router';
 import { GlobeIcon } from '@radix-ui/react-icons';
 import { useApi } from '../../api/ApiProvider.tsx';
 import { useQuery } from '../../api/useQuery.ts';
@@ -16,6 +16,10 @@ interface ProfileData { profile: PublicProfile; reviews: PublicReview[]; nextRev
 /** Guest-readable public projection: no contact details, itinerary or private choices. */
 export function PublicProfilePage() {
   const { userId = '' } = useParams();
+  const source:unknown=useLocation().state;
+  const candidate=source&&typeof source==='object'&&'backTo'in source?source.backTo:null;
+  const backTo=typeof candidate==='string'&&/^\/meals\/[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(candidate)?candidate:'/discover';
+  const mealBackTo=source&&typeof source==='object'&&'mealBackTo'in source&&source.mealBackTo==='/meals?section=HOSTING'?'/meals?section=HOSTING':'/discover';
   const { api } = useApi();
   const viewer = useSignedIn();
   const q = useQuery<ProfileData>(`profile:${userId}`, async (c) => (await c.call('getPublicProfile', { params: { userId } })).data);
@@ -38,7 +42,7 @@ export function PublicProfilePage() {
   };
   return (
     <>
-      <PageHeader title={profile.displayName} backTo="/discover" />
+      <PageHeader title={profile.displayName} backTo={backTo} backState={backTo==='/discover'?undefined:{backTo:mealBackTo}} />
       <div className="body-pad">
         <div className="profile-heading">
           <Avatar name={profile.displayName} url={profile.avatarUrl} size={88} />

@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router';
+import { Link,useLocation,useParams } from 'react-router';
 import { useRenderedEvent } from '../../api/telemetry.tsx';
 import { ArrowRightIcon, CalendarIcon, ChatBubbleIcon, ExternalLinkIcon, InfoCircledIcon, PersonIcon, SewingPinIcon } from '@radix-ui/react-icons';
 import { useSignedIn } from '../../api/session.tsx';
@@ -18,11 +18,14 @@ import {
  */
 export function MealDetailPage() {
   const { mealId = '' } = useParams();
+  const source:unknown=useLocation().state;
+  const backTo=source&&typeof source==='object'&&'backTo'in source&&source.backTo==='/meals?section=HOSTING'?'/meals?section=HOSTING':'/discover';
+  const profileSource={backTo:`/meals/${mealId}`,mealBackTo:backTo};
   const signedIn = useSignedIn();
   const q = useQuery<MealDetail>(`meal:${mealId}:${signedIn?.user.id ?? 'guest'}`, async (c) => (await c.call('getMeal', { params: { mealId } })).data);
   useRenderedEvent('detail_view',{mealId},!!q.data);
 
-  if (!q.data) return q.error ? <><PageHeader title="The table" backTo="/discover" /><div className="body-pad"><FormError>{errorMessage(q.error)}</FormError></div></> : <Loading />;
+  if (!q.data) return q.error ? <><PageHeader title="The table" backTo={backTo} /><div className="body-pad"><FormError>{errorMessage(q.error)}</FormError></div></> : <Loading />;
   const { meal, myApplication, conversationId } = q.data;
   const actions = new Set(meal.allowedActions);
   const isHost = signedIn?.user.id === meal.host.id;
@@ -31,7 +34,7 @@ export function MealDetailPage() {
 
   return (
     <>
-      <PageHeader title="The table" backTo="/discover" />
+      <PageHeader title="The table" backTo={backTo} />
       <div className="detail-hero" aria-hidden="true">{monogram(meal.venue.name)}</div>
       <div className="body-pad">
         <div className="eyebrow">{areaName(meal.areaCode).toUpperCase()} · {tableKind(meal.capacity)}</div>
@@ -41,10 +44,10 @@ export function MealDetailPage() {
           <div><PersonIcon /><strong>{meal.confirmedCount} of {meal.capacity} confirmed</strong><span>Including the host</span></div>
         </div>
         <div className="host-line">
-          <Link to={`/profiles/${meal.host.id}`} aria-label={`Host ${meal.host.displayName}`}><Avatar name={meal.host.displayName} url={meal.host.avatarUrl} size={44} /></Link>
+          <Link to={`/profiles/${meal.host.id}`} state={profileSource} aria-label={`Host ${meal.host.displayName}`}><Avatar name={meal.host.displayName} url={meal.host.avatarUrl} size={44} /></Link>
           <div>
             <small>Your host</small>
-            <Link to={`/profiles/${meal.host.id}`}><strong>{meal.host.displayName}</strong></Link>
+            <Link to={`/profiles/${meal.host.id}`} state={profileSource}><strong>{meal.host.displayName}</strong></Link>
           </div>
           <span className="pill">{languagesLabel(meal.languages)}</span>
         </div>

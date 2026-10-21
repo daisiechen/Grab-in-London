@@ -74,10 +74,10 @@ export function FormError({ children }: { children: ReactNode }) {
   return <p className="form-error" role="alert">{children}</p>;
 }
 
-export function PageHeader({ title, backTo }: { title: string; backTo?: string }) {
+export function PageHeader({ title, backTo,backState }: { title: string; backTo?: string;backState?:unknown }) {
   return (
     <header className="page-header">
-      {backTo ? <Link to={backTo} aria-label="Back"><ChevronLeftIcon /></Link> : <span />}
+      {backTo ? <Link to={backTo} state={backState} aria-label="Back"><ChevronLeftIcon /></Link> : <span />}
       <strong>{title}</strong>
       <span />
     </header>
