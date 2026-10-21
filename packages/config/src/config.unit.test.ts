@@ -48,6 +48,23 @@ it('keeps real AI disabled without an explicit bundle path and never treats a ke
   expect(()=>loadConfig({...local,AI_BUNDLE_FILE:'relative/ai.json'})).toThrow(/AI_BUNDLE_FILE/);
 });
 
+it('accepts only a canonical bounded Svix signing key without revealing rejected input',()=>{
+  expect(loadConfig(local).resendWebhookSecret).toBeNull();
+  const secret='whsec_'+Buffer.alloc(32,7).toString('base64');
+  expect(loadConfig({...local,RESEND_WEBHOOK_SECRET:secret}).resendWebhookSecret).toBe(secret);
+  for(const value of ['not-a-signing-key','whsec_AA==',secret+'\r\nignored'])expect(()=>loadConfig({...local,RESEND_WEBHOOK_SECRET:value})).toThrow(/RESEND_WEBHOOK_SECRET/);
+});
+
+it('keeps Auth0 Management separate from login credentials and rejects partial grants configuration',()=>{
+  expect(loadConfig(production).auth0Management).toBeNull();
+  const clientSecret=['synthetic','management','credential'].join('-');
+  expect(loadConfig({...production,AUTH0_MANAGEMENT_CLIENT_ID:'synthetic-management',AUTH0_MANAGEMENT_CLIENT_SECRET:clientSecret}).auth0Management).toEqual({domain:production.AUTH0_DOMAIN,clientId:'synthetic-management',clientSecret});
+  for(const extra of [{AUTH0_MANAGEMENT_CLIENT_ID:'management'},{AUTH0_MANAGEMENT_CLIENT_SECRET:clientSecret}]){
+    let message='';try{loadConfig({...production,...extra});}catch(error){message=(error as Error).message;}
+    expect(message).toContain('AUTH0_MANAGEMENT_');expect(message).not.toContain(clientSecret);
+  }
+});
+
 describe('trusted reverse proxies', () => {
   it('defaults to no forwarded-header trust and accepts only explicit address ranges', () => {
     expect(loadConfig(local).trustedProxyCidrs).toEqual([]);

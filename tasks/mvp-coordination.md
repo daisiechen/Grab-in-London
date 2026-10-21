@@ -500,3 +500,11 @@
 - QA正式0db Native36/37/38实证：冷启见群，进聊天标已读导致inbox cache删除，返回已挂载Inbox显示Chats0/Applications0且无加载/错误，实际下拉立刻恢复列表；该手动恢复不是自动路径通过。根因query订阅数据失效不触发reload，F40解散仍定向通过不重开。
 - 仅InboxScreen与自有inbox-refresh：恢复focus先session revalidate/世代校验再reload，首挂载不重复读；数据缺失显示Loading/不假0，离线/403可见错误并显式重试，读到403仍保原hook清缓存，无自动失败循环；分页后先assertGeneration再写conversation缓存，晚响应不跨账号回灌。不改通用query/cache/Chat或消息写入。
 - 自有原2红→4绿（mounted invalidation/focus、403恢复、offline不读、expiry晚响应），全iOS40套270项/type/lint/diff绿（/private/tmp/fancy-f41-all-ios.log），根check与unit334/API178见同批AI记录；未改后台/Web，沿用未变层。正式SHA正常签名包交QA实际Back/Inbox复验，未用组件通过抢关F41。
+
+
+## Auth0管理撤销适配与独立配置
+
+- 独立Auth0 Management适配器只针对保留本地映射的精确issuer/subject，先撤该user全部Auth0 grants再删该远端user，不按Fancy UUID/email删，不复用BFF登录凭据或假定其有client_credentials。只请求delete:grants/delete:users，token仅RAM/singleflight/期限/严格scope，401清cache下轮取，拒绝/限流/超时/未知均NEEDS_SUPPORT，不伪造供应商幂等header。
+- 新管理配置两键须配对且domain受限，值不回显；缺配保不可用。Apple独立Unavailable，缺APPLE行/空grant/404都不是从未Apple授权的证明；保本地identity到真正remote与policy完成，不标完整删除已通过。另新增可选RESEND_WEBHOOK_SECRET严格canonical有界Svix配置，未配置不启webhook，配置存在不当作真实回调通过。
+- 自有Auth010unit+新2/原5真实PG回归17项及类型/lint通过；覆盖精确归属、token生命周期/权限、丢DELETE响应后重启幂等404恢复/Apple仍Support。全批根core:check、unit360、DB135、API195、release23、Web/Adminbuild全部绿（/private/tmp/fancy-providers-f42-{check,core,webbuild,adminbuild}.log）。原生F42另280项绿，未重跑未改Web组件层，不冒全端真实验收。
+- 只检查私有配置键是否存在：当前Management两键、Resend webhook secret、AI bundle与policy声明仍未保存，真实操作待对应配置/人工批准，账号已具备不等同这些新增最小权限设置已完成。没有读取/输出值，没有真实管理API删除或发信。

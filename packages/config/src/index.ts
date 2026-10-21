@@ -38,11 +38,14 @@ export const CONFIG_KEYS = [
   'AUTH0_DOMAIN',
   'AUTH0_CLIENT_ID',
   'AUTH0_CLIENT_SECRET',
+  'AUTH0_MANAGEMENT_CLIENT_ID',
+  'AUTH0_MANAGEMENT_CLIENT_SECRET',
   'GOOGLE_MAPS_API_KEY',
   'DEEPSEEK_API_KEY',
   'AI_BUNDLE_FILE',
   'RESEND_API_KEY',
   'RESEND_FROM',
+  'RESEND_WEBHOOK_SECRET',
   'ANALYTICS_COVERAGE_START',
   'PORT',
   'PRIVACY_POLICY_VERSION',
@@ -66,6 +69,7 @@ export interface CoreConfig {
   /** Registered native redirect for iOS OAuth (custom scheme), if iOS sign-in is enabled. */
   iosRedirectUri: string | null;
   auth0: { domain: string; clientId: string; clientSecret: string } | null;
+  auth0Management:{domain:string;clientId:string;clientSecret:string}|null;
   googleMapsApiKey: string | null;
   /** Secret storage only; enabling calls additionally requires a verified integration bundle. */
   deepseekApiKey: string | null;
@@ -73,6 +77,7 @@ export interface CoreConfig {
   aiBundleFile:string|null;
   /** Sending-only credentials; absent configuration keeps business mail unavailable. */
   resend: {apiKey:string;from:string}|null;
+  resendWebhookSecret:string|null;
   /** Operator-confirmed first coverage of the deployed API + both client SDKs. */
   analyticsCoverageStart: string | null;
   port: number;
@@ -179,9 +184,22 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
     else auth0 = { domain, clientId, clientSecret };
   }
   const port = Number(value('PORT') ?? '3000');
+  const managementId=value('AUTH0_MANAGEMENT_CLIENT_ID'),managementSecret=value('AUTH0_MANAGEMENT_CLIENT_SECRET');
+  let auth0Management:CoreConfig['auth0Management']=null;
+  if(managementId||managementSecret){
+    const domain=value('AUTH0_DOMAIN');
+    if(!managementId||!managementSecret||!domain)issues.push('AUTH0_MANAGEMENT_CLIENT_ID, AUTH0_MANAGEMENT_CLIENT_SECRET and AUTH0_DOMAIN must be supplied together');
+    else if(!/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i.test(domain)||managementId.length>256||managementSecret.length>4096||/[\p{Cc}\s]/u.test(managementId)||/\p{Cc}/u.test(managementSecret))issues.push('AUTH0_MANAGEMENT_CLIENT_ID or AUTH0_MANAGEMENT_CLIENT_SECRET configuration is invalid');
+    else auth0Management={domain:domain.toLowerCase(),clientId:managementId,clientSecret:managementSecret};
+  }
   const aiBundleFile=value('AI_BUNDLE_FILE')??null;
   if(aiBundleFile&&(!isAbsolute(aiBundleFile)||/\p{Cc}/u.test(aiBundleFile)))issues.push('AI_BUNDLE_FILE must be an absolute artifact path');
   const resendKey=value('RESEND_API_KEY'),resendFrom=value('RESEND_FROM');
+  const resendWebhookSecret=value('RESEND_WEBHOOK_SECRET')??null;
+  if(resendWebhookSecret){
+    const encoded=resendWebhookSecret.slice(6),decoded=resendWebhookSecret.length<=350?Buffer.from(encoded,'base64'):Buffer.alloc(0);
+    if(!/^whsec_[A-Za-z0-9+/]+={0,2}$/.test(resendWebhookSecret)||decoded.length<32||decoded.length>256||decoded.toString('base64')!==encoded)issues.push('RESEND_WEBHOOK_SECRET must be a bounded canonical signing key');
+  }
   let resend:CoreConfig['resend']=null;
   if(resendKey||resendFrom){
     if(!resendKey||!resendFrom)issues.push('RESEND_API_KEY and RESEND_FROM must be supplied together');
@@ -230,8 +248,10 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
     iosRedirectUri,
     googleMapsApiKey: value('GOOGLE_MAPS_API_KEY') ?? null,
     deepseekApiKey: value('DEEPSEEK_API_KEY') ?? null,
+    auth0Management,
     aiBundleFile,
     resend,
+    resendWebhookSecret,
     analyticsCoverageStart,
     auth0,
     port,
