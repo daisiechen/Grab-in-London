@@ -391,3 +391,9 @@
 - 自有回归捕获JS毫秒截断会放过同毫秒刚过期会话；仅本handler关闭锁阶段后读取完整DB clock text，票据/会话SQL期限使用同精确instant，认证年龄来自同instant。不靠sleep，真实PG固定时钟-1µs拒/+1µs允许确定性覆盖。
 - 修前真实删除先赢link200；修后新8+原identity26/native1共35API及原R158探针1绿。包括family撤销、票据/会话过期、双intent只消费一次、inactive shell不得迁移；最终两文件冻结，root整合API/check/Python后提交，正式关闭仍交QA固定SHA独立复验。
 - 根冻结完整API174及原QA队列probe1、core:check、自有文档结构3项通过（/private/tmp/fancy-f30-{api,original,check,documentation}.log）。全Python77两项QA证据WIP一致性失败（probe changed/报告R160等未同步）保留fancy-f30-python.log，不改QA证据或声称全绿；QA批收束后补其完整验证。QA55a7f5明确释放root窗口，本轮仅两生产/自有测试文件与本记录提交，研究与QA修改保留。
+
+## QA-F31 OAuth取消后保留允许的回流目标（2026-10-21）
+
+- QA R166 Google/Apple取消后原Try again硬编码Discover，丢已allowlist饭局申请路径；没有自动申请。仅OAuthCallbackPage在现started guard中一次消费并保存已验证目标，错误重试复用该RAM ref，默认/恶意外部目标仍Discover，不扩大持久存储或授权。
+- 自有取消→重试→正常登录返回申请页而0applyMeal、两provider及外部目标fallback回归修前两红/修后与原auth共25绿；根Web/admin282、Web生产构建及core:check绿（/private/tmp/fancy-f31-{clients,build,check}.log）。QA拥有探针findByRole不支持exact的类型问题由QA改锚定精确名称解决，不放宽目标或由生产改测试。
+- 根修正后原QA+自有定向复跑及自有文档结构验证另记fancy-f31-{original,documentation}.log。全Python77仍1项QA probe更新后hash未冻结一致性失败，原fancy-f31-python.log保留，开发不改QA证据或冒全绿。正式SHA交QA真实隔离合成OAuth portal浏览器取消/重试复验，不关闭真实Google/Apple门槛。

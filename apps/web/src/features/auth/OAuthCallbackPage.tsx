@@ -24,11 +24,13 @@ export function OAuthCallbackPage() {
   const [linkRequired, setLinkRequired] = useState(false);
   const [confirmation,setConfirmation]=useState<{pending:PendingLink;proof:string;next:string}|null>(null);
   const started = useRef(false);
+  const returnTarget = useRef('/discover');
 
   useEffect(() => {
     if (started.current) return;
     started.current = true;
     const returnTo = takeReturnTo();
+    returnTarget.current = returnTo;
     const state = params.get('state');
     if (!state) {
       setError('This sign-in link is incomplete. Please start again.');
@@ -74,7 +76,7 @@ export function OAuthCallbackPage() {
       <div className="body-pad">
         <h1>Sign-in didn’t finish.</h1>
         <FormError>{error}</FormError>
-        <PrimaryLink to={signInPath('/discover')}>Try again</PrimaryLink>
+        <PrimaryLink to={signInPath(returnTarget.current)}>Try again</PrimaryLink>
       </div>
     );
   }
