@@ -289,3 +289,11 @@
 - 负责人真实PG/API定向7项通过，根全release18项通过（/private/tmp/fancy-clock-release.log）：四连接/默认值与Node一致、真实timer、drain、推进中途失败、正常会话到期、原40poll限流429后只推进60秒恢复且保留旧桶；生产worker/HTTP同一meal ID走close/start/end的-1ms/exact边界、roster2、双方SELF出席、互选OPEN，最终业务日期原样。
 - 浏览器仍真实钟，此入口只验server主导meal/postmeal/session路径；客户端倒计时/日期校验与独立AI sweep TTL不纳入通过。推进marker不等同所有后台job完成，必须观察目标物化状态；限流窗口冻结时需在安全余量内推进1秒/60秒，不禁用或清桶。命令与限制见infra/README.md，QA正式浏览器复验仍独立执行。
 - 根core:check及Python71通过（/private/tmp/fancy-clock-check.log、fancy-clock-python.log），无生产/客户端修改，不声称本批重跑这些业务层。QA在91cdaf1完成真实钟Web取消席位/独立退群/重新申请批准/历史间隙不可见/解散后只读完整路径，当前132 PASS /73 NOT_RUN /12 BLOCKED，无当前FAIL，并明确释放Git窗口。新clock入口正式提交后另起固定SHA环境，不篡改旧B6现场。
+
+## QA-F18 私聊对方公开昵称（2026-10-21）
+
+- 独立QA固定4a0c66f的B7真实浏览器旅程完成互选和一次显式私聊发送后，刷新页头仍为Conversation，不能识别对方；该缺陷是展示问题，不将已通过的单向禁止私聊/互选鉴权描述为失败。QA保留原截图与双向API原红，生产不改QA结论。
+- 既有conversation查询仅在当前actor属于pair时投影另一ACTIVE用户的公开displayName为title，删除/删除中使用Deleted member安全名称，不读取邮箱。详情与Inbox统一，GROUP继续meal标题；会员区间、互选和历史读取规则不改，不扩DTO、不改客户端。
+- 自有真实PG四项修前两红、修后全绿，关联19项通过；根完整API160项通过（/private/tmp/fancy-f18-api.log）。覆盖双方分别看到对方、发送后重取、匿名/外人禁止、删除申请后profile尚存即隐藏及GROUP不变。独立原探针另用临时配置显式运行，不改变仓库收集配置。
+- 保留B7固定时钟现场，未重启API或重写同场业务时间；新代码与旧运行环境不混称浏览器修复通过。正式关闭需QA对提交SHA独立复验；提交等待QA释放索引窗口，研究修改及QA文件不混入。
+- 根独立原探针2项、core:check及Python71通过，日志/private/tmp/fancy-f18-{probe,check,python}.log；客户端无修改，沿用最近已验证客户端层，不声称本批重跑Web/原生或真实供应商。

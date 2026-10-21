@@ -13,7 +13,13 @@ import { applicationDto } from '../meals/read.ts';
 
 interface ConversationRow { id: string; kind: 'GROUP' | 'DIRECT'; meal_id: string | null; pair_id: string | null; version: string; head: string; dissolved_at: Date | null; title: string | null; host_id: string | null }
 async function conversation(db: Pool | PoolClient, id: string, userId: string, live = false): Promise<ConversationRow> {
-  const { rows: [row] } = await db.query<ConversationRow>(`SELECT c.*, m.title, m.host_id FROM conversations c LEFT JOIN meals m ON m.id = c.meal_id
+  const { rows: [row] } = await db.query<ConversationRow>(`SELECT c.*,CASE WHEN c.kind='DIRECT' THEN
+      CASE WHEN peer.status='ACTIVE' THEN COALESCE(profile.display_name,'Fancy member') ELSE 'Deleted member' END
+      ELSE m.title END AS title,m.host_id
+    FROM conversations c LEFT JOIN meals m ON m.id=c.meal_id
+    LEFT JOIN user_pairs pair ON c.kind='DIRECT' AND pair.id=c.pair_id AND $2 IN(pair.low_user,pair.high_user)
+    LEFT JOIN users peer ON peer.id=CASE WHEN pair.low_user=$2 THEN pair.high_user WHEN pair.high_user=$2 THEN pair.low_user END
+    LEFT JOIN profiles profile ON profile.user_id=peer.id AND peer.status='ACTIVE'
     WHERE c.id = $1 AND EXISTS (SELECT 1 FROM membership_intervals i WHERE i.conversation_id = c.id AND i.user_id = $2)`, [id, userId]);
   if (!row) throw new DomainError('NOT_FOUND', 'Conversation not found.');
   if (live) {
