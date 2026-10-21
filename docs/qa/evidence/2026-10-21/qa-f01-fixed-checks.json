@@ -1,0 +1,19 @@
+{
+  "testedCommit": "04cb601c5486b33acb2d7968642bab209806ce91",
+  "checks": [
+    {
+      "title": "QA Saturday brunch verification",
+      "host": "QA Saturday Host",
+      "time": "12:30",
+      "href": "/meals/a869ab67-c472-496d-a9f2-66fc971eb9d4/apply",
+      "passed": true
+    },
+    {
+      "title": "QA Friday dinner verification",
+      "host": "QA Friday Host",
+      "time": "18:00",
+      "href": "/meals/fca96c53-e3c0-4526-a4c0-8ffe0523486d/apply",
+      "passed": true
+    }
+  ]
+}

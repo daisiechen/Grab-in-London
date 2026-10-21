@@ -6279,10 +6279,296 @@
       "command": "pnpm core:check",
       "exitCode": 0,
       "result": "workspace/infra typecheck; generated contract drift check; eslint --max-warnings=0; secret scan passed"
+    },
+    {
+      "id": "R6",
+      "testedCommit": "04cb601c5486b33acb2d7968642bab209806ce91",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-round2.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-independent-round2.json",
+      "startedAt": "2026-10-21T07:16:25.304000+00:00",
+      "exitCode": 0,
+      "passed": 6,
+      "total": 6,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R6-T001",
+          "run": "R6",
+          "path": "scripts/qa-independent-round2.api.test.ts",
+          "title": "independent QA second safety round QA-DB-001 capacity four last-seat race has one seat JOIN and notification per channel",
+          "status": "passed",
+          "durationMs": 207.7575
+        },
+        {
+          "id": "R6-T002",
+          "run": "R6",
+          "path": "scripts/qa-independent-round2.api.test.ts",
+          "title": "independent QA second safety round QA-DB-004 same application intent retries one round but changed body conflicts without extra fact",
+          "status": "passed",
+          "durationMs": 23.103500000000054
+        },
+        {
+          "id": "R6-T003",
+          "run": "R6",
+          "path": "scripts/qa-independent-round2.api.test.ts",
+          "title": "independent QA second safety round QA-CHAT-001 pending applicant cannot fetch group history LIVE or private summaries",
+          "status": "passed",
+          "durationMs": 32.413875000000075
+        },
+        {
+          "id": "R6-T004",
+          "run": "R6",
+          "path": "scripts/qa-independent-round2.api.test.ts",
+          "title": "independent QA second safety round QA-CHAT-012 empty and 2001 fail; 1 and 2000 persist exactly once as literal text",
+          "status": "passed",
+          "durationMs": 15.975500000000011
+        },
+        {
+          "id": "R6-T005",
+          "run": "R6",
+          "path": "scripts/qa-independent-round2.api.test.ts",
+          "title": "independent QA second safety round QA-DB-014 host cannot apply to or leave own confirmed seat and cannot forge cancellation reason",
+          "status": "passed",
+          "durationMs": 19.145667000000003
+        },
+        {
+          "id": "R6-T006",
+          "run": "R6",
+          "path": "scripts/qa-independent-round2.api.test.ts",
+          "title": "independent QA second safety round QA-API-003 stale profile version and client clocks are rejected with original fields intact",
+          "status": "passed",
+          "durationMs": 10.09375
+        }
+      ]
+    },
+    {
+      "id": "R7",
+      "testedCommit": "04cb601c5486b33acb2d7968642bab209806ce91",
+      "command": "pnpm exec vitest run --project api --project web apps/api/src/conversations/conversations.api.test.ts apps/web/src/features/inbox/inbox.unit.test.tsx --reporter=json --outputFile=/private/tmp/fancy-independent-f01-fix.json",
+      "startedAt": "2026-10-21T07:19:56.956000+00:00",
+      "exitCode": 0,
+      "passed": 16,
+      "total": 16,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R7-T001",
+          "run": "R7",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "message helpers finds older conversation metadata after five inbox pages",
+          "status": "passed",
+          "durationMs": 2.869000000000028
+        },
+        {
+          "id": "R7-T002",
+          "run": "R7",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "message helpers fails closed instead of hanging or treating an incomplete inbox as complete",
+          "status": "passed",
+          "durationMs": 0.6117080000000215
+        },
+        {
+          "id": "R7-T003",
+          "run": "R7",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "message helpers orders by bigint seq and de-duplicates by id",
+          "status": "passed",
+          "durationMs": 0.33579100000008566
+        },
+        {
+          "id": "R7-T004",
+          "run": "R7",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) polls LIVE every 2 s with afterSeq and renders text, never HTML",
+          "status": "passed",
+          "durationMs": 47.21012499999995
+        },
+        {
+          "id": "R7-T005",
+          "run": "R7",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) a 403 stops LIVE polling, removes the composer and reads HISTORY",
+          "status": "passed",
+          "durationMs": 20.62870799999996
+        },
+        {
+          "id": "R7-T006",
+          "run": "R7",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) read-only conversations never poll LIVE",
+          "status": "passed",
+          "durationMs": 12.010124999999903
+        },
+        {
+          "id": "R7-T007",
+          "run": "R7",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) retries a send with the same clientMessageId and clears the composer on success",
+          "status": "passed",
+          "durationMs": 143.43216700000005
+        },
+        {
+          "id": "R7-T008",
+          "run": "R7",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) keeps unsent text when sending is refused",
+          "status": "passed",
+          "durationMs": 54.06683399999997
+        },
+        {
+          "id": "R7-T009",
+          "run": "R7",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "group chat (T12) leaving the group is confirmed, uses the conversation version and ends LIVE",
+          "status": "passed",
+          "durationMs": 53.88599999999997
+        },
+        {
+          "id": "R7-T010",
+          "run": "R7",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "inbox list (T12) QA-F01 distinguishes two pending meals by title, London time, host and correct application link",
+          "status": "passed",
+          "durationMs": 24.80716700000005
+        },
+        {
+          "id": "R7-T011",
+          "run": "R7",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "inbox list (T12) shows conversations beyond the first server page",
+          "status": "passed",
+          "durationMs": 12.095041999999921
+        },
+        {
+          "id": "R7-T012",
+          "run": "R7",
+          "path": "apps/web/src/features/inbox/inbox.unit.test.tsx",
+          "title": "inbox list (T12) separates meal groups, personal chats and application progress",
+          "status": "passed",
+          "durationMs": 21.556124999999838
+        },
+        {
+          "id": "R7-T013",
+          "run": "R7",
+          "path": "apps/api/src/conversations/conversations.api.test.ts",
+          "title": "conversation interval API dedupes only the same authorized message, rejects key changes and outsiders, keeps text literal",
+          "status": "passed",
+          "durationMs": 135.067
+        },
+        {
+          "id": "R7-T014",
+          "run": "R7",
+          "path": "apps/api/src/conversations/conversations.api.test.ts",
+          "title": "conversation interval API retains authorized history, excludes leave/rejoin gaps and refuses replay after leaving",
+          "status": "passed",
+          "durationMs": 37.56716599999993
+        },
+        {
+          "id": "R7-T015",
+          "run": "R7",
+          "path": "apps/api/src/conversations/conversations.api.test.ts",
+          "title": "conversation interval API paginates live delivery without advancing past undelivered messages, scopes signed cursors and dissolves terminally",
+          "status": "passed",
+          "durationMs": 29.444165999999996
+        },
+        {
+          "id": "R7-T016",
+          "run": "R7",
+          "path": "apps/api/src/conversations/conversations.api.test.ts",
+          "title": "QA-F01 application meal summary returns matching public metadata for two pending meals, masks deleted hosts and does not add private fields",
+          "status": "passed",
+          "durationMs": 26.49158299999999
+        }
+      ]
+    },
+    {
+      "id": "R8",
+      "testedCommit": "04cb601c5486b33acb2d7968642bab209806ce91",
+      "command": "pnpm --filter @fancy/ios exec jest src/features/inbox/chat.test.tsx --ci --json --outputFile=/private/tmp/fancy-independent-f01-ios.json",
+      "startedAt": "2026-10-21T07:19:55.223000+00:00",
+      "exitCode": 0,
+      "passed": 9,
+      "total": 9,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R8-T001",
+          "run": "R8",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "InboxScreen separates chats from pending applications and keeps pending requests visible",
+          "status": "passed",
+          "durationMs": 105
+        },
+        {
+          "id": "R8-T002",
+          "run": "R8",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) drops messages and compose drafts across logout and another account sign-in",
+          "status": "passed",
+          "durationMs": 52
+        },
+        {
+          "id": "R8-T003",
+          "run": "R8",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) polls LIVE in the foreground, pauses in the background and catches up on resume",
+          "status": "passed",
+          "durationMs": 7
+        },
+        {
+          "id": "R8-T004",
+          "run": "R8",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) a failed send stays visible with Retry (same clientMessageId); there is no automatic resend",
+          "status": "passed",
+          "durationMs": 71
+        },
+        {
+          "id": "R8-T005",
+          "run": "R8",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) 403 while polling switches to read-only history and stops polling",
+          "status": "passed",
+          "durationMs": 5
+        },
+        {
+          "id": "R8-T006",
+          "run": "R8",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) a dissolved group loads HISTORY once and never polls",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R8-T007",
+          "run": "R8",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) leaving the group needs confirmation and sends If-Match",
+          "status": "passed",
+          "durationMs": 9
+        },
+        {
+          "id": "R8-T008",
+          "run": "R8",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) renders message bodies as plain text",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R8-T009",
+          "run": "R8",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "acknowledges only rendered foreground progress and stops acknowledgements in background",
+          "status": "passed",
+          "durationMs": 3
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
     "scripts/qa-independent.api.test.ts": "a6bc024027d80956a9ffeed9b32feddd64402c57d95e050037d6f7d08b84be43",
-    "scripts/qa-independent.config.ts": "0cd8ce86fad37ee4ccbce03bf89029e6cc6b78277e652bfdbb44671254281b1a"
-  }
+    "scripts/qa-independent-round2.api.test.ts": "6f4878a814294bea1aeb1392da3fd6c559454012d676a76e066eec4f6c1587b3",
+    "scripts/qa-independent.config.ts": "f3b9fbb48db6a8136ff32a750f34d2b61c0cde4c4b1fb61499be374e549161ed"
+  },
+  "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。"
 }

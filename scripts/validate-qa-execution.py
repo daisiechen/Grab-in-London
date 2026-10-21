@@ -27,7 +27,7 @@ def validate(data=None):
     for c in rows:
         assert c['status'] in ('PASS','FAIL','BLOCKED','NOT_RUN','N/A') and c['actual']
         assert c['title']==plan[c['id']]['title']
-        assert all(e in assertions or e=='B1' for e in c['evidence'])
+        assert all(e in assertions or e in ('B1','B2') for e in c['evidence'])
         assert all(e in assertions for e in c['relatedAutomatedAssertions'])
         if c['status']=='PASS':
             assert c['evidence'] and all(assertions[e]['status']=='passed' for e in c['evidence'])

@@ -15,15 +15,15 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 168,
-    "PASS": 34,
-    "BLOCKED": 14,
-    "FAIL": 1
+    "NOT_RUN": 163,
+    "PASS": 40,
+    "BLOCKED": 14
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
     "B1": "evidence/2026-10-21/browser-journey.zh-CN.md",
-    "defects": "defects-2026-10-21.zh-CN.md"
+    "defects": "defects-2026-10-21.zh-CN.md",
+    "B2": "evidence/2026-10-21/browser-journey.zh-CN.md"
   },
   "cases": [
     {
@@ -3408,8 +3408,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R6-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T150",
         "R1-T151",
@@ -3461,13 +3463,19 @@
         "R2-T036",
         "R2-T037"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "恰一成功且另一被拒",
-        "confirmed=4",
-        "成功方仅一席/一个JOIN/各一通知"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "既有真实PG并发最后一席测试通过，但fixture容量2而非本用例4；未逐项计数各渠道通知，不能按完整原用例PASS。"
+      "remainingExpected": [],
+      "actual": "第二批QA独立探针在04cb601以真实隔离PG执行，完整预期核对通过；消息HTML显示另有B1纯文本浏览器证据。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "既有真实PG并发最后一席测试通过，但fixture容量2而非本用例4；未逐项计数各渠道通知，不能按完整原用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-DB-002",
@@ -3608,8 +3616,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R6-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T150",
         "R1-T151",
@@ -3661,13 +3671,19 @@
         "R2-T036",
         "R2-T037"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "仅一applicationId/轮次",
-        "同body重放不写",
-        "变body409"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第二批QA独立探针在04cb601以真实隔离PG执行，完整预期核对通过；消息HTML显示另有B1纯文本浏览器证据。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-DB-005",
@@ -4515,8 +4531,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R6-T003"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T047",
         "R1-T048",
@@ -4593,12 +4611,18 @@
         "R5-T010",
         "R5-T011"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "无授权404/403",
-        "无历史/摘要/成员消息泄露"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第二批QA独立探针在04cb601以真实隔离PG执行，完整预期核对通过；消息HTML显示另有B1纯文本浏览器证据。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-CHAT-002",
@@ -7901,8 +7925,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R6-T006"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T242",
         "R1-T243",
@@ -8023,13 +8049,19 @@
         "R3-T028",
         "R3-T029"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "版本冲突无覆盖",
-        "非白名单字段拒绝",
-        "actor/时钟由服务端控制"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第二批QA独立探针在04cb601以真实隔离PG执行，完整预期核对通过；消息HTML显示另有B1纯文本浏览器证据。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-API-004",
@@ -14741,9 +14773,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "NOT_RUN",
       "evidence": [
-        "B1"
+        "B1",
+        "B2"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -15062,12 +15095,22 @@
         "出席才反馈",
         "后台同一事实可追溯"
       ],
-      "actual": "浏览器执行到审批入群及主持发送；申请目标回流保稿已取证，QA-F01违反FR09/AC-I01场次可辨认预期；出席、反馈及后台追溯尚未端到端串联。",
+      "actual": "QA-F01在04cb601经两场pending卡片浏览器及API/Web/iOS组件定向复验关闭；保留原失败历史。出席、反馈及后台追溯后半程未完成，因此完整旅程仍NOT_RUN。",
       "defectIds": [
         "QA-F01"
       ],
       "relatedBrowserEvidence": [
         "B1"
+      ],
+      "history": [
+        {
+          "status": "FAIL",
+          "defectIds": [
+            "QA-F01"
+          ],
+          "testedCommit": "8ba6fc7c9974cf6be1ac06d8b16e0380fb3beced",
+          "actual": "浏览器执行到审批入群及主持发送；申请目标回流保稿已取证，QA-F01违反FR09/AC-I01场次可辨认预期；出席、反馈及后台追溯尚未端到端串联。"
+        }
       ]
     },
     {
@@ -18499,8 +18542,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R6-T005"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T150",
         "R1-T151",
@@ -18552,12 +18597,18 @@
         "R2-T036",
         "R2-T037"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "均拒绝",
-        "不削减host席位或写系统取消原因"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第二批QA独立探针在04cb601以真实隔离PG执行，完整预期核对通过；消息HTML显示另有B1纯文本浏览器证据。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-DB-015",
@@ -18820,8 +18871,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R6-T004"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T047",
         "R1-T048",
@@ -18898,13 +18951,19 @@
         "R5-T010",
         "R5-T011"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "空白及2001拒绝",
-        "1和2000保存一次",
-        "HTML纯文本不执行"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "第二批QA独立探针在04cb601以真实隔离PG执行，完整预期核对通过；消息HTML显示另有B1纯文本浏览器证据。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+        }
+      ]
     },
     {
       "id": "QA-AI-046",
@@ -20739,7 +20798,7 @@
     }
   ],
   "deliveryValidation": {
-    "commitBeforeQADelivery": "071ecd7cbd012cb7c49d4b907ec768f90409a3f6",
+    "commitBeforeQADelivery": "04cb601c5486b33acb2d7968642bab209806ce91",
     "checks": [
       {
         "command": "pnpm core:check",
@@ -20752,5 +20811,17 @@
       }
     ],
     "initialDocumentationFailure": "新增浏览器证据未直接列入docs/README.md；补索引后69项通过，未删除或降低断言。"
+  },
+  "lastTargetedCommit": "04cb601c5486b33acb2d7968642bab209806ce91",
+  "defectStatus": {
+    "QA-F01": "CLOSED_TARGETED_QA",
+    "QA-F02": "FIX_VERIFIED_COMPONENT"
+  },
+  "followUp": {
+    "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
+    "userAuthorizedMessaging": true,
+    "status": "remaining_local_execution_in_progress",
+    "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
+    "latestFeedback": "QA-F01 targeted fix verified; original complete journey remains unexecuted; no release pass"
   }
 }

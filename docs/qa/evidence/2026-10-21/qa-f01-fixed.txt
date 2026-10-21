@@ -1,0 +1,60 @@
+Browser tab: 74633022, Title: "Fancy", URL: "http://127.0.0.1:5174/inbox".
+0 AXWebArea Fancy, URL: 127.0.0.1:5174/inbox
+	1 container root
+		2 container
+			55 button Analytics preferences
+			31 text BEFORE AND AFTER THE TABLE
+			32 heading Your table is taking shape., Value: 1
+				33 text Your table is taking shape.
+			34 link Description:  Notifications, Value: 127.0.0.1:5174/inbox/notifications
+			35 tab group Inbox sections
+				36 tab (selectable, settable, boolean) Chats, Value: 0, ID: inbox-chats-tab
+				37 tab (selected, settable, boolean) Applications, Value: 1, ID: inbox-applications-tab
+			38 container Description: Applications, ID: inbox-applications-panel
+				56 heading Applications & next steps 2, Value: 2
+					57 text Applications & next steps 
+				58 text You’ve applied. Your group chat opens once your seat is confirmed.
+				59 container Application Application pending
+					60 heading QA Saturday brunch verification, Value: 3
+						61 text QA Saturday brunch verification
+					62 text Sat 24 Oct · 12:30 London time
+					63 container
+						64 text Hosted by  QA Saturday Host
+					65 container Applied; awaiting host approval; then group chat
+						66 image
+						67 text Applied
+						68 image
+						69 text Host decision
+						70 image
+						71 text Group chat
+					72 text Waiting for host approval
+					73 text Your host will review your introduction. You haven’t joined the group yet.
+					74 link Description: View application, Value: 127.0.0.1:5174/meals/a869ab67-c472-496d-a9f2-66fc971eb9d4/apply
+				75 container Application Application pending
+					76 heading QA Friday dinner verification, Value: 3
+						77 text QA Friday dinner verification
+					78 text Fri 23 Oct · 18:00 London time
+					79 container
+						80 text Hosted by  QA Friday Host
+					81 container Applied; awaiting host approval; then group chat
+						82 image
+						83 text Applied
+						84 image
+						85 text Host decision
+						86 image
+						87 text Group chat
+					88 text Waiting for host approval
+					89 text Your host will review your introduction. You haven’t joined the group yet.
+					90 link Description: View application, Value: 127.0.0.1:5174/meals/fca96c53-e3c0-4526-a4c0-8ffe0523486d/apply
+			47 image
+			48 text No unsolicited private messages. Connect after a shared meal, when you both want to.
+			49 container Main navigation
+				50 link Description: Discover, Value: 127.0.0.1:5174/discover
+				51 link Description: Meals, Value: 127.0.0.1:5174/meals
+				52 link Description: Create meal, Value: 127.0.0.1:5174/create
+				53 link Description: Inbox, Value: 127.0.0.1:5174/inbox
+				54 link Description: Profile, Value: 127.0.0.1:5174/profile
+			23 pop up button Description: Ask Fancy, ID: fancy-assistant-launcher
+			24 button Tuck Fancy to edge
+
+The focused UI element is 37 tab (selected, settable, boolean) Applications, Value: 1, ID: inbox-applications-tab

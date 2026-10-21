@@ -22,3 +22,17 @@
 ## 明确未走完
 
 没有在浏览器中跨真实时间等待饭局结束、完成出席/评分/公评/再约/问卷并追溯后台；没有双设备、iOS原生、真实地图、邮件或模型验收。对应底层既有自动化复跑记录单列，不能替代本条端到端后半程。原计划以Demo为目标的场景也没有自动改写为生产实现PASS。
+
+## B2 · QA-F01修复后定向复验
+
+被测提交`04cb601c5486b33acb2d7968642bab209806ce91`。开发负责人在QA保存B1后重启其临时rig；新数据库不继承B1数据，Web5174使用修复版本。使用显式开启的`scripts/qa-inbox-fixture.mjs`经本地API创建两个不同主持人、标题、日期时间的饭局及同一加入者的PENDING申请，仅合成资料；登录与页面检查使用Chrome UI。
+
+- 新用户通过邮箱fixture登录后回流Inbox；Chats不出现待审饭局群。
+- Applications有两张卡片：“QA Friday dinner verification” / QA Friday Host / Fri23Oct18:00 London，以及“QA Saturday brunch verification” / QA Saturday Host / Sat24Oct12:30 London。
+- 独立DOM断言两张卡片数量、标题、主持人、时间和London标识；View application的href逐一匹配该场mealId；申请私人留言marker不出现于卡片。
+- 分别实际点击两张卡片的View application，目标页各自呈现对应主持人、标题、时间和Application pending，没有串场。
+- 新API夹具脚本另核对每条摘要对应其本人申请且无conversation字段。删除主持人遮罩及字段白名单由R7真PG API断言复验，不冒充浏览器中执行过账号删除。
+- QA独立复跑R7（API4 + Web12）共16项及R8（iOS Inbox Jest9项），均通过；iOS仍仅组件测试，无原生设备结论。
+- 浏览器登录首次遇邮箱30秒冷却；按提示稍后重试成功，未绕过限流。
+
+证据：[修后截图](qa-f01-fixed.png)、[完整页面文字](qa-f01-fixed.txt)、[两场DOM断言结果](qa-f01-fixed-checks.json)。QA-F01在此最小验收范围关闭；B1失败证据保留。完整加入者出席/反馈/后台路径仍未完成，不把QA-JOURNEY-001改为PASS。
