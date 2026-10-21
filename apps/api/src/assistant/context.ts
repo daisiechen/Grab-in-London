@@ -77,3 +77,21 @@ export async function publicFacts(db:Pool|PoolClient,ids:readonly string[]):Prom
   const {rows}=await db.query(`SELECT m.id,m.version::text,m.title,m.status,m.starts_at,m.closes_at,m.budget_max_pence,m.capacity FROM meals m JOIN users host ON host.id=m.host_id AND host.status='ACTIVE' WHERE m.id=ANY($1::uuid[]) ORDER BY m.id`,[ids]);
   return rows.map(r=>({id:r.id,version:r.version,title:r.title,status:r.status,startsAt:(r.starts_at as Date).toISOString(),closesAt:(r.closes_at as Date).toISOString(),budgetMaxPence:r.budget_max_pence,capacity:r.capacity}));
 }
+
+/** Current user text only. Conservative consent recognizer; ambiguity never grants data access. */
+export function explicitlyRequestsOwnIntroduction(input:string):boolean{
+ const text=input.normalize('NFKC').trim().toLowerCase();
+ if(/["`“”「」『』]/.test(text)||/(?:^|\s)'[^']+'/.test(text))return false;
+ if(/\b(?:not|never|without|don't|dont|cannot|can't|should|whether|if|someone|their|his|her|another|host)\b|不要|不用|不想|别|是否|假如|如果|别人|他人|她的|他的|主持人/.test(text))return false;
+ const own=/\bmy\s+(?:(?:own|public|profile)\s+)*(?:bio(?:graphy)?|introduction|profile)\b|我(?:自己)?的(?:公开|个人)?(?:资料|介绍|简介)/;
+ const action=/\b(?:use|using|include|including|incorporate|incorporating|draw(?:ing)? on|based? on)\b|用|使用|结合|参考|根据/;
+ // Require an affirmative request clause; merely describing what another speaker requested is not consent.
+ const request=/^(?:please\s+|can you\s+|could you\s+|would you\s+|请|帮我|麻烦)?(?:use\b|include\b|incorporate\b|draw on\b|base\b|draft\b|write\b|help\b|用|使用|结合|参考|根据|写|起草|润色)/;
+ return request.test(text)&&own.test(text)&&action.test(text);
+}
+export interface OwnPublicIntroduction {version:string;fields:{displayName:string|null;bio:string|null;languages:string[];interests:string[]}}
+export async function ownPublicIntroduction(db:Pool|PoolClient,subject:string):Promise<OwnPublicIntroduction|null>{
+ if(!subject.startsWith('user:'))return null;
+ const {rows:[row]}=await db.query(`SELECT u.version::text,p.display_name,p.bio,p.languages,p.interests FROM users u JOIN profiles p ON p.user_id=u.id WHERE u.id=$1 AND u.status='ACTIVE'`,[subject.slice(5)]);
+ return row?{version:row.version,fields:{displayName:row.display_name,bio:row.bio,languages:row.languages,interests:row.interests}}:null;
+}

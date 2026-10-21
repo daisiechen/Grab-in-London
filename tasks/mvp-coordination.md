@@ -258,3 +258,11 @@
 - QA后续需将Demo来源用例映射生产浏览器路径。复用既有临时PG/API/worker rig，不接真实凭据/付费供应商；另启显式FANCY_LOCAL_STAFF_FIXTURE=1时才预建qa-staff@example.invalid合成后台账号。通过真实核心OTP流程创建身份，再仅给该账号测试analyst/data_admin和模拟MFA；普通账号仍无角色/MFA，bootstrap登录显式204注销且数据库revoked_at回归证明撤销。
 - Web先在127.0.0.1:5174登录，保持API/数据库不变，停止Web Vite后用同端口启动admin，避免5175写Origin被拒；生产CSRF/认证规则不变。精确命令、000000合成验证码、餐厅/最小seed、正常关闭重置及未接OAuth网页/可用模型的边界见infra/README.md。
 - 仅infra/local-acceptance.ts、infra/README.md、infra/tests/local-acceptance.release.test.ts和本记录另批提交。真实PG本地入口最终2项通过（/private/tmp/fancy-local-rig-final.log）；此前整合release13通过，最终小补注销断言后仅重跑受影响2项，infra类型/lint通过。不会把夹具模拟MFA或空库指标当真实供应商/生产验收。
+
+## QA-F15 明确授权的本人公开介绍上下文（2026-10-21）
+
+- QA在04f219d服务端真实PG/受控provider复现：用户明确要求使用本人介绍写申请时，草稿调用仍没有本人公开昵称/bio/languages/interests。普通SEARCH无资料先验与私有canary均保留，F15原红由QA保存；原生/Web的F14已在ec379b0由独立QA关闭，当前正式122 PASS /82 NOT_RUN /1 FAIL（F15）/12 BLOCKED。
+- 仅当前turn原用户文字的明确肯定请求触发本人ACTIVE四字段投影，支持保守中英表达；否定、引用、他人、模糊请求、编辑器文字或历史授权均不触发。资料仅RAM进入该次草稿调用，不进条件/偏好/历史或DB；不读取私有背景/邮箱，guest/无资料先澄清，SQL失败不编造。
+- 在既有actor SHARE提交屏障内复核用户版本及同一四字段，生成中变化则SUPERSEDED无草稿发布。通用draft反编造校验不放宽：只将明确授权bio纳入原同句事实依据，姓名含职业不能授权编造职业，完成付款/订位等仍拒绝。原QA020与hostile矩阵20项由负责人复跑绿，前红/私有字段/下一普通轮不继承等断言保留。
+- 根完整核心unit281/DB119/API156/release13通过（/private/tmp/fancy-f15-core.log）；仅controller/context与两个自有测试及本记录提交，QA/研究文件不混入。正式F15关闭仍需QA固定SHA独立复验，不代表真实模型或部署验收。
+- 根显式临时配置复跑QA完整hostile矩阵20项、全仓core:check及Python70通过（/private/tmp/fancy-f15-qa-hostile.log、fancy-f15-check.log、fancy-f15-python.log）。客户端无修改，沿用F14已通过结果，不重复声称本批重跑客户端层。
