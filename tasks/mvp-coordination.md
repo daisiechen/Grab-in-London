@@ -361,3 +361,10 @@
 
 - QA动态render真实RootLayout并调用createServices捕获的onClearError，R139证明原console.warn记录原Error中的合成私密标记；R138未await render为QA夹具错误，原记录保留。本切片仅删除原error参数并输出固定LOCAL_SIGN_OUT_CLEANUP_FAILED，不序列化message/stack/cause或原始对象。
 - 根原QA动态探针1绿、全原生255绿（/private/tmp/fancy-f26-{original,ios}.log），全core/check/Python77已在本批冻结整合通过。QA拥有动态测试文件，生产仅_layout.tsx一行及本记录另commit，不混QA文件，正式关闭由QA固定SHA复验。
+
+## QA-F27 发现页候选扫描上限（2026-10-21）
+
+- QA原R141在500条截止未成团物理OPEN候选后放第501 eligible，旧公开读越过扫描上限直接返回501。仅发现路由使用物理keyset LIMIT500，满页/500后以最后实际扫描位置签名续页；不peek501，不跳过尚未返回候选，满500即使恰好末尾也保守返回一次续页。
+- 页面与完整eligible统计分开：统计独立批次500遍历、同DB readNow与请求RAM provider缓存，复用原投影/资格/筛选，不拿截断页当全体数量；仍不写business_events或meal物理状态。不扩myMeals/供应商架构。
+- 自有原红首批应空却返回501；修后新3+原meals9/analytics1共13API绿，根原独测probe1绿（/private/tmp/fancy-f27-original.log）。覆盖同毫秒微秒游标、满页不跳行、exact500空终页、筛选篡改、统计完整501；根首轮API165绿/1失败来自新增微秒夹具未同步scheduled_end违反meals_check2，原日志fancy-f27-api.log保留，修正合法fixture并冻结后完整重跑，不改生产约束。
+- 最终冻结根API166、core:check、scope lint及Python77通过（/private/tmp/fancy-f27-{api-frozen,check,python}.log），原probe1绿。QA明确释放Git窗口，仅routes、新自有测试与本记录提交；F24–26独立复验仍由QA决定，不提前改结论。其他核心层及客户端未改，沿用最近已验证结果，不重复声称本批重跑。

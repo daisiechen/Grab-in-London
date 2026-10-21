@@ -63,37 +63,49 @@ export function registerMealRoutes(app:FastifyInstance,deps:AppDeps,venues:Venue
   const split=(k:string)=>typeof q[k]==='string'?(q[k] as string).split(','):[];
   const codec=await cursorCodec(auth?.userId??'public','discoverMeals',q);const cursor=parseCursor(typeof q.cursor==='string'?codec.decode(q.cursor):undefined);const limit=Number(q.limit??20);
   let capture=false;try{capture=await hasAnalyticsConsent(deps,request,auth);}catch{request.log.warn({code:'ANALYTICS_SCOPE_UNAVAILABLE'},'discovery analytics scope unavailable');}
-  type Candidate=MealRow&{after_cursor:boolean;cursor_starts_at:string;statistics_class:string};
-  const {rows}=await deps.pool.query<Candidate>(`SELECT m.*,m.starts_at::text AS cursor_starts_at,($1::timestamptz IS NULL OR (m.starts_at,m.id)>($1::timestamptz,$2::uuid)) AS after_cursor,COALESCE(c.classification,'regular') AS statistics_class FROM meals m LEFT JOIN LATERAL(SELECT classification FROM account_classifications WHERE user_id=m.host_id ORDER BY revision DESC LIMIT 1)c ON true WHERE m.status='OPEN' ORDER BY m.starts_at,m.id`,[cursor?.startsAt??null,cursor?.id??null]);
-  // Request-scoped provider cache only: shared restaurants are resolved once, with no display
-  // fields persisted. Unconsented requests keep the original page-sized provider work.
+  type Candidate=MealRow&{cursor_starts_at:string;statistics_class:string};
+  const readBatch=async(after:{startsAt:string;id:string}|null)=>{const {rows}=await deps.pool.query<Candidate>(`SELECT m.*,m.starts_at::text AS cursor_starts_at,COALESCE(c.classification,'regular') AS statistics_class FROM meals m LEFT JOIN LATERAL(SELECT classification FROM account_classifications WHERE user_id=m.host_id ORDER BY revision DESC LIMIT 1)c ON true WHERE m.status='OPEN' AND ($1::timestamptz IS NULL OR (m.starts_at,m.id)>($1::timestamptz,$2::uuid)) ORDER BY m.starts_at,m.id LIMIT 500`,[after?.startsAt??null,after?.id??null]);return rows;};
+  // Provider display is request-local only, shared by page and independent analytics scans.
   const places=new Map<string,ReturnType<VenueService['details']>>();
   const requestVenues=new Proxy(venues,{get(target,key,receiver){if(key==='details')return(placeId:string)=>{let result=places.get(placeId);if(!result){result=target.details(placeId);places.set(placeId,result);}return result;};return Reflect.get(target,key,receiver);}});
-  const data=[];const eligiblePageIds:string[]=[];let eligibleCount=0;let last:Candidate|undefined;const now=new Date();
-  try{
-  for(const meal of rows){
-   if(!capture&&!meal.after_cursor)continue;
-   if(split('dates').length&&!split('dates').includes(meal.start_local_date))continue;
-   if(q.timeOfDay==='lunch'&&Number(meal.start_local_time.slice(0,2))>=16)continue;if(q.timeOfDay==='dinner'&&Number(meal.start_local_time.slice(0,2))<16)continue;
-   if(split('areaCodes').length&&!split('areaCodes').includes(meal.area_code))continue;
-   if(q.budgetMaxPence!==undefined&&meal.budget_max_pence>Number(q.budgetMaxPence))continue;
-   if(split('tableSizes').length&&!split('tableSizes').includes(String(meal.capacity)))continue;
-   if(split('languages').length&&!meal.languages.some(l=>split('languages').includes(l)))continue;
-   if(split('moods').length&&!split('moods').includes(meal.mood))continue;
-   if(split('cuisineCodes').length&&(!meal.cuisine_code||!split('cuisineCodes').includes(meal.cuisine_code)))continue;
-   if(split('dietaryCodes').length&&!meal.dietary_codes?.some(d=>split('dietaryCodes').includes(d)))continue;
-   const needsProvider=meal.after_cursor&&data.length<limit||typeof q.keyword==='string'||bounds!==undefined;
-   const dto=await mealDto(deps.pool,meal,now,requestVenues,auth?.userId??null,needsProvider);
-   if(dto.status!=='OPEN')continue;
-   if(typeof q.keyword==='string'&&![meal.title,meal.description,dto.venue.name??''].some(s=>s.toLowerCase().includes((q.keyword as string).trim().toLowerCase())))continue;
-   const loc=dto.venue.location;if(bounds&&(!loc||loc.lat>bounds.north||loc.lat<bounds.south||(bounds.west<=bounds.east?loc.lng<bounds.west||loc.lng>bounds.east:loc.lng<bounds.west&&loc.lng>bounds.east)))continue;
-   const eligible=meal.statistics_class==='regular'&&(auth?dto.allowedActions.includes('APPLY'):now<meal.closes_at&&now<meal.starts_at&&dto.confirmedCount<dto.capacity);
-   if(eligible)eligibleCount++;
-   if(meal.after_cursor&&data.length<=limit){data.push(dto);if(data.length<=limit){last=meal;if(eligible)eligiblePageIds.push(meal.id);}}
-   if(!capture&&data.length>limit)break;
+  const {rows:[clock]}=await deps.pool.query<{now:Date}>(`SELECT clock_timestamp() AS now`);const now=clock!.now;
+  const eligible=(meal:Candidate,dto:Awaited<ReturnType<typeof mealDto>>)=>meal.statistics_class==='regular'&&(auth?dto.allowedActions.includes('APPLY'):now<meal.closes_at&&now<meal.starts_at&&dto.confirmedCount<dto.capacity);
+  async function matching(meal:Candidate,display:boolean){
+   if(split('dates').length&&!split('dates').includes(meal.start_local_date))return null;
+   if(q.timeOfDay==='lunch'&&Number(meal.start_local_time.slice(0,2))>=16)return null;if(q.timeOfDay==='dinner'&&Number(meal.start_local_time.slice(0,2))<16)return null;
+   if(split('areaCodes').length&&!split('areaCodes').includes(meal.area_code))return null;
+   if(q.budgetMaxPence!==undefined&&meal.budget_max_pence>Number(q.budgetMaxPence))return null;
+   if(split('tableSizes').length&&!split('tableSizes').includes(String(meal.capacity)))return null;
+   if(split('languages').length&&!meal.languages.some(l=>split('languages').includes(l)))return null;
+   if(split('moods').length&&!split('moods').includes(meal.mood))return null;
+   if(split('cuisineCodes').length&&(!meal.cuisine_code||!split('cuisineCodes').includes(meal.cuisine_code)))return null;
+   if(split('dietaryCodes').length&&!meal.dietary_codes?.some(d=>split('dietaryCodes').includes(d)))return null;
+   let dto=await mealDto(deps.pool,meal,now,requestVenues,auth?.userId??null,false);
+   if(dto.status!=='OPEN')return null;
+   if(display||typeof q.keyword==='string'||bounds!==undefined)dto=await mealDto(deps.pool,meal,now,requestVenues,auth?.userId??null,true);
+   if(typeof q.keyword==='string'&&![meal.title,meal.description,dto.venue.name??''].some(s=>s.toLowerCase().includes((q.keyword as string).trim().toLowerCase())))return null;
+   const loc=dto.venue.location;if(bounds&&(!loc||loc.lat>bounds.north||loc.lat<bounds.south||(bounds.west<=bounds.east?loc.lng<bounds.west||loc.lng>bounds.east:loc.lng<bounds.west&&loc.lng>bounds.east)))return null;
+   return dto;
   }
-  if(capture)try{await recordDiscoveryOutcome(deps,{request,auth,params:q,resultCount:eligibleCount,resultMealIds:data.slice(0,limit).map(m=>m.id),eligibleMealIds:eligiblePageIds,outcome:'success'});}catch{request.log.warn({code:'ANALYTICS_DISCOVERY_UNAVAILABLE'},'discovery analytics recording unavailable');}
-  const hasMore=data.length>limit;return {data:data.slice(0,limit),page:{hasMore,nextCursor:hasMore&&last?codec.encode(Buffer.from(JSON.stringify({startsAt:last.cursor_starts_at,id:last.id})).toString('base64url')):null}};
+  const data:Awaited<ReturnType<typeof mealDto>>[]=[];const eligiblePageIds:string[]=[];let last:Candidate|undefined;let scanned=0;
+  try{
+   const rows=await readBatch(cursor);
+   for(const meal of rows){
+    last=meal;scanned++;
+    const dto=await matching(meal,true);if(!dto)continue;
+    data.push(dto);if(eligible(meal,dto))eligiblePageIds.push(meal.id);
+    if(data.length===limit)break;
+   }
+   // Never inspect row 501. A full scan conservatively exposes a continuation even
+   // when the next request will discover the physical end of the candidate set.
+   const hasMore=scanned<rows.length||rows.length===500;
+   if(capture)try{
+    let eligibleCount=0;let after:null|{startsAt:string;id:string}=null;
+    // This independent aggregate must not consume the page's scan budget or cursor.
+    for(;;){const batch=await readBatch(after);for(const meal of batch){const dto=await matching(meal,false);if(dto&&eligible(meal,dto))eligibleCount++;}if(batch.length<500)break;const tail=batch.at(-1)!;after={startsAt:tail.cursor_starts_at,id:tail.id};}
+    await recordDiscoveryOutcome(deps,{request,auth,params:q,resultCount:eligibleCount,resultMealIds:data.map(m=>m.id),eligibleMealIds:eligiblePageIds,outcome:'success'});
+   }catch{request.log.warn({code:'ANALYTICS_DISCOVERY_UNAVAILABLE'},'discovery analytics recording unavailable');}
+   return {data,page:{hasMore,nextCursor:hasMore&&last?codec.encode(Buffer.from(JSON.stringify({startsAt:last.cursor_starts_at,id:last.id})).toString('base64url')):null}};
   }catch(error){if(capture)try{await recordDiscoveryOutcome(deps,{request,auth,params:q,resultCount:0,resultMealIds:[],eligibleMealIds:[],outcome:'failed'});}catch{request.log.warn({code:'ANALYTICS_DISCOVERY_UNAVAILABLE'},'failed discovery analytics recording unavailable');}throw error;}
  });
  defineRoute(app,deps,'myMeals',async({request,auth})=>{
