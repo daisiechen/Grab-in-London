@@ -34,6 +34,8 @@ FANCY_LOCAL_ACCEPTANCE=1 node infra/local-acceptance.ts
 
 Support CLI浏览器认证的供应商允许回调应登记 `<WEB_ORIGIN>/v1/auth/oauth/callback`（核心HTTP端点），Web原有 `<WEB_ORIGIN>/auth/callback` 是SPA页面，不能替代CLI的浏览器跳转。CLI每次启动本机127.0.0.1随机端口并登记固定 `/auth/callback`，核心仅303回该登记地址，交接码60秒且绑定PKCE；兑换后15分钟access仅在执行命令的进程内使用，无refresh。真实Auth0回调名单、MFA claim及支持角色/个案grant仍须实际配置和复验；拥有CLI程序不会取得这些权限。
 
+Web/iOS遇到LINK_REQUIRED时须明确继续用原账号登录，再由用户确认连接此登录方式，不能只提示返回登录或自动合并。新身份票据最多10分钟、原身份proof须在5分钟内；服务端仍校验当前family及Web HttpOnly binder或原生PKCE verifier。原生票据/verifier/proof仅RAM；Web为跨整页OAuth仅在同tab sessionStorage保存字段受限的短期票据与预认证关联ID，完成的authProof和令牌不进入存储或URL。取消、到期、冲突、会话清除终止；未知网络结果只允许用户以原payload/原幂等key显式重试。真实双提供方链接仍须实际账号验收。
+
 当前仅支持一个API进程承载AI的RAM内容；worker独立一份运行。多API或多worker快照定时器的协调尚未完成，不能直接水平扩容。worker有饭局close/start/end、删除清理、事务邮件发送端口及小时快照；实际邮件/身份撤销提供方尚未配置，邮件不发送、删除状态保留NEEDS_SUPPORT。发现来源与客户端采集覆盖未整体复验前，快照标记partial，未知值为null。
 
 部署后实际复验API来源hook、Web和iOS全部采集入口后，设置 `ANALYTICS_COVERAGE_START` 为三者实际覆盖起点的最晚时刻。worker再与数据库ledger安装起点取较晚值；不设置时保持partial，不把旧历史伪补为完整采集。这个操作不能用代码存在或mock测试替代实际部署验证。

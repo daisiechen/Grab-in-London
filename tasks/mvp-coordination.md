@@ -205,3 +205,11 @@
 - Claude只读发现Auth0适配器丢弃ID token已验证amr，根源码复核及真实RS256签名测试确认：旧版即使amr含mfa仍只回google，修前1失败。仅在jwtVerify签名/issuer/audience/expiry及nonce验证成功后，严格字符串数组内精确mfa才保留一次标记；缺失/字符串/混合数组/其它claim不授MFA，不授角色，不从客户端字段推断。
 - 11项签名JWT回归通过，完整unit243通过、API类型及限定lint通过；初次未升级沙箱的完整unit因CLI回环监听权限4失败，按所需本地端口权限复跑全243通过，未改测试或吞错。日志/private/tmp/fancy-f08-unit-verified.log。官方依据在适配器就近引用Auth0 step-up文档；真实租户MFA策略/claim仍需G-AUTH，供应商验收未关闭。
 - 另行核实双端身份链接仅存票据/提示而无正式双证明提交，不能继续称合同缺失。已分派Web与iOS负责人按现有§7补齐最小显式流程、TTL/取消/会话清除/冲突边界；属于另批进行中工作，不混入本适配器切片或F07关闭结论。
+
+## 双端双证明身份链接补齐（2026-10-21）
+
+- fb26b28已归档独立适配器MFA旧版3红/修后14绿，F08 targeted关闭、不增加217完整case计数；QA再次明确释放Git窗口。双端链接按既有§7实现，原Web只有ticket提示、原生LINK_REQUIRED丢verifier/proof且无提交，均为本地实现缺口。
+- Web显式继续原身份验证，再单独确认连接；短期同tab票据存储只保受限字段以跨全页OAuth，原身份authProof及固定幂等payload仅RAM。原生保原new-identity verifier、真实core authProof和票据仅RAM，原登录成功后仍需显式确认，不自动merge；五分钟过期重新登录取证明，十分钟票据失效重新开始。取消/冲突/会话清除终止，网络未知同payload/key显式重试。旧成功/409/网络响应均不得清新attempt；页面卸载不导航。
+- 根补真实PG native-link协议：新Google身份匹配email→LINK_REQUIRED无第二user→原身份IOS email登录proof/handoff→错误new verifier409、正确links200、同key重放200、新key消费409，最终两identity仍原user；无后端逻辑、schema或SessionManager放宽。
+- 首批冻结整合Web/后台228、iOS219；其后补旧409/503/成功响应及定时器不得清新票据、终态可取消回归，最终Web/后台235、iOS227（含新增QA独立探针）、全API145通过。core:check、Web类型/lint/build及原生Hermes导出通过；Python70最终复验一度因QA报告R39基线展示未刷新而失败，QA已按真实fb26b28+dirty源码hash修正（R40原生仍360d1fe），validator及Python70通过，未改产品断言。unit243/DB111/release11沿用上一无变更层已通过结果，未冒称本批重复运行这些层。日志/private/tmp/fancy-f09-{clients-final,check-final,python-final,web-build,api}.log、/private/tmp/fancy-native-link-api.log及/private/tmp/fancy-ios-f09-export.log。原生已单独360d1fe提交；Web和运行记录随后按白名单交付。QA独立动态复验需最终SHA，真实双provider/设备未验收。
+- Claude重新核验游客撤销静态疑点后明确撤回L3：exchangeHandoff已有revokeGuestAI且更新guest_sessions.revoked_at，与登录兑换同事务提交/回滚；未凭静态误报擅改现有原子撤销。CLI新账号/业务令牌范围两项仅记无越权的策略观察，不额外改变已批准权限合同。
