@@ -293,6 +293,8 @@ importers:
         specifier: 8.23.1
         version: 8.23.1
 
+  packages/assistant: {}
+
   packages/client:
     dependencies:
       '@fancy/contracts':

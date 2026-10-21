@@ -11,6 +11,8 @@ const MealSubject = Obj({ mealId: Uuid, subjectId: Uuid });
 const Subject = Obj({ subjectId: Uuid });
 
 export const socialOperations = [
+  op({ operationId: 'markConversationRead', method: 'POST', path: '/conversations/{conversationId}/read', summary: 'Explicitly acknowledge a rendered conversation position',
+    auth: 'session', write: 'resourceKey', ifMatch: false, params: ConversationId, body: Obj({ throughSeq: DecimalString }), success: { status: 204 }, errors: ['NOT_FOUND','FORBIDDEN'] }),
   op({
     operationId: 'inbox', method: 'GET', path: '/inbox', summary: 'Own conversations and application progress',
     auth: 'session', write: 'read', ifMatch: false, query: Obj({ cursor: T.Optional(Cursor), limit: T.Optional(Limit) }),

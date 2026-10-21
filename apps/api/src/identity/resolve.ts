@@ -56,6 +56,8 @@ export async function identityBelongsTo(db: PoolClient, identity: VerifiedIdenti
  * if none of them reference it; slices register their user-owned tables as they land.
  */
 const FACT_TABLES: Array<{ table: string; column: string }> = [
+  { table: 'profiles', column: 'user_id' },
+  { table: 'product_surveys', column: 'user_id' },
   { table: 'roles', column: 'user_id' },
   { table: 'idempotency', column: 'actor_id' },
   { table: 'membership_intervals', column: 'user_id' },

@@ -19,7 +19,7 @@ export interface IntentKey {
 
 export type Claim =
   | { kind: 'claimed'; token: string; intent: IntentKey }
-  | { kind: 'replay'; status: number; body: unknown; resourceId: string | null };
+  | { kind: 'replay'; status: number; body: unknown; resourceId: string | null; privacyEpoch: string };
 
 export async function claimIntent(pool: Pool, intent: IntentKey, leaseMs = INTENT_LEASE_MS): Promise<Claim> {
   const client = await pool.connect();
@@ -27,9 +27,9 @@ export async function claimIntent(pool: Pool, intent: IntentKey, leaseMs = INTEN
     await client.query('BEGIN');
     const token = randomUUID();
     const inserted = await client.query(
-      `INSERT INTO idempotency (actor_id, operation, key, request_hash, state, claim_token, lease_until, expires_at)
+      `INSERT INTO idempotency (actor_id, operation, key, request_hash, state, claim_token, lease_until, expires_at, privacy_epoch)
        VALUES ($1, $2, $3, $4, 'IN_PROGRESS', $5, clock_timestamp() + make_interval(secs => $6::double precision / 1000),
-               clock_timestamp() + make_interval(days => $7))
+               clock_timestamp() + make_interval(days => $7), (SELECT epoch FROM privacy_control WHERE id=1))
        ON CONFLICT (actor_id, operation, key) DO NOTHING`,
       [intent.actorId, intent.operation, intent.key, intent.requestHash, token, leaseMs, INTENT_RETENTION_DAYS],
     );
@@ -38,7 +38,7 @@ export async function claimIntent(pool: Pool, intent: IntentKey, leaseMs = INTEN
       return { kind: 'claimed', token, intent };
     }
     const { rows } = await client.query(
-      `SELECT request_hash, state, response_status, response_json, resource_id,
+      `SELECT request_hash, state, response_status, response_json, resource_id, privacy_epoch,
               lease_until <= clock_timestamp() AS lease_expired, expires_at <= clock_timestamp() AS expired
          FROM idempotency WHERE actor_id = $1 AND operation = $2 AND key = $3 FOR UPDATE`,
       [intent.actorId, intent.operation, intent.key],
@@ -54,7 +54,7 @@ export async function claimIntent(pool: Pool, intent: IntentKey, leaseMs = INTEN
     }
     if (row.state === 'COMPLETED') {
       await client.query('COMMIT');
-      return { kind: 'replay', status: row.response_status, body: row.response_json, resourceId: row.resource_id };
+      return { kind: 'replay', status: row.response_status, body: row.response_json, resourceId: row.resource_id, privacyEpoch: row.privacy_epoch };
     }
     if (!row.lease_expired) {
       await client.query('ROLLBACK');
@@ -62,7 +62,7 @@ export async function claimIntent(pool: Pool, intent: IntentKey, leaseMs = INTEN
     }
     // Previous attempt crashed before committing its business transaction: take the claim over.
     await client.query(
-      `UPDATE idempotency SET claim_token = $4, lease_until = clock_timestamp() + make_interval(secs => $5::double precision / 1000)
+      `UPDATE idempotency SET claim_token = $4, lease_until = clock_timestamp() + make_interval(secs => $5::double precision / 1000), privacy_epoch=(SELECT epoch FROM privacy_control WHERE id=1)
         WHERE actor_id = $1 AND operation = $2 AND key = $3`,
       [intent.actorId, intent.operation, intent.key, token, leaseMs],
     );

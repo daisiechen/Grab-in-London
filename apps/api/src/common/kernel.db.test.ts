@@ -151,6 +151,11 @@ describe('transaction outcome', () => {
       throw new DomainError('DEADLINE_PASSED', 'Applications are closed.');
     }, { commitOnDomainError: true })).rejects.toMatchObject({ code: 'DEADLINE_PASSED', status: 409 });
     expect((await db.pool.query(`SELECT n FROM ${FIXTURE} WHERE id = $1`, [meal])).rows[0].n).toBe(2);
+    await expect(withTransaction(db.pool, async (tx) => {
+      await tx.client.query(`UPDATE ${FIXTURE} SET n = 99 WHERE id = $1`, [meal]);
+      throw new DomainError('PROVIDER_UNAVAILABLE', 'Try again later.');
+    }, { commitOnDomainError: true })).rejects.toMatchObject({ status: 503 });
+    expect((await db.pool.query(`SELECT n FROM ${FIXTURE} WHERE id = $1`, [meal])).rows[0].n).toBe(2);
   });
 });
 

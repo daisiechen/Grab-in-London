@@ -35,6 +35,7 @@ export const CONFIG_KEYS = [
   'AUTH0_DOMAIN',
   'AUTH0_CLIENT_ID',
   'AUTH0_CLIENT_SECRET',
+  'GOOGLE_MAPS_API_KEY',
   'PORT',
   'PRIVACY_POLICY_VERSION',
   'RETENTION_POLICY_JSON',
@@ -56,6 +57,7 @@ export interface CoreConfig {
   /** Registered native redirect for iOS OAuth (custom scheme), if iOS sign-in is enabled. */
   iosRedirectUri: string | null;
   auth0: { domain: string; clientId: string; clientSecret: string } | null;
+  googleMapsApiKey: string | null;
   port: number;
   privacyPolicyVersion: string | null;
   retentionPolicy: Record<string, unknown> | null;
@@ -179,6 +181,7 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
     webOrigin: webOrigin!,
     sessionSecret,
     iosRedirectUri,
+    googleMapsApiKey: value('GOOGLE_MAPS_API_KEY') ?? null,
     auth0,
     port,
     privacyPolicyVersion,

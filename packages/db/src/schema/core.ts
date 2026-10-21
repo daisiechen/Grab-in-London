@@ -14,6 +14,7 @@ export const users = pgTable('users', {
 });
 
 export const idempotency = pgTable('idempotency', {
+  privacyEpoch: big('privacy_epoch').notNull().default(0n),
   actorId: uuid('actor_id').notNull(),
   operation: text('operation').notNull(),
   key: uuid('key').notNull(),
@@ -68,6 +69,9 @@ export const notifications = pgTable('notifications', {
 });
 
 export const outbox = pgTable('outbox', {
+  claimToken: uuid('claim_token'),
+  leaseUntil: ts('lease_until'),
+  lookupAttempts: integer('lookup_attempts').notNull().default(0),
   id: uuid('id').primaryKey().defaultRandom(),
   eventId: uuid('event_id').notNull(),
   recipientId: uuid('recipient_id'),

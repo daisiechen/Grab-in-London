@@ -61,7 +61,8 @@ describe('migrator', () => {
 
   it('keeps Drizzle table definitions in column parity with the SQL migrations', async () => {
     const tables = Object.values(schema).filter((t: unknown): t is PgTable => typeof t === 'object' && t !== null && Symbol.for('drizzle:IsDrizzleTable') in t);
-    expect(tables.length).toBe(18);
+    const actual = await db.pool.query<{ table_name: string }>(`SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE' AND table_name <> 'schema_migrations'`);
+    expect(tables.map(getTableName).sort()).toEqual(actual.rows.map((r) => r.table_name).sort());
     for (const table of tables) {
       const { rows } = await db.pool.query<{ column_name: string; is_nullable: string }>(
         `SELECT column_name, is_nullable FROM information_schema.columns WHERE table_name = $1 ORDER BY ordinal_position`, [getTableName(table)],

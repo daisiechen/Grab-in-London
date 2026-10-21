@@ -124,7 +124,7 @@ export const operationsAdmin = [
     operationId: 'getExport', method: 'GET', path: '/admin/exports/{exportId}',
     summary: 'Stream text/csv (header lines: snapshotId, asOf, canonical filters, definitionVersion; formula-injection safe) after re-checking role and privacy epoch',
     auth: 'staff', roles: ['analyst', 'data_admin'], write: 'read', ifMatch: false, params: Obj({ exportId: Uuid }),
-    success: { status: 200 }, errors: ['NOT_FOUND', 'SNAPSHOT_REVOKED'],
+    success: { status: 200 }, errors: ['NOT_FOUND', 'SNAPSHOT_REVOKED', 'RECEIPT_EXPIRED'],
   }),
   op({
     operationId: 'getClassification', method: 'GET', path: '/admin/classifications/{userId}', summary: 'Current classification and revision (for If-Match)',
@@ -140,7 +140,7 @@ export const operationsAdmin = [
   op({
     operationId: 'ingestEvents', method: 'POST', path: '/analytics/events', summary: 'Client analytics batch (deduped by eventId)',
     auth: 'optionalSession', write: 'resourceKey', ifMatch: false,
-    body: Obj({ schemaVersion: T.Literal(1), events: T.Array(ClientEvent, { minItems: 1, maxItems: 50 }) }),
+    body: Obj({ schemaVersion: T.Literal(1), consent: Obj({ analytics: T.Boolean(), version: T.String({ minLength: 1, maxLength: 40 }) }), events: T.Array(ClientEvent, { minItems: 0, maxItems: 50 }) }),
     success: { status: 200, data: Obj({ results: T.Array(IngestResult, { maxItems: 50 }) }) }, errors: [],
   }),
 ] as const;

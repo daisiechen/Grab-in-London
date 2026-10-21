@@ -3,6 +3,8 @@ import { isAllowedReturnTarget } from '@fancy/contracts';
 import { DomainError } from '../common/errors.ts';
 import { appendAudit } from '@fancy/db';
 import { withTransaction } from '../common/transaction.ts';
+import { lockActiveActor } from '../common/actor.ts';
+import { invalidateUserAI } from '../assistant/invalidate.ts';
 import type { AppDeps } from '../http/context.ts';
 import { defineRoute, defineWrite } from '../http/routes.ts';
 import { assertWebOrigin, cookieOptions, keyedHash, LINK_BINDER_COOKIE, OAUTH_BINDER_COOKIE, SESSION_COOKIE } from '../http/security.ts';
@@ -123,8 +125,10 @@ async function consume(deps: AppDeps, id: string): Promise<void> {
 }
 
 async function finish(deps: AppDeps, row: AuthTxRow, identity: VerifiedIdentity, request: FastifyRequest) {
-  const current = row.purpose === 'REAUTH' ? await authFromRequest(deps, request) : null;
-  return withTransaction(deps.pool, (tx) => completeAuthentication(deps, tx, row, identity, current));
+  const current = await authFromRequest(deps, request);
+  const bearerGuest=/^Bearer ([A-Za-z0-9_-]{43})$/.exec(request.headers.authorization??'')?.[1];
+  const guestToken=request.cookies['__Host-fancy_guest']??bearerGuest;
+  return withTransaction(deps.pool, (tx) => completeAuthentication(deps, tx, row, identity, current,guestToken));
 }
 
 async function authFromRequest(deps: AppDeps, request: FastifyRequest) {
@@ -203,17 +207,18 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
     return withTransaction(deps.pool, async (tx) => {
       const { rows } = await tx.client.query(
         `SELECT id, client, user_id, app_challenge, provider_state, attempts, max_attempts FROM auth_transactions
-          WHERE secret_hash = $1 AND kind = 'HANDOFF' AND consumed_at IS NULL AND expires_at > clock_timestamp() FOR UPDATE`,
+          WHERE secret_hash = $1 AND kind = 'HANDOFF' AND consumed_at IS NULL AND expires_at > clock_timestamp()`,
         [sha256Hex(body.code)],
       );
       const row = rows[0];
       if (!row) throw new DomainError('STATE_CONFLICT', 'This sign-in has expired. Please start again.');
+      await lockActiveActor(tx,row.user_id,'update');
+      const consumed=await tx.client.query(`UPDATE auth_transactions SET consumed_at=clock_timestamp(),attempts=attempts+1 WHERE id=$1 AND consumed_at IS NULL AND expires_at>clock_timestamp() RETURNING id`,[row.id]);
+      if(consumed.rowCount!==1)throw new DomainError('STATE_CONFLICT','This sign-in has already been used or expired.');
       if (!verifyPkce(body.appVerifier, row.app_challenge)) {
         // A wrong verifier burns the code: the handoff is single-use for its rightful app only.
-        await tx.client.query(`UPDATE auth_transactions SET consumed_at = clock_timestamp(), attempts = attempts + 1 WHERE id = $1`, [row.id]);
         throw new DomainError('STATE_CONFLICT', 'This sign-in could not be verified. Please start again.');
       }
-      await tx.client.query(`UPDATE auth_transactions SET consumed_at = clock_timestamp() WHERE id = $1`, [row.id]);
       const now = await tx.effectiveNow();
       const { familyId, credentials } = await issueNativeCredentials(tx.client, row.user_id, row.client, String(row.provider_state.amr).split(' '), now);
       if (row.provider_state.origin) await tx.client.query(`UPDATE auth_transactions SET result_family_id = $2 WHERE id = $1`, [row.provider_state.origin, familyId]);
@@ -223,7 +228,12 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
 
   defineRoute(app, deps, 'refreshSession', async ({ request }) => {
     const body = asBody<{ refreshToken: string }>(request);
-    const outcome = await withTransaction(deps.pool, async (tx) => rotateRefresh(tx.client, body.refreshToken, await tx.effectiveNow()));
+    const outcome = await withTransaction(deps.pool, async (tx) => {
+      const {rows:[family]}=await tx.client.query<{user_id:string}>(`SELECT sf.user_id FROM refresh_tokens r JOIN session_families sf ON sf.id=r.family_id WHERE r.token_hash=$1`,[sha256Hex(body.refreshToken)]);
+      if(!family)throw new DomainError('AUTH_REQUIRED','Please sign in again.');
+      await lockActiveActor(tx,family.user_id,'update');
+      return rotateRefresh(tx.client,body.refreshToken,await tx.effectiveNow());
+    });
     if (outcome.kind !== 'ok') throw new DomainError('AUTH_REQUIRED', 'Please sign in again.');
     return { data: outcome.credentials };
   });
@@ -231,7 +241,11 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
   defineRoute(app, deps, 'getSession', async ({ auth }) => ({ data: await sessionInfo(deps.pool, auth!, deps.config.sessionSecret) }));
 
   defineRoute(app, deps, 'logout', async ({ auth }) => {
-    await revokeFamily(deps.pool, auth!.familyId, 'LOGOUT');
+    await withTransaction(deps.pool, async (tx) => {
+      await lockActiveActor(tx, auth!.userId, 'update');
+      await invalidateUserAI(tx.client, deps.assistantRuntime!, auth!.userId, 'LOGOUT');
+      await revokeFamily(tx.client, auth!.familyId, 'LOGOUT');
+    });
     return { status: 204, after: (reply) => void reply.clearCookie(SESSION_COOKIE, { path: '/' }) };
   });
 

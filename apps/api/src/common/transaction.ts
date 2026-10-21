@@ -51,7 +51,7 @@ export async function withTransaction<T>(pool: Pool, fn: (tx: Tx) => Promise<T>,
         await client.query('COMMIT');
         return result;
       } catch (error) {
-        if (error instanceof DomainError && options.commitOnDomainError) {
+        if (error instanceof DomainError && error.status < 500 && options.commitOnDomainError) {
           await client.query('COMMIT');
         } else {
           await client.query('ROLLBACK').catch(() => undefined);

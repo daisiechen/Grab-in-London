@@ -14,6 +14,9 @@ import { identityBelongsTo, resolveIdentity } from './resolve.ts';
 import { sessionInfo } from './me.ts';
 import { ABSOLUTE_MS, issueWebSession, markReauthenticated } from './sessions.ts';
 import { randomToken, sha256Hex } from './tokens.ts';
+import { lockActiveActor } from '../common/actor.ts';
+import { invalidateSubjectAI, invalidateUserAI } from '../assistant/invalidate.ts';
+import { revokeFamily } from './sessions.ts';
 
 export const HANDOFF_TTL_MS = 60_000;
 export const LINK_TTL_MS = 10 * 60_000;
@@ -29,8 +32,7 @@ export interface AuthTxRow {
   provider_state: Record<string, string>;
 }
 
-export async function completeAuthentication(deps: AppDeps, tx: Tx, row: AuthTxRow, identity: VerifiedIdentity, current: AuthContext | null): Promise<HandlerResult> {
-  const now = await tx.effectiveNow();
+export async function completeAuthentication(deps: AppDeps, tx: Tx, row: AuthTxRow, identity: VerifiedIdentity, current: AuthContext | null, guestToken?:string): Promise<HandlerResult> {
   const authProof = row.id;
 
   if (row.purpose === 'REAUTH') {
@@ -39,14 +41,19 @@ export async function completeAuthentication(deps: AppDeps, tx: Tx, row: AuthTxR
       throw new DomainError('FORBIDDEN', 'Re-authentication must finish on the device that started it.');
     }
     if (!(await identityBelongsTo(tx.client, identity, row.user_id))) throw new DomainError('FORBIDDEN', 'Sign in with an account already linked to you.');
+    await lockActiveActor(tx,current.userId,'update');
+    const now=await tx.effectiveNow();
     await markReauthenticated(tx.client, familyId, identity.amr, now);
     await tx.client.query(`UPDATE auth_transactions SET result_family_id = $2 WHERE id = $1`, [row.id, familyId]);
     const session = await sessionInfo(tx.client, { ...current, authTime: now, amr: [...new Set([...current.amr, ...identity.amr])] }, deps.config.sessionSecret);
     return { data: { outcome: 'AUTHENTICATED', session, authProof } };
   }
 
-  const resolution = await resolveIdentity(tx.client, identity, now);
+  const {rows:[clock]}=await tx.client.query<{now:Date}>(`SELECT clock_timestamp() AS now`);
+  const resolution = await resolveIdentity(tx.client, identity, clock!.now);
   if (resolution.kind === 'link_required') {
+    await lockActiveActor(tx,resolution.targetUserId);
+    const now=await tx.effectiveNow();
     const ticket = randomToken();
     const binder = row.client === 'WEB' ? randomToken() : null;
     if (row.client !== 'WEB' && !row.app_challenge) throw new DomainError('VALIDATION_FAILED', 'appChallenge is required for native sign-in.');
@@ -63,13 +70,26 @@ export async function completeAuthentication(deps: AppDeps, tx: Tx, row: AuthTxR
     };
   }
 
+  const users=[...new Set([resolution.userId,...(current?[current.userId]:[])])].sort();
+  const locked=await tx.locks.lock<{id:string;status:string}>('users',users,'update','id,status');
+  if(!locked.some(u=>u.id===resolution.userId&&u.status==='ACTIVE'))throw new DomainError('AUTH_REQUIRED','This account is no longer available.');
+  if(current&&current.userId!==resolution.userId){
+    await invalidateUserAI(tx.client,deps.assistantRuntime!,current.userId,'ACCOUNT_CHANGE');
+    await revokeFamily(tx.client,current.familyId,'LOGOUT');
+  }
+  if(guestToken){
+    const {rows:[guest]}=await tx.client.query<{id:string}>(`SELECT id FROM guest_sessions WHERE token_hash=$1 AND revoked_at IS NULL FOR UPDATE`,[sha256Hex(guestToken)]);
+    if(guest){await invalidateSubjectAI(tx.client,deps.assistantRuntime!,`guest:${guest.id}`,'ACCOUNT_CHANGE');await tx.client.query(`UPDATE guest_sessions SET revoked_at=clock_timestamp() WHERE id=$1`,[guest.id]);}
+  }
+  const now=await tx.effectiveNow();
+
   if (row.client === 'WEB') {
     const web = await issueWebSession(tx.client, resolution.userId, identity.amr, now);
     await tx.client.query(`UPDATE auth_transactions SET result_family_id = $2 WHERE id = $1`, [row.id, web.familyId]);
     const session = await sessionInfo(tx.client, { userId: resolution.userId, sessionId: web.sessionId, kind: 'WEB', authTime: now, amr: identity.amr }, deps.config.sessionSecret);
     return {
       data: { outcome: 'AUTHENTICATED', session, authProof, ...(row.return_target ? { returnTarget: row.return_target } : {}) },
-      after: (reply) => void reply.setCookie(SESSION_COOKIE, web.token, cookieOptions(ABSOLUTE_MS / 1000)),
+      after: (reply) => {reply.clearCookie('__Host-fancy_guest',{path:'/'});void reply.setCookie(SESSION_COOKIE, web.token, cookieOptions(ABSOLUTE_MS / 1000));},
     };
   }
 

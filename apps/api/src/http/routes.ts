@@ -13,6 +13,7 @@ import { authenticateToken } from '../identity/sessions.ts';
 import type { AppDeps, AuthContext } from './context.ts';
 import { domainErrorBody } from './errors.ts';
 import { assertCsrf, assertWebOrigin, SESSION_COOKIE } from './security.ts';
+import { enforceRateLimit } from './rate-limit.ts';
 
 export interface HandlerResult {
   status?: number;
@@ -79,6 +80,7 @@ async function preflight(def: OperationDef, request: FastifyRequest, deps: AppDe
     if (!m) throw new DomainError('VALIDATION_FAILED', 'If-Match must be a quoted version.', { fieldErrors: { 'headers.if-match': 'Invalid version' } });
     ifMatch = m[1]!;
   }
+  if (auth) await enforceRateLimit(deps.pool, auth.userId, def, request.url.split('?')[0]!);
   return { auth, ifMatch };
 }
 
@@ -113,12 +115,22 @@ export function defineRoute(app: FastifyInstance, deps: AppDeps, id: OperationId
   });
 }
 
+/** Binary/text read endpoints keep the exact same authentication and policy preflight. */
+export function defineRawRoute(app: FastifyInstance, deps: AppDeps, id: OperationId, handler: (ctx: HandlerContext) => Promise<unknown>): void {
+  const def = operationsById[id];
+  if (def.write !== 'read') throw new Error(`${id} is not a raw read endpoint`);
+  app.route({ method: def.method, url: routePath(def), schema: schemaFor(def), handler: async (request, reply) => {
+    const { auth, ifMatch } = await preflight(def, request, deps);
+    return handler({ request, reply, deps, auth, ifMatch });
+  } });
+}
+
 /**
  * Idempotent authenticated write (API §1): claim actor+operation+key, run the command in one
  * transaction, seal success or DomainError with the business commit, replay only after the actor
  * is still allowed, release the claim on unexpected failure.
  */
-export function defineWrite(app: FastifyInstance, deps: AppDeps, id: OperationId, handler: WriteHandler, stillAuthorized?: (auth: AuthContext) => Promise<boolean>): void {
+export function defineWrite(app: FastifyInstance, deps: AppDeps, id: OperationId, handler: WriteHandler, stillAuthorized?: (auth: AuthContext, context: HandlerContext) => Promise<boolean>): void {
   const def = operationsById[id];
   if (def.write !== 'idempotencyKey' || (def.auth !== 'session' && def.auth !== 'staff')) throw new Error(`${id} is not an authenticated idempotent write`);
   app.route({
@@ -140,8 +152,8 @@ export function defineWrite(app: FastifyInstance, deps: AppDeps, id: OperationId
       });
       if (claim.kind === 'replay') {
         const replay = await replayIfAuthorized(claim, async () => {
-          const { rows } = await deps.pool.query(`SELECT 1 FROM users WHERE id = $1 AND status = 'ACTIVE'`, [actor.userId]);
-          return rows.length === 1 && (stillAuthorized ? await stillAuthorized(actor) : true);
+          const { rows } = await deps.pool.query(`SELECT 1 FROM users WHERE id = $1 AND status = 'ACTIVE' AND (SELECT epoch FROM privacy_control WHERE id=1)=$2`, [actor.userId, claim.privacyEpoch]);
+          return rows.length === 1 && (stillAuthorized ? await stillAuthorized(actor, { request, reply, deps, auth: actor, ifMatch }) : true);
         });
         reply.header('idempotent-replay', 'true');
         return reply.status(replay.status).send(replay.body);
@@ -157,14 +169,14 @@ export function defineWrite(app: FastifyInstance, deps: AppDeps, id: OperationId
             await completeIntent(tx.client, claim, { status, body, resourceId: result.resourceId ?? null });
             return { status, body };
           } catch (error) {
-            if (error instanceof DomainError) await completeIntent(tx.client, claim, { status: error.status, body: domainErrorBody(request, error) });
+            if (error instanceof DomainError && error.status < 500) await completeIntent(tx.client, claim, { status: error.status, body: domainErrorBody(request, error) });
             throw error;
           }
         }, { commitOnDomainError: true });
         after?.(reply);
         return reply.status(status).send(body);
       } catch (error) {
-        if (!(error instanceof DomainError)) await releaseIntent(deps.pool, claim).catch(() => undefined);
+        if (!(error instanceof DomainError) || error.status >= 500) await releaseIntent(deps.pool, claim).catch(() => undefined);
         throw error;
       }
     },

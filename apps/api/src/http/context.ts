@@ -1,6 +1,8 @@
 import type { Pool } from 'pg';
 import type { CoreConfig } from '@fancy/config';
 import type { IdentityProvider } from '../identity/provider.ts';
+import type { PlacesProvider } from '../venues/provider.ts';
+import type { AssistantRuntime } from '../../../../packages/assistant/src/index.ts';
 
 export interface AuthContext {
   userId: string;
@@ -19,6 +21,8 @@ export interface AppDeps {
   identity: IdentityProvider;
   /** Server origin used to build provider redirect URIs (e.g. https://app.example). */
   publicOrigin: string;
+  placesProvider?: PlacesProvider;
+  assistantRuntime?: AssistantRuntime;
 }
 
 declare module 'fastify' {

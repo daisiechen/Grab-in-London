@@ -3,12 +3,13 @@ import { peopleOperations } from './operations/people.ts';
 import { mealOperations } from './operations/meals.ts';
 import { socialOperations } from './operations/social.ts';
 import { operationsAdmin } from './operations/operations-admin.ts';
+import { assistantOperations } from './operations/assistant.ts';
 import type { OperationDef } from './operation.ts';
 
 export const API_PREFIX = '/v1';
 export const CONTRACT_VERSION = '1.0.0';
 
-export const operations = [...authOperations, ...peopleOperations, ...mealOperations, ...socialOperations, ...operationsAdmin] as const;
+export const operations = [...authOperations, ...peopleOperations, ...mealOperations, ...socialOperations, ...operationsAdmin, ...assistantOperations] as const;
 export type AnyOperation = (typeof operations)[number];
 export type OperationId = AnyOperation['operationId'];
 export type OperationMap = { [O in AnyOperation as O['operationId']]: O };

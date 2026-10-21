@@ -8,3 +8,4 @@ export * from './registry.ts';
 export { buildOpenApi } from './openapi.ts';
 export * from './return-target.ts';
 export * from './declarations.ts';
+export * as assistantDto from './assistant-dto.ts';

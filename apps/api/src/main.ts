@@ -5,6 +5,7 @@ import { buildServer } from './http/server.ts';
 import { Auth0IdentityProvider } from './identity/auth0-provider.ts';
 import { TestIdentityProvider } from './identity/test-provider.ts';
 import type { IdentityProvider } from './identity/provider.ts';
+import { GooglePlacesProvider } from './venues/google-provider.ts';
 
 export function identityProviderFor(config: CoreConfig): IdentityProvider {
   if (config.adapters.AUTH_ADAPTER === 'test') return new TestIdentityProvider(config.environment);
@@ -23,6 +24,7 @@ if (import.meta.main) {
     throw error;
   }
   const pool = createPool(config.databaseUrl, { application: 'fancy-api' });
-  const app = await buildServer({ config, pool, identity: identityProviderFor(config), publicOrigin: config.webOrigin });
+  const app = await buildServer({ config, pool, identity: identityProviderFor(config), publicOrigin: config.webOrigin,
+    ...(config.adapters.PLACES_ADAPTER === 'google' && config.googleMapsApiKey ? { placesProvider: new GooglePlacesProvider(config.googleMapsApiKey) } : {}) });
   await app.listen({ port: config.port, host: '127.0.0.1' });
 }

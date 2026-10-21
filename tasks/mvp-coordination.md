@@ -69,3 +69,19 @@
 - 新阻塞 **MVP-R01**（iOS）：`apps/ios/src/features/auth/session.ts` 中，受控 promise 延迟 `getSession`，先 `completeHandoff`、再成功 `logout`，最后释放旧响应，状态从 `signedOut` 又变成 `signedIn`。Codex 直接对当前 SessionManager 源码用 Node 24 transform-types 和 fake API 复现，不是设备验收。修复需 auth generation/epoch 使迟到会话/刷新/凭据写入失效，并覆盖退出与 SecureStore.clear 失败仍清缓存/进入退出态。反馈已暂存于 Claude，额度重置后先确认已交给 iOS 唯一负责人；不得由其他负责人并发改它的文件。
 - 需用户明早处理：DeepSeek Key 安全配置、Xcode 首次打开/许可、域名及 Auth0/Maps/邮件/Apple/Expo 外部账号与账单/签名。按睡前要求先跳过，不反复请求，也不把 mock 或 Expo 单测当作真实门槛关闭。
 - 阶段方法复盘：事务/租约回归、延迟响应复现与证据边界由现有 QA 验收及调试方法覆盖，本次不新建或安装技能候选，原任务继续优先。
+
+## Codex 接管（2026-10-21 用户明确授权）
+
+- 用户要求 Claude 限额期间由 Codex 接手全部生产开发，恢复后交叉检查。已在原 Claude 桌面会话发出停止写入、停止旧子任务、禁止运行旧待执行写入命令的通知；恢复后只读审查最新提交。
+- 接管基线 `95b297c`。保留 Web 未提交批次、整个 iOS 未提交实现及根 package 的客户端测试脚本；不修改其他会话的竞品研究。生产目录、共享配置、任务状态及集成交付负责人改为 Codex。
+- Codex 并行分工：`web_takeover` 独占 apps/web；`ios_takeover` 独占 apps/ios；`venues_backend` 独占 apps/api/src/venues；主负责人独占其他生产后端、数据库、共享配置、锁文件与任务表。子任务不提交，主负责人串行验证集成交付。PRD/Demo 原负责人不变。
+- 已更新 heartbeat，禁止按旧提示恢复 Claude 写入；Claude 恢复只读检查，报告可复现缺陷，由 Codex 修复。独立测试仍以整体自测通过为前提。
+
+## 接管实施检查点（2026-10-21 06:03 London）
+
+- 已串行同步 Web 基线 `0b1a298`、iOS基线 `63c693b`、测试入口/签名游标 `29b012b`。下述后端集成批次在本记录写入时待提交，不能视作已经在GitHub。
+- 生产后端已接资料、饭局/申请/审批/取消、生命周期、消息及显式已读、饭后与私聊授权、问卷、通知/举报与个案支持、删除屏障/本地清理、后台快照/下钻/CSV及AI偏好/会话/预算/草稿。AI原文与导出正文只在RAM；真实提供方未配置时明确不可用，未用fixture伪装真实调用。
+- 05:57完整核心回归：unit131、真实PostgreSQL89、API84、release9通过；随后新增worker入口测试1、空batch同意/撤回与发现来源合计10项API、release10、SDK10、删除页6项分别通过。Web+admin185、iOS136在05:56版本通过；后续AI/采集UI增量仍需最终集成重跑。仓库Python64通过（随后新增运行说明仍待重查），类型/生成物/lint/secret检查在提交前重跑。
+- 独立代码复核修复：删除席位与最低人数、私聊Inbox发送状态、支持case失权重放、PG微秒分页、pending申请Inbox、账号切换旧响应及UI隔离、失效reauth不得清AI、5xx事务回滚。用户数据删除worker物理清私有字段，远端身份/Apple撤销与政策未齐时NEEDS_SUPPORT，不宣称删除最终完成。
+- 新增可销毁本机联调入口 `infra/local-acceptance.ts`（回环3000、临时PostgreSQL、测试身份与虚构餐厅、固定测试OTP），开始真实浏览器登录/补资料/创建/双账号申请审批/消息链；这不是线上或真实外部验收。API/worker实际入口与CI配置已准备，首尔没有安装或部署。
+- Web AI助手接入已冻结，iOS AI UI仍在实施；Web采集同意与完整来源事件仍在实施。后台未知来源维持partial/null。当前仍未完成整体自测，尚未通知「测试- MVP+AI」开始执行；用户要求的独立测试交接在可执行范围自测全通过之后发送。

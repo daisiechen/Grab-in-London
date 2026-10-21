@@ -2,37 +2,33 @@ import type { Pool, PoolClient } from 'pg';
 import type { AuthContext } from '../http/context.ts';
 import { csrfTokenFor } from '../http/security.ts';
 
-/**
- * Own private projection. Profile fields arrive with T05 (profiles table); until then they are
- * empty and the gate lists them as missing — the gate is never reported complete by default.
- */
+/** Private projection, shared by sign-in and profile endpoints. */
 export async function loadMe(db: Pool | PoolClient, userId: string) {
   const { rows } = await db.query(
-    `SELECT u.id, u.version, c.email, COALESCE(array_agg(r.role ORDER BY r.role) FILTER (WHERE r.role IS NOT NULL), '{}') AS roles
-       FROM users u LEFT JOIN private_contact c ON c.user_id = u.id LEFT JOIN roles r ON r.user_id = u.id
-      WHERE u.id = $1 GROUP BY u.id, u.version, c.email`,
-    [userId],
+    `SELECT u.id, u.version, c.email, p.*, ARRAY(SELECT role FROM roles WHERE user_id = u.id ORDER BY role) AS roles
+       FROM users u LEFT JOIN private_contact c ON c.user_id = u.id LEFT JOIN profiles p ON p.user_id = u.id
+      WHERE u.id = $1`, [userId],
   );
-  const r = rows[0];
+  const r = rows[0]!;
+  const ageConfirmed = r.age_confirmed_version === '2026-10-21';
+  const communityAccepted = r.community_accepted_version === '2026-10-21';
+  const missing = [
+    ...(!r.display_name ? ['displayName'] : []), ...(!r.bio ? ['bio'] : []),
+    ...(!r.languages?.length ? ['languages'] : []), ...(!r.life_status ? ['lifeStatus'] : []),
+    ...(!r.interests?.length ? ['interests'] : []), ...(!ageConfirmed ? ['age'] : []),
+    ...(!communityAccepted ? ['community'] : []),
+  ];
   return {
-    id: r.id as string,
-    version: r.version as string,
-    displayName: null,
-    avatarRef: null,
-    bio: null,
-    languages: [],
-    lifeStatus: null,
-    interests: [],
-    background: {},
+    id: r.id as string, version: r.version as string,
+    displayName: (r.display_name as string | null) ?? null,
+    avatarRef: (r.avatar_ref as string | null) ?? null,
+    bio: (r.bio as string | null) ?? null,
+    languages: (r.languages as string[]) ?? [], lifeStatus: (r.life_status as string | null) ?? null,
+    interests: (r.interests as string[]) ?? [], background: (r.background as Record<string, string>) ?? {},
     email: (r.email as string | null) ?? null,
-    ageConfirmedVersion: null,
-    communityAcceptedVersion: null,
-    profileGate: {
-      ageConfirmed: false,
-      communityAccepted: false,
-      profileComplete: false,
-      missing: ['displayName', 'bio', 'languages', 'lifeStatus', 'interests', 'age', 'community'],
-    },
+    ageConfirmedVersion: (r.age_confirmed_version as string | null) ?? null,
+    communityAcceptedVersion: (r.community_accepted_version as string | null) ?? null,
+    profileGate: { ageConfirmed, communityAccepted, profileComplete: missing.length === 0, missing },
     roles: r.roles as string[],
   };
 }

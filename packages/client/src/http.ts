@@ -14,6 +14,7 @@ export interface ClientOptions {
   baseUrl: string;
   credentials: Credentials;
   fetch?: typeof fetch;
+  headers?: (operationId: OperationId) => Readonly<Record<string,string>>;
 }
 
 export interface ApiClient {
@@ -44,12 +45,13 @@ export function createApiClient(options: ClientOptions): ApiClient {
       const qs = search.toString();
       const url = base + path + (qs ? `?${qs}` : '');
 
-      const headers: Record<string, string> = { accept: 'application/json' };
+      const headers: Record<string, string> = { ...options.headers?.(operationId), accept: 'application/json' };
       if (meta.hasBody) headers['content-type'] = 'application/json';
       if (meta.write === 'idempotencyKey') {
         if (!req.idempotencyKey) throw new TypeError(`${operationId}: idempotencyKey is required`);
         headers['idempotency-key'] = req.idempotencyKey;
       }
+      if (meta.write === 'resourceKey' && req.idempotencyKey) headers['idempotency-key'] = req.idempotencyKey;
       if (meta.ifMatch) {
         if (req.ifMatch === undefined) throw new TypeError(`${operationId}: ifMatch version is required`);
         headers['if-match'] = formatIfMatch(req.ifMatch);

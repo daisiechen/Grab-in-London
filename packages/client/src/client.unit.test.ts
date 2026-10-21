@@ -23,6 +23,15 @@ describe('generated SDK metadata', () => {
 });
 
 describe('createApiClient', () => {
+  it('adds operation-scoped AI headers while preserving authoritative session CSRF', async () => {
+    let responses=0;
+    const {calls,fetch}=capture(()=>ok(responses++===0?201:200,{data:{},meta:{requestId:'r',serverNow:'2026-10-21T10:00:00Z'}}));
+    const client=createApiClient({baseUrl:'',credentials:{kind:'cookie',csrfToken:()=> 'session-csrf'},fetch,headers:id=>id==='bootstrapAI'?{'x-ai-device-token':'device-token','x-csrf-token':'guest-csrf'}:{}});
+    await client.call('bootstrapAI',{body:{deviceChallenge:'a'.repeat(43)},idempotencyKey:KEY});
+    expect(calls[0]!.init.headers).toMatchObject({'x-ai-device-token':'device-token','x-csrf-token':'session-csrf','idempotency-key':KEY});
+    await client.call('getSession',{});
+    expect(calls[1]!.init.headers).not.toHaveProperty('x-ai-device-token');
+  });
   it('sends idempotency key, quoted If-Match and CSRF on cookie writes', async () => {
     const { calls, fetch } = capture(ok(200, { data: {}, meta: { requestId: 'r1', serverNow: '2026-10-21T10:00:00Z' } }));
     const client = createApiClient({ baseUrl: 'https://app.example.test/', credentials: { kind: 'cookie', csrfToken: () => 'csrf-token-123456' }, fetch });

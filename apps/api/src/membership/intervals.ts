@@ -5,10 +5,11 @@
  * same transaction as the seat change that causes it — never via the outbox.
  */
 import type { Tx } from '../common/transaction.ts';
-import { DomainError } from '../common/errors.ts';
+import { DomainError, InvariantError } from '../common/errors.ts';
 import { registerLockTable } from '../common/locks.ts';
 
 registerLockTable('conversations', 'conversation');
+registerLockTable('user_pairs', 'pair');
 
 export type ConversationKind = 'GROUP' | 'DIRECT';
 export type BoundaryKind = 'JOIN' | 'LEAVE' | 'DISSOLVE' | 'MESSAGE';
@@ -27,6 +28,13 @@ interface ConversationRow {
 }
 
 async function lockConversation(tx: Tx, conversationId: string): Promise<ConversationRow> {
+  // Composite commands prelock every aggregate before reading effectiveNow. Reusing an
+  // already-held exclusive lock is safe and must not reopen the transaction's lock phase.
+  if (tx.locks.held.some((lock) => lock.table === 'conversations' && lock.id === conversationId.toLowerCase() && lock.mode === 'update')) {
+    const { rows: [row] } = await tx.client.query<ConversationRow>(`SELECT id, kind, head, dissolved_at, version FROM conversations WHERE id = $1`, [conversationId]);
+    if (!row) throw new DomainError('NOT_FOUND', 'Conversation not found.');
+    return row;
+  }
   const [row] = await tx.locks.lock<ConversationRow & { id: string }>('conversations', [conversationId], 'update', 'id, kind, head, dissolved_at, version');
   if (!row) throw new DomainError('NOT_FOUND', 'Conversation not found.');
   return row;
@@ -64,6 +72,21 @@ export async function createGroupConversation(tx: Tx, o: { mealId: string; hostI
   const joinSeq = await allocate(tx, conversationId, 'JOIN', o.hostId, o.effectiveAt);
   await tx.client.query(`INSERT INTO membership_intervals (conversation_id, user_id, join_seq) VALUES ($1, $2, $3)`, [conversationId, o.hostId, String(joinSeq)]);
   return { conversationId, joinSeq };
+}
+
+/** Caller holds the pair UPDATE lock; fresh rows require no additional lock phase. */
+export async function createDirectConversation(tx: Tx, o: { pairId: string; userIds: [string, string]; effectiveAt: Date }): Promise<{ conversationId: string }> {
+  if (!tx.locks.held.some(l => l.table === 'user_pairs' && l.id === o.pairId && l.mode === 'update')) throw new InvariantError('Pair UPDATE lock is required');
+  const { rows: [existing] } = await tx.client.query<{ id: string }>(`SELECT id FROM conversations WHERE pair_id=$1`, [o.pairId]);
+  if (existing) return { conversationId: existing.id };
+  const users = [...new Set(o.userIds)].sort();
+  if (users.length !== 2) throw new DomainError('STATE_CONFLICT', 'A direct conversation needs two different members.');
+  const { rows: [created] } = await tx.client.query<{ id: string }>(`INSERT INTO conversations(kind,pair_id) VALUES('DIRECT',$1) RETURNING id`, [o.pairId]);
+  for (const userId of users) {
+    const seq = await allocate(tx, created!.id, 'JOIN', userId, o.effectiveAt);
+    await tx.client.query(`INSERT INTO membership_intervals(conversation_id,user_id,join_seq) VALUES($1,$2,$3)`, [created!.id,userId,String(seq)]);
+  }
+  return { conversationId: created!.id };
 }
 
 /** Opens a membership interval; an already-open member is a no-op (no duplicate JOIN). */

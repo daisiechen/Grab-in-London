@@ -4,7 +4,7 @@ import { migrate } from '@fancy/db';
 import { createGates, createMigratedDatabase, waitForLockWaiters, type MigratedDatabase } from '@fancy/testkit/db';
 import { withTransaction } from '../common/transaction.ts';
 import {
-  allocateMessageSeq, createGroupConversation, dissolveConversation, intervalsFor, isVisible, joinConversation, leaveConversation,
+  allocateMessageSeq, createGroupConversation, createDirectConversation, dissolveConversation, intervalsFor, isVisible, joinConversation, leaveConversation,
 } from './intervals.ts';
 
 const serverUrl = inject('pgServerUrl');
@@ -13,10 +13,22 @@ beforeAll(async () => { db = await createMigratedDatabase(serverUrl, migrate); }
 afterAll(async () => { await db.drop(); });
 
 const user = async () => (await db.pool.query<{ id: string }>(`INSERT INTO users DEFAULT VALUES RETURNING id`)).rows[0]!.id;
+async function pair() {
+  const users = [await user(), await user()].sort() as [string, string];
+  const { rows: [row] } = await db.pool.query(`INSERT INTO user_pairs(low_user,high_user) VALUES($1,$2) RETURNING id`,users);
+  return { id: row.id as string, users };
+}
 const now = new Date();
 async function group() {
   const host = await user();
-  const { conversationId } = await withTransaction(db.pool, (tx) => createGroupConversation(tx, { mealId: randomUUID(), hostId: host, effectiveAt: now }));
+  const venue = (await db.pool.query(`INSERT INTO venues (place_id, provider) VALUES ($1, 'fixture') RETURNING id`, [randomUUID()])).rows[0].id;
+  const mealId = (await db.pool.query(`INSERT INTO meals
+    (host_id, venue_ref, title, description, starts_at, closes_at, scheduled_end_at,
+     start_local_date, start_local_time, start_offset, close_local_date, close_local_time, close_offset,
+     minimum, capacity, budget_min_pence, budget_max_pence, languages, mood, booking_mode, terms_version, attempt_id)
+    VALUES ($1,$2,'Kernel meal','Membership kernel test meal', '2030-01-01 18:00Z', '2030-01-01 17:00Z', '2030-01-01 20:00Z',
+    '2030-01-01','18:00',0,'2030-01-01','17:00',0,2,4,1000,2000,ARRAY['en'],'EASY_CONVERSATION','EXTERNAL_PAY_AT_VENUE','test',$3) RETURNING id`, [host, venue, randomUUID()])).rows[0].id;
+  const { conversationId } = await withTransaction(db.pool, (tx) => createGroupConversation(tx, { mealId, hostId: host, effectiveAt: now }));
   return { host, conversationId };
 }
 const events = async (conversationId: string) =>
@@ -24,6 +36,18 @@ const events = async (conversationId: string) =>
 const tx = <T>(fn: Parameters<typeof withTransaction<T>>[1]) => withTransaction(db.pool, fn);
 
 describe('S14 conversation kernel', () => {
+  it('reuses a preheld exclusive conversation lock after the command clock without acquiring a new lock', async () => {
+    const { conversationId } = await group();
+    const guest = await user();
+    await tx(async (t) => {
+      await t.locks.lock('conversations', [conversationId], 'update');
+      const effectiveAt = await t.effectiveNow();
+      expect(await joinConversation(t, conversationId, guest, effectiveAt)).toMatchObject({ created: true });
+      expect(await leaveConversation(t, conversationId, guest, effectiveAt)).toMatchObject({ leaveSeq: 3n });
+      expect(t.locks.held).toHaveLength(1);
+    });
+    expect(await events(conversationId)).toEqual(['1:JOIN', '2:JOIN', '3:LEAVE']);
+  });
   it('creates the group with the host joined at seq 1', async () => {
     const { host, conversationId } = await group();
     expect(await events(conversationId)).toEqual(['1:JOIN']);
@@ -99,13 +123,26 @@ describe('S14 conversation kernel', () => {
     await expect(db.pool.query(`UPDATE membership_intervals SET leave_seq = 99 WHERE conversation_id = $1`, [conversationId])).rejects.toMatchObject({ code: '23503' });
     await expect(db.pool.query(`DELETE FROM conversation_events WHERE conversation_id = $1`, [conversationId])).rejects.toThrow(/append-only/);
     await expect(db.pool.query(`INSERT INTO conversations (kind) VALUES ('GROUP')`)).rejects.toMatchObject({ code: '23514' });
-    await expect(db.pool.query(`INSERT INTO conversations (kind, pair_id) VALUES ('DIRECT', gen_random_uuid())`).then(async () =>
+    const p = await pair();
+    await expect(db.pool.query(`INSERT INTO conversations (kind, pair_id) VALUES ('DIRECT', $1)`,[p.id]).then(async () =>
       db.pool.query(`UPDATE conversations SET dissolved_at = now(), dissolved_seq = 0 WHERE kind = 'DIRECT'`))).rejects.toMatchObject({ code: '23514' });
   });
 
   it('refuses to dissolve a direct conversation', async () => {
     const a = await user();
-    const { rows } = await db.pool.query<{ id: string }>(`INSERT INTO conversations (kind, pair_id) VALUES ('DIRECT', gen_random_uuid()) RETURNING id`);
+    const p = await pair();
+    const { rows } = await db.pool.query<{ id: string }>(`INSERT INTO conversations (kind, pair_id) VALUES ('DIRECT', $1) RETURNING id`,[p.id]);
     await expect(tx((t) => dissolveConversation(t, rows[0]!.id, a, now))).rejects.toMatchObject({ code: 'FORBIDDEN' });
+  });
+  it('creates one direct conversation with two membership boundaries and never rejoins an existing one', async () => {
+    const p = await pair();
+    const created = await tx(async (t) => {
+      await t.locks.lock('user_pairs',[p.id],'update');
+      const at = await t.effectiveNow();
+      return createDirectConversation(t,{pairId:p.id,userIds:p.users,effectiveAt:at});
+    });
+    expect(await events(created.conversationId)).toEqual(['1:JOIN','2:JOIN']);
+    expect(await tx(async (t) => { await t.locks.lock('user_pairs',[p.id],'update'); return createDirectConversation(t,{pairId:p.id,userIds:p.users,effectiveAt:now}); })).toEqual(created);
+    expect(await events(created.conversationId)).toEqual(['1:JOIN','2:JOIN']);
   });
 });

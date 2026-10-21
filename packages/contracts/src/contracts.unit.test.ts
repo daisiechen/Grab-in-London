@@ -34,7 +34,7 @@ describe('registry matches the reviewed API contract', () => {
 
   it('adds only the export download route described in prose', () => {
     const extra = all.map((d) => d.operationId).filter((id) => !documented.some((d) => d.id === id));
-    expect(extra.sort()).toEqual(['getClassification', 'getExport']);
+    expect(extra.sort()).toEqual(['markConversationRead', 'getClassification', 'getExport', 'createGuestSession', 'readAIPreferences', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'readAI', 'activityAI', 'resetAI', 'requestAI', 'pollAI', 'validateAIDraft'].sort());
     expect(doc).toContain('GET /admin/exports/:id');
   });
 
@@ -57,6 +57,7 @@ describe('write protocol', () => {
       'block', 'cancelMeal', 'classifyUser', 'declareBooking', 'decideApplication', 'dissolveGroup', 'editMeal', 'leaveGroup',
       'leaveMeal', 'putSurvey', 'rateExperience', 'reportAttendance', 'requestDeletion', 'resolveCase', 'reviewPerson',
       'revokeConnection', 'selectReconnect', 'unblock', 'updateMe', 'withdrawApplication',
+      'replaceAIPreferences', 'deleteAIPreferences',
     ].sort());
     for (const id of ['createMeal', 'applyMeal', 'sendMessage', 'createReport']) expect(byId(id)!.ifMatch, id).toBe(false);
   });
@@ -67,8 +68,8 @@ describe('write protocol', () => {
       else if (def.operationId !== 'deletionStatus') expect(def.write, def.operationId).not.toBe('read');
     }
     const clientRequest = all.filter((d) => d.write === 'clientRequestId').map((d) => d.operationId).sort();
-    expect(clientRequest).toEqual(['exchangeHandoff', 'logout', 'refreshSession', 'startEmail', 'startOAuth', 'startReauth', 'verifyEmail']);
-    expect(all.filter((d) => d.write === 'resourceKey').map((d) => d.operationId).sort()).toEqual(['ingestEvents', 'sendMessage']);
+    expect(clientRequest).toEqual(['createGuestSession', 'exchangeHandoff', 'logout', 'refreshSession', 'startEmail', 'startOAuth', 'startReauth', 'verifyEmail']);
+    expect(all.filter((d) => d.write === 'resourceKey').map((d) => d.operationId).sort()).toEqual(['markConversationRead', 'ingestEvents', 'sendMessage', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'activityAI', 'resetAI', 'requestAI', 'validateAIDraft'].sort());
   });
 
   it('derives transport error codes from protocol flags', () => {
@@ -212,9 +213,11 @@ describe('schemas reject unknown fields', () => {
   it('rejects business-success analytics events from clients', () => {
     const ingest = validator(byId('ingestEvents')!.body!);
     const event = { eventId: '6a1f6c32-6c4e-4c4d-9a51-6c1d0e5f9b11', type: 'detail_view', occurredAt: '2026-10-21T10:00:00Z', anonymousId: 'anon-12345', sessionId: 'sess-12345', appVersion: '1.0.0', properties: {} };
-    expect(ingest({ schemaVersion: 1, events: [event] })).toBe(true);
+    const consent = { analytics: true, version: '2026-10-21' };
+    expect(ingest({ schemaVersion: 1, consent, events: [event] })).toBe(true);
+    expect(ingest({ schemaVersion: 1, events: [event] })).toBe(false);
     for (const type of ['meal_published', 'application_succeeded', 'attendance_present']) {
-      expect(ingest({ schemaVersion: 1, events: [{ ...event, type }] }), type).toBe(false);
+      expect(ingest({ schemaVersion: 1, consent, events: [{ ...event, type }] }), type).toBe(false);
     }
     expect(ingest({ schemaVersion: 1, events: [{ ...event, userId: 'spoofed' }] })).toBe(false);
   });

@@ -13,6 +13,15 @@ const node = (args: string[], env: Record<string, string> = {}) =>
   spawnSync(process.execPath, args, { cwd: ROOT, encoding: 'utf8', env: { PATH: process.env.PATH ?? '', ...env } });
 
 describe('workspace boundaries', () => {
+  it('runs the same local gates in CI without deployment or repository-write permission', () => {
+    const workflow=read('.github/workflows/core.yml');
+    expect(workflow).toContain('contents: read');
+    expect(workflow).toContain('fetch-depth: 0');
+    expect(workflow).toContain('persist-credentials: false');
+    expect(workflow).toContain('require-lockfile: true');
+    for(const command of ['pnpm core:check','pnpm core:test','pnpm core:test:clients','python3 -m unittest discover -s tests','pnpm --filter @fancy/web build','pnpm --filter @fancy/admin build'])expect(workflow).toContain(command);
+    expect(workflow).not.toMatch(/secrets\.|ssh |contents: write|pull_request_target/);
+  });
   it('keeps demo/ and admin/ outside the production workspace', () => {
     const workspace = read('pnpm-workspace.yaml');
     const members = [...workspace.matchAll(/^\s+-\s+(\S+)/gm)].map((m) => m[1]);
