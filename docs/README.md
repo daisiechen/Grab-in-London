@@ -41,6 +41,8 @@
 
 ## 发布与验收
 
+- [政策审核清单](policies/README.md)、[隐私通知英文草稿](policies/privacy-notice.draft.en.md)与[社区规则英文草稿](policies/community-guidelines.draft.en.md)：个人发布主体的英文初稿、申请进度与发布前待确认项；未批准、未生效。
+
 - [原14条阻塞解除准备](delivery/mvp-gate-unblocking-2026-10-21.zh-CN.md)：逐条负责人、解除条件及本地演练；最终状态由独立QA复验判定。
 - [MVP 本地自测与独测交接](delivery/mvp-local-selftest-2026-10-21.zh-CN.md)：本机验证、精确版本、模拟与真实边界及待用户操作。
 
