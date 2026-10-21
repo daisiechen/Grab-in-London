@@ -24,7 +24,27 @@ source infra/dev-env.sh
 FANCY_LOCAL_ACCEPTANCE=1 node infra/local-acceptance.ts
 ```
 
-另一个终端运行 `pnpm --filter @fancy/web dev`，访问 `http://127.0.0.1:5174`。此入口使用临时数据库、测试身份、虚构餐厅，邮箱验证码为000000；退出即销毁数据。它不是线上服务，不能接真实用户，也没有真实地图、邮件或模型调用。后台若需MFA/角色，按API测试夹具向这个临时库显式授予测试角色；业务身份不可因能登录便自动取得后台权限。
+另一个终端运行 `pnpm --filter @fancy/web dev`，访问 `http://127.0.0.1:5174`。此入口使用临时数据库、测试身份、虚构餐厅，邮箱验证码为000000；退出即销毁数据。它不是线上服务，不能接真实用户，也没有真实地图、邮件或模型调用。需要合成后台账号时，启动 API 前显式增加第二个开关：
+
+```sh
+source infra/dev-env.sh
+FANCY_LOCAL_ACCEPTANCE=1 FANCY_LOCAL_STAFF_FIXTURE=1 node infra/local-acceptance.ts
+```
+
+在 Web 用 `qa-staff@example.invalid` 和 `000000` 登录。此固定虚构账号预先通过核心登录协议创建，授予 `analyst`、`data_admin`；只有它在第二个开关启用时获得模拟 `mfa` claim。这不代表真实 MFA 验证通过。普通任意 `@example.invalid` 账号仍只有 OTP、无后台角色；第二个开关关闭时，固定邮箱也无模拟 MFA、不会预建角色。bootstrap 的临时登录已注销且不输出凭据；只移除已消费的 bootstrap OTP 行，避免它占用浏览器首次登录的重发窗口，其余限流不变。
+
+后台验收与 Web 串行共用 **5174 同源**：保持 API/临时 PG 运行，先在 Web 登录，再只停止 Web Vite（Ctrl-C），然后运行：
+
+```sh
+source infra/dev-env.sh
+pnpm --filter @fancy/admin exec vite --port 5174
+```
+
+在同一浏览器访问 `http://127.0.0.1:5174`，使用已有 cookie；不要清除登录数据。后台读取及写入仍受原角色/MFA/CSRF 校验。返回 Web 时停 admin Vite，再运行 `pnpm --filter @fancy/web dev`。默认 admin dev 的5175适合独立只读开发，但本 rig 的写操作只允许5174，不改变生产 Origin 规则。
+
+数据库没有预填真实业务历史。最小业务 seed 通过 Web 创建两个不同合成邮箱账号，补资料，搜索 `Fancy` 选虚构餐厅，创建未来饭局，再由另一账号申请、主持人审批。可复用 `FANCY_QA_LOCAL_FIXTURE=1 node scripts/qa-inbox-fixture.mjs` 生成双 pending Inbox 合成场景；脚本日期固定2026-10-23/24，过期后需改用浏览器创建未来饭局。worker 启动并定时生成快照，空库/未到成熟窗口的指标为空或未知，不能当成熟业务数据。
+
+正常停止 API rig 会清理临时库，重启重新预建（若启用）合成 staff；强杀进程不保证执行清理。Google/Apple 的 TestIDP 授权地址为 `test-idp.invalid`，此 rig 没有合成授权网页，所以浏览器 provider 登录/身份链接仍未测，需后补独立 fixture 或真实配置。AI 未注入可用模型端口，维持明确不可用提示；不因 `mock` 配置字样宣称模型链已联通。
 
 ## 正式进程入口
 

@@ -252,3 +252,9 @@
 - Web对visibility/focus和下一AI动作同样验证，bootstrap绑定偏好epoch，不被单独查看偏好改写基准；pause revision与账号/会话generation合并围栏。后台SEND结果只RAM暂存，经当前校验后才显示；epoch变化销毁。首次bootstrap挂起的先后台放行/先回前台两序列均须校验后才发送，不绕过零AI请求断言。
 - 原生定向33项（含QA原probe）、根iOS242项；Web助手40项、根Web/后台258项通过。日志/private/tmp/fancy-f14-{ios,web,build,check,python}.log；仅双端五个生产/自有测试文件及本记录提交，QA/研究/本地rig另批不混。正式F14关闭仍交QA固定SHA独立复验，不冒称真机/真实供应商验收。
 - 全仓core:check、Web生产构建及Python70通过；本批后端业务无修改，unit/DB/API结果沿用最近已验证层，不声称在客户端切片重跑。并行本地rig发布隔离13项通过，其变更按另批处理。
+
+## 本地生产界面验收入口（2026-10-21）
+
+- QA后续需将Demo来源用例映射生产浏览器路径。复用既有临时PG/API/worker rig，不接真实凭据/付费供应商；另启显式FANCY_LOCAL_STAFF_FIXTURE=1时才预建qa-staff@example.invalid合成后台账号。通过真实核心OTP流程创建身份，再仅给该账号测试analyst/data_admin和模拟MFA；普通账号仍无角色/MFA，bootstrap登录显式204注销且数据库revoked_at回归证明撤销。
+- Web先在127.0.0.1:5174登录，保持API/数据库不变，停止Web Vite后用同端口启动admin，避免5175写Origin被拒；生产CSRF/认证规则不变。精确命令、000000合成验证码、餐厅/最小seed、正常关闭重置及未接OAuth网页/可用模型的边界见infra/README.md。
+- 仅infra/local-acceptance.ts、infra/README.md、infra/tests/local-acceptance.release.test.ts和本记录另批提交。真实PG本地入口最终2项通过（/private/tmp/fancy-local-rig-final.log）；此前整合release13通过，最终小补注销断言后仅重跑受影响2项，infra类型/lint通过。不会把夹具模拟MFA或空库指标当真实供应商/生产验收。
