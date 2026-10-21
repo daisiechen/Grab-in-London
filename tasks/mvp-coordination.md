@@ -383,3 +383,11 @@
 - 自有真实双连接：第一完成实际validate后持锁，第二在pg_stat_activity观察到meta FOR UPDATE等待，释放第一后两成功；activity/activity、activity/reset及双read共享并发3项与原privacy-review4项共7绿。旧QA spy若丢新增参数/强制两排他validate同时到达，须由QA调整调度观测位置并保原红，不能为迎合探针放松生产锁。
 - 根完整DB/API与core:check整合验证中，代码冻结后分别记录结果；不将新的统一写锁泛化为所有AI并发均无死锁。完整只读写入口审阅已另交QA临时清单，静态候选/真实证据与外部门槛明确区分。
 - 根最终DB133/API166、core:check及本轮文档结构3项通过（/private/tmp/fancy-f29-{db,api,check,documentation}.log）。QA证据仍并行更新，未重跑或冒称全77一致性绿；该批冻结后由QA补其完整验证。root沿用QA明确保留的提交窗口，仅两生产/自有测试文件与本记录提交，不混QA/research，正式SHA交QA独立复验。
+
+## QA-F30 删除屏障之后拒绝身份绑定（2026-10-21）
+
+- QA R158真实双HTTP队列：holder users FOR NO KEY UPDATE允许限流FK，DELETE先等用户UPDATE、LINK后等，放行后DELETE202且DELETING，旧LINK仍200并新增身份。R155/157强锁阻preflight为夹具错误，原红分别保留，不混作产品复现。
+- 仅identity/routes.ts与自有link-authorization.api.test.ts：票据无锁hint只确定锁集合，先排序user UPDATE并检查actor/shell ACTIVE，再锁票据权威重读绑定/目标/有效性与identity映射，消除与purge user→ticket相反锁序。锁后重验原session/family撤销、expiry/idle/kind/owner、原family proof及严格敏感认证期限；不改handoff/公共认证框架。
+- 自有回归捕获JS毫秒截断会放过同毫秒刚过期会话；仅本handler关闭锁阶段后读取完整DB clock text，票据/会话SQL期限使用同精确instant，认证年龄来自同instant。不靠sleep，真实PG固定时钟-1µs拒/+1µs允许确定性覆盖。
+- 修前真实删除先赢link200；修后新8+原identity26/native1共35API及原R158探针1绿。包括family撤销、票据/会话过期、双intent只消费一次、inactive shell不得迁移；最终两文件冻结，root整合API/check/Python后提交，正式关闭仍交QA固定SHA独立复验。
+- 根冻结完整API174及原QA队列probe1、core:check、自有文档结构3项通过（/private/tmp/fancy-f30-{api,original,check,documentation}.log）。全Python77两项QA证据WIP一致性失败（probe changed/报告R160等未同步）保留fancy-f30-python.log，不改QA证据或声称全绿；QA批收束后补其完整验证。QA55a7f5明确释放root窗口，本轮仅两生产/自有测试文件与本记录提交，研究与QA修改保留。

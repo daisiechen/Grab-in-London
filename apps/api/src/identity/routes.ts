@@ -291,7 +291,7 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
     const body = asBody<{ linkTicket: string; originalChallengeProof: string; appVerifier?: string }>(request);
     const { rows: [ticket] } = await tx.client.query(
       `SELECT id, client, user_id, binder_hash, app_challenge, provider, provider_state FROM auth_transactions
-        WHERE secret_hash = $1 AND kind = 'LINK' AND consumed_at IS NULL AND expires_at > clock_timestamp() FOR UPDATE`,
+        WHERE secret_hash = $1 AND kind = 'LINK' AND consumed_at IS NULL AND expires_at > clock_timestamp()`,
       [sha256Hex(body.linkTicket)],
     );
     if (!ticket || ticket.user_id !== auth.userId) throw new DomainError('LINK_TICKET_INVALID', 'This link request has expired. Please sign in again.');
@@ -299,26 +299,43 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
       ? (() => { const b = request.cookies[LINK_BINDER_COOKIE]; return !!b && sha256Hex(b) === ticket.binder_hash; })()
       : !!body.appVerifier && verifyPkce(body.appVerifier, ticket.app_challenge);
     if (!bound) throw new DomainError('LINK_TICKET_INVALID', 'Finish linking on the device where you started.');
-    const { rows: [proof] } = await tx.client.query<{consumed_at:Date}>(
-      `SELECT consumed_at FROM auth_transactions WHERE id = $1 AND result_family_id = $2 AND consumed_at IS NOT NULL`,
-      [body.originalChallengeProof, auth.familyId],
-    );
-    if (!proof) throw new DomainError('REAUTH_REQUIRED', 'Please sign in with your original method again to link this account.');
-
     const issuer: string = ticket.provider_state.issuer;
     const subject: string = ticket.provider_state.subject;
     const { rows: [mapped] } = await tx.client.query<{ user_id: string }>(`SELECT user_id FROM identities WHERE issuer = $1 AND subject = $2`, [issuer, subject]);
     const ids = mapped && mapped.user_id !== auth.userId ? [auth.userId, mapped.user_id] : [auth.userId];
-    await tx.locks.lock('users', ids, 'update');
+    const lockedUsers=await tx.locks.lock<{id:string;status:string}>('users', ids, 'update','id,status');
+    if(!lockedUsers.some(user=>user.id===auth.userId&&user.status==='ACTIVE'))throw new DomainError('AUTH_REQUIRED','Your session is no longer valid.');
+    if(mapped&&mapped.user_id!==auth.userId&&!lockedUsers.some(user=>user.id===mapped.user_id&&user.status==='ACTIVE'))throw new DomainError('ACCOUNT_LINK_CONFLICT','This account is unavailable for linking.');
+    // The hint determines the sorted user-lock set only. Lock tickets after users, as
+    // deletion/purge also takes users before touching authentication transactions.
+    const {rows:[currentTicket]}=await tx.client.query(`SELECT *,expires_at::text AS exact_expires_at FROM auth_transactions WHERE id=$1 AND secret_hash=$2 AND kind='LINK' FOR UPDATE`,[ticket.id,sha256Hex(body.linkTicket)]);
+    if(!currentTicket||currentTicket.consumed_at||currentTicket.user_id!==auth.userId)throw new DomainError('LINK_TICKET_INVALID','This link request has expired. Please sign in again.');
+    if(currentTicket.client!==ticket.client||currentTicket.provider!==ticket.provider||currentTicket.provider_state.issuer!==issuer||currentTicket.provider_state.subject!==subject)throw Object.assign(new Error('link target changed'),{code:'40001'});
+    const currentBound=currentTicket.binder_hash
+      ? (()=>{const b=request.cookies[LINK_BINDER_COOKIE];return !!b&&sha256Hex(b)===currentTicket.binder_hash;})()
+      : !!body.appVerifier&&verifyPkce(body.appVerifier,currentTicket.app_challenge);
+    if(!currentBound)throw new DomainError('LINK_TICKET_INVALID','Finish linking on the device where you started.');
     // Re-read under the user locks: the mapping must not have moved since discovery.
     const { rows: [recheck] } = await tx.client.query<{ user_id: string }>(`SELECT user_id FROM identities WHERE issuer = $1 AND subject = $2`, [issuer, subject]);
     if ((recheck?.user_id ?? null) !== (mapped?.user_id ?? null)) throw Object.assign(new Error('identity mapping changed'), { code: '40001' });
-    const now=await tx.effectiveNow();
-    assertFreshAuth(auth.authTime, now, 'Please sign in again to link this account.');
+    await tx.effectiveNow();
+    // Keep PostgreSQL microseconds for TTL predicates; JS Date alone would allow an
+    // already-expired credential later in the same millisecond to pass the SQL check.
+    const {rows:[authorizationClock]}=await tx.client.query<{instant:string}>(`SELECT clock_timestamp()::text AS instant`);
+    const authorizationInstant=authorizationClock!.instant;const now=new Date(authorizationInstant);
+    const {rows:[ticketTime]}=await tx.client.query<{valid:boolean}>(`SELECT $1::timestamptz>$2::timestamptz AS valid`,[currentTicket.exact_expires_at,authorizationInstant]);
+    if(!ticketTime!.valid)throw new DomainError('LINK_TICKET_INVALID','This link request has expired. Please sign in again.');
+    // Logout/refresh/deletion use the same user UPDATE barrier. Preflight authorization
+    // may have become obsolete while this sensitive write waited for that lock.
+    const {rows:[currentSession]}=await tx.client.query<{auth_time:Date}>(`SELECT f.auth_time FROM sessions s JOIN session_families f ON f.id=s.family_id WHERE s.id=$1 AND f.id=$2 AND f.user_id=$3 AND f.kind=$4 AND f.revoked_at IS NULL AND s.expires_at>$5 AND f.absolute_expires_at>$5 AND (s.idle_timeout IS NULL OR s.last_used_at+s.idle_timeout>$5)`,[auth.sessionId,auth.familyId,auth.userId,auth.kind,authorizationInstant]);
+    if(!currentSession)throw new DomainError('AUTH_REQUIRED','Your session is no longer valid.');
+    const {rows:[proof]}=await tx.client.query<{consumed_at:Date}>(`SELECT consumed_at FROM auth_transactions WHERE id=$1 AND result_family_id=$2 AND consumed_at IS NOT NULL`,[body.originalChallengeProof,auth.familyId]);
+    if(!proof)throw new DomainError('REAUTH_REQUIRED','Please sign in with your original method again to link this account.');
+    assertFreshAuth(currentSession.auth_time, now, 'Please sign in again to link this account.');
     assertFreshAuth(proof.consumed_at, now, 'Please sign in with your original method again to link this account.');
     if (!mapped) {
       await tx.client.query(`INSERT INTO identities (user_id, issuer, subject, provider, email_verified) VALUES ($1, $2, $3, $4, $5)`,
-        [auth.userId, issuer, subject, ticket.provider, ticket.provider_state.emailVerified === 'true']);
+        [auth.userId, issuer, subject, ticket.provider, currentTicket.provider_state.emailVerified === 'true']);
     } else if (mapped.user_id !== auth.userId) {
       if (!(await isProvisionalShell(tx.client, mapped.user_id))) throw new DomainError('ACCOUNT_LINK_CONFLICT', 'Both accounts already have activity, so they cannot be linked.');
       await tx.client.query(`UPDATE identities SET user_id = $1, linked_at = clock_timestamp() WHERE issuer = $2 AND subject = $3`, [auth.userId, issuer, subject]);
