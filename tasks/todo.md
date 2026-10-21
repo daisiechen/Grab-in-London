@@ -2,20 +2,32 @@
 
 > 执行状态说明（2026-10-21起，Claude为本表唯一写入者）：`docs/engineering/review-manifest.json`固定的是提交`4659fdb`中已共同审查的设计快照，不随执行更新；本表仅“状态”值与“完成记录”随实施演进，任务定义/依赖/文件/验收/验证保持快照原文，由`tests/test_core_plan.py`对照该提交校验。执行环境与命令见本表末“执行环境”。
 
+## 执行环境（本机，2026-10-21）
+
+- Node 24.19.0/pnpm 11.25.0不在系统PATH，使用Codex运行时内置版本；PostgreSQL 17.11为EDB官方macOS二进制（get.enterprisedb.com，签名Team 26QKX55P9K），解压到用户目录`~/.local/share/fancy-pg17`，无root、无Docker。`source infra/dev-env.sh`设置PATH与`FANCY_PG_BIN`；也可用`FANCY_TEST_DATABASE_URL`指向`infra/compose.yml`的本地Postgres17。测试库只接受loopback且版本必须17。
+- 验收启动：`source infra/dev-env.sh && pnpm install --frozen-lockfile && pnpm core:check && pnpm core:test:unit && pnpm core:test:db && pnpm core:test:release`；`core:test:api/web/ios`在对应切片落地前故意以退出码2失败。
+- 本机缺完整Xcode（仅CommandLineTools），iOS模拟器/真机构建阻塞G-IOS：需用户从App Store安装Xcode并`sudo xcode-select -s /Applications/Xcode.app`；有测试iPhone。
+
+## 用户外部决定与门槛现状（2026-10-21经Codex转达）
+
+- AI模型供应商：DeepSeek；费用硬上限人民币50元/月。技术包A03文件名`providers/openai.ts`为已审查快照原文，实施按用户决定用DeepSeek适配（`AI_PROVIDER=deepseek`），差异须由Codex在设计文档登记ADR，本表不改任务定义。
+- 托管：优先评估腾讯云首尔服务器（G-HOST）；尚无域名、托管数据库及Auth0/Google Maps/邮件/Apple/Expo账号 → G-AUTH/G-PLACES/G-MAIL/G-IOS/G-HOST/G-AI-*真实验收为blocked_external，本地实现与测试继续。
+- 流程：完成后先交Codex自测，通过后由「测试- MVP+AI」会话独立测试；docs/qa/为额外只读验收输入。
+
 初始全部任务为`todo`。依据[入口](plan.md)及技术包；列出的路径是目标写入范围，不是已存在文件。每片一个负责人，单次提交保持可验证；测试文件随对应切片创建。新证据文档若放docs/，同提交补docs/README.md。T03外部spike可与T02并行研究，写入/集成仍串行。
 
 ## T00 工作区与验证骨架
 
-- 状态：in_progress；依赖：无。
+- 状态：done；依赖：无。
 - 文件：`package.json`, `pnpm-workspace.yaml`, `infra/compose.yml`, `packages/testkit/`；相应测试就近创建。
 - 验收：建立独立core脚本和Postgres17测试DB；保留demo/admin原入口和锁文件；生产fixture配置启动即失败。
 - 验证：`core:check / core:test:release`。
 - 外部依赖/证据：无。
-- 完成记录：未实施；commit/命令结果/证据待执行者填写。
+- 完成记录：commit a1da509（2026-10-21）。命令：`source infra/dev-env.sh && pnpm core:check && pnpm core:test:unit && pnpm core:test:db && pnpm core:test:release`。结果：check通过（2包typecheck+infra、eslint 13文件、secret scan）；unit 11/11、db 4/4（真实PostgreSQL 17.11临时集群）、release 8/8；demo `test:domain` 63/63、`check:runtime`、`test:sites` 6/6及admin `test` 31/31仍通过，锁文件未改。证据：`packages/config/src/config.unit.test.ts`、`packages/testkit/src/postgres/server.db.test.ts`、`infra/tests/workspace.release.test.ts`。生产fixture拒绝由`check-env.ts`预检验证；API/worker入口在T02接入同一`loadConfig`。
 
 ## T01 请求响应schema与SDK
 
-- 状态：todo；依赖：T00。
+- 状态：in_progress；依赖：T00。
 - 文件：`packages/contracts/`, `packages/client/`；相应测试就近创建。
 - 验收：逐端点落实operationId/DTO/error/If-Match；OpenAPI与SDK由同schema生成；五页slug及survey枚举固定并验证未知字段拒绝。
 - 验证：`schema生成漂移+API contract tests`。
