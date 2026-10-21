@@ -57,13 +57,16 @@ export class Auth0IdentityProvider implements IdentityProvider {
     if (nonce !== null && payload.nonce !== nonce) throw new ProviderRejectedError('nonce mismatch');
     if (typeof payload.sub !== 'string') throw new ProviderRejectedError('missing sub');
     const email = typeof payload.email === 'string' ? payload.email.toLowerCase() : null;
+    // Auth0 documents amr:[...,"mfa"] as session MFA evidence. Only the verified token's
+    // well-formed claim counts: https://auth0.com/blog/preventing-destructive-actions-with-step-up-authentication/
+    const mfa = Array.isArray(payload.amr) && payload.amr.every((method) => typeof method === 'string') && payload.amr.includes('mfa');
     return {
       issuer: this.issuer,
       subject: payload.sub,
       provider,
       email,
       emailVerified: payload.email_verified === true,
-      amr: [provider === 'EMAIL' ? 'otp' : provider === 'APPLE' ? 'apple' : 'google'],
+      amr: [provider === 'EMAIL' ? 'otp' : provider === 'APPLE' ? 'apple' : 'google', ...(mfa ? ['mfa' as const] : [])],
     };
   }
 

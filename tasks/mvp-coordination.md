@@ -198,3 +198,10 @@
 - 修复严格绑定授权URL内真实provider state（不是stateTransactionId）与精确app回调，原code/state仅交现有HTTPS oauthCallback；仅其JSON结果能提供handoff或LINK_REQUIRED，URL中的handoff/linkTicket拒绝。正常登录才兑换handoff；两类再次认证重验证原family JSON session，再以同一删除intent/receipt提交。generation、userId及mounted校验防止退出/换账号/页面卸载后的响应继续删除；再次认证后仍要求reauth时不自动循环。
 - 冻结后根整合Web/后台219及iOS207测试通过（包含QA当前独立四项），全core:check通过；原生负责人另已完成iOS Hermes导出（/private/tmp/fancy-ios-f07-export及同名前缀日志）、类型/lint。根日志/private/tmp/fancy-f07-{clients,check}.log。仅原生七文件与本协调记录，不含QA/研究文件，不改server或共享契约；独立正式复验仍需固定修复SHA，真实Auth0/Google/Apple/设备仍未验收。
 - Claude对b76c593 CLI及本批原生源码继续只读交叉检查；其新增适配器MFA claim丢失与原生双证明链接缺口正分别核证，不将静态检查当测试通过，也不因已修F07宣称完整认证已闭环。
+
+## Auth0已验证MFA标记保留（2026-10-21）
+
+- e5d3542独立QA已固定b76c593验证F06及1080993验证F07，原失败保留，当前91 PASS /114 NOT_RUN /12 BLOCKED，无当前FAIL；JOURNEY001仅解除前置失败回NOT_RUN。b76c593 CI39581746626完成success。QA提交窗口明确释放后开发接手。
+- Claude只读发现Auth0适配器丢弃ID token已验证amr，根源码复核及真实RS256签名测试确认：旧版即使amr含mfa仍只回google，修前1失败。仅在jwtVerify签名/issuer/audience/expiry及nonce验证成功后，严格字符串数组内精确mfa才保留一次标记；缺失/字符串/混合数组/其它claim不授MFA，不授角色，不从客户端字段推断。
+- 11项签名JWT回归通过，完整unit243通过、API类型及限定lint通过；初次未升级沙箱的完整unit因CLI回环监听权限4失败，按所需本地端口权限复跑全243通过，未改测试或吞错。日志/private/tmp/fancy-f08-unit-verified.log。官方依据在适配器就近引用Auth0 step-up文档；真实租户MFA策略/claim仍需G-AUTH，供应商验收未关闭。
+- 另行核实双端身份链接仅存票据/提示而无正式双证明提交，不能继续称合同缺失。已分派Web与iOS负责人按现有§7补齐最小显式流程、TTL/取消/会话清除/冲突边界；属于另批进行中工作，不混入本适配器切片或F07关闭结论。
