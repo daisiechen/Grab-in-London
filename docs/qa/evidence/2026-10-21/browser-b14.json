@@ -1,0 +1,21 @@
+{
+  "observations": [
+    {
+      "id": "B14-O001",
+      "status": "passed",
+      "title": "Production create keeps confirmed North through empty search and unconfirmed South preview",
+      "testedCommit": "19d1fb9784c4727e664c026c4a0bd6c29eb7b5cb",
+      "environment": "Actual Web localhost5177/API61973 real isolated PG, fixture Places/OTP; no real providers",
+      "steps": [
+        "Confirm North by explicit Use restaurant; search zzzz-no-restaurant-qa gives No restaurants found",
+        "Old North remains selected; no manual add path",
+        "Search Fancy, preview South without confirming; old North remains selected in later Costs/Review",
+        "Publish synthetic min2/cap2 meal only after explicit reservation and final review checks; detail confirms North and host1/2"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/cross-create-no-results-keeps-venue.jpg",
+        "evidence/2026-10-21/cross-web-published.jpg"
+      ]
+    }
+  ]
+}

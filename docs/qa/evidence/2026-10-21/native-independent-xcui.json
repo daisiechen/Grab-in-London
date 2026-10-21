@@ -1,0 +1,59 @@
+{
+  "scope": "Independent QA real headless XCUITest, not DOM/Jest; synthetic local email/provider fixture only",
+  "device": "E770649D-8AED-4B78-AEFE-DB0BB85B4BB7 iOS27.0 simulator",
+  "formalApp19d": {
+    "binarySha256": "9f581849a4c7ee3f02fd66db83fcd48e8a7d5e29493d6ac26d30460c50e73e5a",
+    "hermesSha256": "02c5efa63fd3e6bbb6f7cf2694ce0b7985899edc5515f244e93e89e48c3159d0"
+  },
+  "runs": [
+    {
+      "id": "NATIVE-AUTH1",
+      "result": "passed",
+      "app": "formal5b source-equivalent Release",
+      "durationSeconds": 88.406,
+      "source": "native-auth-xcui.swift",
+      "assertions": [
+        "invalid email rejected",
+        "wrong OTP rejected",
+        "correct fixture OTP reaches profile setup"
+      ],
+      "localResultBundle": "/private/tmp/fancy-qa-native/Auth1.xcresult"
+    },
+    {
+      "id": "NATIVE-PROFILE2",
+      "result": "passed",
+      "app": "same5b",
+      "durationSeconds": 68.993,
+      "source": "native-profile-xcui.swift",
+      "assertions": [
+        "cold launch restores existing account",
+        "explicit synthetic profile and community consent completed",
+        "Discover reachable"
+      ],
+      "localResultBundle": "/private/tmp/fancy-qa-native/Profile2.xcresult"
+    },
+    {
+      "id": "NATIVE-APPLY3",
+      "result": "QA_SELECTOR_FAILURE",
+      "actual": "Combined card accessibility button exists; incorrect staticText selector failed before apply."
+    },
+    {
+      "id": "NATIVE-APPLY4",
+      "result": "UNRESOLVED",
+      "app": "formal19d Release",
+      "actual": "Cold session unavailable; public meal visible; no application submitted."
+    },
+    {
+      "id": "NATIVE-APPLY5",
+      "result": "UNRESOLVED",
+      "app": "formal19d Release",
+      "actual": "Server clock aligned to real UTC+20sec; Try again still unavailable. Developer safe diagnostic build pending isolated install. No product root cause asserted."
+    }
+  ],
+  "limits": [
+    "No full Web/iOS role-swapped journey passed",
+    "No native reinstall/AI RAM restart acceptance",
+    "No real auth provider or mail service",
+    "Raw xcresult/logs remain local; only synthetic steps and safe metadata published"
+  ]
+}

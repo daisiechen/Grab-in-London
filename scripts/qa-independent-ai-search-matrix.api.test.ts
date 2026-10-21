@@ -104,3 +104,10 @@ it.each(['FOUR','UNKNOWN','HIDDEN'])('QA-AI-012 %s comparison cannot return unau
  const m=await meal(),ids=kind==='FOUR'?[m,randomUUID(),randomUUID(),randomUUID()]:kind==='UNKNOWN'?[randomUUID()]:[m];if(kind==='HIDDEN')await db.pool.query("UPDATE users SET status='DELETING' WHERE id=$1",[hostId]);
  const h=await setup([plan('COMPARE',[],ids)]);const r=await h.run(h.turn('Compare these options',{explicitMealIds:ids}));expect(['FAILED','SUPERSEDED']).toContain(r.state);expect(r.result).toBeNull();
 });
+
+it('QA-AI-011 legitimate zero differs from unavailable provider; missing mandatory budget is rejected instead of advertised within budget',async()=>{
+ await meal(3500);const zero=await setup([plan('SEARCH',[patch('budgetMaxPence',100,'£1')]),plan('SEARCH',[patch('budgetMaxPence',null,'any budget','CLEAR')])],emptyPreferences(),async()=>{throw new Error('Controlled venue display outage');});const empty=await zero.run(zero.turn('under £1'));expect(empty.state).toBe('SUCCEEDED');expect(empty.result!.cards).toEqual([]);expect(empty.result!.replyText).toContain('No eligible public meals');
+ const broken=zero;const result=await broken.run(broken.turn('any budget',{appliedFilters:{bounds:{north:52,south:50,east:0,west:-1}}}));expect(result.state).toBe('FAILED');expect(result.result).toBeNull();
+ // Current approved Meal contract requires a known budget; do not manufacture an illegal unknown row as a searchable meal.
+ await expect(db.pool.query('UPDATE meals SET budget_max_pence=NULL WHERE host_id=$1',[hostId])).rejects.toMatchObject({code:'23502'});expect((await db.pool.query('SELECT count(*)::int n FROM meals WHERE budget_max_pence IS NULL')).rows[0].n).toBe(0);
+});

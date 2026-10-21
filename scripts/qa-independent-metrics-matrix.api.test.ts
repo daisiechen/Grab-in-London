@@ -1,14 +1,14 @@
 import {withTransaction} from '../apps/api/src/common/transaction.ts';
 /** QA round four: post-meal exact windows and independent message/consent permissions. */
-import {randomUUID} from 'node:crypto';
+import {randomBytes,randomUUID} from 'node:crypto';
 import {afterAll,beforeAll,expect,inject,it} from 'vitest';
 import {Browser,createHarness,json,type Harness} from '../apps/api/src/test/harness.ts';
 import {createGroupConversation,joinConversation} from '../apps/api/src/membership/intervals.ts';
 let h:Harness;
 beforeAll(async()=>{h=await createHarness(inject('pgServerUrl'));});afterAll(async()=>h.close());
 async function actor(){const b=new Browser(h);const {body}=await b.signInWithEmail(`${randomUUID()}@example.invalid`);return{b,id:body.data.session.user.id as string};}
-async function fixture(present=true){
- const host=await actor(),guest=await actor(),outsider=await actor();const end=new Date(Date.now()-8*86400_000),start=new Date(+end-7200_000),close=new Date(+start-3600_000);
+async function fixture(present=true,endAgoMs=8*86400_000){
+ const host=await actor(),guest=await actor(),outsider=await actor();const end=new Date(Date.now()-endAgoMs),start=new Date(+end-7200_000),close=new Date(+start-3600_000);
  const venue=(await h.db.pool.query("INSERT INTO venues(place_id,provider) VALUES($1,'fixture') RETURNING id",['fixture_'+randomUUID()])).rows[0].id;
  const m=(await h.db.pool.query("INSERT INTO meals(host_id,venue_ref,title,description,starts_at,closes_at,scheduled_end_at,start_local_date,start_local_time,start_offset,close_local_date,close_local_time,close_offset,minimum,capacity,budget_min_pence,budget_max_pence,languages,mood,booking_mode,terms_version,attempt_id,status,head) VALUES($1,$2,'QA finished table','Synthetic independent post-meal fixture description',$3,$4,$5,'2026-10-20','19:00',60,'2026-10-20','18:00',60,2,4,1000,2000,ARRAY['en'],'EASY_CONVERSATION','EXTERNAL_PAY_AT_VENUE','2026-10-21',$6,'COMPLETED',2) RETURNING id",[host.id,venue,start,close,end,randomUUID()])).rows[0].id as string;
  for(const[index,user]of[host,guest].entries()){await h.db.pool.query('INSERT INTO seat_events(meal_id,seq,user_id,type,effective_at,command_id) VALUES($1,$2,$3,$4,$5,$6)',[m,index+1,user.id,index?'GUEST_CONFIRMED':'HOST_CONFIRMED',new Date(+close-60_000),randomUUID()]);await h.db.pool.query("INSERT INTO start_roster(meal_id,user_id,source_revision_hash,starts_at) VALUES($1,$2,'qa-independent',$3)",[m,user.id,start]);if(present)await h.db.pool.query("INSERT INTO attendance_revisions(meal_id,subject_id,source,value,version,actor_id,created_at) VALUES($1,$2,'SELF','present',1,$2,$3)",[m,user.id,end]);}
@@ -90,4 +90,28 @@ it('QA-METRIC-018 real server deduplicates a session meal across new event IDs a
  const discovery=await b.request('GET','/v1/meals?limit=100',{headers:{'x-fancy-analytics':'enabled'}});expect(discovery.statusCode,discovery.body).toBe(200);const requestId=json(discovery).meta.requestId;
  const event=(mealId=f.m)=>({eventId:randomUUID(),type:'meal_impression',occurredAt:new Date().toISOString(),anonymousId:'qa-exposure',sessionId:'qa-exposure',appVersion:'web-mvp-1',properties:{mealId,discoveryRequestId:requestId,visibleRatio:.5,durationMs:1000,eligible:true,foreground:true}});
  const send=async(e:unknown)=>{const r=await b.request('POST','/v1/analytics/events',{body:batch([e])});expect(r.statusCode,r.body).toBe(200);return json(r).data.results[0];};expect((await send(event())).status).toBe('accepted');expect((await send(event())).status).toBe('duplicate');expect((await send(event(randomUUID()))).reason).toBe('not_eligible');expect((await h.db.pool.query("SELECT count(*)::int n FROM analytics_events WHERE type='meal_impression' AND properties->>'mealId'=$1",[f.m])).rows[0].n).toBe(1);
+});
+
+import {advanceLifecycle,type MealRow} from '../apps/api/src/meals/lifecycle.ts';
+it('QA-METRIC-008 QA-METRIC-014 classified then deleted third seat recomputes analysis peak2 without changing authoritative formation history',async()=>{
+ const f=await fixture(),third=await actor();await h.db.pool.query("UPDATE meals SET minimum=3,head=3,status='OPEN' WHERE id=$1",[f.m]);await h.db.pool.query("INSERT INTO seat_events(meal_id,seq,user_id,type,effective_at,command_id) SELECT id,3,$2,'GUEST_CONFIRMED',closes_at-interval '1 minute',$3 FROM meals WHERE id=$1",[f.m,third.id,randomUUID()]);
+ await withTransaction(h.db.pool,async tx=>{await tx.locks.lock('users',[f.host.id],'share');const [m]=await tx.locks.lock<MealRow>('meals',[f.m],'update','*');await tx.locks.lock('conversations',[f.group],'update');await advanceLifecycle(tx,m!,await tx.effectiveNow());});
+ const business=async()=>(await h.db.pool.query('SELECT id,kind,payload FROM business_events WHERE aggregate_id=$1 ORDER BY id',[f.m])).rows;const original=await business();expect(original.some(x=>x.kind==='meal.close')).toBe(true);
+ const seal=async()=>loadAdminSnapshot(h.db.pool,{snapshotId:await sealSourceSnapshot(h.db.pool,new Date('2026-01-01'))});
+ const peak=(data:Awaited<ReturnType<typeof seal>>)=>data.calculated.rows.formation!.find(r=>r.rowId===f.m)!;expect(peak(await seal()).attributes.peakConfirmed).toBe(3);
+ const staff=await analyst();await h.db.pool.query("INSERT INTO roles(user_id,role,granted_by) VALUES($1,'data_admin','qa-fixture')",[staff.id]);
+ const classify=async(value:string,version:string)=>{const r=await staff.b.request('PUT',`/v1/admin/classifications/${third.id}`,{headers:{'idempotency-key':randomUUID(),'if-match':`"${version}"`},body:{classification:value,reason:'Independent peak reconciliation fixture.'}});expect(r.statusCode,r.body).toBe(200);return json(r).data.revision;};
+ const v=await classify('test','0'),excluded=await seal();expect(peak(excluded)).toMatchObject({inNumerator:false,attributes:{peakConfirmed:2}});expect(await business()).toEqual(original);await classify('regular',v);expect(peak(await seal()).attributes.peakConfirmed).toBe(3);
+ const deletion=await third.b.request('POST','/v1/me/deletion',{headers:{'idempotency-key':randomUUID(),'if-match':'"1"'},body:{confirm:true,receiptToken:randomBytes(32).toString('base64url')}});expect(deletion.statusCode,deletion.body).toBe(202);const removed=await seal();expect(peak(removed)).toMatchObject({inNumerator:false,attributes:{peakConfirmed:2}});expect(removed.calculated.rows.attendance!.some(r=>r.attributes.userId===third.id)).toBe(false);expect(await business()).toEqual(original);
+});
+
+it('QA-ADMIN-004 actual CSV pins snapshot/asOf/filter/v4 and identifies synthetic fixture provenance without private fields',async()=>{
+ const a=await analyst(),id=await sealSourceSnapshot(h.db.pool,new Date('2026-01-01')),loaded=await loadAdminSnapshot(h.db.pool,{snapshotId:id});const csv=await exported(a.b,id,'feedback');expect(csv).toContain(`"snapshotId","${id}"`);expect(csv).toContain(`"asOf","${loaded.snapshot.asOf}"`);expect(csv).toContain(`"filterHash","${loaded.filterHash}"`);expect(csv).toContain('"definitionVersion","v4"');expect(csv).not.toMatch(/@example.invalid|messageBody|pair_consents|reconnect|private_contact/);expect(csv).toMatch(/fixture|synthetic|sample|示例|模拟/i);
+});
+it('QA-NOTIFY-003 actual group message private report and unilateral reconnect never put private body or choice in email records',async()=>{
+ const f=await fixture(true,3600_000),body='SYNTHETIC_MESSAGE_PRIVATE_5c91',details='SYNTHETIC_REPORT_PRIVATE_5c91';const sent=await f.host.b.request('POST',`/v1/conversations/${f.group}/messages`,{body:{body,clientMessageId:randomUUID()}});expect(sent.statusCode,sent.body).toBe(201);
+ const report=await f.host.b.request('POST','/v1/reports',{headers:{'idempotency-key':randomUUID()},body:{targetType:'USER',targetId:f.guest.id,reason:'private_concern',details}});expect(report.statusCode,report.body).toBe(201);
+ const selected=await f.host.b.request('PUT',`/v1/meals/${f.m}/reconnect/${f.guest.id}`,{headers:{'idempotency-key':randomUUID(),'if-match':'"0"'},body:{selected:true}});expect(selected.statusCode,selected.body).toBe(200);
+ const rows=(await h.db.pool.query('SELECT payload FROM outbox')).rows;expect(JSON.stringify(rows)).not.toContain(body);expect(JSON.stringify(rows)).not.toContain(details);expect(JSON.stringify(rows)).not.toMatch(/selected|reconnect|WAITING/);
+ expect((await h.db.pool.query('SELECT event_id,recipient_id,channel,count(*) n FROM outbox GROUP BY event_id,recipient_id,channel HAVING count(*)>1')).rows).toEqual([]);
 });

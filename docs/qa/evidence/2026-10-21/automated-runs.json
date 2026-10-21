@@ -16695,6 +16695,673 @@
           "failureSummary": "AssertionError: expected [ { …(27) } ] to have a length of +0 but got 1"
         }
       ]
+    },
+    {
+      "id": "R142",
+      "testedCommit": "19d1fb9784c4727e664c026c4a0bd6c29eb7b5cb",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-area-mapping.api.test.ts scripts/qa-independent-ai-search-matrix.api.test.ts (F27 production query pending in parallel; confirmation and assistant scopes fixed19d)",
+      "startedAt": "2026-10-21T19:22:08.779000+00:00",
+      "exitCode": 0,
+      "passed": 25,
+      "failed": 0,
+      "total": 25,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R142-T001",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-003 CLEAR survives later UNSET and suppresses saved budget ranking without mutating page filters",
+          "status": "passed",
+          "durationMs": 147.9240000000001
+        },
+        {
+          "id": "R142-T002",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-004 only table size changes while prior explicit area/date remain and capacity includes host",
+          "status": "passed",
+          "durationMs": 82.19858399999998
+        },
+        {
+          "id": "R142-T003",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-005 the soft winner at source position21 is ranked before truncating20 and cards cap3",
+          "status": "passed",
+          "durationMs": 58.85179199999993
+        },
+        {
+          "id": "R142-T004",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-006 unknown diet is excluded by vegan hard but remains eligible under Any with zero vegan soft match",
+          "status": "passed",
+          "durationMs": 115.85037499999999
+        },
+        {
+          "id": "R142-T005",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-007 Spanish alone clarifies before an explicit language Spanish becomes es",
+          "status": "passed",
+          "durationMs": 100.13824999999997
+        },
+        {
+          "id": "R142-T006",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-008 cheaper must offer a budget clarification without changing existing area/date/budget",
+          "status": "passed",
+          "durationMs": 67.14224999999988
+        },
+        {
+          "id": "R142-T007",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-046 PENDING exclusion and explicit own state explanation",
+          "status": "passed",
+          "durationMs": 64.80154199999993
+        },
+        {
+          "id": "R142-T008",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-046 CONFIRMED exclusion and explicit own state explanation",
+          "status": "passed",
+          "durationMs": 52.659124999999904
+        },
+        {
+          "id": "R142-T009",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-046 DECLINED exclusion and explicit own state explanation",
+          "status": "passed",
+          "durationMs": 27.876417000000174
+        },
+        {
+          "id": "R142-T010",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-046 WITHDRAWN exclusion and explicit own state explanation",
+          "status": "passed",
+          "durationMs": 55.811292000000094
+        },
+        {
+          "id": "R142-T011",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-047 exactly one unknown-soft candidate yields exactly that card and no invented IDs",
+          "status": "passed",
+          "durationMs": 26.560500000000047
+        },
+        {
+          "id": "R142-T012",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-048 no current explicit target clarifies in current input language: Explain this meal",
+          "status": "passed",
+          "durationMs": 38.36983299999997
+        },
+        {
+          "id": "R142-T013",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-048 no current explicit target clarifies in current input language: 解释这顿饭",
+          "status": "passed",
+          "durationMs": 63.603207999999995
+        },
+        {
+          "id": "R142-T014",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-049 APPLICATION length301 cannot produce transferable content",
+          "status": "passed",
+          "durationMs": 139.31270800000016
+        },
+        {
+          "id": "R142-T015",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-049 CREATE_TITLE length81 cannot produce transferable content",
+          "status": "passed",
+          "durationMs": 44.84262499999977
+        },
+        {
+          "id": "R142-T016",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-049 CREATE_DESCRIPTION length1001 cannot produce transferable content",
+          "status": "passed",
+          "durationMs": 38.87370800000008
+        },
+        {
+          "id": "R142-T017",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-049 group 1001 rejects; application300 group1000 create80/1000 remain within original editor limits",
+          "status": "passed",
+          "durationMs": 17.84400000000005
+        },
+        {
+          "id": "R142-T018",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-009 natural week Friday and next Friday are exact; default reply displays concrete seven-day London window",
+          "status": "passed",
+          "durationMs": 36.25845900000013
+        },
+        {
+          "id": "R142-T019",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-012 comparison only uses explicit three current public meals and never private profile or itinerary fields",
+          "status": "passed",
+          "durationMs": 50.61658299999999
+        },
+        {
+          "id": "R142-T020",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-012 FOUR comparison cannot return unauthorised or invented object facts",
+          "status": "passed",
+          "durationMs": 32.995750000000044
+        },
+        {
+          "id": "R142-T021",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-012 UNKNOWN comparison cannot return unauthorised or invented object facts",
+          "status": "passed",
+          "durationMs": 30.229166000000077
+        },
+        {
+          "id": "R142-T022",
+          "run": "R142",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-012 HIDDEN comparison cannot return unauthorised or invented object facts",
+          "status": "passed",
+          "durationMs": 21.44104100000004
+        },
+        {
+          "id": "R142-T023",
+          "run": "R142",
+          "path": "scripts/qa-independent-area-mapping.api.test.ts",
+          "title": "QA-DISCOVERY-009 unsorted overlap/shared border/vertex chooses lexical alpha; interior zeta and outside unknown",
+          "status": "passed",
+          "durationMs": 1.7494580000000042
+        },
+        {
+          "id": "R142-T024",
+          "run": "R142",
+          "path": "scripts/qa-independent-area-mapping.api.test.ts",
+          "title": "QA-DISCOVERY-009 holes exclude interior, MultiPolygon includes separate island and malformed/fixture-production input fails closed",
+          "status": "passed",
+          "durationMs": 0.8831250000000637
+        },
+        {
+          "id": "R142-T025",
+          "run": "R142",
+          "path": "scripts/qa-independent-area-mapping.api.test.ts",
+          "title": "QA-DISCOVERY-009 actual HTTP confirm maps only verified provider point and persists app-owned code/version without geometry/display",
+          "status": "passed",
+          "durationMs": 160.16916700000002
+        }
+      ]
+    },
+    {
+      "id": "R143",
+      "testedCommit": "19d1fb9784c4727e664c026c4a0bd6c29eb7b5cb",
+      "command": "pnpm --filter @fancy/ios test --runInBand --runTestsByPath src/qa-independent-layout-logging.test.tsx",
+      "startedAt": "2026-10-21T19:22:13.180000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R143-T001",
+          "run": "R143",
+          "path": "apps/ios/src/qa-independent-layout-logging.test.tsx",
+          "title": "QA-CODE-006 root sign-out cleanup log never receives raw credential/storage error content",
+          "status": "passed",
+          "durationMs": 21
+        }
+      ]
+    },
+    {
+      "id": "R144",
+      "testedCommit": "19d1fb9784c4727e664c026c4a0bd6c29eb7b5cb",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-metrics-matrix.api.test.ts -t QA-METRIC-008 QA-METRIC-014",
+      "startedAt": "2026-10-21T19:23:25.008000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R144-T001",
+          "run": "R144",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-008 QA-METRIC-014 classified then deleted third seat recomputes analysis peak2 without changing authoritative formation history",
+          "status": "failed",
+          "durationMs": 153.013417,
+          "failureSummary": "AssertionError: {\"error\":{\"code\":\"VALIDATION_FAILED\",\"message\":\"Some fields need attention.\",\"fieldErrors\":{\"body.receiptToken\":\"must match pattern \\\"^[A-Za-z0-9_-]{43}$\\\"\"}},\"meta\":{\"requestId\":\"ad3b68e2-7941-460a-ab92-4dc0bc392a08\",\"serverNow\":\"2026-10-21T19:23:26.303Z\"}}: expected 422 to be 202 // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "R145",
+      "testedCommit": "15934c21d2bdb35c8ab373b0197abb213e873840",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-discovery-scan.api.test.ts",
+      "startedAt": "2026-10-21T19:23:39.802000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R145-T001",
+          "run": "R145",
+          "path": "scripts/qa-independent-discovery-scan.api.test.ts",
+          "title": "QA-DISCOVERY-007 500 ineligible candidates yield continuation rather than scanning beyond the cap or falsely ending",
+          "status": "passed",
+          "durationMs": 276.511708
+        }
+      ]
+    },
+    {
+      "id": "R146",
+      "testedCommit": "15934c21d2bdb35c8ab373b0197abb213e873840",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-metrics-matrix.api.test.ts -t QA-METRIC-008 QA-METRIC-014",
+      "startedAt": "2026-10-21T19:24:26.124000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R146-T001",
+          "run": "R146",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-METRIC-008 QA-METRIC-014 classified then deleted third seat recomputes analysis peak2 without changing authoritative formation history",
+          "status": "passed",
+          "durationMs": 162.163541
+        }
+      ]
+    },
+    {
+      "id": "R147",
+      "testedCommit": "15934c21d2bdb35c8ab373b0197abb213e873840",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-discovery-scan.api.test.ts",
+      "startedAt": "2026-10-21T19:25:01.549000+00:00",
+      "exitCode": 1,
+      "passed": 1,
+      "failed": 1,
+      "total": 2,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R147-T001",
+          "run": "R147",
+          "path": "scripts/qa-independent-discovery-scan.api.test.ts",
+          "title": "QA-DISCOVERY-007 500 ineligible candidates yield continuation rather than scanning beyond the cap or falsely ending",
+          "status": "passed",
+          "durationMs": 273.4647500000001
+        },
+        {
+          "id": "R147-T002",
+          "run": "R147",
+          "path": "scripts/qa-independent-discovery-scan.api.test.ts",
+          "title": "QA-DISCOVERY-007 public list/detail work under PG read-only mode which rejects writes and row-locking reads",
+          "status": "failed",
+          "durationMs": 8.507417000000032,
+          "failureSummary": "error: cannot execute UPDATE in a read-only transaction"
+        }
+      ]
+    },
+    {
+      "id": "R148",
+      "testedCommit": "15934c21d2bdb35c8ab373b0197abb213e873840",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-contract-audit.api.test.ts",
+      "startedAt": "2026-10-21T19:26:01.529000+00:00",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "total": 2,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R148-T001",
+          "run": "R148",
+          "path": "scripts/qa-independent-contract-audit.api.test.ts",
+          "title": "QA-CODE-004 every declared operation is registered and every idempotent write requires authenticated server identity",
+          "status": "passed",
+          "durationMs": 1.5020000000000664
+        },
+        {
+          "id": "R148-T002",
+          "run": "R148",
+          "path": "scripts/qa-independent-contract-audit.api.test.ts",
+          "title": "QA-CODE-004 every protected HTTP operation rejects an unauthenticated caller without stack SQL or raw errors",
+          "status": "passed",
+          "durationMs": 97.33620799999994
+        }
+      ]
+    },
+    {
+      "id": "R149",
+      "testedCommit": "15934c21d2bdb35c8ab373b0197abb213e873840",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-discovery-scan.api.test.ts",
+      "startedAt": "2026-10-21T19:26:56.643000+00:00",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "total": 2,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R149-T001",
+          "run": "R149",
+          "path": "scripts/qa-independent-discovery-scan.api.test.ts",
+          "title": "QA-DISCOVERY-007 500 ineligible candidates yield continuation rather than scanning beyond the cap or falsely ending",
+          "status": "passed",
+          "durationMs": 277.04541600000005
+        },
+        {
+          "id": "R149-T002",
+          "run": "R149",
+          "path": "scripts/qa-independent-discovery-scan.api.test.ts",
+          "title": "QA-DISCOVERY-007 public list/detail work under PG read-only mode which rejects writes and row-locking reads",
+          "status": "passed",
+          "durationMs": 199.45462499999985
+        }
+      ]
+    },
+    {
+      "id": "R150",
+      "testedCommit": "15934c21d2bdb35c8ab373b0197abb213e873840",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-tonight.api.test.ts",
+      "startedAt": "2026-10-21T19:27:53.962000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R150-T001",
+          "run": "R150",
+          "path": "scripts/qa-independent-tonight.api.test.ts",
+          "title": "QA-AI-010 fixed London19:00 only future today18-23:59 eligible meals; DST ambiguous/nonexistent times never silently submit",
+          "status": "passed",
+          "durationMs": 33.552459
+        }
+      ]
+    },
+    {
+      "id": "R151",
+      "testedCommit": "15934c21d2bdb35c8ab373b0197abb213e873840",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-search-matrix.api.test.ts -t QA-AI-011",
+      "startedAt": "2026-10-21T19:28:33.120000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R151-T001",
+          "run": "R151",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-011 legitimate zero differs from unavailable provider; missing mandatory budget is rejected instead of advertised within budget",
+          "status": "failed",
+          "durationMs": 46.920458999999994,
+          "failureSummary": "AssistantError: AI_CONFLICT"
+        }
+      ]
+    },
+    {
+      "id": "R152",
+      "testedCommit": "15934c21d2bdb35c8ab373b0197abb213e873840",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-metrics-matrix.api.test.ts -t QA-ADMIN-004|QA-NOTIFY-003",
+      "startedAt": "2026-10-21T19:29:23.021000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 2,
+      "total": 2,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R152-T001",
+          "run": "R152",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-ADMIN-004 actual CSV pins snapshot/asOf/filter/v4 and identifies synthetic fixture provenance without private fields",
+          "status": "failed",
+          "durationMs": 121.53945800000008,
+          "failureSummary": "AssertionError: expected '\"snapshotId\",\"17747014-2a23-49cd-ba83…' to match /fixture|synthetic|sample|示例|模拟/i"
+        },
+        {
+          "id": "R152-T002",
+          "run": "R152",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-NOTIFY-003 actual group message private report and unilateral reconnect never put private body or choice in email records",
+          "status": "failed",
+          "durationMs": 23.000875000000065,
+          "failureSummary": "AssertionError: {\"error\":{\"code\":\"VALIDATION_FAILED\",\"message\":\"Some fields need attention.\",\"fieldErrors\":{\"body.reason\":\"must be equal to one of the allowed values\"}},\"meta\":{\"requestId\":\"c33773dc-e69d-4035-88df-9b4ee774ef42\",\"serverNow\":\"2026-10-21T19:29:24.311Z\"}}: expected 422 to be 201 // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "R153",
+      "testedCommit": "e73114433746db73001fbc6b975ef1d44a0e4cd6",
+      "command": "vitest independent AI011 and NOTIFY003 targeted",
+      "startedAt": "2026-10-21T19:30:19.743000+00:00",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "total": 2,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R153-T001",
+          "run": "R153",
+          "path": "scripts/qa-independent-ai-search-matrix.api.test.ts",
+          "title": "QA-AI-011 legitimate zero differs from unavailable provider; missing mandatory budget is rejected instead of advertised within budget",
+          "status": "passed",
+          "durationMs": 48.97162499999996
+        },
+        {
+          "id": "R153-T002",
+          "run": "R153",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-NOTIFY-003 actual group message private report and unilateral reconnect never put private body or choice in email records",
+          "status": "passed",
+          "durationMs": 134.155167
+        }
+      ]
+    },
+    {
+      "id": "R154",
+      "testedCommit": "e73114433746db73001fbc6b975ef1d44a0e4cd6",
+      "command": "vitest independent same-session real PG dual validation barrier original red",
+      "startedAt": "2026-10-21T19:44:42.795000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R154-T001",
+          "run": "R154",
+          "path": "scripts/qa-independent-session-lock-upgrade.api.test.ts",
+          "title": "QA-CODE-003 QA-CODE-007 two same-session activities do not deadlock on validated SHARE to UPDATE conversion",
+          "status": "failed",
+          "durationMs": 1022.690709,
+          "failureSummary": "AssertionError: expected [ 'OK', { code: '40P01', …(1) } ] to deeply equal [ 'OK', 'OK' ]"
+        }
+      ]
+    },
+    {
+      "id": "R155",
+      "testedCommit": "e73114433746db73001fbc6b975ef1d44a0e4cd6",
+      "command": "vitest independent queued deletion link candidate; QA observer setup failure",
+      "startedAt": "2026-10-21T19:46:10.095000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R155-T001",
+          "run": "R155",
+          "path": "scripts/qa-independent-link-deletion-race.api.test.ts",
+          "title": "QA-CODE-004 actual accepted deletion wins queued user lock before link and prevents a new identity link",
+          "status": "failed",
+          "durationMs": 1119.7626659999999,
+          "failureSummary": "Error: real user lock waiters not observed"
+        }
+      ]
+    },
+    {
+      "id": "R156",
+      "testedCommit": "8ae96efea9288f3b96131e10131a8255e7324e43",
+      "command": "vitest independent AI session exclusive lock wait and original CSV provenance retest",
+      "startedAt": "2026-10-21T19:51:14.912000+00:00",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "total": 2,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R156-T001",
+          "run": "R156",
+          "path": "scripts/qa-independent-metrics-matrix.api.test.ts",
+          "title": "QA-ADMIN-004 actual CSV pins snapshot/asOf/filter/v4 and identifies synthetic fixture provenance without private fields",
+          "status": "passed",
+          "durationMs": 122.49433399999998
+        },
+        {
+          "id": "R156-T002",
+          "run": "R156",
+          "path": "scripts/qa-independent-session-lock-upgrade.api.test.ts",
+          "title": "QA-CODE-003 QA-CODE-007 two same-session activities do not deadlock on validated SHARE to UPDATE conversion",
+          "status": "passed",
+          "durationMs": 14.71633300000002
+        }
+      ]
+    },
+    {
+      "id": "R157",
+      "testedCommit": "8ae96efea9288f3b96131e10131a8255e7324e43",
+      "command": "vitest queued deletion link candidate; diagnosed FK rate-limit lock setup failure",
+      "startedAt": "2026-10-21T19:51:56.697000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R157-T001",
+          "run": "R157",
+          "path": "scripts/qa-independent-link-deletion-race.api.test.ts",
+          "title": "QA-CODE-004 actual accepted deletion wins queued user lock before link and prevents a new identity link",
+          "status": "failed",
+          "durationMs": 1069.0617080000002,
+          "failureSummary": "Error: real user lock waiters not observed [{\"state\":\"idle in transaction\",\"wait_event_type\":\"Client\",\"query\":\"SELECT id FROM users WHERE id=$1 FOR UPDATE\"},{\"state\":\"active\",\"wait_event_type\":\"Lock\",\"query\":\"WITH tick AS (SELECT clock_timestamp() AS now), win AS (SELECT to_timestamp(floor(extract(epoch FROM now)/$3)*$3) AS start, now FROM tick), counted AS (\\n INSERT INTO api_rate_limits(actor_id,bucket,window_start,count) SELECT $1,$2,start,1 FROM win\\n ON CONFLICT(actor_id,bucket,window_start) DO UPDATE SET count=api_rate_limits.count+1 RETURNING count)\\n SELECT counted.count, greatest(1,ceil(extract(epoch FROM (win.start+make_interval(secs=>$3)-win.now))))::int AS retry FROM counted,win\"}]"
+        }
+      ]
+    },
+    {
+      "id": "R158",
+      "testedCommit": "8ae96efea9288f3b96131e10131a8255e7324e43",
+      "command": "vitest independent real deletion first then link queued behind user NO KEY UPDATE lock; original F30 red",
+      "startedAt": "2026-10-21T19:52:26.091000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R158-T001",
+          "run": "R158",
+          "path": "scripts/qa-independent-link-deletion-race.api.test.ts",
+          "title": "QA-CODE-004 actual accepted deletion wins queued user lock before link and prevents a new identity link",
+          "status": "failed",
+          "durationMs": 339.85533399999986,
+          "failureSummary": "AssertionError: {\"data\":{\"identities\":[{\"provider\":\"EMAIL\",\"linkedAt\":\"2026-10-21T19:52:28.896Z\"},{\"provider\":\"GOOGLE\",\"linkedAt\":\"2026-10-21T19:52:29.008Z\"}]},\"meta\":{\"requestId\":\"855ef0e9-d1ce-4b30-b3b2-4f74d0278e56\",\"serverNow\":\"2026-10-21T19:52:29.009Z\"}}: expected [ 401, 403 ] to include 200"
+        }
+      ]
+    },
+    {
+      "id": "R159",
+      "testedCommit": "8ae96efea9288f3b96131e10131a8255e7324e43",
+      "command": "vitest independent tonight DST area mapping and route contract regression; removed unused test helper only",
+      "startedAt": "2026-10-21T19:55:01.795000+00:00",
+      "exitCode": 0,
+      "passed": 6,
+      "failed": 0,
+      "total": 6,
+      "suiteFiles": 3,
+      "assertions": [
+        {
+          "id": "R159-T001",
+          "run": "R159",
+          "path": "scripts/qa-independent-area-mapping.api.test.ts",
+          "title": "QA-DISCOVERY-009 unsorted overlap/shared border/vertex chooses lexical alpha; interior zeta and outside unknown",
+          "status": "passed",
+          "durationMs": 0.8393750000000182
+        },
+        {
+          "id": "R159-T002",
+          "run": "R159",
+          "path": "scripts/qa-independent-area-mapping.api.test.ts",
+          "title": "QA-DISCOVERY-009 holes exclude interior, MultiPolygon includes separate island and malformed/fixture-production input fails closed",
+          "status": "passed",
+          "durationMs": 0.42125000000010004
+        },
+        {
+          "id": "R159-T003",
+          "run": "R159",
+          "path": "scripts/qa-independent-area-mapping.api.test.ts",
+          "title": "QA-DISCOVERY-009 actual HTTP confirm maps only verified provider point and persists app-owned code/version without geometry/display",
+          "status": "passed",
+          "durationMs": 67.81120799999997
+        },
+        {
+          "id": "R159-T004",
+          "run": "R159",
+          "path": "scripts/qa-independent-contract-audit.api.test.ts",
+          "title": "QA-CODE-004 every declared operation is registered and every idempotent write requires authenticated server identity",
+          "status": "passed",
+          "durationMs": 1.7343329999999924
+        },
+        {
+          "id": "R159-T005",
+          "run": "R159",
+          "path": "scripts/qa-independent-contract-audit.api.test.ts",
+          "title": "QA-CODE-004 every protected HTTP operation rejects an unauthenticated caller without stack SQL or raw errors",
+          "status": "passed",
+          "durationMs": 114.01549999999997
+        },
+        {
+          "id": "R159-T006",
+          "run": "R159",
+          "path": "scripts/qa-independent-tonight.api.test.ts",
+          "title": "QA-AI-010 fixed London19:00 only future today18-23:59 eligible meals; DST ambiguous/nonexistent times never silently submit",
+          "status": "passed",
+          "durationMs": 53.102832999999976
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -16760,12 +17427,17 @@
     "tests/test_native_bundle_probe.py": "f19f61699e3328c6433fac86de0a3bfc1ee360649f7f1b2d9aeffc3d44aa58e9",
     "scripts/qa-ai-browser-fixture.ts": "01c817782db9839b17904db9035052ef09bbf0c50b1269ef0a942a61200ffccc",
     "scripts/qa-inspect-ai-writes.py": "4568f5c5325eb40e1895fefc49ef87fb18974ac3a5ce1ac4df2f74189ba80857",
-    "scripts/qa-independent-ai-search-matrix.api.test.ts": "05ab3752979936f46c7459c1c5f9dd4fba508c4e3a4ed4bd5c41f20a4b1e7927",
+    "scripts/qa-independent-ai-search-matrix.api.test.ts": "9a2da2d8836fddc5b3f6939079cdaa80f49f9d9318a3ea9730ffcd5182210bdf",
     "scripts/qa-independent-support-propagation.api.test.ts": "08d793622ea3d9dbfba5862cd44ba08e3c917fd918bad8c8a6a1d0397b601ad3",
-    "scripts/qa-independent-metrics-matrix.api.test.ts": "fdbbd065fce173aafaf61f8c2a280293ed2901894c5c4367e9002597fefa6921",
+    "scripts/qa-independent-metrics-matrix.api.test.ts": "8f7a0227193c66f185ae05c6576d1df2b90ebd1648c7b31b3ef7eb7e55042224",
     "scripts/qa-independent-my-meals.api.test.ts": "438ee4cf061fcae4b28e2ebf4c0b38af0fab92206e2d19e052fe50da989ffc94",
     "scripts/qa-independent-account-isolation.api.test.ts": "46eedbf8beddacf0eb98f6a4244fc3b8d94655c6e3a90506689034d94865a6a3",
-    "scripts/qa-independent-discovery-scan.api.test.ts": "a73fd370677141e21e0b828df5bf0523b09226876b36a0266cba2bc57344d827"
+    "scripts/qa-independent-discovery-scan.api.test.ts": "e3a3274f73122eec1ebdbc94dc013980b7ecf97a5c17d2c77ec6edb759b8fd39",
+    "scripts/qa-independent-area-mapping.api.test.ts": "ae4561ac8aa6e1a302502a7ade316eb3f6860ee81c3f67303210c5b2c911d39f",
+    "scripts/qa-independent-contract-audit.api.test.ts": "a7879e3a133341ea90d1f9e770cdba2c8361a81172ab58433e1f064c5be7eca6",
+    "scripts/qa-independent-tonight.api.test.ts": "27a0b42b3be4701307dcaaeb9a285a867e897b15057ef450284852f499040d79",
+    "scripts/qa-independent-session-lock-upgrade.api.test.ts": "3386ec283d304a28660123e9082dbb94d7618fe3caf38321d045deb5ed7f8386",
+    "scripts/qa-independent-link-deletion-race.api.test.ts": "c7c81eaab7b91413cb24d340b47e342789cacc782ad796d3dcf9cb97219c359c"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console. R68/R69 valid TestIDP OAuth callback200 captured actual non-silent child stdout only in parent RAM. Metadata contains only leak booleans, never credential strings or raw logs. R69 aggregates code/state/email checks without stopping at the first boolean failure. R72 mutates semantic OpenAPI/SDK artifacts only in an owned temporary contracts copy, requires the real checker fail1 and restore0, and verifies original workspace bytes untouched. Static cases remain NOT_RUN until fixed committed handoff recheck.",
   "runtimeSnapshotVerification": {

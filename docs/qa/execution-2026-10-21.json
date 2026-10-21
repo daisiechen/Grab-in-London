@@ -12,15 +12,15 @@
     "mail": "test outbox, no real recipient",
     "ai": "mock, no real provider calls",
     "browser": "Chrome local production Web 127.0.0.1:5174; sequential account switch, not two devices",
-    "ios": "Jest only, no native device acceptance",
-    "nativeRuntimeCheck20261021": "Read-only simctl outside sandbox confirms installed iOS27.0/27.1 runtimes and available shutdown iPhone simulators. Sandboxed service refusal is not missing-runtime proof. Build/launch and real native journey remain unexecuted.",
+    "ios": "Actual headless Release XCUITest on isolated iOS27.0 simulator: OTP/profile success; formal19d restore investigation ongoing. No complete native journey claim.",
+    "nativeRuntimeCheck20261021": "Available iOS27.0/27.1 runtimes and dedicated simulator; actual build/install/launch and XCTest interact successfully. Historical empty device/GUI assumptions superseded.",
     "nativeRuntimeEvidence20261021": "Native owner actual headless Release install/launch and first-screen evidence independently reviewed by QA, F20 exact red874/fixed9df, F21 formal5b source-equivalent AppRoot and Metro matched. No independent native taps or complete role journey; root complete5b archive rebuild pending when reviewed."
   },
   "counts": {
-    "NOT_RUN": 29,
-    "PASS": 172,
-    "FAIL": 4,
-    "BLOCKED": 12
+    "NOT_RUN": 23,
+    "PASS": 182,
+    "FAIL": 1,
+    "BLOCKED": 11
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
@@ -52,7 +52,9 @@
     "browserObservationsB12": "evidence/2026-10-21/browser-b12.json",
     "browserObservationsB13": "evidence/2026-10-21/browser-b13.json",
     "browserObservationsCodeReview": "evidence/2026-10-21/code-review-observations.json",
-    "nativeFormalReview": "evidence/2026-10-21/native-formal-5b-review.json"
+    "nativeFormalReview": "evidence/2026-10-21/native-formal-5b-review.json",
+    "browserObservationsB14": "evidence/2026-10-21/browser-b14.json",
+    "nativeIndependentXcui": "evidence/2026-10-21/native-independent-xcui.json"
   },
   "cases": [
     {
@@ -2972,8 +2974,10 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "B14-O001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T071",
         "R1-T072",
@@ -3024,13 +3028,13 @@
         "R2-T147",
         "R2-T148"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "无手动新增假餐厅入口",
-        "旧确认选择保留",
-        "未确认候选不可发布"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：先选现有示例餐厅 → 搜索不存在名称 → 关闭搜索。当前仍缺：无手动新增假餐厅入口；旧确认选择保留；未确认候选不可发布。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+      "remainingExpected": [],
+      "actual": "Actual production create UI fixture search: empty query result retains old confirmed venue, no manual-add bypass; candidate preview does not change confirmed selection until explicit use. Published detail still North."
     },
     {
       "id": "QA-DISCOVERY-006",
@@ -3112,9 +3116,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": [
-        "R141-T001"
+        "R149-T001",
+        "R149-T002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T071",
@@ -3166,13 +3171,13 @@
         "R2-T147",
         "R2-T148"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "到期不可申请",
-        "GET无写和行锁",
-        "≤100页/≤500扫描且nextCursor不谎报结束"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "Independent reproduced/static corroborated defect QA-F27 handed to original development owner; local fix/targeted independent retest pending. No external credential dependency for this defect.",
+      "remainingExpected": [],
+      "actual": "F27 formal15934 fixed. Real501-candidate continuation obeys500 cap; public list/detail execute under true PG read-only connection, with negative UPDATE/FOR UPDATE controls rejected25006; expiry has no APPLY/business writes.",
       "defectIds": [
         "QA-F27"
       ]
@@ -3258,9 +3263,11 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": [
-        "CR1-O001"
+        "R142-T023",
+        "R142-T024",
+        "R142-T025"
       ],
       "relatedAutomatedAssertions": [
         "R1-T071",
@@ -3312,12 +3319,12 @@
         "R2-T147",
         "R2-T148"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "固定areaCode排序决定唯一归属",
-        "无匹配unknown不默认Soho"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "Independent reproduced/static corroborated defect QA-F24 handed to original development owner; local fix/targeted independent retest pending. No external credential dependency for this defect.",
+      "remainingExpected": [],
+      "actual": "F24 formal8c3 coordinate mapper: lexical boundary/overlap, hole/MultiPolygon, unknown/invalid and actual HTTP confirmed point persistence independently verified. Licensed real London geometry remains external G-PLACES.",
       "defectIds": [
         "QA-F24"
       ]
@@ -7377,8 +7384,11 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R125-T003",
+        "R146-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -7418,13 +7428,13 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "M可招募达标但取消",
-        "N测试成员不能撑成团",
-        "不把招募达标叫实际举行"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：M开始前peak3/min3后来取消 → N正式host+2测试成员。尚缺逐项证据：M可招募达标但取消；N测试成员不能撑成团；不把招募达标叫实际举行。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent handwritten formation/cancellation facts plus actual3-seat lifecycle; classified third excluded in analysis peak2 but authoritative business formation stays unchanged."
     },
     {
       "id": "QA-METRIC-009",
@@ -7726,8 +7736,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R146-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -7767,13 +7779,13 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "分析peak=2",
-        "用户贡献从分子分母退出",
-        "原业务成团事实不改"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：正式3席/min3已发生业务达标 → 删除1用户 → 新快照。尚缺逐项证据：分析peak=2；用户贡献从分子分母退出；原业务成团事实不改。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Actual deletion202 after3-seat formation: newly sealed snapshot removes user contribution and recomputes analysis peak2; authoritative lifecycle/business formation remains unchanged."
     },
     {
       "id": "QA-METRIC-015",
@@ -8329,9 +8341,9 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
-        "B10-T002"
+        "R156-T001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T170",
@@ -8415,13 +8427,13 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "snapshot/asOf/filter/definitionVersion一致",
-        "fixture明确",
-        "无消息/单方再约/联系方式"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：筛选后导出CSV并核对图表。当前仍缺：snapshot/asOf/filter/definitionVersion一致；fixture明确；无消息/单方再约/联系方式。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations."
+      "remainingExpected": [],
+      "actual": "F28 formale731 actual CSV pins snapshot/asOf/filterHash/v4, server-derived synthetic fixture provenance and no private body/contact/one-sided reconnect fields."
     },
     {
       "id": "QA-API-001",
@@ -9312,15 +9324,15 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
-        "R98-T002",
+        "R104-T001",
+        "R104-T002",
+        "R104-T003",
         "R104-T004",
         "R104-T005",
         "R104-T006",
-        "R104-T001",
-        "R104-T002",
-        "R104-T003"
+        "R153-T002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T417",
@@ -9378,12 +9390,12 @@
         "R3-T028",
         "R3-T029"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "邮件无申请/消息/举报正文/单方再约",
-        "通知唯一event+recipient+channel"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "申请正文随机marker在通知及outbox中不存在；未同轮覆盖举报/私聊/单方再约正文和三元唯一约束。 R98 private body injected into disposable outbox rejected DEAD/INVALID_PAYLOAD with provider dispatch0 and no body in captured warn/error. Full producer matrix and event-recipient-channel uniqueness remain pending. R104 actual matrix outbox refs contain only IDs and event-recipient-channel unique; raw chat body never emailed, invalid raw body rejected, safe dead-letter events verified R105. Full one-sided reconnect/report-content producer privacy scenario remains not independently complete; NOT_RUN retained."
+      "remainingExpected": [],
+      "actual": "Actual outbox and production mail matrix: no private application/chat/report text or one-sided reconnect choice in email; unique event-recipient-channel records. Test outbox only, not real provider delivery."
     },
     {
       "id": "QA-AI-001",
@@ -10381,9 +10393,9 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": [
-        "R131-T001"
+        "R142-T018"
       ],
       "relatedAutomatedAssertions": [
         "R1-T094",
@@ -10491,12 +10503,12 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "周五10-23、下周五10-30",
-        "默认7日10-19到10-25且显示日期窗口"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "Independent reproduced/static corroborated defect QA-F25 handed to original development owner; local fix/targeted independent retest pending. No external credential dependency for this defect.",
+      "remainingExpected": [],
+      "actual": "F25 formalf633 same effective seven London calendar dates used for actual search and explicit response bounds; natural Friday/next Friday replay green.",
       "defectIds": [
         "QA-F25"
       ]
@@ -10507,8 +10519,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R150-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -10615,12 +10629,12 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "仅当日18:00—23:59未来场",
-        "歧义先选偏移/不存在报错，无可提交错误时点"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "本地生产实现尚需实际执行：冻结今晚18点后 → 输入今晚 → 再输入秋季重复01:30/春季不存在时间。尚缺逐项证据：仅当日18:00—23:59未来场；歧义先选偏移/不存在报错，无可提交错误时点。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Actual Node and PG fixed19:00 London clock: only future same-day18–23:59 eligible candidates; DST ambiguous time requires explicit offset and nonexistent time rejected. API/DB scope, not native picker."
     },
     {
       "id": "QA-AI-011",
@@ -10628,8 +10642,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R153-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -10736,13 +10752,13 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "0说明无匹配",
-        "失败显示不可用不谎称0结果",
-        "未知金额不称预算内"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：hard预算不足返回0 → 注入discovery失败 → 未知金额场。尚缺逐项证据：0说明无匹配；失败显示不可用不谎称0结果；未知金额不称预算内。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Controlled provider real PG: legitimate zero displayed as zero; provider unavailable fails without fabricated zero; legal persisted meals require non-null mandatory budget (23502 rejects invalid unknown)."
     },
     {
       "id": "QA-AI-012",
@@ -13665,7 +13681,7 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "BLOCKED",
+      "status": "NOT_RUN",
       "evidence": [],
       "relatedAutomatedAssertions": [
         "R1-T094",
@@ -13780,7 +13796,7 @@
         "重装先清旧token",
         "RAM丢失410不从日志恢复，未发字保留"
       ],
-      "actual": "原生实测仍缺。开发已核验用户完成Xcode首次配置，checkFirstLaunchStatus退出0，不能再以旧许可69阻塞；获准只读host枚举devices为空，runtime准备尚待核对。现有Jest/SecureStore/重启410证据只证明组件与服务端，不等于真实设备或模拟器重装通过。",
+      "actual": "Native runtime/device now available; QA actual headless XCUITest completed email OTP and profile on isolated iOS27.0 simulator. Formal19d cold restore currently unavailable under owner diagnosis; reinstall/AI RAM restart path remains local work, not user dependency.",
       "history": [
         {
           "status": "BLOCKED",
@@ -15567,8 +15583,10 @@
       "priority": "P0",
       "plannedStage": "review",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "R158-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T242",
         "R1-T243",
@@ -15642,7 +15660,10 @@
         "禁止整行序列化",
         "错误不泄密"
       ],
-      "actual": "本地生产实现尚需实际执行：检查所有route的认证、角色、输入/响应schema → 绕过allowedActions直接请求。尚缺逐项证据：服务端独立校验；不信actorId；禁止整行序列化；错误不泄密。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "F30: actual DELETE202 commits DELETING before queued LINK still returns200 and adds GOOGLE identity. Formal lock-after-current-state repair and original dual HTTP replay pending.",
+      "defectIds": [
+        "QA-F30"
+      ]
     },
     {
       "id": "QA-CODE-005",
@@ -15740,9 +15761,9 @@
       "priority": "P0",
       "plannedStage": "review",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "NOT_RUN",
       "evidence": [
-        "R139-T001"
+        "R143-T001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T242",
@@ -15818,7 +15839,7 @@
         "仅允许最小元数据",
         "合成评测原文另隔离"
       ],
-      "actual": "Independent reproduced/static corroborated defect QA-F26 handed to original development owner; local fix/targeted independent retest pending. No external credential dependency for this defect.",
+      "actual": "F26 targeted original RootLayout callback independently fixed on19d: raw private Error never logged. Remaining whole logging/evaluation source inventory not yet accepted; originalR139 red retained in runs.",
       "defectIds": [
         "QA-F26"
       ],
@@ -16000,7 +16021,7 @@
         "原生证据包含构建号/OS/设备",
         "WebView或DOM测试不能充当iOS完成"
       ],
-      "actual": "原生实测仍缺。开发已核验用户完成Xcode首次配置，checkFirstLaunchStatus退出0，不能再以旧许可69阻塞；获准只读host枚举devices为空，runtime准备尚待核对。现有Jest/SecureStore/重启410证据只证明组件与服务端，不等于真实设备或模拟器重装通过。",
+      "actual": "Actual isolated iOS27.0 simulator and headless Release/XCUITest available; no missing-runtime/license claim. Formal build hashes and first-screen reviewed, QA OTP/profile actual taps proven. Complete native role journey/keyboard/background/real-device release evidence still pending; Jest/DOM not substituted.",
       "history": [
         {
           "status": "BLOCKED",

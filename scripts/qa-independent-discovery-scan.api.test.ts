@@ -14,3 +14,14 @@ it('QA-DISCOVERY-007 500 ineligible candidates yield continuation rather than sc
  expect(json(r).data).toHaveLength(0);expect(json(r).page.hasMore).toBe(true);expect(json(r).page.nextCursor).toBeTruthy();
  const next=await b.request('GET',`/v1/meals?limit=1&cursor=${encodeURIComponent(json(r).page.nextCursor)}`);expect(next.statusCode,next.body).toBe(200);expect(json(next).data).toHaveLength(1);expect(json(next).page.hasMore).toBe(false);
 });
+
+import {createPool} from '../packages/db/src/index.ts';
+import {loadConfig} from '../packages/config/src/index.ts';
+import {buildServer} from '../apps/api/src/http/server.ts';
+import {WEB_ORIGIN} from '../apps/api/src/test/harness.ts';
+it('QA-DISCOVERY-007 public list/detail work under PG read-only mode which rejects writes and row-locking reads',async()=>{
+ const url=new URL(h.db.url);url.searchParams.set('options','-c default_transaction_read_only=on');const pool=createPool(url.toString());const deps={pool:h.db.pool,identity:h.idp,publicOrigin:WEB_ORIGIN,config:loadConfig({ENVIRONMENT:'test',DATABASE_URL:url.toString(),AUTH_ADAPTER:'test',PLACES_ADAPTER:'fixture',MAIL_ADAPTER:'outbox_test',AI_PROVIDER:'mock',WEB_ORIGIN,SESSION_SECRET:'api-test-session-secret-0123456789abcdef',IOS_REDIRECT_URI:'fancy://auth/callback'})};const app=await buildServer(deps);deps.pool=pool;
+ try{await expect(pool.query('UPDATE meals SET title=title')).rejects.toMatchObject({code:'25006'});await expect(pool.query('SELECT id FROM meals FOR UPDATE')).rejects.toMatchObject({code:'25006'});expect((await app.inject({method:'GET',url:'/v1/meals?limit=100'})).statusCode).toBe(200);
+ const id=(await h.db.pool.query('SELECT id FROM meals ORDER BY starts_at LIMIT 1')).rows[0].id;const r=await app.inject({method:'GET',url:`/v1/meals/${id}`});expect(r.statusCode,r.body).toBe(200);expect(json(r).data.meal.allowedActions).not.toContain('APPLY');
+ }finally{await app.close();await pool.end();}
+});
