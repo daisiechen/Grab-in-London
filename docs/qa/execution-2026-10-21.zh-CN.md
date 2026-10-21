@@ -14,10 +14,10 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 133 |
+| PASS | 134 |
 | FAIL | 0 |
 | BLOCKED | 12 |
-| NOT_RUN | 72 |
+| NOT_RUN | 71 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实环境、原生runtime/设备/签名或政策批准证据；本地恢复与分步删除现已复验通过，不能再笼统视为外部阻塞。FAIL优先于未完成的后续步骤。
@@ -238,7 +238,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-PRIVACY-006 · MVCC构建与删除竞争 | PASS | 真实PG两连接：A主持未来M、确认N、pendingQ及开始后R；RR构建同事务显式读旧epoch后暂停原privacy FOR SHARE发送。普通删除HTTP202提交且epoch已升，再释放未改写的原SQL，PostgreSQL40001拒绝旧构建且snapshot行数不增加。重新构建成功；新snapshot_subjects及users/applications/seats/attendance/experiences/rosters均无删除A，公开profile404/session401；物理共享R的start_roster仍保留A历史资格，未复活身份。；证据 R62-T001 |
 | QA-PRIVACY-007 · 供应商删除分步失败 | PASS | 生产worker+真实PG受控Auth0/Apple逐步故障、进程重建恢复、稳定幂等键及他人数据保留通过；仍不关闭真实供应商撤销门槛。；证据 R10-T050, R10-T051, R10-T052, R10-T053, R10-T054 |
 | QA-PRIVACY-008 · 备份恢复删除台账 | PASS | QA扩展实际pg_dump/pg_restore：闸门在重放前阻API/worker，原receipt/身份失效及他人保留；备份前真实可下载E0恢复重放后由仍有效analyst会话读得410 SNAPSHOT_REVOKED且无CSV；重复重放和审计/时长通过。线上台账持久化/漏项检测仍属G-HOST。；证据 R12-T001 |
-| QA-METRIC-001 · 零分母 | NOT_RUN | 本地生产实现尚需实际执行：无任何成熟申请/明确问卷答案，查询比率与CSV。尚缺逐项证据：分母0→null/—而非0%；CSV与页面同值同单位。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-METRIC-001 · 零分母 | NOT_RUN | 本地生产实现尚需实际执行：无任何成熟申请/明确问卷答案，查询比率与CSV。尚缺逐项证据：分母0→null/—而非0%；CSV与页面同值同单位。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations.；证据 B10-T002 |
 | QA-METRIC-002 · 重复事件与伪成功 | NOT_RUN | 本地生产实现尚需实际执行：同eventId投递两次 → 客户端发送application_success。尚缺逐项证据：首条accepted第二duplicate；伪业务成功rejected且不进指标。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-METRIC-003 · 迟到接收 | NOT_RUN | 本地生产实现尚需实际执行：occurredAt<asOf但receivedAt>asOf → 构建S0和晚S1。尚缺逐项证据：S0排除；S1可纳入；S0不可变。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-METRIC-004 · 首次申请14天等号 | PASS | R82 独立手算fixture：首申请10月1日12Z，14天-1ms observing分母0、等号成熟1/1；同用户后续申请不替全历史first，选期排除历史first时不回捞较晚申请。直接调用现生产metrics函数并检查明细行/手算分子分母；不是页面计算作oracle，不代表CSV或浏览器全链路。；证据 R82-T001 |
@@ -247,19 +247,19 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-METRIC-007 · 申请轮次归因 | PASS | R82 独立四轮fixture：撤回r1、确认并出席r2、B拒绝r3、另一取消场r4；结果分母4分子1，仅r2行计出席，所有适用轮次分母保留。直接调用现生产metrics函数并检查明细行/手算分子分母；不是页面计算作oracle，不代表CSV或浏览器全链路。；证据 R82-T004 |
 | QA-METRIC-008 · 成团与取消分开 | NOT_RUN | 本地生产实现尚需实际执行：M开始前peak3/min3后来取消 → N正式host+2测试成员。尚缺逐项证据：M可招募达标但取消；N测试成员不能撑成团；不把招募达标叫实际举行。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-METRIC-009 · 问卷最新再筛 | PASS | R83独立手算：A9月25Yes、10月2No，asOf10月18查9月不回捞旧Yes；asOf9月30可见Yes有效1/1。B null+venue只有未答行且不入分母；全期A No分母1分子0，与B null严格区分。直接现行metrics函数，页面/CSV全链路另列。；证据 R83-T001 |
-| QA-METRIC-010 · 问卷独立过滤 | NOT_RUN | 本地生产实现尚需实际执行：日期/分群固定 → 改变饭局区域、语言、人数、预算。尚缺逐项证据：问卷样本和值均不变；UI/CSV声明surveyScope。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-METRIC-010 · 问卷独立过滤 | NOT_RUN | 本地生产实现尚需实际执行：日期/分群固定 → 改变饭局区域、语言、人数、预算。尚缺逐项证据：问卷样本和值均不变；UI/CSV声明surveyScope。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations.；证据 B10-T002, B10-T001 |
 | QA-METRIC-011 · 评分和问卷粒度 | NOT_RUN | 本地生产实现尚需实际执行：A两场评分1和5，问卷Yes且cost+venue → 导出。尚缺逐项证据：评分2人次、问卷1用户；因素可多选比例不要求100%；不按单场星级切问卷。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-METRIC-012 · 预算互斥分段 | NOT_RUN | 本地生产实现尚需实际执行：max20/20.01/30/30.01/40/40.01/unknown各1场 → 选择各分段及并集。尚缺逐项证据：每场只落一个预算段；unknown独列；双语并集无重复。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-METRIC-013 · 测试员工分类恢复 | NOT_RUN | 本地生产实现尚需实际执行：data_admin将A regular→test→regular → 含host和参与记录。尚缺逐项证据：新快照排除A贡献及其host整场；正式host他人事实保留；恢复重新构建，旧快照不常规改写。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-METRIC-014 · 删除后peak重算 | NOT_RUN | 本地生产实现尚需实际执行：正式3席/min3已发生业务达标 → 删除1用户 → 新快照。尚缺逐项证据：分析peak=2；用户贡献从分子分母退出；原业务成团事实不改。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-METRIC-015 · London周跨DST | NOT_RUN | 本地生产实现尚需实际执行：用秋季重复01:30两UTC与周日/周一边界构建周报。尚缺逐项证据：两01:30同London日；周一开周；14/30天用连续UTC时长。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-METRIC-016 · 同快照全链路 | NOT_RUN | 本地生产实现尚需实际执行：固定S0+filterHash翻页/下钻/CSV → 期间产生S1。尚缺逐项证据：本次链路仍S0+原filters+v4；显式切换才S1。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-METRIC-016 · 同快照全链路 | NOT_RUN | 本地生产实现尚需实际执行：固定S0+filterHash翻页/下钻/CSV → 期间产生S1。尚缺逐项证据：本次链路仍S0+原filters+v4；显式切换才S1。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations.；证据 B10-T002 |
 | QA-METRIC-017 · 审核分位数 | NOT_RUN | 本地生产实现尚需实际执行：四申请首次决策延迟1/2/3/10小时 → 重复决定及pending/expired混入。尚缺逐项证据：最近秩P50=2、P90=10；仅首次批准/拒绝入分布；终止轮不计pending。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-METRIC-018 · 采集曝光阈值 | NOT_RUN | 本地生产实现尚需实际执行：49%1000ms、50%999ms、50%1000ms → 中途后台/移出 → 同session再曝。尚缺逐项证据：仅连续前台50%且1000ms合格；中断重计；session+meal首次去重且不可申请不发。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-ADMIN-001 · 五页导航与筛选 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：遍历overview/journey/supply/retention/quality → 改多选和语言再回页。当前仍缺：五页无多余核实/运营页；条件和语言保持；同字段OR跨字段AND。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
-| QA-ADMIN-002 · 字典弹层焦点 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：键盘打开指标字典 → Escape关闭 → 点外部关闭。当前仍缺：公式/单位/来源/分母可读；关闭后焦点回触发按钮。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
-| QA-ADMIN-003 · 小屏和空态 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：390px遍历五页表格下钻 → 选空数据范围 → 恢复。当前仍缺：页面不横向溢出，表格可滚；空态不沿用旧图表；0和未知分清。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
-| QA-ADMIN-004 · 导出元信息 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：筛选后导出CSV并核对图表。当前仍缺：snapshot/asOf/filter/definitionVersion一致；fixture明确；无消息/单方再约/联系方式。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 |
+| QA-ADMIN-001 · 五页导航与筛选 | PASS | B10 real browser traversed exactly five primary pages; en+zh and sizes2+3 OR retain English capacity2 meal; Chinese AND matching sizes yields no meals. Switching to English and navigating supply/retention preserves both sets, date and language. Local synthetic staff environment only.；证据 B10-T001 |
+| QA-ADMIN-002 · 字典弹层焦点 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：键盘打开指标字典 → Escape关闭 → 点外部关闭。当前仍缺：公式/单位/来源/分母可读；关闭后焦点回触发按钮。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations.；证据 B10-T002 |
+| QA-ADMIN-003 · 小屏和空态 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：390px遍历五页表格下钻 → 选空数据范围 → 恢复。当前仍缺：页面不横向溢出，表格可滚；空态不沿用旧图表；0和未知分清。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations.；证据 B10-T002 |
+| QA-ADMIN-004 · 导出元信息 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：筛选后导出CSV并核对图表。当前仍缺：snapshot/asOf/filter/definitionVersion一致；fixture明确；无消息/单方再约/联系方式。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations.；证据 B10-T002 |
 | QA-API-001 · 公开字段白名单 | PASS | 游客/他人令牌读取公开profile与meal时profile键严格在公开白名单；私密邮箱/消息/举报及敏感字段不序列化。猜授权群历史和别人举报回执403/404；别人申请ID与主体不出现在自己的列表。合成身份、真实HTTP/PG。；证据 R31-T001 |
 | QA-API-002 · 后台角色隔离 | PASS | 真实HTTP/PG：analyst改classification拒绝，data_admin+MFA/reason/version成功且有审计，但被标staff者无role/不能读后台，data_admin不能越权取消他人饭局。support无全表case接口且不能读分析/分类，仅case授权范围。；证据 R31-T002 |
 | QA-API-003 · 错误版本与额外字段 | PASS | 第二批QA独立探针在04cb601以真实隔离PG执行，完整预期核对通过；消息HTML显示另有B1纯文本浏览器证据。；证据 R6-T006 |
@@ -329,7 +329,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-GATE-007 · G-AI-MODEL真实评测 | BLOCKED | R10评测准备13项和60中英固定样本已核验；默认不读Key不联网、无真实捕获时NOT_RUN/BLOCKED。真实DeepSeek质量/人工可用率/延迟未测，不关闭门槛。 |
 | QA-GATE-008 · G-AI-DATA供应商边界 | BLOCKED | 已提供官方参数/政策核查ADR并独立复跑本地适配边界；真实账户/留存及第三方数据批准仍缺，不继承其他供应商承诺。 |
 | QA-GATE-009 · G-AI-COST实账 | BLOCKED | 缺真实usage/账单与call账本对照证据。并发人民币50预留已有本地通过证据；开发可预备对账脚本，真实账单必须来自已批准配置，不扩大金额或开自动充值。 |
-| QA-JOURNEY-001 · 加入者完整闭环 | NOT_RUN | B7 complete real Web lifecycle/postmeal and B8 same-meal Admin trace passed in explicit local fixture. F18 fixed2b9449a independently API2+boundary8 and actual browser Inbox/header/send/reload passed B9. Historical reds retained in history and run bundles. Original cross-client precondition requires actual Web/iOS role swap; no native-device proof yet, so NOT_RUN rather than whole-case PASS.；证据 B7-T001, B7-T002, B7-T003, B7-T004, B8-T002, B9-T001, R93-T001, R93-T002 |
+| QA-JOURNEY-001 · 加入者完整闭环 | NOT_RUN | B7 complete real Web lifecycle/postmeal and B8 same-meal Admin trace passed in explicit local fixture. F18 fixed2b9449a independently API2+boundary8 and actual browser Inbox/header/send/reload passed B9. Historical reds retained in history and run bundles. Original cross-client precondition requires actual Web/iOS role swap; no native-device proof yet, so NOT_RUN rather than whole-case PASS. B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations.；证据 B7-T001, B7-T002, B7-T003, B7-T004, B8-T002, B9-T001, R93-T001, R93-T002, B10-T002 |
 | QA-JOURNEY-002 · 主持者完整闭环 | PASS | B7统一4a0c66f新隔离场从真实UI创建4步/餐厅确认/最低2上限2/截止/Review发布，guest主动申请hostApprove首客锁安排、声明stale后本人重报；同场真实worker截止达标/开始封存2人/结束Completed。默认双方Unknown，GuestSELFpresent后Host报其absent不覆盖，freshGuest仍Attendedyourreport。无应用支付/库存依赖；明确fixture时钟与供应商边界，不代表真实自然时间/外部订位或原生验收。；证据 B7-T001, B7-T002, B7-T003 |
 | QA-JOURNEY-003 · 取消与聊天独立路径 | PASS | B6实际IAB从Round1获准→本人取消席位后仍发送群消息→本人另退群只读→主动重申Round2待审→H批准重入→host解散。离群间隔GAP由仍授权host发送，返回guest只见离群前旧消息与重入后AFTER_REJOIN、GAP0，解散后Message0，刷新仍只读且无重新开启控件。全部使用真实本地API/PG、模拟身份/餐厅，非iOS原生/真实服务。；证据 B6-T002 |
 | QA-JOURNEY-004 · 互选私密路径 | NOT_RUN | 本地生产实现尚需实际执行：A单方再约→B访问→B互选→私聊→A撤回→解除拉黑。尚缺逐项证据：单方不可推断；互选才可发；撤回后历史只读；解除不复活同意。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |

@@ -1,0 +1,11 @@
+"snapshotId","e0c9729c-7aba-4de2-af6a-49c820a2c668"
+"asOf","2026-10-23T19:00:00.000Z"
+"filters","{""from"":""2025-10-20"",""to"":""2026-09-20"",""areas"":[],""languages"":[],""budgetBands"":[],""sizes"":[],""sources"":[],""segments"":[],""budgetUpToPence"":null}"
+"filterHash","92f9cbbad21165e1175f3a2c1d3e66298164427800894c0995af2d5716a5e4f2"
+"definitionVersion","v4"
+
+"metric","value","numerator","denominator"
+"weekly","","",""
+"activation","","0","0"
+"retention","","0","0"
+"coverage","","0","0"

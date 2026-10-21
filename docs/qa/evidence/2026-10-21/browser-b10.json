@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "observations": [
+    {
+      "id": "B10-T001",
+      "title": "Actual five-page Admin navigation, persistent language and set filters, OR/AND",
+      "steps": [
+        "Visited overview/journey/supply/retention/quality: exactly five primary nav entries, no extra verification/operations page.",
+        "Same snapshot language en+zh OR retains English-only meal; sizes2+3 OR retains capacity2 meal.",
+        "Switch Chinese to English then navigate supply and retention: language, language-set and size-set persist.",
+        "Remove English leaving Chinese AND size2/3: meal aggregates0/0 and no meal rows; independent product survey retainsYes1/1 Venue1 Cost1. English size2 match would exist under OR across fields, so empty result discriminates AND."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b10-admin-language-no-meal-survey-retained.jpg"
+      ],
+      "status": "passed",
+      "testedCommit": "4a0c66f838cb73aa5ac9e2a2ac74662ce2462c11",
+      "environment": "Preserved B7 real temporary PG/API and same frozen Admin; synthetic staff/MFA, fixed Node/DB clock23Oct19Z, real browser. No native/provider/production-readiness proof."
+    },
+    {
+      "id": "B10-T002",
+      "title": "Same application trace and actual CSV null/metadata comparison",
+      "steps": [
+        "Journey actual unique application4c3edcbc-6524-4b27-87df-067ed46697f0 belongs to exact B7 meal and guest, CONFIRMED; matured application attendance1/1.",
+        "Keyboard Enter opens weekly metric dictionary with formula/unit/source and SELF precedence; Escape closes and document.activeElement returns original trigger. Outside-dismiss remains untested.",
+        "Actually downloaded quality and overview CSV: same snapshot/asOf/filterHash/v4. Weekly2 and coverage fraction1 numerator2 denominator2 match UI2 and100percent2/2; zero activation and retention denominator0 serialize empty value not zero.",
+        "Actual keyboard date change applied empty2025-10-20 through2026-09-20: old chart gone, empty explanation. Export filters/hash change but same snapshot/asOf/v4; weekly empty, coverage empty0/0.",
+        "QA setup correction: CUA date fill alone changed DOM but not React state; subsequent real ArrowDown input produced dirty draft and enabled Apply. No product failure inferred. Export is fractional values without unit column; full unit/fixture declaration and filtered CSV scope checks pending."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b10-admin-application-trace.jpg",
+        "evidence/2026-10-21/b10-admin-empty-not-zero.jpg",
+        "evidence/2026-10-21/b10-export-quality.csv",
+        "evidence/2026-10-21/b10-export-overview.csv",
+        "evidence/2026-10-21/b10-export-empty.csv"
+      ],
+      "status": "passed",
+      "testedCommit": "4a0c66f838cb73aa5ac9e2a2ac74662ce2462c11",
+      "environment": "Preserved B7 real temporary PG/API and same frozen Admin; synthetic staff/MFA, fixed Node/DB clock23Oct19Z, real browser. No native/provider/production-readiness proof."
+    }
+  ]
+}

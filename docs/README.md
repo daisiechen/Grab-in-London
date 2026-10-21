@@ -93,3 +93,5 @@
 - QA B8: [report](qa/evidence/2026-10-21/browser-b8.zh-CN.md), [observations](qa/evidence/2026-10-21/browser-b8.json), [survey](qa/evidence/2026-10-21/b8-survey-yes-factors.jpg), [same-meal attendance](qa/evidence/2026-10-21/b8-admin-same-meal-attendance.jpg), [score/survey](qa/evidence/2026-10-21/b8-admin-score-survey-separated.jpg).
 
 - QA B9: [report](qa/evidence/2026-10-21/browser-b9.zh-CN.md), [observations](qa/evidence/2026-10-21/browser-b9.json), [fixed target](qa/evidence/2026-10-21/b9-f18-fixed-target-reload.jpg).
+
+- QA B10: [report](qa/evidence/2026-10-21/browser-b10.zh-CN.md), [observations](qa/evidence/2026-10-21/browser-b10.json), [application](qa/evidence/2026-10-21/b10-admin-application-trace.jpg), [empty](qa/evidence/2026-10-21/b10-admin-empty-not-zero.jpg), [filter independence](qa/evidence/2026-10-21/b10-admin-language-no-meal-survey-retained.jpg), [quality CSV](qa/evidence/2026-10-21/b10-export-quality.csv), [overview CSV](qa/evidence/2026-10-21/b10-export-overview.csv), [empty CSV](qa/evidence/2026-10-21/b10-export-empty.csv).

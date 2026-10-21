@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 72,
-    "PASS": 133,
+    "NOT_RUN": 71,
+    "PASS": 134,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -37,7 +37,9 @@
     "browserObservationsB8": "evidence/2026-10-21/browser-b8.json",
     "B8": "evidence/2026-10-21/browser-b8.zh-CN.md",
     "browserObservationsB9": "evidence/2026-10-21/browser-b9.json",
-    "B9": "evidence/2026-10-21/browser-b9.zh-CN.md"
+    "B9": "evidence/2026-10-21/browser-b9.zh-CN.md",
+    "browserObservationsB10": "evidence/2026-10-21/browser-b10.json",
+    "B10": "evidence/2026-10-21/browser-b10.zh-CN.md"
   },
   "cases": [
     {
@@ -6888,7 +6890,9 @@
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
-      "evidence": [],
+      "evidence": [
+        "B10-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -6933,7 +6937,7 @@
         "分母0→null/—而非0%",
         "CSV与页面同值同单位"
       ],
-      "actual": "本地生产实现尚需实际执行：无任何成熟申请/明确问卷答案，查询比率与CSV。尚缺逐项证据：分母0→null/—而非0%；CSV与页面同值同单位。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "本地生产实现尚需实际执行：无任何成熟申请/明确问卷答案，查询比率与CSV。尚缺逐项证据：分母0→null/—而非0%；CSV与页面同值同单位。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations."
     },
     {
       "id": "QA-METRIC-002",
@@ -7425,7 +7429,10 @@
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
-      "evidence": [],
+      "evidence": [
+        "B10-T002",
+        "B10-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -7470,7 +7477,7 @@
         "问卷样本和值均不变",
         "UI/CSV声明surveyScope"
       ],
-      "actual": "本地生产实现尚需实际执行：日期/分群固定 → 改变饭局区域、语言、人数、预算。尚缺逐项证据：问卷样本和值均不变；UI/CSV声明surveyScope。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "本地生产实现尚需实际执行：日期/分群固定 → 改变饭局区域、语言、人数、预算。尚缺逐项证据：问卷样本和值均不变；UI/CSV声明surveyScope。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations."
     },
     {
       "id": "QA-METRIC-011",
@@ -7754,7 +7761,9 @@
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
-      "evidence": [],
+      "evidence": [
+        "B10-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -7799,7 +7808,7 @@
         "本次链路仍S0+原filters+v4",
         "显式切换才S1"
       ],
-      "actual": "本地生产实现尚需实际执行：固定S0+filterHash翻页/下钻/CSV → 期间产生S1。尚缺逐项证据：本次链路仍S0+原filters+v4；显式切换才S1。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "本地生产实现尚需实际执行：固定S0+filterHash翻页/下钻/CSV → 期间产生S1。尚缺逐项证据：本次链路仍S0+原filters+v4；显式切换才S1。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations."
     },
     {
       "id": "QA-METRIC-017",
@@ -7917,8 +7926,10 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "B10-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T170",
         "R1-T171",
@@ -8001,13 +8012,19 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "五页无多余核实/运营页",
-        "条件和语言保持",
-        "同字段OR跨字段AND"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：遍历overview/journey/supply/retention/quality → 改多选和语言再回页。当前仍缺：五页无多余核实/运营页；条件和语言保持；同字段OR跨字段AND。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+      "remainingExpected": [],
+      "actual": "B10 real browser traversed exactly five primary pages; en+zh and sizes2+3 OR retain English capacity2 meal; Chinese AND matching sizes yields no meals. Switching to English and navigating supply/retention preserves both sets, date and language. Local synthetic staff environment only.",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：遍历overview/journey/supply/retention/quality → 改多选和语言再回页。当前仍缺：五页无多余核实/运营页；条件和语言保持；同字段OR跨字段AND。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+        }
+      ]
     },
     {
       "id": "QA-ADMIN-002",
@@ -8016,7 +8033,9 @@
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
-      "evidence": [],
+      "evidence": [
+        "B10-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T170",
         "R1-T171",
@@ -8104,7 +8123,7 @@
         "公式/单位/来源/分母可读",
         "关闭后焦点回触发按钮"
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：键盘打开指标字典 → Escape关闭 → 点外部关闭。当前仍缺：公式/单位/来源/分母可读；关闭后焦点回触发按钮。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：键盘打开指标字典 → Escape关闭 → 点外部关闭。当前仍缺：公式/单位/来源/分母可读；关闭后焦点回触发按钮。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations."
     },
     {
       "id": "QA-ADMIN-003",
@@ -8113,7 +8132,9 @@
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
-      "evidence": [],
+      "evidence": [
+        "B10-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T170",
         "R1-T171",
@@ -8202,7 +8223,7 @@
         "空态不沿用旧图表",
         "0和未知分清"
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：390px遍历五页表格下钻 → 选空数据范围 → 恢复。当前仍缺：页面不横向溢出，表格可滚；空态不沿用旧图表；0和未知分清。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：390px遍历五页表格下钻 → 选空数据范围 → 恢复。当前仍缺：页面不横向溢出，表格可滚；空态不沿用旧图表；0和未知分清。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations."
     },
     {
       "id": "QA-ADMIN-004",
@@ -8211,7 +8232,9 @@
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
-      "evidence": [],
+      "evidence": [
+        "B10-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T170",
         "R1-T171",
@@ -8300,7 +8323,7 @@
         "fixture明确",
         "无消息/单方再约/联系方式"
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：筛选后导出CSV并核对图表。当前仍缺：snapshot/asOf/filter/definitionVersion一致；fixture明确；无消息/单方再约/联系方式。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。"
+      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：筛选后导出CSV并核对图表。当前仍缺：snapshot/asOf/filter/definitionVersion一致；fixture明确；无消息/单方再约/联系方式。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations."
     },
     {
       "id": "QA-API-001",
@@ -15934,7 +15957,8 @@
         "B8-T002",
         "B9-T001",
         "R93-T001",
-        "R93-T002"
+        "R93-T002",
+        "B10-T002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -16299,7 +16323,7 @@
       "remainingExpected": [
         "Actual native device Web/iOS role-swapped full journey remains unexecuted."
       ],
-      "actual": "B7 complete real Web lifecycle/postmeal and B8 same-meal Admin trace passed in explicit local fixture. F18 fixed2b9449a independently API2+boundary8 and actual browser Inbox/header/send/reload passed B9. Historical reds retained in history and run bundles. Original cross-client precondition requires actual Web/iOS role swap; no native-device proof yet, so NOT_RUN rather than whole-case PASS.",
+      "actual": "B7 complete real Web lifecycle/postmeal and B8 same-meal Admin trace passed in explicit local fixture. F18 fixed2b9449a independently API2+boundary8 and actual browser Inbox/header/send/reload passed B9. Historical reds retained in history and run bundles. Original cross-client precondition requires actual Web/iOS role swap; no native-device proof yet, so NOT_RUN rather than whole-case PASS. B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations.",
       "defectIds": [
         "QA-F18"
       ],
@@ -22193,7 +22217,7 @@
     "userAuthorizedMessaging": true,
     "status": "remaining_local_execution_in_progress",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
-    "latestFeedback": "QA-F01 targeted fix verified; original complete journey remains unexecuted; no release pass"
+    "latestFeedback": "F18 closed by R93/R94/B9; actual same-meal Admin B8/B10 and five-page filters passed; remaining local execution and native/external gates remain."
   },
   "blockerTriage": "原14条中供应商分步删除和恢复删除台账两条已转本地执行并通过；其余12条缺真实环境/许可/批准证据，各项可本地准备部分已继续推进，不能视为12个未修代码故障。"
 }

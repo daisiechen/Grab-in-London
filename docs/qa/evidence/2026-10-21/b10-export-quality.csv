@@ -1,0 +1,11 @@
+"snapshotId","e0c9729c-7aba-4de2-af6a-49c820a2c668"
+"asOf","2026-10-23T19:00:00.000Z"
+"filters","{""from"":""2026-09-26"",""to"":""2026-10-23"",""areas"":[],""languages"":[],""budgetBands"":[],""sizes"":[],""sources"":[],""segments"":[],""budgetUpToPence"":null}"
+"filterHash","8b65a8c3f47529dabccdf1abe0dbf05c14f6b1a3f00bb532ee33aea0b7d5cb46"
+"definitionVersion","v4"
+
+"metric","value","numerator","denominator"
+"missingRequired","0","",""
+"duplicates","0","",""
+"excluded","0","",""
+"receiveLatencyP90","","",""
