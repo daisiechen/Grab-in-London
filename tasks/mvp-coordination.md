@@ -94,3 +94,11 @@
 - 后台公式修复：按当期分类恢复认证历史事件，不改原始分类，不追溯链接匿名；weekly卡片/明细与批准Demo最新可见周一致；表单错误按step/field聚合、下钻和CSV贯通。
 - 06:20整合回归：unit149、PostgreSQL100、API91、release10通过；Web+后台211通过；Web与后台生产build通过，仓库Python64通过；随后新增DeepSeek安全配置映射单测13/13及release10分别通过。非iOS全部包类型/SDK生成物/infra类型/lint/secret scan通过。新增或修改的局部回归不能代替整个未完成iOS批次的最终验证。
 - iOS助手、三编辑器、显式已读与Google原生地图源码正在收尾；此前基线及新局部测试已过，最终全套/Metro export仍待该负责人冻结后整合复跑。真实Google Key/Map ID、DeepSeek模型/价格/计数器/60样本、身份/邮件、Xcode签名/真机与首尔部署仍是外部门槛，未接真实用户。
+
+
+## Codex 接管后本机整体自测通过（2026-10-21 06:40 London）
+
+- 最终代码提交 `8bc1e92`，承接 `20ff465` iOS主集成；本批包括原生显式采集/来源事件、原生scope无Set-Cookie、ID型选店确认修复、Web游客固定主体复用、快照删除主持人保留他人历史及SQL微秒精度、实际采集覆盖日期配置。此前 `20ff465` 本地远端SHA已核对一致。
+- `core:check`、unit151/DB101/API96/release10、Web+后台211/iOS169（25 suites）、Python64、Web/admin builds均通过；最后原生no-cookie变更单独10API通过。Hermes导出1535modules/约3.3MB成功，不是原生签名安装。详情及本机日志见 [本地自测报告](../docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md)。报告/任务更新后重跑Python文档验证。
+- 本机fixture环境已按最终后端重新启动，API3000与临时PG/worker；入口与固定OTP见运行说明。没有首尔部署或真实供应商调用。独立测试交接将固定最终文档提交SHA，不能把自动化计数视为217条用例全部通过。
+- Claude当前09:10 London限额恢复，已停止原任务自动续写；现有heartbeat保留恢复后只读交叉审查，不重启旧写入任务。等待独测及真实外部门槛，完整任务不批量标done。

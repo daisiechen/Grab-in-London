@@ -59,7 +59,7 @@
 - 验收：实现opaque session/rotation/CSRF/state nonce PKCE/handoff；双proof链接不静默搬业务历史；真实provider接T03，test adapter禁生产。
 - 验证：`core:test:api S03 S04`。
 - 外部依赖/证据：真实验收依赖T03。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T05 资料、角色与Web登录回流
 
@@ -68,7 +68,7 @@
 - 验收：公开DTO白名单、私密字段拒绝；18+/社区/资料gate；登录保留草稿主动重提，后台role/MFA服务端校验。
 - 验证：`core:test:api / core:test:web S05`。
 - 外部依赖/证据：G-AUTH真实验收。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T06 地点适配与选店Web
 
@@ -77,7 +77,7 @@
 - 验收：confirm placeId不信客户端地址；Google字段许可/缓存/署名和地图错误；搜索区域/返回选择保持，无手填绕过。
 - 验证：`core:test:api / core:test:web S06`。
 - 外部依赖/证据：G-PLACES真实验收；fixtures隔离。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T07 创建/编辑/预约声明切片
 
@@ -86,7 +86,7 @@
 - 验收：按P-03严格DST；host占位并调用T30 JOIN/排作业；锁定后编辑的guard以fixture测试，真实首guest永久锁在T10集成；声明stale不伪造预约。
 - 验证：`core:test:db / core:test:web S07（S08真实批准集成留T10）`。
 - 外部依赖/证据：无。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T08 发现/详情/本人Meals
 
@@ -95,7 +95,7 @@
 - 验收：游客投影+筛选地图一致；本人申请/行程不公开；返回保持过滤，纯projectLifecycle不写库/争锁；五分区/双语/预算/多日期；菜系饮食分支交T32在P-05下实现，最终验收前不冒称完整发现已完成。
 - 验证：`core:test:api / core:test:web S05 S09`。
 - 外部依赖/证据：无。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T09 申请、撤回与多轮历史
 
@@ -104,7 +104,7 @@
 - 验收：有效申请唯一/每轮独立；DECLINED不可重申，withdraw可；重试不重复、pending不占位。
 - 验证：`core:test:db / core:test:web S10`。
 - 外部依赖/证据：无。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T10 审批、退出与取消
 
@@ -113,7 +113,7 @@
 - 验收：并发最后一席只1批准；截止后不可批；取消终态通知事实和首guest锁同事务，席位退出不退群。
 - 验证：`core:test:db / core:test:web S01 S02 S11`。
 - 外部依赖/证据：无。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T11 生命周期调度与历史名单联调
 
@@ -122,7 +122,7 @@
 - 验收：接T31已完成函数与T02 runner；worker/在线共用补齐；迟到按截止和开始历史；等号退出排除、开始后保留他人、jobs重试不重复。
 - 验证：`core:test:db S01 S12 S13`。
 - 外部依赖/证据：无。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T12 群区间、消息与Inbox
 
@@ -131,7 +131,7 @@
 - 验收：JOIN/MESSAGE/LEAVE统一序号与提交序；历史union无空档，LIVE撤权停止；cancel/end可聊、dissolve永不重开。
 - 验证：`core:test:db / core:test:web S14 S15`。
 - 外部依赖/证据：无。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T13 出席与饭后评分
 
@@ -140,7 +140,7 @@
 - 验收：7天半开窗口，self>host，unknown独立；有效资格评分1..5修订；无默认全员出席。
 - 验证：`core:test:db / core:test:web S16 S17`。
 - 外部依赖/证据：无。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T14 个人公评与发布
 
@@ -149,7 +149,7 @@
 - 验收：双方出席/禁止自评；互评或7天发布；纠错立即撤出公开、版本不重复计。
 - 验证：`core:test:api / core:test:web S18`。
 - 外部依赖/证据：无。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T15 互选、拉黑与私聊
 
@@ -158,7 +158,7 @@
 - 验收：单方私密且7天选择；每次发送锁内重算依据；撤回/block清双方，解除不恢复，另一有效饭局可保连接。
 - 验证：`core:test:db / core:test:web S19 S20`。
 - 外部依赖/证据：无。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T16 独立产品问卷
 
@@ -167,7 +167,7 @@
 - 验收：again null与false分开；七枚举去重/不能全空；不接mealId/不受7天出席限制。
 - 验证：`core:test:api / core:test:web S21`。
 - 外部依赖/证据：无。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T17 站内通知与关键邮件
 
@@ -176,7 +176,7 @@
 - 验收：按事件收件人渠道唯一；批准拒绝过期取消邮件与站内；失败不回滚席位，UNKNOWN处理/死信告警。
 - 验证：`core:test:db / provider inbox evidence S22`。
 - 外部依赖/证据：G-MAIL真实验收。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T18 举报与受审计支持CLI
 
@@ -185,7 +185,7 @@
 - 验收：receipt本人可查；support MFA+case+reason+version；逾期出席更正同命令重算，无任意SQL或chat默认读权。
 - 验证：`core:test:api / core:test:db S20 S23`。
 - 外部依赖/证据：G-AUTH MFA/运营负责人。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T19 删除屏障与清理作业
 
@@ -194,7 +194,7 @@
 - 验收：reauth后同步撤权/未开始cancel leave/pending withdraw/群区间关闭；预存receipt可恢复各provider和内容清理；本片只实现privacy epoch和删除台账屏障，快照发布/410联调必须到T23才验收。
 - 验证：`core:test:db / core:test:api S24；S25联调留T23`。
 - 外部依赖/证据：G-PRIVACY/G-AUTH；分析快照联调在T23。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T20 授权采集与匿名关联
 
@@ -203,7 +203,7 @@
 - 验收：按契约事件schema/consent/身份/环境；重复eventId不重计；前端不能伪造批准/出席成功。
 - 验证：`core:test:api S26`。
 - 外部依赖/证据：无。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T21 快照计算和手算指标
 
@@ -212,7 +212,7 @@
 - 验收：REPEATABLE READ输入清单/修订hash；逐项采集契约分子分母；迟到更正新快照，Survey先最新再日期筛。
 - 验证：`core:test:db S17 S21 S27`。
 - 外部依赖/证据：无。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T22 后台五页与分类
 
@@ -221,7 +221,7 @@
 - 验收：复用五页视觉，角色服务端校验；过滤/下钻绑定snapshot；分类审计只data_admin且新快照生效。
 - 验证：`core:test:api / core:test:web S27 S28`。
 - 外部依赖/证据：无。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T23 导出、隐私与快照撤销联调
 
@@ -230,7 +230,7 @@
 - 验收：CSV与页面同快照并防公式；删除受影响snapshot全410/cache导出失效；新快照清主体，恢复先删台账。
 - 验证：`core:test:db / core:test:web S25 S28`。
 - 外部依赖/证据：G-PRIVACY。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T24 iOS身份、资料与原生壳
 
@@ -239,7 +239,7 @@
 - 验收：开发构建原生导航与键盘；OAuth/OTP回流/session SecureStore/退出；同profileGate不另造用户。
 - 验证：`core:test:ios + device S03 S04 S05`。
 - 外部依赖/证据：G-IOS/G-AUTH。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T25 iOS发现、选店、创建与审批
 
@@ -248,7 +248,7 @@
 - 验收：同SDK和Google署名；DST偏移选择/不存在报错；申请草稿和审批409可恢复、外订到店付无假支付。
 - 验证：`core:test:ios + device S06 S07 S10 S11`。
 - 外部依赖/证据：G-PLACES。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T26 iOS会话与饭后
 
@@ -257,7 +257,7 @@
 - 验收：前后台poll/区间权限；出席评分公评互选Survey同规范；举报/删除receipt且push不实现。
 - 验证：`core:test:ios + device S14 S19 S21 S24`。
 - 外部依赖/证据：T19已完成后验收删除真实流。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T27 部署、CI与运行恢复
 
@@ -266,25 +266,25 @@
 - 验收：CI全脚本/生产禁fixture；API单副本Recreate/禁止重叠部署，重启AI旧会话410/未发文字保留；expand兼容迁移/worker租约恢复；实测备份RPO/RTO与删除台账重放、日志不含私密。
 - 验证：`core:test:release S22 S25 S29`。
 - 外部依赖/证据：G-HOST。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T28 真实外部集成与全链路验收
 
-- 状态：todo；依赖：T27, T32。
+- 状态：blocked_external；依赖：T27, T32。
 - 文件：`docs/engineering/evidence/core-acceptance.md`, `packages/testkit/e2e/`；相应测试就近创建。
 - 验收：G-AUTH/PLACES/MAIL/IOS/PRIVACY/HOST逐证据关闭；真实两账户Web/iOS跨端批准群聊饭后后台链路；完整AI依赖单列不能冒称全产品可发布。
 - 验证：`全部core脚本+真机/收件箱/恢复证据 S30`。
 - 外部依赖/证据：全部external gates。
-- 完成记录：未实施；commit/命令结果/证据待执行者填写。
+- 完成记录：本地代码和自测已完成；G-AUTH/G-PLACES/G-MAIL/G-IOS/G-PRIVACY/G-HOST/G-AI-MODEL/DATA/COST 尚未关闭，详见本地自测报告。
 
 ## T29 执行交接与AI集成前检查
 
-- 状态：todo；依赖：T28。
+- 状态：in_progress；依赖：T28。
 - 文件：`docs/engineering/evidence/handover.md`, `tasks/todo.md`；相应测试就近创建。
 - 验收：已实现/真实通过/未通过逐项列；实际API与schema和本包一致差异有ADR；AI后续只接同权限命令，AI包未验收则完整发布保持blocked。
 - 验证：`core:check + evidence audit S30`。
 - 外部依赖/证据：真实AI A任务及最终集成是完整产品发布依赖，不在本任务伪造完成。
-- 完成记录：未实施；commit/命令结果/证据待执行者填写。
+- 完成记录：本地自测通过，独立测试交接准备完成；精确通知版本与后续结果由协调记录承接，完整外部验收仍待处理。
 
 ## T30 会话与授权区间内核（先于T07）
 
@@ -302,7 +302,7 @@
 - 验收：实现advanceLifecycle与无写入projectLifecycle共用纯规则；截止/开始/结束及历史名单可在fixture测试；在线申请审批依赖本函数，T11仅调度联调。
 - 验证：`core:test:db S09 S12 S13（fixture历史）`。
 - 外部依赖/证据：无。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## T32 菜系与饮食筛选的数据闭环
 
@@ -311,7 +311,7 @@
 - 验收：按P-05与数据契约§6实现可选host声明/字典/unknown/筛选/披露，原PRD/Demo回填仍归原会话；首guest后锁定一致，T28最终完整核心验收等待本任务。
 - 验证：`core:test:api / core:test:web / core:test:ios S31`。
 - 外部依赖/证据：P-05已确认；原文回填待原会话（执行需同时读决定附件）；若涉及iOS文件实现同时依赖T25，先后端与Web再iOS联调。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 T02创建runner与通用通知表，T27仅扩运行/恢复；T31创建生命周期/roster函数，T11仅接调度并联调，不重复归属。每片业务迁移归该片，T02不预建未定义业务表。
 
@@ -331,7 +331,7 @@ T02创建runner与通用通知表，T27仅扩运行/恢复；T31创建生命周�
 - 验收：六类偏好白名单与P-04/P-05；本人确认保存/CAS替换/删除不依赖模型；AI仅无正文元数据和偏好迁移。
 - 验证：`core:test:api + core:test:db AI-S04 AI-S10`。
 - 外部依赖/证据：按[AI方案](../docs/engineering/ai-development-plan.zh-CN.md)；没有真实门槛证据不能done真实集成。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## A02 短期会话与删除屏障
 
@@ -340,7 +340,7 @@ T02创建runner与通用通知表，T27仅扩运行/恢复；T31创建生命周�
 - 验收：先实现24h guest主体/cookie+CSRF或iOS bearer，刷新不重置额度；RAM不入WAL，安装marker防重装读旧Keychain；device/generation/活动去重/30分钟等号；刷新退出账号变化/偏好删除迟到失效、账户删除不漏AI。
 - 验证：`core:test:api + core:test:db AI-S05 AI-S06 AI-S10`。
 - 外部依赖/证据：按[AI方案](../docs/engineering/ai-development-plan.zh-CN.md)；没有真实门槛证据不能done真实集成。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## A03 请求去重、预算预留与provider adapter
 
@@ -349,7 +349,7 @@ T02创建runner与通用通知表，T27仅扩运行/恢复；T31创建生命周�
 - 验收：主体1在途/成功轮预留；内部2次调用均预算闸/总deadline；UNKNOWN保留费用/禁重发，ai_budget_ops+MFA对账API/ops-cli审计；Mock禁生产。
 - 验证：`core:test:db + core:test:api AI-S07 AI-S08 AI-S09；真实provider验收依赖A00`。
 - 外部依赖/证据：按[AI方案](../docs/engineering/ai-development-plan.zh-CN.md)；没有真实门槛证据不能done真实集成。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## A04 真实AI检索/解释与事实验证
 
@@ -358,7 +358,7 @@ T02创建runner与通用通知表，T27仅扩运行/恢复；T31创建生命周�
 - 验收：明确hard与soft排序/清除标记、日期服务端解析；完整集合先排后20候选/3卡；最小投影/无chat/不编事实，source版本重验。
 - 验证：`core:test:api AI-S01 AI-S02 AI-S03 AI-S11`。
 - 外部依赖/证据：按[AI方案](../docs/engineering/ai-development-plan.zh-CN.md)；没有真实门槛证据不能done真实集成。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## A05 三种草稿与确认交接
 
@@ -367,7 +367,7 @@ T02创建runner与通用通知表，T27仅扩运行/恢复；T31创建生命周�
 - 验收：申请20–300/创建字段/群1000以内；生成与transfer重验目标；不写业务/不勾声明，编辑器冲突和重复转入有确定行为。
 - 验证：`core:test:api AI-S12 AI-S13`。
 - 外部依赖/证据：按[AI方案](../docs/engineering/ai-development-plan.zh-CN.md)；没有真实门槛证据不能done真实集成。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## A06 Web助手生产适配
 
@@ -376,7 +376,7 @@ T02创建runner与通用通知表，T27仅扩运行/恢复；T31创建生命周�
 - 验收：复用浮动首页/偏好/卡片；处理中失败重试/Continue/NEW/TTL不同；draft转原编辑器本人主动submit且无覆盖丢稿。
 - 验证：`core:test:web AI-S04 AI-S05 AI-S12 AI-S13`。
 - 外部依赖/证据：按[AI方案](../docs/engineering/ai-development-plan.zh-CN.md)；没有真实门槛证据不能done真实集成。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## A07 iOS助手与跨端偏好
 
@@ -385,7 +385,7 @@ T02创建runner与通用通知表，T27仅扩运行/恢复；T31创建生命周�
 - 验收：原生浮动入口/键盘/上下文切换；偏好共享版本对话不跨端；冷启动/前后台/断网/退出及删除，不用WebView冒交付。
 - 验证：`core:test:ios + device AI-S05 AI-S10 AI-S14`。
 - 外部依赖/证据：按[AI方案](../docs/engineering/ai-development-plan.zh-CN.md)；没有真实门槛证据不能done真实集成。
-- 完成记录：Codex接管实施中；生产源码及局部自动化已落地，整体联调与本切片全部验收尚未关闭。已提交客户端基线为 Web commit 0b1a298、iOS commit 63c693b；当前后端及AI增量待串行提交，证据与剩余门槛见 tasks/mvp-coordination.md。不得以存在代码或局部测试代替完成。
+- 完成记录：Codex已接管；生产代码及本机整体自动化通过，代码批次 ca8d8c1/69266ba/ac0afa9/20ff465 和最终采集增量由协调记录固定。验证及真实/mock边界见 docs/delivery/mvp-local-selftest-2026-10-21.zh-CN.md；等待217条独立测试及本切片适用外部门槛，暂不以自动化通过关闭完整任务。
 
 ## A08 60样本真实评测与对抗/并发验收
 
@@ -398,9 +398,9 @@ T02创建runner与通用通知表，T27仅扩运行/恢复；T31创建生命周�
 
 ## A09 核心+AI联合交付检查
 
-- 状态：todo；依赖：A08, T28, T29。
+- 状态：blocked_external；依赖：A08, T28, T29。
 - 文件：`docs/engineering/evidence/mvp-acceptance.md`, `infra/ai-runtime/`, `tasks/todo.md`；相应测试就近创建。
 - 验收：核心六门槛+AI三门槛和PRD回填diff复核；费用人工停用/清理/ai_budget_ops对账/单API重启会话失效/合并发布回归；未授权不部署，上线与设计完成分开。
 - 验证：`core:test:release +真实全链路 AI-S15；全部外部门槛与本轮决定原文回填`。
 - 外部依赖/证据：按[AI方案](../docs/engineering/ai-development-plan.zh-CN.md)；没有真实门槛证据不能done真实集成。
-- 完成记录：未实施；commit/命令结果/证据待执行者填写。
+- 完成记录：本地代码和自测已完成；G-AUTH/G-PLACES/G-MAIL/G-IOS/G-PRIVACY/G-HOST/G-AI-MODEL/DATA/COST 尚未关闭，详见本地自测报告。
