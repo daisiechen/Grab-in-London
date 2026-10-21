@@ -26,3 +26,15 @@ it('QA-F10 an overlong controlled editor value gets a visible inline error witho
  await waitFor(()=>expect(screen.getByRole('alert').textContent).toMatch(/2000|2,000|shorten|long/i));
  expect((field as HTMLTextAreaElement).value).toBe(original);expect(stub.callsTo('requestAI')).toHaveLength(0);
 });
+it('QA-F10 blank sends nothing, raw edge whitespace cannot bypass2000 and shortening to2000 resumes one explicit request',async()=>{
+ const stub=setup(),sid='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+ stub.on('bootstrapAI',()=>ok({sessionId:sid,generation:1,deviceToken:'d'.repeat(43),revokeHandle:'r'.repeat(43),expiresAt:new Date(Date.now()+1800000).toISOString()},201));
+ stub.on('activityAI',()=>ok({expiresAt:new Date(Date.now()+1800000).toISOString()}));
+ stub.on('requestAI',call=>ok({requestId:(call.body as {requestId:string}).requestId,sessionId:sid,generation:1,state:'PENDING',deadline:new Date(Date.now()+30000).toISOString(),result:null,errorCode:null},202));
+ stub.on('pollAI',call=>ok({requestId:call.params.requestId,sessionId:sid,generation:1,state:'SUCCEEDED',deadline:new Date(Date.now()+30000).toISOString(),result:{replyText:'Synthetic normal recovery response',cards:[]},errorCode:null}));
+ const field=await open();fireEvent.change(field,{target:{value:'   '}});await userEvent.click(screen.getByRole('button',{name:'Send to Fancy'}));expect(stub.callsTo('requestAI')).toHaveLength(0);
+ const overlong=' '+ 'q'.repeat(1999)+' ';fireEvent.change(field,{target:{value:overlong}});await userEvent.click(screen.getByRole('button',{name:'Send to Fancy'}));
+ expect((field as HTMLTextAreaElement).value).toBe(overlong);expect(screen.getByRole('alert').textContent).toMatch(/2000|2,000|shorten|long/i);expect(stub.callsTo('requestAI')).toHaveLength(0);
+ const allowed='q'.repeat(2000);fireEvent.change(field,{target:{value:allowed}});await userEvent.click(screen.getByRole('button',{name:'Send to Fancy'}));
+ await waitFor(()=>expect(stub.callsTo('requestAI')).toHaveLength(1));expect((stub.callsTo('requestAI')[0]!.body as {input:string}).input).toBe(allowed);
+});

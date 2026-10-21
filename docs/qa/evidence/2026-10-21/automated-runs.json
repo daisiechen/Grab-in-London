@@ -11078,6 +11078,631 @@
           "durationMs": 15.241582999999991
         }
       ]
+    },
+    {
+      "id": "R54",
+      "testedCommit": "49d22b6042e183e4e7123af972517275be6453f5",
+      "command": "pnpm exec vitest run --project web apps/web/src/features/assistant/qa-independent-length.unit.test.tsx",
+      "startedAt": "2026-10-21T13:06:58.669000+00:00",
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R54-T001",
+          "run": "R54",
+          "path": "apps/web/src/features/assistant/qa-independent-length.unit.test.tsx",
+          "title": "QA-F10 pasted 2001-character original is preserved instead of silently truncated",
+          "status": "passed",
+          "durationMs": 101.72474999999997
+        },
+        {
+          "id": "R54-T002",
+          "run": "R54",
+          "path": "apps/web/src/features/assistant/qa-independent-length.unit.test.tsx",
+          "title": "QA-F10 an overlong controlled editor value gets a visible inline error without losing text or requesting AI",
+          "status": "passed",
+          "durationMs": 35.900667
+        },
+        {
+          "id": "R54-T003",
+          "run": "R54",
+          "path": "apps/web/src/features/assistant/qa-independent-length.unit.test.tsx",
+          "title": "QA-F10 blank sends nothing, raw edge whitespace cannot bypass2000 and shortening to2000 resumes one explicit request",
+          "status": "passed",
+          "durationMs": 60.24075000000005
+        }
+      ]
+    },
+    {
+      "id": "R55",
+      "testedCommit": "49d22b6042e183e4e7123af972517275be6453f5",
+      "command": "pnpm --filter @fancy/ios exec jest src/features/assistant/manager.test.ts src/features/assistant/widget.test.tsx --runInBand --json",
+      "startedAt": "2026-10-21T13:06:59.838000+00:00",
+      "exitCode": 0,
+      "passed": 24,
+      "failed": 0,
+      "total": 24,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R55-T001",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/widget.test.tsx",
+          "title": "opens an explicit assistant entry without creating an identity or sending anything",
+          "status": "passed",
+          "durationMs": 115
+        },
+        {
+          "id": "R55-T002",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/widget.test.tsx",
+          "title": "keeps overlong native input with inline shortening guidance and recovers at 2000 characters",
+          "status": "passed",
+          "durationMs": 27
+        },
+        {
+          "id": "R55-T003",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "recovers a temporary guest read failure on explicit retry without discarding its revocation identity",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R55-T004",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "retries failed credential persistence before bootstrap without minting another guest",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R55-T005",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "retries the same request intent and sends only explicitly confirmed guest preferences",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R55-T006",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "single-flights bootstrap and ignores a response after account isolation",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R55-T007",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "expires exactly at TTL and preserves unsent text and confirmed guest preferences",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R55-T008",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "clears assistant input on NEW without applying or clearing the registered business editor",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R55-T009",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "requires replacement confirmation and rejects edits during validation without applying",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R55-T010",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "does not apply a late answer while closed, and never implicitly sends editor content",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R55-T011",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "releases MEAL context on blur before asking from a page without explicit context",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R55-T012",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "does not let a retired focus cleanup erase the new page context",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R55-T013",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "restores the same fixed-expiry guest across managers and NEW",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R55-T014",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "cold-starts with no AI transcript or device token and only continues after an explicit action using the fixed-expiry guest",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R55-T015",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "treats a server RAM-loss 410 as expired without automatic regeneration and keeps local unsent text and confirmed preferences",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R55-T016",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "creates a new subject only after the fixed 24h expiry",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R55-T017",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "clears the secure guest record on login without retaining AI content",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R55-T018",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "fails closed on secure read or write failure without sending assistant requests or minting retries",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R55-T019",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "blocks future guest bootstrap if account-transition secure deletion fails",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R55-T020",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "keeps invalid question text verbatim and sends no request (case 0)",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R55-T021",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "keeps invalid question text verbatim and sends no request (case 1)",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R55-T022",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "keeps invalid question text verbatim and sends no request (case 2)",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R55-T023",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "keeps invalid question text verbatim and sends no request (case 3)",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R55-T024",
+          "run": "R55",
+          "path": "apps/ios/src/features/assistant/manager.test.ts",
+          "title": "accepts exactly 2000 characters and recovers after shortening overlong input",
+          "status": "passed",
+          "durationMs": 0
+        }
+      ]
+    },
+    {
+      "id": "R56",
+      "testedCommit": "49d22b6042e183e4e7123af972517275be6453f5",
+      "command": "pnpm exec vitest run --project web apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx apps/web/src/lib/poller.unit.test.ts (initial fixture)",
+      "startedAt": "2026-10-21T13:07:12.428000+00:00",
+      "exitCode": 1,
+      "passed": 7,
+      "failed": 2,
+      "total": 9,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R56-T001",
+          "run": "R56",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) polls immediately and then every 2 s while visible",
+          "status": "passed",
+          "durationMs": 7.472750000000019
+        },
+        {
+          "id": "R56-T002",
+          "run": "R56",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) backs off 2/4/8/16/30 s on consecutive failures, caps at 30 s, and resets after success",
+          "status": "passed",
+          "durationMs": 19.571292000000028
+        },
+        {
+          "id": "R56-T003",
+          "run": "R56",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) adds up to +20% jitter",
+          "status": "passed",
+          "durationMs": 0.13545900000002575
+        },
+        {
+          "id": "R56-T004",
+          "run": "R56",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) pauses while hidden and re-checks auth before catching up on return",
+          "status": "passed",
+          "durationMs": 7.827916999999957
+        },
+        {
+          "id": "R56-T005",
+          "run": "R56",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) stops for good when the resume auth check fails",
+          "status": "passed",
+          "durationMs": 7.764208999999994
+        },
+        {
+          "id": "R56-T006",
+          "run": "R56",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) a tick returning stop (403 → HISTORY) ends polling",
+          "status": "passed",
+          "durationMs": 3.9661250000000337
+        },
+        {
+          "id": "R56-T007",
+          "run": "R56",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) does not start while hidden, and starts polling when shown",
+          "status": "passed",
+          "durationMs": 6.518624999999986
+        },
+        {
+          "id": "R56-T008",
+          "run": "R56",
+          "path": "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx",
+          "title": "QA-CHAT-009 GROUP hides polling, backs off to30s, authenticates before catchup and never sends retained text after403",
+          "status": "failed",
+          "durationMs": 292.356625,
+          "failureSummary": "AssertionError: expected [ 'auth', 'LIVE', 'HISTORY', …(2) ] to deeply equal [ 'auth', 'LIVE', 'HISTORY' ]"
+        },
+        {
+          "id": "R56-T009",
+          "run": "R56",
+          "path": "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx",
+          "title": "QA-CHAT-009 DIRECT hides polling, backs off to30s, authenticates before catchup and never sends retained text after403",
+          "status": "failed",
+          "durationMs": 1148.5160409999999,
+          "failureSummary": "Error: Unable to find an element with the text: /Your earlier messages remain read-only/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher "
+        }
+      ]
+    },
+    {
+      "id": "R57",
+      "testedCommit": "49d22b6042e183e4e7123af972517275be6453f5",
+      "command": "pnpm exec vitest run --project web apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx apps/web/src/lib/poller.unit.test.ts (current metadata)",
+      "startedAt": "2026-10-21T13:08:31.187000+00:00",
+      "exitCode": 0,
+      "passed": 9,
+      "failed": 0,
+      "total": 9,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R57-T001",
+          "run": "R57",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) polls immediately and then every 2 s while visible",
+          "status": "passed",
+          "durationMs": 6.197458999999981
+        },
+        {
+          "id": "R57-T002",
+          "run": "R57",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) backs off 2/4/8/16/30 s on consecutive failures, caps at 30 s, and resets after success",
+          "status": "passed",
+          "durationMs": 19.492208000000005
+        },
+        {
+          "id": "R57-T003",
+          "run": "R57",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) adds up to +20% jitter",
+          "status": "passed",
+          "durationMs": 0.12975000000000136
+        },
+        {
+          "id": "R57-T004",
+          "run": "R57",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) pauses while hidden and re-checks auth before catching up on return",
+          "status": "passed",
+          "durationMs": 7.7903329999999755
+        },
+        {
+          "id": "R57-T005",
+          "run": "R57",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) stops for good when the resume auth check fails",
+          "status": "passed",
+          "durationMs": 7.767832999999996
+        },
+        {
+          "id": "R57-T006",
+          "run": "R57",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) a tick returning stop (403 → HISTORY) ends polling",
+          "status": "passed",
+          "durationMs": 3.787666999999942
+        },
+        {
+          "id": "R57-T007",
+          "run": "R57",
+          "path": "apps/web/src/lib/poller.unit.test.ts",
+          "title": "LivePoller (T12) does not start while hidden, and starts polling when shown",
+          "status": "passed",
+          "durationMs": 5.905624999999986
+        },
+        {
+          "id": "R57-T008",
+          "run": "R57",
+          "path": "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx",
+          "title": "QA-CHAT-009 GROUP hides polling, backs off to30s, authenticates before catchup and never sends retained text after403",
+          "status": "passed",
+          "durationMs": 297.34179200000005
+        },
+        {
+          "id": "R57-T009",
+          "run": "R57",
+          "path": "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx",
+          "title": "QA-CHAT-009 DIRECT hides polling, backs off to30s, authenticates before catchup and never sends retained text after403",
+          "status": "passed",
+          "durationMs": 179.05537500000014
+        }
+      ]
+    },
+    {
+      "id": "R58",
+      "testedCommit": "49d22b6042e183e4e7123af972517275be6453f5",
+      "command": "pnpm --filter @fancy/ios exec jest src/features/inbox/poller.test.ts src/features/inbox/chat.test.tsx --runInBand --json",
+      "startedAt": "2026-10-21T13:08:32.324000+00:00",
+      "exitCode": 0,
+      "passed": 20,
+      "failed": 0,
+      "total": 20,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R58-T001",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "InboxScreen separates chats from pending applications and keeps pending requests visible",
+          "status": "passed",
+          "durationMs": 98
+        },
+        {
+          "id": "R58-T002",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) drops messages and compose drafts across logout and another account sign-in",
+          "status": "passed",
+          "durationMs": 45
+        },
+        {
+          "id": "R58-T003",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) polls LIVE in the foreground, pauses in the background and catches up on resume",
+          "status": "passed",
+          "durationMs": 7
+        },
+        {
+          "id": "R58-T004",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) a failed send stays visible with Retry (same clientMessageId); there is no automatic resend",
+          "status": "passed",
+          "durationMs": 65
+        },
+        {
+          "id": "R58-T005",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) 403 while polling switches to read-only history and stops polling",
+          "status": "passed",
+          "durationMs": 6
+        },
+        {
+          "id": "R58-T006",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) a dissolved group loads HISTORY once and never polls",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R58-T007",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) leaving the group needs confirmation and sends If-Match",
+          "status": "passed",
+          "durationMs": 10
+        },
+        {
+          "id": "R58-T008",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "ChatScreen (S14) renders message bodies as plain text",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R58-T009",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/chat.test.tsx",
+          "title": "acknowledges only rendered foreground progress and stops acknowledgements in background",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R58-T010",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/poller.test.ts",
+          "title": "MessagePoller (S14) polls every 2 s in the foreground after the last seen seq and de-duplicates",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R58-T011",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/poller.test.ts",
+          "title": "MessagePoller (S14) pauses in the background (no timer, no request) and catches up immediately on resume",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R58-T012",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/poller.test.ts",
+          "title": "MessagePoller (S14) backs off 2/4/8/16/30 s with jitter on failures and resets after success",
+          "status": "passed",
+          "durationMs": 9
+        },
+        {
+          "id": "R58-T013",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/poller.test.ts",
+          "title": "MessagePoller (S14) jitter stays within ±20 %",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R58-T014",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/poller.test.ts",
+          "title": "MessagePoller (S14) honours Retry-After on 429",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R58-T015",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/poller.test.ts",
+          "title": "MessagePoller (S14) 403 stops polling for good and switches to history",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R58-T016",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/poller.test.ts",
+          "title": "MessagePoller (S14) 401 pauses; resuming after sign-in catches up from the last seq",
+          "status": "passed",
+          "durationMs": 4
+        },
+        {
+          "id": "R58-T017",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/poller.test.ts",
+          "title": "MessagePoller (S14) follows pages within one tick",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R58-T018",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/poller.test.ts",
+          "title": "MessagePoller (S14) compares seq numerically beyond 2^53",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R58-T019",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/poller.test.ts",
+          "title": "poller lifecycle races ignores a rejected request after stop without firing signed-out callbacks",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R58-T020",
+          "run": "R58",
+          "path": "apps/ios/src/features/inbox/poller.test.ts",
+          "title": "rejects a previous foreground lifetime response even after resume",
+          "status": "passed",
+          "durationMs": 3
+        }
+      ]
+    },
+    {
+      "id": "R59",
+      "testedCommit": "49d22b6042e183e4e7123af972517275be6453f5",
+      "command": "pnpm exec vitest run --project web apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx (explicit deferred stale metadata)",
+      "startedAt": "2026-10-21T13:09:19.487000+00:00",
+      "exitCode": 1,
+      "passed": 2,
+      "failed": 1,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R59-T001",
+          "run": "R59",
+          "path": "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx",
+          "title": "QA-CHAT-009 GROUP hides polling, backs off to30s, authenticates before catchup and never sends retained text after403",
+          "status": "passed",
+          "durationMs": 296.656333
+        },
+        {
+          "id": "R59-T002",
+          "run": "R59",
+          "path": "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx",
+          "title": "QA-CHAT-009 DIRECT hides polling, backs off to30s, authenticates before catchup and never sends retained text after403",
+          "status": "passed",
+          "durationMs": 153.83129099999996
+        },
+        {
+          "id": "R59-T003",
+          "run": "R59",
+          "path": "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx",
+          "title": "QA-CHAT-009 metadata captured before revocation cannot restart LIVE after a terminal403",
+          "status": "failed",
+          "durationMs": 16.306208000000083,
+          "failureSummary": "AssertionError: expected [ 'LIVE', 'HISTORY' ] to not include 'LIVE'"
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -11111,8 +11736,9 @@
     "scripts/qa-independent-london-quota.api.test.ts": "a10b8fd693e443478808da252cd8ec423956a8769353f031d2cc1a64282930b6",
     "scripts/qa-independent-ai-crash.api.test.ts": "906bed2171239dcde79c7c50ad1c446e3f3746b5fd2ae898924dc5155dbe14a3",
     "scripts/qa-ai-crash-child.ts": "aa1ee0de811e6c961535a0fc46c8c2aa0932195f856a0ada390074218b8971a4",
-    "apps/web/src/features/assistant/qa-independent-length.unit.test.tsx": "27870258d564549e713a79a51d42bd018447a2fe4d051ded9457b467bb34b0c9",
-    "scripts/qa-independent-ai-limits.api.test.ts": "a8df504a862789ca31e92b1bdca21c5f0b14bec6443b0c6eb8156eefb1d0156a"
+    "apps/web/src/features/assistant/qa-independent-length.unit.test.tsx": "378d50911dd819dee96eb24b4102e06be357510e3d85ca55417fd933f03321ef",
+    "scripts/qa-independent-ai-limits.api.test.ts": "a8df504a862789ca31e92b1bdca21c5f0b14bec6443b0c6eb8156eefb1d0156a",
+    "apps/web/src/features/inbox/qa-independent-recovery.unit.test.tsx": "8fc38f1e09b54c4107f6dc338be803c24bdb81ce79a8920872ff7fab2690a1c8"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed.",
   "runtimeSnapshotVerification": {
@@ -11178,6 +11804,7 @@
     "R44 initial QA fixture selected email from identities (no such column). Corrected to private_contact per migration; no production change or assertion weakening. Intermediate logout-only pass is superseded by final two-case R44. R44 rate recovery sleep is controlled: verifies Retry-After milliseconds then clears only synthetic actor rate buckets rather than waiting wall-clock; real API limiter and SDK retry execute.",
     "R47 setup: SQL quote escaping initially prevented collection (0 tests); corrected and linted. Booking declaration fixture used invalid CONFIRMED, causing two DB CHECK failures before target command; corrected to contracted REPORTED_CONFIRMED. Single-consent fixture initially lacked a public-complete profile (404 before selection); completed profiles before baseline. All business assertions retained; these are QA setup failures, not production defects. Final R47 executes 3/3 on real isolated PostgreSQL. Start clock injected only after command locks; blocker waits for both backend Lock states, not a fixed sleep as proof. Recipient reads during uncommitted consent use a second DB connection and a controlled promise barrier, followed by rollback and committed API selection.",
     "R48 initial SQL period alias day caused six setup failures; corrected reserved alias to day_period/month_period. Owner-only preferences route has no target-user parameter: initially QA expected unknown userId query rejection422, but contract binds auth.userId and returns B own empty fields. Corrected to assert no A disclosure, guessed target path404, B wrong-version deletion409 and A fields unchanged; no access-control expectation weakened. Real disable configuration is AI_PROVIDER=disabled, not an invented AI_ENABLED env var. Local synthetic iOS credentials are issued through session service; OS browser/Keychain are not tested.",
-    "R49 initial NEW/reset request omitted contract-required explicit idempotency intent key and returned422 before quota assertions. Added required UUID header; quota and source/CSRF assertions unchanged. Fixed guest expiry validated as exactly24h in DB; expiry path advanced by changing only synthetic credential expires_at to past, not waiting24h. This verifies refresh/NEW cannot renew it but cookie clearing can create a fresh quota subject, an explicit known bypass boundary."
+    "R49 initial NEW/reset request omitted contract-required explicit idempotency intent key and returned422 before quota assertions. Added required UUID header; quota and source/CSRF assertions unchanged. Fixed guest expiry validated as exactly24h in DB; expiry path advanced by changing only synthetic credential expires_at to past, not waiting24h. This verifies refresh/NEW cannot renew it but cookie clearing can create a fresh quota subject, an explicit known bypass boundary.",
+    "R56 initial DIRECT assertion used GROUP read-only wording (QA fixture mismatch), and current-metadata test unconditionally returned stale canSend=true. R57 uses the correct group/direct wording and current canSend projection; allows repeated HISTORY reads but forbids LIVE after HISTORY. Original R56 failures retained. R59 adds a separate controlled deferred response captured before revocation and released only after403/HISTORY: this still fails, independently proving the stale-metadata race rather than discarding it as fixture error."
   ]
 }
