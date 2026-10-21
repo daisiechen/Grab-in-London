@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 106,
-    "PASS": 99,
+    "NOT_RUN": 105,
+    "PASS": 100,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -13917,8 +13917,12 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R25-T006",
+        "R25-T007",
+        "R51-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -14025,15 +14029,16 @@
         "R2-T062",
         "R2-T063",
         "R25-T006",
-        "R25-T007"
+        "R25-T007",
+        "R51-T001"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "UNKNOWN最大reserve保留且不重发",
-        "失败照实际结算",
-        "用户成功轮及在途位释放"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "R25独立provider故障注入：timeout无usage→UNKNOWN/max3024保留，失败有usage→KNOWN/20结算，均FAILED/no结果且quota successes0/reserved0；调用restart恢复方法后原call不可dispatch/请求重放不重发。尚未实际杀API进程重启，保留NOT_RUN。"
+      "remainingExpected": [],
+      "actual": "复用R25已独立失败usage：无usage UNKNOWN保留max3024不重发；已知失败按实际20结算；成功轮和占位0。新增R51真实两个API子进程：第一个buildServer收202、provider IN_FLIGHT后SIGKILL，无graceful onClose且DB仍PENDING；第二个全新API启动自动恢复，旧RAM重放410/provider calls0。请求FAILED RESTART，call UNKNOWN/actualNULL，两个期间预算均reserved3024/used0，quota成功和占位0、active_request null，旧call不能再次dispatch且总call1。只杀本测试创建的进程，不是真实供应商超时/账单验收。"
     },
     {
       "id": "QA-AI-042",
