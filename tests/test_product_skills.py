@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 
 
 ROOT = Path(__file__).resolve().parents[1]
-NAMES = ("product-management", "product-design")
+NAMES = ("product-management", "product-design", "qa-acceptance")
 LINK = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 
 

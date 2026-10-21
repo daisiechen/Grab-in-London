@@ -19,6 +19,7 @@ GitHub 仓库：https://github.com/daisiechen/Grab-in-London
 - 商业模式设计、市场可行性、单位经济或投入决策分析：先阅读 [business-model-design](.agents/skills/business-model-design/SKILL.md)，再按任务加载其 references。具体业务事实、假设和决策记录在对应项目文档中。
 - 需求发现、用户路径、PRD、优先级与产品验收：参考 [product-management](.agents/skills/product-management/SKILL.md)。
 - 信息架构、交互、视觉系统、原型与设计审查：参考 [product-design](.agents/skills/product-design/SKILL.md)。
+- 功能验收、探索性测试、缺陷复现与回归：参考 [qa-acceptance](.agents/skills/qa-acceptance/SKILL.md)。
 - 按当前任务加载相关 references；项目背景、具体规则和决策保存在 PRD、设计规范等项目文档中，不写入通用技能。
 
 ## 文档管理
