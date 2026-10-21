@@ -8,7 +8,7 @@ import {createFetchStub,fail,noContent,ok,deferred,type StubResponse} from '../.
 import {fakePollerDeps} from '../../test/fakePoller.ts';
 import {PollerDepsContext} from '../../lib/pollerContext.tsx';
 import {MEAL_ID,session as userSession} from '../../test/fixtures.ts';
-import {AssistantProvider,useAssistantEditor} from './context.tsx';
+import {AssistantProvider,useAssistant,useAssistantEditor} from './context.tsx';
 import {AssistantLauncher} from './AssistantLauncher.tsx';
 import {AssistantPanel} from './AssistantPanel.tsx';
 import {emptyFields,type AIDraft,type AIResult} from './model.ts';
@@ -105,6 +105,84 @@ describe('Ask Fancy production UI with isolated mock transport',()=>{
 });
 
 describe('Ask Fancy expiry, retries and typed draft boundaries',()=>{
+ it.each([false,true])('fences first-send bootstrap across a pause (foreground before bootstrap=%s)',async(early)=>{
+  const stub=baseStub(),held=deferred<StubResponse>();stub.on('bootstrapAI',()=>held.promise);renderAssistant(stub);await open();await send('Retain the initial question');await waitFor(()=>expect(stub.callsTo('bootstrapAI')).toHaveLength(1));
+  const visibility=vi.spyOn(document,'visibilityState','get').mockReturnValue('hidden');fireEvent(document,new Event('visibilitychange'));
+  stub.on('readAIPreferences',()=>ok({fields:emptyFields(),version:'4',epoch:'4',confirmedAt:null}));
+  if(early){visibility.mockReturnValue('visible');fireEvent(document,new Event('visibilitychange'));}
+  await act(async()=>{held.resolve(ok(aiSession(),201));});expect(stub.callsTo('requestAI')).toHaveLength(0);
+  expect((screen.getByRole('textbox',{name:'Ask Fancy'}) as HTMLTextAreaElement).value).toBe('Retain the initial question');
+  if(!early){visibility.mockReturnValue('visible');fireEvent(document,new Event('visibilitychange'));}
+  await screen.findByText(/Preferences changed on another device/);expect(stub.callsTo('requestAI')).toHaveLength(0);expect(stub.callsTo('readAI')).toHaveLength(0);visibility.mockRestore();
+ });
+ it.each([false,true])('holds an in-flight result offscreen until foreground epoch verification (changed=%s)',async(changed)=>{
+  const stub=baseStub(),held=deferred<StubResponse>();stub.on('requestAI',()=>held.promise);renderAssistant(stub);await open();await send();await waitFor(()=>expect(stub.callsTo('requestAI')).toHaveLength(1));
+  fireEvent.change(screen.getByRole('textbox',{name:'Ask Fancy'}),{target:{value:'Preserve my next unsent question'}});
+  const visibility=vi.spyOn(document,'visibilityState','get').mockReturnValue('hidden');fireEvent(document,new Event('visibilitychange'));const activity=stub.callsTo('activityAI').length;
+  const requestId=(stub.callsTo('requestAI')[0]!.body as {requestId:string}).requestId;
+  await act(async()=>{held.resolve(ok(status(requestId),202));});expect(screen.queryByText('Here is a suggestion for you to review.')).toBeNull();
+  if(changed)stub.on('readAIPreferences',()=>ok({fields:emptyFields(),version:'4',epoch:'4',confirmedAt:null}));
+  visibility.mockReturnValue('visible');fireEvent(document,new Event('visibilitychange'));
+  if(changed){await screen.findByText(/Preferences changed on another device/);expect(screen.queryByText('Here is a suggestion for you to review.')).toBeNull();}
+  else{await screen.findByText('Here is a suggestion for you to review.');expect((screen.getByRole('button',{name:'Send to Fancy'}) as HTMLButtonElement).disabled).toBe(false);}
+  expect((screen.getByRole('textbox',{name:'Ask Fancy'}) as HTMLTextAreaElement).value).toBe('Preserve my next unsent question');expect(stub.callsTo('activityAI')).toHaveLength(activity);visibility.mockRestore();
+ });
+ it('holds polling and requests behind one foreground preference check without renewing activity',async()=>{
+  const stub=baseStub(),held=deferred<StubResponse>(),f=fakePollerDeps();
+  stub.on('requestAI',call=>ok(status((call.body as {requestId:string}).requestId,false),202));stub.on('pollAI',call=>ok(status(call.params.requestId!,false)));
+  renderAssistant(stub,undefined,f);await open();await send();await waitFor(()=>expect(stub.callsTo('pollAI').length).toBeGreaterThan(0));
+  const visibility=vi.spyOn(document,'visibilityState','get').mockReturnValue('hidden');fireEvent(document,new Event('visibilitychange'));await act(async()=>{await f.setVisible(false);});
+  stub.on('readAIPreferences',()=>held.promise);const polls=stub.callsTo('pollAI').length,activities=stub.callsTo('activityAI').length,reads=stub.callsTo('readAIPreferences').length;
+  visibility.mockReturnValue('visible');fireEvent(document,new Event('visibilitychange'));fireEvent(window,new Event('focus'));await act(async()=>{await f.setVisible(true);});
+  expect(stub.callsTo('readAIPreferences')).toHaveLength(reads+1);expect(stub.callsTo('pollAI')).toHaveLength(polls);expect(stub.callsTo('activityAI')).toHaveLength(activities);
+  await act(async()=>{held.resolve(ok({fields:emptyFields(),version:'3',epoch:'3',confirmedAt:null}));await f.flush();});
+  await waitFor(()=>expect(stub.callsTo('pollAI').length).toBeGreaterThan(polls));expect(stub.callsTo('activityAI')).toHaveLength(activities);visibility.mockRestore();
+ });
+ it('keeps unsent text and blocks sends, draft validation and activity while foreground checks are offline',async()=>{
+  const stub=baseStub();renderAssistant(stub);await open();await send();await screen.findByText('Here is a suggestion for you to review.');
+  fireEvent.change(screen.getByRole('textbox',{name:'Ask Fancy'}),{target:{value:'Keep my question offline'}});
+  const visibility=vi.spyOn(document,'visibilityState','get').mockReturnValue('hidden');fireEvent(document,new Event('visibilitychange'));
+  stub.on('readAIPreferences',()=>{throw new TypeError('offline');});const activity=stub.callsTo('activityAI').length,requests=stub.callsTo('requestAI').length;
+  visibility.mockReturnValue('visible');fireEvent(document,new Event('visibilitychange'));await screen.findByRole('alert');
+  await userEvent.click(screen.getByRole('button',{name:'Send to Fancy'}));await screen.findByRole('alert');
+  expect(stub.callsTo('requestAI')).toHaveLength(requests);expect(stub.callsTo('validateAIDraft')).toHaveLength(0);expect(stub.callsTo('activityAI')).toHaveLength(activity);
+  expect((screen.getByRole('textbox',{name:'Ask Fancy'}) as HTMLTextAreaElement).value).toBe('Keep my question offline');visibility.mockRestore();
+ });
+ it('discards a late foreground preference response after independent preference deletion',async()=>{
+  let assistant:ReturnType<typeof useAssistant>|null=null;function Capture(){assistant=useAssistant();return null;}
+  const stub=baseStub(),held=deferred<StubResponse>();renderAssistant(stub,<Capture/>);await open();await send();await screen.findByText('Here is a suggestion for you to review.');
+  const visibility=vi.spyOn(document,'visibilityState','get').mockReturnValue('hidden');fireEvent(document,new Event('visibilitychange'));stub.on('readAIPreferences',()=>held.promise);
+  visibility.mockReturnValue('visible');fireEvent(document,new Event('visibilitychange'));
+  stub.on('deleteAIPreferences',()=>ok({fields:emptyFields(),version:'4',epoch:'4',confirmedAt:null}));
+  await act(async()=>{await assistant!.deletePreferences();});
+  await screen.findByText('Preferences deleted and conversation cleared. Your unsent text is kept.');
+  await act(async()=>{held.resolve(ok({fields:{...emptyFields(),budgetMaxPence:9999},version:'99',epoch:'99',confirmedAt:null}));});
+  expect(screen.queryByText(/Preferences changed on another device/)).toBeNull();expect(screen.getByText('Preferences deleted and conversation cleared. Your unsent text is kept.')).toBeTruthy();expect(screen.queryByText('Here is a suggestion for you to review.')).toBeNull();visibility.mockRestore();
+ });
+ it('does not let a response from an earlier foreground check unlock a newer background pause',async()=>{
+  const stub=baseStub(),held=deferred<StubResponse>();renderAssistant(stub);await open();await send();await screen.findByText('Here is a suggestion for you to review.');
+  const visibility=vi.spyOn(document,'visibilityState','get').mockReturnValue('hidden');fireEvent(document,new Event('visibilitychange'));stub.on('readAIPreferences',()=>held.promise);
+  const reads=stub.callsTo('readAIPreferences').length,sessionReads=stub.callsTo('readAI').length;
+  visibility.mockReturnValue('visible');fireEvent(document,new Event('visibilitychange'));await waitFor(()=>expect(stub.callsTo('readAIPreferences')).toHaveLength(reads+1));
+  visibility.mockReturnValue('hidden');fireEvent(document,new Event('visibilitychange'));
+  await act(async()=>{held.resolve(ok({fields:emptyFields(),version:'3',epoch:'3',confirmedAt:null}));});expect(stub.callsTo('readAI')).toHaveLength(sessionReads);
+  stub.on('readAIPreferences',()=>ok({fields:emptyFields(),version:'4',epoch:'4',confirmedAt:null}));visibility.mockReturnValue('visible');fireEvent(document,new Event('visibilitychange'));
+  await screen.findByText(/Preferences changed on another device/);expect(stub.callsTo('readAIPreferences')).toHaveLength(reads+2);visibility.mockRestore();
+ });
+ it.each([false,true])('checks foreground epoch after a completed turn (panel closed=%s) and keeps unsent input without activity',async(closed)=>{
+  const stub=baseStub();renderAssistant(stub);await open();await send();await screen.findByText('Here is a suggestion for you to review.');
+  fireEvent.change(screen.getByRole('textbox',{name:'Ask Fancy'}),{target:{value:'Keep this unsent question'}});
+  if(closed)await userEvent.click(screen.getByRole('button',{name:'Close assistant'}));
+  const activity=stub.callsTo('activityAI').length,reads=stub.callsTo('readAIPreferences').length;
+  const visibility=vi.spyOn(document,'visibilityState','get').mockReturnValue('hidden');fireEvent(document,new Event('visibilitychange'));
+  stub.on('readAIPreferences',()=>ok({fields:emptyFields(),version:'4',epoch:'4',confirmedAt:null}));
+  visibility.mockReturnValue('visible');fireEvent(document,new Event('visibilitychange'));fireEvent(window,new Event('focus'));
+  await waitFor(()=>expect(stub.callsTo('readAIPreferences')).toHaveLength(reads+1));
+  if(closed)await open();
+  await screen.findByText(/Preferences changed on another device/);
+  expect(screen.queryByText('Here is a suggestion for you to review.')).toBeNull();expect((screen.getByRole('textbox',{name:'Ask Fancy'}) as HTMLTextAreaElement).value).toBe('Keep this unsent question');
+  expect(stub.callsTo('activityAI')).toHaveLength(activity);expect(stub.callsTo('requestAI')).toHaveLength(1);visibility.mockRestore();
+ });
  it('expires local conversation content at the boundary and preserves unsent user input',async()=>{
   const now=Date.now();const clock=vi.spyOn(Date,'now').mockReturnValue(now);const stub=baseStub();renderAssistant(stub);await open();await send();await screen.findByText('Here is a suggestion for you to review.');
   clock.mockReturnValue(now+1_800_001);await userEvent.type(screen.getByRole('textbox',{name:'Ask Fancy'}),'Keep my unsent wording.');await userEvent.click(screen.getByRole('button',{name:'Send to Fancy'}));await screen.findByText('This conversation has expired. Your unsent message is kept; start a new conversation.');expect(screen.queryByText('Here is a suggestion for you to review.')).toBeNull();expect((screen.getByRole('textbox',{name:'Ask Fancy'}) as HTMLTextAreaElement).value).toBe('Keep my unsent wording.');

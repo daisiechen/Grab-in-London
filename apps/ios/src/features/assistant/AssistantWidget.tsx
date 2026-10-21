@@ -20,7 +20,7 @@ export function AssistantWidget(){
  const [active,setActive]=useState(AppState.currentState==='active');
  const [includeEditor,setIncludeEditor]=useState(false);const [replace,setReplace]=useState<AIDraft|null>(null);const [busy,setBusy]=useState(false);
  const editTimer=useRef<ReturnType<typeof setTimeout>|null>(null);
- useEffect(()=>{const sub=AppState.addEventListener('change',state=>{setActive(state==='active');if(state!=='active'){if(editTimer.current){clearTimeout(editTimer.current);editTimer.current=null;void assistant.edited();}assistant.pause();}else assistant.tick();});return()=>sub.remove();},[assistant]);
+ useEffect(()=>{const sub=AppState.addEventListener('change',state=>{setActive(state==='active');if(state!=='active'){setReplace(null);setIncludeEditor(false);if(editTimer.current){clearTimeout(editTimer.current);editTimer.current=null;void assistant.edited();}assistant.pause();}else void assistant.resume();});return()=>sub.remove();},[assistant]);
  useEffect(()=>{
   if(!s.open||!active)return;
   const ttl=setInterval(()=>assistant.tick(),1000);
@@ -29,6 +29,7 @@ export function AssistantWidget(){
  },[assistant,s.open,s.phase,active]);
  useEffect(()=>()=>{if(editTimer.current)clearTimeout(editTimer.current);},[]);
  useEffect(()=>{setReplace(null);setIncludeEditor(false);},[s.open]);
+ useEffect(()=>{setReplace(null);},[s.result]);
  const transfer=async(d:AIDraft,confirm:boolean)=>{setBusy(true);try{await assistant.transfer(d,confirm);setReplace(null);}catch(e){assistant.report(e);}finally{setBusy(false);}};
  const useDraft=(d:AIDraft)=>{
   const editor=assistant.editorFor(d);
@@ -41,7 +42,7 @@ export function AssistantWidget(){
   <Sheet visible={s.open} title="Ask Fancy" onClose={()=>{if(editTimer.current){clearTimeout(editTimer.current);editTimer.current=null;void assistant.edited();}assistant.close();}}>
    <KeyboardAvoidingView behavior={Platform.OS==='ios'?'padding':undefined}>
     <ScrollView style={{maxHeight:480}} contentContainerStyle={{gap:12}} keyboardShouldPersistTaps="handled">
-     {s.view==='preferences'?<PreferencesView key={`${s.preferenceVersion}:${s.view}`}/>:<>
+     {s.view==='preferences'?<PreferencesView key={`${s.preferenceVersion}:${s.view}:${JSON.stringify(s.preferences)}`}/>:<>
       {s.view==='home'?<><Heading>A little help finding your table.</Heading><Body muted>Find, compare or draft a few words. You choose what to send or publish.</Body><Primary label={s.turns.length?'Continue conversation':'Start conversation'} onPress={()=>void assistant.continue()}/><TextAction label="My preferences" onPress={()=>void assistant.preferences()}/></>:null}
       {s.view==='chat'?<>
        {s.turns.map((turn,i)=><View key={i} style={[styles.turn,turn.role==='user'&&styles.mine]}><Body>{turn.text}</Body></View>)}

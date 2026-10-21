@@ -60,7 +60,7 @@ it('requires replacement confirmation and rejects edits during validation withou
  h.manager.registerEditor({key:'form',kind:'APPLICATION',targetId:'meal',current:()=>({text:'My text',version}),apply});
  await expect(h.manager.transfer(draft,false)).rejects.toThrow('Confirm replacement');
  expect(h.call.mock.calls.filter(c=>c[0]==='validateAIDraft')).toHaveLength(0);
- const wait=deferred<unknown>();h.responses.set('validateAIDraft',()=>wait.promise);const transfer=h.manager.transfer(draft,true);version='2';wait.resolve({data:draft});
+ const wait=deferred<unknown>();h.responses.set('validateAIDraft',()=>wait.promise);const transfer=h.manager.transfer(draft,true);await flush();expect(h.call.mock.calls.filter(c=>c[0]==='validateAIDraft')).toHaveLength(1);version='2';wait.resolve({data:draft});
  await expect(transfer).rejects.toMatchObject({code:'EDITOR_CONFLICT'});expect(apply).not.toHaveBeenCalled();
 });
 it('does not apply a late answer while closed, and never implicitly sends editor content',async()=>{
@@ -139,4 +139,49 @@ it('accepts exactly 2000 characters and recovers after shortening overlong input
  const h=setup();h.manager.setText('x'.repeat(2001));await h.manager.send();expect(h.manager.getSnapshot().error).not.toBeNull();
  h.manager.setText('x'.repeat(2000));expect(h.manager.getSnapshot().error).toBeNull();await h.manager.send();
  const calls=h.call.mock.calls.filter(c=>c[0]==='requestAI');expect(calls).toHaveLength(1);expect(calls[0]?.[1]).toMatchObject({body:{input:'x'.repeat(2000)}});
+});
+function signedInResumeFixture(){
+ const h=setup();h.actor('account-a');h.manager.open();let epoch='1';
+ h.responses.set('readAIPreferences',async()=>({data:{fields:{...emptyPreferences(),budgetMaxPence:epoch==='1'?3500:null},version:epoch,epoch,confirmedAt:null}}));
+ h.responses.set('readAI',async()=>({data:{turns:[{role:'assistant',text:'OLD_CONTEXT'}],latestRequestId:null,expiresAt:new Date(1800000).toISOString()}}));
+ return {...h,preferenceEpoch:(value:string)=>{epoch=value;}};
+}
+it('validates remote epoch on foreground, clears old context and keeps unsent input',async()=>{
+ const h=signedInResumeFixture();await h.manager.continue();h.manager.setText('Unsent question');h.manager.pause();h.preferenceEpoch('2');
+ await h.manager.resume();expect(h.manager.getSnapshot().preferences.budgetMaxPence).toBeNull();expect(h.manager.getSnapshot().turns).toEqual([]);expect(h.manager.getSnapshot().result).toBeNull();expect(h.manager.getSnapshot().text).toBe('Unsent question');
+ expect(h.call.mock.calls.filter(c=>c[0]==='readAIPreferences')).toHaveLength(2);
+});
+it('hides old state while resume verification is pending; deduplicates concurrent resume reads',async()=>{
+ const h=signedInResumeFixture();await h.manager.continue();h.manager.pause();const wait=deferred<unknown>();h.responses.set('readAIPreferences',()=>wait.promise);
+ const one=h.manager.resume(),two=h.manager.resume();expect(h.manager.getSnapshot().turns).toEqual([]);expect(h.manager.getSnapshot().preferences).toEqual(emptyPreferences());
+ wait.resolve({data:{fields:{...emptyPreferences(),budgetMaxPence:3500},version:'1',epoch:'1',confirmedAt:null}});await Promise.all([one,two]);
+ expect(h.call.mock.calls.filter(c=>c[0]==='readAIPreferences')).toHaveLength(2);expect(h.manager.getSnapshot().turns).toEqual([{role:'assistant',text:'OLD_CONTEXT'}]);
+ expect(h.call.mock.calls.filter(c=>c[0]==='activityAI')).toHaveLength(0);
+});
+it('fails closed offline on resume and blocks old context, draft transfer and provider requests',async()=>{
+ const h=signedInResumeFixture();await h.manager.continue();h.manager.setText('Kept');h.manager.pause();h.responses.set('readAIPreferences',async()=>{throw new Error('offline');});
+ await h.manager.resume();await h.manager.send();await h.manager.retry();
+ expect(h.manager.getSnapshot()).toMatchObject({text:'Kept',turns:[],result:null,preferences:emptyPreferences()});expect(h.call.mock.calls.some(c=>c[0]==='requestAI')).toBe(false);
+ const apply=jest.fn();const draft={id:'stale-draft',kind:'APPLICATION',targetId:'meal',editorVersion:'1',text:'Old candidate',fields:null} as unknown as AIDraft;
+ h.manager.registerEditor({key:'old-form',kind:'APPLICATION',targetId:'meal',current:()=>({text:'User form',version:'1'}),apply});
+ await expect(h.manager.transfer(draft,true)).rejects.toMatchObject({code:'AI_UNAVAILABLE'});await h.manager.savePreferences({...emptyPreferences(),budgetMaxPence:9999},'old-proposal');
+ expect(h.call.mock.calls.some(c=>c[0]==='validateAIDraft'||c[0]==='replaceAIPreferences')).toBe(false);expect(apply).not.toHaveBeenCalled();
+ h.responses.set('deleteAIPreferences',async()=>({data:{fields:emptyPreferences(),version:'2',epoch:'2',confirmedAt:null}}));await h.manager.deletePreferences();expect(h.call.mock.calls.some(c=>c[0]==='deleteAIPreferences')).toBe(true);
+});
+it.each(['account','new','pause'] as const)('does not apply a late foreground verification after %s',async action=>{
+ const h=signedInResumeFixture();await h.manager.continue();h.manager.pause();const wait=deferred<unknown>();h.responses.set('readAIPreferences',()=>wait.promise);const resume=h.manager.resume();
+ if(action==='account')h.actor('account-b');else if(action==='new')await h.manager.newConversation();else h.manager.pause();
+ wait.resolve({data:{fields:{...emptyPreferences(),budgetMaxPence:9999},version:'8',epoch:'8',confirmedAt:null}});await resume;
+ expect(h.manager.getSnapshot().preferences.budgetMaxPence).not.toBe(9999);expect(h.manager.getSnapshot().turns).toEqual([]);
+});
+
+it('a second pause fences an old resume; a second active event performs a new verification',async()=>{
+ const h=signedInResumeFixture();await h.manager.continue();h.manager.setText('Unsent');h.manager.pause();const old=deferred<unknown>();h.responses.set('readAIPreferences',()=>old.promise);const first=h.manager.resume();
+ h.manager.pause();old.resolve({data:{fields:{...emptyPreferences(),budgetMaxPence:9999},version:'1',epoch:'1',confirmedAt:null}});expect(await first).toBe(false);
+ expect(h.manager.getSnapshot()).toMatchObject({preferences:emptyPreferences(),turns:[],text:'Unsent'});await h.manager.send();expect(h.call.mock.calls.some(c=>c[0]==='requestAI')).toBe(false);
+ h.preferenceEpoch('2');h.responses.set('readAIPreferences',async()=>({data:{fields:emptyPreferences(),version:'2',epoch:'2',confirmedAt:null}}));await h.manager.resume();expect(h.manager.getSnapshot().preferences).toEqual(emptyPreferences());expect(h.call.mock.calls.filter(c=>c[0]==='readAIPreferences')).toHaveLength(3);
+});
+it('does not let an awaiting send resume into account B after account A verification completes late',async()=>{
+ const h=signedInResumeFixture();await h.manager.continue();h.manager.setText('A question');h.manager.pause();const old=deferred<unknown>();h.responses.set('readAIPreferences',()=>old.promise);const resume=h.manager.resume();const send=h.manager.send();h.actor('account-b');
+ old.resolve({data:{fields:{...emptyPreferences(),budgetMaxPence:9999},version:'1',epoch:'1',confirmedAt:null}});await Promise.all([resume,send]);expect(h.manager.getSnapshot().text).toBe('');expect(h.call.mock.calls.some(c=>c[0]==='requestAI')).toBe(false);
 });

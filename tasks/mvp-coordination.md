@@ -244,3 +244,11 @@
 - 生产server统一使用请求日志白名单：仅method、无query/fragment的路径、连接信息；不序列化headers/body/raw对象，保留reqId及响应耗时。业务request.url不改，回调仍能解析原始code/state。错误序列化丢弃提供方原message/stack/cause与附带请求，只保有限name/code及固定占位。
 - 真实Pino定向2项修前红/修后绿；根显式运行独立OAuth/删除receipt子进程探针2项通过（/private/tmp/fancy-f13-probes.config.mts及fancy-f13-probes.log），未改QA探针/仓库收集配置且未打印原日志。仅三个生产/自有测试文件及本记录交付；固定提交由独立QA复验后决定F13关闭，CODE006全路径审计不由局部通过代替。
 - 根工作树unit252（包含QA并行自有assets三项，不混入生产提交）、API156、core:check和Python70通过，日志/private/tmp/fancy-f13-{unit,api,check,python}.log。后端业务/DB和客户端未改，不冒称本批重跑无关层；提交需等QA明确释放Git窗口。
+
+## QA-F14 双端恢复前台偏好版本验证（2026-10-21）
+
+- 独立QA在8e94ab3复现iOS恢复前台仅tick，另一端删除偏好后仍留旧介绍；修正探针getState拼写为真实getSnapshot后同请求次数断言仍红，原红由04f219d保留。服务端删除/旧session屏障已绿，不无故改后端。Web只在部分待处理poller恢复查session，同类完成对话缺口经自有前红确认。
+- 原生每次pause结束旧异步epoch，隐藏旧turn/result/账号偏好；active合并恢复请求，先读本人偏好epoch/version，再读会话。变化清旧上下文/候选，保本人未发文字；离线保持AI屏障，发送/重试/Continue/转写/确认候选不得绕过。偏好读/删除独立可用。NEW、换账号及再次pause均拒绝迟到旧响应；只读恢复不续TTL。
+- Web对visibility/focus和下一AI动作同样验证，bootstrap绑定偏好epoch，不被单独查看偏好改写基准；pause revision与账号/会话generation合并围栏。后台SEND结果只RAM暂存，经当前校验后才显示；epoch变化销毁。首次bootstrap挂起的先后台放行/先回前台两序列均须校验后才发送，不绕过零AI请求断言。
+- 原生定向33项（含QA原probe）、根iOS242项；Web助手40项、根Web/后台258项通过。日志/private/tmp/fancy-f14-{ios,web,build,check,python}.log；仅双端五个生产/自有测试文件及本记录提交，QA/研究/本地rig另批不混。正式F14关闭仍交QA固定SHA独立复验，不冒称真机/真实供应商验收。
+- 全仓core:check、Web生产构建及Python70通过；本批后端业务无修改，unit/DB/API结果沿用最近已验证层，不声称在客户端切片重跑。并行本地rig发布隔离13项通过，其变更按另批处理。

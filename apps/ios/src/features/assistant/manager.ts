@@ -33,6 +33,8 @@ export class AssistantManager {
  private guestIntent:string|null=null;private bootChallenge:string|null=null;private bootKey:string|null=null;
  private pending:{body:RequestOf<'requestAI'>['body'];sessionId:string}|null=null;private editors=new Map<string,Editor>();
  private booting:Promise<void>|null=null;private polling=false;
+ private foreground=true;private needsResumeCheck=false;private preferenceEpoch:string|null=null;
+ private resuming:{epoch:number;promise:Promise<boolean>}|null=null;
  private observedAreas=new Set<string>();private shownRequests=new Set<string>();private shownResults=new Set<string>();
  private contextOwner:symbol|null=null;private context:AIContext={sourcePage:'DISCOVER'};private actor:string;private revokingDevice:string|null=null;
  private readonly deps:{auth:SessionManager;api:ApiClient;newId:()=>string;randomBytes:(n:number)=>Uint8Array;now:()=>number;guestStore:GuestCredentialStore;revokeGuest?:(session:ResponseOf<'bootstrapAI'>['data'],credential:string)=>Promise<void>};
@@ -58,10 +60,48 @@ export class AssistantManager {
  editorFor(draft:AIDraft){return [...this.editors.values()].find(e=>e.kind===draft.kind&&e.targetId===draft.targetId);}
  open(){this.presentation++;this.set({open:true,view:'home',error:null});}
  close(){this.presentation++;this.set({open:false});}
- pause(){this.presentation++;}
+ pause(){
+  this.needsResumeCheck=this.needsResumeCheck||!!this.session||!!this.booting||this.preferenceEpoch!==null;
+  this.foreground=false;this.epoch++;this.presentation++;this.booting=null;this.polling=false;this.resuming=null;
+  this.set({turns:[],result:null,...(this.needsResumeCheck?{phase:'loading' as const,error:null}:{}),...(this.deps.auth.getState().status==='signedIn'?{preferences:emptyPreferences()}:{})});
+ }
+ resume():Promise<boolean>{
+  this.foreground=true;this.tick();if(!this.needsResumeCheck)return Promise.resolve(true);
+  if(this.resuming?.epoch===this.epoch)return this.resuming.promise;
+  const epoch=this.epoch;const promise=this.verifyResume(epoch);const entry={epoch,promise};this.resuming=entry;
+  void promise.finally(()=>{if(this.resuming===entry)this.resuming=null;});return promise;
+ }
+ private async ensureResumed(){const epoch=this.epoch;if(!this.foreground)return false;const valid=this.needsResumeCheck?await this.resume():true;return valid&&this.foreground&&epoch===this.epoch;}
+ private async verifyResume(epoch:number):Promise<boolean>{
+  const signedIn=this.deps.auth.getState().status==='signedIn';
+  this.set({phase:'loading',turns:[],result:null,error:null,...(signedIn?{preferences:emptyPreferences()}:{})});
+  try{
+   if(signedIn){
+    const p=await this.deps.api.call('readAIPreferences',{});this.guard(epoch);
+    const changed=this.preferenceEpoch!==null&&(this.preferenceEpoch!==p.data.epoch||this.state.preferenceVersion!==p.data.version);
+    this.preferenceEpoch=p.data.epoch;
+    if(changed){this.invalidateConversation(true);this.needsResumeCheck=false;this.set({preferences:p.data.fields,preferenceVersion:p.data.version,phase:'expired',error:'Your preferences changed on another device. The old conversation was cleared. Your unsent text is kept.'});return true;}
+    this.set({preferences:p.data.fields,preferenceVersion:p.data.version});
+   }
+   const session=this.session;
+   if(session){
+    const current=await this.deps.api.call('readAI',{params:{sessionId:session.sessionId}});this.guard(epoch);
+    this.needsResumeCheck=false;
+    this.set({turns:current.data.turns.filter(t=>t.role==='user'||t.role==='assistant').map(t=>({role:t.role as 'user'|'assistant',text:t.text})),expiresAt:Date.parse(current.data.expiresAt),phase:'idle',error:null});
+    if(current.data.latestRequestId)await this.poll(current.data.latestRequestId,false);
+   }else{this.guard(epoch);this.needsResumeCheck=false;this.set({phase:'idle',error:null});}
+   this.guard(epoch);return !this.needsResumeCheck;
+  }catch(e){
+   if(epoch===this.epoch){
+    if(e instanceof ApiError&&(e.kind==='gone'||e.code==='AI_SUPERSEDED'))this.invalidateConversation(true);
+    this.needsResumeCheck=true;this.set({phase:'error',turns:[],result:null,error:'We couldn’t verify this conversation. Your unsent text is kept. Reconnect and retry before using Ask Fancy.',...(signedIn?{preferences:emptyPreferences()}:{})});
+   }
+   return false;
+  }
+ }
  setText(text:string){this.set({text,...(this.state.error===OVERLONG_INPUT_MESSAGE||this.state.error==='Use 1–2,000 characters.'?{error:null}:{})});}
  async edited(){
-  if(!this.session||this.state.phase==='expired')return;
+  if(!this.foreground||this.needsResumeCheck||!this.session||this.state.phase==='expired')return;
   const epoch=this.epoch;
   try{const active=await this.deps.api.call('activityAI',{params:{sessionId:this.session.sessionId},body:{generation:this.session.generation,activityType:'EDIT',activityEventId:this.deps.newId()}});this.guard(epoch);this.set({expiresAt:Date.parse(active.data.expiresAt)});}catch(e){if(epoch===this.epoch)this.handle(e);}
  }
@@ -69,21 +109,22 @@ export class AssistantManager {
  private async loadPreferences(strict=false){
   if(this.deps.auth.getState().status!=='signedIn')return;
   const epoch=this.epoch;
-  try{const p=await this.deps.api.call('readAIPreferences',{});this.guard(epoch);this.set({preferences:p.data.fields,preferenceVersion:p.data.version});}catch(e){if(epoch===this.epoch)this.handle(e);if(strict)throw e;}
+  try{const p=await this.deps.api.call('readAIPreferences',{});this.guard(epoch);if(this.session&&this.preferenceEpoch!==null&&this.preferenceEpoch!==p.data.epoch){this.invalidateConversation(true);this.set({phase:'idle'});}this.preferenceEpoch=p.data.epoch;this.set({preferences:p.data.fields,preferenceVersion:p.data.version});}catch(e){if(epoch===this.epoch)this.handle(e);if(strict)throw e;}
  }
  async savePreferences(fields:Preferences,proposalId?:string){
+  if(proposalId&&(!(await this.ensureResumed())||!this.session||this.state.result?.preferenceProposal?.id!==proposalId)){this.set({error:'This proposal changed or expired. Ask again before confirming.'});return;}
   const epoch=this.epoch;
   try{
    if(this.deps.auth.getState().status==='signedIn'){
     const p=await this.deps.api.call('replaceAIPreferences',{ifMatch:this.state.preferenceVersion,idempotencyKey:this.deps.newId(),body:{fields,confirmation:true,...(proposalId&&this.session?{proposalId,sessionId:this.session.sessionId,generation:this.session.generation}:{})}});
-    this.guard(epoch);this.invalidateConversation(true);this.set({preferences:p.data.fields,preferenceVersion:p.data.version,phase:'idle',error:null,view:'home'});
+    this.guard(epoch);this.preferenceEpoch=p.data.epoch;this.invalidateConversation(true);this.set({preferences:p.data.fields,preferenceVersion:p.data.version,phase:'idle',error:null,view:'home'});
    }else{this.invalidateConversation(true);this.set({preferences:structuredClone(fields),preferenceVersion:'0',phase:'idle',error:null,view:'home'});}
   }catch(e){if(epoch===this.epoch){this.handle(e);if(e instanceof ApiError&&e.kind==='conflict')await this.loadPreferences();}}
  }
  async deletePreferences(){
   if(this.deps.auth.getState().status!=='signedIn'){await this.savePreferences(emptyPreferences());return;}
   const epoch=this.epoch;
-  try{const p=await this.deps.api.call('deleteAIPreferences',{ifMatch:this.state.preferenceVersion,idempotencyKey:this.deps.newId()});this.guard(epoch);this.invalidateConversation(true);this.set({preferences:p.data.fields,preferenceVersion:p.data.version,phase:'idle',error:null,view:'home'});}catch(e){if(epoch===this.epoch)this.handle(e);}
+  try{const p=await this.deps.api.call('deleteAIPreferences',{ifMatch:this.state.preferenceVersion,idempotencyKey:this.deps.newId()});this.guard(epoch);this.preferenceEpoch=p.data.epoch;this.invalidateConversation(true);this.set({preferences:p.data.fields,preferenceVersion:p.data.version,phase:'idle',error:null,view:'home'});}catch(e){if(epoch===this.epoch)this.handle(e);}
  }
  private async bootstrap(){
   if(this.session)return;if(this.booting)return this.booting;
@@ -122,7 +163,7 @@ export class AssistantManager {
   this.session=created.data;this.set({expiresAt:Date.parse(created.data.expiresAt)});
  }
  async continue(){
-  this.tick();const epoch=this.epoch;const presentation=this.presentation;this.set({view:'chat',phase:'loading',error:null});
+  const actionEpoch=this.epoch;if(!(await this.ensureResumed())||actionEpoch!==this.epoch)return;this.tick();const epoch=this.epoch;const presentation=this.presentation;this.set({view:'chat',phase:'loading',error:null});
   try{
    await this.bootstrap();this.guard(epoch);const s=this.session!;
    const current=await this.deps.api.call('readAI',{params:{sessionId:s.sessionId}});this.guard(epoch);
@@ -132,7 +173,7 @@ export class AssistantManager {
   }catch(e){if(epoch===this.epoch&&presentation===this.presentation)this.handle(e);}
  }
  async send(includeEditorText=false){
-  this.tick();if(this.state.phase==='processing'||this.state.phase==='loading')return;
+  const actionEpoch=this.epoch;if(!(await this.ensureResumed())||actionEpoch!==this.epoch)return;this.tick();if(this.state.phase==='processing'||this.state.phase==='loading')return;
   if(this.context.unsupportedFilters){this.set({error:'Ask Fancy can’t apply the current map, time-of-day or text-search filter yet. Clear that filter before asking.',phase:'error'});return;}
   const input=this.state.text.trim();if(this.state.text.length>ASSISTANT_INPUT_MAX){this.set({error:OVERLONG_INPUT_MESSAGE});return;}if(!input){this.set({error:'Use 1–2,000 characters.'});return;}
   const epoch=this.epoch;const presentation=this.presentation;this.set({view:'chat',phase:'loading',error:null});
@@ -145,6 +186,7 @@ export class AssistantManager {
   }catch(e){if(epoch===this.epoch&&presentation===this.presentation)this.handle(e);}
  }
  async retry(){
+  const actionEpoch=this.epoch;if(!(await this.ensureResumed())||actionEpoch!==this.epoch)return;
   if(!this.pending){await this.continue();return;}
   this.set({phase:'loading',error:null});const epoch=this.epoch;const presentation=this.presentation;
   try{await this.submitPending(epoch,presentation);}catch(e){if(epoch===this.epoch&&presentation===this.presentation)this.handle(e);}
@@ -156,9 +198,9 @@ export class AssistantManager {
   this.set({text:this.state.text.trim()===p.body.input?'':this.state.text,turns:alreadyShown?this.state.turns:[...this.state.turns,{role:'user',text:p.body.input}]});this.accept(response.data);
  }
  async poll(requestId=this.pending?.body.requestId,appendReply=true){
-  if(!requestId||!this.session||!this.state.open||this.polling)return;this.polling=true;
+  if(!this.foreground||this.needsResumeCheck||!requestId||!this.session||!this.state.open||this.polling)return;this.polling=true;
   const epoch=this.epoch;const presentation=this.presentation;const s=this.session;
-  try{const result=await this.deps.api.call('pollAI',{params:{requestId},query:{sessionId:s.sessionId,generation:s.generation}});this.guard(epoch);if(presentation===this.presentation)this.accept(result.data,appendReply);}catch(e){if(epoch===this.epoch&&presentation===this.presentation)this.handle(e);}finally{this.polling=false;}
+  try{const result=await this.deps.api.call('pollAI',{params:{requestId},query:{sessionId:s.sessionId,generation:s.generation}});this.guard(epoch);if(presentation===this.presentation)this.accept(result.data,appendReply);}catch(e){if(epoch===this.epoch&&presentation===this.presentation)this.handle(e);}finally{if(epoch===this.epoch)this.polling=false;}
  }
  private accept(data:ResponseOf<'pollAI'>['data'],appendReply=true){
   if(data.state==='PENDING'){if(this.shownResults.has(data.requestId))return;this.set({phase:'processing',error:null});return;}
@@ -168,6 +210,7 @@ export class AssistantManager {
   }else{this.set({phase:'error',result:null,text:this.state.text||pending?.body.input||'',error:data.state==='SUPERSEDED'?'This result changed or expired. Start a new conversation.':'No answer was confirmed. Your original request is kept below.'});}
  }
  async transfer(draft:AIDraft,replaceConfirmed:boolean){
+  const actionEpoch=this.epoch;if(!(await this.ensureResumed())||actionEpoch!==this.epoch)throw new ApiError({status:503,code:'AI_UNAVAILABLE',message:'Conversation verification required'});
   const editor=this.editorFor(draft);if(!editor||!this.session)throw new Error('Open the original form first');
   const epoch=this.epoch;const snapshot=editor.current();const s=this.session;
   if(snapshot.text.trim()&&!replaceConfirmed)throw new Error('Confirm replacement first');
@@ -177,17 +220,17 @@ export class AssistantManager {
   editor.apply(reply.data);this.close();
  }
  async newConversation(){
-  const old=this.session;this.epoch++;this.presentation++;this.session=null;this.pending=null;this.shownRequests.clear();this.shownResults.clear();this.bootChallenge=null;this.bootKey=null;this.guestIntent=null;
-  const preferences=this.deps.auth.getState().status==='signedIn'?this.state.preferences:emptyPreferences();this.set({phase:'idle',text:'',turns:[],result:null,error:null,expiresAt:null,preferences,view:'home'});
+  const old=this.session;this.resuming=null;this.booting=null;this.epoch++;this.presentation++;this.session=null;this.pending=null;this.shownRequests.clear();this.shownResults.clear();this.bootChallenge=null;this.bootKey=null;this.guestIntent=null;
+  const preferences=this.deps.auth.getState().status==='signedIn'&&!this.needsResumeCheck?this.state.preferences:emptyPreferences();this.set({phase:'idle',text:'',turns:[],result:null,error:null,expiresAt:null,preferences,view:'home'});
   if(old)try{this.revokingDevice=old.deviceToken;await this.deps.api.call('resetAI',{params:{sessionId:old.sessionId},body:{generation:old.generation,reason:'NEW'},idempotencyKey:this.deps.newId()});}catch{/* Local generation already ended. Server TTL bounds unreachable revocation. */}finally{this.revokingDevice=null;}
  }
- private invalidateConversation(keepText:boolean){this.revokeGuest();this.booting=null;this.epoch++;this.presentation++;this.session=null;this.pending=null;this.shownRequests.clear();this.shownResults.clear();this.bootChallenge=null;this.bootKey=null;this.set({result:null,turns:[],expiresAt:null,...(keepText?{}:{text:''})});}
+ private invalidateConversation(keepText:boolean){this.resuming=null;this.polling=false;this.revokeGuest();this.booting=null;this.epoch++;this.presentation++;this.session=null;this.pending=null;this.shownRequests.clear();this.shownResults.clear();this.bootChallenge=null;this.bootKey=null;this.set({result:null,turns:[],expiresAt:null,...(keepText?{}:{text:''})});}
  tick(){if(this.session&&this.state.expiresAt!==null&&this.deps.now()>=this.state.expiresAt){this.invalidateConversation(true);this.set({phase:'expired',error:'This conversation expired after 30 minutes without activity. Your unsent text and confirmed preferences are kept.'});}}
  private handle(e:unknown){
   if(e instanceof ApiError&&(e.kind==='gone'||e.code==='AI_SUPERSEDED')){this.invalidateConversation(true);this.set({phase:'expired',error:'This conversation expired or was reset elsewhere. Your unsent text is kept.'});}
   else this.set({phase:'error',error:message(e)});
  }
  private revokeGuest(){if(this.session&&this.guest)void this.deps.revokeGuest?.(this.session,this.guest.token).catch(()=>{});}
- clear(){this.guestLoaded=true;void this.storage(()=>this.deps.guestStore.clear()).catch(()=>{});this.revokeGuest();this.booting=null;this.epoch++;this.presentation++;this.session=null;this.guest=null;this.guestIntent=null;this.bootChallenge=null;this.bootKey=null;this.pending=null;this.revokingDevice=null;this.editors.clear();this.shownRequests.clear();this.shownResults.clear();this.contextOwner=null;this.context={sourcePage:'DISCOVER'};this.state=initial();for(const l of this.listeners)l();}
+ clear(){this.resuming=null;this.needsResumeCheck=false;this.preferenceEpoch=null;this.polling=false;this.guestLoaded=true;void this.storage(()=>this.deps.guestStore.clear()).catch(()=>{});this.revokeGuest();this.booting=null;this.epoch++;this.presentation++;this.session=null;this.guest=null;this.guestIntent=null;this.bootChallenge=null;this.bootKey=null;this.pending=null;this.revokingDevice=null;this.editors.clear();this.shownRequests.clear();this.shownResults.clear();this.contextOwner=null;this.context={sourcePage:'DISCOVER'};this.state=initial();for(const l of this.listeners)l();}
  report(error:unknown){this.set({error:message(error)});}
 }
