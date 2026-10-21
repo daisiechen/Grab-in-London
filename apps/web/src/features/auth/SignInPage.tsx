@@ -9,11 +9,12 @@ import { safeReturnTo } from '../../lib/returnTo.ts';
 import { browser } from '../../lib/browser.ts';
 import { Field, FormError, Primary, TextAction } from '../../ui/components.tsx';
 import { Sheet } from '../../ui/Sheet.tsx';
-import { destinationAfterSignIn, rememberLinkTicket, rememberReturnTo } from './completeSignIn.ts';
+import { clearLinkTicket,continueLink,destinationAfterSignIn,expectLinkProof,linkForProof,pendingLink,rememberLinkTicket,rememberReturnTo,type PendingLink } from './completeSignIn.ts';
+import {LinkConfirmation} from './LinkConfirmation.tsx';
 import { CommunityPrinciples } from './CommunityPrinciples.tsx';
 
 type Stage = 'account' | 'email' | 'verify' | 'link';
-type Outcome = { outcome: 'AUTHENTICATED' } | { outcome: 'LINK_REQUIRED'; linkTicket: string; expiresAt: string };
+type Outcome = { outcome: 'AUTHENTICATED';authProof:string } | { outcome: 'LINK_REQUIRED'; linkTicket: string; expiresAt: string };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -40,6 +41,7 @@ export function SignInPage() {
   const [info, setInfo] = useState('');
   const [busy, setBusy] = useState(false);
   const [showPrinciples, setShowPrinciples] = useState(false);
+  const [confirmation,setConfirmation]=useState<{pending:PendingLink;proof:string;next:string}|null>(null);
   const timer = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
   useEffect(() => () => clearInterval(timer.current), []);
@@ -58,11 +60,14 @@ export function SignInPage() {
 
   const finish = async (result: Outcome) => {
     if (result.outcome === 'LINK_REQUIRED') {
-      rememberLinkTicket(result.linkTicket, result.expiresAt);
+      if(pendingLink()?.phase==='original'){setError('Use a sign-in method already linked to your account.');setStage('account');return;}
+      rememberLinkTicket(result.linkTicket, result.expiresAt,returnTo);
       setStage('link');
       return;
     }
+    const linking=pendingLink()?.phase==='original';
     const state = await refresh();
+    if(linking){const p=linkForProof(result.authProof);if(!p||state.status!=='signed-in'){clearLinkTicket();setError('This linking request expired or the session changed. Start again.');setStage('account');return;}setConfirmation({pending:p,proof:result.authProof,next:destinationAfterSignIn(state,p.returnTo)??'/discover'});return;}
     const next = destinationAfterSignIn(state, returnTo);
     if (next) navigate(next, { replace: true });
     else setError('We couldn’t start your session. Please try again.');
@@ -83,6 +88,7 @@ export function SignInPage() {
       });
       setEmail(trimmed);
       setChallengeId(res.data.challengeId);
+      expectLinkProof(res.data.challengeId);
       setCode('');
       startCountdown(secondsUntil(res.data.resendAfter, res.meta.serverNow));
       if (stage === 'verify') setInfo('A new code is ready.');
@@ -131,6 +137,7 @@ export function SignInPage() {
       const url = new URL(res.data.authorizationUrl);
       if (url.protocol !== 'https:') throw new Error('Unexpected sign-in address');
       rememberReturnTo(returnTo);
+      expectLinkProof(res.data.stateTransactionId);
       browser.assign(url.href);
     } catch (e) {
       setError(errorMessage(e));
@@ -139,11 +146,13 @@ export function SignInPage() {
   };
 
   const back = () => {
+    if(stage==='link')clearLinkTicket();
     setError('');
     setInfo('');
     setStage(stage === 'verify' ? 'email' : 'account');
   };
 
+  if(confirmation)return <LinkConfirmation key={`${confirmation.pending.ticket}:${confirmation.proof}`} pending={confirmation.pending} proof={confirmation.proof} onDone={()=>navigate(confirmation.next,{replace:true})} onCancel={()=>{setConfirmation(null);setStage('account');}} onReverify={()=>{continueLink();setConfirmation(null);setStage('account');setError('Verify your original sign-in again.');}}/>;
   return (
     <div className="brand-entrance">
       {stage !== 'account' && (
@@ -152,6 +161,7 @@ export function SignInPage() {
       <span className="brand-wordmark">Fancy</span>
       {stage === 'account' && (
         <>
+          {pendingLink()?.phase==='original'&&<p className="prose">Verify the sign-in method you used before. You’ll confirm the connection afterwards.</p>}
           <span className="eyebrow">YOUR NEXT TABLE STARTS HERE</span>
           <h1>Let’s keep in touch.</h1>
           <p className="prose">Join a table, or come back for another.</p>
@@ -201,9 +211,12 @@ export function SignInPage() {
           <p className="prose">
             An account already uses this email. Sign in the way you did before to link this sign-in method. We never merge accounts automatically.
           </p>
-          <Primary onClick={() => { setStage('account'); setError(''); }}>Back to sign-in</Primary>
+          <Primary onClick={() => {try{continueLink();setStage('account');setError('');}catch{setError('This linking request expired. Start again.');}}}>Verify original sign-in</Primary>
+          <TextAction onClick={()=>{clearLinkTicket();setStage('account');setError('');}}>Cancel linking</TextAction>
+          <FormError>{error}</FormError>
         </>
       )}
+      {stage!=='link'&&pendingLink()?.phase==='original'&&<TextAction disabled={busy} onClick={()=>{clearLinkTicket();setStage('account');setError('');setCode('');}}>Cancel linking</TextAction>}
       {stage === 'account' && <FormError>{error}</FormError>}
       <Sheet open={showPrinciples} onOpenChange={setShowPrinciples} title="Community & privacy principles">
         <CommunityPrinciples />

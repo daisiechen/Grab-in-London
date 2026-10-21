@@ -1,10 +1,14 @@
 import { describe, expect, it, vi } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { act,render,screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { createFetchStub, fail, ok, meta } from '../../test/fetchStub.ts';
-import { renderApp } from '../../test/render.tsx';
+import { createFetchStub, deferred,fail,ok,meta,type StubResponse } from '../../test/fetchStub.ts';
+import { renderApp,testApi } from '../../test/render.tsx';
 import { me, session } from '../../test/fixtures.ts';
 import { browser } from '../../lib/browser.ts';
+import {rememberLinkTicket,continueLink,expectLinkProof,linkForProof,pendingLink} from './completeSignIn.ts';
+import {clearAll} from '../../lib/storage.ts';
+import {ApiProvider} from '../../api/ApiProvider.tsx';
+import {LinkConfirmation} from './LinkConfirmation.tsx';
 
 const CHALLENGE = '66666666-6666-4666-8666-666666666666';
 const resendIn30 = { challengeId: CHALLENGE, expiresAt: '2026-10-21T12:05:00.000Z', resendAfter: '2026-10-21T12:00:30.000Z' };
@@ -24,6 +28,7 @@ function authStub(user = session()) {
 
 async function enterEmailAndCode(code = '123456') {
   await userEvent.click(await screen.findByRole('button', { name: /Continue with email/ }));
+  await userEvent.clear(screen.getByLabelText('Email address'));
   await userEvent.type(screen.getByLabelText('Email address'), 'sam@example.test');
   await userEvent.click(screen.getByRole('button', { name: /Send code/ }));
   await userEvent.type(await screen.findByLabelText('6-digit code'), code);
@@ -31,6 +36,16 @@ async function enterEmailAndCode(code = '123456') {
 }
 
 describe('email OTP sign-in (T05)', () => {
+  it('explicitly verifies the original identity then connects with its proof, never automatically', async () => {
+    const {stub,signIn}=authStub();let first=true;
+    stub.on('verifyEmail',()=>{if(first){first=false;return ok({outcome:'LINK_REQUIRED',linkTicket:'l'.repeat(40),expiresAt:new Date(Date.now()+600000).toISOString()});}signIn();return ok({outcome:'AUTHENTICATED',authProof:CHALLENGE});});
+    stub.on('linkIdentity',()=>ok({identities:[]}));renderApp(stub.fetch,'/sign-in?returnTo=%2Fprofile');
+    await enterEmailAndCode();await userEvent.click(await screen.findByRole('button',{name:'Verify original sign-in'}));
+    await enterEmailAndCode();expect(stub.callsTo('linkIdentity')).toHaveLength(0);
+    await userEvent.click(await screen.findByRole('button',{name:'Connect this sign-in method'}));
+    await waitFor(()=>expect(stub.callsTo('linkIdentity')).toHaveLength(1));
+    expect(stub.callsTo('linkIdentity')[0]!.body).toEqual({linkTicket:'l'.repeat(40),originalChallengeProof:CHALLENGE});
+  });
   it('verifies, refreshes the session and returns to the allow-listed page', async () => {
     const { stub } = authStub();
     renderApp(stub.fetch, '/sign-in?returnTo=%2Fprofile');
@@ -101,7 +116,7 @@ describe('email OTP sign-in (T05)', () => {
 
   it('LINK_REQUIRED issues no session and never merges automatically', async () => {
     const { stub } = authStub();
-    stub.on('verifyEmail', () => ok({ outcome: 'LINK_REQUIRED', linkTicket: 'l'.repeat(40), expiresAt: '2026-10-21T12:10:00.000Z' }));
+    stub.on('verifyEmail', () => ok({ outcome: 'LINK_REQUIRED', linkTicket: 'l'.repeat(40), expiresAt: new Date(Date.now()+600000).toISOString() }));
     renderApp(stub.fetch, '/sign-in');
     await enterEmailAndCode();
     expect(await screen.findByRole('heading', { name: 'You’ve been here before.' })).toBeTruthy();
@@ -110,6 +125,84 @@ describe('email OTP sign-in (T05)', () => {
 });
 
 describe('OAuth sign-in (T05)', () => {
+  it.each([200,409,503])('ignores an old %s response after a new linking ticket has replaced it',async(status)=>{
+    rememberLinkTicket('t'.repeat(43),new Date(Date.now()+600000).toISOString());continueLink();expectLinkProof(CHALLENGE);
+    const held=deferred<StubResponse>(),{stub,signIn}=authStub();signIn();stub.on('oauthCallback',()=>ok({outcome:'AUTHENTICATED',authProof:CHALLENGE}));stub.on('linkIdentity',()=>held.promise);
+    renderApp(stub.fetch,'/auth/callback?code=provider-code&state=provider-state');
+    await userEvent.click(await screen.findByRole('button',{name:'Connect this sign-in method'}));
+    rememberLinkTicket('n'.repeat(43),new Date(Date.now()+600000).toISOString());
+    await act(async()=>{held.resolve(status===200?ok({identities:[]}):fail(status,status===409?'LINK_TICKET_INVALID':'PROVIDER_UNAVAILABLE'));});
+    expect(pendingLink()?.ticket).toBe('n'.repeat(43));expect(screen.queryByRole('alert')).toBeNull();
+  });
+  it('isolates a replacement confirmation component from the previous in-flight attempt',async()=>{
+    const held=deferred<StubResponse>(),stub=createFetchStub({linkIdentity:()=>held.promise}),api=testApi(stub.fetch);
+    const done=vi.fn(),cancel=vi.fn(),reverify=vi.fn();
+    rememberLinkTicket('t'.repeat(43),new Date(Date.now()+600000).toISOString());continueLink();expectLinkProof(CHALLENGE);const old=linkForProof(CHALLENGE)!;
+    const view=render(<ApiProvider api={api}><LinkConfirmation key={`${old.ticket}:${CHALLENGE}`} pending={old} proof={CHALLENGE} onDone={done} onCancel={cancel} onReverify={reverify}/></ApiProvider>);
+    await userEvent.click(screen.getByRole('button',{name:'Connect this sign-in method'}));
+    const newProof='77777777-7777-4777-8777-777777777777';rememberLinkTicket('n'.repeat(43),new Date(Date.now()+600000).toISOString());continueLink();expectLinkProof(newProof);const next=linkForProof(newProof)!;
+    view.rerender(<ApiProvider api={api}><LinkConfirmation key={`${next.ticket}:${newProof}`} pending={next} proof={newProof} onDone={done} onCancel={cancel} onReverify={reverify}/></ApiProvider>);
+    await act(async()=>{held.resolve(fail(409,'LINK_TICKET_INVALID'));});
+    expect(pendingLink()?.ticket).toBe(next.ticket);expect(done).not.toHaveBeenCalled();expect(screen.queryByRole('alert')).toBeNull();expect((screen.getByRole('button',{name:'Connect this sign-in method'}) as HTMLButtonElement).disabled).toBe(false);
+  });
+  it('ignores the old expiry callback after a new ticket replaces the confirmed flow',async()=>{
+    const timers=vi.spyOn(globalThis,'setTimeout');
+    rememberLinkTicket('t'.repeat(43),new Date(Date.now()+600000).toISOString());continueLink();expectLinkProof(CHALLENGE);
+    const {stub,signIn}=authStub();signIn();stub.on('oauthCallback',()=>ok({outcome:'AUTHENTICATED',authProof:CHALLENGE}));
+    renderApp(stub.fetch,'/auth/callback?code=provider-code&state=provider-state');
+    await screen.findByRole('button',{name:'Connect this sign-in method'});
+    const expire=timers.mock.calls.find(([,delay])=>typeof delay==='number'&&delay>290000)?.[0];expect(typeof expire).toBe('function');
+    rememberLinkTicket('n'.repeat(43),new Date(Date.now()+600000).toISOString());
+    act(()=>{if(typeof expire==='function')expire();});
+    expect(pendingLink()?.ticket).toBe('n'.repeat(43));expect(screen.queryByRole('alert')).toBeNull();timers.mockRestore();
+  });
+  it('allows cancel after its own expiry while the link request remains in flight',async()=>{
+    const timers=vi.spyOn(globalThis,'setTimeout'),held=deferred<StubResponse>();
+    rememberLinkTicket('t'.repeat(43),new Date(Date.now()+600000).toISOString());continueLink();expectLinkProof(CHALLENGE);
+    const {stub,signIn}=authStub();signIn();stub.on('oauthCallback',()=>ok({outcome:'AUTHENTICATED',authProof:CHALLENGE}));stub.on('linkIdentity',()=>held.promise);
+    renderApp(stub.fetch,'/auth/callback?code=provider-code&state=provider-state');
+    await userEvent.click(await screen.findByRole('button',{name:'Connect this sign-in method'}));
+    const expire=timers.mock.calls.find(([,delay])=>typeof delay==='number'&&delay>290000)?.[0];
+    act(()=>{if(typeof expire==='function')expire();});
+    const cancel=screen.getByRole('button',{name:'Cancel linking'});expect((cancel as HTMLButtonElement).disabled).toBe(false);
+    await userEvent.click(cancel);expect(await screen.findByRole('button',{name:/Continue with email/})).toBeTruthy();
+    await act(async()=>{held.resolve(fail(409,'LINK_TICKET_INVALID'));});timers.mockRestore();
+  });
+  it('survives a full-page original OAuth return, keeps proof in RAM and retries only explicitly with the same key',async()=>{
+    rememberLinkTicket('t'.repeat(43),new Date(Date.now()+600000).toISOString(),'/profile');continueLink();expectLinkProof(CHALLENGE);
+    const {stub,signIn}=authStub();signIn();
+    stub.on('oauthCallback',()=>ok({outcome:'AUTHENTICATED',authProof:CHALLENGE}));
+    stub.on('linkIdentity',()=>{throw new TypeError('offline');});
+    renderApp(stub.fetch,'/auth/callback?code=provider-code&state=provider-state');
+    const button=await screen.findByRole('button',{name:'Connect this sign-in method'});
+    expect(stub.callsTo('linkIdentity')).toHaveLength(0);expect(sessionStorage.getItem('fancy.auth.linkTicket')).not.toContain(CHALLENGE);
+    await userEvent.click(button);await screen.findByRole('alert');expect(stub.callsTo('linkIdentity')).toHaveLength(1);
+    stub.on('linkIdentity',()=>ok({identities:[]}));await userEvent.click(button);
+    await waitFor(()=>expect(stub.callsTo('linkIdentity')).toHaveLength(2));
+    const [first,second]=stub.callsTo('linkIdentity');expect(first!.body).toEqual(second!.body);expect(first!.headers['idempotency-key']).toBe(second!.headers['idempotency-key']);
+    await waitFor(()=>expect(pendingLink()).toBeNull());
+  });
+  it.each(['ACCOUNT_LINK_CONFLICT','LINK_TICKET_INVALID'])('ends a confirmed OAuth link on %s without another attempt',async(code)=>{
+    rememberLinkTicket('t'.repeat(43),new Date(Date.now()+600000).toISOString());continueLink();expectLinkProof(CHALLENGE);
+    const {stub,signIn}=authStub();signIn();stub.on('oauthCallback',()=>ok({outcome:'AUTHENTICATED',authProof:CHALLENGE}));stub.on('linkIdentity',()=>fail(409,code));
+    renderApp(stub.fetch,'/auth/callback?code=provider-code&state=provider-state');
+    const button=await screen.findByRole('button',{name:'Connect this sign-in method'});await userEvent.click(button);
+    await screen.findByRole('alert');expect((button as HTMLButtonElement).disabled).toBe(true);expect(pendingLink()).toBeNull();expect(stub.callsTo('linkIdentity')).toHaveLength(1);
+    const cancel=screen.getByRole('button',{name:'Cancel linking'});expect((cancel as HTMLButtonElement).disabled).toBe(false);await userEvent.click(cancel);expect(await screen.findByRole('button',{name:/Continue with email/})).toBeTruthy();
+  });
+  it('cancels a confirmed link without consuming it on the server',async()=>{
+    rememberLinkTicket('t'.repeat(43),new Date(Date.now()+600000).toISOString());continueLink();expectLinkProof(CHALLENGE);
+    const {stub,signIn}=authStub();signIn();stub.on('oauthCallback',()=>ok({outcome:'AUTHENTICATED',authProof:CHALLENGE}));
+    renderApp(stub.fetch,'/auth/callback?code=provider-code&state=provider-state');
+    await userEvent.click(await screen.findByRole('button',{name:'Cancel linking'}));expect(pendingLink()).toBeNull();expect(stub.callsTo('linkIdentity')).toHaveLength(0);
+  });
+  it('refuses confirmation after private session state has been cleared',async()=>{
+    rememberLinkTicket('t'.repeat(43),new Date(Date.now()+600000).toISOString());continueLink();expectLinkProof(CHALLENGE);
+    const {stub,signIn}=authStub();signIn();stub.on('oauthCallback',()=>ok({outcome:'AUTHENTICATED',authProof:CHALLENGE}));
+    renderApp(stub.fetch,'/auth/callback?code=provider-code&state=provider-state');
+    const button=await screen.findByRole('button',{name:'Connect this sign-in method'});clearAll();await userEvent.click(button);
+    expect((await screen.findByRole('alert')).textContent).toMatch(/session changed/);expect(stub.callsTo('linkIdentity')).toHaveLength(0);
+  });
   it('redirects to the provider, then completes on /auth/callback back to the saved page', async () => {
     const assign = vi.spyOn(browser, 'assign').mockImplementation(() => {});
     const { stub, signIn } = authStub();

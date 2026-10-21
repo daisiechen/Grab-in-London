@@ -4,8 +4,9 @@ import { useApi } from '../../api/ApiProvider.tsx';
 import { useSession } from '../../api/session.tsx';
 import { errorMessage } from '../../api/errors.ts';
 import { signInPath } from '../../lib/returnTo.ts';
-import { FormError, Loading, PrimaryLink } from '../../ui/components.tsx';
-import { destinationAfterSignIn, rememberLinkTicket, takeReturnTo } from './completeSignIn.ts';
+import { FormError, Loading, PrimaryLink,Primary,TextAction } from '../../ui/components.tsx';
+import { clearLinkTicket,continueLink,destinationAfterSignIn,linkForProof,pendingLink,rememberLinkTicket,takeReturnTo,type PendingLink } from './completeSignIn.ts';
+import {LinkConfirmation} from './LinkConfirmation.tsx';
 
 /**
  * Provider redirect target for Web: WEB redirect_uri = <web origin>/auth/callback (confirmed).
@@ -21,6 +22,7 @@ export function OAuthCallbackPage() {
   const [params] = useSearchParams();
   const [error, setError] = useState('');
   const [linkRequired, setLinkRequired] = useState(false);
+  const [confirmation,setConfirmation]=useState<{pending:PendingLink;proof:string;next:string}|null>(null);
   const started = useRef(false);
 
   useEffect(() => {
@@ -40,11 +42,14 @@ export function OAuthCallbackPage() {
           query: { state, ...(code ? { code } : {}), ...(providerError ? { error: providerError.slice(0, 200) } : {}) },
         });
         if (res.data.outcome === 'LINK_REQUIRED') {
-          rememberLinkTicket(res.data.linkTicket, res.data.expiresAt);
+          if(pendingLink()?.phase==='original'){setError('Use a sign-in method already linked to your account.');return;}
+          rememberLinkTicket(res.data.linkTicket, res.data.expiresAt,returnTo);
           setLinkRequired(true);
           return;
         }
-        const next = destinationAfterSignIn(await refresh(), returnTo);
+        const linking=pendingLink()?.phase==='original';const session=await refresh();
+        if(linking){const p=linkForProof(res.data.authProof);if(!p||session.status!=='signed-in'){clearLinkTicket();setError('This linking request expired or the session changed. Start again.');return;}setConfirmation({pending:p,proof:res.data.authProof,next:destinationAfterSignIn(session,p.returnTo)??'/discover'});return;}
+        const next = destinationAfterSignIn(session, returnTo);
         if (next) navigate(next, { replace: true });
         else setError('We couldn’t start your session. Please try again.');
       } catch (e) {
@@ -53,12 +58,14 @@ export function OAuthCallbackPage() {
     })();
   }, [api, navigate, params, refresh]);
 
+  if(confirmation)return <LinkConfirmation key={`${confirmation.pending.ticket}:${confirmation.proof}`} pending={confirmation.pending} proof={confirmation.proof} onDone={()=>navigate(confirmation.next,{replace:true})} onCancel={()=>{clearLinkTicket();navigate(signInPath('/discover'),{replace:true});}} onReverify={()=>{continueLink();navigate(signInPath(confirmation.pending.returnTo),{replace:true});}}/>;
   if (linkRequired) {
     return (
       <div className="body-pad">
         <h1>You’ve been here before.</h1>
         <p className="prose">An account already uses this email. Sign in the way you did before to link this sign-in method. We never merge accounts automatically.</p>
-        <PrimaryLink to={signInPath('/discover')}>Back to sign-in</PrimaryLink>
+        <Primary onClick={()=>{try{continueLink();navigate(signInPath(pendingLink()?.returnTo??'/discover'),{replace:true});}catch{setLinkRequired(false);setError('This linking request expired. Start again.');}}}>Verify original sign-in</Primary>
+        <TextAction onClick={()=>{clearLinkTicket();navigate(signInPath('/discover'),{replace:true});}}>Cancel linking</TextAction>
       </div>
     );
   }
