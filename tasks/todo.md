@@ -2,13 +2,13 @@
 
 > 执行状态说明（2026-10-21起，Claude为本表唯一写入者）：`docs/engineering/review-manifest.json`固定的是提交`4659fdb`中已共同审查的设计快照，不随执行更新；本表仅“状态”值与“完成记录”随实施演进，任务定义/依赖/文件/验收/验证保持快照原文，由`tests/test_core_plan.py`对照该提交校验。执行环境与命令见本表末“执行环境”。
 
-## 执行环境（本机，2026-10-21）
+**执行环境（本机，2026-10-21）**
 
 - Node 24.19.0/pnpm 11.25.0不在系统PATH，使用Codex运行时内置版本；PostgreSQL 17.11为EDB官方macOS二进制（get.enterprisedb.com，签名Team 26QKX55P9K），解压到用户目录`~/.local/share/fancy-pg17`，无root、无Docker。`source infra/dev-env.sh`设置PATH与`FANCY_PG_BIN`；也可用`FANCY_TEST_DATABASE_URL`指向`infra/compose.yml`的本地Postgres17。测试库只接受loopback且版本必须17。
 - 验收启动：`source infra/dev-env.sh && pnpm install --frozen-lockfile && pnpm core:check && pnpm core:test:unit && pnpm core:test:db && pnpm core:test:release`；`core:test:api/web/ios`在对应切片落地前故意以退出码2失败。
 - 本机缺完整Xcode（仅CommandLineTools），iOS模拟器/真机构建阻塞G-IOS：需用户从App Store安装Xcode并`sudo xcode-select -s /Applications/Xcode.app`；有测试iPhone。
 
-## 用户外部决定与门槛现状（2026-10-21经Codex转达）
+**用户外部决定与门槛现状（2026-10-21经Codex转达）**
 
 - AI模型供应商：DeepSeek；费用硬上限人民币50元/月。技术包A03文件名`providers/openai.ts`为已审查快照原文，实施按用户决定用DeepSeek适配（`AI_PROVIDER=deepseek`），差异须由Codex在设计文档登记ADR，本表不改任务定义。
 - 托管：优先评估腾讯云首尔服务器（G-HOST）；尚无域名、托管数据库及Auth0/Google Maps/邮件/Apple/Expo账号 → G-AUTH/G-PLACES/G-MAIL/G-IOS/G-HOST/G-AI-*真实验收为blocked_external，本地实现与测试继续。
