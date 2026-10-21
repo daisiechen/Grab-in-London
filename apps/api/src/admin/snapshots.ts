@@ -11,9 +11,12 @@ export async function sealSourceSnapshot(pool: Pool, historyCoverageStart: Date,
   const db = await pool.connect();
   try {
     await db.query('BEGIN ISOLATION LEVEL REPEATABLE READ');
-    const { rows: clock } = await db.query<{ as_of: Date }>('SELECT transaction_timestamp() AS as_of');
+    // node-postgres maps timestamptz to millisecond Date. Keep SQL's exact boundary as text
+    // so facts committed in the same millisecond are neither omitted nor misclassified.
+    const { rows: clock } = await db.query<{ as_of: string }>('SELECT transaction_timestamp()::text AS as_of');
     const asOf = clock[0]!.as_of;
-    if (historyCoverageStart > asOf) throw new Error('INVALID_HISTORY_COVERAGE');
+    const lifecycleNow = new Date(asOf);
+    if (historyCoverageStart > lifecycleNow) throw new Error('INVALID_HISTORY_COVERAGE');
     // Serializes publication with the account-deletion privacy barrier. The deletion
     // worker can revoke/purge via analytics_snapshot_subjects before making data available.
     const { rows: privacy } = await db.query<{ epoch: string }>('SELECT epoch::text FROM privacy_control WHERE id=1 FOR SHARE');
@@ -21,13 +24,15 @@ export async function sealSourceSnapshot(pool: Pool, historyCoverageStart: Date,
     const excluded = classifications.filter(c => c.classification !== 'regular').map(c => c.user_id);
     const { rows: users } = await db.query(`SELECT id,created_at FROM users WHERE status='ACTIVE' AND created_at<=$1 AND NOT(id=ANY($2::uuid[]))`, [asOf,excluded]);
     const ids = users.map(u => u.id);
-    const { rows: meals } = await db.query(`SELECT id,host_id,starts_at,closes_at,scheduled_end_at,minimum,capacity,budget_max_pence,languages,area_code,status,cancel_reason,created_at,attempt_id FROM meals WHERE created_at<=$1 AND host_id=ANY($2::uuid[])`, [asOf,ids]);
+    // A deleted regular host does not erase the shared meal or surviving guests' history.
+    // Classification exclusion remains meal-wide; active-account scope below is user-specific.
+    const { rows: meals } = await db.query(`SELECT id,host_id,starts_at,closes_at,scheduled_end_at,minimum,capacity,budget_max_pence,languages,area_code,status,cancel_reason,created_at,attempt_id FROM meals WHERE created_at<=$1 AND NOT(host_id=ANY($2::uuid[]))`, [asOf,excluded]);
     const mealIds = meals.map(m => m.id);
     const { rows: applications } = await db.query(`SELECT id,meal_id,user_id,round,state,created_at,decided_at FROM applications WHERE created_at<=$1 AND meal_id=ANY($2::uuid[]) AND user_id=ANY($3::uuid[])`, [asOf,mealIds,ids]);
     const { rows: allSeats } = await db.query(`SELECT meal_id,seq::text,user_id,application_id,type,effective_at,recorded_at FROM seat_events WHERE effective_at<=$1 AND recorded_at<=$1 AND meal_id=ANY($2::uuid[]) ORDER BY meal_id,seq`, [asOf,mealIds]);
     // Projection consumes all authoritative business seats, while statistical membership and
     // formation below exclude classified accounts. Analysis never re-executes cancellation.
-    for(const meal of meals){const projected=projectLifecycle(meal as Pick<MealRow,'status'|'cancel_reason'|'closes_at'|'scheduled_end_at'|'minimum'>,allSeats.filter(s=>s.meal_id===meal.id).map(s=>({userId:s.user_id,type:s.type,effectiveAt:s.effective_at,seq:BigInt(s.seq)})),asOf);meal.status=projected.status;meal.cancel_reason=projected.cancelReason;}
+    for(const meal of meals){const projected=projectLifecycle(meal as Pick<MealRow,'status'|'cancel_reason'|'closes_at'|'scheduled_end_at'|'minimum'>,allSeats.filter(s=>s.meal_id===meal.id).map(s=>({userId:s.user_id,type:s.type,effectiveAt:s.effective_at,seq:BigInt(s.seq)})),lifecycleNow);meal.status=projected.status;meal.cancel_reason=projected.cancelReason;}
     const validIds=new Set(ids);const seats=allSeats.filter(s=>validIds.has(s.user_id));
     const { rows: surveys } = await db.query(`SELECT DISTINCT ON(user_id) user_id,version::text,again,reasons,submitted_at FROM product_surveys WHERE submitted_at<=$1 AND user_id=ANY($2::uuid[]) ORDER BY user_id,version DESC`, [asOf,ids]);
     // Rebuild authenticated history using this snapshot's classification revision. Anonymous

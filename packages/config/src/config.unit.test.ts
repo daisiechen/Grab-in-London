@@ -34,6 +34,13 @@ it('accepts a privately supplied DeepSeek credential without changing the select
   expect(config.adapters.AI_PROVIDER).toBe('mock');
 });
 
+it('keeps analytics partial until a valid historical deployment coverage instant is explicitly supplied',()=>{
+  expect(loadConfig(local).analyticsCoverageStart).toBeNull();
+  expect(loadConfig({...local,ANALYTICS_COVERAGE_START:'2020-01-01T00:00:00Z'}).analyticsCoverageStart).toBe('2020-01-01T00:00:00Z');
+  expect(()=>loadConfig({...local,ANALYTICS_COVERAGE_START:'not-an-instant'})).toThrow(/ANALYTICS_COVERAGE_START/);
+  expect(()=>loadConfig({...local,ANALYTICS_COVERAGE_START:new Date(Date.now()+86400_000).toISOString()})).toThrow(/ANALYTICS_COVERAGE_START/);
+});
+
 function issuesOf(env: Record<string, string>): string[] {
   try {
     loadConfig(env);

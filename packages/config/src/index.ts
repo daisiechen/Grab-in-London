@@ -37,6 +37,7 @@ export const CONFIG_KEYS = [
   'AUTH0_CLIENT_SECRET',
   'GOOGLE_MAPS_API_KEY',
   'DEEPSEEK_API_KEY',
+  'ANALYTICS_COVERAGE_START',
   'PORT',
   'PRIVACY_POLICY_VERSION',
   'RETENTION_POLICY_JSON',
@@ -61,6 +62,8 @@ export interface CoreConfig {
   googleMapsApiKey: string | null;
   /** Secret storage only; enabling calls additionally requires a verified integration bundle. */
   deepseekApiKey: string | null;
+  /** Operator-confirmed first coverage of the deployed API + both client SDKs. */
+  analyticsCoverageStart: string | null;
   port: number;
   privacyPolicyVersion: string | null;
   retentionPolicy: Record<string, unknown> | null;
@@ -173,6 +176,8 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
   }
 
   const logLevel = (value('LOG_LEVEL') ?? 'info') as LogLevel;
+  const analyticsCoverageStart=value('ANALYTICS_COVERAGE_START')??null;
+  if(analyticsCoverageStart&&(!Number.isFinite(Date.parse(analyticsCoverageStart))||Date.parse(analyticsCoverageStart)>Date.now()))issues.push('ANALYTICS_COVERAGE_START must be a valid past instant');
   if (!LOG_LEVELS.includes(logLevel)) issues.push(`LOG_LEVEL must be one of ${LOG_LEVELS.join('/')}`);
 
   if (issues.length) throw new ConfigError(issues);
@@ -186,6 +191,7 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
     iosRedirectUri,
     googleMapsApiKey: value('GOOGLE_MAPS_API_KEY') ?? null,
     deepseekApiKey: value('DEEPSEEK_API_KEY') ?? null,
+    analyticsCoverageStart,
     auth0,
     port,
     privacyPolicyVersion,

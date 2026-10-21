@@ -21,6 +21,19 @@ const event=()=>({eventId:randomUUID(),type:'map_opened',occurredAt:new Date().t
 const send=(b:Browser,events:unknown[],analytics=true,version=ANALYTICS_CONSENT_VERSION)=>b.request('POST','/v1/analytics/events',{body:{schemaVersion:1,consent:{analytics,version},events}});
 async function consent(b:Browser){expect((await send(b,[])).statusCode).toBe(200);}
 describe('analytics consent and ingestion',()=>{
+  it('bootstraps an analytics-only native scope while browsers keep it HttpOnly',async()=>{
+    const body={schemaVersion:1,consent:{analytics:true,version:ANALYTICS_CONSENT_VERSION},events:[]};
+    const native=await h.app.inject({method:'POST',url:'/v1/analytics/events',headers:{'x-fancy-analytics-client':'native'},payload:body});
+    expect(native.statusCode,native.body).toBe(200);
+    expect(native.headers['set-cookie']).toBeUndefined();
+    const scope=native.headers['x-fancy-analytics-scope'];expect(scope).toMatch(/^[A-Za-z0-9_-]{43}\.[A-Za-z0-9_-]{43}$/);
+    const discovered=await h.app.inject({method:'GET',url:'/v1/meals',headers:{cookie:`fancy_analytics_scope=${scope}`,'x-fancy-analytics':'enabled'}});
+    expect(discovered.statusCode,discovered.body).toBe(200);
+    expect((await h.db.pool.query(`SELECT 1 FROM analytics_discovery_requests WHERE request_id=$1`,[json(discovered).meta.requestId])).rows).toHaveLength(1);
+    const web=await h.app.inject({method:'POST',url:'/v1/analytics/events',headers:{origin:WEB_ORIGIN,'x-fancy-analytics-client':'native'},payload:body});
+    expect(web.statusCode).toBe(200);expect(web.headers['x-fancy-analytics-scope']).toBeUndefined();
+    expect(web.headers['set-cookie']).toContain('HttpOnly');
+  });
   it('establishes and withdraws consent without manufacturing a client event',async()=>{
     const b=new Browser(h);const before=Number((await h.db.pool.query(`SELECT count(*) FROM analytics_events`)).rows[0].count);
     expect(json(await send(b,[])).data.results).toEqual([]);

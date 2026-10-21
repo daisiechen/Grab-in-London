@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useAnalyticsPresentation } from '../../../analytics/hooks.ts';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ActivityIndicator } from 'react-native';
 import { ApiError, type ResponseOf } from '@fancy/client';
@@ -19,6 +20,7 @@ export function PublicProfileScreen() {
   const [data, setData] = useState<Data | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
+  useAnalyticsPresentation('profile_view',{userId:String(userId)},!!data);
 
   useEffect(() => {
     let live = true;

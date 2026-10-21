@@ -1,4 +1,5 @@
 import {useAssistantContext} from '../assistant/hooks.ts';
+import { useAnalyticsPresentation } from '../../analytics/hooks.ts';
 import { useState } from 'react';
 import { ActivityIndicator, Linking, Pressable, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -33,6 +34,7 @@ export function MealDetailScreen() {
   const q = useQuery<Detail>(mealKey(id), async () => (await api.call('getMeal', { params: { mealId: id } })).data);
   const [confirm, setConfirm] = useState<Confirm>('');
   const [busy, setBusy] = useState(false);
+  useAnalyticsPresentation('detail_view',{mealId:id},!!q.data);
   const [message, setMessage] = useState<string | null>(null);
   // One key per user intent: reused when the same confirmation is retried, renewed after success.
   const [intentKey, setIntentKey] = useState(() => ({ withdraw: newId(), leave: newId() }));

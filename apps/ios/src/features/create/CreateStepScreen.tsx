@@ -1,4 +1,6 @@
 import {NativeMap} from '../maps/NativeMap.tsx';
+import { useAnalyticsPresentation } from '../../analytics/hooks.ts';
+import { formErrorProperties,serverFormErrors } from '../../analytics/form-errors.ts';
 import {useAssistantContext,useAssistantEditor} from '../assistant/hooks.ts';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Keyboard, ScrollView, View } from 'react-native';
@@ -60,6 +62,7 @@ function CreateStep({ step }: { step: Step }) {
   const services = useServices();
   const router = useRouter();
   const [draft, update] = useCreateDraft();
+  useAnalyticsPresentation('create_started',{attemptId:draft.attemptId},true);
   useAssistantContext({sourcePage:'CREATE'});
   const [error, setError] = useState<string | null>(null);
   const today = londonToday(services.now());
@@ -67,7 +70,8 @@ function CreateStep({ step }: { step: Step }) {
   const next = () => {
     Keyboard.dismiss();
     const issue = validateStep(draft, step, today);
-    if (issue) return setError(issue);
+    if (issue) {const properties=formErrorProperties(draft.attemptId,issue);if(properties)services.analytics.emit('form_error',properties);return setError(issue);}
+    if(step===0)services.analytics.emit('create_arranged',{attemptId:draft.attemptId});
     setError(null);
     router.push(STEP_ROUTES[(step + 1) as 1 | 2 | 3]);
   };
@@ -92,9 +96,12 @@ function VenuePicker({ draft, update }: Part) {
   const [results, setResults] = useState<Candidate[] | null>(null);
   const [issue, setIssue] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [mapReady,setMapReady]=useState(false);
+  useAnalyticsPresentation('map_opened',{},mapReady&&!!results?.some(candidate=>candidate.location));
   const confirmKeys = useRef(new Map<string, string>());
 
   const search = async () => {
+    setMapReady(false);
     const term = q.trim();
     if (!term) return;
     setIssue(null);
@@ -112,11 +119,12 @@ function VenuePicker({ draft, update }: Part) {
     if (!confirmKeys.current.has(c.placeId)) confirmKeys.current.set(c.placeId, newId());
     try {
       const v = (await api.call('confirmVenue', { body: { placeId: c.placeId }, idempotencyKey: confirmKeys.current.get(c.placeId)! })).data;
-      if (!v.available || !v.name) {
+      if (!v.available) {
         setIssue('This restaurant can’t be verified right now. Choose another.');
       } else {
-        const choice: VenueChoice = { venueRef: v.venueRef, placeId: v.placeId, name: v.name, address: v.address ?? '', attribution: v.attributions.map((a) => a.text).join(' · ') };
+        const choice: VenueChoice = { venueRef: v.venueRef, placeId: v.placeId, name: v.name??c.name, address: v.address ?? c.address, attribution: c.attributions.map((a) => a.text).join(' · ') };
         update({ venue: choice });
+        setMapReady(false);
         setResults(null);
       }
     } catch (e) {
@@ -141,7 +149,7 @@ function VenuePicker({ draft, update }: Part) {
       <FormMessage message={issue} />
       {results?.length === 0 ? <Body muted>No restaurants found. Try another name. Your current choice is kept.</Body> : null}
       {results?.length?<Body muted>Google Maps</Body>:null}
-      {results?.some(c=>c.location)?<NativeMap label="Restaurant choices" points={results.flatMap(c=>c.location?[{id:c.placeId,title:c.name,lat:c.location.lat,lng:c.location.lng,attributions:c.attributions.map(a=>a.text)}]:[])} onSelect={id=>{const candidate=results.find(c=>c.placeId===id);if(candidate&&busy===null)void choose(candidate);}}/>:null}
+      {results?.some(c=>c.location)?<NativeMap label="Restaurant choices" points={results.flatMap(c=>c.location?[{id:c.placeId,title:c.name,lat:c.location.lat,lng:c.location.lng,attributions:c.attributions.map(a=>a.text)}]:[])} onSelect={id=>{const candidate=results.find(c=>c.placeId===id);if(candidate&&busy===null)void choose(candidate);}} onReady={()=>setMapReady(true)}/>:null}
       {results?.map((c) => (
         <View key={c.placeId} style={{ gap: 2 }}>
           <Primary secondary label={`Choose ${c.name}`} busy={busy === c.placeId} disabled={busy !== null} onPress={() => void choose(c)} />
@@ -221,7 +229,8 @@ function Review({ draft, update, today }: Part & { today: string }) {
   const publish = async (d: CreateDraft) => {
     Keyboard.dismiss();
     const issue = validateStep(d, 3, today);
-    if (issue) return setError(issue);
+    if (issue) {const properties=formErrorProperties(d.attemptId,issue);if(properties)services.analytics.emit('form_error',properties);return setError(issue);}
+    services.analytics.emit('create_arranged',{attemptId:d.attemptId});
     const body = toCreateBody(d, POLICY_VERSION);
     const serialized = JSON.stringify(body);
     if (!intent.current || intent.current.body !== serialized) intent.current = { key: services.newId(), body: serialized };
@@ -236,6 +245,8 @@ function Review({ draft, update, today }: Part & { today: string }) {
     } catch (e) {
       if (!(e instanceof ApiError)) return setError('Something went wrong. Please try again.');
       const resolution = timeResolution(e);
+      if(resolution)services.analytics.emit('form_error',{attemptId:d.attemptId,step:'arrange',field:resolution.target==='start'?'time':'closeTime',errorCode:e.code==='TIME_AMBIGUOUS'?'time_ambiguous':e.code==='TIME_NONEXISTENT'?'time_nonexistent':'invalid'});
+      else for(const properties of serverFormErrors(d.attemptId,e.fieldErrors))services.analytics.emit('form_error',properties);
       if (resolution) {
         setPicked(null);
         setTime(resolution);

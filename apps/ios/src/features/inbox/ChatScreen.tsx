@@ -1,5 +1,6 @@
 import {useAssistantContext,useAssistantEditor} from '../assistant/hooks.ts';
 import {ReadAcknowledger} from './read-ack.ts';
+import { useAnalyticsPresentation } from '../../analytics/hooks.ts';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -58,6 +59,8 @@ function AuthenticatedChatScreen() {
   const state = useSessionState();
   const [conversation, setConversation] = useState<Conversation | null>(() => cache.get<Conversation>(conversationKey(id)) ?? null);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [hasRead,setHasRead]=useState(false);
+  useAnalyticsPresentation('chat_opened',{conversationId:id},conversation?.kind==='GROUP'&&hasRead);
   const [outgoing, setOutgoing] = useState<Outgoing[]>([]);
   const [text, setText] = useState('');
   const editorVersion=useRef(0);
@@ -100,6 +103,7 @@ function AuthenticatedChatScreen() {
       new MessagePoller<Message>({
         fetchAfter: async (afterSeq, cursor) => {
           const res = await api.call('readMessages', { params: { conversationId: id }, query: { mode: 'LIVE', ...(afterSeq ? { afterSeq } : {}), ...(cursor ? { cursor } : {}), limit: 50 } });
+          setHasRead(true);
           return { messages: res.data, scannedThroughSeq:res.page.scannedThroughSeq??res.data.at(-1)?.seq??'0', nextCursor: res.page.nextCursor, hasMore: res.page.hasMore };
         },
         onPage:page=>readAck.scannedThrough(page.scannedThroughSeq??'0',page.messages.at(-1)?.seq??null),
@@ -120,7 +124,7 @@ function AuthenticatedChatScreen() {
     if (!conversation || live || !signedIn) return;
     let active = true;
     allPages((cursor) => api.call('readMessages', { params: { conversationId: id }, query: { mode: 'HISTORY', limit: 100, ...(cursor ? { cursor } : {}) } }))
-      .then((items) => active && setMessages((cur) => mergeMessages(cur, items)))
+      .then((items) => {if(active){setHasRead(true);setMessages((cur) => mergeMessages(cur, items));}})
       .catch((e: unknown) => active && setLoadError(e instanceof ApiError && e.kind === 'forbidden' ? 'This history isn’t available to you.' : 'We couldn’t load messages.'));
     return () => {
       active = false;

@@ -23,6 +23,18 @@ function readyDraft(): CreateDraft {
 }
 
 describe('Create Arrange (S10, QA-CREATE-001)', () => {
+  it('keeps only transient search display when confirmation returns a durable ID without provider display fields',async()=>{
+    const app=createTestApp();await signIn(app,me());
+    app.mock.on('GET','/v1/venues',page([{placeId:'place-1',name:'Dishoom',address:'7 Boundary St',location:null,photoRefs:[],attributions:[{provider:'google',text:'Google'}]}]));
+    app.mock.on('POST','/v1/venues/confirm',ok({...venueResponse,name:null,address:null,location:null,attributions:[]}));
+    await renderApp(app,<CreateStepScreen step={0}/>);
+    await fireEvent.changeText(screen.getByLabelText('Search restaurants'),'dishoom');
+    await fireEvent.press(screen.getByRole('button',{name:'Search'}));
+    await fireEvent.press(await screen.findByRole('button',{name:'Choose Dishoom'}));
+    expect(await screen.findByLabelText('Selected restaurant Dishoom')).toBeOnTheScreen();
+    expect(app.services.drafts.get<CreateDraft>(CREATE_DRAFT_KEY)?.venue).toMatchObject({venueRef:VENUE_REF,name:'Dishoom',address:'7 Boundary St'});
+    expect(app.mock.callsTo('POST','/v1/venues/confirm')[0]?.body).toEqual({placeId:'place-1'});
+  });
   it('searches venues, confirms one server-side and blocks Continue until the step is valid', async () => {
     const app = createTestApp();
     await signIn(app, me());

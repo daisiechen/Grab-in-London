@@ -21,7 +21,11 @@ export function createWorkerRuntime(pool:Pool,config:CoreConfig){
   if(Date.now()-lastSnapshot>=3600_000){
    // Coverage starts at the actual ledger installation, never an invented historical date.
    const {rows:[coverage]}=await pool.query<{started_at:Date}>(`SELECT started_at FROM analytics_delivery_coverage WHERE id=1`);
-   if(coverage){await sealSourceSnapshot(pool,coverage.started_at);lastSnapshot=Date.now();}
+   if(coverage){
+    const declared=config.analyticsCoverageStart?new Date(config.analyticsCoverageStart):null;
+    const start=declared&&declared>coverage.started_at?declared:coverage.started_at;
+    await sealSourceSnapshot(pool,start,{verifiedDiscovery:!!declared,clientTelemetry:!!declared});lastSnapshot=Date.now();
+   }
    await pool.query(`DELETE FROM idempotency WHERE expires_at<clock_timestamp()`);
   }
   return result;

@@ -4,6 +4,13 @@ import {Browser,createHarness,json,type Harness} from '../test/harness.ts';
 let h:Harness;
 beforeAll(async()=>{h=await createHarness(inject('pgServerUrl'));});afterAll(async()=>{await h.close();});
 describe('assistant HTTP security with model disabled',()=>{
+ it('reuses a live Web guest on page bootstrap without rolling its expiry or resetting the quota subject',async()=>{
+  const browser=new Browser(h);
+  const first=await browser.request('POST','/v1/guest-sessions',{body:{clientRequestId:randomUUID(),client:'WEB'}});expect(first.statusCode).toBe(201);
+  const cookie=browser.cookies.get('__Host-fancy_guest');
+  const second=await browser.request('POST','/v1/guest-sessions',{body:{clientRequestId:randomUUID(),client:'WEB'}});expect(second.statusCode,second.body).toBe(201);
+  expect(json(second).data).toEqual(json(first).data);expect(second.headers['set-cookie']).toBeUndefined();expect(browser.cookies.get('__Host-fancy_guest')).toBe(cookie);
+ });
  it('mints one opaque guest credential per durable intent and rejects replay after restart-equivalent metadata lookup',async()=>{
   const id=randomUUID();const response=await h.app.inject({method:'POST',url:'/v1/guest-sessions',payload:{clientRequestId:id,client:'IOS'}});
   expect(response.statusCode,response.body).toBe(201);const token=json(response).data.guestToken;expect(token).toMatch(/^[A-Za-z0-9_-]{43}$/);

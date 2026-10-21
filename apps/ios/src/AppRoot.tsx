@@ -4,6 +4,7 @@ import { Primary } from './ui/Button.tsx';
 import { Body } from './ui/Text.tsx';
 import {AssistantWidget} from './features/assistant/AssistantWidget.tsx';
 import { colors } from './ui/tokens.ts';
+import { AnalyticsConsent } from './analytics/Consent.tsx';
 import { ServicesProvider, useSessionState, type Services } from './services.tsx';
 
 /** Restores the session once and re-checks an `unavailable` session when the app returns to the foreground. */
@@ -11,14 +12,17 @@ export function AppRoot({ services, children }: { services: Services; children: 
   const [started] = useState(() => services.session.restore());
   useEffect(() => {
     void started;
+    services.analytics.setForeground(AppState.currentState==='active');
     const sub = AppState.addEventListener('change', (next) => {
+      services.analytics.setForeground(next==='active');
       if (next === 'active' && services.session.getState().status === 'unavailable') void services.session.revalidate();
     });
-    return () => sub.remove();
+    return () => {sub.remove();services.analytics.setForeground(false);};
   }, [services, started]);
   return (
     <ServicesProvider services={services}>
       <SessionBanner services={services} />
+      <AnalyticsConsent manager={services.analytics}/>
       {children}
       <AssistantWidget />
     </ServicesProvider>

@@ -32,6 +32,8 @@ FANCY_LOCAL_ACCEPTANCE=1 node infra/local-acceptance.ts
 
 当前仅支持一个API进程承载AI的RAM内容；worker独立一份运行。多API或多worker快照定时器的协调尚未完成，不能直接水平扩容。worker有饭局close/start/end、删除清理、事务邮件发送端口及小时快照；实际邮件/身份撤销提供方尚未配置，邮件不发送、删除状态保留NEEDS_SUPPORT。发现来源与客户端采集覆盖未整体复验前，快照标记partial，未知值为null。
 
+部署后实际复验API来源hook、Web和iOS全部采集入口后，设置 `ANALYTICS_COVERAGE_START` 为三者实际覆盖起点的最晚时刻。worker再与数据库ledger安装起点取较晚值；不设置时保持partial，不把旧历史伪补为完整采集。这个操作不能用代码存在或mock测试替代实际部署验证。
+
 发布目录采用 `/home/ubuntu/fancy/releases/<commit>/`；配置、数据、备份、日志分别放 `shared/config`、`shared/data`、`shared/backups`、`shared/logs`，均不进入公开仓库。先在备用回环端口验证新release，再通过经批准的同源网关切换；旧release保留用于回滚。实际端口、域名、TLS及systemd文件待服务器操作授权后核定，不能猜测并覆盖已有配置。
 
 ## 人工门槛与恢复

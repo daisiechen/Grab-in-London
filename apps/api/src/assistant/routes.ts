@@ -38,6 +38,16 @@ export function registerAssistantRoutes(app:FastifyInstance,deps:AppDeps,control
   defineRoute(app,deps,'createGuestSession',async({request})=>bridge(async()=>{
     const body=request.body as {clientRequestId:string;client:'WEB'|'IOS'};
     if(body.client==='WEB'||request.headers.origin!==undefined)assertWebOrigin(request,deps.config.webOrigin);
+    // A page reload loses RAM bootstrap state, not the fixed 24h quota subject.
+    // Reuse its HttpOnly credential without extending the cookie/database expiry.
+    const existing=body.client==='WEB'?request.cookies[GUEST_COOKIE]:undefined;
+    if(existing){
+      try{
+        const principal=await authenticateGuest(deps.pool,existing);
+        const {rows:[current]}=await deps.pool.query<{expires_at:Date}>(`SELECT expires_at FROM guest_sessions WHERE id=$1`,[principal.slice(6)]);
+        if(current)return {data:{guestToken:null,csrfToken:csrfTokenFor(deps.config.sessionSecret,principal),expiresAt:current.expires_at.toISOString()}};
+      }catch(error){if(!(error instanceof AssistantError)||error.code!=='AI_SESSION_EXPIRED')throw error;}
+    }
     const guest=await createGuest(deps.pool,body.clientRequestId,keyedHash(deps.config.sessionSecret,'ai-guest-ip',request.ip));
     const web=body.client==='WEB';
     return {data:{guestToken:web?null:guest.token,csrfToken:web?csrfTokenFor(deps.config.sessionSecret,`guest:${guest.id}`):null,expiresAt:guest.expiresAt.toISOString()},after:(reply)=>{if(web)reply.setCookie(GUEST_COOKIE,guest.token,cookieOptions(24*60*60));}};

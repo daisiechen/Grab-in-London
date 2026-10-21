@@ -14,4 +14,12 @@ describe('worker runtime assembly',()=>{
   expect(rows[0].source_status.analytics).toBe('partial');
   expect(rows[0].quality.incompleteSources).toEqual(expect.arrayContaining(['verifiedDiscovery','clientTelemetry']));
  });
+ it('uses the later deployed-client coverage boundary only after explicit configuration',async()=>{
+  const declared=new Date(Date.now()-1).toISOString();
+  const config=loadConfig({ENVIRONMENT:'test',DATABASE_URL:db.url,AUTH_ADAPTER:'test',PLACES_ADAPTER:'fixture',MAIL_ADAPTER:'outbox_test',AI_PROVIDER:'mock',WEB_ORIGIN:'http://localhost:5174',SESSION_SECRET:'worker-test-session-secret-0123456789',ANALYTICS_COVERAGE_START:declared});
+  await createWorkerRuntime(db.pool,config).tick();
+  const row=(await db.pool.query(`SELECT history_coverage_start,source_status FROM analytics_snapshots ORDER BY created_at DESC LIMIT 1`)).rows[0];
+  expect(row.history_coverage_start.toISOString()).toBe(new Date(declared).toISOString());
+  expect(row.source_status.analytics).toBe('ready');
+ });
 });

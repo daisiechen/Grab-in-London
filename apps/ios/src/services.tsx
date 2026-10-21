@@ -10,8 +10,10 @@ import { createAppChallenge, type AppChallengePair } from './features/auth/pkce.
 import type { WebBrowserAuthSessionResult } from 'expo-web-browser';
 import * as ExpoCrypto from 'expo-crypto';
 import {AssistantManager} from './features/assistant/manager.ts';
+import { AnalyticsManager } from './analytics/manager.ts';
 
 export interface Services {
+  analytics:AnalyticsManager;
   assistant:AssistantManager;
   session: SessionManager;
   /** Authenticated client (refresh + single replay on 401). Use for every feature call. */
@@ -49,8 +51,9 @@ export function createServices(config: ServiceConfig): Services {
   const newId = config.newId ?? newIntentKey;
   const now = config.now ?? Date.now;
   const aiHolder:{manager?:AssistantManager}={};
+  const analyticsHolder:{manager?:AnalyticsManager}={};
   const base = (accessToken: () => string | null,loginGuest=false) =>
-    createApiClient({ baseUrl: config.baseUrl, credentials: { kind: 'bearer', accessToken },headers:op=>loginGuest&&(op==='verifyEmail'||op==='exchangeHandoff')&&!accessToken()&&aiHolder.manager?.credential?{authorization:`Bearer ${aiHolder.manager.credential}`}:{}, ...(config.fetch ? { fetch: config.fetch } : {}) });
+    createApiClient({ baseUrl: config.baseUrl, credentials: { kind: 'bearer', accessToken },headers:op=>({...analyticsHolder.manager?.headersFor(op),...(loginGuest&&(op==='verifyEmail'||op==='exchangeHandoff')&&!accessToken()&&aiHolder.manager?.credential?{authorization:`Bearer ${aiHolder.manager.credential}`}:{})}), ...(config.fetch ? { fetch: config.fetch } : {}) });
   const guestStore=config.guestStore??secureGuestCredentialStore();
   let installation:Promise<void>|null=null;
   const ensureInstallation=()=>installation??=(async()=>{if(config.installMarker&&!(await config.installMarker.isPresent())){await config.store.clear();await guestStore.clear();await config.installMarker.set();}})();
@@ -69,6 +72,11 @@ export function createServices(config: ServiceConfig): Services {
     ...(config.onClearError ? { onClearError: config.onClearError } : {}),
   });
   holder.session = session;
+  const analytics=new AnalyticsManager({baseUrl:config.baseUrl,fetch:config.fetch??fetch,newId,now,identity:()=>{
+    const current=session.getState();const signedIn=current.status==='signedIn';
+    return {key:`${session.generation}:${current.status}:${signedIn?current.session.user.id:'guest'}`,ready:signedIn||current.status==='signedOut',authenticated:signedIn,accessToken:session.accessToken()};
+  }});
+  analyticsHolder.manager=analytics;session.subscribe(()=>analytics.syncIdentity());onSessionEnd.add(()=>analytics.clear());
   const aiRaw=createApiClient({baseUrl:config.baseUrl,credentials:{kind:'bearer',accessToken:()=>session.accessToken()??aiHolder.manager?.credential??null},
     headers:()=>aiHolder.manager?.deviceToken?{'ai-device-token':aiHolder.manager.deviceToken}:{},...(config.fetch?{fetch:config.fetch}:{})});
   const assistant=new AssistantManager({guestStore:installedGuestStore,revokeGuest:async(old,credential)=>{
@@ -78,6 +86,7 @@ export function createServices(config: ServiceConfig): Services {
   aiHolder.manager=assistant;
   onSessionEnd.add(()=>assistant.clear());
   return {
+    analytics,
     assistant,
     session,
     api: sessionClient(raw, session),

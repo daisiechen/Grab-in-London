@@ -97,9 +97,9 @@ EXPO_NO_TELEMETRY=1 EXPO_OFFLINE=1 pnpm --filter @fancy/ios exec expo export --p
 
 This produces an iOS Hermes bundle, not a signed app. Native compilation, simulator/device keyboard
 and navigation, actual OAuth/email, native Maps/Places and cross-end API flows remain unverified.
-The map surface is pending the native map integration. Dual-proof `LINK_REQUIRED` completion and
-reauth completion require server protocol agreement. A07 AI assistant is not implemented; no AI
-operation exists in the current shared SDK contract. No fake AI response is substituted.
+The Google native map and Ask Fancy implementation are described below. Missing map credentials
+or a native Google map module produce a list fallback. Actual provider and device acceptance remain
+external gates; no fake AI response is substituted.
 
 ### Ask Fancy and native map implementation
 
@@ -129,3 +129,12 @@ build. Missing key, Expo Go, or missing Google native module shows the list fall
 private server Places key must never be reused here. Google SDK/native rendering, device
 installation, Apple signing, real DeepSeek credentials/pricing/token counting and real model
 acceptance remain external gates; Jest native substitutes and JS export do not verify them.
+
+### Optional native analytics
+
+Usage analytics starts disabled. Explicit consent obtains a signed analytics-only scope via
+`x-fancy-analytics-scope`; the native server branch sets no cookie. The scope and bounded fixed-metadata
+event queue live only in RAM and clear on account/session changes. Source hooks report actual focused
+foreground presentation, discovery proofs and continuous 50%/one-second list visibility. Search input,
+message text and client-invented business success/result counts are not sent. Missing native protocol
+fails closed; component tests do not establish the device networking stack's behavior.

@@ -1,4 +1,6 @@
 import {useAssistantContext} from '../assistant/hooks.ts';
+import { useAnalyticsPresentations,useAnalyticsState } from '../../analytics/hooks.ts';
+import { useNativeImpressions,type DiscoveryProof } from '../../analytics/impressions.ts';
 import {NativeMap,type Bounds} from '../maps/NativeMap.tsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, ScrollView, StyleSheet, View } from 'react-native';
@@ -31,18 +33,33 @@ const SIZE_OPTIONS = [2, 3, 4, 5, 6] as const;
  * Google native Maps SDK is configured; otherwise lists remain available.
  */
 export function DiscoverScreen() {
-  const { api, now,assistant } = useServices();
+  const { api, now,assistant,analytics } = useServices();
+  const analyticsState=useAnalyticsState();
+  const analyticsEpoch=analyticsState.enabled?analyticsState.generation:0;
+  const [proofs,setProofs]=useState<Record<string,DiscoveryProof>>({});
+  const [presented,setPresented]=useState<DiscoveryProof|null>(null);
+  const pendingFilterEvents=useRef<string[]>([]);
+  const [filterEvents,setFilterEvents]=useState<string[]>([]);
+  const [mapReady,setMapReady]=useState(false);
+  const [mapMode,setMapMode]=useState(false);
   const router = useRouter();
   const today = londonToday(now());
   const [applied, setApplied] = useState<Filters>(emptyFilters);
   const [pending, setPending] = useState<Filters>(emptyFilters);
   const [sheet, setSheet] = useState<SheetKind>('');
   const [meals, setMeals] = useState<Meal[]>([]);
+  const onViewable=useNativeImpressions(meals,proofs);
+  const viewabilityConfig=useRef({itemVisiblePercentThreshold:50}).current;
+  useAnalyticsPresentations([
+    ...[...new Set(Object.values(proofs).filter(p=>p.generation===analyticsState.generation).map(p=>p.requestId))].map(discoveryRequestId=>({type:'discovery_results' as const,properties:{discoveryRequestId}})),
+    ...(presented?.generation===analyticsState.generation?filterEvents.map(filter=>({type:'filter_applied' as const,properties:{filter},key:presented.requestId+filter})):[]),
+    ...(presented?.generation===analyticsState.generation&&meals.length===0?[{type:'discovery_results' as const,properties:{discoveryRequestId:presented.requestId}}]:[]),
+    ...(mapMode&&mapReady?[{type:'map_opened' as const,properties:{}}]:[]),
+  ],true);
   const [cursor, setCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const requestId = useRef(0);
-  const [mapMode,setMapMode]=useState(false);
   const [pendingBounds,setPendingBounds]=useState<Bounds|null>(null);
   const [bounds,setBounds]=useState<Bounds|null>(null);
   useAssistantContext({sourcePage:'DISCOVER',appliedFilters:{
@@ -55,6 +72,7 @@ export function DiscoverScreen() {
   const load = useCallback(
     async (filters: Filters, after: string | null) => {
       const id = ++requestId.current;
+      const generation=analytics.getState().enabled?analytics.getState().generation:-1;
       setLoading(true);
       setError(null);
       try {
@@ -62,6 +80,9 @@ export function DiscoverScreen() {
         if (id !== requestId.current) return;
         assistant.observeAreas(res.data.map(m=>m.areaCode));
         setMeals((prev) => (after ? [...prev, ...res.data] : res.data));
+        const proof={requestId:res.meta.requestId,generation};
+        setProofs(previous=>({... (after?previous:{}),...Object.fromEntries(res.data.map(meal=>[meal.id,proof]))}));setPresented(proof);
+        setFilterEvents(pendingFilterEvents.current);pendingFilterEvents.current=[];
         setCursor(res.page.hasMore ? res.page.nextCursor : null);
       } catch (e) {
         if (id !== requestId.current) return;
@@ -70,7 +91,7 @@ export function DiscoverScreen() {
         if (id === requestId.current) setLoading(false);
       }
     },
-    [api,bounds,assistant],
+    [api,bounds,assistant,analytics,analyticsEpoch],
   );
 
   useEffect(() => {
@@ -82,6 +103,7 @@ export function DiscoverScreen() {
     setSheet(kind);
   };
   const apply = () => {
+    pendingFilterEvents.current=analyticsState.enabled?([['dates','dates'],['capacity','tableSizes'],['budget','budgetMaxPence'],['languages','languages'],['cuisine','cuisineCodes'],['dietary','dietaryCodes']] as const).filter(([,key])=>JSON.stringify(applied[key])!==JSON.stringify(pending[key])).map(([name])=>name):[];
     setApplied(pending);
     setSheet('');
   };
@@ -93,6 +115,8 @@ export function DiscoverScreen() {
     <SafeAreaView style={styles.safe} edges={['top']}>
       <FlatList
         testID="discover-list"
+        onViewableItemsChanged={onViewable}
+        viewabilityConfig={viewabilityConfig}
         data={meals}
         keyExtractor={(m) => m.id}
         contentContainerStyle={styles.content}
@@ -106,11 +130,11 @@ export function DiscoverScreen() {
               <Primary secondary label={sizeLabel} onPress={() => open('size')} />
               <Primary secondary label={count ? `Filters · ${count}` : 'Filters'} onPress={() => open('filters')} />
             </ScrollView>
-            <Primary secondary label={mapMode?'Show list':'Show map'} onPress={()=>setMapMode(p=>!p)}/>
+            <Primary secondary label={mapMode?'Show list':'Show map'} onPress={()=>{setMapReady(false);setMapMode(p=>!p);}}/>
             {mapMode?<>
-              <NativeMap points={meals.flatMap(m=>m.venue.available&&m.venue.location?[{id:m.id,title:m.title,lat:m.venue.location.lat,lng:m.venue.location.lng,attributions:m.venue.attributions.map(a=>a.text)}]:[])} onSelect={id=>router.push(`/meals/${id}`)} onMove={setPendingBounds}/>
-              <Primary secondary label="Search this area" disabled={!pendingBounds} onPress={()=>{if(pendingBounds)setBounds(pendingBounds);}}/>
-              {bounds?<TextAction label="Clear map area" onPress={()=>setBounds(null)}/>:null}
+              <NativeMap points={meals.flatMap(m=>m.venue.available&&m.venue.location?[{id:m.id,title:m.title,lat:m.venue.location.lat,lng:m.venue.location.lng,attributions:m.venue.attributions.map(a=>a.text)}]:[])} onSelect={id=>router.push(`/meals/${id}`)} onMove={setPendingBounds} onReady={()=>setMapReady(true)}/>
+              <Primary secondary label="Search this area" disabled={!pendingBounds} onPress={()=>{if(pendingBounds){pendingFilterEvents.current=analyticsState.enabled?['area']:[];setBounds(pendingBounds);}}}/>
+              {bounds?<TextAction label="Clear map area" onPress={()=>{pendingFilterEvents.current=analyticsState.enabled?['area']:[];setBounds(null);}}/>:null}
             </>:null}
             <FormMessage message={error} />
             {error ? <Primary secondary label="Try again" onPress={() => void load(applied, null)} /> : null}

@@ -107,7 +107,11 @@ export function registerAnalyticsIngest(app: FastifyInstance, deps: AppDeps) {
       for(const result of results)await tx.client.query(`INSERT INTO analytics_deliveries(event_id,user_id,outcome,reason,environment,classification) VALUES($1,$2,$3,$4,$5,$6)`,[result.eventId,auth?.userId??null,result.status,'reason'in result?result.reason:null,deps.config.environment,classification]);
       return results;
     });
-    reply.setCookie(COOKIE,guest.value,{ httpOnly:true,secure:['staging','production'].includes(deps.config.environment),sameSite:'lax',path:'/',maxAge:86400 });
+    // Native transports do not consistently expose Set-Cookie. This opaque scope is
+    // analytics-only, never a user/AI credential or a grant by itself. Browser requests
+    // retain the HttpOnly boundary; native clients must still prove consent on each scope.
+    if(request.headers['x-fancy-analytics-client']==='native'&&!request.headers.origin&&!auth?.viaCookie)reply.header('x-fancy-analytics-scope',guest.value);
+    else reply.setCookie(COOKIE,guest.value,{ httpOnly:true,secure:['staging','production'].includes(deps.config.environment),sameSite:'lax',path:'/',maxAge:86400 });
     return {data:{results}};
   });
 }
