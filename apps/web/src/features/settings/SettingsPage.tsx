@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router';
 import { useSession } from '../../api/session.tsx';
 import { signInPath } from '../../lib/returnTo.ts';
-import { Loading, PageHeader, Primary } from '../../ui/components.tsx';
+import { Loading, PageHeader, Primary, PrimaryLink } from '../../ui/components.tsx';
 import { Sheet } from '../../ui/Sheet.tsx';
 
 /** Settings hub; survey, reports and deletion entries are added by their slices (T16/T18/T19). */
@@ -20,7 +20,9 @@ export function SettingsPage() {
         <h1>Make yourself at home.</h1>
         <p className="prose">Your preferences, privacy and account in one place.</p>
         <section>
+          <PrimaryLink secondary to="/settings/survey">Your Fancy experience</PrimaryLink>
           <h2>Account</h2>
+          <PrimaryLink secondary to="/settings/deletion">Delete account</PrimaryLink>
           <div className="settings-info-row"><span>Email</span><span>{state.session.user.email ?? 'Not shared'}</span></div>
           <Primary secondary onClick={() => setConfirm(true)}>Sign out</Primary>
         </section>

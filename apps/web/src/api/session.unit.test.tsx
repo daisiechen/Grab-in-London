@@ -42,6 +42,18 @@ describe('SessionProvider', () => {
     expect(loadDraft('apply:m1')).toEqual({ intro: 'typed before signing in' });
   });
 
+  it('a network failure while re-checking does not sign a signed-in user out', async () => {
+    let n = 0;
+    const stub = createFetchStub({ getSession: () => (++n === 1 ? ok(session()) : fail(503, 'PROVIDER_UNAVAILABLE')) });
+    renderWithProviders(<Probe />, stub.fetch);
+    await waitFor(() => expect(screen.getByTestId('status').textContent).toBe('signed-in:Sam Rivera'));
+    saveDraft('create', { title: 'kept' });
+    await userEvent.click(screen.getByText('refresh'));
+    await waitFor(() => expect(stub.callsTo('getSession').length).toBeGreaterThanOrEqual(2));
+    expect(screen.getByTestId('status').textContent).toBe('signed-in:Sam Rivera');
+    expect(loadDraft('create')).toEqual({ title: 'kept' });
+  });
+
   it('ignores a getSession response that arrives after logout (auth generation)', async () => {
     const first = deferred<StubResponse>();
     const late = deferred<StubResponse>();

@@ -1,4 +1,6 @@
 /** Contract-shaped test data (fictional). */
+import type { PublicProfile } from '../api/types.ts';
+
 export const USER_ID = '11111111-1111-4111-8111-111111111111';
 export const HOST_ID = '22222222-2222-4222-8222-222222222222';
 export const MEAL_ID = '33333333-3333-4333-8333-333333333333';
@@ -19,7 +21,7 @@ export function session(meOverrides: Record<string, unknown> = {}) {
   return { user: me(meOverrides), csrfToken: 'csrf-token-0123456789', authTime: '2026-10-21T11:00:00.000Z', amr: ['otp'] };
 }
 
-export function publicProfile(id = HOST_ID, displayName = 'Maya Chen') {
+export function publicProfile(id = HOST_ID, displayName = 'Maya Chen'): PublicProfile {
   return { id, displayName, avatarUrl: null, bio: 'Designer who loves dumplings and long dinners.', interests: ['FOOD'], languages: ['en', 'zh'] };
 }
 

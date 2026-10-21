@@ -63,7 +63,10 @@ export function VenuePicker({ value, onConfirm, mapBounds }: {
     try {
       const body = { placeId: chosen.placeId };
       const res = await intent.run(body, (key) => api.client.call('confirmVenue', { body, idempotencyKey: key }));
-      onConfirm(res.data);
+      // Search display fields are transient. Confirmation returns only the durable place
+      // identity; retain the selected result in memory so the review screen stays readable.
+      onConfirm({ ...res.data, name: res.data.name ?? chosen.name, address: res.data.address ?? chosen.address,
+        location: res.data.location ?? chosen.location ?? null, attributions: chosen.attributions });
     } catch (e) {
       setError(e instanceof ApiError && e.code === 'NOT_FOUND'
         ? 'This restaurant can’t be confirmed right now. Choose another one.'
@@ -106,7 +109,7 @@ export function VenuePicker({ value, onConfirm, mapBounds }: {
       <div className="venue-selection-status" aria-live="polite">
         {value ? (
           value.available ? (
-            <><strong>{value.name}</strong><p>{value.address}</p><small>Confirmed with Google. Book your table with the restaurant directly.</small></>
+            <><strong>{value.name ?? 'Selected restaurant'}</strong><p>{value.address ?? 'Search again to refresh restaurant details.'}</p><small>Confirmed with Google. Book your table with the restaurant directly.</small></>
           ) : (
             <><strong>Restaurant information temporarily unavailable</strong><small>Choose again, or try later.</small></>
           )

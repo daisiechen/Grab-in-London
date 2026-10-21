@@ -46,7 +46,7 @@ export function ApplyPage() {
   const [composeAgain, setComposeAgain] = useState(false);
   const intent = useMemo(() => new Intent(api.retry), [api]);
 
-  useEffect(() => { if (intro) saveDraft(draftKey, { intro }); }, [draftKey, intro]);
+  useEffect(() => { if (intro) saveDraft(draftKey, { intro }); else clearDraft(draftKey); }, [draftKey, intro]);
 
   if (!q.data) return q.error ? <><PageHeader title="Request a seat" backTo={`/meals/${mealId}`} /><div className="body-pad"><FormError>{errorMessage(q.error)}</FormError></div></> : <Loading />;
   const { meal, myApplication } = q.data;

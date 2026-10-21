@@ -5,7 +5,7 @@ import { createFetchStub, fail, ok, type RecordedCall } from '../../test/fetchSt
 import { renderApp } from '../../test/render.tsx';
 import { MEAL_ID, VENUE_REF, meal, session } from '../../test/fixtures.ts';
 import { loadDraft, saveDraft } from '../../lib/drafts.ts';
-import { defaultClose, newDraft, poundsToPence, toCreateBody, validateStep, type MealDraft } from './model.ts';
+import { defaultClose, newDraft, poundsToPence, timeFieldOf, toCreateBody, validateStep, type MealDraft } from './model.ts';
 import { editPatch } from './EditMealPage.tsx';
 
 const venue = { venueRef: VENUE_REF, placeId: 'p-1', available: true, name: 'Dishoom', address: '22 Kingly St, London', location: null, areaCode: 'soho', attributions: [], displayExpiresAt: null };
@@ -48,6 +48,12 @@ describe('create meal model (T07)', () => {
     expect(toCreateBody(complete({ reviewConfirmed: false }))).toBeNull();
     expect(toCreateBody(complete({ bookingConfirmed: false, reviewConfirmed: true }))).toBeNull();
   });
+  it('maps time errors only by the exact start/close field keys', () => {
+    expect(timeFieldOf({ start: 'x' })).toBe('start');
+    expect(timeFieldOf({ close: 'x' })).toBe('close');
+    expect(timeFieldOf({ '/close': 'x' })).toBeNull();
+    expect(timeFieldOf(undefined)).toBeNull();
+  });
   it('edit patch contains only changed fields', () => {
     const before = complete({ reviewConfirmed: true });
     expect(editPatch(before, { ...before, title: 'Late supper club!' })).toEqual({ title: 'Late supper club!' });
@@ -64,8 +70,8 @@ describe('create meal flow (T07)', () => {
     await userEvent.click(await screen.findByRole('button', { name: /Continue/ }));
     await userEvent.click(await screen.findByRole('button', { name: /Continue/ }));
     expect((await screen.findByRole('alert')).textContent).toBe('Confirm your restaurant reservation to continue.');
-    expect((screen.getByRole('checkbox', { name: /I have a reservation at Dishoom/ }) as HTMLInputElement).checked).toBe(false);
-    await userEvent.click(screen.getByRole('checkbox', { name: /I have a reservation at Dishoom/ }));
+    expect((screen.getByRole('checkbox', { name: /I have a reservation at the restaurant/ }) as HTMLInputElement).checked).toBe(false);
+    await userEvent.click(screen.getByRole('checkbox', { name: /I have a reservation at the restaurant/ }));
     await userEvent.click(screen.getByRole('button', { name: /Continue/ }));
     await userEvent.click(await screen.findByRole('button', { name: /Publish meal/ }));
     expect((await screen.findByRole('alert')).textContent).toMatch(/cancellation terms/);
@@ -111,6 +117,25 @@ describe('create meal flow (T07)', () => {
     expect((second!.body as { start: { utcOffsetMinutes: number } }).start.utcOffsetMinutes).toBe(0);
     expect(second!.headers['idempotency-key']).not.toBe(first!.headers['idempotency-key']);
     expect((second!.body as { attemptId: string }).attemptId).toBe((first!.body as { attemptId: string }).attemptId);
+  });
+
+  it('applies a BST/GMT choice to the deadline when the server names `close`', async () => {
+    let n = 0;
+    const stub = createStub(() => (++n === 1
+      ? fail(422, 'TIME_AMBIGUOUS', { fieldErrors: { close: 'ambiguous' }, choices: [{ utcOffsetMinutes: 60, label: 'BST', instant: '2026-10-25T00:30:00Z' }, { utcOffsetMinutes: 0, label: 'GMT', instant: '2026-10-25T01:30:00Z' }] })
+      : ok(meal(), 201)));
+    saveDraft('create', complete({ date: '2026-10-25', time: '03:30', closeDate: '2026-10-25', closeTime: '01:30' }));
+    renderApp(stub.fetch, '/create');
+    await toReview();
+    await userEvent.click(screen.getByRole('checkbox', { name: /checked the arrangements/ }));
+    await userEvent.click(screen.getByRole('button', { name: /Publish meal/ }));
+    expect(await screen.findByText('Which deadline did you mean?')).toBeTruthy();
+    await userEvent.click(screen.getByRole('radio', { name: /01:30 BST · first time/ }));
+    await userEvent.click(screen.getByRole('button', { name: /Publish meal/ }));
+    await waitFor(() => expect(stub.callsTo('createMeal')).toHaveLength(2));
+    const second = stub.callsTo('createMeal')[1]!.body as { start: object; close: { utcOffsetMinutes: number } };
+    expect(second.close.utcOffsetMinutes).toBe(60);
+    expect(second.start).not.toHaveProperty('utcOffsetMinutes');
   });
 
   it('treats a nonexistent London time as an error and returns to the time step', async () => {

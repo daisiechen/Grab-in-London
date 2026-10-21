@@ -131,9 +131,14 @@ export function toCreateBody(d: MealDraft): CreateMealBody | null {
   };
 }
 
-/** Which TimeInput an ambiguity/nonexistence error refers to (field error key names `close`, else start). */
-export function timeFieldOf(fieldErrors: Record<string, string> | undefined): 'start' | 'close' {
-  return Object.keys(fieldErrors ?? {}).some((k) => /close/i.test(k)) ? 'close' : 'start';
+/**
+ * Which TimeInput a TIME_AMBIGUOUS / TIME_NONEXISTENT / INVALID_OFFSET error refers to: the
+ * server puts it under exactly `start` or `close`. Anything else is not guessed (null).
+ */
+export function timeFieldOf(fieldErrors: Record<string, string> | undefined): 'start' | 'close' | null {
+  if (fieldErrors && 'start' in fieldErrors) return 'start';
+  if (fieldErrors && 'close' in fieldErrors) return 'close';
+  return null;
 }
 
 /** Draft prefilled from an existing meal for editing. */

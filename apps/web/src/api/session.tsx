@@ -30,6 +30,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
    * after logout therefore can never sign the user back in.
    */
   const generation = useRef(0);
+  const stateRef = useRef<SessionState>(state);
+  stateRef.current = state;
 
   const clearLocal = useCallback(() => {
     generation.current++;
@@ -54,7 +56,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         setState({ status: 'guest' });
         return { status: 'guest' };
       }
-      // Network/provider failure: stay a guest for public pages but do not claim a session.
+      // Network/provider failure proves nothing about the session: a signed-in user stays
+      // signed in (the next real 401 clears it); an unknown first load is treated as guest.
+      if (stateRef.current.status === 'signed-in') return stateRef.current;
       api.setCsrfToken(null);
       setState({ status: 'guest' });
       return { status: 'guest' };
@@ -65,9 +69,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
    * A 401 only revokes something if we were signed in. A guest's 401 (e.g. getSession on
    * first load) must not wipe the drafts a guest is carrying into sign-in.
    */
-  const signedInRef = useRef(false);
-  signedInRef.current = state.status === 'signed-in';
-  useEffect(() => api.onUnauthorized(() => { if (signedInRef.current) clearLocal(); }), [api, clearLocal]);
+  useEffect(() => api.onUnauthorized(() => { if (stateRef.current.status === 'signed-in') clearLocal(); }), [api, clearLocal]);
   useEffect(() => { void refresh(); }, [refresh]);
 
   const signOut = useCallback(async () => {

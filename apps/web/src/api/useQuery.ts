@@ -48,7 +48,13 @@ export function useQuery<T>(key: string | null, loader: (client: ApiClient) => P
     return () => { generation.current++; };
   }, [cache, key, run]);
 
-  useEffect(() => cache.onClear(() => setDataState(undefined)), [cache]);
+  useEffect(() => cache.onClear(() => {
+    // Invalidate pending reads before clearing: a late reply must not repopulate private data.
+    generation.current++;
+    setDataState(undefined);
+    setError(null);
+    setLoading(false);
+  }), [cache]);
 
   const setData = useCallback((value: T) => {
     if (key) cache.set(key, value);

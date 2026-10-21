@@ -108,3 +108,32 @@
 .settings-page section { margin-top: 28px; padding-top: 6px; }
 .settings-info-row { display: flex; justify-content: space-between; gap: 15px; padding: 14px 0; font-size: 13px; border-bottom: 1px solid var(--line); }
 .settings-link { display: flex; justify-content: space-between; align-items: center; width: 100%; text-align: left; min-height: 52px; padding: 14px 0; border-bottom: 1px solid var(--line); gap: 15px; font-size: 14px; color: inherit; text-decoration: none; }
+
+/* Inbox and chat */
+.inbox-tabs { display: flex; margin: 20px 0; gap: 8px; }
+.inbox-tabs button { flex: 1; min-height: 44px; border-bottom: 2px solid transparent; }
+.inbox-tabs button[aria-selected="true"] { border-color: var(--forest); font-weight: 700; }
+.inbox-row { width: 100%; display: flex; align-items: center; gap: 11px; text-align: left; padding: 19px 0; border-bottom: 1px solid var(--line); color: inherit; text-decoration: none; }
+.inbox-row > div { flex: 1; min-width: 0; }
+.inbox-row strong { font-size: 13px; }
+.inbox-row p { font-size: 11px; color: var(--muted); margin: 4px 0; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.inbox-row small { font-size: 10px; }
+.unread { background: var(--peach); border-radius: 10px; padding: 1px 7px; font-size: 10px; font-weight: 700; }
+.inbox-progress-card { border: 1px solid var(--line); border-radius: 15px; padding: 18px; margin: 18px 0 25px; }
+.inbox-progress-card p { font-size: 13px; line-height: 1.6; }
+.chat-body { padding: 13px 16px calc(80px + var(--safe-bottom)); }
+.chat-pinned { display: flex; gap: 10px; padding: 13px; background: #f0f4eb; border-radius: 10px; font-size: 12px; }
+.chat-pinned p { margin: 4px 0 0; font-size: 10px; color: var(--muted); }
+.chat-date { text-align: center; margin: 24px 0; font-size: 9px; letter-spacing: 0.7px; color: #9aa197; }
+.chat-message { display: flex; gap: 7px; margin: 18px 0; max-width: 90%; }
+.chat-message > div { min-width: 0; }
+.chat-message small { display: block; margin: 0 0 5px; font-size: 9px; }
+.chat-message p { padding: 12px 14px; background: #f1f3ed; border-radius: 2px 13px 13px 13px; font-size: 12px; line-height: 1.6; margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.chat-message.own { margin-left: auto; justify-content: flex-end; }
+.chat-message.own p { background: var(--forest); color: white; border-radius: 13px 2px 13px 13px; }
+.chat-message.own small { text-align: right; }
+.chat-message.redacted p { font-style: italic; color: var(--muted); background: transparent; border: 1px dashed var(--line); }
+.composer { position: fixed; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; bottom: 0; display: flex; gap: 9px; padding: 12px 16px calc(12px + var(--safe-bottom)); background: #fff; border-top: 1px solid var(--line); z-index: 15; }
+.composer textarea { min-width: 0; flex: 1; background: #f4f5ef; border: 1px solid var(--line); padding: 11px 13px; border-radius: 22px; font-size: 16px; resize: none; max-height: 120px; }
+.composer button { width: 40px; height: 40px; border-radius: 50%; background: var(--forest); color: white; display: grid; place-items: center; flex: none; align-self: flex-end; }
+.group-member { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }

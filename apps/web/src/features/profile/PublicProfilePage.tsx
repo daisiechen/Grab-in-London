@@ -7,6 +7,8 @@ import { errorMessage } from '../../api/errors.ts';
 import type { PublicProfile, PublicReview } from '../../api/types.ts';
 import { Avatar, FormError, Loading, PageHeader, TextAction } from '../../ui/components.tsx';
 import { InterestTags, References, languageList } from './ProfileView.tsx';
+import { useSignedIn } from '../../api/session.tsx';
+import { MemberSafety } from '../connections/MemberSafety.tsx';
 
 interface ProfileData { profile: PublicProfile; reviews: PublicReview[]; nextReviewCursor: string | null }
 
@@ -14,6 +16,7 @@ interface ProfileData { profile: PublicProfile; reviews: PublicReview[]; nextRev
 export function PublicProfilePage() {
   const { userId = '' } = useParams();
   const { api } = useApi();
+  const viewer = useSignedIn();
   const q = useQuery<ProfileData>(`profile:${userId}`, async (c) => (await c.call('getPublicProfile', { params: { userId } })).data);
   const [more, setMore] = useState<{ reviews: PublicReview[]; cursor: string | null } | null>(null);
   const [error, setError] = useState('');
@@ -48,6 +51,7 @@ export function PublicProfilePage() {
         <References reviews={reviews} empty="No published references yet." />
         {cursor && <TextAction onClick={() => void loadMore()}>Show more references</TextAction>}
         <FormError>{error}</FormError>
+        {viewer && viewer.user.id !== profile.id && <MemberSafety subjectId={profile.id} name={profile.displayName} />}
       </div>
     </>
   );

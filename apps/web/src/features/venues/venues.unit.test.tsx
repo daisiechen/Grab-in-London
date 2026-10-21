@@ -17,6 +17,17 @@ function Harness() {
 }
 
 describe('VenuePicker (T06)', () => {
+  it('retains transient search display when confirmation only returns durable place identity', async () => {
+    const stub = createFetchStub({ getSession: () => ok(session()), searchVenues: () => page([candidate('p-1', 'Dishoom')]), confirmVenue: () => ok({ ...confirmed, name: null, address: null, location: null }) });
+    renderWithProviders(<Harness />, stub.fetch);
+    await userEvent.type(screen.getByLabelText('Search restaurants'), 'dish');
+    await userEvent.click(screen.getByRole('button', { name: 'Search' }));
+    await userEvent.click(await screen.findByRole('button', { name: /Dishoom/ }));
+    await userEvent.click(screen.getByRole('button', { name: /Use Dishoom/ }));
+    await screen.findByText('Confirmed with Google. Book your table with the restaurant directly.');
+    expect(screen.getAllByText('Dishoom').length).toBeGreaterThan(1);
+    expect(stub.callsTo('confirmVenue')[0]!.body).toEqual({ placeId: 'p-1' });
+  });
   it('confirms by placeId only and shows the server-confirmed details', async () => {
     const stub = createFetchStub({
       getSession: () => ok(session()),

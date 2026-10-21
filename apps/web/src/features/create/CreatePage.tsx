@@ -90,11 +90,11 @@ export function CreatePage() {
       navigate(`/meals/${res.data.id}`, { replace: true });
     } catch (e) {
       if (gate.handle(e, '/create')) return;
-      if (e instanceof ApiError && e.code === 'TIME_AMBIGUOUS' && e.choices?.length) {
-        setAmbiguity({ field: timeFieldOf(e.fieldErrors), choices: e.choices });
+      const field = e instanceof ApiError ? timeFieldOf(e.fieldErrors) : null;
+      if (e instanceof ApiError && e.code === 'TIME_AMBIGUOUS' && e.choices?.length && field) {
+        setAmbiguity({ field, choices: e.choices });
         setError(errorMessage(e));
-      } else if (e instanceof ApiError && (e.code === 'TIME_NONEXISTENT' || e.code === 'INVALID_OFFSET')) {
-        const field = timeFieldOf(e.fieldErrors);
+      } else if (e instanceof ApiError && (e.code === 'TIME_NONEXISTENT' || e.code === 'INVALID_OFFSET') && field) {
         setDraft((d) => ({ ...d, ...(field === 'close' ? { closeOffset: null } : { startOffset: null }), reviewConfirmed: false }));
         setStep(0);
         setError(`${field === 'close' ? 'Deadline: ' : 'Meal time: '}${errorMessage(e)}`);
@@ -136,7 +136,7 @@ export function CreatePage() {
             <h2>{draft.title}</h2>
             <p>{draft.description}</p>
             {([
-              ['Place & time', `${draft.venue?.name ?? ''} · ${draft.venue?.address ?? ''}`, `${draft.date ? longDate(draft.date) : ''} · ${draft.time} London time · ${draft.capacity} people including you (minimum ${draft.minimum})`, 0],
+              ['Place & time', draft.venue?.name ? `${draft.venue.name} · ${draft.venue.address ?? ''}` : 'Selected restaurant · choose again to refresh its display details', `${draft.date ? longDate(draft.date) : ''} · ${draft.time} London time · ${draft.capacity} people including you (minimum ${draft.minimum})`, 0],
               ['The company', draft.mood ? MOODS[draft.mood] : '', `${draft.languages.map((l) => LANGUAGES[l]).join(' & ')} · Cuisine: ${cuisineLabel({ cuisineCode: draft.cuisineCode })} · Dietary: ${dietaryLabel({ dietaryCodes: draft.dietaryCodes.length ? draft.dietaryCodes : null })}`, 1],
               ['Costs & reservation', min !== null && max !== null ? `${budgetRange(min, max)} estimated per person` : '', 'Pay at the restaurant · Host reports already booked', 2],
             ] as const).map(([label, a, b, s]) => (
