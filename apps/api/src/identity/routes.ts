@@ -41,12 +41,16 @@ function checkReturnTarget(target: string | undefined): string | null {
   return target;
 }
 
-/** Creates (or dedupes) an EMAIL_OTP challenge under a per-email advisory lock and rate limits. */
+/** Creates/dedupes an OTP challenge under shared email and IP quota locks. */
 async function startOtp(deps: AppDeps, request: FastifyRequest, o: { clientRequestId: string; email: string; client: AuthTxRow['client']; purpose: 'LOGIN' | 'REAUTH'; userId: string | null; familyId: string | null; returnTarget: string | null }) {
   const emailHash = keyedHash(deps.config.sessionSecret, 'email', o.email);
   const ipHash = keyedHash(deps.config.sessionSecret, 'ip', request.ip);
   const created = await withTransaction(deps.pool, async (tx) => {
-    await tx.client.query(`SELECT pg_advisory_xact_lock(hashtextextended($1, 0))`, [emailHash]);
+    // Domain-prefixed opaque keys share one deterministic order for LOGIN and REAUTH.
+    // Different email addresses still serialize when they consume the same IP budget.
+    for(const key of [`otp:email:${emailHash}`,`otp:ip:${ipHash}`].sort()) {
+      await tx.client.query(`SELECT pg_advisory_xact_lock(hashtextextended($1, 0))`, [key]);
+    }
     const dup = await tx.client.query(`SELECT id, email_hash, expires_at, created_at, consumed_at FROM auth_transactions WHERE kind = 'EMAIL_OTP' AND client_request_id = $1`, [o.clientRequestId]);
     if (dup.rows[0]) {
       if (dup.rows[0].email_hash !== emailHash) throw new DomainError('IDEMPOTENCY_CONFLICT', 'This request id was already used.');

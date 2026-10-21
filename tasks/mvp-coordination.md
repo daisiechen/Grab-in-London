@@ -397,3 +397,11 @@
 - QA R166 Google/Apple取消后原Try again硬编码Discover，丢已allowlist饭局申请路径；没有自动申请。仅OAuthCallbackPage在现started guard中一次消费并保存已验证目标，错误重试复用该RAM ref，默认/恶意外部目标仍Discover，不扩大持久存储或授权。
 - 自有取消→重试→正常登录返回申请页而0applyMeal、两provider及外部目标fallback回归修前两红/修后与原auth共25绿；根Web/admin282、Web生产构建及core:check绿（/private/tmp/fancy-f31-{clients,build,check}.log）。QA拥有探针findByRole不支持exact的类型问题由QA改锚定精确名称解决，不放宽目标或由生产改测试。
 - 根修正后原QA+自有定向复跑及自有文档结构验证另记fancy-f31-{original,documentation}.log。全Python77仍1项QA probe更新后hash未冻结一致性失败，原fancy-f31-python.log保留，开发不改QA证据或冒全绿。正式SHA交QA真实隔离合成OAuth portal浏览器取消/重试复验，不关闭真实Google/Apple门槛。
+
+## QA-F32 OTP跨邮箱共享IP配额（2026-10-21）
+
+- QA R168真实不同PG backend在实际count之后暂停，两邮箱同IP都读4而各201，突破5/15min；R167代理connect callback透传错误是QA setup，原记录分别保留。仅startOtp新增opaque email/IP两命名advisory事务锁，字符串统一排序，LOGIN/REAUTH同序，取齐后去重/DBnow/count/insert；不记明文邮箱/IP到锁键或日志。
+- Provider发送继续提交后，异常耗次与原cookie/native/purpose规则不改。新4真实PG回归覆盖holder观察两quota等待→[201,429]/总5/send1、跨IP同email同请求去重、不同IP独立、provider挂起时两quota锁都已可独立取得；与identity/native/F30共39API绿。不能以修后不可能双count到达的旧barrier强迫死锁或允许6次，QA需保原红并按实际配额等待调度复验。
+- 原R168重跑先红，最终两文件冻结；root完整API/check/Python验证后单独提交。命名锁更改不声称旧新程序混跑期间绝对配额，发布时应统一协议版本。
+- F31真实浏览器HTTP合成授权页被生产HTTPS保护正确拒绝，先前HTTPsmoke不等同完整浏览器取消通过。只读未见现有可信本机TLS/tunnel，未读key/安装trust/外网暴露；保API/组件证据，浏览器段待执行，不放宽HTTPS检查。
+- 根冻结API178及core:check、自有文档结构3项通过（/private/tmp/fancy-f32-{api,check,documentation}.log）。全Python77两项QA证据并行更新一致性失败（probe hash/报告184与187状态快照未同步），原fancy-f32-python.log保留；不改QA证据或冒全绿。root持串行窗口，仅OTP两文件与本记录提交，独测需用实际锁等待调度在正式SHA复验并保R168原红。
