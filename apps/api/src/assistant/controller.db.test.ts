@@ -34,6 +34,17 @@ async function meal(budget=3000){
 }
 const noWrites=async()=>({applications:Number((await db.pool.query('SELECT count(*) n FROM applications')).rows[0].n),messages:Number((await db.pool.query('SELECT count(*) n FROM messages')).rows[0].n),meals:Number((await db.pool.query('SELECT count(*) n FROM meals')).rows[0].n)});
 describe('controlled AI orchestration (not real-provider evaluation)',()=>{
+ it('clarifies a missing explain target in the current input language without reusing the previous meal',async()=>{
+  const target=await meal();const h=await setup([plan('EXPLAIN',[],[target]),plan('EXPLAIN'),plan('EXPLAIN')]);const before=await noWrites();
+  try{
+  const first=await h.run(h.turn('Explain this meal',{explicitMealId:target}));expect(first.result?.cards[0]?.mealId).toBe(target);
+  const chinese=await h.run(h.turn('解释这顿饭'));
+  expect(chinese.result?.replyText).toMatch(/请.*确认|请选择/);expect(chinese.result?.replyText).not.toContain('Synthetic Friday dinner');expect(chinese.result?.cards).toEqual([]);
+  const english=await h.run(h.turn('Explain this meal'));
+  expect(english.result?.replyText).toMatch(/^Please confirm/);expect(english.result?.cards).toEqual([]);
+  expect(h.captured).toHaveLength(3);expect(await noWrites()).toEqual(before);
+  }finally{await db.pool.query('DELETE FROM meals WHERE id=$1',[target]);}
+ });
  it('keeps saved budget soft, applies provenance-checked explicit GBP hard limit and never writes business rows',async()=>{
   const cheap=await meal(3000);await meal(4500);const h=await setup([plan('SEARCH'),plan('SEARCH',[{field:'budgetMaxPence',op:'SET',value:3500,source:'£35'}])],{...emptyPreferences(),budgetMaxPence:3500});const before=await noWrites();
   const soft=await h.run(h.turn('Find meals'));expect(soft.state).toBe('SUCCEEDED');expect(soft.result?.cards).toHaveLength(2);expect(soft.result?.cards[0]?.mealId).toBe(cheap);

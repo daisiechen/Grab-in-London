@@ -18,7 +18,9 @@ export interface AssistantResult {
  replyText:string;cards:Array<{mealId:string;title:string;startsAt:string;budgetMaxPence:number;capacity:number;version:string}>;
  draft?:AIDraft;preferenceProposal?:PreferenceProposal;comparison?:Array<{mealId:string;title:string;status:string;startsAt:string;budgetMaxPence:number;capacity:number;version:string}>;
 }
-const clarification=():AssistantResult=>({replyText:'Please confirm the date, area, budget or exact meal you mean. I won’t infer an ambiguous condition or perform any booking or sending action.',cards:[]});
+const clarification=(input=''):AssistantResult=>({replyText:/\p{Script=Han}/u.test(input)
+ ? '请确认你想了解的具体饭局。我不会猜测目标，也不会替你预约或发送消息。'
+ : 'Please confirm the date, area, budget or exact meal you mean. I won’t infer an ambiguous condition or perform any booking or sending action.',cards:[]});
 const card=(c:{id:string;title:string;startsAt:string;budgetMaxPence:number;capacity:number;version:string})=>({mealId:c.id,title:c.title,startsAt:c.startsAt,budgetMaxPence:c.budgetMaxPence,capacity:c.capacity,version:c.version});
 const draftSchema=(kind:DraftKind)=>kind==='CREATE'
  ? {type:'object',additionalProperties:false,required:['title','description'],properties:{title:{type:'string',minLength:5,maxLength:80},description:{type:'string',minLength:20,maxLength:1000}}}
@@ -109,7 +111,7 @@ export class AssistantController {
     result={replyText:chosen.length?`These public meals match your confirmed conditions${query.hard.dates?.length?` for ${query.hard.dates.join(', ')}`:' in the next 7 London calendar days (including today)'}. Saved preferences affect order only. Availability may change.`:'No eligible public meals match these conditions. You can choose which filter to change.',cards:chosen.map(card)};
    }else if(plan.intent==='COMPARE'||plan.intent==='EXPLAIN'){
     const ids=this.selectedIds(plan,turn);
-    if(!ids.length)result=clarification();
+    if(!ids.length)result=clarification(plan.intent==='EXPLAIN'?turn.input:'');
     else{
      facts=await publicFacts(this.pool,ids);if(facts.length!==ids.length)throw new AssistantError('AI_SUPERSEDED');
      if(plan.intent==='COMPARE')result={replyText:'Comparison uses the current public meal details. Budgets are per person in GBP, paid at the restaurant; no seat is held.',cards:[],comparison:facts.map(f=>({...card(f),status:f.status}))};

@@ -336,3 +336,9 @@
 - query与controller F23由不同唯一owner分别冻结，根整合DB/API/原独测matrix及全仓检查后各自切片提交，不混QA或研究文件。正式关闭仍交QA固定SHA决定。
 - 根冻结整合DB127/API160及当前独测矩阵17项通过（/private/tmp/fancy-f22-f23-{db,api,original-matrix}.log），core:check通过。该矩阵在QA原R117后新增一项，严格记录本次17，不覆盖原红。Python77在QA并行更新证据时两项一致性失败（probe变更/报告尚未同步），原日志fancy-f22-f23-python.log保留，待QA批冻结后原样复跑，开发不替QA改证据。
 - QA在ef40e7c冻结原红及支持/指标/创建证据后释放窗口；根原样复跑Python77全绿（/private/tmp/fancy-f22-f23-python-frozen.log），原并行快照失败记录保留。本次仅F22两文件与记录先提交，F23另切片，独测正式状态160 PASS /43 NOT_RUN /2 FAIL /12 BLOCKED，开发不抢先关闭。
+
+## QA-F23 缺当前饭局目标的中文澄清（2026-10-21）
+
+- QA原R117先明确解释饭局M，下一中文请求未附当前mealId时没有复用M，但错误固定英文回复。仅EXPLAIN无当前ids分支将本轮input交澄清helper，含中文使用中文提示；英文保持原回复，不从历史/editor/偏好猜语言，不扩其他reply本地化。
+- 自有明确M→中文无目标→英文无目标修前中文红、修后controller真实PG14绿；三轮只有各自原解析provider一次，缺目标cards空且不含旧标题、业务行不增。源码两文件冻结后与F22整合根DB127/API160/独测当前矩阵17、unit292、core:check及冻结Python77均通过，日志见本轮F22记录；无需为仅分commit重复相同冻结层。
+- F22先e355584独立推送核SHA，本切片仅controller与自有DB测试及本记录，不混QA/研究。正式关闭交QA最终SHA独立复验，不声称真实模型或完整原生交互通过。
