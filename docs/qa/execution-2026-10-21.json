@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 100,
-    "PASS": 105,
+    "NOT_RUN": 98,
+    "PASS": 107,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -11030,8 +11030,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R64-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -11136,15 +11138,16 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R64-T001"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "各阶段独立重检",
-        "失权转入/Send拒绝",
-        "无读群正文"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：群草稿生成后退群 → 再转入 → 另一次转入后解散再Send。尚缺逐项证据：各阶段独立重检；失权转入/Send拒绝；无读群正文。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "真实PG/HTTP三阶段：生成GROUP草稿无消息写，provider完整输入未含已发送群正文sentinel；退群后转入409 TARGET_CHANGED，再请求生成SUPERSEDED且无结果。另一群先生成并转入200，仍无消息写；随后主持明确解散，旧转入文字Send403且消息数0。各阶段服务器独立鉴权，不把AI生成/转入视作发送；只使用计数mock provider，不是真实模型或系统浏览器。"
     },
     {
       "id": "QA-AI-018",
@@ -11152,8 +11155,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R64-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -11258,15 +11263,16 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R64-T002"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "仍可起草及转入",
-        "不得把取消当退群",
-        "发送依原权限"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：M取消但A仍群成员 → 请求并转入群草稿。尚缺逐项证据：仍可起草及转入；不得把取消当退群；发送依原权限。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "真实PG/HTTP：主持取消未来饭局但未退群/解散；成员仍可生成GROUP草稿并转入，两个AI阶段消息数均0；只有本人随后显式POST消息才201且恰好1条。非成员发送隐藏404且无额外消息，conversation.dissolved_at仍null。饭局取消未被误当作群权限撤销，发送仍依成员授权。"
     },
     {
       "id": "QA-AI-019",

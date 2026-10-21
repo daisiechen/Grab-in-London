@@ -12179,6 +12179,35 @@
           "durationMs": 83.32595900000001
         }
       ]
+    },
+    {
+      "id": "R64",
+      "testedCommit": "f481d25daadffc8493ea07c074563cb497c59840",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-group-permissions.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-ai-group-permissions-final.json",
+      "startedAt": "2026-10-21T13:30:11.012000+00:00",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "total": 2,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R64-T001",
+          "run": "R64",
+          "path": "scripts/qa-independent-ai-group-permissions.api.test.ts",
+          "title": "QA-AI-017 generation transfer and Send each recheck permission without reading group bodies or writing during AI stages",
+          "status": "passed",
+          "durationMs": 419.35020799999995
+        },
+        {
+          "id": "R64-T002",
+          "run": "R64",
+          "path": "scripts/qa-independent-ai-group-permissions.api.test.ts",
+          "title": "QA-AI-018 cancelled meal retains member ability to draft transfer and explicitly send while outsiders remain denied",
+          "status": "passed",
+          "durationMs": 437.281125
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -12218,7 +12247,8 @@
     "scripts/qa-independent-deletion-logs.api.test.ts": "2c9e2ec6c136d48e45e85ab2ecd2c359f65c01446b87e70f621d8e7a1f131cd4",
     "scripts/qa-deletion-log-child.ts": "802a845b48bf184645d73d8a3bc78939e5f43bbfec25fe44951e47f342f979be",
     "scripts/qa-independent-snapshot-race.api.test.ts": "2f71df1295860e2dfcc2df39890c6f9ba1f4c7627877573cff175b2b2334102a",
-    "apps/admin/src/state/qa-independent-revocation.unit.test.tsx": "e2999aca140d3f9bdb9f2f88319e44a1e9c99884da300a701967d05f74c01c09"
+    "apps/admin/src/state/qa-independent-revocation.unit.test.tsx": "e2999aca140d3f9bdb9f2f88319e44a1e9c99884da300a701967d05f74c01c09",
+    "scripts/qa-independent-ai-group-permissions.api.test.ts": "67ded17c812c8d5fa85aebdeb3c0849e7691b7b4a81900c9cfd4df6f5631638f"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console.",
   "runtimeSnapshotVerification": {
@@ -12285,6 +12315,7 @@
     "R47 setup: SQL quote escaping initially prevented collection (0 tests); corrected and linted. Booking declaration fixture used invalid CONFIRMED, causing two DB CHECK failures before target command; corrected to contracted REPORTED_CONFIRMED. Single-consent fixture initially lacked a public-complete profile (404 before selection); completed profiles before baseline. All business assertions retained; these are QA setup failures, not production defects. Final R47 executes 3/3 on real isolated PostgreSQL. Start clock injected only after command locks; blocker waits for both backend Lock states, not a fixed sleep as proof. Recipient reads during uncommitted consent use a second DB connection and a controlled promise barrier, followed by rollback and committed API selection.",
     "R48 initial SQL period alias day caused six setup failures; corrected reserved alias to day_period/month_period. Owner-only preferences route has no target-user parameter: initially QA expected unknown userId query rejection422, but contract binds auth.userId and returns B own empty fields. Corrected to assert no A disclosure, guessed target path404, B wrong-version deletion409 and A fields unchanged; no access-control expectation weakened. Real disable configuration is AI_PROVIDER=disabled, not an invented AI_ENABLED env var. Local synthetic iOS credentials are issued through session service; OS browser/Keychain are not tested.",
     "R49 initial NEW/reset request omitted contract-required explicit idempotency intent key and returned422 before quota assertions. Added required UUID header; quota and source/CSRF assertions unchanged. Fixed guest expiry validated as exactly24h in DB; expiry path advanced by changing only synthetic credential expires_at to past, not waiting24h. This verifies refresh/NEW cannot renew it but cookie clearing can create a fresh quota subject, an explicit known bypass boundary.",
-    "R56 initial DIRECT assertion used GROUP read-only wording (QA fixture mismatch), and current-metadata test unconditionally returned stale canSend=true. R57 uses the correct group/direct wording and current canSend projection; allows repeated HISTORY reads but forbids LIVE after HISTORY. Original R56 failures retained. R59 adds a separate controlled deferred response captured before revocation and released only after403/HISTORY: this still fails, independently proving the stale-metadata race rather than discarding it as fixture error."
+    "R56 initial DIRECT assertion used GROUP read-only wording (QA fixture mismatch), and current-metadata test unconditionally returned stale canSend=true. R57 uses the correct group/direct wording and current canSend projection; allows repeated HISTORY reads but forbids LIVE after HISTORY. Original R56 failures retained. R59 adds a separate controlled deferred response captured before revocation and released only after403/HISTORY: this still fails, independently proving the stale-metadata race rather than discarding it as fixture error.",
+    "R64 initial fast multi-stage setup hit the guest one-second write-burst limiter before the final send (429 rather than authorization403); clears only that synthetic actor write-burst row immediately before the authorization probe, retaining all durable messages/quota. Stranger send correctly conceals an unknown conversation with404, not403; expectation aligned to established route contract, still asserts no message. No production code or permission assertion weakened."
   ]
 }
