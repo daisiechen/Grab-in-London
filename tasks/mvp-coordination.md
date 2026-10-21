@@ -493,3 +493,10 @@
 - 官方Flash1017同commit四公开文件哈希固定，byte-BPE无normalizer扩张且256单字节覆盖；共用实际发送payload与完整schema/system/user/JSON-mode模板做UTF8保守界，再要求COST单独证明托管端额外输入上界，缺证不默认0。不把公开模板证明泛化为API隐藏提示已验证；真实alias漂移/数据条款/质量评测仍须实证。
 - pure dry-plan无Key/env/network：固定6条中英合成spike只列payload hash/上界费用，不发送；60样本最多120内部调用槽，每call16000输入/2000输出按峰值2/8元每百万tokens合计最高5.76元，纠正曾误按两次累计输入的3.84元估算。不是已花费或实际调用数；人民币50/月仍不变。
 - 根冻结core:check、unit334、API178通过（/private/tmp/fancy-ai-f41-{check,unit,api}.log），相关66回归及assistant/API/testkit类型/lint绿；实际官方artifact加明确临时SYNTHETIC审批夹具正路径/错hash核查零network，夹具已删，不是真审批。未启用真实AI或关闭MODEL/DATA/COST门槛。资料来源：官方api-docs.deepseek.com pricing/ChatCompletions/token_usage与deepseek-ai官方HF固定commit，见代码PUBLIC_ARTIFACTS。
+
+
+## QA-F41 原生收件箱返回时刷新失效缓存
+
+- QA正式0db Native36/37/38实证：冷启见群，进聊天标已读导致inbox cache删除，返回已挂载Inbox显示Chats0/Applications0且无加载/错误，实际下拉立刻恢复列表；该手动恢复不是自动路径通过。根因query订阅数据失效不触发reload，F40解散仍定向通过不重开。
+- 仅InboxScreen与自有inbox-refresh：恢复focus先session revalidate/世代校验再reload，首挂载不重复读；数据缺失显示Loading/不假0，离线/403可见错误并显式重试，读到403仍保原hook清缓存，无自动失败循环；分页后先assertGeneration再写conversation缓存，晚响应不跨账号回灌。不改通用query/cache/Chat或消息写入。
+- 自有原2红→4绿（mounted invalidation/focus、403恢复、offline不读、expiry晚响应），全iOS40套270项/type/lint/diff绿（/private/tmp/fancy-f41-all-ios.log），根check与unit334/API178见同批AI记录；未改后台/Web，沿用未变层。正式SHA正常签名包交QA实际Back/Inbox复验，未用组件通过抢关F41。
