@@ -15088,6 +15088,88 @@
           "durationMs": 0.16154200000005403
         }
       ]
+    },
+    {
+      "id": "R108",
+      "testedCommit": "7e372cdc426158cc4d1dcd0c52c395b5c5d42873 + QA-only hand-computable fixtures",
+      "command": "vitest run --project unit apps/api/src/admin/qa-independent-metric-dst-quantiles.unit.test.ts",
+      "startedAt": "2026-10-21T17:54:26.874000+00:00",
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R108-T001",
+          "run": "R108",
+          "path": "apps/api/src/admin/qa-independent-metric-dst-quantiles.unit.test.ts",
+          "title": "QA-METRIC-015 repeated London0130 stays one local day and Monday starts a new week",
+          "status": "passed",
+          "durationMs": 11.22354199999998
+        },
+        {
+          "id": "R108-T002",
+          "run": "R108",
+          "path": "apps/api/src/admin/qa-independent-metric-dst-quantiles.unit.test.ts",
+          "title": "QA-METRIC-015 14 and30 day maturity across fallback use elapsedUTC not calendar wall hours",
+          "status": "passed",
+          "durationMs": 1.2043749999999989
+        },
+        {
+          "id": "R108-T003",
+          "run": "R108",
+          "path": "apps/api/src/admin/qa-independent-metric-dst-quantiles.unit.test.ts",
+          "title": "QA-METRIC-017 handcomputed nearest rank1,2,4,10 givesP50=2/P90=10; terminal rounds not pending",
+          "status": "passed",
+          "durationMs": 0.6386660000000006
+        }
+      ]
+    },
+    {
+      "id": "R109",
+      "testedCommit": "7e372cdc426158cc4d1dcd0c52c395b5c5d42873 + QA-only hand-computable fixtures",
+      "command": "vitest run --project unit apps/api/src/admin/qa-independent-metric-dst-quantiles.unit.test.ts",
+      "startedAt": "2026-10-21T17:55:07.802000+00:00",
+      "exitCode": 0,
+      "passed": 4,
+      "failed": 0,
+      "total": 4,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R109-T001",
+          "run": "R109",
+          "path": "apps/api/src/admin/qa-independent-metric-dst-quantiles.unit.test.ts",
+          "title": "QA-METRIC-015 repeated London0130 stays one local day and Monday starts a new week",
+          "status": "passed",
+          "durationMs": 11.829624999999993
+        },
+        {
+          "id": "R109-T002",
+          "run": "R109",
+          "path": "apps/api/src/admin/qa-independent-metric-dst-quantiles.unit.test.ts",
+          "title": "QA-METRIC-015 14 and30 day maturity across fallback use elapsedUTC not calendar wall hours",
+          "status": "passed",
+          "durationMs": 1.8546249999999986
+        },
+        {
+          "id": "R109-T003",
+          "run": "R109",
+          "path": "apps/api/src/admin/qa-independent-metric-dst-quantiles.unit.test.ts",
+          "title": "QA-METRIC-017 handcomputed nearest rank [ 1, 2, 3, 10 ] givesP50=2/P90=10; terminal rounds not pending",
+          "status": "passed",
+          "durationMs": 0.674334000000016
+        },
+        {
+          "id": "R109-T004",
+          "run": "R109",
+          "path": "apps/api/src/admin/qa-independent-metric-dst-quantiles.unit.test.ts",
+          "title": "QA-METRIC-017 handcomputed nearest rank [ 1, 2, 4, 10 ] givesP50=2/P90=10; terminal rounds not pending",
+          "status": "passed",
+          "durationMs": 0.4608329999999796
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -15146,7 +15228,8 @@
     "scripts/qa-independent-draft-authorization.api.test.ts": "d990daf9f3b83d95a4d0137eaea969358d0e810221fdbe1cb0ee1b7dd43370ee",
     "scripts/qa-independent-mail-faults.api.test.ts": "71b9a043c2a0e1d1d2097cc15dcb8dd89826087ac091f272005118141a0017b2",
     "scripts/qa-independent-notification-matrix.api.test.ts": "ca109f828370585d327f39dfb2c168f5a323568aeede58b8b9d0f9ff951a1d19",
-    "scripts/qa-independent-create-boundaries.api.test.ts": "71e1dfdbb31fa96fa7b16625ac91e5537a3c6bb9b8ade96f66f263211f2b8461"
+    "scripts/qa-independent-create-boundaries.api.test.ts": "71e1dfdbb31fa96fa7b16625ac91e5537a3c6bb9b8ade96f66f263211f2b8461",
+    "apps/api/src/admin/qa-independent-metric-dst-quantiles.unit.test.ts": "72e954ae3fd897ec9130af44fb1d7179b7873251354cbe3b819858f8e1ad34db"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console. R68/R69 valid TestIDP OAuth callback200 captured actual non-silent child stdout only in parent RAM. Metadata contains only leak booleans, never credential strings or raw logs. R69 aggregates code/state/email checks without stopping at the first boolean failure. R72 mutates semantic OpenAPI/SDK artifacts only in an owned temporary contracts copy, requires the real checker fail1 and restore0, and verifies original workspace bytes untouched. Static cases remain NOT_RUN until fixed committed handoff recheck.",
   "runtimeSnapshotVerification": {
@@ -15225,6 +15308,7 @@
     "F18 browser fixture setup: link each workspace dependency directory in fixed archive; seed both SELF attendance reports before either reconnect choice. First incorrect-order attempt received expected403 and was discarded with its disposable DB; not a product failure.",
     "R95 initial extra postmeal DTO assertion used incomplete old-meal fixture (physical start_roster without seat_events). R96 includes both sealed roster and actual host/guest seat_events/head plus status assertion; all original business expectations retained. R95 red preserved as QA fixture failure, not product defect.",
     "R99 initial probe accessed detail.version instead of detail.meal.version and produced422; R101/R102 moved only due_at, leaving run_after future and correctly claiming0. Corrected only isolated QA fixtures, retained all reds; final formal cd66d87 archive R104 six green and R105 ten green authoritative.",
-    "R106 error-code/message matcher mismatch corrected to exact error.code VALIDATION_FAILED, original boundary unchanged. R10710green. No UI draft-preservation claim from API/functions."
+    "R106 error-code/message matcher mismatch corrected to exact error.code VALIDATION_FAILED, original boundary unchanged. R10710green. No UI draft-preservation claim from API/functions.",
+    "R108 initially covered alternate1/2/4/10 quantiles. Re-read frozen plan exact1/2/3/10 and expanded R109 to both data vectors, unchanged P50=2 P90=10. No prior failure or threshold adjustment."
   ]
 }

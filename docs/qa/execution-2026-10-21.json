@@ -16,8 +16,8 @@
     "nativeRuntimeCheck20261021": "Read-only simctl outside sandbox confirms installed iOS27.0/27.1 runtimes and available shutdown iPhone simulators. Sandboxed service refusal is not missing-runtime proof. Build/launch and real native journey remain unexecuted."
   },
   "counts": {
-    "NOT_RUN": 66,
-    "PASS": 139,
+    "NOT_RUN": 64,
+    "PASS": 141,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -7736,8 +7736,11 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R109-T001",
+        "R109-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -7777,13 +7780,19 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "两01:30同London日",
-        "周一开周",
-        "14/30天用连续UTC时长"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：用秋季重复01:30两UTC与周日/周一边界构建周报。尚缺逐项证据：两01:30同London日；周一开周；14/30天用连续UTC时长。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent hand-computable fixed-asOf fixtures R109, actual production calculateMetrics. London2026-10-25 00:30Z and01:30Z both local01:30 and oneSunday; weekly keysOct19 forSunday thenOct26 forMonday, unique counts2 and1. Across fallback14-day maturity exactUTC ms and30-day repeat exactUTC accepted while+1h excluded. Exact plan1/2/3/10 and alternate1/2/4/10 yield nearest-rankP50=2/P90=10; later duplicate approval does not shift first decision, withdrawals/expiry/cancel have no decision duration, only one live pending; cancelled meal and exactclose pending excluded. This is independent fixture reconciliation, not page/network/native proof.",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：用秋季重复01:30两UTC与周日/周一边界构建周报。尚缺逐项证据：两01:30同London日；周一开周；14/30天用连续UTC时长。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+        }
+      ]
     },
     {
       "id": "QA-METRIC-016",
@@ -7847,8 +7856,11 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R109-T003",
+        "R109-T004"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -7888,13 +7900,19 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "最近秩P50=2、P90=10",
-        "仅首次批准/拒绝入分布",
-        "终止轮不计pending"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：四申请首次决策延迟1/2/3/10小时 → 重复决定及pending/expired混入。尚缺逐项证据：最近秩P50=2、P90=10；仅首次批准/拒绝入分布；终止轮不计pending。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent hand-computable fixed-asOf fixtures R109, actual production calculateMetrics. London2026-10-25 00:30Z and01:30Z both local01:30 and oneSunday; weekly keysOct19 forSunday thenOct26 forMonday, unique counts2 and1. Across fallback14-day maturity exactUTC ms and30-day repeat exactUTC accepted while+1h excluded. Exact plan1/2/3/10 and alternate1/2/4/10 yield nearest-rankP50=2/P90=10; later duplicate approval does not shift first decision, withdrawals/expiry/cancel have no decision duration, only one live pending; cancelled meal and exactclose pending excluded. This is independent fixture reconciliation, not page/network/native proof.",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：四申请首次决策延迟1/2/3/10小时 → 重复决定及pending/expired混入。尚缺逐项证据：最近秩P50=2、P90=10；仅首次批准/拒绝入分布；终止轮不计pending。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+        }
+      ]
     },
     {
       "id": "QA-METRIC-018",
@@ -22316,7 +22334,7 @@
     "userAuthorizedMessaging": true,
     "status": "remaining_local_execution_in_progress",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
-    "latestFeedback": "R107 exact publication deadline function/default suggestion boundaries PASS DB012; legal/illegal sizes API8green but CREATE003 editor preservation still NOT_RUN. Native build progressing, no release pass."
+    "latestFeedback": "R109 independent DST/week/continuous-duration and nearest-rank/terminal-pending fixtures4PASS; METRIC015/017 complete. Native toolchain build continues; no native run or release pass."
   },
   "blockerTriage": "原14条中供应商分步删除和恢复删除台账两条已转本地执行并通过；其余12条缺真实环境/许可/批准证据，各项可本地准备部分已继续推进，不能视为12个未修代码故障。"
 }

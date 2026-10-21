@@ -14,10 +14,10 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 139 |
+| PASS | 141 |
 | FAIL | 0 |
 | BLOCKED | 12 |
-| NOT_RUN | 66 |
+| NOT_RUN | 64 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实环境、原生runtime/设备/签名或政策批准证据；本地恢复与分步删除现已复验通过，不能再笼统视为外部阻塞。FAIL优先于未完成的后续步骤。
@@ -133,6 +133,8 @@
 | R105 | 退出码0；10/10通过，失败0，2个测试文件 | `cd66d87` |
 | R106 | 退出码1；9/10通过，失败1，1个测试文件 | `c2d5b0d` |
 | R107 | 退出码0；10/10通过，失败0，1个测试文件 | `c2d5b0d` |
+| R108 | 退出码0；3/3通过，失败0，1个测试文件 | `7e372cd` |
+| R109 | 退出码0；4/4通过，失败0，1个测试文件 | `7e372cd` |
 
 R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯函数探针；R5复跑分页修复回归，R6是QA第二批6项独立P0探针；R7/R8为QA-F01修复的API/Web及iOS组件定向复跑；R9是第三批12项独立边界探针，R10/R11复跑解除准备，R12为QA新增真实备份中E0导出的恢复后撤销分支；R13为饭后及群/私聊权限独立探针；R14保留QA-F03修前2失败，R15为0518d45修后的12项独立探针复验，R16为身份模块26项受影响HTTP回归（包括fresh会话下未来proof拒绝），不能删除修前结果或把历史失败当当前通过；R17为举报本人回执及撤授权重放3项独立HTTP/PG探针，撤session/DELETING状态通过受控数据库夹具设置。R18为安排锁、历史截止补算、开始名单及预约隔离6项独立PG/HTTP探针，删除仅屏障状态，完整删除名单断言仍未通过。R19/R20独立定向复跑5a37fdc关闭顺序单测及真实PG负载退出，未替代远端CI结果。R21为删除实际HTTP/本地purge、故障rollback及用户锁消息/审批竞态5项独立探针，生产日志脱敏仍待完整捕获。R22为ac09af4固定版本的11项独立受控AI/controller/HTTP探针，仅035/036/037具完整预期证据；R23为该版本Claude发现修复28项API/DB独立定向复验。R24保留QA-F04修前停用后仍发布失败；R25为8e2b908修后7项独立停用/费用/reaper探针，R26为22项受影响DB回归，F04定向关闭而043仍有未测断言。R27保留QA-F05修前Web失败，T001另为已分类夹具错误；R28/R29为f298048独立session/PG及Web组件各3项，R30为iOS manager17项定向回归；F05在NEW与TTL/偏好删除差异范围关闭。R31为公开DTO/后台角色/CSV授权及跨快照游标和大序号4项独立HTTP/PG探针，公式转义另覆盖formatter，不声称Excel实际执行。R32保留QA-F06 CLI入口失败，R33保留QA-F07原生协议失败；R34/R35固定b76c593独立8+32项验证CLI修复，R36固定1080993独立iOS49项验证桥接修复。完整加入用户路径仍NOT_RUN，不据组件通过升级。不能将这些数量相加当作独立业务用例数；R5与R1有重复，R2也不是原生设备验收。逐项测试名、状态、时间和命令见[机器证据](evidence/2026-10-21/automated-runs.json)。R4是质量检查而非业务用例。
 
@@ -265,9 +267,9 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-METRIC-012 · 预算互斥分段 | NOT_RUN | 本地生产实现尚需实际执行：max20/20.01/30/30.01/40/40.01/unknown各1场 → 选择各分段及并集。尚缺逐项证据：每场只落一个预算段；unknown独列；双语并集无重复。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-METRIC-013 · 测试员工分类恢复 | NOT_RUN | 本地生产实现尚需实际执行：data_admin将A regular→test→regular → 含host和参与记录。尚缺逐项证据：新快照排除A贡献及其host整场；正式host他人事实保留；恢复重新构建，旧快照不常规改写。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-METRIC-014 · 删除后peak重算 | NOT_RUN | 本地生产实现尚需实际执行：正式3席/min3已发生业务达标 → 删除1用户 → 新快照。尚缺逐项证据：分析peak=2；用户贡献从分子分母退出；原业务成团事实不改。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-METRIC-015 · London周跨DST | NOT_RUN | 本地生产实现尚需实际执行：用秋季重复01:30两UTC与周日/周一边界构建周报。尚缺逐项证据：两01:30同London日；周一开周；14/30天用连续UTC时长。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-METRIC-015 · London周跨DST | PASS | Independent hand-computable fixed-asOf fixtures R109, actual production calculateMetrics. London2026-10-25 00:30Z and01:30Z both local01:30 and oneSunday; weekly keysOct19 forSunday thenOct26 forMonday, unique counts2 and1. Across fallback14-day maturity exactUTC ms and30-day repeat exactUTC accepted while+1h excluded. Exact plan1/2/3/10 and alternate1/2/4/10 yield nearest-rankP50=2/P90=10; later duplicate approval does not shift first decision, withdrawals/expiry/cancel have no decision duration, only one live pending; cancelled meal and exactclose pending excluded. This is independent fixture reconciliation, not page/network/native proof.；证据 R109-T001, R109-T002 |
 | QA-METRIC-016 · 同快照全链路 | NOT_RUN | 本地生产实现尚需实际执行：固定S0+filterHash翻页/下钻/CSV → 期间产生S1。尚缺逐项证据：本次链路仍S0+原filters+v4；显式切换才S1。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations.；证据 B10-T002 |
-| QA-METRIC-017 · 审核分位数 | NOT_RUN | 本地生产实现尚需实际执行：四申请首次决策延迟1/2/3/10小时 → 重复决定及pending/expired混入。尚缺逐项证据：最近秩P50=2、P90=10；仅首次批准/拒绝入分布；终止轮不计pending。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-METRIC-017 · 审核分位数 | PASS | Independent hand-computable fixed-asOf fixtures R109, actual production calculateMetrics. London2026-10-25 00:30Z and01:30Z both local01:30 and oneSunday; weekly keysOct19 forSunday thenOct26 forMonday, unique counts2 and1. Across fallback14-day maturity exactUTC ms and30-day repeat exactUTC accepted while+1h excluded. Exact plan1/2/3/10 and alternate1/2/4/10 yield nearest-rankP50=2/P90=10; later duplicate approval does not shift first decision, withdrawals/expiry/cancel have no decision duration, only one live pending; cancelled meal and exactclose pending excluded. This is independent fixture reconciliation, not page/network/native proof.；证据 R109-T003, R109-T004 |
 | QA-METRIC-018 · 采集曝光阈值 | NOT_RUN | 本地生产实现尚需实际执行：49%1000ms、50%999ms、50%1000ms → 中途后台/移出 → 同session再曝。尚缺逐项证据：仅连续前台50%且1000ms合格；中断重计；session+meal首次去重且不可申请不发。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-ADMIN-001 · 五页导航与筛选 | PASS | B10 real browser traversed exactly five primary pages; en+zh and sizes2+3 OR retain English capacity2 meal; Chinese AND matching sizes yields no meals. Switching to English and navigating supply/retention preserves both sets, date and language. Local synthetic staff environment only.；证据 B10-T001 |
 | QA-ADMIN-002 · 字典弹层焦点 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：键盘打开指标字典 → Escape关闭 → 点外部关闭。当前仍缺：公式/单位/来源/分母可读；关闭后焦点回触发按钮。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations.；证据 B10-T002 |

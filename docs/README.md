@@ -103,3 +103,5 @@
 - QA R104/R105: [F19 closure and actual notification matrix](qa/evidence/2026-10-21/r104-r105-mail-closure.md).
 
 - QA R107: [creation and exact publication boundaries](qa/evidence/2026-10-21/r107-create-boundaries.md).
+
+- QA R109: [independent DST and quantile reconciliation](qa/evidence/2026-10-21/r109-dst-quantiles.md).
