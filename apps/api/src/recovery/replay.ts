@@ -2,12 +2,13 @@ import {createHash,randomBytes,randomUUID} from 'node:crypto';
 import type {Pool} from 'pg';
 import type {AppDeps} from '../http/context.ts';
 import {withTransaction} from '../common/transaction.ts';
-import {applyDeletion} from '../deletion/routes.ts';
+import {applyDeletion,restoreInstantMicros} from '../deletion/routes.ts';
 export interface DeletionLedger {version:1;entries:Array<{userId:string;deletionId:string;acceptedAt:string;receiptTokenHash:string;expiresAt:string|null;policyVersion:string}>}
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 /** Input comes from an independently preserved deletion ledger, never the restored backup alone. */
 export function ledgerDigest(ledger:DeletionLedger):string {
- if(ledger.version!==1||!Array.isArray(ledger.entries)||ledger.entries.length>100000||ledger.entries.some(e=>!uuid.test(e.userId)||!uuid.test(e.deletionId)||!/^[0-9a-f]{64}$/.test(e.receiptTokenHash)||!Number.isFinite(Date.parse(e.acceptedAt))||typeof e.policyVersion!=='string'||e.policyVersion.length>128||(e.expiresAt!==null&&!Number.isFinite(Date.parse(e.expiresAt)))))throw new Error('INVALID_DELETION_LEDGER');
+ if(ledger.version!==1||!Array.isArray(ledger.entries)||ledger.entries.length>100000||ledger.entries.some(e=>!e||!uuid.test(e.userId)||!uuid.test(e.deletionId)||!/^[0-9a-f]{64}$/.test(e.receiptTokenHash)||typeof e.policyVersion!=='string'||e.policyVersion.length>128))throw new Error('INVALID_DELETION_LEDGER');
+ for(const e of ledger.entries){const accepted=restoreInstantMicros(e.acceptedAt);if(e.expiresAt!==null&&restoreInstantMicros(e.expiresAt)<=accepted)throw new Error('INVALID_DELETION_LEDGER');}
  if(new Set(ledger.entries.map(e=>e.userId)).size!==ledger.entries.length)throw new Error('DUPLICATE_DELETION_SUBJECT');
  return createHash('sha256').update(JSON.stringify(ledger)).digest('hex');
 }
@@ -19,6 +20,10 @@ export async function replayDeletionLedger(deps:AppDeps,ledger:DeletionLedger){
  const digest=ledgerDigest(ledger);
  const{rows:[gate]}=await deps.pool.query(`SELECT state,ledger_digest FROM recovery_control WHERE id=1`);
  if(gate?.state!=='REPLAY_REQUIRED'||gate.ledger_digest!==digest)throw new Error('RECOVERY_LEDGER_MISMATCH');
+ // Validate the entire trusted manifest before replaying any entry. Preserve timestamp text
+ // in SQL rather than truncating microseconds through JS Date, including for absent subjects.
+ const {rows:[times]}=await deps.pool.query(`SELECT NOT EXISTS(SELECT 1 FROM jsonb_to_recordset($1::jsonb) AS e("userId" uuid,"acceptedAt" timestamptz) LEFT JOIN users u ON u.id=e."userId" WHERE e."acceptedAt">clock_timestamp() OR e."acceptedAt"<u.created_at) AS valid`,[JSON.stringify(ledger.entries.map(e=>({userId:e.userId,acceptedAt:e.acceptedAt})))]);
+ if(!times?.valid)throw new Error('INVALID_DELETION_LEDGER');
  for(const entry of ledger.entries){
   await withTransaction(deps.pool,async tx=>{
    const {rows:[user]}=await tx.client.query(`SELECT status FROM users WHERE id=$1`,[entry.userId]);
