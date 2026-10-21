@@ -7,7 +7,7 @@ def render():
     p=json.loads((ROOT/'docs/qa/execution-2026-10-21.json').read_text())
     runs=json.loads((ROOT/'docs/qa/evidence/2026-10-21/automated-runs.json').read_text())['runs']
     lines=['# 独立QA执行报告 · 2026-10-21','',
-    ('**结论：本轮不通过，存在未闭环缺陷：'+', '.join(k for k,v in p.get('defectStatus',{}).items() if v=='OPEN')+'。**' if any(v=='OPEN' for v in p.get('defectStatus',{}).values()) else '**结论：部分执行，尚不能完成整体验收；不构成发布通过。**')+' QA-F01和QA-F03定向修复已关闭，QA-F02组件回归通过；保留修前失败历史和未执行断言。','',
+    ('**结论：本轮不通过，存在未闭环缺陷：'+', '.join(k for k,v in p.get('defectStatus',{}).items() if v=='OPEN')+'。**' if any(v=='OPEN' for v in p.get('defectStatus',{}).values()) else '**结论：部分执行，尚不能完成整体验收；不构成发布通过。**')+' 已定向关闭：'+', '.join(k for k,v in p.get('defectStatus',{}).items() if v=='CLOSED_TARGETED_QA')+'；组件修复验证：'+', '.join(k for k,v in p.get('defectStatus',{}).items() if v=='FIX_VERIFIED_COMPONENT')+'。保留修前失败历史和未执行断言。','',
     f"原测试计划基线4659fdb；被测交接`{p['baselineCommit']}`，业务代码`{p['codeBaselineCommit']}`。Inbox分页修复在`{p['fixVerificationCommit']}`仅做定向复验；QA-F01及第二批P0探针在04cb601验证，第三批边界、删除/恢复和适配在d4582f7及后续仅CI增量版本定向验证，具体版本见运行表；更早证据沿用对应固定基线。",'',
     '## 阻塞澄清与跟进','',p.get('blockerTriage',''),'',
     '15分钟仅为兜底唤醒，无项目规定；发现问题直接交开发、有修复即复验，不等待定时周期。原14条已逐条交原开发会话处理，两条本地删除/恢复用例已通过，其余本地准备继续推进。','',

@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 114,
-    "PASS": 91,
+    "NOT_RUN": 112,
+    "PASS": 93,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -2453,8 +2453,47 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R44-T001",
+        "R45-T001",
+        "R45-T002",
+        "R45-T003",
+        "R45-T004",
+        "R45-T005",
+        "R45-T006",
+        "R45-T007",
+        "R45-T008",
+        "R45-T009",
+        "R45-T010",
+        "R45-T011",
+        "R46-T001",
+        "R46-T002",
+        "R46-T003",
+        "R46-T004",
+        "R46-T005",
+        "R46-T006",
+        "R46-T007",
+        "R46-T008",
+        "R46-T009",
+        "R46-T010",
+        "R46-T011",
+        "R46-T012",
+        "R46-T013",
+        "R46-T014",
+        "R46-T015",
+        "R46-T016",
+        "R46-T017",
+        "R46-T018",
+        "R46-T019",
+        "R46-T020",
+        "R46-T021",
+        "R46-T022",
+        "R46-T023",
+        "R46-T024",
+        "R46-T025",
+        "R46-T026"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T001",
         "R1-T002",
@@ -2549,15 +2588,53 @@
         "R2-T164",
         "R2-T165",
         "R2-T166",
-        "R2-T167"
+        "R2-T167",
+        "R44-T001",
+        "R45-T001",
+        "R45-T002",
+        "R45-T003",
+        "R45-T004",
+        "R45-T005",
+        "R45-T006",
+        "R45-T007",
+        "R45-T008",
+        "R45-T009",
+        "R45-T010",
+        "R45-T011",
+        "R46-T001",
+        "R46-T002",
+        "R46-T003",
+        "R46-T004",
+        "R46-T005",
+        "R46-T006",
+        "R46-T007",
+        "R46-T008",
+        "R46-T009",
+        "R46-T010",
+        "R46-T011",
+        "R46-T012",
+        "R46-T013",
+        "R46-T014",
+        "R46-T015",
+        "R46-T016",
+        "R46-T017",
+        "R46-T018",
+        "R46-T019",
+        "R46-T020",
+        "R46-T021",
+        "R46-T022",
+        "R46-T023",
+        "R46-T024",
+        "R46-T025",
+        "R46-T026"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "本设备family撤销且私密缓存清理",
-        "未授权写失败",
-        "其他合法设备不被普通退出注销"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "独立真实PG/API：设备logout204撤销family及cookie；捕获cookie重放session、私密messages深链、旧clientMessageId及新写均401且DB消息数不增加；另一合法设备session200且消息201。R45 Web11项清除查询缓存、持久草稿及组件RAM，失联退出和迟到session也不恢复私密状态；R46原生session26项含SecureStore/cache清理。完整覆盖本条api_db_or_unit方法的三项预期；不等同真实浏览器全程或原生设备验收。"
     },
     {
       "id": "QA-DISCOVERY-001",
@@ -18384,8 +18461,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R44-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T242",
         "R1-T243",
@@ -18504,15 +18583,16 @@
         "R3-T026",
         "R3-T027",
         "R3-T028",
-        "R3-T029"
+        "R3-T029",
+        "R44-T002"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "缺版本428",
-        "429带Retry-After",
-        "不换key制造重复写"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "缺If-Match428且profile版本不变的独立探针通过，既有429响应测试通过；未完成客户端429退避同key写重试联合路径。"
+      "remainingExpected": [],
+      "actual": "独立真实PG/API/SDK：编辑缺If-Match得428；真实writes限额得429和正Retry-After，SDK按该秒数退避，受控sleep中仅清合成actor限额模拟下一窗口；同原intent/key及version重试200，同key再重放仍仅一次meal.edited事实。未通过更换key规避限额，不声称等待了真实时长。"
     },
     {
       "id": "QA-API-008",

@@ -10490,6 +10490,357 @@
           "durationMs": 138.50458300000003
         }
       ]
+    },
+    {
+      "id": "R44",
+      "testedCommit": "b3adefe1ae5fa09414c3dc5ed5020b77d56f9327",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-logout.api.test.ts",
+      "startedAt": "2026-10-21T12:16:11.708000+00:00",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "total": 2,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R44-T001",
+          "run": "R44",
+          "path": "scripts/qa-independent-logout.api.test.ts",
+          "title": "QA-AUTH-014 revokes only the departing family and rejects captured private deep-link reads and message replay",
+          "status": "passed",
+          "durationMs": 156.01625
+        },
+        {
+          "id": "R44-T002",
+          "run": "R44",
+          "path": "scripts/qa-independent-logout.api.test.ts",
+          "title": "QA-API-007 missing version returns 428 and real 429 retries one original intent with its Retry-After",
+          "status": "passed",
+          "durationMs": 32.247792000000004
+        }
+      ]
+    },
+    {
+      "id": "R45",
+      "testedCommit": "b3adefe1ae5fa09414c3dc5ed5020b77d56f9327",
+      "command": "pnpm exec vitest run --project web apps/web/src/api/session.unit.test.tsx apps/web/src/api/private-scope.unit.test.tsx",
+      "startedAt": "2026-10-21T12:14:50.055000+00:00",
+      "exitCode": 0,
+      "passed": 11,
+      "failed": 0,
+      "total": 11,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R45-T001",
+          "run": "R45",
+          "path": "apps/web/src/api/private-scope.unit.test.tsx",
+          "title": "private component state ownership across Web session boundaries destroys local message, selection, query cache and persisted draft when account identity changes",
+          "status": "passed",
+          "durationMs": 135.79645900000003
+        },
+        {
+          "id": "R45-T002",
+          "run": "R45",
+          "path": "apps/web/src/api/private-scope.unit.test.tsx",
+          "title": "private component state ownership across Web session boundaries preserves the same account local draft during profile/session refreshes",
+          "status": "passed",
+          "durationMs": 80.62470899999994
+        },
+        {
+          "id": "R45-T003",
+          "run": "R45",
+          "path": "apps/web/src/api/private-scope.unit.test.tsx",
+          "title": "private component state ownership across Web session boundaries destroys local component state after a server 401",
+          "status": "passed",
+          "durationMs": 78.28108400000008
+        },
+        {
+          "id": "R45-T004",
+          "run": "R45",
+          "path": "apps/web/src/api/private-scope.unit.test.tsx",
+          "title": "private component state ownership across Web session boundaries destroys local component state after logout even if the server is unavailable",
+          "status": "passed",
+          "durationMs": 81.83466600000008
+        },
+        {
+          "id": "R45-T005",
+          "run": "R45",
+          "path": "apps/web/src/api/private-scope.unit.test.tsx",
+          "title": "private component state ownership across Web session boundaries destroys local component state on deletion acceptance even before navigating away",
+          "status": "passed",
+          "durationMs": 82.28412500000013
+        },
+        {
+          "id": "R45-T006",
+          "run": "R45",
+          "path": "apps/web/src/api/session.unit.test.tsx",
+          "title": "SessionProvider signs in from GET /auth/session and sends the CSRF token on writes",
+          "status": "passed",
+          "durationMs": 57.546291999999994
+        },
+        {
+          "id": "R45-T007",
+          "run": "R45",
+          "path": "apps/web/src/api/session.unit.test.tsx",
+          "title": "SessionProvider treats 401 from getSession as a guest and keeps a guest’s drafts for sign-in",
+          "status": "passed",
+          "durationMs": 3.2590829999999187
+        },
+        {
+          "id": "R45-T008",
+          "run": "R45",
+          "path": "apps/web/src/api/session.unit.test.tsx",
+          "title": "SessionProvider a network failure while re-checking does not sign a signed-in user out",
+          "status": "passed",
+          "durationMs": 10.302999999999997
+        },
+        {
+          "id": "R45-T009",
+          "run": "R45",
+          "path": "apps/web/src/api/session.unit.test.tsx",
+          "title": "SessionProvider ignores a getSession response that arrives after logout (auth generation)",
+          "status": "passed",
+          "durationMs": 19.031708999999978
+        },
+        {
+          "id": "R45-T010",
+          "run": "R45",
+          "path": "apps/web/src/api/session.unit.test.tsx",
+          "title": "SessionProvider clears caches and drafts on logout even when the server call fails",
+          "status": "passed",
+          "durationMs": 25.472917000000052
+        },
+        {
+          "id": "R45-T011",
+          "run": "R45",
+          "path": "apps/web/src/api/session.unit.test.tsx",
+          "title": "SessionProvider a 401 from any call clears the session and private state",
+          "status": "passed",
+          "durationMs": 10.283792000000062
+        }
+      ]
+    },
+    {
+      "id": "R46",
+      "testedCommit": "b3adefe1ae5fa09414c3dc5ed5020b77d56f9327",
+      "command": "pnpm --filter @fancy/ios exec jest src/features/auth/session.test.ts --runInBand --json",
+      "startedAt": "2026-10-21T12:14:59.251000+00:00",
+      "exitCode": 0,
+      "passed": 26,
+      "failed": 0,
+      "total": 26,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R46-T001",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "reuses the already rotated access token when an older concurrent 401 arrives late",
+          "status": "passed",
+          "durationMs": 6
+        },
+        {
+          "id": "R46-T002",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "does not expire a newer rotated session when a retried request returns a stale 401",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R46-T003",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "SessionManager restore (QA-AUTH-006 / QA-AUTH-013) stays unavailable when protected storage cannot be read and retries safely",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R46-T004",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "SessionManager restore (QA-AUTH-006 / QA-AUTH-013) starts signed out without a stored refresh token and makes no request",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R46-T005",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "SessionManager restore (QA-AUTH-006 / QA-AUTH-013) rotates the stored refresh token, keeps access in memory only and loads the session",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R46-T006",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "SessionManager restore (QA-AUTH-006 / QA-AUTH-013) signs out and clears Keychain + caches when the refresh family was revoked (reuse)",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R46-T007",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "SessionManager restore (QA-AUTH-006 / QA-AUTH-013) reports unavailable offline instead of pretending to be signed in, and keeps the token for retry",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R46-T008",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "SessionManager restore (QA-AUTH-006 / QA-AUTH-013) discards a Keychain token left by a previous install",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R46-T009",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "handoff, refresh and logout exchanges the one-time handoff code with the app verifier",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R46-T010",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "handoff, refresh and logout rejects CLI credentials returned to the iOS app",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R46-T011",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "handoff, refresh and logout shares one refresh between concurrent callers so a rotated token is never reused",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R46-T012",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "handoff, refresh and logout logout revokes server-side, then clears SecureStore and caches",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R46-T013",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "handoff, refresh and logout logout offline still clears local credentials and reports the server was not reached",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R46-T014",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "sessionClient refreshes once on 401 and replays the same request (same Idempotency-Key)",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R46-T015",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "sessionClient ends the session when the replay is still unauthorised",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R46-T016",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "auth epoch: late responses cannot undo an ended session queues logout credential deletion before slow cache cleanup and a new sign-in",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R46-T017",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "auth epoch: late responses cannot undo an ended session serializes Keychain writes so old cleanup cannot erase a new sign-in",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R46-T018",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "auth epoch: late responses cannot undo an ended session a getSession resolving after logout leaves the user signed out with no token",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R46-T019",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "auth epoch: late responses cannot undo an ended session an exchangeHandoff resolving after logout never writes the Keychain or signs in",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R46-T020",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "auth epoch: late responses cannot undo an ended session a refresh resolving after logout does not restore rotated credentials",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R46-T021",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "auth epoch: late responses cannot undo an ended session a Keychain write still in flight when logout happens is removed afterwards",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R46-T022",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "auth epoch: late responses cannot undo an ended session account deletion also invalidates in-flight session loads",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R46-T023",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "sign-out survives local clean-up failures clears caches/drafts and reaches signedOut even when SecureStore delete rejects",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R46-T024",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "sign-out survives local clean-up failures a throwing cache clearer does not stop the remaining clearers or the Keychain delete",
+          "status": "passed",
+          "durationMs": 0
+        },
+        {
+          "id": "R46-T025",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "feature requests belong to the session that started them discards an authenticated feature response arriving after logout",
+          "status": "passed",
+          "durationMs": 2
+        },
+        {
+          "id": "R46-T026",
+          "run": "R46",
+          "path": "apps/ios/src/features/auth/session.test.ts",
+          "title": "feature requests belong to the session that started them does not send an authenticated operation when preflight refresh ends the session",
+          "status": "passed",
+          "durationMs": 0
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -10514,7 +10865,8 @@
     "apps/ios/src/features/auth/qa-independent-oauth.test.ts": "b9a279faea7b109da69c30634fe35b2f705ed0a0f7d92ad3d5d28aafdb45bdd0",
     "apps/api/src/identity/qa-independent-auth0.unit.test.ts": "bd95da9ca9d7afbc2cad0432f04c74867965af9e898a5a4c9da4a7aba77852cd",
     "apps/web/src/features/auth/qa-independent-link.unit.test.tsx": "67fe69e71a4d799dcf40363b43ce1e0f40486dd22cf0071d765e40510688839a",
-    "apps/ios/src/features/auth/qa-independent-link.test.ts": "174a6d0031318bea6335108060cd53618becedaa78f8c8f52486c62c847bf6d0"
+    "apps/ios/src/features/auth/qa-independent-link.test.ts": "174a6d0031318bea6335108060cd53618becedaa78f8c8f52486c62c847bf6d0",
+    "scripts/qa-independent-logout.api.test.ts": "d8d9a10e85f0b2e4458c50bda8567aacb83b7248baafe3da41ca0b617dd6f413"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled.",
   "runtimeSnapshotVerification": {
@@ -10576,6 +10928,7 @@
     {
       "run": "R36",
       "detail": "LINK_REQUIRED扩展探针曾后注册mock.on却未覆盖先注册成功路由，导致得到signedIn；修为setup(outcome)单一路由后4项过。该次是QA夹具，不是新产品缺陷。R33原provider code/state失败不删除。"
-    }
+    },
+    "R44 initial QA fixture selected email from identities (no such column). Corrected to private_contact per migration; no production change or assertion weakening. Intermediate logout-only pass is superseded by final two-case R44. R44 rate recovery sleep is controlled: verifies Retry-After milliseconds then clears only synthetic actor rate buckets rather than waiting wall-clock; real API limiter and SDK retry execute."
   ]
 }
