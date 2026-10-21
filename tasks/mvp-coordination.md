@@ -58,3 +58,14 @@
 - Xcode 后续已安装但许可尚未接受，默认 `/usr/bin/git` 因而报退出码 69。已核实旧 Command Line Tools Git 可运行，Claude 正在给开发环境脚本补相应 PATH 回退，不代用户接受许可或更改系统 `xcode-select`。Xcode 首次启动、许可及原生构建留待用户清醒后操作。
 - 当前没有三端完整实现通过验收的证据；后续以唯一任务表及对应版本实测为准。
 - 窗口控制曾出现 `noWindowsAvailable`，用户重新打开后已恢复。Claude 已回复确认 DeepSeek 与人民币 50 元/月及测试交接决定，并开始更新 provider 配置；后续服务器只读核查结果仍需同步给执行会话。
+
+## 限额检查点与恢复（2026-10-21 02:28 London）
+
+- Claude 桌面显示已达到会话限额，04:10 重置。没有购买额度或改模型。三个前端子任务及主任务需要在原会话恢复；不要另开一个无上下文任务重做。
+- 已创建本会话 heartbeat `fancy-mvp`，按用户时区从今日 04:15 起至 09:15 每小时跟进，最多六次；无变化时保持安静。恢复后读取本记录、唯一任务表、工作区差异及暂存消息，继续开发、自测和有条件的独立测试交接；达到可执行范围闭环后停用跟进。机器仍需保持可运行。
+- 这不是 MVP 完成交付。最后已同步的本轮协调提交为 `a6d294f`；T02、会话内核、三端客户端和相关工具/契约增补仍有大量未提交实现，未声称已同步 GitHub，不替 Claude 暂存这些文件。
+- Codex 在较早的 T02 工作区上独立验证了 42 项 PostgreSQL 测试通过。后续再次执行时，66 项核心单测通过，数据库测试为 43 PASS / 1 FAIL（共 44）：`packages/db/src/migrate.db.test.ts` 的 schema parity 测试写死 8 张表，而新 `schema/conversations.ts` 已导出 3 张会话表，总计 11。应检查真实 SQL/Drizzle 全量映射并修复不随切片扩展的断言，而非删除校验或假称通过。此轮命令因 `&&` 在 DB 失败处停止，release/Python/diff 检查未继续执行。
+- 已由 Claude 修复、仍待最终版本独立复验的审查项：过期幂等 claim 必须抛非可提交的 `FencingError`；作业每次领取独立 claim token，阻止同 owner 的旧执行者提交；重试耗尽进入 DEAD；错误代码采用有限白名单，拒绝把未知 code/错误原文入库；SDK 尊重 120 秒 Retry-After；worker 空闲轮询移除取消监听器。已添加对应回归，不据源码文字单独宣布通过。
+- 新阻塞 **MVP-R01**（iOS）：`apps/ios/src/features/auth/session.ts` 中，受控 promise 延迟 `getSession`，先 `completeHandoff`、再成功 `logout`，最后释放旧响应，状态从 `signedOut` 又变成 `signedIn`。Codex 直接对当前 SessionManager 源码用 Node 24 transform-types 和 fake API 复现，不是设备验收。修复需 auth generation/epoch 使迟到会话/刷新/凭据写入失效，并覆盖退出与 SecureStore.clear 失败仍清缓存/进入退出态。反馈已暂存于 Claude，额度重置后先确认已交给 iOS 唯一负责人；不得由其他负责人并发改它的文件。
+- 需用户明早处理：DeepSeek Key 安全配置、Xcode 首次打开/许可、域名及 Auth0/Maps/邮件/Apple/Expo 外部账号与账单/签名。按睡前要求先跳过，不反复请求，也不把 mock 或 Expo 单测当作真实门槛关闭。
+- 阶段方法复盘：事务/租约回归、延迟响应复现与证据边界由现有 QA 验收及调试方法覆盖，本次不新建或安装技能候选，原任务继续优先。
