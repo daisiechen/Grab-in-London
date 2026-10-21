@@ -20,7 +20,7 @@ const pages: Record<string, ReturnType<typeof pageData>> = {
   },
   retention: {
     ...pageData('retention', A, { retention: { numerator: 1, denominator: 2 } }),
-    series: { 'cohort.retention': [{ key: '2026-09-28', value: { numerator: 1, denominator: 2 } }, { key: '2026-10-12', value: null }] },
+    series: { 'cohort.retention': [{ key: '2026-09-28', value: { numerator: 1, denominator: 2 } }, { key: '2026-10-12', value: null },{key:'2026-10-19',value:{numerator:0,denominator:0}}] },
   },
   journey: pageData('journey', A, {}),
   quality: pageData('quality', A, { missingRequired: 2, duplicates: 1, excluded: 3, receiveLatencyP90: 4 }),
@@ -43,6 +43,28 @@ function setup(url: string, extra: Record<string, (c: Call) => ReturnType<typeof
 afterEach(() => vi.restoreAllMocks());
 
 describe('page bodies render server values only', () => {
+  it('labels the latest visible week and warns when it is clipped or still in progress',async()=>{
+    const previous=pages.overview!;
+    pages.overview={...previous,metrics:{...previous.metrics,weekly:1},series:{'weekly.trend':[{key:'2026-10-05',value:2},{key:'2026-10-12',value:1}]}};
+    try {
+      setup('/?lang=en#overview');
+      const content=await screen.findByLabelText('Page content');
+      const card=within(content).getByRole('button',{name:/Weekly attended users/});
+      expect(card.querySelector('.metric-value')?.textContent).toBe('1');
+      expect(card.textContent).toContain('2026-10-12 · Latest visible week · Partial week');
+    } finally {pages.overview=previous;}
+  });
+  it('shows form errors by fixed step and field and opens snapshot-bound source rows',async()=>{
+    pages.journey={...pageData('journey',A,{formErrors:3}),series:{'form.errors.byStep':[{key:'arrange',value:2},{key:'introduce',value:1}],'form.errors.byField':[{key:'venue',value:2},{key:'title',value:1}]}};
+    const mock=setup('/?lang=en#journey',{'GET /v1/admin/drilldowns/.+':()=>list([drillRow('event-one',{step:'arrange',field:'venue',errorCode:'required'})])});
+    const content=await screen.findByLabelText('Page content');
+    await userEvent.click(within(content).getByRole('button',{name:'Host a meal'}));
+    expect(within(content).getByRole('heading',{name:'Form errors by step'})).toBeTruthy();
+    expect(within(content).getByRole('heading',{name:'Form errors by field'})).toBeTruthy();
+    await waitFor(()=>expect(mock.calls.some(call=>call.path==='/v1/admin/drilldowns/formErrors')).toBe(true));
+    expect(mock.calls.find(call=>call.path==='/v1/admin/drilldowns/formErrors')?.query.get('snapshotId')).toBe(SNAP_A);
+    expect(await within(content).findByText('required')).toBeTruthy();
+  });
   it('overview: ratio with zero denominator is "—", numbers and the trend come from the snapshot', async () => {
     setup('/?lang=en#overview');
     const content = await screen.findByLabelText('Page content');
@@ -58,14 +80,44 @@ describe('page bodies render server values only', () => {
     pages.journey = pageData('journey', A, { applications: null, approved: { numerator: 0, denominator: 0 } });
     setup('/?lang=en#journey');
     const content = await screen.findByLabelText('Page content');
-    expect(within(content).getByText('No matching records')).toBeTruthy();
+    expect(within(content).getByText('No calculable metrics')).toBeTruthy();
+    expect(within(content).getByText(/immature cohorts or incomplete sources/)).toBeTruthy();
     expect(within(content).queryByRole('img')).toBeNull();
+  });
+  it('renders server decision P90/P50 in hours and keeps a true zero pending count distinct from null waiting time',async()=>{
+    pages.journey={...pageData('journey',A,{approval:12,approvalP50:5,pendingApplications:0,oldestPendingHours:null}),series:{'features.usage':[{key:'map_opened',value:0},{key:'chat_opened',value:2}]}};
+    setup('/?lang=en#journey',{'GET /v1/admin/drilldowns/.+':()=>list([])});
+    const content=await screen.findByLabelText('Page content');
+    const p90=within(content).getByRole('button',{name:/Decision time P90 \(hours\)/});
+    const p50=within(content).getByRole('button',{name:/Decision time P50 \(hours\)/});
+    expect(p90.querySelector('.metric-value')?.textContent).toBe('12');
+    expect(p50.querySelector('.metric-value')?.textContent).toBe('5');
+    expect(within(content).getByRole('button',{name:/Pending applications/}).querySelector('.metric-value')?.textContent).toBe('0');
+    const wait=within(content).getByRole('button',{name:/Oldest pending wait/});
+    expect(wait.querySelector('.metric-value')?.textContent).toBe('—');
+    expect(wait.textContent).toContain('Unavailable or not applicable');
+    expect(within(content).getByText('Map opened')).toBeTruthy();
+    expect(within(content).getByText(/cannot detect deployment configuration/)).toBeTruthy();
+    await userEvent.click(p50);
+    expect(await screen.findByText(/Median hours from successful application/)).toBeTruthy();
+  });
+  it('does not draw a line across missing trend periods',async()=>{
+    const previous=pages.overview!;
+    pages.overview={...previous,series:{'weekly.trend':[{key:'2026-09-28',value:5},{key:'2026-10-05',value:null},{key:'2026-10-12',value:7}]}};
+    try {
+      setup('/?lang=en#overview');
+      const chart=await screen.findByRole('img',{name:'Weekly attended user trend'});
+      const lines=chart.querySelectorAll('path[fill="none"]');
+      expect(lines).toHaveLength(2);
+      expect([...lines].every(line=>!line.getAttribute('d')?.includes('L'))).toBe(true);
+    } finally {pages.overview=previous;}
   });
 
   it('retention: unmatured cohorts show "Observing", cohort week opens the cohort users drilldown', async () => {
     const mock = setup('/?lang=en#retention', { 'GET /v1/admin/drilldowns/.+': () => list([]) });
     const content = await screen.findByLabelText('Page content');
     expect(within(content).getByText('Observing')).toBeTruthy();
+    expect(within(content).getByText('Unavailable')).toBeTruthy();
     expect(content.querySelector('.cohort-cell.mature')!.textContent).toBe('50.0%');
     await userEvent.click(within(content).getByRole('button', { name: '2026-09-28' }));
     await waitFor(() => expect(mock.calls.some((c) => c.path === '/v1/admin/drilldowns/cohort.users')).toBe(true));

@@ -5,7 +5,7 @@ import {advanceLifecycle,type MealRow} from '../meals/lifecycle.ts';
 import type {PairRow} from '../connections/service.ts';
 registerLockTable('meals','meal');registerLockTable('user_pairs','pair');registerLockTable('conversations','conversation');
 /** Attendance can withdraw direct-send qualifications, so it shares the pair locks used by sends. */
-export async function lockPostMeal(tx:Tx,mealId:string,actorId:string,subjectId?:string) {
+export async function lockPostMeal(tx:Tx,mealId:string,actorId:string,subjectId?:string,lockAuthorization?:()=>Promise<void>) {
  const {rows:[hint]}=await tx.client.query<MealRow>(`SELECT * FROM meals WHERE id=$1`,[mealId]);if(!hint)throw new DomainError('NOT_FOUND','Meal not found.');
  const {rows:roster}=await tx.client.query<{user_id:string}>(`SELECT user_id FROM start_roster WHERE meal_id=$1`,[mealId]);const rosterIds=roster.map(r=>r.user_id);
  // Before a delayed lifecycle materialises the roster, all historical confirmed users form a safe lock superset.
@@ -18,5 +18,6 @@ export async function lockPostMeal(tx:Tx,mealId:string,actorId:string,subjectId?
  const pairs=pairHints.length?await tx.locks.lock<PairRow>('user_pairs',pairHints.map(p=>p.id),'update','*'):[];
  const {rows:conversations}=pairs.length?await tx.client.query<{id:string}>(`SELECT id FROM conversations WHERE pair_id=ANY($1::uuid[]) ORDER BY id`,[pairs.map(p=>p.id)]):{rows:[]};
  if(conversations.length)await tx.locks.lock('conversations',conversations.map(c=>c.id),'update');
+ if(lockAuthorization)await lockAuthorization();
  const now=await tx.effectiveNow();await advanceLifecycle(tx,meal,now);return {meal,now,pairs};
 }

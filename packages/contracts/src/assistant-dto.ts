@@ -18,6 +18,8 @@ export const AIResult=Obj({
 export const AISession=Obj({sessionId:Uuid,generation:T.Integer({minimum:1}),deviceToken:T.String({pattern:'^[A-Za-z0-9_-]{43}$'}),revokeHandle:T.String({pattern:'^[A-Za-z0-9_-]{43}$'}),expiresAt:Instant});
 export const AIRequestStatus=Obj({requestId:Uuid,sessionId:Uuid,generation:T.Integer({minimum:1}),state:Enum(['PENDING','SUCCEEDED','NEEDS_INPUT','FAILED','SUPERSEDED']),deadline:Instant,result:T.Union([AIResult,T.Null()]),errorCode:T.Union([T.String({maxLength:80}),T.Null()])});
 export const AIHardFilters=Obj({
+  bounds:T.Optional(Obj({north:T.Number({minimum:-90,maximum:90}),south:T.Number({minimum:-90,maximum:90}),east:T.Number({minimum:-180,maximum:180}),west:T.Number({minimum:-180,maximum:180})})),
+  keyword:T.Optional(Text(1,120)),timeOfDay:T.Optional(Enum(['lunch','dinner'])),
   cuisineCodes:T.Optional(UniqueArray(Enum(['EUROPEAN','JAPANESE','SPANISH','CHINESE']),0,4)),
   dates:T.Optional(UniqueArray(LocalDate,0,30)),
   areas:T.Optional(UniqueArray(T.String({pattern:'^[a-z0-9]+(-[a-z0-9]+)*$',maxLength:80}),0,30)),

@@ -55,8 +55,10 @@ export function calculateMetrics(facts:Facts,filters:Filters,asOfIso:string){
  rows.attendance=partRows;
  if(sourceReady){
   ratio('coverage',partRows);
-  count('weekly',[...new Map(selectedParts.filter(p=>p.value==='present').map(p=>[p.userId,row(p.userId,{userId:p.userId})])).values()]);
   const weeks=new Map<string,Set<string>>();for(const p of selectedParts.filter(p=>p.value==='present')){const key=week(p.meal.starts_at);if(!weeks.has(key))weeks.set(key,new Set());weeks.get(key)!.add(p.userId);}series['weekly.trend']=[...weeks].sort(([a],[b])=>a.localeCompare(b)).map(([key,set])=>({key,value:set.size}));
+  const latestWeek=series['weekly.trend'].at(-1)?.key;
+  rows.weekly=latestWeek?[...weeks.get(latestWeek)!].map(userId=>row(userId,{userId,week:latestWeek})):[];
+  metrics.weekly=latestWeek?rows.weekly.length:null;
   series['attendance.distribution']=['present','absent','unknown'].map(key=>({key,value:selectedParts.filter(p=>p.value===key).length}));
   const attendedMealIds=new Set(selectedParts.filter(p=>p.value==='present').map(p=>p.meal.id));count('mealsWithAttendance',facts.meals.filter(m=>attendedMealIds.has(m.id)).map(m=>row(m.id,attrs(m))));
  }
@@ -127,6 +129,9 @@ export function calculateMetrics(facts:Facts,filters:Filters,asOfIso:string){
   const rendered=events.filter(e=>e.type==='discovery_results'&&e.properties.rendered===true);
   const impressions=events.filter(e=>e.type==='meal_impression');
   const details=events.filter(e=>e.type==='detail_view');
+  const formErrors=events.filter(e=>e.type==='form_error');
+  count('formErrors',formErrors.map(e=>row(e.event_id,{eventId:e.event_id,userId:e.user_id,occurredAt:e.occurred_at,attemptId:String(e.properties.attemptId),step:String(e.properties.step),field:String(e.properties.field),errorCode:String(e.properties.errorCode)})));
+  for(const dimension of ['step','field'] as const){const groups=new Map<string,number>();for(const event of formErrors){const key=String(event.properties[dimension]);groups.set(key,(groups.get(key)??0)+1);}series[dimension==='step'?'form.errors.byStep':'form.errors.byField']=[...groups].sort(([a],[b])=>a.localeCompare(b)).map(([key,value])=>({key,value}));}
   const identity=(e:Event)=>e.user_id??'anonymous:'+e.anonymous_id;
   series['browse.people']=[['loaded',rendered],['impression',impressions],['detail',details]].map(([key,collection])=>({key:String(key),value:new Set((collection as Event[]).map(identity)).size}));
   series['features.usage']=['map_opened','filter_applied','profile_view','chat_opened'].map(key=>({key,value:new Set(events.filter(e=>e.type===key).map(identity)).size}));

@@ -1,0 +1,6 @@
+.google-map-wrap { position: relative; margin: 12px 0; }
+.google-map-canvas { width: 100%; height: 340px; border-radius: 16px; overflow: hidden; }
+.google-map-search { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); border: 1px solid #ddd; border-radius: 24px; background: white; padding: 10px 16px; white-space: nowrap; font: inherit; box-shadow: 0 2px 8px #0002; }
+.google-meal-pin { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border: 1px solid #ded6ce; border-radius: 20px; background: white; color: #28241f; padding: 7px 12px; font: 600 12px system-ui; box-shadow: 0 2px 5px #0002; cursor: pointer; }
+.google-meal-pin.selected { background: #df683e; color: white; border-color: #df683e; }
+.google-meal-pin:focus-visible { outline: 3px solid #28241f; outline-offset: 3px; }

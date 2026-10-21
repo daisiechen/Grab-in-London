@@ -27,6 +27,13 @@ const production = {
   RETENTION_POLICY_JSON: '{"deletedAccountDays":30}',
 };
 
+it('accepts a privately supplied DeepSeek credential without changing the selected adapter',()=>{
+  expect(loadConfig(local).deepseekApiKey).toBeNull();
+  const config=loadConfig({...local,DEEPSEEK_API_KEY:'local-placeholder-only'});
+  expect(config.deepseekApiKey).toBe('local-placeholder-only');
+  expect(config.adapters.AI_PROVIDER).toBe('mock');
+});
+
 function issuesOf(env: Record<string, string>): string[] {
   try {
     loadConfig(env);

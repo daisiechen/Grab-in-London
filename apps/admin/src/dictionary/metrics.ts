@@ -17,8 +17,8 @@ export const metrics: Metric[] = [
     id: "weekly",
     title: ["每周确认出席用户数", "Weekly attended users"],
     definition: [
-      "按饭局开始时间归周，统计出席状态为出席的去重用户；包括发起人。同周多场只计一次。",
-      "Distinct users with confirmed attendance, including hosts, grouped by meal start week. Multiple meals in one week count once.",
+      "按饭局开始时间归周，统计出席状态为出席的去重用户；包括发起人。同周多场只计一次。卡片取曲线中最近可见周，并标明周起始日期；筛选截断或该周未结束时标为周数据不完整。",
+      "Distinct users with confirmed attendance, including hosts, grouped by meal start week. Multiple meals in one week count once. The card uses the latest visible week in the chart and identifies its start date; clipped or ongoing weeks are marked partial.",
     ],
     unit: ["用户 / 周", "Users / week"],
     window: [
@@ -187,10 +187,10 @@ export const metrics: Metric[] = [
   },
   {
     id: "approval",
-    title: ["申请处理耗时", "Application response time"],
+    title: ["审核用时 P90（小时）", "Decision time P90 (hours)"],
     definition: [
       "从申请提交成功，到发起人第一次批准或拒绝的小时数。中位数=50%的已处理申请用时不超过此值；P90=90%不超过此值（最近秩法）。例如5.0h与12.0h表示一半在5小时内、九成在12小时内处理。待处理申请不计入，另列数量与等待用时。",
-      "Hours from application success to first valid decision, median and P90; pending wait is separate.",
+      "P90 hours from application success to the first valid approval or decline, using nearest rank without interpolation. Pending applications are excluded and reported separately. The approval key contains P90 hours, not a mean or milliseconds.",
     ],
     unit: ["申请 / 小时", "Application / hours"],
     window: [
@@ -257,5 +257,25 @@ export const metrics: Metric[] = [
     source: ["Settings自愿ProductSurvey，登录即可提交，不绑定mealId、出席资格或饭后7天；不迁移旧单场again/reasons。", "Voluntary authenticated Settings ProductSurvey, independent of meals, attendance and the 7-day window. Legacy meal fields are not migrated."],
     decision: ["观察Fancy整体体验因素与意愿，作为访谈线索。", "Use product-level experience and intention to guide interviews."],
     caveat: ["展示提交、回答与未回答样本；不以问卷意愿替代实际再赴约。", "Show response and missing-answer counts; survey intent is not observed retention."],
+  },
+  {
+    id:'formErrors',title:['表单校验错误事件','Form validation error events'],
+    definition:['按事件发生日期筛选有效 form_error，按 eventId 去重计事件数，再按固定步骤与字段归类。同次尝试可以产生多次不同错误；不代表用户数或放弃率。','Valid form_error events in the selected occurrence period, deduplicated by eventId and grouped by fixed step and field. One attempt may have multiple errors; this is neither users nor abandonment rate.'],
+    unit:['事件','Events'],window:['发生时间在筛选范围，发生和接收时间均不晚于快照。','Occurrence in range; occurrence and receipt no later than snapshot.'],source:['已同意采集的客户端固定错误代码；不含输入值。','Consented client events with fixed error codes; no input values.'],decision:['识别创建流程的校验卡点。','Identify validation friction in creation.'],caveat:['缺少适用尝试分母时不生成错误率；未同意与未送达事件不推断为成功。','No error rate without an applicable attempt denominator; unconsented or undelivered events do not imply success.'],
+  },
+  {
+    id:'approvalP50',title:['审核用时 P50（小时）','Decision time P50 (hours)'],
+    definition:['从申请成功到首次有效批准或拒绝的小时数，中位数取最近秩，不插值。待审不进入分布。','Median hours from successful application to first valid approval or decline; nearest rank, no interpolation. Pending applications are excluded.'],
+    unit:['小时','Hours'],window:['期内申请，审核结果截至快照。','Applications in the selected period, decisions as of the snapshot.'],source:['申请与首次有效审核事实。','Application and first valid decision facts.'],decision:['结合 P90 与待审量检查响应。','Inspect response alongside P90 and pending counts.'],caveat:['无有效审核样本为 —，不表示零小时。','No valid decisions yields —, not zero hours.'],
+  },
+  {
+    id:'pendingApplications',title:['仍在待审的申请','Pending applications'],
+    definition:['期内申请中，截至快照仍为待审、饭局未取消且申请截止时间未到的申请数量。退出、拒绝、过期不继续计待审。','Applications in the selected period still pending as of the snapshot, for uncancelled meals before the application deadline. Withdrawn, declined and expired applications are excluded.'],
+    unit:['申请记录','Applications'],window:['按申请日期入组，状态截至快照。','Cohort by application date, status as of snapshot.'],source:['申请状态与饭局截止时间。','Application state and meal deadline.'],decision:['识别仍需处理的积压。','Identify remaining review backlog.'],caveat:['有完整事实的 0 表示无待审；缺源为 —。','With complete facts, 0 means no pending applications; missing sources show —.'],
+  },
+  {
+    id:'oldestPendingHours',title:['最久待审时长（小时）','Oldest pending wait (hours)'],
+    definition:['上述仍在待审申请中，快照时间减申请时间的最大小时数。没有待审申请时为 —。','Maximum hours from application to snapshot among the remaining pending applications. With none pending, the value is —.'],
+    unit:['小时','Hours'],window:['期内申请，等待截至快照，不是实时计时。','Applications in the period, wait as of snapshot, not a live clock.'],source:['待审申请与快照时间。','Pending applications and snapshot time.'],decision:['优先检查等待最久的申请。','Prioritise the longest waiting applications.'],caveat:['已结束的申请不继续累加等待时间。','Terminated applications do not continue accumulating wait.'],
   },
 ];

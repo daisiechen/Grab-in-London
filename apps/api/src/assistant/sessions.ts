@@ -45,8 +45,8 @@ export class SessionService {
         const epoch = await preferenceEpoch(c, subject);
         const session = this.runtime.create(subject, epoch);
         createdId = session.id;
-        await c.query(`INSERT INTO ai_session_meta(id,subject,device_hash,revoke_hash,generation,preference_epoch,last_activity_at,expires_at,status,bootstrap_hash)
-          VALUES($1,$2,$3,$4,$5,$6,$7,$8,'ACTIVE',$9)`, [session.id, subject, tokenHash(session.deviceToken), tokenHash(session.revokeHandle), session.generation, epoch, new Date(session.expiresAt-SESSION_TTL_MS), new Date(session.expiresAt), deviceChallenge?tokenHash(deviceChallenge):null]);
+        await c.query(`INSERT INTO ai_session_meta(id,subject,device_hash,revoke_hash,generation,preference_epoch,last_activity_at,expires_at,status,bootstrap_hash,privacy_epoch)
+          SELECT $1,$2,$3,$4,$5,$6,$7,$8,'ACTIVE',$9,epoch FROM privacy_control WHERE id=1`, [session.id, subject, tokenHash(session.deviceToken), tokenHash(session.revokeHandle), session.generation, epoch, new Date(session.expiresAt-SESSION_TTL_MS), new Date(session.expiresAt), deviceChallenge?tokenHash(deviceChallenge):null]);
         return session;
       });
     } catch (error) {
@@ -78,8 +78,10 @@ export class SessionService {
   async validate(c: PoolClient, id: string, binding: SessionBinding) {
     await activeSubject(c, binding.subject);
     const epoch = await preferenceEpoch(c, binding.subject);
-    const { rows: [row] } = await c.query(`SELECT subject,device_hash,generation::text,preference_epoch::text,status FROM ai_session_meta WHERE id=$1 FOR SHARE`,[id]);
+    const { rows: [row] } = await c.query(`SELECT subject,device_hash,generation::text,preference_epoch::text,privacy_epoch::text,status FROM ai_session_meta WHERE id=$1 FOR SHARE`,[id]);
     if (!row || row.subject!==binding.subject || row.device_hash!==tokenHash(binding.deviceToken)) throw new AssistantError('AI_SESSION_EXPIRED');
+    const {rows:[privacy]}=await c.query(`SELECT epoch::text FROM privacy_control WHERE id=1 FOR SHARE`);
+    if(row.privacy_epoch!==privacy?.epoch){this.runtime.destroy(id);throw new AssistantError('AI_SESSION_EXPIRED');}
     if (row.status!=='ACTIVE' || row.generation!==String(binding.generation) || row.preference_epoch!==epoch || epoch!==binding.preferenceEpoch) throw new AssistantError('AI_SUPERSEDED');
     this.runtime.read(id,binding); // RAM authority: stale DB activity never widens TTL.
   }

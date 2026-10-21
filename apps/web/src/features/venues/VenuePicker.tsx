@@ -6,9 +6,11 @@ import { Intent } from '../../api/webApi.ts';
 import { errorMessage } from '../../api/errors.ts';
 import type { Venue, VenueCandidate } from '../../api/types.ts';
 import { FormError, Primary, TextAction } from '../../ui/components.tsx';
+import { GoogleMap } from '../maps/GoogleMap.tsx';
+import type { Bounds } from '../maps/googleMaps.ts';
 
-/** Map viewport from a future Places map adapter (G-PLACES); absent until that gate is met. */
-export interface Bounds { north: number; south: number; east: number; west: number }
+/** Shared transient Google Maps viewport; G-PLACES still requires live credential verification. */
+export type { Bounds } from '../maps/googleMaps.ts';
 
 /**
  * Restaurant picker (T06). Candidates come from searchVenues; only the placeId is sent to
@@ -46,7 +48,7 @@ export function VenuePicker({ value, onConfirm, mapBounds }: {
       });
       setResults(more ? [...(results ?? []), ...res.data] : res.data);
       setCursor(res.page.nextCursor);
-      if (!more) setChosen(null);
+      if (!more&&!bounds) setChosen(null);
     } catch (e) {
       setError(e instanceof ApiError && e.code === 'PROVIDER_UNAVAILABLE'
         ? 'Restaurant search is temporarily unavailable. Try again shortly.'
@@ -89,6 +91,7 @@ export function VenuePicker({ value, onConfirm, mapBounds }: {
       {mapBounds && (
         <TextAction onClick={() => { setAreaBounds(mapBounds); void search(undefined, false, mapBounds); }}>Search this area</TextAction>
       )}
+      <GoogleMap label="Restaurant map" points={(results??[]).flatMap(r=>r.location?[{id:r.placeId,title:r.name,location:r.location}]:[])} selected={chosen?.placeId??value?.placeId??null} onSelect={id=>setChosen(results?.find(r=>r.placeId===id)??null)} appliedBounds={areaBounds} onSearch={bounds=>{setAreaBounds(bounds);void search(undefined,false,bounds);}}/>
       {results && (
         <div className="venue-map-results" aria-label="Restaurant results">
           {results.map((r) => (
@@ -99,7 +102,7 @@ export function VenuePicker({ value, onConfirm, mapBounds }: {
           ))}
           {!results.length && <p className="muted">No restaurants found. Try another name.</p>}
           {cursor && <TextAction onClick={() => void search(undefined, true)}>More restaurants</TextAction>}
-          {results.flatMap((r) => r.attributions).slice(0, 1).map((a, i) => <p className="attribution" key={i}>{a.text}</p>)}
+          {results.flatMap((r) => r.attributions).filter((a,i,all)=>all.findIndex(other=>other.text===a.text)===i).map((a, i) => <p className="attribution" key={i}>{a.text}</p>)}
         </div>
       )}
       {chosen && chosen.placeId !== value?.placeId && (

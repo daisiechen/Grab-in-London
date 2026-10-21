@@ -4,7 +4,7 @@ export const INTENTS=['SEARCH','COMPARE','EXPLAIN','DRAFT_APPLICATION','DRAFT_CR
 export type AIIntent=(typeof INTENTS)[number];
 export interface Patch {field:string;op:'SET'|'CLEAR';value:unknown;source:string}
 export interface QueryPlan {intent:AIIntent;patches:Patch[];mealIds:string[]}
-export const querySchema={type:'object',additionalProperties:false,required:['intent','patches','mealIds'],properties:{intent:{type:'string',enum:INTENTS},patches:{type:'array',maxItems:10,items:{type:'object',additionalProperties:false,required:['field','op','value','source'],properties:{field:{type:'string',enum:['areas','budgetMaxPence','tableSizes','dietaryCodes','languages','moods','dates','cuisineCodes']},op:{type:'string',enum:['SET','CLEAR']},value:{},source:{type:'string',maxLength:2000}}}},mealIds:{type:'array',maxItems:3,uniqueItems:true,items:{type:'string',format:'uuid'}}}};
+export const querySchema={type:'object',additionalProperties:false,required:['intent','patches','mealIds'],properties:{intent:{type:'string',enum:INTENTS},patches:{type:'array',maxItems:10,items:{type:'object',additionalProperties:false,required:['field','op','value','source'],properties:{field:{type:'string',enum:['areas','budgetMaxPence','tableSizes','dietaryCodes','languages','moods','dates','cuisineCodes','keyword','timeOfDay','bounds']},op:{type:'string',enum:['SET','CLEAR']},value:{},source:{type:'string',maxLength:2000}}}},mealIds:{type:'array',maxItems:3,uniqueItems:true,items:{type:'string',format:'uuid'}}}};
 const fail=()=>{throw new AssistantError('AI_CONFLICT');};
 export function validatePlan(value:unknown,input:string):QueryPlan{
   if(!value||typeof value!=='object'||Array.isArray(value))return fail();
@@ -15,7 +15,7 @@ export function validatePlan(value:unknown,input:string):QueryPlan{
     if(!value||typeof value!=='object'||Array.isArray(value))return fail();
     const p=value as Patch;
     if(Object.keys(p).sort().join(',')!=='field,op,source,value'||!['SET','CLEAR'].includes(p.op)||typeof p.source!=='string'||!p.source.trim()||!input.includes(p.source)||fields.has(p.field))return fail();
-    if(!['areas','budgetMaxPence','tableSizes','dietaryCodes','languages','moods','dates','cuisineCodes'].includes(p.field))return fail();
+    if(!['areas','budgetMaxPence','tableSizes','dietaryCodes','languages','moods','dates','cuisineCodes','keyword','timeOfDay','bounds'].includes(p.field))return fail();
     fields.add(p.field);
   }
   return o as unknown as QueryPlan;
@@ -51,7 +51,7 @@ export function applyPlan(plan:QueryPlan,input:string,applied:HardFilters,previo
   for(const p of plan.patches){
     const source=p.source.toLowerCase();
     if(p.op==='CLEAR'){
-      const subjects:Record<string,RegExp>={budgetMaxPence:/budget|cost|price|spend|预算|金额|价格|花费/,areas:/area|location|where|place|地区|区域|地点|位置/,tableSizes:/size|people|persons|table|人数|几人/,dietaryCodes:/diet|vegan|vegetarian|饮食|素食/,languages:/language|speak|语言|语种/,moods:/mood|atmosphere|vibe|氛围/,dates:/date|day|time|日期|时间|哪天/,cuisineCodes:/cuisine|food|菜系|菜种/};
+      const subjects:Record<string,RegExp>={budgetMaxPence:/budget|cost|price|spend|预算|金额|价格|花费/,areas:/area|location|where|place|地区|区域|地点|位置/,tableSizes:/size|people|persons|table|人数|几人/,dietaryCodes:/diet|vegan|vegetarian|饮食|素食/,languages:/language|speak|语言|语种/,moods:/mood|atmosphere|vibe|氛围/,dates:/date|day|time|日期|时间|哪天/,cuisineCodes:/cuisine|food|菜系|菜种/,keyword:/keyword|search text|named|called|关键词|关键字|名称/,timeOfDay:/time|lunch|dinner|时段|午餐|晚餐/,bounds:/map|bounds|viewport|地图|范围/};
       if(!subjects[p.field]?.test(source))return fail();
       if(p.value!==null||!/(no\b.*(limit|preference)|any\b|remove\b|clear\b|不限|无所谓|不限制|清除)/i.test(source))return fail();
       delete (hard as Record<string,unknown>)[p.field];delete explicit[p.field];
@@ -62,6 +62,15 @@ export function applyPlan(plan:QueryPlan,input:string,applied:HardFilters,previo
     if(p.field==='budgetMaxPence'){
       const amount=/[£]\s*(\d+(?:\.\d{1,2})?)/.exec(source)??/(\d+(?:\.\d{1,2})?)\s*(?:pounds?|英镑)/.exec(source);
       if(!amount||typeof value!=='number'||!Number.isSafeInteger(value)||value!==Math.round(Number(amount[1])*100)||value<1)return fail();
+    }else if(p.field==='bounds'){
+      // Geometry is chosen by the map, never fabricated by the model. Explicit CLEAR is above.
+      return fail();
+    }else if(p.field==='keyword'){
+      if(typeof value!=='string'||!value.trim()||value.length>120||!source.includes(value.toLowerCase())||!/keyword|search for|named|called|关键词|关键字|名为|叫/.test(source))return fail();
+      value=value.trim();
+    }else if(p.field==='timeOfDay'){
+      if(value!=='lunch'&&value!=='dinner')return fail();
+      if(!(value==='lunch'?/lunch|午餐|午饭/:/dinner|晚餐|晚饭/).test(source))return fail();
     }else if(p.field==='dates'){
       const parsed=londonDates(p.source,now);if(!parsed){clarification=true;continue;}
       value=parsed.dates;
@@ -84,6 +93,7 @@ export function applyPlan(plan:QueryPlan,input:string,applied:HardFilters,previo
     if(/[£]\s*\d/.test(input)&&!has('budgetMaxPence'))clarification=true;
     if(/\b(cheap|cheaper|minimum|at least|above|over)\b|便宜|至少|以上/i.test(input))clarification=true;
     if(/\b(friday|tonight|today|tomorrow|weekend)\b|周五|今晚|今天|明天|周末|\d{4}-\d{2}-\d{2}/i.test(input)&&!has('dates'))clarification=true;
+    if(/\b(lunch|dinner)\b|午餐|午饭|晚餐|晚饭/i.test(input)&&!has('timeOfDay')&&!hard.timeOfDay)clarification=true;
     const areaMentioned=allowedAreas.filter(area=>input.toLowerCase().includes(area.replaceAll('-',' ')));
     if(areaMentioned.some(area=>!hard.areas?.includes(area)))clarification=true;
   }

@@ -5,14 +5,15 @@ import {createMigratedDatabase,type MigratedDatabase} from '@fancy/testkit/db';
 import {AssistantRuntime,emptyPreferences,mockProvider,type SessionBinding} from '../../../../packages/assistant/src/index.ts';
 import {AssistantController,type AssistantTurn} from './controller.ts';
 import {SessionService,createGuest} from './sessions.ts';
+import {publicCandidates,publicFacts,type VenueDisplay} from './context.ts';
 let db:MigratedDatabase;let userId:string;let hostId:string;
 beforeAll(async()=>{db=await createMigratedDatabase(inject('pgServerUrl'),migrate);});afterAll(async()=>{await db.drop();});
 beforeEach(async()=>{userId=randomUUID();hostId=randomUUID();await db.pool.query(`INSERT INTO users(id) VALUES($1),($2)`,[userId,hostId]);});
 const plan=(intent:string,patches:unknown[]=[],mealIds:string[]=[])=>({intent,patches,mealIds});
-async function setup(outputs:unknown[],preferences=emptyPreferences()){
+async function setup(outputs:unknown[],preferences=emptyPreferences(),venueDisplay?:VenueDisplay){
  const captured:string[]=[];const runtime=new AssistantRuntime();const sessions=new SessionService(db.pool,runtime);
  const provider=mockProvider('test',async request=>{captured.push(request.input);return {parsed:outputs.shift(),usage:{inputTokens:10,outputTokens:10},providerRequestId:`synthetic-${randomUUID()}`};});
- const c=new AssistantController({pool:db.pool,sessions,secret:'synthetic-hmac-key-for-local-tests-only-123',allowedAreas:['soho'],provider,price:{version:'synthetic-only-CNY',inputMicroCnyPerMillion:1_000_000n,outputMicroCnyPerMillion:1_000_000n,verified:true,validUntil:Date.now()+60_000},countInputTokens:()=>1024});
+ const c=new AssistantController({pool:db.pool,sessions,secret:'synthetic-hmac-key-for-local-tests-only-123',allowedAreas:['soho'],provider,price:{version:'synthetic-only-CNY',inputMicroCnyPerMillion:1_000_000n,outputMicroCnyPerMillion:1_000_000n,verified:true,validUntil:Date.now()+60_000},countInputTokens:()=>1024,...(venueDisplay?{venueDisplay}:{})});
  const pref=await c.preferences.replace(userId,'0',preferences,true);
  const subject=`user:${userId}`;const s=await sessions.create(subject);const b:SessionBinding={subject,deviceToken:s.deviceToken,generation:1,preferenceEpoch:pref.epoch};
  const {rows:[clock]}=await db.pool.query(`SELECT 'D:'||to_char(clock_timestamp() AT TIME ZONE 'Europe/London','YYYY-MM-DD') day_period,'M:'||to_char(clock_timestamp() AT TIME ZONE 'Europe/London','YYYY-MM') month_period`);
@@ -97,5 +98,46 @@ describe('guest confirmed RAM soft preferences',()=>{
  });
  it('rejects user-supplied guest preferences instead of overriding confirmed account values',async()=>{
   const h=await setup([]);await expect(h.c.request(h.s.id,h.b,h.turn('Find meals',{guestPreferences:{...emptyPreferences(),budgetMaxPence:1000}}))).rejects.toThrow('AI_CONFLICT');expect((await h.c.preferences.read(userId)).fields).toEqual(emptyPreferences());expect(h.captured).toHaveLength(0);
+ });
+});
+
+describe('complete current filters and public deletion barrier',()=>{
+ it('keeps keyword, London time and viewport constraints through the real candidate query without persisting provider metadata',async()=>{
+  const a=await meal(),b=await meal(),scope=`scope-${randomUUID()}`;
+  const starts=new Date(Date.now()+2*86400_000);starts.setUTCHours(16,0,0,0);
+  await db.pool.query(`UPDATE meals SET area_code=$2,starts_at=$3,closes_at=$3::timestamptz-interval '1 hour',scheduled_end_at=$3::timestamptz+interval '2 hours' WHERE id=ANY($1::uuid[])`,[[a,b],scope,starts]);
+  const refs=(await db.pool.query(`SELECT id,venue_ref FROM meals WHERE id=ANY($1::uuid[])`,[[a,b]])).rows;
+  const calls:string[]=[];
+  const h=await setup([plan('SEARCH')],emptyPreferences(),async ref=>{calls.push(ref);return {name:'PROVIDER_ONLY_DUMPLING_SENTINEL',location:{lat:refs.find(r=>r.id===a)!.venue_ref===ref?51.5:55,lng:-.1}};});
+  const r=await h.run(h.turn('Find meals',{appliedFilters:{areas:[scope],keyword:'dumpling',timeOfDay:'dinner',bounds:{north:52,south:51,west:-1,east:0}}}));
+  expect(r.state).toBe('SUCCEEDED');expect(r.result?.cards.map(c=>c.mealId)).toEqual([a]);expect(calls).toHaveLength(2);
+  expect(h.captured.join('')).not.toContain('PROVIDER_ONLY_DUMPLING_SENTINEL');
+  const metadata=(await db.pool.query(`SELECT row_to_json(r)::text body FROM ai_requests r WHERE request_id=$1`,[r.requestId])).rows[0].body;
+  expect(metadata).not.toContain('dumpling');expect(metadata).not.toContain('51.5');
+  const venues=(await db.pool.query(`SELECT row_to_json(v)::text body FROM venues v WHERE id=ANY($1::uuid[])`,[refs.map(r=>r.venue_ref)])).rows;
+  expect(JSON.stringify(venues)).not.toContain('PROVIDER_ONLY_DUMPLING_SENTINEL');expect(JSON.stringify(venues)).not.toContain('location');
+ });
+ it('fails a provider-dependent viewport query closed rather than returning unfiltered meal cards',async()=>{
+  const a=await meal(),scope=`scope-${randomUUID()}`;await db.pool.query(`UPDATE meals SET area_code=$2 WHERE id=$1`,[a,scope]);
+  const h=await setup([plan('SEARCH')]);
+  const r=await h.run(h.turn('Find meals',{appliedFilters:{areas:[scope],bounds:{north:52,south:51,west:-1,east:0}}}));
+  expect(r.state).toBe('FAILED');expect(r.result).toBeNull();expect(r.errorCode).toBe('UNAVAILABLE');
+ });
+ it('excludes a deleting host before the asynchronous purge erases their original public text',async()=>{
+  const id=await meal();expect(await publicFacts(db.pool,[id])).toHaveLength(1);
+  await db.pool.query(`UPDATE users SET status='DELETING' WHERE id=$1`,[hostId]);
+  expect((await db.pool.query(`SELECT title FROM meals WHERE id=$1`,[id])).rows[0].title).toBe('Synthetic Friday dinner');
+  expect(await publicFacts(db.pool,[id])).toEqual([]);
+  expect((await publicCandidates(db.pool,`user:${userId}`)).some(c=>c.id===id)).toBe(false);
+ });
+ it('supersedes a prepared result when its public host enters deletion before publication',async()=>{
+  const id=await meal(),scope=`scope-${randomUUID()}`;await db.pool.query(`UPDATE meals SET area_code=$2 WHERE id=$1`,[id,scope]);
+  const h=await setup([plan('SEARCH')]);const finish=h.c.requests.finish.bind(h.c.requests);
+  h.c.requests.finish=async(...args)=>{
+   if(args[2]==='SUCCEEDED')await db.pool.query(`UPDATE users SET status='DELETING' WHERE id=$1`,[hostId]);
+   return finish(...args);
+  };
+  const r=await h.run(h.turn('Find meals',{appliedFilters:{areas:[scope]}}));
+  expect(r.state).toBe('SUPERSEDED');expect(r.result).toBeNull();
  });
 });

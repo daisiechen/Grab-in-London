@@ -99,8 +99,8 @@ export const MEAL_ACTIONS = [
 export const ADMIN_PAGE_KEYS = {
   overview: { metrics: ['weekly', 'activation', 'retention', 'coverage'], series: ['weekly.trend'] },
   journey: {
-    metrics: ['discovery7', 'impressionNoApply', 'applications', 'approved', 'confirmed', 'applicationAttendance', 'approval', 'approvalP50', 'pendingApplications', 'oldestPendingHours'],
-    series: ['funnel.join', 'funnel.create', 'browse.people', 'features.usage'],
+    metrics: ['discovery7', 'impressionNoApply', 'applications', 'approved', 'confirmed', 'applicationAttendance', 'approval', 'approvalP50', 'pendingApplications', 'oldestPendingHours', 'formErrors'],
+    series: ['funnel.join', 'funnel.create', 'browse.people', 'features.usage', 'form.errors.byStep', 'form.errors.byField'],
   },
   supply: {
     metrics: ['discovery', 'formation', 'cancellation', 'coverage', 'mealsWithAttendance'],

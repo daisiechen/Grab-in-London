@@ -18,6 +18,10 @@ const metricTitles: Record<string, [string, string]> = {
   duplicates: ['重复排除事件', 'Deduplicated events'],
   excluded: ['测试/员工排除', 'Test/staff exclusions'],
   receiveLatencyP90: ['接收延迟 P90', 'P90 receive latency'],
+  approvalP50: ['审核用时 P50（小时）', 'Decision time P50 (hours)'],
+  pendingApplications: ['仍在待审的申请', 'Pending applications'],
+  oldestPendingHours: ['最久待审时长（小时）', 'Oldest pending wait (hours)'],
+  formErrors:['表单校验错误事件','Form validation error events'],
 };
 
 const seriesTitles: Record<string, [string, string]> = {
@@ -33,6 +37,8 @@ const seriesTitles: Record<string, [string, string]> = {
   'rating.distribution': ['单场饭局评分分布', 'Meal rating distribution'],
   'survey.reasons': ['Fancy 整体体验问卷', 'Fancy product survey'],
   'quality.sources': ['数据来源', 'Data sources'],
+  'form.errors.byStep':['表单错误：步骤','Form errors by step'],
+  'form.errors.byField':['表单错误：字段','Form errors by field'],
 };
 
 const listTitles: Record<string, [string, string]> = {
@@ -53,6 +59,19 @@ const itemLabels: Record<string, [string, string]> = {
   expectations: ['预期', 'Expectations'], venue: ['场地', 'Venue'], cost: ['费用', 'Cost'], unspecified: ['未选择因素', 'No factor chosen'],
   user: ['用户自发', 'User-led'], assisted: ['平台协助', 'Assisted'],
   client: ['客户端行为', 'Client behaviour'], business: ['业务服务结果', 'Business results'], attendanceReports: ['线下出席确认', 'Attendance reports'],
+  loaded: ['发现结果已呈现', 'Discovery rendered'], impression: ['有效曝光', 'Eligible impressions'], detail: ['详情已呈现', 'Detail rendered'],
+  started: ['开始创建', 'Started'], arranged: ['完成安排', 'Arranged'], published: ['发布成功', 'Published'], attended: ['有效出席', 'Attended'],
+  map_opened: ['地图打开', 'Map opened'], filter_applied: ['筛选应用', 'Filter applied'], profile_view: ['资料呈现', 'Profile viewed'], chat_opened: ['群聊打开', 'Group chat opened'],
+  none: ['未选择因素', 'No factor chosen'],
+  SELF: ['本人自报', 'Self-report'], HOST: ['发起人记录', 'Host report'], SUPPORT: ['支持纠错', 'Support correction'],
+  decisionHours: ['首次审核用时（小时）', 'First decision time (hours)'], pendingWaitHours: ['当前待审时长（小时）', 'Current pending wait (hours)'],
+  receivedAt: ['接收时间', 'Received'], receiveLatencySeconds: ['接收延迟（秒）', 'Receive latency (seconds)'],
+  arrange:['安排','Arrange'],introduce:['介绍','Introduce'],costs:['费用','Costs'],review:['确认','Review'],
+  step:['步骤','Step'],field:['字段','Field'],errorCode:['错误类型','Error code'],attemptId:['创建尝试','Creation attempt'],
+  title:['标题','Title'],description:['介绍','Description'],minimum:['最低人数','Minimum'],capacity:['人数上限','Capacity'],
+  date:['日期','Date'],time:['时间','Time'],closeDate:['截止日期','Closing date'],closeTime:['截止时间','Closing time'],
+  mood:['氛围','Atmosphere'],languages:['语言','Languages'],budgetMin:['预算下限','Minimum budget'],budgetMax:['预算上限','Maximum budget'],
+  bookingConfirmed:['预约确认','Booking confirmation'],reviewConfirmed:['安排确认','Arrangement confirmation'],week:['周起始','Week starting'],
   // Drill-down attribute columns.
   mealId: ['饭局', 'Meal'], userId: ['用户', 'User'], area: ['区域', 'Area'], startsAt: ['开始时间', 'Starts'],
   appliedAt: ['申请时间', 'Applied'], occurredAt: ['发生时间', 'Occurred'], status: ['状态', 'Status'], source: ['来源', 'Source'],

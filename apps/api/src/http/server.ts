@@ -13,6 +13,7 @@ import { SessionService } from '../assistant/sessions.ts';
 import { AssistantController } from '../assistant/controller.ts';
 import { registerAssistantRoutes } from '../assistant/routes.ts';
 import { startAssistantLifecycle } from '../assistant/lifecycle.ts';
+import {DomainError} from '../common/errors.ts';
 import { registerExportRoutes } from '../admin/exports.ts';
 import { registerVenueRoutes } from '../venues/routes.ts';
 import { VenueService } from '../venues/service.ts';
@@ -79,7 +80,12 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   registerExportRoutes(app, deps);
   registerAnalyticsIngest(app, deps);
   registerSupportRoutes(app, deps);
-  const assistant = new AssistantController({ pool: deps.pool, sessions: new SessionService(deps.pool, deps.assistantRuntime), secret: deps.config.sessionSecret, allowedAreas: [] });
+  const assistant = new AssistantController({ allowedAreas: [], ...deps.assistant, pool: deps.pool, sessions: new SessionService(deps.pool, deps.assistantRuntime), secret: deps.config.sessionSecret,
+    venueDisplay:async venueRef=>{
+      const {rows:[reference]}=await deps.pool.query<{place_id:string}>(`SELECT place_id FROM venues WHERE id=$1`,[venueRef]);
+      if(!reference)throw new DomainError('NOT_FOUND','Venue unavailable.');
+      const place=await venues.details(reference.place_id);return {name:place.name,location:place.location};
+    } });
   registerAssistantRoutes(app, deps, assistant);
   const stopAssistant = await startAssistantLifecycle(deps.assistantRuntime, assistant.requests, assistant.budget);
   app.addHook('onClose', stopAssistant);

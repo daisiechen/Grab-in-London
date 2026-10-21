@@ -85,3 +85,12 @@
 - 独立代码复核修复：删除席位与最低人数、私聊Inbox发送状态、支持case失权重放、PG微秒分页、pending申请Inbox、账号切换旧响应及UI隔离、失效reauth不得清AI、5xx事务回滚。用户数据删除worker物理清私有字段，远端身份/Apple撤销与政策未齐时NEEDS_SUPPORT，不宣称删除最终完成。
 - 新增可销毁本机联调入口 `infra/local-acceptance.ts`（回环3000、临时PostgreSQL、测试身份与虚构餐厅、固定测试OTP），开始真实浏览器登录/补资料/创建/双账号申请审批/消息链；这不是线上或真实外部验收。API/worker实际入口与CI配置已准备，首尔没有安装或部署。
 - Web AI助手接入已冻结，iOS AI UI仍在实施；Web采集同意与完整来源事件仍在实施。后台未知来源维持partial/null。当前仍未完成整体自测，尚未通知「测试- MVP+AI」开始执行；用户要求的独立测试交接在可执行范围自测全通过之后发送。
+
+## 本地核心闭环复验（2026-10-21 06:22 London）
+
+- 已同步 `ca8d8c1` 后端/AI内核和 `69266ba` Web助手/显式采集；两者本地远端一致。后者 GitHub Actions run `39547884093` 已完成 success（https://github.com/daisiechen/Grab-in-London/actions/runs/39547884093）；它不覆盖后续未提交增量。
+- 本批新增真实Google Web地图初始化（公开Key/Map ID缺失则不加载SDK、列表回退）、支持CLI、支持纠错个案授权并发锁修复、AI完整保留地图/关键词/时段硬筛选，以及0021全局隐私epoch。Google公开数据不放Apple底图；iOS同样改用Google provider，无key/原生模块时回退列表。
+- 独立交叉检查补证：支持纠错等待饭局锁时撤grant，修前错误写入，修后404且无修订；游客AI完成与登录撤销，修前稳定40P01，修后通过；删除其它账号后，旧AI转录/结果/草稿不可读，在途结果不能发布，成功配额释放，新会话可建。删除提交成功后清空整个单API的旧RAM上下文。
+- 后台公式修复：按当期分类恢复认证历史事件，不改原始分类，不追溯链接匿名；weekly卡片/明细与批准Demo最新可见周一致；表单错误按step/field聚合、下钻和CSV贯通。
+- 06:20整合回归：unit149、PostgreSQL100、API91、release10通过；Web+后台211通过；Web与后台生产build通过，仓库Python64通过；随后新增DeepSeek安全配置映射单测13/13及release10分别通过。非iOS全部包类型/SDK生成物/infra类型/lint/secret scan通过。新增或修改的局部回归不能代替整个未完成iOS批次的最终验证。
+- iOS助手、三编辑器、显式已读与Google原生地图源码正在收尾；此前基线及新局部测试已过，最终全套/Metro export仍待该负责人冻结后整合复跑。真实Google Key/Map ID、DeepSeek模型/价格/计数器/60样本、身份/邮件、Xcode签名/真机与首尔部署仍是外部门槛，未接真实用户。

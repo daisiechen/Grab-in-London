@@ -1,0 +1,11 @@
+{
+  "name": "@fancy/support-cli",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --experimental-strip-types src/main.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "cd ../.. && vitest run --project unit apps/support-cli"
+  },
+  "dependencies": { "@fancy/client": "workspace:*" }
+}

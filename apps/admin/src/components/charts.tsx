@@ -32,8 +32,8 @@ export function TrendChart({ points, label, lang, onPoint }: {
   const values = points.map((p) => scalar(p.value));
   const max = Math.max(...values.map((v) => v ?? 0), 1);
   const xy = points.map((_, i) => [35 + (i * 590) / Math.max(points.length - 1, 1), 164 - ((values[i] ?? 0) / max) * 144] as const);
-  const known = xy.filter((_, i) => values[i] !== null);
-  const path = known.map(([x, y], i) => `${i ? 'L' : 'M'}${x},${y}`).join(' ');
+  const segments:Array<Array<readonly [number,number]>>=[];
+  xy.forEach((point,index)=>{if(values[index]===null)return;if(index===0||values[index-1]===null)segments.push([]);segments.at(-1)!.push(point);});
   return (
     <div className="trend-chart">
       <svg viewBox="0 0 640 195" role="img" aria-label={label}>
@@ -49,12 +49,10 @@ export function TrendChart({ points, label, lang, onPoint }: {
             <text x="2" y={24 + i * 48} fill="#7d8982" fontSize="11">{Math.round(max * (1 - i / 3))}</text>
           </g>
         ))}
-        {known.length > 0 && (
-          <>
-            <path d={`${path} L${known.at(-1)![0]},164 L${known[0]![0]},164 Z`} fill="url(#chart-fill)" />
-            <path d={path} fill="none" stroke="#256a55" strokeWidth="2.5" />
-          </>
-        )}
+        {segments.map((segment,index)=>{const path=segment.map(([x,y],i)=>`${i?'L':'M'}${x},${y}`).join(' ');return <g key={index}>
+          <path d={`${path} L${segment.at(-1)![0]},164 L${segment[0]![0]},164 Z`} fill="url(#chart-fill)" />
+          <path d={path} fill="none" stroke="#256a55" strokeWidth="2.5" />
+        </g>;})}
         {xy.map(([x, y], i) => (
           <g key={points[i]!.key}>
             {values[i] !== null && <circle cx={x} cy={y} r="4" fill="#fff" stroke="#256a55" strokeWidth="2" />}

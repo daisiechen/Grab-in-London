@@ -1,10 +1,12 @@
 import { CUISINES, DIETARY, LANGUAGES, MOODS, TIME_OF_DAY, type CuisineCode, type DietaryCode, type LanguageCode, type MoodCode } from '@fancy/contracts';
 import type { DiscoverQuery } from '../../api/types.ts';
+import { validBounds,type Bounds } from '../maps/googleMaps.ts';
 
 export type TimeOfDay = (typeof TIME_OF_DAY)[number];
 
 /** Applied Discover filters (API §6). They live in the URL so back navigation restores them. */
 export interface Filters {
+  bounds:Bounds|null;
   dates: string[];
   timeOfDay: TimeOfDay;
   areaCodes: string[];
@@ -18,6 +20,7 @@ export interface Filters {
 }
 
 export const emptyFilters: Filters = {
+  bounds:null,
   dates: [], timeOfDay: 'any', areaCodes: [], budgetMaxPence: null, tableSizes: [], languages: [], moods: [], cuisineCodes: [], dietaryCodes: [], keyword: '',
 };
 
@@ -28,7 +31,9 @@ const only = <T extends string>(values: string[], allowed: readonly string[]) =>
 export function parseFilters(params: URLSearchParams): Filters {
   const tod = params.get('timeOfDay');
   const budget = Number(params.get('budgetMaxPence'));
+  const bounds=Object.fromEntries((['north','south','east','west'] as const).map(k=>[k,params.has(k)?Number(params.get(k)):NaN])) as unknown as Bounds;
   return {
+    bounds:validBounds(bounds)?bounds:null,
     dates: [...new Set(list(params.get('dates')).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)))].sort(),
     timeOfDay: tod && (TIME_OF_DAY as readonly string[]).includes(tod) ? (tod as TimeOfDay) : 'any',
     areaCodes: [...new Set(list(params.get('areaCodes')).filter((a) => /^[a-z0-9]+(-[a-z0-9]+)*$/.test(a)))],
@@ -45,6 +50,7 @@ export function parseFilters(params: URLSearchParams): Filters {
 /** URL form, also the cache key; `view` and other UI params are preserved by the caller. */
 export function filtersToParams(f: Filters, base: URLSearchParams = new URLSearchParams()): URLSearchParams {
   const p = new URLSearchParams(base);
+  for(const key of ['north','south','east','west'] as const){if(f.bounds)p.set(key,String(f.bounds[key]));else p.delete(key);}
   const setList = (k: string, v: readonly (string | number)[]) => (v.length ? p.set(k, v.join(',')) : p.delete(k));
   setList('dates', f.dates);
   if (f.timeOfDay !== 'any') p.set('timeOfDay', f.timeOfDay); else p.delete('timeOfDay');
@@ -61,7 +67,7 @@ export function filtersToParams(f: Filters, base: URLSearchParams = new URLSearc
 
 /** Comma lists per DiscoverQuery; empty dimensions are omitted (= Any). */
 export function filtersToQuery(f: Filters, cursor?: string): DiscoverQuery {
-  const q: DiscoverQuery = {};
+  const q: DiscoverQuery = {...(f.bounds??{})};
   if (f.dates.length) q.dates = f.dates.join(',');
   if (f.timeOfDay !== 'any') q.timeOfDay = f.timeOfDay;
   if (f.areaCodes.length) q.areaCodes = f.areaCodes.join(',');

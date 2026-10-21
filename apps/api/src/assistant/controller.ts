@@ -5,7 +5,7 @@ import { BudgetLedger } from './budget.ts';
 import { PreferenceService } from './preferences.ts';
 import { SessionService } from './sessions.ts';
 import { RequestService } from './requests.ts';
-import { publicCandidates,publicFacts,rankCandidates,type HardFilters,type PublicFacts } from './context.ts';
+import { publicCandidates,publicFacts,rankCandidates,filterPublicCandidates,validatePublicFilters,type VenueDisplay,type HardFilters,type PublicFacts } from './context.ts';
 import { runBudgetedCall,type VerifiedPrice } from './provider-call.ts';
 import { applyPlan,querySchema,validatePlan,type QueryPlan } from './query.ts';
 import { createDraft,draftTarget,transferDraft,type AIDraft,type DraftKind } from './drafts.ts';
@@ -30,14 +30,17 @@ export class AssistantController {
  private readonly pool:Pool;private readonly areas:readonly string[];
  private readonly provider:ModelProvider|null;private readonly price:VerifiedPrice|null;
  private readonly counter:((request:Parameters<ModelProvider['generate']>[0])=>number)|null;
- constructor(options:{pool:Pool;sessions:SessionService;secret:string;allowedAreas:readonly string[];provider?:ModelProvider;price?:VerifiedPrice;countInputTokens?:(request:Parameters<ModelProvider['generate']>[0])=>number}){
+ private readonly venueDisplay:VenueDisplay|undefined;
+ constructor(options:{pool:Pool;sessions:SessionService;secret:string;allowedAreas:readonly string[];provider?:ModelProvider;price?:VerifiedPrice;countInputTokens?:(request:Parameters<ModelProvider['generate']>[0])=>number;venueDisplay?:VenueDisplay}){
   this.pool=options.pool;this.areas=options.allowedAreas;this.sessions=options.sessions;this.requests=new RequestService(options.pool,options.sessions,options.secret);
   this.budget=new BudgetLedger(options.pool);this.preferences=new PreferenceService(options.pool,options.sessions.runtime,options.allowedAreas);
   this.provider=options.provider??null;this.price=options.price??null;this.counter=options.countInputTokens??null;
+  this.venueDisplay=options.venueDisplay;
  }
  async request(id:string,binding:SessionBinding,turn:AssistantTurn){
   if(!this.provider||!this.price?.verified||!this.counter||this.price.validUntil<=Date.now())throw new AssistantError('AI_UNAVAILABLE');
   if(!turn.input.trim()||turn.input.length>2000||(turn.editorText?.length??0)>2000)throw new AssistantError('AI_CONFLICT');
+  validatePublicFilters(turn.appliedFilters??{});
   if(binding.subject.startsWith('user:')&&turn.guestPreferences!==undefined)throw new AssistantError('AI_CONFLICT');
   const guestFields=turn.guestPreferences===undefined?this.sessions.runtime.guestPreferences(id,binding):validatePreferences(turn.guestPreferences,this.areas);
   const preferences=binding.subject.startsWith('user:')?await this.preferences.read(binding.subject.slice(5)):{fields:guestFields,version:'0',epoch:'0'};
@@ -99,7 +102,8 @@ export class AssistantController {
    if(ambiguous)result=clarification();
    else if(plan.intent==='OUT_OF_SCOPE')result={replyText:'I can help find, compare and explain meals or prepare a text candidate. You remain in control of applying, booking, paying and sending.',cards:[]};
    else if(plan.intent==='SEARCH'){
-    const ranked=rankCandidates(await publicCandidates(this.pool,binding.subject,query.hard.dates),query.hard,prefs,query.conditions.cleared as (keyof Preferences)[]);
+    const base=rankCandidates(await publicCandidates(this.pool,binding.subject,query.hard.dates),query.hard,prefs,query.conditions.cleared as (keyof Preferences)[]);
+    const ranked=await filterPublicCandidates(base,query.hard,this.venueDisplay);
     const candidates=ranked.slice(0,20);const chosen=candidates.slice(0,3);facts=chosen.map(c=>({...c,status:'OPEN',closesAt:''}));
     result={replyText:chosen.length?`These public meals match your confirmed conditions${query.hard.dates?.length?` for ${query.hard.dates.join(', ')}`:' in the next 7 London calendar days (including today)'}. Saved preferences affect order only. Availability may change.`:'No eligible public meals match these conditions. You can choose which filter to change.',cards:chosen.map(card)};
    }else if(plan.intent==='COMPARE'||plan.intent==='EXPLAIN'){
@@ -156,6 +160,9 @@ export class AssistantController {
     if(result.preferenceProposal)this.sessions.runtime.saveArtifact(id,binding,result.preferenceProposal.id,{requestId:turn.requestId,value:result.preferenceProposal});
     this.sessions.runtime.publish(id,binding,turn.requestId,result);
    },async c=>{
+    // Lock every source host together with the actor in global user-ID order before meals.
+    // requests.finish invokes this callback before its fallback actor/AI metadata locks.
+    await c.query(`SELECT id FROM users WHERE id IN(SELECT host_id FROM meals WHERE id=ANY($1::uuid[])) OR id=$2::uuid ORDER BY id FOR SHARE`,[facts.map(f=>f.id),binding.subject.startsWith('user:')?binding.subject.slice(5):null]);
     if(facts.length)await c.query(`SELECT id FROM meals WHERE id=ANY($1::uuid[]) ORDER BY id FOR SHARE`,[facts.map(f=>f.id)]);
     if(result.draft?.kind==='GROUP')await c.query(`SELECT id FROM conversations WHERE id=$1 FOR SHARE`,[result.draft.targetId]);
    });

@@ -58,6 +58,8 @@ export async function transferDraft(db:Pool,runtime:AssistantRuntime,id:string,b
     let version:string|null;
     try{version=await draftTarget(c,binding.subject,draft.kind,draft.targetId);}catch{throw new AssistantError('TARGET_CHANGED');}
     if(version!==draft.targetVersion)throw new AssistantError('TARGET_CHANGED');
+    const {rows:[privacy]}=await c.query(`SELECT m.privacy_epoch::text AS session_epoch,p.epoch::text AS current_epoch FROM ai_session_meta m CROSS JOIN privacy_control p WHERE m.id=$1 AND p.id=1 FOR SHARE OF p`,[id]);
+    if(!privacy||privacy.session_epoch!==privacy.current_epoch){runtime.destroy(id);throw new AssistantError('DRAFT_EXPIRED');}
     runtime.read(id,binding);
     // Return the same immutable replacement on repeats. Never append or call a business command.
     return draft;

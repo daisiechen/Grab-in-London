@@ -15,6 +15,21 @@ function sample():Facts{
  surveys:[{user_id:'a',version:'1',again:true,reasons:['company'],submitted_at:'2026-09-20T00:00:00Z'},{user_id:'a',version:'2',again:false,reasons:['cost'],submitted_at:'2026-10-02T00:00:00Z'},{user_id:'b',version:'1',again:null,reasons:['cost'],submitted_at:'2026-10-03T00:00:00Z'}],events:[]};
 }
 describe('measurement v4 hand-calculated source facts',()=>{
+ it('weekly card and its drilldown use the latest visible week rather than distinct users across the entire range',()=>{
+  const facts=sample();facts.attendance=facts.attendance!.filter(r=>!(r.meal_id==='m2'&&r.subject_id==='a'));
+  const result=calculateMetrics(facts,filters,asOf);
+  expect(result.series['weekly.trend']!.map(p=>p.value)).toEqual([2,1]);expect(result.metrics.weekly).toBe(1);
+  expect(result.rows.weekly!.map(r=>r.attributes)).toEqual([{userId:'h',week:'2026-10-19'}]);
+ });
+ it('counts fixed form errors as events by step and field while preserving the no-telemetry null gate',()=>{
+  const facts=sample();facts.telemetryReady=true;
+  facts.events=[['a','arrange','venue'],['b','arrange','venue'],['c','introduce','title']].map(([id,step,field])=>({event_id:id!,anonymous_id:'anonymous',user_id:'a',session_id:'session',type:'form_error',occurred_at:'2026-10-02T10:00:00Z',received_at:'2026-10-02T10:00:01Z',properties:{attemptId:'attempt',step:step!,field:field!,errorCode:'required'}}));
+  const result=calculateMetrics(facts,filters,asOf);
+  expect(result.metrics.formErrors).toBe(3);expect(result.rows.formErrors).toHaveLength(3);
+  expect(result.series['form.errors.byStep']).toEqual([{key:'arrange',value:2},{key:'introduce',value:1}]);
+  expect(result.series['form.errors.byField']).toEqual([{key:'title',value:1},{key:'venue',value:2}]);
+  expect(calculateMetrics({...facts,telemetryReady:false},filters,asOf).metrics.formErrors).toBeNull();
+ });
  it('keeps unknown separate, resolves self over host and counts user/week rather than duplicate visits',()=>{
   const r=calculateMetrics(sample(),filters,asOf);
   expect(r.metrics.coverage).toEqual({numerator:4,denominator:5});expect(r.metrics.weekly).toBe(2);

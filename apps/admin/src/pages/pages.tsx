@@ -9,7 +9,7 @@ import { itemLabel, listTitle, metricTitle, seriesTitle } from '../dictionary/la
 import { ClassificationPanel } from '../features/classification/ClassificationPanel.tsx';
 import { MetricDictionary } from '../features/dictionary/MetricDictionary.tsx';
 import { DrilldownTable, type Binding } from '../features/drilldown/DrilldownTable.tsx';
-import { formatMetric, formatNumber, formatRatio, isRatio, type Language, type Translate } from '../i18n.ts';
+import { formatMetric, formatNumber, formatRatio, isRatio,londonDay, type Language, type Translate } from '../i18n.ts';
 
 export type Detail =
   | { kind: 'metric'; id: string }
@@ -34,10 +34,13 @@ const isEmpty = (data: AdminPageData) =>
   Object.values(data.metrics).every((v) => v === null || (isRatio(v) && v.denominator === 0)) && Object.values(data.series).every((s) => !s.length);
 
 function Cards({ ids, p }: { ids: readonly string[]; p: PageProps }) {
+  const latestWeek=p.data.series['weekly.trend']?.at(-1)?.key;
+  const weekEnd=latestWeek?new Date(Date.parse(latestWeek+'T12:00:00Z')+6*86400000).toISOString().slice(0,10):null;
+  const partial=!!latestWeek&&!!weekEnd&&((p.binding.query.from??latestWeek)>latestWeek||(p.binding.query.to??weekEnd)<weekEnd||londonDay(p.data.snapshot.asOf)<=weekEnd);
   return (
     <div className={`metric-grid${ids.length > 3 ? ' four' : ''}`}>
       {ids.map((id) => (
-        <MetricCard key={id} title={metricTitle(p.t, id)} value={p.data.metrics[id]} lang={p.lang} onOpen={() => p.open({ kind: 'metric', id })} />
+        <MetricCard key={id} title={metricTitle(p.t, id)} value={p.data.metrics[id]} lang={p.lang} {...(id==='weekly'&&latestWeek?{foot:`${latestWeek} · ${p.t('最近可见周','Latest visible week')}${partial?` · ${p.t('周数据不完整','Partial week')}`:''}`}:p.data.metrics[id]==null?{foot:p.t('未就绪或不适用；请查看定义','Unavailable or not applicable; see definition')}:{})} onOpen={() => p.open({ kind: 'metric', id })} />
       ))}
     </div>
   );
@@ -105,9 +108,16 @@ function Journey(p: PageProps) {
           </Panel>
         </>
       ) : (
-        <SeriesPanel id="funnel.create" p={p} className="create-funnel" />
+        <>
+          <SeriesPanel id="funnel.create" p={p} className="create-funnel" />
+          <div className="two-column"><SeriesPanel id="form.errors.byStep" p={p}/><SeriesPanel id="form.errors.byField" p={p}/></div>
+          <Panel title={p.t('表单校验错误记录','Form validation errors')}>
+            <DrilldownTable target="formErrors" binding={p.binding} caption={p.t('表单校验错误记录','Form validation errors')} t={p.t} lang={p.lang}/>
+          </Panel>
+        </>
       )}
       <SeriesPanel id="features.usage" p={p} className="feature-grid" />
+      <p className="method-note">{p.t('地图统计需客户端已配置浏览器专用 Key 与生产 Map ID。本页无法检测部署配置；地图未提供时，不能将零次使用解释为没有需求。','Map measurement requires a configured browser key and production Map ID. This page cannot detect deployment configuration; zero use while maps are unavailable does not establish a lack of demand.')}</p>
     </>
   );
 }
@@ -151,7 +161,7 @@ function Retention(p: PageProps) {
                 <tr key={row.key}>
                   <td><button className="text-button mono" onClick={() => p.open({ kind: 'list', target: 'cohort.users', rows: { cohortWeek: row.key }, title: `${p.t('首次赴约队列', 'First-attendance cohort')} · ${row.key}` })}>{row.key}</button></td>
                   <td>{isRatio(row.value) ? `${formatNumber(p.lang, row.value.numerator)} / ${formatNumber(p.lang, row.value.denominator)}` : '—'}</td>
-                  <td><span className={`cohort-cell ${isRatio(row.value) && row.value.denominator ? 'mature' : ''}`}>{isRatio(row.value) && row.value.denominator ? formatRatio(row.value) : p.t('观察中', 'Observing')}</span></td>
+                  <td><span className={`cohort-cell ${isRatio(row.value) && row.value.denominator ? 'mature' : ''}`}>{isRatio(row.value) && row.value.denominator ? formatRatio(row.value) : row.value===null?p.t('未就绪','Unavailable'):p.t('观察中', 'Observing')}</span></td>
                 </tr>
               ))}
             </tbody>
@@ -178,6 +188,7 @@ function Quality(p: PageProps & { openMetric(id: string): void }) {
         ))}
       </div>
       <p className="method-note">{p.t('因隐私删除排除的主体', 'Subjects excluded after privacy deletion')}: {formatNumber(p.lang, p.data.privacyExcludedCount)}</p>
+      <p className="method-note">{p.t('部分来源可能未就绪。— 表示来源缺失、观察期未满或零分母，不等于 0；当前接口未提供逐来源连接状态，不能据图表判断已全部接通。','Sources may be partial. — means missing sources, an immature observation window or a zero denominator, not 0. This response provides no per-source connection status, so charts cannot establish that every source is connected.')}</p>
       <div className="two-column">
         <Panel title={p.t('数据完整性检查', 'Data integrity checks')} eyebrow={p.t('全量快照，不受业务筛选影响', 'FULL SNAPSHOT · NOT AFFECTED BY BUSINESS FILTERS')}>
           <p>{p.t('缺字段事件进入隔离队列，不参与指标。迟到事件在下次快照按发生时间回补，并更新快照版本。', 'Malformed events are quarantined, not counted. Late events backfill by occurrence time in the next versioned snapshot.')}</p>
@@ -201,7 +212,7 @@ export function openRow(p: Pick<PageProps, 'open' | 't'>, attributes: Record<str
 }
 
 export function PageBody(p: PageProps & { page: AdminPageName; openMetric(id: string): void }) {
-  if (p.page !== 'quality' && isEmpty(p.data)) return <Empty t={p.t} reset={p.reset} />;
+  if (p.page !== 'quality' && isEmpty(p.data)) return <Empty t={p.t} reset={p.reset} unavailable />;
   switch (p.page) {
     case 'overview': return <Overview {...p} />;
     case 'journey': return <Journey {...p} />;

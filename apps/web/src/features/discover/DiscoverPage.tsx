@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTelemetry } from '../../api/telemetry.tsx';
 import { ObservedMeal } from './ObservedMeal.tsx';
+import { GoogleMap } from '../maps/GoogleMap.tsx';
 import { useSearchParams } from 'react-router';
 import { CUISINES, DIETARY, LANGUAGES, MOODS, type CuisineCode, type DietaryCode, type LanguageCode, type MoodCode } from '@fancy/contracts';
 import { CalendarIcon, ChevronDownIcon, LayersIcon, ListBulletIcon, MagnifyingGlassIcon, MixerHorizontalIcon, PersonIcon } from '@radix-ui/react-icons';
@@ -38,13 +39,14 @@ export function DiscoverPage() {
   const notify = useToast();
   const [params, setParams] = useSearchParams();
   const applied = useMemo(() => parseFilters(params), [params]);
-  const view = params.get('view') === 'areas' ? 'areas' : 'list';
+  const view = params.get('view') === 'areas' ? 'areas' : params.get('view')==='map'?'map':'list';
   const queryKey = `${telemetry.enabled?`analytics-${telemetry.generation}`:'private'}:${filtersToParams(applied).toString()}`;
   const [sheet, setSheet] = useState<SheetKind>('');
   const [pending, setPending] = useState<Filters>(applied);
   const [extra, setExtra] = useState<{ key: string; meals: Meal[]; nextCursor: string | null; proofs:Record<string,string>; requests:string[] } | null>(null);
   const [moreError, setMoreError] = useState('');
   const [area, setArea] = useState<string | null>(null);
+  const [selectedMeal,setSelectedMeal]=useState<string|null>(null);
   const pendingFilterEvents=useRef<{key:string;filters:string[]}|null>(null);
 
   const results = useQuery<Results>(`discover:${queryKey}`, async (c) => {
@@ -78,9 +80,9 @@ export function DiscoverPage() {
     setArea(null);
     setParams(filtersToParams(next, params));
   };
-  const setView = (v: 'list' | 'areas') => {
+  const setView = (v: 'list' | 'areas'|'map') => {
     const p = new URLSearchParams(params);
-    if (v === 'areas') p.set('view', 'areas'); else p.delete('view');
+    if (v !== 'list') p.set('view', v); else p.delete('view');
     setParams(p, { replace: true });
   };
   const loadMore = async () => {
@@ -99,7 +101,9 @@ export function DiscoverPage() {
     for (const m of meals) by.set(m.areaCode, [...(by.get(m.areaCode) ?? []), m]);
     return [...by.entries()].sort((a, b) => b[1].length - a[1].length);
   }, [meals]);
-  const shown = view === 'areas' ? (area ? groups.find(([code]) => code === area)?.[1] ?? [] : []) : meals;
+  const selected=meals.find(meal=>meal.id===selectedMeal);
+  const proofFor=(id:string)=>(extra?.key===queryKey?extra.proofs[id]:undefined)??(results.data?.key===queryKey?results.data.requestId:undefined);
+  const shown = view === 'areas' ? (area ? groups.find(([code]) => code === area)?.[1] ?? [] : []) : view==='map'&&selected?meals.filter(meal=>meal.id!==selected.id):meals;
   const count = moreFilterCount(applied);
   const dates = upcomingLondonDates(28);
 
@@ -114,6 +118,7 @@ export function DiscoverPage() {
           <button type="button" onClick={() => open('size')} aria-label="Filter by table size"><PersonIcon />{sizeButtonLabel(applied.tableSizes)}<ChevronDownIcon /></button>
           <div className="view-toggle">
             <button type="button" aria-label="List view" aria-pressed={view === 'list'} className={view === 'list' ? 'selected' : ''} onClick={() => setView('list')}><ListBulletIcon /></button>
+            <button type="button" aria-label="Map view" aria-pressed={view === 'map'} className={view === 'map' ? 'selected' : ''} onClick={() => setView('map')}>Map</button>
             <button type="button" aria-label="Areas view" aria-pressed={view === 'areas'} className={view === 'areas' ? 'selected' : ''} onClick={() => setView('areas')}><LayersIcon /></button>
           </div>
           <button type="button" className="more-filter" aria-label={count ? `More filters, ${count} active` : 'More filters'} onClick={() => open('filters')}>
@@ -122,6 +127,11 @@ export function DiscoverPage() {
         </div>
       </header>
       <div className="list-content">
+        {view==='map'&&<>
+          <GoogleMap label="Meal map" points={meals.flatMap(m=>m.venue.location?[{id:m.id,title:m.title,location:m.venue.location}]:[])} selected={selectedMeal} onSelect={setSelectedMeal} appliedBounds={applied.bounds} onSearch={bounds=>apply({...applied,bounds})}/>
+          {selected&&<ObservedMeal key={selected.id} meal={selected} requestId={proofFor(selected.id)}><MealCard meal={selected} compact/></ObservedMeal>}
+          {!!meals.length&&meals.some(m=>!m.venue.location)&&<p className="muted">Meals without verified restaurant coordinates remain in the list.</p>}
+        </>}
         {results.error && !results.data ? (
           <div className="empty">
             <h3>We couldn’t load meals.</h3>
@@ -144,7 +154,7 @@ export function DiscoverPage() {
               </>
             )}
             {view === 'list' && <div className="section-heading"><h2>A seat for you</h2><span>{meals.length} meals</span></div>}
-            {shown.map((m) => <ObservedMeal key={m.id} meal={m} requestId={(extra?.key===queryKey?extra.proofs[m.id]:undefined)??(results.data?.key===queryKey?results.data.requestId:undefined)}><MealCard meal={m} compact /></ObservedMeal>)}
+            {shown.map((m) => <ObservedMeal key={m.id} meal={m} requestId={proofFor(m.id)}><MealCard meal={m} compact /></ObservedMeal>)}
             {!meals.length && (
               <div className="empty">
                 <MagnifyingGlassIcon />

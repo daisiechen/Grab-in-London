@@ -3,6 +3,25 @@ import {applyPlan,londonDates,validatePlan} from './query.ts';
 const now=new Date('2026-10-21T12:00:00Z');
 const plan=(patches:unknown[],intent='SEARCH')=>({intent,patches,mealIds:[]});
 const patch=(field:string,value:unknown,source:string,op='SET')=>({field,value,source,op});
+describe('page keyword/map/time filters and explicit changes',()=>{
+ it('keeps applied conditions unchanged when the model emits no patch',()=>{
+  const applied={keyword:'dumpling',timeOfDay:'dinner' as const,bounds:{north:52,south:51,east:0,west:-1}};
+  expect(applyPlan(validatePlan(plan([]),'Find meals'),'Find meals',applied,{hard:{},cleared:[]},[],now).hard).toEqual(applied);
+ });
+ it('accepts provenance-checked time and keyword and rejects fabricated geometry or keyword',()=>{
+  const input='dinner named dumpling';
+  const q=applyPlan(validatePlan(plan([patch('timeOfDay','dinner','dinner'),patch('keyword','dumpling','named dumpling')]),input),input,{}, {hard:{},cleared:[]},[],now);
+  expect(q.hard).toMatchObject({timeOfDay:'dinner',keyword:'dumpling'});
+  expect(()=>applyPlan(validatePlan(plan([patch('bounds',{north:52,south:51,east:0,west:-1},'map')]),'map'),'map',{}, {hard:{},cleared:[]},[],now)).toThrow('AI_CONFLICT');
+  expect(()=>applyPlan(validatePlan(plan([patch('keyword','invented','named dumpling')]),input),input,{}, {hard:{},cleared:[]},[],now)).toThrow('AI_CONFLICT');
+ });
+ it('only explicitly clears the named field and requests clarification if an explicit time is omitted',()=>{
+  const input='clear map bounds';
+  const q=applyPlan(validatePlan(plan([patch('bounds',null,input,'CLEAR')]),input),input,{keyword:'dumpling',bounds:{north:52,south:51,east:0,west:-1}},{hard:{},cleared:[]},[],now);
+  expect(q.hard).toEqual({keyword:'dumpling'});expect(q.conditions.cleared).toContain('bounds');
+  expect(applyPlan(validatePlan(plan([]),'Find lunch'),'Find lunch',{}, {hard:{},cleared:[]},[],now).clarification).toBe(true);
+ });
+});
 describe('query provenance and server interpretation',()=>{
  it('parses London Friday, next natural-week Friday, tonight and Sunday remainder',()=>{
   expect(londonDates('周五',now)).toEqual({dates:['2026-10-23'],tonight:false});

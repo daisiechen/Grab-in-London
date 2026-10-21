@@ -12,8 +12,8 @@ import { recordAttendanceRevision } from '../post-meal/attendance.ts';
 import { invalidateIneligiblePairs } from '../connections/service.ts';
 const reportDto = (r: Record<string, unknown>) => ({ id:r.id, receipt:r.receipt, targetType:r.target_type, status:r.status, publicOutcome:r.public_outcome, createdAt:(r.created_at as Date).toISOString() });
 const notificationDto = (r: Record<string, unknown>) => { const refs = r.refs as Record<string,string>; return { id:r.id,template:r.template,createdAt:(r.created_at as Date).toISOString(),readAt:(r.read_at as Date | null)?.toISOString() ?? null,mealId:refs.mealId ?? null,applicationId:refs.applicationId ?? null,conversationId:refs.conversationId ?? null }; };
-async function caseFor(db: Pool | PoolClient, caseId: string, actor: string) {
-  const { rows:[r] } = await db.query(`SELECT c.* FROM support_cases c JOIN support_case_grants g ON g.case_id=c.id AND g.user_id=$2 WHERE c.id=$1`,[caseId,actor]);
+async function caseFor(db: Pool | PoolClient, caseId: string, actor: string,lockGrant=false) {
+  const { rows:[r] } = await db.query(`SELECT c.* FROM support_cases c JOIN support_case_grants g ON g.case_id=c.id AND g.user_id=$2 WHERE c.id=$1${lockGrant?' FOR SHARE OF c,g':''}`,[caseId,actor]);
   if(!r) throw new DomainError('NOT_FOUND','Case not found.'); return r;
 }
 const caseDto = (r: Record<string, unknown>) => ({ id:r.id,version:r.version,status:r.status,reportId:r.report_id,targetType:r.target_type,targetId:r.target_id,details:r.details,createdAt:(r.created_at as Date).toISOString() });
@@ -23,7 +23,10 @@ export function registerSupportRoutes(app: FastifyInstance, deps: AppDeps) {
     const body=request.body as {mealId:string;subjectId:string;value:'present'|'absent';expectedVersion:string;reason:string};
     const supportCase=await caseFor(tx.client,caseId,auth.userId);
     if(supportCase.target_type!=='MEAL'||supportCase.target_id!==body.mealId)throw new DomainError('FORBIDDEN','This case does not authorize a correction for that meal.');
-    const {meal,now,pairs}=await lockPostMeal(tx,body.mealId,auth.userId,body.subjectId);
+    const {meal,now,pairs}=await lockPostMeal(tx,body.mealId,auth.userId,body.subjectId,async()=>{
+      const current=await caseFor(tx.client,caseId,auth.userId,true);
+      if(current.target_type!=='MEAL'||current.target_id!==body.mealId)throw new DomainError('FORBIDDEN','This case does not authorize a correction for that meal.');
+    });
     const attendance=await recordAttendanceRevision(tx,meal,body.subjectId,'SUPPORT',body.value,auth.userId,body.expectedVersion,now,body.reason);
     await invalidateIneligiblePairs(tx,pairs,now);
     await appendAudit(tx.client,{actorKind:'SUPPORT',actorId:auth.userId,action:'attendance.corrected',aggregateType:'case',aggregateId:caseId,requestId:request.id,reason:body.reason,payload:{mealId:body.mealId,subjectId:body.subjectId,revision:attendance.version}});
@@ -62,7 +65,7 @@ export function registerSupportRoutes(app: FastifyInstance, deps: AppDeps) {
     await appendAudit(deps.pool as unknown as PoolClient,{actorKind:'SUPPORT',actorId:auth!.userId,action:'support.case_viewed',aggregateType:'case',aggregateId:r.id,requestId:request.id});return {data:caseDto(r)};
   });
   defineWrite(app,deps,'resolveCase',async({request,auth,ifMatch},tx)=>{
-    await lockActiveActor(tx,auth.userId);const id=(request.params as {caseId:string}).caseId;await caseFor(tx.client,id,auth.userId);
+    await lockActiveActor(tx,auth.userId);const id=(request.params as {caseId:string}).caseId;await caseFor(tx.client,id,auth.userId,true);
     const body=request.body as {status:string;publicOutcome:string|null;reason:string};
     const {rows:[r]}=await tx.client.query(`UPDATE support_cases SET status=$2,version=version+1 WHERE id=$1 AND version=$3 RETURNING *`,[id,body.status,ifMatch]);
     if(!r)throw new DomainError('VERSION_CONFLICT','The case changed. Reload it.');

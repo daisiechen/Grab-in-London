@@ -9,6 +9,7 @@ import { migrate } from '@fancy/db';
 import { createMigratedDatabase, type MigratedDatabase } from '@fancy/testkit/db';
 import { buildServer } from '../http/server.ts';
 import { TestIdentityProvider } from '../identity/test-provider.ts';
+import type {AppDeps} from '../http/context.ts';
 
 export const WEB_ORIGIN = 'http://localhost:5174';
 
@@ -26,14 +27,14 @@ export interface Harness {
   close(): Promise<void>;
 }
 
-export async function createHarness(serverUrl: string): Promise<Harness> {
+export async function createHarness(serverUrl: string,assistant?:AppDeps['assistant']): Promise<Harness> {
   const db = await createMigratedDatabase(serverUrl, migrate);
   const config = loadConfig({
     ENVIRONMENT: 'test', DATABASE_URL: db.url, AUTH_ADAPTER: 'test', PLACES_ADAPTER: 'fixture', MAIL_ADAPTER: 'outbox_test',
     AI_PROVIDER: 'mock', WEB_ORIGIN, SESSION_SECRET: 'api-test-session-secret-0123456789abcdef', IOS_REDIRECT_URI: 'fancy://auth/callback',
   });
   const idp = new TestIdentityProvider('test');
-  const app = await buildServer({ config, pool: db.pool, identity: idp, publicOrigin: WEB_ORIGIN });
+  const app = await buildServer({ config, pool: db.pool, identity: idp, publicOrigin: WEB_ORIGIN, ...(assistant?{assistant}:{}) });
   return { app, db, idp, close: async () => { await app.close(); await db.drop(); } };
 }
 

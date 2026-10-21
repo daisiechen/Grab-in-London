@@ -37,9 +37,9 @@ FANCY_LOCAL_ACCEPTANCE=1 node infra/local-acceptance.ts
 ## 人工门槛与恢复
 
 - G-HOST：批准安装及部署；确认域名/TLS、备份目标、磁盘与网络访问策略。当前未部署。
-- G-AUTH/G-PLACES/G-MAIL：Auth0、Google、邮件真实项目及最小权限密钥；测试适配器在staging/production启动时被拒绝。
+- G-AUTH/G-PLACES/G-MAIL：Auth0、Google、邮件真实项目及最小权限密钥；Google服务端Key与Web受域名限制的公开Key/Map ID、iOS受bundle限制的公开Key分开。客户端配置见各app的说明，不复用服务端密钥。Google Places结果只放Google底图；无配置时列表回退。测试适配器在staging/production启动时被拒绝。
 - G-IOS：Xcode首次启动与许可、Apple/Expo账号、签名和iPhone实测；自动化组件测试不能代替安装测试。
-- G-AI：DeepSeek安全Key、当前价格/计数器及每天/每用户额度确认，月预算固定人民币50元，无自动充值；默认不可用。
+- G-AI：DeepSeek安全Key放未跟踪安全环境变量 `DEEPSEEK_API_KEY`，不要发聊天或进Git；当前价格/计数器及每天/每用户额度仍须核实。月预算固定人民币50元，无自动充值；Key本身不启用调用。HTTP应用可通过 `AppDeps.assistant` 显式注入经过验证的provider/价格/计数器，默认不注入，真实评测通过后才开放。
 - G-PRIVACY：批准保留期、删除身份/Apple授权撤销、争议最小记录、加密删除回执邮件通道与备份清理；未关闭不能接真实用户。
 
 恢复备份时先停API/worker、恢复到隔离库，重放独立删除台账和快照撤销屏障，再验证删除主体不可登录、正文不可读、旧快照/导出返回410。实际备份/恢复演练尚未在首尔服务器执行，不能据本文件宣称通过。数据库迁移后的回滚不能仅切旧代码，须先核对旧代码与当前schema兼容性。

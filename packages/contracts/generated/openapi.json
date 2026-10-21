@@ -10673,6 +10673,7 @@
                 "approvalP50",
                 "pendingApplications",
                 "oldestPendingHours",
+                "formErrors",
                 "discovery",
                 "formation",
                 "cancellation",
@@ -11249,7 +11250,7 @@
                     "type": "string"
                   },
                   "metric": {
-                    "pattern": "^(summary\\.(overview|journey|supply|retention|quality)|weekly|activation|retention|coverage|discovery7|impressionNoApply|applications|approved|confirmed|applicationAttendance|approval|approvalP50|pendingApplications|oldestPendingHours|discovery|formation|cancellation|mealsWithAttendance|feedback|survey|laterOpportunity|missingRequired|duplicates|excluded|receiveLatencyP90|meals|applications|cohort\\.users|attendance|quality\\.events)$",
+                    "pattern": "^(summary\\.(overview|journey|supply|retention|quality)|weekly|activation|retention|coverage|discovery7|impressionNoApply|applications|approved|confirmed|applicationAttendance|approval|approvalP50|pendingApplications|oldestPendingHours|formErrors|discovery|formation|cancellation|mealsWithAttendance|feedback|survey|laterOpportunity|missingRequired|duplicates|excluded|receiveLatencyP90|meals|applications|cohort\\.users|attendance|quality\\.events)$",
                     "type": "string"
                   },
                   "filters": {
@@ -14643,6 +14644,51 @@
                     "additionalProperties": false,
                     "type": "object",
                     "properties": {
+                      "bounds": {
+                        "additionalProperties": false,
+                        "type": "object",
+                        "required": [
+                          "north",
+                          "south",
+                          "east",
+                          "west"
+                        ],
+                        "properties": {
+                          "north": {
+                            "minimum": -90,
+                            "maximum": 90,
+                            "type": "number"
+                          },
+                          "south": {
+                            "minimum": -90,
+                            "maximum": 90,
+                            "type": "number"
+                          },
+                          "east": {
+                            "minimum": -180,
+                            "maximum": 180,
+                            "type": "number"
+                          },
+                          "west": {
+                            "minimum": -180,
+                            "maximum": 180,
+                            "type": "number"
+                          }
+                        }
+                      },
+                      "keyword": {
+                        "minLength": 1,
+                        "maxLength": 120,
+                        "pattern": "\\S",
+                        "type": "string"
+                      },
+                      "timeOfDay": {
+                        "type": "string",
+                        "enum": [
+                          "lunch",
+                          "dinner"
+                        ]
+                      },
                       "cuisineCodes": {
                         "uniqueItems": true,
                         "minItems": 0,

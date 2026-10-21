@@ -75,6 +75,6 @@ export function registerDeletionRoutes(app:FastifyInstance,deps:AppDeps){
   await tx.client.query(`INSERT INTO deletion_journal(deletion_id,user_id) VALUES($1,$2)`,[row.id,auth.userId]);
   await enqueueJob(tx.client,{kind:'account.purge',resourceId:row.id,dueAt:now});
   await appendAudit(tx.client,{actorKind:'USER',actorId:auth.userId,action:'account.deletion_accepted',aggregateType:'deletion',aggregateId:row.id,requestId:request.id});
-  return{data:statusDto(row),resourceId:row.id,after:(reply)=>{void reply.clearCookie(SESSION_COOKIE,{path:'/'});}};
+  return{data:statusDto(row),resourceId:row.id,after:(reply)=>{deps.assistantRuntime?.shutdown();void reply.clearCookie(SESSION_COOKIE,{path:'/'});}};
  });
 }

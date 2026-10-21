@@ -36,6 +36,7 @@ export const CONFIG_KEYS = [
   'AUTH0_CLIENT_ID',
   'AUTH0_CLIENT_SECRET',
   'GOOGLE_MAPS_API_KEY',
+  'DEEPSEEK_API_KEY',
   'PORT',
   'PRIVACY_POLICY_VERSION',
   'RETENTION_POLICY_JSON',
@@ -58,6 +59,8 @@ export interface CoreConfig {
   iosRedirectUri: string | null;
   auth0: { domain: string; clientId: string; clientSecret: string } | null;
   googleMapsApiKey: string | null;
+  /** Secret storage only; enabling calls additionally requires a verified integration bundle. */
+  deepseekApiKey: string | null;
   port: number;
   privacyPolicyVersion: string | null;
   retentionPolicy: Record<string, unknown> | null;
@@ -182,6 +185,7 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
     sessionSecret,
     iosRedirectUri,
     googleMapsApiKey: value('GOOGLE_MAPS_API_KEY') ?? null,
+    deepseekApiKey: value('DEEPSEEK_API_KEY') ?? null,
     auth0,
     port,
     privacyPolicyVersion,

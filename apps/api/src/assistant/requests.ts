@@ -53,9 +53,13 @@ export class RequestService {
   }
   async finish(subject:string,requestId:string,state:TerminalRequestState,errorCode:'TIMEOUT'|'UNAVAILABLE'|'SUPERSEDED'|'RESTART'|'INVALID_RESULT'|null=null,validateAndPublish?: (client:PoolClient)=>Promise<void>,prelockSources?:(client:PoolClient)=>Promise<void>){
     return transaction(this.pool,async c=>{
-      // Lock even a deleting account before AI rows; invalidated work must still release quota.
-      if(subject.startsWith('user:'))await c.query(`SELECT id FROM users WHERE id=$1 FOR SHARE`,[subject.slice(5)]);
+      // Source callback locks actor and public authors together in sorted user order.
       await prelockSources?.(c);
+      // Lock even a deleting account before AI rows; invalidated work must still release quota.
+      if(subject.startsWith('user:')){
+        await c.query(`SELECT id FROM users WHERE id=$1 FOR SHARE`,[subject.slice(5)]);
+        await c.query(`SELECT user_id FROM ai_preferences WHERE user_id=$1 FOR SHARE`,[subject.slice(5)]);
+      }else if(subject.startsWith('guest:'))await c.query(`SELECT id FROM guest_sessions WHERE id=$1 FOR SHARE`,[subject.slice(6)]);
       await this.lockSubject(c,subject);
       const {rows:[request]}=await c.query(`SELECT *,deadline<=clock_timestamp() timed_out FROM ai_requests WHERE subject=$1 AND request_id=$2 FOR UPDATE`,[subject,requestId]);
       if(!request)throw new AssistantError('AI_CONFLICT');
@@ -63,13 +67,15 @@ export class RequestService {
       let final=state;
       if(request.timed_out){final='FAILED';errorCode='TIMEOUT';}
       if(final==='SUCCEEDED'||final==='NEEDS_INPUT'){
-        const {rows:[session]}=await c.query(`SELECT status,generation::text,preference_epoch::text FROM ai_session_meta WHERE id=$1 FOR UPDATE`,[request.session_id]);
+        const {rows:[session]}=await c.query(`SELECT status,generation::text,preference_epoch::text,privacy_epoch::text FROM ai_session_meta WHERE id=$1 FOR UPDATE`,[request.session_id]);
         let valid=session?.status==='ACTIVE'&&session.generation===String(request.generation);
         if(subject.startsWith('user:')){
           const {rows:[user]}=await c.query(`SELECT status FROM users WHERE id=$1`,[subject.slice(5)]);
           const {rows:[prefs]}=await c.query(`SELECT epoch::text FROM ai_preferences WHERE user_id=$1`,[subject.slice(5)]);
           valid=valid&&user?.status==='ACTIVE'&&session.preference_epoch===(prefs?.epoch??'0');
         }
+        const {rows:[privacy]}=await c.query(`SELECT epoch::text FROM privacy_control WHERE id=1 FOR SHARE`);
+        valid=valid&&session?.privacy_epoch===privacy?.epoch;
         if(!valid){final='SUPERSEDED';errorCode='SUPERSEDED';}
         else {
           if(!validateAndPublish)throw new AssistantError('AI_UNAVAILABLE');
