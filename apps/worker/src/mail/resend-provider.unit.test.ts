@@ -51,3 +51,9 @@ it('requires current claim admission when configured and excludes the fencing to
  expect(fetcher).not.toHaveBeenCalled();const admission=vi.fn(async()=>true),provider=new ResendMailProvider({...options,fetch:fetcher,onDispatch:admission});expect(await provider.send(input)).toEqual({status:'UNKNOWN'});expect(admission).not.toHaveBeenCalled();
  expect((await provider.send({...input,claimToken})).status).toBe('SENT');expect(admission).toHaveBeenCalledWith({outboxId:id,claimToken,payloadSha256:expect.stringMatching(/^[0-9a-f]{64}$/)});expect(JSON.stringify(fetcher.mock.calls)).not.toContain(claimToken);
 });
+it('rechecks monotonic DB-derived destination budget after awaited dispatch hook, before fetch',async()=>{
+ let monotonic=100;const now=vi.spyOn(performance,'now').mockImplementation(()=>monotonic),fetcher=vi.fn<typeof fetch>(async()=>Response.json({id}));
+ try{const provider=new ResendMailProvider({...options,fetch:fetcher,onDispatch:async()=>{monotonic=201;return true;}});expect(await provider.send({...input,claimToken:mealId,dispatchDeadlineMs:200})).toEqual({status:'RETRY'});expect(fetcher).not.toHaveBeenCalled();
+ const live=new ResendMailProvider({...options,fetch:fetcher,onDispatch:async()=>true});expect(await live.send({...input,claimToken:mealId,dispatchDeadlineMs:202})).toEqual({status:'SENT',providerId:id});expect(fetcher).toHaveBeenCalledTimes(1);expect(JSON.stringify(fetcher.mock.calls)).not.toContain('dispatchDeadlineMs');
+ }finally{now.mockRestore();}
+});

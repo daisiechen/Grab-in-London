@@ -1,6 +1,6 @@
 import type {} from '@fastify/cookie';
 import type { FastifyInstance } from 'fastify';
-import { appendAudit, enqueueJob } from '@fancy/db';
+import { appendAudit, enqueueJob, captureDeletionMail } from '@fancy/db';
 import { DomainError } from '../common/errors.ts';
 import { registerLockTable } from '../common/locks.ts';
 import type { Tx } from '../common/transaction.ts';
@@ -106,6 +106,7 @@ export async function applyDeletion(tx:Tx,deps:AppDeps,input:({kind:'USER';authT
   const days=deps.config.retentionPolicy?.deletionReceiptDays;
   const expires=typeof days==='number'&&Number.isInteger(days)&&days>0?new Date(now.getTime()+days*86_400_000):null;
   const {rows:[row]}=await tx.client.query(`INSERT INTO deletion_requests(id,user_id,receipt_token_hash,status,requested_at,expires_at,policy_version) VALUES(COALESCE($6::uuid,gen_random_uuid()),$1,$2,'PENDING',$3,$4,$5) RETURNING *`,[input.userId,input.kind==='RESTORE'?input.receiptTokenHash:sha256Hex(token),input.kind==='RESTORE'?input.acceptedAt:now,input.kind==='RESTORE'?input.expiresAt:expires,input.kind==='RESTORE'?input.policyVersion:(deps.config.privacyPolicyVersion??'unconfigured'),input.kind==='RESTORE'?input.deletionId:null]);
+  if(input.kind==='USER')await captureDeletionMail(tx.client,row.id,input.userId,deps.config.deletionMailEncryption);
   await tx.client.query(`INSERT INTO deletion_journal(deletion_id,user_id) VALUES($1,$2)`,[row.id,input.userId]);
   await enqueueJob(tx.client,{kind:'account.purge',resourceId:row.id,dueAt:actualNow});
   await appendAudit(tx.client,{actorKind:input.kind==='USER'?'USER':'SYSTEM',actorId:input.userId,action:'account.deletion_accepted',aggregateType:'deletion',aggregateId:row.id,requestId:input.requestId});

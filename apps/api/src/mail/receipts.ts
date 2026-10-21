@@ -1,14 +1,16 @@
+import {prelockDeletionMail,clearDeletionMail} from '@fancy/db';
 import type {Pool} from 'pg';
 import {withTransaction} from '../common/transaction.ts';
 import {DomainError} from '../common/errors.ts';
-export interface VerifiedMailReceipt {svixId:string;outboxId:string;providerEmailId:string;eventType:'email.sent'|'email.delivered'|'email.bounced';payloadSha256:string;occurredAt:string;signedAttemptAt:string}
+export interface VerifiedMailReceipt {svixId:string;outboxId:string;providerEmailId:string;eventType:'email.sent'|'email.delivered'|'email.bounced'|'email.suppressed';payloadSha256:string;occurredAt:string;signedAttemptAt:string}
 const conflict=()=>new DomainError('STATE_CONFLICT','Mail receipt evidence conflicts.');
 /** Durable dispatch admission only; signature evidence is still required to prove acceptance. */
 export async function admitResendDispatch(pool:Pool,input:{outboxId:string;claimToken:string;payloadSha256:string}):Promise<boolean>{
  return withTransaction(pool,async tx=>{
+  await prelockDeletionMail(tx.client,input.outboxId);
   const {rows}=await tx.client.query(`SELECT id FROM outbox WHERE id=$1 FOR UPDATE`,[input.outboxId]);
   if(!rows.length)return false;
-  const {rows:admitted}=await tx.client.query(`INSERT INTO mail_provider_messages(outbox_id,dispatch_hash) SELECT id,$2 FROM outbox WHERE id=$1 AND claim_token=$3 AND status='SENDING' AND lease_until>clock_timestamp() AND channel='EMAIL' ON CONFLICT(outbox_id) DO UPDATE SET dispatch_hash=mail_provider_messages.dispatch_hash WHERE mail_provider_messages.dispatch_hash=EXCLUDED.dispatch_hash RETURNING outbox_id`,[input.outboxId,input.payloadSha256,input.claimToken]);
+  const {rows:admitted}=await tx.client.query(`INSERT INTO mail_provider_messages(outbox_id,dispatch_hash) SELECT id,$2 FROM outbox WHERE id=$1 AND claim_token=$3 AND status='SENDING' AND lease_until>clock_timestamp() AND channel='EMAIL' AND (template NOT IN('deletion_received','deletion_completed') OR EXISTS(SELECT 1 FROM deletion_mail_envelopes e JOIN deletion_requests d ON d.id=e.deletion_id WHERE payload=jsonb_build_object('deletionId',e.deletion_id::text) AND recipient_id=e.user_id AND event_id=CASE WHEN template='deletion_received' THEN e.received_event_id ELSE e.completed_event_id END AND e.state='ACTIVE' AND e.expires_at>clock_timestamp() AND (template='deletion_received' OR d.status='COMPLETED'))) ON CONFLICT(outbox_id) DO UPDATE SET dispatch_hash=mail_provider_messages.dispatch_hash WHERE mail_provider_messages.dispatch_hash=EXCLUDED.dispatch_hash RETURNING outbox_id`,[input.outboxId,input.payloadSha256,input.claimToken]);
   return admitted.length===1;
  });
 }
@@ -16,6 +18,7 @@ export async function recordResendReceipt(pool:Pool,event:VerifiedMailReceipt):P
  try{return await withTransaction(pool,async tx=>{
   const {rows:[old]}=await tx.client.query<{payload_sha256:string}>(`SELECT payload_sha256 FROM mail_provider_receipts WHERE svix_id=$1`,[event.svixId]);
   if(old){if(old.payload_sha256!==event.payloadSha256)throw conflict();return 'duplicate';}
+  const deletionId=await prelockDeletionMail(tx.client,event.outboxId);
   const {rows:[outbox]}=await tx.client.query<{status:string;channel:string;attempts:number;provider_id:string|null}>(`SELECT status,channel,attempts,provider_id FROM outbox WHERE id=$1 FOR UPDATE`,[event.outboxId]);
   if(!outbox||outbox.channel!=='EMAIL'||outbox.attempts<1||!['SENDING','UNKNOWN','SENT','DEAD'].includes(outbox.status))return 'ignored';
   if(outbox.provider_id!==null&&outbox.provider_id!==event.providerEmailId)throw conflict();
@@ -25,6 +28,11 @@ export async function recordResendReceipt(pool:Pool,event:VerifiedMailReceipt):P
   await tx.client.query(`UPDATE mail_provider_messages SET provider_email_id=$2 WHERE outbox_id=$1`,[event.outboxId,event.providerEmailId]);
   const {rows}=await tx.client.query(`INSERT INTO mail_provider_receipts(svix_id,outbox_id,provider_email_id,event_type,payload_sha256,provider_occurred_at,signed_attempt_at) VALUES($1,$2,$3,$4,$5,$6,$7) ON CONFLICT(svix_id) DO NOTHING RETURNING svix_id`,[event.svixId,event.outboxId,event.providerEmailId,event.eventType,event.payloadSha256,event.occurredAt,event.signedAttemptAt]);
   if(!rows.length){const {rows:[existing]}=await tx.client.query<{payload_sha256:string}>(`SELECT payload_sha256 FROM mail_provider_receipts WHERE svix_id=$1`,[event.svixId]);if(existing?.payload_sha256!==event.payloadSha256)throw conflict();return 'duplicate';}
+  if(event.eventType==='email.suppressed'){
+   if(deletionId)await clearDeletionMail(tx.client,deletionId,'SUPPRESSED');
+   else await tx.client.query(`UPDATE outbox SET status=CASE WHEN status='SENT' THEN 'SENT' ELSE 'DEAD' END,claim_token=NULL,lease_until=NULL,last_error_code='RECIPIENT_UNAVAILABLE' WHERE id=$1`,[event.outboxId]);
+   return 'accepted';
+  }
   const column=event.eventType==='email.sent'?'sent_at':event.eventType==='email.delivered'?'delivered_at':'bounced_at';
   await tx.client.query(`UPDATE mail_provider_messages SET ${column}=LEAST(${column},$2::timestamptz) WHERE outbox_id=$1`,[event.outboxId,event.occurredAt]);
   // Clearing the claim atomically fences a send/lookup already in flight. Delivery's

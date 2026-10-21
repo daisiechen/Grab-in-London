@@ -1,9 +1,10 @@
+import {expireDeletionMail,isDeletionMail,resolveDeletionMail,type DeletionMailEncryption} from '@fancy/db';
 import {randomUUID} from 'node:crypto';
 import type {Pool} from 'pg';
 export type DeliveryOutcome={status:'SENT';providerId:string}|{status:'UNKNOWN'}|{status:'RETRY'};
 export interface MailProvider {
  kind:'test'|'real'|'unavailable';
- send(input:{idempotencyKey:string;email:string;template:string;refs:Record<string,string>;claimToken?:string}):Promise<DeliveryOutcome>;
+ send(input:{idempotencyKey:string;email:string;template:string;refs:Record<string,string>;claimToken?:string;dispatchDeadlineMs?:number}):Promise<DeliveryOutcome>;
  /** NOT_SENT is only valid with provider-authoritative proof, never a lookup timeout/not-found. */
  lookup(idempotencyKey:string):Promise<DeliveryOutcome|{status:'NOT_SENT'}>;
 }
@@ -22,7 +23,7 @@ export function logMailDead(event:MailDeadEvent){
  console.error(JSON.stringify({event:'mail_dead',outboxId:event.outboxId,errorCode:event.errorCode,attempts:event.attempts,lookupAttempts:event.lookupAttempts}));
 }
 type DeadRow=Pick<DeliveryRow,'id'|'attempts'|'lookup_attempts'>;
-export function mailDelivery(pool:Pool,provider:MailProvider,environment:'development'|'test'|'staging'|'production',options:{onDead?:(event:MailDeadEvent)=>void|Promise<void>}={}){
+export function mailDelivery(pool:Pool,provider:MailProvider,environment:'development'|'test'|'staging'|'production',options:{deletionMailEncryption?:DeletionMailEncryption|null;onDead?:(event:MailDeadEvent)=>void|Promise<void>}={}){
  if(provider.kind==='test'&&environment!=='test'&&environment!=='development')throw new Error('TEST_MAIL_FORBIDDEN');
  async function alert(row:DeadRow,errorCode:MailDeadCode){
   const event:MailDeadEvent=Object.freeze({event:'mail_dead',outboxId:row.id,errorCode,attempts:row.attempts,lookupAttempts:row.lookup_attempts});
@@ -36,7 +37,9 @@ export function mailDelivery(pool:Pool,provider:MailProvider,environment:'develo
   const {rows}=await pool.query<DeadRow>(`UPDATE outbox SET status='DEAD',last_error_code=$3,claim_token=NULL,lease_until=NULL,updated_at=clock_timestamp() WHERE id=$1 AND claim_token=$2 RETURNING id,attempts,lookup_attempts`,[id,token,errorCode]);
   for(const row of rows)await alert(row,errorCode);
  }
+ async function withMailTransaction<T>(work:(client:import('pg').PoolClient)=>Promise<T>){const client=await pool.connect();try{await client.query('BEGIN');const value=await work(client);await client.query('COMMIT');return value;}catch(error){await client.query('ROLLBACK');throw error;}finally{client.release();}}
  async function tick(){
+  await withMailTransaction(client=>expireDeletionMail(client,options.deletionMailEncryption??null));
   await pool.query(`UPDATE outbox SET status='UNKNOWN',claim_token=NULL,lease_until=NULL,next_attempt_at=clock_timestamp(),last_error_code='LEASE_EXPIRED' WHERE status='SENDING' AND lease_until<clock_timestamp()`);
   const {rows:exhausted}=await pool.query<DeadRow>(`UPDATE outbox SET status='DEAD',claim_token=NULL,lease_until=NULL,last_error_code='RETRY_EXHAUSTED',updated_at=clock_timestamp() WHERE status IN('PENDING','FAILED','UNKNOWN') AND (lease_until IS NULL OR lease_until<clock_timestamp()) AND (attempts>=8 OR lookup_attempts>=8 OR created_at<=clock_timestamp()-interval '24 hours') RETURNING id,attempts,lookup_attempts`);
   for(const row of exhausted)await alert(row,'RETRY_EXHAUSTED');
@@ -51,9 +54,11 @@ export function mailDelivery(pool:Pool,provider:MailProvider,environment:'develo
    if(row.status==='UNKNOWN'){
     try{outcome=await provider.lookup(row.id);}catch{outcome={status:'UNKNOWN'};}
    }else{
-    const {rows:[contact]}=await pool.query<{email:string}>(`SELECT c.email FROM private_contact c JOIN users u ON u.id=c.user_id WHERE c.user_id=$1 AND u.status='ACTIVE'`,[row.recipient_id]);
-    if(!contact){await markDead(row.id,token,'RECIPIENT_UNAVAILABLE');continue;}
-    try{outcome=await provider.send({idempotencyKey:row.id,email:contact.email,template:row.template,refs:row.payload,claimToken:row.claim_token});}catch{outcome={status:'UNKNOWN'};}
+    const beforeResolution=performance.now();
+    const deletionDestination=isDeletionMail(row.template)?await withMailTransaction(client=>resolveDeletionMail(client,row,options.deletionMailEncryption??null)):null;
+    const email=isDeletionMail(row.template)?deletionDestination?.email:(await pool.query<{email:string}>(`SELECT c.email FROM private_contact c JOIN users u ON u.id=c.user_id WHERE c.user_id=$1 AND u.status='ACTIVE'`,[row.recipient_id])).rows[0]?.email;
+    if(!email){await markDead(row.id,token,'RECIPIENT_UNAVAILABLE');continue;}
+    try{outcome=await provider.send({idempotencyKey:row.id,email,template:row.template,refs:row.payload,claimToken:row.claim_token,...(deletionDestination?{dispatchDeadlineMs:beforeResolution+deletionDestination.remainingMs}:{})});}catch{outcome={status:'UNKNOWN'};}
    }
    const status=outcome.status==='SENT'?'SENT':outcome.status==='UNKNOWN'?'UNKNOWN':outcome.status==='NOT_SENT'?'PENDING':'FAILED';
    await pool.query(`UPDATE outbox SET status=$3,provider_id=$4,claim_token=NULL,lease_until=NULL,updated_at=clock_timestamp(),next_attempt_at=clock_timestamp()+make_interval(secs=>$5),last_error_code=$6 WHERE id=$1 AND claim_token=$2`,[row.id,token,status,outcome.status==='SENT'?outcome.providerId:null,Math.min(3600,30*2**Math.max(row.attempts,row.lookup_attempts)),status==='SENT'?null:status==='UNKNOWN'?'PROVIDER_UNKNOWN_OUTCOME':'PROVIDER_UNAVAILABLE']);

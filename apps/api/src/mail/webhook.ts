@@ -18,7 +18,7 @@ export function verifyResendWebhook(raw:Buffer,headers:Record<string,string|stri
  if(!verified)throw invalid();
  let payload:unknown;try{payload=JSON.parse(raw.toString('utf8'));}catch{throw invalid();}
  if(!payload||typeof payload!=='object'||!('type'in payload)||typeof payload.type!=='string')throw invalid();
- if(!['email.sent','email.delivered','email.bounced'].includes(payload.type))return null;
+ if(!['email.sent','email.delivered','email.bounced','email.suppressed'].includes(payload.type))return null;
  if(!('data'in payload)||!payload.data||typeof payload.data!=='object'||!('created_at'in payload)||typeof payload.created_at!=='string'||payload.created_at.length>64||!Number.isFinite(Date.parse(payload.created_at)))throw invalid();
  const data=payload.data;if(!('email_id'in data)||typeof data.email_id!=='string'||!UUID.test(data.email_id))throw invalid();
  if(!('tags'in data)||!data.tags||typeof data.tags!=='object'||Array.isArray(data.tags)||!('outbox_id'in data.tags))return null;

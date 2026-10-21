@@ -97,3 +97,6 @@ it('actual Resend adapter persists claim-bound admission and receives a signed c
  const pending=mailDelivery(h.db.pool,adapter,'test').tick();try{await entry;expect((await post(raw(f.id,providerId))).statusCode).toBe(200);}finally{release();await pending;}
  expect(fetches).toBe(1);expect(await row(f.id)).toMatchObject({status:'SENT',provider_id:providerId,attempts:1,claim_token:null});await mailDelivery(h.db.pool,adapter,'test').tick();expect(fetches).toBe(1);
 });
+it('accepts only signed suppression evidence, persists enum without raw recipient and stops further delivery',async()=>{
+ const f=await queued(),provider=randomUUID(),payload=raw(f.id,provider,'email.suppressed');expect((await post(payload,{...signed(payload),'svix-signature':'v1,AAAA'})).statusCode).toBe(400);expect((await row(f.id)).status).toBe('UNKNOWN');expect((await post(payload)).statusCode).toBe(200);expect(await row(f.id)).toMatchObject({status:'DEAD',claim_token:null,last_error_code:'RECIPIENT_UNAVAILABLE'});const receipts=(await h.db.pool.query(`SELECT * FROM mail_provider_receipts WHERE outbox_id=$1`,[f.id])).rows;expect(receipts[0].event_type).toBe('email.suppressed');expect(JSON.stringify(receipts)).not.toContain('PRIVATE_');
+});

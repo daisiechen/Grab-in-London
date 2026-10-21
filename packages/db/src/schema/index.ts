@@ -16,3 +16,4 @@ export * from './deletions.ts';
 export * from './exports.ts';
 export * from './admin-snapshots.ts';
 export * from './mail-receipts.ts';
+export * from './deletion-mail.ts';

@@ -1,3 +1,4 @@
+import {enqueueDeletionMail} from '@fancy/db';
 import {purgeKnownSupportText} from '../../../api/src/support/privacy.ts';
 import type {Pool} from 'pg';
 import {withTransaction} from '../../../api/src/common/transaction.ts';
@@ -45,7 +46,7 @@ export function deletionHandler(pool:Pool,provider:DeletionProvider|DeletionStep
    await tx.client.query(`DELETE FROM session_families WHERE user_id=$1`,[hint.user_id]);
    await tx.client.query(`DELETE FROM roles WHERE user_id=$1`,[hint.user_id]);
    await tx.client.query(`DELETE FROM support_case_grants WHERE user_id=$1`,[hint.user_id]);
-   await tx.client.query(`UPDATE outbox SET status='DEAD',last_error_code='RECIPIENT_UNAVAILABLE',claim_token=NULL,lease_until=NULL WHERE recipient_id=$1 AND status<>'SENT'`,[hint.user_id]);
+   await tx.client.query(`UPDATE outbox SET status='DEAD',last_error_code='RECIPIENT_UNAVAILABLE',claim_token=NULL,lease_until=NULL WHERE recipient_id=$1 AND status<>'SENT' AND NOT(template IN('deletion_received','deletion_completed') AND payload=jsonb_build_object('deletionId',$2::text) AND EXISTS(SELECT 1 FROM deletion_mail_envelopes e WHERE e.deletion_id=$2::uuid AND e.user_id=$1 AND event_id=CASE WHEN template='deletion_received' THEN e.received_event_id ELSE e.completed_event_id END AND e.state='ACTIVE' AND e.expires_at>clock_timestamp()))`,[hint.user_id,job.resourceId]);
    await tx.client.query(`UPDATE deletion_requests SET status='PROCESSING',provider_steps=provider_steps||'{"local":"COMPLETED","supportText":"KNOWN_LINKS_REDACTED","supportTextScope":"UNSTRUCTURED_ASSOCIATIONS_UNVERIFIED"}'::jsonb WHERE id=$1`,[job.resourceId]);
   });
   // Remote calls are outside SQL locks. They use the stable deletion ID for provider dedupe.
@@ -61,6 +62,7 @@ export function deletionHandler(pool:Pool,provider:DeletionProvider|DeletionStep
     await tx.client.query(`UPDATE users SET status='DELETED',updated_at=clock_timestamp() WHERE id=$1`,[hint.user_id]);
    }
    await tx.client.query(`UPDATE deletion_requests SET status=$2,completed_at=CASE WHEN $2='COMPLETED' THEN clock_timestamp() ELSE NULL END,provider_steps=provider_steps||jsonb_build_object('identity',$3::text,'retention',$4::text) WHERE id=$1`,[job.resourceId,completed?'COMPLETED':'NEEDS_SUPPORT',remote,policyApproved?'APPROVED':'NEEDS_APPROVAL']);
+   if(completed)await enqueueDeletionMail(tx.client,job.resourceId,'deletion_completed');
   });
  };
 }

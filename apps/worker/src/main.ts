@@ -33,7 +33,7 @@ export function createWorkerRuntime(pool:Pool,config:CoreConfig){
   'meal.close':lifecycle,'meal.start':lifecycle,'meal.end':lifecycle,
   'account.purge':deletionHandler(pool,deletionStepsFor(pool,config),deletionPolicyApproved(config)),
  },onDead:(job,errorCode)=>console.error(JSON.stringify({event:'job_dead',...job,errorCode}))});
- const mail=mailDelivery(pool,mailProviderFor(config,pool),config.environment,{onDead:logMailDead});
+ const mail=mailDelivery(pool,mailProviderFor(config,pool),config.environment,{onDead:logMailDead,deletionMailEncryption:config.deletionMailEncryption});
  let lastSnapshot=0;
  async function tick(){
   if(!await recoveryReady(pool))return {claimed:0,done:0,retried:0,dead:0,lost:0};

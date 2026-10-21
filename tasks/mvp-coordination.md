@@ -532,3 +532,12 @@
 
 - 按用户批准的两类删除通知最长7天方案，新增独立DELETION_MAIL_KEY_VERSION/DELETION_MAIL_KEYS_JSON配置：默认null，不生成或复用session/provider密钥；版本与1至8把canonical base64 32字节AES密钥严格校验，错误不回显值。仅配置准备，不代表通知已实现、真实发信授权或完整隐私门槛批准。
 - config33项、配置类型/lint、workspace release11项及diff验证通过；实际私有配置未修改。加密envelope、生产者/过期清理/发送目的校验仍由唯一owner实施，尚未闭环。QA已提交22e665f并明确释放Git窗口；F42正式cd69正常签名包已交QA实际验收，不将构建当功能通过。
+
+
+## 删除通知加密保留与供应商抑制（本地验证）
+
+- 按用户批准，两通知复用既有refs-only outbox、dispatch admission和签名receipt。0025新增目的隔离AES-256-GCM邮箱副本，仅实时USER受理捕获已验证邮箱；AAD绑定用户、请求、接受/截止与两固定模板，RESTORE不重捕获。受理事务入列，真实COMPLETED才入完成通知，缺key保匿名回执，缺整体policy或remote证明不发虚假完成。
+- 截止固定168小时（calendar7days跨London回冬令时可能169h）；DB时间检查，运行tick过期清密文，provider不可用也执行清理。普通ACTIVE收件人条件不放宽，purge仅精确保留本请求/用户/event两通知；UNKNOWN不盲目重发。
+- 官方email.suppressed仅受验签名及dispatch/provider映射接受，停止本目的两通知并清密文，不存reason原文/email；统一envelope再按ID锁outbox，回执清claim围栏旧writer。DB锁后复查TTL，剩余时长保守转performance期限，在Resend admission后fetch前再查。DB与HTTP不可能原子，不能撤回有效期内已发请求；物理清理依服务运行，停机不保证168h瞬时清，恢复仍拒超期发送。
+- root冻结core:check退出0，unit364/DB147/API199/release23全通过，日志/private/tmp/fancy-deletion-mail-frozen-{check,core}.log；文档3/diff绿。首次未提权有4项CLI loopback环境红，保留fancy-deletion-mail-final-core日志；未改断言，允许本机监听的完整重跑全绿。定向DB33/API22/unit33覆盖DST、双连接锁等待、抑制/到期、缺key与恢复。未改Web/native，未重跑未变UI全量。
+- 未生成或保存真实加密key、未配置真实webhook、未发真实邮件或远端删除；迁移仅新测试库，不动QA及真实联调库。QA继续DM撤回/F42；clone工具仅准备和自建库验证，尚无安全checkpoint，禁止源61973导出/复制。整体生产验收未闭环。

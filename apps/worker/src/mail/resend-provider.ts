@@ -48,6 +48,9 @@ export class ResendMailProvider implements MailProvider {
    if(!input.claimToken||!UUID.test(input.claimToken))return {status:'UNKNOWN'};
    try{if(!await this.options.onDispatch({outboxId:input.idempotencyKey,claimToken:input.claimToken,payloadSha256:createHash('sha256').update(body).digest('hex')}))return {status:'UNKNOWN'};}catch{return {status:'UNKNOWN'};}
   }
+  // Monotonic budget originates from DB remaining TTL before recipient resolution.
+  // It is deliberately conservative across lock/query/commit delays and ignores wall-clock skew.
+  if(input.dispatchDeadlineMs!==undefined&&(!Number.isFinite(input.dispatchDeadlineMs)||performance.now()>=input.dispatchDeadlineMs))return {status:'RETRY'};
   let response:Response;
   try{response=await this.doFetch('https://api.resend.com/emails',{method:'POST',redirect:'error',headers:{Authorization:'Bearer '+this.options.apiKey,'Content-Type':'application/json','Idempotency-Key':input.idempotencyKey},body,signal:AbortSignal.timeout(this.options.timeoutMs??10000)});}catch{return {status:'UNKNOWN'};}
   // A response rejecting admission is retryable by the existing bounded delivery policy.
