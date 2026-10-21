@@ -99,16 +99,27 @@ export class AssistantController {
    if(plan.mealIds.some(mealId=>!suppliedIds.includes(mealId)&&!turn.input.includes(mealId)))throw new AssistantError('AI_CONFLICT');
    const query=applyPlan(plan,turn.input,turn.appliedFilters??{},previous,this.areas,new Date());
    let result:AssistantResult;let facts:PublicFacts[]=[];let targetVersion:string|null=null;
+   let searchDates:readonly string[]|undefined;
    let introduction:OwnPublicIntroduction|null=null;
    let ownApplication:{id:string;state:string;version:string}|null=null;
    const ambiguous=query.clarification||plan.intent==='CLARIFY';
    if(ambiguous)result=clarification();
    else if(plan.intent==='OUT_OF_SCOPE')result={replyText:'I can help find, compare and explain meals or prepare a text candidate. You remain in control of applying, booking, paying and sending.',cards:[]};
    else if(plan.intent==='SEARCH'){
-    const base=rankCandidates(await publicCandidates(this.pool,binding.subject,query.hard.dates),query.hard,prefs,query.conditions.cleared as (keyof Preferences)[]);
+    searchDates=query.hard.dates;
+    if(!searchDates?.length){
+     // Capture the default calendar window once from the same DB clock used by candidate
+     // eligibility. Keep these dates through final revalidation, even across London midnight.
+     const {rows:[window]}=await this.pool.query<{dates:string[]}>(`WITH window_start AS MATERIALIZED(SELECT (clock_timestamp() AT TIME ZONE 'Europe/London')::date first_day)
+       SELECT ARRAY(SELECT to_char(first_day+n,'YYYY-MM-DD') FROM generate_series(0,6) AS days(n) ORDER BY n) dates FROM window_start`);
+     if(!window||window.dates.length!==7)throw new AssistantError('AI_UNAVAILABLE');
+     searchDates=window.dates;
+    }
+    const dateLabel=query.hard.dates?.length?` for ${query.hard.dates.join(', ')}`:` from ${searchDates[0]} through ${searchDates[6]} (Europe/London, including both dates)`;
+    const base=rankCandidates(await publicCandidates(this.pool,binding.subject,searchDates),query.hard,prefs,query.conditions.cleared as (keyof Preferences)[]);
     const ranked=await filterPublicCandidates(base,query.hard,this.venueDisplay);
     const candidates=ranked.slice(0,20);const chosen=candidates.slice(0,3);facts=chosen.map(c=>({...c,status:'OPEN',closesAt:''}));
-    result={replyText:chosen.length?`These public meals match your confirmed conditions${query.hard.dates?.length?` for ${query.hard.dates.join(', ')}`:' in the next 7 London calendar days (including today)'}. Saved preferences affect order only. Availability may change.`:'No eligible public meals match these conditions. You can choose which filter to change.',cards:chosen.map(card)};
+    result={replyText:chosen.length?`These public meals match your confirmed conditions${dateLabel}. Saved preferences affect order only. Availability may change.`:`No eligible public meals match these conditions${dateLabel}. You can choose which filter to change.`,cards:chosen.map(card)};
    }else if(plan.intent==='COMPARE'||plan.intent==='EXPLAIN'){
     const ids=this.selectedIds(plan,turn);
     if(!ids.length)result=clarification(plan.intent==='EXPLAIN'?turn.input:'');
@@ -154,7 +165,7 @@ export class AssistantController {
      const latest=await publicFacts(c,facts.map(f=>f.id));
      if(facts.some(f=>!latest.some(x=>x.id===f.id&&x.version===f.version)))throw new AssistantError('AI_SUPERSEDED');
      if(plan.intent==='SEARCH'){
-      const eligible=await publicCandidates(c,binding.subject,query.hard.dates);
+      const eligible=await publicCandidates(c,binding.subject,searchDates);
       if(result.cards.some(f=>!eligible.some(x=>x.id===f.mealId)))throw new AssistantError('AI_SUPERSEDED');
      }
     }

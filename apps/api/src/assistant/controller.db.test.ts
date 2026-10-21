@@ -1,22 +1,24 @@
 import {randomUUID} from 'node:crypto';
-import {afterAll,beforeAll,beforeEach,describe,expect,inject,it} from 'vitest';
-import {migrate} from '@fancy/db';
+import {afterAll,beforeAll,beforeEach,describe,expect,inject,it,vi} from 'vitest';
+import {createPool,migrate,type Pool} from '@fancy/db';
 import {createMigratedDatabase,type MigratedDatabase} from '@fancy/testkit/db';
 import {AssistantRuntime,emptyPreferences,mockProvider,type SessionBinding} from '../../../../packages/assistant/src/index.ts';
 import {AssistantController,type AssistantTurn} from './controller.ts';
 import {SessionService,createGuest} from './sessions.ts';
 import {publicCandidates,publicFacts,type VenueDisplay} from './context.ts';
+import * as publicContext from './context.ts';
 let db:MigratedDatabase;let userId:string;let hostId:string;
 beforeAll(async()=>{db=await createMigratedDatabase(inject('pgServerUrl'),migrate);});afterAll(async()=>{await db.drop();});
 beforeEach(async()=>{userId=randomUUID();hostId=randomUUID();await db.pool.query(`INSERT INTO users(id) VALUES($1),($2)`,[userId,hostId]);});
 const plan=(intent:string,patches:unknown[]=[],mealIds:string[]=[])=>({intent,patches,mealIds});
-async function setup(outputs:unknown[],preferences=emptyPreferences(),venueDisplay?:VenueDisplay){
- const captured:string[]=[];const runtime=new AssistantRuntime();const sessions=new SessionService(db.pool,runtime);
+async function setup(outputs:unknown[],preferences=emptyPreferences(),venueDisplay?:VenueDisplay,options:{pool?:Pool;now?:()=>number}={}){
+ const pool=options.pool??db.pool;
+ const captured:string[]=[];const runtime=new AssistantRuntime(options.now?{now:options.now}:{});const sessions=new SessionService(pool,runtime);
  const provider=mockProvider('test',async request=>{captured.push(request.input);return {parsed:outputs.shift(),usage:{inputTokens:10,outputTokens:10},providerRequestId:`synthetic-${randomUUID()}`};});
- const c=new AssistantController({pool:db.pool,sessions,secret:'synthetic-hmac-key-for-local-tests-only-123',allowedAreas:['soho'],provider,price:{version:'synthetic-only-CNY',inputMicroCnyPerMillion:1_000_000n,outputMicroCnyPerMillion:1_000_000n,verified:true,validUntil:Date.now()+60_000},countInputTokens:()=>1024,...(venueDisplay?{venueDisplay}:{})});
+ const c=new AssistantController({pool,sessions,secret:'synthetic-hmac-key-for-local-tests-only-123',allowedAreas:['soho'],provider,price:{version:'synthetic-only-CNY',inputMicroCnyPerMillion:1_000_000n,outputMicroCnyPerMillion:1_000_000n,verified:true,validUntil:Date.now()+60_000},countInputTokens:()=>1024,...(venueDisplay?{venueDisplay}:{})});
  const pref=await c.preferences.replace(userId,'0',preferences,true);
  const subject=`user:${userId}`;const s=await sessions.create(subject);const b:SessionBinding={subject,deviceToken:s.deviceToken,generation:1,preferenceEpoch:pref.epoch};
- const {rows:[clock]}=await db.pool.query(`SELECT 'D:'||to_char(clock_timestamp() AT TIME ZONE 'Europe/London','YYYY-MM-DD') day_period,'M:'||to_char(clock_timestamp() AT TIME ZONE 'Europe/London','YYYY-MM') month_period`);
+ const {rows:[clock]}=await pool.query(`SELECT 'D:'||to_char(clock_timestamp() AT TIME ZONE 'Europe/London','YYYY-MM-DD') day_period,'M:'||to_char(clock_timestamp() AT TIME ZONE 'Europe/London','YYYY-MM') month_period`);
  await c.budget.configure(clock.day_period,10_000_000n,100,true);await c.budget.configure(clock.month_period,10_000_000n,100,true);
  const turn=(input:string,extra:Partial<AssistantTurn>={}):AssistantTurn=>({requestId:randomUUID(),generation:1,input,sourcePage:'DISCOVER',queryVersion:'0',preferenceVersion:'1',contextVersion:'0',...extra});
  const run=async(input:AssistantTurn)=>{
@@ -34,6 +36,42 @@ async function meal(budget=3000){
 }
 const noWrites=async()=>({applications:Number((await db.pool.query('SELECT count(*) n FROM applications')).rows[0].n),messages:Number((await db.pool.query('SELECT count(*) n FROM messages')).rows[0].n),meals:Number((await db.pool.query('SELECT count(*) n FROM meals')).rows[0].n)});
 describe('controlled AI orchestration (not real-provider evaluation)',()=>{
+ it('labels the actual default London date window for matching searches',async()=>{
+  const target=await meal();const h=await setup([plan('SEARCH')]);
+  try{
+  const {rows:[window]}=await db.pool.query(`WITH day AS MATERIALIZED(SELECT (clock_timestamp() AT TIME ZONE 'Europe/London')::date first) SELECT first::text start,(first+6)::text finish FROM day`);
+  const match=await h.run(h.turn('Find meals'));
+  expect(match.state).toBe('SUCCEEDED');expect(match.result?.cards.length).toBeGreaterThan(0);
+  expect(match.result?.replyText).toContain(window.start);expect(match.result?.replyText).toContain(window.finish);
+  }finally{await db.pool.query('DELETE FROM meals WHERE id=$1',[target]);}
+ });
+ it('labels the same actual default window even when no public meal matches',async()=>{
+  const h=await setup([plan('SEARCH')]);
+  const {rows:[window]}=await db.pool.query(`WITH day AS MATERIALIZED(SELECT (clock_timestamp() AT TIME ZONE 'Europe/London')::date first) SELECT first::text start,(first+6)::text finish FROM day`);
+  const empty=await h.run(h.turn('Find meals',{appliedFilters:{budgetMaxPence:1}}));
+  expect(empty.state).toBe('SUCCEEDED');expect(empty.result?.cards).toEqual([]);
+  expect(empty.result?.replyText).toContain(window.start);expect(empty.result?.replyText).toContain(window.finish);
+ });
+ it('retains the same default window through a London midnight during final revalidation',async()=>{
+  let instant=Date.parse('2030-11-01T23:59:59.000Z');
+  await db.pool.query(`CREATE SCHEMA ai_search_clock; CREATE TABLE ai_search_clock.state(instant timestamptz NOT NULL); INSERT INTO ai_search_clock.state VALUES('2030-11-01T23:59:59.000Z'); CREATE FUNCTION ai_search_clock.clock_timestamp() RETURNS timestamptz LANGUAGE sql VOLATILE AS 'SELECT instant FROM ai_search_clock.state'`);
+  const url=new URL(db.url);url.searchParams.set('options','-c search_path=ai_search_clock,pg_catalog,public');
+  const pool=createPool(url.toString());const reads=vi.spyOn(publicContext,'publicCandidates');
+  try{
+   const inside=await meal(),outside=await meal();
+   for(const [id,date] of [[inside,'2030-11-07'],[outside,'2030-11-08']])await db.pool.query(`UPDATE meals SET starts_at=($2||'T19:00:00Z')::timestamptz,closes_at=($2||'T18:00:00Z')::timestamptz,scheduled_end_at=($2||'T21:00:00Z')::timestamptz,start_local_date=$2,close_local_date=$2 WHERE id=$1`,[id,date]);
+   const h=await setup([plan('SEARCH')],emptyPreferences(),async()=>{
+    instant=Date.parse('2030-11-02T00:00:01.000Z');await db.pool.query(`UPDATE ai_search_clock.state SET instant=$1`,[new Date(instant)]);
+    return {name:'Synthetic fixture',location:{lat:51.5,lng:0}};
+   },{pool,now:()=>instant});
+   const result=await h.run(h.turn('Find meals',{appliedFilters:{bounds:{north:52,south:51,east:1,west:-1}}}));
+   expect(result.state).toBe('SUCCEEDED');expect(result.result?.cards.map(c=>c.mealId)).toEqual([inside]);
+   expect(result.result?.replyText).toContain('2030-11-01');expect(result.result?.replyText).toContain('2030-11-07');expect(result.result?.replyText).not.toContain('2030-11-08');
+   const dates=Array.from({length:7},(_,index)=>`2030-11-0${index+1}`);
+   expect(reads.mock.calls.map(call=>call[2])).toEqual([dates,dates]);
+   expect(h.runtime.conditions(h.s.id,h.b).hard.dates).toBeUndefined();
+  }finally{reads.mockRestore();await pool.end();await db.pool.query('DROP SCHEMA ai_search_clock CASCADE');}
+ });
  it('clarifies a missing explain target in the current input language without reusing the previous meal',async()=>{
   const target=await meal();const h=await setup([plan('EXPLAIN',[],[target]),plan('EXPLAIN'),plan('EXPLAIN')]);const before=await noWrites();
   try{

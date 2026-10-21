@@ -350,3 +350,9 @@
 - 同venueRef编辑保留meal原区域快照，实际换venue才用新区域，避免仅改文案暗改统计维度。十三生产/自有测试文件由backend唯一负责，web只读交叉审无新P1/P2，提出code64长度问题已修正；真实London覆盖不作通过声明。
 - 自有15unit、26关联API与10迁移DB通过；根冻结整合全core unit298/DB130/API163/release18通过（/private/tmp/fancy-f24-f26-core.log），core:check通过（/private/tmp/fancy-f24-f26-check.log）。F25/F26分别冻结另批提交；F27新发现页切片尚未加入上述冻结整合，不混称其通过。
 - QA在bf5031a保留F24–F27原红并释放Git窗口，根冻结Python77通过（/private/tmp/fancy-f24-f26-python.log），独测正式172 PASS /29 NOT_RUN /4 FAIL /12 BLOCKED；开发不抢先关闭。F24只十三文件+本记录提交，其他生产切片和研究/QA修改不混入。
+
+## QA-F25 默认AI搜索显示实际日期窗口（2026-10-21）
+
+- 原R131默认搜索仅显示next 7 days，不提供实际伦敦起止。仅SEARCH默认分支从一个MATERIALIZED DB clock快照得到七个YYYY-MM-DD，初查与提交复验共用同一数组，成功与无结果均显示含首尾的实际窗口；不写hardconditions，不改变自然周/显式日期和即时资格判断。
+- 自有新增三项修前三红、修后controller PG17绿，含真实DB从午夜前推进两秒后初查/finish日期仍一致；根原QA搜索矩阵22绿（/private/tmp/fancy-f25-original-matrix.log）。全core/check/Python77为F24–F26冻结整合结果，见本批记录，不将分commit误当代码变动重跑。
+- F24先8c3a947独立同步，本切片仅controller、自有DB测试与本记录；正式缺陷关闭交QA固定SHA复验，不含F27后续分页改动。
