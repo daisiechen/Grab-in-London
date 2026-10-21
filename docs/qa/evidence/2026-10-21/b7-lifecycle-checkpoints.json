@@ -1,0 +1,299 @@
+{
+  "schemaVersion": 1,
+  "testedCommit": "4a0c66f838cb73aa5ac9e2a2ac74662ce2462c11",
+  "fixtureClockOnly": true,
+  "publicMealTiming": {
+    "id": "2ff6200b-a688-4421-b133-c064fa456503",
+    "startsAt": {
+      "instant": "2026-10-22T17:00:00.000Z",
+      "localDate": "2026-10-22",
+      "localTime": "18:00",
+      "timeZone": "Europe/London",
+      "utcOffsetMinutes": 60
+    },
+    "closesAt": {
+      "instant": "2026-10-22T16:00:00.000Z",
+      "localDate": "2026-10-22",
+      "localTime": "17:00",
+      "timeZone": "Europe/London",
+      "utcOffsetMinutes": 60
+    },
+    "scheduledEndAt": "2026-10-22T19:00:00.000Z",
+    "status": "OPEN",
+    "version": "1",
+    "confirmedCount": 1
+  },
+  "checkpoints": [
+    {
+      "ownedClockDatabaseVerified": true,
+      "mealId": "2ff6200b-a688-4421-b133-c064fa456503",
+      "marks": [],
+      "startRoster": [],
+      "jobs": [
+        {
+          "kind": "meal.close",
+          "state": "PENDING",
+          "due_at": "2026-10-22T17:00:00+01:00",
+          "attempts": 0
+        },
+        {
+          "kind": "meal.end",
+          "state": "PENDING",
+          "due_at": "2026-10-22T20:00:00+01:00",
+          "attempts": 0
+        },
+        {
+          "kind": "meal.start",
+          "state": "PENDING",
+          "due_at": "2026-10-22T18:00:00+01:00",
+          "attempts": 0
+        }
+      ],
+      "checkpoint": "2026-10-21T16:11:56.066Z",
+      "label": "before-boundaries"
+    },
+    {
+      "ownedClockDatabaseVerified": true,
+      "mealId": "2ff6200b-a688-4421-b133-c064fa456503",
+      "marks": [],
+      "startRoster": [],
+      "jobs": [
+        {
+          "kind": "meal.close",
+          "state": "PENDING",
+          "due_at": "2026-10-22T17:00:00+01:00",
+          "attempts": 0
+        },
+        {
+          "kind": "meal.end",
+          "state": "PENDING",
+          "due_at": "2026-10-22T20:00:00+01:00",
+          "attempts": 0
+        },
+        {
+          "kind": "meal.start",
+          "state": "PENDING",
+          "due_at": "2026-10-22T18:00:00+01:00",
+          "attempts": 0
+        }
+      ],
+      "checkpoint": "2026-10-22T15:59:59.999Z",
+      "mealStatus": "OPEN",
+      "confirmedCount": 2,
+      "label": "close-minus1"
+    },
+    {
+      "ownedClockDatabaseVerified": true,
+      "mealId": "2ff6200b-a688-4421-b133-c064fa456503",
+      "marks": [
+        {
+          "kind": "CLOSE",
+          "due_at": "2026-10-22T17:00:00+01:00"
+        }
+      ],
+      "startRoster": [],
+      "jobs": [
+        {
+          "kind": "meal.close",
+          "state": "DONE",
+          "due_at": "2026-10-22T17:00:00+01:00",
+          "attempts": 1
+        },
+        {
+          "kind": "meal.end",
+          "state": "PENDING",
+          "due_at": "2026-10-22T20:00:00+01:00",
+          "attempts": 0
+        },
+        {
+          "kind": "meal.start",
+          "state": "PENDING",
+          "due_at": "2026-10-22T18:00:00+01:00",
+          "attempts": 0
+        }
+      ],
+      "checkpoint": "2026-10-22T16:00:00.000Z",
+      "mealStatus": "OPEN",
+      "confirmedCount": 2,
+      "label": "close-exact"
+    },
+    {
+      "ownedClockDatabaseVerified": true,
+      "mealId": "2ff6200b-a688-4421-b133-c064fa456503",
+      "marks": [
+        {
+          "kind": "CLOSE",
+          "due_at": "2026-10-22T17:00:00+01:00"
+        }
+      ],
+      "startRoster": [],
+      "jobs": [
+        {
+          "kind": "meal.close",
+          "state": "DONE",
+          "due_at": "2026-10-22T17:00:00+01:00",
+          "attempts": 1
+        },
+        {
+          "kind": "meal.end",
+          "state": "PENDING",
+          "due_at": "2026-10-22T20:00:00+01:00",
+          "attempts": 0
+        },
+        {
+          "kind": "meal.start",
+          "state": "PENDING",
+          "due_at": "2026-10-22T18:00:00+01:00",
+          "attempts": 0
+        }
+      ],
+      "checkpoint": "2026-10-22T16:59:59.999Z",
+      "label": "start-minus1"
+    },
+    {
+      "ownedClockDatabaseVerified": true,
+      "mealId": "2ff6200b-a688-4421-b133-c064fa456503",
+      "marks": [
+        {
+          "kind": "CLOSE",
+          "due_at": "2026-10-22T17:00:00+01:00"
+        },
+        {
+          "kind": "START",
+          "due_at": "2026-10-22T18:00:00+01:00"
+        }
+      ],
+      "startRoster": [
+        {
+          "user_id": "2e86cbdb-51e8-40d5-ae0e-bf543c2cd6f7",
+          "starts_at": "2026-10-22T18:00:00+01:00"
+        },
+        {
+          "user_id": "44f4ac1a-1ee8-4b2b-a65f-9322b402e183",
+          "starts_at": "2026-10-22T18:00:00+01:00"
+        }
+      ],
+      "jobs": [
+        {
+          "kind": "meal.close",
+          "state": "DONE",
+          "due_at": "2026-10-22T17:00:00+01:00",
+          "attempts": 1
+        },
+        {
+          "kind": "meal.end",
+          "state": "PENDING",
+          "due_at": "2026-10-22T20:00:00+01:00",
+          "attempts": 0
+        },
+        {
+          "kind": "meal.start",
+          "state": "DONE",
+          "due_at": "2026-10-22T18:00:00+01:00",
+          "attempts": 1
+        }
+      ],
+      "checkpoint": "2026-10-22T17:00:00.000Z",
+      "label": "start-exact"
+    },
+    {
+      "ownedClockDatabaseVerified": true,
+      "mealId": "2ff6200b-a688-4421-b133-c064fa456503",
+      "marks": [
+        {
+          "kind": "CLOSE",
+          "due_at": "2026-10-22T17:00:00+01:00"
+        },
+        {
+          "kind": "START",
+          "due_at": "2026-10-22T18:00:00+01:00"
+        }
+      ],
+      "startRoster": [
+        {
+          "user_id": "2e86cbdb-51e8-40d5-ae0e-bf543c2cd6f7",
+          "starts_at": "2026-10-22T18:00:00+01:00"
+        },
+        {
+          "user_id": "44f4ac1a-1ee8-4b2b-a65f-9322b402e183",
+          "starts_at": "2026-10-22T18:00:00+01:00"
+        }
+      ],
+      "jobs": [
+        {
+          "kind": "meal.close",
+          "state": "DONE",
+          "due_at": "2026-10-22T17:00:00+01:00",
+          "attempts": 1
+        },
+        {
+          "kind": "meal.end",
+          "state": "PENDING",
+          "due_at": "2026-10-22T20:00:00+01:00",
+          "attempts": 0
+        },
+        {
+          "kind": "meal.start",
+          "state": "DONE",
+          "due_at": "2026-10-22T18:00:00+01:00",
+          "attempts": 1
+        }
+      ],
+      "checkpoint": "2026-10-22T18:59:59.999Z",
+      "mealStatus": "OPEN",
+      "label": "end-minus1"
+    },
+    {
+      "ownedClockDatabaseVerified": true,
+      "mealId": "2ff6200b-a688-4421-b133-c064fa456503",
+      "marks": [
+        {
+          "kind": "CLOSE",
+          "due_at": "2026-10-22T17:00:00+01:00"
+        },
+        {
+          "kind": "END",
+          "due_at": "2026-10-22T20:00:00+01:00"
+        },
+        {
+          "kind": "START",
+          "due_at": "2026-10-22T18:00:00+01:00"
+        }
+      ],
+      "startRoster": [
+        {
+          "user_id": "2e86cbdb-51e8-40d5-ae0e-bf543c2cd6f7",
+          "starts_at": "2026-10-22T18:00:00+01:00"
+        },
+        {
+          "user_id": "44f4ac1a-1ee8-4b2b-a65f-9322b402e183",
+          "starts_at": "2026-10-22T18:00:00+01:00"
+        }
+      ],
+      "jobs": [
+        {
+          "kind": "meal.close",
+          "state": "DONE",
+          "due_at": "2026-10-22T17:00:00+01:00",
+          "attempts": 1
+        },
+        {
+          "kind": "meal.end",
+          "state": "DONE",
+          "due_at": "2026-10-22T20:00:00+01:00",
+          "attempts": 1
+        },
+        {
+          "kind": "meal.start",
+          "state": "DONE",
+          "due_at": "2026-10-22T18:00:00+01:00",
+          "attempts": 1
+        }
+      ],
+      "checkpoint": "2026-10-22T19:00:00.000Z",
+      "mealStatus": "COMPLETED",
+      "confirmedCount": 2,
+      "label": "end-exact"
+    }
+  ]
+}

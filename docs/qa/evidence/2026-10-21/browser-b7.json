@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "observations": [
+    {
+      "id": "B7-T001",
+      "status": "passed",
+      "title": "Same fresh clock meal created, authenticated applicant preserved, approved and explicit group message",
+      "steps": [
+        "Newemptyclockrig hostUIregister/profile/Create4steps publishes targetmeal",
+        "NewguestApplyunsent→OTP→profile→sameApply; backDiscoverdatefilter and sameMeal stillpreservesdraft",
+        "OnlyexplicitSendcreatesPending; hostApprove2of2 locksarrangements/stalesbooking; explicitreportBookedfor2",
+        "GuestrealUI sendsoneexplicitgroupmessage"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b7-new-clock-meal.jpg",
+        "evidence/2026-10-21/b7-auth-profile-return-draft.jpg",
+        "evidence/2026-10-21/b7-approved-guest-group-message.jpg"
+      ],
+      "testedCommit": "4a0c66f838cb73aa5ac9e2a2ac74662ce2462c11",
+      "environment": "Unified fixed git archive Web/API/worker; dedicated new temporary PG and explicit fixture fixed Node/DB clock. Browser clock real; local TestIDP/Places/mail; no live vendor/native/AI-timer conclusion."
+    },
+    {
+      "id": "B7-T002",
+      "status": "passed",
+      "title": "Physical lifecycle at -1ms and equality with postmeal window",
+      "steps": [
+        "Close-1ms nomarks/roster0/jobsPending; exactClose CLOSE/jobDone, qualifiedmealOpen2",
+        "Start-1ms roster0; exactStart sealedphysicalroster exactlyhostandguest2/STARTjobDone",
+        "End-1ms Open/noEND/jobPending; exactEnd Completed/all3marks/all3jobsDone",
+        "UIbeforeStart403; atStartandEnd-1ms windowclosed/noIattended; exactEnd open withbothdefaultUnknown",
+        "ReadonlySQLverified ownedPG activity and BEGINREADONLY onlytargetmarks/roster/jobs; noquerytext/session/credentials orbusinesswrites"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b7-lifecycle-checkpoints.json",
+        "evidence/2026-10-21/b7-exact-close-qualified.jpg",
+        "evidence/2026-10-21/b7-end-minus1-no-report.jpg",
+        "evidence/2026-10-21/b7-exact-end-unknown-attendance.jpg"
+      ],
+      "testedCommit": "4a0c66f838cb73aa5ac9e2a2ac74662ce2462c11",
+      "environment": "Unified fixed git archive Web/API/worker; dedicated new temporary PG and explicit fixture fixed Node/DB clock. Browser clock real; local TestIDP/Places/mail; no live vendor/native/AI-timer conclusion."
+    },
+    {
+      "id": "B7-T003",
+      "status": "passed",
+      "title": "Self attendance overrides conflicting host report, scores stay private",
+      "steps": [
+        "Unknownattendancepublicreviewattemptrejected withoutfakesuccess",
+        "GuestexplicitSELFpresent enablesownprivate5",
+        "HostdefaultUnknown thenreportsGuestabsent andownSELFpresent/private3",
+        "GuestfreshloginstillAttendedyourreport andown5selected; hostreportdoesnotoverrideSELF"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b7-guest-self-present-private-score.jpg",
+        "evidence/2026-10-21/b7-host-own-report-guest-host-absent.jpg"
+      ],
+      "testedCommit": "4a0c66f838cb73aa5ac9e2a2ac74662ce2462c11",
+      "environment": "Unified fixed git archive Web/API/worker; dedicated new temporary PG and explicit fixture fixed Node/DB clock. Browser clock real; local TestIDP/Places/mail; no live vendor/native/AI-timer conclusion."
+    },
+    {
+      "id": "B7-T004",
+      "status": "passed",
+      "title": "Doubleblind reviews and mutual private reconnect to one explicit direct message",
+      "steps": [
+        "HostfirstpublicrefPending andguestpublicprofileNoPublishedRefs",
+        "HostonechoiceWAITING/noDM; guestfreshstatecheckboxoff/nopeerwishleak",
+        "Guestsecondrefpublishes; guestexplicitmutualchoiceopensSayHello",
+        "ClickSayHello thenexplicitSendoneDMcanary; noautomaticmodel/businesssend"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b7-one-sided-reconnect-reference-pending.jpg",
+        "evidence/2026-10-21/b7-mutual-reconnect-published-references.jpg",
+        "evidence/2026-10-21/b7-mutual-direct-message.jpg"
+      ],
+      "testedCommit": "4a0c66f838cb73aa5ac9e2a2ac74662ce2462c11",
+      "environment": "Unified fixed git archive Web/API/worker; dedicated new temporary PG and explicit fixture fixed Node/DB clock. Browser clock real; local TestIDP/Places/mail; no live vendor/native/AI-timer conclusion."
+    },
+    {
+      "id": "B7-T005",
+      "status": "failed",
+      "title": "F18 direct page does not identify peer",
+      "steps": [
+        "MutualSayHelloToQAClockHost opensdirectID4a83a4ae-1d27-4d41-8417-df32e0849976",
+        "BeforeandaftersendheaderonlyConversation withnopeername/avatar; reloadpersists",
+        "R92fixedarchive independentrealPG/APIhostandguesttargettitlebothfail"
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b7-mutual-direct-message.jpg"
+      ],
+      "testedCommit": "4a0c66f838cb73aa5ac9e2a2ac74662ce2462c11",
+      "environment": "Unified fixed git archive Web/API/worker; dedicated new temporary PG and explicit fixture fixed Node/DB clock. Browser clock real; local TestIDP/Places/mail; no live vendor/native/AI-timer conclusion."
+    }
+  ]
+}
