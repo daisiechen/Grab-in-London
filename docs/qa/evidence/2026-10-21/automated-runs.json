@@ -10960,6 +10960,35 @@
           "durationMs": 294.82825
         }
       ]
+    },
+    {
+      "id": "R50",
+      "testedCommit": "6cc3055104b1e2129e35fb45a270c63d3bb3b707",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-london-quota.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-london-quota.json",
+      "startedAt": "2026-10-21T12:53:07.613000+00:00",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "total": 2,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R50-T001",
+          "run": "R50",
+          "path": "scripts/qa-independent-london-quota.api.test.ts",
+          "title": "QA-AI-039 London midnight completion charges the admission day once despite unchanged UTC date",
+          "status": "passed",
+          "durationMs": 28.265832999999986
+        },
+        {
+          "id": "R50-T002",
+          "run": "R50",
+          "path": "scripts/qa-independent-london-quota.api.test.ts",
+          "title": "QA-AI-039 repeated London 01:30 across DST does not reset fifty-success daily quota",
+          "status": "passed",
+          "durationMs": 15.87533400000001
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -10989,9 +11018,10 @@
     "scripts/qa-independent-start-boundary.api.test.ts": "898d3b13a3371901024a724d94c11587364e23b69d026b8ecb114613e543ff63",
     "scripts/qa-independent-single-consent.api.test.ts": "4628c470beb0da63f4d8a3a7e3a77421398a31f72f6cd1b808aed35a120a4401",
     "scripts/qa-independent-ai-availability.api.test.ts": "f209a10f0aaf9bdfb9c13377aa3c32df191f8bd21b4d832c23d9d9844afcb7fd",
-    "scripts/qa-independent-guest-quota.api.test.ts": "f5fb3657f33e89eb3edc1864b1776d1222c8c51c1f8ec702a668a6d2bd018bb9"
+    "scripts/qa-independent-guest-quota.api.test.ts": "f5fb3657f33e89eb3edc1864b1776d1222c8c51c1f8ec702a668a6d2bd018bb9",
+    "scripts/qa-independent-london-quota.api.test.ts": "a10b8fd693e443478808da252cd8ec423956a8769353f031d2cc1a64282930b6"
   },
-  "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests.",
+  "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY.",
   "runtimeSnapshotVerification": {
     "commit": "d4582f7e5e4f52e43cb1d49a06622b98c8c10ad6",
     "comparedFiles": 555,

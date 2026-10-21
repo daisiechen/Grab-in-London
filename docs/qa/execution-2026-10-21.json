@@ -15,8 +15,8 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 107,
-    "PASS": 98,
+    "NOT_RUN": 106,
+    "PASS": 99,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -13663,8 +13663,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R50-T001",
+        "R50-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -13769,14 +13772,16 @@
         "R2-T060",
         "R2-T061",
         "R2-T062",
-        "R2-T063"
+        "R2-T063",
+        "R50-T001",
+        "R50-T002"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "归受理日一次扣轮",
-        "不按UTC日或重复小时重置"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。"
+      "remainingExpected": [],
+      "actual": "真实PG生产SQL在隔离qa_clock search_path时钟与同钟RAM下执行：2026-10-24 22:59:59Z（London23:59:59）受理，provider受控暂停至23:00:01Z（次日00:00:01，UTC仍同日）才完成；仅受理日quota成功1/占位0，重复finish false不双扣，费用KNOWN20且callId一次。秋季2026-10-25 00:30Z与01:30Z均为London01:30；49轮后首轮成功至50，第二次新session仍AI_QUOTA_EXCEEDED，provider不增加。未修改生产SQL或宿主时钟，不将DDL默认created_at当虚拟时钟证据。"
     },
     {
       "id": "QA-AI-040",

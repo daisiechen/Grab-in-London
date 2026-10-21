@@ -14,10 +14,10 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 98 |
+| PASS | 99 |
 | FAIL | 0 |
 | BLOCKED | 12 |
-| NOT_RUN | 107 |
+| NOT_RUN | 106 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实环境、原生runtime/设备/签名或政策批准证据；本地恢复与分步删除现已复验通过，不能再笼统视为外部阻塞。FAIL优先于未完成的后续步骤。
@@ -75,6 +75,7 @@
 | R47 | 退出码0；3/3通过，失败0，2个测试文件 | `1974180` |
 | R48 | 退出码0；6/6通过，失败0，1个测试文件 | `739d6da` |
 | R49 | 退出码0；1/1通过，失败0，1个测试文件 | `05faa12` |
+| R50 | 退出码0；2/2通过，失败0，1个测试文件 | `6cc3055` |
 
 R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯函数探针；R5复跑分页修复回归，R6是QA第二批6项独立P0探针；R7/R8为QA-F01修复的API/Web及iOS组件定向复跑；R9是第三批12项独立边界探针，R10/R11复跑解除准备，R12为QA新增真实备份中E0导出的恢复后撤销分支；R13为饭后及群/私聊权限独立探针；R14保留QA-F03修前2失败，R15为0518d45修后的12项独立探针复验，R16为身份模块26项受影响HTTP回归（包括fresh会话下未来proof拒绝），不能删除修前结果或把历史失败当当前通过；R17为举报本人回执及撤授权重放3项独立HTTP/PG探针，撤session/DELETING状态通过受控数据库夹具设置。R18为安排锁、历史截止补算、开始名单及预约隔离6项独立PG/HTTP探针，删除仅屏障状态，完整删除名单断言仍未通过。R19/R20独立定向复跑5a37fdc关闭顺序单测及真实PG负载退出，未替代远端CI结果。R21为删除实际HTTP/本地purge、故障rollback及用户锁消息/审批竞态5项独立探针，生产日志脱敏仍待完整捕获。R22为ac09af4固定版本的11项独立受控AI/controller/HTTP探针，仅035/036/037具完整预期证据；R23为该版本Claude发现修复28项API/DB独立定向复验。R24保留QA-F04修前停用后仍发布失败；R25为8e2b908修后7项独立停用/费用/reaper探针，R26为22项受影响DB回归，F04定向关闭而043仍有未测断言。R27保留QA-F05修前Web失败，T001另为已分类夹具错误；R28/R29为f298048独立session/PG及Web组件各3项，R30为iOS manager17项定向回归；F05在NEW与TTL/偏好删除差异范围关闭。R31为公开DTO/后台角色/CSV授权及跨快照游标和大序号4项独立HTTP/PG探针，公式转义另覆盖formatter，不声称Excel实际执行。R32保留QA-F06 CLI入口失败，R33保留QA-F07原生协议失败；R34/R35固定b76c593独立8+32项验证CLI修复，R36固定1080993独立iOS49项验证桥接修复。完整加入用户路径仍NOT_RUN，不据组件通过升级。不能将这些数量相加当作独立业务用例数；R5与R1有重复，R2也不是原生设备验收。逐项测试名、状态、时间和命令见[机器证据](evidence/2026-10-21/automated-runs.json)。R4是质量检查而非业务用例。
 
@@ -261,7 +262,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-AI-036 · requestId去重 | PASS | 真实HTTP并发同requestId同body均202且provider只调1次，结束后重放不调模型/扣轮；改body409 AI_CONFLICT，显式NEW清RAM后原请求410；Controller另验证runtime.shutdown后不重生成。quota仅successes1/reserved0。；证据 R22-T001, R22-T007 |
 | QA-AI-037 · 最后成功轮竞争 | PASS | 真实PG原子预留第50轮，跨设备不超50；受控provider分别NEEDS_INPUT/SUCCEEDED扣1，FAILED与偏好删除导致SUPERSEDED不扣，所有reserved回0。重复finish不重复结算；无真实模型费用调用。；证据 R22-T006, R22-T008, R22-T009, R22-T010 |
 | QA-AI-038 · 游客额度主体 | PASS | 真实PG/API和计数provider：同guest已9轮后完成第10轮；第二cookie视图刷新复用guest并保持原expiresAt，bootstrap及NEW重建仍同subject且429，不新增provider调用。DB凭据TTL精确24h；清cookie生成新subject可独立成功一次，明确其可规避匿名额度；合成expiry后旧凭据410并新建主体。错误Origin的创建/AI bootstrap和缺CSRF写均403。保留原subject10轮及新subject1轮记录；不声称真实等待24小时或匿名限额不可规避。；证据 R49-T001 |
-| QA-AI-039 · 跨日和DST额度 | NOT_RUN | 相关自动化已复跑，但本条原定步骤/全部预期未逐项取证，保持NOT_RUN；相关测试索引不授予本用例PASS。 |
+| QA-AI-039 · 跨日和DST额度 | PASS | 真实PG生产SQL在隔离qa_clock search_path时钟与同钟RAM下执行：2026-10-24 22:59:59Z（London23:59:59）受理，provider受控暂停至23:00:01Z（次日00:00:01，UTC仍同日）才完成；仅受理日quota成功1/占位0，重复finish false不双扣，费用KNOWN20且callId一次。秋季2026-10-25 00:30Z与01:30Z均为London01:30；49轮后首轮成功至50，第二次新session仍AI_QUOTA_EXCEEDED，provider不增加。未修改生产SQL或宿主时钟，不将DDL默认created_at当虚拟时钟证据。；证据 R50-T001, R50-T002 |
 | QA-AI-040 · 第2调用费用预留 | PASS | R25独立controller+真实PG：新增call名额仅1时解析call结算20microCNY、第2call预算拒绝不进入provider且无草稿；另两subject并发争最后3024microCNY最高费用预留，仅一个provider被调用，另一个FAILED，所有账本used+reserved不超cap，解析用量不丢失。；证据 R25-T003, R25-T005 |
 | QA-AI-041 · UNKNOWN与失败计费 | NOT_RUN | R25独立provider故障注入：timeout无usage→UNKNOWN/max3024保留，失败有usage→KNOWN/20结算，均FAILED/no结果且quota successes0/reserved0；调用restart恢复方法后原call不可dispatch/请求重放不重发。尚未实际杀API进程重启，保留NOT_RUN。 |
 | QA-AI-042 · reaper迟到发布竞争 | PASS | 受控provider已在途，真实PG deadline置过去并先运行expireDeadlines将PENDING→FAILED；随后释放成功结果，费用照结算KNOWN但请求仍FAILED、result null、quota successes0/reserved0。迟到finish返回false且不调用publish回调。；证据 R24-T002 |
