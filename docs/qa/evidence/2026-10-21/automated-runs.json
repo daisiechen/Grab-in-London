@@ -10878,6 +10878,67 @@
           "durationMs": 45.80704100000003
         }
       ]
+    },
+    {
+      "id": "R48",
+      "testedCommit": "739d6da03dd72a5a3c9de468ea823f863a7c28ce",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-availability.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-ai-availability-multiclient.json",
+      "startedAt": "2026-10-21T12:46:41.798000+00:00",
+      "exitCode": 0,
+      "passed": 6,
+      "failed": 0,
+      "total": 6,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R48-T001",
+          "run": "R48",
+          "path": "scripts/qa-independent-ai-availability.api.test.ts",
+          "title": "QA-AI-043 none does not dispatch and leaves business and preference deletion usable",
+          "status": "passed",
+          "durationMs": 376.675375
+        },
+        {
+          "id": "R48-T002",
+          "run": "R48",
+          "path": "scripts/qa-independent-ai-availability.api.test.ts",
+          "title": "QA-AI-043 missing-day does not dispatch and leaves business and preference deletion usable",
+          "status": "passed",
+          "durationMs": 253.74316599999997
+        },
+        {
+          "id": "R48-T003",
+          "run": "R48",
+          "path": "scripts/qa-independent-ai-availability.api.test.ts",
+          "title": "QA-AI-043 missing-month does not dispatch and leaves business and preference deletion usable",
+          "status": "passed",
+          "durationMs": 231.36508400000002
+        },
+        {
+          "id": "R48-T004",
+          "run": "R48",
+          "path": "scripts/qa-independent-ai-availability.api.test.ts",
+          "title": "QA-AI-043 missing-call-cap does not dispatch and leaves business and preference deletion usable",
+          "status": "passed",
+          "durationMs": 228.51308399999994
+        },
+        {
+          "id": "R48-T005",
+          "run": "R48",
+          "path": "scripts/qa-independent-ai-availability.api.test.ts",
+          "title": "QA-AI-043 disabled-budget does not dispatch and leaves business and preference deletion usable",
+          "status": "passed",
+          "durationMs": 226.648416
+        },
+        {
+          "id": "R48-T006",
+          "run": "R48",
+          "path": "scripts/qa-independent-ai-availability.api.test.ts",
+          "title": "QA-AI-027 disabled provider still lets only the owner read/delete preferences and retains submitted meal",
+          "status": "passed",
+          "durationMs": 233.9476669999999
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -10905,9 +10966,10 @@
     "apps/ios/src/features/auth/qa-independent-link.test.ts": "174a6d0031318bea6335108060cd53618becedaa78f8c8f52486c62c847bf6d0",
     "scripts/qa-independent-logout.api.test.ts": "d8d9a10e85f0b2e4458c50bda8567aacb83b7248baafe3da41ca0b617dd6f413",
     "scripts/qa-independent-start-boundary.api.test.ts": "898d3b13a3371901024a724d94c11587364e23b69d026b8ecb114613e543ff63",
-    "scripts/qa-independent-single-consent.api.test.ts": "4628c470beb0da63f4d8a3a7e3a77421398a31f72f6cd1b808aed35a120a4401"
+    "scripts/qa-independent-single-consent.api.test.ts": "4628c470beb0da63f4d8a3a7e3a77421398a31f72f6cd1b808aed35a120a4401",
+    "scripts/qa-independent-ai-availability.api.test.ts": "f209a10f0aaf9bdfb9c13377aa3c32df191f8bd21b4d832c23d9d9844afcb7fd"
   },
-  "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled.",
+  "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests.",
   "runtimeSnapshotVerification": {
     "commit": "d4582f7e5e4f52e43cb1d49a06622b98c8c10ad6",
     "comparedFiles": 555,
@@ -10969,6 +11031,7 @@
       "detail": "LINK_REQUIRED扩展探针曾后注册mock.on却未覆盖先注册成功路由，导致得到signedIn；修为setup(outcome)单一路由后4项过。该次是QA夹具，不是新产品缺陷。R33原provider code/state失败不删除。"
     },
     "R44 initial QA fixture selected email from identities (no such column). Corrected to private_contact per migration; no production change or assertion weakening. Intermediate logout-only pass is superseded by final two-case R44. R44 rate recovery sleep is controlled: verifies Retry-After milliseconds then clears only synthetic actor rate buckets rather than waiting wall-clock; real API limiter and SDK retry execute.",
-    "R47 setup: SQL quote escaping initially prevented collection (0 tests); corrected and linted. Booking declaration fixture used invalid CONFIRMED, causing two DB CHECK failures before target command; corrected to contracted REPORTED_CONFIRMED. Single-consent fixture initially lacked a public-complete profile (404 before selection); completed profiles before baseline. All business assertions retained; these are QA setup failures, not production defects. Final R47 executes 3/3 on real isolated PostgreSQL. Start clock injected only after command locks; blocker waits for both backend Lock states, not a fixed sleep as proof. Recipient reads during uncommitted consent use a second DB connection and a controlled promise barrier, followed by rollback and committed API selection."
+    "R47 setup: SQL quote escaping initially prevented collection (0 tests); corrected and linted. Booking declaration fixture used invalid CONFIRMED, causing two DB CHECK failures before target command; corrected to contracted REPORTED_CONFIRMED. Single-consent fixture initially lacked a public-complete profile (404 before selection); completed profiles before baseline. All business assertions retained; these are QA setup failures, not production defects. Final R47 executes 3/3 on real isolated PostgreSQL. Start clock injected only after command locks; blocker waits for both backend Lock states, not a fixed sleep as proof. Recipient reads during uncommitted consent use a second DB connection and a controlled promise barrier, followed by rollback and committed API selection.",
+    "R48 initial SQL period alias day caused six setup failures; corrected reserved alias to day_period/month_period. Owner-only preferences route has no target-user parameter: initially QA expected unknown userId query rejection422, but contract binds auth.userId and returns B own empty fields. Corrected to assert no A disclosure, guessed target path404, B wrong-version deletion409 and A fields unchanged; no access-control expectation weakened. Real disable configuration is AI_PROVIDER=disabled, not an invented AI_ENABLED env var. Local synthetic iOS credentials are issued through session service; OS browser/Keychain are not tested."
   ]
 }
