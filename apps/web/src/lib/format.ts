@@ -35,8 +35,12 @@ export interface ZonedLike { localDate: string; localTime: string; utcOffsetMinu
 
 /** "Fri 23 Oct · 19:30 London time"; adds BST/GMT on clock-change days so repeated times stay unambiguous. */
 export function zonedLabel(z: ZonedLike): string {
-  const zone = isLondonTransitionDate(z.localDate) ? `${offsetLabel(z.utcOffsetMinutes)} London time` : 'London time';
-  return `${longDate(z.localDate)} · ${z.localTime} ${zone}`;
+  return `${longDate(z.localDate)} · ${timeLabel(z)}`;
+}
+
+/** "19:30 London time", or "01:30 GMT London time" on a clock-change day. */
+export function timeLabel(z: ZonedLike): string {
+  return isLondonTransitionDate(z.localDate) ? `${z.localTime} ${offsetLabel(z.utcOffsetMinutes)} London time` : `${z.localTime} London time`;
 }
 
 export function initials(name: string | null | undefined): string {

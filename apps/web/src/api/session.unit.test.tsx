@@ -34,10 +34,12 @@ describe('SessionProvider', () => {
     await waitFor(() => expect(screen.getByTestId('status').textContent).toBe('guest'));
   });
 
-  it('treats 401 from getSession as a guest', async () => {
+  it('treats 401 from getSession as a guest and keeps a guest’s drafts for sign-in', async () => {
+    saveDraft('apply:m1', { intro: 'typed before signing in' });
     const stub = createFetchStub({ getSession: () => fail(401, 'AUTH_REQUIRED') });
     renderWithProviders(<Probe />, stub.fetch);
     await waitFor(() => expect(screen.getByTestId('status').textContent).toBe('guest'));
+    expect(loadDraft('apply:m1')).toEqual({ intro: 'typed before signing in' });
   });
 
   it('ignores a getSession response that arrives after logout (auth generation)', async () => {

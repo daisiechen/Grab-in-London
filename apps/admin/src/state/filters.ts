@@ -26,16 +26,13 @@ export interface AdminFilters {
   sizes: SizeFilter[];
   budgetBands: BudgetBand[];
   /**
-   * Legacy prototype threshold link (`budget=25`/`budget=30` meaning ≤ £25 / ≤ £30). Measurement contract §5
-   * keeps its threshold meaning; the API param (budgetUpToPence) is pending, so it is preserved in the URL,
-   * shown as a chip with a not-applied warning, and NOT sent or approximated by bands.
+   * Legacy prototype threshold link (`budget=25`/`budget=30` = ≤ £25 / ≤ £30). Measurement contract §5 keeps the
+   * threshold meaning: sent as `budgetUpToPence`, never approximated by bands. Mutually exclusive with budgetBands.
    */
   legacyBudgetMax: LegacyBudgetMax | null;
 }
 export const LEGACY_BUDGET_MAX = ['25', '30'] as const;
 export type LegacyBudgetMax = (typeof LEGACY_BUDGET_MAX)[number];
-/** Pending contract param: the legacy threshold cannot be sent yet. */
-export const LEGACY_BUDGET_SUPPORTED = false;
 
 export type SetField = 'areas' | 'sources' | 'segments' | 'languages' | 'sizes' | 'budgetBands';
 export const SET_FIELDS: readonly SetField[] = ['areas', 'sources', 'segments', 'languages', 'sizes', 'budgetBands'];
@@ -149,6 +146,8 @@ export interface FilterQuery {
   sizes?: string;
   sources?: string;
   segments?: string;
+  /** Legacy threshold in integer pence; the server rejects it together with budgetBands. */
+  budgetUpToPence?: number;
 }
 
 /** Contract query (adminPage/adminDrilldown/adminExport filters) in a stable canonical order. */
@@ -159,7 +158,8 @@ export function toQuery(filters: AdminFilters, snapshotDay: string): FilterQuery
   if (filters.languages.length) query.languages = ordered(LANGUAGE_FILTERS, filters.languages).join(',');
   if (filters.sizes.length) query.sizes = ordered(SIZE_FILTERS, filters.sizes).join(',');
   if (filters.segments.length) query.segments = ordered(SEGMENTS, filters.segments).join(',');
-  if (filters.budgetBands.length) query.budgetBands = ordered(BUDGET_BANDS, filters.budgetBands).join(',');
+  if (filters.legacyBudgetMax) query.budgetUpToPence = Number(filters.legacyBudgetMax) * 100;
+  else if (filters.budgetBands.length) query.budgetBands = ordered(BUDGET_BANDS, filters.budgetBands).join(',');
   return query;
 }
 
@@ -169,4 +169,4 @@ export const queryKey = (query: FilterQuery): string =>
 
 /** Hidden "more filters" count shown on the popover trigger. */
 export const advancedCount = (filters: AdminFilters) =>
-  [filters.languages, filters.sizes, filters.budgetBands].filter((v) => v.length > 0).length;
+  [filters.languages.length, filters.sizes.length, filters.budgetBands.length || (filters.legacyBudgetMax ? 1 : 0)].filter((n) => n > 0).length;

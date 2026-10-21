@@ -177,7 +177,7 @@ function Body({ t, lang, page, filters, setFilters, go, binding, open, evidence,
   const reset = () => setFilters(emptyFilters());
   return (
     <>
-      <FilterBar t={t} filters={filters} snapshotDay={c.snapshotDay} route={page} onChange={setFilters} />
+      <FilterBar t={t} filters={filters} snapshotDay={c.snapshotDay} dimensions={c.snapshot.dimensions} route={page} onChange={setFilters} />
       <div className="context-line">
         <span>
           {t('伦敦时间 · 数据截至', 'Europe/London · data as of')} {formatLondonTime(lang, c.snapshot.asOf)}

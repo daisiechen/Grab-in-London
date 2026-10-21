@@ -46,6 +46,10 @@ export const HASH = 'a'.repeat(64);
 
 export const snapshot = (id: string, asOf: string, status: 'SEALED' | 'REVOKED' = 'SEALED') => ({
   id, asOf, createdAt: asOf, definitionVersion: '4', classificationRevision: '7', status,
+  dimensions: {
+    areas: [{ code: 'soho', label: 'Soho' }, { code: 'kings-cross', label: "King's Cross" }],
+    sources: [{ code: 'user', label: 'User-led' }, { code: 'assisted', label: 'Assisted' }],
+  },
 });
 
 export const session = (roles: string[] = ['analyst']) => ({

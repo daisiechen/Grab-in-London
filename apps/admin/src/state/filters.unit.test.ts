@@ -22,12 +22,17 @@ describe('URL filter codec', () => {
     expect(state.filters.segments).toEqual(['existing']);
     expect(state.filters.languages).toEqual(['zh']);
     expect(state.filters.sizes).toEqual(['3', '4', '5', '6']);
-    // ≤ £30 keeps its threshold meaning (not mapped to bands) and is preserved for the pending API param.
+    // ≤ £30 keeps its threshold meaning (not mapped to bands) and is sent as budgetUpToPence.
     expect(state.filters.budgetBands).toEqual([]);
     expect(state.filters.legacyBudgetMax).toBe('30');
     expect(new URLSearchParams(toSearch(state)).get('budget')).toBe('30');
     expect(parseSearch('?budget=25').filters.legacyBudgetMax).toBe('25');
-    expect(toQuery(parseSearch('?budget=25').filters, '2026-10-18')).toEqual({ from: '2026-09-21', to: '2026-10-18' });
+    expect(toQuery(parseSearch('?budget=25').filters, '2026-10-18')).toEqual({ from: '2026-09-21', to: '2026-10-18', budgetUpToPence: 2500 });
+    // Exclusive with bands: a link carrying both keeps the canonical bands only.
+    const both = parseSearch('?budgetBands=0-20&budget=25').filters;
+    expect(both.legacyBudgetMax).toBeNull();
+    expect(toQuery(both, '2026-10-18')).toEqual({ from: '2026-09-21', to: '2026-10-18', budgetBands: '0-20' });
+    expect(toQuery({ ...emptyFilters(), budgetBands: ['0-20'], legacyBudgetMax: '30' }, '2026-10-18')).toEqual({ from: '2026-09-21', to: '2026-10-18', budgetUpToPence: 3000 });
     expect(parseSearch('?language=English').filters.languages).toEqual(['en']);
     expect(parseSearch('?size=duo').filters.sizes).toEqual(['2']);
     expect(parseSearch('?area=Soho,Kings Cross,bad!').filters.areas).toEqual(['kings-cross', 'soho']);

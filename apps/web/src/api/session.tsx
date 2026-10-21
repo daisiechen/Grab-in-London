@@ -50,7 +50,10 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       return next;
     } catch (error) {
       if (gen !== generation.current) return { status: 'guest' };
-      if (error instanceof ApiError && error.status === 401) return { status: 'guest' };
+      if (error instanceof ApiError && error.status === 401) {
+        setState({ status: 'guest' });
+        return { status: 'guest' };
+      }
       // Network/provider failure: stay a guest for public pages but do not claim a session.
       api.setCsrfToken(null);
       setState({ status: 'guest' });
@@ -58,7 +61,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     }
   }, [api]);
 
-  useEffect(() => api.onUnauthorized(clearLocal), [api, clearLocal]);
+  /**
+   * A 401 only revokes something if we were signed in. A guest's 401 (e.g. getSession on
+   * first load) must not wipe the drafts a guest is carrying into sign-in.
+   */
+  const signedInRef = useRef(false);
+  signedInRef.current = state.status === 'signed-in';
+  useEffect(() => api.onUnauthorized(() => { if (signedInRef.current) clearLocal(); }), [api, clearLocal]);
   useEffect(() => { void refresh(); }, [refresh]);
 
   const signOut = useCallback(async () => {

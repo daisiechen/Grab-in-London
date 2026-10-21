@@ -49,6 +49,29 @@ describe('admin shell', () => {
     expect(screen.getByRole('button', { name: 'Remove filter: Budget' }).textContent).toContain('> £20–30');
   });
 
+  it('offers area/source options from the pinned snapshot and sends their codes', async () => {
+    const mock = setup(baseRoutes(), '/?lang=en#overview');
+    await screen.findByLabelText('Page content');
+    const areas = screen.getByRole('group', { name: 'Area' });
+    expect(within(areas).getAllByRole('checkbox').map((c) => c.parentElement!.textContent)).toEqual(['All areas', 'Soho', "King's Cross"]);
+    await userEvent.click(within(areas).getByLabelText("King's Cross"));
+    await waitFor(() => expect(mock.calls.filter((c) => c.path === '/v1/admin/overview').at(-1)!.query.get('areas')).toBe('kings-cross'));
+    expect(screen.getByRole('button', { name: 'Remove filter: Area' }).textContent).toContain("King's Cross");
+  });
+
+  it('sends a legacy ≤ £25 link as budgetUpToPence; choosing bands replaces it', async () => {
+    const mock = setup(baseRoutes(), '/?lang=en&budget=25#overview');
+    await screen.findByLabelText('Page content');
+    const first = mock.calls.find((c) => c.path === '/v1/admin/overview')!;
+    expect(first.query.get('budgetUpToPence')).toBe('2500');
+    expect(first.query.get('budgetBands')).toBeNull();
+    expect(screen.queryByRole('alert')).toBeNull();
+    await userEvent.click(within(screen.getByRole('group', { name: 'Budget / person' })).getByLabelText('£0–20'));
+    await waitFor(() => expect(mock.calls.filter((c) => c.path === '/v1/admin/overview').at(-1)!.query.get('budgetBands')).toBe('0-20'));
+    expect(mock.calls.filter((c) => c.path === '/v1/admin/overview').at(-1)!.query.get('budgetUpToPence')).toBeNull();
+    expect(new URL(location.href).searchParams.get('budget')).toBeNull();
+  });
+
   it('applies dates only on Apply and rejects an end after the snapshot', async () => {
     const mock = setup(baseRoutes());
     await screen.findByLabelText('页面内容');
