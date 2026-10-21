@@ -9866,6 +9866,171 @@
           "durationMs": 0
         }
       ]
+    },
+    {
+      "id": "R37",
+      "testedCommit": "e5d35422a349c58456a48b11725817f2d17e17d5",
+      "command": "pnpm exec vitest run --project unit apps/api/src/identity/qa-independent-auth0.unit.test.ts (isolated historical adapter from e5d3542)",
+      "startedAt": "2026-10-21T11:58:30.814000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 3,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R37-T001",
+          "run": "R37",
+          "path": "apps/api/src/identity/qa-independent-auth0.unit.test.ts",
+          "title": "QA-F08 GOOGLE preserves signed MFA evidence without granting it to unsigned claims",
+          "status": "failed",
+          "durationMs": 42.32508300000001,
+          "failureSummary": "AssertionError: expected [ 'google' ] to include 'mfa'"
+        },
+        {
+          "id": "R37-T002",
+          "run": "R37",
+          "path": "apps/api/src/identity/qa-independent-auth0.unit.test.ts",
+          "title": "QA-F08 APPLE preserves signed MFA evidence without granting it to unsigned claims",
+          "status": "failed",
+          "durationMs": 67.465542,
+          "failureSummary": "AssertionError: expected [ 'apple' ] to include 'mfa'"
+        },
+        {
+          "id": "R37-T003",
+          "run": "R37",
+          "path": "apps/api/src/identity/qa-independent-auth0.unit.test.ts",
+          "title": "QA-F08 EMAIL preserves signed MFA evidence without granting it to unsigned claims",
+          "status": "failed",
+          "durationMs": 63.05362499999998,
+          "failureSummary": "AssertionError: expected [ 'otp' ] to include 'mfa'"
+        }
+      ]
+    },
+    {
+      "id": "R38",
+      "testedCommit": "a0287f957d67657568a34caf6365833c3ac0fd74",
+      "command": "pnpm exec vitest run --project unit apps/api/src/identity/qa-independent-auth0.unit.test.ts apps/api/src/identity/auth0-provider.unit.test.ts",
+      "startedAt": "2026-10-21T11:58:36.401000+00:00",
+      "exitCode": 0,
+      "passed": 14,
+      "failed": 0,
+      "total": 14,
+      "suiteFiles": 2,
+      "assertions": [
+        {
+          "id": "R38-T001",
+          "run": "R38",
+          "path": "apps/api/src/identity/auth0-provider.unit.test.ts",
+          "title": "retains MFA only from the cryptographically verified array claim while keeping the provider method",
+          "status": "passed",
+          "durationMs": 4.435040999999984
+        },
+        {
+          "id": "R38-T002",
+          "run": "R38",
+          "path": "apps/api/src/identity/auth0-provider.unit.test.ts",
+          "title": "does not infer MFA from malformed or absent amr undefined",
+          "status": "passed",
+          "durationMs": 1.1268330000000049
+        },
+        {
+          "id": "R38-T003",
+          "run": "R38",
+          "path": "apps/api/src/identity/auth0-provider.unit.test.ts",
+          "title": "does not infer MFA from malformed or absent amr null",
+          "status": "passed",
+          "durationMs": 0.9952920000000063
+        },
+        {
+          "id": "R38-T004",
+          "run": "R38",
+          "path": "apps/api/src/identity/auth0-provider.unit.test.ts",
+          "title": "does not infer MFA from malformed or absent amr \"mfa\"",
+          "status": "passed",
+          "durationMs": 1.7270829999999933
+        },
+        {
+          "id": "R38-T005",
+          "run": "R38",
+          "path": "apps/api/src/identity/auth0-provider.unit.test.ts",
+          "title": "does not infer MFA from malformed or absent amr \"mfa\"",
+          "status": "passed",
+          "durationMs": 1.5168330000000196
+        },
+        {
+          "id": "R38-T006",
+          "run": "R38",
+          "path": "apps/api/src/identity/auth0-provider.unit.test.ts",
+          "title": "does not infer MFA from malformed or absent amr {\"mfa\":true}",
+          "status": "passed",
+          "durationMs": 0.5465419999999881
+        },
+        {
+          "id": "R38-T007",
+          "run": "R38",
+          "path": "apps/api/src/identity/auth0-provider.unit.test.ts",
+          "title": "does not infer MFA from malformed or absent amr \"MFA\"",
+          "status": "passed",
+          "durationMs": 0.7442500000000223
+        },
+        {
+          "id": "R38-T008",
+          "run": "R38",
+          "path": "apps/api/src/identity/auth0-provider.unit.test.ts",
+          "title": "does not infer MFA from malformed or absent amr \"otp\"",
+          "status": "passed",
+          "durationMs": 0.6062080000000094
+        },
+        {
+          "id": "R38-T009",
+          "run": "R38",
+          "path": "apps/api/src/identity/auth0-provider.unit.test.ts",
+          "title": "does not infer MFA from malformed or absent amr undefined",
+          "status": "passed",
+          "durationMs": 0.49408299999998917
+        },
+        {
+          "id": "R38-T010",
+          "run": "R38",
+          "path": "apps/api/src/identity/auth0-provider.unit.test.ts",
+          "title": "rejects a signed token with the wrong nonce, issuer, audience or expiry",
+          "status": "passed",
+          "durationMs": 2.112707999999998
+        },
+        {
+          "id": "R38-T011",
+          "run": "R38",
+          "path": "apps/api/src/identity/auth0-provider.unit.test.ts",
+          "title": "never accepts an MFA claim signed by an untrusted key",
+          "status": "passed",
+          "durationMs": 24.678166000000004
+        },
+        {
+          "id": "R38-T012",
+          "run": "R38",
+          "path": "apps/api/src/identity/qa-independent-auth0.unit.test.ts",
+          "title": "QA-F08 GOOGLE preserves signed MFA evidence without granting it to unsigned claims",
+          "status": "passed",
+          "durationMs": 60.57308300000001
+        },
+        {
+          "id": "R38-T013",
+          "run": "R38",
+          "path": "apps/api/src/identity/qa-independent-auth0.unit.test.ts",
+          "title": "QA-F08 APPLE preserves signed MFA evidence without granting it to unsigned claims",
+          "status": "passed",
+          "durationMs": 37.31566699999999
+        },
+        {
+          "id": "R38-T014",
+          "run": "R38",
+          "path": "apps/api/src/identity/qa-independent-auth0.unit.test.ts",
+          "title": "QA-F08 EMAIL preserves signed MFA evidence without granting it to unsigned claims",
+          "status": "passed",
+          "durationMs": 104.58625
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -9887,9 +10052,10 @@
     "scripts/qa-independent-ai-session.api.test.ts": "8910212437dc6e1484f1778200517e03a6731ca5a7c35bf6583628991b680ff3",
     "scripts/qa-independent-access.api.test.ts": "be6bfd2b89278cb935dda6258bdb8372a4f06a60805ace1967351bb52f6cac42",
     "scripts/qa-independent-auth-protocol.api.test.ts": "5f86f768740c0ad39228d81cdef12a2f55da5d6db6446359442719d708aec835",
-    "apps/ios/src/features/auth/qa-independent-oauth.test.ts": "b9a279faea7b109da69c30634fe35b2f705ed0a0f7d92ad3d5d28aafdb45bdd0"
+    "apps/ios/src/features/auth/qa-independent-oauth.test.ts": "b9a279faea7b109da69c30634fe35b2f705ed0a0f7d92ad3d5d28aafdb45bdd0",
+    "apps/api/src/identity/qa-independent-auth0.unit.test.ts": "bd95da9ca9d7afbc2cad0432f04c74867965af9e898a5a4c9da4a7aba77852cd"
   },
-  "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。",
+  "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls.",
   "runtimeSnapshotVerification": {
     "commit": "d4582f7e5e4f52e43cb1d49a06622b98c8c10ad6",
     "comparedFiles": 555,

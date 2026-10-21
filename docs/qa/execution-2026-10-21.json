@@ -21418,7 +21418,8 @@
     "QA-F04": "CLOSED_TARGETED_QA",
     "QA-F05": "CLOSED_TARGETED_QA",
     "QA-F06": "CLOSED_TARGETED_QA",
-    "QA-F07": "CLOSED_TARGETED_QA"
+    "QA-F07": "CLOSED_TARGETED_QA",
+    "QA-F08": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
