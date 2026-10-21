@@ -25,10 +25,11 @@ class AIRequirementsTest(unittest.TestCase):
 
     def test_scope_stays_a_design_and_review_is_not_self_closed(self):
         scope = self.text.split('### 0.1', 1)[1].split('### 0.2', 1)[0]
-        self.assertIn('建议纳入MVP', scope)
-        self.assertIn('仍待产品负责人确认', scope)
+        self.assertIn('已确认真实AI纳入MVP', scope)
+        self.assertIn('业务动作由用户确认', scope)
+        self.assertNotIn('真实AI是否纳入首期', scope)
         for boundary in ('不改Demo源码', '不修改原独立评审结论',
-                         '不计入已批准开发包', 'N-02时间策略',
+                         '产品决定不等于N-01独立复评通过', 'N-02时间策略',
                          '不接真实模型', '规则单测只能证明模拟行为'):
             self.assertIn(boundary, self.ai)
 
