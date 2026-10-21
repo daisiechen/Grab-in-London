@@ -30,6 +30,12 @@ export const CONFIG_KEYS = [
   ...(Object.keys(ADAPTERS) as AdapterKey[]),
   'DEV_FIXED_OTP',
   'WEB_ORIGIN',
+  'SESSION_SECRET',
+  'IOS_REDIRECT_URI',
+  'AUTH0_DOMAIN',
+  'AUTH0_CLIENT_ID',
+  'AUTH0_CLIENT_SECRET',
+  'PORT',
   'PRIVACY_POLICY_VERSION',
   'RETENTION_POLICY_JSON',
   'LOG_LEVEL',
@@ -43,7 +49,14 @@ export interface CoreConfig {
   databaseUrl: string;
   adapters: { [K in AdapterKey]: (typeof ADAPTERS)[K][number] };
   devFixedOtp: string | null;
-  webOrigin: string | null;
+  /** Origin of the Web client; Origin header of cookie writes must equal it. */
+  webOrigin: string;
+  /** HMAC key for CSRF tokens and rate-limit IP hashing (≥32 chars). */
+  sessionSecret: string;
+  /** Registered native redirect for iOS OAuth (custom scheme), if iOS sign-in is enabled. */
+  iosRedirectUri: string | null;
+  auth0: { domain: string; clientId: string; clientSecret: string } | null;
+  port: number;
   privacyPolicyVersion: string | null;
   retentionPolicy: Record<string, unknown> | null;
   logLevel: LogLevel;
@@ -114,6 +127,22 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
   if (devFixedOtp && deployed) issues.push(`DEV_FIXED_OTP must be unset in ${environment}`);
 
   const webOrigin = value('WEB_ORIGIN') ?? null;
+  if (!webOrigin) issues.push('WEB_ORIGIN is required');
+  else if (!/^https?:\/\/[a-z0-9.-]+(:\d+)?$/i.test(webOrigin)) issues.push('WEB_ORIGIN must be an origin (scheme://host[:port])');
+  const sessionSecret = value('SESSION_SECRET') ?? '';
+  if (sessionSecret.length < 32) issues.push('SESSION_SECRET must be at least 32 characters');
+  const iosRedirectUri = value('IOS_REDIRECT_URI') ?? null;
+  if (iosRedirectUri && !/^[a-z][a-z0-9+.-]*:\/\/[a-z0-9/._-]+$/i.test(iosRedirectUri)) issues.push('IOS_REDIRECT_URI must be a registered native redirect URI');
+  let auth0: CoreConfig['auth0'] = null;
+  if (adapters.AUTH_ADAPTER === 'auth0') {
+    const domain = value('AUTH0_DOMAIN');
+    const clientId = value('AUTH0_CLIENT_ID');
+    const clientSecret = value('AUTH0_CLIENT_SECRET');
+    if (!domain || !clientId || !clientSecret) issues.push('AUTH0_DOMAIN, AUTH0_CLIENT_ID and AUTH0_CLIENT_SECRET are required for AUTH_ADAPTER=auth0');
+    else auth0 = { domain, clientId, clientSecret };
+  }
+  const port = Number(value('PORT') ?? '3000');
+  if (!Number.isInteger(port) || port < 1 || port > 65535) issues.push('PORT must be a TCP port');
   const privacyPolicyVersion = value('PRIVACY_POLICY_VERSION') ?? null;
   let retentionPolicy: Record<string, unknown> | null = null;
   const retentionRaw = value('RETENTION_POLICY_JSON');
@@ -147,7 +176,11 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
     databaseUrl: db!.toString(),
     adapters: adapters as CoreConfig['adapters'],
     devFixedOtp,
-    webOrigin,
+    webOrigin: webOrigin!,
+    sessionSecret,
+    iosRedirectUri,
+    auth0,
+    port,
     privacyPolicyVersion,
     retentionPolicy,
     logLevel,

@@ -8,6 +8,8 @@ const local = {
   PLACES_ADAPTER: 'fixture',
   MAIL_ADAPTER: 'outbox_test',
   AI_PROVIDER: 'mock',
+  WEB_ORIGIN: 'http://localhost:5174',
+  SESSION_SECRET: 'test-session-secret-0123456789abcdef',
 };
 const production = {
   ENVIRONMENT: 'production',
@@ -17,6 +19,10 @@ const production = {
   MAIL_ADAPTER: 'provider',
   AI_PROVIDER: 'deepseek',
   WEB_ORIGIN: 'https://app.example.test',
+  SESSION_SECRET: 'prod-session-secret-0123456789abcdefgh',
+  AUTH0_DOMAIN: 'tenant.eu.auth0.example',
+  AUTH0_CLIENT_ID: 'client-id',
+  AUTH0_CLIENT_SECRET: 'client-secret-value-for-tests',
   PRIVACY_POLICY_VERSION: '2026-10',
   RETENTION_POLICY_JSON: '{"deletedAccountDays":30}',
 };
@@ -86,6 +92,16 @@ describe('loadConfig', () => {
     expect(issues).toEqual(['DATABASE_URL is required', 'PLACES_ADAPTER must be one of google/fixture']);
   });
 
+  it('requires a long session secret, a web origin and Auth0 credentials for the Auth0 adapter', () => {
+    expect(issuesOf({ ...local, SESSION_SECRET: 'short', WEB_ORIGIN: 'localhost' })).toEqual([
+      'WEB_ORIGIN must be an origin (scheme://host[:port])',
+      'SESSION_SECRET must be at least 32 characters',
+    ]);
+    expect(issuesOf({ ...production, AUTH0_CLIENT_SECRET: '' })).toEqual(['AUTH0_DOMAIN, AUTH0_CLIENT_ID and AUTH0_CLIENT_SECRET are required for AUTH_ADAPTER=auth0']);
+    expect(issuesOf({ ...local, IOS_REDIRECT_URI: 'javascript:alert(1)' })).toEqual(['IOS_REDIRECT_URI must be a registered native redirect URI']);
+    expect(loadConfig({ ...local, IOS_REDIRECT_URI: 'fancy://auth/callback', PORT: '4000' })).toMatchObject({ iosRedirectUri: 'fancy://auth/callback', port: 4000, auth0: null });
+  });
+
   it('never echoes secret values in errors', () => {
     try {
       loadConfig({ ...production, AUTH_ADAPTER: 'test', DEV_FIXED_OTP: '987654' });
@@ -94,6 +110,7 @@ describe('loadConfig', () => {
       const message = (error as Error).message;
       expect(message).not.toContain('hunter2-secret');
       expect(message).not.toContain('987654');
+      expect(message).not.toContain('prod-session-secret');
     }
   });
 });

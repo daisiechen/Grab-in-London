@@ -10,11 +10,11 @@
     "core:check": "pnpm -r --workspace-concurrency=1 run typecheck && tsc -p infra/tsconfig.json && pnpm --filter @fancy/contracts run check:generated && eslint --max-warnings=0 . && node infra/scripts/secret-scan.mjs .",
     "core:test:unit": "vitest run --project unit",
     "core:test:db": "vitest run --project db",
-    "core:test:api": "node infra/scripts/not-implemented.mjs core:test:api T04",
+    "core:test:api": "vitest run --project api",
     "core:test:web": "node infra/scripts/not-implemented.mjs core:test:web T05",
     "core:test:ios": "node infra/scripts/not-implemented.mjs core:test:ios T24",
     "core:test:release": "vitest run --project release",
-    "core:test": "pnpm core:test:unit && pnpm core:test:db && pnpm core:test:release",
+    "core:test": "pnpm core:test:unit && pnpm core:test:db && pnpm core:test:api && pnpm core:test:release",
     "core:test:clients": "vitest run --project web --project admin"
   },
   "devDependencies": {

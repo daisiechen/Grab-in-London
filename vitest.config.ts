@@ -36,6 +36,16 @@ export default defineConfig({
           hookTimeout: 60_000,
         },
       },
+      {
+        test: {
+          name: 'api',
+          include: roots.map((r) => `${r}/*.api.test.ts`),
+          exclude: clientExclude,
+          globalSetup: ['packages/testkit/src/postgres/global-setup.ts'],
+          testTimeout: 30_000,
+          hookTimeout: 60_000,
+        },
+      },
       { test: { name: 'release', include: roots.map((r) => `${r}/*.release.test.ts`), exclude, testTimeout: 60_000 } },
     ],
   },

@@ -195,7 +195,8 @@
                           "additionalProperties": false,
                           "type": "object",
                           "required": [
-                            "outcome"
+                            "outcome",
+                            "authProof"
                           ],
                           "properties": {
                             "outcome": {
@@ -243,6 +244,15 @@
                             "handoffCode": {
                               "minLength": 32,
                               "maxLength": 128,
+                              "type": "string"
+                            },
+                            "returnTarget": {
+                              "pattern": "^/(?![/\\\\])[A-Za-z0-9/_?=&.%-]*$",
+                              "maxLength": 300,
+                              "type": "string"
+                            },
+                            "authProof": {
+                              "format": "uuid",
                               "type": "string"
                             }
                           }
@@ -627,7 +637,8 @@
                           "additionalProperties": false,
                           "type": "object",
                           "required": [
-                            "outcome"
+                            "outcome",
+                            "authProof"
                           ],
                           "properties": {
                             "outcome": {
@@ -675,6 +686,15 @@
                             "handoffCode": {
                               "minLength": 32,
                               "maxLength": 128,
+                              "type": "string"
+                            },
+                            "returnTarget": {
+                              "pattern": "^/(?![/\\\\])[A-Za-z0-9/_?=&.%-]*$",
+                              "maxLength": 300,
+                              "type": "string"
+                            },
+                            "authProof": {
+                              "format": "uuid",
                               "type": "string"
                             }
                           }
@@ -1735,8 +1755,11 @@
                     "type": "string"
                   },
                   "originalChallengeProof": {
-                    "minLength": 16,
-                    "maxLength": 512,
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "appVerifier": {
+                    "pattern": "^[A-Za-z0-9._~-]{43,128}$",
                     "type": "string"
                   }
                 }

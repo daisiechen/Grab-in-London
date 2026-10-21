@@ -29,7 +29,15 @@ export const CliCredentials = Obj({
 });
 /** AUTHENTICATED (Web: cookie set; iOS: handoffCode) or LINK_REQUIRED (no session issued), API §7. */
 const AuthOutcome = T.Union([
-  Obj({ outcome: T.Literal('AUTHENTICATED'), session: T.Optional(SessionInfo), handoffCode: T.Optional(T.String({ minLength: 32, maxLength: 128 })) }),
+  Obj({
+    outcome: T.Literal('AUTHENTICATED'),
+    session: T.Optional(SessionInfo),
+    handoffCode: T.Optional(T.String({ minLength: 32, maxLength: 128 })),
+    /** Allow-listed path bound server-side to the started transaction (Web). */
+    returnTarget: T.Optional(ReturnTarget),
+    /** Id of the completed authentication; proves a fresh login of this identity to /auth/links. */
+    authProof: Uuid,
+  }),
   Obj({ outcome: T.Literal('LINK_REQUIRED'), linkTicket: T.String({ minLength: 32, maxLength: 128 }), expiresAt: Instant }),
 ]);
 
@@ -97,7 +105,13 @@ export const authOperations = [
   op({
     operationId: 'linkIdentity', method: 'POST', path: '/auth/links', summary: 'Link a second proven identity (dual proof)',
     auth: 'session', write: 'idempotencyKey', ifMatch: false,
-    body: Obj({ linkTicket: T.String({ minLength: 32, maxLength: 128 }), originalChallengeProof: T.String({ minLength: 16, maxLength: 512 }) }),
+    body: Obj({
+      linkTicket: T.String({ minLength: 32, maxLength: 128 }),
+      /** authProof of the original identity's fresh sign-in (≤5 minutes) in this same session. */
+      originalChallengeProof: Uuid,
+      /** iOS only: PKCE-style verifier of the app challenge the ticket was bound to. */
+      appVerifier: T.Optional(T.String({ pattern: '^[A-Za-z0-9._~-]{43,128}$' })),
+    }),
     success: { status: 200, data: Obj({ identities: T.Array(LinkedIdentity, { maxItems: 10 }) }) },
     errors: ['REAUTH_REQUIRED', 'LINK_TICKET_INVALID', 'ACCOUNT_LINK_CONFLICT'],
   }),

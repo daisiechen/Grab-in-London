@@ -35,8 +35,8 @@ describe('workspace boundaries', () => {
     for (const [name, command] of Object.entries(scripts)) {
       expect(command, name).not.toMatch(/passWithNoTests|\|\|\s*true|exit 0/);
     }
-    for (const layer of ['unit', 'db', 'release']) expect(scripts[`core:test:${layer}`]).toBe(`vitest run --project ${layer}`);
-    for (const layer of ['api', 'web', 'ios']) expect(scripts[`core:test:${layer}`]).toMatch(/^node infra\/scripts\/not-implemented\.mjs /);
+    for (const layer of ['unit', 'db', 'api', 'release']) expect(scripts[`core:test:${layer}`]).toBe(`vitest run --project ${layer}`);
+    for (const layer of ['web', 'ios']) expect(scripts[`core:test:${layer}`]).toMatch(/^node infra\/scripts\/not-implemented\.mjs /);
   });
 
   it('fails unimplemented test layers instead of reporting success', () => {
@@ -86,6 +86,7 @@ describe('startup preflight', () => {
     DATABASE_URL: 'postgres://app@db.internal/fancy?sslmode=verify-full',
     AUTH_ADAPTER: 'auth0', PLACES_ADAPTER: 'google', MAIL_ADAPTER: 'provider', AI_PROVIDER: 'disabled',
     WEB_ORIGIN: 'https://app.example.test', PRIVACY_POLICY_VERSION: 'v1', RETENTION_POLICY_JSON: '{}',
+    SESSION_SECRET: 'release-session-secret-0123456789abcdef', AUTH0_DOMAIN: 'tenant.example', AUTH0_CLIENT_ID: 'id', AUTH0_CLIENT_SECRET: 'secret-value',
   };
 
   it('starts with a real production configuration', () => {
