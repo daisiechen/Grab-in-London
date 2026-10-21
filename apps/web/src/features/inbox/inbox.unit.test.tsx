@@ -2,10 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { act, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { createFetchStub, fail, ok, page, type Handler } from '../../test/fetchStub.ts';
-import { renderApp } from '../../test/render.tsx';
+import { renderApp, testApi } from '../../test/render.tsx';
 import { fakePollerDeps } from '../../test/fakePoller.ts';
 import { APPLICATION_ID, HOST_ID, MEAL_ID, USER_ID, meal, publicProfile, session } from '../../test/fixtures.ts';
-import { mergeMessages, maxSeq } from '../../api/conversations.ts';
+import { mergeMessages, maxSeq, readInbox, findConversation } from '../../api/conversations.ts';
 
 const CONV = '14141414-1414-4141-8141-141414141414';
 const conversation = (over: Record<string, unknown> = {}) => ({ id: CONV, version: '3', kind: 'GROUP', mealId: MEAL_ID, title: 'Friday dinner & new faces', canSend: true, dissolved: false, head: '12', ...over });
@@ -24,6 +24,20 @@ function chatStub(readMessages: Handler, over: Record<string, unknown> = {}, ext
 }
 
 describe('message helpers', () => {
+  it('finds older conversation metadata after five inbox pages', async () => {
+    const s=createFetchStub({inbox:({url})=>{
+      const index=Number(url.searchParams.get('cursor')??0);
+      return index===5 ? page([{conversation:conversation(),lastMessage:null,unreadCount:0}]) : page([],String(index+1));
+    }});
+    expect((await findConversation(testApi(s.fetch).client,CONV))?.id).toBe(CONV);
+    expect(s.callsTo('inbox')).toHaveLength(6);
+  });
+  it('fails closed instead of hanging or treating an incomplete inbox as complete', async () => {
+    const s=createFetchStub({inbox:()=>page([], 'repeated')});
+    await expect(readInbox(testApi(s.fetch).client)).rejects.toThrow('Pagination did not advance');
+    expect(s.callsTo('inbox')).toHaveLength(2);
+  });
+
   it('orders by bigint seq and de-duplicates by id', () => {
     const merged = mergeMessages([msg('10', 'b'), msg('9', 'a')], [msg('10', 'b'), msg('100', 'c')]);
     expect(merged.map((m) => m.seq)).toEqual(['9', '10', '100']);
@@ -129,6 +143,18 @@ describe('group chat (T12)', () => {
 });
 
 describe('inbox list (T12)', () => {
+  it('shows conversations beyond the first server page', async () => {
+    const s = createFetchStub({
+      getSession: () => ok(session()),
+      inbox: ({url}) => url.searchParams.get('cursor') === 'next-inbox'
+        ? page([{conversation: conversation({id:'15151515-1515-4151-8151-151515151515',title:'Older dinner group'}),lastMessage:null,unreadCount:0}])
+        : page([{conversation:conversation(),lastMessage:null,unreadCount:0}], 'next-inbox'),
+    });
+    renderApp(s.fetch, '/inbox');
+    expect(await screen.findByText('Older dinner group')).toBeTruthy();
+    expect(screen.getByText('Friday dinner & new faces')).toBeTruthy();
+    expect(s.callsTo('inbox').map(c=>c.url.searchParams.get('cursor'))).toEqual([null,'next-inbox']);
+  });
   it('separates meal groups, personal chats and application progress', async () => {
     const s = createFetchStub({
       getSession: () => ok(session()),

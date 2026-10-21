@@ -5,12 +5,13 @@ import { useSession } from '../../api/session.tsx';
 import { useQuery } from '../../api/useQuery.ts';
 import { errorMessage } from '../../api/errors.ts';
 import type { InboxItem } from '../../api/conversations.ts';
+import { readInbox } from '../../api/conversations.ts';
 import { signInPath } from '../../lib/returnTo.ts';
 import { FormError, Loading, Primary, PrimaryLink } from '../../ui/components.tsx';
 import { applicationLabels } from '../meals/present.ts';
 
 type Tab = 'chats' | 'applications';
-interface InboxData { items: InboxItem[]; nextCursor: string | null }
+interface InboxData { items: InboxItem[] }
 
 /**
  * Inbox (T12): meal groups and personal conversations, plus application progress. Only the
@@ -21,8 +22,7 @@ export function InboxPage() {
   const [tab, setTab] = useState<Tab>('chats');
   const signedIn = state.status === 'signed-in';
   const q = useQuery<InboxData>(signedIn ? 'inbox' : null, async (c) => {
-    const res = await c.call('inbox', {});
-    return { items: res.data, nextCursor: res.page.nextCursor };
+    return { items: await readInbox(c) };
   });
 
   if (state.status === 'loading') return <Loading />;
