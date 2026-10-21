@@ -429,3 +429,11 @@
 - QA Apply13真实标题Y127与native导航头116–170重叠，独立于首屏F21；5b/19d Screen/Apply字节相同。仅Screen的ScrollView显式contentInsetAdjustmentBehavior automatic，让UIKit按真实header调整，不硬编码高度/重复safearea，不改AppRoot/键盘/OS设置。
 - 新自有回归修前undefined红、修后绿，根全iOS256/type/整目录lint通过；保interactive dismissal/handled taps/KAV原配置。此测试证明配置，不单独证明几何视觉；正式SHA独立正常签名Release构建后交QA实际标题/滚动/提交复验，现键盘问题不另凭自动化手势失败认定根因。
 - F35先386e600同步，本切片仅Screen+自有inset测试与记录；三切片最终整合结果见F34记录。正常Xcode签名19d已实际恢复到Apply表单，新的正式SHA构建仍需保留自动Simulated.xcent与Mach-O entitlement，旧5b/19d及诊断产物不覆盖、QA设备状态不抢。
+
+
+## QA-F37 原生聊天自定义头避让导航栏（2026-10-21）
+
+- QA Chat17实际导航栏Y116–170与群标题Y125.7、Leave group Y114–158重叠；ChatScreen独立根不使用Screen，故F36不覆盖此处。仅认证聊天根通过已安装Expo公开useHeaderHeight取得真实高度，iOS paddingTop避让；保bottom safearea、keyboard offset88及消息/权限/历史行为。
+- 新3动态高度0/64/96回归修前undefined红、修后绿；既有chat与analytics自有测试只补导航context mock。全量原生与core:check结果在冻结后记录；组件配置证明不代替真实几何与消息验收。原Chat17精确Message selector失败与真实顶部遮挡分别处理，不把选择器失败冒认消息产品缺陷。
+- 原生83df实际Apply15已由QA完成保留身份恢复、标题避让、编辑返回保稿及显式提交到pending；这不意味着未执行的直接键盘提交路径或F37已关闭。QA继续主acfe饭局Web主持/Native加入申请审批与双端消息，未移交staff克隆，61973/时钟/设备由QA独占。dc09848政策草稿及其CI成功不等于政策获批。
+- 冻结四文件根核对：全iOS38套/259项、core:check、自有文档结构3项及diff检查全部通过（/private/tmp/fancy-f37-ios-tests.log、fancy-f37-check.log、fancy-f37-documentation.log）；未修改后端/Web，沿用其上批验证，不冒称全层重跑。root持串行Git窗口，仅四原生文件与本记录提交推送，正式SHA后独立正常签名构建交QA，不安装或抢其设备。

@@ -1,3 +1,4 @@
+import {useHeaderHeight} from 'expo-router/react-navigation';
 import {useAssistantContext,useAssistantEditor} from '../assistant/hooks.ts';
 import {ReadAcknowledger} from './read-ack.ts';
 import { useAnalyticsPresentation } from '../../analytics/hooks.ts';
@@ -52,6 +53,7 @@ export function ChatScreen() {
 }
 
 function AuthenticatedChatScreen() {
+  const headerHeight=useHeaderHeight();
   const { conversationId } = useLocalSearchParams<{ conversationId: string }>();
   const id = String(conversationId);
   const services = useServices();
@@ -199,7 +201,7 @@ function AuthenticatedChatScreen() {
 
 
   return (
-    <SafeAreaView style={styles.safe} edges={['bottom']} testID="chat">
+    <SafeAreaView style={[styles.safe,{paddingTop:Platform.OS==='ios'?headerHeight:0}]} edges={['bottom']} testID="chat">
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={88}>
         <View style={styles.header}>
           <Text style={styles.title} accessibilityRole="header">{conversation?.title ?? 'Conversation'}</Text>

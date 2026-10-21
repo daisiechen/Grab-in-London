@@ -1,3 +1,4 @@
+jest.mock('expo-router/react-navigation',()=>({useHeaderHeight:()=>0}));
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { AppState, type AppStateStatus } from 'react-native';
 import { ChatScreen, mergeMessages } from './ChatScreen.tsx';
