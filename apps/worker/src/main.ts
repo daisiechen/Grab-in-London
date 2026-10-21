@@ -1,8 +1,10 @@
+import {recoveryReady} from '../../api/src/recovery/replay.ts';
 import {randomUUID} from 'node:crypto';
 import {loadConfig,type CoreConfig} from '@fancy/config';
 import {createPool,type Pool} from '@fancy/db';
 import {sealSourceSnapshot} from '../../api/src/admin/snapshots.ts';
-import {deletionHandler,UnavailableDeletionProvider} from './handlers/deletion.ts';
+import {UnavailableDeletionSteps} from './deletion/provider.ts';
+import {deletionHandler} from './handlers/deletion.ts';
 import {lifecycleHandler} from './handlers/lifecycle.ts';
 import {mailDelivery,UnavailableMailProvider} from './mail/delivery.ts';
 import {createRunner,idle} from './runner/runner.ts';
@@ -12,11 +14,12 @@ export function createWorkerRuntime(pool:Pool,config:CoreConfig){
  const lifecycle=lifecycleHandler(pool);
  const runner=createRunner({pool,owner:`fancy-worker:${randomUUID()}`,handlers:{
   'meal.close':lifecycle,'meal.start':lifecycle,'meal.end':lifecycle,
-  'account.purge':deletionHandler(pool,new UnavailableDeletionProvider()),
+  'account.purge':deletionHandler(pool,new UnavailableDeletionSteps()),
  },onDead:(job,errorCode)=>console.error(JSON.stringify({event:'job_dead',...job,errorCode}))});
  const mail=mailDelivery(pool,new UnavailableMailProvider(),config.environment);
  let lastSnapshot=0;
  async function tick(){
+  if(!await recoveryReady(pool))return {claimed:0,done:0,retried:0,dead:0,lost:0};
   const result=await runner.tick();await mail.tick();
   if(Date.now()-lastSnapshot>=3600_000){
    // Coverage starts at the actual ledger installation, never an invented historical date.

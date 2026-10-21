@@ -120,3 +120,12 @@
 - 生产修复：InboxItem增量可选 `applicationMeal`，仅含饭局标题、London ZonedTime、主持人公开显示名。本人已授权申请按对应meal关联，不新增邮箱/留言/群信息；主持人非ACTIVE时标题/姓名遮罩。Web和iOS申请卡片展示摘要，原View application链接不变；iOS可访问性标签包含场次，避免同状态按钮无法区分。
 - 定向验证：Web两场pending卡片检查标题、分别日期时间、主持人、各自mealId链接及不显示私人留言；API真实PG两场对应、精简摘要字段、无群信息及删除主持人遮罩；iOS卡片展示及跳转。修后API4、Web单文件12、iOS169通过；全包core:check、Web全量173及build、iOS类型/lint均通过。根Python69项中1项因QA并行修改探针后记录哈希待更新而失败（QA probe changed after run），已通知QA，不改其断言、不宣称全绿；协调文档单独验证。
 - 旧的本机API进程不会自动加载新服务端代码；已提醒QA先保存现有路径证据，再重启可销毁fixture进行浏览器复验，不能用旧进程判断补丁失败。最终关闭由QA负责，未将QA-F01提前标CLOSED。
+
+
+## 原14条阻塞本地解除准备（2026-10-21 08:38 London）
+
+- QA已在 `c015910` 纠正PRIVACY-007/008为本地待执行，不再泛称外部阻塞。开发本轮按14个原ID逐条写 [解除矩阵](../docs/delivery/mvp-gate-unblocking-2026-10-21.zh-CN.md)，注明可复验部分、唯一依赖、负责人及不能关闭的真实门槛。
+- 本轮生产增量：供应商Auth0/Apple分步持久checkpoint及稳定幂等key；0022恢复闸门阻断API业务及worker；可信离线台账重放复用原删除事务，保原删除ID/回执hash/有效期/政策；真实pg_dump/pg_restore与错误台账拒绝/重放/重复重放/他人保留；同库新API/RAM runtime旧AI410；本机100并发/1000账号/10000消息混合负载准备。
+- iOS原生工具链仍因未接受许可退出69；新增4项冷启动/安全存储/410测试后全173通过，不冒称真重装。免费Personal Team足以尝试个人设备开发，不将付费Program或EAS误列为全部本地测试前置。
+- DeepSeek官方参数/usage/数据边界核证ADR、34适配器回归、固定60合成中英样本及无网默认runner/结果校验已准备；未读取Key/真实调用/批准价，dry-run60 NOT_RUN，真实评测仍需实际账户及批准。
+- 最终核心整合unit198、DB106、API100、release10通过；core:check、Web+后台215/iOS173通过。最后补充恢复回执原有效期/政策后定向恢复复跑；QA已串行补两份新文档索引并交回本批暂存；Python69项最终通过，限定lint与diff检查通过。QA脚本及报告保留独占，本轮不替其改case结论。

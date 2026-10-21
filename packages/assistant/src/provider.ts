@@ -19,7 +19,7 @@ export function deepSeekProvider(config: {
 }): ModelProvider {
   const now = config.now ?? Date.now;
   return { async generate(req) {
-    if (!config.enabled || !config.apiKey || !config.modelVerified || !config.model || !config.priceVersion || req.deadline <= now() || req.maxOutputTokens < 1 || req.maxOutputTokens > 2000) {
+    if (!config.enabled || !config.apiKey || !config.modelVerified || !config.model || !config.priceVersion || req.deadline <= now() || !Number.isSafeInteger(req.maxOutputTokens) || req.maxOutputTokens < 1 || req.maxOutputTokens > 2000 || !Number.isFinite(req.deadline) || req.signal?.aborted) {
       throw new ProviderError('PROVIDER_UNAVAILABLE', 'KNOWN');
     }
     const controller = new AbortController();
@@ -31,7 +31,7 @@ export function deepSeekProvider(config: {
       // Fixed official origin. Raw provider bodies/errors are never logged or reflected to clients.
       // Fetch has no retry. Each internal call needs its own durable budget admission first.
       const response = await (config.fetch ?? fetch)('https://api.deepseek.com/chat/completions', {
-        method: 'POST', signal: controller.signal,
+        method: 'POST', signal: controller.signal, redirect:'error',
         headers: { authorization: `Bearer ${config.apiKey}`, 'content-type': 'application/json' },
         body: JSON.stringify({ model: config.model, stream: false, thinking: { type: 'disabled' }, max_tokens: req.maxOutputTokens,
           response_format: { type: 'json_object' }, messages: [
@@ -40,17 +40,19 @@ export function deepSeekProvider(config: {
           ] }),
       });
       if (!response.ok) throw new ProviderError('PROVIDER_UNAVAILABLE');
-      const body = await response.json() as { id?: unknown; choices?: Array<{ finish_reason?: unknown; message?: { content?: unknown } }>; usage?: { prompt_tokens?: unknown; completion_tokens?: unknown } };
+      const raw:unknown=await response.json();
+      if(!raw||typeof raw!=='object'||Array.isArray(raw))throw new ProviderError('PROVIDER_INVALID_RESULT');
+      const body = raw as { id?: unknown; choices?: Array<{ finish_reason?: unknown; message?: { content?: unknown; refusal?:unknown; tool_calls?:unknown } }>; usage?: { prompt_tokens?: unknown; completion_tokens?: unknown } };
       const input = body.usage?.prompt_tokens;
       const output = body.usage?.completion_tokens;
       const validUsage = Number.isSafeInteger(input) && Number.isSafeInteger(output) && Number(input) >= 0 && Number(output) >= 0;
       const usage = validUsage ? { inputTokens: Number(input), outputTokens: Number(output) } : null;
       const choice = body.choices?.[0];
-      if (!usage || typeof body.id !== 'string' || !body.id || choice?.finish_reason !== 'stop' || typeof choice.message?.content !== 'string' || choice.message.content.length > 64_000 || usage.outputTokens > req.maxOutputTokens) {
+      if (!usage || typeof body.id !== 'string' || !body.id || body.id.length>256 || choice?.finish_reason !== 'stop' || choice.message?.refusal != null || (Array.isArray(choice.message?.tool_calls)&&choice.message.tool_calls.length>0) || typeof choice.message?.content !== 'string' || choice.message.content.length > 64_000 || usage.outputTokens > req.maxOutputTokens) {
         throw new ProviderError('PROVIDER_INVALID_RESULT', usage ? 'KNOWN' : 'UNKNOWN', usage, typeof body.id === 'string' ? body.id : null);
       }
       if (controller.signal.aborted || now() >= req.deadline) throw new ProviderError('PROVIDER_TIMEOUT', 'KNOWN', usage, body.id);
-      try { return { parsed: JSON.parse(choice.message.content) as unknown, usage, providerRequestId: body.id }; }
+      try { const parsed:unknown=JSON.parse(choice.message.content);if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw new Error('Expected JSON object');return { parsed, usage, providerRequestId: body.id }; }
       catch { throw new ProviderError('PROVIDER_INVALID_RESULT', 'KNOWN', usage, body.id); }
     } catch (error) {
       if (error instanceof ProviderError) throw error;

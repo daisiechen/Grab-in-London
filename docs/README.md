@@ -32,6 +32,7 @@
 - [API与客户端契约](engineering/api-and-client-contract.zh-CN.md)：接口、权限、Web/iOS与后台适配、通知渠道。
 - [验证与发布](engineering/validation-and-release.zh-CN.md)及[场景清单](engineering/acceptance-scenarios.json)：待实施业务验收与真实外部门槛。
 - [真实AI技术方案](engineering/ai-development-plan.zh-CN.md)与[AI场景](engineering/ai-acceptance-scenarios.json)：只读检索/草稿、偏好/短期会话、费用硬闸、真实评测与接入门槛。
+- [DeepSeek 接入准备核查](engineering/decisions/deepseek-readiness.md)：官方参数、政策与候选价格核对及本地适配；不代表真实模型或数据门槛获准启用。
 - [DeepSeek 人民币预算实施决策](engineering/decisions/ai-cny-budget.md)：按用户决定使用人民币最小整数单位计账，月上限50元；真实价格及凭据缺失时关闭模型调用。
 - [共同审查记录](engineering/collaborative-review.zh-CN.md)：精确版本、双方意见、关闭情况及适用边界；[哈希清单](engineering/review-manifest.json)固定10份认可文件。
 - [Claude执行入口](../tasks/plan.md)与[唯一任务表](../tasks/todo.md)：43个切片，已获用户授权启动实施，实际状态及验证证据以任务表为准。
@@ -40,6 +41,7 @@
 
 ## 发布与验收
 
+- [原14条阻塞解除准备](delivery/mvp-gate-unblocking-2026-10-21.zh-CN.md)：逐条负责人、解除条件及本地演练；最终状态由独立QA复验判定。
 - [MVP 本地自测与独测交接](delivery/mvp-local-selftest-2026-10-21.zh-CN.md)：本机验证、精确版本、模拟与真实边界及待用户操作。
 
 - [MVP与AI测试计划](qa/test-plan.zh-CN.md)、[测试用例目录](qa/test-cases.zh-CN.md)、[结构化用例](qa/test-cases.json)与[Claude协作及差异登记](qa/collaboration-and-gaps.zh-CN.md)：覆盖PRD、双端Demo、技术包的待执行验收，区分模拟、待实现和真实门槛。

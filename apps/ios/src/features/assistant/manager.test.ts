@@ -1,5 +1,5 @@
 import {memoryGuestCredentialStore,type GuestCredentialStore} from './guest-store.ts';
-import type {ApiClient} from '@fancy/client';
+import {ApiError,type ApiClient} from '@fancy/client';
 import type {SessionManager} from '../auth/session.ts';
 import {AssistantManager,emptyPreferences,type AIDraft} from './manager.ts';
 import {deferred,flush} from '../../test/deferred.ts';
@@ -70,6 +70,28 @@ it('restores the same fixed-expiry guest across managers and NEW',async()=>{
  await first.manager.newConversation();expect(first.manager.credential).toBe(token);expect(await store.read()).toEqual(stored);
  const second=setup(store);await second.manager.continue();expect(second.manager.credential).toBe(token);
  expect(second.call.mock.calls.some(c=>c[0]==='createGuestSession')).toBe(false);expect(await store.read()).toEqual(stored);
+});
+it('cold-starts with no AI transcript or device token and only continues after an explicit action using the fixed-expiry guest',async()=>{
+ const store=memoryGuestCredentialStore(),first=setup(store);
+ first.responses.set('readAI',async()=>({data:{turns:[{role:'assistant',text:'RAM_ONLY_OLD_TRANSCRIPT'}],latestRequestId:null,expiresAt:new Date(1800000).toISOString()}}));
+ await first.manager.continue();first.manager.setText('RAM_ONLY_OLD_UNSENT');
+ const stored=await store.read();expect(Object.keys(stored!).sort()).toEqual(['expiresAt','token']);
+ const cold=setup(store);expect(cold.call).not.toHaveBeenCalled();expect(cold.manager.deviceToken).toBeNull();
+ expect(cold.manager.getSnapshot()).toMatchObject({turns:[],text:'',result:null,view:'home'});
+ cold.responses.set('bootstrapAI',async()=>({data:{sessionId:'new-explicit-session',generation:'1',deviceToken:'new-device-proof',revokeHandle:'revoke',expiresAt:new Date(1800000).toISOString()}}));
+ await cold.manager.continue();expect(cold.manager.getSnapshot()).toMatchObject({phase:'idle',turns:[]});
+ expect(cold.call.mock.calls.map(c=>c[0])).toEqual(['bootstrapAI','readAI']);
+ expect(cold.call.mock.calls[1]?.[1]).toEqual({params:{sessionId:'new-explicit-session'}});
+ expect(await store.read()).toEqual(stored);expect(cold.manager.credential).toBe(stored?.token);
+});
+it('treats a server RAM-loss 410 as expired without automatic regeneration and keeps local unsent text and confirmed preferences',async()=>{
+ const h=setup();await h.manager.savePreferences({...emptyPreferences(),tableSizes:[2]});await h.manager.continue();
+ h.manager.setText('LOCAL_UNSENT_AFTER_SERVER_RESTART');
+ h.responses.set('readAI',async()=>{throw new ApiError({status:410,code:'AI_SESSION_EXPIRED',message:'Server RAM is gone'});});
+ await h.manager.continue();
+ expect(h.manager.getSnapshot()).toMatchObject({phase:'expired',text:'LOCAL_UNSENT_AFTER_SERVER_RESTART',preferences:{tableSizes:[2]},turns:[],result:null});
+ expect(h.manager.deviceToken).toBeNull();expect(h.call.mock.calls.filter(c=>c[0]==='bootstrapAI')).toHaveLength(1);
+ expect(h.call.mock.calls.some(c=>c[0]==='requestAI'||c[0]==='pollAI')).toBe(false);
 });
 it('creates a new subject only after the fixed 24h expiry',async()=>{
  const store=memoryGuestCredentialStore();await store.write({token:'synthetic-expired-fixture',expiresAt:86400000});const h=setup(store);h.time(86400000);

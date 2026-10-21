@@ -1,6 +1,7 @@
 import type {Pool} from 'pg';
 import {withTransaction} from '../../../api/src/common/transaction.ts';
 import type {JobHandler} from '../runner/runner.ts';
+import {StepwiseDeletionProvider,type DeletionSteps} from '../deletion/provider.ts';
 
 /** Provider implementations must revoke Auth0 identities/refresh grants and Apple grants.
  * A timeout or an unconfigured provider never counts as completed. */
@@ -10,7 +11,8 @@ export interface DeletionProvider {
 export class UnavailableDeletionProvider implements DeletionProvider {
  async revoke():Promise<'NEEDS_SUPPORT'>{return 'NEEDS_SUPPORT';}
 }
-export function deletionHandler(pool:Pool,provider:DeletionProvider,policyApproved=false):JobHandler {
+export function deletionHandler(pool:Pool,provider:DeletionProvider|DeletionSteps,policyApproved=false):JobHandler {
+ const remoteProvider='auth0' in provider?new StepwiseDeletionProvider(pool,provider):provider;
  return async(job)=>{
   const {rows:[hint]}=await pool.query<{user_id:string;status:string}>(`SELECT user_id,status FROM deletion_requests WHERE id=$1`,[job.resourceId]);
   if(!hint||hint.status==='COMPLETED')return;
@@ -46,7 +48,7 @@ export function deletionHandler(pool:Pool,provider:DeletionProvider,policyApprov
   });
   // Remote calls are outside SQL locks. They use the stable deletion ID for provider dedupe.
   let remote:'COMPLETED'|'NEEDS_SUPPORT';
-  try{remote=await provider.revoke(hint.user_id,job.resourceId);}catch{remote='NEEDS_SUPPORT';}
+  try{remote=await remoteProvider.revoke(hint.user_id,job.resourceId);}catch{remote='NEEDS_SUPPORT';}
   await withTransaction(pool,async(tx)=>{
    await tx.locks.lock('users',[hint.user_id],'update');
    const {rows:[receipt]}=await tx.client.query(`SELECT status FROM deletion_requests WHERE id=$1 FOR UPDATE`,[job.resourceId]);

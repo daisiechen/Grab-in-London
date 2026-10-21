@@ -47,3 +47,30 @@ FANCY_LOCAL_ACCEPTANCE=1 node infra/local-acceptance.ts
 恢复备份时先停API/worker、恢复到隔离库，重放独立删除台账和快照撤销屏障，再验证删除主体不可登录、正文不可读、旧快照/导出返回410。实际备份/恢复演练尚未在首尔服务器执行，不能据本文件宣称通过。数据库迁移后的回滚不能仅切旧代码，须先核对旧代码与当前schema兼容性。
 
 CI只运行验证，无部署凭据或远程写权限。配置依据官方 [checkout](https://github.com/actions/checkout)、[pnpm/setup](https://github.com/pnpm/setup) 文档；远端CI首次执行结果需单独核查，不能以本地测试替代。
+
+
+## 隔离恢复与负载准备（不代表首尔验收）
+
+本机演练：`pnpm exec vitest run --project api apps/api/src/recovery infra/tests/load.api.test.ts`。
+使用真实PG17的pg_dump/pg_restore，把备份之后接受的删除台账保存在备份之外，再在隔离库恢复。
+0022恢复闸门会阻止API业务流量和worker；台账摘要匹配且逐主体复用生产删除事务、撤身份/快照后才ready。
+重放保留原删除ID与回执hash，避免恢复后换provider幂等键；重复重放不多建删除请求。
+
+人工生产恢复必须先停入口/API/worker，恢复到隔离库，应用迁移，再在API/worker启动前arm闸门。
+绝不能先开放恢复库再补台账。以下工具默认拒绝运行，需显式离线模式、安全环境和独立台账文件：
+
+```sh
+FANCY_OFFLINE_RECOVERY=1 node infra/recovery.ts export /private/path/deletion-ledger.json
+FANCY_OFFLINE_RECOVERY=1 node infra/recovery.ts arm /private/path/deletion-ledger.json
+FANCY_OFFLINE_RECOVERY=1 node infra/recovery.ts replay /private/path/deletion-ledger.json
+```
+
+export对当前源库执行，arm/replay对隔离恢复库执行；用各自安全DATABASE_URL，不把URL放命令历史或公开资料。
+export使用0600且拒绝覆盖；只导出ID、接受时刻和回执hash，不导出正文或明文回执。
+独立台账必须比恢复备份新且完整；把备份内的旧台账再次导出不满足这个条件。
+当前工具只提供显式离线导出/重放，尚未配置生产独立持久化通道、导出频率/漏项检测或异地存储，不能据本机演练关闭G-PRIVACY/G-HOST。
+不能靠恢复库自身的READY默认值识别一次外部pg_restore；停流量及arm是发布操作契约，需在真实托管演练验证。
+
+负载前置使用1000合成账号、10000合成消息，100并发（25消息读取+75资料读取）走真实HTTP处理器/PG，但Fastify inject不包含TLS、网络和首尔资源竞争。
+最初对同一账号发100次消息读取触发40/min限流；调整为混合合法请求，不关闭或提高限流。
+输出p95、错误率和观测到的worker延迟；这里不是持续压测或生产SLO证明。24小时RPO/4小时RTO目标仍须真实备份频率、独立台账持久化和首尔恢复计时验证。

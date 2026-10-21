@@ -109,3 +109,11 @@ export const privacyControl = pgTable('privacy_control', {
   epoch: big('epoch').notNull().default(0n),
   updatedAt: ts('updated_at').notNull().defaultNow(),
 });
+
+export const recoveryControl = pgTable('recovery_control', {
+  id: smallint('id').primaryKey(),
+  state: text('state', {enum:['READY','REPLAY_REQUIRED']}).notNull(),
+  ledgerDigest: text('ledger_digest'),
+  replayedCount: integer('replayed_count').notNull().default(0),
+  updatedAt: ts('updated_at').notNull().defaultNow(),
+});

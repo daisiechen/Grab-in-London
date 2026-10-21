@@ -1,1 +1,1 @@
-{ "extends": "../tsconfig.base.json", "compilerOptions": { "allowJs": false }, "include": ["tests", "../vitest.config.ts"] }
+{ "extends": "../tsconfig.base.json", "compilerOptions": { "allowJs": false }, "include": ["tests", "recovery.ts", "../vitest.config.ts"] }

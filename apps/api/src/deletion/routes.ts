@@ -1,7 +1,9 @@
+import type {} from '@fastify/cookie';
 import type { FastifyInstance } from 'fastify';
 import { appendAudit, enqueueJob } from '@fancy/db';
 import { DomainError } from '../common/errors.ts';
 import { registerLockTable } from '../common/locks.ts';
+import type { Tx } from '../common/transaction.ts';
 import { lockActiveActor } from '../common/actor.ts';
 import { defineRoute, defineWrite } from '../http/routes.ts';
 import type { AppDeps } from '../http/context.ts';
@@ -30,51 +32,57 @@ export function registerDeletionRoutes(app:FastifyInstance,deps:AppDeps){
   if(row.expires_at&&row.expires_at<=new Date())throw new DomainError('RECEIPT_EXPIRED','This deletion receipt has expired.');return{data:statusDto(row)};
  });
  defineWrite(app,deps,'requestDeletion',async({request,auth,ifMatch},tx)=>{
-  const actor=await lockActiveActor(tx,auth.userId,'update');
-  if(actor.version!==ifMatch)throw new DomainError('VERSION_CONFLICT','Your account changed. Reload before confirming.',{currentVersion:actor.version});
+  const row=await applyDeletion(tx,deps,{kind:'USER',userId:auth.userId,authTime:auth.authTime,ifMatch,receiptToken:(request.body as {receiptToken:string}).receiptToken,requestId:request.id});
+  return{data:statusDto(row),resourceId:row.id,after:(reply)=>{deps.assistantRuntime?.shutdown();void reply.clearCookie(SESSION_COOKIE,{path:'/'});}};
+ });
+}
+
+/** Trusted in-process recovery boundary only; never exposed as an HTTP operation. */
+export async function applyDeletion(tx:Tx,deps:AppDeps,input:({kind:'USER';authTime:Date;ifMatch:string|null}|{kind:'RESTORE';deletionId:string;acceptedAt:string;receiptTokenHash:string;expiresAt:string|null;policyVersion:string})&{userId:string;receiptToken:string;requestId:string}) {
+  const actor=await lockActiveActor(tx,input.userId,'update');
+  if(input.kind==='USER'&&actor.version!==input.ifMatch)throw new DomainError('VERSION_CONFLICT','Your account changed. Reload before confirming.',{currentVersion:actor.version});
   // Holding this user UPDATE blocks new applications, approvals and messages involving the actor.
-  const {rows:pairs}=await tx.client.query<{id:string}>(`SELECT id FROM user_pairs WHERE low_user=$1 OR high_user=$1 ORDER BY id`,[auth.userId]);
+  const {rows:pairs}=await tx.client.query<{id:string}>(`SELECT id FROM user_pairs WHERE low_user=$1 OR high_user=$1 ORDER BY id`,[input.userId]);
   const pairIds=pairs.map(p=>p.id);
-  const {rows:mealIds}=await tx.client.query<{id:string}>(`SELECT id FROM meals WHERE host_id=$1 OR id IN(SELECT meal_id FROM applications WHERE user_id=$1 AND state IN('PENDING','CONFIRMED')) OR id IN(SELECT basis_meal_id FROM pair_consents WHERE pair_id=ANY($2::uuid[])) ORDER BY id`,[auth.userId,pairIds]);
+  const {rows:mealIds}=await tx.client.query<{id:string}>(`SELECT id FROM meals WHERE host_id=$1 OR id IN(SELECT meal_id FROM applications WHERE user_id=$1 AND state IN('PENDING','CONFIRMED')) OR id IN(SELECT basis_meal_id FROM pair_consents WHERE pair_id=ANY($2::uuid[])) ORDER BY id`,[input.userId,pairIds]);
   const meals=await tx.locks.lock<MealRow>('meals',mealIds.map(m=>m.id),'update','*');
   if(pairIds.length)await tx.locks.lock('user_pairs',pairIds,'update');
-  const {rows:conversations}=await tx.client.query<{id:string}>(`SELECT id FROM conversations WHERE meal_id=ANY($1::uuid[]) OR pair_id=ANY($2::uuid[]) OR id IN(SELECT conversation_id FROM membership_intervals WHERE user_id=$3 AND leave_seq IS NULL) ORDER BY id`,[mealIds.map(m=>m.id),pairIds,auth.userId]);
+  const {rows:conversations}=await tx.client.query<{id:string}>(`SELECT id FROM conversations WHERE meal_id=ANY($1::uuid[]) OR pair_id=ANY($2::uuid[]) OR id IN(SELECT conversation_id FROM membership_intervals WHERE user_id=$3 AND leave_seq IS NULL) ORDER BY id`,[mealIds.map(m=>m.id),pairIds,input.userId]);
   await tx.locks.lock('conversations',conversations.map(c=>c.id),'update');
-  await prelockUserAI(tx.client,auth.userId);
+  await prelockUserAI(tx.client,input.userId);
   await tx.locks.privacyControl();
-  const now=await tx.effectiveNow();assertFreshAuth(auth.authTime,now);
-  await invalidateUserAI(tx.client,deps.assistantRuntime!,auth.userId,'ACCOUNT_DELETED');
+  const now=await tx.effectiveNow();if(input.kind==='USER')assertFreshAuth(input.authTime,now);
+  await invalidateUserAI(tx.client,deps.assistantRuntime!,input.userId,'ACCOUNT_DELETED');
   for(const meal of meals){
    await advanceLifecycle(tx,meal,now);
    if(now<meal.starts_at&&meal.status==='OPEN'){
-    if(meal.host_id===auth.userId)await cancelMealState(tx,meal,'host',now,auth.userId);
+    if(meal.host_id===input.userId)await cancelMealState(tx,meal,'host',now,input.userId);
     else{
-     const {rows:[application]}=await tx.client.query(`SELECT id,state FROM applications WHERE meal_id=$1 AND user_id=$2 AND state IN('PENDING','CONFIRMED') FOR UPDATE`,[meal.id,auth.userId]);
+     const {rows:[application]}=await tx.client.query(`SELECT id,state FROM applications WHERE meal_id=$1 AND user_id=$2 AND state IN('PENDING','CONFIRMED') FOR UPDATE`,[meal.id,input.userId]);
      if(application?.state==='CONFIRMED'){
-      await addSeat(tx,meal,auth.userId,application.id,'LEFT',now,request.id);
+      await addSeat(tx,meal,input.userId,application.id,'LEFT',now,input.requestId);
       await tx.client.query(`UPDATE meals SET version=version+1 WHERE id=$1`,[meal.id]);meal.version=String(BigInt(meal.version)+1n);
      }
      if(application)await tx.client.query(`UPDATE applications SET state=$2,version=version+1,decided_at=$3 WHERE id=$1`,[application.id,application.state==='PENDING'?'WITHDRAWN':'CANCELLED',now]);
-     if(application?.state==='CONFIRMED'&&now>=meal.closes_at&&(await currentSeats(tx,meal,now)).length<meal.minimum)await cancelMealState(tx,meal,'insufficient',now,auth.userId);
+     if(application?.state==='CONFIRMED'&&now>=meal.closes_at&&(await currentSeats(tx,meal,now)).length<meal.minimum)await cancelMealState(tx,meal,'insufficient',now,input.userId);
     }
-   }else await tx.client.query(`UPDATE applications SET state='WITHDRAWN',version=version+1,decided_at=$3 WHERE meal_id=$1 AND user_id=$2 AND state='PENDING'`,[meal.id,auth.userId,now]);
+   }else await tx.client.query(`UPDATE applications SET state='WITHDRAWN',version=version+1,decided_at=$3 WHERE meal_id=$1 AND user_id=$2 AND state='PENDING'`,[meal.id,input.userId,now]);
   }
-  await revokePairsForDeletion(tx,auth.userId,now);
-  for(const c of conversations)await leaveConversation(tx,c.id,auth.userId,now);
-  await tx.client.query(`UPDATE users SET status='DELETING',version=version+1,privacy_epoch=privacy_epoch+1,updated_at=$2 WHERE id=$1`,[auth.userId,now]);
-  await revokeAllForUser(tx.client,auth.userId,'ACCOUNT_DELETION');
+  await revokePairsForDeletion(tx,input.userId,now);
+  for(const c of conversations)await leaveConversation(tx,c.id,input.userId,now);
+  await tx.client.query(`UPDATE users SET status='DELETING',version=version+1,privacy_epoch=privacy_epoch+1,updated_at=$2 WHERE id=$1`,[input.userId,now]);
+  await revokeAllForUser(tx.client,input.userId,'ACCOUNT_DELETION');
   await tx.client.query(`UPDATE privacy_control SET epoch=epoch+1 WHERE id=1`);
-  const {rows:revoked}=await tx.client.query<{id:string}>(`UPDATE analytics_snapshots SET revoked_at=COALESCE(revoked_at,$2) WHERE id IN(SELECT snapshot_id FROM analytics_snapshot_subjects WHERE user_id=$1) RETURNING id`,[auth.userId,now]);
+  const {rows:revoked}=await tx.client.query<{id:string}>(`UPDATE analytics_snapshots SET revoked_at=COALESCE(revoked_at,$2) WHERE id IN(SELECT snapshot_id FROM analytics_snapshot_subjects WHERE user_id=$1) RETURNING id`,[input.userId,now]);
   const revokedIds=revoked.map(s=>s.id);
   purgeSnapshotExports(revokedIds);
   await tx.client.query(`UPDATE analytics_exports SET revoked_at=COALESCE(revoked_at,$2) WHERE snapshot_id=ANY($1::uuid[])`,[revokedIds,now]);
-  const token=(request.body as {receiptToken:string}).receiptToken;
+  const token=input.receiptToken;
   const days=deps.config.retentionPolicy?.deletionReceiptDays;
   const expires=typeof days==='number'&&Number.isInteger(days)&&days>0?new Date(now.getTime()+days*86_400_000):null;
-  const {rows:[row]}=await tx.client.query(`INSERT INTO deletion_requests(user_id,receipt_token_hash,status,requested_at,expires_at,policy_version) VALUES($1,$2,'PENDING',$3,$4,$5) RETURNING *`,[auth.userId,sha256Hex(token),now,expires,deps.config.privacyPolicyVersion??'unconfigured']);
-  await tx.client.query(`INSERT INTO deletion_journal(deletion_id,user_id) VALUES($1,$2)`,[row.id,auth.userId]);
+  const {rows:[row]}=await tx.client.query(`INSERT INTO deletion_requests(id,user_id,receipt_token_hash,status,requested_at,expires_at,policy_version) VALUES(COALESCE($6::uuid,gen_random_uuid()),$1,$2,'PENDING',$3,$4,$5) RETURNING *`,[input.userId,input.kind==='RESTORE'?input.receiptTokenHash:sha256Hex(token),input.kind==='RESTORE'?new Date(input.acceptedAt):now,input.kind==='RESTORE'?(input.expiresAt?new Date(input.expiresAt):null):expires,input.kind==='RESTORE'?input.policyVersion:(deps.config.privacyPolicyVersion??'unconfigured'),input.kind==='RESTORE'?input.deletionId:null]);
+  await tx.client.query(`INSERT INTO deletion_journal(deletion_id,user_id) VALUES($1,$2)`,[row.id,input.userId]);
   await enqueueJob(tx.client,{kind:'account.purge',resourceId:row.id,dueAt:now});
-  await appendAudit(tx.client,{actorKind:'USER',actorId:auth.userId,action:'account.deletion_accepted',aggregateType:'deletion',aggregateId:row.id,requestId:request.id});
-  return{data:statusDto(row),resourceId:row.id,after:(reply)=>{deps.assistantRuntime?.shutdown();void reply.clearCookie(SESSION_COOKIE,{path:'/'});}};
- });
+  await appendAudit(tx.client,{actorKind:input.kind==='USER'?'USER':'SYSTEM',actorId:input.userId,action:'account.deletion_accepted',aggregateType:'deletion',aggregateId:row.id,requestId:input.requestId});
+  return row;
 }

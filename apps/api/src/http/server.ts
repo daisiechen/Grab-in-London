@@ -1,3 +1,4 @@
+import { recoveryReady } from '../recovery/replay.ts';
 import { registerProfileRoutes } from '../profiles/routes.ts';
 import { registerSurveyRoutes } from '../surveys/routes.ts';
 import { registerMealRoutes } from '../meals/routes.ts';
@@ -52,11 +53,17 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
     if (request.url.startsWith('/v1/')) reply.header('cache-control', 'private, no-store');
   });
 
+  app.addHook('onRequest',async(request,reply)=>{
+    if(request.url.startsWith('/v1/')){
+      try{if(await recoveryReady(deps.pool))return;}catch{/* Missing gate or database: fail closed. */}
+      return reply.status(503).send(errorBody(request,'SERVICE_UNAVAILABLE','Recovery verification is required.'));
+    }
+  });
   app.get('/health/live', async () => ({ status: 'ok' }));
   app.get('/health/ready', async (_request, reply) => {
     try {
       const { rows } = await deps.pool.query<{ version: string }>(`SELECT max(version) AS version FROM schema_migrations`);
-      const ready = rows[0]?.version === latestMigration();
+      const ready = rows[0]?.version === latestMigration() && await recoveryReady(deps.pool);
       return reply.status(ready ? 200 : 503).send({ status: ready ? 'ready' : 'migrations_pending' });
     } catch {
       return reply.status(503).send({ status: 'database_unavailable' });
