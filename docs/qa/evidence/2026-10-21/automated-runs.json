@@ -14425,6 +14425,118 @@
           "durationMs": 29.234500000000025
         }
       ]
+    },
+    {
+      "id": "R95",
+      "testedCommit": "61853fd5236edf4486c4a31fff5be9567d5aa66f + QA-only independent probes",
+      "command": "Independent survey boundary probe; initial incomplete fixture",
+      "startedAt": "2026-10-21T17:24:26.426000+00:00",
+      "exitCode": 1,
+      "passed": 2,
+      "failed": 1,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R95-T001",
+          "run": "R95",
+          "path": "scripts/qa-independent-survey-boundaries.api.test.ts",
+          "title": "QA-SURVEY-001 no attendance: blank rejected and company-only stays unanswered",
+          "status": "passed",
+          "durationMs": 116.5078749999999
+        },
+        {
+          "id": "R95-T002",
+          "run": "R95",
+          "path": "scripts/qa-independent-survey-boundaries.api.test.ts",
+          "title": "QA-SURVEY-002 explicit false differs from cleared null; only seven unique factors accepted",
+          "status": "passed",
+          "durationMs": 12.83420799999999
+        },
+        {
+          "id": "R95-T003",
+          "run": "R95",
+          "path": "scripts/qa-independent-survey-boundaries.api.test.ts",
+          "title": "QA-SURVEY-003 product survey works beyond meal window and never migrates or modifies score",
+          "status": "failed",
+          "durationMs": 16.257541999999944,
+          "failureSummary": "QA fixture omitted seat_events while seeding start_roster; postMealState correctly denied access and assertion attempted undefined.data. Added actual seat facts and explicit response status assertion; not product failure."
+        }
+      ]
+    },
+    {
+      "id": "R96",
+      "testedCommit": "61853fd5236edf4486c4a31fff5be9567d5aa66f + QA-only independent probes",
+      "command": "vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-survey-boundaries.api.test.ts",
+      "startedAt": "2026-10-21T17:25:08.441000+00:00",
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R96-T001",
+          "run": "R96",
+          "path": "scripts/qa-independent-survey-boundaries.api.test.ts",
+          "title": "QA-SURVEY-001 no attendance: blank rejected and company-only stays unanswered",
+          "status": "passed",
+          "durationMs": 116.79979200000002
+        },
+        {
+          "id": "R96-T002",
+          "run": "R96",
+          "path": "scripts/qa-independent-survey-boundaries.api.test.ts",
+          "title": "QA-SURVEY-002 explicit false differs from cleared null; only seven unique factors accepted",
+          "status": "passed",
+          "durationMs": 13.616333999999938
+        },
+        {
+          "id": "R96-T003",
+          "run": "R96",
+          "path": "scripts/qa-independent-survey-boundaries.api.test.ts",
+          "title": "QA-SURVEY-003 product survey works beyond meal window and never migrates or modifies score",
+          "status": "passed",
+          "durationMs": 24.25299999999993
+        }
+      ]
+    },
+    {
+      "id": "R97",
+      "testedCommit": "61853fd5236edf4486c4a31fff5be9567d5aa66f + QA-only independent probes",
+      "command": "vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-draft-authorization.api.test.ts",
+      "startedAt": "2026-10-21T17:26:15.403000+00:00",
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R97-T001",
+          "run": "R97",
+          "path": "scripts/qa-independent-draft-authorization.api.test.ts",
+          "title": "QA-AI-015 normal create transfer contains only title/description; repeated transfers never publish",
+          "status": "passed",
+          "durationMs": 32.24312500000002
+        },
+        {
+          "id": "R97-T002",
+          "run": "R97",
+          "path": "scripts/qa-independent-draft-authorization.api.test.ts",
+          "title": "QA-AI-015 provider cannot inject venue/time/terms or booking confirmation into create candidate",
+          "status": "passed",
+          "durationMs": 14.280666999999994
+        },
+        {
+          "id": "R97-T003",
+          "run": "R97",
+          "path": "scripts/qa-independent-draft-authorization.api.test.ts",
+          "title": "QA-AI-014 draft generate transfer replacement and replay never submit an application",
+          "status": "passed",
+          "durationMs": 20.220000000000027
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -14478,7 +14590,9 @@
     "scripts/qa-browser-extra-applicant.mjs": "f6654ae9a9ed43cf44c2f55e1adc51b61815ebb179cfb126c6bc5f2a9eaf31fe",
     "scripts/qa-independent-direct-title.api.test.ts": "9c41ed304cba4d0d87bc567cbe24f0b07b20fbccd9636655f8b6a3067227a642",
     "scripts/qa-inspect-clock-meal.py": "5b1e1427870f0a5952c19006b6b5ddee4b2084f4d56f930e9c23c9428c0227da",
-    "scripts/qa-direct-browser-fixture.ts": "20b7b8b17491210e330579f8054c8a5c49df7598ac1b099477be29f61d3a60ed"
+    "scripts/qa-direct-browser-fixture.ts": "20b7b8b17491210e330579f8054c8a5c49df7598ac1b099477be29f61d3a60ed",
+    "scripts/qa-independent-survey-boundaries.api.test.ts": "8f9c8f9cb7570c201e73af554cbb21876440c123e352b4629672eda94dc74811",
+    "scripts/qa-independent-draft-authorization.api.test.ts": "d990daf9f3b83d95a4d0137eaea969358d0e810221fdbe1cb0ee1b7dd43370ee"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console. R68/R69 valid TestIDP OAuth callback200 captured actual non-silent child stdout only in parent RAM. Metadata contains only leak booleans, never credential strings or raw logs. R69 aggregates code/state/email checks without stopping at the first boolean failure. R72 mutates semantic OpenAPI/SDK artifacts only in an owned temporary contracts copy, requires the real checker fail1 and restore0, and verifies original workspace bytes untouched. Static cases remain NOT_RUN until fixed committed handoff recheck.",
   "runtimeSnapshotVerification": {
@@ -14554,6 +14668,7 @@
     "F16 R86 final return assertion independently red; removed unsupported Testing Library exact options after tsc, unchanged names/assertions. R87 same product failure with clean Web typecheck. Browser B3 also reproduces on fixed archive.",
     "Extra applicant fixture node --check and explicit opt-in rejection passed; initial guard shell test omitted Node from PATH and made no request, corrected to discovered absolute Node runtime without weakening guard. Script actual local HTTP run created one Pending actor only.",
     "B7 read-only inspector first selected jobs.status; schema is jobs.state, corrected SELECT only. Python py_compile attempted host cache outside allowed root; AST parse without writes and explicit no-opt-in rejection passed. No business data changed.",
-    "F18 browser fixture setup: link each workspace dependency directory in fixed archive; seed both SELF attendance reports before either reconnect choice. First incorrect-order attempt received expected403 and was discarded with its disposable DB; not a product failure."
+    "F18 browser fixture setup: link each workspace dependency directory in fixed archive; seed both SELF attendance reports before either reconnect choice. First incorrect-order attempt received expected403 and was discarded with its disposable DB; not a product failure.",
+    "R95 initial extra postmeal DTO assertion used incomplete old-meal fixture (physical start_roster without seat_events). R96 includes both sealed roster and actual host/guest seat_events/head plus status assertion; all original business expectations retained. R95 red preserved as QA fixture failure, not product defect."
   ]
 }

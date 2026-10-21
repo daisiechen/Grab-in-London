@@ -14,10 +14,10 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 134 |
+| PASS | 136 |
 | FAIL | 0 |
 | BLOCKED | 12 |
-| NOT_RUN | 71 |
+| NOT_RUN | 69 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实环境、原生runtime/设备/签名或政策批准证据；本地恢复与分步删除现已复验通过，不能再笼统视为外部阻塞。FAIL优先于未完成的后续步骤。
@@ -120,6 +120,9 @@
 | R92 | 退出码1；0/2通过，失败2，1个测试文件 | `4a0c66f` |
 | R93 | 退出码0；2/2通过，失败0，1个测试文件 | `2b9449a` |
 | R94 | 退出码0；8/8通过，失败0，2个测试文件 | `2b9449a` |
+| R95 | 退出码1；2/3通过，失败1，1个测试文件 | `61853fd` |
+| R96 | 退出码0；3/3通过，失败0，1个测试文件 | `61853fd` |
+| R97 | 退出码0；3/3通过，失败0，1个测试文件 | `61853fd` |
 
 R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯函数探针；R5复跑分页修复回归，R6是QA第二批6项独立P0探针；R7/R8为QA-F01修复的API/Web及iOS组件定向复跑；R9是第三批12项独立边界探针，R10/R11复跑解除准备，R12为QA新增真实备份中E0导出的恢复后撤销分支；R13为饭后及群/私聊权限独立探针；R14保留QA-F03修前2失败，R15为0518d45修后的12项独立探针复验，R16为身份模块26项受影响HTTP回归（包括fresh会话下未来proof拒绝），不能删除修前结果或把历史失败当当前通过；R17为举报本人回执及撤授权重放3项独立HTTP/PG探针，撤session/DELETING状态通过受控数据库夹具设置。R18为安排锁、历史截止补算、开始名单及预约隔离6项独立PG/HTTP探针，删除仅屏障状态，完整删除名单断言仍未通过。R19/R20独立定向复跑5a37fdc关闭顺序单测及真实PG负载退出，未替代远端CI结果。R21为删除实际HTTP/本地purge、故障rollback及用户锁消息/审批竞态5项独立探针，生产日志脱敏仍待完整捕获。R22为ac09af4固定版本的11项独立受控AI/controller/HTTP探针，仅035/036/037具完整预期证据；R23为该版本Claude发现修复28项API/DB独立定向复验。R24保留QA-F04修前停用后仍发布失败；R25为8e2b908修后7项独立停用/费用/reaper探针，R26为22项受影响DB回归，F04定向关闭而043仍有未测断言。R27保留QA-F05修前Web失败，T001另为已分类夹具错误；R28/R29为f298048独立session/PG及Web组件各3项，R30为iOS manager17项定向回归；F05在NEW与TTL/偏好删除差异范围关闭。R31为公开DTO/后台角色/CSV授权及跨快照游标和大序号4项独立HTTP/PG探针，公式转义另覆盖formatter，不声称Excel实际执行。R32保留QA-F06 CLI入口失败，R33保留QA-F07原生协议失败；R34/R35固定b76c593独立8+32项验证CLI修复，R36固定1080993独立iOS49项验证桥接修复。完整加入用户路径仍NOT_RUN，不据组件通过升级。不能将这些数量相加当作独立业务用例数；R5与R1有重复，R2也不是原生设备验收。逐项测试名、状态、时间和命令见[机器证据](evidence/2026-10-21/automated-runs.json)。R4是质量检查而非业务用例。
 
@@ -227,9 +230,9 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-POST-008 · 公评双盲与到期发布 | NOT_RUN | 本地生产实现尚需实际执行：A给B公评 → B未提交 → 到end+7d → 另一场双方提前提交。尚缺逐项证据：单方到期前不公开；到期或双方提交可公开；单方再约始终不公开。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-POST-009 · 资格修订传播 | NOT_RUN | 本地生产实现尚需实际执行：先评分/公评/互选 → 支持合法纠错present→absent→present。尚缺逐项证据：新有效投影重算；不合格公评撤公开、评分退出统计、唯一依据私聊停止；恢复不重复计数。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-POST-010 · 支持窗与最小权限 | NOT_RUN | 本地生产实现尚需实际执行：end+7d−1ms支持修订 → 等号有MFA/case/reason/version再修订 → analyst尝试。尚缺逐项证据：窗内409 CORRECTION_WINDOW_OPEN；等号合法修订且有审计；analyst拒绝，不读聊天。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-SURVEY-001 · 全空与仅因素 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：默认again=null → 全空Save → 只选company后Save。当前仍缺：全空拒绝；仅因素可保存且again仍null。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B8: actual questionnaire persistence and separate Admin score/survey observed; no-attendance eligibility, seven-day update and full enum/dedup assertions remain. NOT_RUN retained.；证据 B8-T001, B8-T002 |
-| QA-SURVEY-002 · No与清除不同 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：明确No保存 → 清除again并选cost → 重复选因素。当前仍缺：false不当null；清除后未答；reasons去重且仅七枚举。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B8: actual questionnaire persistence and separate Admin score/survey observed; no-attendance eligibility, seven-day update and full enum/dedup assertions remain. NOT_RUN retained.；证据 B8-T001, B8-T002 |
-| QA-SURVEY-003 · 问卷与单场分离 | NOT_RUN | 原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：在饭后页填score → 设置填问卷 → 超过饭后7天再更新问卷。当前仍缺：单场仅score不问整体意愿；问卷无需出席或7天资格；不迁移旧单场答案。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B8: actual questionnaire persistence and separate Admin score/survey observed; no-attendance eligibility, seven-day update and full enum/dedup assertions remain. NOT_RUN retained.；证据 B8-T001, B8-T002 |
+| QA-SURVEY-001 · 全空与仅因素 | PASS | R96 independent real PG/API: no-attendance actor blank422/company-only null; explicitfalse vs clear-null immutable revisions; duplicate/unknown/case/empty factors422, seven unique enumerated factors accepted. Eight-day-old completed meal score5 remains exactly one revision after expired score update409 and independent survey save200; no mealId accepted and no again/reasons in postmeal DTO. B8 real browser persistence and separate same-meal Admin score/survey evidence reused. R95 fixture setup failure permanently retained, not product failure.；证据 R96-T001, B8-T001, B8-T002 |
+| QA-SURVEY-002 · No与清除不同 | PASS | R96 independent real PG/API: no-attendance actor blank422/company-only null; explicitfalse vs clear-null immutable revisions; duplicate/unknown/case/empty factors422, seven unique enumerated factors accepted. Eight-day-old completed meal score5 remains exactly one revision after expired score update409 and independent survey save200; no mealId accepted and no again/reasons in postmeal DTO. B8 real browser persistence and separate same-meal Admin score/survey evidence reused. R95 fixture setup failure permanently retained, not product failure.；证据 R96-T002, B8-T001, B8-T002 |
+| QA-SURVEY-003 · 问卷与单场分离 | PASS | R96 independent real PG/API: no-attendance actor blank422/company-only null; explicitfalse vs clear-null immutable revisions; duplicate/unknown/case/empty factors422, seven unique enumerated factors accepted. Eight-day-old completed meal score5 remains exactly one revision after expired score update409 and independent survey save200; no mealId accepted and no again/reasons in postmeal DTO. B8 real browser persistence and separate same-meal Admin score/survey evidence reused. R95 fixture setup failure permanently retained, not product failure.；证据 R96-T003, B8-T001, B8-T002 |
 | QA-PRIVACY-001 · 举报回执与本人范围 | PASS | 隔离HTTP+真实PG独立执行：举报本人回执RECEIVED→IN_REVIEW→RESPONDED，其他主体猜ID404；所有本人回执及双方通知无私密正文，无虚构已处理状态。支持访问仅用于合成case授权，未发生真实投诉处理。；证据 R17-T001 |
 | QA-PRIVACY-002 · 删除同步屏障 | PASS | 真实HTTP删除202后未来host场取消、成员退席、pending撤回，全部活跃session撤销、mutual consent撤销及公开资料404。真实PG用户锁中先排队删除再消息/审批，两者拒绝且无新消息或批准席位；身份/餐厅为test适配器。；证据 R21-T004, R21-T005 |
 | QA-PRIVACY-003 · 删除失败与丢响应 | PASS | R21真实DB删除journal故障500，user/epoch/meal/receipt/session整体回滚，移除后202丢响应、撤session仍凭预存receipt查最小三字段证据沿用。R61补实际非silent Fastify/Pino管道：子进程中故障异常故意含合成receipt秘密，捕获实际stdout含unexpected error及请求完成；500后ACTIVE/session200，重试202后session401，receipt POST200只含completedAt/requestedAt/status。receipt/accessToken均不在日志，所有调用URL无query，响应不含token。仅日志内存脱敏检查，不发布原始日志、不关闭部署日志运输/真实provider门槛。；证据 R21-T003, R61-T001 |
@@ -281,8 +284,8 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-AI-011 · 无结果与不可用 | NOT_RUN | 本地生产实现尚需实际执行：hard预算不足返回0 → 注入discovery失败 → 未知金额场。尚缺逐项证据：0说明无匹配；失败显示不可用不谎称0结果；未知金额不称预算内。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-AI-012 · 只比较明确三场 | NOT_RUN | 本地生产实现尚需实际执行：选择3个公开候选 → 再指定第四/未知mealId/隐藏场。尚缺逐项证据：≤3按同快照事实比较；无权对象拒绝不回显；不读取人格或行程。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-AI-013 · 解释本人状态 | PASS | R80受控provider+真实PG：本人PENDING申请询问批准/付款，结果仅PENDING且不保留座位，不称批准/已确认/预付款要求；私有申请正文不传模型。隔离数据库临时重命名applications注入真实状态SQL读取失败，结果FAILED且result=null，不生成已知状态；finally恢复表名，业务行数不变。服务端实现范围，不代表真实模型供应商评测。；证据 R80-T001 |
-| QA-AI-014 · 申请草稿无副作用 | NOT_RUN | R22独立controller/PG已覆盖部分：生成草稿无业务写，取消后转入拒绝；尚缺浏览器同draft反复转入和本人Submit恰好一申请。 保持NOT_RUN，不按自动化数授整条PASS。 |
-| QA-AI-015 · 创建草稿不默认同意 | NOT_RUN | R22独立controller/PG已覆盖部分：生成仅title/description、无自动发布；尚缺真实Create转入/Review前checkbox及留空状态。 保持NOT_RUN，不按自动化数授整条PASS。 |
+| QA-AI-014 · 申请草稿无副作用 | NOT_RUN | R22独立controller/PG已覆盖部分：生成草稿无业务写，取消后转入拒绝；尚缺浏览器同draft反复转入和本人Submit恰好一申请。 保持NOT_RUN，不按自动化数授整条PASS。 R97 independent generate/changed-editor conflict/explicit replacement/repeated transfer all keep business row counts unchanged. Actual editor and final core submission once path remain unexecuted; NOT_RUN retained.；证据 R97-T003 |
+| QA-AI-015 · 创建草稿不默认同意 | NOT_RUN | R22独立controller/PG已覆盖部分：生成仅title/description、无自动发布；尚缺真实Create转入/Review前checkbox及留空状态。 保持NOT_RUN，不按自动化数授整条PASS。 R97 independent valid CREATE repeated transfer title/description only, targetnull, no business row writes; provider extra place/time/booking/terms injection rejected FAILED/null. Actual editor confirmation controls and final path still pending; NOT_RUN retained.；证据 R97-T001, R97-T002 |
 | QA-AI-016 · 非空编辑器冲突 | PASS | 独立Web生成后关闭助手编辑v2，重开Continue并取消替换，v2保留且无transfer/apply；R22服务端版本冲突、显式确认及重复转入证据互补，不能静默覆盖或追加。；证据 R22-T005, R29-T001 |
 | QA-AI-017 · 生成转入发送三次鉴权 | PASS | 真实PG/HTTP三阶段：生成GROUP草稿无消息写，provider完整输入未含已发送群正文sentinel；退群后转入409 TARGET_CHANGED，再请求生成SUPERSEDED且无结果。另一群先生成并转入200，仍无消息写；随后主持明确解散，旧转入文字Send403且消息数0。各阶段服务器独立鉴权，不把AI生成/转入视作发送；只使用计数mock provider，不是真实模型或系统浏览器。；证据 R64-T001 |
 | QA-AI-018 · 取消饭局仍可协调 | PASS | 真实PG/HTTP：主持取消未来饭局但未退群/解散；成员仍可生成GROUP草稿并转入，两个AI阶段消息数均0；只有本人随后显式POST消息才201且恰好1条。非成员发送隐藏404且无额外消息，conversation.dissolved_at仍null。饭局取消未被误当作群权限撤销，发送仍依成员授权。；证据 R64-T002 |
@@ -330,7 +333,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-GATE-008 · G-AI-DATA供应商边界 | BLOCKED | 已提供官方参数/政策核查ADR并独立复跑本地适配边界；真实账户/留存及第三方数据批准仍缺，不继承其他供应商承诺。 |
 | QA-GATE-009 · G-AI-COST实账 | BLOCKED | 缺真实usage/账单与call账本对照证据。并发人民币50预留已有本地通过证据；开发可预备对账脚本，真实账单必须来自已批准配置，不扩大金额或开自动充值。 |
 | QA-JOURNEY-001 · 加入者完整闭环 | NOT_RUN | B7 complete real Web lifecycle/postmeal and B8 same-meal Admin trace passed in explicit local fixture. F18 fixed2b9449a independently API2+boundary8 and actual browser Inbox/header/send/reload passed B9. Historical reds retained in history and run bundles. Original cross-client precondition requires actual Web/iOS role swap; no native-device proof yet, so NOT_RUN rather than whole-case PASS. B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations.；证据 B7-T001, B7-T002, B7-T003, B7-T004, B8-T002, B9-T001, R93-T001, R93-T002, B10-T002 |
-| QA-JOURNEY-002 · 主持者完整闭环 | PASS | B7统一4a0c66f新隔离场从真实UI创建4步/餐厅确认/最低2上限2/截止/Review发布，guest主动申请hostApprove首客锁安排、声明stale后本人重报；同场真实worker截止达标/开始封存2人/结束Completed。默认双方Unknown，GuestSELFpresent后Host报其absent不覆盖，freshGuest仍Attendedyourreport。无应用支付/库存依赖；明确fixture时钟与供应商边界，不代表真实自然时间/外部订位或原生验收。；证据 B7-T001, B7-T002, B7-T003 |
+| QA-JOURNEY-002 · 主持者完整闭环 | NOT_RUN | B7统一4a0c66f新隔离场从真实UI创建4步/餐厅确认/最低2上限2/截止/Review发布，guest主动申请hostApprove首客锁安排、声明stale后本人重报；同场真实worker截止达标/开始封存2人/结束Completed。默认双方Unknown，GuestSELFpresent后Host报其absent不覆盖，freshGuest仍Attendedyourreport。无应用支付/库存依赖；明确fixture时钟与供应商边界，不代表真实自然时间/外部订位或原生验收。 Original cross-client precondition audit corrects whole-case PASS to NOT_RUN: B7 Web lifecycle proof retained, actual iOS role swap missing. No product regression inferred.；证据 B7-T001, B7-T002, B7-T003 |
 | QA-JOURNEY-003 · 取消与聊天独立路径 | PASS | B6实际IAB从Round1获准→本人取消席位后仍发送群消息→本人另退群只读→主动重申Round2待审→H批准重入→host解散。离群间隔GAP由仍授权host发送，返回guest只见离群前旧消息与重入后AFTER_REJOIN、GAP0，解散后Message0，刷新仍只读且无重新开启控件。全部使用真实本地API/PG、模拟身份/餐厅，非iOS原生/真实服务。；证据 B6-T002 |
 | QA-JOURNEY-004 · 互选私密路径 | NOT_RUN | 本地生产实现尚需实际执行：A单方再约→B访问→B互选→私聊→A撤回→解除拉黑。尚缺逐项证据：单方不可推断；互选才可发；撤回后历史只读；解除不复活同意。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-JOURNEY-005 · AI申请路径 | NOT_RUN | 本地生产实现尚需实际执行：显式查找→选明确M→生成申请→转入已有编辑器→本人确认提交。尚缺逐项证据：AI阶段无写；不覆盖未发字；提交时重验名额/截止；服务失败可继续原路径。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |

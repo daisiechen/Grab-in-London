@@ -12,11 +12,12 @@
     "mail": "test outbox, no real recipient",
     "ai": "mock, no real provider calls",
     "browser": "Chrome local production Web 127.0.0.1:5174; sequential account switch, not two devices",
-    "ios": "Jest only, no native device acceptance"
+    "ios": "Jest only, no native device acceptance",
+    "nativeRuntimeCheck20261021": "Read-only simctl outside sandbox confirms installed iOS27.0/27.1 runtimes and available shutdown iPhone simulators. Sandboxed service refusal is not missing-runtime proof. Build/launch and real native journey remain unexecuted."
   },
   "counts": {
-    "NOT_RUN": 71,
-    "PASS": 134,
+    "NOT_RUN": 69,
+    "PASS": 136,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -6403,8 +6404,9 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
+        "R96-T001",
         "B8-T001",
         "B8-T002"
       ],
@@ -6424,12 +6426,18 @@
         "R1-T454",
         "R1-T455"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "全空拒绝",
-        "仅因素可保存且again仍null"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：默认again=null → 全空Save → 只选company后Save。当前仍缺：全空拒绝；仅因素可保存且again仍null。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B8: actual questionnaire persistence and separate Admin score/survey observed; no-attendance eligibility, seven-day update and full enum/dedup assertions remain. NOT_RUN retained."
+      "remainingExpected": [],
+      "actual": "R96 independent real PG/API: no-attendance actor blank422/company-only null; explicitfalse vs clear-null immutable revisions; duplicate/unknown/case/empty factors422, seven unique enumerated factors accepted. Eight-day-old completed meal score5 remains exactly one revision after expired score update409 and independent survey save200; no mealId accepted and no again/reasons in postmeal DTO. B8 real browser persistence and separate same-meal Admin score/survey evidence reused. R95 fixture setup failure permanently retained, not product failure.",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：默认again=null → 全空Save → 只选company后Save。当前仍缺：全空拒绝；仅因素可保存且again仍null。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B8: actual questionnaire persistence and separate Admin score/survey observed; no-attendance eligibility, seven-day update and full enum/dedup assertions remain. NOT_RUN retained."
+        }
+      ]
     },
     {
       "id": "QA-SURVEY-002",
@@ -6437,8 +6445,9 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
+        "R96-T002",
         "B8-T001",
         "B8-T002"
       ],
@@ -6458,13 +6467,19 @@
         "R1-T454",
         "R1-T455"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "false不当null",
-        "清除后未答",
-        "reasons去重且仅七枚举"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：明确No保存 → 清除again并选cost → 重复选因素。当前仍缺：false不当null；清除后未答；reasons去重且仅七枚举。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B8: actual questionnaire persistence and separate Admin score/survey observed; no-attendance eligibility, seven-day update and full enum/dedup assertions remain. NOT_RUN retained."
+      "remainingExpected": [],
+      "actual": "R96 independent real PG/API: no-attendance actor blank422/company-only null; explicitfalse vs clear-null immutable revisions; duplicate/unknown/case/empty factors422, seven unique enumerated factors accepted. Eight-day-old completed meal score5 remains exactly one revision after expired score update409 and independent survey save200; no mealId accepted and no again/reasons in postmeal DTO. B8 real browser persistence and separate same-meal Admin score/survey evidence reused. R95 fixture setup failure permanently retained, not product failure.",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：明确No保存 → 清除again并选cost → 重复选因素。当前仍缺：false不当null；清除后未答；reasons去重且仅七枚举。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B8: actual questionnaire persistence and separate Admin score/survey observed; no-attendance eligibility, seven-day update and full enum/dedup assertions remain. NOT_RUN retained."
+        }
+      ]
     },
     {
       "id": "QA-SURVEY-003",
@@ -6472,8 +6487,9 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
+        "R96-T003",
         "B8-T001",
         "B8-T002"
       ],
@@ -6493,13 +6509,19 @@
         "R1-T454",
         "R1-T455"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "单场仅score不问整体意愿",
-        "问卷无需出席或7天资格",
-        "不迁移旧单场答案"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：在饭后页填score → 设置填问卷 → 超过饭后7天再更新问卷。当前仍缺：单场仅score不问整体意愿；问卷无需出席或7天资格；不迁移旧单场答案。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B8: actual questionnaire persistence and separate Admin score/survey observed; no-attendance eligibility, seven-day update and full enum/dedup assertions remain. NOT_RUN retained."
+      "remainingExpected": [],
+      "actual": "R96 independent real PG/API: no-attendance actor blank422/company-only null; explicitfalse vs clear-null immutable revisions; duplicate/unknown/case/empty factors422, seven unique enumerated factors accepted. Eight-day-old completed meal score5 remains exactly one revision after expired score update409 and independent survey save200; no mealId accepted and no again/reasons in postmeal DTO. B8 real browser persistence and separate same-meal Admin score/survey evidence reused. R95 fixture setup failure permanently retained, not product failure.",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：在饭后页填score → 设置填问卷 → 超过饭后7天再更新问卷。当前仍缺：单场仅score不问整体意愿；问卷无需出席或7天资格；不迁移旧单场答案。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B8: actual questionnaire persistence and separate Admin score/survey observed; no-attendance eligibility, seven-day update and full enum/dedup assertions remain. NOT_RUN retained."
+        }
+      ]
     },
     {
       "id": "QA-PRIVACY-001",
@@ -10844,7 +10866,9 @@
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
-      "evidence": [],
+      "evidence": [
+        "R97-T003"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -10958,7 +10982,7 @@
         "转入同份替换不追加",
         "只有本人提交创建一申请"
       ],
-      "actual": "R22独立controller/PG已覆盖部分：生成草稿无业务写，取消后转入拒绝；尚缺浏览器同draft反复转入和本人Submit恰好一申请。 保持NOT_RUN，不按自动化数授整条PASS。"
+      "actual": "R22独立controller/PG已覆盖部分：生成草稿无业务写，取消后转入拒绝；尚缺浏览器同draft反复转入和本人Submit恰好一申请。 保持NOT_RUN，不按自动化数授整条PASS。 R97 independent generate/changed-editor conflict/explicit replacement/repeated transfer all keep business row counts unchanged. Actual editor and final core submission once path remain unexecuted; NOT_RUN retained."
     },
     {
       "id": "QA-AI-015",
@@ -10967,7 +10991,10 @@
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
-      "evidence": [],
+      "evidence": [
+        "R97-T001",
+        "R97-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -11081,7 +11108,7 @@
         "外订/条款/Review不勾",
         "无自动发布"
       ],
-      "actual": "R22独立controller/PG已覆盖部分：生成仅title/description、无自动发布；尚缺真实Create转入/Review前checkbox及留空状态。 保持NOT_RUN，不按自动化数授整条PASS。"
+      "actual": "R22独立controller/PG已覆盖部分：生成仅title/description、无自动发布；尚缺真实Create转入/Review前checkbox及留空状态。 保持NOT_RUN，不按自动化数授整条PASS。 R97 independent valid CREATE repeated transfer title/description only, targetnull, no business row writes; provider extra place/time/booking/terms injection rejected FAILED/null. Actual editor confirmation controls and final path still pending; NOT_RUN retained."
     },
     {
       "id": "QA-AI-016",
@@ -16374,7 +16401,7 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "PASS",
+      "status": "NOT_RUN",
       "evidence": [
         "B7-T001",
         "B7-T002",
@@ -16689,14 +16716,11 @@
         "R5-T010",
         "R5-T011"
       ],
-      "coveredExpectedIndexes": [
-        0,
-        1,
-        2,
-        3
+      "coveredExpectedIndexes": [],
+      "remainingExpected": [
+        "Original plan requires actual Web/iOS role-swapped journey. Complete B7 Web proof remains valid; native journey not yet executed."
       ],
-      "remainingExpected": [],
-      "actual": "B7统一4a0c66f新隔离场从真实UI创建4步/餐厅确认/最低2上限2/截止/Review发布，guest主动申请hostApprove首客锁安排、声明stale后本人重报；同场真实worker截止达标/开始封存2人/结束Completed。默认双方Unknown，GuestSELFpresent后Host报其absent不覆盖，freshGuest仍Attendedyourreport。无应用支付/库存依赖；明确fixture时钟与供应商边界，不代表真实自然时间/外部订位或原生验收。",
+      "actual": "B7统一4a0c66f新隔离场从真实UI创建4步/餐厅确认/最低2上限2/截止/Review发布，guest主动申请hostApprove首客锁安排、声明stale后本人重报；同场真实worker截止达标/开始封存2人/结束Completed。默认双方Unknown，GuestSELFpresent后Host报其absent不覆盖，freshGuest仍Attendedyourreport。无应用支付/库存依赖；明确fixture时钟与供应商边界，不代表真实自然时间/外部订位或原生验收。 Original cross-client precondition audit corrects whole-case PASS to NOT_RUN: B7 Web lifecycle proof retained, actual iOS role swap missing. No product regression inferred.",
       "relatedBrowserEvidence": [
         "B1"
       ],
@@ -16720,6 +16744,16 @@
           "status": "NOT_RUN",
           "actual": "B3-B6真实Web已四步创建/Review发布/无应用支付，审批后首guest锁安排、reservation stale随2/3人数变化、host明确重新报告均通过；F16/F17已正式复验。旧真实钟场尚未截止/开始/结束，因此饭后host不覆盖self及默认未知出席未在同一全程走完，整体NOT_RUN。",
           "reason": "B7 same-meal controlled-clock physical lifecycle and postmeal; F18 target display independently red"
+        },
+        {
+          "status": "PASS",
+          "actual": "B7统一4a0c66f新隔离场从真实UI创建4步/餐厅确认/最低2上限2/截止/Review发布，guest主动申请hostApprove首客锁安排、声明stale后本人重报；同场真实worker截止达标/开始封存2人/结束Completed。默认双方Unknown，GuestSELFpresent后Host报其absent不覆盖，freshGuest仍Attendedyourreport。无应用支付/库存依赖；明确fixture时钟与供应商边界，不代表真实自然时间/外部订位或原生验收。",
+          "evidence": [
+            "B7-T001",
+            "B7-T002",
+            "B7-T003"
+          ],
+          "reason": "Audit original precondition: Web/iOS role swap requires actual native proof, not solely Web+API."
         }
       ],
       "defectIds": [
@@ -22217,7 +22251,7 @@
     "userAuthorizedMessaging": true,
     "status": "remaining_local_execution_in_progress",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
-    "latestFeedback": "F18 closed by R93/R94/B9; actual same-meal Admin B8/B10 and five-page filters passed; remaining local execution and native/external gates remain."
+    "latestFeedback": "R96 survey3 PASS/R97 draft3 targeted PASS. Host JOURNEY002 corrected to NOT_RUN for original actual native role-swap precondition. Runtime available on unsandboxed read; developer asked for local simulator build/config."
   },
   "blockerTriage": "原14条中供应商分步删除和恢复删除台账两条已转本地执行并通过；其余12条缺真实环境/许可/批准证据，各项可本地准备部分已继续推进，不能视为12个未修代码故障。"
 }
