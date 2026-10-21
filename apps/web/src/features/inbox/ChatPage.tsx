@@ -57,6 +57,8 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
   const loadedFirst = useRef(false);
   const pending = useRef<{ id: string; body: string } | null>(null);
   const poller = useRef<LivePoller | null>(null);
+  // Monotonic for this mounted conversation. A different route gets a fresh keyed instance.
+  const historyOnly = useRef(false);
   const intent = useRef(new Intent(api.retry));
   const [renderedThrough,setRenderedThrough] = useState<string|null>(null);
   const acknowledged = useRef('0');
@@ -75,6 +77,8 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
   }, []);
 
   const toHistory = useCallback(async () => {
+    if (historyOnly.current) return;
+    historyOnly.current = true;
     poller.current?.stop();
     setMode('HISTORY');
     try {
@@ -97,14 +101,14 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
     void (async () => {
       try {
         const conv = await findConversation(api.client, conversationId);
-        if (!alive) return;
+        if (!alive || historyOnly.current) return;
         setConversation(conv);
         if (conv?.mealId) {
           const res = await api.client.call('getMeal', { params: { mealId: conv.mealId } }).catch(() => null);
-          if (alive && res) setMeal(res.data.meal);
+          if (alive && !historyOnly.current && res) setMeal(res.data.meal);
         }
       } catch (e) {
-        if (alive) { setConversation(null); setError(errorMessage(e)); }
+        if (alive && !historyOnly.current) { setConversation(null); setError(errorMessage(e)); }
       }
     })();
     return () => { alive = false; };
@@ -112,7 +116,7 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
 
   // LIVE polling while we may send; otherwise read the HISTORY archive once.
   useEffect(() => {
-    if (!conversation) return;
+    if (!conversation || historyOnly.current) return;
     if (!conversation.canSend || conversation.dissolved) {
       void toHistory();
       return;
@@ -123,6 +127,7 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
           params: { conversationId },
           query: { mode: 'LIVE', ...(after.current ? { afterSeq: after.current } : {}) },
         });
+        if (historyOnly.current) return 'stop';
         absorb(res.data, res.page.scannedThroughSeq);
         if (!loadedFirst.current) { loadedFirst.current = true; setOlderCursor(res.page.nextCursor); }
         return 'continue';
@@ -165,7 +170,7 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
   const send = async (event?: FormEvent) => {
     event?.preventDefault();
     const body = text.trim();
-    if (!body || sending) return;
+    if (!body || sending || historyOnly.current || !canSend) return;
     if (body.length > 2000) { setError('Messages can be up to 2,000 characters.'); return; }
     if (!pending.current || pending.current.body !== body) pending.current = { id: newIntentKey(), body };
     const clientMessageId = pending.current.id;
@@ -192,7 +197,7 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
   const loadOlder = async () => {
     if (!olderCursor) return;
     try {
-      const res = await api.client.call('readMessages', { params: { conversationId }, query: { mode, cursor: olderCursor } });
+      const res = await api.client.call('readMessages', { params: { conversationId }, query: { mode: historyOnly.current ? 'HISTORY' : mode, cursor: olderCursor } });
       setMessages((cur) => mergeMessages(cur, res.data));
       setOlderCursor(res.page.nextCursor);
     } catch (e) {
@@ -207,6 +212,7 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
       const res = await intent.current.run({ op, v: conversation.version }, (key) =>
         api.client.call(op, { params: { conversationId }, body: { confirm: true }, ifMatch: conversation.version, idempotencyKey: key }));
       setConversation(res.data);
+      if (!res.data.canSend || res.data.dissolved) void toHistory();
       setSheet('');
       notify(kind === 'leave' ? 'You left the group. Your meal participation is unchanged.' : 'Group dissolved. Earlier messages remain available.');
     } catch (e) {

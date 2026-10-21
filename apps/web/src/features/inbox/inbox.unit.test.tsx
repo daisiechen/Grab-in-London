@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { act, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { createFetchStub, fail, ok, page, type Handler } from '../../test/fetchStub.ts';
+import { createFetchStub,deferred,fail,ok,page,type StubResponse,type Handler } from '../../test/fetchStub.ts';
 import { renderApp, testApi } from '../../test/render.tsx';
 import { fakePollerDeps } from '../../test/fakePoller.ts';
 import { APPLICATION_ID, HOST_ID, MEAL_ID, USER_ID, meal, publicProfile, session } from '../../test/fixtures.ts';
@@ -46,6 +46,25 @@ describe('message helpers', () => {
 });
 
 describe('group chat (T12)', () => {
+  it('keeps HISTORY terminal when a pre-revocation metadata refresh completes late',async()=>{
+    const f=fakePollerDeps(),held=deferred<StubResponse>();let inboxReads=0,revoked=false;
+    const row={conversation:conversation(),lastMessage:null,unreadCount:0};
+    const s=chatStub(call=>call.url.searchParams.get('mode')==='HISTORY'?page([msg('11','Permitted archive')]):revoked?fail(403,'FORBIDDEN'):page([msg('11','Permitted archive')]),{}, {inbox:()=>++inboxReads===1?page([row]):held.promise});
+    renderApp(s.fetch,`/inbox/${CONV}`,{pollerDeps:f.deps});await screen.findByLabelText('Message');
+    await act(async()=>{await f.setVisible(false);});revoked=true;await act(async()=>{await f.setVisible(true);});await screen.findByText(/messages.*read-only/);
+    await act(async()=>{held.resolve(page([row]));await f.flush();});
+    const modes=s.callsTo('readMessages').map(call=>call.url.searchParams.get('mode'));
+    expect(modes.filter(mode=>mode==='HISTORY')).toHaveLength(1);expect(modes.slice(modes.indexOf('HISTORY')+1)).toEqual([]);
+    expect(f.pending()).toEqual([]);expect(s.callsTo('sendMessage')).toHaveLength(0);expect(screen.queryByLabelText('Message')).toBeNull();
+  });
+  it('starts LIVE normally for a newly mounted authorized conversation after the previous one became HISTORY',async()=>{
+    const next='15151515-1515-4151-8151-151515151515',f=fakePollerDeps();
+    const rows=[{conversation:conversation(),lastMessage:null,unreadCount:0},{conversation:conversation({id:next,title:'Another authorized table'}),lastMessage:null,unreadCount:0}];
+    const s=chatStub(call=>call.params.conversationId===CONV?(call.url.searchParams.get('mode')==='LIVE'?fail(403,'FORBIDDEN'):page([msg('11','Old authorized archive')])):page([msg('12','New authorized live message')]),{}, {inbox:()=>page(rows)});
+    const first=renderApp(s.fetch,`/inbox/${CONV}`,{pollerDeps:f.deps});await screen.findByText('Old authorized archive');expect(screen.queryByLabelText('Message')).toBeNull();first.unmount();
+    renderApp(s.fetch,`/inbox/${next}`,{pollerDeps:f.deps});await screen.findByText('New authorized live message');expect(screen.getByLabelText('Message')).toBeTruthy();
+    expect(s.callsTo('readMessages').filter(call=>call.params.conversationId===next).map(call=>call.url.searchParams.get('mode'))).toEqual(['LIVE']);
+  });
   it('polls LIVE every 2 s with afterSeq and renders text, never HTML', async () => {
     const f = fakePollerDeps();
     let n = 0;

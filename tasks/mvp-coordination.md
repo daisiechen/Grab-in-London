@@ -221,3 +221,10 @@
 - Web自有及QA探针21项、原生定向24项通过；根整合Web/后台241项、iOS233项及Web生产构建通过。日志/private/tmp/fancy-f10-web-final.log、/private/tmp/fancy-f10-ios.log、/private/tmp/fancy-f10-build-final.log。后端/契约未修改，不重复声称本批运行核心unit/DB/API/release。
 - QA明确释放Git窗口后开发仅提交双端七个生产/自有测试文件和本记录，保留QA文件与研究修改。正式修复SHA交独立QA复验，AI045及F10关闭结论由QA持有。
 - 全仓core:check及Python70项通过（/private/tmp/fancy-f10-check.log、/private/tmp/fancy-f10-python.log），包含生成契约一致性、类型、lint和密钥扫描；不等同真实供应商或设备验收。
+
+## QA-F11 聊天403后的旧元数据围栏（2026-10-21）
+
+- QA在49d22b6动态挂起恢复时取得的旧canSend元数据：LIVE403进入HISTORY后，晚到元数据重建轮询器，再发无权LIVE请求。没有自动发送或越权正文泄露；原红在1253409保留。同期F10独立Web3/iOS24复验关闭，当前101 PASS /103 NOT_RUN /1 FAIL /12 BLOCKED；本批不代QA关闭F11。
+- 当前挂载聊天页用同步单调HISTORY围栏，403、发送403或退出/解散先置位停止轮询，再读一次授权HISTORY；旧元数据成功/失败与晚到LIVE结果不再改状态，分页使用HISTORY，发送同步拒绝。围栏只属于当前挂载会话，新路由实例可正常LIVE，不改后端授权或原生轮询。
+- 自有前红13项中1失败（重复HISTORY），修后自有14及QA独立3全部通过；新挂载授权会话恢复LIVE及编辑器回归通过。根Web/后台247项整合通过；记录/private/tmp/fancy-f11-clients.log。QA已明确释放提交窗口，开发仅提交ChatPage、自有测试和本记录，保留研究修改；正式修复SHA交独立QA复验。
+- 全仓core:check、Python70项及Web生产构建通过（/private/tmp/fancy-f11-check.log、/private/tmp/fancy-f11-python.log、/private/tmp/fancy-f11-build.log）。原生和后端无修改，沿用前批通过结果，不冒称重跑。
