@@ -454,3 +454,11 @@
 - QA正式Web3919465/API19d反向Native主持/Web加入饭局e0af2bf6-41e9-4d8b-ae79-310b7ab3d095，显式Cancel my place成功后application CANCELLED/seat LEFT，群membership leave_seq仍null；保留群聊是独立权限事实，旧Inbox硬编码Seat confirmed误称仍有席位。
 - 仅InboxPage将LIVE GROUP改为中性Meal group，不从群权限猜申请状态，不改退席/群权限/API；自有seat-label组件投影回归修前1红，修后完整inbox5文件22项通过，Web类型、两文件lint、diff均绿（/private/tmp/fancy-f39-before.log、fancy-f39-after.log）。此为文案/组件证明，真实反向取消路径原证据由QA拥有，正式关闭待提交SHA独立复验。
 - F38已由QA正式3919465独立R189七项通过并定向关闭；JOURNEY008完整异常路径仍NOT_RUN。F39不改后端/iOS，沿用其既有验证，不冒重跑；root保留QA/平台配置/research修改，Git窗口须明确交接后才提交。
+
+
+## QA-F40 原生主持人解散群聊入口（2026-10-21）
+
+- QA正式Native611a Host28主持反向饭局e0af2bf6-41e9-4d8b-ae79-310b7ab3d095批准第二轮后，聊天仅Leave group且原生没有dissolveGroup调用，缺PRD已要求的主持解散路径。后端既有主持授权/版本CAS/永久解散接口不改，不把host离群当解散。
+- 最小ChatScreen+自有chat-dissolve测试：getMeal.meal.host.id与当前session比对才提供主持解散独立确认，未知/失败不猜权限；当前版本与独立intent key，成功cache/history/停止poll，未发文字可见保留且不重放。409关闭旧确认并权威重读inbox，失败阻旧版本/显式单飞Reload；成功更新后要求再点入口和确认，发现已解散立即只读。普通失败在确认Modal内显示，保草稿与重试意图；保现消息/键盘/底部safearea。
+- 本轮不改API/群授权/申请；QA保持61973、clock与设备独占，待正式SHA正常签名独立归档构建，仅交包不安装。现自有业务回归与全原生验证进行中，冻结后记录实际结果，目标关闭仍由QA真实主持/全体只读复验。
+- 冻结后全iOS39套/266项、类型、全apps/ios lint、core:check及两文件diff检查通过（/private/tmp/fancy-f40-{ios-tests,types,lint,check}.log）；自有7项覆盖guest/host lookup失败、取消/确认、409新版/刷新失败显式恢复/已解散、普通失败Modal与保稿。QA明确短借Git仅三文件，推送核SHA后归还；F39同时由QA正式R191两项及实际四群中性标签复验关闭，原红保留。

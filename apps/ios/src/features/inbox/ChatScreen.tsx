@@ -57,7 +57,7 @@ function AuthenticatedChatScreen() {
   const { conversationId } = useLocalSearchParams<{ conversationId: string }>();
   const id = String(conversationId);
   const services = useServices();
-  const { api, cache, newId } = services;
+  const { api, cache, newId, session } = services;
   const state = useSessionState();
   const [conversation, setConversation] = useState<Conversation | null>(() => cache.get<Conversation>(conversationKey(id)) ?? null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -71,6 +71,16 @@ function AuthenticatedChatScreen() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [sheet, setSheet] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [host,setHost]=useState<{mealId:string;id:string}|null>(null);
+  const metadataRevision=useRef(0);
+  const refreshingMetadata=useRef(false);
+  const [metadataLoading,setMetadataLoading]=useState(false);
+  const [dissolveError,setDissolveError]=useState<string|null>(null);
+  const [dissolveSheet,setDissolveSheet]=useState(false);
+  const [dissolveBlocked,setDissolveBlocked]=useState(false);
+  const dissolveKey=useRef<{version:string;key:string}|null>(null);
+  const dissolving=useRef(false);
+  const isHost=state.status==='signedIn'&&host?.mealId===conversation?.mealId&&host?.id===state.session.user.id;
   const signedIn = state.status === 'signedIn';
   const live = !!conversation && conversation.canSend && !conversation.dissolved && !readOnly;
   const leaveKey = useRef(newId());
@@ -99,6 +109,14 @@ function AuthenticatedChatScreen() {
       active = false;
     };
   }, [api, cache, conversation, id, signedIn]);
+
+  useEffect(()=>{
+    let active=true;setHost(null);
+    if(conversation?.kind==='GROUP'&&conversation.mealId){
+      void api.call('getMeal',{params:{mealId:conversation.mealId}}).then(res=>{if(active)setHost({mealId:res.data.meal.id,id:res.data.meal.host.id});}).catch(()=>{if(active)setHost(null);});
+    }
+    return()=>{active=false;};
+  },[api,conversation?.kind,conversation?.mealId]);
 
   const poller = useMemo(
     () =>
@@ -200,15 +218,48 @@ function AuthenticatedChatScreen() {
   };
 
 
+  const refreshGroup=async()=>{
+    if(refreshingMetadata.current)return;
+    refreshingMetadata.current=true;setMetadataLoading(true);
+    const revision=++metadataRevision.current;
+    const generation=session.generation;
+    try{
+      const items=await allPages(cursor=>api.call('inbox',{query:{limit:100,...(cursor?{cursor}:{})}}));
+      session.assertGeneration(generation);
+      if(revision!==metadataRevision.current)return;
+      const found=items.map((item:InboxItem)=>item.conversation).find(c=>c?.id===id);
+      if(!found||found.kind!=='GROUP')throw new Error('GROUP_UNAVAILABLE');
+      cache.set(conversationKey(id),found);setConversation(found);setDissolveBlocked(false);
+      if(found.dissolved||!found.canSend){setReadOnly(true);poller.stop();setNotice('This group is read-only. Earlier messages remain available.');}
+      else setNotice('This group changed. Review it and confirm again.');
+    }catch{if(session.generation===generation&&revision===metadataRevision.current){setDissolveBlocked(true);setNotice('We couldn’t refresh this group. Reload group details before trying again.');}}
+    finally{refreshingMetadata.current=false;if(session.generation===generation)setMetadataLoading(false);}
+  };
+  const dissolve=async()=>{
+    if(!conversation||!isHost||!live||dissolveBlocked||dissolving.current)return;
+    dissolving.current=true;setBusy(true);setDissolveError(null);const generation=session.generation;
+    if(dissolveKey.current?.version!==conversation.version)dissolveKey.current={version:conversation.version,key:newId()};
+    try{
+      const updated=(await api.call('dissolveGroup',{params:{conversationId:id},body:{confirm:true},ifMatch:conversation.version,idempotencyKey:dissolveKey.current.key})).data;
+      session.assertGeneration(generation);cache.set(conversationKey(id),updated);cache.delete('inbox');setConversation(updated);setReadOnly(true);poller.stop();setDissolveSheet(false);setNotice('Group dissolved. Everyone’s earlier messages remain read-only.');
+    }catch(error){
+      if(session.generation!==generation)return;
+      if(error instanceof ApiError&&error.kind==='conflict'){setDissolveBlocked(true);setDissolveSheet(false);dissolveKey.current=null;await refreshGroup();}
+      else setDissolveError('We couldn’t dissolve the group. Your text is kept. Please try again.');
+    }finally{dissolving.current=false;if(session.generation===generation)setBusy(false);}
+  };
+
+
   return (
     <SafeAreaView style={[styles.safe,{paddingTop:Platform.OS==='ios'?headerHeight:0}]} edges={['bottom']} testID="chat">
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={88}>
         <View style={styles.header}>
           <Text style={styles.title} accessibilityRole="header">{conversation?.title ?? 'Conversation'}</Text>
-          {conversation?.kind === 'GROUP' && live ? <TextAction label="Leave group" onPress={() => setSheet(true)} /> : null}
+          {conversation?.kind === 'GROUP' && live ? (isHost ? (!dissolveBlocked ? <TextAction label="Dissolve group" onPress={()=>{setDissolveError(null);setDissolveSheet(true);}}/> : null) : <TextAction label="Leave group" onPress={() => setSheet(true)} />) : null}
         </View>
         <FormMessage message={loadError} />
         <FormMessage message={notice} tone="info" />
+        {dissolveBlocked?<TextAction label="Reload group details" disabled={metadataLoading} onPress={()=>void refreshGroup()}/>:null}
         <FlatList
           testID="chat-messages"
           onViewableItemsChanged={onViewable}
@@ -248,9 +299,15 @@ function AuthenticatedChatScreen() {
             <Primary label="Send" disabled={!text.trim()} onPress={submit} />
           </View>
         ) : conversation ? (
-          <Text style={[styles.meta, styles.pad]}>History is read-only.</Text>
+          <View><Text style={[styles.meta, styles.pad]}>History is read-only.</Text>{text?<View style={styles.pad}><Body>{`Unsent text: ${text}`}</Body><TextAction label="Discard unsent text" onPress={()=>{editorVersion.current++;setText('');}}/></View>:null}</View>
         ) : null}
       </KeyboardAvoidingView>
+      <Sheet visible={dissolveSheet} title="Dissolve this group?" onClose={()=>setDissolveSheet(false)}>
+        <Body>Everyone will lose the ability to send new messages. Earlier messages stay available. This does not cancel the meal or change attendance. The group cannot reopen.</Body>
+        <FormMessage message={dissolveError}/>
+        <Primary secondary label="Keep group" onPress={()=>setDissolveSheet(false)}/>
+        <TextAction destructive label="Confirm dissolution" disabled={busy||dissolveBlocked} onPress={()=>void dissolve()}/>
+      </Sheet>
       <Sheet visible={sheet} title="Leave this group?" onClose={() => setSheet(false)}>
         <Body>You won’t see new messages. Earlier messages stay read-only, and your seat at the meal doesn’t change.</Body>
         <Primary secondary label="Stay in group" onPress={() => setSheet(false)} />
