@@ -17,9 +17,9 @@
     "nativeRuntimeEvidence20261021": "Native owner actual headless Release install/launch and first-screen evidence independently reviewed by QA, F20 exact red874/fixed9df, F21 formal5b source-equivalent AppRoot and Metro matched. No independent native taps or complete role journey; root complete5b archive rebuild pending when reviewed."
   },
   "counts": {
-    "NOT_RUN": 43,
-    "PASS": 160,
-    "FAIL": 2,
+    "NOT_RUN": 29,
+    "PASS": 172,
+    "FAIL": 4,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -49,7 +49,10 @@
     "B11": "evidence/2026-10-21/browser-b11.zh-CN.md",
     "nativeRuntimeReview": "evidence/2026-10-21/native-f20-f21-owner-runtime-review.json",
     "nativeClosureReview": "evidence/2026-10-21/native-f20-f21-closure.md",
-    "browserObservationsB12": "evidence/2026-10-21/browser-b12.json"
+    "browserObservationsB12": "evidence/2026-10-21/browser-b12.json",
+    "browserObservationsB13": "evidence/2026-10-21/browser-b13.json",
+    "browserObservationsCodeReview": "evidence/2026-10-21/code-review-observations.json",
+    "nativeFormalReview": "evidence/2026-10-21/native-formal-5b-review.json"
   },
   "cases": [
     {
@@ -3109,8 +3112,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "R141-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T071",
         "R1-T072",
@@ -3167,7 +3172,10 @@
         "GET无写和行锁",
         "≤100页/≤500扫描且nextCursor不谎报结束"
       ],
-      "actual": "本地生产实现尚需实际执行：worker暂停跨截止 → GET列表/详情 → 记录DB写计数和锁。尚缺逐项证据：到期不可申请；GET无写和行锁；≤100页/≤500扫描且nextCursor不谎报结束。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "Independent reproduced/static corroborated defect QA-F27 handed to original development owner; local fix/targeted independent retest pending. No external credential dependency for this defect.",
+      "defectIds": [
+        "QA-F27"
+      ]
     },
     {
       "id": "QA-DISCOVERY-008",
@@ -3250,8 +3258,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "CR1-O001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T071",
         "R1-T072",
@@ -3307,7 +3317,10 @@
         "固定areaCode排序决定唯一归属",
         "无匹配unknown不默认Soho"
       ],
-      "actual": "本地生产实现尚需实际执行：同一坐标命中两polygon边界 → 无区域坐标。尚缺逐项证据：固定areaCode排序决定唯一归属；无匹配unknown不默认Soho。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "Independent reproduced/static corroborated defect QA-F24 handed to original development owner; local fix/targeted independent retest pending. No external credential dependency for this defect.",
+      "defectIds": [
+        "QA-F24"
+      ]
     },
     {
       "id": "QA-CREATE-001",
@@ -6939,9 +6952,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
-        "B10-T002"
+        "R127-T001",
+        "B13-O002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T012",
@@ -6982,12 +6996,12 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "分母0→null/—而非0%",
-        "CSV与页面同值同单位"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "本地生产实现尚需实际执行：无任何成熟申请/明确问卷答案，查询比率与CSV。尚缺逐项证据：分母0→null/—而非0%；CSV与页面同值同单位。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations."
+      "remainingExpected": [],
+      "actual": "Independent targeted production probes R127 and cited UI evidence cover the original expected assertions. Local synthetic environment; real PG/API where stated, controlled clock/provider or component transport explicitly scoped. Historical setup/real failures retained; no native journey or real vendor claim."
     },
     {
       "id": "QA-METRIC-002",
@@ -7482,10 +7496,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
-        "B10-T002",
-        "B10-T001"
+        "R130-T002",
+        "B13-O002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T012",
@@ -7526,12 +7540,12 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "问卷样本和值均不变",
-        "UI/CSV声明surveyScope"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "本地生产实现尚需实际执行：日期/分群固定 → 改变饭局区域、语言、人数、预算。尚缺逐项证据：问卷样本和值均不变；UI/CSV声明surveyScope。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations."
+      "remainingExpected": [],
+      "actual": "Independent targeted production probes R130 and cited UI evidence cover the original expected assertions. Local synthetic environment; real PG/API where stated, controlled clock/provider or component transport explicitly scoped. Historical setup/real failures retained; no native journey or real vendor claim."
     },
     {
       "id": "QA-METRIC-011",
@@ -7596,8 +7610,12 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R130-T001",
+        "R130-T003",
+        "R125-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -7637,13 +7655,13 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "每场只落一个预算段",
-        "unknown独列",
-        "双语并集无重复"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：max20/20.01/30/30.01/40/40.01/unknown各1场 → 选择各分段及并集。尚缺逐项证据：每场只落一个预算段；unknown独列；双语并集无重复。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent targeted production probes R130 and cited UI evidence cover the original expected assertions. Local synthetic environment; real PG/API where stated, controlled clock/provider or component transport explicitly scoped. Historical setup/real failures retained; no native journey or real vendor claim."
     },
     {
       "id": "QA-METRIC-013",
@@ -7947,8 +7965,12 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R136-T001",
+        "R128-T001",
+        "R128-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T012",
         "R1-T013",
@@ -7988,13 +8010,13 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "仅连续前台50%且1000ms合格",
-        "中断重计",
-        "session+meal首次去重且不可申请不发"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：49%1000ms、50%999ms、50%1000ms → 中途后台/移出 → 同session再曝。尚缺逐项证据：仅连续前台50%且1000ms合格；中断重计；session+meal首次去重且不可申请不发。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent targeted production probes R136 and cited UI evidence cover the original expected assertions. Local synthetic environment; real PG/API where stated, controlled clock/provider or component transport explicitly scoped. Historical setup/real failures retained; no native journey or real vendor claim."
     },
     {
       "id": "QA-ADMIN-001",
@@ -8108,9 +8130,9 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
-        "B10-T002"
+        "B13-O001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T170",
@@ -8194,12 +8216,12 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "公式/单位/来源/分母可读",
-        "关闭后焦点回触发按钮"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：键盘打开指标字典 → Escape关闭 → 点外部关闭。当前仍缺：公式/单位/来源/分母可读；关闭后焦点回触发按钮。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations."
+      "remainingExpected": [],
+      "actual": "B13 actual browser observations and saved screenshots/DOM widths; B10 preceding empty-filter evidence retained. Fixed local snapshot, no real telemetry/vendor claim."
     },
     {
       "id": "QA-ADMIN-003",
@@ -8207,9 +8229,9 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
-        "B10-T002"
+        "B13-O002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T170",
@@ -8293,13 +8315,13 @@
         "R1-T385",
         "R1-T386"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "页面不横向溢出，表格可滚",
-        "空态不沿用旧图表",
-        "0和未知分清"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "原场景来源Demo，按已授权目标映射当前生产实现；无需回验旧Demo。待执行：390px遍历五页表格下钻 → 选空数据范围 → 恢复。当前仍缺：页面不横向溢出，表格可滚；空态不沿用旧图表；0和未知分清。目标为生产路径，不能因没有重跑旧Demo而停工或授予PASS。 B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations."
+      "remainingExpected": [],
+      "actual": "B13 actual browser observations and saved screenshots/DOM widths; B10 preceding empty-filter evidence retained. Fixed local snapshot, no real telemetry/vendor claim."
     },
     {
       "id": "QA-ADMIN-004",
@@ -10113,9 +10135,9 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": [
-        "R117-T005"
+        "R126-T005"
       ],
       "relatedAutomatedAssertions": [
         "R1-T094",
@@ -10223,15 +10245,12 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "第一轮最少澄清不自选菜系",
-        "明确后使用es语言"
+      "coveredExpectedIndexes": [
+        0,
+        1
       ],
-      "actual": "Independent R117 actual production controller failure, sent to development owner; current fixes not yet accepted. Original red retained. Explicit language Spanish still NEEDS_INPUT.",
-      "defectIds": [
-        "QA-F22"
-      ]
+      "remainingExpected": [],
+      "actual": "Independent targeted production probes R126 and cited UI evidence cover the original expected assertions. Local synthetic environment; real PG/API where stated, controlled clock/provider or component transport explicitly scoped. Historical setup/real failures retained; no native journey or real vendor claim."
     },
     {
       "id": "QA-AI-008",
@@ -10362,8 +10381,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "R131-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -10475,7 +10496,10 @@
         "周五10-23、下周五10-30",
         "默认7日10-19到10-25且显示日期窗口"
       ],
-      "actual": "本地生产实现尚需实际执行：冻结London周一2026-10-19 → 分别本周五/下周五/未指定日期。尚缺逐项证据：周五10-23、下周五10-30；默认7日10-19到10-25且显示日期窗口。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "Independent reproduced/static corroborated defect QA-F25 handed to original development owner; local fix/targeted independent retest pending. No external credential dependency for this defect.",
+      "defectIds": [
+        "QA-F25"
+      ]
     },
     {
       "id": "QA-AI-010",
@@ -10726,8 +10750,13 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R131-T002",
+        "R131-T003",
+        "R131-T004",
+        "R131-T005"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -10834,13 +10863,13 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "≤3按同快照事实比较",
-        "无权对象拒绝不回显",
-        "不读取人格或行程"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：选择3个公开候选 → 再指定第四/未知mealId/隐藏场。尚缺逐项证据：≤3按同快照事实比较；无权对象拒绝不回显；不读取人格或行程。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent targeted production probes R131 and cited UI evidence cover the original expected assertions. Local synthetic environment; real PG/API where stated, controlled clock/provider or component transport explicitly scoped. Historical setup/real failures retained; no native journey or real vendor claim."
     },
     {
       "id": "QA-AI-013",
@@ -13379,8 +13408,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R135-T001",
+        "R135-T002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -13487,13 +13519,13 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "B不见A上下文",
-        "普通退出保留A账号偏好",
-        "删除清所有偏好/上下文且屏障阻旧发布"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：A退出登录B → 再A其他端 → 删除A与AI发布并发。尚缺逐项证据：B不见A上下文；普通退出保留A账号偏好；删除清所有偏好/上下文且屏障阻旧发布。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent targeted production probes R135 and cited UI evidence cover the original expected assertions. Local synthetic environment; real PG/API where stated, controlled clock/provider or component transport explicitly scoped. Historical setup/real failures retained; no native journey or real vendor claim."
     },
     {
       "id": "QA-AI-033",
@@ -15708,10 +15740,9 @@
       "priority": "P0",
       "plannedStage": "review",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "FAIL",
       "evidence": [
-        "R73-T001",
-        "R73-T002"
+        "R139-T001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T242",
@@ -15787,9 +15818,9 @@
         "仅允许最小元数据",
         "合成评测原文另隔离"
       ],
-      "actual": "F13在正式26317f8独立R73实际Node OAuth及receipt/故障日志2项通过；code/state/email不泄漏，业务callback200，requestId/path/耗时保留。R74真实Pino serializer回归通过。R68/R69修前失败保留。全面日志、客户端存储及隔离评测原文审阅尚未完成，整条NOT_RUN。",
+      "actual": "Independent reproduced/static corroborated defect QA-F26 handed to original development owner; local fix/targeted independent retest pending. No external credential dependency for this defect.",
       "defectIds": [
-        "QA-F13"
+        "QA-F26"
       ],
       "history": [
         {
@@ -20010,8 +20041,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R132-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T150",
         "R1-T151",
@@ -20063,13 +20096,13 @@
         "R2-T036",
         "R2-T037"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "新安排重新校验且声明stale",
-        "旧job不得错误取消新时点场",
-        "每有效计划只一事实"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：无guest时改starts/closes → 运行旧dueAt job及新dueAt job。尚缺逐项证据：新安排重新校验且声明stale；旧job不得错误取消新时点场；每有效计划只一事实。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent targeted production probes R132 and cited UI evidence cover the original expected assertions. Local synthetic environment; real PG/API where stated, controlled clock/provider or component transport explicitly scoped. Historical setup/real failures retained; no native journey or real vendor claim."
     },
     {
       "id": "QA-DB-014",
@@ -20151,8 +20184,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "PASS",
+      "evidence": [
+        "R140-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T150",
         "R1-T151",
@@ -20204,14 +20239,14 @@
         "R2-T036",
         "R2-T037"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "逐项核对API§6五分区",
-        "允许有意交集",
-        "EXPIRED不伪装整场取消",
-        "轮次分别显示"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2,
+        3
       ],
-      "actual": "本地生产实现尚需实际执行：构造host/confirmed/declined/expired/withdrawn/个人退出/整场取消/已结束名单。尚缺逐项证据：逐项核对API§6五分区；允许有意交集；EXPIRED不伪装整场取消；轮次分别显示。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "remainingExpected": [],
+      "actual": "Independent targeted production probes R140 and cited UI evidence cover the original expected assertions. Local synthetic environment; real PG/API where stated, controlled clock/provider or component transport explicitly scoped. Historical setup/real failures retained; no native journey or real vendor claim."
     },
     {
       "id": "QA-CHAT-010",
@@ -20759,9 +20794,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": [
-        "R117-T013"
+        "R126-T012",
+        "R126-T013"
       ],
       "relatedAutomatedAssertions": [
         "R1-T094",
@@ -20869,16 +20905,13 @@
         "R2-T062",
         "R2-T063"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "先要求选择目标",
-        "旧选中不自动当当前明确对象",
-        "按当前输入语言回复"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "Independent R117 actual production controller failure, sent to development owner; current fixes not yet accepted. Original red retained. Chinese missing-target request gets English clarification; stale target correctly not reused.",
-      "defectIds": [
-        "QA-F23"
-      ]
+      "remainingExpected": [],
+      "actual": "Independent targeted production probes R126 and cited UI evidence cover the original expected assertions. Local synthetic environment; real PG/API where stated, controlled clock/provider or component transport explicitly scoped. Historical setup/real failures retained; no native journey or real vendor claim."
     },
     {
       "id": "QA-AI-049",
@@ -22415,15 +22448,19 @@
     "QA-F19": "CLOSED_TARGETED_QA",
     "QA-F20": "CLOSED_TARGETED_QA",
     "QA-F21": "CLOSED_TARGETED_QA",
-    "QA-F22": "OPEN",
-    "QA-F23": "OPEN"
+    "QA-F22": "CLOSED_TARGETED_QA",
+    "QA-F23": "CLOSED_TARGETED_QA",
+    "QA-F24": "OPEN",
+    "QA-F25": "OPEN",
+    "QA-F26": "OPEN",
+    "QA-F27": "OPEN"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
     "userAuthorizedMessaging": true,
     "status": "remaining_local_execution_in_progress",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
-    "latestFeedback": "R117 two stable AI language defects F22/F23 handed to developer. R119 support propagation/exact window2green; R123 core draft boundaries4green. Other local work continues; no user approval needed for these fixes."
+    "latestFeedback": "F22/F23 independently closed on61ff R12617green; F24 mapping/F25 date-window/F26 native raw-error log/F27 discovery scan limit open with developer owners. Local execution continues; native headless XCTest smoke now owner-proven and full journeys pending."
   },
   "blockerTriage": "原14条中供应商分步删除和恢复删除台账两条已转本地执行并通过；其余12条缺真实环境/许可/批准证据，各项可本地准备部分已继续推进，不能视为12个未修代码故障。"
 }

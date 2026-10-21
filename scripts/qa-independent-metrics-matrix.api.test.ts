@@ -63,3 +63,31 @@ it('QA-METRIC-013 classification excludes the account contribution and hosted me
  const hostVersion=await classify(f.host.id,'staff','0');const s2=await seal();expect((await facts(s2,'meals')).some((m:{id:string})=>m.id===f.m)).toBe(false);
  await classify(f.guest.id,'regular',v);await classify(f.host.id,'regular',hostVersion);const s3=await seal();expect((await facts(s3,'meals')).some((m:{id:string})=>m.id===f.m)).toBe(true);expect((await facts(s3,'users')).some((u:{id:string})=>u.id===f.guest.id)).toBe(true);expect((await facts(s0,'users')).some((u:{id:string})=>u.id===f.guest.id)).toBe(true);
 });
+
+async function analyst(){const a=await actor();await h.db.pool.query("INSERT INTO roles(user_id,role,granted_by) VALUES($1,'analyst','qa-fixture')",[a.id]);await h.db.pool.query("UPDATE session_families SET amr=ARRAY['mfa'] WHERE user_id=$1",[a.id]);return a;}
+async function exported(b:Browser,snapshotId:string,metric:string,filters:Record<string,string>={}){const r=await b.request('POST','/v1/admin/exports',{headers:{'idempotency-key':randomUUID()},body:{snapshotId,metric,filters}});expect(r.statusCode,r.body).toBe(201);const csv=await b.request('GET',`/v1/admin/exports/${json(r).data.exportId}`);expect(csv.statusCode,csv.body).toBe(200);return csv.body;}
+it('QA-METRIC-001 zero denominator remains empty CSV value with exact0/0 and pinned v4 metadata',async()=>{
+ const a=await analyst(),id=await sealSourceSnapshot(h.db.pool,new Date('2026-01-01')),filters={from:'2020-01-01',to:'2020-01-02'};
+ const r=await a.b.request('GET',`/v1/admin/retention?snapshotId=${id}&from=${filters.from}&to=${filters.to}`);expect(r.statusCode,r.body).toBe(200);expect(json(r).data.metrics.feedback).toEqual({numerator:0,denominator:0});
+ const csv=await exported(a.b,id,'feedback',filters);expect(csv).toContain('"feedback","","0","0"');expect(csv).toContain(`"snapshotId","${id}"`);expect(csv).toContain('"definitionVersion","v4"');expect(csv).toContain('"asOf"');expect(csv).toContain('"filterHash"');
+});
+it('QA-METRIC-010 independent survey filters preserve rows and factors while UI/API and CSV expose scope and user units',async()=>{
+ const f=await fixture();await h.db.pool.query("INSERT INTO product_surveys(user_id,version,again,reasons,submitted_at) VALUES($1,1,true,ARRAY['venue','cost'],clock_timestamp())",[f.guest.id]);const a=await analyst(),id=await sealSourceSnapshot(h.db.pool,new Date('2026-01-01'));
+ const read=async(extra:string)=>{const r=await a.b.request('GET',`/v1/admin/retention?snapshotId=${id}${extra}`);expect(r.statusCode,r.body).toBe(200);return json(r).data;};
+ const all=await read(''),narrow=await read('&areas=missing&languages=zh&sizes=6&budgetBands=40%2B');expect(narrow.metrics.survey).toEqual(all.metrics.survey);expect(narrow.series['survey.reasons']).toEqual(all.series['survey.reasons']);
+ const csv=await exported(a.b,id,'survey',{areas:'missing',languages:'zh',sizes:'6',budgetBands:'40+'});expect(csv).toContain('"surveyScope","date_and_user_segment"');expect(csv).toContain('"unit","users"');expect(csv).toContain('"surveyFactor:venue","1"');expect(csv).toContain('"surveyFactor:cost","1"');
+});
+
+it('QA-METRIC-012 legally omitted discovery-request budget stays unknown rather than borrowing a meal budget',()=>{
+ const f=fact();f.discoveryReady=true;f.events=[{event_id:'unknown-request',anonymous_id:'synthetic',user_id:null,session_id:'synthetic',type:'discovery_results',occurred_at:'2026-10-01T10:00:00Z',received_at:'2026-10-01T10:00:01Z',properties:{serverOnly:true,resultCount:0,filters:{languages:'en,zh'}}}];
+ const unknown=calculateMetrics(f,{...filters,budgetBands:['unknown'],languages:['en','zh']},asOf);expect(unknown.metrics.discovery).toEqual({numerator:1,denominator:1});
+ const concrete=calculateMetrics(f,{...filters,budgetBands:['0-20','20-30','30-40','40+']},asOf);expect(concrete.metrics.discovery).toEqual({numerator:0,denominator:0});expect(calculateMetrics(f,{...filters,budgetUpToPence:5000},asOf).metrics.discovery).toEqual({numerator:0,denominator:0});
+});
+
+it('QA-METRIC-018 real server deduplicates a session meal across new event IDs and rejects ineligible discovery target',async()=>{
+ const f=await fixture();await h.db.pool.query("UPDATE meals SET starts_at='2030-10-23T17:00Z',closes_at='2030-10-23T16:00Z',scheduled_end_at='2030-10-23T19:00Z',start_local_date='2030-10-23',close_local_date='2030-10-23',status='OPEN' WHERE id=$1",[f.m]);
+ const b=new Browser(h),batch=(events:unknown[])=>({schemaVersion:1,consent:{analytics:true,version:ANALYTICS_CONSENT_VERSION},events});expect((await b.request('POST','/v1/analytics/events',{body:batch([])})).statusCode).toBe(200);
+ const discovery=await b.request('GET','/v1/meals?limit=100',{headers:{'x-fancy-analytics':'enabled'}});expect(discovery.statusCode,discovery.body).toBe(200);const requestId=json(discovery).meta.requestId;
+ const event=(mealId=f.m)=>({eventId:randomUUID(),type:'meal_impression',occurredAt:new Date().toISOString(),anonymousId:'qa-exposure',sessionId:'qa-exposure',appVersion:'web-mvp-1',properties:{mealId,discoveryRequestId:requestId,visibleRatio:.5,durationMs:1000,eligible:true,foreground:true}});
+ const send=async(e:unknown)=>{const r=await b.request('POST','/v1/analytics/events',{body:batch([e])});expect(r.statusCode,r.body).toBe(200);return json(r).data.results[0];};expect((await send(event())).status).toBe('accepted');expect((await send(event())).status).toBe('duplicate');expect((await send(event(randomUUID()))).reason).toBe('not_eligible');expect((await h.db.pool.query("SELECT count(*)::int n FROM analytics_events WHERE type='meal_impression' AND properties->>'mealId'=$1",[f.m])).rows[0].n).toBe(1);
+});

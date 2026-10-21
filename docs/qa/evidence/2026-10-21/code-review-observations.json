@@ -1,0 +1,18 @@
+{
+  "observations": [
+    {
+      "id": "CR1-O001",
+      "status": "failed",
+      "title": "QA-DISCOVERY-009 versioned point-in-polygon mapping absent before F24",
+      "testedCommit": "61ff27c3a512e87cc769ecd98a66b933ff4c15e0",
+      "environment": "Independent static source review; developer owner corroborated, not dynamic native evidence",
+      "steps": [
+        "Engineering data-command contract areaCode requires verified coordinates and versioned polygon with deterministic boundary ordering.",
+        "VenueService.confirmVerified passes placeId only; PostgresVenueReferences.findOrCreate inserts unknown unconditionally.",
+        "No point/polygon mapper or injectible dataset in production source tree; no local overlap/boundary implementation.",
+        "Owner acknowledged missing local algorithm and took F24; actual licensed London dataset remains separate G-PLACES gate."
+      ],
+      "artifacts": []
+    }
+  ]
+}

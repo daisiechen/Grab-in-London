@@ -1,0 +1,38 @@
+{
+  "observations": [
+    {
+      "id": "B13-O001",
+      "status": "passed",
+      "title": "QA-ADMIN-002 dictionary outside click, Enter/Escape and restored trigger focus",
+      "testedCommit": "4a0c66f838cb73aa5ac9e2a2ac74662ce2462c11",
+      "environment": "B7 actual Admin5174/API3000 real PG synthetic staff, frozen fixture clock",
+      "steps": [
+        "Open weekly dictionary from metric definition button; formula/unit/time/source/decision/boundary and denominator explanation readable.",
+        "Click backdrop outside visible right dialog: dialog count0 and document.activeElement text metric definition.",
+        "Enter reopens; Escape closes; dialog count0 and focus same trigger."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/admin-definition-dismiss-focus.jpg"
+      ]
+    },
+    {
+      "id": "B13-O002",
+      "status": "passed",
+      "title": "QA-ADMIN-003 five pages at390px retain contained tables and distinguish empty unknown and zero",
+      "testedCommit": "4a0c66f838cb73aa5ac9e2a2ac74662ce2462c11",
+      "environment": "Same actual Admin/B7; viewport390x844 reset after test",
+      "steps": [
+        "Overview/journey/supply/retention/quality body width379 within viewport390.",
+        "Wide journey1772/supply924 tables stay inside313px overflow:auto parents; overview dialog fits379.",
+        "Retention shows immature0/0 as dash/observing, actual zero rating bins as0, independent survey1/1.",
+        "Quality empty exceptions table says no matching data, no records does not mean conversion zero; quality latency unknown dash and actual duplicate0 distinct.",
+        "B10 earlier filter-to-empty chart removal evidence retained; not replaced by mock data."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/admin-retention-390.jpg",
+        "evidence/2026-10-21/admin-quality-empty-390.jpg",
+        "evidence/2026-10-21/admin-small-widths.json"
+      ]
+    }
+  ]
+}

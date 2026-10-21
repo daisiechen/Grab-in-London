@@ -1,0 +1,72 @@
+[
+  {
+    "body": 379,
+    "dialogs": [
+      {
+        "tables": [
+          {
+            "overflow": "auto",
+            "parentScroll": 697,
+            "parentWidth": 319,
+            "width": 697.359375
+          }
+        ],
+        "width": 379
+      }
+    ],
+    "page": "overview",
+    "viewport": 390
+  },
+  {
+    "body": 379,
+    "page": "journey",
+    "tables": [
+      {
+        "overflow": "auto",
+        "parentScroll": 1772,
+        "parentWidth": 313,
+        "width": 1771.90625
+      }
+    ],
+    "viewport": 390
+  },
+  {
+    "body": 379,
+    "page": "supply",
+    "tables": [
+      {
+        "overflow": "auto",
+        "parentScroll": 924,
+        "parentWidth": 313,
+        "width": 924.0078125
+      }
+    ],
+    "viewport": 390
+  },
+  {
+    "body": 379,
+    "page": "retention",
+    "tables": [
+      {
+        "overflow": "auto",
+        "parentScroll": 313,
+        "parentWidth": 313,
+        "width": 313
+      }
+    ],
+    "viewport": 390
+  },
+  {
+    "body": 379,
+    "page": "quality",
+    "tables": [
+      {
+        "overflow": "auto",
+        "parentScroll": 334,
+        "parentWidth": 334,
+        "width": 334
+      }
+    ],
+    "viewport": 390
+  }
+]

@@ -1,0 +1,46 @@
+{
+  "sourceCommit": "5b26fb3f633d19ca1deaf3e588ed16dc56836be5",
+  "ownerExecuted": true,
+  "qaIndependentlyReadAndHashed": true,
+  "sourceFilesComparedAgainstGit": 188,
+  "artifactChecks": [
+    {
+      "artifact": "Fancy",
+      "sha256": "60dee3c635a02862aa58a40005d0e5567e7219f72a62187322bc6dd54b691edf",
+      "matchesOwnerManifest": true
+    },
+    {
+      "artifact": "main.jsbundle",
+      "sha256": "3b0cf473ac7301e6a49ea6866dea917130b22c1ff816db63e4cf7613b2cc836d",
+      "matchesOwnerManifest": true
+    },
+    {
+      "artifact": "Info.plist",
+      "sha256": "4945d9ab412cabb842fbf03f8cb15564920913ce31017aa66068b13d29917e3a",
+      "matchesOwnerManifest": true
+    },
+    {
+      "artifact": "fancy-f21-5b26fb3-source-manifest.json",
+      "sha256": "abf2f8e9028cbc6b7f14cbc4425d8aa8e026f572d55e67b1f0f8dd4c796a4fff",
+      "matchesOwnerManifest": true
+    },
+    {
+      "artifact": "fancy-f21-5b26fb3-native-screen.png",
+      "sha256": "83e06523edeca4ea3ecb74952ab8b45efe96a4bbcc546dc463bd3c7b4741179a",
+      "matchesOwnerManifest": true
+    },
+    {
+      "artifact": "fancy-f21-5b26fb3-native-runtime.log",
+      "sha256": "d70c5bf9cb8c83f0bdb89de6ee9391e4d6366715e26bfe7569f82fe633186c89",
+      "matchesOwnerManifest": true
+    },
+    {
+      "artifact": "fancy-f21-5b26fb3-native-build.log",
+      "sha256": "6786bdd04f5864068fbbcb6e82cb8f584cec79f3d73acd040e51b0c36d305803",
+      "matchesOwnerManifest": true
+    }
+  ],
+  "runtimeFatalMarkers": 0,
+  "buildSuccessMarker": true,
+  "scope": "Exact full archive Release build/install/launch and first-screen only; no independent QA native taps or journey claim."
+}

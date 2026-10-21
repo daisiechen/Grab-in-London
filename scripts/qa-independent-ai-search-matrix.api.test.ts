@@ -91,3 +91,16 @@ it('QA-AI-049 group 1001 rejects; application300 group1000 create80/1000 remain 
  expect(createDraft('APPLICATION',randomUUID(),'1','0',{text:'a'.repeat(300)},'').text).toHaveLength(300);
  expect(createDraft('CREATE',null,null,'0',{title:'a'.repeat(80),description:'a'.repeat(1000)},'').fields).toEqual({title:'a'.repeat(80),description:'a'.repeat(1000)});
 });
+
+import {londonDates} from '../apps/api/src/assistant/query.ts';
+it('QA-AI-009 natural week Friday and next Friday are exact; default reply displays concrete seven-day London window',async()=>{
+ const monday=new Date('2026-10-19T12:00:00Z');expect(londonDates('friday',monday)).toEqual({dates:['2026-10-23'],tonight:false});expect(londonDates('next friday',monday)).toEqual({dates:['2026-10-30'],tonight:false});
+ await meal();const h=await setup([plan('SEARCH')]);const r=await h.run(h.turn('Find options'));const first=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London'}).format(new Date());const last=new Date(new Date(first+'T12:00:00Z').getTime()+6*86400_000).toISOString().slice(0,10);expect(r.result!.replyText).toContain(first);expect(r.result!.replyText).toContain(last);
+});
+it('QA-AI-012 comparison only uses explicit three current public meals and never private profile or itinerary fields',async()=>{
+ const ids=[await meal(),await meal(),await meal()];const h=await setup([plan('COMPARE',[],ids)]);const r=await h.run(h.turn('Compare these options',{explicitMealIds:ids}));expect(r.state).toBe('SUCCEEDED');expect(r.result!.comparison!.map(c=>c.mealId).sort()).toEqual(ids.sort());expect(JSON.stringify(r.result)).not.toMatch(/personality|itinerary|private_contact|email|biography/);
+});
+it.each(['FOUR','UNKNOWN','HIDDEN'])('QA-AI-012 %s comparison cannot return unauthorised or invented object facts',async kind=>{
+ const m=await meal(),ids=kind==='FOUR'?[m,randomUUID(),randomUUID(),randomUUID()]:kind==='UNKNOWN'?[randomUUID()]:[m];if(kind==='HIDDEN')await db.pool.query("UPDATE users SET status='DELETING' WHERE id=$1",[hostId]);
+ const h=await setup([plan('COMPARE',[],ids)]);const r=await h.run(h.turn('Compare these options',{explicitMealIds:ids}));expect(['FAILED','SUPERSEDED']).toContain(r.state);expect(r.result).toBeNull();
+});
