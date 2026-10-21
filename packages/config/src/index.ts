@@ -5,6 +5,8 @@
  * staging and production refuse to start with them.
  */
 
+import { isIP } from 'node:net';
+
 export const ENVIRONMENTS = ['development', 'test', 'staging', 'production'] as const;
 export type Environment = (typeof ENVIRONMENTS)[number];
 
@@ -42,6 +44,7 @@ export const CONFIG_KEYS = [
   'PRIVACY_POLICY_VERSION',
   'RETENTION_POLICY_JSON',
   'LOG_LEVEL',
+  'TRUSTED_PROXY_CIDRS',
 ] as const;
 
 const LOG_LEVELS = ['debug', 'info', 'warn', 'error'] as const;
@@ -68,6 +71,8 @@ export interface CoreConfig {
   privacyPolicyVersion: string | null;
   retentionPolicy: Record<string, unknown> | null;
   logLevel: LogLevel;
+  /** Explicit proxy addresses only; an empty list distrusts all forwarded headers. */
+  trustedProxyCidrs: string[];
 }
 
 /** Lists offending keys only; values are never echoed so secrets stay out of logs. */
@@ -81,6 +86,22 @@ export class ConfigError extends Error {
 }
 
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1', '[::1]']);
+
+function parseTrustedProxies(raw: string | undefined, issues: string[]): string[] {
+  if (!raw) return [];
+  const entries = raw.split(',').map((entry) => entry.trim());
+  const valid = raw.length <= 4096 && entries.length <= 32 && entries.every((entry) => {
+    const [address, prefix, extra] = entry.split('/');
+    const family = isIP(address ?? '');
+    return !!family && !address!.includes('%') && extra === undefined &&
+      (prefix === undefined || (/^\d{1,3}$/.test(prefix) && Number(prefix) >= 1 && Number(prefix) <= (family === 4 ? 32 : 128)));
+  });
+  if (!valid) {
+    issues.push('TRUSTED_PROXY_CIDRS must contain at most 32 explicit IP addresses or nonzero CIDRs');
+    return [];
+  }
+  return [...new Set(entries)];
+}
 
 function parseDatabaseUrl(raw: string | undefined, issues: string[]): URL | null {
   if (!raw) {
@@ -179,6 +200,7 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
   const analyticsCoverageStart=value('ANALYTICS_COVERAGE_START')??null;
   if(analyticsCoverageStart&&(!Number.isFinite(Date.parse(analyticsCoverageStart))||Date.parse(analyticsCoverageStart)>Date.now()))issues.push('ANALYTICS_COVERAGE_START must be a valid past instant');
   if (!LOG_LEVELS.includes(logLevel)) issues.push(`LOG_LEVEL must be one of ${LOG_LEVELS.join('/')}`);
+  const trustedProxyCidrs = parseTrustedProxies(value('TRUSTED_PROXY_CIDRS'), issues);
 
   if (issues.length) throw new ConfigError(issues);
   return {
@@ -197,5 +219,6 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
     privacyPolicyVersion,
     retentionPolicy,
     logLevel,
+    trustedProxyCidrs,
   };
 }

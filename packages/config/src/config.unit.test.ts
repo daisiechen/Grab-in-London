@@ -27,6 +27,17 @@ const production = {
   RETENTION_POLICY_JSON: '{"deletedAccountDays":30}',
 };
 
+describe('trusted reverse proxies', () => {
+  it('defaults to no forwarded-header trust and accepts only explicit address ranges', () => {
+    expect(loadConfig(local).trustedProxyCidrs).toEqual([]);
+    expect(loadConfig({ ...local, TRUSTED_PROXY_CIDRS: '127.0.0.1, ::1/128, 10.1.2.0/24,127.0.0.1' }).trustedProxyCidrs)
+      .toEqual(['127.0.0.1', '::1/128', '10.1.2.0/24']);
+  });
+  it.each(['true', '*', 'loopback', 'localhost', '0.0.0.0/0', '::/0', '127.0.0.1/33', '::1/129', '127.0.0.1/', '127.0.0.1,,::1', 'fe80::1%en0'])('refuses unsafe or malformed trust value %s', (input) => {
+    expect(() => loadConfig({ ...local, TRUSTED_PROXY_CIDRS: input })).toThrow(/TRUSTED_PROXY_CIDRS/);
+  });
+});
+
 it('accepts a privately supplied DeepSeek credential without changing the selected adapter',()=>{
   expect(loadConfig(local).deepseekApiKey).toBeNull();
   const config=loadConfig({...local,DEEPSEEK_API_KEY:'local-placeholder-only'});

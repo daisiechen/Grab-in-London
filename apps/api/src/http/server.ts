@@ -40,7 +40,7 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
     },
     genReqId: () => randomUUID(),
     bodyLimit: 64 * 1024,
-    trustProxy: false,
+    trustProxy: deps.config.trustedProxyCidrs.length ? deps.config.trustedProxyCidrs : false,
     ajv: { customOptions: { removeAdditional: false } },
   });
   await app.register(cookie);

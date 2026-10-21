@@ -45,6 +45,7 @@ export const ERROR_STATUS = {
   RATE_LIMITED: 429,
   INTERNAL_ERROR: 500,
   PROVIDER_UNAVAILABLE: 503,
+  SERVICE_UNAVAILABLE: 503,
 } as const;
 export type ErrorCode = keyof typeof ERROR_STATUS;
 export const ERROR_CODES = Object.keys(ERROR_STATUS) as ErrorCode[];
