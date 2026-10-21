@@ -12763,6 +12763,74 @@
           "durationMs": 58.22179199999999
         }
       ]
+    },
+    {
+      "id": "R76",
+      "testedCommit": "8e94ab305ce985cb40cd85e3f0230d1843e216dd + QA-only probes",
+      "command": "pnpm exec vitest run --config scripts/qa-independent.config.ts scripts/qa-independent-ai-hostile.api.test.ts -t 'QA-AI-026'",
+      "startedAt": "2026-10-21T14:19:46.475000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "excludedByNameFilter": 17,
+      "assertions": [
+        {
+          "id": "R76-T001",
+          "run": "R76",
+          "path": "scripts/qa-independent-ai-hostile.api.test.ts",
+          "title": "QA-AI-026 independent held provider cannot publish after deletion; both old device sessions are invalid and fresh bootstrap uses new epoch",
+          "status": "passed",
+          "durationMs": 27.674833000000035
+        }
+      ]
+    },
+    {
+      "id": "R77",
+      "testedCommit": "8e94ab305ce985cb40cd85e3f0230d1843e216dd + QA-only probes",
+      "command": "pnpm --filter @fancy/ios exec jest src/features/assistant/qa-independent-resume.test.tsx --runInBand",
+      "startedAt": "2026-10-21T14:20:59.299000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "excludedByNameFilter": 0,
+      "assertions": [
+        {
+          "id": "R77-T001",
+          "run": "R77",
+          "path": "apps/ios/src/features/assistant/qa-independent-resume.test.tsx",
+          "title": "QA-AI-026 foreground validates account preference epoch before retaining old assistant context and preserves unsent text",
+          "status": "failed",
+          "durationMs": 1138,
+          "failureSummary": "Foreground event did not re-read account preferences: expected calls > 1, actual 1; old preference context was not invalidated."
+        }
+      ]
+    },
+    {
+      "id": "R78",
+      "testedCommit": "8e94ab305ce985cb40cd85e3f0230d1843e216dd + QA-only probes",
+      "command": "pnpm --filter @fancy/ios exec jest src/features/assistant/qa-independent-resume.test.tsx --runInBand",
+      "startedAt": "2026-10-21T14:22:23.527000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "suiteFiles": 1,
+      "excludedByNameFilter": 0,
+      "assertions": [
+        {
+          "id": "R78-T001",
+          "run": "R78",
+          "path": "apps/ios/src/features/assistant/qa-independent-resume.test.tsx",
+          "title": "QA-AI-026 foreground validates account preference epoch before retaining old assistant context and preserves unsent text",
+          "status": "failed",
+          "durationMs": 1131,
+          "failureSummary": "Foreground event did not re-read account preferences: expected calls > 1, actual 1; old preference context was not invalidated."
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
@@ -12804,11 +12872,12 @@
     "scripts/qa-independent-snapshot-race.api.test.ts": "2f71df1295860e2dfcc2df39890c6f9ba1f4c7627877573cff175b2b2334102a",
     "apps/admin/src/state/qa-independent-revocation.unit.test.tsx": "e2999aca140d3f9bdb9f2f88319e44a1e9c99884da300a701967d05f74c01c09",
     "scripts/qa-independent-ai-group-permissions.api.test.ts": "67ded17c812c8d5fa85aebdeb3c0849e7691b7b4a81900c9cfd4df6f5631638f",
-    "scripts/qa-independent-ai-hostile.api.test.ts": "a9e74fb3326d1957ff24b47bc176a1bc2e376e828bb30d14fb19d9cc72f9eb43",
+    "scripts/qa-independent-ai-hostile.api.test.ts": "1cf023ce52a6e19740c0e6124d19fb86bff8ebb13887a4aab14a7938e2d5661e",
     "scripts/qa-independent-provider-lock.api.test.ts": "e5bc76e651eccec34cb774662a0c78b2b6f95b39130242ae16faf7a4c95aac87",
     "scripts/qa-independent-oauth-logs.api.test.ts": "30dd3835dc27e9a64a251dfab9a653b188c0dfdbd5ef379620435cf3a6376700",
     "scripts/qa-oauth-log-child.ts": "2407272b1de6534c7670b8fdf5e9f91104f3c82de14c5767835eda48d50d91d9",
-    "apps/api/src/test/qa-independent-assets.unit.test.ts": "d74cde8973e70c2274453d08a2a9db3c08d5f4014588bde4eb4c8a4293f3f6c1"
+    "apps/api/src/test/qa-independent-assets.unit.test.ts": "d74cde8973e70c2274453d08a2a9db3c08d5f4014588bde4eb4c8a4293f3f6c1",
+    "apps/ios/src/features/assistant/qa-independent-resume.test.tsx": "01492766cb4b94a44bcdaf1c35d86c7812dc5b6ab80de06f765142d69e986664"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console. R68/R69 valid TestIDP OAuth callback200 captured actual non-silent child stdout only in parent RAM. Metadata contains only leak booleans, never credential strings or raw logs. R69 aggregates code/state/email checks without stopping at the first boolean failure. R72 mutates semantic OpenAPI/SDK artifacts only in an owned temporary contracts copy, requires the real checker fail1 and restore0, and verifies original workspace bytes untouched. Static cases remain NOT_RUN until fixed committed handoff recheck.",
   "runtimeSnapshotVerification": {
@@ -12878,6 +12947,7 @@
     "R56 initial DIRECT assertion used GROUP read-only wording (QA fixture mismatch), and current-metadata test unconditionally returned stale canSend=true. R57 uses the correct group/direct wording and current canSend projection; allows repeated HISTORY reads but forbids LIVE after HISTORY. Original R56 failures retained. R59 adds a separate controlled deferred response captured before revocation and released only after403/HISTORY: this still fails, independently proving the stale-metadata race rather than discarding it as fixture error.",
     "R64 initial fast multi-stage setup hit the guest one-second write-burst limiter before the final send (429 rather than authorization403); clears only that synthetic actor write-burst row immediately before the authorization probe, retaining all durable messages/quota. Stranger send correctly conceals an unknown conversation with404, not403; expectation aligned to established route contract, still asserts no message. No production code or permission assertion weakened.",
     "R65 copied helper imported unused describe (lint corrected). Initial four hidden-group setup failures omitted required messages.created_at; added clock_timestamp and completed JOIN/membership/message sequence before final execution. No production assertions weakened. R65 verifies each rejected malformed output still increments both active daily/monthly used money by exactly20 times actual provider-call count, rather than merely seeing a KNOWN row.",
-    "R67 QA-only cleanup: createHarness.close captures the original app, so a rebuilt disabled-config app also needs explicit close before original close/drop. Corrected wrapper and six availability assertions still pass. This stops its own lifecycle timer before pool drop; no production assertion changed. Concurrent F12 candidate files are explicitly not treated as accepted by this run."
+    "R67 QA-only cleanup: createHarness.close captures the original app, so a rebuilt disabled-config app also needs explicit close before original close/drop. Corrected wrapper and six availability assertions still pass. This stops its own lifecycle timer before pool drop; no production assertion changed. Concurrent F12 candidate files are explicitly not treated as accepted by this run.",
+    "R77 final unreachable getState references corrected to existing getSnapshot API; iOS tsc passed, R78 repeats the same foreground request-count failure. No production alias or lowered assertion."
   ]
 }

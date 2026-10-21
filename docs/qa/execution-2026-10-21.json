@@ -15,8 +15,9 @@
     "ios": "Jest only, no native device acceptance"
   },
   "counts": {
-    "NOT_RUN": 91,
+    "NOT_RUN": 90,
     "PASS": 114,
+    "FAIL": 1,
     "BLOCKED": 12
   },
   "evidenceCatalog": {
@@ -12181,8 +12182,12 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "R76-T001",
+        "R77-T001",
+        "R78-T001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -12291,11 +12296,20 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "epoch升、旧引用RAM清、旧结果SUPERSEDED不发布",
-        "他端先同步",
-        "未发文字保留"
+        "iOS恢复前台先同步epoch并清旧结果；离线不继续AI",
+        "客户端未发文字仍保留；Web对应恢复路径待独立核查"
       ],
-      "actual": "本地生产实现尚需实际执行：provider挂起 → 删偏好 → 放行旧响应 → 另一设备恢复。尚缺逐项证据：epoch升、旧引用RAM清、旧结果SUPERSEDED不发布；他端先同步；未发文字保留。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "R76真实PG/受控挂起provider：删除偏好epoch1→2、两个旧session失效、旧RAM上下文/草稿不可读、迟到结果SUPERSEDED，新bootstrap epoch2空上下文均通过。R77真实AssistantWidget组件AppState background→active：服务器准备epoch2删除响应，但readAIPreferences仍仅首次1次，旧上下文继续显示。QA-F14交接开发；不是服务端删除失败，不代表原生设备验收。",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：provider挂起 → 删偏好 → 放行旧响应 → 另一设备恢复。尚缺逐项证据：epoch升、旧引用RAM清、旧结果SUPERSEDED不发布；他端先同步；未发文字保留。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
+          "reason": "R76 server deletion green; R77 native foreground independently red"
+        }
+      ],
+      "defectIds": [
+        "QA-F14"
+      ]
     },
     {
       "id": "QA-AI-027",
@@ -21850,7 +21864,8 @@
     "QA-F10": "CLOSED_TARGETED_QA",
     "QA-F11": "CLOSED_TARGETED_QA",
     "QA-F12": "CLOSED_TARGETED_QA",
-    "QA-F13": "CLOSED_TARGETED_QA"
+    "QA-F13": "CLOSED_TARGETED_QA",
+    "QA-F14": "OPEN"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",

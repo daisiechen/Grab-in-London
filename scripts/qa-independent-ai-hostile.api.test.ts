@@ -96,3 +96,20 @@ it('QA-AI-024 independent query and rejected proposal stay unsaved; explicit con
  const stored=await db.pool.query('SELECT row_to_json(p)::text body FROM ai_preferences p WHERE user_id=$1',[userId]);
  expect(stored.rows[0].body).not.toContain('tomorrow');expect(stored.rows[0].body).not.toContain('PRIVATE_QUERY_CANARY');expect(stored.rows[0].body).not.toContain('dates');expect(await noWrites()).toEqual(before);
 });
+
+it('QA-AI-026 independent held provider cannot publish after deletion; both old device sessions are invalid and fresh bootstrap uses new epoch',async()=>{
+ let release!:()=>void;const gate=new Promise<void>(r=>{release=r;});const h=await setup([plan('SEARCH')],{...emptyPreferences(),budgetMaxPence:3500},undefined,gate);
+ const other=await h.c.sessions.create(h.b.subject),otherBinding={...h.b,deviceToken:other.deviceToken};
+ h.runtime.appendMessage(h.s.id,h.b,'user','PRIVATE_OLD_CONTEXT');h.runtime.saveArtifact(h.s.id,h.b,'old-artifact',{text:'PRIVATE_OLD_DRAFT'});
+ const turn=h.turn('Find meals');await h.c.request(h.s.id,h.b,turn);
+ try{
+  const stop=Date.now()+3000;while(h.captured.length===0){if(Date.now()>stop)throw Error('provider admission did not reach controlled gate');await new Promise<void>(r=>setImmediate(r));}
+  const removed=await h.c.preferences.remove(userId,'1');expect(removed).toMatchObject({epoch:'2',version:'2',fields:emptyPreferences(),confirmed_at:null});
+  expect(()=>h.runtime.read(h.s.id,h.b)).toThrow('AI_SESSION_EXPIRED');expect(()=>h.runtime.artifact(h.s.id,h.b,'old-artifact')).toThrow('AI_SESSION_EXPIRED');
+  await expect(h.c.sessions.read(other.id,otherBinding)).rejects.toThrow();
+  release();const stop2=Date.now()+3000;for(;;){const rows=await db.pool.query('SELECT state FROM ai_calls WHERE request_id=$1',[turn.requestId]);if(rows.rows.length&&rows.rows.every(r=>r.state!=='IN_FLIGHT'))break;if(Date.now()>stop2)throw Error('late provider did not settle');await new Promise<void>(r=>setImmediate(r));}
+  expect((await db.pool.query('SELECT state FROM ai_requests WHERE request_id=$1',[turn.requestId])).rows[0].state).toBe('SUPERSEDED');
+  const next=await h.c.sessions.create(h.b.subject);const metadata=await db.pool.query('SELECT preference_epoch::text FROM ai_session_meta WHERE id=$1',[next.id]);expect(metadata.rows[0].preference_epoch).toBe('2');
+  expect(h.runtime.read(next.id,{...h.b,deviceToken:next.deviceToken,preferenceEpoch:'2'}).messages).toEqual([]);expect(await h.c.preferences.read(userId)).toMatchObject({fields:emptyPreferences(),epoch:'2'});
+ }finally{release();}
+});
