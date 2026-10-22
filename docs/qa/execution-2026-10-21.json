@@ -16059,7 +16059,7 @@
         "真实提供方有效及PKCE/回调/身份映射证据",
         "模拟按钮/Expo Go不能替代"
       ],
-      "actual": "缺真实EMAIL/Google/Apple身份提供方、回调/PKCE及映射联调证据。开发先核对已有配置及本地回调测试，只有确实缺账号/域名配置/凭据时列明用户操作；不发真实身份请求替代授权。",
+      "actual": "开发2026-10-22白名单核验：Auth0基础配置已非空，Google已到账号选择页，但本人完成回调尚无证据；不能继续称缺账户。专用Management两键未配置，Apple发布/身份配置尚未完成。开发负责接线，QA待真实三方式PKCE/回调/映射验证；需本人登录的步骤单列。",
       "history": [
         {
           "status": "BLOCKED",
@@ -16084,7 +16084,7 @@
         "地址坐标服务端验证",
         "Google地图/照片署名、许可表及缓存符合已批准配置"
       ],
-      "actual": "缺真实Google Places/地图key与Map ID配置下的placeId、坐标、署名和许可验收证据。开发先做适配及失效/缺配置回退测试，并列出真实配置依赖。",
+      "actual": "Google服务端key已配置，开发报告地图/Places两次正常真实调用；不是缺Google账户。仍待QA核验真实placeId、服务端地址坐标、照片署名与许可/缓存全套断言。开发负责交接配置及可复验环境，调用成功不等于整条验收通过。",
       "history": [
         {
           "status": "BLOCKED",
@@ -16109,7 +16109,7 @@
         "实际收件箱可追踪去重",
         "provider accepted不能单独通过"
       ],
-      "actual": "缺真实邮件提供方与收件箱接收、去重及渠道矩阵证据。本地outbox/失败恢复可继续测；开发核对发送域/提供方和可用测试收件箱，缺账号配置才列用户依赖。",
+      "actual": "Resend基础发送配置已非空，已有测试邮件delivered运输证据；不是缺邮件账户。生产运输/回执与删除通知168h本地实现已验证，但真实worker业务发信、收件箱去重/渠道矩阵及签名webhook未验；webhook专用配置尚缺。开发负责接线与最小真实验证交接，需真实发信授权另明确。",
       "history": [
         {
           "status": "BLOCKED",
@@ -16135,7 +16135,7 @@
         "原生证据包含构建号/OS/设备",
         "WebView或DOM测试不能充当iOS完成"
       ],
-      "actual": "Actual isolated iOS27.0 simulator and headless Release/XCUITest available; no missing-runtime/license claim. Formal build hashes and first-screen reviewed, QA OTP/profile actual taps proven. Complete native role journey/keyboard/background/real-device release evidence still pending; Jest/DOM not substituted. B21-O007 actualnativefocusedkeyboard obscuresquestion/Ask(79); F49OPEN. Do not substitute enabled/componentchecks for physicalnativeusability.",
+      "actual": "正常签名iOS模拟器及实际UI测试可执行；F49键盘、F50通知、F51聊天发送已定向关闭，原失败保留。完整双向旅程/后台切换等本地剩余断言由开发与QA继续执行；真机证据未具备，Apple发布签名仍待审核。不能将本地待测笼统列作用户缺账户。",
       "history": [
         {
           "status": "BLOCKED",
@@ -16162,7 +16162,7 @@
         "有责任人批准及实际执行证据",
         "无凭据/生产原文进公开仓库"
       ],
-      "actual": "缺保留期限、备份和供应商删除政策的批准及真实执行证据。故障注入和本地删除屏障不需政策批准可先测；开发整理待批准政策差异与真实适配缺口，不笼统等待。",
+      "actual": "用户已批准两类删除通知verified邮箱加密副本最长168h，此批准不重复索取，也不扩大为整体隐私政策批准。专用通知加密配置、Auth0 Management最小权限配置尚缺；真实远端删除/供应商执行及整体保留备份政策证据仍未完成。本地删除屏障和PG恢复已通过。开发负责配置接线及剩余政策差异清单，需用户决定的具体项单列。",
       "history": [
         {
           "status": "BLOCKED",
@@ -16186,7 +16186,7 @@
         "记录p95/错误率/worker延迟及实测RPO/RTO对比24h/4h设计目标",
         "API1副本Recreate无重叠，旧AI410保未发字"
       ],
-      "actual": "实际本地PG恢复闸门及删除台账演练通过；目标托管恢复/持久化独立台账、100并发网络/部署Recreate证据仍缺，不以Fastify inject代表目标环境。",
+      "actual": "本地PG恢复/删除台账及旧AI会话410保未发字已有通过证据。目标首尔环境目前仅获只读授权，实际部署、恢复及负载演练未执行；此为部署批准和目标环境实测证据缺口，不是缺云账户。开发负责准备具体部署/演练方案，获批准后QA验证RPO/RTO、p95/错误率/worker延迟与Recreate无重叠。",
       "history": [
         {
           "status": "BLOCKED",
@@ -16212,7 +16212,7 @@
         "P95≤10秒、30秒终结",
         "保留逐样本实际偏差"
       ],
-      "actual": "R10评测准备13项和60中英固定样本已核验；默认不读Key不联网、无真实捕获时NOT_RUN/BLOCKED。真实DeepSeek质量/人工可用率/延迟未测，不关闭门槛。",
+      "actual": "DeepSeek key已配置，开发报告认证/models查询成功；不是缺账户。真实生成、60固定样本质量/人工可用率/延迟尚未执行，MODEL/DATA/COST有效批准bundle尚缺。开发负责准备有界评测和明确批准差异，QA取得可执行交接后验证；models成功不能代替生成质量通过。",
       "history": [
         {
           "status": "BLOCKED",
@@ -16237,7 +16237,7 @@
         "第三方边界有明确批准",
         "未闭合不向真实用户开放"
       ],
-      "actual": "已提供官方参数/政策核查ADR并独立复跑本地适配边界；真实账户/留存及第三方数据批准仍缺，不继承其他供应商承诺。",
+      "actual": "DeepSeek基础账户/key已就绪，官方参数/政策ADR及本地适配边界已验证。供应商留存/数据边界的明确批准及有效bundle尚缺；账户存在不证明数据处理范围获批。开发负责形成具体政策决定项，不要求用户重复提供已有key。",
       "history": [
         {
           "status": "BLOCKED",
@@ -16263,7 +16263,7 @@
         "未批准金额保持关闭",
         "最终CNY等值不超过人民币50/月；不是域名/签名/其他云资源或自动充值授权"
       ],
-      "actual": "缺真实usage/账单与call账本对照证据。并发人民币50预留已有本地通过证据；开发可预备对账脚本，真实账单必须来自已批准配置，不扩大金额或开自动充值。",
+      "actual": "DeepSeek人民币50/月、无自动充值边界保持，key已配置；本地并发预留已通过。真实usage/账单与调用账本对照尚无证据，批准bundle未就绪；不把预算上限理解为任意真实调用批准。开发负责最小有界调用/对账方案，QA验证实际账本。",
       "history": [
         {
           "status": "BLOCKED",
@@ -22347,7 +22347,7 @@
         "不静默沿用旧供应商model/参数或留存声明",
         "全量原质量/延迟/零容忍门槛保持；真实可用性未测则G-AI-MODEL未关闭"
       ],
-      "actual": "DeepSeek本地适配34项及评测准备13项独立复跑通过；真实样本与延迟门槛尚缺，不能用受控响应关闭真实模型准入。",
+      "actual": "DeepSeek本地适配及评测准备已通过，基础key认证/models已由开发验证。此条依赖G-AI-MODEL真实生成质量/延迟准入，不是另一项缺账户；尚无真实60样本结果，保持未通过且不冒受控响应为真实模型证据。",
       "history": [
         {
           "status": "BLOCKED",
@@ -22601,7 +22601,7 @@
         "只用已验证适配参数；不支持能力显式阻塞/ADR替代",
         "不能继承其他供应商数据承诺或用无效参数关闭G-AI-DATA"
       ],
-      "actual": "DeepSeek仅允许官方JSON/nonthinking白名单、拒store/tools、usage含reasoning计费/token上限等34项受控适配通过；真实账户地区/留存批准证据仍缺。",
+      "actual": "DeepSeek官方JSON/nonthinking参数白名单与拒store/tools等受控适配已通过，基础账户已就绪。此条依赖G-AI-DATA明确供应商数据批准及真实参数验收，不是独立缺账户；不能继承其他供应商留存承诺。",
       "history": [
         {
           "status": "BLOCKED",
