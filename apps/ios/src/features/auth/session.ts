@@ -60,6 +60,12 @@ export class SessionManager {
   private epoch = 0;
   private persistence: Promise<void> = Promise.resolve();
   private readonly listeners = new Set<(s: SessionState) => void>();
+  private remoteLogoutUnconfirmed = false;
+  private readonly logoutNoticeListeners = new Set<() => void>();
+  getLogoutNotice = () => this.remoteLogoutUnconfirmed;
+  subscribeLogoutNotice = (listener: () => void) => {this.logoutNoticeListeners.add(listener);return () => {this.logoutNoticeListeners.delete(listener);};};
+  dismissLogoutNotice = () => this.setLogoutNotice(false);
+  private setLogoutNotice(value: boolean) {if(this.remoteLogoutUnconfirmed===value)return;this.remoteLogoutUnconfirmed=value;for(const listener of this.logoutNoticeListeners)listener();}
   private readonly now: () => number;
   private readonly deps: SessionDeps;
 
@@ -209,13 +215,14 @@ export class SessionManager {
       }
     }
     await this.end('logout');
-    if (!token) return { serverRevoked: false };
-    try {
+    const endedEpoch=this.epoch;
+    let serverRevoked=false;
+    if(token)try {
       await this.deps.withToken(token).call('logout', { body: { clientRequestId: this.deps.newId() } });
-      return { serverRevoked: true };
-    } catch {
-      return { serverRevoked: false };
-    }
+      serverRevoked=true;
+    } catch { /* Local sign-out remains complete; remote revocation is unconfirmed. */ }
+    if(!serverRevoked&&this.epoch===endedEpoch&&this.state.status==='signedOut')this.setLogoutNotice(true);
+    return {serverRevoked};
   }
 
   /** Session no longer valid (401 after refresh, reuse-revoked family, refresh expired). */
@@ -304,6 +311,7 @@ export class SessionManager {
 
   private set(next: SessionState) {
     this.state = next;
+    if(next.status==='signedIn')this.setLogoutNotice(false);
     for (const l of this.listeners) l(next);
   }
 }

@@ -3,6 +3,7 @@ import { AppState, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Primary } from './ui/Button.tsx';
 import { Body } from './ui/Text.tsx';
+import {LogoutNotice} from './features/auth/LogoutNotice.tsx';
 import {AssistantWidget} from './features/assistant/AssistantWidget.tsx';
 import { colors } from './ui/tokens.ts';
 import { AnalyticsConsent } from './analytics/Consent.tsx';
@@ -23,6 +24,7 @@ export function AppRoot({ services, children }: { services: Services; children: 
   return (
     <ServicesProvider services={services}>
       <SafeAreaView edges={['top', 'left', 'right']} testID="app-notices">
+        <LogoutNotice session={services.session}/>
         <SessionBanner services={services} />
         <AnalyticsConsent manager={services.analytics}/>
       </SafeAreaView>

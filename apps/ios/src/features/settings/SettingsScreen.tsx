@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Primary, TextAction } from '../../ui/Button.tsx';
-import { FormMessage } from '../../ui/FormMessage.tsx';
 import { Screen } from '../../ui/Screen.tsx';
 import { Sheet } from '../../ui/Sheet.tsx';
 import { Body, SectionTitle } from '../../ui/Text.tsx';
@@ -14,15 +13,13 @@ export function SettingsScreen() {
   const router = useRouter();
   const [confirm, setConfirm] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [note, setNote] = useState<string | null>(null);
 
   const signOut = async () => {
     setBusy(true);
-    const { serverRevoked } = await session.logout();
+    await session.logout();
     setBusy(false);
     setConfirm(false);
-    if (!serverRevoked) setNote('Signed out on this iPhone. We couldn’t reach Fancy to end the session remotely; it will expire on its own.');
-    router.replace('/');
+    if(session.getState().status==='signedOut')router.replace('/');
   };
 
   return (
@@ -40,7 +37,6 @@ export function SettingsScreen() {
       <TextAction label="Check deletion status" onPress={() => router.push('/deletion-status')} />
       <SectionTitle>Help shape Fancy</SectionTitle>
       {state.status === 'signedIn' ? <TextAction label="Product survey" onPress={() => router.push('/survey')} /> : null}
-      <FormMessage message={note} tone="info" />
       <Sheet visible={confirm} title="Sign out?" onClose={() => setConfirm(false)}>
         <Body>You’ll return to the account screen.</Body>
         <Primary secondary label="Stay signed in" onPress={() => setConfirm(false)} />
