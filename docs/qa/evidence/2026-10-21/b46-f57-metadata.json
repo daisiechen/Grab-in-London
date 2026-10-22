@@ -1,0 +1,51 @@
+{
+  "identityExact": true,
+  "readOnly": true,
+  "declarations": [
+    {
+      "revision": "1",
+      "declared_count": 1,
+      "reported_at": "2026-10-22T11:21:26.971Z",
+      "status": "REPORTED_CONFIRMED"
+    },
+    {
+      "revision": "2",
+      "declared_count": 2,
+      "reported_at": "2026-10-22T11:22:27.971Z",
+      "status": "REPORTED_CONFIRMED"
+    }
+  ],
+  "seats": [
+    {
+      "seq": "1",
+      "type": "HOST_CONFIRMED",
+      "effective_at": "2026-10-22T11:21:26.971Z",
+      "recorded_at": "2026-10-22T11:21:26.971Z"
+    },
+    {
+      "seq": "3",
+      "type": "GUEST_CONFIRMED",
+      "effective_at": "2026-10-22T11:22:27.971Z",
+      "recorded_at": "2026-10-22T11:22:27.971Z"
+    },
+    {
+      "seq": "5",
+      "type": "LEFT",
+      "effective_at": "2026-10-22T11:23:28.971Z",
+      "recorded_at": "2026-10-22T11:23:28.971Z"
+    },
+    {
+      "seq": "7",
+      "type": "GUEST_CONFIRMED",
+      "effective_at": "2026-10-22T12:09:06.962Z",
+      "recorded_at": "2026-10-22T12:09:06.962Z"
+    }
+  ],
+  "meal": [
+    {
+      "version": "5",
+      "status": "OPEN",
+      "capacity": 2
+    }
+  ]
+}
