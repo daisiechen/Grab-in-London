@@ -28,7 +28,8 @@
    "steps": [
     "Guarded clock 02:00→02:01Z for OTP resend. Web A normal OTP and explicit Send → PENDING.",
     "native195: native sign-out of B, normal OTP sign-in of H, M4 Manage your table shows A request; probe pauses at a file checkpoint.",
-    "Web A withdraws via confirmation → WITHDRAWN. Checkpoint released; native H taps Approve on the stale list → “This changed a moment ago. We’ve refreshed it — please check and try again.”, Requests · 0, A and B withdrawn, 1 of 3 confirmed. DB: one seat (host)."
+    "Web A withdraws via confirmation → WITHDRAWN. Checkpoint released; native H taps Approve on the stale list → “This changed a moment ago. We’ve refreshed it — please check and try again.”, Requests · 0, A and B withdrawn, 1 of 3 confirmed. DB: one seat (host).",
+    "Actual server result (idempotency status/code/requestId only): decideApplication 409 VERSION_CONFLICT 8e3ee3dc-6b18-4314-8af4-891c4c5bec43."
    ],
    "artifacts": [
     "evidence/2026-10-21/b68-native-host-approve-409-refreshed.png",

@@ -7,6 +7,7 @@
    "status": "passed",
    "title": "Source B recovery checkpoint and business release on the same retained DB",
    "steps": [
+    "Baselines: client = formal native build of 3ee69fe (F58/F59); API/Web = source B new process at 89dc541 (F60–F62). Same retained database.",
     "Recovery receipt independently checked read-only: same PostgreSQL, fixed clock 02:01:00Z, startup proof before/after table counts and safe business hashes equal across 66 tables, matchingRecoveryRows 0; ai_budget D22/M10 used 3712/reserved 3024/calls 30 and 1 UNKNOWN unchanged; no D23 row; 0 AI in flight; 4 meals, 12 jobs (9 DONE, 3 PENDING for M4 on 24 Oct). New generation is a new process (originalRAMRestored false), not RAM restoration.",
     "QA sent inspect (rev2) then releaseBusiness (rev3) and inspect (rev4): HTTP open, worker stopped, AI namespace closed; every public table count identical before and after release."
    ],
@@ -22,7 +23,8 @@
     "Cover-installed the formal F58/F59 Simulator Release build on D92: CDHash 6b624cc… → 8e35fda4…, binary SHA 92827499…ba61 equals the entry; a QA xctestrun repointed to this app so XCTest does not reinstall the old build; CDHash still 8e35fda4… after the run. Source B API 62057, existing H native session refreshed normally.",
     "F59: while A has blocked H, native H on M3 After the meal taps I’d meet QA Final Applicant again → “This action isn’t available to you right now.”, no “Choice saved privately”; the copy does not disclose the block.",
     "F58: native H taps the new “View QA Final Applicant’s profile” on the post-meal screen → public profile → Block → Confirm block → “Member blocked. Private contact is disabled. Shared groups are unchanged.” → Unblock → Confirm unblock → “Member unblocked. Your previous connection is not restored.”",
-    "DB read-only: block_revisions +2 (H v3 active, v4 inactive); pair_consents unchanged (old epoch3 both revoked, no new row); pair consent epoch advanced; direct messages unchanged (4); other deltas only idempotency +3 and one normal native token refresh."
+    "DB read-only: block_revisions +2 (H v3 active, v4 inactive); pair_consents unchanged (old epoch3 both revoked, no new row); pair consent epoch advanced; direct messages unchanged (4); other deltas only idempotency +3 and one normal native token refresh.",
+    "Correction after independent QA review: the native197 F59 screenshot does not show the error copy (it was rendered above the visible scroll region; staticText existence alone is not user-visible evidence). F59 closure is withdrawn pending B69-O003; the original image and log are retained."
    ],
    "artifacts": [
     "evidence/2026-10-21/b69-native-f59-forbidden-neutral.png",
@@ -31,6 +33,37 @@
     "evidence/2026-10-21/b69-native-f58-unblocked-not-restored.png",
     "evidence/2026-10-21/native197-xcui.swift"
    ]
+  },
+  {
+   "id": "B69-O003",
+   "executedBy": "Claude Code",
+   "testedCommit": "3ee69fec6b79552404217aa5415d4f041853a06f",
+   "status": "passed",
+   "title": "F59 user-visible neutral forbidden copy with actual 403 request references",
+   "steps": [
+    "native198 asserted only window bounds; its screenshot again shows the message hidden behind the persistent analytics prompt. Retained as a failed visibility attempt (probe error, not product).",
+    "native199 (same app, CDHash 8e35fda4…) taps I’d meet QA Final Applicant again while A has blocked H, then scrolls until the message frame lies inside the visible scroll view and is hittable: message (21,478,360×18) inside scroll view (0,345,402×495). Screenshot shows “This action isn’t available to you right now.” under the After the meal title; no “Choice saved privately”; the copy does not mention blocking.",
+    "Actual server results from idempotency (status/code/requestId only): selectReconnect 403 FORBIDDEN 6aff90b8-1447-4873-81b0-92c1ccbe3392 (native197), 187bafd7-7e2b-4b04-9d17-32e98968c652 (native198), 5512f120-1de2-4a77-87bb-e866a978f952 (native199).",
+    "Observations for product review (not filed as defects): the error appears at the top of the page while the tapped control is further down, so the user must scroll up to see it; the host’s own attendance row reads “You · Came · they reported”. Analytics decline shows “server could not be updated” because source B denies analytics scope writes by manifest (environment limitation)."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/b69-native-f59-forbidden-visible.png",
+    "evidence/2026-10-21/native199-xcui.swift"
+   ]
+  },
+  {
+   "id": "B69-O004",
+   "executedBy": "Claude Code",
+   "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+   "status": "passed",
+   "title": "Reviewed single advance to the OTP horizon with worker release and reconciled technical delta",
+   "steps": [
+    "Root reviewed a single advance 02:01:00Z → 02:16:00.000Z (oldOtpMax 02:01:00 + 900000 ms; deny when now < horizon). Fresh guards: control rev5, HTTP active/handlers 0, AI off, worker stopped, no grants or support window, 0 AI in flight, 0 due jobs, price valid until 11:06:20.971Z, D22/M10 and 1 UNKNOWN unchanged; all clients stopped.",
+    "releaseWorker (rev6) and inspect (rev7): no table change. advance (rev8, oneDueBatchOnly) and inspect (rev9): clock 02:16:00Z, not latched.",
+    "Reconciled with the reviewed startup-proof safe projection and 66 table counts (no token/email/OTP/message body read or hashed): since startup only block_revisions +2 and idempotency +3 (F58/F59 commands), sessions/refresh_tokens +1 (normal native refresh), and the first full-worker tick sealing snapshot as_of 02:16:00Z (classification revision 3; facts +14, subjects +2) by the original worker mechanism. Prior 02:00Z snapshot keeps 14 facts/2 subjects; ai_budget and ai_calls safe hashes unchanged; no D23 row.",
+    "An earlier QA helper hashed whole rows server-side, including credential and message tables; it was withdrawn on review and its outputs are kept private and not used."
+   ],
+   "artifacts": []
   }
  ],
  "processNotes": [

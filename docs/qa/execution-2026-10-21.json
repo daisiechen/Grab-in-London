@@ -17670,7 +17670,9 @@
         "B65-O003",
         "B65-O004",
         "B69-O001",
-        "B69-O002"
+        "B69-O002",
+        "B69-O003",
+        "B69-O004"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -23139,7 +23141,7 @@
     "QA-F56": "CLOSED_TARGETED_QA",
     "QA-F57": "CLOSED_TARGETED_QA",
     "QA-F58": "CLOSED_TARGETED_QA",
-    "QA-F59": "CLOSED_TARGETED_QA",
+    "QA-F59": "FIX_VERIFIED_PENDING_INDEPENDENT_REVIEW",
     "QA-F60": "OPEN_CONFIRMED",
     "QA-F61": "OPEN_CONFIRMED",
     "QA-F62": "OPEN_CONFIRMED",
@@ -23164,5 +23166,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B69:201 PASS/5 NOT_RUN/11 BLOCKED. Source B released for business (HTTP open, worker stopped, AI off), clock 02:01Z. F58/F59 closed by actual native retest. Next: reviewed single advance to 02:16Z for Web OTP, then F60/F61/F62, J004 final non-revival, J005."
+  "currentExecutionSlice": "B69:201 PASS/5 NOT_RUN/11 BLOCKED. Source B (client 3ee69fe, API 89dc541) same DB, clock 02:16Z, worker released, AI off. F58 closed; F59 visible evidence pending independent review. Next: Web OTP on 53016, F60/F61/F62, J004 final non-revival, then J005."
 }
