@@ -2,8 +2,8 @@ import {useHeaderHeight} from 'expo-router/react-navigation';
 import {useAssistantContext,useAssistantEditor} from '../assistant/hooks.ts';
 import {ReadAcknowledger} from './read-ack.ts';
 import { useAnalyticsPresentation } from '../../analytics/hooks.ts';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AppState, FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useRef, useState, type ComponentRef } from 'react';
+import { AppState, Keyboard, FlatList, Platform, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { ApiError, type ResponseOf } from '@fancy/client';
@@ -52,8 +52,30 @@ export function ChatScreen() {
   return <AuthenticatedChatScreen key={`${conversationId}:${state.session.user.id}:${session.generation}`} />;
 }
 
+type KeyboardRect={screenX:number;screenY:number;width:number;height:number};
+/** Window-space intersection, measured on the fixed outer viewport (not its padded child). */
+export function createKeyboardViewportTracker(measure:(done:(x:number,y:number,width:number,height:number)=>void)=>void,publish:(padding:number)=>void){
+ let revision=0,alive=true,keyboard:KeyboardRect|null=null;
+ const refresh=()=>{if(!alive)return;const current=++revision,frame=keyboard;if(!frame||frame.screenY<=0){publish(0);return;}measure((x,y,width,height)=>{
+  if(!alive||revision!==current||![x,y,width,height,frame.screenX,frame.screenY,frame.width,frame.height].every(Number.isFinite))return;
+  const intersects=frame.width>0&&frame.height>0&&width>0&&height>0&&x<frame.screenX+frame.width&&x+width>frame.screenX&&y<frame.screenY+frame.height;
+  publish(intersects?Math.min(height,Math.max(0,y+height-frame.screenY)):0);
+ });};
+ return {refresh,keyboard(frame:KeyboardRect|null){keyboard=frame;refresh();},start(){alive=true;revision++;},stop(){alive=false;keyboard=null;revision++;}};
+}
+
 function AuthenticatedChatScreen() {
   const headerHeight=useHeaderHeight();
+  const viewport=useRef<ComponentRef<typeof View>>(null);
+  const [keyboardPadding,setKeyboardPadding]=useState(0);
+  const keyboardTracker=useMemo(()=>createKeyboardViewportTracker(done=>viewport.current?.measureInWindow(done),setKeyboardPadding),[]);
+  useFocusEffect(useCallback(()=>{
+    keyboardTracker.start();keyboardTracker.refresh();
+    const show=Keyboard.addListener('keyboardWillShow',event=>keyboardTracker.keyboard(event.endCoordinates));
+    const change=Keyboard.addListener('keyboardWillChangeFrame',event=>keyboardTracker.keyboard(event.endCoordinates));
+    const hide=Keyboard.addListener('keyboardWillHide',()=>keyboardTracker.keyboard(null));
+    return()=>{show.remove();change.remove();hide.remove();keyboardTracker.stop();};
+  },[keyboardTracker]));
   const { conversationId } = useLocalSearchParams<{ conversationId: string }>();
   const id = String(conversationId);
   const services = useServices();
@@ -252,7 +274,8 @@ function AuthenticatedChatScreen() {
 
   return (
     <SafeAreaView style={[styles.safe,{paddingTop:Platform.OS==='ios'?headerHeight:0}]} edges={['bottom']} testID="chat">
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={88}>
+      <View testID="chat-keyboard-viewport" ref={viewport} collapsable={false} style={{flex:1,paddingBottom:Platform.OS==='ios'?keyboardPadding:0}} onLayout={keyboardTracker.refresh}>
+      <View testID="chat-keyboard" style={{flex:1}}>
         <View style={styles.header}>
           <Text style={styles.title} accessibilityRole="header">{conversation?.title ?? 'Conversation'}</Text>
           {conversation?.kind === 'GROUP' && live ? (isHost ? (!dissolveBlocked ? <TextAction label="Dissolve group" onPress={()=>{setDissolveError(null);setDissolveSheet(true);}}/> : null) : <TextAction label="Leave group" onPress={() => setSheet(true)} />) : null}
@@ -301,7 +324,8 @@ function AuthenticatedChatScreen() {
         ) : conversation ? (
           <View><Text style={[styles.meta, styles.pad]}>History is read-only.</Text>{text?<View style={styles.pad}><Body>{`Unsent text: ${text}`}</Body><TextAction label="Discard unsent text" onPress={()=>{editorVersion.current++;setText('');}}/></View>:null}</View>
         ) : null}
-      </KeyboardAvoidingView>
+      </View>
+      </View>
       <Sheet visible={dissolveSheet} title="Dissolve this group?" onClose={()=>setDissolveSheet(false)}>
         <Body>Everyone will lose the ability to send new messages. Earlier messages stay available. This does not cancel the meal or change attendance. The group cannot reopen.</Body>
         <FormMessage message={dissolveError}/>

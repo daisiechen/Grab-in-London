@@ -671,3 +671,12 @@
 - F50原生五文件新增Inbox Notifications入口/route、真实listNotifications分页和显式markRead。加载与错误不伪空、分页错误保旧列表且重复游标拒绝；mark单飞及同ID失败重试保Intent key，成功才已读，无聊天引用猜权限。focus/foreground先验证session，generation/revision拒旧响应，403/404/410清投影。固定模板文案及未知模板通用通知，无自由正文。
 - root审查发现首轮334绿未覆盖mark在途跨后台后按钮禁用残留，退回补真实AppState deferred回归并修bookkeeping；迟到结果仍不回填。最终定向8项与全49套336项/type/all-iOSlint绿，root最终core:check/native/type/lint通过，日志/private/tmp/fancy-f50-final-{check,ios,ios-type,ios-lint}.log。正常签名正式包与QA actual尚未做，F50不因本地绿关闭。
 - Web53bd8fe已正式push；远端本次CI39711935722失败于Run pnpm/setup@v3，项目check/test未执行，详细日志接口不可用，不能猜产品失败原因或冒CI绿。B26原记录保留，后续新SHA仍须核CI。F51已给iosowner唯一ChatScreen+自有keyboard-layout测试薄片：用实际screen/local坐标转换替换常量88，保持既有header安全布局及业务协议；尚在实施，不混本片提交。旧UC8TVF run/clock16Z/最新QA控制revision10及全部原环境保留，root不写FIFO，整体生产验收未闭环。
+
+## F51 聊天键盘遮挡的独立修复
+
+- QA actual95原红为keyboard顶590，Send底745且hittable=false，未强制点击/未发送；原生收到Web取消后群消息不等于原生可发送。F51保持独立于F49 Sheet与F50通知，不改群权限、消息协议或强制隐藏键盘绕过验收。
+- 首个动态keyboardVerticalOffset候选虽纯测试绿，root与venues实读RN0.88确认prop变化不自动重算KAV；该候选撤回，不能用其早期日志声明通过。最终仅ChatScreen与自有keyboard-layout测试两文件：固定outer viewport真实measureInWindow，窗口/键盘矩形相交计算clamp到容器高度的paddingBottom，子flex内容压缩而测量外层总frame不反馈缩水。用普通View替代常量88的KAV，保F37 header/safearea与所有消息/草稿逻辑。
+- keyboard show/change/hide与真实outer layout触发重测，hide清零、focus/blur/unmount revision拒迟到；无私有RN调用、TextInput重挂、全局AppRoot接口或100ms轮询。仅保证真实layout/keyboard事件后的重测，不声称无事件的任意同高祖先平移可检测；app仍portrait-only，不新增横屏功能。
+- 最终5项自有回归包含生产交集helper的geometry/clamp/晚回调及实际Chat组件synthetic native measure→真实padding渲染/viewport尺寸变化/keyboard hide/清监听。全50套341原生/type/all-iOSlint绿，日志/private/tmp/f51-intersection-{all,type,lint}.log；模拟测量不冒真实95几何通过，需正式签名包由QA核Send在键盘上方、可点击且正常发送后才能关闭。
+- QA接受下一完整J010原前置解释：同新PG正常验证C support角色与必要TEST分类后正常logout，drain并关闭合成portal，再H/A真实UI；不要求15min CLI token跨数小时仍active，不新增casegrant。旧UC8TVF run/源/IDs/证据全部保留。新run只读计划为最终SHA新archive+Accessv3屏障+P3b角色前置、单API/fullworker/单AI，候选新origin unified-j010-v2.localhost:52992/native62048，尚未实现或启动；实际启动仍需独立审查与端口核验。
+- CI8303首轮与明确重试attempt2均已用专用GitHub日志核：registry.npmjs.org下载pnpm原生包30s Timeout，项目检查未运行；保原失败，不盲换registry或以本地绿冒远端绿。下个正式SHA继续核完整CI。整体生产验收未闭环。
