@@ -1,0 +1,8 @@
+{
+  "run": 82,
+  "classification": "PASS",
+  "resultLines": [
+    "Test Case '-[ProbeUITests.ProbeTests testSupportedPortraitLockAndKeyboardCloseReopenKeepsUnsentText]' passed (31.748 seconds).",
+    "** TEST EXECUTE SUCCEEDED **"
+  ]
+}

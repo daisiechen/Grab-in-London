@@ -1,0 +1,37 @@
+{
+  "observations": [
+    {
+      "id": "B23-O001",
+      "testedCommit": "cbdbf975dca79b05e4adb315ac225464488c1fb1",
+      "environment": "Signed Release iOS27 dedicated simulator D92E / old controlled API3102 and local PG; synthetic AI, no real provider",
+      "status": "passed",
+      "title": "F49 keyboard physical Ask, portrait lock, close/reopen, explicit draft Keep/Replace",
+      "steps": [
+        "Actual81 focused input/Ask/Close physically hittable above keyboard; actual Ask returns controlled clarification. Actual82 supported portrait lock remains402x874 on device rotation; close dismisses keyboard and reopen keeps unsent text. True landscape layout N/A under approved portrait-only app.",
+        "Actual85 natural modal scrolling: generate application draft, Keep preserves original introduction, reopen and explicitly Replace transfers controlled text. No Send request pressed. PG application count remains0; business probe unchanged. Actual83/84 are retained QA scroll-control failures, not product failures.",
+        "Actual86 normal logout clears native auth without unconfirmed notice; read-only same user PG IOS family active1→0, reasonLOGOUT1. Actual87 cold launch remains guest. These are F46 normal baseline only; injected503 path pending.",
+        "Targeted F49 closed; 193 PASS/13 NOT_RUN/11 BLOCKED unchanged. Old3102 backend is not current full integration; full J001–012 and AI034 live-RAM-loss remain incomplete."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-b23-81-xcui.swift",
+        "evidence/2026-10-21/native-b23-81-1.png",
+        "evidence/2026-10-21/native-b23-81-2.png",
+        "evidence/2026-10-21/native-b23-82-xcui.swift",
+        "evidence/2026-10-21/native-b23-82-1.png",
+        "evidence/2026-10-21/native-b23-82-2.png",
+        "evidence/2026-10-21/native-b23-83-xcui.swift",
+        "evidence/2026-10-21/native-b23-84-xcui.swift",
+        "evidence/2026-10-21/native-b23-85-xcui.swift",
+        "evidence/2026-10-21/native-b23-85-1.png",
+        "evidence/2026-10-21/native-b23-85-2.png",
+        "evidence/2026-10-21/native-b23-86-xcui.swift",
+        "evidence/2026-10-21/native-b23-86-1.png",
+        "evidence/2026-10-21/native-b23-87-xcui.swift",
+        "evidence/2026-10-21/native-b23-87-1.png",
+        "evidence/2026-10-21/b23-business-after85.json",
+        "evidence/2026-10-21/b23-normal-logout-server-facts.json",
+        "evidence/2026-10-21/b23-f49-artifact-proof.json"
+      ]
+    }
+  ]
+}

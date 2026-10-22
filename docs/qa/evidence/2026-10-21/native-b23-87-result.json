@@ -1,0 +1,8 @@
+{
+  "run": 87,
+  "classification": "PASS",
+  "resultLines": [
+    "Test Case '-[ProbeUITests.ProbeTests testNormalLogoutColdGuestAndOwnedRunnerSynchronizationFile]' passed (12.414 seconds).",
+    "** TEST EXECUTE SUCCEEDED **"
+  ]
+}

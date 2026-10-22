@@ -1,6 +1,6 @@
 # 独立QA执行报告 · 2026-10-21
 
-**结论：部分执行，尚不能完成整体验收；不构成发布通过。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18, QA-F19, QA-F20, QA-F21, QA-F22, QA-F23, QA-F24, QA-F25, QA-F26, QA-F27, QA-F28, QA-F29, QA-F30, QA-F31, QA-F32, QA-F33, QA-F34, QA-F35, QA-F36, QA-F37, QA-F38, QA-F39, QA-F40, QA-F41, QA-F42, QA-F44, QA-F45, QA-F48；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
+**结论：部分执行，尚不能完成整体验收；不构成发布通过。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18, QA-F19, QA-F20, QA-F21, QA-F22, QA-F23, QA-F24, QA-F25, QA-F26, QA-F27, QA-F28, QA-F29, QA-F30, QA-F31, QA-F32, QA-F33, QA-F34, QA-F35, QA-F36, QA-F37, QA-F38, QA-F39, QA-F40, QA-F41, QA-F42, QA-F44, QA-F45, QA-F48, QA-F49；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
 
 原测试计划基线4659fdb；被测交接`8ba6fc7c9974cf6be1ac06d8b16e0380fb3beced`，业务代码`8bc1e9280153491b6a63c68cd6ba6a49f8061978`。Inbox分页修复在`cd66d87a153b3171cebbe7ae74680eceb356aed1`仅做定向复验；QA-F01及第二批P0探针在04cb601验证，第三批边界、删除/恢复和适配在d4582f7及后续仅CI增量版本定向验证，具体版本见运行表；更早证据沿用对应固定基线。
 
@@ -24,7 +24,7 @@
 
 ## 实际运行
 
-B22 actual80 F48formal0a targetedclosed, normalguestApply/login/profile/exacttarget andPGapplication0/businessunchanged verified. F45formal6e75–78targetedclosed. 193PASS/13NOT_RUN/11BLOCKED; no wholeJourneycountincrease. F49actual79keyboardAskoccluded OPEN awaitingformalcbdbcandidate; F46actualfaultnoticeandAI034newpersistentPG RAMloss pending; unifiedHAB/Web-iOS/Adminsameenvironment planownedbydevelopment. Originalmainriglost F47; no releaseclaim.
+B23 F49 actual81/82/85 targeted closed; normal logout86 server revocation and coldguest87 baseline passed. 193PASS/13NOT_RUN/11BLOCKED unchanged. F46 injected503 native notice pending, AI034 live-RAM-loss pending, full unified journeys pending.
 
 | ID | 结果 | 范围 |
 |---|---|---|
@@ -475,7 +475,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 
 ## 下一批执行顺序
 
-1. Independently verify officialF49candidate and actual79keyboardreplay: physicalinput/Ask/header/Close, portrait andscrollablelandscape, controlledmockAsk/result/explicittransfer, preserveoriginalred.
+1. Run formal cbdb/API63102 actual503 logout global notice and remote-family-still-active, then coldguest; preserve normal86/87 baseline.
 2. Run ownedF46fixed503proxy actualnative logoutnotice, localclear vsremoteunconfirmed, then normal204 path; do not stop old3102/62044 or useDBfamilycleanup.
 3. Review retained-parent AI034runner identity/stop/cleanup fixes then genuineAPI-child hardRAMloss andnormalnative410/liveunsentretention; neverrestartold3102.
 4. Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.

@@ -1,0 +1,8 @@
+{
+  "run": 85,
+  "classification": "PASS",
+  "resultLines": [
+    "Test Case '-[ProbeUITests.ProbeTests testNativeApplicationDraftKeepThenExplicitReplaceWithoutSend]' passed (66.705 seconds).",
+    "** TEST EXECUTE SUCCEEDED **"
+  ]
+}

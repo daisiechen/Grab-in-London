@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "cbdbf975dca79b05e4adb315ac225464488c1fb1",
+  "independentlyVerifiedTrackedSources": 205,
+  "candidateHashes": {
+    "Fancy": "951de2ab20497848ea8af6fd9be3b33f24a8c10e60475ddcda765f3c310069ba",
+    "main.jsbundle": "eb15719c14182ef7a7075dd3250cc83e2b0a46fa0197d9d7ad5f9965c6d95186"
+  },
+  "deepStrictCodesignExit": 0,
+  "installed": true,
+  "actualInstalledHashes": {
+    "Fancy": "951de2ab20497848ea8af6fd9be3b33f24a8c10e60475ddcda765f3c310069ba",
+    "main.jsbundle": "eb15719c14182ef7a7075dd3250cc83e2b0a46fa0197d9d7ad5f9965c6d95186"
+  }
+}

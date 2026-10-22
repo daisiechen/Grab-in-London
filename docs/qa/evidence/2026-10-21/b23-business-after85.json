@@ -1,0 +1,27 @@
+{
+  "businessProbe": [
+    {
+      "table_name": "applications",
+      "operation": "INSERT",
+      "n": 1
+    },
+    {
+      "table_name": "meals",
+      "operation": "UPDATE",
+      "n": 1
+    },
+    {
+      "table_name": "notifications",
+      "operation": "INSERT",
+      "n": 1
+    }
+  ],
+  "aiRequests": [
+    {
+      "state": "SUCCEEDED",
+      "n": 5
+    }
+  ],
+  "apiPid": 42728,
+  "fixtureOnly": true
+}

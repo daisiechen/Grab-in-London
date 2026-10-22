@@ -1,0 +1,9 @@
+{
+  "run": 83,
+  "classification": "QA_HARNESS_CONTROL_FAILURE",
+  "resultLines": [
+    "/tmp/fancy-qa-native/ProbeTests.swift:5: error: -[ProbeUITests.ProbeTests testNativeApplicationDraftKeepThenExplicitReplaceWithoutSend] : XCTAssertTrue failed - Attributes: Application, 0x10bbd1a40, pid: 32792, label: 'Fancy'",
+    "Test Case '-[ProbeUITests.ProbeTests testNativeApplicationDraftKeepThenExplicitReplaceWithoutSend]' failed (51.783 seconds).",
+    "** TEST EXECUTE FAILED **"
+  ]
+}

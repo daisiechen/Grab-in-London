@@ -146,3 +146,5 @@
 - [QA B21：冷启动与重装实测、键盘遮挡缺陷](qa/evidence/2026-10-21/browser-b21.json)
 
 - [QA B22：原生访客申请登录回流定向验收](qa/evidence/2026-10-21/browser-b22.json)
+
+- [QA B23：原生键盘、明确草稿替换与正常退出基线](qa/evidence/2026-10-21/browser-b23.json)

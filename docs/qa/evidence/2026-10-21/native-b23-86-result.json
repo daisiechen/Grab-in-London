@@ -1,0 +1,8 @@
+{
+  "run": 86,
+  "classification": "PASS",
+  "resultLines": [
+    "Test Case '-[ProbeUITests.ProbeTests testNormalLogoutRevokesServerFamilyWithoutUnconfirmedNotice]' passed (19.045 seconds).",
+    "** TEST EXECUTE SUCCEEDED **"
+  ]
+}

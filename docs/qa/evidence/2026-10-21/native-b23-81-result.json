@@ -1,0 +1,8 @@
+{
+  "run": 81,
+  "classification": "PASS",
+  "resultLines": [
+    "Test Case '-[ProbeUITests.ProbeTests testFixedAssistantPortraitPhysicalKeyboardAskAndControlledResponse]' passed (32.727 seconds).",
+    "** TEST EXECUTE SUCCEEDED **"
+  ]
+}
