@@ -1,0 +1,42 @@
+{
+  "observations": [
+    {
+      "id": "B38-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Authorized group history, same-process rate-limit recovery and actual native-to-Web message",
+      "steps": [
+        "A admitted by normal host approval. Native118 harness wrongly expected messages posted before join; preserve FAIL. Frozen data-and-command contract requires join_seq < message.seq, so no prejoin messages is correct.",
+        "Web H normally posts a new welcome after A joins. Native119 sees welcome and cannot read prejoin fallback, but harness wrongly taps non-scroll header to dismiss keyboard; sheet never opens, preserve FAIL.",
+        "Native120 normal tap on visible message within list dismisses keyboard; explicit keyboard-gone assertion passes, then actual assistant opens. No product patch or proposed F55.",
+        "Actual native Ask receives legitimate429 and retains text/Retry. Same UI process writes finite private MINUTE ready, pauses. Fresh exact owner/revision/clock and zero HTTP/AI/worker in-flight checked; approved61s transition remains before actual meal close/start/end, same London budget day/month, within original24h synthetic price.",
+        "Same-process go presses actual Retry. GROUP candidate generated; Keep preserves manual draft; explicit Replace fills original group editor. SEND checkpoint independently shows messages3/apps1/seat_events2; provider calls15/failures1/real0/unrelatedProfileSeenfalse. Candidate did not send.",
+        "QA releases SEND; actual keyboard opens, composer and Send are hittable, Send above keyboard; normal Send succeeds and clears editor. Native120 test PASS.",
+        "Web H normally opens same group and sees QA Final Applicant new message at12:11 alongside own earlier messages. Both Web→native and native→Web are actual UI observations in same database. Full005006 remain NOT_RUN pending original reverse-role and Admin/preconditions;429 recovery does not substitute for original401/offline requirements."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b38-web-post-join-welcome.png",
+        "evidence/2026-10-21/b38-native120-group-candidate.png",
+        "evidence/2026-10-21/b38-native120-group-sent.png",
+        "evidence/2026-10-21/b38-web-received-native120.png"
+      ]
+    },
+    {
+      "id": "B38-O002",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Normal session boundaries before client-role reversal",
+      "steps": [
+        "Web H normal Sign out confirmation reaches guest sign-in. No cookie/credential injection or port-only isolation.",
+        "Native121 harness does not scroll to bottom Settings and fails; preserve failure. Native122 normally declines optional analytics, scrolls as needed, opens Settings and confirms Sign out; actual A displayName checked before logout, guest profile/sign-in checked afterward.",
+        "Web client then normally authenticates A through a new OTP challenge. Existing complete QA Final Applicant profile appears without overwriting H or creating a new profile.",
+        "A Web assistant is empty with no H conversation or draft inherited. Native H authentication and reverse-role business journeys are still in progress, not proven by this observation."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b38-native122-a-logout-guest.png",
+        "evidence/2026-10-21/b38-web-a-role-profile.png",
+        "evidence/2026-10-21/b38-web-a-role-ai-blank.png"
+      ]
+    }
+  ]
+}
