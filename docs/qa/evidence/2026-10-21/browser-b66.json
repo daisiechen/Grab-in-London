@@ -28,8 +28,8 @@
    "steps": [
     "Guarded clock 01:02Z→02:00Z (no pending/due jobs, no meal boundary, same London day); only analytics_snapshots/facts/subjects changed; AI calls 30/budgets 2 unchanged.",
     "Staff S normal OTP sign-in; Admin 01:00Z snapshot shows survey willing 0/1 with cost 1 (B v2); 02:00Z snapshot shows 1/1, venue 1, cost 1 (latest native version only); page notes rating and survey are independent and survey is affected only by date and user segment.",
-    "Survey drilldown definition: voluntary Settings survey, sign-in only, not bound to mealId, attendance or feedback window. Normal UI “导出此明细” → POST 201 / GET 200; CSV one row (B, latest), no meal fields; 26 rows and 1287 bytes (CRLF) equal the analytics_exports record.",
-    "Rating coverage drilldown export: feedback 0/0, rating 1–5 all 0, no rows; 17 rows/620 bytes equal the record.",
+    "Survey drilldown definition: voluntary Settings survey, sign-in only, not bound to mealId, attendance or feedback window. Normal UI “导出此明细” → POST 201 / GET 200; CSV one row (B, latest), no meal fields; 26 rows match the analytics_exports record (recorded byte_count 1287); the repository CSV is an LF-normalized transcription of the response text (raw bytes not captured; byte equality not claimed).",
+    "Rating coverage drilldown export: feedback 0/0, rating 1–5 all 0, no rows; 17 rows match the record (recorded byte_count 620); LF-normalized transcription, byte equality not claimed.",
     "Read-only trace: all 4 meal scores (A5/H4 on M1 and M3) are from effectively present attendees on meals hosted by H, classified TEST since 20:00Z, so they are excluded per Admin PRD; B has 0 scores. Survey and rating exports contain no public reference or reconnect fields.",
     "Tool gap: the browser download itself was not lstat/SHA-checked on disk (no Downloads scan); content verified from the received response and the export record."
    ],

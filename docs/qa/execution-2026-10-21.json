@@ -111,7 +111,8 @@
     "remainingPlan20261022": "remaining-plan-2026-10-22.zh-CN.md",
     "browserObservationsB69": "evidence/2026-10-21/browser-b69.json",
     "browserObservationsB70": "evidence/2026-10-21/browser-b70.json",
-    "browserObservationsB71": "evidence/2026-10-21/browser-b71.json"
+    "browserObservationsB71": "evidence/2026-10-21/browser-b71.json",
+    "browserObservationsB72": "evidence/2026-10-21/browser-b72.json"
   },
   "cases": [
     {
@@ -19192,7 +19193,9 @@
         "B43-O005",
         "B68-O001",
         "B68-O002",
-        "B68-O003"
+        "B68-O003",
+        "B72-O002",
+        "B72-O003"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -19515,7 +19518,7 @@
       "remainingExpected": [
         "Complete remaining abnormal journey assertions and shared environment/admin trace; targeted F41 return regression alone is not whole-case acceptance."
       ],
-      "actual": "F41 targeted closed at042bc79: Native43 repeats originalNative41 read-chat/Back/Inbox probe and automatically restores five groups without pull; R19513/0. Original36/37/41 reds and manual38 recovery retained. F38 real429 visible/recovery also passed. Other full abnormal path assertions remain NOT_RUN. B43 captures actual native Replace429 visible error/preserved editor and successful normal controlled recovery;137 cold auth clock skew is separate environment precondition, not a completed abnormal-journey matrix. B68 (Claude, same DB M4): approval 409 on both Web host and native host refreshes and creates no seat; Web mid-edit 401 keeps target, no automatic replay, but clears the unsent introduction (QA-F62). Group 403, Admin snapshot 410, offline recovery and native 401 not yet executed; rig exited at ~20:46 BST.",
+      "actual": "F41 targeted closed at042bc79: Native43 repeats originalNative41 read-chat/Back/Inbox probe and automatically restores five groups without pull; R19513/0. Original36/37/41 reds and manual38 recovery retained. F38 real429 visible/recovery also passed. Other full abnormal path assertions remain NOT_RUN. B43 captures actual native Replace429 visible error/preserved editor and successful normal controlled recovery;137 cold auth clock skew is separate environment precondition, not a completed abnormal-journey matrix. B68 (Claude, same DB M4): approval 409 on both Web host and native host refreshes and creates no seat; Web mid-edit 401 keeps target, no automatic replay, but clears the unsent introduction (QA-F62). Group 403, Admin snapshot 410, offline recovery and native 401 not yet executed; rig exited at ~20:46 BST. B72 (source B): F62 fixed — same-tab 401 caused by sign-out in another tab returns to the apply target, restores the same user’s unsent introduction without replay, and discards it for a different user. Native 401, group 403, Admin snapshot 410 and offline recovery remain.",
       "defectIds": [
         "QA-F38",
         "QA-F41",
@@ -23171,7 +23174,7 @@
     "QA-F59": "CLOSED_TARGETED_QA",
     "QA-F60": "CLOSED_TARGETED_QA_EXCEPT_READ_FAILURE_COPY",
     "QA-F61": "CLOSED_TARGETED_QA",
-    "QA-F62": "OPEN_CONFIRMED",
+    "QA-F62": "CLOSED_TARGETED_QA",
     "QA-F63": "OPEN_CONFIRMED"
   },
   "followUp": {
@@ -23193,5 +23196,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B71:202 PASS/4 NOT_RUN/11 BLOCKED. F61 closed by actual export on source B. F62 and J005 wait for a reviewed advance to clear the per-IP OTP window (02:31:00Z, then 02:31:30Z)."
+  "currentExecutionSlice": "B72:202 PASS/4 NOT_RUN/11 BLOCKED. F58–F62 closed on source B (F60 except read-failure copy). Clock 02:31:30Z. Next: J005 plan for review (configureDay/enableAI, meals, clock steps), then J008 group 403."
 }

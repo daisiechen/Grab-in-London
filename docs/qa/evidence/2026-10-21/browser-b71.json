@@ -9,7 +9,7 @@
    "steps": [
     "Staff S normal OTP on the new host; Admin 体验与留存 on snapshot as_of 02:16:00Z (worker-sealed), page shows 后续机会曝光 as 未就绪或不适用.",
     "Normal UI 导出指标 → POST /v1/admin/exports 201, GET 200, status “已导出当前快照与筛选的指标” (previously 503 PROVIDER_UNAVAILABLE with “导出失败，请重试”, B66-O003).",
-    "CSV adds a status column: retention/activation/feedback empty with no_denominator, survey 1/1 available, laterOpportunity empty and unavailable. 14 rows and 685 bytes (CRLF) equal the analytics_exports record (summary.retention). Content verified from the received response; the downloaded file on disk was not inspected."
+    "CSV adds a status column: retention/activation/feedback empty with no_denominator, survey 1/1 available, laterOpportunity empty and unavailable. 14 rows match the analytics_exports record (summary.retention, recorded byte_count 685). The repository CSV is an LF-normalized transcription of the response text shown by the browser tool (671 bytes, no CR); raw response bytes were not captured, so byte equality is not claimed. The downloaded file on disk was not inspected."
    ],
    "artifacts": [
     "evidence/2026-10-21/b71-export-retention-summary.csv"

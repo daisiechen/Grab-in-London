@@ -1,0 +1,44 @@
+{
+ "observations": [
+  {
+   "id": "B72-O001",
+   "executedBy": "Claude Code",
+   "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+   "status": "passed",
+   "title": "Reviewed advances to clear the OTP window for F62",
+   "steps": [
+    "Root/independent QA approved one advance 02:16:00Z → 02:31:00.000Z (per-IP 5 codes per 15 min; three codes at 02:16) and, only after B’s new code was actually created at 02:31, one advance to 02:31:30.000Z (per-email 30 s resend). All tabs closed or idle and native app stopped before each; fresh guards each time (HTTP active/handlers 0, AI off, 0 grants, 4 meals/12 jobs with nothing crossed, D22/M10 3712/3024/30, UNKNOWN 1, price valid to 11:06:20.971Z).",
+    "advance rev18 (02:31) and rev23 (02:31:30): ACKed, not latched; reviewed startup-proof safe projection and 66 counts unchanged across each step. Last snapshot still 02:16:00Z (next worker snapshot 03:16Z)."
+   ],
+   "artifacts": []
+  },
+  {
+   "id": "B72-O002",
+   "executedBy": "Claude Code",
+   "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+   "status": "passed",
+   "title": "F62 same-tab 401 restores the same user’s unsent introduction without replay",
+   "steps": [
+    "Web B normal OTP (challenge c5e35ee1, created 02:31:00Z) on unified-source-b:53016 → M4 Apply again → introduction typed, not sent.",
+    "A second tab signs B out explicitly (this is the cause of the 401; not a natural expiry). The original tab does not sign out; its Send gets POST applications 401 and moves to sign-in with returnTo the M4 apply page.",
+    "After the reviewed advance, B signs in again in the same tab (challenge 95dbbb1a, 02:31:30Z): the apply page returns; Apply again opens the editor with the exact 49-character introduction restored (49/300); no application created (B M4 round1 WITHDRAWN only)."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/b72-web-f62-same-user-restored.jpg"
+   ]
+  },
+  {
+   "id": "B72-O003",
+   "executedBy": "Claude Code",
+   "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+   "status": "passed",
+   "title": "F62 different user in the same tab discards the isolated draft",
+   "steps": [
+    "With the restored B draft open, a second tab signs B out again; the original tab’s Send gets a second 401.",
+    "A signs in in the same tab (challenge 68684c88, 02:31:30Z): A’s own M4 page shows Application pending; no introduction field content and no draft keys in this tab’s sessionStorage. Applications unchanged (A round2 PENDING, B round1 WITHDRAWN).",
+    "Safe projection after F62: business safe hashes unchanged; only auth_transactions +2, session_families +2, sessions +2, api_rate_limits +1."
+   ],
+   "artifacts": []
+  }
+ ]
+}
