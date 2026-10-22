@@ -1,0 +1,47 @@
+{
+  "observations": [
+    {
+      "id": "B47-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Normal native whole-meal cancellation preserves separate group chat, then explicit dissolution makes it read-only",
+      "steps": [
+        "Native140 normal H originalM2 Manage/Cancel/Other/explicitconfirm passes; actual current mealVersion6 CANCELLED. No direct SQL mutation.",
+        "Native141 cannot reach offscreen horizontal Cancelled section; harness-control failure before group/send preserved. Native142 uses observed horizontal Sections swipe, normal Cancelled/M2/Open group/TextView/Send passes.",
+        "WebA initially40s429 preserved; guarded execution-currentUTC calibration preserves business/budget hashes with no crossed business/period/price/snapshot threshold. Normal reload sees M2 chat remains open after host cancelled. Composer remains available.",
+        "Native143 normal Dissolve group/explicitConfirm dissolution passes; native composer and dissolve action removed. Normal WebA reload shows read-only/no new delivery banner, old5 authorized messages retained, missing-interval gap absent, no composer. No claim about M1 or whole journey completion."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b47-summary.json"
+      ]
+    },
+    {
+      "id": "B47-O002",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Single application metric export succeeds independently of incomplete summary export",
+      "steps": [
+        "Normal S Journey application3 metric/detail/Export this detail displays exported snapshot and filters success.",
+        "Independent readonly analytics_exports confirms applications scope/15CSVrows/1447bytes/nonrevoked/15minuteexpiry. Tool download event times out; direct chrome downloads URL is blocked by browser policy and not bypassed. Actual CSV bytes not obtained or reconciled.",
+        "Summary.journey export failures remain distinct, consistent only as source hypothesis with incomplete discovery/telemetry; exact HTTP status remains unknown. No inferred backend FAIL or complete CSV PASS."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b47-summary.json"
+      ]
+    },
+    {
+      "id": "B47-O003",
+      "testedCommit": "d4a3ee47916bad5a6d1ebcdfe1672d64f9a7566a",
+      "status": "passed",
+      "title": "F57 formal source and isolated test fixture independently verified; live acceptance pending",
+      "steps": [
+        "Formal d4a3ee4 source three product files reviewed; independent meals.api.test.ts18/18 passes.",
+        "New isolated F57 fixture ENTRY/pins/SUM exact; complete1733Gitblob/mode and all executable pins exact; independent21/21/0skip. No standing started by QA.",
+        "Legacy compatibility only OWN selftest, not standing data seed. Original f6d9 API/old declarations untouched. F57 remains OPEN pending actual normal UI roundtrip and redeclaration on separate new source."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b47-summary.json"
+      ]
+    }
+  ]
+}

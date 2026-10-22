@@ -1,0 +1,113 @@
+{
+  "exportMetadata": [
+    {
+      "metric": "applications",
+      "row_count": 15,
+      "byte_count": 1447,
+      "created_at": "2026-10-22T12:23:20.135Z",
+      "expires_at": "2026-10-22T12:38:20.135Z",
+      "revoked_at": null
+    }
+  ],
+  "meal": [
+    {
+      "version": "6",
+      "status": "CANCELLED",
+      "capacity": 2
+    }
+  ],
+  "clockChecks": [
+    {
+      "phase": "before",
+      "clock": "2026-10-22T12:23:20.135Z",
+      "tables": [
+        {
+          "table": "ai_budget",
+          "count": "2",
+          "sha256": "05fff3a85b30b102496924c71aebe28c89cbaea73bbec3b91270a966ee0e35b6"
+        },
+        {
+          "table": "ai_budget_reconciliations",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "ai_calls",
+          "count": "24",
+          "sha256": "515cfaa63628b5b1cbde4769e87faea06c53f8ab924b1b15488b69127780c3f3"
+        },
+        {
+          "table": "analytics_snapshots",
+          "count": "2",
+          "sha256": "914f039ce1789d419c392627b7ed2c43d8d9007f96ef9b905e4ea9c44e4f0e96"
+        },
+        {
+          "table": "applications",
+          "count": "3",
+          "sha256": "fbf5b037aefe0866669a1ad27c649f788640f877ef3687225e262b88f172de99"
+        },
+        {
+          "table": "meals",
+          "count": "2",
+          "sha256": "16a09102ffd30babd6880b2291f54aee781274ce3ee63a21903026f29ae73f58"
+        },
+        {
+          "table": "messages",
+          "count": "10",
+          "sha256": "0c9ce8437aea94e00774d402716c67aa2cba2bc24fc1aa55139d854a889e66a0"
+        },
+        {
+          "table": "seat_events",
+          "count": "6",
+          "sha256": "4970dc4545db431af7e863ac4df5bd01d823796ead735226ebf5fc245fdc21b9"
+        }
+      ]
+    },
+    {
+      "phase": "after",
+      "clock": "2026-10-22T12:34:26.495Z",
+      "tables": [
+        {
+          "table": "ai_budget",
+          "count": "2",
+          "sha256": "05fff3a85b30b102496924c71aebe28c89cbaea73bbec3b91270a966ee0e35b6"
+        },
+        {
+          "table": "ai_budget_reconciliations",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "ai_calls",
+          "count": "24",
+          "sha256": "515cfaa63628b5b1cbde4769e87faea06c53f8ab924b1b15488b69127780c3f3"
+        },
+        {
+          "table": "analytics_snapshots",
+          "count": "2",
+          "sha256": "914f039ce1789d419c392627b7ed2c43d8d9007f96ef9b905e4ea9c44e4f0e96"
+        },
+        {
+          "table": "applications",
+          "count": "3",
+          "sha256": "fbf5b037aefe0866669a1ad27c649f788640f877ef3687225e262b88f172de99"
+        },
+        {
+          "table": "meals",
+          "count": "2",
+          "sha256": "16a09102ffd30babd6880b2291f54aee781274ce3ee63a21903026f29ae73f58"
+        },
+        {
+          "table": "messages",
+          "count": "10",
+          "sha256": "0c9ce8437aea94e00774d402716c67aa2cba2bc24fc1aa55139d854a889e66a0"
+        },
+        {
+          "table": "seat_events",
+          "count": "6",
+          "sha256": "4970dc4545db431af7e863ac4df5bd01d823796ead735226ebf5fc245fdc21b9"
+        }
+      ]
+    }
+  ]
+}

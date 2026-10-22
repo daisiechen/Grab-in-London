@@ -87,7 +87,8 @@
     "browserObservationsB42": "evidence/2026-10-21/browser-b42.json",
     "browserObservationsB43": "evidence/2026-10-21/browser-b43.json",
     "browserObservationsB44": "evidence/2026-10-21/browser-b44.json",
-    "browserObservationsB45": "evidence/2026-10-21/browser-b45.json"
+    "browserObservationsB45": "evidence/2026-10-21/browser-b45.json",
+    "browserObservationsB47": "evidence/2026-10-21/browser-b47.json"
   },
   "cases": [
     {
@@ -22885,5 +22886,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B40 CREATE002 reopenedFAIL for independent F55 native future→completed wording and F56 initial declaredCount1 vs plannedcapacity2. 194PASS/1FAIL/11NOT_RUN/11BLOCKED. Formal F55 client95e independently source/hash/signature/backendcompatibility/28components verified; actual nativeQA in progress. F56 thin backend fix separately owned, no hotpatch/old data rewrite. Other local paths continue. B43 continues original final database: reverse nativeH/WebA approval, booking and GROUP explicitSend, B privacy/full rejection, WebA independent seat/group withdrawal and new Pending round. Internal native clock skew awaits direct alignment authorization; independent normal S Web/Admin access works but only initial pre-business snapshot exists. No whole journey upgraded."
+  "currentExecutionSlice": "B47 current:195PASS/11NOT_RUN/11BLOCKED. F55/F56 targeted closed; clock prerequisite resolved under direct human plan authorization. Original same-database M2 reverse nativeH/WebA approval, independent seat/group withdrawal, rejoin history exclusion, normal host meal cancellation with group still writable, explicit group dissolution/read-only verified. QA-F57 OPEN_CONFIRMED: roster count return revives old declaration; formald4a3 fix18API/21fixture independently green, live new OWN normal UI acceptance pending. SameDB natural S0 applications match sealed facts and do not change after later approvals; single-metric export UI/ticket proven but CSV bytes not reconciled. Missing telemetry/real gates remain, no whole-journey promotion."
 }

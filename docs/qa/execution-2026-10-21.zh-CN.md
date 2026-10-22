@@ -24,7 +24,7 @@
 
 ## 实际运行
 
-B40 CREATE002 reopenedFAIL for independent F55 native future→completed wording and F56 initial declaredCount1 vs plannedcapacity2. 194PASS/1FAIL/11NOT_RUN/11BLOCKED. Formal F55 client95e independently source/hash/signature/backendcompatibility/28components verified; actual nativeQA in progress. F56 thin backend fix separately owned, no hotpatch/old data rewrite. Other local paths continue. B43 continues original final database: reverse nativeH/WebA approval, booking and GROUP explicitSend, B privacy/full rejection, WebA independent seat/group withdrawal and new Pending round. Internal native clock skew awaits direct alignment authorization; independent normal S Web/Admin access works but only initial pre-business snapshot exists. No whole journey upgraded.
+B47 current:195PASS/11NOT_RUN/11BLOCKED. F55/F56 targeted closed; clock prerequisite resolved under direct human plan authorization. Original same-database M2 reverse nativeH/WebA approval, independent seat/group withdrawal, rejoin history exclusion, normal host meal cancellation with group still writable, explicit group dissolution/read-only verified. QA-F57 OPEN_CONFIRMED: roster count return revives old declaration; formald4a3 fix18API/21fixture independently green, live new OWN normal UI acceptance pending. SameDB natural S0 applications match sealed facts and do not change after later approvals; single-metric export UI/ticket proven but CSV bytes not reconciled. Missing telemetry/real gates remain, no whole-journey promotion.
 
 | ID | 结果 | 范围 |
 |---|---|---|
