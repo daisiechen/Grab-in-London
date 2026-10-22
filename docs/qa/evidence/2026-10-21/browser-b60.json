@@ -1,0 +1,32 @@
+{
+  "observations": [
+    {
+      "id": "B60-O001",
+      "testedCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "Normal mirrored clients restored through new OTP sessions",
+      "steps": [
+        "After lawful CLOSE stage, native175 normally signs out previous applicant when present and signs in existing synthetic host via ordinary email challenge. Exact controlled challenge is read once only after OTP field ready; no code log or real delivery.175 exits0 and actual host profile visible.",
+        "Web host normal Settings Signout/confirmation→existing applicant ordinary email OTP→returns Settings showing applicant identity. Normal M3 detail confirms seat and2of2 roster after cutoff, without a seat-cancellation control.",
+        "These are new normal sessions; no old token TTL extension, credential edits, RAM restoration or model request."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b60-web-applicant-after-close.png"
+      ]
+    },
+    {
+      "id": "B60-O002",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Natural START across London day boundary creates exact roster without default attendance or AI accounting changes",
+      "steps": [
+        "Fresh exact original owner/revision/current22Z, all3meals/fourremainingjobs, due/run_after/lease audit confirms only two meal.start at23Z cross; natural snapshot23Z permitted, END01 not crossed. UI/OTP/download stopped and finite HTTP/handler/API/worker/pending/grant activity zero.",
+        "London day explicitly changes Oct22→Oct23 while month unchanged. Synthetic price remains valid. Old Oct22/day and Oct/month ledgers each used3712/reserved3024/calls30 with original one UNKNOWN remain responsible; Oct23 budget row does not exist and is not initialized. No new AI request permitted.",
+        "Precisely approved original-runtime advance22Z→23Z acknowledged once. Independent owned read-only database confirms M3OPEN/STARTmark1/start_roster exactlyH+A2/SELFattendance0/groupdissolved. M2 remains CANCELLED/STARTroster0; M1 remains completed.",
+        "Only two END jobs remain pending. New natural snapshotas_of23Z exists. AIbudget/calls/requests, seat_events and booking_declarations digests exactly match pre-START values; Oct23budget0.",
+        "Original complete mirrored lifecycle/postmeal and privacy journeys remain NOT_RUN with specific remaining assertions. No END, default attendance, new provider call or whole-case promotion."
+      ],
+      "artifacts": []
+    }
+  ]
+}
