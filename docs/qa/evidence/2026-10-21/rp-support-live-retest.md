@@ -16,3 +16,13 @@
 本次证明同意处理正常返回且 303 响应完成，范围缩小至浏览器响应处理与回调抵达前；不证明具体 CSP 原因。有限 stop 已执行并保留数据库，不重试失败事务。F52 与完整 J010 均未关闭。
 
 首次启动请求被自动审批以“尚未证明浏览器就绪”为由拒绝，未产生授权事务。QA 先正常打开诊断环境并取得页面快照，再提交就绪证据获准启动；未绕过该拒绝。
+
+## 无身份 303 CSP 浏览器有序对照
+
+新探针无身份、数据库或授权事务，两页 HTML/action 完全相同；只对比 form-action self 与 self 加本轮唯一精确目标 origin，未改正式策略。QA 独立冻结哈希与四项保护检查通过。
+
+正常 Chrome 先 GET self 页并普通点击 Approve 一次。QA 直接只读私有聚合：pageSelf=1、pageExact=0、postSubmitted=1、landing=0；reportAccepted=1、directiveFormAction=1、dispositionEnforce=1、targetPortal=1，其他报告桶为 0。报告目标只按 origin 分类，不能称其具体 blocked URL 是目标页。开发首次手工摘要错误写报告数为 0，随后依据实际输出撤回更正；QA 独立读取亦为 1。
+
+再新 GET exact 页并普通点击一次：pageSelf=1、pageExact=1、postSubmitted=2、landing=1；所有报告计数保持不变。目标服务器收到请求，但 Chrome 页面显示 ERR_BLOCKED_BY_CLIENT，不能把客户端显示失败误当未送达。未重发、刷新、HTTP 手工提交或关闭浏览器保护。
+
+在本探针边界内，self 下的强制 form-action 报告、目标未达，与精确允许后的目标到达构成策略介导的实证；不能自动证明原 OAuth 链每个跳转或 CLI 完成。原 F52 仍需精确修正及正常完整链路复验，统计不变。
