@@ -1,0 +1,91 @@
+{
+  "source": "d4a3ee47916bad5a6d1ebcdfe1672d64f9a7566a",
+  "scope": "Separate new OWN targeted fixture, normal Web H/A. Original f6d9 environment/history unchanged.",
+  "clock": "2026-10-22T14:38:36.766Z",
+  "checkpoints": [
+    {
+      "phase": "pending",
+      "mealVersion": "1",
+      "confirmedCount": 1,
+      "capacity": 2,
+      "booking": {
+        "revision": "1",
+        "status": "REPORTED_CONFIRMED",
+        "declaredCount": 2,
+        "reportedAt": "2026-10-22T14:38:36.766Z",
+        "stale": false
+      }
+    },
+    {
+      "phase": "approved",
+      "mealVersion": "2",
+      "confirmedCount": 2,
+      "capacity": 2,
+      "booking": {
+        "revision": "1",
+        "status": "REPORTED_CONFIRMED",
+        "declaredCount": 2,
+        "reportedAt": "2026-10-22T14:38:36.766Z",
+        "stale": true
+      }
+    },
+    {
+      "phase": "declared2",
+      "mealVersion": "3",
+      "confirmedCount": 2,
+      "capacity": 2,
+      "booking": {
+        "revision": "2",
+        "status": "REPORTED_CONFIRMED",
+        "declaredCount": 2,
+        "reportedAt": "2026-10-22T14:38:36.766Z",
+        "stale": false
+      }
+    },
+    {
+      "phase": "left",
+      "mealVersion": "4",
+      "confirmedCount": 1,
+      "capacity": 2,
+      "booking": {
+        "revision": "2",
+        "status": "REPORTED_CONFIRMED",
+        "declaredCount": 2,
+        "reportedAt": "2026-10-22T14:38:36.766Z",
+        "stale": true
+      }
+    },
+    {
+      "phase": "reapproved",
+      "mealVersion": "5",
+      "confirmedCount": 2,
+      "capacity": 2,
+      "booking": {
+        "revision": "2",
+        "status": "REPORTED_CONFIRMED",
+        "declaredCount": 2,
+        "reportedAt": "2026-10-22T14:38:36.766Z",
+        "stale": true
+      }
+    },
+    {
+      "phase": "declared3",
+      "mealVersion": "6",
+      "confirmedCount": 2,
+      "capacity": 2,
+      "booking": {
+        "revision": "3",
+        "status": "REPORTED_CONFIRMED",
+        "declaredCount": 2,
+        "reportedAt": "2026-10-22T14:38:36.766Z",
+        "stale": false
+      }
+    }
+  ],
+  "legacyCompatibility": "Independent OWN API regression only; no standing legacy seed.",
+  "controls": [
+    "Initial H private OTP envelope was mistakenly submitted as raw code and correctly rejected.",
+    "Second H private envelope was consumed before a missing REPL binding failed; not submitted.",
+    "Same-challenge reread refused, no limits reset. Two individually guarded approved +61 steps permit normal Resend, dummy local JSON parsing preflight then normal H/A authentication succeeds. No OTP stored publicly or code output."
+  ]
+}

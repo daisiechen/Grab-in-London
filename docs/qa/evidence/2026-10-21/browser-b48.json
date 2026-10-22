@@ -1,0 +1,20 @@
+{
+  "observations": [
+    {
+      "id": "B48-O001",
+      "testedCommit": "d4a3ee47916bad5a6d1ebcdfe1672d64f9a7566a",
+      "status": "passed",
+      "title": "F57 actual same-clock normal roster roundtrip keeps old booking stale until host re-declares",
+      "steps": [
+        "Independent formal18API/21fixture tests plus1733source Gitblob/modes and executable pins exact; separate source accepted before owner starts one new H/A-only runtime.",
+        "Normal H/A OTP/profile, H four-step publish cap2, A introSendPending, HApprove, normal H declaration revision2fresh.",
+        "Normal sameA Cancelplace, ApplyagainnewintroRound2, normal HApprove: count2/version5 with oldrevision2 stillstale. Actual manager Host to update reservation.",
+        "Normal H Booked/Update createsrevision3/version6fresh. All business actions through actual browserUI, all six independent unauthenticated publicGET projections saved; no clock change during business sequence.",
+        "Original f6d9/Native138 failed evidence retained, original runtime not patched. Legacyhash conservative compatibility independently tested only in OWN API. No whole-journey or release acceptance."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b48-f57-projections.json"
+      ]
+    }
+  ]
+}

@@ -88,7 +88,8 @@
     "browserObservationsB43": "evidence/2026-10-21/browser-b43.json",
     "browserObservationsB44": "evidence/2026-10-21/browser-b44.json",
     "browserObservationsB45": "evidence/2026-10-21/browser-b45.json",
-    "browserObservationsB47": "evidence/2026-10-21/browser-b47.json"
+    "browserObservationsB47": "evidence/2026-10-21/browser-b47.json",
+    "browserObservationsB48": "evidence/2026-10-21/browser-b48.json"
   },
   "cases": [
     {
@@ -22867,7 +22868,7 @@
     "QA-F54": "CLOSED_TARGETED_QA",
     "QA-F55": "CLOSED_TARGETED_QA",
     "QA-F56": "CLOSED_TARGETED_QA",
-    "QA-F57": "OPEN_CONFIRMED"
+    "QA-F57": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -22886,5 +22887,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B47 current:195PASS/11NOT_RUN/11BLOCKED. F55/F56 targeted closed; clock prerequisite resolved under direct human plan authorization. Original same-database M2 reverse nativeH/WebA approval, independent seat/group withdrawal, rejoin history exclusion, normal host meal cancellation with group still writable, explicit group dissolution/read-only verified. QA-F57 OPEN_CONFIRMED: roster count return revives old declaration; formald4a3 fix18API/21fixture independently green, live new OWN normal UI acceptance pending. SameDB natural S0 applications match sealed facts and do not change after later approvals; single-metric export UI/ticket proven but CSV bytes not reconciled. Missing telemetry/real gates remain, no whole-journey promotion."
+  "currentExecutionSlice": "B47 current:195PASS/11NOT_RUN/11BLOCKED. F55/F56 targeted closed; clock prerequisite resolved under direct human plan authorization. Original same-database M2 reverse nativeH/WebA approval, independent seat/group withdrawal, rejoin history exclusion, normal host meal cancellation with group still writable, explicit group dissolution/read-only verified. B48 QA-F57 CLOSED_TARGETED_QA: formal d4a3 fix18API/21fixture independently green; separate new OWN normal H/A actual UI same-clock2→1→2 keepsrev2stale and only normal redeclarationrev3fresh. Original f6d9 failure retained. SameDB natural S0 applications match sealed facts and do not change after later approvals; single-metric export UI/ticket proven but CSV bytes not reconciled. Missing telemetry/real gates remain, no whole-journey promotion."
 }
