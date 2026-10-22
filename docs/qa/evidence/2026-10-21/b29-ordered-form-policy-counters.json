@@ -1,0 +1,79 @@
+{
+  "probeScope": "isolated noidentity/noPG/no-redirect form; only document Referrer-Policy differs, sameCSP/strictOrigin/action/HTML",
+  "independentProbeSelftests": {
+    "passed": 6,
+    "failed": 0
+  },
+  "baselineAfterFourNormalClicks": {
+    "getNoReferrer": 2,
+    "getSameOrigin": 2,
+    "postConsent": 4,
+    "originClass": {
+      "self": 2,
+      "null": 2,
+      "other": 0
+    },
+    "contentType": {
+      "form": 4,
+      "other": 0
+    },
+    "status": {
+      "accepted200": 2,
+      "rejected400": 2
+    }
+  },
+  "afterOrderedChromeNoReferrer": {
+    "getNoReferrer": 3,
+    "getSameOrigin": 2,
+    "postConsent": 5,
+    "originClass": {
+      "self": 2,
+      "null": 3,
+      "other": 0
+    },
+    "contentType": {
+      "form": 5,
+      "other": 0
+    },
+    "status": {
+      "accepted200": 2,
+      "rejected400": 3
+    }
+  },
+  "afterOrderedChromeSameOrigin": {
+    "getNoReferrer": 3,
+    "getSameOrigin": 3,
+    "postConsent": 6,
+    "originClass": {
+      "self": 3,
+      "null": 3,
+      "other": 0
+    },
+    "contentType": {
+      "form": 6,
+      "other": 0
+    },
+    "status": {
+      "accepted200": 3,
+      "rejected400": 3
+    }
+  },
+  "normalBrowserActions": "fresh Chrome GET plus actual visible Approve click once per ordered phase; no manual Origin or HTTP consent driver",
+  "orderedDeltas": [
+    {
+      "policy": "no-referrer",
+      "postConsent": 1,
+      "originNull": 1,
+      "rejected400": 1
+    },
+    {
+      "policy": "same-origin",
+      "postConsent": 1,
+      "originSelf": 1,
+      "accepted200": 1
+    }
+  ],
+  "finalCounterProvenance": "read-only independently extracted from owner STOPPED receipt; intermediate bounded snapshots supplied by owner while QA paused all probe actions",
+  "probeStopped": true,
+  "limits": "Chrome result display still ERR_BLOCKED_BY_CLIENT for both; that does not imply no POST. This verifies form-probe behavior only, not complete OAuth/CLI or original live request headers."
+}

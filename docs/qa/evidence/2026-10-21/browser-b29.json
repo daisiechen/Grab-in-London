@@ -1,0 +1,19 @@
+{
+  "observations": [
+    {
+      "id": "B29-O001",
+      "testedCommit": "3a17e8b8971f617b1e4d4f1c3903586b6464e6f9",
+      "status": "passed",
+      "title": "Ordered real-browser form probe discriminates Referrer-Policy Origin behavior",
+      "steps": [
+        "Standalone frozenprobe-v2 independentlyhashverified and6selftests pass; noidentity/PG/redirects. Baseline4normalUI submissions allreachedserver, self2/null2 andaccepted2/rejected2. GETJSONobserve itself showedclientblocked, disproving clientblocked=>noPOST.",
+        "QA pausesallotheractions; normalChrome freshno-referrer+Approve once yieldscounterdelta POST1/null1/rejected4001. Then normalsame-origin+Approve once yieldsPOST1/self1/accepted2001. No handOrigin, HTTPdriver, extension disable or safety bypass.",
+        "Owner stops onlyprobe. QA directlyreadsSTOPPEDreceipt finitefinalcounts get3/3, post6,self3/null3,accepted3/rejected3. Originalidentityrun remainsstopped/PGretained.",
+        "Within this identicalform probe, no-referrer policy causes strictOrigin rejection while same-origin succeeds. Originalportal repair andactualfullCLI consent remainpending; originalheaders were notdirectlycaptured. JSONdisplay clientblock remainsseparate, no claimcompleteOAuthPASS."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b29-ordered-form-policy-counters.json"
+      ]
+    }
+  ]
+}

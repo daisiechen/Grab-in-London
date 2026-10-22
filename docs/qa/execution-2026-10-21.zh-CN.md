@@ -24,7 +24,7 @@
 
 ## 实际运行
 
-B28 noauth formprobe fourbrowser-policy combinations: IAB bothunchanged, Chrome bothERR_BLOCKED_BY_CLIENT. F52actualbrowser boundary unresolved; no causalOrigin/CSPclaim.194PASS/11NOT_RUN/1FAIL/11BLOCKED unchanged; F50/F51actualfixverification pending.
+B29 orderednormalChrome noauthformprobe: no-referrer→Originnull/strict400; same-origin→self/200, eachcounterdelta1. POSTsactuallyarrived despiteclientblockedJSONdisplay. F52originalsupportchainrepair/retestpending; F50/F51targetedH/Anewrigpreparing.194PASS/11NOT_RUN/1FAIL/11BLOCKED unchanged.
 
 | ID | 结果 | 范围 |
 |---|---|---|

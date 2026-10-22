@@ -70,7 +70,8 @@
     "browserObservationsB25": "evidence/2026-10-21/browser-b25.json",
     "browserObservationsB26": "evidence/2026-10-21/browser-b26.json",
     "browserObservationsB27": "evidence/2026-10-21/browser-b27.json",
-    "browserObservationsB28": "evidence/2026-10-21/browser-b28.json"
+    "browserObservationsB28": "evidence/2026-10-21/browser-b28.json",
+    "browserObservationsB29": "evidence/2026-10-21/browser-b29.json"
   },
   "cases": [
     {
@@ -22686,7 +22687,7 @@
     "QA-F49": "CLOSED_TARGETED_QA",
     "QA-F50": "OPEN_ACTUAL_UI_REPRODUCED",
     "QA-F51": "OPEN_NATIVE_REPRODUCED",
-    "QA-F52": "OPEN_ENVIRONMENT_BROWSER_PRELUDE"
+    "QA-F52": "PROBE_CAUSE_VERIFIED_LIVE_RETEST_PENDING"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -22706,5 +22707,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B28 noauth formprobe fourbrowser-policy combinations: IAB bothunchanged, Chrome bothERR_BLOCKED_BY_CLIENT. F52actualbrowser boundary unresolved; no causalOrigin/CSPclaim.194PASS/11NOT_RUN/1FAIL/11BLOCKED unchanged; F50/F51actualfixverification pending."
+  "currentExecutionSlice": "B29 orderednormalChrome noauthformprobe: no-referrer→Originnull/strict400; same-origin→self/200, eachcounterdelta1. POSTsactuallyarrived despiteclientblockedJSONdisplay. F52originalsupportchainrepair/retestpending; F50/F51targetedH/Anewrigpreparing.194PASS/11NOT_RUN/1FAIL/11BLOCKED unchanged."
 }

@@ -158,3 +158,5 @@
 - [QA B27：新版定向前置复验与合成授权浏览器阻塞](qa/evidence/2026-10-21/browser-b27.json)
 
 - [QA B28：双浏览器无账号表单策略对照](qa/evidence/2026-10-21/browser-b28.json)
+
+- [QA B29：有序浏览器表单Origin与策略因果对照](qa/evidence/2026-10-21/browser-b29.json)
