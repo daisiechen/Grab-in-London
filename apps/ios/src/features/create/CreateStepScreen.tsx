@@ -203,6 +203,10 @@ function Introduce({ draft, update }: Part) {
   );
 }
 
+function reservationDeclaration(draft: CreateDraft): string {
+  return `I have already booked a table at ${draft.venue?.name ?? 'the restaurant'} for ${draft.capacity} people${draft.date ? ` on ${longDate(draft.date)}` : ''}${draft.time ? ` at ${draft.time} (Europe/London)` : ''}. This is my confirmation, not verification by Fancy.`;
+}
+
 function Costs({ draft, update }: Part) {
   return (
     <View style={{ gap: 16 }}>
@@ -212,7 +216,7 @@ function Costs({ draft, update }: Part) {
       <SectionTitle>How guests pay</SectionTitle>
       <Body>Pay at the restaurant. Fancy doesn’t take payments or deposits.</Body>
       <SectionTitle>Restaurant reservation</SectionTitle>
-      <CheckRow label="I’ll reserve the table with the restaurant myself and keep guests updated if anything changes." checked={draft.bookingDeclarationConfirmed} onChange={(v) => update({ bookingDeclarationConfirmed: v })} />
+      <CheckRow label={reservationDeclaration(draft)} checked={draft.bookingDeclarationConfirmed} onChange={(v) => update({ bookingDeclarationConfirmed: v })} />
     </View>
   );
 }
@@ -290,7 +294,7 @@ function Review({ draft, update, today }: Part & { today: string }) {
       <TextAction label="Edit introduction" onPress={() => edit(1)} />
       <SectionTitle>Costs</SectionTitle>
       <Body>{`£${draft.budgetMin}–£${draft.budgetMax} per person · Pay at the restaurant`}</Body>
-      <Body>{draft.bookingDeclarationConfirmed ? 'You’ll reserve the table yourself.' : 'Reservation not confirmed yet.'}</Body>
+      <Body>{draft.bookingDeclarationConfirmed ? reservationDeclaration(draft) : 'Reservation not confirmed yet.'}</Body>
       <TextAction label="Edit costs" onPress={() => edit(2)} />
       <CheckRow label="I’ve reviewed these details. Guests see them when they apply." checked={draft.reviewConfirmed} onChange={(v) => update({ reviewConfirmed: v })} />
       <FormMessage message={error ?? (time && time.kind !== 'choose' ? time.message : null)} />

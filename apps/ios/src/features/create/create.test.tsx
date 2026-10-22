@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { CREATE_DRAFT_KEY, CreateStepScreen } from './CreateStepScreen.tsx';
 import { emptyDraft, updateDraft, type CreateDraft } from './model.ts';
 import { createTestApp, renderApp, signIn } from '../../test/render.tsx';
@@ -21,6 +21,41 @@ function readyDraft(): CreateDraft {
   d = updateDraft(d, { title: 'Late supper', description: 'A relaxed late supper with new faces.', mood: 'FOOD_DISCOVERIES', languages: ['en'] });
   return updateDraft(d, { budgetMin: '20', budgetMax: '30', bookingDeclarationConfirmed: true });
 }
+
+describe('Create Costs completed reservation declaration (F55)', () => {
+  it('requires the host to confirm an already booked named table before continuing', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.services.drafts.set(CREATE_DRAFT_KEY, { ...readyDraft(), bookingDeclarationConfirmed: false });
+    await renderApp(app, <CreateStepScreen step={2} />);
+    const declaration = screen.getByRole('checkbox', { name: 'I have already booked a table at Dishoom for 4 people on Sun 25 Oct at 01:30 (Europe/London). This is my confirmation, not verification by Fancy.' });
+    expect(declaration).not.toBeChecked();
+    await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
+    expect(mockRouter.push).not.toHaveBeenCalled();
+    expect(screen.getByRole('alert')).toHaveTextContent('Confirm that you have already booked the table with the restaurant.');
+    await fireEvent.press(declaration);
+    await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
+    expect(mockRouter.push).toHaveBeenCalledWith('/create/review');
+    expect(app.mock.callsTo('POST', '/v1/meals')).toHaveLength(0);
+  });
+
+  it.each<Partial<CreateDraft>>([
+    { venue: { venueRef: '9c1b0a9f-8e7d-4c6b-9a5f-4e3d2c1b0a9f', placeId: 'place-2', name: 'Another restaurant', address: 'Another address', attribution: 'Google' } },
+    { date: '2026-10-26' }, { time: '19:00' }, { capacity: 5 },
+  ])('requires fresh personal confirmation after reservation details change: %j', async (patch) => {
+    const app = createTestApp(); await signIn(app, me());
+    app.services.drafts.set(CREATE_DRAFT_KEY, readyDraft());
+    await renderApp(app, <CreateStepScreen step={2} />);
+    expect(screen.getByRole('checkbox', { name: /I have already booked/ })).toBeChecked();
+    await act(async () => { app.services.drafts.set(CREATE_DRAFT_KEY, updateDraft(readyDraft(), patch)); });
+    const declaration = screen.getByRole('checkbox', { name: /I have already booked/ });
+    expect(declaration).not.toBeChecked();
+    await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
+    expect(mockRouter.push).not.toHaveBeenCalled();
+    await fireEvent.press(declaration);
+    await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
+    expect(mockRouter.push).toHaveBeenCalledWith('/create/review');
+  });
+});
 
 describe('Create Arrange (S10, QA-CREATE-001)', () => {
   it('keeps only transient search display when confirmation returns a durable ID without provider display fields',async()=>{
@@ -70,6 +105,7 @@ describe('Create Review publish (S10, QA-TIME-004..007, QA-CREATE-002)', () => {
     }), 1);
     app.mock.on('POST', '/v1/meals', ok(meal(), 201));
     await renderApp(app, <CreateStepScreen step={3} />);
+    expect(screen.getByText('I have already booked a table at Dishoom for 4 people on Sun 25 Oct at 01:30 (Europe/London). This is my confirmation, not verification by Fancy.')).toBeOnTheScreen();
 
     await fireEvent.press(screen.getByRole('button', { name: 'Publish meal' }));
     expect(screen.getByRole('alert')).toHaveTextContent('Confirm you’ve reviewed the details before publishing.');

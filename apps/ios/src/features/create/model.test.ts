@@ -63,7 +63,7 @@ describe('create validation (QA-INPUT-009..016, QA-CREATE-002/003)', () => {
   });
 
   it('booking attestation and review must be explicitly ticked', () => {
-    expect(validateStep({ ...complete(), bookingDeclarationConfirmed: false }, 2, TODAY)).toMatch(/reserve the table/);
+    expect(validateStep({ ...complete(), bookingDeclarationConfirmed: false }, 2, TODAY)).toMatch(/already booked the table/);
     expect(validateStep({ ...complete(), reviewConfirmed: false }, 3, TODAY)).toMatch(/reviewed/);
   });
 });

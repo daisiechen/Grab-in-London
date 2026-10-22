@@ -122,7 +122,7 @@ export function validateStep(draft: CreateDraft, step: Step, todayLondon: string
     const min = poundsToPence(draft.budgetMin);
     const max = poundsToPence(draft.budgetMax);
     if (min === null || max === null || min > max) return 'Enter a valid budget, with the maximum at least the minimum.';
-    if (!draft.bookingDeclarationConfirmed) return 'Confirm that you’ll reserve the table with the restaurant yourself.';
+    if (!draft.bookingDeclarationConfirmed) return 'Confirm that you have already booked the table with the restaurant.';
     return null;
   }
   if (!draft.reviewConfirmed) return 'Confirm you’ve reviewed the details before publishing.';
