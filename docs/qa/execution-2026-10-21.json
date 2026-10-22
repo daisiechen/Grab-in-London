@@ -73,7 +73,8 @@
     "browserObservationsB29": "evidence/2026-10-21/browser-b29.json",
     "browserObservationsB30": "evidence/2026-10-21/browser-b30.json",
     "browserObservationsB31": "evidence/2026-10-21/browser-b31.json",
-    "browserObservationsB32": "evidence/2026-10-21/browser-b32.json"
+    "browserObservationsB32": "evidence/2026-10-21/browser-b32.json",
+    "browserObservationsB33": "evidence/2026-10-21/browser-b33.json"
   },
   "cases": [
     {
@@ -17770,7 +17771,8 @@
       "evidence": [
         "B11-T001",
         "B11-T002",
-        "B21-O007"
+        "B21-O007",
+        "B33-O001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -18088,7 +18090,7 @@
         "提交时重验名额/截止",
         "服务失败可继续原路径"
       ],
-      "actual": "本地生产实现尚需实际执行：显式查找→选明确M→生成申请→转入已有编辑器→本人确认提交。尚缺逐项证据：AI阶段无写；不覆盖未发字；提交时重验名额/截止；服务失败可继续原路径。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B11 realWeb actualcontrolled-model generate/explicit-transfer/single-request and manual-create confirmations complete with physical write proof. Full failure-recovery/group-send and actual native role swap remain outstanding, so NOT_RUN retained. B21-O007 actualnativefocusedkeyboard obscuresquestion/Ask(79); original F49 red retained; B23-O001 actual81/82/85 closed F49 by normal keyboard-open Ask, close/reopen and explicit transfer. Full native role swap, failure-recovery and group-send assertions remain pending; targeted closure does not grant whole-journey PASS. Do not substitute enabled/componentchecks for physicalnativeusability.",
+      "actual": "本地生产实现尚需实际执行：显式查找→选明确M→生成申请→转入已有编辑器→本人确认提交。尚缺逐项证据：AI阶段无写；不覆盖未发字；提交时重验名额/截止；服务失败可继续原路径。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B11 realWeb actualcontrolled-model generate/explicit-transfer/single-request and manual-create confirmations complete with physical write proof. Full failure-recovery/group-send and actual native role swap remain outstanding, so NOT_RUN retained. B21-O007 actualnativefocusedkeyboard obscuresquestion/Ask(79); original F49 red retained; B23-O001 actual81/82/85 closed F49 by normal keyboard-open Ask, close/reopen and explicit transfer. Full native role swap, failure-recovery and group-send assertions remain pending; targeted closure does not grant whole-journey PASS. Do not substitute enabled/componentchecks for physicalnativeusability. B33 actual controlled Web anonymous explicit SEARCH→real card selection→APPLICATION draft→explicit replacement passed. Applications0 after draft/transfer and after normal OTP/profile return with intact target/draft; only explicit final Send creates pending application1, seat_events remains host1. Full native role swap/B privacy/Admin/capacity/deadline assertions remain NOT_RUN.",
       "defectIds": [
         "QA-F49"
       ]

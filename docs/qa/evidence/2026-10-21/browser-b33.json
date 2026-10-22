@@ -1,0 +1,21 @@
+{
+  "observations": [
+    {
+      "id": "B33-O001",
+      "testedCommit": "3a17e8b8971f617b1e4d4f1c3903586b6464e6f9",
+      "status": "passed",
+      "title": "Normal controlled Web SEARCH selection and APPLICATION draft survives login without auto-submit",
+      "steps": [
+        "Separate Chrome actor explicitly asks Find meals, receives real controller public meal card from same local database, and selects that specific card.",
+        "Normal application editor has unsent manual text. Explicit selected-meal request generates application draft; explicit transfer and replacement confirmation populate the original editor. Applications remain0.",
+        "User Send while Guest enters normal email OTP/profile. Same original target and complete draft return after profile; applications still0, no automatic send.",
+        "Only another explicit Send creates applications1, UI pending; seat_events remains1 host seat, no autoapproval.",
+        "Whole005 remains NOT_RUN for original Web/iOS role swap, B privacy, sameDB Admin and final capacity/deadline assertions. No real model/provider quality claim."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b33-application-unsent.png",
+        "evidence/2026-10-21/b33-application-pending.png"
+      ]
+    }
+  ]
+}
