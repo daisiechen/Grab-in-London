@@ -1,0 +1,24 @@
+{
+  "observations": [
+    {
+      "id": "B25-O001",
+      "testedCommit": "cbdbf975dca79b05e4adb315ac225464488c1fb1",
+      "status": "passed",
+      "title": "AI034 same native App process across genuine owned API-child RAM loss",
+      "steps": [
+        "Official signed62046endpoint package205gitarchive sources/binary/Hermes independently exact. Backend frozen2005991 controlled SEARCH only, no real provider. DedicatedD92 simulator, new ownedPG, no oldfixture restarts.",
+        "Actual91 normalGuest Start→controlledAI SEARCH completes with no eligible meals→type QA034 LIVE UNSENT91→Close flush EDIT and stop panel polling. SameUITest/App writes test-runner-only READY. This150second control gate coordinates QA crash, not a business timeout.",
+        "Fresh finiteinspect pending0/inflight0 and completedrequest1; exactowner/hash finiteFIFO crash only ownchild34736→45797. Parent reports sameDatabase/business/auth/clock true, technicalDelta[]. No PG reset, cleanup, credential read or source DB change.",
+        "Same still-running App reopens Continue: expired/410 handling UI, original unsent text exact, old answer absent, no automatic New or Retry. Read-only afterinspect keeps guest_sessions/ai_session_meta/ai_requests counts1 and digests unchanged; business/auth unchanged.",
+        "Together with B21 actual75–78 signed/guest cold explicitContinue and genuineuninstall/install oldtoken isolation, all three AI034 expected assertions now passed. Earlier69 red and historicBLOCKED retained. This is targeted local synthetic lifecycle coverage, not full unifiedJourney or realvendor acceptance."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-b25-91-xcui.swift",
+        "evidence/2026-10-21/native-b25-91-orchestration.py",
+        "evidence/2026-10-21/b25-native91-restart-proof.json",
+        "evidence/2026-10-21/b25-native91-after-inspect.json",
+        "evidence/2026-10-21/native-b25-91-expired-unsent.png"
+      ]
+    }
+  ]
+}

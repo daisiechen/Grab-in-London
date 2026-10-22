@@ -1,0 +1,355 @@
+{
+  "before": {
+    "event": "inspect",
+    "owner": "bbf009d0-a909-4898-8339-9f21af4967e6",
+    "childNumber": 1,
+    "childPid": 34736,
+    "databaseIdentity": "e7045e9a7df22b8a47bb5a86e2389cb60e4c97c8aca63f71ddcb51cc339cf07b",
+    "clock": "2026-10-22T03:23:24.066000Z",
+    "pending": 0,
+    "inflight": 0,
+    "tables": [
+      {
+        "table": "account_classifications",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "ai_budget",
+        "count": "2",
+        "sha256": "a11df4025b93db4dc60ac1d91a3b6b9c15f3c539f5b00982237593de467917b2"
+      },
+      {
+        "table": "ai_budget_reconciliations",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "ai_calls",
+        "count": "1",
+        "sha256": "3fd819d80f885dcadd61f074ad9bedb22896f403af68c21ca28f2a997b126a75"
+      },
+      {
+        "table": "ai_preferences",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "ai_quota",
+        "count": "1",
+        "sha256": "5b06b67df4f800847261bc0ec74219754d10b7ebddd3e4b9f299312fd786622d"
+      },
+      {
+        "table": "ai_requests",
+        "count": "1",
+        "sha256": "2347b24cc05bb6e024d26d24690ccd9e37cd6aea0ccc6fc97dc305b367d2b9d9"
+      },
+      {
+        "table": "ai_session_meta",
+        "count": "1",
+        "sha256": "6210317d6c9c93a7ba200652f6bb8428e182c88d5df665f4952f651eef0781e5"
+      },
+      {
+        "table": "ai_subjects",
+        "count": "1",
+        "sha256": "ef69436139540f17eff0e933af0810dc8428530b96dda50c149cf6afbd03e725"
+      },
+      {
+        "table": "analytics_consents",
+        "count": "1",
+        "sha256": "612470d70d8a64abfbbb6fe7e492ce28a5dcefa1d027f7a4d79355f0b3923542"
+      },
+      {
+        "table": "analytics_deliveries",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "analytics_delivery_coverage",
+        "count": "1",
+        "sha256": "e6aecd914c67b677ab7eadff79e992a573c970b12dfc2c63c570972c35f8417a"
+      },
+      {
+        "table": "analytics_discovery_requests",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "analytics_events",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "analytics_exports",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "analytics_snapshot_facts",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "analytics_snapshot_subjects",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "analytics_snapshots",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "api_rate_limits",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "applications",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "attendance_revisions",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "audit_events",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "auth_transactions",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "block_revisions",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "blocks",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "booking_declarations",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "business_events",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "conversation_events",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "conversation_reads",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "conversations",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "deletion_journal",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "deletion_mail_envelopes",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "deletion_requests",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "experience_revisions",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "guest_sessions",
+        "count": "1",
+        "sha256": "6ec33635216eefe368fae3476e544573f8f73a63d5281478fbee4183615ab515"
+      },
+      {
+        "table": "idempotency",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "identities",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "jobs",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "lifecycle_marks",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "mail_provider_messages",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "mail_provider_receipts",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "meals",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "membership_intervals",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "messages",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "notifications",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "outbox",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "pair_consents",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "privacy_control",
+        "count": "1",
+        "sha256": "1d064f655ec30ebff54b55d89ee9c68e0f50754f400762c5704ca012a13dc258"
+      },
+      {
+        "table": "private_contact",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "product_surveys",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "profiles",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "public_review_revisions",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "recovery_control",
+        "count": "1",
+        "sha256": "4703658667647633edc580110b77c4c82d92f01dad2d0698f43e326d153f39c5"
+      },
+      {
+        "table": "refresh_tokens",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "reports",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "roles",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "schema_migrations",
+        "count": "25",
+        "sha256": "076fea2508fea62de15e9b1bc92fe3a7a4408ba2f226bba6440f232076f0eba0"
+      },
+      {
+        "table": "seat_events",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "session_families",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "sessions",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "start_roster",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "support_case_grants",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "support_cases",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "user_pairs",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "users",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "table": "venues",
+        "count": "0",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "checkpoint": "686c3b7cc22a4bff50e7e0a148111a8c5f19f4afc731998a24283b33028c8519"
+  },
+  "restart": {
+    "event": "restarted",
+    "oldPid": 34736,
+    "newPid": 45797,
+    "sameDatabase": true,
+    "businessUnchanged": true,
+    "authUnchanged": true,
+    "clockUnchanged": true,
+    "technicalRecoveryDelta": []
+  }
+}

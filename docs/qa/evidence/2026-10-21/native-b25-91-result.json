@@ -1,0 +1,9 @@
+{
+  "run": 91,
+  "status": "PASS",
+  "xcodeResult": "TEST EXECUTE SUCCEEDED",
+  "sameUITestAndAppProcessAcrossRestart": true,
+  "businessResponseTimeoutSeconds": 25,
+  "qaControlGateSeconds": 150,
+  "gatePurpose": "test coordination only, not product-response timeout"
+}

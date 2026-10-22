@@ -14,17 +14,17 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 193 |
+| PASS | 194 |
 | FAIL | 0 |
 | BLOCKED | 11 |
-| NOT_RUN | 13 |
+| NOT_RUN | 12 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实供应商、真实设备发行、部署或政策批准证据；本地已有可运行模拟器和正常签名原生UI，不能再用旧许可/runtime缺失概括。本地恢复与分步删除已独立通过。FAIL优先于未完成的后续步骤。
 
 ## 实际运行
 
-B24 F46 actual88–90 targeted closed: normal OTP, exact503 global warning, localGuest/coldGuest and remote family still active independently verified. B23 F49 closed. 193PASS/13NOT_RUN/11BLOCKED unchanged. AI034 sameApp RAMloss and unified fulljourneys remain pending.
+B25 AI034 all three expectations PASS via B21 actual75–78 plus sameApp RAMloss91. 194PASS/12NOT_RUN/11BLOCKED. F46/F49 targetedclosed; remaining12 are full unifiedjourneys requiring sameenvironment normalHAB andWeb/iOSrole swaps/Adminnotificationtrace.
 
 | ID | 结果 | 范围 |
 |---|---|---|
@@ -413,7 +413,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-AI-031 · 刷新与设备隔离 | PASS | 真实SessionService刷新带旧revokeHandle使旧会话失效；新会话及另一设备正文空。仅sessionId或错误device proof拒绝，DB元数据无正文及明文device token。仅本地设备绑定范围。；证据 R28-T003 |
 | QA-AI-032 · 退出切账号与账号删除 | PASS | Independent targeted production probes R135 and cited UI evidence cover the original expected assertions. Local synthetic environment; real PG/API where stated, controlled clock/provider or component transport explicitly scoped. Historical setup/real failures retained; no native journey or real vendor claim.；证据 R135-T001, R135-T002 |
 | QA-AI-033 · 游客登录不迁偏好 | PASS | Planned api_db_or_unit method, independent real PG/core HTTP Web-cookie and native bearer/PKCE handoff. Pre-existing account identities and confirmed preferences explicitly seeded through PreferenceService, no OTP cooldown/time edits. Guest submits confirmed soft fields with private marker, completed turn readable before login; login revokes old guest/session410, existing account turns empty and saved fields/version1 unchanged. Native guest remains valid through OTP verification, then revoked atomically by actual handoff exchange. Account logout followed by mint/boot yields different guest token/subject and empty turns; no guest preferences persisted. Native transport API proof only, no running App/Keychain/actual device/UI claim; cross-client journeys remain NOT_RUN.；证据 R111-T001, R111-T002 |
-| QA-AI-034 · iOS重装与冷启动 | NOT_RUN | F45 actualold69red retained; official6e actual75/76signed and77/78guest cold explicitContinue same liveID/count verified. Trueuninstall/reinstall oldauth/AI notadopted. F45targetedclosed; no full034PASS because trueAPI-RAMloss/liveunsentretention remainsunexecuted. Partial native assertions0/1 are described with direct B21 evidence only; numeric coveredExpectedIndexes reserved by existing validator for complete-casePASS, so empty until all034expectations complete.；证据 B20-O005, B21-O003, B21-O004 |
+| QA-AI-034 · iOS重装与冷启动 | PASS | B21 actual75–78 proved signed/guest cold explicitContinue and realuninstall/install oldtoken isolation. B25 actual91 completed controlledAI then same nativeApp process across ownedAPIchild SIGKILL/restart samePG/auth/clock: expired410handling, exactliveunsentretention, no oldresult/logrecovery or automaticnew. Fresh before/after finitePG digests/counts prove no newguest/session/request orbusinesswrite. Local synthetic simulator scope only.；证据 B21-O003, B21-O004, B25-O001 |
 | QA-AI-035 · 主体1在途 | PASS | 隔离真实PG+受控provider：账号49成功轮前置，两设备与同会话不同requestId争最后名额，仅一个PENDING；其他AI_CONFLICT，provider只调用一次。NEEDS_INPUT结算后50轮，继续请求AI_QUOTA_EXCEEDED且无新call。；证据 R22-T006 |
 | QA-AI-036 · requestId去重 | PASS | 真实HTTP并发同requestId同body均202且provider只调1次，结束后重放不调模型/扣轮；改body409 AI_CONFLICT，显式NEW清RAM后原请求410；Controller另验证runtime.shutdown后不重生成。quota仅successes1/reserved0。；证据 R22-T001, R22-T007 |
 | QA-AI-037 · 最后成功轮竞争 | PASS | 真实PG原子预留第50轮，跨设备不超50；受控provider分别NEEDS_INPUT/SUCCEEDED扣1，FAILED与偏好删除导致SUPERSEDED不扣，所有reserved回0。重复finish不重复结算；无真实模型费用调用。；证据 R22-T006, R22-T008, R22-T009, R22-T010 |
@@ -475,8 +475,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 
 ## 下一批执行顺序
 
-1. Review retained-parent AI034runner identity/stop/cleanup fixes then genuineAPI-child hardRAMloss andnormalnative410/liveunsentretention; neverrestartold3102.
-2. Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.
-3. Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval.
+1. Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.
+2. Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval.
 
 Claude参与此前测试设计建议；本次动态执行及结论由Codex负责。Claude提出静态发现后由开发筛选复现修复至ac09af4，QA已独立定向复跑28项API/DB通过；不算Claude动态测试或完整交叉签收。

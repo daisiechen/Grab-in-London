@@ -17,8 +17,8 @@
     "nativeRuntimeEvidence20261021": "Native83df/611a normal Xcode simulated entitlement and source/binary independently verified; actual QA taps passed. Earlier CODE_SIGNING_ALLOWED=NO artifacts failed getItem-34018, preserved as setup/build evidence; no missing-runtime/license blocker remains."
   },
   "counts": {
-    "PASS": 193,
-    "NOT_RUN": 13,
+    "PASS": 194,
+    "NOT_RUN": 12,
     "BLOCKED": 11
   },
   "evidenceCatalog": {
@@ -65,7 +65,8 @@
     "browserObservationsB21": "evidence/2026-10-21/browser-b21.json",
     "browserObservationsB22": "evidence/2026-10-21/browser-b22.json",
     "browserObservationsB23": "evidence/2026-10-21/browser-b23.json",
-    "browserObservationsB24": "evidence/2026-10-21/browser-b24.json"
+    "browserObservationsB24": "evidence/2026-10-21/browser-b24.json",
+    "browserObservationsB25": "evidence/2026-10-21/browser-b25.json"
   },
   "cases": [
     {
@@ -13766,11 +13767,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
-        "B20-O005",
         "B21-O003",
-        "B21-O004"
+        "B21-O004",
+        "B25-O001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T094",
@@ -13879,16 +13880,28 @@
         "R2-T063",
         "R10-T048"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "Actual API-child RAM loss while retaining samePG/auth: oldsession/result410, no log/DB content recovery, current live native unsent text retained. Parent-owned fixture not yet ready."
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "F45 actualold69red retained; official6e actual75/76signed and77/78guest cold explicitContinue same liveID/count verified. Trueuninstall/reinstall oldauth/AI notadopted. F45targetedclosed; no full034PASS because trueAPI-RAMloss/liveunsentretention remainsunexecuted. Partial native assertions0/1 are described with direct B21 evidence only; numeric coveredExpectedIndexes reserved by existing validator for complete-casePASS, so empty until all034expectations complete.",
+      "remainingExpected": [],
+      "actual": "B21 actual75–78 proved signed/guest cold explicitContinue and realuninstall/install oldtoken isolation. B25 actual91 completed controlledAI then same nativeApp process across ownedAPIchild SIGKILL/restart samePG/auth/clock: expired410handling, exactliveunsentretention, no oldresult/logrecovery or automaticnew. Fresh before/after finitePG digests/counts prove no newguest/session/request orbusinesswrite. Local synthetic simulator scope only.",
       "history": [
         {
           "status": "BLOCKED",
           "actual": "没有可操作的iOS原生安装/重装设备；Jest不能证明Keychain与冷启动。",
           "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        },
+        {
+          "status": "NOT_RUN",
+          "actual": "F45 actualold69red retained; official6e actual75/76signed and77/78guest cold explicitContinue same liveID/count verified. Trueuninstall/reinstall oldauth/AI notadopted. F45targetedclosed; no full034PASS because trueAPI-RAMloss/liveunsentretention remainsunexecuted. Partial native assertions0/1 are described with direct B21 evidence only; numeric coveredExpectedIndexes reserved by existing validator for complete-casePASS, so empty until all034expectations complete.",
+          "reason": "B25 completes final same-App RAM-loss assertion; preserve earlier scope",
+          "evidence": [
+            "B20-O005",
+            "B21-O003",
+            "B21-O004"
+          ]
         }
       ],
       "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies",
@@ -22672,9 +22685,8 @@
   },
   "blockerTriage": "当前11条外部门槛仍需真实服务验收、发行设备、部署或政策批准证据；开发已告知除Apple待审核外资源就绪，不再沿用账号/Key未开通作为笼统阻塞。QA尚未把资源就绪等同实际接入通过。AI034属于本地NOT_RUN，原生runtime/签名/冷恢复已实际可运行；待测为重装token边界及受控AI生命周期。原14条中的本地隐私/恢复已通过。当前F44原生安全入口缺失为开发待修；完整双端旅程与新生产切片仍实际推进。",
   "nextExecution": [
-    "Review retained-parent AI034runner identity/stop/cleanup fixes then genuineAPI-child hardRAMloss andnormalnative410/liveunsentretention; neverrestartold3102.",
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B24 F46 actual88–90 targeted closed: normal OTP, exact503 global warning, localGuest/coldGuest and remote family still active independently verified. B23 F49 closed. 193PASS/13NOT_RUN/11BLOCKED unchanged. AI034 sameApp RAMloss and unified fulljourneys remain pending."
+  "currentExecutionSlice": "B25 AI034 all three expectations PASS via B21 actual75–78 plus sameApp RAMloss91. 194PASS/12NOT_RUN/11BLOCKED. F46/F49 targetedclosed; remaining12 are full unifiedjourneys requiring sameenvironment normalHAB andWeb/iOSrole swaps/Adminnotificationtrace."
 }
