@@ -19849,7 +19849,10 @@
         "receipt无私密数据",
         "旧导出不可再读"
       ],
-      "actual": "本地生产实现尚需实际执行：举报→查本人回执→support个案→reauth删除→断网丢202→receipt查→后台快照撤销。尚缺逐项证据：受理不称处理完成；202同步屏障；receipt无私密数据；旧导出不可再读。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "本地生产实现尚需实际执行：举报→查本人回执→support个案→reauth删除→断网丢202→receipt查→后台快照撤销。尚缺逐项证据：受理不称处理完成；202同步屏障；receipt无私密数据；旧导出不可再读。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 2026-10-23 QA-F64 opened: native deletion receipt is held only in memory, so after an accepted 202 with a lost response the receipt cannot be recovered (contract data §72, API row 80). Deletion of H/A is deferred until a fixed, normally signed native build is available.",
+      "defectIds": [
+        "QA-F64"
+      ]
     },
     {
       "id": "QA-API-006",
@@ -23175,7 +23178,8 @@
     "QA-F60": "CLOSED_TARGETED_QA_EXCEPT_READ_FAILURE_COPY",
     "QA-F61": "CLOSED_TARGETED_QA",
     "QA-F62": "CLOSED_TARGETED_QA",
-    "QA-F63": "OPEN_CONFIRMED"
+    "QA-F63": "OPEN_CONFIRMED",
+    "QA-F64": "OPEN_CONFIRMED"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
