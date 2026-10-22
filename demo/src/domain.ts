@@ -648,3 +648,17 @@ export function alternativeReservationSlot(meal: Meal) {
   ).filter((time) => time !== meal.time);
   return alternatives.find((time) => time > meal.time) || alternatives[0] || "";
 }
+
+// Shared prototype boundaries; production validates independently.
+export function validProfileBio(bio: string): boolean {
+  const length = bio.trim().length;
+  return length >= 20 && length <= 1000;
+}
+export const hostCuisineOptions = ["European", "Japanese", "Spanish", "Chinese"];
+export const hostDietaryOptions = ["Vegetarian options", "Vegan"];
+export function hostMealDeclarations(cuisine: string, dietary: string[]) {
+  return {
+    cuisine: hostCuisineOptions.includes(cuisine) ? cuisine : undefined,
+    dietary: dietary.length ? hostDietaryOptions.filter((v) => dietary.includes(v)) : undefined,
+  };
+}

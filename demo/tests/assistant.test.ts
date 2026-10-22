@@ -221,3 +221,22 @@ test("unsupported areas and invalid dates ask for correction", () => {
     /isn’t valid/,
   );
 });
+
+
+test("saved budget ranks only; explicit budget filters and CLEAR suppresses old preference", () => {
+  const base = initialMeals[0];
+  const c = { ...context(), preferences: { ...blankPreferences, budget: "35" }, meals: [
+    { ...base, id: "expensive", max: 45 }, { ...base, id: "affordable", max: 35 },
+  ] };
+  const soft = assistantReply("find meals", c);
+  assert.deepEqual(soft.meals?.map((m) => m.id), ["affordable", "expensive"]);
+  assert.equal(soft.query?.budget, undefined);
+  assert.match(soft.text, /preferences rank/);
+  const hard = assistantReply("find meals budget £35", c);
+  assert.deepEqual(hard.meals?.map((m) => m.id), ["affordable"]);
+  const clear = assistantReply("any budget", { ...c, query: hard.query! });
+  assert.equal(clear.query?.budget, "");
+  assert.equal(clear.meals?.length, 2);
+  assert.doesNotMatch(clear.text, /preferences rank/);
+  assert.equal(assistantReply("compare meals", { ...c, query: clear.query! }).query?.budget, "");
+});

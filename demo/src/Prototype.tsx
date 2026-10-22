@@ -86,6 +86,10 @@ import {
   inboxStage,
   conversationPreview,
   validateMeal,
+  validProfileBio,
+  hostCuisineOptions,
+  hostDietaryOptions,
+  hostMealDeclarations,
   validateDemoEmail,
   validateDemoCode,
   needsAccount,
@@ -127,6 +131,8 @@ const initialDraft = {
   min: 25,
   max: 35,
   description: "",
+  cuisine: "",
+  dietary: [] as string[],
   language: "English",
   mood: "Easy conversation",
   cost: "offline",
@@ -859,10 +865,10 @@ function BrandEntrance({
                       keyboard.hide();
                       if (
                         person.name.trim().length < 2 ||
-                        person.bio.trim().length < 20
+                        !validProfileBio(person.bio)
                       ) {
                         setIssue(
-                          "Add a name of at least 2 characters and an introduction of at least 20 characters.",
+                          "Add a name of at least 2 characters and an introduction of 20–1,000 characters.",
                         );
                         return;
                       }
@@ -876,6 +882,7 @@ function BrandEntrance({
                         ...person,
                         photo,
                         name: person.name.trim(),
+                        bio: person.bio.trim(),
                       });
                     }}
                   >
@@ -2142,7 +2149,6 @@ export default function Prototype() {
       return;
     }
     const restaurant = restaurantChoice(draft.venue, draft.restaurant)!;
-    const sample = restaurant.source === "demo" ? createVenues.find((v) => v.name === draft.venue) : undefined;
     const areaLocation = initialMeals.find((m) => m.area === restaurant.area);
     const meal: Meal = {
       restaurant,
@@ -2167,8 +2173,7 @@ export default function Prototype() {
       members: ["alex"],
       x: areaLocation?.x ?? 50,
       y: areaLocation?.y ?? 50,
-      cuisine: sample?.cuisine || "",
-      dietary: restaurant.source === "demo" ? ["Vegetarian options"] : [],
+      ...hostMealDeclarations(draft.cuisine, draft.dietary),
       booking: draft.booking === "external" ? "CONFIRMED" : "PENDING",
       costMode:
         draft.cost === "offline"
@@ -2558,6 +2563,7 @@ export default function Prototype() {
             </div>
             <h2>A little about this meal</h2>
             <p className="prose">{current.description}</p>
+            <p className="muted">Cuisine: {current.cuisine || "Not provided"} · Dietary options: {current.dietary?.length ? current.dietary.join(", ") : "Not provided"}. Host-reported · not an allergy guarantee.</p>
             <div className="tags">
               <span>{current.mood}</span>
               <span>Friendship first</span>
@@ -3411,6 +3417,23 @@ export default function Prototype() {
                 20–1,000 characters · {draft.description.length}/1,000
               </small>
               <ChoiceGroup
+                label="Cuisine · optional"
+                value={draft.cuisine}
+                onChange={(cuisine) => setDraft({ ...draft, cuisine, accepted: false })}
+                options={[["", "Not provided"], ...hostCuisineOptions.map((v): [string, string] => [v, v])]}
+              />
+              <fieldset className="filter-section">
+                <legend>Dietary options · optional</legend>
+                <div className="choice-grid">
+                  {hostDietaryOptions.map((value) => <label key={value} className={`choice-chip ${draft.dietary.includes(value) ? "chosen" : ""}`}>
+                    <input type="checkbox" checked={draft.dietary.includes(value)} onChange={(e) => setDraft({ ...draft, dietary: e.target.checked ? [...draft.dietary, value] : draft.dietary.filter((v) => v !== value), accepted: false })} />
+                    <span>{value}</span>{draft.dietary.includes(value) && <CheckIcon />}
+                  </label>)}
+                </div>
+                {!draft.dietary.length && <p className="muted">Not provided</p>}
+              </fieldset>
+              <p className="muted">Host-reported · not an allergy guarantee. Check with the restaurant.</p>
+              <ChoiceGroup
                 label="Atmosphere"
                 value={draft.mood}
                 onChange={(mood) =>
@@ -3605,6 +3628,7 @@ export default function Prototype() {
                 <div className="eyebrow">YOUR NEW TABLE</div>
                 <h2>{draft.title}</h2>
                 <p>{draft.description}</p>
+                <p className="muted">Cuisine: {draft.cuisine || "Not provided"} · Dietary options: {draft.dietary.length ? draft.dietary.join(", ") : "Not provided"}. Host-reported · not an allergy guarantee.</p>
                 {[
                   [
                     "Place & time",
@@ -4245,7 +4269,7 @@ export default function Prototype() {
               {key === "bio" ? (
                 <KeyboardTextarea
                   value={draftProfile.bio}
-                  maxLength={500}
+                  maxLength={1000}
                   rows={4}
                   onBlur={() => keyboard.hide()}
                   onChange={(e) =>
@@ -4274,17 +4298,17 @@ export default function Prototype() {
             onClick={() => {
               if (
                 draftProfile.name.trim().length < 2 ||
-                draftProfile.bio.trim().length < 20 ||
+                !validProfileBio(draftProfile.bio) ||
                 !draftProfile.language.trim() ||
                 !draftProfile.life.trim() ||
                 !draftProfile.interests.trim()
               ) {
                 setError(
-                  "Add your name (2+ characters), introduction (20+), London life, languages and interests.",
+                  "Add your name (2+ characters), introduction (20–1,000), London life, languages and interests.",
                 );
                 return;
               }
-              setProfile(draftProfile);
+              setProfile({ ...draftProfile, name: draftProfile.name.trim(), bio: draftProfile.bio.trim() });
               back();
               notify("Profile saved.");
             }}
@@ -4539,7 +4563,7 @@ export default function Prototype() {
           <p className="muted">{criticalEditAllowed(current) ? "You can edit before anyone is approved." : "The restaurant, time, budget and group size are locked after the first approval. Cancel and create a new meal to change them."}</p>
           <Primary secondary disabled={!criticalEditAllowed(current) || !canRecruit(current, clock)} onClick={() => {
             const local = new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/London", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }).format(closesAt(current)).split(" ");
-            setDraft({ ...initialDraft, title: current.title, venue: current.venue, restaurant: current.restaurant || null, date: current.date, time: current.time, capacity: current.capacity, minimum: minimumFor(current), deadlineDate: local[0], deadlineTime: local[1], min: current.min, max: current.max, description: current.description, language: current.language, mood: current.mood, cost: current.costMode === "OFFLINE" ? "offline" : current.costMode === "FIXED_MENU" ? "menu" : "deposit", booking: current.reservationSource === "external" ? "external" : "in-app", deposit: current.deposit });
+            setDraft({ ...initialDraft, title: current.title, venue: current.venue, restaurant: current.restaurant || null, date: current.date, time: current.time, capacity: current.capacity, minimum: minimumFor(current), deadlineDate: local[0], deadlineTime: local[1], min: current.min, max: current.max, description: current.description, cuisine: current.cuisine || "", dietary: current.dietary || [], language: current.language, mood: current.mood, cost: current.costMode === "OFFLINE" ? "offline" : current.costMode === "FIXED_MENU" ? "menu" : "deposit", booking: current.reservationSource === "external" ? "external" : "in-app", deposit: current.deposit });
             setEditingMeal(current.id); setCreateStep(0); go("create");
           }}>Edit arrangements</Primary>
           <Primary secondary disabled={!!current.cancelledAt || Date.parse(clock) >= startsAt(current)} onClick={() => setSheet("cancel-meal")}>Cancel this meal</Primary>

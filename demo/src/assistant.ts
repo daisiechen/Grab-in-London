@@ -249,7 +249,6 @@ export function assistantReply(
     Object.entries(c.filters).filter(([, value]) => value !== ""),
   );
   const query: AssistantQuery = {
-    ...c.preferences,
     ...activeFilters,
     ...c.query,
     ...parsed,
@@ -278,11 +277,16 @@ export function assistantReply(
       m.booking !== "CANCELLED" &&
       !m.owned,
   );
+  // Saved preferences only rank eligible results. An explicit CLEAR suppresses that field.
+  const soft = Object.entries(c.preferences).filter(([key, value]) => value && !(key in query));
+  const score = (meal: Meal) => soft.filter(([key, value]) =>
+    eligibleMeals([meal], { ...emptyFilters, [key]: value }).length > 0).length;
+  results.sort((a, b) => score(b) - score(a) || `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`) || a.id.localeCompare(b.id));
   const criteria = preferenceSummary(query);
   return {
     query,
     text: results.length
-      ? `${/compare|比较/i.test(text) ? "Compare these options" : `I found ${results.length} ${results.length === 1 ? "table" : "tables"}`}${criteria ? ` for ${criteria}` : " with places available"}. Budget uses the top of each meal’s estimated range. Open a meal to review the people, costs and terms.`
+      ? `${/compare|比较/i.test(text) ? "Compare these options" : `I found ${results.length} ${results.length === 1 ? "table" : "tables"}`}${criteria ? ` for ${criteria}` : " with places available"}. Budget uses the top of each meal’s estimated range. ${soft.length ? "Saved preferences rank these results; they do not exclude other matches. " : ""}Open a meal to review the people, costs and terms.`
       : `No available tables match${criteria ? ` ${criteria}` : " these conditions"}. I haven’t changed your requirements. Try “any area”, “any date”, “any budget” or “clear search”, or ask me to draft a meal.`,
     meals: results,
   };

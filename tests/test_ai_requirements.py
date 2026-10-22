@@ -44,6 +44,15 @@ class AIRequirementsTest(unittest.TestCase):
                          '预约失败不等于不能招募', '不产生申请、席位、饭局、消息或通知'):
             self.assertIn(boundary, self.ai)
 
+    def test_confirmed_decisions_are_backfilled(self):
+        profile = self.text.split('### FR-02 ', 1)[1].split('### FR-03 ', 1)[0]
+        self.assertIn('20–1000', profile)
+        self.assertNotIn('20–500', profile)
+        for requirement in ('已保存偏好仅用于soft排序', '£45饭局仍可出现',
+                            '抑制对应旧soft预算', 'host可选声明',
+                            'VEGETARIAN_OPTIONS=Vegetarian options', '不选存null'):
+            self.assertIn(requirement, self.text)
+
     def test_memory_errors_and_usage_have_separate_lifecycles(self):
         for contract in ('Confirm and remember', 'version', '版本检查',
                          '不自动迁入账号', 'now ≥ lastActivity+30分钟',

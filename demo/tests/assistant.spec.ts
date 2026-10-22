@@ -548,7 +548,10 @@ test("home, preferences and conversation have distinct return and reset behavior
   await page.screenshot({ path: "qa/comments-2026-10-20/assistant-home-resume.png" });
   await ask(page, "Find meals");
   await expect(page.locator(".helper-turn")).toHaveCount(1);
-  await expect(page.locator(".helper-meal-card")).toHaveCount(2);
+  await expect(page.locator(".helper-meal-card")).toHaveCount(5);
+  await expect(page.locator(".helper-meal-card").first()).toContainText("Soho");
+  await expect(page.locator(".helper-meal-card").filter({ hasText: "Fitzrovia" })).toHaveCount(1);
+  await expect(page.locator(".helper-turn").last()).toContainText("Saved preferences rank");
   await expect(page.getByRole('button', {name: 'Use larger view', exact: true})).toHaveCount(0);
   await expect(page.getByRole('button', {name: 'Close Fancy helper', exact: true})).toHaveCount(0);
   await expect(page.locator('.helper-tools').getByRole('button', {name: 'My preferences', exact: true})).toBeVisible();
@@ -587,7 +590,10 @@ test("idle expiry resets context, retains approved preferences and unsent text, 
     .getByRole("button", { name: "Send to Fancy", exact: true })
     .click();
   await expect(page.locator(".helper-turn")).toHaveCount(1);
-  await expect(page.locator(".helper-meal-card")).toHaveCount(2);
+  await expect(page.locator(".helper-meal-card")).toHaveCount(5);
+  await expect(page.locator(".helper-meal-card").first()).toContainText("Soho");
+  await expect(page.locator(".helper-meal-card").filter({ hasText: "Fitzrovia" })).toHaveCount(1);
+  await expect(page.locator(".helper-turn").last()).toContainText("Saved preferences rank");
   await settleKeyboard(page, false);
   await settleHelper(page);
   await page.screenshot({ path: "qa/comments-2026-10-20/assistant-timestamps.png" });

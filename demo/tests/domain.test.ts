@@ -518,3 +518,22 @@ test("map selection is required; manual restaurant records cannot be published",
   assert.equal(url.origin, "https://www.google.com");
   assert.equal(url.searchParams.get("query"), `${sample.name}, ${sample.address}`);
 });
+
+
+test("registration and profile editing share trimmed bio boundaries", async () => {
+  const { validProfileBio } = await import("../src/domain.ts");
+  for (const n of [19, 1001]) assert.equal(validProfileBio("x".repeat(n)), false);
+  for (const n of [20, 1000]) assert.equal(validProfileBio("  " + "x".repeat(n) + "  "), true);
+  assert.equal(validProfileBio(" ".repeat(30)), false);
+});
+test("host declarations remain unknown until explicit selection and filter consistently", async () => {
+  const { hostMealDeclarations } = await import("../src/domain.ts");
+  const base = initialMeals[0];
+  const unknown = { ...base, ...hostMealDeclarations("", []) };
+  assert.equal(unknown.cuisine, undefined);
+  assert.equal(unknown.dietary, undefined);
+  assert.equal(eligibleMeals([unknown], { ...emptyFilters, dietary: "Vegetarian options" }).length, 0);
+  assert.equal(eligibleMeals([unknown], emptyFilters).length, 1);
+  const declared = { ...base, ...hostMealDeclarations("Japanese", ["Vegetarian options"]) };
+  assert.equal(eligibleMeals([declared], { ...emptyFilters, cuisine: "Japanese", dietary: "Vegetarian options" }).length, 1);
+});
