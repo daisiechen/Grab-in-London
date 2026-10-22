@@ -18,9 +18,8 @@
   },
   "counts": {
     "PASS": 193,
-    "NOT_RUN": 12,
-    "BLOCKED": 11,
-    "FAIL": 1
+    "NOT_RUN": 13,
+    "BLOCKED": 11
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
@@ -61,7 +60,8 @@
     "nativeFormalRuntimeReview": "evidence/2026-10-21/native-formal-runtime-review.json",
     "browserObservationsB17": "evidence/2026-10-21/browser-b17.json",
     "browserObservationsB18": "evidence/2026-10-21/browser-b18.json",
-    "browserObservationsB19": "evidence/2026-10-21/browser-b19.json"
+    "browserObservationsB19": "evidence/2026-10-21/browser-b19.json",
+    "browserObservationsB20": "evidence/2026-10-21/browser-b20.json"
   },
   "cases": [
     {
@@ -16257,7 +16257,10 @@
         "B9-T001",
         "R93-T001",
         "R93-T002",
-        "B10-T002"
+        "B10-T002",
+        "B19-O001",
+        "B19-O007",
+        "B19-O008"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -16620,9 +16623,10 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "Actual native device Web/iOS role-swapped full journey remains unexecuted."
+        "Actual guest Apply→login→profile completion→return to same target without automatic submission, in both required client/role directions; prior preauthenticated apply does not establish this prefix.",
+        "Same physical test database notification/admin trace and exact once-only original normal meal facts; complete per-case evidence mapping before PASS."
       ],
-      "actual": "B7 complete real Web lifecycle/postmeal and B8 same-meal Admin trace passed in explicit local fixture. F18 fixed2b9449a independently API2+boundary8 and actual browser Inbox/header/send/reload passed B9. Historical reds retained in history and run bundles. Original cross-client precondition requires actual Web/iOS role swap; no native-device proof yet, so NOT_RUN rather than whole-case PASS. B10 actual application trace, five-page state, dictionary Enter/Escape/focus and CSV metadata/null/empty-state verified. Full outside-dismiss, responsive, all filter dimensions, unit/fixture declaration and S1 persistence requirements are not collectively proven; retain outstanding expectations. Native first-launch F20 reported by native owner and log corroborated; temporary TypeBox resolver screen exists, formal fix/rebuild/interaction not yet accepted. QA has not operated native App; retain NOT_RUN and full native role-swap requirement.",
+      "actual": "Actual mainM1 Webhost/Nativeguest and reverseM5 Nativehost/Webguest approval/groupmessages, lifecycle, SELFattendance/privateexperience/publicreferences andexplicitreconnect executed with realPG unique facts (B17/B18/B19). Earlier normalnativeApply12 started already authenticated; it does not establish full guestApply→login→profilegate return. KeepNOT_RUN until that prefix is actually replayed per required client/role and sameDBstafftrace is captured; no composition-based wholepathPASS.",
       "defectIds": [
         "QA-F18"
       ],
@@ -16676,7 +16680,9 @@
       "status": "NOT_RUN",
       "evidence": [
         "B19-O004",
-        "B19-O005"
+        "B19-O005",
+        "B20-O003",
+        "B20-O004"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -16989,9 +16995,9 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "Original plan requires actual Web/iOS role-swapped journey. Complete B7 Web proof remains valid; native journey not yet executed."
+        "Finish same physical test-environment staff/admin trace precondition and verify full expected mapping; actual dual-direction create/booking/approval/lifecycle and host SELF-priority slices already captured, not automatically whole-case PASS."
       ],
-      "actual": "F42targetedclosed formalcd69: originalNative52 missinghostcontrol retained; actual53unknown/no-default/Reviewcancel PG0; actual54HOSTabsent independentlyconfirmed; WebguestSELFpresent then Native55HOSTabsentagain preserves effectiveSELFpresent. R19614/0. Fullbothdirectionjourney still heldNR for thirdprivacyactor/sharedfactsadminprecondition and remainingassertions.",
+      "actual": "F42targetedclosed formalcd69: originalNative52 missinghostcontrol retained; actual53unknown/no-default/Reviewcancel PG0; actual54HOSTabsent independentlyconfirmed; WebguestSELFpresent then Native55HOSTabsentagain preserves effectiveSELFpresent. R19614/0. Fullbothdirectionjourney still heldNR for thirdprivacyactor/sharedfactsadminprecondition and remainingassertions. B20-O004: sameDBsidecar bootstrap facts verified, but original rig autoexited during legalclockadvance; no sourceadminUI/snapshot/CSV executed. Environmentrecovery developerowned, not user blocker.",
       "relatedBrowserEvidence": [
         "B1"
       ],
@@ -17040,7 +17046,9 @@
       "status": "NOT_RUN",
       "evidence": [
         "B18-O001",
-        "B18-O002"
+        "B18-O002",
+        "B20-O003",
+        "B20-O004"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -17356,9 +17364,9 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "Both client directions now prove seat/group independence, authorized historical union and terminal dissolution; complete shared-environment receipt/admin precondition still pending."
+        "Same physical database staff/admin trace precondition; dual-direction end-user cancellation/leave/rejoin/authorized union/terminal dissolve slices already actually captured."
       ],
-      "actual": "F39/F40 targetedclosed. Native0db35 actualhost Keepgroup preservesdraft/no write, explicitdissolve makesbothreadonly; samePGdissolvedseq8/messageCount3 provesdraftunsent. Native33/36/37 guestold+new/noabsencegap/noeditor passed; Native38 manualInboxpull restoreshostcoldreadonly/noReopen. Webhost independentlydissolvesnativeguest group3870, samePGdissolvedseq9/messageCount4; doesnotcancelmeal/changecurrentseats. FullcaseheldNOT_RUN untilsharedfactsreceipt/adminprecondition, not inflated fromtests. F41generalInboxreturn separate.",
+      "actual": "F39/F40 targetedclosed. Native0db35 actualhost Keepgroup preservesdraft/no write, explicitdissolve makesbothreadonly; samePGdissolvedseq8/messageCount3 provesdraftunsent. Native33/36/37 guestold+new/noabsencegap/noeditor passed; Native38 manualInboxpull restoreshostcoldreadonly/noReopen. Webhost independentlydissolvesnativeguest group3870, samePGdissolvedseq9/messageCount4; doesnotcancelmeal/changecurrentseats. FullcaseheldNOT_RUN untilsharedfactsreceipt/adminprecondition, not inflated fromtests. F41generalInboxreturn separate. B20-O004: sameDBsidecar bootstrap facts verified, but original rig autoexited during legalclockadvance; no sourceadminUI/snapshot/CSV executed. Environmentrecovery developerowned, not user blocker.",
       "history": [
         {
           "status": "NOT_RUN",
@@ -17385,14 +17393,15 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "NOT_RUN",
       "evidence": [
         "B19-O001",
         "B19-O002",
         "B19-O007",
         "B19-O008",
         "B19-O009",
-        "B19-O010"
+        "B19-O010",
+        "B20-O001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -17710,7 +17719,7 @@
         "撤回后历史只读",
         "解除不复活同意"
       ],
-      "actual": "SamePG realNative/Web bothrole feedback andmutualDM done; original/reversewithdraw readonly verified. ThirdB sevenAPIprivacychecks single/mutual phases and publicprojectionhashequality verified. F44 actual59B formalcd69 has no nativeBlock/Unblock entry, sourceconfirmsnocalls; mirrorblockedbyproductgap, ownerfixinprogress. FullcasealsoawaitssharedDBadmintrace.",
+      "actual": "Original samePG bothrole feedback/mutualDM/withdraw and thirdB privacy retained. F44 native safety gap fixed formal2005991 and actual61–64 independent ownedPG targeted passed; not full original mirroredjourney. SameDBadmintrace still unexecuted; original61973 rig exited during reviewedclockadvance(F47), developer recovery pending. No wholecasepass.",
       "defectIds": [
         "QA-F44"
       ]
@@ -22564,7 +22573,7 @@
       "conclusion": "success",
       "url": "https://github.com/daisiechen/Grab-in-London/actions/runs/39581746626"
     },
-    "documentationTests": "79 Python documentation/configuration tests passed, including two new fail-closed guards for the third-actor privacy probe; plan/execution validation and diff whitespace checks passed."
+    "documentationTests": "80 Python documentation/configuration tests passed; added fail-closed owned-native-safety guard. Native and actual journey evidence remain separately scoped."
   },
   "lastTargetedCommit": "0518d45f89a392c716debc87ba9e23b27d26b5e2",
   "defectStatus": {
@@ -22610,21 +22619,31 @@
     "QA-F40": "CLOSED_TARGETED_QA",
     "QA-F41": "CLOSED_TARGETED_QA",
     "QA-F42": "CLOSED_TARGETED_QA",
-    "QA-F44": "OPEN"
+    "QA-F44": "CLOSED_TARGETED_QA",
+    "QA-F45": "OPEN_NATIVE_REPRODUCED",
+    "QA-F46": "OPEN_FORMAL_NATIVE_RETEST_PENDING",
+    "QA-F47": "OPEN_ENVIRONMENT"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
     "userAuthorizedMessaging": true,
     "status": "remaining_local_execution_in_progress",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
-    "latestFeedback": "F38/F39/F40/F41/F42 targeted QA closures handed to original development thread; complete local journeys remain in execution. Developer preparing cloned-facts staff/controlled-AI entry; source DB untouched until explicit safe checkpoint. ee971b4 deletion/mail new slice requires separate fresh-DB verification, not migration in QA original rig."
+    "latestFeedback": "F38/F39/F40/F41/F42 targeted QA closures handed to original development thread; complete local journeys remain in execution. Developer preparing cloned-facts staff/controlled-AI entry; source DB untouched until explicit safe checkpoint. ee971b4 deletion/mail new slice requires separate fresh-DB verification, not migration in QA original rig.",
+    "pendingFixtureDependencies": [
+      "Phase1 sameDB staff sidecar reviewed before sourceconnection; bootstrap/logout then QA normalclock+60s and factscompare/freshcheckpoint, no quota reset or migration.",
+      "F44 targeted independent2005991/API62044/newPG/newsimD92E pending formallymatchedsignedbuild andactualUI; originalsameDBJ004cannotbepassedfromnewrig.",
+      "AI3102 existing controlledmock fixture source identification cb9257e scope verified by environmentowner; native build queued after F44, do not stop its drop-on-exit ownerDB.",
+      "New deletion-mail7day slice independentfreshPG R19815/0 only; controlledprovider tests do not prove real vendor delivery."
+    ]
   },
   "blockerTriage": "当前11条外部门槛仍需真实服务验收、发行设备、部署或政策批准证据；开发已告知除Apple待审核外资源就绪，不再沿用账号/Key未开通作为笼统阻塞。QA尚未把资源就绪等同实际接入通过。AI034属于本地NOT_RUN，原生runtime/签名/冷恢复已实际可运行；待测为重装token边界及受控AI生命周期。原14条中的本地隐私/恢复已通过。当前F44原生安全入口缺失为开发待修；完整双端旅程与新生产切片仍实际推进。",
   "nextExecution": [
-    "F38/F39/F40/F41/F42已定向关闭，F43为限流恢复非业务缺陷。F44原生Block/Unblock缺口已实际复现，等待正式匹配API/原生包后定向复验；不热替换原环境。",
-    "继续现有同餐局原生/Web完整旅程并互换角色；单独场景执行退席位/退群/重入/解散，避免污染正常路径一次性事实。",
-    "本地AI生命周期/重装及AI完整用户路径由开发落实受控服务夹具；后台/支持以明确复制receipt或同环境实际事实核对，不能仅因缺夹具而交给用户。",
-    "真实供应商、账号Key、付款/部署/保留政策及真实发行设备仅保留必要外部门槛，不以本地mock或模拟器关闭。"
+    "Developer diagnose F47 clockrig fatalcleanup without modifying prior evidence; preserve logs and pause originalsidecar, new persistent-parent rig/proven recovery needed for sameDBpaths.",
+    "Finish AI005/006 controlled native paths andAI034 realRAMloss using independent reviewed persistentPG rig; verify F45 token-only coldcontinuation without content persistence.",
+    "Obtain formal F46 source/artifact andactual native remote-unconfirmed notice; retain localclear vsserverrevocation boundaries.",
+    "Execute complete guestApply→login→profile→same target prefix forJOURNEY001 in one declared finalenvironment, plus remaining sameDBadmin/UI assertions.",
+    "Retain11 externalblocked gates with specificreal-provider/native/policy/deployment evidence; no blanketmissingKey claim."
   ],
-  "currentExecutionSlice": "B19 completes actual reversefeedback/explicitmutualDM/withdrawreadonly, thirdB privacyphasehashes; F42targetedclosed. F43candidate reclassifiedactual429 and retryonlychoice57success; priorfailureretained. NewF44formalcd69 actual59B missingnativeBlock/Unblock, OPEN handedowner; completeJOURNEY004FAIL. OriginalAPI61973/PID63824/PG/sim retained, controlledclock2026-10-24T01:10Z safecheckpoint; ownerpreparingsameDBstaffsidecar, no sourceconnection until reviewed. No realvendor/releaseclaim."
+  "currentExecutionSlice": "B20 F44 actual native61–64 targetedclosed; original59Bredretained. Native66 localclear/67coldguest passed butremoteunconfirmed activefamily1, F46 old2red/WIP2green formalnativepending. F45 accepteddesign/sourcegap coldAIcontinuation ownerfixpending. Originalsidecarstage1 bootstrap/17facts verified; authorizedclockadvance triggerfatalautomaticcleanup F47, causeunknown; sameDBadmintrace unexecuted. No217casecountinflation. F45 actualNative68 normalstart/69cold Continue absent whilefinite PGsessionACTIVE/unexpired andoriginalAPIpidunchanged; no modelcall."
 }

@@ -1,0 +1,234 @@
+{
+  "verification": {
+    "tables": 17,
+    "sourceWrites": false,
+    "bootstrapRevoked": true,
+    "mealsUnchanged": true,
+    "migrations": 23
+  },
+  "facts": {
+    "clock": "2026-10-24T01:10:00.000000Z",
+    "privacyEpoch": "0",
+    "migrations": [
+      {
+        "version": "0001_core_kernel",
+        "checksum": "abf99e7339d6acfe77e3f03adbe23ae6b9cb4fb121159338ff02480d0a22daac"
+      },
+      {
+        "version": "0002_conversation_kernel",
+        "checksum": "c57150925860afb9a25c816ab900fbf8dfc654ab06e6d16d1509755b411605d8"
+      },
+      {
+        "version": "0003_identity",
+        "checksum": "da3701b2d197c185db1eadd77400e8d56931aa1db3c8c8ee102e6d554c2f5d3f"
+      },
+      {
+        "version": "0004_profiles",
+        "checksum": "c1b1486e32b5b885db7182d8d59bb0c78d01d9c0c7d144afe14ae0d6d7b19609"
+      },
+      {
+        "version": "0005_venues",
+        "checksum": "3a94389ae36ebaa5ce74e76b557ba7e7453665afd6abd351b2635540b5841db7"
+      },
+      {
+        "version": "0006_meals",
+        "checksum": "7cf382aebccbb6c08b9060a3729606d80cfe54bc2ca13a62123a6c56534fc814"
+      },
+      {
+        "version": "0007_product_surveys",
+        "checksum": "f57abbf03757cff1d7240009cd33587b520d9c0291c4bdd104d44ca6a6f7cb3a"
+      },
+      {
+        "version": "0008_analytics",
+        "checksum": "7f5e90f23503be448bdf723d1ad44505f1db6b6e00a5af6cde0f5111a3f8975c"
+      },
+      {
+        "version": "0009_assistant",
+        "checksum": "77f794275c65a6bf2856e531c8b66f7880ff1a6165fae0ca3cda8e194bd81698"
+      },
+      {
+        "version": "0010_messages",
+        "checksum": "b7ea521aea7976ed5662b1d57ce0f0e80352d8bafe20cff6eb1966f96cffd576"
+      },
+      {
+        "version": "0011_analytics_events",
+        "checksum": "c45063ab026fb431979c0296ff457711eee6e08ccd8afb25470790c944598f60"
+      },
+      {
+        "version": "0012_reports",
+        "checksum": "0bd73cab00080a60e52cc07c72cf2aac3434ec8d2e96b18fbf54078aa9e3018a"
+      },
+      {
+        "version": "0013_rate_limits",
+        "checksum": "e91830030806912f97c5930aba0298dd3d5d7ad49061039c727b47e58ceb6fcc"
+      },
+      {
+        "version": "0014_post_meal",
+        "checksum": "5caa95da57bd29cc2dc44d660eeeeba55893275526f16644fc53cc0edbc67374"
+      },
+      {
+        "version": "0015_deletions",
+        "checksum": "a49ab2f60bf4e71c863498c957c43d71cf73fcd84a07bb394e7fa6410704defd"
+      },
+      {
+        "version": "0016_exports",
+        "checksum": "de3b5bc868eaff838a44fd95bbadba5272072098327468d81ed5a7f3fbf6b079"
+      },
+      {
+        "version": "0017_ai_guest_intents",
+        "checksum": "173adbdaba5eaf1ab96d9828d2f8c1ffbe405df7ab35af58f8f7f99764a4143b"
+      },
+      {
+        "version": "0018_admin_snapshots",
+        "checksum": "2dfd42bdc9516b2bed6639e618c67a5f2423838ea1461f06c133302588cb34c9"
+      },
+      {
+        "version": "0019_intent_privacy",
+        "checksum": "0e316d8139ed6c39709e3e0deef448c0590d687f4cfd1c95d64d2cb941115e4b"
+      },
+      {
+        "version": "0020_mail_leases",
+        "checksum": "e6b1e829c488b74168cfc024635692598a701c64a8f576f921bc5786c71c3479"
+      },
+      {
+        "version": "0021_ai_privacy_epoch",
+        "checksum": "5666bb20ac088b5f4ec9776f1cbcddfb994e8f19f7080bcc775359c820cb6d6e"
+      },
+      {
+        "version": "0022_recovery_gate",
+        "checksum": "64410705cecca4a257ec64e58f3fe7d80a63fcdc61ae5ecf0468bbc6a879af2f"
+      },
+      {
+        "version": "0023_venue_area_versions",
+        "checksum": "8341d3a3cf593d767cecb474f430cb15feb1b1ec9a00ad8d2e05c4b0a01c5f5b"
+      }
+    ],
+    "meals": [
+      {
+        "id": "3870db70-2f9a-4002-8956-a5d6b16bb013",
+        "status": "COMPLETED",
+        "version": "5",
+        "head": "9"
+      },
+      {
+        "id": "57c7b03f-29d5-4a4f-8cc2-8d2db7fc91bb",
+        "status": "COMPLETED",
+        "version": "4",
+        "head": "7"
+      },
+      {
+        "id": "5b8d682f-cfda-493d-8d0f-cc58a37d7533",
+        "status": "CANCELLED",
+        "version": "4",
+        "head": "5"
+      },
+      {
+        "id": "acfe9e54-d6d7-4c63-81b6-f6aae4e53610",
+        "status": "COMPLETED",
+        "version": "4",
+        "head": "7"
+      },
+      {
+        "id": "e0af2bf6-41e9-4d8b-ae79-310b7ab3d095",
+        "status": "COMPLETED",
+        "version": "7",
+        "head": "11"
+      }
+    ],
+    "tables": [
+      {
+        "table": "applications",
+        "count": "7",
+        "digest": "5c1b4d94545e60a0c0df2e79da1ee736"
+      },
+      {
+        "table": "attendance_revisions",
+        "count": "7",
+        "digest": "862c33a570f6b1cac7017001d652e328"
+      },
+      {
+        "table": "conversation_events",
+        "count": "35",
+        "digest": "0fecab5e01a5b59a15220014bc07c81e"
+      },
+      {
+        "table": "conversation_reads",
+        "count": "12",
+        "digest": "f2f1a47f8029e73617c0471e0d8ccc67"
+      },
+      {
+        "table": "conversations",
+        "count": "6",
+        "digest": "17ce72c08cd54bae9ceeb6ca4b067a09"
+      },
+      {
+        "table": "experience_revisions",
+        "count": "4",
+        "digest": "b497b90940a7644382d20dcd2ef6ec7b"
+      },
+      {
+        "table": "lifecycle_marks",
+        "count": "13",
+        "digest": "e4a111a78e08b2d656c5b808075ec3d8"
+      },
+      {
+        "table": "meals",
+        "count": "5",
+        "digest": "3292a710476c69e5c6bdf59c12eda0a6"
+      },
+      {
+        "table": "membership_intervals",
+        "count": "14",
+        "digest": "981ae8fd153e271aa39c617c2cd88e8c"
+      },
+      {
+        "table": "messages",
+        "count": "17",
+        "digest": "c2f970a7add24183a6502688cd45c969"
+      },
+      {
+        "table": "notifications",
+        "count": "28",
+        "digest": "0eced1e2248e99807cda755c44e3c2c3"
+      },
+      {
+        "table": "outbox",
+        "count": "9",
+        "digest": "0f88a5ca857d7677f80769f8954141a4"
+      },
+      {
+        "table": "pair_consents",
+        "count": "4",
+        "digest": "6276c8e3af1231ff2af3a198a5ab6972"
+      },
+      {
+        "table": "public_review_revisions",
+        "count": "4",
+        "digest": "410b1beca7b07865cb835cd61b5a2dfa"
+      },
+      {
+        "table": "seat_events",
+        "count": "14",
+        "digest": "72441d8a7d6244e06d06b43b3df6f39a"
+      },
+      {
+        "table": "start_roster",
+        "count": "8",
+        "digest": "b37432a863d79fb014839a6d39965be4"
+      },
+      {
+        "table": "user_pairs",
+        "count": "1",
+        "digest": "844c28c04f087cc880ad39e006279038"
+      }
+    ],
+    "checkpointFactsDigest": "23083470f1ff1655bf348cdd7c210ed3bb878e1991b38cc5fa0a6b9a31a5cadb"
+  },
+  "command": {
+    "command": "resume",
+    "checkpointId": "9c299978-fc7a-4a7e-b51c-cb9c6ad97ce8",
+    "clock": "2026-10-24T01:10:00.000000Z",
+    "checkpointFactsDigest": "23083470f1ff1655bf348cdd7c210ed3bb878e1991b38cc5fa0a6b9a31a5cadb",
+    "approvedDeltas": []
+  }
+}

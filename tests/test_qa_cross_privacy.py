@@ -22,5 +22,15 @@ class PrivacyProbeGuards(unittest.TestCase):
         self.assertIn('Pass one-sided, mutual, or withdrawn', result.stderr)
         self.assertNotIn('Traceback', result.stderr)
 
+class NativeSafetyProbeGuards(unittest.TestCase):
+    def test_requires_explicit_fixture_flag_before_metadata_or_pg_access(self):
+        env = dict(os.environ)
+        env.pop('FANCY_QA_LOCAL_FIXTURE', None)
+        script = SCRIPT.with_name('qa-inspect-native-safety.py')
+        result = subprocess.run([sys.executable, str(script)], env=env, capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('Requires explicit local fixture flag', result.stderr)
+        self.assertNotIn('Traceback', result.stderr)
+
 if __name__ == '__main__':
     unittest.main()

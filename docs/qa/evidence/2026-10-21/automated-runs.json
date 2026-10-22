@@ -21575,6 +21575,346 @@
           "durationMs": 0
         }
       ]
+    },
+    {
+      "id": "R198",
+      "testedCommit": "2005991055a6462d1f7bcf027b518ac3d7b304e8",
+      "command": "pnpm exec vitest run --project db --project api packages/db/src/deletion-mail.db.test.ts apps/worker/src/mail/deletion-mail.db.test.ts apps/api/src/deletion/mail.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-r198.json",
+      "startedAt": "2026-10-21T23:08:10.242000+00:00",
+      "exitCode": 0,
+      "passed": 15,
+      "failed": 0,
+      "total": 15,
+      "suiteFiles": 3,
+      "assertions": [
+        {
+          "id": "R198-T001",
+          "run": "R198",
+          "path": "apps/api/src/deletion/mail.api.test.ts",
+          "title": "live accepted deletion atomically retains only encrypted verified owner address and a single refs-only received event",
+          "status": "passed",
+          "durationMs": 192.039125
+        },
+        {
+          "id": "R198-T002",
+          "run": "R198",
+          "path": "apps/api/src/deletion/mail.api.test.ts",
+          "title": "offline RESTORE never captures restored private_contact into a fresh destination",
+          "status": "passed",
+          "durationMs": 10.655875000000037
+        },
+        {
+          "id": "R198-T003",
+          "run": "R198",
+          "path": "apps/api/src/deletion/mail.api.test.ts",
+          "title": "missing encryption configuration accepts deletion and anonymous receipt without retaining a destination",
+          "status": "passed",
+          "durationMs": 85.5095
+        },
+        {
+          "id": "R198-T004",
+          "run": "R198",
+          "path": "packages/db/src/deletion-mail.db.test.ts",
+          "title": "captures only encrypted verified destination, references only; dedup preserves seven-day deadline",
+          "status": "passed",
+          "durationMs": 15.597332999999992
+        },
+        {
+          "id": "R198-T005",
+          "run": "R198",
+          "path": "packages/db/src/deletion-mail.db.test.ts",
+          "title": "missing key is receipt-only and does not retain ciphertext or enqueue",
+          "status": "passed",
+          "durationMs": 1.9527499999999804
+        },
+        {
+          "id": "R198-T006",
+          "run": "R198",
+          "path": "packages/db/src/deletion-mail.db.test.ts",
+          "title": "wrong key or AAD tamper clears ciphertext permanently instead of trying restored contact",
+          "status": "passed",
+          "durationMs": 4.38262499999999
+        },
+        {
+          "id": "R198-T007",
+          "run": "R198",
+          "path": "packages/db/src/deletion-mail.db.test.ts",
+          "title": "DB deadline wins with process time unchanged, stops UNKNOWN and works with no provider",
+          "status": "passed",
+          "durationMs": 2.650334000000015
+        },
+        {
+          "id": "R198-T008",
+          "run": "R198",
+          "path": "packages/db/src/deletion-mail.db.test.ts",
+          "title": "completed mail requires true COMPLETED; unique event prevents repeated completion notices",
+          "status": "passed",
+          "durationMs": 5.461166999999989
+        },
+        {
+          "id": "R198-T009",
+          "run": "R198",
+          "path": "packages/db/src/deletion-mail.db.test.ts",
+          "title": "rotation uses the original key version without extending deadline, distinct nonces hide repeated destination",
+          "status": "passed",
+          "durationMs": 3.1594589999999982
+        },
+        {
+          "id": "R198-T010",
+          "run": "R198",
+          "path": "packages/db/src/deletion-mail.db.test.ts",
+          "title": "unverified future verification timestamp and cross-owner resolution never expose destination",
+          "status": "passed",
+          "durationMs": 2.1371249999999975
+        },
+        {
+          "id": "R198-T011",
+          "run": "R198",
+          "path": "apps/worker/src/mail/deletion-mail.db.test.ts",
+          "title": "purge removes contact and ordinary mail; received/completed reuse refs-only outbox and independent encrypted destination",
+          "status": "passed",
+          "durationMs": 19.50804099999999
+        },
+        {
+          "id": "R198-T012",
+          "run": "R198",
+          "path": "apps/worker/src/mail/deletion-mail.db.test.ts",
+          "title": "missing retention-policy approval never sends a false completed notice",
+          "status": "passed",
+          "durationMs": 5.127999999999986
+        },
+        {
+          "id": "R198-T013",
+          "run": "R198",
+          "path": "apps/worker/src/mail/deletion-mail.db.test.ts",
+          "title": "UNKNOWN is never resent, expired/missing key clears destination even with unavailable provider",
+          "status": "passed",
+          "durationMs": 5.766666999999984
+        },
+        {
+          "id": "R198-T014",
+          "run": "R198",
+          "path": "apps/worker/src/mail/deletion-mail.db.test.ts",
+          "title": "signed matching suppression erases destination and fences pending completed notice; late sent cannot revive channel",
+          "status": "passed",
+          "durationMs": 6.143792000000019
+        },
+        {
+          "id": "R198-T015",
+          "run": "R198",
+          "path": "apps/worker/src/mail/deletion-mail.db.test.ts",
+          "title": "dispatch waits on envelope before outbox, then rejects expired authorization; concurrent suppression has no reverse lock",
+          "status": "passed",
+          "durationMs": 6.407540999999981
+        }
+      ]
+    },
+    {
+      "id": "R199",
+      "testedCommit": "2005991055a6462d1f7bcf027b518ac3d7b304e8",
+      "command": "pnpm exec vitest run --project api apps/api/src/connections/block-state.api.test.ts --reporter=json --outputFile=/private/tmp/fancy-r199.json",
+      "startedAt": "2026-10-21T23:09:09.928000+00:00",
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "total": 3,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R199-T001",
+          "run": "R199",
+          "path": "apps/api/src/connections/block-state.api.test.ts",
+          "title": "starts false/version0 for active subject without profile; GET creates no pair or business records",
+          "status": "passed",
+          "durationMs": 369.32845799999996
+        },
+        {
+          "id": "R199-T002",
+          "run": "R199",
+          "path": "apps/api/src/connections/block-state.api.test.ts",
+          "title": "returns only actor direction and latest revision through block/unblock, without revealing reverse block",
+          "status": "passed",
+          "durationMs": 19.564750000000004
+        },
+        {
+          "id": "R199-T003",
+          "run": "R199",
+          "path": "apps/api/src/connections/block-state.api.test.ts",
+          "title": "requires session, rejects self and masks missing/deleting/deleted subjects uniformly",
+          "status": "passed",
+          "durationMs": 7.511124999999993
+        }
+      ]
+    },
+    {
+      "id": "R200",
+      "testedCommit": "2005991055a6462d1f7bcf027b518ac3d7b304e8",
+      "command": "pnpm --dir apps/ios test --runInBand --runTestsByPath src/features/connections/member-safety.test.tsx --json --outputFile=/private/tmp/fancy-r200.json",
+      "startedAt": "2026-10-21T23:09:41.590000+00:00",
+      "exitCode": 0,
+      "passed": 12,
+      "failed": 0,
+      "total": 12,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R200-T001",
+          "run": "R200",
+          "path": "apps/ios/src/features/connections/member-safety.test.tsx",
+          "title": "block and unblock each require independent confirmation; cancel writes nothing",
+          "status": "passed",
+          "durationMs": 172
+        },
+        {
+          "id": "R200-T002",
+          "run": "R200",
+          "path": "apps/ios/src/features/connections/member-safety.test.tsx",
+          "title": "persisted blocked state is read on mount rather than inferred from a fresh component",
+          "status": "passed",
+          "durationMs": 14
+        },
+        {
+          "id": "R200-T003",
+          "run": "R200",
+          "path": "apps/ios/src/features/connections/member-safety.test.tsx",
+          "title": "failed initial read blocks all mutations until explicit reload succeeds",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R200-T004",
+          "run": "R200",
+          "path": "apps/ios/src/features/connections/member-safety.test.tsx",
+          "title": "409 closes old confirmation, rereads actual state, and requires another confirmation/version",
+          "status": "passed",
+          "durationMs": 7
+        },
+        {
+          "id": "R200-T005",
+          "run": "R200",
+          "path": "apps/ios/src/features/connections/member-safety.test.tsx",
+          "title": "409 read failure prevents stale retry until explicit successful reload",
+          "status": "passed",
+          "durationMs": 6
+        },
+        {
+          "id": "R200-T006",
+          "run": "R200",
+          "path": "apps/ios/src/features/connections/member-safety.test.tsx",
+          "title": "ordinary mutation failure is visible inside confirmation and preserves intent",
+          "status": "passed",
+          "durationMs": 5
+        },
+        {
+          "id": "R200-T007",
+          "run": "R200",
+          "path": "apps/ios/src/features/connections/member-safety.test.tsx",
+          "title": "guest and own member have no safety read or write entry",
+          "status": "passed",
+          "durationMs": 1
+        },
+        {
+          "id": "R200-T008",
+          "run": "R200",
+          "path": "apps/ios/src/features/connections/member-safety.test.tsx",
+          "title": "late read after account switch cannot expose previous actor settings",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R200-T009",
+          "run": "R200",
+          "path": "apps/ios/src/features/connections/member-safety.test.tsx",
+          "title": "late prior-target read cannot overwrite the current target",
+          "status": "passed",
+          "durationMs": 3
+        },
+        {
+          "id": "R200-T010",
+          "run": "R200",
+          "path": "apps/ios/src/features/connections/member-safety.test.tsx",
+          "title": "actual public profile provides safety entry for a signed-in other member",
+          "status": "passed",
+          "durationMs": 12
+        },
+        {
+          "id": "R200-T011",
+          "run": "R200",
+          "path": "apps/ios/src/features/connections/member-safety.test.tsx",
+          "title": "late mutation after account change cannot show success or old confirmation",
+          "status": "passed",
+          "durationMs": 4
+        },
+        {
+          "id": "R200-T012",
+          "run": "R200",
+          "path": "apps/ios/src/features/connections/member-safety.test.tsx",
+          "title": "repeated reload is single flight and writes stay unavailable while it is pending",
+          "status": "passed",
+          "durationMs": 3
+        }
+      ]
+    },
+    {
+      "id": "R201",
+      "testedCommit": "2005991055a6462d1f7bcf027b518ac3d7b304e8",
+      "command": "Isolated formal2005991 node Jest with explicit current dependency modulePaths; independent network and503 Settings-unmount regression",
+      "startedAt": "2026-10-22T00:07:04.700000+00:00",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 2,
+      "total": 2,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R201-T001",
+          "run": "R201",
+          "path": "apps/ios/src/qa-independent-logout-navigation.test.tsx",
+          "title": "QA-F46: retains truthful remote-unconfirmed notice after actual Settings unmount for network",
+          "status": "failed",
+          "durationMs": 1810,
+          "failureSummary": "After local sign-out Settings really unmounts; guest destination and cleared local credentials present, remote-unconfirmed notice absent."
+        },
+        {
+          "id": "R201-T002",
+          "run": "R201",
+          "path": "apps/ios/src/qa-independent-logout-navigation.test.tsx",
+          "title": "QA-F46: retains truthful remote-unconfirmed notice after actual Settings unmount for 503",
+          "status": "failed",
+          "durationMs": 1023,
+          "failureSummary": "After local sign-out Settings really unmounts; guest destination and cleared local credentials present, remote-unconfirmed notice absent."
+        }
+      ]
+    },
+    {
+      "id": "R202",
+      "testedCommit": "ff3231d146400ece1769a3c2d191c7440246ebb3",
+      "command": "Working tree F46 owner fix, independent Jest network and503 actual Settings-unmount; not committed production acceptance",
+      "startedAt": "2026-10-22T00:06:02.114000+00:00",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "total": 2,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R202-T001",
+          "run": "R202",
+          "path": "apps/ios/src/qa-independent-logout-navigation.test.tsx",
+          "title": "QA-F46: retains truthful remote-unconfirmed notice after actual Settings unmount for network",
+          "status": "passed",
+          "durationMs": 140
+        },
+        {
+          "id": "R202-T002",
+          "run": "R202",
+          "path": "apps/ios/src/qa-independent-logout-navigation.test.tsx",
+          "title": "QA-F46: retains truthful remote-unconfirmed notice after actual Settings unmount for 503",
+          "status": "passed",
+          "durationMs": 9
+        }
+      ],
+      "workingTreeScope": "Owner uncommitted AppRoot.tsx,auth/session.ts,auth/LogoutNotice.tsx,SettingsScreen.tsx. Formal/native verification pending."
     }
   ],
   "qaProbeSourceSha256": {
@@ -21659,7 +21999,9 @@
     "apps/web/src/features/create/qa-independent-venue-reset.unit.test.tsx": "a937371da042850e1fd1338f77f7379e3120843806d42417161b34d6a0f750d8",
     "apps/web/src/features/inbox/qa-independent-read-error.unit.test.tsx": "b338fa2cea745b3bed84f14a5cd6dd1aba37079c7cee9a7aa93d2d11e613c62c",
     "apps/web/src/features/inbox/qa-independent-seat-label.unit.test.tsx": "f6ce8c7df12d07b1fa364df42b75231f7579c3c17afc4cdd162ada9ed1a7dd23",
-    "scripts/qa-cross-privacy.py": "978c5c8518262e5c96c1e78ad3c8fec9cefb76b0cf04fde352174ec31a762daa"
+    "scripts/qa-cross-privacy.py": "978c5c8518262e5c96c1e78ad3c8fec9cefb76b0cf04fde352174ec31a762daa",
+    "scripts/qa-inspect-native-safety.py": "c0c4e4e7cbd3a5c44ab8f39cad75cac85f33fd029fddbfc5513cd38734d9eac4",
+    "apps/ios/src/qa-independent-logout-navigation.test.tsx": "1264045d78c02bb4ee7565506bc4247c2f35d5aafc636bbf72ce8d613aed2fac"
   },
   "configurationEvolution": "R3原29探针源码未变；配置include在R6扩展为glob，并以文件筛选只跑新增6项，不重复计数。 R37 isolated historical provider module removed after execution; R38 committed a0287f9 adapter. No remote tenant calls. R39 historical Web component captured before the native commit; testedCommit labels pre-native HEAD plus exact Web source SHA256, not a committed Web implementation. R40 is native-only and excludes concurrent Web changes. R39 probe completion originally awaited the old error alert; corrected to await response settlement with act so the repaired silent stale response is valid. Replacement-ticket assertion unchanged. F09 pre-fix uncommitted Web component preserved verbatim at docs/qa/evidence/2026-10-21/f09-web-before.tsx.txt (SHA256 ae323691d243b4c114e4d10e8c70226e1abac4169dccca8e1a00f7e7f34029bc). Final handoff 17f80d86006bd8cdd323ac9ef8525fc7ac61c932 has no apps/web, apps/ios or apps/api diff from 6272e9d; original run SHAs retained, no tests relabelled. R48 reuses R25-T001/T004 late-publication fences after verifying no apps/api/src/assistant or packages/assistant diff from 8e2b908 through 739d6da; does not rerun unrelated passed tests. R50 controls clock_timestamp resolution only for a new pool in a disposable migrated database (qa_clock schema first, then pg_catalog/public); SQL source remains unchanged and pool clock is verified explicitly. AssistantRuntime receives same mutable clock. No host or production clock change. Default column timestamps retain migration-bound function OIDs; tested admission/finish clock queries resolve the controlled function. Local mock provider records callId and settles20 microCNY. R51 actually forks Node24 API child with the ordinary buildServer/startup lifecycle, sends only synthetic DB/bearer material via IPC, SIGKILLs this owned child while provider is hung, then starts a fresh API child. No graceful onClose on first process, no provider network service, no production process touched. New process has a configured controlled provider, so calls0 proves recovery did not resend even when one was available. Local IPC secrets are neither emitted nor committed. R61 enables info on the actual Fastify/Pino logger built by buildServer, preserving the same redaction/serializer configuration; child stdout is captured only in parent RAM and not published. An injected PostgreSQL exception deliberately contains the synthetic receipt token, but logged unexpected-error entry excludes it. The API production tree is unchanged from 1253409 through concurrent F11-only 5676dde. No deploy log-shipping or real provider claim. R62 proxy pauses only issuing the real privacy FOR SHARE SQL on the actual RR client; adds a plain epoch observer read in that same transaction before the barrier. No production query rewritten. Deletion commits through the ordinary HTTP endpoint on another connection, then the original lock query raises PostgreSQL40001. Fresh source is built explicitly after rollback; physical shared start roster is preserved while statistical subjects/facts exclude the deleted user. R63 uses the real ConsoleProvider cache with mock transport, not an external deployed console. R68/R69 valid TestIDP OAuth callback200 captured actual non-silent child stdout only in parent RAM. Metadata contains only leak booleans, never credential strings or raw logs. R69 aggregates code/state/email checks without stopping at the first boolean failure. R72 mutates semantic OpenAPI/SDK artifacts only in an owned temporary contracts copy, requires the real checker fail1 and restore0, and verifies original workspace bytes untouched. Static cases remain NOT_RUN until fixed committed handoff recheck.",
   "runtimeSnapshotVerification": {

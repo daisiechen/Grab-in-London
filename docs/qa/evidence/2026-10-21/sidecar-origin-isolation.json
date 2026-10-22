@@ -1,0 +1,34 @@
+{
+  "post": {
+    "host": "f44-admin.localhost:52046",
+    "method": "POST",
+    "path": "/origin",
+    "qaMarkerSeen": true,
+    "requestOrigin": "http://f44-admin.localhost:52046",
+    "fixtureOnly": true
+  },
+  "otherHost": {
+    "host": "f44-isolation-probe.localhost:52046",
+    "method": "GET",
+    "path": "/echo",
+    "qaMarkerSeen": false,
+    "requestOrigin": null,
+    "fixtureOnly": true
+  },
+  "originalHost": {
+    "host": "f44-admin.localhost:52046",
+    "method": "GET",
+    "path": "/echo",
+    "qaMarkerSeen": true,
+    "requestOrigin": null,
+    "fixtureOnly": true
+  },
+  "cleanup": {
+    "host": "f44-admin.localhost:52046",
+    "method": "GET",
+    "path": "/echo",
+    "qaMarkerSeen": false,
+    "requestOrigin": null,
+    "fixtureOnly": true
+  }
+}

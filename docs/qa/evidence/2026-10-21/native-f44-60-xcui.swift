@@ -1,0 +1,8 @@
+import XCTest
+final class ProbeTests:XCTestCase {
+ func testF44FreshGuestLoginAndCancelBlock() throws {
+  continueAfterFailure=false
+  let app=XCUIApplication(bundleIdentifier:"com.example.fancy.dev");app.launch();let decline=app.buttons["Decline analytics"];if decline.waitForExistence(timeout:5){decline.tap()};app.buttons["Profile, tab, 5 of 5"].tap();app.buttons["Sign in or create an account"].tap();app.buttons["Continue with email"].tap();let email=app.textFields["Email address"];XCTAssertTrue(email.waitForExistence(timeout:10),app.debugDescription);email.tap();email.typeText("f44-guest@example.invalid");app.buttons["Send code"].tap();let code=app.textFields["6-digit code"];XCTAssertTrue(code.waitForExistence(timeout:12),app.debugDescription);code.tap();code.typeText("000000");app.buttons["Verify & continue"].tap();XCTAssertTrue(app.buttons["Settings"].waitForExistence(timeout:12),app.debugDescription)
+  app.buttons["Meals, tab, 2 of 5"].tap();app.otherElements["Past"].tap();let meal=app.buttons.matching(NSPredicate(format:"label BEGINSWITH %@","F44 shared table,")).firstMatch;XCTAssertTrue(meal.waitForExistence(timeout:12),app.debugDescription);meal.tap();app.buttons["Your host, F44 Host"].tap();let block=app.buttons["Block F44 Host"];XCTAssertTrue(block.waitForExistence(timeout:12),app.debugDescription);block.tap();XCTAssertTrue(app.buttons["Confirm block"].waitForExistence(timeout:5));app.buttons["Cancel"].tap();XCTAssertFalse(app.buttons["Confirm block"].exists);XCTAssertTrue(app.buttons["Block F44 Host"].exists);print("QA_NATIVE_F44_CANCEL_BLOCK\n"+app.debugDescription);let a=XCTAttachment(screenshot:app.screenshot());a.name="native-f44-cancel-block";a.lifetime = .keepAlways;add(a)
+ }
+}

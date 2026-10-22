@@ -1,0 +1,15 @@
+{
+  "pid": 42728,
+  "readOnly": true,
+  "metadata": [
+    {
+      "id": "b314823c-0cea-4fc2-8336-fca3ad9dd487",
+      "generation": 1,
+      "status": "ACTIVE",
+      "last_activity_at": "2026-10-22T01:08:22.207+01:00",
+      "expires_at": "2026-10-22T01:38:22.207+01:00",
+      "unexpired": true,
+      "no_pending": true
+    }
+  ]
+}

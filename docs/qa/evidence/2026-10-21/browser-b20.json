@@ -1,0 +1,103 @@
+{
+  "observations": [
+    {
+      "id": "B20-O001",
+      "testedCommit": "2005991055a6462d1f7bcf027b518ac3d7b304e8",
+      "environment": "Actual signed iOS27.0 QA-owned second simulator / isolated real PG synthetic fixtures; no real provider",
+      "status": "passed",
+      "title": "F44 actual native cancel/block/cancel-unblock/unblock targeted closure",
+      "steps": [
+        "Independent197 native/client/contracts tracked hashes match formal2005991; signed Release binary/Hermes and installed app independently verified. API62044 has compatible new getBlock on separately ownedPG; original61973 never replaced.",
+        "Native60 normalOTP succeeded; duplicate Meals AXselector failed before block. QAselector corrected, red retained. Native61 CancelBlock zero finite DB delta;62 ConfirmBlock creates ownblock revision1, clears both consents, epoch2; DM2 old messages readonly and sharedgroup unchanged.",
+        "Native63 CancelUnblock zero delta;64 ConfirmUnblock removes ownblock revision2false, consentepoch2 stays, oldconsents revoked, oldDM readonly, groupmembership/message/notification facts unchanged. Initial postproof numeric2/string2 QAassert corrected without touching DB.",
+        "Ownedfixture seeded completedmeal/roster/consents/messages are explicit preconditions; this is not original five-meal full journey or admin trace. F44 targeted closed; historical B19-O010 red retained."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-f44-60-xcui.swift",
+        "evidence/2026-10-21/native-f44-61-xcui.swift",
+        "evidence/2026-10-21/native-f44-62-xcui.swift",
+        "evidence/2026-10-21/native-f44-63-xcui.swift",
+        "evidence/2026-10-21/native-f44-64-xcui.swift",
+        "evidence/2026-10-21/f44-native60-finite-facts.json",
+        "evidence/2026-10-21/f44-native61-finite-facts.json",
+        "evidence/2026-10-21/f44-native62-finite-facts.json",
+        "evidence/2026-10-21/f44-native63-finite-facts.json",
+        "evidence/2026-10-21/f44-native64-finite-facts.json",
+        "evidence/2026-10-21/f44-independent-artifact-review.json",
+        "evidence/2026-10-21/f44-native61-cancel-block.png",
+        "evidence/2026-10-21/f44-native62-blocked.png",
+        "evidence/2026-10-21/f44-native63-cancel-unblock.png",
+        "evidence/2026-10-21/f44-native64-unblocked.png",
+        "evidence/2026-10-21/f44-native64-readonly-dm.png",
+        "evidence/2026-10-21/f44-native64-shared-group.png"
+      ]
+    },
+    {
+      "id": "B20-O002",
+      "testedCommit": "2005991055a6462d1f7bcf027b518ac3d7b304e8",
+      "environment": "Actual signed iOS27.0 QA-owned second simulator / isolated real PG synthetic fixtures; no real provider",
+      "status": "failed",
+      "title": "F46 local signout succeeds but remote-unconfirmed notice is lost on route unmount",
+      "steps": [
+        "Native65 failed QAhelper before actual SignOut;66 normal Settings confirmation reaches guest. OwnIOS sessionfamily active1 before and after: remote revocation NOT proven. Exact HTTPstatus unavailable because fixture logger silent; aggregate ratecount14 suggests quota but is not confirmed429.",
+        "Native67 same formal2005991/backend62044 coldlaunch stillguest; confirms localclear only. No credentials/Keychain read, no DBfamily cleanup/revoke.",
+        "Independent R201 network and503 deferredlogout after actual Settingsunmount bothred on isolatedformal2005991; R202 identical2 tests pass owneruncommittedfix. Earlier oldarchive pnpm sharedmodules refusal andmissingconfig/runtime setup are QAsetupfailures, not product assertions.",
+        "Ownerworkingtree fix not formal/nativeaccepted yet. Preserve F46 open until formal artifact andactual native notice verified."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-f46-65-xcui.swift",
+        "evidence/2026-10-21/native-f46-66-xcui.swift",
+        "evidence/2026-10-21/native-f46-67-xcui.swift"
+      ]
+    },
+    {
+      "id": "B20-O003",
+      "testedCommit": "19d1fb9784c4727e664c026c4a0bd6c29eb7b5cb",
+      "environment": "Actual signed iOS27.0 QA-owned second simulator / isolated real PG synthetic fixtures; no real provider",
+      "status": "passed",
+      "title": "Admin sidecar preparation independently passes self-owned operator and hostname-isolation gates",
+      "steps": [
+        "V2 reviewed1253 tool/archive hashes; original1231regular+4symlink sources independently verified against gitarchive19d. Earlier copied adapted infra archive provenance mismatch retained and corrected before sourceattach.",
+        "Independent realoperator uses self-ownedPG23migrations/17capturetables/twopools, normalOTP/401/CSRF/logout then explicit60sownclock, resume/snapshot/CSV, oldfacts unchanged. No sourceowner connection by this isolated test.",
+        "Actual IAB SecureHttpOnly nonauthmarker sent only f44-admin.localhost, absent siblinghostname, formOrigin exact; marker cleared and ownprobe closed. This is preparation only; no sourcebrowser/adminUIpass."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/sidecar-independent-operator-proof.json",
+        "evidence/2026-10-21/sidecar-origin-isolation.json"
+      ]
+    },
+    {
+      "id": "B20-O004",
+      "testedCommit": "19d1fb9784c4727e664c026c4a0bd6c29eb7b5cb",
+      "environment": "Actual signed iOS27.0 QA-owned second simulator / isolated real PG synthetic fixtures; no real provider",
+      "status": "failed",
+      "title": "F47 environment: original clock rig exits into destructive cleanup path during reviewed advance",
+      "steps": [
+        "Actual source stage1 normal newstaffOTP→ownTEST→logout204→ownlistener/poolclosed. Operatorbaseline/bootstrap17facts digest23083470f1ff1655bf348cdd7c210ed3bb878e1991b38cc5fa0a6b9a31a5cadb identical. QA independently reconfirmed17tables/fivemeals/23migrations at01:10 beforeadvance.",
+        "QA single authorized FIFOadvance from2026-10-24T01:10Z to01:11Z; existing verificationGETs receive503; no secondadvance. Exactverification fails. readonlyPG thenECONNREFUSED, originalPID63824 absent/API61973 listenerabsent.",
+        "Source log ends LOCAL CLOCK STOPPED; current=2026-10-24T01:10:00.000Z; reset required. infra/local-acceptance.ts catches transitionerror without cause and finally calls cleanupDb.drop/pg.stop. No QAkill/stop/SQLwrite. Trigger stage is unknown; do not infer worker/drain timeout without reproduction.",
+        "Immediately escalated owner, no resume/snapshot/restart/cleanup. Main sameDBtrace paused; prior captured successful facts remain historical evidence, lostliveenvironment cannot be claimed restored. Fixture ownership/recovery belongs development; not user confirmation blocker."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/sidecar-stage1-pre-advance-facts.json"
+      ]
+    },
+    {
+      "id": "B20-O005",
+      "testedCommit": "2005991055a6462d1f7bcf027b518ac3d7b304e8",
+      "environment": "Actual signed Release iOS27.0 secondQA simulator, formal2005991 API3102 compatible operations; original PID42728 same process",
+      "status": "failed",
+      "title": "F45 actual cold launch loses explicit continuation of live same-install AI session",
+      "steps": [
+        "Native68 normalguest Start→questioneditor; native69 ~2minuteslater coldlaunch→AskFancy shows Startconversation, Continueconversation absent. No Ask/modelcall/reset performed.",
+        "Read-only finite metadata sessionb314823c-0cea-4fc2-8336-fca3ad9dd487 ACTIVE gen1, expiry01:38:22+01, unexpired=true/no_pending; API originalPID unchanged. Matches accepteddesign46/sourceconfirmed mismatch. Native68 editor existence alone not wholebootstrap proof; finite normalcreated metadata supplies additional evidence.",
+        "Native69 assertion failure retained; Xcode postfailure diagnostic/xcresult packaging still pending. Not AI034 RAMloss or full005/006 pass. Formal fix artifact required."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-f45-68-xcui.swift",
+        "evidence/2026-10-21/native-f45-69-xcui.swift",
+        "evidence/2026-10-21/f45-native69-finite-session.json"
+      ]
+    }
+  ]
+}

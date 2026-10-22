@@ -1,0 +1,105 @@
+{
+  "ownedFixtureVerified": true,
+  "sourceCommit": "2005991055a6462d1f7bcf027b518ac3d7b304e8",
+  "clock": "2026-10-22T01:20:33.806Z",
+  "blocks": [
+    {
+      "blocker": "fed5e6d8-d695-4bd2-959a-f3011875a26c",
+      "blocked": "3cebfcab-b78d-441f-8598-bb1f66b41a52"
+    }
+  ],
+  "blockRevisions": [
+    {
+      "blocker": "fed5e6d8-d695-4bd2-959a-f3011875a26c",
+      "blocked": "3cebfcab-b78d-441f-8598-bb1f66b41a52",
+      "active": true,
+      "version": 1
+    }
+  ],
+  "pairs": [
+    {
+      "id": "4252746e-c169-4e10-a791-2fff9fa2ac9a",
+      "low_user": "3cebfcab-b78d-441f-8598-bb1f66b41a52",
+      "high_user": "fed5e6d8-d695-4bd2-959a-f3011875a26c",
+      "consent_epoch": 2,
+      "version": 2
+    }
+  ],
+  "consents": [
+    {
+      "user_id": "3cebfcab-b78d-441f-8598-bb1f66b41a52",
+      "epoch": 1,
+      "revision": 2,
+      "revoked_at": "2026-10-22T02:20:33.806+01:00"
+    },
+    {
+      "user_id": "fed5e6d8-d695-4bd2-959a-f3011875a26c",
+      "epoch": 1,
+      "revision": 2,
+      "revoked_at": "2026-10-22T02:20:33.806+01:00"
+    }
+  ],
+  "conversations": [
+    {
+      "id": "3717a56f-9e1f-4ecf-999c-84ba3a2a27d0",
+      "kind": "DIRECT",
+      "version": 3,
+      "head": 4,
+      "dissolved_at": null
+    },
+    {
+      "id": "4f84caac-bfb3-4c77-8581-cee1f44974c3",
+      "kind": "GROUP",
+      "version": 3,
+      "head": 3,
+      "dissolved_at": null
+    }
+  ],
+  "memberships": [
+    {
+      "conversation_id": "3717a56f-9e1f-4ecf-999c-84ba3a2a27d0",
+      "user_id": "3cebfcab-b78d-441f-8598-bb1f66b41a52",
+      "join_seq": 1,
+      "leave_seq": null
+    },
+    {
+      "conversation_id": "3717a56f-9e1f-4ecf-999c-84ba3a2a27d0",
+      "user_id": "fed5e6d8-d695-4bd2-959a-f3011875a26c",
+      "join_seq": 2,
+      "leave_seq": null
+    },
+    {
+      "conversation_id": "4f84caac-bfb3-4c77-8581-cee1f44974c3",
+      "user_id": "3cebfcab-b78d-441f-8598-bb1f66b41a52",
+      "join_seq": 1,
+      "leave_seq": null
+    },
+    {
+      "conversation_id": "4f84caac-bfb3-4c77-8581-cee1f44974c3",
+      "user_id": "fed5e6d8-d695-4bd2-959a-f3011875a26c",
+      "join_seq": 2,
+      "leave_seq": null
+    }
+  ],
+  "messageRefs": [
+    {
+      "id": "9e39999c-72b5-4cf4-869f-e53643edf1e8",
+      "conversation_id": "3717a56f-9e1f-4ecf-999c-84ba3a2a27d0",
+      "seq": 3,
+      "sender_id": "3cebfcab-b78d-441f-8598-bb1f66b41a52"
+    },
+    {
+      "id": "0b2ad2ca-acfe-4bfa-bd57-e1e5bfc6692d",
+      "conversation_id": "3717a56f-9e1f-4ecf-999c-84ba3a2a27d0",
+      "seq": 4,
+      "sender_id": "fed5e6d8-d695-4bd2-959a-f3011875a26c"
+    },
+    {
+      "id": "a4ad2688-6b41-46ba-90ac-c2c3179889ec",
+      "conversation_id": "4f84caac-bfb3-4c77-8581-cee1f44974c3",
+      "seq": 3,
+      "sender_id": "3cebfcab-b78d-441f-8598-bb1f66b41a52"
+    }
+  ],
+  "notificationCount": 0
+}

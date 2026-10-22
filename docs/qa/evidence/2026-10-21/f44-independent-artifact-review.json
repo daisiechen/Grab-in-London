@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "2005991055a6462d1f7bcf027b518ac3d7b304e8",
+  "trackedSourcesIndependentlyVerified": 197,
+  "candidateHashes": {
+    "Fancy": "2b8dba59047e0b0132b5fbcf920596df51b95f993850ae84eac416d3dca50c10",
+    "main.jsbundle": "2b313e5e0de067d33da45133815347ef6cc7ee4ad7b6e7170974c35e50e121fa"
+  },
+  "installed": true,
+  "actualInstalledHashes": {
+    "Fancy": "2b8dba59047e0b0132b5fbcf920596df51b95f993850ae84eac416d3dca50c10",
+    "main.jsbundle": "2b313e5e0de067d33da45133815347ef6cc7ee4ad7b6e7170974c35e50e121fa"
+  },
+  "device": "D92E76C4-9333-4FC7-8B53-E681DA73C055",
+  "cancelBlockFiniteFactsUnchanged": true
+}
