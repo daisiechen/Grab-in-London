@@ -1,0 +1,21 @@
+{
+  "observations": [
+    {
+      "id": "B27-O001",
+      "testedCommit": "3a17e8b8971f617b1e4d4f1c3903586b6464e6f9",
+      "status": "failed",
+      "title": "F52 local synthetic support consent browser does not advance prelude",
+      "steps": [
+        "New frozen assembly and normal signed candidate independently compared against1600full/209native source; native13component and9newprelude tests pass. These do not close F50/F51 actualUI failures. No newpackage install whileprelude pending.",
+        "Single newlyowned assembly starts with support prerequisite only, noH/Afacts. Normal syntheticportal shows Approve/Cancel. ActualAXApprove then inspectedform semanticApprove produce no visible navigation; CLI staysawaiting, portalforms1/pendingidentity1/verified0/Crows0.",
+        "No browsererror/warn logs were returned. CSP form-action self plus cross-origin callback is only a source-based hypothesis; no securitypolicyviolation captured. No arbitraryHTTPconsentdriver, forcedsubmit, livehotpatch or businessseed used. Developer notified for read-onlydiagnosis.",
+        "Prior010FAIL andF50/F51 originalred remain. Exactcause and actualnewfixednotification/keyboard/journey execution pending. No userexternalaccount action requested.",
+        "Before approved Chrome comparison, currentrunprecheck foundpreludeFAILED/latchedFailed/CLIexited/Cnull. No staleopaqueURL opened or retried. Originalfailedrun preserved, no reset."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b27-finite-review-facts.json",
+        "evidence/2026-10-21/b27-synthetic-consent-stalled.png"
+      ]
+    }
+  ]
+}

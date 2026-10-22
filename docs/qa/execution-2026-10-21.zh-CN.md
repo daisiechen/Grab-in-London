@@ -24,7 +24,7 @@
 
 ## 实际运行
 
-B26 actualJ010 WebH/nativeA normalUI reachedinsufficientcancel and Webgroup send; F50 stationnotificationUI missing Web/native causes010FAIL.194PASS/11NOT_RUN/1FAIL/11BLOCKED; supportpreconditionpending. ExistingF46/F49/AI034closures retained. F51 nativeChat keyboard Send occlusion actual95 independentlyconfirmed; two stable defects handed to productionowners.
+B27 formal3a17 source/package independently verified andnative13/newprelude9 tests pass; actualnewrig supportconsent stalls inbrowser F52, causeunknown. No newnativeinstall/actualF50-F51closure.194PASS/11NOT_RUN/1FAIL/11BLOCKED retained; QA productionowners investigating without hotpatch or HTTPconsentbypass.
 
 | ID | 结果 | 范围 |
 |---|---|---|

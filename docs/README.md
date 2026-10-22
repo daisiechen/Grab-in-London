@@ -154,3 +154,5 @@
 - [QA B25：iOS同进程跨API重启与未发文字保留](qa/evidence/2026-10-21/browser-b25.json)
 
 - [QA B26：J010实际双端路径与站内通知缺陷](qa/evidence/2026-10-21/browser-b26.json)
+
+- [QA B27：新版定向前置复验与合成授权浏览器阻塞](qa/evidence/2026-10-21/browser-b27.json)

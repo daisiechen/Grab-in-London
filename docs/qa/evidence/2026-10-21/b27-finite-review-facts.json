@@ -1,0 +1,44 @@
+{
+  "productionCommit": "3a17e8b8971f617b1e4d4f1c3903586b6464e6f9",
+  "nativePackage": {
+    "fullSourcesIndependentlyCompared": 1600,
+    "nativeSubsetIndependentlyCompared": 209,
+    "binarySha256": "f0e3ff5ca7ccda1c44697dd3397d57d60ae2bbfda1f1cdfec494b529300a4892",
+    "hermesSha256": "ca87e8da835fcf0527a51c499441b0aa1d95499529c2bd8f39186079ef18154a",
+    "codesignDeepStrictExit": 0,
+    "installed": false
+  },
+  "targetedComponents": {
+    "nativeNotificationAndKeyboard": {
+      "passed": 13,
+      "failed": 0
+    }
+  },
+  "newAssemblyPrerequisite": {
+    "independentNewTestsPassed": 9,
+    "failed": 0,
+    "fullSourceAndExecutionPinsVerified": true
+  },
+  "actualBrowserSupportPrelude": {
+    "state": "AWAITING_C_CONSENT",
+    "normalApproveAXClickThenSemanticClick": "no visible navigation",
+    "portalForms": 1,
+    "portalActiveHandlers": 0,
+    "identityPending": 1,
+    "verifiedExchanges": 0,
+    "supportRoleRows": 0,
+    "staffRoleRows": 2,
+    "cliExited": false,
+    "hABusinessSeed": false,
+    "cause": "UNKNOWN; CSP cross-origin redirect is a hypothesis, not established by browser event evidence",
+    "browserErrorWarnLogs": [],
+    "laterState": {
+      "state": "FAILED",
+      "latchedFailed": true,
+      "cliExited": true,
+      "C": null,
+      "chromeComparisonAttempted": false,
+      "reason": "precheck found transaction no longer active, no old transaction retry"
+    }
+  }
+}

@@ -68,7 +68,8 @@
     "browserObservationsB23": "evidence/2026-10-21/browser-b23.json",
     "browserObservationsB24": "evidence/2026-10-21/browser-b24.json",
     "browserObservationsB25": "evidence/2026-10-21/browser-b25.json",
-    "browserObservationsB26": "evidence/2026-10-21/browser-b26.json"
+    "browserObservationsB26": "evidence/2026-10-21/browser-b26.json",
+    "browserObservationsB27": "evidence/2026-10-21/browser-b27.json"
   },
   "cases": [
     {
@@ -22683,7 +22684,8 @@
     "QA-F48": "CLOSED_TARGETED_QA",
     "QA-F49": "CLOSED_TARGETED_QA",
     "QA-F50": "OPEN_ACTUAL_UI_REPRODUCED",
-    "QA-F51": "OPEN_NATIVE_REPRODUCED"
+    "QA-F51": "OPEN_NATIVE_REPRODUCED",
+    "QA-F52": "OPEN_ENVIRONMENT_BROWSER_PRELUDE"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -22703,5 +22705,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B26 actualJ010 WebH/nativeA normalUI reachedinsufficientcancel and Webgroup send; F50 stationnotificationUI missing Web/native causes010FAIL.194PASS/11NOT_RUN/1FAIL/11BLOCKED; supportpreconditionpending. ExistingF46/F49/AI034closures retained. F51 nativeChat keyboard Send occlusion actual95 independentlyconfirmed; two stable defects handed to productionowners."
+  "currentExecutionSlice": "B27 formal3a17 source/package independently verified andnative13/newprelude9 tests pass; actualnewrig supportconsent stalls inbrowser F52, causeunknown. No newnativeinstall/actualF50-F51closure.194PASS/11NOT_RUN/1FAIL/11BLOCKED retained; QA productionowners investigating without hotpatch or HTTPconsentbypass."
 }
