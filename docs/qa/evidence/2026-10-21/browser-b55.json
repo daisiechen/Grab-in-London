@@ -1,0 +1,37 @@
+{
+  "observations": [
+    {
+      "id": "B55-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Owned fixed-clock burst diagnosis and normal venue confirmation recovery",
+      "steps": [
+        "Independent read-only identity-scoped metadata finds original synthetic host burst11/10 and minute11/60 after Native160 venue failure. No new confirmVenue intent at that second; preflight rate-limit source precedes intent claim. This supports burst refusal, without claiming a directly observed HTTP429. Controlled Places source is static and has no expiry or real network.",
+        "Native161 pauses at explicit READY before restoring an existing valid candidate. Fresh original identity/price/day-month budget/UNKNOWN/all meal-job-snapshot/no in-flight/grant checks pass. Current burst/minute had risen to12 from opening assistant; guard printed rather than asserted the change and advanced the specifically approved1.001-second target before stopping. This control omission is retained and reported, not hidden or retroactively claimed unchanged.",
+        "After actual ACK, UI stays paused. Recheck original exact current clock, no in-flight requests/grants, new-second burst0 and minute12; assert full normal prefix conservative bound+8 within10/60 before releasing UI. No extra time advance, budget reset or quota clear.",
+        "Native161 normal Continue restores original Native160 candidate and explicitly transfers it through normal target/version validation into current create editor. This is candidate reuse, not a new model result or restoration of the old editor RAM. Sheet closes and restaurant selection succeeds with no confirmation error.",
+        "Independent read-only metadata now finds new confirmVenue COMPLETED/200, current burst2 and minute14. No new model call is made. Actual date selection then stops on inherited unidirectional test scrolling; no Review/Publish. Failure retained as harness issue.",
+        "Native162 unifies exact-label/bidirectional option helper with previously exercised version. Before running, actual burst2/minute14 plus complete planned prefix4 is asserted within10/60; later Publish checkpoint must recheck actual+1. No further clock change is approved by these observations."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B55-O002",
+      "testedCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "Native host explicitly publishes M3 after normal candidate reuse and complete manual Review",
+      "steps": [
+        "Native162 uses normal Continue to restore original Native160 candidate, performs explicit Use through normal editor validation and actual sheet-close check. This reuses a valid candidate; it is not a new model generation or old editor RAM restoration.",
+        "Normal restaurant confirmation succeeds. The previously exercised bidirectional exact-label helper handles date/time/capacity and the full manual introduction/costs flow. Review shows fixture venue, Fri23Oct00:00 London, minimum2/capacity2, budget15–30, concrete already-completed host reservation declaration. Review confirmation remains unchecked and Publish unclicked at READY.",
+        "Independent original read-only identity check confirms only two prior meals before Publish. Initial exact counter estimate4/16 is rejected by guard because actual5/17. Test remains paused. Actual native log shows normal Decline analytics at startup; source maps it to ingestEvents POST, explaining the third prefix write. No unknown write is accepted.",
+        "Fresh actual burst5/minute17 plus explicit Publish1 is asserted within10/60; no in-flight API/worker/grants. Normal UI then explicitly checks Review and clicks Publish. Native162 test exits0 and published meal detail is captured.",
+        "Independent original owned database confirms exactly one new OPEN meal, minimum2/capacity2, one HOST_CONFIRMED seat event, one GROUP conversation. Close22Z/start23Z/end next-day01Z. All six pending lifecycle jobs are retained, including the cancelled older meal; no lifecycle time advanced.",
+        "Original fixture clock remains21:01:02.001Z. Controlled model calls remain28 and real provider calls0; Native161/162 do not generate another candidate. Existing historical frozen-API declaration issues are not claimed hotfixed.",
+        "This completes the native create/publish slice only. J006 still requires actual native-host GROUP draft and explicit send; other original dual-client journeys remain unfinished."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b55-native-m3-published.png"
+      ]
+    }
+  ]
+}
