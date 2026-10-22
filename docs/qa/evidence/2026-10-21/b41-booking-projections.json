@@ -1,0 +1,54 @@
+{
+  "testedCommit": "5b72deff82248b08451578d86b2daefa5741b8e3",
+  "syntheticOnly": true,
+  "states": [
+    {
+      "phase": "published",
+      "capacity": 2,
+      "confirmedCount": 1,
+      "arrangementLocked": false,
+      "bookingDeclaration": {
+        "revision": "1",
+        "status": "REPORTED_CONFIRMED",
+        "declaredCount": 2,
+        "stale": false
+      }
+    },
+    {
+      "phase": "pending",
+      "capacity": 2,
+      "confirmedCount": 1,
+      "arrangementLocked": false,
+      "bookingDeclaration": {
+        "revision": "1",
+        "status": "REPORTED_CONFIRMED",
+        "declaredCount": 2,
+        "stale": false
+      }
+    },
+    {
+      "phase": "approved",
+      "capacity": 2,
+      "confirmedCount": 2,
+      "arrangementLocked": true,
+      "bookingDeclaration": {
+        "revision": "1",
+        "status": "REPORTED_CONFIRMED",
+        "declaredCount": 2,
+        "stale": true
+      }
+    },
+    {
+      "phase": "redeclared",
+      "capacity": 2,
+      "confirmedCount": 2,
+      "arrangementLocked": true,
+      "bookingDeclaration": {
+        "revision": "2",
+        "status": "REPORTED_CONFIRMED",
+        "declaredCount": 2,
+        "stale": false
+      }
+    }
+  ]
+}

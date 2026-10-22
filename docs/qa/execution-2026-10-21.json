@@ -82,7 +82,8 @@
     "browserObservationsB37": "evidence/2026-10-21/browser-b37.json",
     "browserObservationsB38": "evidence/2026-10-21/browser-b38.json",
     "targetedObservationsB39": "evidence/2026-10-21/targeted-b39.json",
-    "browserObservationsB40": "evidence/2026-10-21/browser-b40.json"
+    "browserObservationsB40": "evidence/2026-10-21/browser-b40.json",
+    "browserObservationsB41": "evidence/2026-10-21/browser-b41.json"
   },
   "cases": [
     {
@@ -3516,7 +3517,8 @@
         "B3-T004",
         "B4-T004",
         "B40-O001",
-        "B40-O003"
+        "B40-O003",
+        "B41-O001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T080",
@@ -3568,10 +3570,9 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "Native must explicitly confirm completed external reservation for actual restaurant/date/time/count; future intent cannot record/display already booked. Retest F55 then reconfirm original expected assertions; historical Web budget/reset proof retained.",
-        "F56 initial declaration must preserve explicit capacity count while keeping current-roster snapshot stale behavior; targeted realAPI and client semantics need independent verification."
+        "Native must explicitly confirm completed external reservation for actual restaurant/date/time/count; future intent cannot record/display already booked. Retest F55 then reconfirm original expected assertions; historical Web budget/reset proof retained."
       ],
-      "actual": "B40-O001 native actual Costs and Review future reservation promise publishes as Restaurant booked, violating frozen completed external-booking declaration. QA-F55 OPEN with original native owner. Original B3/B4 Web budget/unchecked/reset checks retained in history; native mechanical127 pass does not satisfy declaration semantics. Separate F56 actual public API initial declaredCount1 despite planned capacity2 confirmed; expected host roster1 is not the defect. Owner-reviewed thin newAPI fix pending independent acceptance, no current old data rewrite.",
+      "actual": "B40-O001 native actual Costs and Review future reservation promise publishes as Restaurant booked, violating frozen completed external-booking declaration. QA-F55 OPEN with original native owner. Original B3/B4 Web budget/unchecked/reset checks retained in history; native mechanical127 pass does not satisfy declaration semantics. Separate F56 actual public API initial declaredCount1 despite planned capacity2 confirmed; expected host roster1 is not the defect. Owner-reviewed thin newAPI fix pending independent acceptance, no current old data rewrite. B41 independently verifies formal5b72 F56 normal Web create/pending/approval/redeclaration with exact public snapshots; F56 closed targeted. F55 actual native replay remains OPEN, so overall case remains FAIL.",
       "relatedBrowserEvidence": [
         "B1"
       ],
@@ -22834,7 +22835,7 @@
     "QA-F53": "CLOSED_TARGETED_QA",
     "QA-F54": "CLOSED_TARGETED_QA",
     "QA-F55": "OPEN",
-    "QA-F56": "OPEN"
+    "QA-F56": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",

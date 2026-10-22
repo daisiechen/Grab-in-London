@@ -1,0 +1,25 @@
+{
+  "observations": [
+    {
+      "id": "B41-O001",
+      "testedCommit": "5b72deff82248b08451578d86b2daefa5741b8e3",
+      "status": "passed",
+      "title": "F56 normal Web reservation count and roster-change targeted verification",
+      "steps": [
+        "Independently verified frozen ENTRY/pins/SUMS and all1702 formal Git source entries including blob/hash/mode/symlink; independently ran20 fixture tests,0 failures/skips. These tests do not replace browser evidence. Independently ran13 API regression tests.",
+        "Separate synthetic H/A browser identities on a new canonical host: normal email OTP, normal profile, return-to paths and draft preservation; no credential/session seeding, real providers, AI, Admin or support prerequisites.",
+        "H normal four-step create: capacity2/minimum2, explicit existing reservation for2, Review and Publish. Public projection confirmed1/declared2/revision1/fresh. This distinguishes planned reservation total from current host-only roster.",
+        "A normal explicit Send request yields Pending. Public confirmed1/declared2/fresh unchanged.",
+        "H normal Approve fills2/2. Actual UI Host to update reservation and roster-changed notice; public declared2/stale=true/arrangementLocked=true. Matching total counts cannot suppress roster snapshot invalidation.",
+        "H normal Booked with restaurant then Update reservation status displays updated for2; public revision2/declared2/fresh. F56 CLOSED_TARGETED_QA. Original B40 failures and old database evidence remain; no data rewrite or old trace extension.",
+        "No fixture clock advance, no native client replacement for this backend-only check. F55 native Costs/Review replay remains pending, so QA-CREATE-002 stays FAIL and full journeys stay NOT_RUN. Native128 stopped at a harness offscreen first-match selection before Costs; it does not prove a new product failure or F55 acceptance."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b41-review-for2.png",
+        "evidence/2026-10-21/b41-approved-stale.png",
+        "evidence/2026-10-21/b41-redeclared-for2.png",
+        "evidence/2026-10-21/b41-booking-projections.json"
+      ]
+    }
+  ]
+}
