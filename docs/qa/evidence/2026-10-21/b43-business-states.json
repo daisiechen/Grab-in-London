@@ -1,0 +1,73 @@
+{
+  "syntheticOnly": true,
+  "sourceApiCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+  "nativeClientCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+  "phases": [
+    {
+      "phase": "before_original_native_approval",
+      "counts": {
+        "meals": 2,
+        "applications": 2,
+        "seat_events": 3,
+        "messages": 4
+      }
+    },
+    {
+      "phase": "approved_before_b_stale_submit",
+      "counts": {
+        "meals": 2,
+        "applications": 2,
+        "seat_events": 4,
+        "messages": 4
+      }
+    },
+    {
+      "phase": "after_b_stale_rejection",
+      "counts": {
+        "meals": 2,
+        "applications": 2,
+        "seat_events": 4,
+        "messages": 4
+      }
+    },
+    {
+      "phase": "ai_transferred_before_explicit_send",
+      "counts": {
+        "meals": 2,
+        "applications": 2,
+        "seat_events": 4,
+        "messages": 5
+      }
+    },
+    {
+      "phase": "after_explicit_native_ai_send",
+      "counts": {
+        "meals": 2,
+        "applications": 2,
+        "seat_events": 4,
+        "messages": 6
+      }
+    },
+    {
+      "phase": "gap_message_after_group_leave",
+      "counts": {
+        "meals": 2,
+        "applications": 2,
+        "seat_events": 5,
+        "messages": 8
+      }
+    },
+    {
+      "phase": "second_application_pending",
+      "counts": {
+        "meals": 2,
+        "applications": 3,
+        "seat_events": 5,
+        "messages": 8
+      }
+    }
+  ],
+  "staleSubmissionBusinessCountsAndHashesUnchanged": true,
+  "aiPreSendBusinessCountsAndHashesUnchanged": true,
+  "realProviderCalls": 0
+}

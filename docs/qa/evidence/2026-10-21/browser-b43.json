@@ -1,0 +1,105 @@
+{
+  "observations": [
+    {
+      "id": "B43-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "nativeClientCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "Reverse native host approval, stale full-table rejection and third-user privacy",
+      "steps": [
+        "Preserved original same-database WebA pending M2. The earlier live B editor tab had been lost at a status-turn boundary; this batch explicitly opens a NEW normal B editor, not a reconstructed old live page. Actual B identity,1/2 and43-character unsent manual text recorded.",
+        "Native131 cold normal H profile/Hosting/original M2/Manage table/Approve A passes. Public2/2 and booking stale. WebA normal reload confirms approved and actual normal group access.",
+        "B sends from the pre-approval NEW editor after table fills. UI shows This table is full and no longer accepts requests; exact43-character text retained. Four business table counts and hashes unchanged.",
+        "B visits observed group URL normally and receives confirmation-required access denial with no message body. No B provider call or cross-user biography exposure."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b43-native-m2-approved.png",
+        "evidence/2026-10-21/b43-b-stale-full-rejected.png",
+        "evidence/2026-10-21/b43-b-group-denied.png",
+        "evidence/2026-10-21/b43-business-states.json"
+      ]
+    },
+    {
+      "id": "B43-O002",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "nativeClientCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "Normal native reservation update and actual reverse cross-client chat",
+      "steps": [
+        "Native132 normal Update reservation/Booked/Save succeeds; actual WebA meal detail reflects Restaurant booked. Later132 failure is harness TextField lookup for actual TextView, preserved without repeating successful booking.",
+        "Native133 uses actual TextView and explicitly sends Native host welcome for the original M2. Normal WebA group renders exact text and H author. No hidden business request or database seeding."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b43-native-booking-updated.png"
+      ]
+    },
+    {
+      "id": "B43-O003",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "nativeClientCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "Reverse native group AI draft Keep/Replace, no automatic write and explicit Send",
+      "steps": [
+        "Native134 creates correct controlled GROUP candidate and Keep preserves original. Second Use/Replace encounters true429; visible Please wait before trying again. Your text is kept and confirmation remains. Script replacement assertion fails and is retained; no Send reached. This is an observed rate refusal, not a new F54 product failure.",
+        "One separately reviewed exact61-second old-fixture recovery passes fresh identity/idle/meal-job/budget boundaries and Node/DB ACK. Native135 then normally generates and Keep/Replace succeeds; no additional recovery branch used. No quota or TTL clearing.",
+        "At same-process SEND checkpoint, four business counts and hashes equal pre-generation snapshot and messages remain5. Only explicit normal Send is released, then actual messages6 and WebA exact candidate/H author receipt. Synthetic provider calls24/failure1/unrelatedProfileSeenfalse/realProviderCalls0."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b43-native-ai-candidate-before-send.png",
+        "evidence/2026-10-21/b43-web-ai-message-received.png",
+        "evidence/2026-10-21/b43-business-states.json"
+      ]
+    },
+    {
+      "id": "B43-O004",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "nativeClientCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "Seat cancellation and group leave remain separate; pending reapply does not restore membership",
+      "steps": [
+        "WebA normal Cancel your place/confirm releases seat: actual1/2 and Participation cancelled. UI explicitly says group stays open. Actual normal group still reads previous messages and A explicitly sends I cancelled my seat but can still chat.",
+        "A normal Group settings/Leave/confirm produces read-only old history, no composer. Native136 normal H sends M2 host-only gap while A is outside; physical message count8 proves gap exists.",
+        "A normal reload retains only prior authorized history and excludes the gap message. Explicit Apply again opens blank intro; manually submit new introduction yields new Pending round. Pending group reload remains read-only and gap excluded. No automatic seat or membership revival.",
+        "Second-round host approval, post-rejoin interval union and terminal dissolution remain NOT_RUN in this current trace; Native137 stops at cold auth before any approval."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b43-seat-cancelled.png",
+        "evidence/2026-10-21/b43-chat-after-seat-cancellation.png",
+        "evidence/2026-10-21/b43-left-history-gap-excluded.png",
+        "evidence/2026-10-21/b43-reapply-pending-still-readonly.png",
+        "evidence/2026-10-21/b43-business-states.json"
+      ]
+    },
+    {
+      "id": "B43-O005",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "nativeClientCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "failed",
+      "title": "Native137 cold-session precondition blocked by fixed-fixture versus device clock skew",
+      "steps": [
+        "Native137 fails H-profile assertion: actual Guest before reaching second-round approval. Preserve original failed log/result/source; original second application remains Pending, no new business seed or approval.",
+        "Fresh exact-owned PostgreSQL BEGIN READ ONLY/SELECT metadata: family not revoked; fixture11:23:28.971, latest15-minute access expiry11:38:28.971, device11:44:07.193. Production source uses client Date.now for access expiry. This supports environment skew diagnosis, not a confirmed production defect.",
+        "Proposed clock alignment was rejected by automatic approval review because exact environment mutation approval came from another agent rather than direct human authorization. No alignment executed; no delegation workaround, changed TTL/client clock, token read or new environment. Developer owns diagnosis and direct human confirmation is pending.",
+        "Web cookie sessions remain usable. Continue independent Web/Admin work, not list this as an unconfigured-account or extra real-provider gate."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b43-clock-diagnostic.json"
+      ]
+    },
+    {
+      "id": "B43-O006",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "nativeClientCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "Normal staff sign-in reaches same-database Admin; initial snapshot is not current journey reconciliation",
+      "steps": [
+        "B normal Settings sign-out explicitly confirms Guest and removes local unsent drafts. Using configured synthetic S address, normal OTP/private one-reader inbox verifies staff identity; no role/MFA or credential injection.",
+        "Same canonical Admin validates access and loads initial sealed snapshot asOf11:06:20.971/classificationRevision0 created before H/A business. Snapshot chooser contains only this one. Empty unavailable metrics are not interpreted as zero or current business reconciliation.",
+        "Current business-derived S0, normal data-admin classification and derived S1/explicit switching are still pending. Original developer is locating existing formal full-worker derivation path; QA neither inserts snapshots nor patches standing runtime. No Admin/full-journey PASS."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b43-admin-initial-snapshot-boundary.png"
+      ]
+    }
+  ]
+}

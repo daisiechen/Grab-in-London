@@ -14,7 +14,8 @@
     "browser": "Actual IAB Web frozen snapshots; per-observation version matrix. Tabs on same hostname share cookies across ports; rigs tested sequentially after explicit reauth, not falsely treated as isolated sessions.",
     "ios": "Independent actual headless Release XCUITest on isolated iOS27.0 simulator; current native611a/source191 matched. OTP/profile, cold restore, application pending/no-seat/no-chat, approvals and persistent cross-client messages verified. Full remaining native role-swap/lifecycle paths still pending.",
     "nativeRuntimeCheck20261021": "Available iOS27.0/27.1 runtimes and dedicated simulator; actual build/install/launch and XCTest interact successfully. Historical empty device/GUI assumptions superseded.",
-    "nativeRuntimeEvidence20261021": "Native83df/611a normal Xcode simulated entitlement and source/binary independently verified; actual QA taps passed. Earlier CODE_SIGNING_ALLOWED=NO artifacts failed getItem-34018, preserved as setup/build evidence; no missing-runtime/license blocker remains."
+    "nativeRuntimeEvidence20261021": "Native83df/611a normal Xcode simulated entitlement and source/binary independently verified; actual QA taps passed. Earlier CODE_SIGNING_ALLOWED=NO artifacts failed getItem-34018, preserved as setup/build evidence; no missing-runtime/license blocker remains.",
+    "nativeClockAlignment": "B43 internal execution prerequisite: fixed synthetic API clock is more than15minutes behind native device UTC; cold restored access is locally expired. Direct clock-alignment authorization pending after automatic approval rejection; no mutation executed. Web/Admin can proceed; this is not a new missing-account or real-provider gate."
   },
   "counts": {
     "PASS": 195,
@@ -83,7 +84,8 @@
     "targetedObservationsB39": "evidence/2026-10-21/targeted-b39.json",
     "browserObservationsB40": "evidence/2026-10-21/browser-b40.json",
     "browserObservationsB41": "evidence/2026-10-21/browser-b41.json",
-    "browserObservationsB42": "evidence/2026-10-21/browser-b42.json"
+    "browserObservationsB42": "evidence/2026-10-21/browser-b42.json",
+    "browserObservationsB43": "evidence/2026-10-21/browser-b43.json"
   },
   "cases": [
     {
@@ -16335,7 +16337,10 @@
         "B20-O006",
         "B22-O001",
         "B37-O004",
-        "B38-O001"
+        "B38-O001",
+        "B43-O001",
+        "B43-O002",
+        "B43-O004"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -16700,7 +16705,7 @@
       "remainingExpected": [
         "Repeat required wholeguestApply→normalLogin→profile→explicitapplication→approval→group→feedback end-to-end in bothWeb/iOSdirections in one finaldeclared environment, withBprivacy/notifications/sameDBadmintrace. F48nativeprefixalone is nowverified."
       ],
-      "actual": "Actual mainM1 Webhost/Nativeguest and reverseM5 Nativehost/Webguest approval/groupmessages, lifecycle, SELFattendance/privateexperience/publicreferences andexplicitreconnect executed with realPG unique facts (B17/B18/B19). Earlier normalnativeApply12 started already authenticated; it does not establish full guestApply→login→profilegate return. KeepNOT_RUN until that prefix is actually replayed per required client/role and sameDBstafftrace is captured; no composition-based wholepathPASS. Native70 normalguest publicOPENfuturemeal has noRequesttojoin (actualAX+publicHTTP), so prefixfails beforeOTP; independentR203emptyactions reproduces. QA-F48 handednativeowner, wholecaseFAIL notNR. B22-O001 formal0a actual80normalguestApply/login/profile/sameoriginaltarget/noautoSend passes F48targetedfix. StillNOT_RUN untilsameenvironmentbothrolefullpath/admintrace; original70red retained. B37-O004 one-process native117 normal explicit Send produces one PENDING application, hostseat stays1; only WebH normal Approve changes confirmed2/4. Reservation becomes stale, normal re-declaration for2 restores booked, arrangements lock. Remaining original full-journey assertions still unexecuted. B38 native120 actual authorized post-join message read/pre-join history exclusion, normal bubble keyboard dismissal, same-process actual429→finite61s→Retry, GROUP Keep/Replace, no-send checkpoint, keyboard-open explicit Send and WebH receipt passed. Harness118 wrong prehistory assumption/119 wrong header-dismiss assumption retained as failures; no product patch. Original reverse-role and remaining full-journey assertions remain unexecuted.",
+      "actual": "Actual mainM1 Webhost/Nativeguest and reverseM5 Nativehost/Webguest approval/groupmessages, lifecycle, SELFattendance/privateexperience/publicreferences andexplicitreconnect executed with realPG unique facts (B17/B18/B19). Earlier normalnativeApply12 started already authenticated; it does not establish full guestApply→login→profilegate return. KeepNOT_RUN until that prefix is actually replayed per required client/role and sameDBstafftrace is captured; no composition-based wholepathPASS. Native70 normalguest publicOPENfuturemeal has noRequesttojoin (actualAX+publicHTTP), so prefixfails beforeOTP; independentR203emptyactions reproduces. QA-F48 handednativeowner, wholecaseFAIL notNR. B22-O001 formal0a actual80normalguestApply/login/profile/sameoriginaltarget/noautoSend passes F48targetedfix. StillNOT_RUN untilsameenvironmentbothrolefullpath/admintrace; original70red retained. B37-O004 one-process native117 normal explicit Send produces one PENDING application, hostseat stays1; only WebH normal Approve changes confirmed2/4. Reservation becomes stale, normal re-declaration for2 restores booked, arrangements lock. Remaining original full-journey assertions still unexecuted. B38 native120 actual authorized post-join message read/pre-join history exclusion, normal bubble keyboard dismissal, same-process actual429→finite61s→Retry, GROUP Keep/Replace, no-send checkpoint, keyboard-open explicit Send and WebH receipt passed. Harness118 wrong prehistory assumption/119 wrong header-dismiss assumption retained as failures; no product patch. Original reverse-role and remaining full-journey assertions remain unexecuted. B43 nativeH approves original WebA M2, actual group access, B full-editor rejection/privacy; WebA seat cancellation/group leave/reapply Pending verified. Current second-round approval and full feedback/Admin prerequisites remain.",
       "defectIds": [
         "QA-F18",
         "QA-F48"
@@ -16759,7 +16764,9 @@
         "B20-O003",
         "B20-O004",
         "B37-O004",
-        "B40-O002"
+        "B40-O002",
+        "B43-O001",
+        "B43-O002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -17074,7 +17081,7 @@
       "remainingExpected": [
         "Finish same physical test-environment staff/admin trace precondition and verify full expected mapping; actual dual-direction create/booking/approval/lifecycle and host SELF-priority slices already captured, not automatically whole-case PASS."
       ],
-      "actual": "F42targetedclosed formalcd69: originalNative52 missinghostcontrol retained; actual53unknown/no-default/Reviewcancel PG0; actual54HOSTabsent independentlyconfirmed; WebguestSELFpresent then Native55HOSTabsentagain preserves effectiveSELFpresent. R19614/0. Fullbothdirectionjourney still heldNR for thirdprivacyactor/sharedfactsadminprecondition and remainingassertions. B20-O004: sameDBsidecar bootstrap facts verified, but original rig autoexited during legalclockadvance; no sourceadminUI/snapshot/CSV executed. Environmentrecovery developerowned, not user blocker. B37-O004 one-process native117 normal explicit Send produces one PENDING application, hostseat stays1; only WebH normal Approve changes confirmed2/4. Reservation becomes stale, normal re-declaration for2 restores booked, arrangements lock. Remaining original full-journey assertions still unexecuted. B40 nativeH role cold-restore/empty AI CREATE/manual4step/explicitPublish mechanics observed; reservation semantic F55 is separately failing in QA-CREATE-002. Full case remains NOT_RUN; do not grant PASS before F55 and original full expectations close.",
+      "actual": "F42targetedclosed formalcd69: originalNative52 missinghostcontrol retained; actual53unknown/no-default/Reviewcancel PG0; actual54HOSTabsent independentlyconfirmed; WebguestSELFpresent then Native55HOSTabsentagain preserves effectiveSELFpresent. R19614/0. Fullbothdirectionjourney still heldNR for thirdprivacyactor/sharedfactsadminprecondition and remainingassertions. B20-O004: sameDBsidecar bootstrap facts verified, but original rig autoexited during legalclockadvance; no sourceadminUI/snapshot/CSV executed. Environmentrecovery developerowned, not user blocker. B37-O004 one-process native117 normal explicit Send produces one PENDING application, hostseat stays1; only WebH normal Approve changes confirmed2/4. Reservation becomes stale, normal re-declaration for2 restores booked, arrangements lock. Remaining original full-journey assertions still unexecuted. B40 nativeH role cold-restore/empty AI CREATE/manual4step/explicitPublish mechanics observed; reservation semantic F55 is separately failing in QA-CREATE-002. Full case remains NOT_RUN; do not grant PASS before F55 and original full expectations close. B43 nativeH normal approval, booking update and actual WebA chat receipt verified in original physical final DB. Whole lifecycle/Admin remains.",
       "relatedBrowserEvidence": [
         "B1"
       ],
@@ -17127,7 +17134,9 @@
         "B18-O001",
         "B18-O002",
         "B20-O003",
-        "B20-O004"
+        "B20-O004",
+        "B43-O004",
+        "B43-O005"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -17443,9 +17452,10 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "Same physical database staff/admin trace precondition; dual-direction end-user cancellation/leave/rejoin/authorized union/terminal dissolve slices already actually captured."
+        "Same physical database staff/admin trace precondition; dual-direction end-user cancellation/leave/rejoin/authorized union/terminal dissolve slices already actually captured.",
+        "Current sameDB M2 second-round native approval, authorized union history after rejoin and terminal dissolution; native client restore requires authorized fixture clock alignment. Shared Admin trace still pending."
       ],
-      "actual": "F39/F40 targetedclosed. Native0db35 actualhost Keepgroup preservesdraft/no write, explicitdissolve makesbothreadonly; samePGdissolvedseq8/messageCount3 provesdraftunsent. Native33/36/37 guestold+new/noabsencegap/noeditor passed; Native38 manualInboxpull restoreshostcoldreadonly/noReopen. Webhost independentlydissolvesnativeguest group3870, samePGdissolvedseq9/messageCount4; doesnotcancelmeal/changecurrentseats. FullcaseheldNOT_RUN untilsharedfactsreceipt/adminprecondition, not inflated fromtests. F41generalInboxreturn separate. B20-O004: sameDBsidecar bootstrap facts verified, but original rig autoexited during legalclockadvance; no sourceadminUI/snapshot/CSV executed. Environmentrecovery developerowned, not user blocker.",
+      "actual": "F39/F40 targetedclosed. Native0db35 actualhost Keepgroup preservesdraft/no write, explicitdissolve makesbothreadonly; samePGdissolvedseq8/messageCount3 provesdraftunsent. Native33/36/37 guestold+new/noabsencegap/noeditor passed; Native38 manualInboxpull restoreshostcoldreadonly/noReopen. Webhost independentlydissolvesnativeguest group3870, samePGdissolvedseq9/messageCount4; doesnotcancelmeal/changecurrentseats. FullcaseheldNOT_RUN untilsharedfactsreceipt/adminprecondition, not inflated fromtests. F41generalInboxreturn separate. B20-O004: sameDBsidecar bootstrap facts verified, but original rig autoexited during legalclockadvance; no sourceadminUI/snapshot/CSV executed. Environmentrecovery developerowned, not user blocker. B43 current WebA withdrawal releases seat while chat sends; independent leave makes history read-only, actual H gap message excluded; explicit new round Pending does not restore membership. Current reapproval/union/terminal dissolve pending Native137 clock precondition and shared Admin trace.",
       "history": [
         {
           "status": "NOT_RUN",
@@ -17836,7 +17846,8 @@
         "B37-O003",
         "B37-O004",
         "B38-O001",
-        "B38-O002"
+        "B38-O002",
+        "B43-O001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -18153,7 +18164,7 @@
         "在最终环境原双向客户端重验名额/截止；B35仅证明Web旧编辑器在精确截止后取消分支拒绝，不能代替另一端和全部前置",
         "按原客户端完成服务失败后正常申请路径；不以群消息fallback替代全部申请断言"
       ],
-      "actual": "B33 normal Web explicit SEARCH/public card selection/APPLICATION draft/confirmed transfer, guest Send→normal OTP/profile→intact original target/draft, no autoSend, explicit finalSend→one pending application passed. B34 A normal logout/B normal login shows independent blank dialogue/editor; B draft generated and transferred while1/2, H normal approval fills2/2, B normal finalSubmit rejects full while preserving draft, four business table hashes unchanged. B32 controlled provider failure/manual fallback is separate group evidence, not a substitute for application fallback in every client. Original F49 targeted closure and earlier failures preserved in history. Whole005 remains NOT_RUN: final deadline boundary, native/Web role reversal, B privacy assertions and sameDB Admin still require complete final-environment execution. B35 normal A withdrawal releases seat and retains group, B old draft survives reload. At exact stored closesAt, normal worker cancels insufficient meal; B old editor finalSend rejects cancellation, draft retained, four business tables unchanged after transition. This is CANCELLED branch only; full final-environment prerequisites remain unexecuted. B37 final same-database nativeA normal guest SEARCH/card/OTP/profile and explicit APPLICATION Keep/Replace completed; applications remains0, no finalSend. B privacy and forbidden group/Admin plus detectorfalse covered separately B37-O002; complete native/Web reversal and final expectations remain. B37-O004 one-process native117 normal explicit Send produces one PENDING application, hostseat stays1; only WebH normal Approve changes confirmed2/4. Reservation becomes stale, normal re-declaration for2 restores booked, arrangements lock. Remaining original full-journey assertions still unexecuted. B38 native120 actual authorized post-join message read/pre-join history exclusion, normal bubble keyboard dismissal, same-process actual429→finite61s→Retry, GROUP Keep/Replace, no-send checkpoint, keyboard-open explicit Send and WebH receipt passed. Harness118 wrong prehistory assumption/119 wrong header-dismiss assumption retained as failures; no product patch. Original reverse-role and remaining full-journey assertions remain unexecuted. B38-O002 WebH and nativeA normal logout, WebA new normal OTP and existing profile/empty AI account isolation verified. NativeH login/reverse business path still in progress.",
+      "actual": "B33 normal Web explicit SEARCH/public card selection/APPLICATION draft/confirmed transfer, guest Send→normal OTP/profile→intact original target/draft, no autoSend, explicit finalSend→one pending application passed. B34 A normal logout/B normal login shows independent blank dialogue/editor; B draft generated and transferred while1/2, H normal approval fills2/2, B normal finalSubmit rejects full while preserving draft, four business table hashes unchanged. B32 controlled provider failure/manual fallback is separate group evidence, not a substitute for application fallback in every client. Original F49 targeted closure and earlier failures preserved in history. Whole005 remains NOT_RUN: final deadline boundary, native/Web role reversal, B privacy assertions and sameDB Admin still require complete final-environment execution. B35 normal A withdrawal releases seat and retains group, B old draft survives reload. At exact stored closesAt, normal worker cancels insufficient meal; B old editor finalSend rejects cancellation, draft retained, four business tables unchanged after transition. This is CANCELLED branch only; full final-environment prerequisites remain unexecuted. B37 final same-database nativeA normal guest SEARCH/card/OTP/profile and explicit APPLICATION Keep/Replace completed; applications remains0, no finalSend. B privacy and forbidden group/Admin plus detectorfalse covered separately B37-O002; complete native/Web reversal and final expectations remain. B37-O004 one-process native117 normal explicit Send produces one PENDING application, hostseat stays1; only WebH normal Approve changes confirmed2/4. Reservation becomes stale, normal re-declaration for2 restores booked, arrangements lock. Remaining original full-journey assertions still unexecuted. B38 native120 actual authorized post-join message read/pre-join history exclusion, normal bubble keyboard dismissal, same-process actual429→finite61s→Retry, GROUP Keep/Replace, no-send checkpoint, keyboard-open explicit Send and WebH receipt passed. Harness118 wrong prehistory assumption/119 wrong header-dismiss assumption retained as failures; no product patch. Original reverse-role and remaining full-journey assertions remain unexecuted. B38-O002 WebH and nativeA normal logout, WebA new normal OTP and existing profile/empty AI account isolation verified. NativeH login/reverse business path still in progress. B43 current B fresh pre-approval editor gets full rejection with exact manual text preserved and zero business delta. This is not an AI-generated native capacity/deadline full-journey substitute.",
       "defectIds": [
         "QA-F49"
       ],
@@ -18211,7 +18222,8 @@
         "B37-O001",
         "B38-O001",
         "B38-O002",
-        "B40-O002"
+        "B40-O002",
+        "B43-O003"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -18525,10 +18537,9 @@
       "coveredExpectedIndexes": [],
       "remainingExpected": [
         "同一最终环境按原Web/iOS互换角色完成Create和Group路径",
-        "第三账号隐私及同数据库后台前置",
-        "正式F54修复的当前确认弹窗错误实际复验；原受控Web部分证据保留"
+        "第三账号隐私及同数据库后台前置"
       ],
-      "actual": "本地生产实现尚需实际执行：生成Create草稿→原四步补选地点/条款→主动发布→群草稿→主动Send。尚缺逐项证据：没有模型代办；所有人工确认实际发生；生成/转入/发送分别授权。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B11 realWeb actualcontrolled-model generate/explicit-transfer/single-request and manual-create confirmations complete with physical write proof. Full failure-recovery/group-send and actual native role swap remain outstanding, so NOT_RUN retained. B21-O007 actualnativefocusedkeyboard obscuresquestion/Ask(79); original F49 red retained; B23-O001 actual81/82/85 closed F49 by normal keyboard-open Ask, close/reopen and explicit transfer. Full native role swap, failure-recovery and group-send assertions remain pending; targeted closure does not grant whole-journey PASS. Do not substitute enabled/componentchecks for physicalnativeusability. B32 actual controlled Web CREATE generation/explicit transfer/Keep preservation/explicit replace/four-step manual publish and authorized GROUP generation/transfer/manual Send passed; original F54 rate error behind modal remains open. Explicit synthetic provider failure calls6→7/failures0→1 with unchanged business digests and preserved manual editor followed by ordinary Send verified. Still NOT_RUN for missing original A/B privacy, Web/iOS role interchange and sameDB Admin preconditions. B37 final same-database WebH actual CREATE full manual four-step Publish and GROUP explicit draft transfer/Send plus genuine controlled-provider-failure/manual group fallback completed; native role reversal and full original Admin/preconditions remain. B38 native120 actual authorized post-join message read/pre-join history exclusion, normal bubble keyboard dismissal, same-process actual429→finite61s→Retry, GROUP Keep/Replace, no-send checkpoint, keyboard-open explicit Send and WebH receipt passed. Harness118 wrong prehistory assumption/119 wrong header-dismiss assumption retained as failures; no product patch. Original reverse-role and remaining full-journey assertions remain unexecuted. B38-O002 WebH and nativeA normal logout, WebA new normal OTP and existing profile/empty AI account isolation verified. NativeH login/reverse business path still in progress. B40 nativeH role cold-restore/empty AI CREATE/manual4step/explicitPublish mechanics observed; reservation semantic F55 is separately failing in QA-CREATE-002. Full case remains NOT_RUN; do not grant PASS before F55 and original full expectations close.",
+      "actual": "本地生产实现尚需实际执行：生成Create草稿→原四步补选地点/条款→主动发布→群草稿→主动Send。尚缺逐项证据：没有模型代办；所有人工确认实际发生；生成/转入/发送分别授权。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B11 realWeb actualcontrolled-model generate/explicit-transfer/single-request and manual-create confirmations complete with physical write proof. Full failure-recovery/group-send and actual native role swap remain outstanding, so NOT_RUN retained. B21-O007 actualnativefocusedkeyboard obscuresquestion/Ask(79); original F49 red retained; B23-O001 actual81/82/85 closed F49 by normal keyboard-open Ask, close/reopen and explicit transfer. Full native role swap, failure-recovery and group-send assertions remain pending; targeted closure does not grant whole-journey PASS. Do not substitute enabled/componentchecks for physicalnativeusability. B32 actual controlled Web CREATE generation/explicit transfer/Keep preservation/explicit replace/four-step manual publish and authorized GROUP generation/transfer/manual Send passed; original F54 rate error behind modal remains open. Explicit synthetic provider failure calls6→7/failures0→1 with unchanged business digests and preserved manual editor followed by ordinary Send verified. Still NOT_RUN for missing original A/B privacy, Web/iOS role interchange and sameDB Admin preconditions. B37 final same-database WebH actual CREATE full manual four-step Publish and GROUP explicit draft transfer/Send plus genuine controlled-provider-failure/manual group fallback completed; native role reversal and full original Admin/preconditions remain. B38 native120 actual authorized post-join message read/pre-join history exclusion, normal bubble keyboard dismissal, same-process actual429→finite61s→Retry, GROUP Keep/Replace, no-send checkpoint, keyboard-open explicit Send and WebH receipt passed. Harness118 wrong prehistory assumption/119 wrong header-dismiss assumption retained as failures; no product patch. Original reverse-role and remaining full-journey assertions remain unexecuted. B38-O002 WebH and nativeA normal logout, WebA new normal OTP and existing profile/empty AI account isolation verified. NativeH login/reverse business path still in progress. B40 nativeH role cold-restore/empty AI CREATE/manual4step/explicitPublish mechanics observed; reservation semantic F55 is separately failing in QA-CREATE-002. Full case remains NOT_RUN; do not grant PASS before F55 and original full expectations close. B43 reverse nativeH GROUP normal candidate/Keep/Replace passes; same-process preSend zero business delta, only explicit Send and actual WebA receipt. True134rate refusal retained,135 successful fresh bounded recovery. Shared sameDB Admin/notification and whole original mapping still pending.",
       "defectIds": [
         "QA-F49",
         "QA-F55",
@@ -18891,7 +18902,9 @@
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
       "evidence": [
-        "B18-O007"
+        "B18-O007",
+        "B43-O003",
+        "B43-O005"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -19214,7 +19227,7 @@
       "remainingExpected": [
         "Complete remaining abnormal journey assertions and shared environment/admin trace; targeted F41 return regression alone is not whole-case acceptance."
       ],
-      "actual": "F41 targeted closed at042bc79: Native43 repeats originalNative41 read-chat/Back/Inbox probe and automatically restores five groups without pull; R19513/0. Original36/37/41 reds and manual38 recovery retained. F38 real429 visible/recovery also passed. Other full abnormal path assertions remain NOT_RUN.",
+      "actual": "F41 targeted closed at042bc79: Native43 repeats originalNative41 read-chat/Back/Inbox probe and automatically restores five groups without pull; R19513/0. Original36/37/41 reds and manual38 recovery retained. F38 real429 visible/recovery also passed. Other full abnormal path assertions remain NOT_RUN. B43 captures actual native Replace429 visible error/preserved editor and successful normal controlled recovery;137 cold auth clock skew is separate environment precondition, not a completed abnormal-journey matrix.",
       "defectIds": [
         "QA-F38",
         "QA-F41"
@@ -22058,7 +22071,9 @@
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
-      "evidence": [],
+      "evidence": [
+        "B43-O006"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T054",
         "R1-T055",
@@ -22374,7 +22389,7 @@
         "分类不改登录权限",
         "新快照排除测试贡献且保留筛选"
       ],
-      "actual": "本地生产实现尚需实际执行：分析者过滤S0下钻CSV → data_admin改分类生成S1 → 显式切换。尚缺逐项证据：旧链路S0一致；分类不改登录权限；新快照排除测试贡献且保留筛选。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "本地生产实现尚需实际执行：分析者过滤S0下钻CSV → data_admin改分类生成S1 → 显式切换。尚缺逐项证据：旧链路S0一致；分类不改登录权限；新快照排除测试贡献且保留筛选。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B43 S normal OTP accesses sameDB Admin, but only pre-business initial sealed snapshot exists; empty metrics are not zero/current reconciliation. Derived current S0/S1/classification and explicit switch remain."
     },
     {
       "id": "QA-AI-050",
@@ -22867,5 +22882,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B40 CREATE002 reopenedFAIL for independent F55 native future→completed wording and F56 initial declaredCount1 vs plannedcapacity2. 194PASS/1FAIL/11NOT_RUN/11BLOCKED. Formal F55 client95e independently source/hash/signature/backendcompatibility/28components verified; actual nativeQA in progress. F56 thin backend fix separately owned, no hotpatch/old data rewrite. Other local paths continue."
+  "currentExecutionSlice": "B40 CREATE002 reopenedFAIL for independent F55 native future→completed wording and F56 initial declaredCount1 vs plannedcapacity2. 194PASS/1FAIL/11NOT_RUN/11BLOCKED. Formal F55 client95e independently source/hash/signature/backendcompatibility/28components verified; actual nativeQA in progress. F56 thin backend fix separately owned, no hotpatch/old data rewrite. Other local paths continue. B43 continues original final database: reverse nativeH/WebA approval, booking and GROUP explicitSend, B privacy/full rejection, WebA independent seat/group withdrawal and new Pending round. Internal native clock skew awaits direct alignment authorization; independent normal S Web/Admin access works but only initial pre-business snapshot exists. No whole journey upgraded."
 }

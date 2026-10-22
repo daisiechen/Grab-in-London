@@ -1,0 +1,15 @@
+{
+  "identityExact": true,
+  "readOnly": true,
+  "fixtureNow": "2026-10-22T11:23:28.971Z",
+  "observedDeviceUtc": "2026-10-22T11:44:07.193Z",
+  "latestNativeAccessExpiry": "2026-10-22T11:38:28.971Z",
+  "nativeFamilyRevoked": false,
+  "accessTtlMinutes": 15,
+  "nativeClientUsesDeviceClock": true,
+  "normalReapprovalExecuted": false,
+  "clockAlignmentApplied": false,
+  "alignmentAutomaticApprovalRejected": true,
+  "directHumanAuthorizationPending": true,
+  "productionRegressionConfirmed": false
+}
