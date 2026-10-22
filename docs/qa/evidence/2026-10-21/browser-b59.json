@@ -1,0 +1,19 @@
+{
+  "observations": [
+    {
+      "id": "B59-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Original M3 natural CLOSE preserves qualified meal and dissolved group with no accounting rewrite",
+      "steps": [
+        "Fresh exact retained runner/database identity, revision and current21:02:05.003Z audited; three meals/six pending lifecycle jobs. Only two meal.close due/run_after22Z and natural hourly snapshot cross target22:00:00.000Z; no START or END.",
+        "Synthetic price remains valid; same London Oct22 daily/monthly periods. Each period used3712/reserved3024/calls30 and original one UNKNOWN unchanged. No pending AI/in-flight HTTP/handler/API/worker/support grant; UI/OTP/download stopped.",
+        "Exact approved advance to22Z acknowledged once. Independent owned read-only database shows M3OPEN/minimum2/capacity2/CLOSEmark1/noSTARTroster/groupdissolved. Current seats2 had been independently established before CLOSE.",
+        "All three close jobs DONE; M2 remains CANCELLED/noSTARTroster/groupdissolved, M1 remains COMPLETED. Two START and two END jobs remain pending for future phases.",
+        "Exactly one new real derived snapshot as_of22Z exists alongside21Z snapshot. Finite before-after table digests for AIbudget/calls/requests, seat events and booking declarations match exactly; no historical business rewrite/new model call or budget row.",
+        "Current nativeA/WebH roles remain; normal swap is subsequent.23Z is London next day and not approved by this stage; no START/END or complete J001/J002 promotion."
+      ],
+      "artifacts": []
+    }
+  ]
+}
