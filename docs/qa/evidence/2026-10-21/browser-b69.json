@@ -1,0 +1,39 @@
+{
+ "observations": [
+  {
+   "id": "B69-O001",
+   "executedBy": "Claude Code",
+   "testedCommit": "3ee69fec6b79552404217aa5415d4f041853a06f",
+   "status": "passed",
+   "title": "Source B recovery checkpoint and business release on the same retained DB",
+   "steps": [
+    "Recovery receipt independently checked read-only: same PostgreSQL, fixed clock 02:01:00Z, startup proof before/after table counts and safe business hashes equal across 66 tables, matchingRecoveryRows 0; ai_budget D22/M10 used 3712/reserved 3024/calls 30 and 1 UNKNOWN unchanged; no D23 row; 0 AI in flight; 4 meals, 12 jobs (9 DONE, 3 PENDING for M4 on 24 Oct). New generation is a new process (originalRAMRestored false), not RAM restoration.",
+    "QA sent inspect (rev2) then releaseBusiness (rev3) and inspect (rev4): HTTP open, worker stopped, AI namespace closed; every public table count identical before and after release."
+   ],
+   "artifacts": []
+  },
+  {
+   "id": "B69-O002",
+   "executedBy": "Claude Code",
+   "testedCommit": "3ee69fec6b79552404217aa5415d4f041853a06f",
+   "status": "passed",
+   "title": "F58/F59 actual native retest on the formally built 3ee69fe app",
+   "steps": [
+    "Cover-installed the formal F58/F59 Simulator Release build on D92: CDHash 6b624cc… → 8e35fda4…, binary SHA 92827499…ba61 equals the entry; a QA xctestrun repointed to this app so XCTest does not reinstall the old build; CDHash still 8e35fda4… after the run. Source B API 62057, existing H native session refreshed normally.",
+    "F59: while A has blocked H, native H on M3 After the meal taps I’d meet QA Final Applicant again → “This action isn’t available to you right now.”, no “Choice saved privately”; the copy does not disclose the block.",
+    "F58: native H taps the new “View QA Final Applicant’s profile” on the post-meal screen → public profile → Block → Confirm block → “Member blocked. Private contact is disabled. Shared groups are unchanged.” → Unblock → Confirm unblock → “Member unblocked. Your previous connection is not restored.”",
+    "DB read-only: block_revisions +2 (H v3 active, v4 inactive); pair_consents unchanged (old epoch3 both revoked, no new row); pair consent epoch advanced; direct messages unchanged (4); other deltas only idempotency +3 and one normal native token refresh."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/b69-native-f59-forbidden-neutral.png",
+    "evidence/2026-10-21/b69-native-f58-profile-from-postmeal.png",
+    "evidence/2026-10-21/b69-native-f58-blocked.png",
+    "evidence/2026-10-21/b69-native-f58-unblocked-not-restored.png",
+    "evidence/2026-10-21/native197-xcui.swift"
+   ]
+  }
+ ],
+ "processNotes": [
+  "J004 final unblock-does-not-revive assertion waits until A’s Web block is also removed (F60, needs Web OTP after the reviewed 02:16 advance)."
+ ]
+}

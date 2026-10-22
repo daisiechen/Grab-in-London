@@ -108,7 +108,8 @@
     "browserObservationsB66": "evidence/2026-10-21/browser-b66.json",
     "auditB67": "evidence/2026-10-21/audit-b67-j001-j002.zh-CN.md",
     "browserObservationsB68": "evidence/2026-10-21/browser-b68.json",
-    "remainingPlan20261022": "remaining-plan-2026-10-22.zh-CN.md"
+    "remainingPlan20261022": "remaining-plan-2026-10-22.zh-CN.md",
+    "browserObservationsB69": "evidence/2026-10-21/browser-b69.json"
   },
   "cases": [
     {
@@ -17667,7 +17668,9 @@
         "B65-O001",
         "B65-O002",
         "B65-O003",
-        "B65-O004"
+        "B65-O004",
+        "B69-O001",
+        "B69-O002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -17982,7 +17985,7 @@
       "remainingExpected": [
         "补 native host / Web applicant 方向完整单向隐私、互选、双向私信、撤回、拉黑再解封不恢复。原 Web host / native applicant 方向证据保留。"
       ],
-      "actual": "B53 audit correction: 原预期子断言已通过，见保留 evidence；原共同前提 Web/iOS 互换各走一次尚未完成。补 native host / Web applicant 方向完整单向隐私、互选、双向私信、撤回、拉黑再解封不恢复。原 Web host / native applicant 方向证据保留。 B61–B63 (2026-10-22, archived/continued by Claude Code after Codex usage limit): natural 00Z snapshot and 01Z END on M3 with unchanged ledgers; WebA unknown→SELF present→private5; nativeH SELF present, HOST absent cannot override A SELF, private4, reference, one-sided meet-again. Slice only; whole case stays NOT_RUN. B64 private candidate: original Claude B63 attribution retained; normal Native180 independently reads persisted SELF priority and private choice without rewriting. WebA explicitly saves48-character reference, observes unilateral privacy, mutually selects and explicitly sends one M3 direct message. Native reply/withdraw/block/unblock and Admin trace remain unexecuted; no whole-case promotion. B65 (Claude): native H reads A M3 DM and replies, Web A receives (two-way DM across clients); Web A withdraw → both epoch3 consents revoked, Web and native DM read-only; Web A blocks H → Web reconnect 403 honest message, native H DM read-only and reconnect rejected without write (generic error QA-F59). Native host cannot reach co-diner profile to block after the meal (QA-F58); Web cannot see or undo its block after reload (QA-F60), so unblock-does-not-revive remains unexecuted. Whole case stays NOT_RUN.",
+      "actual": "B53 audit correction: 原预期子断言已通过，见保留 evidence；原共同前提 Web/iOS 互换各走一次尚未完成。补 native host / Web applicant 方向完整单向隐私、互选、双向私信、撤回、拉黑再解封不恢复。原 Web host / native applicant 方向证据保留。 B61–B63 (2026-10-22, archived/continued by Claude Code after Codex usage limit): natural 00Z snapshot and 01Z END on M3 with unchanged ledgers; WebA unknown→SELF present→private5; nativeH SELF present, HOST absent cannot override A SELF, private4, reference, one-sided meet-again. Slice only; whole case stays NOT_RUN. B64 private candidate: original Claude B63 attribution retained; normal Native180 independently reads persisted SELF priority and private choice without rewriting. WebA explicitly saves48-character reference, observes unilateral privacy, mutually selects and explicitly sends one M3 direct message. Native reply/withdraw/block/unblock and Admin trace remain unexecuted; no whole-case promotion. B65 (Claude): native H reads A M3 DM and replies, Web A receives (two-way DM across clients); Web A withdraw → both epoch3 consents revoked, Web and native DM read-only; Web A blocks H → Web reconnect 403 honest message, native H DM read-only and reconnect rejected without write (generic error QA-F59). Native host cannot reach co-diner profile to block after the meal (QA-F58); Web cannot see or undo its block after reload (QA-F60), so unblock-does-not-revive remains unexecuted. Whole case stays NOT_RUN. B69 (Claude, source B new process on same DB): F58 native post-meal profile entry with block/unblock and F59 neutral forbidden copy pass on the formal 3ee69fe app. F60 Web and final unblock non-revival remain; whole case stays NOT_RUN.",
       "defectIds": [
         "QA-F44",
         "QA-F58",
@@ -23135,8 +23138,8 @@
     "QA-F55": "CLOSED_TARGETED_QA",
     "QA-F56": "CLOSED_TARGETED_QA",
     "QA-F57": "CLOSED_TARGETED_QA",
-    "QA-F58": "OPEN_CONFIRMED",
-    "QA-F59": "OPEN_CONFIRMED",
+    "QA-F58": "CLOSED_TARGETED_QA",
+    "QA-F59": "CLOSED_TARGETED_QA",
     "QA-F60": "OPEN_CONFIRMED",
     "QA-F61": "OPEN_CONFIRMED",
     "QA-F62": "OPEN_CONFIRMED",
@@ -23161,5 +23164,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B68:201 PASS/5 NOT_RUN/11 BLOCKED. Fixes 3ee69fe (F58/F59/F60) and 89dc541 (F61/F62) committed; F58/F59 formal native ENTRY independently verified, not installed. All five fixes stay OPEN until actual retest. Standing rig exited ~20:46 BST, cause unknown; waiting for reviewed restore. Remaining plan: remaining-plan-2026-10-22.zh-CN.md."
+  "currentExecutionSlice": "B69:201 PASS/5 NOT_RUN/11 BLOCKED. Source B released for business (HTTP open, worker stopped, AI off), clock 02:01Z. F58/F59 closed by actual native retest. Next: reviewed single advance to 02:16Z for Web OTP, then F60/F61/F62, J004 final non-revival, J005."
 }
