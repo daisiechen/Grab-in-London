@@ -162,3 +162,5 @@
 - [QA B29：有序浏览器表单Origin与策略因果对照](qa/evidence/2026-10-21/browser-b29.json)
 
 - [QA B30：站内通知与原生键盘发送实际修复验收](qa/evidence/2026-10-21/browser-b30.json)
+
+- [支持授权链表单消费后的定向复验](qa/evidence/2026-10-21/rp-support-live-retest.md)：独立检查与实际浏览器阶段结果，保留未完成边界。
