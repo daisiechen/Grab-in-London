@@ -1,7 +1,10 @@
-import {randomUUID} from 'node:crypto';
+import {createHash,randomUUID} from 'node:crypto';
 import {afterAll,beforeAll,describe,expect,inject,it} from 'vitest';
 import {Browser,createHarness,json,type Harness} from '../test/harness.ts';
 import {londonTime} from './time.ts';
+import {arrangementHash} from './read.ts';
+import type {MealRow} from './lifecycle.ts';
+import type {PoolClient} from 'pg';
 let h:Harness;
 beforeAll(async()=>{h=await createHarness(inject('pgServerUrl'));});afterAll(async()=>{await h.close();});
 async function actor(complete=true){const b=new Browser(h);const {body}=await b.signInWithEmail(`${randomUUID()}@example.invalid`);if(complete){const response=await b.request('PATCH','/v1/me',{body:{displayName:'Alex Test',bio:'I enjoy shared meals and meeting new people.',languages:['en','zh'],lifeStatus:'NEW_TO_LONDON',interests:['FOOD'],ageConfirmedVersion:'2026-10-21',communityAcceptedVersion:'2026-10-21'},headers:{'if-match':'"1"','idempotency-key':randomUUID()}});expect(response.statusCode,response.body).toBe(200);}return {b,id:body.data.session.user.id as string};}
@@ -16,6 +19,31 @@ async function publish(host:Browser,extra:Record<string,unknown>={}){const {resu
 const apply=(b:Browser,mealId:string,key=randomUUID())=>b.request('POST',`/v1/meals/${mealId}/applications`,{body:{message:'I would enjoy meeting everyone at this meal.'},headers:{'idempotency-key':key}});
 const decide=(b:Browser,id:string,version='1',decision='APPROVE')=>b.request('POST',`/v1/applications/${id}/decision`,{body:{decision},headers:{'idempotency-key':randomUUID(),'if-match':`"${version}"`}});
 const detail=async(b:Browser,id:string)=>json(await b.request('GET',`/v1/meals/${id}`)).data;
+
+// The isolated pool uses the fixed SQL clock for existing and subsequently created connections.
+async function withFixedBookingClock(run:()=>Promise<void>){
+ const pool=h.db.pool;let installed=false,clockError:unknown;
+ const onConnect=(client:PoolClient)=>{void client.query('SET search_path=booking_fixed_clock,pg_catalog,public').catch(error=>{clockError=error;});};
+ const applyToConnections=async(sql:string)=>{
+  const held:PoolClient[]=[];
+  try{
+   const results=await Promise.allSettled(Array.from({length:pool.totalCount},async()=>{const c=await pool.connect();held.push(c);}));
+   const failed=results.find(r=>r.status==='rejected');if(failed?.status==='rejected')throw failed.reason;
+   const resets=await Promise.allSettled([...held].map(async c=>{try{await c.query(sql);}catch(error){held.splice(held.indexOf(c),1);c.release(error instanceof Error?error:true);throw error;}}));
+   const resetFailure=resets.find(r=>r.status==='rejected');if(resetFailure?.status==='rejected')throw resetFailure.reason;
+  }finally{for(const c of held)c.release();}
+ };
+ try{
+  const {rows:[clock]}=await pool.query(`SELECT date_trunc('milliseconds',clock_timestamp())::text instant`);
+  await pool.query('CREATE SCHEMA booking_fixed_clock');installed=true;
+  await pool.query(`CREATE FUNCTION booking_fixed_clock.clock_timestamp() RETURNS timestamptz LANGUAGE sql VOLATILE AS $$ SELECT '${clock.instant}'::timestamptz $$`);
+  pool.on('connect',onConnect);await applyToConnections('SET search_path=booking_fixed_clock,pg_catalog,public');
+  await run();if(clockError)throw clockError;
+ }finally{
+  pool.removeListener('connect',onConnect);
+  try{await applyToConnections('RESET search_path');}finally{if(installed)await pool.query('DROP SCHEMA booking_fixed_clock CASCADE');}
+ }
+}
 
 describe('MVP production meal commands and privacy',()=>{
  it('publishes host seat, GROUP JOIN, three jobs and self-reported booking atomically; retries do not duplicate',async()=>{
@@ -48,6 +76,56 @@ describe('MVP production meal commands and privacy',()=>{
   expect(left.statusCode,left.body).toBe(200);
   latest=(await detail(host.b,meal.id)).meal;
   expect(latest.confirmedCount).toBe(1);expect(latest.bookingDeclaration).toMatchObject({declaredCount:2,revision:'2',stale:true});
+ });
+ it.each([false,true])('keeps a declaration stale when the roster returns to two (replacement=%s), even at one database instant',async replacement=>{
+  const host=await actor(),a=await actor(),b=await actor();const meal=await publish(host.b,{capacity:2});
+  await withFixedBookingClock(async()=>{
+   const first=json(await apply(a.b,meal.id)).data;expect((await decide(host.b,first.id)).statusCode).toBe(200);
+   let latest=(await detail(host.b,meal.id)).meal;
+   const declared=await host.b.request('POST',`/v1/meals/${meal.id}/booking-declarations`,{body:{status:'REPORTED_CONFIRMED',count:2},headers:{'idempotency-key':randomUUID(),'if-match':`"${latest.version}"`}});expect(declared.statusCode,declared.body).toBe(201);
+   latest=(await detail(host.b,meal.id)).meal;expect(latest.bookingDeclaration.stale).toBe(false);
+   expect((await a.b.request('POST',`/v1/meals/${meal.id}/leave`,{headers:{'idempotency-key':randomUUID(),'if-match':`"${latest.version}"`}})).statusCode).toBe(200);
+   expect((await detail(host.b,meal.id)).meal.bookingDeclaration.stale).toBe(true);
+   const next=json(await apply(replacement?b.b:a.b,meal.id)).data;expect((await decide(host.b,next.id)).statusCode).toBe(200);
+   latest=(await detail(host.b,meal.id)).meal;expect(latest.confirmedCount).toBe(2);expect(latest.bookingDeclaration).toMatchObject({revision:'2',declaredCount:2,stale:true});
+   const refreshed=await host.b.request('POST',`/v1/meals/${meal.id}/booking-declarations`,{body:{status:'REPORTED_CONFIRMED',count:2},headers:{'idempotency-key':randomUUID(),'if-match':`"${latest.version}"`}});expect(refreshed.statusCode,refreshed.body).toBe(201);
+   expect((await detail(host.b,meal.id)).meal.bookingDeclaration).toMatchObject({revision:'3',stale:false});
+   const {rows:[events]}=await h.db.pool.query(`SELECT count(DISTINCT effective_at)::int instants FROM seat_events WHERE meal_id=$1 AND type<>'HOST_CONFIRMED'`,[meal.id]);expect(events.instants).toBe(1);
+  });
+ });
+ it('keeps pending, messages, group exit and booking events fresh without advancing the seat watermark',async()=>{
+  const host=await actor(),guest=await actor();const meal=await publish(host.b);const application=json(await apply(guest.b,meal.id)).data;
+  expect((await detail(host.b,meal.id)).meal.bookingDeclaration.stale).toBe(false);
+  expect((await decide(host.b,application.id)).statusCode).toBe(200);
+  let latest=(await detail(host.b,meal.id)).meal;
+  for(let i=0;i<2;i++){
+   const declared=await host.b.request('POST',`/v1/meals/${meal.id}/booking-declarations`,{body:{status:'REPORTED_CONFIRMED',count:2},headers:{'idempotency-key':randomUUID(),'if-match':`"${latest.version}"`}});expect(declared.statusCode,declared.body).toBe(201);latest=json(declared).data;expect(latest.bookingDeclaration.stale).toBe(false);
+  }
+  const {rows:[conversation]}=await h.db.pool.query('SELECT id,version FROM conversations WHERE meal_id=$1',[meal.id]);
+  const sent=await guest.b.request('POST',`/v1/conversations/${conversation.id}/messages`,{body:{body:'A normal message does not change the restaurant reservation.',clientMessageId:randomUUID()}});expect(sent.statusCode,sent.body).toBe(201);
+  const {rows:[current]}=await h.db.pool.query('SELECT version FROM conversations WHERE id=$1',[conversation.id]);
+  const left=await guest.b.request('POST',`/v1/conversations/${conversation.id}/leave`,{body:{confirm:true},headers:{'if-match':`"${current.version}"`,'idempotency-key':randomUUID()}});expect(left.statusCode,left.body).toBe(200);
+  expect((await detail(host.b,meal.id)).meal.bookingDeclaration.stale).toBe(false);
+ });
+ it('reads legacy hashes conservatively without rewriting them and requires normal host redeclaration',async()=>{
+  const host=await actor();const meal=await publish(host.b);
+  const {rows:[m]}=await h.db.pool.query('SELECT * FROM meals WHERE id=$1',[meal.id]);
+  const legacy=createHash('sha256').update(JSON.stringify([m.venue_ref,m.title,m.description,m.starts_at.toISOString(),m.closes_at.toISOString(),m.minimum,m.capacity,m.budget_min_pence,m.budget_max_pence,m.languages,m.mood,m.cuisine_code,m.dietary_codes,1])).digest('hex');
+  // Explicit legacy row setup in this fresh test database; production reads never rewrite it.
+  await h.db.pool.query(`INSERT INTO booking_declarations(meal_id,revision,reported_by,declared_count,reported_at,status,arrangement_hash) VALUES($1,2,$2,1,clock_timestamp(),'REPORTED_CONFIRMED',$3)`,[meal.id,m.host_id,legacy]);
+  const before=(await h.db.pool.query('SELECT * FROM booking_declarations WHERE meal_id=$1',[meal.id])).rows;
+  for(let i=0;i<2;i++)expect((await detail(host.b,meal.id)).meal.bookingDeclaration).toMatchObject({revision:'2',stale:true});
+  expect((await h.db.pool.query('SELECT * FROM booking_declarations WHERE meal_id=$1',[meal.id])).rows).toEqual(before);
+  const declared=await host.b.request('POST',`/v1/meals/${meal.id}/booking-declarations`,{body:{status:'REPORTED_CONFIRMED',count:1},headers:{'idempotency-key':randomUUID(),'if-match':`"${meal.version}"`}});expect(declared.statusCode,declared.body).toBe(201);
+  expect(json(declared).data.bookingDeclaration).toMatchObject({revision:'3',stale:false});
+  expect((await h.db.pool.query('SELECT arrangement_hash FROM booking_declarations WHERE meal_id=$1 AND revision=2',[meal.id])).rows[0].arrangement_hash).toBe(legacy);
+ });
+ it('retains distinct decimal seat revisions above the JavaScript integer precision limit',async()=>{
+  const host=await actor();const meal=await publish(host.b);
+  const {rows:[row]}=await h.db.pool.query<MealRow>('SELECT * FROM meals WHERE id=$1',[meal.id]);
+  const first=9007199254740992n,next=first+1n;
+  expect(arrangementHash(row!,1,first)).toBe(arrangementHash(row!,1,String(first)));
+  expect(arrangementHash(row!,1,first)).not.toBe(arrangementHash(row!,1,next));
  });
  it('rejects incomplete profile, unknown restaurant and invalid deadlines without publishing',async()=>{
   const {b}=await actor(false);expect((await create(b)).result.statusCode).toBe(403);

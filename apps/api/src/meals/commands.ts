@@ -72,7 +72,7 @@ export async function publishMeal(tx:Tx,actorId:string,input:CreateMealInput,ver
  await schedule(tx,meal!);
  // The host reports booking the planned capacity; the hash captures the current host-only roster baseline.
  // Later roster or arrangement changes still make this self-reported declaration stale.
- await tx.client.query(`INSERT INTO booking_declarations(meal_id,revision,reported_by,declared_count,reported_at,status,arrangement_hash) VALUES($1,1,$2,$3,$4,'REPORTED_CONFIRMED',$5)`,[meal!.id,actorId,input.capacity,now,arrangementHash(meal!,1)]);
+ await tx.client.query(`INSERT INTO booking_declarations(meal_id,revision,reported_by,declared_count,reported_at,status,arrangement_hash) VALUES($1,1,$2,$3,$4,'REPORTED_CONFIRMED',$5)`,[meal!.id,actorId,input.capacity,now,arrangementHash(meal!,1,meal!.head)]);
  return {meal:meal!,now};
 }
 export async function editArrangement(tx:Tx,mealId:string,actorId:string,expected:string|null,patch:Partial<Arrangement>,verified:VerifiedVenue) {
@@ -90,7 +90,8 @@ export async function editArrangement(tx:Tx,mealId:string,actorId:string,expecte
 }
 export async function declareBooking(tx:Tx,mealId:string,actorId:string,expected:string|null,input:{status:string;count:number}) {
  const {meal,now}=await lockMeal(tx,mealId,actorId);if(meal.host_id!==actorId)throw new DomainError('FORBIDDEN','Only the host can report a booking.');openMeal(meal);checkVersion(meal.version,expected);
-  await tx.client.query(`INSERT INTO booking_declarations(meal_id,revision,reported_by,declared_count,reported_at,status,arrangement_hash) SELECT $1,COALESCE(max(revision),0)+1,$2,$3,$4,$5,$6 FROM booking_declarations WHERE meal_id=$1`,[mealId,actorId,input.count,now,input.status,arrangementHash(meal,input.count)]);
+  const {rows:[roster]}=await tx.client.query<{revision:string}>(`SELECT COALESCE(max(seq),0)::text AS revision FROM seat_events WHERE meal_id=$1`,[mealId]);
+  await tx.client.query(`INSERT INTO booking_declarations(meal_id,revision,reported_by,declared_count,reported_at,status,arrangement_hash) SELECT $1,COALESCE(max(revision),0)+1,$2,$3,$4,$5,$6 FROM booking_declarations WHERE meal_id=$1`,[mealId,actorId,input.count,now,input.status,arrangementHash(meal,input.count,roster!.revision)]);
  await tx.client.query(`UPDATE meals SET version=version+1 WHERE id=$1`,[mealId]);meal.version=String(BigInt(meal.version)+1n);
  const eventId=await mealFact(tx,meal,'booking.declared',now,actorId);
  for(const userId of await currentSeats(tx,meal,now))await insertNotification(tx.client,{eventId,recipientId:userId,template:'booking_updated',refs:{mealId}});
