@@ -23035,7 +23035,7 @@
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
     "userAuthorizedMessaging": true,
-    "status": "codex_usage_limited_claude_code_takeover",
+    "status": "claude_code_independent_qa_with_codex_dev_coordinator",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
     "latestFeedback": "B30 actualF50/F51 closures handed to originaldevelopment; remainingwholejourneys andF52 realnewCLIbrowserchain require normalexecution, nofixturefragment-to-wholepass.",
     "pendingFixtureDependencies": [
@@ -23043,7 +23043,8 @@
       "Wholejourney sameenvironment normalUI H/A paths and exactcasepreconditions; do not require unplannedAdmin/B gates.",
       "Realprovider/device/deployment/policy gates remain11separate; localmock/normal-signing simulator cannotreplace them."
     ],
-    "handoff": "docs/qa/handoff-2026-10-22-claude.zh-CN.md"
+    "handoff": "docs/qa/handoff-2026-10-22-claude.zh-CN.md",
+    "note": "Codex QA chat usage-limited since 2026-10-22 16:11Z (history retained); development coordinator Codex resumed. Claude Code owns docs/qa and QA scripts; defects go to the development coordinator."
   },
   "blockerTriage": "11 external gates remain separate real-provider/device/policy/deployment evidence; resourcesready is not integrationPASS.11localwholejourneys still incomplete, not userresourceblockers. AI034/F44/F45/F46/F48/F49/F50/F51 localtargetedclosures have directevidence. F52 normal Chrome synthetic support chain now independently passed exact-target correction; callback/exchange/auth/logout/exit0/drain verified. Whole business journeys and real-provider gates remain pending. Noassumed realcall/billing/deployment approval.",
   "nextExecution": [
