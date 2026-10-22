@@ -1,5 +1,5 @@
 import {useEffect,useRef,useState} from 'react';
-import {AppState,KeyboardAvoidingView,Platform,Pressable,ScrollView,StyleSheet,Text,View} from 'react-native';
+import {AppState,Pressable,ScrollView,StyleSheet,Text,View} from 'react-native';
 import {useRouter} from 'expo-router';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useServices} from '../../services.tsx';
@@ -39,9 +39,8 @@ export function AssistantWidget(){
  };
  return <>
   <Pressable accessibilityRole="button" accessibilityLabel="Ask Fancy" style={[styles.launcher,{bottom:Math.max(insets.bottom,12)+64}]} onPress={()=>assistant.open()}><Text style={styles.launcherText}>✦ Ask Fancy</Text></Pressable>
-  <Sheet visible={s.open} title="Ask Fancy" onClose={()=>{if(editTimer.current){clearTimeout(editTimer.current);editTimer.current=null;void assistant.edited();}assistant.close();}}>
-   <KeyboardAvoidingView behavior={Platform.OS==='ios'?'padding':undefined}>
-    <ScrollView style={{maxHeight:480}} contentContainerStyle={{gap:12}} keyboardShouldPersistTaps="handled">
+  <Sheet avoidKeyboard keyboardInsets={insets} visible={s.open} title="Ask Fancy" onClose={()=>{if(editTimer.current){clearTimeout(editTimer.current);editTimer.current=null;void assistant.edited();}assistant.close();}}>
+    <ScrollView style={{maxHeight:480,flexShrink:1}} contentContainerStyle={{gap:12}} keyboardShouldPersistTaps="handled">
      {s.view==='preferences'?<PreferencesView key={`${s.preferenceVersion}:${s.view}:${JSON.stringify(s.preferences)}`}/>:<>
       {s.view==='home'?<><Heading>A little help finding your table.</Heading><Body muted>Find, compare or draft a few words. You choose what to send or publish.</Body><Primary label={s.restorable||s.turns.length?'Continue conversation':'Start conversation'} onPress={()=>void assistant.continue()}/><TextAction label="My preferences" onPress={()=>void assistant.preferences()}/></>:null}
       {s.view==='chat'?<>
@@ -66,7 +65,6 @@ export function AssistantWidget(){
      {s.phase==='error'?<TextAction label="Retry assistant request" onPress={()=>void assistant.retry()}/>:null}
      {s.phase==='expired'?<TextAction label="Start again with my unsent text" onPress={()=>void assistant.continue()}/>:null}
     </ScrollView>
-   </KeyboardAvoidingView>
   </Sheet>
  </>;
 }
