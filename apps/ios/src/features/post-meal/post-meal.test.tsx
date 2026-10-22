@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { PostMealScreen, attendanceText } from './PostMealScreen.tsx';
 import { createTestApp, renderApp, signIn } from '../../test/render.tsx';
-import { resetRouter, routeParams } from '../../test/router.ts';
+import { mockRouter, resetRouter, routeParams } from '../../test/router.ts';
 import { fail, ok } from '../../test/mock-fetch.ts';
 import { HOST_ID, MEAL_ID, USER_ID, me, publicProfile } from '../../test/fixtures.ts';
 
@@ -34,6 +34,37 @@ describe('attendanceText', () => {
 });
 
 describe('PostMealScreen (S19/S21)', () => {
+  it('lets the host open an eligible table member profile even after the feedback window closes', async () => {
+    const app = createTestApp(); await signIn(app, me({ id: HOST_ID }));
+    app.mock.on('GET', PATH, ok(state({ windowOpen: false })));
+    await renderApp(app, <PostMealScreen />);
+    await fireEvent.press(await screen.findByRole('button', { name: 'View Alex’s profile' }));
+    expect(mockRouter.push).toHaveBeenCalledWith(`/profiles/${USER_ID}`);
+    expect(screen.queryByRole('button', { name: 'View Maya’s profile' })).toBeNull();
+    expect(app.mock.callsTo('PUT', /reconnect|attendance/)).toHaveLength(0);
+  });
+
+  it('offers profiles only for authoritative eligible members, not unknown attendance subjects', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.mock.on('GET', PATH, ok(state({ eligibleMembers: [publicProfile(USER_ID, 'Alex')], attendance: [att(USER_ID), att(HOST_ID)] })));
+    await renderApp(app, <PostMealScreen />);
+    await screen.findByText('You · Not reported yet');
+    expect(screen.queryByRole('button', { name: /profile/ })).toBeNull();
+  });
+
+  it('describes a forbidden reconnect as neutral unavailability without retrying or exposing a block', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.mock.on('GET', PATH, ok(state({ attendance: [att(USER_ID, { value: 'present', source: 'SELF' })] })));
+    app.mock.on('PUT', `/v1/meals/${MEAL_ID}/reconnect/${HOST_ID}`, fail(403, 'FORBIDDEN'));
+    await renderApp(app, <PostMealScreen />);
+    await fireEvent.press(await screen.findByRole('button', { name: 'I’d meet Maya again' }));
+    expect(await screen.findByText('This action isn’t available to you right now.')).toBeOnTheScreen();
+    expect(screen.queryByText(/Please try again|blocked|blocking/i)).toBeNull();
+    expect(app.mock.callsTo('PUT', /reconnect/)).toHaveLength(1);
+    expect(app.mock.callsTo('GET', PATH)).toHaveLength(1);
+    expect(screen.getByText('Maya · Not chosen')).toBeOnTheScreen();
+  });
+
   it('self attendance uses If-Match; feedback opens only once present', async () => {
     const app = createTestApp();
     await signIn(app, me());

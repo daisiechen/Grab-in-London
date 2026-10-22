@@ -156,6 +156,7 @@ describe('report and block (T15/T18)', () => {
       getSession: () => ok(session()),
       getPublicProfile: () => ok({ profile: publicProfile(), reviews: [], nextReviewCursor: null }),
       createReport: () => ok({ id: '18181818-1818-4181-8181-181818181818', receipt: 'FR-7Q2K9', status: 'RECEIVED', targetType: 'USER', publicOutcome: null, createdAt: '2026-10-21T12:00:00.000Z' }, 201),
+      getBlock: () => ok({ subjectId: HOST_ID, blocked: false, version: '0' }),
       block: () => ok({ subjectId: HOST_ID, blocked: true, version: '1' }),
     });
     renderApp(s.fetch, `/profiles/${HOST_ID}`);
@@ -174,6 +175,8 @@ describe('report and block (T15/T18)', () => {
     expect(within(confirm).getByText(/Unblocking will not restore your connection/)).toBeTruthy();
     await userEvent.click(within(confirm).getByRole('button', { name: 'Block member' }));
     expect(await screen.findByText('You have blocked this member. Private contact is disabled.')).toBeTruthy();
+    expect(s.callsTo('getBlock')).toHaveLength(1);
+    expect(s.callsTo('getBlock')[0]!.params).toEqual({subjectId:HOST_ID});
     expect(s.callsTo('block')[0]!.headers['if-match']).toBe('"0"');
   });
 

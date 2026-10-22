@@ -86,7 +86,7 @@ function PostMealScreenContent() {
     } catch (e) {
       if (e instanceof ApiError && !e.retryable) keys.current.delete(intent);
       setMessage({
-        text: e instanceof ApiError && e.kind === 'conflict' ? 'This changed a moment ago or the feedback window has closed. We’ve refreshed it.' : e instanceof ApiError && e.kind === 'network' ? 'We couldn’t confirm this with Fancy. Check your connection and try again.' : 'Something went wrong. Please try again.',
+        text: e instanceof ApiError && e.kind === 'conflict' ? 'This changed a moment ago or the feedback window has closed. We’ve refreshed it.' : e instanceof ApiError && e.kind === 'forbidden' ? 'This action isn’t available to you right now.' : e instanceof ApiError && e.kind === 'network' ? 'We couldn’t confirm this with Fancy. Check your connection and try again.' : 'Something went wrong. Please try again.',
         tone: 'error',
       });
       if (e instanceof ApiError && e.kind === 'conflict') await q.reload();
@@ -140,6 +140,10 @@ function PostMealScreenContent() {
             )
           ) : null}
         </View>
+      ))}
+
+      {s.eligibleMembers.filter(member=>member.id!==meId).map(member=>(
+        <TextAction key={`profile:${member.id}`} label={`View ${member.displayName}’s profile`} onPress={()=>{if(current())router.push(`/profiles/${member.id}`);}} />
       ))}
 
       {isHost&&s.windowOpen?<View style={{gap:8}}>
