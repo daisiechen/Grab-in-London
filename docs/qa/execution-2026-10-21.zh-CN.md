@@ -1,6 +1,6 @@
 # 独立QA执行报告 · 2026-10-21
 
-**结论：本轮不通过，存在未闭环缺陷：QA-F55。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18, QA-F19, QA-F20, QA-F21, QA-F22, QA-F23, QA-F24, QA-F25, QA-F26, QA-F27, QA-F28, QA-F29, QA-F30, QA-F31, QA-F32, QA-F33, QA-F34, QA-F35, QA-F36, QA-F37, QA-F38, QA-F39, QA-F40, QA-F41, QA-F42, QA-F44, QA-F45, QA-F46, QA-F47, QA-F48, QA-F49, QA-F50, QA-F51, QA-F52, QA-F53, QA-F54, QA-F56；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
+**结论：部分执行，尚不能完成整体验收；不构成发布通过。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18, QA-F19, QA-F20, QA-F21, QA-F22, QA-F23, QA-F24, QA-F25, QA-F26, QA-F27, QA-F28, QA-F29, QA-F30, QA-F31, QA-F32, QA-F33, QA-F34, QA-F35, QA-F36, QA-F37, QA-F38, QA-F39, QA-F40, QA-F41, QA-F42, QA-F44, QA-F45, QA-F46, QA-F47, QA-F48, QA-F49, QA-F50, QA-F51, QA-F52, QA-F53, QA-F54, QA-F55, QA-F56；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
 
 原测试计划基线4659fdb；被测交接`8ba6fc7c9974cf6be1ac06d8b16e0380fb3beced`，业务代码`8bc1e9280153491b6a63c68cd6ba6a49f8061978`。Inbox分页修复在`cd66d87a153b3171cebbe7ae74680eceb356aed1`仅做定向复验；QA-F01及第二批P0探针在04cb601验证，第三批边界、删除/恢复和适配在d4582f7及后续仅CI增量版本定向验证，具体版本见运行表；更早证据沿用对应固定基线。
 
@@ -14,8 +14,8 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 194 |
-| FAIL | 1 |
+| PASS | 195 |
+| FAIL | 0 |
 | BLOCKED | 11 |
 | NOT_RUN | 11 |
 | N/A | 0 |
@@ -299,7 +299,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-DISCOVERY-008 · 未提供菜系饮食 | PASS | B5 Web980c8ed/API8387580固定本地合成环境。host未提供菜系/饮食，Japanese或Vegan具体hard各0、Any恢复4；详情两字段Not provided，筛选与详情均host声明且无过敏保证。未使用页面计算作预期，按已知四场日期/人数/语言/预算fixture核对；不代Google Maps真实服务。；证据 B5-T004 |
 | QA-DISCOVERY-009 · 坐标区域边界 | PASS | F24 formal8c3 coordinate mapper: lexical boundary/overlap, hole/MultiPolygon, unknown/invalid and actual HTTP confirmed point persistence independently verified. Licensed real London geometry remains external G-PLACES.；证据 R142-T023, R142-T024, R142-T025 |
 | QA-CREATE-001 · 创建四步与返回保稿 | PASS | B3先前真实四步输入和Review未确认拒绝保留；正式Web980c8ed B4原条款返回路径两入口均Step4，false/true确认各自保留、餐厅显示仅RAM且不自动发布。返回安排/介绍/费用原字段不变，成功发布后同账号新Create无餐厅/时间、默认4不复用旧2。R90原QA组件与创建回归30项绿，R86/R87及B3原红保留。API8387580非AI核心未变；无真实外订。；证据 B3-T004, B4-T002, B4-T005, R90-T018 |
-| QA-CREATE-002 · 外订声明与预算 | FAIL | B40-O001 native actual Costs and Review future reservation promise publishes as Restaurant booked, violating frozen completed external-booking declaration. QA-F55 OPEN with original native owner. Original B3/B4 Web budget/unchecked/reset checks retained in history; native mechanical127 pass does not satisfy declaration semantics. Separate F56 actual public API initial declaredCount1 despite planned capacity2 confirmed; expected host roster1 is not the defect. Owner-reviewed thin newAPI fix pending independent acceptance, no current old data rewrite. B41 independently verifies formal5b72 F56 normal Web create/pending/approval/redeclaration with exact public snapshots; F56 closed targeted. F55 actual native replay remains OPEN, so overall case remains FAIL.；证据 B3-T004, B4-T004, B40-O001, B40-O003, B41-O001 |
+| QA-CREATE-002 · 外订声明与预算 | PASS | B42 actual signed native95e Costs/Review explicitly completed reservation with venue/date/time/count and host-only verification: unchecked blocks, capacity2→3 resets and requires new confirmation. Native130 passed all actual gates; no Publish and existing business table counts/hashes unchanged. Historical B3/B4 Web inverted budget, pay-at-restaurant/no app payment, unchecked/reset evidence retained. B41 formal5b72 normal Web create/pending/approval/redeclaration verifies initial planned declaredCount2 distinct from confirmed host1 and correct roster stale logic. F55/F56 closed targeted; all3 original expectations covered, original failures preserved in history. No real reservation or whole-journey acceptance.；证据 B3-T004, B4-T004, B41-O001, B42-O001 |
 | QA-CREATE-003 · 人数范围 | PASS | B12 actual production Web prevents invalid size/minimum choices at2/6 boundaries, preserves other draft fields; R107 independently verifies invalid actual API inputs422 without publish. Local real PG, fixture venue; not native or real restaurant booking.；证据 B12-O001, R107-T001, R107-T002, R107-T003, R107-T004, R107-T005, R107-T006, R107-T007, R107-T008, R107-T009, R107-T010 |
 | QA-CREATE-004 · 时间菜单恢复 | PASS | F34/F35 formal actual Create and390/320 browser:48 slots,160x224 internal scroll/selected focus, keyboard and outside cancel preserve value; confirmed different venue clears time/declarations and explains required re-selection. Current PRD uses all48 planned slots, not obsolete supplier inventory filtering.；证据 B16-O002, B16-O003, R183-T001, R183-T002 |
 | QA-DB-001 · 最后一席双审批 | PASS | 第二批QA独立探针在04cb601以真实隔离PG执行，完整预期核对通过；消息HTML显示另有B1纯文本浏览器证据。；证据 R6-T001 |

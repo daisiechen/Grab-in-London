@@ -17,8 +17,7 @@
     "nativeRuntimeEvidence20261021": "Native83df/611a normal Xcode simulated entitlement and source/binary independently verified; actual QA taps passed. Earlier CODE_SIGNING_ALLOWED=NO artifacts failed getItem-34018, preserved as setup/build evidence; no missing-runtime/license blocker remains."
   },
   "counts": {
-    "PASS": 194,
-    "FAIL": 1,
+    "PASS": 195,
     "BLOCKED": 11,
     "NOT_RUN": 11
   },
@@ -83,7 +82,8 @@
     "browserObservationsB38": "evidence/2026-10-21/browser-b38.json",
     "targetedObservationsB39": "evidence/2026-10-21/targeted-b39.json",
     "browserObservationsB40": "evidence/2026-10-21/browser-b40.json",
-    "browserObservationsB41": "evidence/2026-10-21/browser-b41.json"
+    "browserObservationsB41": "evidence/2026-10-21/browser-b41.json",
+    "browserObservationsB42": "evidence/2026-10-21/browser-b42.json"
   },
   "cases": [
     {
@@ -3512,13 +3512,12 @@
       "priority": "P1",
       "plannedStage": "demo",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": [
         "B3-T004",
         "B4-T004",
-        "B40-O001",
-        "B40-O003",
-        "B41-O001"
+        "B41-O001",
+        "B42-O001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T080",
@@ -3568,11 +3567,13 @@
         "R2-T143",
         "R2-T144"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "Native must explicitly confirm completed external reservation for actual restaurant/date/time/count; future intent cannot record/display already booked. Retest F55 then reconfirm original expected assertions; historical Web budget/reset proof retained."
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "B40-O001 native actual Costs and Review future reservation promise publishes as Restaurant booked, violating frozen completed external-booking declaration. QA-F55 OPEN with original native owner. Original B3/B4 Web budget/unchecked/reset checks retained in history; native mechanical127 pass does not satisfy declaration semantics. Separate F56 actual public API initial declaredCount1 despite planned capacity2 confirmed; expected host roster1 is not the defect. Owner-reviewed thin newAPI fix pending independent acceptance, no current old data rewrite. B41 independently verifies formal5b72 F56 normal Web create/pending/approval/redeclaration with exact public snapshots; F56 closed targeted. F55 actual native replay remains OPEN, so overall case remains FAIL.",
+      "remainingExpected": [],
+      "actual": "B42 actual signed native95e Costs/Review explicitly completed reservation with venue/date/time/count and host-only verification: unchecked blocks, capacity2→3 resets and requires new confirmation. Native130 passed all actual gates; no Publish and existing business table counts/hashes unchanged. Historical B3/B4 Web inverted budget, pay-at-restaurant/no app payment, unchecked/reset evidence retained. B41 formal5b72 normal Web create/pending/approval/redeclaration verifies initial planned declaredCount2 distinct from confirmed host1 and correct roster stale logic. F55/F56 closed targeted; all3 original expectations covered, original failures preserved in history. No real reservation or whole-journey acceptance.",
       "relatedBrowserEvidence": [
         "B1"
       ],
@@ -3590,6 +3591,18 @@
             "B4-T004"
           ],
           "reason": "New native F55 domain-semantic failure reopens this case; prior Web assertions remain historical valid evidence, not whole-client acceptance."
+        },
+        {
+          "status": "FAIL",
+          "actual": "B40-O001 native actual Costs and Review future reservation promise publishes as Restaurant booked, violating frozen completed external-booking declaration. QA-F55 OPEN with original native owner. Original B3/B4 Web budget/unchecked/reset checks retained in history; native mechanical127 pass does not satisfy declaration semantics. Separate F56 actual public API initial declaredCount1 despite planned capacity2 confirmed; expected host roster1 is not the defect. Owner-reviewed thin newAPI fix pending independent acceptance, no current old data rewrite. B41 independently verifies formal5b72 F56 normal Web create/pending/approval/redeclaration with exact public snapshots; F56 closed targeted. F55 actual native replay remains OPEN, so overall case remains FAIL.",
+          "evidence": [
+            "B3-T004",
+            "B4-T004",
+            "B40-O001",
+            "B40-O003",
+            "B41-O001"
+          ],
+          "reason": "B42 closes F55 by actual signed native replay and B41 closes F56; preserve all original failed observations."
         }
       ],
       "defectIds": [
@@ -22834,7 +22847,7 @@
     "QA-F52": "CLOSED_TARGETED_QA",
     "QA-F53": "CLOSED_TARGETED_QA",
     "QA-F54": "CLOSED_TARGETED_QA",
-    "QA-F55": "OPEN",
+    "QA-F55": "CLOSED_TARGETED_QA",
     "QA-F56": "CLOSED_TARGETED_QA"
   },
   "followUp": {

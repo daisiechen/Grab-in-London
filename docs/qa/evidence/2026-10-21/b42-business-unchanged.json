@@ -1,0 +1,31 @@
+{
+  "syntheticOnly": true,
+  "published": false,
+  "tables": [
+    {
+      "table": "meals",
+      "beforeCount": 2,
+      "afterCount": 2,
+      "sha256Unchanged": true
+    },
+    {
+      "table": "applications",
+      "beforeCount": 2,
+      "afterCount": 2,
+      "sha256Unchanged": true
+    },
+    {
+      "table": "seat_events",
+      "beforeCount": 3,
+      "afterCount": 3,
+      "sha256Unchanged": true
+    },
+    {
+      "table": "messages",
+      "beforeCount": 4,
+      "afterCount": 4,
+      "sha256Unchanged": true
+    }
+  ],
+  "caseGrants": 0
+}

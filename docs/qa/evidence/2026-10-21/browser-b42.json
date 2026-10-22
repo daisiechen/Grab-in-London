@@ -1,0 +1,27 @@
+{
+  "observations": [
+    {
+      "id": "B42-O001",
+      "testedCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "F55 actual signed native completed-booking declaration, unchecked gate and arrangement reset",
+      "steps": [
+        "Signed frozen formal95e native client independently verified1697 source/209native entries, binary/Hermes hashes, signature and unchanged production backend compatibility; existing final f6d9 API retained. Independent2 Jest suites/28 targeted tests passed, not a substitute for native UI.",
+        "Native128 first-match scroll direction failed before Costs;129 reached actual corrected Costs but Xcode identifier shortcut rejected a label longer than128 characters. Both failed runs retained; neither is called a product regression or semantic acceptance.130 changes only harness bidirectional scroll and exact label NSPredicate, retaining every original acceptance assertion.",
+        "Before130 one separately approved exact61-second fixture recovery passed fresh owner/clock/PGidentity plus meal/job boundary, pendingAI/grants and idle checks; Node/database clock ACK exact. No quota/TTL changes, no repeated clock loop. New F56 environment clock never advanced.",
+        "Actual native130 Costs unchecked explicitly says already booked at concrete Fixture North restaurant for2 on Sat24Oct00:00 Europe/London, host declaration not verification by Fancy. Continue remains Costs with completed-reservation confirmation error.",
+        "Explicit checkbox confirmation allows Review. Review repeats same specific completed-booking declaration; old future promise absent.",
+        "Normal Edit arrangement changes capacity2 to3, normal Continue through introduction returns Costs. Declaration text updates3 and prior confirmation resets; Continue again requires completed-booking confirmation. Explicit recheck allows Review matching3. Screenshots directly inspected.",
+        "No Publish performed. Physical business counts and table hashes unchanged across this replay: meals2/applications2/seat_events3/messages4; grants0. Original incorrectly published meal and prior failure screenshots remain unchanged.",
+        "F55 CLOSED_TARGETED_QA. Together with historical B3/B4 actual Web budget/pay-at-restaurant/reset proof and B41 F56 normal Web published snapshot verification, all3 original QA-CREATE-002 expectations covered. No full217 pass, fulljourney promotion, real reservation or real provider/device release claim."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b42-native-review-for3.png",
+        "evidence/2026-10-21/b42-native-reset-requires-confirmation.png",
+        "evidence/2026-10-21/b42-native-review-for2.png",
+        "evidence/2026-10-21/b42-native-unchecked-blocked.png",
+        "evidence/2026-10-21/b42-business-unchanged.json"
+      ]
+    }
+  ]
+}
