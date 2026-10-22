@@ -1,0 +1,10 @@
+{
+  "sourceCommit": "3a17e8b8971f617b1e4d4f1c3903586b6464e6f9",
+  "independentlyComparedFullSourceCount": 1600,
+  "nativeSubset": 209,
+  "installedBinarySha256": "f0e3ff5ca7ccda1c44697dd3397d57d60ae2bbfda1f1cdfec494b529300a4892",
+  "installedHermesSha256": "ca87e8da835fcf0527a51c499441b0aa1d95499529c2bd8f39186079ef18154a",
+  "normalSignatureDeepStrictExit": 0,
+  "endpoint": "reviewed local targeted gateway; no real provider",
+  "scope": "H/A only, no support identity/roles; fullJ010precondition not satisfied"
+}

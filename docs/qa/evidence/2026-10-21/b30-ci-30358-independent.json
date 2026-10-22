@@ -1,0 +1,8 @@
+{
+  "runId": 39718110495,
+  "headSha": "30358c24ebaa7d751ffaf3e332f6621297c1dc6b",
+  "status": "completed",
+  "conclusion": "success",
+  "verification": "QA independent official GitHub Actions API read",
+  "scope": "exact30358 commit, not laterQAcommits; oldpnpmsetup timeout runs retained"
+}

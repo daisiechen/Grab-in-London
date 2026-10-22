@@ -1,0 +1,103 @@
+{
+  "sink": {
+    "sends": 3,
+    "lookups": 0,
+    "deliveries": 3,
+    "receipts": [
+      {
+        "outboxId": "445c3925-856e-44f6-b780-f2bf9077e8c0",
+        "template": "application_approved",
+        "providerId": "synthetic-mail-445c3925-856e-44f6-b780-f2bf9077e8c0",
+        "sendCalls": 1,
+        "lookupCalls": 0
+      },
+      {
+        "outboxId": "b17a7908-62ab-4776-836a-8cb0f47a9124",
+        "template": "meal_cancelled",
+        "providerId": "synthetic-mail-b17a7908-62ab-4776-836a-8cb0f47a9124",
+        "sendCalls": 1,
+        "lookupCalls": 0
+      },
+      {
+        "outboxId": "f93179fb-b559-4049-a178-7841a0b35072",
+        "template": "meal_cancelled",
+        "providerId": "synthetic-mail-f93179fb-b559-4049-a178-7841a0b35072",
+        "sendCalls": 1,
+        "lookupCalls": 0
+      }
+    ]
+  },
+  "roles": [
+    {
+      "role": "H",
+      "userId": "afea2d04-3f59-4541-8ed8-2ca534ff6f90",
+      "outbox": [
+        {
+          "id": "b17a7908-62ab-4776-836a-8cb0f47a9124",
+          "event_id": "093b7ca3-52b7-40fa-ada6-b2d7880cf940",
+          "meal_id": "96c455d9-154b-4165-9d0a-71f6370696a6",
+          "template": "meal_cancelled",
+          "status": "SENT",
+          "attempts": 1,
+          "lookup_attempts": 0
+        }
+      ],
+      "notifications": [
+        {
+          "id": "367cb7ed-d44c-4ab9-a4a6-787280704c12",
+          "event_id": "093b7ca3-52b7-40fa-ada6-b2d7880cf940",
+          "meal_id": "96c455d9-154b-4165-9d0a-71f6370696a6",
+          "template": "meal_cancelled",
+          "read_at": null
+        },
+        {
+          "id": "98532541-d44d-459e-9870-e9539cd72cd4",
+          "event_id": "f56c6ee7-a243-4802-92f7-9c822221d531",
+          "meal_id": "96c455d9-154b-4165-9d0a-71f6370696a6",
+          "template": "application_submitted",
+          "read_at": null
+        }
+      ]
+    },
+    {
+      "role": "A",
+      "userId": "867cd6a5-c832-4415-a8e4-f9f08350f56f",
+      "outbox": [
+        {
+          "id": "445c3925-856e-44f6-b780-f2bf9077e8c0",
+          "event_id": "e208178a-7615-48cd-8f15-29c67a3caf1d",
+          "meal_id": "96c455d9-154b-4165-9d0a-71f6370696a6",
+          "template": "application_approved",
+          "status": "SENT",
+          "attempts": 1,
+          "lookup_attempts": 0
+        },
+        {
+          "id": "f93179fb-b559-4049-a178-7841a0b35072",
+          "event_id": "093b7ca3-52b7-40fa-ada6-b2d7880cf940",
+          "meal_id": "96c455d9-154b-4165-9d0a-71f6370696a6",
+          "template": "meal_cancelled",
+          "status": "SENT",
+          "attempts": 1,
+          "lookup_attempts": 0
+        }
+      ],
+      "notifications": [
+        {
+          "id": "ded50d6d-d949-461b-bab2-3ccee8ea47c5",
+          "event_id": "e208178a-7615-48cd-8f15-29c67a3caf1d",
+          "meal_id": "96c455d9-154b-4165-9d0a-71f6370696a6",
+          "template": "application_approved",
+          "read_at": null
+        },
+        {
+          "id": "ec2c4742-a453-4a25-8eb1-6c533f030f9b",
+          "event_id": "093b7ca3-52b7-40fa-ada6-b2d7880cf940",
+          "meal_id": "96c455d9-154b-4165-9d0a-71f6370696a6",
+          "template": "meal_cancelled",
+          "read_at": "2026-10-22T16:00:00.000Z"
+        }
+      ]
+    }
+  ]
+}

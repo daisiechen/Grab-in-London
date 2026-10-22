@@ -18,8 +18,7 @@
   },
   "counts": {
     "PASS": 194,
-    "NOT_RUN": 11,
-    "FAIL": 1,
+    "NOT_RUN": 12,
     "BLOCKED": 11
   },
   "evidenceCatalog": {
@@ -71,7 +70,8 @@
     "browserObservationsB26": "evidence/2026-10-21/browser-b26.json",
     "browserObservationsB27": "evidence/2026-10-21/browser-b27.json",
     "browserObservationsB28": "evidence/2026-10-21/browser-b28.json",
-    "browserObservationsB29": "evidence/2026-10-21/browser-b29.json"
+    "browserObservationsB29": "evidence/2026-10-21/browser-b29.json",
+    "browserObservationsB30": "evidence/2026-10-21/browser-b30.json"
   },
   "cases": [
     {
@@ -21237,10 +21237,10 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "NOT_RUN",
       "evidence": [
-        "B26-O001",
-        "B26-O002"
+        "B30-O001",
+        "B30-O002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -21553,14 +21553,23 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "F50 Web/native station notification list/read actualUI unavailable; F51 native group Send physically occluded by keyboard; support precondition not assembled. Controlledmail is synthetic only."
+        "Complete QA-JOURNEY-010 in a single environment satisfying authorised-support prerequisite. B30 H/A-only targeted rig deliberately lacks support; do not splice separate support fixtures into whole-case PASS."
       ],
-      "actual": "B26 normalWebHcreate/nativeAApply/profile/send/WebApprove/legitimateclock→insufficient2/min3. Web cancellation/no-refund/group send proved; PG H/A eachone station notification and controlledmailSENT1. WebNotifications link fallsintoChat route and nativehasno notificationentry: F50 actualUI FAIL. Actual93groupreceive passes but send notattempted dueQA selector issue; preservecontrolfailure separately. Actual95 correctedlocator confirms separateF51: keyboard590..816, Send700.67..745.67/hittablefalse; no nativeSend. Webhostsend+nativeAreceive proved, nativewritependingfix.",
+      "actual": "B30 formal3a17 actualnewnormalH/A UI, insufficientcancel2/min3, bothownstationnotification list/explicitread persisted andactorisolated, controlledmail eachonce, nativekeyboardactualSend99/100 deliveredWeb afterreopen/ancestorchange. F50/F51targetedclosed. Whole010 remainsNOT_RUN because authorisedsupportprecondition absent; originalB26FAIL retained inhistory, nowholecasePASS.",
       "history": [
         {
           "status": "NOT_RUN",
           "actual": "本地生产实现尚需实际执行：H创建min3 → 仅A确认 → 到截止 → 查站内及邮件 → 群发消息。尚缺逐项证据：原因insufficient；当前成员通知各一次；群仍可发言；无退款承诺。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
           "reason": "B26 actual normal Web/native journey reveals F50"
+        },
+        {
+          "status": "FAIL",
+          "actual": "B26 normalWebHcreate/nativeAApply/profile/send/WebApprove/legitimateclock→insufficient2/min3. Web cancellation/no-refund/group send proved; PG H/A eachone station notification and controlledmailSENT1. WebNotifications link fallsintoChat route and nativehasno notificationentry: F50 actualUI FAIL. Actual93groupreceive passes but send notattempted dueQA selector issue; preservecontrolfailure separately. Actual95 correctedlocator confirms separateF51: keyboard590..816, Send700.67..745.67/hittablefalse; no nativeSend. Webhostsend+nativeAreceive proved, nativewritependingfix.",
+          "evidence": [
+            "B26-O001",
+            "B26-O002"
+          ],
+          "reason": "B30 independently closesF50/F51; whole010 remainsincomplete because newtargeted environmentexplicitly hasnoauthorizedsupportprecondition"
         }
       ],
       "defectIds": [
@@ -22685,8 +22694,8 @@
     "QA-F47": "OPEN_ENVIRONMENT",
     "QA-F48": "CLOSED_TARGETED_QA",
     "QA-F49": "CLOSED_TARGETED_QA",
-    "QA-F50": "OPEN_ACTUAL_UI_REPRODUCED",
-    "QA-F51": "OPEN_NATIVE_REPRODUCED",
+    "QA-F50": "CLOSED_TARGETED_QA",
+    "QA-F51": "CLOSED_TARGETED_QA",
     "QA-F52": "PROBE_CAUSE_VERIFIED_LIVE_RETEST_PENDING"
   },
   "followUp": {
@@ -22694,18 +22703,17 @@
     "userAuthorizedMessaging": true,
     "status": "remaining_local_execution_in_progress",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
-    "latestFeedback": "F38/F39/F40/F41/F42 targeted QA closures handed to original development thread; complete local journeys remain in execution. Developer preparing cloned-facts staff/controlled-AI entry; source DB untouched until explicit safe checkpoint. ee971b4 deletion/mail new slice requires separate fresh-DB verification, not migration in QA original rig.",
+    "latestFeedback": "B30 actualF50/F51 closures handed to originaldevelopment; remainingwholejourneys andF52 realnewCLIbrowserchain require normalexecution, nofixturefragment-to-wholepass.",
     "pendingFixtureDependencies": [
-      "Phase1 sameDB staff sidecar reviewed before sourceconnection; bootstrap/logout then QA normalclock+60s and factscompare/freshcheckpoint, no quota reset or migration.",
-      "F44 targeted independent2005991/API62044/newPG/newsimD92E pending formallymatchedsignedbuild andactualUI; originalsameDBJ004cannotbepassedfromnewrig.",
-      "AI3102 existing controlledmock fixture source identification cb9257e scope verified by environmentowner; native build queued after F44, do not stop its drop-on-exit ownerDB.",
-      "New deletion-mail7day slice independentfreshPG R19815/0 only; controlledprovider tests do not prove real vendor delivery."
+      "RP-only exactnormal supportCLI browser chain after independentfreeze review; no extendingTTL or HTTPconsent bypass.",
+      "Wholejourney sameenvironment normalUI H/A paths and exactcasepreconditions; do not require unplannedAdmin/B gates.",
+      "Realprovider/device/deployment/policy gates remain11separate; localmock/normal-signing simulator cannotreplace them."
     ]
   },
-  "blockerTriage": "当前11条外部门槛仍需真实服务验收、发行设备、部署或政策批准证据；开发已告知除Apple待审核外资源就绪，不再沿用账号/Key未开通作为笼统阻塞。QA尚未把资源就绪等同实际接入通过。AI034属于本地NOT_RUN，原生runtime/签名/冷恢复已实际可运行；待测为重装token边界及受控AI生命周期。原14条中的本地隐私/恢复已通过。当前F44原生安全入口缺失为开发待修；完整双端旅程与新生产切片仍实际推进。",
+  "blockerTriage": "11 external gates remain separate real-provider/device/policy/deployment evidence; resourcesready is not integrationPASS.12localwholejourneys still incomplete, not userresourceblockers. AI034/F44/F45/F46/F48/F49/F50/F51 localtargetedclosures have directevidence. F52 isolatedformprobe hasorderedOriginpolicycause verified, actualsupportchainrepair stillpending. Noassumed realcall/billing/deployment approval.",
   "nextExecution": [
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B29 orderednormalChrome noauthformprobe: no-referrer→Originnull/strict400; same-origin→self/200, eachcounterdelta1. POSTsactuallyarrived despiteclientblockedJSONdisplay. F52originalsupportchainrepair/retestpending; F50/F51targetedH/Anewrigpreparing.194PASS/11NOT_RUN/1FAIL/11BLOCKED unchanged."
+  "currentExecutionSlice": "B30 F50/F51 targetedactualclosed via newformal3a17 Web/native99/100 andread-onlyrecipientfacts; 194PASS/12NOT_RUN/11BLOCKED. Whole010supportprecondition absent; F52 RP-only realconsentchainretestpending. Alloriginalred preserved."
 }

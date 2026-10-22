@@ -160,3 +160,5 @@
 - [QA B28：双浏览器无账号表单策略对照](qa/evidence/2026-10-21/browser-b28.json)
 
 - [QA B29：有序浏览器表单Origin与策略因果对照](qa/evidence/2026-10-21/browser-b29.json)
+
+- [QA B30：站内通知与原生键盘发送实际修复验收](qa/evidence/2026-10-21/browser-b30.json)

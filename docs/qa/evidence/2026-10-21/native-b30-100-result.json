@@ -1,0 +1,8 @@
+{
+  "run": 100,
+  "classification": "PASS",
+  "resultLines": [
+    "QA_NATIVE100_AFTER_ANCESTOR_CHANGE keyboard=(0.0, 590.0, 402.0, 226.0) input=(13.0, 490.9999895095825, 298.6666564941406, 41.0) send=(320.6666564941406, 487.9999895095825, 69.33334350585938, 45.0) hittable=true",
+    "** TEST EXECUTE SUCCEEDED **"
+  ]
+}

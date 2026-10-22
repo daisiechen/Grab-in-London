@@ -1,12 +1,12 @@
 # 独立QA执行报告 · 2026-10-21
 
-**结论：部分执行，尚不能完成整体验收；不构成发布通过。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18, QA-F19, QA-F20, QA-F21, QA-F22, QA-F23, QA-F24, QA-F25, QA-F26, QA-F27, QA-F28, QA-F29, QA-F30, QA-F31, QA-F32, QA-F33, QA-F34, QA-F35, QA-F36, QA-F37, QA-F38, QA-F39, QA-F40, QA-F41, QA-F42, QA-F44, QA-F45, QA-F46, QA-F48, QA-F49；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
+**结论：部分执行，尚不能完成整体验收；不构成发布通过。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18, QA-F19, QA-F20, QA-F21, QA-F22, QA-F23, QA-F24, QA-F25, QA-F26, QA-F27, QA-F28, QA-F29, QA-F30, QA-F31, QA-F32, QA-F33, QA-F34, QA-F35, QA-F36, QA-F37, QA-F38, QA-F39, QA-F40, QA-F41, QA-F42, QA-F44, QA-F45, QA-F46, QA-F48, QA-F49, QA-F50, QA-F51；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
 
 原测试计划基线4659fdb；被测交接`8ba6fc7c9974cf6be1ac06d8b16e0380fb3beced`，业务代码`8bc1e9280153491b6a63c68cd6ba6a49f8061978`。Inbox分页修复在`cd66d87a153b3171cebbe7ae74680eceb356aed1`仅做定向复验；QA-F01及第二批P0探针在04cb601验证，第三批边界、删除/恢复和适配在d4582f7及后续仅CI增量版本定向验证，具体版本见运行表；更早证据沿用对应固定基线。
 
 ## 阻塞澄清与跟进
 
-当前11条外部门槛仍需真实服务验收、发行设备、部署或政策批准证据；开发已告知除Apple待审核外资源就绪，不再沿用账号/Key未开通作为笼统阻塞。QA尚未把资源就绪等同实际接入通过。AI034属于本地NOT_RUN，原生runtime/签名/冷恢复已实际可运行；待测为重装token边界及受控AI生命周期。原14条中的本地隐私/恢复已通过。当前F44原生安全入口缺失为开发待修；完整双端旅程与新生产切片仍实际推进。
+11 external gates remain separate real-provider/device/policy/deployment evidence; resourcesready is not integrationPASS.12localwholejourneys still incomplete, not userresourceblockers. AI034/F44/F45/F46/F48/F49/F50/F51 localtargetedclosures have directevidence. F52 isolatedformprobe hasorderedOriginpolicycause verified, actualsupportchainrepair stillpending. Noassumed realcall/billing/deployment approval.
 
 15分钟仅为兜底唤醒，无项目规定；发现问题直接交开发、有修复即复验，不等待定时周期。原14条已逐条交原开发会话处理，两条本地删除/恢复用例已通过，其余本地准备继续推进。
 
@@ -15,16 +15,16 @@
 | 状态 | 数量 |
 |---|---:|
 | PASS | 194 |
-| FAIL | 1 |
+| FAIL | 0 |
 | BLOCKED | 11 |
-| NOT_RUN | 11 |
+| NOT_RUN | 12 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实供应商、真实设备发行、部署或政策批准证据；本地已有可运行模拟器和正常签名原生UI，不能再用旧许可/runtime缺失概括。本地恢复与分步删除已独立通过。FAIL优先于未完成的后续步骤。
 
 ## 实际运行
 
-B29 orderednormalChrome noauthformprobe: no-referrer→Originnull/strict400; same-origin→self/200, eachcounterdelta1. POSTsactuallyarrived despiteclientblockedJSONdisplay. F52originalsupportchainrepair/retestpending; F50/F51targetedH/Anewrigpreparing.194PASS/11NOT_RUN/1FAIL/11BLOCKED unchanged.
+B30 F50/F51 targetedactualclosed via newformal3a17 Web/native99/100 andread-onlyrecipientfacts; 194PASS/12NOT_RUN/11BLOCKED. Whole010supportprecondition absent; F52 RP-only realconsentchainretestpending. Alloriginalred preserved.
 
 | ID | 结果 | 范围 |
 |---|---|---|
@@ -466,7 +466,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-AI-047 · 结果不足三张 | PASS | Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim.；证据 R117-T011 |
 | QA-AI-048 · 当日与未确认目标 | PASS | Independent targeted production probes R126 and cited UI evidence cover the original expected assertions. Local synthetic environment; real PG/API where stated, controlled clock/provider or component transport explicitly scoped. Historical setup/real failures retained; no native journey or real vendor claim.；证据 R126-T012, R126-T013 |
 | QA-AI-049 · 创建与群草稿长度 | PASS | Independent R123 four assertions: application301, create81/1001 and group1001 rejected; exact300/80/1000/1000 allowed in core validator. Failed generation has no transfer artifact or business writes; no editor bypass. Controlled model and real PG for controller cases; pure core group boundary.；证据 R123-T001, R123-T002, R123-T003, R123-T004 |
-| QA-JOURNEY-010 · 截止不足通知路径 | FAIL | B26 normalWebHcreate/nativeAApply/profile/send/WebApprove/legitimateclock→insufficient2/min3. Web cancellation/no-refund/group send proved; PG H/A eachone station notification and controlledmailSENT1. WebNotifications link fallsintoChat route and nativehasno notificationentry: F50 actualUI FAIL. Actual93groupreceive passes but send notattempted dueQA selector issue; preservecontrolfailure separately. Actual95 correctedlocator confirms separateF51: keyboard590..816, Send700.67..745.67/hittablefalse; no nativeSend. Webhostsend+nativeAreceive proved, nativewritependingfix.；证据 B26-O001, B26-O002 |
+| QA-JOURNEY-010 · 截止不足通知路径 | NOT_RUN | B30 formal3a17 actualnewnormalH/A UI, insufficientcancel2/min3, bothownstationnotification list/explicitread persisted andactorisolated, controlledmail eachonce, nativekeyboardactualSend99/100 deliveredWeb afterreopen/ancestorchange. F50/F51targetedclosed. Whole010 remainsNOT_RUN because authorisedsupportprecondition absent; originalB26FAIL retained inhistory, nowholecasePASS.；证据 B30-O001, B30-O002 |
 | QA-JOURNEY-011 · 支持纠错全路径 | NOT_RUN | 本地生产实现尚需实际执行：CLI OAuth+MFA→授权case→end+7d纠错→新快照→私聊重验→审计。尚缺逐项证据：逐步权限重验；保留原报告；新资格传播，旧普通快照不改；不开放全表/消息正文。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-JOURNEY-012 · 后台分析分类路径 | NOT_RUN | 本地生产实现尚需实际执行：分析者过滤S0下钻CSV → data_admin改分类生成S1 → 显式切换。尚缺逐项证据：旧链路S0一致；分类不改登录权限；新快照排除测试贡献且保留筛选。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-AI-050 · DeepSeek模型替换准入 | BLOCKED | DeepSeek本地适配34项及评测准备13项独立复跑通过；真实样本与延迟门槛尚缺，不能用受控响应关闭真实模型准入。 |

@@ -1,0 +1,51 @@
+{
+  "observations": [
+    {
+      "id": "B30-O001",
+      "testedCommit": "3a17e8b8971f617b1e4d4f1c3903586b6464e6f9",
+      "status": "passed",
+      "title": "F50 actualWeb/native ownnotification list/read persists with actor isolation",
+      "steps": [
+        "New H/A-only OWN PG, final3a17 normal signed native installedbinary/Hermes exact and1600/209 source independentlyverified. No support/staff/roles/MFA orbusinessseed. Oldnative96normalLogout thennewbundle/host; normalWebHOTP/profile/refresh→four-stepmin3/cap4 publish→actual97nativeA normalguestApply/OTP/profile/explicitSend→H WebApprove2. QA inboxhelper device-ID typo corrected beforecode retrieval; no extraOTP/quota reset.",
+        "Freshinspect allhandlerssettled; legitimate forwardclock todeadline16Z. Web actualNotifications link now opens staticnotificationpage with cancellationnotice; native99 actualNotifications shows Mealcancelled, explicitMarkRead persists.98QAuseddifferentWebcopy asnative locator, retainedcontrolfailure notproductbug.",
+        "Read-onlyscopedfacts afterAmark: AcancellationreadAt populated while Hstillnull. H WebstillUnread→normalMark→refreshRead; final ownreadfacts bothpersist. Viewmeal returnstheexactnewcancelledmeal. Controlledmail/notification peractor eachonce; mockSENT not realdelivery.",
+        "F50 targetedclosed only; componentnotification/privacy/error/pagination regressions previously13green reused. Whole010 supportprecondition absent, not grantedPASS; originalB26red retained."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b30-installed-formal-proof.json",
+        "evidence/2026-10-21/b30-web-own-notification-read.png",
+        "evidence/2026-10-21/b30-web-received-native-sends.png",
+        "evidence/2026-10-21/b30-a-read-h-unread-facts.json",
+        "evidence/2026-10-21/b30-both-own-read-facts.json",
+        "evidence/2026-10-21/native-b30-96-xcui.swift",
+        "evidence/2026-10-21/native-b30-97-xcui.swift",
+        "evidence/2026-10-21/native-b30-98-xcui.swift",
+        "evidence/2026-10-21/native-b30-99-xcui.swift",
+        "evidence/2026-10-21/native-b30-100-xcui.swift",
+        "evidence/2026-10-21/native-b30-99-1.png",
+        "evidence/2026-10-21/native-b30-99-2.png",
+        "evidence/2026-10-21/native-b30-99-3.png",
+        "evidence/2026-10-21/native-b30-100-1.png",
+        "evidence/2026-10-21/b30-ci-30358-independent.json"
+      ]
+    },
+    {
+      "id": "B30-O002",
+      "testedCommit": "3a17e8b8971f617b1e4d4f1c3903586b6464e6f9",
+      "status": "passed",
+      "title": "F51 actualkeyboardSend reachable andrealmessages delivered afterreopen/ancestorchange",
+      "steps": [
+        "Native99 keyboardy590..816, messagey491..532, Sendy488..533, hittabletrue/app402x874supportedportrait. ActualphysicalSend QA99 succeeds withkeyboardopen, noforcedtap orkeyboardbypass.",
+        "Native100 coldreopen normalInbox/group→typeQA100; whilekeyboardshown normalDeclineanalytics removesancestorbanner. Input/Sendremeasure remainabove590/hittabletrue andactualSend succeeds. Webothermember normalgroup UI receivestheexactQA99 andQA100 messages.",
+        "F51 targetedclosed; original94/95red retained, F49assistantSheet closure separate. Native98copylocatorfailure retained separately. Realdevice/externalgates notclaimed."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-b30-99-xcui.swift",
+        "evidence/2026-10-21/native-b30-99-result.json",
+        "evidence/2026-10-21/native-b30-100-xcui.swift",
+        "evidence/2026-10-21/native-b30-100-result.json",
+        "evidence/2026-10-21/b30-web-received-native-sends.png"
+      ]
+    }
+  ]
+}

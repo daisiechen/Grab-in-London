@@ -1,0 +1,7 @@
+{
+  "run": 98,
+  "classification": "QA_COPY_LOCATOR_FAILURE",
+  "resultLines": [
+    "** TEST EXECUTE FAILED **"
+  ]
+}
