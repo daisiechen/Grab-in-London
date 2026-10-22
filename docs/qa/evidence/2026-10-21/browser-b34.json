@@ -1,0 +1,22 @@
+{
+  "observations": [
+    {
+      "id": "B34-O001",
+      "testedCommit": "3a17e8b8971f617b1e4d4f1c3903586b6464e6f9",
+      "status": "passed",
+      "title": "Normal account switch isolation and final application capacity revalidation after AI draft",
+      "steps": [
+        "A confirms normal logout. B normal OTP/profile has fresh AI conversation and blank application editor; no A draft or dialogue inherited.",
+        "With actual capacity1/2, B explicitly searches, selects real meal, generates application draft and explicitly transfers it; no submission yet.",
+        "In separate host browser H normally approves A, actual count becomes2/2.",
+        "B submits the already-open original draft editor once; UI reports This table is full and no longer taking requests; draft remains. No forced hidden action or updated business data used.",
+        "Read-only before/after applications, seat_events, meals and messages count plus sorted row hashes are identical. No new B application or seat.",
+        "Still partial005: exact deadline counterexample, cross-client reversal and same-database Admin requirements remain unpassed."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b34-b-isolated-ai.png",
+        "evidence/2026-10-21/b34-capacity-submit-rejected.png"
+      ]
+    }
+  ]
+}
