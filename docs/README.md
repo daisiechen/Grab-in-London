@@ -7,6 +7,7 @@
 | 文档 | 用途与权威关系 |
 | --- | --- |
 | [主 PRD](product/PRD.zh-CN.md) | 当前v0.8需求真源；§0为已确认首期规格，沿用星期日恢复版界面 |
+| [MVP 补丁版本 PRD](product/mvp-patch-PRD.zh-CN.md) | 下一版增量需求、UX 问答及 Figma / 补丁 Demo 映射；需求梳理中，不改变当前 MVP 开发与测试基线 |
 | [产品简介](product/product-brief.md) | 产品定位与摘要；详细规则以主 PRD 为准 |
 | [首期运营指标与采集契约](product/admin/measurement-contract.zh-CN.md) | 后台全部指标算法、App采集入口与生产数据接入验收 |
 | [管理端 PRD](product/admin/PRD.zh-CN.md) | 管理端范围及指标；引用主 PRD，不替代共享业务规则 |
