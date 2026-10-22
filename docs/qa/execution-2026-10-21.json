@@ -102,7 +102,9 @@
     "browserObservationsB58": "evidence/2026-10-21/browser-b58.json",
     "browserObservationsB59": "evidence/2026-10-21/browser-b59.json",
     "browserObservationsB60": "evidence/2026-10-21/browser-b60.json",
-    "browserObservationsB61B63": "evidence/2026-10-21/browser-b61-b63.json"
+    "browserObservationsB61B63": "evidence/2026-10-21/browser-b61-b63.json",
+    "browserObservationsB64": "evidence/2026-10-21/browser-b64.json",
+    "browserObservationsB65": "evidence/2026-10-21/browser-b65.json"
   },
   "cases": [
     {
@@ -16368,7 +16370,9 @@
         "B59-O001",
         "B60-O001",
         "B60-O002",
-        "B62-O002"
+        "B62-O002",
+        "B64-O001",
+        "B64-O002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -16733,7 +16737,7 @@
       "remainingExpected": [
         "Repeat required wholeguestApply→normalLogin→profile→explicitapplication→approval→group→feedback end-to-end in bothWeb/iOSdirections in one finaldeclared environment, withBprivacy/notifications/sameDBadmintrace. F48nativeprefixalone is nowverified."
       ],
-      "actual": "Actual mainM1 Webhost/Nativeguest and reverseM5 Nativehost/Webguest approval/groupmessages, lifecycle, SELFattendance/privateexperience/publicreferences andexplicitreconnect executed with realPG unique facts (B17/B18/B19). Earlier normalnativeApply12 started already authenticated; it does not establish full guestApply→login→profilegate return. KeepNOT_RUN until that prefix is actually replayed per required client/role and sameDBstafftrace is captured; no composition-based wholepathPASS. Native70 normalguest publicOPENfuturemeal has noRequesttojoin (actualAX+publicHTTP), so prefixfails beforeOTP; independentR203emptyactions reproduces. QA-F48 handednativeowner, wholecaseFAIL notNR. B22-O001 formal0a actual80normalguestApply/login/profile/sameoriginaltarget/noautoSend passes F48targetedfix. StillNOT_RUN untilsameenvironmentbothrolefullpath/admintrace; original70red retained. B37-O004 one-process native117 normal explicit Send produces one PENDING application, hostseat stays1; only WebH normal Approve changes confirmed2/4. Reservation becomes stale, normal re-declaration for2 restores booked, arrangements lock. Remaining original full-journey assertions still unexecuted. B38 native120 actual authorized post-join message read/pre-join history exclusion, normal bubble keyboard dismissal, same-process actual429→finite61s→Retry, GROUP Keep/Replace, no-send checkpoint, keyboard-open explicit Send and WebH receipt passed. Harness118 wrong prehistory assumption/119 wrong header-dismiss assumption retained as failures; no product patch. Original reverse-role and remaining full-journey assertions remain unexecuted. B43 nativeH approves original WebA M2, actual group access, B full-editor rejection/privacy; WebA seat cancellation/group leave/reapply Pending verified. Current second-round approval and full feedback/Admin prerequisites remain. B49–B51 originalsameDB lifecycle/SELFpriority/ownexperience/publicreference/unilateralprivacy/mutualDM actuals captured; no wholecasepromotion until remaining fullassertions and current sharedAdmintrace. B56 original M3 guest Web filter/detail/Apply→normal OTP existing-profile return retains49-character draft, independent DB0automatic applications, explicit Send Pending→nativeH approval and booking update→WebA confirmed/empty authorized group passed. Reverse normal END/feedback and other remaining original assertions still pending. B59: original M3 natural22Z CLOSE processed with minimum2 met and OPEN retained; group remains dissolved, no STARTroster, no AI/budget/seat/booking history changes. Mirrored START/END/postmeal path still pending. B60 normal new OTP sessions restore nativeH/WebA; natural23Z START exactH+A roster2/SELF0/groupdissolved and oldAI/seat/booking history unchanged; LondonD23budget remains absent. END and postmeal still pending. B61–B63 (2026-10-22, archived/continued by Claude Code after Codex usage limit): natural 00Z snapshot and 01Z END on M3 with unchanged ledgers; WebA unknown→SELF present→private5; nativeH SELF present, HOST absent cannot override A SELF, private4, reference, one-sided meet-again. Slice only; whole case stays NOT_RUN.",
+      "actual": "Actual mainM1 Webhost/Nativeguest and reverseM5 Nativehost/Webguest approval/groupmessages, lifecycle, SELFattendance/privateexperience/publicreferences andexplicitreconnect executed with realPG unique facts (B17/B18/B19). Earlier normalnativeApply12 started already authenticated; it does not establish full guestApply→login→profilegate return. KeepNOT_RUN until that prefix is actually replayed per required client/role and sameDBstafftrace is captured; no composition-based wholepathPASS. Native70 normalguest publicOPENfuturemeal has noRequesttojoin (actualAX+publicHTTP), so prefixfails beforeOTP; independentR203emptyactions reproduces. QA-F48 handednativeowner, wholecaseFAIL notNR. B22-O001 formal0a actual80normalguestApply/login/profile/sameoriginaltarget/noautoSend passes F48targetedfix. StillNOT_RUN untilsameenvironmentbothrolefullpath/admintrace; original70red retained. B37-O004 one-process native117 normal explicit Send produces one PENDING application, hostseat stays1; only WebH normal Approve changes confirmed2/4. Reservation becomes stale, normal re-declaration for2 restores booked, arrangements lock. Remaining original full-journey assertions still unexecuted. B38 native120 actual authorized post-join message read/pre-join history exclusion, normal bubble keyboard dismissal, same-process actual429→finite61s→Retry, GROUP Keep/Replace, no-send checkpoint, keyboard-open explicit Send and WebH receipt passed. Harness118 wrong prehistory assumption/119 wrong header-dismiss assumption retained as failures; no product patch. Original reverse-role and remaining full-journey assertions remain unexecuted. B43 nativeH approves original WebA M2, actual group access, B full-editor rejection/privacy; WebA seat cancellation/group leave/reapply Pending verified. Current second-round approval and full feedback/Admin prerequisites remain. B49–B51 originalsameDB lifecycle/SELFpriority/ownexperience/publicreference/unilateralprivacy/mutualDM actuals captured; no wholecasepromotion until remaining fullassertions and current sharedAdmintrace. B56 original M3 guest Web filter/detail/Apply→normal OTP existing-profile return retains49-character draft, independent DB0automatic applications, explicit Send Pending→nativeH approval and booking update→WebA confirmed/empty authorized group passed. Reverse normal END/feedback and other remaining original assertions still pending. B59: original M3 natural22Z CLOSE processed with minimum2 met and OPEN retained; group remains dissolved, no STARTroster, no AI/budget/seat/booking history changes. Mirrored START/END/postmeal path still pending. B60 normal new OTP sessions restore nativeH/WebA; natural23Z START exactH+A roster2/SELF0/groupdissolved and oldAI/seat/booking history unchanged; LondonD23budget remains absent. END and postmeal still pending. B61–B63 (2026-10-22, archived/continued by Claude Code after Codex usage limit): natural 00Z snapshot and 01Z END on M3 with unchanged ledgers; WebA unknown→SELF present→private5; nativeH SELF present, HOST absent cannot override A SELF, private4, reference, one-sided meet-again. Slice only; whole case stays NOT_RUN. B64 private candidate: original Claude B63 attribution retained; normal Native180 independently reads persisted SELF priority and private choice without rewriting. WebA explicitly saves48-character reference, observes unilateral privacy, mutually selects and explicitly sends one M3 direct message. Native reply/withdraw/block/unblock and Admin trace remain unexecuted; no whole-case promotion.",
       "defectIds": [
         "QA-F18",
         "QA-F48"
@@ -16807,7 +16811,9 @@
         "B60-O002",
         "B61-O001",
         "B62-O001",
-        "B63-O001"
+        "B63-O001",
+        "B64-O001",
+        "B64-O002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -17122,7 +17128,7 @@
       "remainingExpected": [
         "Finish same physical test-environment staff/admin trace precondition and verify full expected mapping; actual dual-direction create/booking/approval/lifecycle and host SELF-priority slices already captured, not automatically whole-case PASS."
       ],
-      "actual": "F42targetedclosed formalcd69: originalNative52 missinghostcontrol retained; actual53unknown/no-default/Reviewcancel PG0; actual54HOSTabsent independentlyconfirmed; WebguestSELFpresent then Native55HOSTabsentagain preserves effectiveSELFpresent. R19614/0. Fullbothdirectionjourney still heldNR for thirdprivacyactor/sharedfactsadminprecondition and remainingassertions. B20-O004: sameDBsidecar bootstrap facts verified, but original rig autoexited during legalclockadvance; no sourceadminUI/snapshot/CSV executed. Environmentrecovery developerowned, not user blocker. B37-O004 one-process native117 normal explicit Send produces one PENDING application, hostseat stays1; only WebH normal Approve changes confirmed2/4. Reservation becomes stale, normal re-declaration for2 restores booked, arrangements lock. Remaining original full-journey assertions still unexecuted. B40 nativeH role cold-restore/empty AI CREATE/manual4step/explicitPublish mechanics observed; reservation semantic F55 is separately failing in QA-CREATE-002. Full case remains NOT_RUN; do not grant PASS before F55 and original full expectations close. B43 nativeH normal approval, booking update and actual WebA chat receipt verified in original physical final DB. Whole lifecycle/Admin remains. B49–B51 originalsameDB lifecycle/SELFpriority/ownexperience/publicreference/unilateralprivacy/mutualDM actuals captured; no wholecasepromotion until remaining fullassertions and current sharedAdmintrace. B55 nativeH original sameDB M3 actual normal candidate reuse→manual four steps/completed declaration/unchecked Review→explicit Publish independently passed; one new OPEN meal/host seat/group with exact lifecycle jobs. No wholecase promotion: native GROUP and subsequent role-swapped normal lifecycle still pending. B56 nativeH normal approval and fresh booking declaration for M3 passed with exact WebA receipt; normal deadline/host postmeal reporting still pending. B59: original M3 natural22Z CLOSE processed with minimum2 met and OPEN retained; group remains dissolved, no STARTroster, no AI/budget/seat/booking history changes. Mirrored START/END/postmeal path still pending. B60 normal new OTP sessions restore nativeH/WebA; natural23Z START exactH+A roster2/SELF0/groupdissolved and oldAI/seat/booking history unchanged; LondonD23budget remains absent. END and postmeal still pending. B61–B63 (2026-10-22, archived/continued by Claude Code after Codex usage limit): natural 00Z snapshot and 01Z END on M3 with unchanged ledgers; WebA unknown→SELF present→private5; nativeH SELF present, HOST absent cannot override A SELF, private4, reference, one-sided meet-again. Slice only; whole case stays NOT_RUN.",
+      "actual": "F42targetedclosed formalcd69: originalNative52 missinghostcontrol retained; actual53unknown/no-default/Reviewcancel PG0; actual54HOSTabsent independentlyconfirmed; WebguestSELFpresent then Native55HOSTabsentagain preserves effectiveSELFpresent. R19614/0. Fullbothdirectionjourney still heldNR for thirdprivacyactor/sharedfactsadminprecondition and remainingassertions. B20-O004: sameDBsidecar bootstrap facts verified, but original rig autoexited during legalclockadvance; no sourceadminUI/snapshot/CSV executed. Environmentrecovery developerowned, not user blocker. B37-O004 one-process native117 normal explicit Send produces one PENDING application, hostseat stays1; only WebH normal Approve changes confirmed2/4. Reservation becomes stale, normal re-declaration for2 restores booked, arrangements lock. Remaining original full-journey assertions still unexecuted. B40 nativeH role cold-restore/empty AI CREATE/manual4step/explicitPublish mechanics observed; reservation semantic F55 is separately failing in QA-CREATE-002. Full case remains NOT_RUN; do not grant PASS before F55 and original full expectations close. B43 nativeH normal approval, booking update and actual WebA chat receipt verified in original physical final DB. Whole lifecycle/Admin remains. B49–B51 originalsameDB lifecycle/SELFpriority/ownexperience/publicreference/unilateralprivacy/mutualDM actuals captured; no wholecasepromotion until remaining fullassertions and current sharedAdmintrace. B55 nativeH original sameDB M3 actual normal candidate reuse→manual four steps/completed declaration/unchecked Review→explicit Publish independently passed; one new OPEN meal/host seat/group with exact lifecycle jobs. No wholecase promotion: native GROUP and subsequent role-swapped normal lifecycle still pending. B56 nativeH normal approval and fresh booking declaration for M3 passed with exact WebA receipt; normal deadline/host postmeal reporting still pending. B59: original M3 natural22Z CLOSE processed with minimum2 met and OPEN retained; group remains dissolved, no STARTroster, no AI/budget/seat/booking history changes. Mirrored START/END/postmeal path still pending. B60 normal new OTP sessions restore nativeH/WebA; natural23Z START exactH+A roster2/SELF0/groupdissolved and oldAI/seat/booking history unchanged; LondonD23budget remains absent. END and postmeal still pending. B61–B63 (2026-10-22, archived/continued by Claude Code after Codex usage limit): natural 00Z snapshot and 01Z END on M3 with unchanged ledgers; WebA unknown→SELF present→private5; nativeH SELF present, HOST absent cannot override A SELF, private4, reference, one-sided meet-again. Slice only; whole case stays NOT_RUN. B64 private candidate: original Claude B63 attribution retained; normal Native180 independently reads persisted SELF priority and private choice without rewriting. WebA explicitly saves48-character reference, observes unilateral privacy, mutually selects and explicitly sends one M3 direct message. Native reply/withdraw/block/unblock and Admin trace remain unexecuted; no whole-case promotion.",
       "relatedBrowserEvidence": [
         "B1"
       ],
@@ -17582,7 +17588,13 @@
         "B51-O001",
         "B51-O002",
         "B52-O001",
-        "B63-O001"
+        "B63-O001",
+        "B64-O001",
+        "B64-O002",
+        "B65-O001",
+        "B65-O002",
+        "B65-O003",
+        "B65-O004"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -17897,9 +17909,12 @@
       "remainingExpected": [
         "补 native host / Web applicant 方向完整单向隐私、互选、双向私信、撤回、拉黑再解封不恢复。原 Web host / native applicant 方向证据保留。"
       ],
-      "actual": "B53 audit correction: 原预期子断言已通过，见保留 evidence；原共同前提 Web/iOS 互换各走一次尚未完成。补 native host / Web applicant 方向完整单向隐私、互选、双向私信、撤回、拉黑再解封不恢复。原 Web host / native applicant 方向证据保留。 B61–B63 (2026-10-22, archived/continued by Claude Code after Codex usage limit): natural 00Z snapshot and 01Z END on M3 with unchanged ledgers; WebA unknown→SELF present→private5; nativeH SELF present, HOST absent cannot override A SELF, private4, reference, one-sided meet-again. Slice only; whole case stays NOT_RUN.",
+      "actual": "B53 audit correction: 原预期子断言已通过，见保留 evidence；原共同前提 Web/iOS 互换各走一次尚未完成。补 native host / Web applicant 方向完整单向隐私、互选、双向私信、撤回、拉黑再解封不恢复。原 Web host / native applicant 方向证据保留。 B61–B63 (2026-10-22, archived/continued by Claude Code after Codex usage limit): natural 00Z snapshot and 01Z END on M3 with unchanged ledgers; WebA unknown→SELF present→private5; nativeH SELF present, HOST absent cannot override A SELF, private4, reference, one-sided meet-again. Slice only; whole case stays NOT_RUN. B64 private candidate: original Claude B63 attribution retained; normal Native180 independently reads persisted SELF priority and private choice without rewriting. WebA explicitly saves48-character reference, observes unilateral privacy, mutually selects and explicitly sends one M3 direct message. Native reply/withdraw/block/unblock and Admin trace remain unexecuted; no whole-case promotion. B65 (Claude): native H reads A M3 DM and replies, Web A receives (two-way DM across clients); Web A withdraw → both epoch3 consents revoked, Web and native DM read-only; Web A blocks H → Web reconnect 403 honest message, native H DM read-only and reconnect rejected without write (generic error QA-F59). Native host cannot reach co-diner profile to block after the meal (QA-F58); Web cannot see or undo its block after reload (QA-F60), so unblock-does-not-revive remains unexecuted. Whole case stays NOT_RUN.",
       "defectIds": [
-        "QA-F44"
+        "QA-F44",
+        "QA-F58",
+        "QA-F59",
+        "QA-F60"
       ],
       "history": [
         {
@@ -23030,7 +23045,10 @@
     "QA-F54": "CLOSED_TARGETED_QA",
     "QA-F55": "CLOSED_TARGETED_QA",
     "QA-F56": "CLOSED_TARGETED_QA",
-    "QA-F57": "CLOSED_TARGETED_QA"
+    "QA-F57": "CLOSED_TARGETED_QA",
+    "QA-F58": "OPEN_CONFIRMED",
+    "QA-F59": "OPEN_CONFIRMED",
+    "QA-F60": "OPEN_CONFIRMED"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -23051,5 +23069,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B63:198 PASS/8 NOT_RUN/11 BLOCKED. M3 lifecycle complete through END01Z (B61/B62). Post-meal: WebA SELF present/private5; nativeH SELF present, HOST absent on A shows SELF priority, private4, public reference H→A, one-sided meet-again (no mutual). Next: WebA reference/meet-again to reach mutual unlock and DM on M3 (J004 native-host/Web-applicant direction), product survey vs qualified score and same-DB Admin/CSV trace (J007). See docs/qa/handoff-2026-10-22-claude.zh-CN.md."
+  "currentExecutionSlice": "B65:198 PASS/8 NOT_RUN/11 BLOCKED. J004 native-host/Web-applicant: two-way DM, withdraw read-only, block rejects reconnect verified; QA-F58 (native host no post-meal block entry), QA-F59 (native generic 403 copy), QA-F60 (Web block state not loaded, cannot unblock) open with development coordinator. Unblock non-revival waits for F60. Next: J007 native B survey and same-DB Admin/CSV."
 }

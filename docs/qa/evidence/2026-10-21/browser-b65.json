@@ -1,0 +1,68 @@
+{
+ "observations": [
+  {
+   "id": "B65-O001",
+   "executedBy": "Claude Code",
+   "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+   "status": "passed",
+   "title": "Two-way M3 direct message across clients",
+   "steps": [
+    "Guarded clock 01:00:00Z→01:01:00Z (no pending jobs/crossed boundaries/table change) to allow normal Web A OTP resend; normal OTP sign-in.",
+    "native181: H Inbox → QA Final Applicant chat shows A M3 message and M1 history; explicit Send of reply; no Retry.",
+    "Web A Inbox chat shows H reply at 02:01 London."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/b65-native-host-dm-reply-sent.png",
+    "evidence/2026-10-21/native181-xcui.swift"
+   ]
+  },
+  {
+   "id": "B65-O002",
+   "executedBy": "Claude Code",
+   "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+   "status": "passed",
+   "title": "Withdraw clears both consents; history read-only on both clients",
+   "steps": [
+    "Web A Withdraw connection → confirmation sheet (messages stop, history kept, both must re-choose) → confirm → toast “Connection withdrawn. Private messages are now read-only.”",
+    "DB: A and H epoch3 consents revoked at 01:01, pair consent_epoch 4; messages count unchanged.",
+    "Web chat shows read-only notice and no composer; native182 cold launch shows history and no Message field."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/b65-native-withdrawn-dm-readonly.png",
+    "evidence/2026-10-21/native182-xcui.swift"
+   ]
+  },
+  {
+   "id": "B65-O003",
+   "executedBy": "Claude Code",
+   "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+   "status": "passed",
+   "title": "Block rejects reconnect on both clients without writes",
+   "steps": [
+    "Web A H profile (via chat avatar) → Block → Block member → “You have blocked this member. Private contact is disabled.” DB block A→H active v1.",
+    "Web A post-meal reconnect tick → PUT reconnect 403, “This action isn’t available to you right now.”, no consent row.",
+    "native183 H DM read-only; its reconnect attempt is discarded as evidence because H write-burst count exceeded 10 in the frozen 1-second window (possible 429).",
+    "Guarded clock 01:01→01:02Z; native184 with only 2 H writes: reconnect rejected, no consent row, but generic error text (QA-F59)."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/f59-native-blocked-reconnect-generic-error.png",
+    "evidence/2026-10-21/native183-xcui.swift",
+    "evidence/2026-10-21/native184-xcui.swift"
+   ]
+  },
+  {
+   "id": "B65-O004",
+   "executedBy": "Claude Code",
+   "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+   "status": "failed",
+   "title": "Block entry and unblock path defects",
+   "steps": [
+    "native182: after the meal H has no control leading to A profile (meal detail, chat, post-meal) → cannot block (QA-F58). Probe failed at that step; read-only portion passed.",
+    "Web reload of H profile no longer shows blocked status/Unblock; re-block 409 leaves no Unblock (QA-F60). Unblock-does-not-revive not executed."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/f60-web-reblock-409-no-unblock.jpg"
+   ]
+  }
+ ]
+}

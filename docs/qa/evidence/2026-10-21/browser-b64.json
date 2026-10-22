@@ -1,0 +1,34 @@
+{
+ "observations": [
+  {
+   "id": "B64-O001",
+   "executedBy": "Codex QA (resumed 2026-10-22 ~17:22Z after usage limit); merged by Claude Code",
+   "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+   "status": "passed",
+   "title": "Read-only Native180 persisted SELF priority and host unilateral choice",
+   "steps": [
+    "Native180 exits0 with ownSELFpresent, applicantSELFpresent plus HOSTabsent report, and host Undochoice control. No feedback re-submission. Claude B63 supplies original HOST/private4/ref45/choice provenance; retain new177 failed and178 stopped probe history, do not relabel either successful."
+   ],
+   "artifacts": []
+  },
+  {
+   "id": "B64-O002",
+   "executedBy": "Codex QA (resumed 2026-10-22 ~17:22Z after usage limit); merged by Claude Code",
+   "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+   "status": "passed",
+   "title": "New normal WebA feedback and mutual/direct actions",
+   "steps": [
+    "WebA explicit48-character reference Save succeeds/published. Before selecting, active host choice is not exposed to applicant: checkbox0/no mutual controls screenshot. Applicant explicitly selects, mutual Sayhello appears, opens existing authorized direct history, explicitly sends new M3 message and clears editor. Native reply/withdraw/block/unblock not executed in this resumed slice."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/b64-web-applicant-unilateral-private.png",
+    "evidence/2026-10-21/b64-web-applicant-mutual-dm-sent.png"
+   ]
+  }
+ ],
+ "processNotes": [
+  "Codex QA resumed while Claude held the QA executor role and performed B64-O001/O002 between 17:22Z and 17:35Z; Claude detected the unexplained applicant writes via idempotency/xmin/rate-limit rows and traced them to the Codex transcript.",
+  "Codex stopped all business, clock and shared-file writes at 17:34Z and confirmed Claude as sole QA executor. Codex conflicting working-tree registrations (duplicate B61/B62 IDs) were backed up privately and not committed; its merge candidate on c413304 was adopted.",
+  "Claude harness note: one OTP one-reader reply was consumed by a format check without use; resend is throttled on the frozen fixture clock, so a guarded single advance 01:00:00Z→01:01:00Z (no pending jobs, no crossed meal boundary, same London day, no table change) was executed before normal re-login. No business write resulted."
+ ]
+}

@@ -195,3 +195,5 @@
 - [QA B43：反向跨端审批、AI 群稿与独立离群](qa/evidence/2026-10-21/browser-b43.json)：同库实际推进至重新申请 Pending；记录原生测试时钟偏差与后台初始快照边界，完整旅程仍待补齐。
 
 - [QA B61–B63：M3 午夜快照、饭局结束与双端饭后反馈切片](qa/evidence/2026-10-21/browser-b61-b63.json)：Web 申请人自报/私评分，原生主持人本人优先/评价/单方再约；整条旅程仍待测。[Codex→Claude 交接记录](qa/handoff-2026-10-22-claude.zh-CN.md)。
+
+- [QA B64：Codex 恢复后 Web 申请人回评/单方隐私/互选/私信与并发处理](qa/evidence/2026-10-21/browser-b64.json)；[QA B65：跨端私信往返、撤回只读、拉黑拒绝再约及 F58/F59/F60](qa/evidence/2026-10-21/browser-b65.json)。
