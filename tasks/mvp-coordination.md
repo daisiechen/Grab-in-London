@@ -584,3 +584,13 @@
 - F47：QA独立推进前17表digest再核同，按协议仅一次FIFO advance01:11，旧rig随后报LOCAL CLOCK STOPPED current01:10 resetrequired并自动退出；63824/61973消失、PG拒连。旧脚本任一advance阶段错误均fatal，finally无条件dropDB/pg.stop删目录；日志未记录具体失败阶段，不能猜drain或workerstop timeout，Nodecurrent旧也不能证明PG commit是否发生。保留原api.log、descriptor、QA/private/tmp/fancy-qa-stage1-before.json和operatorreceipt；禁止重试advance/resume/snapshot/重启/清理旧环境，不伪造旧IDs/history宣称恢复，旧同库后台trace未闭环。生产代码与独立F44结果不因该fixture丢失重开。
 - venues owner已获准最小F47基础设施修复：阶段安全错误/DBclock OLD/TARGET/UNKNOWN、默认异常保OWNDBPG、显式核owner receipt才清理、PGstop失败不强rm、真实heldrequest/responseabort/workerstop/advance/tick故障回归。app.close原AI recovery元数据副作用须明示，保库不冒静止快照。所有验证只新自有PG，原环境不复建。
 - AI3102正常签名包200已交QA；034独立parent持OWNPG/仅OWN APIchild真SIGKILL再spawn的短生命周期测试通过：同auth/business/clockhash、技术delta空、旧session/result410，测试资源已清理，无standing；最终WIP因F45暂停，不冒native034通过。完整001新case/sameDBstaff/合法clock与默认保数据需后续独立新环境，不拼旧trace。
+
+
+## F45/F46/F47 冻结整合与正式复验交接
+
+- F45正式1e6c2a4安全保存当前安装AI凭据：session/generation/device/revoke/服务端TTL与真实owner绑定，正文/偏好/草稿不落盘；冷启仅候选，用户显式Continue才读上下文，marker缺失先清Keychain再写marker。账户切换与晚响应围栏、存储失败拒用均有回归。原Native69红保留，实际正常签名包复验前不关闭。
+- F46正式65e6818把远端退出未确认提示移至AppRoot/session独立订阅，Settings卸载后仍显示；204无提示，晚到失败不附新登录。仅说明远端未确认，不能声称Native66已查明429或已撤销family。
+- F47正式6e497d3默认退出及异常保留OWN PostgreSQL；显式0600所有权receipt、真实PID/port/data目录核验并pg_ctl成功后才清理。时钟故障输出阶段和数据库OLD/TARGET/UNKNOWN，不能从旧Node时间猜提交结果。新PG失败停机保数据回归通过。关闭app可能写AI recovery元数据，保留并非静止快照。原61973资料已丢失，禁止resume46293/重建旧IDs冒恢复；原sameDB后台旅程需全新case重跑。
+- root综合冻结core:check退出0、unit365/DB147/API203/release27全部绿；原生317/type绿，QA自有unused import修正后全iOSlint0，文档3绿。日志/private/tmp/fancy-f454647-{check,core}.log及fancy-f45-f46-frozen-{ios,type}.log。三提交分别push/fetch核对HEAD=origin/main，其他QA/research修改未索引。
+- 已交ios owner完整archive正式6e497d3，API3102正常签名Release arm64 build-only，待实际source/binary/Hermes证据后QA仅第二sim安装，复验冷启Continue、重装marker与退出notice。整体生产验收未闭环。
+- AI3102仅补合成London新日2026-10-22预算10CNY/100calls，旧日/月与业务probe不变，所有调用价格标注synthetic-only-no-real-charge；本次无真实provider调用/充值/预算初始化。私有回执/private/tmp/fancy-ai3102-synthetic-day-cap-receipt.json，不公开配置或凭据。
