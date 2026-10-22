@@ -1,0 +1,42 @@
+{
+  "observations": [
+    {
+      "id": "B26-O001",
+      "testedCommit": "c3fb3557c4da4af64e74351a5cd1a1698e8afe93",
+      "status": "failed",
+      "title": "F50 Web notifications link falls into conversation route; native lacks station notification UI",
+      "steps": [
+        "Fresh OWN J010 accessv3 reviewed15tests; formalnative1522/205sources/hash/signature independently exact. Normal canonicalhost Web H OTP/profile/refresh persists authentication; four-stepUI min3/cap4 publishes484977ad. Actualnative92 guestApply→normalAOTP/privateone-readFIFO→profile→exacttarget→explicitSend PASS. H normalWebApprove confirms2 belowmin3. No business seed.",
+        "Freshinspect API active0/handlerRunning0/worker no inflight; legalfiniteadvance04:17:45.136Z→16Z succeeds samePG/Node/DB/worker. Actualmeal detail states cancelled not enough people; no in-app payment to refund. Host normalUI group message sends after cancellation.",
+        "Click real Inbox Notifications link /inbox/notifications displays Chat fallback Your chat opens after confirmation. Staticroutes has only /inbox/:conversationId; native Inbox has Chats/Applications only. Actual93 Inbox confirms absence, receives host message; later QA locator Message versus actualMessage Message causes QA-only control failure before native send (preserved, not product defect).",
+        "Scopedreadonly rolefacts show samecancel event H/A eachnotifications1/outboxSENT1; controlledsink eachsendCalls1, providerHTTP0. No actual mailbox/provider delivery claimed. F50 productionowners notified immediately; support precondition separately not assembled. Whole010 FAIL from actual UI defect; other journey cases remainNOT_RUN."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b26-web-host-published.png",
+        "evidence/2026-10-21/b26-web-insufficient.png",
+        "evidence/2026-10-21/b26-web-cancelled-group-send.png",
+        "evidence/2026-10-21/b26-web-notifications-failure.png",
+        "evidence/2026-10-21/b26-scoped-notification-mail-facts.json",
+        "evidence/2026-10-21/b26-legal-clock-advance.json",
+        "evidence/2026-10-21/native-b26-92-xcui.swift",
+        "evidence/2026-10-21/native-b26-93-xcui.swift"
+      ]
+    },
+    {
+      "id": "B26-O002",
+      "testedCommit": "c3fb3557c4da4af64e74351a5cd1a1698e8afe93",
+      "status": "failed",
+      "title": "F51 native group composer Send physically hidden by keyboard",
+      "steps": [
+        "Actual93 received Webhost cancelledgroup message but QA exactMessage label missed actualMessage Message; preservedQAcontrolred. Corrected94 reaches actualSend but hitpoint-1,-1 and no send.",
+        "Actual95 shortQA95 focusedinput: keyboard y590..816, messagey703.67..744.67, Sendy700.67..745.67, Sendhittablefalse. Explicitphysicalreachability assertion fails, noforcedtap/noSend.",
+        "IndependentF51 ownedbyoriginalnative developer. Not closed by successfulWebgroup send or priorF49assistantSheet fix. Preserve currentownPG and bothsessions; no trueprovider call."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-b26-95-chat-keyboard-failure.png",
+        "evidence/2026-10-21/native-b26-95-xcui.swift",
+        "evidence/2026-10-21/native-b26-95-result.json"
+      ]
+    }
+  ]
+}

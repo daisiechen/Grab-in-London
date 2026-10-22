@@ -15,16 +15,16 @@
 | 状态 | 数量 |
 |---|---:|
 | PASS | 194 |
-| FAIL | 0 |
+| FAIL | 1 |
 | BLOCKED | 11 |
-| NOT_RUN | 12 |
+| NOT_RUN | 11 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实供应商、真实设备发行、部署或政策批准证据；本地已有可运行模拟器和正常签名原生UI，不能再用旧许可/runtime缺失概括。本地恢复与分步删除已独立通过。FAIL优先于未完成的后续步骤。
 
 ## 实际运行
 
-B25 AI034 all three expectations PASS via B21 actual75–78 plus sameApp RAMloss91. 194PASS/12NOT_RUN/11BLOCKED. F46/F49 targetedclosed; remaining12 are full unifiedjourneys requiring sameenvironment normalHAB andWeb/iOSrole swaps/Adminnotificationtrace.
+B26 actualJ010 WebH/nativeA normalUI reachedinsufficientcancel and Webgroup send; F50 stationnotificationUI missing Web/native causes010FAIL.194PASS/11NOT_RUN/1FAIL/11BLOCKED; supportpreconditionpending. ExistingF46/F49/AI034closures retained. F51 nativeChat keyboard Send occlusion actual95 independentlyconfirmed; two stable defects handed to productionowners.
 
 | ID | 结果 | 范围 |
 |---|---|---|
@@ -466,7 +466,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-AI-047 · 结果不足三张 | PASS | Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim.；证据 R117-T011 |
 | QA-AI-048 · 当日与未确认目标 | PASS | Independent targeted production probes R126 and cited UI evidence cover the original expected assertions. Local synthetic environment; real PG/API where stated, controlled clock/provider or component transport explicitly scoped. Historical setup/real failures retained; no native journey or real vendor claim.；证据 R126-T012, R126-T013 |
 | QA-AI-049 · 创建与群草稿长度 | PASS | Independent R123 four assertions: application301, create81/1001 and group1001 rejected; exact300/80/1000/1000 allowed in core validator. Failed generation has no transfer artifact or business writes; no editor bypass. Controlled model and real PG for controller cases; pure core group boundary.；证据 R123-T001, R123-T002, R123-T003, R123-T004 |
-| QA-JOURNEY-010 · 截止不足通知路径 | NOT_RUN | 本地生产实现尚需实际执行：H创建min3 → 仅A确认 → 到截止 → 查站内及邮件 → 群发消息。尚缺逐项证据：原因insufficient；当前成员通知各一次；群仍可发言；无退款承诺。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
+| QA-JOURNEY-010 · 截止不足通知路径 | FAIL | B26 normalWebHcreate/nativeAApply/profile/send/WebApprove/legitimateclock→insufficient2/min3. Web cancellation/no-refund/group send proved; PG H/A eachone station notification and controlledmailSENT1. WebNotifications link fallsintoChat route and nativehasno notificationentry: F50 actualUI FAIL. Actual93groupreceive passes but send notattempted dueQA selector issue; preservecontrolfailure separately. Actual95 correctedlocator confirms separateF51: keyboard590..816, Send700.67..745.67/hittablefalse; no nativeSend. Webhostsend+nativeAreceive proved, nativewritependingfix.；证据 B26-O001, B26-O002 |
 | QA-JOURNEY-011 · 支持纠错全路径 | NOT_RUN | 本地生产实现尚需实际执行：CLI OAuth+MFA→授权case→end+7d纠错→新快照→私聊重验→审计。尚缺逐项证据：逐步权限重验；保留原报告；新资格传播，旧普通快照不改；不开放全表/消息正文。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-JOURNEY-012 · 后台分析分类路径 | NOT_RUN | 本地生产实现尚需实际执行：分析者过滤S0下钻CSV → data_admin改分类生成S1 → 显式切换。尚缺逐项证据：旧链路S0一致；分类不改登录权限；新快照排除测试贡献且保留筛选。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-AI-050 · DeepSeek模型替换准入 | BLOCKED | DeepSeek本地适配34项及评测准备13项独立复跑通过；真实样本与延迟门槛尚缺，不能用受控响应关闭真实模型准入。 |

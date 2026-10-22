@@ -1,0 +1,8 @@
+{
+  "run": 93,
+  "classification": "QA_LOCATOR_FAILURE",
+  "resultLines": [
+    "/tmp/fancy-qa-native/ProbeTests.swift:7: error: -[ProbeUITests.ProbeTests testJ010CancelledGroupStillReceivesAndSends] : XCTAssertTrue failed",
+    "** TEST EXECUTE FAILED **"
+  ]
+}

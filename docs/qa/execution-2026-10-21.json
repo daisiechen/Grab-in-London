@@ -18,7 +18,8 @@
   },
   "counts": {
     "PASS": 194,
-    "NOT_RUN": 12,
+    "NOT_RUN": 11,
+    "FAIL": 1,
     "BLOCKED": 11
   },
   "evidenceCatalog": {
@@ -66,7 +67,8 @@
     "browserObservationsB22": "evidence/2026-10-21/browser-b22.json",
     "browserObservationsB23": "evidence/2026-10-21/browser-b23.json",
     "browserObservationsB24": "evidence/2026-10-21/browser-b24.json",
-    "browserObservationsB25": "evidence/2026-10-21/browser-b25.json"
+    "browserObservationsB25": "evidence/2026-10-21/browser-b25.json",
+    "browserObservationsB26": "evidence/2026-10-21/browser-b26.json"
   },
   "cases": [
     {
@@ -21232,8 +21234,11 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "B26-O001",
+        "B26-O002"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T054",
         "R1-T055",
@@ -21545,12 +21550,20 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "原因insufficient",
-        "当前成员通知各一次",
-        "群仍可发言",
-        "无退款承诺"
+        "F50 Web/native station notification list/read actualUI unavailable; F51 native group Send physically occluded by keyboard; support precondition not assembled. Controlledmail is synthetic only."
       ],
-      "actual": "本地生产实现尚需实际执行：H创建min3 → 仅A确认 → 到截止 → 查站内及邮件 → 群发消息。尚缺逐项证据：原因insufficient；当前成员通知各一次；群仍可发言；无退款承诺。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "B26 normalWebHcreate/nativeAApply/profile/send/WebApprove/legitimateclock→insufficient2/min3. Web cancellation/no-refund/group send proved; PG H/A eachone station notification and controlledmailSENT1. WebNotifications link fallsintoChat route and nativehasno notificationentry: F50 actualUI FAIL. Actual93groupreceive passes but send notattempted dueQA selector issue; preservecontrolfailure separately. Actual95 correctedlocator confirms separateF51: keyboard590..816, Send700.67..745.67/hittablefalse; no nativeSend. Webhostsend+nativeAreceive proved, nativewritependingfix.",
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：H创建min3 → 仅A确认 → 到截止 → 查站内及邮件 → 群发消息。尚缺逐项证据：原因insufficient；当前成员通知各一次；群仍可发言；无退款承诺。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。",
+          "reason": "B26 actual normal Web/native journey reveals F50"
+        }
+      ],
+      "defectIds": [
+        "QA-F50",
+        "QA-F51"
+      ]
     },
     {
       "id": "QA-JOURNEY-011",
@@ -22668,7 +22681,9 @@
     "QA-F46": "CLOSED_TARGETED_QA",
     "QA-F47": "OPEN_ENVIRONMENT",
     "QA-F48": "CLOSED_TARGETED_QA",
-    "QA-F49": "CLOSED_TARGETED_QA"
+    "QA-F49": "CLOSED_TARGETED_QA",
+    "QA-F50": "OPEN_ACTUAL_UI_REPRODUCED",
+    "QA-F51": "OPEN_NATIVE_REPRODUCED"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -22688,5 +22703,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B25 AI034 all three expectations PASS via B21 actual75–78 plus sameApp RAMloss91. 194PASS/12NOT_RUN/11BLOCKED. F46/F49 targetedclosed; remaining12 are full unifiedjourneys requiring sameenvironment normalHAB andWeb/iOSrole swaps/Adminnotificationtrace."
+  "currentExecutionSlice": "B26 actualJ010 WebH/nativeA normalUI reachedinsufficientcancel and Webgroup send; F50 stationnotificationUI missing Web/native causes010FAIL.194PASS/11NOT_RUN/1FAIL/11BLOCKED; supportpreconditionpending. ExistingF46/F49/AI034closures retained. F51 nativeChat keyboard Send occlusion actual95 independentlyconfirmed; two stable defects handed to productionowners."
 }

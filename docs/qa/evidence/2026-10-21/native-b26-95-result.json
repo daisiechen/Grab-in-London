@@ -1,0 +1,9 @@
+{
+  "run": 95,
+  "classification": "PRODUCT_KEYBOARD_FAILURE",
+  "resultLines": [
+    "QA_NATIVE95_GEOMETRY keyboard=(0.0, 590.0, 402.0, 226.0) message=(13.0, 703.6666460037231, 298.6666564941406, 41.0) send=(320.6666564941406, 700.6666460037231, 69.33334350585938, 45.0) hittable=false",
+    "/tmp/fancy-qa-native/ProbeTests.swift:7: error: -[ProbeUITests.ProbeTests testJ010CancelledGroupStillReceivesAndSends] : XCTAssertTrue failed - Chat Send must physically be reachable while typing",
+    "** TEST EXECUTE FAILED **"
+  ]
+}

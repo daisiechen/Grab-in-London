@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "c3fb3557c4da4af64e74351a5cd1a1698e8afe93",
+  "caseId": "QA-JOURNEY-010",
+  "mealId": "484977ad-c470-4f47-a147-4e2af18492f9",
+  "groupId": "2f3d0c3f-fbf0-4051-9690-3e8f97442f31",
+  "hostId": "3e09f860-cf02-467a-b853-57220095df0f",
+  "applicantId": "c23a8c4e-5398-4aec-8bf3-70181243e961",
+  "setup": "all business facts created via normal Web/native UI, no API/SQL business seed",
+  "clock": "2026-10-22T16:00:00.000Z",
+  "minimum": 3,
+  "confirmed": 2,
+  "observedDefect": "QA-F50 Web notifications route absent; native notification UI absent (actual93 pending)",
+  "supportPrecondition": "not assembled, separately incomplete"
+}

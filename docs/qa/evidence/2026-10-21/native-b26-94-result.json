@@ -1,0 +1,8 @@
+{
+  "run": 94,
+  "classification": "PRODUCT_KEYBOARD_FAILURE",
+  "resultLines": [
+    "/tmp/fancy-qa-native/ProbeTests.swift:7: error: -[ProbeUITests.ProbeTests testJ010CancelledGroupStillReceivesAndSends] : XCTAssertTrue failed - Attributes: Application, 0x1106397c0, pid: 68990, label: 'Fancy'",
+    "** TEST EXECUTE FAILED **"
+  ]
+}
