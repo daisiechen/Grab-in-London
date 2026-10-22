@@ -47,10 +47,16 @@ it('webhook fences an actual in-flight UNKNOWN lookup and never lets its NOT_SEN
  const adapter:MailProvider={kind:'test',send:async()=>{sends++;return{status:'UNKNOWN'};},lookup:async()=>{entered();await gate;return{status:'NOT_SENT'};}};const service=mailDelivery(h.db.pool,adapter,'test'),pending=service.tick();try{await entry;expect((await post(raw(f.id,provider))).statusCode).toBe(200);}finally{release();await pending;}await service.tick();expect(sends).toBe(0);expect(await row(f.id)).toMatchObject({status:'SENT',provider_id:provider});
 });
 it('uses a real independent row-lock barrier and the old worker claim updates zero rows after receipt commits',async()=>{
- const f=await queued(),provider=randomUUID(),holder=await h.db.pool.connect();let webhook:ReturnType<typeof post>|undefined,oldWriter:Promise<{rowCount:number|null}>|undefined;
- try{await holder.query('BEGIN');await holder.query('SELECT id FROM outbox WHERE id=$1 FOR UPDATE',[f.id]);webhook=post(raw(f.id,provider));let waiting=false;for(let n=0;n<150;n++){const {rows}=await h.db.pool.query("SELECT 1 FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'SELECT status,channel,attempts,%'");if(rows.length){waiting=true;break;}await new Promise<void>(r=>setImmediate(r));}expect(waiting).toBe(true);
- oldWriter=h.db.pool.query("UPDATE outbox SET status='UNKNOWN',provider_id=NULL WHERE id=$1 AND claim_token=$2",[f.id,f.claim]);await holder.query('COMMIT');expect((await webhook).statusCode).toBe(200);expect((await oldWriter).rowCount).toBe(0);expect(await row(f.id)).toMatchObject({status:'SENT',provider_id:provider});
- }finally{await holder.query('ROLLBACK');holder.release();if(webhook)await webhook;if(oldWriter)await oldWriter;}
+ const f=await queued(),provider=randomUUID(),holder=await h.db.pool.connect(),writer=await h.db.pool.connect();let webhook:ReturnType<typeof post>|undefined,oldWriter:Promise<{rowCount:number|null}>|undefined;
+ try{
+  // Stop the receipt only after it owns the outbox lock. Observing a waiter on
+  // the outbox alone does not prove it will win the subsequent lock handoff.
+  await holder.query('BEGIN');await holder.query('SELECT outbox_id FROM mail_provider_messages WHERE outbox_id=$1 FOR UPDATE',[f.id]);webhook=post(raw(f.id,provider));
+  let receiptPid:number|undefined;for(let n=0;n<150;n++){const {rows}=await h.db.pool.query("SELECT pid FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query='UPDATE mail_provider_messages SET provider_email_id=$2 WHERE outbox_id=$1'");if(rows.length===1){receiptPid=rows[0].pid;break;}await new Promise<void>(r=>setImmediate(r));}expect(receiptPid).toBeDefined();
+  const {rows:[{pid:writerPid}]}=await writer.query('SELECT pg_backend_pid() AS pid');oldWriter=writer.query("UPDATE outbox SET status='UNKNOWN',provider_id=NULL WHERE id=$1 AND claim_token=$2",[f.id,f.claim]);
+  let blockedByReceipt=false;for(let n=0;n<150;n++){const {rows:[{blockers}]}=await h.db.pool.query('SELECT pg_blocking_pids($1) AS blockers',[writerPid]);if(blockers.includes(receiptPid)){blockedByReceipt=true;break;}await new Promise<void>(r=>setImmediate(r));}expect(blockedByReceipt).toBe(true);
+  await holder.query('COMMIT');expect((await webhook).statusCode).toBe(200);expect((await oldWriter).rowCount).toBe(0);expect(await row(f.id)).toMatchObject({status:'SENT',provider_id:provider});
+ }finally{await holder.query('ROLLBACK');holder.release();try{await Promise.allSettled([webhook,oldWriter]);}finally{writer.release();}}
 });
 it('does not register a webhook for absent secret or fixture mail adapter',async()=>{for(const changes of [{resendWebhookSecret:null},{adapters:{...config().adapters,MAIL_ADAPTER:'outbox_test' as const}}]){const app=await buildServer({config:{...config(),...changes},pool:h.db.pool,identity:h.idp,publicOrigin:'http://localhost:5174'});try{expect((await app.inject({method:'POST',url:'/v1/webhooks/resend',payload:{}})).statusCode).toBe(404);}finally{await app.close();}}});
 it('rolls back mapping and receipt with a failed outbox transition then retries once',async()=>{
