@@ -1,0 +1,79 @@
+Application, 0x10ba49f40, pid: 4029, label: 'Fancy' <App element pid: 4029>
+  Window (Main), 0x10ba4a080, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 4029, elementOrHash.elementID: 4369383424.4>
+    Other, 0x10ba4a1c0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 4029, elementOrHash.elementID: 4370188288.5>
+      Other, 0x10ba4a300, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 4029, elementOrHash.elementID: 4417611776.6>
+        Other, 0x10ba4a440, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 4029, elementOrHash.elementID: 4417314944.7>
+          Other, 0x10ba4a580, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 4029, elementOrHash.elementID: 4420338112.8>
+            Other, 0x10ba4a6c0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 4029, elementOrHash.elementID: 4370235392.9>
+              Other, 0x10ba4a800, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 4029, elementOrHash.elementID: 4370236288.10>
+                Other, 0x10ba4a940, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 4029, elementOrHash.elementID: 4370238080.11>
+                  Other, 0x10ba4aa80, {{0.0, 0.0}, {402.0, 106.0}}, identifier: 'app-notices' <AX element pid: 4029, elementOrHash.elementID: 4370237184.12>
+                    Button, 0x10ba4abc0, {{0.0, 62.0}, {402.0, 44.0}}, label: 'Analytics preferences' <AX element pid: 4029, elementOrHash.elementID: 4370242560.17>
+                  Other, 0x10ba4ad00, {{0.0, 106.0}, {402.0, 768.0}} <AX element pid: 4029, elementOrHash.elementID: 4370238976.13>
+                    Other, 0x10ba4ae40, {{0.0, 106.0}, {402.0, 768.0}} <AX element pid: 4029, elementOrHash.elementID: 4417555968.19>
+                      NavigationBar, 0x10ba4af80, {{0.0, 116.0}, {402.0, 54.0}}, identifier: 'Meal' <AX element pid: 4029, elementOrHash.elementID: 4417427456.83>
+                        Button, 0x10ba4b0c0, {{16.0, 116.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Back' <AX element pid: 4029, elementOrHash.elementID: 4695812288.84>
+                        StaticText, 0x10ba4b200, {{181.7, 127.7}, {38.3, 20.7}}, label: 'Meal' <AX element pid: 4029, elementOrHash.elementID: 4486286400.85>
+                      Other, 0x10ba4b340, {{0.0, 106.0}, {402.0, 768.0}} <AX element pid: 4029, elementOrHash.elementID: 4420352896.22>
+                        Other, 0x10ba4b480, {{0.0, 106.0}, {402.0, 768.0}} <AX element pid: 4029, elementOrHash.elementID: 4486286848.24>
+                          Other, 0x10ba4b5c0, {{0.0, 106.0}, {402.0, 768.0}} <AX element pid: 4029, elementOrHash.elementID: 4369294336.86>
+                            Other, 0x10ba4b700, {{0.0, 106.0}, {402.0, 768.0}} <AX element pid: 4029, elementOrHash.elementID: 4694592128.87>
+                              Other, 0x10ba4b840, {{0.0, 106.0}, {402.0, 768.0}} <AX element pid: 4029, elementOrHash.elementID: 4694593024.88>
+                                Other, 0x10ba4b980, {{0.0, 106.0}, {402.0, 768.0}}, identifier: 'meal-detail' <AX element pid: 4029, elementOrHash.elementID: 4694593920.89>
+                                  Other, 0x10ba4bac0, {{0.0, 106.0}, {402.0, 734.0}} <AX element pid: 4029, elementOrHash.elementID: 4369393664.90>
+                                    ScrollView, 0x10ba4bc00, {{0.0, 106.0}, {402.0, 734.0}} <AX element pid: 4029, elementOrHash.elementID: 4419739136.91>
+                                      Other, 0x10ba4bd40, {{0.0, 106.0}, {402.0, 734.0}} <AX element pid: 4029, elementOrHash.elementID: 4486296256.92>
+                                        Other, 0x10ba4be80, {{0.0, 106.0}, {402.0, 104.0}} <AX element pid: 4029, elementOrHash.elementID: 4697021888.97>
+                                      Other, 0x10a440dc0, {{0.0, 106.0}, {402.0, 734.0}} <AX element pid: 4029, elementOrHash.elementID: 4486295808.93>
+                                      Other, 0x10a441b80, {{0.0, 170.0}, {402.0, 891.3}} <AX element pid: 4029, elementOrHash.elementID: 4486296704.94>
+                                        Other, 0x10a441180, {{0.0, 170.0}, {402.0, 891.3}} <AX element pid: 4029, elementOrHash.elementID: 4370243456.18>
+                                          StaticText, 0x10a442580, {{21.0, 191.0}, {360.0, 12.0}}, label: 'LONDON · A SMALL TABLE' <AX element pid: 4029, elementOrHash.elementID: 4697609472.100>
+                                            StaticText, 0x10a442940, {{21.0, 191.0}, {360.0, 12.0}}, label: 'LONDON · A SMALL TABLE' <AX element pid: 4029, elementOrHash.elementID: 4696934512.120>
+                                          StaticText, 0x10a442bc0, {{21.0, 217.0}, {360.0, 33.7}}, label: 'QA AI browser future meal' <AX element pid: 4029, elementOrHash.elementID: 4697607680.101>
+                                            StaticText, 0x10a442d00, {{21.0, 217.0}, {360.0, 33.7}}, label: 'QA AI browser future meal' <AX element pid: 4029, elementOrHash.elementID: 4696934592.121>
+                                          StaticText, 0x10a442a80, {{21.0, 264.7}, {360.0, 20.3}}, label: 'Sat 24 Oct · 19:00 BST' <AX element pid: 4029, elementOrHash.elementID: 4697605888.102>
+                                            StaticText, 0x10a442e40, {{21.0, 264.7}, {360.0, 20.3}}, label: 'Sat 24 Oct · 19:00 BST' <AX element pid: 4029, elementOrHash.elementID: 4696934672.122>
+                                          StaticText, 0x10a4430c0, {{21.0, 299.0}, {360.0, 20.3}}, label: '1 of 4 confirmed' <AX element pid: 4029, elementOrHash.elementID: 4697604096.103>
+                                            StaticText, 0x10a443200, {{21.0, 299.0}, {360.0, 20.3}}, label: '1 of 4 confirmed' <AX element pid: 4029, elementOrHash.elementID: 4696934752.123>
+                                          Button, 0x10a442f80, {{21.0, 333.3}, {360.0, 30.3}}, label: 'Your host, QA AI Host' <AX element pid: 4029, elementOrHash.elementID: 4694603776.104>
+                                          StaticText, 0x10a443340, {{21.0, 377.7}, {360.0, 20.3}}, label: 'A little about this meal' <AX element pid: 4029, elementOrHash.elementID: 4694602880.105>
+                                            StaticText, 0x10a4435c0, {{21.0, 377.7}, {360.0, 20.3}}, label: 'A little about this meal' <AX element pid: 4029, elementOrHash.elementID: 4696934832.124>
+                                          StaticText, 0x10a443700, {{21.0, 412.0}, {360.0, 40.3}}, label: 'A friendly synthetic table for independent draft authorization checks.' <AX element pid: 4029, elementOrHash.elementID: 4694601088.106>
+                                            StaticText, 0x10a443480, {{21.0, 412.0}, {360.0, 40.3}}, label: 'A friendly synthetic table for independent draft authorization checks.' <AX element pid: 4029, elementOrHash.elementID: 4696934912.125>
+                                          StaticText, 0x10a443840, {{21.0, 466.3}, {360.0, 40.3}}, label: '2–4 people including the host · Applications close Sat 24 Oct · 18:00 BST' <AX element pid: 4029, elementOrHash.elementID: 4694599296.107>
+                                            StaticText, 0x10a443ac0, {{21.0, 466.3}, {360.0, 40.3}}, label: '2–4 people including the host · Applications close Sat 24 Oct · 18:00 BST' <AX element pid: 4029, elementOrHash.elementID: 4696934992.126>
+                                          StaticText, 0x10a443c00, {{21.0, 520.7}, {360.0, 20.3}}, label: 'Easy conversation · English' <AX element pid: 4029, elementOrHash.elementID: 4694597504.108>
+                                            StaticText, 0x10a443980, {{21.0, 520.7}, {360.0, 20.3}}, label: 'Easy conversation · English' <AX element pid: 4029, elementOrHash.elementID: 4696935072.127>
+                                          StaticText, 0x10a443d40, {{21.0, 555.0}, {360.0, 20.3}}, label: 'Cuisine: Not provided · Dietary: Not provided' <AX element pid: 4029, elementOrHash.elementID: 4370245248.109>
+                                            StaticText, 0x10a443e80, {{21.0, 555.0}, {360.0, 20.3}}, label: 'Cuisine: Not provided · Dietary: Not provided' <AX element pid: 4029, elementOrHash.elementID: 4696935232.128>
+                                          StaticText, 0x10a440640, {{21.0, 589.3}, {360.0, 20.3}}, label: 'Cuisine and dietary details are declared by the host.' <AX element pid: 4029, elementOrHash.elementID: 4697608576.110>
+                                            StaticText, 0x10a440780, {{21.0, 589.3}, {360.0, 20.3}}, label: 'Cuisine and dietary details are declared by the host.' <AX element pid: 4029, elementOrHash.elementID: 4696935312.129>
+                                          StaticText, 0x10759f700, {{21.0, 623.7}, {360.0, 20.3}}, label: 'The restaurant' <AX element pid: 4029, elementOrHash.elementID: 4697606784.111>
+                                            StaticText, 0x10759f840, {{21.0, 623.7}, {360.0, 20.3}}, label: 'The restaurant' <AX element pid: 4029, elementOrHash.elementID: 4696935392.130>
+                                          StaticText, 0x10759f980, {{21.0, 658.0}, {360.0, 20.3}}, label: '[Fixture] Fancy North Kitchen' <AX element pid: 4029, elementOrHash.elementID: 4697604992.112>
+                                            StaticText, 0x10759fc00, {{21.0, 658.0}, {360.0, 20.3}}, label: '[Fixture] Fancy North Kitchen' <AX element pid: 4029, elementOrHash.elementID: 4696935472.131>
+                                          StaticText, 0x10ba68000, {{21.0, 692.3}, {360.0, 20.3}}, label: '[Fixture] Example street, London' <AX element pid: 4029, elementOrHash.elementID: 4694604672.113>
+                                            StaticText, 0x10ba68140, {{21.0, 692.3}, {360.0, 20.3}}, label: '[Fixture] Example street, London' <AX element pid: 4029, elementOrHash.elementID: 4696937072.132>
+                                          StaticText, 0x10ba68280, {{21.0, 726.7}, {360.0, 20.3}}, label: 'Restaurant booked' <AX element pid: 4029, elementOrHash.elementID: 4370244352.114>
+                                            StaticText, 0x10ba683c0, {{21.0, 726.7}, {360.0, 20.3}}, label: 'Restaurant booked' <AX element pid: 4029, elementOrHash.elementID: 4696936672.133>
+                                          StaticText, 0x10ba68500, {{21.0, 761.0}, {360.0, 40.3}}, label: 'Reservation reported by the host; not verified by the app.' <AX element pid: 4029, elementOrHash.elementID: 4370241664.16>
+                                            StaticText, 0x10ba68640, {{21.0, 761.0}, {360.0, 40.3}}, label: 'Reservation reported by the host; not verified by the app.' <AX element pid: 4029, elementOrHash.elementID: 4696936752.134>
+                                          Button, 0x10ba68780, {{21.0, 815.3}, {360.0, 44.0}}, label: 'Open in Google Maps' <AX element pid: 4029, elementOrHash.elementID: 4694601984.115>
+                                          StaticText, 0x10ba688c0, {{21.0, 873.3}, {360.0, 20.3}}, label: 'Keeping costs clear' <AX element pid: 4029, elementOrHash.elementID: 4694600192.116>
+                                            StaticText, 0x10ba68a00, {{21.0, 873.3}, {360.0, 20.3}}, label: 'Keeping costs clear' <AX element pid: 4029, elementOrHash.elementID: 4696936992.135>
+                                          StaticText, 0x10ba68b40, {{21.0, 907.3}, {360.0, 20.3}}, label: '£15–£30 per person · Pay at the restaurant' <AX element pid: 4029, elementOrHash.elementID: 4694598400.117>
+                                            StaticText, 0x10ba68c80, {{21.0, 907.3}, {360.0, 20.3}}, label: '£15–£30 per person · Pay at the restaurant' <AX element pid: 4029, elementOrHash.elementID: 4696936832.136>
+                                          StaticText, 0x10ba68dc0, {{21.0, 941.7}, {360.0, 40.3}}, label: 'Fancy doesn’t take payments. Everyone pays the restaurant directly.' <AX element pid: 4029, elementOrHash.elementID: 4694596608.118>
+                                            StaticText, 0x10ba68f00, {{21.0, 941.7}, {360.0, 40.3}}, label: 'Fancy doesn’t take payments. Everyone pays the restaurant directly.' <AX element pid: 4029, elementOrHash.elementID: 4696936912.137>
+                                          Button, 0x10ba69040, {{21.0, 996.3}, {360.0, 44.0}}, label: 'Report this meal' <AX element pid: 4029, elementOrHash.elementID: 4694595712.119>
+                                      Other, 0x10ba69180, {{369.0, 170.0}, {30.0, 642.0}}, label: 'Vertical scroll bar, 2 pages', value: 0% <AX element pid: 4029, elementOrHash.elementID: 4417511936.95>
+                                        Other, 0x10ba692c0, {{396.0, 173.0}, {3.0, 488.7}} <AX element pid: 4029, elementOrHash.elementID: 4697020992.98>
+                                      Other, 0x10ba69400, {{28.0, 807.0}, {346.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0% <AX element pid: 4029, elementOrHash.elementID: 4417510912.96>
+                                        Other, 0x10ba69540, {{31.0, 834.0}, {340.0, 3.0}} <AX element pid: 4029, elementOrHash.elementID: 4697020544.99>
+                                      Other, 0x10ba69680, {{369.0, 170.0}, {30.0, 642.0}}, label: 'Vertical scroll bar, 2 pages', value: 0% <AX element pid: 4029, elementOrHash.elementID: 4417511936.95>
+                                        Other, 0x10ba697c0, {{396.0, 173.0}, {3.0, 488.7}} <AX element pid: 4029, elementOrHash.elementID: 4697020992.98>
+                                      Other, 0x10ba69900, {{28.0, 807.0}, {346.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0% <AX element pid: 4029, elementOrHash.elementID: 4417510912.96>
+                                        Other, 0x10ba69a40, {{31.0, 834.0}, {340.0, 3.0}} <AX element pid: 4029, elementOrHash.elementID: 4697020544.99>
+                      Toolbar, 0x10ba69b80, {{0.0, 106.0}, {402.0, 768.0}}, identifier: 'Toolbar', label: 'Toolbar' <AX element pid: 4029, elementOrHash.elementID: 4417556480.23>
+                        Other, 0x10ba69cc0, {{0.0, 106.0}, {402.0, 768.0}} <AX element pid: 4029, elementOrHash.elementID: 4417556992.25>
+                  Button, 0x10ba69e00, {{274.3, 731.0}, {111.7, 45.0}}, label: 'Ask Fancy' <AX element pid: 4029, elementOrHash.elementID: 4370240768.14>

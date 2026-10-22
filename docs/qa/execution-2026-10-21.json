@@ -18,8 +18,9 @@
   },
   "counts": {
     "PASS": 193,
-    "NOT_RUN": 13,
-    "BLOCKED": 11
+    "FAIL": 2,
+    "BLOCKED": 11,
+    "NOT_RUN": 11
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
@@ -13762,8 +13763,10 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
-      "evidence": [],
+      "status": "FAIL",
+      "evidence": [
+        "B20-O005"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T094",
         "R1-T095",
@@ -13877,7 +13880,7 @@
         "重装先清旧token",
         "RAM丢失410不从日志恢复，未发字保留"
       ],
-      "actual": "Native actual signed Release coldrestore now works atformal042/cd69; old19d runtime/restore note is historical, not current blocker. Continue/reinstall-token clearing/AI RAM410 and preservedunsentdraft remain unexecutedlocal assertions, requiring isolated nativeAI fixture and disposable second device; not userdependency.",
+      "actual": "B20-O005 actualNative68 normalguest session bootstrap,69 coldlaunch sameinstall shows Start instead of explicitContinue while finitePGsessionACTIVE/unexpired andAPI42728unchanged. QA-F45 confirmedFAIL on first expected assertion; reinstall marker andactualRAMloss/unsentretention remainunexecuted, no wholecasepass. Formalfix/nativeartifact verification pending.",
       "history": [
         {
           "status": "BLOCKED",
@@ -13885,7 +13888,10 @@
           "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
         }
       ],
-      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies",
+      "defectIds": [
+        "QA-F45"
+      ]
     },
     {
       "id": "QA-AI-035",
@@ -16247,7 +16253,7 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "FAIL",
       "evidence": [
         "B7-T001",
         "B7-T002",
@@ -16260,7 +16266,8 @@
         "B10-T002",
         "B19-O001",
         "B19-O007",
-        "B19-O008"
+        "B19-O008",
+        "B20-O006"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -16626,9 +16633,10 @@
         "Actual guest Apply→login→profile completion→return to same target without automatic submission, in both required client/role directions; prior preauthenticated apply does not establish this prefix.",
         "Same physical test database notification/admin trace and exact once-only original normal meal facts; complete per-case evidence mapping before PASS."
       ],
-      "actual": "Actual mainM1 Webhost/Nativeguest and reverseM5 Nativehost/Webguest approval/groupmessages, lifecycle, SELFattendance/privateexperience/publicreferences andexplicitreconnect executed with realPG unique facts (B17/B18/B19). Earlier normalnativeApply12 started already authenticated; it does not establish full guestApply→login→profilegate return. KeepNOT_RUN until that prefix is actually replayed per required client/role and sameDBstafftrace is captured; no composition-based wholepathPASS.",
+      "actual": "Actual mainM1 Webhost/Nativeguest and reverseM5 Nativehost/Webguest approval/groupmessages, lifecycle, SELFattendance/privateexperience/publicreferences andexplicitreconnect executed with realPG unique facts (B17/B18/B19). Earlier normalnativeApply12 started already authenticated; it does not establish full guestApply→login→profilegate return. KeepNOT_RUN until that prefix is actually replayed per required client/role and sameDBstafftrace is captured; no composition-based wholepathPASS. Native70 normalguest publicOPENfuturemeal has noRequesttojoin (actualAX+publicHTTP), so prefixfails beforeOTP; independentR203emptyactions reproduces. QA-F48 handednativeowner, wholecaseFAIL notNR.",
       "defectIds": [
-        "QA-F18"
+        "QA-F18",
+        "QA-F48"
       ],
       "relatedBrowserEvidence": [
         "B1"
@@ -22622,7 +22630,8 @@
     "QA-F44": "CLOSED_TARGETED_QA",
     "QA-F45": "OPEN_NATIVE_REPRODUCED",
     "QA-F46": "OPEN_FORMAL_NATIVE_RETEST_PENDING",
-    "QA-F47": "OPEN_ENVIRONMENT"
+    "QA-F47": "OPEN_ENVIRONMENT",
+    "QA-F48": "OPEN_NATIVE_REPRODUCED"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -22645,5 +22654,5 @@
     "Execute complete guestApply→login→profile→same target prefix forJOURNEY001 in one declared finalenvironment, plus remaining sameDBadmin/UI assertions.",
     "Retain11 externalblocked gates with specificreal-provider/native/policy/deployment evidence; no blanketmissingKey claim."
   ],
-  "currentExecutionSlice": "B20 F44 actual native61–64 targetedclosed; original59Bredretained. Native66 localclear/67coldguest passed butremoteunconfirmed activefamily1, F46 old2red/WIP2green formalnativepending. F45 accepteddesign/sourcegap coldAIcontinuation ownerfixpending. Originalsidecarstage1 bootstrap/17facts verified; authorizedclockadvance triggerfatalautomaticcleanup F47, causeunknown; sameDBadmintrace unexecuted. No217casecountinflation. F45 actualNative68 normalstart/69cold Continue absent whilefinite PGsessionACTIVE/unexpired andoriginalAPIpidunchanged; no modelcall."
+  "currentExecutionSlice": "B20 F44 actual native61–64 targetedclosed; original59Bredretained. Native66 localclear/67coldguest passed butremoteunconfirmed activefamily1, F46 old2red/WIP2green formalnativepending. F45 accepteddesign/sourcegap coldAIcontinuation ownerfixpending. Originalsidecarstage1 bootstrap/17facts verified; authorizedclockadvance triggerfatalautomaticcleanup F47, causeunknown; sameDBadmintrace unexecuted. No217casecountinflation. F45 actualNative68 normalstart/69cold Continue absent whilefinite PGsessionACTIVE/unexpired andoriginalAPIpidunchanged; no modelcall. AI034 nowFAIL following actual69coldContinue failure;12otherNR+11externalBLOCKED. Earlier13NR count preceded this classification. Native70/R203guestCTA absentF48;JOURNEY001FAIL, now193PASS/11NR/2FAIL/11BLOCKED."
 }

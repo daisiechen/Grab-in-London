@@ -91,12 +91,32 @@
       "steps": [
         "Native68 normalguest Start→questioneditor; native69 ~2minuteslater coldlaunch→AskFancy shows Startconversation, Continueconversation absent. No Ask/modelcall/reset performed.",
         "Read-only finite metadata sessionb314823c-0cea-4fc2-8336-fca3ad9dd487 ACTIVE gen1, expiry01:38:22+01, unexpired=true/no_pending; API originalPID unchanged. Matches accepteddesign46/sourceconfirmed mismatch. Native68 editor existence alone not wholebootstrap proof; finite normalcreated metadata supplies additional evidence.",
-        "Native69 assertion failure retained; Xcode postfailure diagnostic/xcresult packaging still pending. Not AI034 RAMloss or full005/006 pass. Formal fix artifact required."
+        "Native69 XCTest completed with one expected assertion failure; Xcode post-test packaging stalled >4min. QA SIGINT only verified own95561 test driver after completion; no API/PG/simulator signal. Immediate simulator screenshot showed desktop and is excluded from business evidence. Formal fix artifact required; no AI034 RAMloss/full005/006 pass. SIGINT failed to stop driver; same validated driver thenSIGTERM exit143. API/PG/sim preserved, no completed xcresult claim."
       ],
       "artifacts": [
         "evidence/2026-10-21/native-f45-68-xcui.swift",
         "evidence/2026-10-21/native-f45-69-xcui.swift",
         "evidence/2026-10-21/f45-native69-finite-session.json"
+      ]
+    },
+    {
+      "id": "B20-O006",
+      "testedCommit": "2005991055a6462d1f7bcf027b518ac3d7b304e8",
+      "environment": "Actual signedRelease secondiOS27 simulator/API3102 syntheticfixture; source same atformal6e497d3",
+      "status": "failed",
+      "title": "F48 guest public meal detail has no application-login entry",
+      "steps": [
+        "Native70 normalDiscover→publicfuturemeal fails at Requesttojoin absent before anyOTP/profile/application. ActualfullAX has Reportmeal but noApply; not hidden offscreen CTA.",
+        "AnonymousHTTP confirms OPEN/futurecutoff/1of4seats andallowedActions[]. Backend intentionallygrantsAPPLY onlyauthenticated; nativeonlycanAPPLY whileWebguestfallback. PRD77/256requiretriggerloginandreturntarget.",
+        "IndependentR203emptyactions projection failsmissingCTA. Existingtestmeal()defaultAPPLY evenforguest maskscontractmismatch; oldtestnotdeleted. Before/afterbusinessProbe andAIrequestcounts equal.",
+        "No login/newactor/businessPOST; XCTestexit65/1assertionfailure. Verbose sysdiagnosedisabled, standardxcresult/attachmentsretained. One HTTPreceiptattempt sandboxdenied, rerunapprovedreadonly; notbusinessfailure. Ownerfixpending."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f48-native70-public-projection.json",
+        "evidence/2026-10-21/native-f48-70-xcui.swift",
+        "evidence/2026-10-21/f48-native70-before-business-probe.json",
+        "evidence/2026-10-21/f48-native70-after-business-probe.json",
+        "evidence/2026-10-21/f48-native70-actual-ax.txt"
       ]
     }
   ]

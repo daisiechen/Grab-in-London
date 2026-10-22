@@ -5,7 +5,7 @@ import {SettingsScreen} from './features/settings/SettingsScreen.tsx';
 import {useSessionState} from './services.tsx';
 import {createTestApp,renderApp,signIn} from './test/render.tsx';
 import {deferred} from './test/deferred.ts';
-import {fail,noContent,networkDown,type MockReply} from './test/mock-fetch.ts';
+import {fail,networkDown,type MockReply} from './test/mock-fetch.ts';
 jest.mock('expo-router',()=>({useRouter:()=>({push:jest.fn(),replace:jest.fn()})}));
 function Navigation(){const state=useSessionState();return state.status==='signedIn'?<SettingsScreen/>:<Text>Guest home</Text>;}
 async function start(){const app=createTestApp();await renderApp(app,<AppRoot services={app.services}><Navigation/></AppRoot>);await waitFor(()=>expect(app.services.session.getState().status).toBe('signedOut'));await act(()=>signIn(app));return app;}

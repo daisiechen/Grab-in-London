@@ -1,0 +1,27 @@
+{
+  "httpStatus": 200,
+  "serverNow": "2026-10-22T00:23:46.053Z",
+  "meal": {
+    "id": "7d501e3b-c0bc-4ae5-a067-4aafbce9ca23",
+    "title": "QA AI browser future meal",
+    "status": "OPEN",
+    "startsAt": {
+      "instant": "2026-10-24T18:00:00.000Z",
+      "localDate": "2026-10-24",
+      "localTime": "19:00",
+      "timeZone": "Europe/London",
+      "utcOffsetMinutes": 60
+    },
+    "closesAt": {
+      "instant": "2026-10-24T17:00:00.000Z",
+      "localDate": "2026-10-24",
+      "localTime": "18:00",
+      "timeZone": "Europe/London",
+      "utcOffsetMinutes": 60
+    },
+    "capacity": 4,
+    "confirmedCount": 1,
+    "allowedActions": []
+  },
+  "guestNoAuthorization": true
+}
