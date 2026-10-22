@@ -207,3 +207,5 @@
 - [QA 剩余用例最小执行计划（2026-10-22）](qa/remaining-plan-2026-10-22.zh-CN.md)：J004/J005/J008/J009/J011 剩余断言、所需新 AI 调用与 Web 新前端复验接入建议。
 
 - [QA B69：source B 同库恢复检查点与 F58/F59 原生实际复验关闭](qa/evidence/2026-10-21/browser-b69.json)。
+
+- [QA B70：F60 Web 实际复验、J004 解除后不复活与第三方隐私（J004 PASS）](qa/evidence/2026-10-21/browser-b70.json)。

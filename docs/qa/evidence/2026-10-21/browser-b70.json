@@ -1,0 +1,51 @@
+{
+ "observations": [
+  {
+   "id": "B70-O001",
+   "executedBy": "Claude Code",
+   "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+   "status": "passed",
+   "title": "F60 Web persisted block state, unblock and 409 reread on source B",
+   "steps": [
+    "Web A normal OTP on the new host unified-source-b.localhost:53016 (no cookie copying) returns to H profile: “You have blocked this member. Private contact is disabled.” with Unblock QA Final Host; a fresh reload shows the same persisted state (block A→H active since 01:01Z).",
+    "Second tab unblocks: DELETE /v1/blocks/H 200 (unblock, requestId 930101d8-96e9-48a9-9bee-af000b0bb678); status and Unblock control disappear.",
+    "The stale first tab clicks Unblock: DELETE 409 VERSION_CONFLICT (requestId d7507240-1dcd-4b77-a6b1-f6662a253946), followed by GET /v1/blocks/H 200; UI shows the real unblocked state (no Unblock control) and “This was updated elsewhere. We’ve refreshed the latest details; please check and try again.”",
+    "Not executed: honest copy on a block-state read failure (needs a client-scoped network fault; no such tool). Original F60 failures (B65) retained."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/b70-web-f60-reload-blocked.jpg",
+    "evidence/2026-10-21/b70-web-f60-409-reread.jpg"
+   ]
+  },
+  {
+   "id": "B70-O002",
+   "executedBy": "Claude Code",
+   "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+   "status": "passed",
+   "title": "J004 native-host/Web-applicant: unblock does not revive consent or private messaging",
+   "steps": [
+    "After both directions are unblocked (latest block revisions inactive, blocks table 0): pair_consents unchanged (epoch1 and epoch3 rows all revoked, no new row), direct messages unchanged (4).",
+    "Web A DM shows “Your previous messages are read-only. A new mutual connection is needed to send messages.”, no composer or Send; Web A post-meal reconnect checkbox unchecked, no mutual or Say hello.",
+    "native200 (client 3ee69fe, CDHash 8e35fda4…, read-only): H DM shows “History is read-only.” with no Message field or Send; H post-meal shows “QA Final Applicant · Not chosen” and the I’d meet again control, no Undo."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/b70-web-dm-readonly-after-unblock.jpg",
+    "evidence/2026-10-21/b70-native-dm-readonly-after-unblock.png",
+    "evidence/2026-10-21/b70-native-postmeal-choice-not-restored.png",
+    "evidence/2026-10-21/native200-xcui.swift"
+   ]
+  },
+  {
+   "id": "B70-O003",
+   "executedBy": "Claude Code",
+   "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+   "status": "passed",
+   "title": "Third account B privacy for the native-host/Web-applicant direction",
+   "steps": [
+    "Web B normal OTP on the new host. H and A profiles show only public bios and the mutually published references; no reconnect, block or private-message state.",
+    "B opens the H–A direct conversation URL: UI “Your chat opens after confirmation”; B’s own GET messages?mode=HISTORY returns 404 NOT_FOUND (requestId 633e5743-6489-43ef-8f5a-b89bd3a55a7a), no messages. A 200 entry in the tab log came from A’s earlier session in the same tab."
+   ],
+   "artifacts": []
+  }
+ ]
+}

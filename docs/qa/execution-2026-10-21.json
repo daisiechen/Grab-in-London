@@ -18,8 +18,8 @@
     "nativeClockAlignment": "B44 direct human authorization received; original synthetic runtime aligned to current UTC12:09:06.962Z. Node/DB ACK; business/budget counts and hashes unchanged; historical UNKNOWN reserve preserved; natural second snapshot retained. Native138 normal OTP restoration succeeds. Earlier B43 clock blocker resolved; product journey assertions remain separate. B45 second guarded execution-currentUTC12:23:20.135Z, no crossed business/price/period/snapshot boundary, ledgers unchanged. Native139 passes; WebA rate limit recovers normally."
   },
   "counts": {
-    "PASS": 201,
-    "NOT_RUN": 5,
+    "PASS": 202,
+    "NOT_RUN": 4,
     "BLOCKED": 11
   },
   "evidenceCatalog": {
@@ -109,7 +109,8 @@
     "auditB67": "evidence/2026-10-21/audit-b67-j001-j002.zh-CN.md",
     "browserObservationsB68": "evidence/2026-10-21/browser-b68.json",
     "remainingPlan20261022": "remaining-plan-2026-10-22.zh-CN.md",
-    "browserObservationsB69": "evidence/2026-10-21/browser-b69.json"
+    "browserObservationsB69": "evidence/2026-10-21/browser-b69.json",
+    "browserObservationsB70": "evidence/2026-10-21/browser-b70.json"
   },
   "cases": [
     {
@@ -17657,22 +17658,20 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
         "B51-O001",
         "B51-O002",
         "B52-O001",
-        "B63-O001",
-        "B64-O001",
         "B64-O002",
         "B65-O001",
         "B65-O002",
         "B65-O003",
-        "B65-O004",
-        "B69-O001",
         "B69-O002",
         "B69-O003",
-        "B69-O004"
+        "B70-O001",
+        "B70-O002",
+        "B70-O003"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -17983,11 +17982,14 @@
         "R5-T010",
         "R5-T011"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "补 native host / Web applicant 方向完整单向隐私、互选、双向私信、撤回、拉黑再解封不恢复。原 Web host / native applicant 方向证据保留。"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2,
+        3
       ],
-      "actual": "B53 audit correction: 原预期子断言已通过，见保留 evidence；原共同前提 Web/iOS 互换各走一次尚未完成。补 native host / Web applicant 方向完整单向隐私、互选、双向私信、撤回、拉黑再解封不恢复。原 Web host / native applicant 方向证据保留。 B61–B63 (2026-10-22, archived/continued by Claude Code after Codex usage limit): natural 00Z snapshot and 01Z END on M3 with unchanged ledgers; WebA unknown→SELF present→private5; nativeH SELF present, HOST absent cannot override A SELF, private4, reference, one-sided meet-again. Slice only; whole case stays NOT_RUN. B64 private candidate: original Claude B63 attribution retained; normal Native180 independently reads persisted SELF priority and private choice without rewriting. WebA explicitly saves48-character reference, observes unilateral privacy, mutually selects and explicitly sends one M3 direct message. Native reply/withdraw/block/unblock and Admin trace remain unexecuted; no whole-case promotion. B65 (Claude): native H reads A M3 DM and replies, Web A receives (two-way DM across clients); Web A withdraw → both epoch3 consents revoked, Web and native DM read-only; Web A blocks H → Web reconnect 403 honest message, native H DM read-only and reconnect rejected without write (generic error QA-F59). Native host cannot reach co-diner profile to block after the meal (QA-F58); Web cannot see or undo its block after reload (QA-F60), so unblock-does-not-revive remains unexecuted. Whole case stays NOT_RUN. B69 (Claude, source B new process on same DB): F58 native post-meal profile entry with block/unblock and F59 neutral forbidden copy pass on the formal 3ee69fe app. F60 Web and final unblock non-revival remain; whole case stays NOT_RUN.",
+      "remainingExpected": [],
+      "actual": "Both directions on the same DB. Web host/native applicant: unilateral privacy, mutual-only DM, withdrawal read-only, block/unblock never revives (B51, B52). Native host/Web applicant: A unilateral choice not inferable by H/B and mutual-only DM (B64-O002 Codex, B65-O001 two-way DM), withdrawal clears both consents and history read-only on both clients (B65-O002), block rejects reconnect with neutral copy (B65-O003, B69-O003), native post-meal profile block/unblock (B69-O002), Web persisted block state/unblock/409 reread (B70-O001), and after both unblocks no consent row, unchecked reconnect, read-only DM on Web and native (B70-O002); third account B sees only public references and gets 404 on the DM (B70-O003). Source B runs client 3ee69fe with API/Web 89dc541 on the retained DB.",
       "defectIds": [
         "QA-F44",
         "QA-F58",
@@ -18043,6 +18045,30 @@
             2,
             3
           ]
+        },
+        {
+          "status": "NOT_RUN",
+          "actual": "B53 audit correction: 原预期子断言已通过，见保留 evidence；原共同前提 Web/iOS 互换各走一次尚未完成。补 native host / Web applicant 方向完整单向隐私、互选、双向私信、撤回、拉黑再解封不恢复。原 Web host / native applicant 方向证据保留。 B61–B63 (2026-10-22, archived/continued by Claude Code after Codex usage limit): natural 00Z snapshot and 01Z END on M3 with unchanged ledgers; WebA unknown→SELF present→private5; nativeH SELF present, HOST absent cannot override A SELF, private4, reference, one-sided meet-again. Slice only; whole case stays NOT_RUN. B64 private candidate: original Claude B63 attribution retained; normal Native180 independently reads persisted SELF priority and private choice without rewriting. WebA explicitly saves48-character reference, observes unilateral privacy, mutually selects and explicitly sends one M3 direct message. Native reply/withdraw/block/unblock and Admin trace remain unexecuted; no whole-case promotion. B65 (Claude): native H reads A M3 DM and replies, Web A receives (two-way DM across clients); Web A withdraw → both epoch3 consents revoked, Web and native DM read-only; Web A blocks H → Web reconnect 403 honest message, native H DM read-only and reconnect rejected without write (generic error QA-F59). Native host cannot reach co-diner profile to block after the meal (QA-F58); Web cannot see or undo its block after reload (QA-F60), so unblock-does-not-revive remains unexecuted. Whole case stays NOT_RUN. B69 (Claude, source B new process on same DB): F58 native post-meal profile entry with block/unblock and F59 neutral forbidden copy pass on the formal 3ee69fe app. F60 Web and final unblock non-revival remain; whole case stays NOT_RUN.",
+          "evidence": [
+            "B51-O001",
+            "B51-O002",
+            "B52-O001",
+            "B63-O001",
+            "B64-O001",
+            "B64-O002",
+            "B65-O001",
+            "B65-O002",
+            "B65-O003",
+            "B65-O004",
+            "B69-O001",
+            "B69-O002",
+            "B69-O003",
+            "B69-O004"
+          ],
+          "remainingExpected": [
+            "补 native host / Web applicant 方向完整单向隐私、互选、双向私信、撤回、拉黑再解封不恢复。原 Web host / native applicant 方向证据保留。"
+          ],
+          "reason": "2026-10-23 B70 completes native-host/Web-applicant direction on source B same DB"
         }
       ]
     },
@@ -23141,8 +23167,8 @@
     "QA-F56": "CLOSED_TARGETED_QA",
     "QA-F57": "CLOSED_TARGETED_QA",
     "QA-F58": "CLOSED_TARGETED_QA",
-    "QA-F59": "FIX_VERIFIED_PENDING_INDEPENDENT_REVIEW",
-    "QA-F60": "OPEN_CONFIRMED",
+    "QA-F59": "CLOSED_TARGETED_QA",
+    "QA-F60": "CLOSED_TARGETED_QA_EXCEPT_READ_FAILURE_COPY",
     "QA-F61": "OPEN_CONFIRMED",
     "QA-F62": "OPEN_CONFIRMED",
     "QA-F63": "OPEN_CONFIRMED"
@@ -23166,5 +23192,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B69:201 PASS/5 NOT_RUN/11 BLOCKED. Source B (client 3ee69fe, API 89dc541) same DB, clock 02:16Z, worker released, AI off. F58 closed; F59 visible evidence pending independent review. Next: Web OTP on 53016, F60/F61/F62, J004 final non-revival, then J005."
+  "currentExecutionSlice": "B70:202 PASS/4 NOT_RUN/11 BLOCKED. J004 PASS on source B; F58/F59 closed; F60 closed except read-failure copy (needs network-fault tool). Next: F61 admin export, F62 same-tab 401, then J005."
 }
