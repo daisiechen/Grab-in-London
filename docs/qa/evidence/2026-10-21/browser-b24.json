@@ -1,0 +1,28 @@
+{
+  "observations": [
+    {
+      "id": "B24-O001",
+      "testedCommit": "cbdbf975dca79b05e4adb315ac225464488c1fb1",
+      "status": "passed",
+      "title": "F46 actual503 logout global warning survives Settings unmount, local credentials cleared",
+      "steps": [
+        "Independently compared1522 git source hashes and205native subset, binary/Hermes/signature; proxy v2 independent7 fake tests pass. Installed signed official63102 endpoint on dedicatedD92 simulator only.",
+        "Actual88 normalOTP existing synthetic completeprofile user: PG activeIOS1,total2, prior normalLOGOUT1. Actual89 normalSettings confirmLogout: proxy precisePOST inject503 count1 forwardedToUpstreamfalse. LocalGuest and global remote-unconfirmed notice survive Settings unmount; dismiss remainsGuest.",
+        "Read-only PG after89 and90 activeIOS1,total2,LOGOUT1 unchanged: remote session really remains active, not falsely claimed revoked. Actual90 cold launch Guest/noSettings/no restored notice after explicit dismissal. Normal86/87 successful logout server1→0 and coldGuest recorded B23.",
+        "F46 targeted closed with component network/503 originalR201red retained and actual503 evidence. No real provider/network-down/release claim. Fullcase counts unchanged193PASS/13NOT_RUN/11BLOCKED; AI034 and unifiedjourneys still pending."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-b24-88-xcui.swift",
+        "evidence/2026-10-21/b24-native88-server-facts.json",
+        "evidence/2026-10-21/native-b24-89-xcui.swift",
+        "evidence/2026-10-21/native-b24-89.png",
+        "evidence/2026-10-21/b24-native89-server-facts.json",
+        "evidence/2026-10-21/native-b24-90-xcui.swift",
+        "evidence/2026-10-21/native-b24-90.png",
+        "evidence/2026-10-21/b24-native90-server-facts.json",
+        "evidence/2026-10-21/b24-f46-artifact-proof.json",
+        "evidence/2026-10-21/b24-proxy-finite-events.jsonl"
+      ]
+    }
+  ]
+}

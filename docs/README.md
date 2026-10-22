@@ -148,3 +148,5 @@
 - [QA B22：原生访客申请登录回流定向验收](qa/evidence/2026-10-21/browser-b22.json)
 
 - [QA B23：原生键盘、明确草稿替换与正常退出基线](qa/evidence/2026-10-21/browser-b23.json)
+
+- [QA B24：退出503全局提示与本机凭据清除定向验收](qa/evidence/2026-10-21/browser-b24.json)

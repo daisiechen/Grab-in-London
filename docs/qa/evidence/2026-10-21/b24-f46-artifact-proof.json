@@ -1,0 +1,9 @@
+{
+  "commit": "cbdbf975dca79b05e4adb315ac225464488c1fb1",
+  "nativeSourcesIndependentlyCompared": 205,
+  "binarySha256": "4fa890197a3d41475b56dc13c29355fbe31bca7ca582d0b83b81410d7ce4353a",
+  "hermesSha256": "34696a155df3b71fd746bf77b8f141372142a80dd7f88924a0e4a54690bcf7a5",
+  "codesignDeepStrictExit": 0,
+  "proxyFakeTestsExit": 0,
+  "scope": "dedicated iOS simulator; synthetic API3102 via exact logout503 proxy63102; not real provider/network-down"
+}

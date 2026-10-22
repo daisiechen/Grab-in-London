@@ -1,0 +1,2 @@
+{"state":"LISTENING","owner":"f46-6685e8a14e484ec2bf7b8c04e0cf4c3f","mode":"503","port":63102,"receiptPath":"/private/tmp/fancy-f46-proxy-v2/owner-f46-6685e8a14e484ec2bf7b8c04e0cf4c3f.json"}
+{"event":"logout-fault-injected","count":1,"mode":"503","forwardedToUpstream":false}
