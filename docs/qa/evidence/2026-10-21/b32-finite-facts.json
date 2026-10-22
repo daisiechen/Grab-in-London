@@ -1,0 +1,64 @@
+{
+  "productionCommit": "3a17e8b8971f617b1e4d4f1c3903586b6464e6f9",
+  "boundary": "controlled grammar algorithm, synthetic counter/price/ledger; no real model or provider fees",
+  "create": {
+    "normalOTPProfile": true,
+    "explicitAsk": true,
+    "explicitTransfer": true,
+    "existingTextRequiresConfirmation": true,
+    "keepPreservesBothFields": true,
+    "rateRejectedReplaceRetained": "F54 error behind modal; normal Keep/Close preserves manual editor",
+    "explicitReplaceAfterLegitimateMinuteAdvance": true,
+    "businessTablesBeforeGenerateThroughTransferAndReview": {
+      "meals": 0,
+      "applications": 0,
+      "messages": 0,
+      "seat_events": 0
+    },
+    "normalFourStepsAndFinalPublish": true,
+    "afterPublish": {
+      "meals": 1,
+      "applications": 0,
+      "messages": 0,
+      "seat_events": 1
+    }
+  },
+  "group": {
+    "normalAskAndExplicitReplacement": true,
+    "messageCountBeforeManualSend": 0,
+    "manualSendCreatedMessage": true
+  },
+  "providerFailure": {
+    "firstAttempt": "request rate limited before provider; not provider-failure proof",
+    "laterAttempt": "explicit synthetic marker reaches controlled provider",
+    "callsBefore": 6,
+    "callsAfter": 7,
+    "failuresBefore": 0,
+    "failuresAfter": 1,
+    "realProviderCalls": 0,
+    "businessDigestUnchanged": [
+      "meals",
+      "applications",
+      "messages",
+      "seat_events"
+    ],
+    "manualTextPreserved": true,
+    "normalManualSendAfterClosingAssistant": true
+  },
+  "clock": {
+    "minuteRecoveryOnly": [
+      "09:51:12.681Z -> 09:52:13.681Z",
+      "09:52:13.681Z -> 09:53:14.681Z"
+    ],
+    "date": "2026-10-22",
+    "conditions": "fresh owner/revision/clock; API/worker no in-flight; same London day/month/price window; before meal deadline; no quota reset or budget change"
+  },
+  "remaining": [
+    "A/B privacy",
+    "Web/iOS role interchange",
+    "same-database Admin",
+    "application final capacity/deadline revalidation"
+  ],
+  "whole005006": "NOT_RUN",
+  "F54": "OPEN pending formal fixed UI replay"
+}

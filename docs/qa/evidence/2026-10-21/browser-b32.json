@@ -1,0 +1,26 @@
+{
+  "observations": [
+    {
+      "id": "B32-O001",
+      "testedCommit": "3a17e8b8971f617b1e4d4f1c3903586b6464e6f9",
+      "status": "passed",
+      "title": "Controlled AI normal Web CREATE and GROUP explicit actions and provider-failure fallback",
+      "steps": [
+        "Normal H OTP/profile; explicit CREATE generation and transfer; existing manual text kept on refusal and replaced only on explicit confirmation.",
+        "Four manual place/time/cost/terms steps, final Publish alone creates meal. Before generation through transfer/review four business tables remain empty.",
+        "In actual host group, normal GROUP generation/explicit replacement leaves messages0; normal Send creates message.",
+        "First failure marker rate-limited before provider and preserved separately. After legitimate minute recovery, explicit marker increments controlled failures0→1/calls6→7; four business digests unchanged, manual editor retained, ordinary Send succeeds.",
+        "Not a full005/006 PASS: role interchange/B privacy/Admin and application boundary assertions remain. F54 original modal error retained, no old fixture hotpatch."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b32-finite-facts.json",
+        "evidence/2026-10-21/b32-ai-keep-unsent.png",
+        "evidence/2026-10-21/b32-ai-manual-published.png",
+        "evidence/2026-10-21/b32-ai-group-unsent-draft.png",
+        "evidence/2026-10-21/b32-ai-group-explicit-sent.png",
+        "evidence/2026-10-21/b32-ai-provider-error.png",
+        "evidence/2026-10-21/b32-ai-provider-manual-fallback.png"
+      ]
+    }
+  ]
+}

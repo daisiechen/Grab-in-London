@@ -168,3 +168,5 @@
 - [J007 产品问卷实际界面部分验收](qa/evidence/2026-10-21/survey-partial-ui.md)：未出席提交、编辑持久化及三账号隔离，完整旅程仍待测。
 
 - [QA B31：同库完整截止不足旅程通过](qa/evidence/2026-10-21/browser-b31.json)：正常支持前置、Web 主持与原生加入、通知去重及取消后群消息。[有限事实](qa/evidence/2026-10-21/b31-finite-facts.json)。
+
+- [QA B32：受控 AI 创建、群草稿与失败恢复实际路径](qa/evidence/2026-10-21/browser-b32.json)：显式生成/转入/发布/发送及失败不写业务；完整 AI 旅程前置仍未满足。[有限事实](qa/evidence/2026-10-21/b32-finite-facts.json)。
