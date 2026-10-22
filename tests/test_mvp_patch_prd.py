@@ -57,3 +57,10 @@ class MvpPatchPrdTest(unittest.TestCase):
                          '通知读取与聊天读取是两种独立状态',
                          '不承诺全端零重复', '不新增群消息邮件'):
             self.assertIn(boundary, text)
+
+    def test_left_group_settings_do_not_expose_current_roster(self):
+        text = (ROOT / 'docs/product/mvp-patch-PRD.zh-CN.md').read_text()
+        for rule in ('AC-008n', '隐藏整个成员名单、当前人数、成员搜索和@候选',
+                     '不新增“离群时历史成员名单快照”能力',
+                     '退群不改变meal participation'):
+            self.assertIn(rule, text)
