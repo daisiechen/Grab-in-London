@@ -22696,7 +22696,7 @@
     "QA-F49": "CLOSED_TARGETED_QA",
     "QA-F50": "CLOSED_TARGETED_QA",
     "QA-F51": "CLOSED_TARGETED_QA",
-    "QA-F52": "PROBE_CAUSE_VERIFIED_LIVE_RETEST_PENDING"
+    "QA-F52": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -22710,7 +22710,7 @@
       "Realprovider/device/deployment/policy gates remain11separate; localmock/normal-signing simulator cannotreplace them."
     ]
   },
-  "blockerTriage": "11 external gates remain separate real-provider/device/policy/deployment evidence; resourcesready is not integrationPASS.12localwholejourneys still incomplete, not userresourceblockers. AI034/F44/F45/F46/F48/F49/F50/F51 localtargetedclosures have directevidence. F52 isolatedformprobe hasorderedOriginpolicycause verified, actualsupportchainrepair stillpending. Noassumed realcall/billing/deployment approval.",
+  "blockerTriage": "11 external gates remain separate real-provider/device/policy/deployment evidence; resourcesready is not integrationPASS.12localwholejourneys still incomplete, not userresourceblockers. AI034/F44/F45/F46/F48/F49/F50/F51 localtargetedclosures have directevidence. F52 normal Chrome synthetic support chain now independently passed exact-target correction; callback/exchange/auth/logout/exit0/drain verified. Whole business journeys and real-provider gates remain pending. Noassumed realcall/billing/deployment approval.",
   "nextExecution": [
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."

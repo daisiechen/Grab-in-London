@@ -26,3 +26,13 @@
 再新 GET exact 页并普通点击一次：pageSelf=1、pageExact=1、postSubmitted=2、landing=1；所有报告计数保持不变。目标服务器收到请求，但 Chrome 页面显示 ERR_BLOCKED_BY_CLIENT，不能把客户端显示失败误当未送达。未重发、刷新、HTTP 手工提交或关闭浏览器保护。
 
 在本探针边界内，self 下的强制 form-action 报告、目标未达，与精确允许后的目标到达构成策略介导的实证；不能自动证明原 OAuth 链每个跳转或 CLI 完成。原 F52 仍需精确修正及正常完整链路复验，统计不变。
+
+## 精确目标修正后：正常合成授权链通过
+
+新的冻结副本仅从当前未消费、未过期的实际 CLI OAuth 事务读取可信 canonical callback 和已注册精确 loopback callback，GET 不消费事务；严格状态、nonce、PKCE、Origin 和超时保持。未允许任意 localhost 或通配目标。QA 源码/冻结核验一致，21 项独立检查通过，0 失败/跳过。
+
+正常 Chrome 先打开新环境确认就绪，再启动一次事务，GET 合成授权页并普通点击 Approve 一次。浏览器显示 ERR_BLOCKED_BY_CLIENT，但以下实际证据全部成立：Web 回调 ingress/forwarded/303 各 1；API 回调 ingress/handlerEntered/303 各 1；身份 exchangeAttempt/verified 各 1、rejected=0；CLI authorization/authenticated/loggedOut/exitZero 各 1，failed/exitOther=0。前置流程 DONE，supportRows=1、staffRows=2、caseGrants=0、portalDrained=true、cliExited=true。
+
+据此 F52 定向关闭，范围限该隔离合成身份/MFA环境。原失败、探针对照与所有客户端显示差异保留。成功环境保留供后续业务，不拼接其他运行的 H/A 数据。真实 IdP/MFA、完整 J010 双端业务及其他旅程尚未通过；194 PASS / 12 NOT_RUN / 11 BLOCKED 不变。
+
+开发另以只读可重复读事务核验数据库身份后提供辅助事实：C 仅 support 角色、最新 TEST 分类 revision2、activeFamilies=0；S 为 analyst/data_admin、TEST revision1、activeFamilies=0；case grants、饭局、申请均为 0。此项明确为开发只读辅助证据，不冒称 QA 独立 SQL；与 QA 实际 DONE、CLI 退出及排空证据一致。
