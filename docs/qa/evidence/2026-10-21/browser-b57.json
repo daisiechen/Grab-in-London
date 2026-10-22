@@ -1,0 +1,36 @@
+{
+  "observations": [
+    {
+      "id": "B57-O001",
+      "testedCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "Preserved native group harness failures and bounded clock recovery",
+      "steps": [
+        "Native165 actual Inbox screenshot shows newest empty group; independent owned database confirms only M3 is live and empty among three groups. Opening must also show empty-state and live host dissolve control. Group identity is not inferred from title alone.",
+        "Fresh exact owner/current clock, three meals/six jobs and next snapshot boundaries, valid synthetic price, daily/monthly budget and unchanged UNKNOWN, zero in-flight requests/workers/grants pass. Precisely approved clock advances1.001seconds once; no meal lifecycle boundary crossed. New-second burst0/minute21 plus conservative prefix9 asserted before run.",
+        "Native166 stops before input because exact Message differs from actual Message Message. Native167 uses validated Message-prefix uniqueness, types only local unsent draft, but stops because header outside chat list does not dismiss keyboard. Neither run calls the model or sends messages. Both failures retained, not product defects.",
+        "Native168 uses actual unique input and normal hittable empty-state tap inside chat list to dismiss keyboard, preserving earlier failures and ordinary UI interaction. No programmatic dismissal, forced tap, quota reset, extra clock or new CREATE generation."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B57-O002",
+      "testedCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "Native M3 GROUP candidate Keep Replace explicit Send and Web receipt complete",
+      "steps": [
+        "Normal native host opens verified new M3 live-empty group and types synthetic local original draft. Normal Continue, New conversation and Start clear old CREATE candidate; actual GROUP prompt entered.",
+        "ACTIVITY READY independent guards show burst2/minute23 plus remaining4 within10/60, model calls still28, real0, no in-flight activity and M3messages0. Normal Ask then produces new GROUP candidate without error.",
+        "Normal Use then Keep my text preserves original unsent group draft; reopening assistant and explicit Use/Replace changes actual group editor to exact candidate. SEND READY independent database still has M3messages0: no automatic send.",
+        "An incorrect one-request/one-model-call estimate29 rejects the first SEND guard. Test remains paused; source and independent ledger prove one SUCCEEDED request has two KNOWN calls for parse and draft, exact cost256microCNY. Both period used balances increase256 to3712/calls30, reserved3024 and historical UNKNOWN1 unchanged. No repeated request or real provider call.",
+        "Fresh actual burst4/minute25 plus Send/readAck2 within10/60, zero in-flight and provider metadata30/real0/unrelatedProfileSeenfalse asserted. Only then normal native Send occurs; editor clears and Native168 exits0.",
+        "Web A actually opens exact M3 group and receives exact candidate from host. Independent owned database confirms one exact host message and one distinct client_message_id in M3, matching initial zero-message checkpoint.",
+        "While clock remains fixed, subsequent chat polling legitimately reaches its rate limit; screenshot preserves received message alongside later polling warning. No hidden warning or inference of fresh message loading during429. Leave chat to stop polling after receipt proof.",
+        "Together with original Web-host path and native-host M3 actual Create/manual four steps/explicit Publish, original J006 steps and all three expectations are complete in both roles in same environment. No END requirement added; external services and release remain unaccepted."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b57-web-group-receipt.png"
+      ]
+    }
+  ]
+}
