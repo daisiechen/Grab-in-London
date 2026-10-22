@@ -15,7 +15,7 @@
     "ios": "Independent actual headless Release XCUITest on isolated iOS27.0 simulator; current native611a/source191 matched. OTP/profile, cold restore, application pending/no-seat/no-chat, approvals and persistent cross-client messages verified. Full remaining native role-swap/lifecycle paths still pending.",
     "nativeRuntimeCheck20261021": "Available iOS27.0/27.1 runtimes and dedicated simulator; actual build/install/launch and XCTest interact successfully. Historical empty device/GUI assumptions superseded.",
     "nativeRuntimeEvidence20261021": "Native83df/611a normal Xcode simulated entitlement and source/binary independently verified; actual QA taps passed. Earlier CODE_SIGNING_ALLOWED=NO artifacts failed getItem-34018, preserved as setup/build evidence; no missing-runtime/license blocker remains.",
-    "nativeClockAlignment": "B43 internal execution prerequisite: fixed synthetic API clock is more than15minutes behind native device UTC; cold restored access is locally expired. Direct clock-alignment authorization pending after automatic approval rejection; no mutation executed. Web/Admin can proceed; this is not a new missing-account or real-provider gate."
+    "nativeClockAlignment": "B44 direct human authorization received; original synthetic runtime aligned to current UTC12:09:06.962Z. Node/DB ACK; business/budget counts and hashes unchanged; historical UNKNOWN reserve preserved; natural second snapshot retained. Native138 normal OTP restoration succeeds. Earlier B43 clock blocker resolved; product journey assertions remain separate."
   },
   "counts": {
     "PASS": 195,
@@ -85,7 +85,8 @@
     "browserObservationsB40": "evidence/2026-10-21/browser-b40.json",
     "browserObservationsB41": "evidence/2026-10-21/browser-b41.json",
     "browserObservationsB42": "evidence/2026-10-21/browser-b42.json",
-    "browserObservationsB43": "evidence/2026-10-21/browser-b43.json"
+    "browserObservationsB43": "evidence/2026-10-21/browser-b43.json",
+    "browserObservationsB44": "evidence/2026-10-21/browser-b44.json"
   },
   "cases": [
     {

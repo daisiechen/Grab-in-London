@@ -1,0 +1,35 @@
+{
+  "observations": [
+    {
+      "id": "B44-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "User-approved current UTC alignment preserves business and budget ledgers",
+      "steps": [
+        "Earlier automatic approval rejections remain unexecuted; actual executed action samples current UTC, not rejected fixed future target.",
+        "Advanced original retained fixture from11:23:28.971Z to12:09:06.962Z after exact owner, idle, London periods, price validity, meal/job boundaries and actual budget guards.",
+        "Counts/hashes of meals/applications/seat_events/messages/ai_budget/ai_calls/ai_budget_reconciliations unchanged. Historical UNKNOWN reserve preserved. Existing hourly worker naturally creates second snapshot; no direct snapshot INSERT or second runtime.",
+        "Snapshot[local synthetic snapshot identifier redacted] asOf12:09:06.962Z classificationRev2 retains partial analytics coverage: verifiedDiscovery/clientTelemetry incomplete. No full Admin acceptance claim."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b44-clock-and-state.json"
+      ]
+    },
+    {
+      "id": "B44-O002",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "failed",
+      "title": "Native138 normal reauthentication and round2 approval succeed; reservation postcondition fails",
+      "steps": [
+        "Native95e960c normal H email OTP login succeeds; exact reapplication introduction is checked, screenshot retained in original xcresult.",
+        "Complete log at60.34s explicitly taps Approve QA Final Applicant. Round2 becomes CONFIRMEDv2 and seat seq7 GUEST_CONFIRMED; old round remains CANCELLED.",
+        "Assertion Host to update reservation fails: actual manager shows Restaurant booked. Preserve failure pending exact roster/signature contract check; do not automatically extend separate5b72 F56 closure to original frozenf6d9.",
+        "Initial truncated-log reading incorrectly attributed missing approval button to pre-approval state; immediate correction sent to developer after full log showed actual tap. No automatic worker approval or developer parallel action inferred."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b44-clock-and-state.json",
+        "evidence/2026-10-21/b44-native138-focused.txt"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,221 @@
+{
+  "userAuthorization": "Direct human approval in this QA conversation: local synthetic planned clock advance/calibration with boundary verification and evidence.",
+  "clockChecks": [
+    {
+      "phase": "before",
+      "clock": "2026-10-22T11:23:28.971Z",
+      "tables": [
+        {
+          "table": "ai_budget",
+          "count": "2",
+          "sha256": "05fff3a85b30b102496924c71aebe28c89cbaea73bbec3b91270a966ee0e35b6"
+        },
+        {
+          "table": "ai_budget_reconciliations",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "ai_calls",
+          "count": "24",
+          "sha256": "515cfaa63628b5b1cbde4769e87faea06c53f8ab924b1b15488b69127780c3f3"
+        },
+        {
+          "table": "analytics_snapshots",
+          "count": "1",
+          "sha256": "c1c749a3ddf17265eda0d8c7c9f22bef7af5ce83a18e5d38e7b692af4b52e498"
+        },
+        {
+          "table": "applications",
+          "count": "3",
+          "sha256": "84ca5ff026ad106a914ccf2f460167cd9382bdde1e329ac0bf9aa3588a7b45ab"
+        },
+        {
+          "table": "meals",
+          "count": "2",
+          "sha256": "49726c8c7920af02c0c1b27451f7d373752996d3b0faf53c27580f11a6684fa8"
+        },
+        {
+          "table": "messages",
+          "count": "8",
+          "sha256": "93de198b3bb2ec10f8464233ed6b2e0d55ed125406053e29ad98287066397969"
+        },
+        {
+          "table": "seat_events",
+          "count": "5",
+          "sha256": "586100fd7a03d6f00092e85b5acbc35d4ed7784d685ec530186469ea0e4cb14a"
+        }
+      ]
+    },
+    {
+      "phase": "after",
+      "clock": "2026-10-22T12:09:06.962Z",
+      "tables": [
+        {
+          "table": "ai_budget",
+          "count": "2",
+          "sha256": "05fff3a85b30b102496924c71aebe28c89cbaea73bbec3b91270a966ee0e35b6"
+        },
+        {
+          "table": "ai_budget_reconciliations",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "ai_calls",
+          "count": "24",
+          "sha256": "515cfaa63628b5b1cbde4769e87faea06c53f8ab924b1b15488b69127780c3f3"
+        },
+        {
+          "table": "analytics_snapshots",
+          "count": "2",
+          "sha256": "914f039ce1789d419c392627b7ed2c43d8d9007f96ef9b905e4ea9c44e4f0e96"
+        },
+        {
+          "table": "applications",
+          "count": "3",
+          "sha256": "84ca5ff026ad106a914ccf2f460167cd9382bdde1e329ac0bf9aa3588a7b45ab"
+        },
+        {
+          "table": "meals",
+          "count": "2",
+          "sha256": "49726c8c7920af02c0c1b27451f7d373752996d3b0faf53c27580f11a6684fa8"
+        },
+        {
+          "table": "messages",
+          "count": "8",
+          "sha256": "93de198b3bb2ec10f8464233ed6b2e0d55ed125406053e29ad98287066397969"
+        },
+        {
+          "table": "seat_events",
+          "count": "5",
+          "sha256": "586100fd7a03d6f00092e85b5acbc35d4ed7784d685ec530186469ea0e4cb14a"
+        }
+      ]
+    }
+  ],
+  "postNative138ReadOnlyState": {
+    "identityExact": true,
+    "readOnly": true,
+    "fixtureNow": "2026-10-22T12:09:06.962Z",
+    "apps": [
+      {
+        "round": 1,
+        "state": "CANCELLED",
+        "version": "3",
+        "created_at": "2026-10-22T11:21:26.971Z",
+        "decided_at": "2026-10-22T11:23:28.971Z"
+      },
+      {
+        "round": 2,
+        "state": "CONFIRMED",
+        "version": "2",
+        "created_at": "2026-10-22T11:23:28.971Z",
+        "decided_at": "2026-10-22T12:09:06.962Z"
+      }
+    ],
+    "seats": [
+      {
+        "seq": "1",
+        "type": "HOST_CONFIRMED",
+        "effective_at": "2026-10-22T11:21:26.971Z",
+        "recorded_at": "2026-10-22T11:21:26.971Z"
+      },
+      {
+        "seq": "3",
+        "type": "GUEST_CONFIRMED",
+        "effective_at": "2026-10-22T11:22:27.971Z",
+        "recorded_at": "2026-10-22T11:22:27.971Z"
+      },
+      {
+        "seq": "5",
+        "type": "LEFT",
+        "effective_at": "2026-10-22T11:23:28.971Z",
+        "recorded_at": "2026-10-22T11:23:28.971Z"
+      },
+      {
+        "seq": "7",
+        "type": "GUEST_CONFIRMED",
+        "effective_at": "2026-10-22T12:09:06.962Z",
+        "recorded_at": "2026-10-22T12:09:06.962Z"
+      }
+    ],
+    "snapshots": [
+      {
+        "as_of": "2026-10-22T11:06:20.971Z",
+        "classification_revision": "0",
+        "source_status": {
+          "meals": "ready",
+          "seats": "ready",
+          "accounts": "ready",
+          "analytics": "partial",
+          "attendance": "ready",
+          "deliveries": "ready",
+          "experience": "ready",
+          "applications": "ready",
+          "productSurvey": "ready",
+          "classifications": "ready"
+        },
+        "quality": {
+          "excludedEvents": 0,
+          "deliveryComplete": true,
+          "incompleteSources": [
+            "verifiedDiscovery",
+            "clientTelemetry"
+          ],
+          "deliveryCoverageStart": "2026-10-22T09:06:20.964Z",
+          "telemetryIdentityMapping": "no_historical_linking"
+        },
+        "dimensions": {
+          "areas": [],
+          "sources": []
+        }
+      },
+      {
+        "as_of": "2026-10-22T12:09:06.962Z",
+        "classification_revision": "2",
+        "source_status": {
+          "meals": "ready",
+          "seats": "ready",
+          "accounts": "ready",
+          "analytics": "partial",
+          "attendance": "ready",
+          "deliveries": "ready",
+          "experience": "ready",
+          "applications": "ready",
+          "productSurvey": "ready",
+          "classifications": "ready"
+        },
+        "quality": {
+          "excludedEvents": 0,
+          "deliveryComplete": true,
+          "incompleteSources": [
+            "verifiedDiscovery",
+            "clientTelemetry"
+          ],
+          "deliveryCoverageStart": "2026-10-22T09:06:20.964Z",
+          "telemetryIdentityMapping": "no_historical_linking"
+        },
+        "dimensions": {
+          "areas": [
+            {
+              "code": "unknown",
+              "label": "unknown"
+            }
+          ],
+          "sources": []
+        }
+      }
+    ]
+  },
+  "guardSummary": {
+    "exactOwnedDatabaseVerified": true,
+    "readOnlyPreflight": true,
+    "sameLondonDayAndMonth": true,
+    "syntheticPriceValid": true,
+    "budgetAndHistoricalReservePreserved": true,
+    "noActiveProviderCallOrSupportGrant": true,
+    "noMealBoundaryCrossed": true,
+    "existingHourlySnapshotBecameDue": true
+  }
+}

@@ -1,0 +1,38 @@
+Test Case '-[ProbeUITests.ProbeTests testNativeReauthAndReapprove138]' started.
+    t =    60.34s Tap "Approve QA Final Applicant" Button
+    t =    60.73s Waiting 12.0s for "Host to update reservation" StaticText to exist
+    t =    61.74s     Checking `Expect predicate `existsNoRetry == 1` for object "Host to update reservation" StaticText`
+    t =    61.75s         Checking existence of `"Host to update reservation" StaticText`
+    t =    62.83s     Checking `Expect predicate `existsNoRetry == 1` for object "Host to update reservation" StaticText`
+    t =    62.83s         Checking existence of `"Host to update reservation" StaticText`
+    t =    63.82s     Checking `Expect predicate `existsNoRetry == 1` for object "Host to update reservation" StaticText`
+    t =    63.82s         Checking existence of `"Host to update reservation" StaticText`
+    t =    64.81s     Checking `Expect predicate `existsNoRetry == 1` for object "Host to update reservation" StaticText`
+    t =    64.81s         Checking existence of `"Host to update reservation" StaticText`
+    t =    65.78s     Checking `Expect predicate `existsNoRetry == 1` for object "Host to update reservation" StaticText`
+    t =    65.78s         Checking existence of `"Host to update reservation" StaticText`
+    t =    66.77s     Checking `Expect predicate `existsNoRetry == 1` for object "Host to update reservation" StaticText`
+    t =    66.77s         Checking existence of `"Host to update reservation" StaticText`
+    t =    67.75s     Checking `Expect predicate `existsNoRetry == 1` for object "Host to update reservation" StaticText`
+    t =    67.75s         Checking existence of `"Host to update reservation" StaticText`
+    t =    68.82s     Checking `Expect predicate `existsNoRetry == 1` for object "Host to update reservation" StaticText`
+    t =    68.82s         Checking existence of `"Host to update reservation" StaticText`
+    t =    69.81s     Checking `Expect predicate `existsNoRetry == 1` for object "Host to update reservation" StaticText`
+    t =    69.81s         Checking existence of `"Host to update reservation" StaticText`
+    t =    70.79s     Checking `Expect predicate `existsNoRetry == 1` for object "Host to update reservation" StaticText`
+    t =    70.79s         Checking existence of `"Host to update reservation" StaticText`
+    t =    71.82s     Checking `Expect predicate `existsNoRetry == 1` for object "Host to update reservation" StaticText`
+    t =    71.82s         Checking existence of `"Host to update reservation" StaticText`
+    t =    72.73s     Checking `Expect predicate `existsNoRetry == 1` for object "Host to update reservation" StaticText`
+    t =    72.73s         Checking existence of `"Host to update reservation" StaticText`
+    t =    72.93s     Checking existence of `"Host to update reservation" StaticText`
+/tmp/fancy-qa-native/ProbeTests.swift:7: error: -[ProbeUITests.ProbeTests testNativeReauthAndReapprove138] : XCTAssertTrue failed - Attributes: Application, 0x1113db700, pid: 28949, label: 'Fancy'
+                                      StaticText, 0x111502800, {{35.3, 359.6}, {331.3, 18.7}}, label: 'Restaurant booked'
+                                        StaticText, 0x111502940, {{35.3, 359.6}, {331.3, 18.7}}, label: 'Restaurant booked'
+                                      StaticText, 0x11150ebc0, {{21.0, 245.0}, {360.0, 18.3}}, label: 'QA Final Applicant has a seat.'
+                                        StaticText, 0x11150ed00, {{21.0, 245.0}, {360.0, 18.3}}, label: 'QA Final Applicant has a seat.'
+                                      StaticText, 0x11150ee40, {{21.0, 277.3}, {360.0, 20.3}}, label: 'Requests · 0'
+                                        StaticText, 0x11150ef80, {{21.0, 277.3}, {360.0, 20.3}}, label: 'Requests · 0'
+                                      StaticText, 0x11150fd40, {{21.0, 483.3}, {360.0, 20.3}}, label: 'Restaurant booked'
+                                        StaticText, 0x11150fe80, {{21.0, 483.3}, {360.0, 20.3}}, label: 'Restaurant booked'
+Test Case '-[ProbeUITests.ProbeTests testNativeReauthAndReapprove138]' failed (74.139 seconds).
