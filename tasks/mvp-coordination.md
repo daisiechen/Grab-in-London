@@ -603,3 +603,12 @@
 - 远端b4394b0在types/lint检查步骤失败，正式快照仍含QA unused noContent导入；此前root绿包含QA未提交修正，08783e3已收录该修正。未取得完整远端错误日志，不把推断当具体日志证实；后续完整CI仍须核。另静态确认F47新增OWN测试在现CI仅共享外部PG/dump wrappers下无法成立，未冒称它是前次已发生的检查失败。
 - 正式236360c新增独立FANCY_OWNED_PG_BIN，CI按官方PGDG方式备本机17服务端，已有符合版本即复用；不改原Docker service/dump wrappers，不skip。两测试明确排除外部URL，仅OWN集群证明；root故意外部127.0.0.1:1/普通bin空/独立真实17环境2项绿，缺OWN硬红由owner保留。完整core:check0、YAML/shell语法0；Ubuntu安装及完整CI尚待实跑，不能称已通过。
 - F46代理仅/tmp新fakeupstream四项绿，无standing/真实3102连接；正在准备固定503/明确双旗标/0600ownerreceipt入口，真实启动须root再核。QA Native71 selector问题与F48业务红分开，Native72继续正常新syntheticactor资料路径，不冒001guest前缀通过。034仍只/tmp自有短生命周期准备，不动3102/62044/原失库。整体验收未闭环。
+
+
+## B21 独立恢复闭环与 F49 键盘避让
+
+- QA正式787a710已push并释放Git：193PASS/12NOT_RUN/1FAIL/11BLOCKED；F45实际75/76 signed冷Continue同session/gen1及数据，77真实卸载重装先清旧auth/AI后正常guestStart，78原guest冷Continue同session/gen1，未发字不持久，EDIT导致服务端TTL合法更新不谎称全部TTL不变。F45仅CLOSED_TARGETED_QA；AI034退NOT_RUN，RAMloss410及未发文字保留仍未验，不冒整条AI全过。实际actor以服务端ID认定，不按快速输入可能缺字的预期邮箱推断。
+- F48正式0a4593e包full1492/native204逐源一致，binaryc4014ad60492622983c949c6034f52f6edb7d39a4af4e0ab52e3a02ec2a62ceb/Hermes300b5dc9a3d43a3c5a7cf897f4e8e7c4c4459c18c08e25e95b14622963e2ef61，正常签名/deepstrict0，已QA核，正在正常游客申请→登录/profile→原申请目标actual复验；组件R204绿不抢actual关闭。完整CI98722c6 completed/success已双方独立核，不能泛化后续新提交或provider验收。
+- F49新实际79：键盘y590..816，输入y626..720、Ask y733..778，二者hittable=false，断言exit65，未tapAsk/模型调用；这是独立键盘布局缺陷，不重开F45恢复数据结论。root正式cbdbf97只三文件：AI opt-in整Modal KeyboardAvoidingView flex1/padding并排除安全top/left/right，sheet及ScrollView允许收缩；移除原只包内部的KAV，保handled taps。其他Sheet默认不变，无新provider要求；manager/协议未改。
+- root布局祖先/默认Sheet关闭边界原红→绿，最终48套328原生/type/全iOSlint0，日志/private/tmp/fancy-f49-{native,type,lint}-release.log；中间测试误用新版库已移除的UNSAFE query导致红及一次无provider的默认Sheet回归红均保留并修正，未放宽实际79要求。交叉审未发现静态阻塞，提醒安全区/横屏实际几何，已交正常签名cbdbf97新包build-only，再由QA实际keyboard/Ask/mock/旋转复验，不以结构测试冒通过。
+- 034/tmp工具三项独立review问题已修：lstat/uid/canonical/权限/receipt与实际PG身份校验，确认停PG/PID退出/端口拒绝/离线系统ID后才rm；IPC断开仅关自有API/pool；主finally真实清理+ECONNREFUSED后才打印true。真实PG stop失败保数据、路径替换拒绝、一次性合成childwait失败保handle、IPC断开PG事实存活回归绿，产品1400tracked仍2005991exact。独立复审六hash全吻合通过；父SIGKILL/内核不可杀仍未测，startup/runtime错误可能API活着，保PG非静止快照。无standing62046/旧服务连接，需QA安全checkpoint后新环境，不能改原3102冒RAMloss。整体验收未闭环。
