@@ -29,3 +29,10 @@ class MvpPatchPrdTest(unittest.TestCase):
                      'IN-007', '本轮不暂存、不提交该差异',
                      '不把Git主分支更新等同线上或QA环境更新'):
             self.assertIn(item, text)
+
+    def test_development_gate_requires_scope_design_and_isolated_implementation(self):
+        text = (ROOT / 'docs/product/mvp-patch-PRD.zh-CN.md').read_text()
+        for gate in ('B01', 'B02', 'B03', 'B04',
+                     'IN归集清单不直接充当开发清单',
+                     '不得替换现行MVP环境'):
+            self.assertIn(gate, text)
