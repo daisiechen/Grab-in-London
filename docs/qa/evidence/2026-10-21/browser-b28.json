@@ -1,0 +1,22 @@
+{
+  "observations": [
+    {
+      "id": "B28-O001",
+      "testedCommit": "3a17e8b8971f617b1e4d4f1c3903586b6464e6f9",
+      "status": "failed",
+      "title": "F52 browser-only form probe cannot confirm referrer hypothesis; both Chrome policies client-blocked",
+      "steps": [
+        "Independently verified frozen form-only probe hashes and4selftests. Root starts isolated noauth/noPG/no-redirect probe. NormalIAB newpage+Approve forbothpolicies remainsunchanged.",
+        "IndependentChrome session normalnewpage+Approve forbothpolicies reaches browsererror ERR_BLOCKED_BY_CLIENT. No classificationJSON observable; browsererror/warnlogs empty. No safetyinterstitial bypass or extension disable.",
+        "Referrer-Policy no-referrer versus same-origin cannot be causally distinguished by these results; Origin/CSP hypotheses remain unknown. Client-blocked UI is actual evidence, not proof of specific extension. Developer notified; oldidentityrun remainsstopped/PGretained. F50/F51 actualfixedUI stillpending."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b28-f52-chrome-no-referrer-blocked.png",
+        "evidence/2026-10-21/b28-f52-chrome-same-origin-blocked.png",
+        "evidence/2026-10-21/b28-f52-iab-no-referrer-unchanged.png",
+        "evidence/2026-10-21/b28-f52-iab-same-origin-unchanged.png",
+        "evidence/2026-10-21/b28-form-probe-matrix.json"
+      ]
+    }
+  ]
+}

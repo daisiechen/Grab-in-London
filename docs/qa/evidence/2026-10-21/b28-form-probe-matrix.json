@@ -1,0 +1,36 @@
+{
+  "probe": "standalone form-only synthetic non-auth probe; no identity, PG, redirects, real nonce or providers",
+  "independentSelftests": {
+    "passed": 4,
+    "failed": 0,
+    "notBrowserProof": true
+  },
+  "matrix": [
+    {
+      "browser": "IAB",
+      "documentReferrerPolicy": "no-referrer",
+      "action": "normal visible Approve button click",
+      "result": "unchanged original page; no classification JSON"
+    },
+    {
+      "browser": "IAB",
+      "documentReferrerPolicy": "same-origin",
+      "action": "normal visible Approve button click",
+      "result": "unchanged original page; no classification JSON"
+    },
+    {
+      "browser": "Chrome",
+      "documentReferrerPolicy": "no-referrer",
+      "action": "normal visible Approve button click",
+      "result": "navigation to consent shows ERR_BLOCKED_BY_CLIENT; no classification JSON"
+    },
+    {
+      "browser": "Chrome",
+      "documentReferrerPolicy": "same-origin",
+      "action": "normal visible Approve button click",
+      "result": "navigation to consent shows ERR_BLOCKED_BY_CLIENT; no classification JSON"
+    }
+  ],
+  "browserErrorWarnLogs": [],
+  "conclusion": "Both policies failed in both browsers; no evidence establishes Origin null/self or CSP rootcause. Chrome actual client-blocked screen is confirmed. No browser protection/extension disabled, no Origin injected, no HTTP driver or forced form submit used."
+}
