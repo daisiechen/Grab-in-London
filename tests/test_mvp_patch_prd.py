@@ -49,3 +49,11 @@ class MvpPatchPrdTest(unittest.TestCase):
         text = (ROOT / 'docs/product/mvp-patch-PRD.zh-CN.md').read_text()
         self.assertIn('开启免打扰后，@本人和@所有人仍提醒', text)
         self.assertNotIn('PATCH-008默认细则仍待用户逐项确认', text)
+
+    def test_delivery_rules_separate_read_states_and_conflict_authority(self):
+        text = (ROOT / 'docs/product/mvp-patch-PRD.zh-CN.md').read_text()
+        for boundary in ('AC-008m', 'push有效期默认消息创建后1小时',
+                         '409冲突则刷新并展示服务端最新值',
+                         '通知读取与聊天读取是两种独立状态',
+                         '不承诺全端零重复', '不新增群消息邮件'):
+            self.assertIn(boundary, text)
