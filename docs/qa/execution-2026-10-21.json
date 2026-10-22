@@ -18746,7 +18746,7 @@
         "评分仅合格人次",
         "不混用公开评价或再约"
       ],
-      "actual": "本地生产实现尚需实际执行：未出席账号填产品问卷 → 合格账号填单场评分 → 后台分别下钻CSV。尚缺逐项证据：问卷不要求资格、不归meal；评分仅合格人次；不混用公开评价或再约。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "本地生产实现尚需实际执行：未出席账号填产品问卷 → 合格账号填单场评分 → 后台分别下钻CSV。尚缺逐项证据：问卷不要求资格、不归meal；评分仅合格人次；不混用公开评价或再约。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 2026-10-22 survey-partial-ui.md: actual normal H/A/B OTP/profile, A submit/edit/reload, independent-browser B blank/different answer/persistent, A unchanged and H blank verified. Read-only PG product_surveys3 with meals/attendance/experience/public review/pairs/messages0. Questionnaire subset passed; eligible-rating/Admin CSV/cross-client full assertions remain pending; whole NOT_RUN retained."
     },
     {
       "id": "QA-JOURNEY-008",

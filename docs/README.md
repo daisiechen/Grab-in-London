@@ -164,3 +164,5 @@
 - [QA B30：站内通知与原生键盘发送实际修复验收](qa/evidence/2026-10-21/browser-b30.json)
 
 - [支持授权链表单消费后的定向复验](qa/evidence/2026-10-21/rp-support-live-retest.md)：独立检查与实际浏览器阶段结果，保留未完成边界。
+
+- [J007 产品问卷实际界面部分验收](qa/evidence/2026-10-21/survey-partial-ui.md)：未出席提交、编辑持久化及三账号隔离，完整旅程仍待测。
