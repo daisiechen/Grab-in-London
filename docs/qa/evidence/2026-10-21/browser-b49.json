@@ -1,0 +1,19 @@
+{
+  "observations": [
+    {
+      "id": "B49-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Original same-database M1 exact CLOSE/START/END via full worker and natural snapshots",
+      "steps": [
+        "Guarded execution-currentUTC alignment12:49:44.011 preserves business/budget; actual normal WebA logout→WebH OTP and nativeH logout→nativeA OTP succeed. Native144 waits for obsolete profile entry after successful logout and fails before OTP; native145 fixes observed navigation only and succeeds, original failure retained.",
+        "Each16ZCLOSE/17ZSTART/19ZEND separately receives concrete owner approval under direct user clock plan; fresh identity/revision/clock/fullmeal+jobs/idle/zeroAI+grant/price/Londonperiod/UNKNOWN guards checked. No blind jump or quota reset.",
+        "CLOSE exact cutoff seat projectionH+A meetsmin2; uniqueCLOSE mark, M1OPEN and publicAPPLY absent. START unique mark and exactH+A roster2; no automaticSELF/experience. END unique mark, M1COMPLETEDv4/M2CANCELLEDv6, still attendance0/experience0.",
+        "Original natural worker seals snapshots16/17/19Z classificationRev2; no direct snapshot INSERT. These are not classification-change S1. Normal WebH completedmeal exposes After the meal. No feedback/PASS inference from clockACK."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b49-lifecycle-summary.json"
+      ]
+    }
+  ]
+}

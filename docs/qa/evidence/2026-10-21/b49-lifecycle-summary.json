@@ -1,0 +1,591 @@
+{
+  "scope": "Original retained same database, API f6d9a06/native95e960c. No production hotpatch; synthetic providers only.",
+  "phases": [
+    {
+      "phase": "close",
+      "clock": "2026-10-22T16:00:00.000Z",
+      "marks": [
+        {
+          "kind": "CLOSE",
+          "due_at": "2026-10-22T16:00:00.000Z",
+          "recorded_at": "2026-10-22T16:00:00.000Z"
+        }
+      ],
+      "meals": [
+        {
+          "status": "OPEN",
+          "version": "3",
+          "minimum": 2,
+          "capacity": 4,
+          "closes_at": "2026-10-22T16:00:00.000Z",
+          "starts_at": "2026-10-22T17:00:00.000Z",
+          "scheduled_end_at": "2026-10-22T19:00:00.000Z"
+        },
+        {
+          "status": "CANCELLED",
+          "version": "6",
+          "minimum": 2,
+          "capacity": 2,
+          "closes_at": "2026-10-22T22:00:00.000Z",
+          "starts_at": "2026-10-22T23:00:00.000Z",
+          "scheduled_end_at": "2026-10-23T01:00:00.000Z"
+        }
+      ],
+      "cutoff": [
+        {
+          "type": "GUEST_CONFIRMED",
+          "n": 1
+        },
+        {
+          "type": "HOST_CONFIRMED",
+          "n": 1
+        }
+      ],
+      "snapshots": [
+        {
+          "as_of": "2026-10-22T11:06:20.971Z",
+          "classification_revision": "0",
+          "source_status": {
+            "meals": "ready",
+            "seats": "ready",
+            "accounts": "ready",
+            "analytics": "partial",
+            "attendance": "ready",
+            "deliveries": "ready",
+            "experience": "ready",
+            "applications": "ready",
+            "productSurvey": "ready",
+            "classifications": "ready"
+          },
+          "revoked_at": null
+        },
+        {
+          "as_of": "2026-10-22T12:09:06.962Z",
+          "classification_revision": "2",
+          "source_status": {
+            "meals": "ready",
+            "seats": "ready",
+            "accounts": "ready",
+            "analytics": "partial",
+            "attendance": "ready",
+            "deliveries": "ready",
+            "experience": "ready",
+            "applications": "ready",
+            "productSurvey": "ready",
+            "classifications": "ready"
+          },
+          "revoked_at": null
+        },
+        {
+          "as_of": "2026-10-22T16:00:00.000Z",
+          "classification_revision": "2",
+          "source_status": {
+            "meals": "ready",
+            "seats": "ready",
+            "accounts": "ready",
+            "analytics": "partial",
+            "attendance": "ready",
+            "deliveries": "ready",
+            "experience": "ready",
+            "applications": "ready",
+            "productSurvey": "ready",
+            "classifications": "ready"
+          },
+          "revoked_at": null
+        }
+      ],
+      "beforeLedgers": [
+        {
+          "table": "ai_budget",
+          "count": "2",
+          "sha256": "05fff3a85b30b102496924c71aebe28c89cbaea73bbec3b91270a966ee0e35b6"
+        },
+        {
+          "table": "ai_budget_reconciliations",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "ai_calls",
+          "count": "24",
+          "sha256": "515cfaa63628b5b1cbde4769e87faea06c53f8ab924b1b15488b69127780c3f3"
+        },
+        {
+          "table": "attendance_revisions",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "experience_revisions",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "lifecycle_marks",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "start_roster",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "afterLedgers": [
+        {
+          "table": "ai_budget",
+          "count": "2",
+          "sha256": "05fff3a85b30b102496924c71aebe28c89cbaea73bbec3b91270a966ee0e35b6"
+        },
+        {
+          "table": "ai_budget_reconciliations",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "ai_calls",
+          "count": "24",
+          "sha256": "515cfaa63628b5b1cbde4769e87faea06c53f8ab924b1b15488b69127780c3f3"
+        },
+        {
+          "table": "attendance_revisions",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "experience_revisions",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "lifecycle_marks",
+          "count": "1",
+          "sha256": "be7bd3565fca6467991eaf397bb100f146d37460e730a001e6c66a75e7005eaa"
+        },
+        {
+          "table": "start_roster",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "phase": "start",
+      "clock": "2026-10-22T17:00:00.000Z",
+      "marks": [
+        {
+          "kind": "CLOSE",
+          "due_at": "2026-10-22T16:00:00.000Z",
+          "recorded_at": "2026-10-22T16:00:00.000Z"
+        },
+        {
+          "kind": "START",
+          "due_at": "2026-10-22T17:00:00.000Z",
+          "recorded_at": "2026-10-22T17:00:00.000Z"
+        }
+      ],
+      "meals": [
+        {
+          "status": "OPEN",
+          "version": "3",
+          "minimum": 2,
+          "capacity": 4,
+          "closes_at": "2026-10-22T16:00:00.000Z",
+          "starts_at": "2026-10-22T17:00:00.000Z",
+          "scheduled_end_at": "2026-10-22T19:00:00.000Z"
+        },
+        {
+          "status": "CANCELLED",
+          "version": "6",
+          "minimum": 2,
+          "capacity": 2,
+          "closes_at": "2026-10-22T22:00:00.000Z",
+          "starts_at": "2026-10-22T23:00:00.000Z",
+          "scheduled_end_at": "2026-10-23T01:00:00.000Z"
+        }
+      ],
+      "cutoff": [
+        {
+          "type": "GUEST_CONFIRMED",
+          "n": 1
+        },
+        {
+          "type": "HOST_CONFIRMED",
+          "n": 1
+        }
+      ],
+      "snapshots": [
+        {
+          "as_of": "2026-10-22T11:06:20.971Z",
+          "classification_revision": "0",
+          "source_status": {
+            "meals": "ready",
+            "seats": "ready",
+            "accounts": "ready",
+            "analytics": "partial",
+            "attendance": "ready",
+            "deliveries": "ready",
+            "experience": "ready",
+            "applications": "ready",
+            "productSurvey": "ready",
+            "classifications": "ready"
+          },
+          "revoked_at": null
+        },
+        {
+          "as_of": "2026-10-22T12:09:06.962Z",
+          "classification_revision": "2",
+          "source_status": {
+            "meals": "ready",
+            "seats": "ready",
+            "accounts": "ready",
+            "analytics": "partial",
+            "attendance": "ready",
+            "deliveries": "ready",
+            "experience": "ready",
+            "applications": "ready",
+            "productSurvey": "ready",
+            "classifications": "ready"
+          },
+          "revoked_at": null
+        },
+        {
+          "as_of": "2026-10-22T16:00:00.000Z",
+          "classification_revision": "2",
+          "source_status": {
+            "meals": "ready",
+            "seats": "ready",
+            "accounts": "ready",
+            "analytics": "partial",
+            "attendance": "ready",
+            "deliveries": "ready",
+            "experience": "ready",
+            "applications": "ready",
+            "productSurvey": "ready",
+            "classifications": "ready"
+          },
+          "revoked_at": null
+        },
+        {
+          "as_of": "2026-10-22T17:00:00.000Z",
+          "classification_revision": "2",
+          "source_status": {
+            "meals": "ready",
+            "seats": "ready",
+            "accounts": "ready",
+            "analytics": "partial",
+            "attendance": "ready",
+            "deliveries": "ready",
+            "experience": "ready",
+            "applications": "ready",
+            "productSurvey": "ready",
+            "classifications": "ready"
+          },
+          "revoked_at": null
+        }
+      ],
+      "exactExpectedRoster": true,
+      "rosterCount": 2,
+      "outcomes": [
+        {
+          "attendance": 0,
+          "experiences": 0
+        }
+      ],
+      "beforeLedgers": [
+        {
+          "table": "ai_budget",
+          "count": "2",
+          "sha256": "05fff3a85b30b102496924c71aebe28c89cbaea73bbec3b91270a966ee0e35b6"
+        },
+        {
+          "table": "ai_budget_reconciliations",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "ai_calls",
+          "count": "24",
+          "sha256": "515cfaa63628b5b1cbde4769e87faea06c53f8ab924b1b15488b69127780c3f3"
+        },
+        {
+          "table": "attendance_revisions",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "experience_revisions",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "lifecycle_marks",
+          "count": "1",
+          "sha256": "be7bd3565fca6467991eaf397bb100f146d37460e730a001e6c66a75e7005eaa"
+        },
+        {
+          "table": "start_roster",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "afterLedgers": [
+        {
+          "table": "ai_budget",
+          "count": "2",
+          "sha256": "05fff3a85b30b102496924c71aebe28c89cbaea73bbec3b91270a966ee0e35b6"
+        },
+        {
+          "table": "ai_budget_reconciliations",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "ai_calls",
+          "count": "24",
+          "sha256": "515cfaa63628b5b1cbde4769e87faea06c53f8ab924b1b15488b69127780c3f3"
+        },
+        {
+          "table": "attendance_revisions",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "experience_revisions",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "lifecycle_marks",
+          "count": "2",
+          "sha256": "c0f326dd79a25913485cb8a306a26cb1e8582bf2c9ff07a2e8dd2554aff0f580"
+        },
+        {
+          "table": "start_roster",
+          "count": "2",
+          "sha256": "b88ae2fccfa393faafb003a8be2d97e77384bc47d700b41bfaea2dda46c70df4"
+        }
+      ]
+    },
+    {
+      "phase": "end",
+      "clock": "2026-10-22T19:00:00.000Z",
+      "marks": [
+        {
+          "kind": "CLOSE",
+          "due_at": "2026-10-22T16:00:00.000Z",
+          "recorded_at": "2026-10-22T16:00:00.000Z"
+        },
+        {
+          "kind": "START",
+          "due_at": "2026-10-22T17:00:00.000Z",
+          "recorded_at": "2026-10-22T17:00:00.000Z"
+        },
+        {
+          "kind": "END",
+          "due_at": "2026-10-22T19:00:00.000Z",
+          "recorded_at": "2026-10-22T19:00:00.000Z"
+        }
+      ],
+      "meals": [
+        {
+          "status": "COMPLETED",
+          "version": "4",
+          "minimum": 2,
+          "capacity": 4,
+          "closes_at": "2026-10-22T16:00:00.000Z",
+          "starts_at": "2026-10-22T17:00:00.000Z",
+          "scheduled_end_at": "2026-10-22T19:00:00.000Z"
+        },
+        {
+          "status": "CANCELLED",
+          "version": "6",
+          "minimum": 2,
+          "capacity": 2,
+          "closes_at": "2026-10-22T22:00:00.000Z",
+          "starts_at": "2026-10-22T23:00:00.000Z",
+          "scheduled_end_at": "2026-10-23T01:00:00.000Z"
+        }
+      ],
+      "cutoff": [
+        {
+          "type": "GUEST_CONFIRMED",
+          "n": 1
+        },
+        {
+          "type": "HOST_CONFIRMED",
+          "n": 1
+        }
+      ],
+      "snapshots": [
+        {
+          "as_of": "2026-10-22T11:06:20.971Z",
+          "classification_revision": "0",
+          "source_status": {
+            "meals": "ready",
+            "seats": "ready",
+            "accounts": "ready",
+            "analytics": "partial",
+            "attendance": "ready",
+            "deliveries": "ready",
+            "experience": "ready",
+            "applications": "ready",
+            "productSurvey": "ready",
+            "classifications": "ready"
+          },
+          "revoked_at": null
+        },
+        {
+          "as_of": "2026-10-22T12:09:06.962Z",
+          "classification_revision": "2",
+          "source_status": {
+            "meals": "ready",
+            "seats": "ready",
+            "accounts": "ready",
+            "analytics": "partial",
+            "attendance": "ready",
+            "deliveries": "ready",
+            "experience": "ready",
+            "applications": "ready",
+            "productSurvey": "ready",
+            "classifications": "ready"
+          },
+          "revoked_at": null
+        },
+        {
+          "as_of": "2026-10-22T16:00:00.000Z",
+          "classification_revision": "2",
+          "source_status": {
+            "meals": "ready",
+            "seats": "ready",
+            "accounts": "ready",
+            "analytics": "partial",
+            "attendance": "ready",
+            "deliveries": "ready",
+            "experience": "ready",
+            "applications": "ready",
+            "productSurvey": "ready",
+            "classifications": "ready"
+          },
+          "revoked_at": null
+        },
+        {
+          "as_of": "2026-10-22T17:00:00.000Z",
+          "classification_revision": "2",
+          "source_status": {
+            "meals": "ready",
+            "seats": "ready",
+            "accounts": "ready",
+            "analytics": "partial",
+            "attendance": "ready",
+            "deliveries": "ready",
+            "experience": "ready",
+            "applications": "ready",
+            "productSurvey": "ready",
+            "classifications": "ready"
+          },
+          "revoked_at": null
+        },
+        {
+          "as_of": "2026-10-22T19:00:00.000Z",
+          "classification_revision": "2",
+          "source_status": {
+            "meals": "ready",
+            "seats": "ready",
+            "accounts": "ready",
+            "analytics": "partial",
+            "attendance": "ready",
+            "deliveries": "ready",
+            "experience": "ready",
+            "applications": "ready",
+            "productSurvey": "ready",
+            "classifications": "ready"
+          },
+          "revoked_at": null
+        }
+      ],
+      "exactExpectedRoster": true,
+      "rosterCount": 2,
+      "outcomes": [
+        {
+          "attendance": 0,
+          "experiences": 0
+        }
+      ],
+      "beforeLedgers": [
+        {
+          "table": "ai_budget",
+          "count": "2",
+          "sha256": "05fff3a85b30b102496924c71aebe28c89cbaea73bbec3b91270a966ee0e35b6"
+        },
+        {
+          "table": "ai_budget_reconciliations",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "ai_calls",
+          "count": "24",
+          "sha256": "515cfaa63628b5b1cbde4769e87faea06c53f8ab924b1b15488b69127780c3f3"
+        },
+        {
+          "table": "attendance_revisions",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "experience_revisions",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "lifecycle_marks",
+          "count": "2",
+          "sha256": "c0f326dd79a25913485cb8a306a26cb1e8582bf2c9ff07a2e8dd2554aff0f580"
+        },
+        {
+          "table": "start_roster",
+          "count": "2",
+          "sha256": "b88ae2fccfa393faafb003a8be2d97e77384bc47d700b41bfaea2dda46c70df4"
+        }
+      ],
+      "afterLedgers": [
+        {
+          "table": "ai_budget",
+          "count": "2",
+          "sha256": "05fff3a85b30b102496924c71aebe28c89cbaea73bbec3b91270a966ee0e35b6"
+        },
+        {
+          "table": "ai_budget_reconciliations",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "ai_calls",
+          "count": "24",
+          "sha256": "515cfaa63628b5b1cbde4769e87faea06c53f8ab924b1b15488b69127780c3f3"
+        },
+        {
+          "table": "attendance_revisions",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "experience_revisions",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "lifecycle_marks",
+          "count": "3",
+          "sha256": "2d47b10a438132a2ad2207ba7652c284703e7046f264bb79a88d1efa13eaa3fa"
+        },
+        {
+          "table": "start_roster",
+          "count": "2",
+          "sha256": "b88ae2fccfa393faafb003a8be2d97e77384bc47d700b41bfaea2dda46c70df4"
+        }
+      ]
+    }
+  ]
+}
