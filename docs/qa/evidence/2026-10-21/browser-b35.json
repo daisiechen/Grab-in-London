@@ -1,0 +1,21 @@
+{
+  "observations": [
+    {
+      "id": "B35-O001",
+      "testedCommit": "3a17e8b8971f617b1e4d4f1c3903586b6464e6f9",
+      "status": "passed",
+      "title": "Exact deadline rejects old AI application editor after normal seat withdrawal",
+      "steps": [
+        "Expired private OTP delivery was not reread or reset; normal resend produced a new challenge and one private read completed A normal login. This is fixture delivery expiry, not a failed product OTP verification.",
+        "A normally cancels confirmed place; UI explicitly retains group chat. B reloads original application: 1/2 confirmed, original 98-character draft intact and Send request enabled.",
+        "Read-only meal API proves closesAt instant 2026-10-22T16:00:00.000Z. Fresh run checkpoint has zero HTTP handlers and no AI/worker operation in flight.",
+        "Approved isolated clock advances exactly to stored closesAt; normal worker cancels insufficient meal. B submits previously open editor once: This meal was cancelled / not taking requests. Draft remains.",
+        "Compare after clock transition/before submit against after submit: applications1, meals1, seat_events3, messages3 identical count and sorted-row SHA256. No new B application.",
+        "This proves final deadline enforcement for the actual CANCELLED insufficient branch. It does not claim a still-OPEN-to-CLOSED branch, native reversal, or whole journey005 completion."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b35-deadline-submit-rejected.png"
+      ]
+    }
+  ]
+}

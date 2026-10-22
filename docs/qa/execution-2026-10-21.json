@@ -75,7 +75,8 @@
     "browserObservationsB31": "evidence/2026-10-21/browser-b31.json",
     "browserObservationsB32": "evidence/2026-10-21/browser-b32.json",
     "browserObservationsB33": "evidence/2026-10-21/browser-b33.json",
-    "browserObservationsB34": "evidence/2026-10-21/browser-b34.json"
+    "browserObservationsB34": "evidence/2026-10-21/browser-b34.json",
+    "browserObservationsB35": "evidence/2026-10-21/browser-b35.json"
   },
   "cases": [
     {
@@ -17774,7 +17775,8 @@
         "B11-T002",
         "B21-O007",
         "B33-O001",
-        "B34-O001"
+        "B34-O001",
+        "B35-O001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -18088,10 +18090,10 @@
       "coveredExpectedIndexes": [],
       "remainingExpected": [
         "在同一最终环境完成原Web/iOS双向申请路径及B隐私/后台核账前置",
-        "实际最终提交截止时间反例及原双向名额重验",
+        "在最终环境原双向客户端重验名额/截止；B35仅证明Web旧编辑器在精确截止后取消分支拒绝，不能代替另一端和全部前置",
         "按原客户端完成服务失败后正常申请路径；不以群消息fallback替代全部申请断言"
       ],
-      "actual": "B33 normal Web explicit SEARCH/public card selection/APPLICATION draft/confirmed transfer, guest Send→normal OTP/profile→intact original target/draft, no autoSend, explicit finalSend→one pending application passed. B34 A normal logout/B normal login shows independent blank dialogue/editor; B draft generated and transferred while1/2, H normal approval fills2/2, B normal finalSubmit rejects full while preserving draft, four business table hashes unchanged. B32 controlled provider failure/manual fallback is separate group evidence, not a substitute for application fallback in every client. Original F49 targeted closure and earlier failures preserved in history. Whole005 remains NOT_RUN: final deadline boundary, native/Web role reversal, B privacy assertions and sameDB Admin still require complete final-environment execution.",
+      "actual": "B33 normal Web explicit SEARCH/public card selection/APPLICATION draft/confirmed transfer, guest Send→normal OTP/profile→intact original target/draft, no autoSend, explicit finalSend→one pending application passed. B34 A normal logout/B normal login shows independent blank dialogue/editor; B draft generated and transferred while1/2, H normal approval fills2/2, B normal finalSubmit rejects full while preserving draft, four business table hashes unchanged. B32 controlled provider failure/manual fallback is separate group evidence, not a substitute for application fallback in every client. Original F49 targeted closure and earlier failures preserved in history. Whole005 remains NOT_RUN: final deadline boundary, native/Web role reversal, B privacy assertions and sameDB Admin still require complete final-environment execution. B35 normal A withdrawal releases seat and retains group, B old draft survives reload. At exact stored closesAt, normal worker cancels insufficient meal; B old editor finalSend rejects cancellation, draft retained, four business tables unchanged after transition. This is CANCELLED branch only; full final-environment prerequisites remain unexecuted.",
       "defectIds": [
         "QA-F49"
       ],
@@ -18106,6 +18108,18 @@
             "B33-O001"
           ],
           "reason": "B34 updates current partial coverage; prior text retained rather than claiming untested work completed."
+        },
+        {
+          "status": "NOT_RUN",
+          "actual": "B33 normal Web explicit SEARCH/public card selection/APPLICATION draft/confirmed transfer, guest Send→normal OTP/profile→intact original target/draft, no autoSend, explicit finalSend→one pending application passed. B34 A normal logout/B normal login shows independent blank dialogue/editor; B draft generated and transferred while1/2, H normal approval fills2/2, B normal finalSubmit rejects full while preserving draft, four business table hashes unchanged. B32 controlled provider failure/manual fallback is separate group evidence, not a substitute for application fallback in every client. Original F49 targeted closure and earlier failures preserved in history. Whole005 remains NOT_RUN: final deadline boundary, native/Web role reversal, B privacy assertions and sameDB Admin still require complete final-environment execution.",
+          "evidence": [
+            "B11-T001",
+            "B11-T002",
+            "B21-O007",
+            "B33-O001",
+            "B34-O001"
+          ],
+          "reason": "B35 preserves earlier partial coverage; exact cancellation deadline branch now observed."
         }
       ]
     },
@@ -22749,5 +22763,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B30 F50/F51 targetedactualclosed via newformal3a17 Web/native99/100 andread-onlyrecipientfacts; 194PASS/12NOT_RUN/11BLOCKED. Whole010supportprecondition absent; F52 RP-only realconsentchainretestpending. Alloriginalred preserved."
+  "currentExecutionSlice": "B35 actual Web deadline/cancellation final-submit slice passed; whole005 stays NOT_RUN. 195 PASS / 11 NOT_RUN / 11 BLOCKED. Unified final fixture frozen for independent review; not standing and no actual operator grant/long phase approved."
 }
