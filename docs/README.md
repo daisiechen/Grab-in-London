@@ -199,3 +199,5 @@
 - [QA B64：Codex 恢复后 Web 申请人回评/单方隐私/互选/私信与并发处理](qa/evidence/2026-10-21/browser-b64.json)；[QA B65：跨端私信往返、撤回只读、拉黑拒绝再约及 F58/F59/F60](qa/evidence/2026-10-21/browser-b65.json)。
 
 - [QA B66：J007 原生未出席问卷与同库后台下钻 CSV（J007 PASS）及 F61 整页导出失败](qa/evidence/2026-10-21/browser-b66.json)。
+
+- [QA B67：J001/J002 同库双方向整条审计（两条 PASS）](qa/evidence/2026-10-21/audit-b67-j001-j002.zh-CN.md)。
