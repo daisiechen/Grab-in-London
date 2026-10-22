@@ -594,3 +594,12 @@
 - root综合冻结core:check退出0、unit365/DB147/API203/release27全部绿；原生317/type绿，QA自有unused import修正后全iOSlint0，文档3绿。日志/private/tmp/fancy-f454647-{check,core}.log及fancy-f45-f46-frozen-{ios,type}.log。三提交分别push/fetch核对HEAD=origin/main，其他QA/research修改未索引。
 - 已交ios owner完整archive正式6e497d3，API3102正常签名Release arm64 build-only，待实际source/binary/Hermes证据后QA仅第二sim安装，复验冷启Continue、重装marker与退出notice。整体生产验收未闭环。
 - AI3102仅补合成London新日2026-10-22预算10CNY/100calls，旧日/月与业务probe不变，所有调用价格标注synthetic-only-no-real-charge；本次无真实provider调用/充值/预算初始化。私有回执/private/tmp/fancy-ai3102-synthetic-day-cap-receipt.json，不公开配置或凭据。
+
+
+## F48 游客申请入口与 CI 所有权证明补齐
+
+- QA正式08783e3保Native70原红及独立R203：OPEN/future/有席饭局游客无Request to join；没有OTP/资料/申请业务写。状态193PASS/11NOT_RUN/2FAIL/11BLOCKED，以QA后续报告为准。F48正式0a4593e仅原生MealDetail与自有8项回归：signedOut且OPEN、开始/截止未过及未满才显示登录入口；restoring/unavailable不当游客，signed仍权威allowedActions。复用现有AuthGate保存原申请目标，未扩后端权限或自动提交。root全原生47套326项/type/全部iOSlint绿，正式0a4593e已push核一致。
+- 6e497d3正常签名包已完整1485/native202逐源核对并交QA；binary2728ffde02d3a5489a29d62a874276e3338c43b2f2ceec42de80758449db2bfa/Hermes08dcc1275b1842a21677d93327fc8e0c0452cd8adb063efdd2e0955492ace80f。仅QA可安装第二sim；先正式包正常Start再coldContinue，不期待旧200包已有新凭据。F48不在6e497包，已另排正式0a4593e正常签名build-only，尚未实际复验关闭。
+- 远端b4394b0在types/lint检查步骤失败，正式快照仍含QA unused noContent导入；此前root绿包含QA未提交修正，08783e3已收录该修正。未取得完整远端错误日志，不把推断当具体日志证实；后续完整CI仍须核。另静态确认F47新增OWN测试在现CI仅共享外部PG/dump wrappers下无法成立，未冒称它是前次已发生的检查失败。
+- 正式236360c新增独立FANCY_OWNED_PG_BIN，CI按官方PGDG方式备本机17服务端，已有符合版本即复用；不改原Docker service/dump wrappers，不skip。两测试明确排除外部URL，仅OWN集群证明；root故意外部127.0.0.1:1/普通bin空/独立真实17环境2项绿，缺OWN硬红由owner保留。完整core:check0、YAML/shell语法0；Ubuntu安装及完整CI尚待实跑，不能称已通过。
+- F46代理仅/tmp新fakeupstream四项绿，无standing/真实3102连接；正在准备固定503/明确双旗标/0600ownerreceipt入口，真实启动须root再核。QA Native71 selector问题与F48业务红分开，Native72继续正常新syntheticactor资料路径，不冒001guest前缀通过。034仍只/tmp自有短生命周期准备，不动3102/62044/原失库。整体验收未闭环。
