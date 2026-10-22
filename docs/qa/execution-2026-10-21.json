@@ -76,7 +76,8 @@
     "browserObservationsB32": "evidence/2026-10-21/browser-b32.json",
     "browserObservationsB33": "evidence/2026-10-21/browser-b33.json",
     "browserObservationsB34": "evidence/2026-10-21/browser-b34.json",
-    "browserObservationsB35": "evidence/2026-10-21/browser-b35.json"
+    "browserObservationsB35": "evidence/2026-10-21/browser-b35.json",
+    "browserObservationsB36": "evidence/2026-10-21/browser-b36.json"
   },
   "cases": [
     {
@@ -22744,7 +22745,7 @@
     "QA-F51": "CLOSED_TARGETED_QA",
     "QA-F52": "CLOSED_TARGETED_QA",
     "QA-F53": "CLOSED_TARGETED_QA",
-    "QA-F54": "OPEN"
+    "QA-F54": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -22763,5 +22764,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B35 actual Web deadline/cancellation final-submit slice passed; whole005 stays NOT_RUN. 195 PASS / 11 NOT_RUN / 11 BLOCKED. Unified final fixture frozen for independent review; not standing and no actual operator grant/long phase approved."
+  "currentExecutionSlice": "B36 F54 actual unified Web targeted closure; independent unified environment54/54 and formal1651/pins70 exact. Counts195 PASS/11 NOT_RUN/11 BLOCKED unchanged; full two-client journeys continue."
 }

@@ -1,0 +1,23 @@
+{
+  "observations": [
+    {
+      "id": "B36-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "F54 real Web replacement failure is visible in active confirmation and preserves editor",
+      "steps": [
+        "New single unified environment reviewed: 1651 formal Git source entries and 70 executable pins exact; independent 54 regression tests pass, zero skip. These are environment checks, not 54 journey passes.",
+        "Normal CLI browser approval and staff prelude complete: authenticated/logout/exitZero once, no failures, portal drained, staff logged out and zero case grants. All identities and providers synthetic.",
+        "H normal OTP/profile, controlled AI CREATE generation, explicit transfer and normal confirmation succeed. H edits title and description manually.",
+        "Normal further requests reach legitimate minute limit. H chooses existing AI draft, explicitly Replace: active confirmation itself visibly and accessibly displays request-limit error, with Keep and Replace available.",
+        "Keep then Close leaves both manual title and introduction exactly intact. No forced request, quota reset, hidden DOM submit or environment patch.",
+        "Before AI versus after failed replacement: meals/applications/seat_events/messages all zero and identical hashes. After approved 61-second isolated clock recovery, ordinary explicit replacement succeeds.",
+        "Close QA-F54 targeted only; all original pre-fix evidence retained. Whole journeys005006 remain NOT_RUN until full original cross-client and same-database prerequisites."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b36-f54-active-confirm-error.png",
+        "evidence/2026-10-21/b36-f54-manual-preserved.png"
+      ]
+    }
+  ]
+}
