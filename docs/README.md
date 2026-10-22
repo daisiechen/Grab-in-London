@@ -144,3 +144,5 @@
 - [QA B20：原生安全复验、退出边界与同库夹具故障](qa/evidence/2026-10-21/browser-b20.json)
 
 - [QA B21：冷启动与重装实测、键盘遮挡缺陷](qa/evidence/2026-10-21/browser-b21.json)
+
+- [QA B22：原生访客申请登录回流定向验收](qa/evidence/2026-10-21/browser-b22.json)

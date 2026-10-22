@@ -1,6 +1,6 @@
 # 独立QA执行报告 · 2026-10-21
 
-**结论：部分执行，尚不能完成整体验收；不构成发布通过。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18, QA-F19, QA-F20, QA-F21, QA-F22, QA-F23, QA-F24, QA-F25, QA-F26, QA-F27, QA-F28, QA-F29, QA-F30, QA-F31, QA-F32, QA-F33, QA-F34, QA-F35, QA-F36, QA-F37, QA-F38, QA-F39, QA-F40, QA-F41, QA-F42, QA-F44, QA-F45；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
+**结论：部分执行，尚不能完成整体验收；不构成发布通过。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18, QA-F19, QA-F20, QA-F21, QA-F22, QA-F23, QA-F24, QA-F25, QA-F26, QA-F27, QA-F28, QA-F29, QA-F30, QA-F31, QA-F32, QA-F33, QA-F34, QA-F35, QA-F36, QA-F37, QA-F38, QA-F39, QA-F40, QA-F41, QA-F42, QA-F44, QA-F45, QA-F48；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
 
 原测试计划基线4659fdb；被测交接`8ba6fc7c9974cf6be1ac06d8b16e0380fb3beced`，业务代码`8bc1e9280153491b6a63c68cd6ba6a49f8061978`。Inbox分页修复在`cd66d87a153b3171cebbe7ae74680eceb356aed1`仅做定向复验；QA-F01及第二批P0探针在04cb601验证，第三批边界、删除/恢复和适配在d4582f7及后续仅CI增量版本定向验证，具体版本见运行表；更早证据沿用对应固定基线。
 
@@ -15,16 +15,16 @@
 | 状态 | 数量 |
 |---|---:|
 | PASS | 193 |
-| FAIL | 1 |
+| FAIL | 0 |
 | BLOCKED | 11 |
-| NOT_RUN | 12 |
+| NOT_RUN | 13 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实供应商、真实设备发行、部署或政策批准证据；本地已有可运行模拟器和正常签名原生UI，不能再用旧许可/runtime缺失概括。本地恢复与分步删除已独立通过。FAIL优先于未完成的后续步骤。
 
 ## 实际运行
 
-B21 F45formal6e actualsigned75/76+reinstall77/guest78 targetedclosed; AI034NR onlytrueRAMlossremains. F48R204componentgreen butactualnewpackpending/J001FAIL. NewF49actual79Askunderkeyboard/hittablefalse confirmed; keepAIpathsNR andexternalnativegateblocked withlocalfailureexplicit. F46actualfaultUIpending/F47sourceenvironmentlost; no217inflation. 193PASS/12NR/1FAIL/11BLOCKED.
+B22 actual80 F48formal0a targetedclosed, normalguestApply/login/profile/exacttarget andPGapplication0/businessunchanged verified. F45formal6e75–78targetedclosed. 193PASS/13NOT_RUN/11BLOCKED; no wholeJourneycountincrease. F49actual79keyboardAskoccluded OPEN awaitingformalcbdbcandidate; F46actualfaultnoticeandAI034newpersistentPG RAMloss pending; unifiedHAB/Web-iOS/Adminsameenvironment planownedbydevelopment. Originalmainriglost F47; no releaseclaim.
 
 | ID | 结果 | 范围 |
 |---|---|---|
@@ -441,7 +441,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-GATE-007 · G-AI-MODEL真实评测 | BLOCKED | R10评测准备13项和60中英固定样本已核验；默认不读Key不联网、无真实捕获时NOT_RUN/BLOCKED。真实DeepSeek质量/人工可用率/延迟未测，不关闭门槛。 |
 | QA-GATE-008 · G-AI-DATA供应商边界 | BLOCKED | 已提供官方参数/政策核查ADR并独立复跑本地适配边界；真实账户/留存及第三方数据批准仍缺，不继承其他供应商承诺。 |
 | QA-GATE-009 · G-AI-COST实账 | BLOCKED | 缺真实usage/账单与call账本对照证据。并发人民币50预留已有本地通过证据；开发可预备对账脚本，真实账单必须来自已批准配置，不扩大金额或开自动充值。 |
-| QA-JOURNEY-001 · 加入者完整闭环 | FAIL | Actual mainM1 Webhost/Nativeguest and reverseM5 Nativehost/Webguest approval/groupmessages, lifecycle, SELFattendance/privateexperience/publicreferences andexplicitreconnect executed with realPG unique facts (B17/B18/B19). Earlier normalnativeApply12 started already authenticated; it does not establish full guestApply→login→profilegate return. KeepNOT_RUN until that prefix is actually replayed per required client/role and sameDBstafftrace is captured; no composition-based wholepathPASS. Native70 normalguest publicOPENfuturemeal has noRequesttojoin (actualAX+publicHTTP), so prefixfails beforeOTP; independentR203emptyactions reproduces. QA-F48 handednativeowner, wholecaseFAIL notNR.；证据 B7-T001, B7-T002, B7-T003, B7-T004, B8-T002, B9-T001, R93-T001, R93-T002, B10-T002, B19-O001, B19-O007, B19-O008, B20-O006 |
+| QA-JOURNEY-001 · 加入者完整闭环 | NOT_RUN | Actual mainM1 Webhost/Nativeguest and reverseM5 Nativehost/Webguest approval/groupmessages, lifecycle, SELFattendance/privateexperience/publicreferences andexplicitreconnect executed with realPG unique facts (B17/B18/B19). Earlier normalnativeApply12 started already authenticated; it does not establish full guestApply→login→profilegate return. KeepNOT_RUN until that prefix is actually replayed per required client/role and sameDBstafftrace is captured; no composition-based wholepathPASS. Native70 normalguest publicOPENfuturemeal has noRequesttojoin (actualAX+publicHTTP), so prefixfails beforeOTP; independentR203emptyactions reproduces. QA-F48 handednativeowner, wholecaseFAIL notNR. B22-O001 formal0a actual80normalguestApply/login/profile/sameoriginaltarget/noautoSend passes F48targetedfix. StillNOT_RUN untilsameenvironmentbothrolefullpath/admintrace; original70red retained.；证据 B7-T001, B7-T002, B7-T003, B7-T004, B8-T002, B9-T001, R93-T001, R93-T002, B10-T002, B19-O001, B19-O007, B19-O008, B20-O006, B22-O001 |
 | QA-JOURNEY-002 · 主持者完整闭环 | NOT_RUN | F42targetedclosed formalcd69: originalNative52 missinghostcontrol retained; actual53unknown/no-default/Reviewcancel PG0; actual54HOSTabsent independentlyconfirmed; WebguestSELFpresent then Native55HOSTabsentagain preserves effectiveSELFpresent. R19614/0. Fullbothdirectionjourney still heldNR for thirdprivacyactor/sharedfactsadminprecondition and remainingassertions. B20-O004: sameDBsidecar bootstrap facts verified, but original rig autoexited during legalclockadvance; no sourceadminUI/snapshot/CSV executed. Environmentrecovery developerowned, not user blocker.；证据 B19-O004, B19-O005, B20-O003, B20-O004 |
 | QA-JOURNEY-003 · 取消与聊天独立路径 | NOT_RUN | F39/F40 targetedclosed. Native0db35 actualhost Keepgroup preservesdraft/no write, explicitdissolve makesbothreadonly; samePGdissolvedseq8/messageCount3 provesdraftunsent. Native33/36/37 guestold+new/noabsencegap/noeditor passed; Native38 manualInboxpull restoreshostcoldreadonly/noReopen. Webhost independentlydissolvesnativeguest group3870, samePGdissolvedseq9/messageCount4; doesnotcancelmeal/changecurrentseats. FullcaseheldNOT_RUN untilsharedfactsreceipt/adminprecondition, not inflated fromtests. F41generalInboxreturn separate. B20-O004: sameDBsidecar bootstrap facts verified, but original rig autoexited during legalclockadvance; no sourceadminUI/snapshot/CSV executed. Environmentrecovery developerowned, not user blocker.；证据 B18-O001, B18-O002, B20-O003, B20-O004 |
 | QA-JOURNEY-004 · 互选私密路径 | NOT_RUN | Original samePG bothrole feedback/mutualDM/withdraw and thirdB privacy retained. F44 native safety gap fixed formal2005991 and actual61–64 independent ownedPG targeted passed; not full original mirroredjourney. SameDBadmintrace still unexecuted; original61973 rig exited during reviewedclockadvance(F47), developer recovery pending. No wholecasepass.；证据 B19-O001, B19-O002, B19-O007, B19-O008, B19-O009, B19-O010, B20-O001 |
@@ -475,10 +475,10 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 
 ## 下一批执行顺序
 
-1. Developer diagnose F47 clockrig fatalcleanup without modifying prior evidence; preserve logs and pause originalsidecar, new persistent-parent rig/proven recovery needed for sameDBpaths.
-2. Finish AI005/006 controlled native paths andAI034 realRAMloss using independent reviewed persistentPG rig; verify F45 token-only coldcontinuation without content persistence.
-3. Obtain formal F46 source/artifact andactual native remote-unconfirmed notice; retain localclear vsserverrevocation boundaries.
-4. Execute complete guestApply→login→profile→same target prefix forJOURNEY001 in one declared finalenvironment, plus remaining sameDBadmin/UI assertions.
-5. Retain11 externalblocked gates with specificreal-provider/native/policy/deployment evidence; no blanketmissingKey claim.
+1. Independently verify officialF49candidate and actual79keyboardreplay: physicalinput/Ask/header/Close, portrait andscrollablelandscape, controlledmockAsk/result/explicittransfer, preserveoriginalred.
+2. Run ownedF46fixed503proxy actualnative logoutnotice, localclear vsremoteunconfirmed, then normal204 path; do not stop old3102/62044 or useDBfamilycleanup.
+3. Review retained-parent AI034runner identity/stop/cleanup fixes then genuineAPI-child hardRAMloss andnormalnative410/liveunsentretention; neverrestartold3102.
+4. Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.
+5. Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval.
 
 Claude参与此前测试设计建议；本次动态执行及结论由Codex负责。Claude提出静态发现后由开发筛选复现修复至ac09af4，QA已独立定向复跑28项API/DB通过；不算Claude动态测试或完整交叉签收。

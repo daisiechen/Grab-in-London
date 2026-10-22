@@ -18,9 +18,8 @@
   },
   "counts": {
     "PASS": 193,
-    "NOT_RUN": 12,
-    "BLOCKED": 11,
-    "FAIL": 1
+    "NOT_RUN": 13,
+    "BLOCKED": 11
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
@@ -63,7 +62,8 @@
     "browserObservationsB18": "evidence/2026-10-21/browser-b18.json",
     "browserObservationsB19": "evidence/2026-10-21/browser-b19.json",
     "browserObservationsB20": "evidence/2026-10-21/browser-b20.json",
-    "browserObservationsB21": "evidence/2026-10-21/browser-b21.json"
+    "browserObservationsB21": "evidence/2026-10-21/browser-b21.json",
+    "browserObservationsB22": "evidence/2026-10-21/browser-b22.json"
   },
   "cases": [
     {
@@ -16259,7 +16259,7 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "NOT_RUN",
       "evidence": [
         "B7-T001",
         "B7-T002",
@@ -16273,7 +16273,8 @@
         "B19-O001",
         "B19-O007",
         "B19-O008",
-        "B20-O006"
+        "B20-O006",
+        "B22-O001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -16636,10 +16637,9 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "Actual guest Apply→login→profile completion→return to same target without automatic submission, in both required client/role directions; prior preauthenticated apply does not establish this prefix.",
-        "Same physical test database notification/admin trace and exact once-only original normal meal facts; complete per-case evidence mapping before PASS."
+        "Repeat required wholeguestApply→normalLogin→profile→explicitapplication→approval→group→feedback end-to-end in bothWeb/iOSdirections in one finaldeclared environment, withBprivacy/notifications/sameDBadmintrace. F48nativeprefixalone is nowverified."
       ],
-      "actual": "Actual mainM1 Webhost/Nativeguest and reverseM5 Nativehost/Webguest approval/groupmessages, lifecycle, SELFattendance/privateexperience/publicreferences andexplicitreconnect executed with realPG unique facts (B17/B18/B19). Earlier normalnativeApply12 started already authenticated; it does not establish full guestApply→login→profilegate return. KeepNOT_RUN until that prefix is actually replayed per required client/role and sameDBstafftrace is captured; no composition-based wholepathPASS. Native70 normalguest publicOPENfuturemeal has noRequesttojoin (actualAX+publicHTTP), so prefixfails beforeOTP; independentR203emptyactions reproduces. QA-F48 handednativeowner, wholecaseFAIL notNR.",
+      "actual": "Actual mainM1 Webhost/Nativeguest and reverseM5 Nativehost/Webguest approval/groupmessages, lifecycle, SELFattendance/privateexperience/publicreferences andexplicitreconnect executed with realPG unique facts (B17/B18/B19). Earlier normalnativeApply12 started already authenticated; it does not establish full guestApply→login→profilegate return. KeepNOT_RUN until that prefix is actually replayed per required client/role and sameDBstafftrace is captured; no composition-based wholepathPASS. Native70 normalguest publicOPENfuturemeal has noRequesttojoin (actualAX+publicHTTP), so prefixfails beforeOTP; independentR203emptyactions reproduces. QA-F48 handednativeowner, wholecaseFAIL notNR. B22-O001 formal0a actual80normalguestApply/login/profile/sameoriginaltarget/noautoSend passes F48targetedfix. StillNOT_RUN untilsameenvironmentbothrolefullpath/admintrace; original70red retained.",
       "defectIds": [
         "QA-F18",
         "QA-F48"
@@ -22652,7 +22652,7 @@
     "QA-F45": "CLOSED_TARGETED_QA",
     "QA-F46": "OPEN_FORMAL_NATIVE_RETEST_PENDING",
     "QA-F47": "OPEN_ENVIRONMENT",
-    "QA-F48": "OPEN_NATIVE_REPRODUCED",
+    "QA-F48": "CLOSED_TARGETED_QA",
     "QA-F49": "OPEN_NATIVE_REPRODUCED"
   },
   "followUp": {
@@ -22670,11 +22670,11 @@
   },
   "blockerTriage": "当前11条外部门槛仍需真实服务验收、发行设备、部署或政策批准证据；开发已告知除Apple待审核外资源就绪，不再沿用账号/Key未开通作为笼统阻塞。QA尚未把资源就绪等同实际接入通过。AI034属于本地NOT_RUN，原生runtime/签名/冷恢复已实际可运行；待测为重装token边界及受控AI生命周期。原14条中的本地隐私/恢复已通过。当前F44原生安全入口缺失为开发待修；完整双端旅程与新生产切片仍实际推进。",
   "nextExecution": [
-    "Developer diagnose F47 clockrig fatalcleanup without modifying prior evidence; preserve logs and pause originalsidecar, new persistent-parent rig/proven recovery needed for sameDBpaths.",
-    "Finish AI005/006 controlled native paths andAI034 realRAMloss using independent reviewed persistentPG rig; verify F45 token-only coldcontinuation without content persistence.",
-    "Obtain formal F46 source/artifact andactual native remote-unconfirmed notice; retain localclear vsserverrevocation boundaries.",
-    "Execute complete guestApply→login→profile→same target prefix forJOURNEY001 in one declared finalenvironment, plus remaining sameDBadmin/UI assertions.",
-    "Retain11 externalblocked gates with specificreal-provider/native/policy/deployment evidence; no blanketmissingKey claim."
+    "Independently verify officialF49candidate and actual79keyboardreplay: physicalinput/Ask/header/Close, portrait andscrollablelandscape, controlledmockAsk/result/explicittransfer, preserveoriginalred.",
+    "Run ownedF46fixed503proxy actualnative logoutnotice, localclear vsremoteunconfirmed, then normal204 path; do not stop old3102/62044 or useDBfamilycleanup.",
+    "Review retained-parent AI034runner identity/stop/cleanup fixes then genuineAPI-child hardRAMloss andnormalnative410/liveunsentretention; neverrestartold3102.",
+    "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
+    "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B21 F45formal6e actualsigned75/76+reinstall77/guest78 targetedclosed; AI034NR onlytrueRAMlossremains. F48R204componentgreen butactualnewpackpending/J001FAIL. NewF49actual79Askunderkeyboard/hittablefalse confirmed; keepAIpathsNR andexternalnativegateblocked withlocalfailureexplicit. F46actualfaultUIpending/F47sourceenvironmentlost; no217inflation. 193PASS/12NR/1FAIL/11BLOCKED."
+  "currentExecutionSlice": "B22 actual80 F48formal0a targetedclosed, normalguestApply/login/profile/exacttarget andPGapplication0/businessunchanged verified. F45formal6e75–78targetedclosed. 193PASS/13NOT_RUN/11BLOCKED; no wholeJourneycountincrease. F49actual79keyboardAskoccluded OPEN awaitingformalcbdbcandidate; F46actualfaultnoticeandAI034newpersistentPG RAMloss pending; unifiedHAB/Web-iOS/Adminsameenvironment planownedbydevelopment. Originalmainriglost F47; no releaseclaim."
 }

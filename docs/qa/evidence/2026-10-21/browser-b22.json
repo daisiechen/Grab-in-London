@@ -1,0 +1,23 @@
+{
+  "observations": [
+    {
+      "id": "B22-O001",
+      "testedCommit": "0a4593e7f1ba9c32620e177ede98b1ea1395971e",
+      "environment": "Actual signedRelease iOS27.0 dedicated secondsim/originalAPI3102 PID42728 real localPG, synthetic identity/provider",
+      "status": "passed",
+      "title": "F48 actual guest Apply→normal OTP/profile→same target with zero automatic business writes",
+      "steps": [
+        "Installedcandidate204trackedgitarchiveexact andactualbinary/Hermesmatch/deepstrict0. Native80 normalDiscover→meal7d501e3b→Requesttojoin→Email; percharacterinputvalueassert exactqa-f48-native80@example.invalid→normal000000verify→profilefields/language/interests/communityconsent→TakeSeat→sameoriginalApplyeditor.",
+        "Originalmealtitlebody/emptyintroduction/Sendrequestexist asserted. NoSendpressed; readonlyPG exactnewactor5b017fbe-39e1-44e0-9fcc-f9b8132230c5/publicQA GuestFlowprofilecomplete, originaltargetapplicationCount0. AllbusinessProbeunchangedandAIrequestsSUCCEEDED2unchanged. No modelcall/no actualprivateemailprovider.",
+        "F48targetedclosed; original70/R203red retained andR204componentgreen. This closesnativeguestentry/returnprefix only; J001two-directionwholelifecycle/notification/adminsameDBandBprivacypreconditions remainNOT_RUN, notwholecasePASS. F49keyboardissue remainsopen separately."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f48-actual-installed-artifact-review.json",
+        "evidence/2026-10-21/native-f48-80-xcui.swift",
+        "evidence/2026-10-21/f48-native80-after-business.json",
+        "evidence/2026-10-21/f48-native80-identity-facts.json",
+        "evidence/2026-10-21/native80-fixed-guest-prefix-exact-apply.png"
+      ]
+    }
+  ]
+}

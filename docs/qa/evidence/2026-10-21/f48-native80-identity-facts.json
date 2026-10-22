@@ -1,0 +1,17 @@
+{
+  "profile": {
+    "user_id": "5b017fbe-39e1-44e0-9fcc-f9b8132230c5",
+    "display_name": "QA Guest Flow",
+    "life_status": "NEW_TO_LONDON",
+    "languages": [
+      "en"
+    ],
+    "interests": [
+      "FOOD"
+    ],
+    "age_confirmed": true,
+    "community_accepted": true
+  },
+  "sameTargetApplicationCount": 0,
+  "syntheticEmailMatches": true
+}
