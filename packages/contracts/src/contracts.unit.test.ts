@@ -48,8 +48,16 @@ describe('registry matches the reviewed API contract', () => {
 
   it('keeps additional reviewed operations explicitly enumerated', () => {
     const extra = all.map((d) => d.operationId).filter((id) => !documented.some((d) => d.id === id));
-    expect(extra.sort()).toEqual(['getBlock', 'markConversationRead', 'getClassification', 'getExport', 'createGuestSession', 'readAIPreferences', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'readAI', 'activityAI', 'resetAI', 'requestAI', 'pollAI', 'validateAIDraft'].sort());
+    expect(extra.sort()).toEqual(['getVenuePhoto','getBlock', 'markConversationRead', 'getClassification', 'getExport', 'createGuestSession', 'readAIPreferences', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'readAI', 'activityAI', 'resetAI', 'requestAI', 'pollAI', 'validateAIDraft'].sort());
     expect(doc).toContain('GET /admin/exports/:id');
+  });
+
+  it('defines photo reads as public ref-only and exposes no client media URL/resource-name input',()=>{
+    const op=byId('getVenuePhoto')!;expect(op).toMatchObject({method:'GET',path:'/venues/{venueRef}/photo',auth:'public',write:'read',ifMatch:false});
+    expect(Object.keys(op.params!.properties)).toEqual(['venueRef']);expect(op.body).toBeUndefined();
+    const check=validator(op.success.data!);expect(check({placeId:'place_one',photo:null})).toBe(true);
+    expect(check({placeId:'place_one',photo:{uri:'https://lh3.googleusercontent.com/x',source:'Google Maps',authorAttributions:[{displayName:'Author',uri:null}]}})).toBe(true);
+    expect(check({placeId:'place_one',photo:{uri:'https://lh3.googleusercontent.com/x',source:'Google Maps',authorAttributions:[],photoName:'not-storable'}})).toBe(false);
   });
 
   it('has unique operationIds and method+path pairs', () => {

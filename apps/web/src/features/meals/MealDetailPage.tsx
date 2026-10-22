@@ -1,3 +1,4 @@
+import {VenuePhoto} from '../venues/VenuePhoto.tsx';
 import {mealReturn} from '../discover/returnContext.ts';
 import { Link,useLocation,useParams } from 'react-router';
 import { useRenderedEvent } from '../../api/telemetry.tsx';
@@ -9,7 +10,7 @@ import type { MealDetail } from '../../api/types.ts';
 import { budgetRange, longDate, timeLabel, zonedLabel } from '../../lib/format.ts';
 import { Avatar, FormError, Loading, PageHeader, PrimaryLink } from '../../ui/components.tsx';
 import {
-  applicationLabels, areaName, bookingStatus, cancelReasonLabel, cuisineLabel, dietaryLabel, googleMapsUrl, languagesLabel, monogram, moodLabel, tableKind,
+  applicationLabels, areaName, bookingStatus, cancelReasonLabel, cuisineLabel, dietaryLabel, googleMapsUrl, languagesLabel, moodLabel, tableKind,
 } from './present.ts';
 
 /**
@@ -36,7 +37,7 @@ export function MealDetailPage() {
   return (
     <>
       <PageHeader title="The table" backTo={backTo} />
-      <div className="detail-hero" aria-hidden="true">{monogram(meal.venue.name)}</div>
+      <VenuePhoto className="detail-hero" venueRef={meal.venue.venueRef} placeId={meal.venue.placeId} label={meal.venue.name}/>
       <div className="body-pad">
         <div className="eyebrow">{areaName(meal.areaCode).toUpperCase()} · {tableKind(meal.capacity)}</div>
         <h1>{meal.title}</h1>

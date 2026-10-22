@@ -22,6 +22,13 @@ function readyDraft(): CreateDraft {
   return updateDraft(d, { budgetMin: '20', budgetMax: '30', bookingDeclarationConfirmed: true });
 }
 
+it('shows the selected restaurant photo and authors on Review without publishing',async()=>{
+ const app=createTestApp();await signIn(app,me());const draft=readyDraft();app.services.drafts.set(CREATE_DRAFT_KEY,draft);
+ app.mock.on('GET',`/v1/venues/${draft.venue!.venueRef}/photo`,ok({placeId:draft.venue!.placeId,photo:{uri:'https://photos.example.invalid/review',source:'Google Maps',authorAttributions:[{displayName:'Review Author',uri:null}]}}));
+ await renderApp(app,<CreateStepScreen step={3}/>);
+ expect(await screen.findByLabelText('Photo of Dishoom')).toBeOnTheScreen();expect(screen.getByText('Review Author')).toBeOnTheScreen();expect(app.mock.callsTo('POST','/v1/meals')).toHaveLength(0);
+});
+
 describe('Create Costs completed reservation declaration (F55)', () => {
   it('requires the host to confirm an already booked named table before continuing', async () => {
     const app = createTestApp(); await signIn(app, me());

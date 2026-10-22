@@ -15,6 +15,7 @@ export const OPERATIONS = {
   updateMe: { method: 'PATCH', path: '/v1/me', pathParams: [], auth: 'session', write: 'idempotencyKey', ifMatch: true, successStatus: 200, list: false, hasBody: true },
   getPublicProfile: { method: 'GET', path: '/v1/profiles/{userId}', pathParams: ['userId'], auth: 'public', write: 'read', ifMatch: false, successStatus: 200, list: false, hasBody: false },
   searchVenues: { method: 'GET', path: '/v1/venues', pathParams: [], auth: 'public', write: 'read', ifMatch: false, successStatus: 200, list: true, hasBody: false },
+  getVenuePhoto: { method: 'GET', path: '/v1/venues/{venueRef}/photo', pathParams: ['venueRef'], auth: 'public', write: 'read', ifMatch: false, successStatus: 200, list: false, hasBody: false },
   confirmVenue: { method: 'POST', path: '/v1/venues/confirm', pathParams: [], auth: 'session', write: 'idempotencyKey', ifMatch: false, successStatus: 200, list: false, hasBody: true },
   discoverMeals: { method: 'GET', path: '/v1/meals', pathParams: [], auth: 'optionalSession', write: 'read', ifMatch: false, successStatus: 200, list: true, hasBody: false },
   getMeal: { method: 'GET', path: '/v1/meals/{mealId}', pathParams: ['mealId'], auth: 'optionalSession', write: 'read', ifMatch: false, successStatus: 200, list: false, hasBody: false },

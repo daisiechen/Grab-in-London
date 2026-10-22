@@ -11,6 +11,7 @@ import { useServices, useSessionState } from '../../services.tsx';
 import { POLICY_VERSION } from '../../config.ts';
 import { HALF_HOUR_SLOTS, londonToday, longDate } from '../../lib/london.ts';
 import { Primary, TextAction } from '../../ui/Button.tsx';
+import {RestaurantPhoto} from '../../ui/RestaurantPhoto.tsx';
 import { CheckRow } from '../../ui/CheckRow.tsx';
 import { ChoiceGroup, MultiChoice } from '../../ui/ChoiceGroup.tsx';
 import { DateChoices } from '../../ui/DateChoices.tsx';
@@ -282,6 +283,7 @@ function Review({ draft, update, today }: Part & { today: string }) {
     <View style={{ gap: 14 }}>
       <Heading>Review your meal</Heading>
       <SectionTitle>Arrange</SectionTitle>
+      {draft.venue?<RestaurantPhoto venueRef={draft.venue.venueRef} placeId={draft.venue.placeId} name={draft.venue.name}/>:null}
       <Body>{draft.venue?.name ?? 'No restaurant chosen'}</Body>
       <Body>{draft.date && draft.time ? `${longDate(draft.date)} · ${draft.time} London time${draft.startOffset !== null ? ` (${draft.startOffset === 60 ? 'BST' : 'GMT'})` : ''}` : 'No time chosen'}</Body>
       <Body>{`${draft.minimum}–${draft.capacity} people including you`}</Body>

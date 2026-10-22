@@ -9,6 +9,14 @@ import type { VenueSearch } from './provider.ts';
 import type { PreparedVenueConfirmation,VenueService } from './service.ts';
 
 export function registerVenueRoutes(app: FastifyInstance, deps: AppDeps, service: VenueService): void {
+  defineRoute(app,deps,'getVenuePhoto',async({request,reply})=>{
+    reply.header('Cache-Control','no-store');
+    const {venueRef}=request.params as {venueRef:string};
+    const {rows:[venue]}=await deps.pool.query<{place_id:string;provider:string}>('SELECT place_id,provider FROM venues WHERE id=$1',[venueRef]);
+    if(!venue)throw new DomainError('NOT_FOUND','This restaurant is unavailable.');
+    const photo=venue.provider==='google'&&service.provider.photo?await service.provider.photo(venue.place_id):null;
+    return {data:{placeId:venue.place_id,photo}};
+  });
   defineRoute(app, deps, 'searchVenues', async ({ request }) => {
     const q = request.query as { q?: string; north?: number; south?: number; east?: number; west?: number; cursor?: string };
     const values = [q.north, q.south, q.east, q.west];

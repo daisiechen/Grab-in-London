@@ -16,6 +16,7 @@ import { useAuthGate } from '../auth/useAuthGate.ts';
 import {
   applicationLabel, areaLabel, bookingLabel, budgetLabel, cuisineLabel, dietaryLabel, languagesLabel, moodLabel, seatsLabel, venueName, whenLabel,
 } from './format.ts';
+import {RestaurantPhoto} from '../../ui/RestaurantPhoto.tsx';
 import { mealActionMessage } from './messages.ts';
 
 type Detail = ResponseOf<'getMeal'>['data'];
@@ -105,6 +106,7 @@ export function MealDetailScreen() {
       <Body muted>Cuisine and dietary details are declared by the host.</Body>
 
       <SectionTitle>The restaurant</SectionTitle>
+      <RestaurantPhoto venueRef={meal.venue.venueRef} placeId={meal.venue.placeId} name={venueName(meal)}/>
       <Body>{venueName(meal)}</Body>
       {meal.venue.available && meal.venue.address ? <Body muted>{meal.venue.address}</Body> : null}
       {meal.venue.attributions.map((a, i) => <Body key={i} muted>{a.text}</Body>)}

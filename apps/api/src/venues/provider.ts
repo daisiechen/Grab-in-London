@@ -10,10 +10,12 @@ export interface Place {
   photoRefs: string[];
   attributions: { provider: 'google'; text: string }[];
 }
+export interface PlacePhoto {uri:string;source:'Google Maps';authorAttributions:{displayName:string;uri:string|null}[]}
 export interface PlacesProvider {
   readonly kind: 'google' | 'fixture' | 'unavailable';
   search(input: VenueSearch): Promise<{ places: Place[]; nextCursor: string | null }>;
   details(placeId: string): Promise<Place | null>;
+  photo?(placeId:string):Promise<PlacePhoto|null>;
 }
 export function validatePlaceId(placeId: string): string {
   // IDs are opaque; do not assume every Google identifier begins with ChIJ.

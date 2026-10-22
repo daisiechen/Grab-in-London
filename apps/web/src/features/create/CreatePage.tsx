@@ -1,3 +1,4 @@
+import {VenuePhoto} from '../venues/VenuePhoto.tsx';
 import { useAssistantEditor, useAssistantEditorRevision } from '../assistant/index.ts';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTelemetry } from '../../api/telemetry.tsx';
@@ -170,6 +171,7 @@ function CreateFlow({terms}:{terms:boolean}) {
       {step === 3 && (
         <>
           <div className="create-review">
+            {draft.venue?<VenuePhoto className="meal-photo" venueRef={draft.venue.venueRef} placeId={draft.venue.placeId} label={draft.venue.name}/>:null}
             <div className="eyebrow">YOUR NEW TABLE</div>
             <h2>{draft.title}</h2>
             <p>{draft.description}</p>

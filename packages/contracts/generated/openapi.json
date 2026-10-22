@@ -2530,6 +2530,129 @@
         "x-if-match": false
       }
     },
+    "/v1/venues/{venueRef}/photo": {
+      "get": {
+        "operationId": "getVenuePhoto",
+        "summary": "Fresh restaurant photograph and mandatory author attribution (never cached)",
+        "parameters": [
+          {
+            "name": "venueRef",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/VenuePhoto"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_REQUEST"
+            ]
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "NOT_FOUND"
+            ]
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "VALIDATION_FAILED"
+            ]
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "RATE_LIMITED"
+            ]
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INTERNAL_ERROR"
+            ]
+          },
+          "503": {
+            "description": "PROVIDER_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "PROVIDER_UNAVAILABLE"
+            ]
+          }
+        },
+        "x-auth": "public",
+        "x-write-protocol": "read",
+        "x-if-match": false
+      }
+    },
     "/v1/venues/confirm": {
       "post": {
         "operationId": "confirmVenue",
@@ -18560,6 +18683,78 @@
             "items": {
               "$ref": "#/components/schemas/Attribution"
             }
+          }
+        }
+      },
+      "VenuePhoto": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "placeId",
+          "photo"
+        ],
+        "properties": {
+          "placeId": {
+            "minLength": 1,
+            "maxLength": 512,
+            "type": "string"
+          },
+          "photo": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "uri",
+                  "authorAttributions",
+                  "source"
+                ],
+                "properties": {
+                  "uri": {
+                    "minLength": 1,
+                    "maxLength": 4096,
+                    "type": "string"
+                  },
+                  "authorAttributions": {
+                    "maxItems": 10,
+                    "type": "array",
+                    "items": {
+                      "additionalProperties": false,
+                      "type": "object",
+                      "required": [
+                        "displayName",
+                        "uri"
+                      ],
+                      "properties": {
+                        "displayName": {
+                          "minLength": 1,
+                          "maxLength": 300,
+                          "type": "string"
+                        },
+                        "uri": {
+                          "anyOf": [
+                            {
+                              "maxLength": 2000,
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "source": {
+                    "const": "Google Maps",
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       },

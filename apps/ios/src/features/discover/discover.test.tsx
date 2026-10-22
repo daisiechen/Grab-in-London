@@ -29,18 +29,19 @@ describe('DiscoverScreen (QA-DISCOVERY-001..003)', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Any date' }));
     await fireEvent.press(screen.getByRole('checkbox', { name: 'Sat 24 Oct' }));
     await fireEvent.press(screen.getByRole('button', { name: 'Close' }));
-    expect(app.mock.calls).toHaveLength(1);
+    expect(app.mock.callsTo('GET','/v1/meals')).toHaveLength(1);
+    expect(app.mock.callsTo('GET',`/v1/venues/${meal().venue.venueRef}/photo`)).toHaveLength(1);
 
     await fireEvent.press(screen.getByRole('button', { name: 'Any date' }));
     await fireEvent.press(screen.getByRole('checkbox', { name: 'Sat 24 Oct' }));
     await fireEvent.press(screen.getByRole('checkbox', { name: 'Tue 27 Oct' }));
     await fireEvent.press(screen.getByRole('button', { name: 'Show meals' }));
     expect(await screen.findByText('No tables match just yet')).toBeOnTheScreen();
-    expect(app.mock.calls[1]?.query.get('dates')).toBe('2026-10-24,2026-10-27');
+    expect(app.mock.callsTo('GET','/v1/meals')[1]?.query.get('dates')).toBe('2026-10-24,2026-10-27');
 
     await fireEvent.press(screen.getByRole('button', { name: 'Clear filters' }));
     expect(await screen.findByText('Sunday dinner')).toBeOnTheScreen();
-    expect(app.mock.calls[2]?.query.get('dates')).toBeNull();
+    expect(app.mock.callsTo('GET','/v1/meals')[2]?.query.get('dates')).toBeNull();
   });
 
   it('past London dates are not selectable', async () => {

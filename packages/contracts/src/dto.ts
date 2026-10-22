@@ -75,6 +75,16 @@ export const Attribution = Obj({
   text: T.String({ maxLength: 500 }),
 });
 
+/** Ephemeral provider display only; never persist photo names, URIs or authors. */
+export const VenuePhoto = Obj({
+  placeId: T.String({minLength:1,maxLength:512}),
+  photo: T.Union([Obj({
+    uri:T.String({minLength:1,maxLength:4096}),
+    authorAttributions:T.Array(Obj({displayName:T.String({minLength:1,maxLength:300}),uri:T.Union([T.String({maxLength:2000}),T.Null()])}),{maxItems:10}),
+    source:T.Literal('Google Maps'),
+  }),T.Null()]),
+});
+
 export const VenueCandidate = Obj({
   placeId: T.String({ minLength: 1, maxLength: 512 }),
   name: T.String({ minLength: 1, maxLength: 300 }),

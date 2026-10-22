@@ -1,6 +1,6 @@
 import { Obj, T, Text, UniqueArray, Uuid } from '../schema.ts';
 import { Cursor, Limit } from '../common.ts';
-import { AvatarRef, Background, InterestCode, LanguageCode, LifeStatusCode, Me, PublicProfile, PublicReview, Venue, VenueCandidate } from '../dto.ts';
+import { AvatarRef, Background, InterestCode, LanguageCode, LifeStatusCode, Me, PublicProfile, PublicReview, Venue, VenueCandidate, VenuePhoto } from '../dto.ts';
 import { op } from '../operation.ts';
 
 /** PATCH /me allow-list; `lifeStatus` is profile data and can never touch users.status. */
@@ -48,6 +48,11 @@ export const peopleOperations = [
     auth: 'public', write: 'read', ifMatch: false,
     query: Obj({ q: T.Optional(T.String({ minLength: 1, maxLength: 120 })), ...Bounds, cursor: T.Optional(Cursor) }),
     success: { status: 200, data: VenueCandidate, list: true }, errors: ['PROVIDER_UNAVAILABLE'],
+  }),
+  op({
+    operationId:'getVenuePhoto',method:'GET',path:'/venues/{venueRef}/photo',summary:'Fresh restaurant photograph and mandatory author attribution (never cached)',
+    auth:'public',write:'read',ifMatch:false,params:Obj({venueRef:Uuid}),query:Obj({}),
+    success:{status:200,data:VenuePhoto},errors:['NOT_FOUND','PROVIDER_UNAVAILABLE'],
   }),
   op({
     operationId: 'confirmVenue', method: 'POST', path: '/venues/confirm', summary: 'Server-side confirmation of a placeId',
