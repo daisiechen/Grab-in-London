@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ActivityIndicator, Linking, Pressable, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ApiError, type ResponseOf } from '@fancy/client';
-import { useServices } from '../../services.tsx';
+import { useServices, useSessionState } from '../../services.tsx';
 import { loadErrorMessage, useQuery } from '../../api/useQuery.ts';
 import { Primary, TextAction } from '../../ui/Button.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
@@ -28,7 +28,8 @@ export function MealDetailScreen() {
   const { mealId } = useLocalSearchParams<{ mealId: string }>();
   const id = String(mealId);
   useAssistantContext({sourcePage:'MEAL',explicitMealId:id});
-  const { api, newId } = useServices();
+  const { api, newId, now } = useServices();
+  const sessionState = useSessionState();
   const router = useRouter();
   const gate = useAuthGate();
   const q = useQuery<Detail>(mealKey(id), async () => (await api.call('getMeal', { params: { mealId: id } })).data);
@@ -54,6 +55,10 @@ export function MealDetailScreen() {
     );
   }
   const { meal, myApplication, conversationId } = q.data;
+  const requestNow = now();
+  const guestCanRequest = sessionState.status === 'signedOut' && meal.status === 'OPEN'
+    && Date.parse(meal.startsAt.instant) > requestNow && Date.parse(meal.closesAt.instant) > requestNow
+    && meal.confirmedCount < meal.capacity;
   const can = (a: (typeof meal.allowedActions)[number]) => meal.allowedActions.includes(a);
 
   const act = async (kind: Exclude<Confirm, ''>) => {
@@ -113,7 +118,7 @@ export function MealDetailScreen() {
 
       <FormMessage message={message} />
       <View style={{ gap: 10 }}>
-        {can('APPLY') ? <Primary label="Request to join" onPress={() => gate(`/meals/${meal.id}/apply`) && router.push(`/meals/${meal.id}/apply`)} /> : null}
+        {can('APPLY') || guestCanRequest ? <Primary label="Request to join" onPress={() => gate(`/meals/${meal.id}/apply`) && router.push(`/meals/${meal.id}/apply`)} /> : null}
         {can('REVIEW_APPLICATIONS') || can('CANCEL') || can('DECLARE_BOOKING') ? <Primary label="Manage your table" onPress={() => router.push(`/meals/${meal.id}/host`)} /> : null}
         {can('OPEN_GROUP') && conversationId ? <Primary secondary label="Open group chat" onPress={() => router.push(`/chat/${conversationId}`)} /> : null}
         {can('POST_MEAL') ? <Primary secondary label="After the meal" onPress={() => router.push(`/post-meal/${meal.id}`)} /> : null}
