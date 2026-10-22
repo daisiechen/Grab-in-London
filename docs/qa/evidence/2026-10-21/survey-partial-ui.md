@@ -12,3 +12,9 @@
 本轮仅验收问卷无需饭局资格、正常保存/编辑/刷新和账号隔离部分。合格人次评分、后台下钻/CSV、Web/iOS 角色互换仍未完成，QA-JOURNEY-007 保持 NOT_RUN；整体统计仍为 194 PASS / 12 NOT_RUN / 11 BLOCKED。
 
 截图：[A编辑后](survey-a-edited.png)、[B初始为空](survey-b-blank.png)、[B独立保存](survey-b-saved.png)、[H保持为空](survey-h-blank.png)。
+
+## 继续执行：空值与因素单独提交
+
+前述 H 空问卷是当时历史证据。后续正常 Chrome H 会话点击 Save feedback，明确提示“Choose an answer or at least one factor.”；前后有限只读 product_surveys 计数与整表排序哈希相同，未写入问卷。随后仅选 The company、不选 Yes/No，正常保存并刷新：company 保持选中，Yes/No 均未选中。产品问卷记录数变为 4，meals/experience_revisions 仍为 0；当前 H 已有答案，不再将旧 H 空状态作为当前事实。
+
+新增实际断言通过：全空拒绝且无写；因素可以单独提交；未回答意愿不默认为愿意或不愿意。完整 J007 尚未完成的评分、后台 CSV 与跨客户端断言保持不变。截图：[空问卷拒绝](survey-empty-rejected.png)、[仅因素持久化](survey-factor-only.png)。
