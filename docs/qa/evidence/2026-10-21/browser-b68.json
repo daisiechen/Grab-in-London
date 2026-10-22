@@ -1,0 +1,57 @@
+{
+ "observations": [
+  {
+   "id": "B68-O001",
+   "executedBy": "Claude Code",
+   "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+   "status": "passed",
+   "title": "Web host stale approval returns 409, refreshes and creates no seat",
+   "steps": [
+    "Web H normal create four steps on fixture venue, capacity3/minimum3, Sat 24 Oct 19:00 London, deadline 18:00, explicit Publish → M4.",
+    "native191 B normal Discover → M4 → Request to join → explicit Send → PENDING v1.",
+    "Web H opens guest list (stale view). native194 B withdraws via confirmation sheet → WITHDRAWN v2 (native192/193 probe failures retained: pending meals are not under Meals; confirm button shares the label).",
+    "Web H clicks Approve on the stale row → POST decision 409; UI “This was updated elsewhere. We’ve refreshed the latest details; please check and try again.”, list shows Application withdrawn, still 1 of 3 confirmed. DB: WITHDRAWN v2, only HOST_CONFIRMED seat."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/b68-web-host-approve-409-refreshed.jpg",
+    "evidence/2026-10-21/b68-native-b-withdrawn.png",
+    "evidence/2026-10-21/native191-xcui.swift",
+    "evidence/2026-10-21/native194-xcui.swift"
+   ]
+  },
+  {
+   "id": "B68-O002",
+   "executedBy": "Claude Code",
+   "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+   "status": "passed",
+   "title": "Native host stale approval refreshes without fake success",
+   "steps": [
+    "Guarded clock 02:00→02:01Z for OTP resend. Web A normal OTP and explicit Send → PENDING.",
+    "native195: native sign-out of B, normal OTP sign-in of H, M4 Manage your table shows A request; probe pauses at a file checkpoint.",
+    "Web A withdraws via confirmation → WITHDRAWN. Checkpoint released; native H taps Approve on the stale list → “This changed a moment ago. We’ve refreshed it — please check and try again.”, Requests · 0, A and B withdrawn, 1 of 3 confirmed. DB: one seat (host)."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/b68-native-host-approve-409-refreshed.png",
+    "evidence/2026-10-21/native195-xcui.swift"
+   ]
+  },
+  {
+   "id": "B68-O003",
+   "executedBy": "Claude Code",
+   "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+   "status": "failed",
+   "title": "Web mid-edit 401 keeps the target but clears the unsent introduction",
+   "steps": [
+    "Web A signed in, opens M4 apply editor and types an introduction without sending. A second tab signs out normally (session shared by host name; drafts live in per-tab sessionStorage so the second tab cannot clear them).",
+    "Original tab clicks Send → POST applications 401 → sign-in page with returnTo=/meals/M4/apply. After normal OTP the apply page returns but the introduction is empty (0/300). DB: no application created (no automatic replay).",
+    "Source: session 401 path calls clearAllPrivateState(), deleting drafts; contract §100/§102 and J008 expect the draft and target kept on 401 (QA-F62)."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/f62-web-401-return-draft-empty.jpg"
+   ]
+  }
+ ],
+ "processNotes": [
+  "2026-10-22 ~20:46 BST the standing rig process (Web 53004/API 62057) exited after revision177; retained PostgreSQL 43436 still listening. No stop event recorded; QA did not restart it. Native196 then showed “You appear to be offline” — environment loss, not a product defect. Remaining J008 steps (group 403, snapshot 410, offline recovery, native 401) wait for the development coordinator to restore the same environment."
+ ]
+}

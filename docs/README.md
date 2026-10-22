@@ -201,3 +201,5 @@
 - [QA B66：J007 原生未出席问卷与同库后台下钻 CSV（J007 PASS）及 F61 整页导出失败](qa/evidence/2026-10-21/browser-b66.json)。
 
 - [QA B67：J001/J002 同库双方向整条审计（两条 PASS）](qa/evidence/2026-10-21/audit-b67-j001-j002.zh-CN.md)。
+
+- [QA B68：J008 双端审批 409、Web 编辑中 401 与 F62；rig 于约 20:46 退出](qa/evidence/2026-10-21/browser-b68.json)。
