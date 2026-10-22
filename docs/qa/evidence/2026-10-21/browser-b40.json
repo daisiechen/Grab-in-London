@@ -1,0 +1,54 @@
+{
+  "observations": [
+    {
+      "id": "B40-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "failed",
+      "title": "F55 native future reservation promise is recorded/displayed as already booked",
+      "steps": [
+        "Native127 actual Costs checkbox says I’ll reserve the table with the restaurant myself and keep guests updated if anything changes. It is the bookingDeclarationConfirmed input.",
+        "Actual Review screenshot repeats You’ll reserve the table yourself. User only acknowledges reviewed details, then normally publishes.",
+        "Actual published same-database meal detail displays Restaurant booked / reservation reported by host. Future intent has been converted into a completed external-booking declaration.",
+        "Frozen PRD at same formal commit Costs326 uses I’ve already booked;334 requires host confirm external booking;343 says externally booked shows host confirmed. Web existing explicit completed-reservation declaration is consistent. This is current frozen MVP semantic mismatch, not a new UX feature.",
+        "Native127 automation passed its mechanical inputs/explicit-publish assertions, but it did not assert this booking semantic. Domain acceptance FAIL is independently recorded here; cannot count UI-script pass as whole product pass.",
+        "QA-F55 handed to original native owner for narrow Costs and Review confirmation wording with concrete venue/date/time/count and tests. Preserve all original evidence; do not alter existing database facts, clear quota or silently swap runtime."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b40-f55-native-review-future-promise.png",
+        "evidence/2026-10-21/b40-f55-published-booked-status.png"
+      ]
+    },
+    {
+      "id": "B40-O002",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Reverse client role identity and explicit native AI-created second meal mechanics",
+      "steps": [
+        "WebH and nativeA normal logout already observed. WebA normal OTP reaches existing A profile/empty assistant. Native123 incorrectly expected extra Continue;124 batch input loses characters and exact value assertion prevents Send;125 true Send receives595s rolling auth-window retry and private inbox helper makes no mutation. Failures retained.",
+        "Original owner approves one exact601s recovery after fresh complete owned-PG identity, fixtureclock, pendingAI0/grants0/noinflight/only3pending meal close16Z/start17Z/end19Z proof; same London budget day/month and original24h price. No rate-table/quota/TTL edit. New normal H OTP126 succeeds to Create.126 harness wrongly tries tab behind full-screen stack; preserve failure.",
+        "Native127 normal cold launch checks existing QA Final Host name, then fresh native AI Start with no A conversation. Controlled CREATE candidate explicitly transferred; real restaurant/date/time/minimum/capacity/budget/review manually chosen.",
+        "Before explicit Publish checkpoint: only original meal1/app1/seat_events2/messages4. Controlled provider17/failures1/real0/unrelatedProfileSeenfalse. No automatic creation.",
+        "After normal final acknowledgement/Publish, second meal appears. Existing A normal Web AI SEARCH selects only eligible new second meal, exact date23Oct00:00/table2/budget30, then normal Apply editor is blank. Further finalSend/host approval and reverse native GROUP path remain unexecuted.",
+        "This positive mechanical slice excludes F55 reservation acceptance above; complete006 and all original mirrored/Admin requirements remain NOT_RUN."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b40-native127-published.png"
+      ]
+    },
+    {
+      "id": "B40-O003",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "failed",
+      "title": "F56 initial completed reservation declaration records roster1 instead of declared total capacity",
+      "steps": [
+        "Read-only actual public API for normally published second meal projects capacity2, confirmedCount1, initial booking revision1 REPORTED_CONFIRMED declaredCount1 stalefalse. Initial host roster1 itself is correct.",
+        "Frozen create confirmation is for planned restaurant/date/time/total group size; root independent contract review confirms initial declared count must match that explicit capacity. Current publish INSERT unconditionally records1. Do not conflate this with F55 future-versus-completed wording.",
+        "Owner-approved narrow repair: initial declaredCount=capacity; keep existing arrangementHash(meal,1) as initial confirmed-roster snapshot (hash also includes capacity), so initial stale staysfalse and later count changes still triggerstale. No read projection/DTO/schema/old data rewrite authorized.",
+        "Original backend owner is implementing real API capacity2/4/6, pending unchanged, approvalstale/normal redeclaration recovery/leave/arrangement/idempotency regressions in new isolated test database. Current unique run remains frozen and unchanged; no fixedAPI proof claimed yet."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b40-f56-booking-projection.json"
+      ]
+    }
+  ]
+}

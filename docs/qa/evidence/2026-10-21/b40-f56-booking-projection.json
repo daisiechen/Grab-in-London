@@ -1,0 +1,13 @@
+{
+  "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+  "method": "read-only actual public meal API after normal native Publish",
+  "capacity": 2,
+  "confirmedCount": 1,
+  "bookingDeclaration": {
+    "revision": "1",
+    "status": "REPORTED_CONFIRMED",
+    "declaredCount": 1,
+    "stale": false
+  },
+  "meaning": "Initial roster1 is expected. The independent mismatch is declaredCount1 versus explicit planned capacity2, not the confirmed roster."
+}
