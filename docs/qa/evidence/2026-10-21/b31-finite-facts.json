@@ -1,0 +1,64 @@
+{
+  "sourceCommit": "3a17e8b8971f617b1e4d4f1c3903586b6464e6f9",
+  "boundary": "isolated synthetic identity/MFA, controlled mail, signed iOS simulator plus Web; not real provider or real device",
+  "prelude": {
+    "state": "DONE",
+    "verifiedExchanges": 1,
+    "supportRoles": 1,
+    "staffRoles": 2,
+    "caseGrants": 0,
+    "portalDrained": true,
+    "cliExited": true,
+    "authenticated": 1,
+    "loggedOut": 1,
+    "exitZero": 1
+  },
+  "cancellation": {
+    "status": "CANCELLED",
+    "reason": "insufficient",
+    "minimum": 3,
+    "capacity": 4,
+    "hostConfirmed": 1,
+    "guestConfirmed": 1,
+    "databaseEvidenceAttribution": "developer read-only repeatable-read transaction, database identity checked; QA independently verified UI and finite controlled-mail metadata"
+  },
+  "notifications": {
+    "H_cancel": 1,
+    "A_cancel": 1,
+    "sameCancelEvent": true,
+    "H_controlledMailSENT": 1,
+    "A_controlledMailSENT": 1,
+    "sendCallsPerCancellation": 1,
+    "AReadWhileHUnread": true,
+    "HExplicitReadPersists": true
+  },
+  "group": {
+    "activeMembers": 2,
+    "notDissolved": true,
+    "messages": 2,
+    "actualWebHostSend": true,
+    "actualNativeGuestSend": "QA106",
+    "receivedInWeb": true
+  },
+  "native": {
+    "sourceFilesVerifiedAgainstGit": 1600,
+    "apiEndpointChecked": true,
+    "installedBinaryAndHermesChecked": true,
+    "normalSignatureDeepStrict": true,
+    "run105": "PASS normal guestApply/OTP/profile/explicitSend",
+    "run106": "PASS own notification read, reopen, physical keyboard Send",
+    "keyboardTop": 590,
+    "sendBottom": 533,
+    "sendHittable": true
+  },
+  "retainedHistory": {
+    "run101": "QA expected Settings while actual app already Guest; not completed logout",
+    "run102": "PASS Guest/no signout notice before switch",
+    "run103": "FAIL first discovery generic error before OTP; setup failure retained",
+    "run104": "PASS normal Try again recovered meal and normal sign-in entry; initial cause unknown"
+  },
+  "noRefundPromise": {
+    "actualUI": "no in-app payment/refund, cancel or adjust restaurant yourself, group remains open",
+    "sourceTemplateReview": "formal worker meal_cancelled subject/message promises only cancellation and checking Fancy; controlled sink is not proof of real template delivery"
+  }
+}

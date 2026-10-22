@@ -1,0 +1,27 @@
+{
+  "observations": [
+    {
+      "id": "B31-O001",
+      "testedCommit": "3a17e8b8971f617b1e4d4f1c3903586b6464e6f9",
+      "status": "passed",
+      "title": "Complete QA-JOURNEY-010 in one support-authorized synthetic database across Web/iOS",
+      "steps": [
+        "Normal Chrome support consent completed PKCE/nonce callback/exchange/authentication/TEST classification/logout/exit0/drain; strict exact-target fixture fix, no real IdP.",
+        "Normal Web H OTP/profile/four-step min3/cap4 publication; normal native105 A guestApply/OTP/profile/explicit application; normal H approval confirms only two.",
+        "Fresh handler-settled inspect then legitimate monotonic clock advance to exact deadline; insufficient cancellation, H/A station cancellation each once and controlled mail each once.",
+        "Native106 explicit own notification read/reopen/keyboard-open group Send succeeds; Web H sees exact QA106 and has sent own message. H own notification remains unread until own explicit mark, survives reload. No refund promise in UI or formal template source.",
+        "Original native101 QA precondition error and103 first discovery failure preserved;102 Guest check and104 normal retry recovery are separate evidence, not erased failure history."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b31-finite-facts.json",
+        "evidence/2026-10-21/b31-host-published.png",
+        "evidence/2026-10-21/b31-host-notice-read.png",
+        "evidence/2026-10-21/b31-web-received-native.png",
+        "evidence/2026-10-21/b31-native-notice-read.png",
+        "evidence/2026-10-21/b31-native-group-sent.png",
+        "evidence/2026-10-21/native-b31-105.swift",
+        "evidence/2026-10-21/native-b31-106.swift"
+      ]
+    }
+  ]
+}

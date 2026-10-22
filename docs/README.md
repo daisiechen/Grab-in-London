@@ -166,3 +166,5 @@
 - [支持授权链表单消费后的定向复验](qa/evidence/2026-10-21/rp-support-live-retest.md)：独立检查与实际浏览器阶段结果，保留未完成边界。
 
 - [J007 产品问卷实际界面部分验收](qa/evidence/2026-10-21/survey-partial-ui.md)：未出席提交、编辑持久化及三账号隔离，完整旅程仍待测。
+
+- [QA B31：同库完整截止不足旅程通过](qa/evidence/2026-10-21/browser-b31.json)：正常支持前置、Web 主持与原生加入、通知去重及取消后群消息。[有限事实](qa/evidence/2026-10-21/b31-finite-facts.json)。

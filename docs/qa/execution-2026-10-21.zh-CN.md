@@ -1,12 +1,12 @@
 # 独立QA执行报告 · 2026-10-21
 
-**结论：部分执行，尚不能完成整体验收；不构成发布通过。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18, QA-F19, QA-F20, QA-F21, QA-F22, QA-F23, QA-F24, QA-F25, QA-F26, QA-F27, QA-F28, QA-F29, QA-F30, QA-F31, QA-F32, QA-F33, QA-F34, QA-F35, QA-F36, QA-F37, QA-F38, QA-F39, QA-F40, QA-F41, QA-F42, QA-F44, QA-F45, QA-F46, QA-F48, QA-F49, QA-F50, QA-F51, QA-F52；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
+**结论：部分执行，尚不能完成整体验收；不构成发布通过。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18, QA-F19, QA-F20, QA-F21, QA-F22, QA-F23, QA-F24, QA-F25, QA-F26, QA-F27, QA-F28, QA-F29, QA-F30, QA-F31, QA-F32, QA-F33, QA-F34, QA-F35, QA-F36, QA-F37, QA-F38, QA-F39, QA-F40, QA-F41, QA-F42, QA-F44, QA-F45, QA-F46, QA-F48, QA-F49, QA-F50, QA-F51, QA-F52, QA-F53；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
 
 原测试计划基线4659fdb；被测交接`8ba6fc7c9974cf6be1ac06d8b16e0380fb3beced`，业务代码`8bc1e9280153491b6a63c68cd6ba6a49f8061978`。Inbox分页修复在`cd66d87a153b3171cebbe7ae74680eceb356aed1`仅做定向复验；QA-F01及第二批P0探针在04cb601验证，第三批边界、删除/恢复和适配在d4582f7及后续仅CI增量版本定向验证，具体版本见运行表；更早证据沿用对应固定基线。
 
 ## 阻塞澄清与跟进
 
-11 external gates remain separate real-provider/device/policy/deployment evidence; resourcesready is not integrationPASS.12localwholejourneys still incomplete, not userresourceblockers. AI034/F44/F45/F46/F48/F49/F50/F51 localtargetedclosures have directevidence. F52 normal Chrome synthetic support chain now independently passed exact-target correction; callback/exchange/auth/logout/exit0/drain verified. Whole business journeys and real-provider gates remain pending. Noassumed realcall/billing/deployment approval.
+11 external gates remain separate real-provider/device/policy/deployment evidence; resourcesready is not integrationPASS.11localwholejourneys still incomplete, not userresourceblockers. AI034/F44/F45/F46/F48/F49/F50/F51 localtargetedclosures have directevidence. F52 normal Chrome synthetic support chain now independently passed exact-target correction; callback/exchange/auth/logout/exit0/drain verified. Whole business journeys and real-provider gates remain pending. Noassumed realcall/billing/deployment approval.
 
 15分钟仅为兜底唤醒，无项目规定；发现问题直接交开发、有修复即复验，不等待定时周期。原14条已逐条交原开发会话处理，两条本地删除/恢复用例已通过，其余本地准备继续推进。
 
@@ -14,10 +14,10 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 194 |
+| PASS | 195 |
 | FAIL | 0 |
 | BLOCKED | 11 |
-| NOT_RUN | 12 |
+| NOT_RUN | 11 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实供应商、真实设备发行、部署或政策批准证据；本地已有可运行模拟器和正常签名原生UI，不能再用旧许可/runtime缺失概括。本地恢复与分步删除已独立通过。FAIL优先于未完成的后续步骤。
@@ -466,7 +466,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-AI-047 · 结果不足三张 | PASS | Independent controlled-provider production controller + real local PG R117; explicit/CLEAR/UNSET/search eligibility and account-state outputs verified per named assertions. Page appliedFilters object remains unchanged. Synthetic provider, no real model-language quality or native UI claim.；证据 R117-T011 |
 | QA-AI-048 · 当日与未确认目标 | PASS | Independent targeted production probes R126 and cited UI evidence cover the original expected assertions. Local synthetic environment; real PG/API where stated, controlled clock/provider or component transport explicitly scoped. Historical setup/real failures retained; no native journey or real vendor claim.；证据 R126-T012, R126-T013 |
 | QA-AI-049 · 创建与群草稿长度 | PASS | Independent R123 four assertions: application301, create81/1001 and group1001 rejected; exact300/80/1000/1000 allowed in core validator. Failed generation has no transfer artifact or business writes; no editor bypass. Controlled model and real PG for controller cases; pure core group boundary.；证据 R123-T001, R123-T002, R123-T003, R123-T004 |
-| QA-JOURNEY-010 · 截止不足通知路径 | NOT_RUN | B30 formal3a17 actualnewnormalH/A UI, insufficientcancel2/min3, bothownstationnotification list/explicitread persisted andactorisolated, controlledmail eachonce, nativekeyboardactualSend99/100 deliveredWeb afterreopen/ancestorchange. F50/F51targetedclosed. Whole010 remainsNOT_RUN because authorisedsupportprecondition absent; originalB26FAIL retained inhistory, nowholecasePASS.；证据 B30-O001, B30-O002 |
+| QA-JOURNEY-010 · 截止不足通知路径 | PASS | B31: one new final3a17 physical database has normal synthetic support authorization/role/TEST/logout/drain prerequisites, normal Web H create min3 and native105 A guestApply/login/profile/explicitSend, H approves only2, legitimate exact cutoff advance produces insufficient cancellation. Each current member station notice and controlled cancellation mail once; native106 and Web normal group sends verified cross-client, own notice read persistence/isolation. UI/formal template has no refund promise. Full original010 expected mapping passed in this declared synthetic scope; real services/devices remain separate gates. Original B26 product reds and B31 101/103 setup/control failures retained with104 normal retry recovery, not erased.；证据 B31-O001 |
 | QA-JOURNEY-011 · 支持纠错全路径 | NOT_RUN | 本地生产实现尚需实际执行：CLI OAuth+MFA→授权case→end+7d纠错→新快照→私聊重验→审计。尚缺逐项证据：逐步权限重验；保留原报告；新资格传播，旧普通快照不改；不开放全表/消息正文。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-JOURNEY-012 · 后台分析分类路径 | NOT_RUN | 本地生产实现尚需实际执行：分析者过滤S0下钻CSV → data_admin改分类生成S1 → 显式切换。尚缺逐项证据：旧链路S0一致；分类不改登录权限；新快照排除测试贡献且保留筛选。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
 | QA-AI-050 · DeepSeek模型替换准入 | BLOCKED | DeepSeek本地适配及评测准备已通过，基础key认证/models已由开发验证。此条依赖G-AI-MODEL真实生成质量/延迟准入，不是另一项缺账户；尚无真实60样本结果，保持未通过且不冒受控响应为真实模型证据。 |

@@ -17,8 +17,8 @@
     "nativeRuntimeEvidence20261021": "Native83df/611a normal Xcode simulated entitlement and source/binary independently verified; actual QA taps passed. Earlier CODE_SIGNING_ALLOWED=NO artifacts failed getItem-34018, preserved as setup/build evidence; no missing-runtime/license blocker remains."
   },
   "counts": {
-    "PASS": 194,
-    "NOT_RUN": 12,
+    "PASS": 195,
+    "NOT_RUN": 11,
     "BLOCKED": 11
   },
   "evidenceCatalog": {
@@ -71,7 +71,8 @@
     "browserObservationsB27": "evidence/2026-10-21/browser-b27.json",
     "browserObservationsB28": "evidence/2026-10-21/browser-b28.json",
     "browserObservationsB29": "evidence/2026-10-21/browser-b29.json",
-    "browserObservationsB30": "evidence/2026-10-21/browser-b30.json"
+    "browserObservationsB30": "evidence/2026-10-21/browser-b30.json",
+    "browserObservationsB31": "evidence/2026-10-21/browser-b31.json"
   },
   "cases": [
     {
@@ -21237,10 +21238,9 @@
       "priority": "P1",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
-        "B30-O001",
-        "B30-O002"
+        "B31-O001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -21551,11 +21551,14 @@
         "R5-T010",
         "R5-T011"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "Complete QA-JOURNEY-010 in a single environment satisfying authorised-support prerequisite. B30 H/A-only targeted rig deliberately lacks support; do not splice separate support fixtures into whole-case PASS."
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2,
+        3
       ],
-      "actual": "B30 formal3a17 actualnewnormalH/A UI, insufficientcancel2/min3, bothownstationnotification list/explicitread persisted andactorisolated, controlledmail eachonce, nativekeyboardactualSend99/100 deliveredWeb afterreopen/ancestorchange. F50/F51targetedclosed. Whole010 remainsNOT_RUN because authorisedsupportprecondition absent; originalB26FAIL retained inhistory, nowholecasePASS.",
+      "remainingExpected": [],
+      "actual": "B31: one new final3a17 physical database has normal synthetic support authorization/role/TEST/logout/drain prerequisites, normal Web H create min3 and native105 A guestApply/login/profile/explicitSend, H approves only2, legitimate exact cutoff advance produces insufficient cancellation. Each current member station notice and controlled cancellation mail once; native106 and Web normal group sends verified cross-client, own notice read persistence/isolation. UI/formal template has no refund promise. Full original010 expected mapping passed in this declared synthetic scope; real services/devices remain separate gates. Original B26 product reds and B31 101/103 setup/control failures retained with104 normal retry recovery, not erased.",
       "history": [
         {
           "status": "NOT_RUN",
@@ -21570,6 +21573,17 @@
             "B26-O002"
           ],
           "reason": "B30 independently closesF50/F51; whole010 remainsincomplete because newtargeted environmentexplicitly hasnoauthorizedsupportprecondition"
+        },
+        {
+          "status": "NOT_RUN",
+          "actual": "B30 formal3a17 actualnewnormalH/A UI, insufficientcancel2/min3, bothownstationnotification list/explicitread persisted andactorisolated, controlledmail eachonce, nativekeyboardactualSend99/100 deliveredWeb afterreopen/ancestorchange. F50/F51targetedclosed. Whole010 remainsNOT_RUN because authorisedsupportprecondition absent; originalB26FAIL retained inhistory, nowholecasePASS.",
+          "evidence": [
+            "B30-O001",
+            "B30-O002"
+          ],
+          "remainingExpected": [
+            "Complete QA-JOURNEY-010 in a single environment satisfying authorised-support prerequisite. B30 H/A-only targeted rig deliberately lacks support; do not splice separate support fixtures into whole-case PASS."
+          ]
         }
       ],
       "defectIds": [
@@ -22696,7 +22710,8 @@
     "QA-F49": "CLOSED_TARGETED_QA",
     "QA-F50": "CLOSED_TARGETED_QA",
     "QA-F51": "CLOSED_TARGETED_QA",
-    "QA-F52": "CLOSED_TARGETED_QA"
+    "QA-F52": "CLOSED_TARGETED_QA",
+    "QA-F53": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -22710,7 +22725,7 @@
       "Realprovider/device/deployment/policy gates remain11separate; localmock/normal-signing simulator cannotreplace them."
     ]
   },
-  "blockerTriage": "11 external gates remain separate real-provider/device/policy/deployment evidence; resourcesready is not integrationPASS.12localwholejourneys still incomplete, not userresourceblockers. AI034/F44/F45/F46/F48/F49/F50/F51 localtargetedclosures have directevidence. F52 normal Chrome synthetic support chain now independently passed exact-target correction; callback/exchange/auth/logout/exit0/drain verified. Whole business journeys and real-provider gates remain pending. Noassumed realcall/billing/deployment approval.",
+  "blockerTriage": "11 external gates remain separate real-provider/device/policy/deployment evidence; resourcesready is not integrationPASS.11localwholejourneys still incomplete, not userresourceblockers. AI034/F44/F45/F46/F48/F49/F50/F51 localtargetedclosures have directevidence. F52 normal Chrome synthetic support chain now independently passed exact-target correction; callback/exchange/auth/logout/exit0/drain verified. Whole business journeys and real-provider gates remain pending. Noassumed realcall/billing/deployment approval.",
   "nextExecution": [
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
