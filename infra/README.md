@@ -131,3 +131,35 @@ FANCY_LOCAL_ACCEPTANCE=1 FANCY_LOCAL_CLOCK=1 FANCY_LOCAL_CLOCK_START="$fancy_clo
 **固定时钟也固定生产限流窗口。** 写入仍为10次/秒 burst、60次/分钟；Inbox/消息轮询仍为每账号每资源40次/分钟。真实浏览器轮询一段时间后可能429，等待真实一分钟不会恢复。远离生命周期边界时，可按终端指令推进1秒或60秒进入新窗口后继续；恰好边界前停止无关页面轮询，只进行少量必要请求，然后推进下一检查点。不要关闭、调高或清空生产限流。
 
 浏览器本身保持真实时钟。本模式只证明由服务端返回的 meal 状态、roster、饭后 window 和权限路径；浏览器本地倒计时、OTP倒计时、客户端日期校验、AI TTL/后台独立扫除器不算本轮通过。`setTimeout`、worker轮询和超时计时仍为真实时间；AI无可用模型端口，也不把它当作可控生命周期集成。正常退出会恢复本进程 Date 并清理临时数据库；主机时钟、生产代码、真实服务均不更改。
+
+### Local fixture preservation and explicit ownership cleanup
+
+The local acceptance rig now preserves its newly owned PostgreSQL process and
+cluster directory on normal stop or fatal clock-transition failure. It prints a
+private `rig-receipt.json` path (mode `0600`), containing only ownership metadata,
+database name and the shutdown boundary; no connection URL or credentials.
+Do not treat preservation as a quiescent snapshot: `app.close()` may write AI
+recovery metadata, and timed-out requests or worker work may still be active.
+Shutdown waits are bounded using real timers. Inspect the receipt and process
+state before any subsequent operator action; this does not authorize recovery of
+an older QA fixture or reconstruction of its historical IDs.
+
+Clock failure diagnostics contain a fixed stage/code, requested and Node clock,
+and a separate database outcome `OLD`, `TARGET`, or `UNKNOWN`. A failed COMMIT
+acknowledgement can mean the database already reached `TARGET` while Node still
+reports the old instant. No automatic rollback, resume, cleanup or clock advance
+follows such a failure. A due-job tick processes only its existing bounded batch,
+not necessarily every due job. Raw exceptions and provider text are not logged.
+
+Destruction requires a separate, explicit command (never a stdin clock command):
+
+```sh
+source infra/dev-env.sh
+node infra/local-acceptance.ts --cleanup-own /absolute/owned/rig-receipt.json --owner OWNER_ID_FROM_PRIVATE_RECEIPT
+```
+
+The cleanup verifies the private receipt, owner marker, canonical temporary
+cluster paths, current PostgreSQL PID and port. External clusters, wrong owners,
+symlink receipts/cluster paths and mismatches are refused. Only a successful
+`pg_ctl stop` permits directory removal; stop failure retains the data. Ordinary
+self-owned automated tests retain their successful `stop()` cleanup behavior.

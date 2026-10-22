@@ -1,3 +1,4 @@
+import {request as httpRequest} from 'node:http';
 import {randomBytes,randomUUID} from 'node:crypto';
 import {afterAll,beforeAll,expect,it,vi} from 'vitest';
 import {createPool,migrate} from '../../packages/db/src/index.ts';
@@ -79,7 +80,7 @@ it('worker failure after committed advancement leaves HTTP closed and reports th
   await expect(advanceRigClock(clock,gate,worker,at(3))).rejects.toThrow();expect(clock.now()).toBe(at(3));expect(worker.start).not.toHaveBeenCalled();expect((await app.inject('/health/live')).statusCode).toBe(503);
   const {rows:[sql]}=await clock.pool.query('SELECT clock_timestamp() AS now');expect(sql.now.toISOString()).toBe(at(3));
   gate.resume();const real=performance.now();
-  await expect(advanceRigClock(clock,gate,{stop:()=>new Promise(()=>{}),tick:async()=>{},start:vi.fn()},at(4),20)).rejects.toThrow('timed out');
+  await expect(advanceRigClock(clock,gate,{stop:()=>new Promise(()=>{}),tick:async()=>{},start:vi.fn()},at(4),20)).rejects.toMatchObject({diagnostic:{phase:'WORKER_STOP',databaseOutcome:'OLD'}});
   expect(performance.now()-real).toBeGreaterThanOrEqual(10);expect(clock.now()).toBe(at(3));expect((await app.inject('/health/live')).statusCode).toBe(503);
  }finally{await app?.close();await clock?.close();await db.drop();}
 });
@@ -118,4 +119,28 @@ it('real worker processes the same published meal at exact close/start/end bound
   const mutual=await guest.request('PUT',`/v1/meals/${mealId}/reconnect/${hostId}`,{selected:true},'0');expect(mutual.statusCode,mutual.body).toBe(200);expect(mutual.json().data.connection).toBe('OPEN');
   expect((await clock.pool.query(`SELECT starts_at,closes_at,scheduled_end_at FROM meals WHERE id=$1`,[mealId])).rows[0]).toEqual({starts_at:new Date(start),closes_at:new Date(close),scheduled_end_at:new Date(end)});
  }finally{try{await app?.close();}finally{try{await clock?.close();}finally{await db.drop();}}}
+},30_000);
+it('diagnoses drain, worker, and ambiguous commit failures from the database rather than Node time',async()=>{
+ const db=await createMigratedDatabase(pg.url,migrate);let clock:LocalClock|undefined;
+ try{
+  clock=await createLocalClock(db,env);const c=clock,gate={pause:async()=>{},block:vi.fn(),resume:vi.fn()},worker={stop:async()=>{},tick:async()=>{},start:vi.fn()};
+  await expect(advanceRigClock(c,{...gate,pause:async()=>{throw new Error('private controlled failure');}},worker,at(0,1))).rejects.toMatchObject({diagnostic:{phase:'HTTP_DRAIN',databaseOutcome:'OLD'}});
+  await expect(advanceRigClock(c,gate,{...worker,stop:async()=>{throw new Error('private worker failure');}},at(0,1))).rejects.toMatchObject({diagnostic:{phase:'WORKER_STOP',databaseOutcome:'OLD'}});
+  // Simulate a committed transaction whose acknowledgement failed: Node is intentionally stale.
+  const advance=vi.spyOn(c,'advanceTo').mockImplementationOnce(async value=>{await c.pool.query('UPDATE fancy_fixture_clock.state SET instant=$1',[value]);throw new Error('private acknowledgement failure');});
+  await expect(advanceRigClock(c,gate,worker,at(0,1))).rejects.toMatchObject({diagnostic:{phase:'CLOCK_COMMIT',nodeCurrent:START,databaseOutcome:'TARGET',databaseCurrent:at(0,1)}});advance.mockRestore();
+  expect(worker.start).not.toHaveBeenCalled();expect(gate.resume).not.toHaveBeenCalled();
+ }finally{await clock?.close();await db.drop();}
+});
+it('drains a complete GET whose client disconnects while waiting for its response',async()=>{
+ const db=await createMigratedDatabase(pg.url,migrate);let app:Awaited<ReturnType<typeof buildServer>>|undefined;
+ let release!:()=>void,entered!:()=>void;const held=new Promise<void>(r=>{release=r;}),ready=new Promise<void>(r=>{entered=r;});
+ try{
+  const config=loadConfig({ENVIRONMENT:'test',DATABASE_URL:db.url,AUTH_ADAPTER:'test',PLACES_ADAPTER:'fixture',MAIL_ADAPTER:'outbox_test',AI_PROVIDER:'disabled',WEB_ORIGIN:'http://127.0.0.1:5174',SESSION_SECRET:randomBytes(32).toString('hex'),IOS_REDIRECT_URI:'fancy://auth/callback'});
+  app=await buildServer({config,pool:db.pool,identity:localFixtureIdentity(env),publicOrigin:config.webOrigin});
+  const gate=localClockGate(app,100);app.get('/fixture/abort-response',async()=>{entered();await held;return {ok:true};});
+  await app.listen({host:'127.0.0.1',port:0});const address=app.server.address();if(!address||typeof address==='string')throw new Error('fixture listener missing');
+  const client=httpRequest({host:'127.0.0.1',port:address.port,path:'/fixture/abort-response',method:'GET'});client.on('error',()=>{});client.end();await ready;
+  client.destroy();await new Promise<void>(r=>setTimeout(r,20));await expect(gate.pause()).resolves.toBeUndefined();release();
+ }finally{release?.();await app?.close();await db.drop();}
 },30_000);

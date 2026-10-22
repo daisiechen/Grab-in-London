@@ -10,7 +10,7 @@
 import { execFile } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 import { existsSync } from 'node:fs';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, rm, readFile, writeFile, realpath } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -21,7 +21,11 @@ const run = promisify(execFile);
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1', '[::1]']);
 export const TEST_DB_PREFIX = 'fancy_test_';
 
+export interface PostgresOwnership {
+  id:string; root:string; data:string; marker:string; bin:string; pid:number; port:number;
+}
 export interface PostgresServer {
+  ownership?:PostgresOwnership;
   /** Admin URL (maintenance database `postgres`). */
   url: string;
   versionNum: number;
@@ -106,11 +110,17 @@ export async function startPostgres17(env: NodeJS.ProcessEnv = process.env): Pro
   const url = `postgres://fancy@127.0.0.1:${port}/postgres`;
   const versionNum = await serverVersionNum(url);
   assertPostgres17(versionNum);
+  const root=await realpath(dir), canonicalBin=await realpath(bin);
+  const pid=Number((await readFile(join(data,'postmaster.pid'),'utf8')).split('\n')[0]);
+  const ownership:PostgresOwnership={id:randomBytes(24).toString('hex'),root,data:join(root,'data'),marker:join(root,'fancy-owner.json'),bin:canonicalBin,pid,port};
+  await writeFile(ownership.marker,JSON.stringify(ownership),{mode:0o600,flag:'wx'});
   return {
     url,
     versionNum,
+    ownership,
     stop: async () => {
-      await run(join(bin, 'pg_ctl'), ['-D', data, '-m', 'fast', '-w', 'stop']).catch(() => undefined);
+      try { await run(join(bin, 'pg_ctl'), ['-D', data, '-m', 'fast', '-w', 'stop']); }
+      catch { throw new Error('OWNED_POSTGRES_STOP_FAILED_DATA_PRESERVED'); }
       await rm(dir, { recursive: true, force: true });
     },
   };

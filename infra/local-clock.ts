@@ -47,6 +47,7 @@ export async function createLocalClock(db:MigratedDatabase,env:NodeJS.ProcessEnv
  return {
   pool,
   now:()=>new RealDate(instant).toISOString(),
+  async readDatabaseClock(){const result=await pool.query(`SELECT instant FROM fancy_fixture_clock.state WHERE id=1`);return result.rows[0].instant.toISOString() as string;},
   validateAdvanceTo(value:string){const next=parseClockInstant(value);if(closed||next<=instant||next>start+WINDOW)return fail();return next;},
   async advanceTo(value:string){
    const next=parseClockInstant(value);if(closed||next<=instant||next>start+WINDOW)return fail();
@@ -60,7 +61,7 @@ export async function createLocalClock(db:MigratedDatabase,env:NodeJS.ProcessEnv
 /** Block new work before draining old requests; never change production request semantics. */
 export function localClockGate(app:Api,drainTimeoutMs=10_000){
  let paused=false;const active=new Set<object>();let drained:(()=>void)|null=null;
- app.addHook('onRequest',async(request,reply)=>{if(paused)return reply.code(503).send({fixtureClockPaused:true});active.add(request);});
+ app.addHook('onRequest',async(request,reply)=>{if(paused)return reply.code(503).send({fixtureClockPaused:true});active.add(request);reply.raw.once('close',()=>finish(request));});
  const finish=(request:object)=>{active.delete(request);if(active.size===0)drained?.();};
  app.addHook('onResponse',async request=>finish(request));
  app.addHook('onRequestAbort',async request=>finish(request));
@@ -73,14 +74,24 @@ export function localClockGate(app:Api,drainTimeoutMs=10_000){
 export type LocalClock=Awaited<ReturnType<typeof createLocalClock>>;
 
 
-/** Caller treats any error after this transition begins as fatal and closes the rig. */
+export type ClockDiagnostic={phase:string;code:string;from:string;target:string;nodeCurrent:string;databaseOutcome:'OLD'|'TARGET'|'UNKNOWN';databaseCurrent:string|null};
+export class RigAdvanceError extends Error{
+ readonly diagnostic:ClockDiagnostic;
+ constructor(diagnostic:ClockDiagnostic){super('LOCAL_CLOCK_TRANSITION_FAILED');this.diagnostic=diagnostic;}
+}
+/** Failure blocks HTTP and preserves evidence; a stale Node clock does not prove rollback. */
 export async function advanceRigClock(clock:LocalClock,gate:ReturnType<typeof localClockGate>,worker:{stop:()=>Promise<unknown>;tick:()=>Promise<unknown>;start:()=>void},value:string,timeoutMs=10_000){
  clock.validateAdvanceTo(value);
+ const from=clock.now();let phase='HTTP_DRAIN';
  async function bounded(job:Promise<unknown>){
   let timer:ReturnType<typeof setTimeout>|undefined;
-  try{return await Promise.race([job,new Promise<never>((_,reject)=>{timer=setTimeout(()=>reject(new Error('Local clock worker timed out')),timeoutMs);})]);}finally{clearTimeout(timer);}
+  try{return await Promise.race([job,new Promise<never>((_,reject)=>{timer=setTimeout(()=>reject(new Error('LOCAL_CLOCK_TIMEOUT')),timeoutMs);})]);}finally{clearTimeout(timer);}
  }
  try{
-  await gate.pause();await bounded(worker.stop());await clock.advanceTo(value);await bounded(worker.tick());worker.start();gate.resume();
- }catch(error){gate.block();throw error;}
+  await gate.pause();phase='WORKER_STOP';await bounded(worker.stop());phase='CLOCK_COMMIT';await clock.advanceTo(value);phase='DUE_BATCH';await bounded(worker.tick());phase='WORKER_RESTART';worker.start();phase='HTTP_RESUME';gate.resume();
+ }catch{
+  gate.block();let databaseCurrent:string|null=null;
+  try{databaseCurrent=await bounded(clock.readDatabaseClock()) as string;}catch{/* Unknown is explicit; no raw exception. */}
+  throw new RigAdvanceError({phase,code:`${phase}_FAILED`,from,target:value,nodeCurrent:clock.now(),databaseOutcome:databaseCurrent===from?'OLD':databaseCurrent===value?'TARGET':'UNKNOWN',databaseCurrent});
+ }
 }

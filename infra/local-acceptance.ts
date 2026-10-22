@@ -1,6 +1,7 @@
-/** Disposable local integration rig. Never deploy this test identity provider. */
+/** Local integration rig; shutdown preserves its owned PostgreSQL cluster by default. */
+import {writeRigReceipt,cleanupOwnedRig} from './local-rig-owner.ts';
 import {createInterface} from 'node:readline';
-import {advanceRigClock,createLocalClock,localClockGate,parseClockCommand,type LocalClock} from './local-clock.ts';
+import {RigAdvanceError,advanceRigClock,createLocalClock,localClockGate,parseClockCommand,type LocalClock} from './local-clock.ts';
 import type {IdentityProvider} from '../apps/api/src/identity/provider.ts';
 import {randomBytes,randomUUID} from 'node:crypto';
 import {loadConfig} from '../packages/config/src/index.ts';
@@ -43,6 +44,10 @@ export async function seedLocalStaff(app:Awaited<ReturnType<typeof buildServer>>
  // Remove only the consumed bootstrap OTP, so it does not consume the first browser resend window.
  await pool.query(`DELETE FROM auth_transactions WHERE id=$1 AND kind='EMAIL_OTP' AND consumed_at IS NOT NULL`,[start.json().data.challengeId]);
 }
+async function settleWithin(job:Promise<unknown>,timeoutMs=10_000){
+ let timer:ReturnType<typeof setTimeout>|undefined;
+ try{await Promise.race([job,new Promise<never>((_,reject)=>{timer=setTimeout(()=>reject(new Error('LOCAL_RIG_SHUTDOWN_TIMEOUT')),timeoutMs);})]);}finally{clearTimeout(timer);}
+}
 async function runClockRig(clock:LocalClock,gate:ReturnType<typeof localClockGate>,runtime:ReturnType<typeof createWorkerRuntime>){
  let stopped=false,abort=new AbortController(),worker=runtime.run(abort.signal),queued=Promise.resolve();
  let finish!:()=>void;const done=new Promise<void>(resolve=>{finish=resolve;});
@@ -56,22 +61,29 @@ async function runClockRig(clock:LocalClock,gate:ReturnType<typeof localClockGat
     const value=parseClockCommand(line);clock.validateAdvanceTo(value);transition=true;
     await advanceRigClock(clock,gate,{stop:async()=>{abort.abort();await worker;},tick:()=>runtime.tick(),start:()=>{abort=new AbortController();worker=runtime.run(abort.signal);watch();}},value);
     console.warn(`FIXED LOCAL CLOCK ${clock.now()}`);
-   }catch{
-    if(transition){stopped=true;gate.block();abort.abort();process.exitCode=1;console.warn(`LOCAL CLOCK STOPPED; current=${clock.now()}; reset required`);finish();}
+   }catch(error){
+    if(error instanceof RigAdvanceError)console.warn(JSON.stringify({fixtureClockFailure:error.diagnostic}));
+    if(transition){stopped=true;gate.block();abort.abort();process.exitCode=1;console.warn(`LOCAL CLOCK STOPPED; current=${clock.now()}; data preserved; inspect phase diagnostic`);finish();}
     else console.warn(`LOCAL CLOCK COMMAND REJECTED; current=${clock.now()}`);
    }
   });
  });
- try{await done;}finally{stopped=true;reader.close();await queued;abort.abort();await worker.catch(()=>undefined);process.removeListener('SIGINT',close);process.removeListener('SIGTERM',close);}
+ try{await done;}finally{stopped=true;reader.close();await queued;abort.abort();await settleWithin(worker).catch(()=>{console.warn('LOCAL RIG WORKER STOP INCOMPLETE; DATA PRESERVED; active work unknown');});process.removeListener('SIGINT',close);process.removeListener('SIGTERM',close);}
+}
+/** No drop/stop capability is accepted by this shutdown boundary. */
+export async function preserveLocalRig(resources:{closeApp:()=>Promise<unknown>;closeClock:()=>Promise<unknown>;closePool:()=>Promise<unknown>}){
+ try{await resources.closeApp();}finally{try{await resources.closeClock();}finally{await resources.closePool();}}
 }
 async function main(){
  assertLocal(process.env);
  if(process.env.FANCY_LOCAL_CLOCK==='1'&&process.env.FANCY_TEST_DATABASE_URL)throw new Error('Clock rig requires a new disposable PostgreSQL cluster');
  const pg=await startPostgres17();
+ const receipt=await writeRigReceipt(pg);
+ console.warn(`LOCAL RIG OWNERSHIP RECEIPT ${receipt}; default shutdown preserves PostgreSQL and data.`);
  let cleanupDb:Awaited<ReturnType<typeof createMigratedDatabase>>|undefined;
  let clock:LocalClock|undefined;let app:Awaited<ReturnType<typeof buildServer>>|undefined;
  try{
- const db=await createMigratedDatabase(pg.url,migrate);cleanupDb=db;
+ const db=await createMigratedDatabase(pg.url,migrate);cleanupDb=db;await writeRigReceipt(pg,new URL(db.url).pathname.slice(1));
  if(process.env.FANCY_LOCAL_CLOCK==='1')clock=await createLocalClock(db,process.env);
  const pool=clock?.pool??db.pool;
  const config=loadConfig({ENVIRONMENT:'development',DATABASE_URL:db.url,AUTH_ADAPTER:'test',PLACES_ADAPTER:'fixture',MAIL_ADAPTER:'outbox_test',AI_PROVIDER:'mock',WEB_ORIGIN,SESSION_SECRET:randomBytes(32).toString('hex'),IOS_REDIRECT_URI:'fancy://auth/callback'});
@@ -89,6 +101,10 @@ async function main(){
    const stop=new AbortController(),close=()=>stop.abort();process.once('SIGINT',close);process.once('SIGTERM',close);
    try{await createWorkerRuntime(pool,config).run(stop.signal);}finally{process.removeListener('SIGINT',close);process.removeListener('SIGTERM',close);}
   }
- }finally{try{await app?.close();}finally{try{await clock?.close();}finally{try{await cleanupDb?.drop();}finally{await pg.stop();}}}}
+ }finally{await preserveLocalRig({closeApp:()=>app?settleWithin(app.close()):Promise.resolve(),closeClock:()=>clock?.close()??Promise.resolve(),closePool:()=>cleanupDb?.pool.end()??Promise.resolve()});console.warn(`LOCAL RIG DATA PRESERVED; receipt=${receipt}; app.close may write AI recovery metadata; active work not certified quiescent`);}
 }
-if(import.meta.main)await main();
+if(import.meta.main){
+ const args=process.argv.slice(2);
+ try{if(args.length){if(args.length!==4||args[0]!=='--cleanup-own'||args[2]!=='--owner')throw new Error('OWN_CLEANUP_REFUSED');await cleanupOwnedRig(args[1]!,args[3]!);}else await main();}
+ catch{console.warn('LOCAL RIG STOPPED; DATA PRESERVATION REQUIRED; inspect ownership receipt and phase metadata');process.exitCode=1;}
+}
