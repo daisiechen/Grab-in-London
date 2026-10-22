@@ -1,0 +1,20 @@
+{
+  "observations": [
+    {
+      "id": "B52-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Original same-database withdrawal, stale-editor refusal and block/unblock never revive old consent",
+      "steps": [
+        "NormalWebH keeps exactunsentDMdraft in openeditor; another normalH postmeal tab Withdraw connection/explicitconfirmation endsconnection.",
+        "NormalSend from staleeditor is refused; UI becomesread-only, originaltwo messages stayvisible, exactUnsenttext retained/no composer. Existing message-load429 preserved; no silentreplay or fakeSend.",
+        "NormalH peerprofile Block/explicitBlockmember thenUnblock shows previousconnection notrestored. NormalH postmeal ownchoicefalse/noSayhello.",
+        "Native153 normalcoldInbox/actualpeerDIRECT loads botholdmessages, History is read-only, noMessageeditor/Send; exit0. Readonly activeconsents0/DMmessagesstill2/twosenders/blocks0, immutable blockrevisions truev1→falsev2; pairEpoch3.",
+        "Together B51 unilateralprivacy/mutualactualDM and thisterminalpath cover all originalJ004 expected assertions. J003 originalM2 fullchainalready actuallycaptured inB43/B45/B47 and sameDBtraceCSV; staleclock/reapproval/dissolve remaining text removed without adding unspecifiedgates."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b52-revocation-summary.json"
+      ]
+    }
+  ]
+}

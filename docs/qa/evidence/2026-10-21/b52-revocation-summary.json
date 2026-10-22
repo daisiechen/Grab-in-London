@@ -1,0 +1,92 @@
+{
+  "identityExact": true,
+  "readOnly": true,
+  "clock": "2026-10-22T19:01:01.000Z",
+  "attendance": [
+    {
+      "subject": "A",
+      "source": "SELF",
+      "value": "present",
+      "version": "1",
+      "created_at": "2026-10-22T19:00:00.000Z"
+    },
+    {
+      "subject": "A",
+      "source": "HOST",
+      "value": "absent",
+      "version": "2",
+      "created_at": "2026-10-22T19:00:00.000Z"
+    },
+    {
+      "subject": "H",
+      "source": "SELF",
+      "value": "present",
+      "version": "1",
+      "created_at": "2026-10-22T19:00:00.000Z"
+    }
+  ],
+  "experience": [
+    {
+      "subject": "A",
+      "score": 5,
+      "revision": "1",
+      "created_at": "2026-10-22T19:00:00.000Z"
+    },
+    {
+      "subject": "H",
+      "score": 4,
+      "revision": "1",
+      "created_at": "2026-10-22T19:00:00.000Z"
+    }
+  ],
+  "reviews": [
+    {
+      "n": 2
+    }
+  ],
+  "consent": [
+    {
+      "n": 2,
+      "active": 0
+    }
+  ],
+  "conversations": [
+    {
+      "kind": "GROUP",
+      "n": 2
+    },
+    {
+      "kind": "DIRECT",
+      "n": 1
+    }
+  ],
+  "directMessages": [
+    {
+      "n": 2,
+      "authors": 2
+    }
+  ],
+  "pair": [
+    {
+      "consent_epoch": "3",
+      "version": "3"
+    }
+  ],
+  "blocks": [
+    {
+      "n": 0
+    }
+  ],
+  "blockHistory": [
+    {
+      "active": true,
+      "version": "1",
+      "created_at": "2026-10-22T19:01:01.000Z"
+    },
+    {
+      "active": false,
+      "version": "2",
+      "created_at": "2026-10-22T19:01:01.000Z"
+    }
+  ]
+}

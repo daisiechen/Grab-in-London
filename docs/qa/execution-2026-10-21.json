@@ -18,9 +18,9 @@
     "nativeClockAlignment": "B44 direct human authorization received; original synthetic runtime aligned to current UTC12:09:06.962Z. Node/DB ACK; business/budget counts and hashes unchanged; historical UNKNOWN reserve preserved; natural second snapshot retained. Native138 normal OTP restoration succeeds. Earlier B43 clock blocker resolved; product journey assertions remain separate. B45 second guarded execution-currentUTC12:23:20.135Z, no crossed business/price/period/snapshot boundary, ledgers unchanged. Native139 passes; WebA rate limit recovers normally."
   },
   "counts": {
-    "PASS": 195,
+    "PASS": 197,
     "BLOCKED": 11,
-    "NOT_RUN": 11
+    "NOT_RUN": 9
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
@@ -92,7 +92,8 @@
     "browserObservationsB48": "evidence/2026-10-21/browser-b48.json",
     "browserObservationsB49": "evidence/2026-10-21/browser-b49.json",
     "browserObservationsB50": "evidence/2026-10-21/browser-b50.json",
-    "browserObservationsB51": "evidence/2026-10-21/browser-b51.json"
+    "browserObservationsB51": "evidence/2026-10-21/browser-b51.json",
+    "browserObservationsB52": "evidence/2026-10-21/browser-b52.json"
   },
   "cases": [
     {
@@ -17146,14 +17147,13 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
-        "B18-O001",
-        "B18-O002",
-        "B20-O003",
-        "B20-O004",
         "B43-O004",
-        "B43-O005"
+        "B43-O005",
+        "B45-O001",
+        "B47-O001",
+        "B51-O003"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -17467,12 +17467,13 @@
         "R191-T002",
         "R192-T001"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "Same physical database staff/admin trace precondition; dual-direction end-user cancellation/leave/rejoin/authorized union/terminal dissolve slices already actually captured.",
-        "Current sameDB M2 second-round native approval, authorized union history after rejoin and terminal dissolution; native client restore requires authorized fixture clock alignment. Shared Admin trace still pending."
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "F39/F40 targetedclosed. Native0db35 actualhost Keepgroup preservesdraft/no write, explicitdissolve makesbothreadonly; samePGdissolvedseq8/messageCount3 provesdraftunsent. Native33/36/37 guestold+new/noabsencegap/noeditor passed; Native38 manualInboxpull restoreshostcoldreadonly/noReopen. Webhost independentlydissolvesnativeguest group3870, samePGdissolvedseq9/messageCount4; doesnotcancelmeal/changecurrentseats. FullcaseheldNOT_RUN untilsharedfactsreceipt/adminprecondition, not inflated fromtests. F41generalInboxreturn separate. B20-O004: sameDBsidecar bootstrap facts verified, but original rig autoexited during legalclockadvance; no sourceadminUI/snapshot/CSV executed. Environmentrecovery developerowned, not user blocker. B43 current WebA withdrawal releases seat while chat sends; independent leave makes history read-only, actual H gap message excluded; explicit new round Pending does not restore membership. Current reapproval/union/terminal dissolve pending Native137 clock precondition and shared Admin trace.",
+      "remainingExpected": [],
+      "actual": "OriginalM2 nativeH/WebA approval→normalAseatcancel/stillchat→separateleave→Hgapexcluded→normalAnewround/Happrove→old+newauthorizedunion/gapexcluded→normalhostmealCancel(groupstillchat)→explicitnativeHgroupDissolve; nativeandWebreadonly/noReopen. ExactsameDB narrative andnaturalS0/CSV trace retained. All three original expected assertions covered; no release/real-provider acceptance.",
       "history": [
         {
           "status": "NOT_RUN",
@@ -17486,6 +17487,19 @@
             "B6-T002"
           ],
           "reason": "Correct scope: B6 proves Web slice only; frozen cross-client role-swap preconditions not completed"
+        },
+        {
+          "status": "NOT_RUN",
+          "actual": "F39/F40 targetedclosed. Native0db35 actualhost Keepgroup preservesdraft/no write, explicitdissolve makesbothreadonly; samePGdissolvedseq8/messageCount3 provesdraftunsent. Native33/36/37 guestold+new/noabsencegap/noeditor passed; Native38 manualInboxpull restoreshostcoldreadonly/noReopen. Webhost independentlydissolvesnativeguest group3870, samePGdissolvedseq9/messageCount4; doesnotcancelmeal/changecurrentseats. FullcaseheldNOT_RUN untilsharedfactsreceipt/adminprecondition, not inflated fromtests. F41generalInboxreturn separate. B20-O004: sameDBsidecar bootstrap facts verified, but original rig autoexited during legalclockadvance; no sourceadminUI/snapshot/CSV executed. Environmentrecovery developerowned, not user blocker. B43 current WebA withdrawal releases seat while chat sends; independent leave makes history read-only, actual H gap message excluded; explicit new round Pending does not restore membership. Current reapproval/union/terminal dissolve pending Native137 clock precondition and shared Admin trace.",
+          "evidence": [
+            "B18-O001",
+            "B18-O002",
+            "B20-O003",
+            "B20-O004",
+            "B43-O004",
+            "B43-O005"
+          ],
+          "reason": "B52 all original expected assertions now directly evidenced in original retained same database; remove stale prerequisites, no new gate or targeted-fixture stitching."
         }
       ],
       "defectIds": [
@@ -17499,20 +17513,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
-        "B19-O001",
-        "B19-O002",
-        "B19-O007",
-        "B19-O008",
-        "B19-O009",
-        "B19-O010",
-        "B20-O001",
-        "B49-O001",
-        "B50-O001",
         "B51-O001",
         "B51-O002",
-        "B51-O003"
+        "B52-O001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -17823,14 +17828,14 @@
         "R5-T010",
         "R5-T011"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "单方不可推断",
-        "互选才可发",
-        "撤回后历史只读",
-        "解除不复活同意"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2,
+        3
       ],
-      "actual": "Original samePG bothrole feedback/mutualDM/withdraw and thirdB privacy retained. F44 native safety gap fixed formal2005991 and actual61–64 independent ownedPG targeted passed; not full original mirroredjourney. SameDBadmintrace still unexecuted; original61973 rig exited during reviewedclockadvance(F47), old trace remains unrecoverable; B39 independently closes protection of new fixture only, not restoration or new full DM journey. No wholecasepass. B49–B51 originalsameDB lifecycle/SELFpriority/ownexperience/publicreference/unilateralprivacy/mutualDM actuals captured; no wholecasepromotion until remaining fullassertions and current sharedAdmintrace.",
+      "remainingExpected": [],
+      "actual": "OriginalM1 nativeA unilateralagain choice undisclosed/WebH noDM; normalH mutualchoice createsoneDIRECT, actualWebH/nativeA two-waymessages. NormalHwithdraw makesstaleeditorSendrefused/read-only/unsentdraftretained. NormalHblock/unblock doesnotrestorechoice orsend; native153 historyonly/noeditorSend. DBactiveconsents0/messages2/blockhistoryappendonly. All four original expected assertions covered in same original database.",
       "defectIds": [
         "QA-F44"
       ],
@@ -17848,6 +17853,25 @@
             "B20-O001"
           ],
           "reason": "B39 distinguishes permanent loss of old trace from targeted new fixture protection closure."
+        },
+        {
+          "status": "NOT_RUN",
+          "actual": "Original samePG bothrole feedback/mutualDM/withdraw and thirdB privacy retained. F44 native safety gap fixed formal2005991 and actual61–64 independent ownedPG targeted passed; not full original mirroredjourney. SameDBadmintrace still unexecuted; original61973 rig exited during reviewedclockadvance(F47), old trace remains unrecoverable; B39 independently closes protection of new fixture only, not restoration or new full DM journey. No wholecasepass. B49–B51 originalsameDB lifecycle/SELFpriority/ownexperience/publicreference/unilateralprivacy/mutualDM actuals captured; no wholecasepromotion until remaining fullassertions and current sharedAdmintrace.",
+          "evidence": [
+            "B19-O001",
+            "B19-O002",
+            "B19-O007",
+            "B19-O008",
+            "B19-O009",
+            "B19-O010",
+            "B20-O001",
+            "B49-O001",
+            "B50-O001",
+            "B51-O001",
+            "B51-O002",
+            "B51-O003"
+          ],
+          "reason": "B52 all original expected assertions now directly evidenced in original retained same database; remove stale prerequisites, no new gate or targeted-fixture stitching."
         }
       ]
     },
@@ -22910,5 +22934,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B47 current:195PASS/11NOT_RUN/11BLOCKED. F55/F56 targeted closed; clock prerequisite resolved under direct human plan authorization. Original same-database M2 reverse nativeH/WebA approval, independent seat/group withdrawal, rejoin history exclusion, normal host meal cancellation with group still writable, explicit group dissolution/read-only verified. B48 QA-F57 CLOSED_TARGETED_QA: formal d4a3 fix18API/21fixture independently green; separate new OWN normal H/A actual UI same-clock2→1→2 keepsrev2stale and only normal redeclarationrev3fresh. Original f6d9 failure retained. SameDB natural S0 applications match sealed facts and do not change after later approvals; single-metric export UI/ticket proven but CSV bytes not reconciled. Missing telemetry/real gates remain, no whole-journey promotion. B49 original M1 sameDB exact16CLOSE/17START/19END verified by unique lifecycle marks/cutoff2/startRosterH+A/completed; no automatic SELF/experience. Natural classRev2 snapshots16/17/19 retained, no classification-after S1 claim. Normal WebH/nativeA roles restored;144 harness navigation red retained/145 normalOTP passes. Actual feedback/admin/classification/7d/deletion still pending. B50 actual originalM1 Native146 A SELFpresent/private5, WebH staleHOSTabsent conflict refresh then freshHOSTabsent, Native147 effectiveSELFpresent stillvalid, HSELFpresent/private4 independently stored. Publicreview147scroll/148newsessionnavigation control failures retained, no submissioncount0 at capture;149 activeScroll whole-frame gesture still under keyboard;150 bounded visible-region gesture pending, no publicreference/choice success inferred. Whole journey remains incomplete. B51 Native151 normal userblur/publicreference/privatechoice actualpass;147–150 failure/correction chain retained. OriginalsameDB unilateralreview1/consent1/noDIRECT→normalHreciprocalreviewpublished/mutual→DIRECT1 and actualWebH/nativeA bidirectional messages2/2authors. Exact singlemetricCSV localartifact now reconciled bytes/rows/hash/sealedfacts/filters, no blockedbrowser workaround; summarypartial/currentfeedbackAdmintrace still incomplete. Withdrawal/block/unblock no-revival pending."
+  "currentExecutionSlice": "B52 current197PASS/9NOT_RUN/11BLOCKED. Original sameDB J003 cancellation/group independence and J004 mutual-private/withdraw/block/unblock complete all original expected assertions and are PASS. F57 targeted CLOSED with independent newfixture, not stitched as original wholejourney. OriginalM1 lifecycle close16/start17/end19, actualSELFpriority/A5H4, mutualpublicreferences and DM verified; current clock19:01:01Z. NaturalclassRev2 snapshots/S0singlemetricCSV reconciled; fresh currentfeedback Admin/classificationS1/support7d/deletion and remaining specificAI/abnormal assertions still pending. Control failures147–150 and exact151normalblur recovery preserved, no productFAIL inferred. Othercases not held behind invented all217 gate."
 }
