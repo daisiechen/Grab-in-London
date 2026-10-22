@@ -1,0 +1,33 @@
+{
+  "observations": [
+    {
+      "id": "B56-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Original M3 Web guest filter and login preserve application draft without automatic submission",
+      "steps": [
+        "Normal Web host Settings sign-out confirmation completes. Guest Discover applies table-size2 filter and opens unique new M3 detail from its actual result.",
+        "Guest types synthetic49-character introduction and clicks Send. Normal sign-in preserves exact M3 apply return target. Existing synthetic applicant A uses normal email OTP through original controlled challenge channel; no code output or real mail service.",
+        "Login returns to exact M3 Apply, preserving introduction and showing existing completed applicant profile. This is existing-profile flow, not a fresh profile completion claim.",
+        "Independent original owned database read-only check at return shows zero M3 applications and only one host seat: no automatic submission or seat reservation.",
+        "Applicant explicitly clicks Send again. UI shows Request sent/Application pending; independent read-only facts show exactly one PENDING round1 and no guest seat."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B56-O002",
+      "testedCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "Normal native host approval and booking update match original Web applicant state",
+      "steps": [
+        "Native163 safety uniqueness guard detects two same-title/date Hosting cards, stops before opening either or performing any write. Failure retained as test navigation issue.",
+        "Actual UI distinguishes new M3 with1of2 confirmed from older cancelled meal2of2. Native164 uses exact observed label, asserts unique match, and verifies exact synthetic49-character applicant introduction before acting.",
+        "Fresh original host burst7/minute19 plus complete two-write approval/booking prefix is asserted within10/60. Normal native host explicitly approves A, observes Host to update reservation, selects Booked and explicitly saves. Native164 exits0. No time advance or model request.",
+        "Independent original owned read-only database shows exactly one CONFIRMED round1 application, one HOST_CONFIRMED and one GUEST_CONFIRMED seat event.",
+        "Web A normally reloads exact application page and sees Your seat is confirmed. Normal Inbox exposes new empty M3 group; actual group shows composer and no messages. The older cancelled group remains archived/read-only.",
+        "Leave chat back to confirmed application page to stop chat polling before later clock guards. Whole mirrored lifecycle and native GROUP generation/send still incomplete; no wholecase promotion."
+      ],
+      "artifacts": []
+    }
+  ]
+}
