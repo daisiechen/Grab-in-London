@@ -21,3 +21,24 @@ export const saveDraft = (key: DraftKey, value: unknown): void => {
 };
 export const clearDraft = (key: DraftKey): void => remove(`draft.${key}`);
 export const clearAllPrivateState = clearAll;
+
+const EXPIRED_APPLICATION='auth.expiredApplication';
+const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+interface ExpiredApplication {ownerUserId:string;mealId:string;intro:string}
+/** Capture only this authenticated editor before private-state destruction, never another form or cache. */
+export function captureExpiredApplication(ownerUserId:string,pathname:string):ExpiredApplication|null{
+ const match=/^\/meals\/([^/]+)\/apply$/.exec(pathname);const mealId=match?.[1];
+ if(!UUID.test(ownerUserId)||!mealId||!UUID.test(mealId))return null;
+ const value=loadDraft<{intro?:unknown}>(`apply:${mealId}`);
+ return typeof value?.intro==='string'&&value.intro.length>0&&value.intro.length<=300?{ownerUserId,mealId,intro:value.intro}:null;
+}
+/** Same-tab lifetime only. Guests never read this key as a normal application draft. */
+export function quarantineExpiredApplication(value:ExpiredApplication|null){if(value)writeJson(EXPIRED_APPLICATION,value);}
+/** Only a trusted authenticated session may consume this; a different owner discards it. */
+export function restoreExpiredApplication(userId:string):void{
+ const value:unknown=readJson(EXPIRED_APPLICATION);remove(EXPIRED_APPLICATION);
+ if(!value||typeof value!=='object'||Array.isArray(value))return;
+ const p=value as Record<string,unknown>;
+ if(Object.keys(p).sort().join(',')!=='intro,mealId,ownerUserId'||p.ownerUserId!==userId||!UUID.test(userId)||typeof p.mealId!=='string'||!UUID.test(p.mealId)||typeof p.intro!=='string'||!p.intro.length||p.intro.length>300)return;
+ saveDraft(`apply:${p.mealId}`,{intro:p.intro});
+}

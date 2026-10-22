@@ -31,6 +31,22 @@ describe('private short-lived CSV exports',()=>{
   expect(csv.body).toContain(`"snapshotId","${id}"`);expect(csv.body).toContain(`"filterHash","${page.filterHash}"`);expect(csv.body).toContain('"formation","","0","0"');
   expect((await h.db.pool.query(`SELECT id FROM analytics_exports WHERE id=$1`,[ticket.exportId])).rows).toHaveLength(1);
  });
+ it('exports available retention metrics and explicitly empty unavailable rows from one partial-source snapshot',async()=>{
+  const a=await analyst();const id=await snapshot();const filters={languages:'en'};const key=randomUUID();
+  const page=await readAdminPage(h.db.pool,'retention',{snapshotId:id,...filters});
+  expect(page.metrics.laterOpportunity).toBeNull();
+  const result=await create(a.b,id,'summary.retention',filters,key);expect(result.statusCode,result.body).toBe(201);
+  const ticket=json(result).data;expect(json(await create(a.b,id,'summary.retention',filters,key)).data).toEqual(ticket);
+  const csv=await a.b.request('GET',`/v1/admin/exports/${ticket.exportId}`);expect(csv.statusCode,csv.body).toBe(200);
+  expect(csv.body).toContain(`"snapshotId","${id}"`);expect(csv.body).toContain(`"filterHash","${page.filterHash}"`);
+  expect(csv.body).toContain('"metric","value","numerator","denominator","status"');
+  expect(csv.body).toContain('"laterOpportunity","","","","unavailable"');
+  for(const [metric,value] of Object.entries(page.metrics)){
+   expect(csv.body.split('\r\n').filter(line=>line.startsWith(`"${metric}",`))).toHaveLength(1);
+   if(typeof value==='number')expect(csv.body).toContain(`"${metric}","${value}","","","available"`);
+   else if(value&&typeof value==='object'&&'numerator' in value&&'denominator' in value){const n=Number(value.numerator),d=Number(value.denominator);expect(csv.body).toContain(`"${metric}","${d===0?'':n/d}","${n}","${d}","${d===0?'no_denominator':'available'}"`);}
+  }
+ });
  it('requires staff role plus MFA for creation and download; tickets belong to one actor',async()=>{
   const a=await analyst();const other=await analyst();const noMfa=await analyst(false);const noRole=await analyst(true,'');const id=await snapshot();
   const ticket=json(await create(a.b,id)).data;
@@ -39,11 +55,16 @@ describe('private short-lived CSV exports',()=>{
   await h.db.pool.query(`UPDATE session_families SET amr=ARRAY['otp'] WHERE user_id=$1`,[a.id]);
   expect((await a.b.request('GET',`/v1/admin/exports/${ticket.exportId}`)).statusCode).toBe(403);
  });
- it('does not export unavailable metrics, misleading partial summaries or unsupported row filters',async()=>{
+ it('keeps unavailable single metrics rejected and marks partial supply summaries without dropping rows',async()=>{
   const a=await analyst();const id=await snapshot();
-  for(const metric of ['discovery','summary.supply','discovery7']){
+  for(const metric of ['discovery','discovery7']){
    const result=await create(a.b,id,metric);expect(result.statusCode,metric+': '+result.body).toBe(503);
   }
+  const summary=await create(a.b,id,'summary.supply');expect(summary.statusCode,summary.body).toBe(201);
+  const csv=await a.b.request('GET',`/v1/admin/exports/${json(summary).data.exportId}`);expect(csv.statusCode,csv.body).toBe(200);
+  expect(csv.body).toContain('"discovery","","","","unavailable"');
+  expect(csv.body).toContain('"formation","","0","0","no_denominator"');
+  expect((await create(a.b,id,'summary.supply',{userId:a.id})).statusCode).toBe(422);
   expect((await create(a.b,id,'formation',{userId:a.id})).statusCode).toBe(201);
  });
  it('expires tickets with 410 and removes bytes on snapshot privacy revocation',async()=>{

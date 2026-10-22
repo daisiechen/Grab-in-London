@@ -1,5 +1,5 @@
 import { describe,expect,it } from 'vitest';
-import { boundedCsv,csvCell,exportProvenance } from './exports.ts';
+import { boundedCsv,csvCell,exportProvenance,summaryMetricRow } from './exports.ts';
 describe('CSV safety and resource bounds',()=>{
   it('quotes delimiters/newlines and suppresses formula and control-prefixed strings',()=>{
     expect(csvCell('a,"b"\nnext')).toBe('"a,""b""\nnext"');
@@ -26,5 +26,15 @@ describe('server-owned CSV provenance',()=>{
  });
  it('disabled AI does not mislabel otherwise real data as synthetic',()=>{
   expect(exportProvenance({environment:'production',adapters:{...real,AI_PROVIDER:'disabled'}})).toEqual({environment:'production',dataSource:'production'});
+ });
+});
+
+describe('partial summary metric status',()=>{
+ it('distinguishes a missing source, known empty source, zero denominator and actual zero',()=>{
+  expect(summaryMetricRow('missing',null)).toEqual(['missing','','','','unavailable']);
+  expect(summaryMetricRow('empty',null,true)).toEqual(['empty','','','','no_data']);
+  expect(summaryMetricRow('ratio',{numerator:0,denominator:0},true)).toEqual(['ratio','',0,0,'no_denominator']);
+  expect(summaryMetricRow('zero',0)).toEqual(['zero',0,'','','available']);
+  expect(summaryMetricRow('ratio',{numerator:1,denominator:2},true)).toEqual(['ratio',0.5,1,2,'available']);
  });
 });

@@ -55,6 +55,13 @@ function metricRow(metric:string,value:unknown,knownSource=false):unknown[]{
   if(value&&typeof value==='object'&&'numerator' in value&&'denominator' in value){const n=Number(value.numerator),d=Number(value.denominator);return [metric,d===0?'':n/d,n,d];}
   throw new DomainError('PROVIDER_UNAVAILABLE',`The ${metric} source is not available for this snapshot.`);
 }
+/** Summary rows preserve unavailable cells instead of aborting the other sealed metrics. */
+export function summaryMetricRow(metric:string,value:unknown,knownSource=false):unknown[]{
+  if(value===null)return [...metricRow(metric,value,true),knownSource?'no_data':'unavailable'];
+  const row=metricRow(metric,value,knownSource);
+  const noDenominator=typeof value==='object'&&value!==null&&'denominator' in value&&Number(value.denominator)===0;
+  return [...row,noDenominator?'no_denominator':'available'];
+}
 export function registerExportRoutes(app:FastifyInstance,deps:AppDeps){
   const blobs=new Map<string,Blob>();stores.add(blobs);
   const drop=(id:string)=>{const blob=blobs.get(id);if(blob){clearTimeout(blob.timer);blob.data.fill(0);}blobs.delete(id);};
@@ -70,10 +77,10 @@ export function registerExportRoutes(app:FastifyInstance,deps:AppDeps){
     const loaded=await loadAdminSnapshot(deps.pool,query);
     const report={snapshot:loaded.snapshot,filterHash:loaded.filterHash,...loaded.calculated.summaries[page]};
     const provenance=exportProvenance(deps.config);
-    const rows:unknown[][]=[['dataSource',provenance.dataSource],['environment',provenance.environment],['snapshotId',report.snapshot.id],['asOf',report.snapshot.asOf],['filters',JSON.stringify(canonicalFilters(query))],['filterHash',report.filterHash],['definitionVersion',report.snapshot.definitionVersion],[],['metric','value','numerator','denominator']];
+    const rows:unknown[][]=[['dataSource',provenance.dataSource],['environment',provenance.environment],['snapshotId',report.snapshot.id],['asOf',report.snapshot.asOf],['filters',JSON.stringify(canonicalFilters(query))],['filterHash',report.filterHash],['definitionVersion',report.snapshot.definitionVersion],[],['metric','value','numerator','denominator',...(body.metric.startsWith('summary.')?['status']:[])]];
     if(body.metric.startsWith('summary.')){
-      // Do not silently omit unsupported page metrics in an apparently complete summary.
-      for(const [key,value] of Object.entries(report.metrics))rows.push(metricRow(key,value,key in loaded.calculated.rows));
+      // Keep every page metric and mark missing sources without inventing zeroes.
+      for(const [key,value] of Object.entries(report.metrics))rows.push(summaryMetricRow(key,value,key in loaded.calculated.rows));
     }else{
       if(body.metric in report.metrics)rows.push(metricRow(body.metric,report.metrics[body.metric],body.metric in loaded.calculated.rows));
       if(body.metric==='survey'){

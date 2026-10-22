@@ -2,7 +2,8 @@ import { Fragment, createContext, useCallback, useContext, useEffect, useMemo, u
 import { ApiError, newIntentKey } from '@fancy/client';
 import { useApi } from './ApiProvider.tsx';
 import type { SessionInfo } from './types.ts';
-import { clearAllPrivateState } from '../lib/drafts.ts';
+import {useLocation} from 'react-router';
+import { captureExpiredApplication,quarantineExpiredApplication,restoreExpiredApplication,clearAllPrivateState } from '../lib/drafts.ts';
 
 export type SessionState =
   | { status: 'loading' }
@@ -23,6 +24,9 @@ const SessionContext = createContext<SessionContextValue | null>(null);
 
 export function SessionProvider({ children }: { children: ReactNode }) {
   const { api, cache } = useApi();
+  const location=useLocation();
+  const routeRef=useRef(location.pathname);routeRef.current=location.pathname;
+  const explicitLogout=useRef(false);
   const [state, setState] = useState<SessionState>({ status: 'loading' });
   /**
    * Auth generation: every sign-out/401/deletion bumps it, and a session response is applied
@@ -40,6 +44,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     api.setCsrfToken(null);
     cache.clear();
     clearAllPrivateState();
+    stateRef.current={status:'guest'};
     setState({ status: 'guest' });
   }, [api, cache]);
 
@@ -55,6 +60,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         cache.clear();
         clearAllPrivateState();
       }
+      restoreExpiredApplication(data.user.id);
       api.setCsrfToken(data.csrfToken ?? null);
       const next: SessionState = { status: 'signed-in', session: data };
       setState(next);
@@ -78,18 +84,25 @@ export function SessionProvider({ children }: { children: ReactNode }) {
    * A 401 only revokes something if we were signed in. A guest's 401 (e.g. getSession on
    * first load) must not wipe the drafts a guest is carrying into sign-in.
    */
-  useEffect(() => api.onUnauthorized(() => { if (stateRef.current.status === 'signed-in') clearLocal(); }), [api, clearLocal]);
+  useEffect(() => api.onUnauthorized(() => {
+    if(stateRef.current.status!=='signed-in')return;
+    const draft=explicitLogout.current?null:captureExpiredApplication(stateRef.current.session.user.id,routeRef.current);
+    clearLocal();
+    quarantineExpiredApplication(draft);
+  }),[api,clearLocal]);
   useEffect(() => { void refresh(); }, [refresh]);
 
   const signOut = useCallback(async () => {
     // Invalidate in-flight session reads before the network call; clear locally whatever happens.
     generation.current++;
+    explicitLogout.current=true;
     try {
       await api.client.call('logout', { body: { clientRequestId: newIntentKey() } });
     } catch {
       // Server-side revoke failed (offline/5xx); this device still forgets everything.
     } finally {
       clearLocal();
+      explicitLogout.current=false;
     }
   }, [api, clearLocal]);
 

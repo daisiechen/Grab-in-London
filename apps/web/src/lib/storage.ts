@@ -38,7 +38,7 @@ export function remove(key: string): void {
   }
 }
 
-/** Removes every Fancy key: drafts, pending sign-in state. Called on logout, 401 and deletion. */
+/** Removes every Fancy key: drafts, pending sign-in state. Called on logout, expiry and deletion; expiry may separately quarantine only the current owner-bound application draft. */
 export function clearAll(): void {
   const s = store();
   if (!s) return;
