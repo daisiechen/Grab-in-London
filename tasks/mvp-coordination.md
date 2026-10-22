@@ -680,3 +680,10 @@
 - 最终5项自有回归包含生产交集helper的geometry/clamp/晚回调及实际Chat组件synthetic native measure→真实padding渲染/viewport尺寸变化/keyboard hide/清监听。全50套341原生/type/all-iOSlint绿，日志/private/tmp/f51-intersection-{all,type,lint}.log；模拟测量不冒真实95几何通过，需正式签名包由QA核Send在键盘上方、可点击且正常发送后才能关闭。
 - QA接受下一完整J010原前置解释：同新PG正常验证C support角色与必要TEST分类后正常logout，drain并关闭合成portal，再H/A真实UI；不要求15min CLI token跨数小时仍active，不新增casegrant。旧UC8TVF run/源/IDs/证据全部保留。新run只读计划为最终SHA新archive+Accessv3屏障+P3b角色前置、单API/fullworker/单AI，候选新origin unified-j010-v2.localhost:52992/native62048，尚未实现或启动；实际启动仍需独立审查与端口核验。
 - CI8303首轮与明确重试attempt2均已用专用GitHub日志核：registry.npmjs.org下载pnpm原生包30s Timeout，项目检查未运行；保原失败，不盲换registry或以本地绿冒远端绿。下个正式SHA继续核完整CI。整体生产验收未闭环。
+
+## 3a17 正式包独核与新 J010-v2 前置准备
+
+- 3a17e8b8971f617b1e4d4f1c3903586b6464e6f9正常签名Release arm64模拟器包已完成，ENTRY /private/tmp/fancy-native-j010-v2-3a17e8b/ENTRY-J010-V2.md SHA5fa7fec5f990c27a29086472c53ffeda0c5777519b51b27b12d04891dfafd276。全1600 tracked/209 native-client-contracts逐源与Git核exact，binary f0e3ff5ca7ccda1c44697dd3397d57d60ae2bbfda1f1cdfec494b529300a4892、Hermes ca87e8da835fcf0527a51c499441b0aa1d95499529c2bd8f39186079ef18154a；API12762048/NO_DOTENV/Mapsblank/build0/deepstrict0/自动Simulated.xcent与MachO appid。QA已独核以上所有源/hash/签名一致；未安装、启动或请求新端点，不重建无关包。
+- QA正式3a17定向通知8+键盘5共13项独跑全绿，证据/private/tmp/fancy-qa-f50-f51-component.json；只证明组件前置，不替原95几何/正常Send或完整J010，B26仍194PASS/11NOT_RUN/1FAIL/11BLOCKED。
+- 新/private/tmp/fancy-j010-v2-3a17e8b装配仍WIP：唯一owner生成1600正式源，单API/fullworker/单AI、Accessv3故障保护与exactS/C正常支持前置组合，尚未绑定62048/52992。root初读发现CLI未认证即exit0或stop可能悬挂pending promise，已交owner补停止取消/实际退出与预期logoutACK阶段回归；必须修测冻结后再独审，不因目录存在授ready。所有旧run、clock、IDs与设备状态不变。
+- 最新CI3a17 run39713204637/job119609129976再次止于pnpm/setup@v3固定官方实现a0881977cd8ea73b1ed212236c99ca10dcc80cf4，registry.npmjs.org/@pnpm/linux-x64/11.25.0元数据30s Timeout；专用日志已核，尚未到runtime安装/frozen-lockfile/项目测试。venues只读本机同linux-x64与exe官方端点15s也超时，不足以判定全球故障；官方版本配置兼容，无bootstrap retry/timeout输入，缓存位于安装之后不能解决此步。未改mirror/签名/lockfile或盲重跑，远端验证仍未通过。整体生产验收未闭环。
