@@ -1,0 +1,77 @@
+{
+  "observations": [
+    {
+      "id": "B37-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Same-database Web host explicit AI CREATE and GROUP, controlled failure/manual fallback",
+      "steps": [
+        "Normal H OTP/profile; controlled CREATE draft and explicit replacement only fill editor. Manual four-step restaurant/date/minimum/capacity/cost/reservation/review completed; meals/applications/seat_events/messages remain zero until explicit Publish.",
+        "Normal Publish creates one meal and host seat. Group manual text remains after Keep. Explicit Replace fills group editor without message; only normal Send attempts transmission.",
+        "First actual group Send receives minute rate limit and messages remains zero. After approved fresh no-inflight isolated61-second recovery, another explicit Send creates one visible message. No quota or limit changed.",
+        "Controlled failure marker actually increments provider calls7→8 and failures0→1, real provider calls0; four business table hashes unchanged. Original manual group text survives; normal explicit Send creates second message, visible after normal reload.",
+        "Synthetic places/AI/mail; native reversal and same-database Admin and all original full-journey prerequisites still outstanding."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b37-first-meal-published.png",
+        "evidence/2026-10-21/b37-group-explicit-and-fallback-sent.png"
+      ]
+    },
+    {
+      "id": "B37-O002",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "B normal identity isolation, forbidden group/Admin and attendance-free product survey",
+      "steps": [
+        "B normal OTP/profile in separate browser, independently verified guest before login; no H identity inferred from port.",
+        "B cannot read unjoined actual group: only opens-after-confirmation UI, no messages. B assistant shows blank own conversation, no H draft/dialogue inheritance.",
+        "B ordinary account actual same-origin Admin shows permission denied and disabled export, no metrics.",
+        "Before any participation, B normal product survey saves Yes/conversation then updates No/cost; normal reload retains latest No/cost. Physical product_surveys2, experience_revisions0. Same-database analyst snapshot/CSV separation remains unexecuted.",
+        "B normal bio saved exact controlled detector marker P2C_B_PRIVATE_CANARY. Subsequent H request and A native request leave unrelatedProfileSeen false; B has not itself invoked provider, avoiding own-profile detector pollution. This is controlled request observation only, not arbitrary private-data proof."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b37-b-group-denied.png",
+        "evidence/2026-10-21/b37-b-ai-isolated.png",
+        "evidence/2026-10-21/b37-b-admin-denied.png",
+        "evidence/2026-10-21/b37-b-survey-v1.png",
+        "evidence/2026-10-21/b37-b-survey-v2.png"
+      ]
+    },
+    {
+      "id": "B37-O003",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Native A actual original application editor Keep and explicit AI replacement without send",
+      "steps": [
+        "Dedicated simulator installs independently verified formal native artifact. Native108 actual guest discovery reaches same actual Web-created meal.",
+        "Native109 actual SEARCH succeeds but harness expects comparison-style Open label; actual search card has title/budget/capacity label. Preserve109 failed harness.110 taps correct existing card but Request button needs normal scrolling; preserve110 failure.",
+        "Native111 normal scroll, selected public card and normal OTP login. Native112 fails typing bio while keyboard covers field; normal dismiss/scroll113 completes profile and returns original blank application editor, no automatic request.",
+        "Native114 actual request receives minute limit before provider invocation, UI preserves text and exposes Retry.115 wrongly assumes pending Retry survives cross-UI-test process restart; preserve failure, no product bug or Retry-success claim.",
+        "Native116 fresh normal editor input and exact input-value assertions, controlled APPLICATION draft, Keep preserves manual introduction; explicit Replace yields exact candidate in original editor. Send exists, not invoked.",
+        "Independent after116 facts: applications0, host seat1, meals1, messages2, product_surveys2, experience_revisions0; controlled provider calls11/failures1/real0 and unrelatedProfileSeenfalse. Full005 remains NOT_RUN."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b37-native116-keep.png",
+        "evidence/2026-10-21/b37-native116-replace-no-send.png"
+      ]
+    },
+    {
+      "id": "B37-O004",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Same-process native explicit application and Web host approval/reservation re-declaration",
+      "steps": [
+        "Native117 complete normal editor→AI generation→Keep original→explicit Replace in one UI process. A private submit checkpoint pauses before normal Send. Independent applications0/seat_events1 proves neither generation nor replacement submitted or reserved a seat.",
+        "QA releases checkpoint; normal visible Send request creates exactly one PENDING application, seat_events remains host1. No automatic approval or hidden API submit. No minute recovery gate was needed in117.",
+        "Web H actual guest list shows the exact candidate introduction and pending request, confirmed1/4. H normal Approve changes confirmed2/4 and notifies A; arrangement edits lock after approval.",
+        "Actual confirmed-count change makes reservation declaration stale and prompts H to update. H normal Booked selection/Update submits declaration for2 people; UI becomes Restaurant booked and confirms update.",
+        "Full001/002/005 are still NOT_RUN: native group/feedback/two-client reversal/whole original preconditions and sameDB Admin/correction remain."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b37-native117-pending.png",
+        "evidence/2026-10-21/b37-approval-reservation-stale.png",
+        "evidence/2026-10-21/b37-reservation-reconfirmed.png"
+      ]
+    }
+  ]
+}
