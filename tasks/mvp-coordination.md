@@ -707,3 +707,10 @@
 - 独立QA正式B30已提交并同步：F50双端通知与F51原生聊天键盘定向关闭。正常界面验证通知已读隔离、刷新持久化、重开聊天及上方提示消失后键盘展开仍可发送，两条原生消息均在Web另一成员端实际收到。保留原失败及测试定位错误历史，不以组件测试代替实际操作。
 - 当前正式统计194项通过、12项未执行、11项阻塞。完整J010因支持授权前置未满足改为未执行，原失败证据保留；专项关闭不代表完整旅程通过。
 - 先前协调提交的完整远端CI已恢复并通过，不把其结果延伸到后续提交。支持授权页的新隔离副本仅修正已证实的表单响应策略，严格Origin、一次性nonce、CSP及生产授权协议保持；交叉审查与独立12项回归通过，正常浏览器支持链仍待QA独核后执行。当前未启动新授权计时，不重用旧失败事务。整体生产验收未闭环。
+
+## Parallel survey testing and bounded authorization diagnostics
+
+- A separate Web questionnaire partial environment now runs independently of the support authorization prerequisite. Formal product sources remain unchanged. Only ordinary H/A/B identities are enabled; there are no elevated roles, seeded business facts, ratings or Admin exports. Owner and independent QA each passed all 16 tests, covering survey submission, edits, reload, account isolation, version conflicts, no meal association and retained failure protection.
+- QA has actual normal-interface evidence for submission, editing and reload persistence; separate-account isolation is still being executed. Whole J007 remains NOT_RUN until its original cross-client, eligible meal-rating and same-database Admin CSV assertions are completed.
+- A separate authorization diagnostic copy is frozen with 16 owner and 16 independent QA tests passing. Saturating phase counters distinguish consent exceptions, response completion, callback arrival and exchange stages without recording authorization material. Origin, CSP, nonce, timeout and production protocols remain unchanged. No new actual diagnostic transaction has started; F52 stays open.
+- Full remote CI for the preceding QA commit was independently confirmed successful. That result is not extended to later commits. Existing environments and failure evidence remain preserved; overall production acceptance is incomplete.
