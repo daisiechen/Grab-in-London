@@ -18086,7 +18086,7 @@
         "提交时重验名额/截止",
         "服务失败可继续原路径"
       ],
-      "actual": "本地生产实现尚需实际执行：显式查找→选明确M→生成申请→转入已有编辑器→本人确认提交。尚缺逐项证据：AI阶段无写；不覆盖未发字；提交时重验名额/截止；服务失败可继续原路径。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B11 realWeb actualcontrolled-model generate/explicit-transfer/single-request and manual-create confirmations complete with physical write proof. Full failure-recovery/group-send and actual native role swap remain outstanding, so NOT_RUN retained. B21-O007 actualnativefocusedkeyboard obscuresquestion/Ask(79); F49OPEN. Do not substitute enabled/componentchecks for physicalnativeusability.",
+      "actual": "本地生产实现尚需实际执行：显式查找→选明确M→生成申请→转入已有编辑器→本人确认提交。尚缺逐项证据：AI阶段无写；不覆盖未发字；提交时重验名额/截止；服务失败可继续原路径。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B11 realWeb actualcontrolled-model generate/explicit-transfer/single-request and manual-create confirmations complete with physical write proof. Full failure-recovery/group-send and actual native role swap remain outstanding, so NOT_RUN retained. B21-O007 actualnativefocusedkeyboard obscuresquestion/Ask(79); original F49 red retained; B23-O001 actual81/82/85 closed F49 by normal keyboard-open Ask, close/reopen and explicit transfer. Full native role swap, failure-recovery and group-send assertions remain pending; targeted closure does not grant whole-journey PASS. Do not substitute enabled/componentchecks for physicalnativeusability.",
       "defectIds": [
         "QA-F49"
       ]
@@ -18418,7 +18418,7 @@
         "所有人工确认实际发生",
         "生成/转入/发送分别授权"
       ],
-      "actual": "本地生产实现尚需实际执行：生成Create草稿→原四步补选地点/条款→主动发布→群草稿→主动Send。尚缺逐项证据：没有模型代办；所有人工确认实际发生；生成/转入/发送分别授权。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B11 realWeb actualcontrolled-model generate/explicit-transfer/single-request and manual-create confirmations complete with physical write proof. Full failure-recovery/group-send and actual native role swap remain outstanding, so NOT_RUN retained. B21-O007 actualnativefocusedkeyboard obscuresquestion/Ask(79); F49OPEN. Do not substitute enabled/componentchecks for physicalnativeusability.",
+      "actual": "本地生产实现尚需实际执行：生成Create草稿→原四步补选地点/条款→主动发布→群草稿→主动Send。尚缺逐项证据：没有模型代办；所有人工确认实际发生；生成/转入/发送分别授权。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B11 realWeb actualcontrolled-model generate/explicit-transfer/single-request and manual-create confirmations complete with physical write proof. Full failure-recovery/group-send and actual native role swap remain outstanding, so NOT_RUN retained. B21-O007 actualnativefocusedkeyboard obscuresquestion/Ask(79); original F49 red retained; B23-O001 actual81/82/85 closed F49 by normal keyboard-open Ask, close/reopen and explicit transfer. Full native role swap, failure-recovery and group-send assertions remain pending; targeted closure does not grant whole-journey PASS. Do not substitute enabled/componentchecks for physicalnativeusability.",
       "defectIds": [
         "QA-F49"
       ]
