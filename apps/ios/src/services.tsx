@@ -1,3 +1,4 @@
+import {secureAIConversationStore,type AIConversationStore} from './features/assistant/session-store.ts';
 import {secureGuestCredentialStore,type GuestCredentialStore} from './features/assistant/guest-store.ts';
 import { createContext, useContext, useSyncExternalStore, type ReactNode } from 'react';
 import { createApiClient, newIntentKey, type ApiClient } from '@fancy/client';
@@ -34,6 +35,8 @@ export interface ServiceConfig {
   baseUrl: string;
   fetch?: typeof fetch;
   guestStore?:GuestCredentialStore;
+  aiConversationStore?:AIConversationStore;
+  hashGuestCredential?:(token:string)=>Promise<string>;
   store: CredentialStore;
   installMarker: InstallMarker | null;
   openAuthSession: Services['openAuthSession'];
@@ -55,16 +58,18 @@ export function createServices(config: ServiceConfig): Services {
   const base = (accessToken: () => string | null,loginGuest=false) =>
     createApiClient({ baseUrl: config.baseUrl, credentials: { kind: 'bearer', accessToken },headers:op=>({...analyticsHolder.manager?.headersFor(op),...(loginGuest&&(op==='verifyEmail'||op==='exchangeHandoff')&&!accessToken()&&aiHolder.manager?.credential?{authorization:`Bearer ${aiHolder.manager.credential}`}:{})}), ...(config.fetch ? { fetch: config.fetch } : {}) });
   const guestStore=config.guestStore??secureGuestCredentialStore();
+  const aiConversationStore=config.aiConversationStore??secureAIConversationStore();
   let installation:Promise<void>|null=null;
   const ensureInstallation=()=>{
     if(installation)return installation;
-    const job=(async()=>{if(config.installMarker&&!(await config.installMarker.isPresent())){await config.store.clear();await guestStore.clear();await config.installMarker.set();}})();
+    const job=(async()=>{if(config.installMarker&&!(await config.installMarker.isPresent())){await config.store.clear();await guestStore.clear();await aiConversationStore.clear();await config.installMarker.set();}})();
     installation=job;void job.catch(()=>{if(installation===job)installation=null;});return job;
   };
   const installedGuestStore:GuestCredentialStore={read:async()=>{await ensureInstallation();return guestStore.read();},write:async value=>{await ensureInstallation();await guestStore.write(value);},clear:()=>guestStore.clear()};
+  const installedAIStore:AIConversationStore={read:async()=>{await ensureInstallation();return aiConversationStore.read();},write:async value=>{await ensureInstallation();await aiConversationStore.write(value);},clear:()=>aiConversationStore.clear()};
   const holder: { session?: SessionManager } = {};
   const transport = base(() => holder.session?.accessToken() ?? null,true);
-  const raw:ApiClient={async call(op,request){if((op==='verifyEmail'||op==='exchangeHandoff')&&!holder.session?.accessToken())await aiHolder.manager?.restoreIdentity();return transport.call(op,request);}};
+  const raw:ApiClient={async call(op,request){if((op==='verifyEmail'||op==='exchangeHandoff')&&!holder.session?.accessToken()){await aiHolder.manager?.restoreIdentity();await aiHolder.manager?.prepareLogin();}return transport.call(op,request);}};
   const session = new SessionManager({
     api: raw,
     withToken: (token) => base(() => token),
@@ -83,7 +88,7 @@ export function createServices(config: ServiceConfig): Services {
   analyticsHolder.manager=analytics;session.subscribe(()=>analytics.syncIdentity());onSessionEnd.add(()=>analytics.clear());
   const aiRaw=createApiClient({baseUrl:config.baseUrl,credentials:{kind:'bearer',accessToken:()=>session.accessToken()??aiHolder.manager?.credential??null},
     headers:()=>aiHolder.manager?.deviceToken?{'ai-device-token':aiHolder.manager.deviceToken}:{},...(config.fetch?{fetch:config.fetch}:{})});
-  const assistant=new AssistantManager({guestStore:installedGuestStore,revokeGuest:async(old,credential)=>{
+  const assistant=new AssistantManager({guestStore:installedGuestStore,conversationStore:installedAIStore,hashGuestCredential:config.hashGuestCredential??(token=>ExpoCrypto.digestStringAsync(ExpoCrypto.CryptoDigestAlgorithm.SHA256,token)),revokeGuest:async(old,credential)=>{
     const retired=createApiClient({baseUrl:config.baseUrl,credentials:{kind:'bearer',accessToken:()=>credential},headers:()=>({'ai-device-token':old.deviceToken}),...(config.fetch?{fetch:config.fetch}:{})});
     await retired.call('resetAI',{params:{sessionId:old.sessionId},body:{generation:old.generation,reason:'ACCOUNT_CHANGE'},idempotencyKey:newId()});
   },auth:session,api:sessionClient(aiRaw,session),newId,now,randomBytes:config.randomBytes??((n)=>ExpoCrypto.getRandomBytes(n))});

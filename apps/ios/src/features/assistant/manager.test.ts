@@ -1,16 +1,20 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports -- Node SHA256 only in isolated test helpers
+const {createHash}=require('node:crypto') as {createHash(algorithm:string):{update(value:string):{digest(format:string):string}}};
+import {memoryAIConversationStore,type AIConversationStore} from './session-store.ts';
 import {memoryGuestCredentialStore,type GuestCredentialStore} from './guest-store.ts';
 import {ApiError,type ApiClient} from '@fancy/client';
 import type {SessionManager} from '../auth/session.ts';
 import {AssistantManager,emptyPreferences,type AIDraft} from './manager.ts';
 import {deferred,flush} from '../../test/deferred.ts';
-function setup(guestStore:GuestCredentialStore=memoryGuestCredentialStore()){
- let now=0;let serial=0;let listener=()=>{};let actor='guest';
+function setup(guestStore:GuestCredentialStore=memoryGuestCredentialStore(),conversationStore:AIConversationStore=memoryAIConversationStore(),initialActor='guest'){
+ let now=0;let serial=0;let listener=()=>{};let actor=initialActor;
  const responses=new Map<string,()=>Promise<unknown>>();
  const call=jest.fn(async(op:string,args:unknown)=>{void args;return responses.get(op)?.()??{data:{}};});
  const auth={getState:()=>actor==='guest'?{status:'signedOut'}:{status:'signedIn',session:{user:{id:actor}}},subscribe:(fn:()=>void)=>{listener=fn;return()=>{};}} as unknown as SessionManager;
- const manager=new AssistantManager({guestStore,auth,api:{call} as unknown as ApiClient,newId:()=>`id-${++serial}`,now:()=>now,randomBytes:n=>new Uint8Array(n)});
+ const manager=new AssistantManager({guestStore,conversationStore,hashGuestCredential:async token=>createHash('sha256').update(token).digest('hex'),auth,api:{call} as unknown as ApiClient,newId:()=>`id-${++serial}`,now:()=>now,randomBytes:n=>new Uint8Array(n)});
+ responses.set('readAIPreferences',async()=>({data:{fields:emptyPreferences(),version:'0',epoch:'0',confirmedAt:null}}));
  responses.set('createGuestSession',async()=>({data:{guestToken:'synthetic-guest-fixture',expiresAt:new Date(86400000).toISOString()}}));
- responses.set('bootstrapAI',async()=>({data:{sessionId:'session-1',generation:'1',deviceToken:'synthetic-device-fixture',revokeHandle:'revoke',expiresAt:new Date(now+1800000).toISOString()}}));
+ responses.set('bootstrapAI',async()=>({data:{sessionId:'session-1',generation:1,deviceToken:'synthetic-device-fixture',revokeHandle:'revoke',expiresAt:new Date(now+1800000).toISOString()}}));
  responses.set('readAI',async()=>({data:{turns:[],latestRequestId:null,expiresAt:new Date(now+1800000).toISOString()}}));
  responses.set('requestAI',async()=>{throw new Error('offline fixture');});
  manager.open();
@@ -38,7 +42,7 @@ it('single-flights bootstrap and ignores a response after account isolation',asy
  const h=setup();const pending=deferred<unknown>();h.responses.set('bootstrapAI',()=>pending.promise);
  const a=h.manager.continue();const b=h.manager.continue();await flush();
  expect(h.call.mock.calls.filter(c=>c[0]==='bootstrapAI')).toHaveLength(1);
- h.actor('account-two');pending.resolve({data:{sessionId:'old',generation:'1',deviceToken:'old',expiresAt:new Date(1800000).toISOString()}});await Promise.all([a,b]);
+ h.actor('account-two');pending.resolve({data:{sessionId:'old',generation:1,deviceToken:'old',expiresAt:new Date(1800000).toISOString()}});await Promise.all([a,b]);
  expect(h.manager.deviceToken).toBeNull();expect(h.manager.getSnapshot().open).toBe(false);
 });
 it('expires exactly at TTL and preserves unsent text and confirmed guest preferences',async()=>{
@@ -90,18 +94,14 @@ it('restores the same fixed-expiry guest across managers and NEW',async()=>{
  const second=setup(store);await second.manager.continue();expect(second.manager.credential).toBe(token);
  expect(second.call.mock.calls.some(c=>c[0]==='createGuestSession')).toBe(false);expect(await store.read()).toEqual(stored);
 });
-it('cold-starts with no AI transcript or device token and only continues after an explicit action using the fixed-expiry guest',async()=>{
- const store=memoryGuestCredentialStore(),first=setup(store);
+it('cold local credentials offer explicit Continue without reading or persisting any transcript',async()=>{
+ const guests=memoryGuestCredentialStore(),sessions=memoryAIConversationStore(),first=setup(guests,sessions);
  first.responses.set('readAI',async()=>({data:{turns:[{role:'assistant',text:'RAM_ONLY_OLD_TRANSCRIPT'}],latestRequestId:null,expiresAt:new Date(1800000).toISOString()}}));
  await first.manager.continue();first.manager.setText('RAM_ONLY_OLD_UNSENT');
- const stored=await store.read();expect(Object.keys(stored!).sort()).toEqual(['expiresAt','token']);
- const cold=setup(store);expect(cold.call).not.toHaveBeenCalled();expect(cold.manager.deviceToken).toBeNull();
- expect(cold.manager.getSnapshot()).toMatchObject({turns:[],text:'',result:null,view:'home'});
- cold.responses.set('bootstrapAI',async()=>({data:{sessionId:'new-explicit-session',generation:'1',deviceToken:'new-device-proof',revokeHandle:'revoke',expiresAt:new Date(1800000).toISOString()}}));
- await cold.manager.continue();expect(cold.manager.getSnapshot()).toMatchObject({phase:'idle',turns:[]});
- expect(cold.call.mock.calls.map(c=>c[0])).toEqual(['bootstrapAI','readAI']);
- expect(cold.call.mock.calls[1]?.[1]).toEqual({params:{sessionId:'new-explicit-session'}});
- expect(await store.read()).toEqual(stored);expect(cold.manager.credential).toBe(stored?.token);
+ const stored=await sessions.read();expect(stored).toMatchObject({sessionId:'session-1',generation:1,owner:{kind:'GUEST'}});expect(JSON.stringify(stored)).not.toContain('RAM_ONLY');expect(Object.keys(stored!).sort()).toEqual(['deviceToken','expiresAt','generation','owner','revokeHandle','sessionId']);
+ const cold=setup(guests,sessions);await flush();expect(cold.call).not.toHaveBeenCalled();expect(cold.manager.getSnapshot()).toMatchObject({restorable:true,turns:[],text:'',result:null,view:'home'});
+ cold.manager.pause();await cold.manager.resume();await cold.manager.edited();await cold.manager.poll('old-result');expect(cold.call).not.toHaveBeenCalled();
+ cold.responses.set('readAI',first.responses.get('readAI')!);await cold.manager.continue();expect(cold.call.mock.calls.map(c=>c[0])).toEqual(['readAI']);expect(cold.manager.getSnapshot().turns[0]?.text).toBe('RAM_ONLY_OLD_TRANSCRIPT');expect(cold.call.mock.calls[0]?.[1]).toEqual({params:{sessionId:'session-1'}});
 });
 it('treats a server RAM-loss 410 as expired without automatic regeneration and keeps local unsent text and confirmed preferences',async()=>{
  const h=setup();await h.manager.savePreferences({...emptyPreferences(),tableSizes:[2]});await h.manager.continue();
@@ -184,4 +184,50 @@ it('a second pause fences an old resume; a second active event performs a new ve
 it('does not let an awaiting send resume into account B after account A verification completes late',async()=>{
  const h=signedInResumeFixture();await h.manager.continue();h.manager.setText('A question');h.manager.pause();const old=deferred<unknown>();h.responses.set('readAIPreferences',()=>old.promise);const resume=h.manager.resume();const send=h.manager.send();h.actor('account-b');
  old.resolve({data:{fields:{...emptyPreferences(),budgetMaxPence:9999},version:'1',epoch:'1',confirmedAt:null}});await Promise.all([resume,send]);expect(h.manager.getSnapshot().text).toBe('');expect(h.call.mock.calls.some(c=>c[0]==='requestAI')).toBe(false);
+});
+
+it('keeps a failed AI credential write pending without repeating bootstrap or minting a guest',async()=>{
+ const guests=memoryGuestCredentialStore(),sessions=memoryAIConversationStore(),write=jest.fn().mockRejectedValueOnce(new Error('locked')).mockImplementation(v=>sessions.write(v));const h=setup(guests,{...sessions,write});
+ await h.manager.continue();expect(h.manager.getSnapshot().phase).toBe('error');expect(h.call.mock.calls.filter(c=>c[0]==='readAI')).toHaveLength(0);
+ await h.manager.continue();expect(h.manager.getSnapshot().phase).toBe('idle');expect(h.call.mock.calls.filter(c=>c[0]==='bootstrapAI')).toHaveLength(1);expect(h.call.mock.calls.filter(c=>c[0]==='createGuestSession')).toHaveLength(1);expect(await sessions.read()).not.toBeNull();
+});
+it('clears a cold guest conversation bound to a different bearer without reading its old session',async()=>{
+ const guests=memoryGuestCredentialStore(),sessions=memoryAIConversationStore(),first=setup(guests,sessions);await first.manager.continue();await guests.write({token:'synthetic-other-guest',expiresAt:86400000});
+ const cold=setup(guests,sessions);await flush();expect(cold.manager.deviceToken).toBeNull();expect(cold.manager.getSnapshot().restorable).toBe(false);expect(cold.call).not.toHaveBeenCalled();expect(await sessions.read()).toBeNull();
+});
+it('cold server410 clears only AI credential metadata and retains same guest and local unsent text',async()=>{
+ const guests=memoryGuestCredentialStore(),sessions=memoryAIConversationStore(),first=setup(guests,sessions);await first.manager.continue();const subject=await guests.read();const cold=setup(guests,sessions);await flush();cold.manager.setText('UNSENT_AFTER_RAM_LOSS');cold.responses.set('readAI',async()=>{throw new ApiError({status:410,code:'AI_SESSION_EXPIRED',message:'Synthetic RAM loss'});});
+ await cold.manager.continue();await flush();expect(cold.manager.getSnapshot()).toMatchObject({phase:'expired',text:'UNSENT_AFTER_RAM_LOSS',turns:[],result:null,restorable:false});expect(await sessions.read()).toBeNull();expect(await guests.read()).toEqual(subject);expect(cold.call.mock.calls.map(c=>c[0])).toEqual(['readAI']);
+});
+it('cold TTL expiry clears metadata locally with no automatic bootstrap or read',async()=>{
+ const guests=memoryGuestCredentialStore(),sessions=memoryAIConversationStore(),first=setup(guests,sessions);await first.manager.continue();const cold=setup(guests,sessions);cold.time(1800000);await flush();expect(cold.manager.getSnapshot()).toMatchObject({phase:'expired',restorable:false});expect(cold.call).not.toHaveBeenCalled();expect(await sessions.read()).toBeNull();expect(await guests.read()).not.toBeNull();
+});
+it('a late secure write followed by account change cannot repopulate the new owner',async()=>{
+ const guests=memoryGuestCredentialStore(),sessions=memoryAIConversationStore(),waiting=deferred<void>();const write=jest.fn(async v=>{await waiting.promise;await sessions.write(v);});const h=setup(guests,{...sessions,write});const action=h.manager.continue();await flush();expect(write).toHaveBeenCalledTimes(1);h.actor('other-account');waiting.resolve();await action;await flush();expect(await sessions.read()).toBeNull();expect(h.manager.deviceToken).toBeNull();expect(h.call.mock.calls.filter(c=>c[0]==='readAI')).toHaveLength(0);expect(h.manager.getSnapshot().restorable).toBe(false);
+});
+it('failed account-transition deletion blocks all AI traffic until secure deletion succeeds',async()=>{
+ const guests=memoryGuestCredentialStore(),sessions=memoryAIConversationStore(),h=setup(guests,sessions);await h.manager.continue();let locked=true;const clear=jest.fn(async()=>{if(locked)throw new Error('locked');await sessions.clear();});
+ const next=setup(guests,{...sessions,clear});await flush();next.actor('other-account');await flush();await next.manager.continue();expect(next.call).not.toHaveBeenCalled();locked=false;await next.manager.continue();expect(next.call.mock.calls.some(c=>c[0]==='bootstrapAI')).toBe(true);expect((await sessions.read())?.owner).toEqual({kind:'USER',userId:'other-account'});
+});
+it('a late cold read after owner change cannot show the old conversation or error',async()=>{
+ const guests=memoryGuestCredentialStore(),sessions=memoryAIConversationStore(),first=setup(guests,sessions);await first.manager.continue();const old=await sessions.read(),wait=deferred<typeof old>();const h=setup(guests,{...sessions,read:()=>wait.promise});await flush();h.actor('new-owner');wait.resolve(old);await flush();expect(h.manager.deviceToken).toBeNull();expect(h.manager.getSnapshot()).toMatchObject({restorable:false,error:null,turns:[],result:null});expect(h.call).not.toHaveBeenCalled();
+});
+it('authoritative edit expiry is persisted without saving the edited text',async()=>{
+ const sessions=memoryAIConversationStore(),h=setup(memoryGuestCredentialStore(),sessions);await h.manager.continue();h.manager.setText('PRIVATE_EDIT');h.time(1000);h.responses.set('activityAI',async()=>({data:{expiresAt:new Date(1801000).toISOString()}}));await h.manager.edited();expect((await sessions.read())?.expiresAt).toBe(1801000);expect(JSON.stringify(await sessions.read())).not.toContain('PRIVATE_EDIT');
+});
+it('signed-in cold Continue fetches preferences and RAM only after explicit action',async()=>{
+ const guests=memoryGuestCredentialStore(),sessions=memoryAIConversationStore(),first=setup(guests,sessions,'same-owner');await first.manager.continue();const cold=setup(guests,sessions,'same-owner');await flush();expect(cold.call).not.toHaveBeenCalled();expect(cold.manager.getSnapshot()).toMatchObject({restorable:true,preferences:emptyPreferences(),turns:[]});await cold.manager.continue();expect(cold.call.mock.calls.map(c=>c[0])).toEqual(['readAIPreferences','readAI']);
+});
+
+it('SEND persists only the authoritative server expiry, not the request or returned result',async()=>{
+ const sessions=memoryAIConversationStore(),h=setup(memoryGuestCredentialStore(),sessions);await h.manager.continue();h.manager.setText('PRIVATE_SEND');h.responses.set('requestAI',async()=>({data:{requestId:'id-result',state:'SUCCEEDED',result:{replyText:'PRIVATE_MODEL_RESULT',cards:[]}}}));h.responses.set('readAI',async()=>({data:{turns:[],latestRequestId:null,expiresAt:new Date(1900000).toISOString()}}));await h.manager.send();expect((await sessions.read())?.expiresAt).toBe(1900000);expect(JSON.stringify(await sessions.read())).not.toContain('PRIVATE_');
+});
+
+it('offline cold Continue retries the same credential instead of creating a replacement conversation',async()=>{
+ const guests=memoryGuestCredentialStore(),sessions=memoryAIConversationStore(),first=setup(guests,sessions);await first.manager.continue();const old=await sessions.read();const cold=setup(guests,sessions);await flush();cold.manager.setText('UNSENT_OFFLINE_COLD');let offline=true;cold.responses.set('readAI',async()=>{if(offline)throw new ApiError({status:0,code:'NETWORK_ERROR',message:'Synthetic offline'});return {data:{turns:[],latestRequestId:null,expiresAt:new Date(1800000).toISOString()}};});
+ await cold.manager.continue();expect(cold.manager.getSnapshot()).toMatchObject({phase:'error',text:'UNSENT_OFFLINE_COLD',turns:[],restorable:true});expect(await sessions.read()).toEqual(old);offline=false;await cold.manager.retry();expect(cold.manager.getSnapshot().phase).toBe('idle');expect(cold.call.mock.calls.map(c=>c[0])).toEqual(['readAI','readAI']);expect(cold.call.mock.calls.every(c=>(c[1] as {params:{sessionId:string}}).params.sessionId==='session-1')).toBe(true);
+});
+
+it('a displayed cold candidate reaching TTL reports expiry without silently bootstrapping on Continue',async()=>{
+ const guests=memoryGuestCredentialStore(),sessions=memoryAIConversationStore(),first=setup(guests,sessions);await first.manager.continue();const cold=setup(guests,sessions);await flush();expect(cold.manager.getSnapshot().restorable).toBe(true);cold.time(1800000);await cold.manager.continue();await flush();expect(cold.manager.getSnapshot().phase).toBe('expired');expect(cold.call).not.toHaveBeenCalled();expect(await sessions.read()).toBeNull();
 });

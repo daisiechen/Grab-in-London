@@ -43,7 +43,7 @@ export function AssistantWidget(){
    <KeyboardAvoidingView behavior={Platform.OS==='ios'?'padding':undefined}>
     <ScrollView style={{maxHeight:480}} contentContainerStyle={{gap:12}} keyboardShouldPersistTaps="handled">
      {s.view==='preferences'?<PreferencesView key={`${s.preferenceVersion}:${s.view}:${JSON.stringify(s.preferences)}`}/>:<>
-      {s.view==='home'?<><Heading>A little help finding your table.</Heading><Body muted>Find, compare or draft a few words. You choose what to send or publish.</Body><Primary label={s.turns.length?'Continue conversation':'Start conversation'} onPress={()=>void assistant.continue()}/><TextAction label="My preferences" onPress={()=>void assistant.preferences()}/></>:null}
+      {s.view==='home'?<><Heading>A little help finding your table.</Heading><Body muted>Find, compare or draft a few words. You choose what to send or publish.</Body><Primary label={s.restorable||s.turns.length?'Continue conversation':'Start conversation'} onPress={()=>void assistant.continue()}/><TextAction label="My preferences" onPress={()=>void assistant.preferences()}/></>:null}
       {s.view==='chat'?<>
        {s.turns.map((turn,i)=><View key={i} style={[styles.turn,turn.role==='user'&&styles.mine]}><Body>{turn.text}</Body></View>)}
        {s.phase==='processing'?<View accessibilityRole="alert"><Body>Thinking… You can close this panel and continue later.</Body></View>:null}

@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports -- Node SHA256 only in isolated test helpers
+const {createHash}=require('node:crypto') as {createHash(algorithm:string):{update(value:string):{digest(format:string):string}}};
+import {memoryAIConversationStore,type AIConversationStore} from '../features/assistant/session-store.ts';
 import {memoryGuestCredentialStore,type GuestCredentialStore} from '../features/assistant/guest-store.ts';
 import type { ReactElement } from 'react';
 import { render } from '@testing-library/react-native';
@@ -17,14 +20,14 @@ export interface TestApp {
   openAuthSession: jest.Mock<Promise<WebBrowserAuthSessionResult>, [string, string]>;
 }
 
-export function createTestApp(opts: { now?: () => number;guestStore?:GuestCredentialStore;installMarker?:import('../features/auth/credential-store.ts').InstallMarker } = {}): TestApp {
+export function createTestApp(opts: { now?: () => number;guestStore?:GuestCredentialStore;aiConversationStore?:AIConversationStore;installMarker?:import('../features/auth/credential-store.ts').InstallMarker } = {}): TestApp {
   const mock = createMockFetch();
   const store = memoryStore();
   const openAuthSession = jest.fn<Promise<WebBrowserAuthSessionResult>, [string, string]>(async () => ({ type: WebBrowserResultType.CANCEL }));
   const services = createServices({
     baseUrl: 'http://api.test',
     fetch: mock.fetch,
-    store,guestStore:opts.guestStore??memoryGuestCredentialStore(),
+    store,guestStore:opts.guestStore??memoryGuestCredentialStore(),aiConversationStore:opts.aiConversationStore??memoryAIConversationStore(),hashGuestCredential:async token=>createHash('sha256').update(token).digest('hex'),
     installMarker: opts.installMarker??null,
     openAuthSession,
     createChallenge: async () => ({ verifier: 'V'.repeat(43), challenge: 'C'.repeat(43) }),

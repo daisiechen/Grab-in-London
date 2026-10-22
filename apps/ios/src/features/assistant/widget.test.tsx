@@ -1,3 +1,6 @@
+import {memoryAIConversationStore} from './session-store.ts';
+import {memoryGuestCredentialStore} from './guest-store.ts';
+import {flush} from '../../test/deferred.ts';
 import {ok,fail} from '../../test/mock-fetch.ts';
 import {NOW} from '../../test/fixtures.ts';
 import {fireEvent} from '@testing-library/react-native';
@@ -24,4 +27,12 @@ it('keeps overlong native input with inline shortening guidance and recovers at 
  const boundary='x'.repeat(2000);await fireEvent.changeText(field,boundary);expect(ui.queryByText(/Shorten.*2,000/)).toBeNull();expect(ui.getByLabelText('Ask').props.accessibilityState.disabled).toBe(false);await fireEvent.press(ui.getByLabelText('Ask'));
  expect(app.mock.callsTo('POST','/v1/ai/sessions/synthetic-ai-session/requests')).toHaveLength(1);expect(app.mock.callsTo('POST','/v1/ai/sessions/synthetic-ai-session/requests')[0]?.body).toMatchObject({input:boundary});
  await fireEvent.changeText(field,'   ');expect(ui.getByLabelText('Ask').props.accessibilityState.disabled).toBe(true);
+});
+it('cold credential-only candidate displays Continue and waits for that explicit action before reading RAM',async()=>{
+
+ // eslint-disable-next-line @typescript-eslint/no-require-imports -- test-only real digest for guest binding
+ const {createHash}=require('node:crypto') as {createHash(algorithm:string):{update(value:string):{digest(format:string):string}}};
+ const ai=memoryAIConversationStore(),guests=memoryGuestCredentialStore(),token='synthetic-widget-guest';await guests.write({token,expiresAt:NOW+86400000});await ai.write({sessionId:'synthetic-cold-session',generation:1,deviceToken:'synthetic-widget-device',revokeHandle:'synthetic-revoke',expiresAt:NOW+1800000,owner:{kind:'GUEST',credentialSha256:createHash('sha256').update(token).digest('hex')}});
+ const app=createTestApp({aiConversationStore:ai,guestStore:guests});await app.services.session.restore();app.mock.on('GET','/v1/ai/sessions/synthetic-cold-session',ok({turns:[{role:'assistant',text:'SERVER_RAM_AFTER_EXPLICIT_CONTINUE'}],latestRequestId:null,expiresAt:new Date(NOW+1800000).toISOString()}));
+ const ui=await renderApp(app,<AssistantWidget/>);await fireEvent.press(ui.getByLabelText('Ask Fancy'));await flush();await ui.findByText('Continue conversation');expect(app.mock.callsTo('GET','/v1/ai/sessions/synthetic-cold-session')).toHaveLength(0);expect(ui.queryByText('SERVER_RAM_AFTER_EXPLICIT_CONTINUE')).toBeNull();await fireEvent.press(ui.getByText('Continue conversation'));await ui.findByText('SERVER_RAM_AFTER_EXPLICIT_CONTINUE');expect(app.mock.callsTo('POST','/v1/ai/sessions')).toHaveLength(0);expect(app.mock.callsTo('GET','/v1/ai/sessions/synthetic-cold-session')[0]?.headers).toMatchObject({authorization:`Bearer ${token}`,'ai-device-token':'synthetic-widget-device'});
 });
