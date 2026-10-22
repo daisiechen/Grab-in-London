@@ -1,0 +1,22 @@
+{
+ "observations": [
+  {
+   "id": "B71-O001",
+   "executedBy": "Claude Code",
+   "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+   "status": "passed",
+   "title": "F61 retention page summary export with an unavailable source on source B",
+   "steps": [
+    "Staff S normal OTP on the new host; Admin 体验与留存 on snapshot as_of 02:16:00Z (worker-sealed), page shows 后续机会曝光 as 未就绪或不适用.",
+    "Normal UI 导出指标 → POST /v1/admin/exports 201, GET 200, status “已导出当前快照与筛选的指标” (previously 503 PROVIDER_UNAVAILABLE with “导出失败，请重试”, B66-O003).",
+    "CSV adds a status column: retention/activation/feedback empty with no_denominator, survey 1/1 available, laterOpportunity empty and unavailable. 14 rows and 685 bytes (CRLF) equal the analytics_exports record (summary.retention). Content verified from the received response; the downloaded file on disk was not inspected."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/b71-export-retention-summary.csv"
+   ]
+  }
+ ],
+ "processNotes": [
+  "F62 and J005 need more normal OTP logins: per-email resend 30 s and per-IP 5 codes per 15 min on the fixed clock, all synthetic roles sharing 127.0.0.1; three codes were issued at 02:16:00Z. A reviewed advance plan (02:31:00Z then 02:31:30Z) is pending root review."
+ ]
+}

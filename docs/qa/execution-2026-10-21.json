@@ -110,7 +110,8 @@
     "browserObservationsB68": "evidence/2026-10-21/browser-b68.json",
     "remainingPlan20261022": "remaining-plan-2026-10-22.zh-CN.md",
     "browserObservationsB69": "evidence/2026-10-21/browser-b69.json",
-    "browserObservationsB70": "evidence/2026-10-21/browser-b70.json"
+    "browserObservationsB70": "evidence/2026-10-21/browser-b70.json",
+    "browserObservationsB71": "evidence/2026-10-21/browser-b71.json"
   },
   "cases": [
     {
@@ -23169,7 +23170,7 @@
     "QA-F58": "CLOSED_TARGETED_QA",
     "QA-F59": "CLOSED_TARGETED_QA",
     "QA-F60": "CLOSED_TARGETED_QA_EXCEPT_READ_FAILURE_COPY",
-    "QA-F61": "OPEN_CONFIRMED",
+    "QA-F61": "CLOSED_TARGETED_QA",
     "QA-F62": "OPEN_CONFIRMED",
     "QA-F63": "OPEN_CONFIRMED"
   },
@@ -23192,5 +23193,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B70:202 PASS/4 NOT_RUN/11 BLOCKED. J004 PASS on source B; F58/F59 closed; F60 closed except read-failure copy (needs network-fault tool). Next: F61 admin export, F62 same-tab 401, then J005."
+  "currentExecutionSlice": "B71:202 PASS/4 NOT_RUN/11 BLOCKED. F61 closed by actual export on source B. F62 and J005 wait for a reviewed advance to clear the per-IP OTP window (02:31:00Z, then 02:31:30Z)."
 }
