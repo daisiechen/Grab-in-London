@@ -64,3 +64,17 @@ class MvpPatchPrdTest(unittest.TestCase):
                      '不新增“离群时历史成员名单快照”能力',
                      '退群不改变meal participation'):
             self.assertIn(rule, text)
+
+    def test_feedback_save_does_not_invent_atomic_or_empty_reviews(self):
+        text = (ROOT / 'docs/product/mvp-patch-PRD.zh-CN.md').read_text()
+        for rule in ('AC-004a', 'AC-004b', 'No changes to save',
+                     '不新增跨接口原子保存功能', '重试仅处理失败项',
+                     '已有公评清空时不调用空值覆盖或静默删除'):
+            self.assertIn(rule, text)
+
+    def test_feedback_revoke_confirmation_precedes_any_write(self):
+        text = (ROOT / 'docs/product/mvp-patch-PRD.zh-CN.md').read_text()
+        for rule in ('AC-004c', '本次整次Save不提交任何项',
+                     '串行先公评后再约', 'Not saved yet',
+                     '迟到结果不写入新对象界面'):
+            self.assertIn(rule, text)
