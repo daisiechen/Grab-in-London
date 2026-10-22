@@ -1,0 +1,65 @@
+{
+ "observations": [
+  {
+   "id": "B61-O001",
+   "executedBy": "Codex QA (archived by Claude Code after Codex usage limit)",
+   "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+   "status": "passed",
+   "title": "Natural 00Z snapshot between START and END changes no business or accounting history",
+   "steps": [
+    "Fresh guards at 23Z: API/worker/HTTP/handler idle, no support window; single dev-approved advance 23Z→00Z acknowledged once.",
+    "Read-only DB: M3 OPEN, START mark 1, roster exactly H+A, SELF attendance 0, group dissolved; M2 CANCELLED; snapshot as_of 00Z exists.",
+    "ai_budget/ai_calls/ai_requests/seat_events/booking_declarations/start_roster/attendance_revisions digests identical before/after; Oct23 day budget row absent."
+   ],
+   "artifacts": []
+  },
+  {
+   "id": "B62-O001",
+   "executedBy": "Codex QA (archived by Claude Code)",
+   "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+   "status": "passed",
+   "title": "Natural 01Z END completes M3 once without default attendance or feedback",
+   "steps": [
+    "Fresh guards at 00Z; single dev-approved advance 00Z→01Z acknowledged once.",
+    "Read-only DB: M3 COMPLETED with exactly one END mark, roster H+A, SELF attendance 0, group dissolved; M2 stays CANCELLED; all three meal.end jobs DONE; snapshot 01Z sealed.",
+    "Protected histories and AI accounting digests unchanged; no new-day budget."
+   ],
+   "artifacts": []
+  },
+  {
+   "id": "B62-O002",
+   "executedBy": "Codex QA (archived by Claude Code)",
+   "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+   "status": "passed",
+   "title": "Web applicant post-meal: unknown → explicit self-report → private score",
+   "steps": [
+    "Web applicant opens After the meal: attendance unknown/not reported, no rating control.",
+    "Explicit 'I attended' saves SELF present; rating opens; explicit score 5 saved privately (DB experience_revisions A=5)."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/b62-web-applicant-unknown-before-self.png"
+   ]
+  },
+  {
+   "id": "B63-O001",
+   "executedBy": "Claude Code (takeover)",
+   "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+   "status": "passed",
+   "title": "Native host post-meal: self-report, host report cannot override applicant SELF, private score, reference, unilateral meet-again",
+   "steps": [
+    "native176 (Codex) normally opened M3 After the meal as host, 'You · Not reported yet', no score control; explicit 'I came' saved SELF present, then failed in the probe tap helper (button above visible scroll area; helper only swiped up). Probe defect, not product; no further writes.",
+    "native177 (Claude) relaunch confirms host SELF persisted; failed again on a simulator swipe timeout behind the optional analytics prompt; no writes.",
+    "native178 declines optional analytics (privacy-preserving), selects 'QA Final Applicant didn’t come' → Review → Confirm. UI shows 'Host report saved. Each member’s own report takes priority.', 'QA Final Applicant · Came · they reported' and 'Your host report: didn’t come'. DB: HOST absent v2 by host, applicant SELF present v1 retained. Private score 4 saved ('Saved privately'). Probe failed at reference save because keyboard made the enabled button non-hittable; no reference written.",
+    "native179 relaunch confirms persisted SELF-priority state, types reference, dismisses keyboard, saves ('Reference saved.'), taps 'I’d meet QA Final Applicant again' ('Choice saved privately.').",
+    "DB read-only: public_review_revisions M3 host→applicant revision1; pair_consents host epoch3 basis M3, applicant none (one-sided, no mutual unlock); ai_calls 30, booking_declarations 7 unchanged."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/b63-native-host-self-persisted.png",
+    "evidence/2026-10-21/b63-native-self-priority-host-absent.png",
+    "evidence/2026-10-21/b63-native-host-reference-private-choice.png",
+    "evidence/2026-10-21/native178-xcui.swift",
+    "evidence/2026-10-21/native179-xcui.swift"
+   ]
+  }
+ ]
+}
