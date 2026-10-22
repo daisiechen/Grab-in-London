@@ -1,0 +1,81 @@
+{
+  "observations": [
+    {
+      "id": "B58-O001",
+      "testedCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "Native applicant independently releases seat, sends in group, then leaves group read-only",
+      "steps": [
+        "Normal native A OTP restored after a retained cooldown failure and one guarded legal minute advance; no session TTL, price, quota or model changes. Current synthetic clock21:02:04.002Z.",
+        "Native171 normally cancels M3 place; Request to join and Open group chat coexist. Explicit applicant chat message sends and editor clears, proving seat release alone preserves group membership.",
+        "Separate normal Leave group confirmation produces explicit left-group/read-only notice and no Message composer.",
+        "The subsequent local reapplication draft does not submit: keyboard occludes Send request and hittability guard stops171. No new round exists at this checkpoint. Preserve failure; do not replay successful cancel/chat/leave.",
+        "Read-only owned-database evidence confirms cancelled round1 and guest LEFT event; seat-event history is not counted as occupancy."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B58-O002",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Host explicitly sends gap message while applicant remains outside group before new application",
+      "steps": [
+        "Prior unmarked browser tab was cleaned up after turn; new normal local tab reuses existing host login. No old tab RAM restoration claim.",
+        "Fresh exact owned database clock/rate audit bounds host write and applicant remaining reapplication prefix within existing limits.",
+        "Group polling displays legitimate fixed-minute429. Host explicitly sends synthetic gap message; actual UI displays sent message and clears composer. No claim that old messages freshly loaded during429.",
+        "Applicant has already independently left group and has not submitted round2 when this Send occurs. Subsequent native visibility must be independently verified.",
+        "Save screenshot preserving rate warning and successful send, then leave Chat to stop polling. No new clock advance, AI request, production source change or external gate closure."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b58-web-gap-sent.png"
+      ]
+    },
+    {
+      "id": "B58-O003",
+      "testedCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "Normal native round2 submit preserves read-only authorized history while pending",
+      "steps": [
+        "Native172 cold navigation normally opens unique Discover M3 card1of2; introduction is freshly entered, not restored editor RAM. Normal visible form heading dismisses keyboard, then explicit Send request occurs.",
+        "Withdraw request visible. Normal historical Open group chat shows History is read-only and zero Message inputs. Previously authorized applicant message remains visible; gap message sent after Leave is absent. Native172 exits0.",
+        "WebH normal guest-list page independently shows new Pending round2, original Cancelled round1, one confirmed host.",
+        "Fresh actual A burst7/writes6 and H burst3/writes2 bounds next approval/booking/welcome/read acknowledgement steps; no quota edits or time advance.",
+        "Host explicitly Approve round2. Original frozen API reproduces known F57 same-count stale behavior, already fixed and accepted separately; no original runtime hotpatch or new closure claim. Host explicitly redeclares Booked for2 and UI confirms update.",
+        "Host explicitly sends welcome only after approval; actual UI shows welcome and clears composer. Screenshot retains legitimate polling429; leave Chat to stop poll. Native independent union/live verification remains subsequent."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b58-web-welcome-sent.png"
+      ]
+    },
+    {
+      "id": "B58-O004",
+      "testedCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "Rejoined native authorized union excludes gap; host explicitly dissolves independently of meal seats",
+      "steps": [
+        "Native173 cold normal Upcoming unique M3→Open group: original host and applicant messages plus new welcome are visible, gap absent, one live Message composer. Test exits0.",
+        "Actual applicant burst10/writes9 triggers deliberate stop before another potential historical readAck. No failed eleventh write is attempted.",
+        "Host normal Group settings→Dissolve→explicit confirmation succeeds. Web shows group dissolved/read-only/no composer. Meal host page still2of2, Confirmedround2, Cancelledround1 and explicit Booked2. This action does not cancel meal or seats.",
+        "Archive history can still acknowledge messages, so readonly does not imply zero writes. Applicant conversation poll21/40 and inbox3 allow final bounded history load.",
+        "Fresh owned identity/revision/current, all3meals6jobs/next snapshot22, synthetic price/day/month/budget/UNKNOWN, zero active HTTP/handler/API/worker/pending/grants are independently audited while UI/OTP/download stopped. Exact permitted1.001second advance to21:02:05.003Z completes once, no business boundary crossed. New-second applicant burst0/minute9 precedes174.",
+        "Native174 cold normal Upcoming M3→Open group verifies old host/applicant messages and new welcome, gap absent, History is read-only, zero Message inputs, no Leave group or Dissolve group control. Test exits0. Independent owned database confirms group dissolved, meal remains OPEN, original round1 CANCELLED/newround2CONFIRMED; historical guest-confirmed2 and LEFT1 net one active guest plus host."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b58-web-dissolved.png"
+      ]
+    },
+    {
+      "id": "B58-O005",
+      "testedCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "Original J003 both-role journey expectations complete without weakening original steps",
+      "steps": [
+        "Original frozen plan J003 requires member approval→seat release→still chat→independent leave→reapply approval→dissolve, with seat/group independence, authorized union history and no reopening. It does not require cancelling this normal meal.",
+        "Earlier native-host/Web-applicant direction evidence is preserved. B58 completes complementary Web-host/native-applicant direction in the same original environment.172/173/174 exit0 evidence covers pending readonly, live rejoined union, then cold dissolved terminal readonly; gap stays excluded.",
+        "Original audit correction that reopened incomplete role swap remains in history. Retain169 OTP cooldown and171 keyboard-control failures, all real rate warnings and formal-source versus retained-runtime F57 distinction. No duplicate business operations, quota reset or provider call.",
+        "Close only J003 with all three original expected indexes; other eight incomplete journeys and eleven external gates remain unpassed."
+      ],
+      "artifacts": []
+    }
+  ]
+}

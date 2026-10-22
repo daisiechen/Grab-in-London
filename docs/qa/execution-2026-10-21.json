@@ -18,9 +18,9 @@
     "nativeClockAlignment": "B44 direct human authorization received; original synthetic runtime aligned to current UTC12:09:06.962Z. Node/DB ACK; business/budget counts and hashes unchanged; historical UNKNOWN reserve preserved; natural second snapshot retained. Native138 normal OTP restoration succeeds. Earlier B43 clock blocker resolved; product journey assertions remain separate. B45 second guarded execution-currentUTC12:23:20.135Z, no crossed business/price/period/snapshot boundary, ledgers unchanged. Native139 passes; WebA rate limit recovers normally."
   },
   "counts": {
-    "PASS": 197,
+    "PASS": 198,
     "BLOCKED": 11,
-    "NOT_RUN": 9
+    "NOT_RUN": 8
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
@@ -98,7 +98,8 @@
     "browserObservationsB54": "evidence/2026-10-21/browser-b54.json",
     "browserObservationsB55": "evidence/2026-10-21/browser-b55.json",
     "browserObservationsB56": "evidence/2026-10-21/browser-b56.json",
-    "browserObservationsB57": "evidence/2026-10-21/browser-b57.json"
+    "browserObservationsB57": "evidence/2026-10-21/browser-b57.json",
+    "browserObservationsB58": "evidence/2026-10-21/browser-b58.json"
   },
   "cases": [
     {
@@ -17156,13 +17157,17 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
         "B43-O004",
-        "B43-O005",
         "B45-O001",
         "B47-O001",
-        "B51-O003"
+        "B51-O003",
+        "B58-O001",
+        "B58-O002",
+        "B58-O003",
+        "B58-O004",
+        "B58-O005"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -17476,11 +17481,13 @@
         "R191-T002",
         "R192-T001"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "补 Web host / native applicant 方向完整退席、继续聊天、独立退群、重新申请批准、授权历史 union、解散终态。原 native host / Web applicant 方向证据保留。"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "B53 audit correction: 原预期子断言已通过，见保留 evidence；原共同前提 Web/iOS 互换各走一次尚未完成。补 Web host / native applicant 方向完整退席、继续聊天、独立退群、重新申请批准、授权历史 union、解散终态。原 native host / Web applicant 方向证据保留。",
+      "remainingExpected": [],
+      "actual": "B58 completes original complementary WebH/nativeA approval→seat cancel/still explicit chat→separate group leave→normal round2 submit/Pendingreadonly→H approve/explicitwelcome→native old/new authorized union excluding gap→H dissolve→native cold terminal readonly/no composer/no reopen controls. Native172/173/174 exit0 and independent owned DB corroborate. Earlier opposite nativeH/WebA original direction retained; all three original expectations complete, no meal cancellation added.",
       "history": [
         {
           "status": "NOT_RUN",
@@ -17523,6 +17530,26 @@
             0,
             1,
             2
+          ]
+        },
+        {
+          "status": "NOT_RUN",
+          "actual": "B53 audit correction: 原预期子断言已通过，见保留 evidence；原共同前提 Web/iOS 互换各走一次尚未完成。补 Web host / native applicant 方向完整退席、继续聊天、独立退群、重新申请批准、授权历史 union、解散终态。原 native host / Web applicant 方向证据保留。 B58: native A actual seat cancel/still-chat/independent group leave/read-only passed; first reapply Send stopped by keyboard before business write. WebH explicit gap sent while A outside and before round2. Reapplication, authorized history union, approval and dissolve remain incomplete. Native172 exits0: explicit round2 submit, pending history read-only/no composer, authorized old message visible/gap excluded. WebH independently approves round2, explicitly redeclares booking2 and sends welcome; rejoined native union and dissolve still pending. Native173 rejoined union/noGAP/livecomposer exits0; H explicit dissolve gives Webreadonly without changing meal2/2. Native174 cold dissolved terminal verification pending after bounded1.001second legal recovery.",
+          "reason": "B58 complete complementary Web host/native applicant original full journey; retain earlier partial and audit correction",
+          "evidence": [
+            "B43-O004",
+            "B43-O005",
+            "B45-O001",
+            "B47-O001",
+            "B51-O003",
+            "B58-O001",
+            "B58-O002",
+            "B58-O003",
+            "B58-O004",
+            "B58-O005"
+          ],
+          "retainedFailedEvidence": [
+            "B43-O005"
           ]
         }
       ],
@@ -23006,5 +23033,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B57:197 PASS/9 NOT_RUN/11 BLOCKED. J006 original AI-create/group steps and three expectations now complete in both role directions, same original database; native M3 explicit Publish162 and Group168 Keep/Replace/zero-autoSend/explicit Send plus WebA receipt accepted. All failed harness/guard attempts and fixed-clock polling limit retained. Current21:01:03.002Z; lifecycle close22/start23/end next-day01 not yet executed or approved. Other incomplete journeys remain specific NOT_RUN; no model/budget/price extension or external gate closed."
+  "currentExecutionSlice": "B58:198 PASS/8 NOT_RUN/11 BLOCKED. Original J003 both role directions complete, including native cold dissolved terminal and authorized historical union excluding gap. Current21:02:05.003Z after exact guarded1.001second recovery. M3 remains OPEN/2confirmed for normal lifecycle, which is not yet executed or approved. All historical control failures/rate warnings retained; no source patch/real provider call/external gate closure."
 }
