@@ -1,0 +1,33 @@
+{
+  "observations": [
+    {
+      "id": "B50-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Original M1 cross-client SELF priority, host conflict recovery and private meal experience",
+      "steps": [
+        "Native146 normalA Past/originalM1/After meal verifies unknown attendance blocks feedback, explicitI came and private5Save succeed; result exit0.",
+        "Original WebH old postmeal snapshot HOSTabsent forA is legitimately rejected as changed elsewhere; visibleerror and refresh. Fresh normal HOSTabsent saves with own-report priority notice.",
+        "Native147 cold reopen actual You Came they reported and Save experience available proves effectiveSELFpresent remains despite newer HOSTabsent; later unrelated public-reference script fails.",
+        "WebH normal ownSELFpresent/private4 saved. Readonly exactownedDB records A SELFpresentv1 thenHOSTabsentv2, HSELFpresentv1, A5/H4 experience revision1. Both at original19Z; no blanketdefaultattendance/ratings."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b50-attendance-summary.json"
+      ]
+    },
+    {
+      "id": "B50-O002",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "failed",
+      "title": "Public reference control attempts not yet accepted; preserve failed navigation and scrolling evidence",
+      "steps": [
+        "Native147 enters unsent synthetic publicreference, generic firstScrollView helper cannot make Save reachable/hittable. No forcedtap, submit or publicreview row; readonlyreviewcount0.",
+        "Native148 attempts app.activate in new XCTest session expecting prior navigation; actual referencefield absent and assertion fails before reading/sendingdraft. This does not prove same-process restoration or product draft persistence failure.",
+        "Native149 normal cold navigation/retyping still fails Save hittable before submit. Actual ScrollView frame300–840 and keyboard starts545: full-element swipe center falls in keyboard overlay. Native150 limits ordinary drag to observed visible ScrollView/keyboard intersection and still requires physicalhittable; pending. No product failure or publicreference/choice success inferred."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b50-attendance-summary.json"
+      ]
+    }
+  ]
+}
