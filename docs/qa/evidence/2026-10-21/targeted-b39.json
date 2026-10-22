@@ -1,0 +1,18 @@
+{
+  "observations": [
+    {
+      "id": "B39-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "F47 new owned fixture fails closed and preserves PG after transition/runtime/control failure",
+      "steps": [
+        "Original repair provenance6e497d36dcf780b3c49eae473c9dd168d677f1c2 separates owned PG lifetime from fatal clock/shutdown failures. Final composed fixture frozen source1651 and executable70 independently exact, with original ENTRY/pins unchanged.",
+        "Independent complete54-test execution passed0fail/0skip. Four exact real-PG regression anchors individually passed: real jobs SQL barrier causes OLD worker-stop failure, latches run and never resumes HTTP via OTP; real runtime failure during paused OTP locks parent/API/access barriers and emits no private OTP FIFO; unexpected own worker or API child exit latches failure and inspect remains available; parent IPC disconnect synchronously blocks newHTTP while preadmitted realDB handler drains, then API exits and OWNPG retained.",
+        "Assertions inspect real blocked SQL/worker-stop diagnostics, HTTP503/sticky refusal, absence of private OTP delivery after failure, preadmitted real handler settlement, owned PG identity readable after stop. Selftest-only explicit cleanup occurs after retained-state verification, not as failure behavior of standing.",
+        "Close F47 only for targeted protections of this new frozen fixture. Original19d destroyed database remains lost, specific old transition stage remains unknown, and original same-database journey evidence cannot be resumed or reconstructed. No old failed observation promoted.",
+        "No claim for arbitrary older cleanup scripts, parent SIGKILL/kernel loss, atomic remote revocation, immediate quietness or full production release. Do not crash or stop current unique unified run to repeat already-passed independent failure evidence."
+      ],
+      "artifacts": []
+    }
+  ]
+}

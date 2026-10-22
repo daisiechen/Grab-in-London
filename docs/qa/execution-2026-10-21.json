@@ -79,7 +79,8 @@
     "browserObservationsB35": "evidence/2026-10-21/browser-b35.json",
     "browserObservationsB36": "evidence/2026-10-21/browser-b36.json",
     "browserObservationsB37": "evidence/2026-10-21/browser-b37.json",
-    "browserObservationsB38": "evidence/2026-10-21/browser-b38.json"
+    "browserObservationsB38": "evidence/2026-10-21/browser-b38.json",
+    "targetedObservationsB39": "evidence/2026-10-21/targeted-b39.json"
   },
   "cases": [
     {
@@ -17764,9 +17765,25 @@
         "撤回后历史只读",
         "解除不复活同意"
       ],
-      "actual": "Original samePG bothrole feedback/mutualDM/withdraw and thirdB privacy retained. F44 native safety gap fixed formal2005991 and actual61–64 independent ownedPG targeted passed; not full original mirroredjourney. SameDBadmintrace still unexecuted; original61973 rig exited during reviewedclockadvance(F47), developer recovery pending. No wholecasepass.",
+      "actual": "Original samePG bothrole feedback/mutualDM/withdraw and thirdB privacy retained. F44 native safety gap fixed formal2005991 and actual61–64 independent ownedPG targeted passed; not full original mirroredjourney. SameDBadmintrace still unexecuted; original61973 rig exited during reviewedclockadvance(F47), old trace remains unrecoverable; B39 independently closes protection of new fixture only, not restoration or new full DM journey. No wholecasepass.",
       "defectIds": [
         "QA-F44"
+      ],
+      "history": [
+        {
+          "status": "NOT_RUN",
+          "actual": "Original samePG bothrole feedback/mutualDM/withdraw and thirdB privacy retained. F44 native safety gap fixed formal2005991 and actual61–64 independent ownedPG targeted passed; not full original mirroredjourney. SameDBadmintrace still unexecuted; original61973 rig exited during reviewedclockadvance(F47), developer recovery pending. No wholecasepass.",
+          "evidence": [
+            "B19-O001",
+            "B19-O002",
+            "B19-O007",
+            "B19-O008",
+            "B19-O009",
+            "B19-O010",
+            "B20-O001"
+          ],
+          "reason": "B39 distinguishes permanent loss of old trace from targeted new fixture protection closure."
+        }
       ]
     },
     {
@@ -22786,7 +22803,7 @@
     "QA-F44": "CLOSED_TARGETED_QA",
     "QA-F45": "CLOSED_TARGETED_QA",
     "QA-F46": "CLOSED_TARGETED_QA",
-    "QA-F47": "OPEN_ENVIRONMENT",
+    "QA-F47": "CLOSED_TARGETED_QA",
     "QA-F48": "CLOSED_TARGETED_QA",
     "QA-F49": "CLOSED_TARGETED_QA",
     "QA-F50": "CLOSED_TARGETED_QA",
@@ -22812,5 +22829,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B38 native approved-group actual history/Keep-Replace/same-process429 recovery/physicalSend/Webreceipt; first WebH/nativeA direction progressed, reverse roles next. Counts195PASS/11NOT_RUN/11BLOCKED unchanged."
+  "currentExecutionSlice": "B39 F47 targeted protection closure in new frozen fixture from independent real-PG regressions; old lost trace remains unrecoverable/unpassed. NativeH actual595s auth cooldown received reviewed exact601s recovery with fresh ownedPG/pending0/grant0/job-boundary proof; normal newOTP replay underway. Counts195PASS/11NOT_RUN/11BLOCKED unchanged."
 }
