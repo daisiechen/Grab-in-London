@@ -1,0 +1,46 @@
+{
+  "observations": [
+    {
+      "id": "B45-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Original M2 native host welcome after rejoin reaches WebA; absent-interval gap stays private",
+      "steps": [
+        "Native139 on signed95e960c normal H Hosting/original M2/Open group chat/types exact M2 welcome after A rejoined./explicit Send passes; exit0.",
+        "WebA initially receives real429 with54second retry, retained. Subsequent user-authorized currentUTC calibration12:09:06.962Z→12:23:20.135Z passes owned/idle/budget/price/boundary guards; no meal/job/date/month/snapshot threshold crossed and no quota cleared.",
+        "Normal WebA reload recovers: old3 authorized messages plus new welcome visible, missing-interval H message absent, normal composer available. No reconstruction or hidden send."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b45-state-summary.json"
+      ]
+    },
+    {
+      "id": "B45-O002",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Actual same-database natural S0 applications reconcile and stay frozen after later approval",
+      "steps": [
+        "Normal existing S session opens actual same Admin; explicit snapshot selection from B44 retained conceptually, recreated tab uses latest naturalS0. Current source facts3users/2meals/3applications/5seats/1survey, no attendance/experience/roster.",
+        "Journey displays3applications,2historically approved,1pending; exact originalM2round2 stays PENDING in S0 while current business is CONFIRMED after Native138. Source facts not retroactively rewritten.",
+        "Supply0/0 maturity and overview no computable metrics do not mean no raw facts. verifiedDiscovery/clientTelemetry incomplete; no full Admin journey PASS. Application detail opens meal evidence dialog with no mature attendance records; retained pending semantic review."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b45-state-summary.json"
+      ]
+    },
+    {
+      "id": "B45-O003",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "failed",
+      "title": "Normal Admin summary export displays failure; response diagnosis remains open",
+      "steps": [
+        "Normal S Journey Export metrics click gives Export failed please retry; browser download event times out15s.",
+        "After valid currentUTC calibration, second normal export still fails. Browser captured error console empty.",
+        "No HTTP status/structured code yet captured; do not infer create vs download failure or declare backend defect closure. Communicated developer for source diagnosis; no role grant or security change."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b45-state-summary.json"
+      ]
+    }
+  ]
+}
