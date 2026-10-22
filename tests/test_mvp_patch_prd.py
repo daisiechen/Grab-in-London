@@ -36,3 +36,11 @@ class MvpPatchPrdTest(unittest.TestCase):
                      'IN归集清单不直接充当开发清单',
                      '不得替换现行MVP环境'):
             self.assertIn(gate, text)
+
+    def test_new_share_and_mentions_require_real_paths_and_authorization(self):
+        text = (ROOT / 'docs/product/mvp-patch-PRD.zh-CN.md').read_text()
+        for requirement in ('PATCH-007', 'PATCH-008', 'AC-007g', 'AC-008h',
+                            '链接不是免审核邀请券', 'Mentions still notify you',
+                            '尚非用户逐项确认', '普通成员不可操作，服务端同样拒绝越权',
+                            '不能以模拟横幅代替系统证据'):
+            self.assertIn(requirement, text)
