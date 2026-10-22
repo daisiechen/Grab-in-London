@@ -94,7 +94,8 @@
     "browserObservationsB50": "evidence/2026-10-21/browser-b50.json",
     "browserObservationsB51": "evidence/2026-10-21/browser-b51.json",
     "browserObservationsB52": "evidence/2026-10-21/browser-b52.json",
-    "browserObservationsB53": "evidence/2026-10-21/browser-b53.json"
+    "browserObservationsB53": "evidence/2026-10-21/browser-b53.json",
+    "browserObservationsB54": "evidence/2026-10-21/browser-b54.json"
   },
   "cases": [
     {
@@ -18298,7 +18299,8 @@
         "B38-O001",
         "B38-O002",
         "B40-O002",
-        "B43-O003"
+        "B43-O003",
+        "B54-O003"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -18614,7 +18616,7 @@
         "同一最终环境按原Web/iOS互换角色完成Create和Group路径",
         "第三账号隐私及同数据库后台前置"
       ],
-      "actual": "本地生产实现尚需实际执行：生成Create草稿→原四步补选地点/条款→主动发布→群草稿→主动Send。尚缺逐项证据：没有模型代办；所有人工确认实际发生；生成/转入/发送分别授权。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B11 realWeb actualcontrolled-model generate/explicit-transfer/single-request and manual-create confirmations complete with physical write proof. Full failure-recovery/group-send and actual native role swap remain outstanding, so NOT_RUN retained. B21-O007 actualnativefocusedkeyboard obscuresquestion/Ask(79); original F49 red retained; B23-O001 actual81/82/85 closed F49 by normal keyboard-open Ask, close/reopen and explicit transfer. Full native role swap, failure-recovery and group-send assertions remain pending; targeted closure does not grant whole-journey PASS. Do not substitute enabled/componentchecks for physicalnativeusability. B32 actual controlled Web CREATE generation/explicit transfer/Keep preservation/explicit replace/four-step manual publish and authorized GROUP generation/transfer/manual Send passed; original F54 rate error behind modal remains open. Explicit synthetic provider failure calls6→7/failures0→1 with unchanged business digests and preserved manual editor followed by ordinary Send verified. Still NOT_RUN for missing original A/B privacy, Web/iOS role interchange and sameDB Admin preconditions. B37 final same-database WebH actual CREATE full manual four-step Publish and GROUP explicit draft transfer/Send plus genuine controlled-provider-failure/manual group fallback completed; native role reversal and full original Admin/preconditions remain. B38 native120 actual authorized post-join message read/pre-join history exclusion, normal bubble keyboard dismissal, same-process actual429→finite61s→Retry, GROUP Keep/Replace, no-send checkpoint, keyboard-open explicit Send and WebH receipt passed. Harness118 wrong prehistory assumption/119 wrong header-dismiss assumption retained as failures; no product patch. Original reverse-role and remaining full-journey assertions remain unexecuted. B38-O002 WebH and nativeA normal logout, WebA new normal OTP and existing profile/empty AI account isolation verified. NativeH login/reverse business path still in progress. B40 nativeH role cold-restore/empty AI CREATE/manual4step/explicitPublish mechanics observed; reservation semantic F55 is separately failing in QA-CREATE-002. Full case remains NOT_RUN; do not grant PASS before F55 and original full expectations close. B43 reverse nativeH GROUP normal candidate/Keep/Replace passes; same-process preSend zero business delta, only explicit Send and actual WebA receipt. True134rate refusal retained,135 successful fresh bounded recovery. Shared sameDB Admin/notification and whole original mapping still pending.",
+      "actual": "本地生产实现尚需实际执行：生成Create草稿→原四步补选地点/条款→主动发布→群草稿→主动Send。尚缺逐项证据：没有模型代办；所有人工确认实际发生；生成/转入/发送分别授权。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B11 realWeb actualcontrolled-model generate/explicit-transfer/single-request and manual-create confirmations complete with physical write proof. Full failure-recovery/group-send and actual native role swap remain outstanding, so NOT_RUN retained. B21-O007 actualnativefocusedkeyboard obscuresquestion/Ask(79); original F49 red retained; B23-O001 actual81/82/85 closed F49 by normal keyboard-open Ask, close/reopen and explicit transfer. Full native role swap, failure-recovery and group-send assertions remain pending; targeted closure does not grant whole-journey PASS. Do not substitute enabled/componentchecks for physicalnativeusability. B32 actual controlled Web CREATE generation/explicit transfer/Keep preservation/explicit replace/four-step manual publish and authorized GROUP generation/transfer/manual Send passed; original F54 rate error behind modal remains open. Explicit synthetic provider failure calls6→7/failures0→1 with unchanged business digests and preserved manual editor followed by ordinary Send verified. Still NOT_RUN for missing original A/B privacy, Web/iOS role interchange and sameDB Admin preconditions. B37 final same-database WebH actual CREATE full manual four-step Publish and GROUP explicit draft transfer/Send plus genuine controlled-provider-failure/manual group fallback completed; native role reversal and full original Admin/preconditions remain. B38 native120 actual authorized post-join message read/pre-join history exclusion, normal bubble keyboard dismissal, same-process actual429→finite61s→Retry, GROUP Keep/Replace, no-send checkpoint, keyboard-open explicit Send and WebH receipt passed. Harness118 wrong prehistory assumption/119 wrong header-dismiss assumption retained as failures; no product patch. Original reverse-role and remaining full-journey assertions remain unexecuted. B38-O002 WebH and nativeA normal logout, WebA new normal OTP and existing profile/empty AI account isolation verified. NativeH login/reverse business path still in progress. B40 nativeH role cold-restore/empty AI CREATE/manual4step/explicitPublish mechanics observed; reservation semantic F55 is separately failing in QA-CREATE-002. Full case remains NOT_RUN; do not grant PASS before F55 and original full expectations close. B43 reverse nativeH GROUP normal candidate/Keep/Replace passes; same-process preSend zero business delta, only explicit Send and actual WebA receipt. True134rate refusal retained,135 successful fresh bounded recovery. Shared sameDB Admin/notification and whole original mapping still pending. B54 Native160 new controlled candidate and explicit form transfer/closed sheet independently pass; normal venue confirmation fails before content/Review/Publish. Original owned database still has only two original meals. QA-ENV-VENUE-002 sent to developer for finite resolve diagnosis, not attributed to missing user accounts or confirmed product defect. Native154/155/157/158/159 control failures preserved with precise stages.",
       "defectIds": [
         "QA-F49",
         "QA-F55",
@@ -22153,7 +22155,8 @@
       "status": "PASS",
       "evidence": [
         "B51-O003",
-        "B53-O001"
+        "B53-O001",
+        "B54-O001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -22470,7 +22473,7 @@
         2
       ],
       "remainingExpected": [],
-      "actual": "B51 original S0 actual singlemetric CSV bytes match fixed sameDB facts. B53 normal data_admin classification TEST/rev3, natural21Z S1 and explicit switch preserve original date/language/region/source/user filters; H-hosted meals and contributions excluded, independent Bsurvey retained. Old S0 and older fullfacts hash unchanged. Normal classified H remains authenticated with own meal/attendance/reporting access. Original three steps and expectations satisfied; no invented duplicate nativeAdmin requirement. Synthetic environment only; external release gates remain.",
+      "actual": "B51 original S0 actual singlemetric CSV bytes match fixed sameDB facts. B53 normal data_admin classification TEST/rev3, natural21Z S1 and explicit switch preserve original date/language/region/source/user filters; H-hosted meals and contributions excluded, independent Bsurvey retained. Old S0 and older fullfacts hash unchanged. Normal classified H remains authenticated with own meal/attendance/reporting access. Original three steps and expectations satisfied; no invented duplicate nativeAdmin requirement. Synthetic environment only; external release gates remain. B54 normal nativeH OTP login also independently passed with TEST classification unchanged; native154 navigation harness failure retained, native156 normal corrected entry exit0.",
       "history": [
         {
           "status": "NOT_RUN",
@@ -22975,5 +22978,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B53: 196 PASS / 10 NOT_RUN / 11 BLOCKED. J003/J004 audit-reopened for original mirrored-client precondition; prior passing evidence/history retained. J012 exact original three steps and expectations now PASS from actual S0 CSV, normal classification, natural21Z S1, explicit switch/filter preservation, unchanged old snapshot and normal login. No mirrored Admin requirement added. Original clock21Z, all future clock targets need fresh boundary checks; no budget/price extension or real provider acceptance."
+  "currentExecutionSlice": "B53: 196 PASS / 10 NOT_RUN / 11 BLOCKED. J003/J004 audit-reopened for original mirrored-client precondition; prior passing evidence/history retained. J012 exact original three steps and expectations now PASS from actual S0 CSV, normal classification, natural21Z S1, explicit switch/filter preservation, unchanged old snapshot and normal login. No mirrored Admin requirement added. Original clock21Z, all future clock targets need fresh boundary checks; no budget/price extension or real provider acceptance. B54 native156 normal TEST-host OTP login passes; Native160 fresh candidate and actual form transfer pass but venue confirmation stops creation before Review/Publish. QA-ENV-VENUE-002 pending developer diagnosis. No M3 exists. Clock21:01:01Z; no further time advance or automatic AI retry."
 }

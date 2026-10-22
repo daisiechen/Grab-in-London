@@ -1,0 +1,45 @@
+{
+  "observations": [
+    {
+      "id": "B54-O001",
+      "testedCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "Normal native host OTP login remains available after statistical TEST classification",
+      "steps": [
+        "Dedicated original native simulator normal applicant sign-out succeeds. Native154 harness incorrectly assumed immediate email-login page; actual Discover screen captured, test fails before any OTP request. Helper times out without requesting a code or changing authentication. This is a preserved test navigation failure, not a product defect.",
+        "Native156 enters actual Profile sign-in, Continue with email, requests code for the existing synthetic host, receives exactly that challenge through the original controlled local OTP channel without code logging, and explicitly verifies.",
+        "Actual native Profile displays QA Final Host after verification. XCUITest exits0. Original database retains TEST classification; no role, classification, session TTL or authentication rule changes made.",
+        "This adds native login compatibility evidence to the already accepted analytics classification case; no additional full journey is promoted."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B54-O002",
+      "testedCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "passed",
+      "title": "Preserved native creation control failures stop before publish without automatic meal creation",
+      "steps": [
+        "Native155 actual controlled AI CREATE, explicit transfer, venue selection and manual arrangement/content/budget performed. The test fails on XCTest identifier length128 limit while locating the new completed-reservation declaration. Declaration/Review/Publish were not clicked.",
+        "Native157 uses exact-label NSPredicate and first checks that original Costs state exists. Across tests the Costs page is absent; the first assertion stops execution with no recovery claim or additional UI action/model call/publish.",
+        "Independent owned database read-only check confirms only original completed and cancelled meals remain, no new meal. Both failed xcresult/logs retained privately. These are test control limitations, not product failures.",
+        "Native158 explicitly starts a normal new request, but current-minute rate limit is visible. Exported failure hierarchy shows old candidate plus Retry/Please wait. Harness wrongly treated existing candidate as fresh success and attempted underlying non-hittable restaurant input while assistant sheet remained open. No fresh generation/transfer success inferred, no Publish. Retained as test-control failure; legal rate limit not a product defect.",
+        "Native159 normal New conversation clears old candidate and returns to home by design. Harness omitted explicit Start conversation and stops on missing question field before Ask; source manager state transition verified. No new generation, transfer, Publish or future clock inferred. Native160 removes redundant reset after the successful normal reset and retains absent-old-candidate/new-response/error/actual-sheet-close guards."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B54-O003",
+      "testedCommit": "95e960cccd26487cc128a445d88dd1bef66596be",
+      "status": "failed",
+      "title": "Normal native M3 creation stops at unconfirmed venue; diagnosis pending, no publish",
+      "steps": [
+        "After authorized precise61-second synthetic clock advance with fresh identity/budget/UNKNOWN/price/job/snapshot/request guards, Native160 normal Start conversation begins without an old candidate.",
+        "Actual new candidate appears with no Retry/error. Explicit Use text in form closes assistant question view; underlying arrangement and restaurant input become hittable, keyboard focus verified.",
+        "Normal restaurant search and Choose Fixture North performed; date Fri23Oct00:00 and capacity2 selected. Continue does not advance to content. Exported actual failure hierarchy shows We could not confirm this restaurant / Choose a restaurant.",
+        "Stop immediately. No new meal, Review or Publish. Independent owned read-only database still contains exactly two original meals. Developer receives precise native evidence and original frozen API version for finite resolve/rate-limit/expiry diagnosis. QA-ENV-VENUE-002 is pending classification; no product defect or user-account blocker inferred.",
+        "Controlled synthetic model accounting is preserved; real provider calls remain0. No budget reset, price extension, hotpatch or further clock advance."
+      ],
+      "artifacts": []
+    }
+  ]
+}
