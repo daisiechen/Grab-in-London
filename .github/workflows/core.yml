@@ -25,6 +25,7 @@ jobs:
           --health-interval 5s --health-timeout 5s --health-retries 12
     env:
       FANCY_PG_BIN: /tmp/fancy-pg17-clients
+      FANCY_OWNED_PG_BIN: /usr/lib/postgresql/17/bin
       FANCY_TEST_DATABASE_URL: postgres://fancy:fancy@127.0.0.1:55417/postgres
     steps:
       - uses: actions/checkout@v7
@@ -41,6 +42,23 @@ jobs:
           sh infra/scripts/ci-pg-clients.sh
           "$FANCY_PG_BIN/pg_dump" --version
           "$FANCY_PG_BIN/pg_restore" --version
+      - name: PostgreSQL 17 owned-cluster binaries
+        run: |
+          if ! test -x "$FANCY_OWNED_PG_BIN/postgres" || ! "$FANCY_OWNED_PG_BIN/postgres" --version | grep -Eq '\(PostgreSQL\) 17\.'; then
+            sudo apt-get update
+            sudo apt-get install -y curl ca-certificates postgresql-common
+            sudo install -d /usr/share/postgresql-common/pgdg
+            sudo curl --fail --silent --show-error -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+            . /etc/os-release
+            printf '%s\n' 'Types: deb' 'URIs: https://apt.postgresql.org/pub/repos/apt' "Suites: ${VERSION_CODENAME}-pgdg" "Architectures: $(dpkg --print-architecture)" 'Components: main' 'Signed-By: /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc' | sudo tee /etc/apt/sources.list.d/fancy-pgdg.sources >/dev/null
+            # No system cluster/service is needed: tests initdb their own temporary clusters.
+            printf '%s\n' 'create_main_cluster = false' | sudo tee /etc/postgresql-common/createcluster.conf >/dev/null
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends postgresql-17
+          fi
+          for binary in postgres initdb pg_ctl; do
+            "$FANCY_OWNED_PG_BIN/$binary" --version | grep -E '\(PostgreSQL\) 17\.'
+          done
       - name: Types, contracts, lint and secret scan
         run: pnpm core:check
       - name: Unit, PostgreSQL, API and release regression
