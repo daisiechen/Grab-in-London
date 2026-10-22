@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "6e497d36dcf780b3c49eae473c9dd168d677f1c2",
+  "independentlyVerifiedTrackedSources": 202,
+  "candidateHashes": {
+    "Fancy": "2728ffde02d3a5489a29d62a874276e3338c43b2f2ceec42de80758449db2bfa",
+    "main.jsbundle": "08dcc1275b1842a21677d93327fc8e0c0452cd8adb063efdd2e0955492ace80f"
+  },
+  "deepStrictCodesignExit": 0,
+  "installed": true,
+  "scope": "F45/F46 official3102 build; F48 not included; originalrig unavailability unchanged",
+  "actualInstalledHashes": {
+    "Fancy": "2728ffde02d3a5489a29d62a874276e3338c43b2f2ceec42de80758449db2bfa",
+    "main.jsbundle": "08dcc1275b1842a21677d93327fc8e0c0452cd8adb063efdd2e0955492ace80f"
+  }
+}

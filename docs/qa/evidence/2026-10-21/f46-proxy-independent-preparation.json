@@ -1,0 +1,10 @@
+{
+  "copiedSource": "/private/tmp/fancy-f46-proxy",
+  "qaOwnReview": "/private/tmp/fancy-qa-f46-proxy-review",
+  "tests": 7,
+  "passed": 7,
+  "failed": 0,
+  "real3102Connections": 0,
+  "standing63102": false,
+  "scope": "Fake upstream/owned random ports only; real logout notice NOT tested."
+}

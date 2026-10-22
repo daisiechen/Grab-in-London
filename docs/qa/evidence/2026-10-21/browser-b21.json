@@ -1,0 +1,140 @@
+{
+  "observations": [
+    {
+      "id": "B21-O001",
+      "testedCommit": "6e497d36dcf780b3c49eae473c9dd168d677f1c2",
+      "environment": "Actual signed Release iOS27.0 dedicated second simulator / original real local PG API3102/PID42728 syntheticprovider, no real service",
+      "status": "passed",
+      "title": "F45 official artifact independently verified and installed",
+      "steps": [
+        "Independentgitarchive comparison202native/client/contracts exact; candidate andinstalled binary/Hermeshashesmatch; deepstrictcodesign0. Source6e497 includesformalF45/F46, F48notincluded. No production protection/signing bypass."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f45-f46-independent-artifact-review.json"
+      ]
+    },
+    {
+      "id": "B21-O002",
+      "testedCommit": "2005991055a6462d1f7bcf027b518ac3d7b304e8",
+      "environment": "Actual signed Release iOS27.0 dedicated second simulator / original real local PG API3102/PID42728 syntheticprovider, no real service",
+      "status": "passed",
+      "title": "Normal QA account registration/profile preparation; control failures retained",
+      "steps": [
+        "Native71 normalOTP succeeded butbioAX labelhasplaceholder suffix, QAexactselector failed.72 fixedbeginswith butXCTestautoscroll computedsubmitpoint(-1,-1);73 refusedunhittablesubmit. No product defectinferred fromthesecontrolfailures.",
+        "74 reusesexistingProfile2 per-character input andnormalheadingtap to dismisskeyboard, completesprofile viaUI thenDiscover→same meal→emptyApplyeditor, noSend. This Profilelogin pathdoesnotreplacefailedguestApplyprefix.",
+        "Initialfinitequery byintendedemailreturnednull; rapid71inputmayhavedroppedcharacters. Actualactor verified fromnormalAIsessionUSERsubject a0b9cc81-7508-4d0a-af17-e7ab554d92d9/publicQA NativeAI profile. Noassumptionofexactexpectedemailidentity."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-b21-71-xcui.swift",
+        "evidence/2026-10-21/native-b21-72-xcui.swift",
+        "evidence/2026-10-21/native-b21-73-xcui.swift",
+        "evidence/2026-10-21/native-b21-74-xcui.swift",
+        "evidence/2026-10-21/native74-normal-registered-apply.png",
+        "evidence/2026-10-21/f45-native75-finite.json"
+      ]
+    },
+    {
+      "id": "B21-O003",
+      "testedCommit": "6e497d36dcf780b3c49eae473c9dd168d677f1c2",
+      "environment": "Actual signed Release iOS27.0 dedicated second simulator / original real local PG API3102/PID42728 syntheticprovider, no real service",
+      "status": "passed",
+      "title": "F45 signed cold explicit Continue retains same valid session and no local text",
+      "steps": [
+        "75normalStart while signedin, typeQACOLD75withoutAsk andclose.76coldlaunch explicitContinue exists; continueopensquestioneditorwithnooldunsenttext.",
+        "IndependentfinitePG75/76 same a8096ff2-f8f1-44ad-bffe-308ab1ee996e/gen1/ACTIVE/unexpired/TTL02:03:43+01/metadataCount4/actorandbusinessfacts; API42728notrestarted. No newbootstrap substituted. No modelcallorAItextpersistenceclaim."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-b21-75-xcui.swift",
+        "evidence/2026-10-21/native75-f45-normal-start-unsent.png",
+        "evidence/2026-10-21/native-b21-76-xcui.swift",
+        "evidence/2026-10-21/native76-f45-continued-no-local-text.png",
+        "evidence/2026-10-21/native76-f45-cold-explicit-continue.png",
+        "evidence/2026-10-21/f45-native75-finite.json",
+        "evidence/2026-10-21/f45-native76-finite.json"
+      ]
+    },
+    {
+      "id": "B21-O004",
+      "testedCommit": "6e497d36dcf780b3c49eae473c9dd168d677f1c2",
+      "environment": "Actual signed Release iOS27.0 dedicated second simulator / original real local PG API3102/PID42728 syntheticprovider, no real service",
+      "status": "passed",
+      "title": "F45 true reinstall and original guest cold regression targeted close",
+      "steps": [
+        "77actualuninstall/install sameofficial6e onQAownedsim: Profileguest/noSettings; AskhomeStart/noContinue beforeanynewStart, sooldlocaluser/AIstate notadopted. NoKeychainreads/no serverfamilyrevocationclaim.",
+        "77normalnewguestStart withunsentQAGUEST77.78cold explicitContinue restoresguest5fbd6d44-7eb0-409b-a1af-3e16ab0fafb4/gen1/ACTIVE/unexpired; metadataCount5andguestIdentityCount2unchanged, samebusinessfacts.",
+        "78oldunsentfieldempty, normaltypingthenAskready/noRetry/noStartagain/noActivityIndicator verifiesreadcompletedwithoutUIerror. ActualEDITlegallyrenewsTTL02:07→02:09; notclaimedunchangedTTL. No Ask/provider/businesswrite.",
+        "F45 CLOSED_TARGETED_QA; historical69redretained. AI034coversnormalContinue/reinstallonly; genuineAPI-RAMloss410 andliveclientunsentretention stillNOT_RUN, cannotPASSwholecase."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-b21-77-xcui.swift",
+        "evidence/2026-10-21/native77-guest-normal-start-unsent.png",
+        "evidence/2026-10-21/native77-reinstall-guest-no-old-continuation.png",
+        "evidence/2026-10-21/native-b21-78-xcui.swift",
+        "evidence/2026-10-21/native78-f45-continued-no-local-text.png",
+        "evidence/2026-10-21/native78-f45-cold-explicit-continue.png",
+        "evidence/2026-10-21/f45-native77-finite.json",
+        "evidence/2026-10-21/f45-native78-finite.json"
+      ]
+    },
+    {
+      "id": "B21-O005",
+      "testedCommit": "6e497d36dcf780b3c49eae473c9dd168d677f1c2",
+      "environment": "Actual signed Release iOS27.0 dedicated second simulator / original real local PG API3102/PID42728 syntheticprovider, no real service",
+      "status": "passed",
+      "title": "Local synthetic day-budget and logout-fault proxy prerequisites",
+      "steps": [
+        "Environmentowner addedonlymissingLondonOct22SYNTHETICdaycap10CNY/100calls; existingmonthcap10CNY/counters/oldquotas/businessprobeunchanged. No realprovider/billing approval.",
+        "QAindependentcopiedproxyfactory+runner7fakeupstreamtests pass exact503/networkdown logout match, headersRAMonly, streaming/clientabort, readonlydefault/refusalgates/privateownerreceipt/occupiedport. No real3102connection orstanding63102bythese tests. F46actualnotice stillpending."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/ai3102-synthetic-new-day-receipt.json",
+        "evidence/2026-10-21/f46-proxy-independent-preparation.json"
+      ]
+    },
+    {
+      "id": "B21-O006",
+      "testedCommit": "0a4593e7f1ba9c32620e177ede98b1ea1395971e",
+      "environment": "Actual signed Release iOS27.0 dedicated second simulator / original real local PG API3102/PID42728 syntheticprovider, no real service",
+      "status": "passed",
+      "title": "F48 component red-green and candidate204-source verification only",
+      "steps": [
+        "R203originalguestemptyallowedActions projection1red preserved; formal0a4593e R204sameindependenttest1green.",
+        "NewF48candidate204sources independentlygitarchiveverified, twohashes/deepstrict0; notinstalledyet. Actualnormalguestlogin/profile/returntarget stillunexecuted. F48notclosed."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f48-independent-artifact-review.json"
+      ]
+    },
+    {
+      "id": "B21-O007",
+      "testedCommit": "6e497d36dcf780b3c49eae473c9dd168d677f1c2",
+      "environment": "Actual signed Release iOS27.0 dedicated second simulator / original real local PG API3102/PID42728 syntheticprovider, no real service",
+      "status": "failed",
+      "title": "F49 actual keyboard obscures native assistant input and Ask",
+      "steps": [
+        "79normalguestcoldContinue→focus/typeQAKEY79, keyboardpresent. Inputy626..720/Asky733..778 bothunderkeyboardy590..816; bothhittablefalse.",
+        "ActualAskHittableassert fails(exit65). Previous75/78enabled checks didnotprovephysicalreachability; screenshots/AXreviewtriggeredthisstrongeractualprobe. No Askpressed/modelrequest/businesswrites.",
+        "CandidatecauseKAVinsideSheetdoesnotmovewholemodal; causeownerreviewpending. IndependentF45metadatarestore remainsfixed; F49 UIissuehandedrootproductionowner. Actualnativekeyboard/mockAsk/layoutretestrequired."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native-b21-79-xcui.swift",
+        "evidence/2026-10-21/native79-assistant-keyboard-reachability.png",
+        "evidence/2026-10-21/f49-native79-geometry.json"
+      ]
+    },
+    {
+      "id": "B21-O008",
+      "testedCommit": "98722c6ad2f50d01f406a89d5851a93f772c333c",
+      "environment": "Actual signed Release iOS27.0 dedicated second simulator / original real local PG API3102/PID42728 syntheticprovider, no real service",
+      "status": "passed",
+      "title": "Exact remote CI snapshot independently confirmed",
+      "steps": [
+        "OfficialGitHubfetch confirms98722c6pushrun39699960920 completed/success. PR-onlycommitworkflowwrapper[]doesnotprovepushabsence.",
+        "IncludesF48andCIownedPGwrapperfix inthatSHA; notnew native/provider/release acceptance."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/ci-98722c6-independent.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "kind": "SYNTHETIC_ONLY_NO_REAL_CHARGE",
+  "day": "D:2026-10-22",
+  "created": true,
+  "dayCapMicroCny": "10000000",
+  "callCap": 100,
+  "monthUnchanged": true,
+  "existingCountersUnchanged": true,
+  "businessProbeUnchanged": true,
+  "realProviderCalls": 0
+}

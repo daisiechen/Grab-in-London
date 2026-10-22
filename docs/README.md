@@ -142,3 +142,5 @@
 - QA B19 actual reciprocal feedback/DM/privacy and F42 closure, with F44 native safety gap retained: [observations](qa/evidence/2026-10-21/browser-b19.json), [formal F42 proof](qa/evidence/2026-10-21/f42-independent-formal-proof.json), [third observer single-side](qa/evidence/2026-10-21/third-privacy-one-sided.json), [third observer mutual](qa/evidence/2026-10-21/third-privacy-mutual.json), [safe checkpoint](qa/evidence/2026-10-21/cross-safe-checkpoint-facts.json), [F44 original profile](qa/evidence/2026-10-21/f44-native-original-profile-no-block.png). Complete journey remains FAIL/NOT_RUN where assertions or same-environment trace are missing.
 
 - [QA B20：原生安全复验、退出边界与同库夹具故障](qa/evidence/2026-10-21/browser-b20.json)
+
+- [QA B21：冷启动与重装实测、键盘遮挡缺陷](qa/evidence/2026-10-21/browser-b21.json)

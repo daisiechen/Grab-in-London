@@ -18,9 +18,9 @@
   },
   "counts": {
     "PASS": 193,
-    "FAIL": 2,
+    "NOT_RUN": 12,
     "BLOCKED": 11,
-    "NOT_RUN": 11
+    "FAIL": 1
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
@@ -62,7 +62,8 @@
     "browserObservationsB17": "evidence/2026-10-21/browser-b17.json",
     "browserObservationsB18": "evidence/2026-10-21/browser-b18.json",
     "browserObservationsB19": "evidence/2026-10-21/browser-b19.json",
-    "browserObservationsB20": "evidence/2026-10-21/browser-b20.json"
+    "browserObservationsB20": "evidence/2026-10-21/browser-b20.json",
+    "browserObservationsB21": "evidence/2026-10-21/browser-b21.json"
   },
   "cases": [
     {
@@ -13763,9 +13764,11 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "FAIL",
+      "status": "NOT_RUN",
       "evidence": [
-        "B20-O005"
+        "B20-O005",
+        "B21-O003",
+        "B21-O004"
       ],
       "relatedAutomatedAssertions": [
         "R1-T094",
@@ -13876,11 +13879,9 @@
       ],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
-        "正常可显式Continue",
-        "重装先清旧token",
-        "RAM丢失410不从日志恢复，未发字保留"
+        "Actual API-child RAM loss while retaining samePG/auth: oldsession/result410, no log/DB content recovery, current live native unsent text retained. Parent-owned fixture not yet ready."
       ],
-      "actual": "B20-O005 actualNative68 normalguest session bootstrap,69 coldlaunch sameinstall shows Start instead of explicitContinue while finitePGsessionACTIVE/unexpired andAPI42728unchanged. QA-F45 confirmedFAIL on first expected assertion; reinstall marker andactualRAMloss/unsentretention remainunexecuted, no wholecasepass. Formalfix/nativeartifact verification pending.",
+      "actual": "F45 actualold69red retained; official6e actual75/76signed and77/78guest cold explicitContinue same liveID/count verified. Trueuninstall/reinstall oldauth/AI notadopted. F45targetedclosed; no full034PASS because trueAPI-RAMloss/liveunsentretention remainsunexecuted. Partial native assertions0/1 are described with direct B21 evidence only; numeric coveredExpectedIndexes reserved by existing validator for complete-casePASS, so empty until all034expectations complete.",
       "history": [
         {
           "status": "BLOCKED",
@@ -16105,14 +16106,16 @@
       "plannedStage": "external",
       "target": "production implementation in local synthetic environment",
       "status": "BLOCKED",
-      "evidence": [],
+      "evidence": [
+        "B21-O007"
+      ],
       "relatedAutomatedAssertions": [],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
         "原生证据包含构建号/OS/设备",
         "WebView或DOM测试不能充当iOS完成"
       ],
-      "actual": "Actual isolated iOS27.0 simulator and headless Release/XCUITest available; no missing-runtime/license claim. Formal build hashes and first-screen reviewed, QA OTP/profile actual taps proven. Complete native role journey/keyboard/background/real-device release evidence still pending; Jest/DOM not substituted.",
+      "actual": "Actual isolated iOS27.0 simulator and headless Release/XCUITest available; no missing-runtime/license claim. Formal build hashes and first-screen reviewed, QA OTP/profile actual taps proven. Complete native role journey/keyboard/background/real-device release evidence still pending; Jest/DOM not substituted. B21-O007 actualnativefocusedkeyboard obscuresquestion/Ask(79); F49OPEN. Do not substitute enabled/componentchecks for physicalnativeusability.",
       "history": [
         {
           "status": "BLOCKED",
@@ -16120,7 +16123,10 @@
           "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
         }
       ],
-      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies",
+      "defectIds": [
+        "QA-F49"
+      ]
     },
     {
       "id": "QA-GATE-005",
@@ -17741,7 +17747,8 @@
       "status": "NOT_RUN",
       "evidence": [
         "B11-T001",
-        "B11-T002"
+        "B11-T002",
+        "B21-O007"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -18059,7 +18066,10 @@
         "提交时重验名额/截止",
         "服务失败可继续原路径"
       ],
-      "actual": "本地生产实现尚需实际执行：显式查找→选明确M→生成申请→转入已有编辑器→本人确认提交。尚缺逐项证据：AI阶段无写；不覆盖未发字；提交时重验名额/截止；服务失败可继续原路径。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B11 realWeb actualcontrolled-model generate/explicit-transfer/single-request and manual-create confirmations complete with physical write proof. Full failure-recovery/group-send and actual native role swap remain outstanding, so NOT_RUN retained."
+      "actual": "本地生产实现尚需实际执行：显式查找→选明确M→生成申请→转入已有编辑器→本人确认提交。尚缺逐项证据：AI阶段无写；不覆盖未发字；提交时重验名额/截止；服务失败可继续原路径。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B11 realWeb actualcontrolled-model generate/explicit-transfer/single-request and manual-create confirmations complete with physical write proof. Full failure-recovery/group-send and actual native role swap remain outstanding, so NOT_RUN retained. B21-O007 actualnativefocusedkeyboard obscuresquestion/Ask(79); F49OPEN. Do not substitute enabled/componentchecks for physicalnativeusability.",
+      "defectIds": [
+        "QA-F49"
+      ]
     },
     {
       "id": "QA-JOURNEY-006",
@@ -18070,7 +18080,8 @@
       "status": "NOT_RUN",
       "evidence": [
         "B11-T001",
-        "B11-T002"
+        "B11-T002",
+        "B21-O007"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -18387,7 +18398,10 @@
         "所有人工确认实际发生",
         "生成/转入/发送分别授权"
       ],
-      "actual": "本地生产实现尚需实际执行：生成Create草稿→原四步补选地点/条款→主动发布→群草稿→主动Send。尚缺逐项证据：没有模型代办；所有人工确认实际发生；生成/转入/发送分别授权。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B11 realWeb actualcontrolled-model generate/explicit-transfer/single-request and manual-create confirmations complete with physical write proof. Full failure-recovery/group-send and actual native role swap remain outstanding, so NOT_RUN retained."
+      "actual": "本地生产实现尚需实际执行：生成Create草稿→原四步补选地点/条款→主动发布→群草稿→主动Send。尚缺逐项证据：没有模型代办；所有人工确认实际发生；生成/转入/发送分别授权。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B11 realWeb actualcontrolled-model generate/explicit-transfer/single-request and manual-create confirmations complete with physical write proof. Full failure-recovery/group-send and actual native role swap remain outstanding, so NOT_RUN retained. B21-O007 actualnativefocusedkeyboard obscuresquestion/Ask(79); F49OPEN. Do not substitute enabled/componentchecks for physicalnativeusability.",
+      "defectIds": [
+        "QA-F49"
+      ]
     },
     {
       "id": "QA-JOURNEY-007",
@@ -22581,7 +22595,14 @@
       "conclusion": "success",
       "url": "https://github.com/daisiechen/Grab-in-London/actions/runs/39581746626"
     },
-    "documentationTests": "80 Python documentation/configuration tests passed; added fail-closed owned-native-safety guard. Native and actual journey evidence remain separately scoped."
+    "documentationTests": "80 Python documentation/configuration tests passed; added fail-closed owned-native-safety guard. Native and actual journey evidence remain separately scoped.",
+    "latestIndependentCI": {
+      "headSha": "98722c6ad2f50d01f406a89d5851a93f772c333c",
+      "runId": 39699960920,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/daisiechen/Grab-in-London/actions/runs/39699960920"
+    }
   },
   "lastTargetedCommit": "0518d45f89a392c716debc87ba9e23b27d26b5e2",
   "defectStatus": {
@@ -22628,10 +22649,11 @@
     "QA-F41": "CLOSED_TARGETED_QA",
     "QA-F42": "CLOSED_TARGETED_QA",
     "QA-F44": "CLOSED_TARGETED_QA",
-    "QA-F45": "OPEN_NATIVE_REPRODUCED",
+    "QA-F45": "CLOSED_TARGETED_QA",
     "QA-F46": "OPEN_FORMAL_NATIVE_RETEST_PENDING",
     "QA-F47": "OPEN_ENVIRONMENT",
-    "QA-F48": "OPEN_NATIVE_REPRODUCED"
+    "QA-F48": "OPEN_NATIVE_REPRODUCED",
+    "QA-F49": "OPEN_NATIVE_REPRODUCED"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -22654,5 +22676,5 @@
     "Execute complete guestApply→login→profile→same target prefix forJOURNEY001 in one declared finalenvironment, plus remaining sameDBadmin/UI assertions.",
     "Retain11 externalblocked gates with specificreal-provider/native/policy/deployment evidence; no blanketmissingKey claim."
   ],
-  "currentExecutionSlice": "B20 F44 actual native61–64 targetedclosed; original59Bredretained. Native66 localclear/67coldguest passed butremoteunconfirmed activefamily1, F46 old2red/WIP2green formalnativepending. F45 accepteddesign/sourcegap coldAIcontinuation ownerfixpending. Originalsidecarstage1 bootstrap/17facts verified; authorizedclockadvance triggerfatalautomaticcleanup F47, causeunknown; sameDBadmintrace unexecuted. No217casecountinflation. F45 actualNative68 normalstart/69cold Continue absent whilefinite PGsessionACTIVE/unexpired andoriginalAPIpidunchanged; no modelcall. AI034 nowFAIL following actual69coldContinue failure;12otherNR+11externalBLOCKED. Earlier13NR count preceded this classification. Native70/R203guestCTA absentF48;JOURNEY001FAIL, now193PASS/11NR/2FAIL/11BLOCKED."
+  "currentExecutionSlice": "B21 F45formal6e actualsigned75/76+reinstall77/guest78 targetedclosed; AI034NR onlytrueRAMlossremains. F48R204componentgreen butactualnewpackpending/J001FAIL. NewF49actual79Askunderkeyboard/hittablefalse confirmed; keepAIpathsNR andexternalnativegateblocked withlocalfailureexplicit. F46actualfaultUIpending/F47sourceenvironmentlost; no217inflation. 193PASS/12NR/1FAIL/11BLOCKED."
 }

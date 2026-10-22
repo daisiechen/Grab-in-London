@@ -1,0 +1,43 @@
+{
+  "apiPid": 42728,
+  "metadataCount": 4,
+  "latest": {
+    "id": "a8096ff2-f8f1-44ad-bffe-308ab1ee996e",
+    "generation": 1,
+    "status": "ACTIVE",
+    "last_activity_at": "2026-10-22T01:33:43.531+01:00",
+    "expires_at": "2026-10-22T02:03:43.531+01:00",
+    "unexpired": true,
+    "no_pending": true
+  },
+  "profile": {
+    "user_id": "a0b9cc81-7508-4d0a-af17-e7ab554d92d9",
+    "display_name": "QA Native AI",
+    "life_status": "NEW_TO_LONDON",
+    "languages": [
+      "en"
+    ],
+    "interests": [
+      "FOOD"
+    ],
+    "age_confirmed": true,
+    "community_accepted": true
+  },
+  "businessProbe": [
+    {
+      "table_name": "applications",
+      "operation": "INSERT",
+      "n": 1
+    },
+    {
+      "table_name": "meals",
+      "operation": "UPDATE",
+      "n": 1
+    },
+    {
+      "table_name": "notifications",
+      "operation": "INSERT",
+      "n": 1
+    }
+  ]
+}

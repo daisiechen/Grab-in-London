@@ -1,0 +1,33 @@
+{
+  "apiPid": 42728,
+  "metadataCount": 5,
+  "guestIdentityCount": 2,
+  "latest": {
+    "id": "5fbd6d44-7eb0-409b-a1af-3e16ab0fafb4",
+    "actor_kind": "GUEST",
+    "generation": 1,
+    "status": "ACTIVE",
+    "last_activity_at": "2026-10-22T01:39:00.307+01:00",
+    "expires_at": "2026-10-22T02:09:00.307+01:00",
+    "unexpired": true,
+    "no_pending": true
+  },
+  "profile": null,
+  "businessProbe": [
+    {
+      "table_name": "applications",
+      "operation": "INSERT",
+      "n": 1
+    },
+    {
+      "table_name": "meals",
+      "operation": "UPDATE",
+      "n": 1
+    },
+    {
+      "table_name": "notifications",
+      "operation": "INSERT",
+      "n": 1
+    }
+  ]
+}

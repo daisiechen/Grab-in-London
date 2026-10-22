@@ -1,0 +1,28 @@
+{
+  "source": "6e497d36dcf780b3c49eae473c9dd168d677f1c2",
+  "nativeRun": 79,
+  "keyboard": {
+    "x": 0,
+    "y": 590,
+    "width": 402,
+    "height": 226
+  },
+  "question": {
+    "x": 22,
+    "y": 626,
+    "width": 358,
+    "height": 94,
+    "hittable": false
+  },
+  "ask": {
+    "x": 21,
+    "y": 733,
+    "width": 360,
+    "height": 45,
+    "hittable": false
+  },
+  "assertion": "Ask physically reachable while typing",
+  "result": "FAIL",
+  "askPressed": false,
+  "realModelCalls": 0
+}

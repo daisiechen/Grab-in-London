@@ -21937,6 +21937,27 @@
           "failureSummary": "Error: Unable to find an element with role: button, name: Request to join\n\n\u001b[36m<RNCSafeAreaProvider>\u001b[39m\n  \u001b[36m<RNCSafeAreaView\u001b[39m\n    \u001b[33mtestID\u001b[39m=\u001b[32m\"meal-detail\"\u001b[39m\n  \u001b[36m>\u001b[39m\n    \u001b[36m<View>\u001b[39m\n      \u001b[36m<RCTScrollView>\u001b[39m\n        \u001b[36m<View>\u001b[39m\n          \u001b[36m<Text>\u001b[39m\n            \u001b[0mSHOREDITCH · A SMALL TABLE\u001b[0m\n          \u001b[36m</Text>\u001b[39m\n          \u001b[36m<Text\u001b[39m\n            \u001b[33maccessibilityRole\u001b[39m=\u001b[32m\"header\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mSunday dinner\u001b[0m\n          \u001b[36m</Text>\u001b[39m\n          \u001b[36m<Text>\u001b[39m\n            \u001b[0mSun 25 Oct · 19:00 GMT\u001b[0m\n          \u001b[36m</Text>\u001b[39m\n          \u001b[36m<Text>\u001b[39m\n            \u001b[0m1 of 4 confirmed\u001b[0m\n          \u001b[36m</Text>\u001b[39m\n          \u001b[36m<View\u001b[39m\n            \u001b[33maccessibilityLabel\u001b[39m=\u001b[32m\"Your host, Maya\"\u001b[39m\n            \u001b[33maccessibilityRole\u001b[39m=\u001b[32m\"button\"\u001b[39m\n            \u001b[33maccessible\u001b[39m=\u001b[32m{true}\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<Text>\u001b[39m\n              \u001b[0mYour host\u001b[0m\n            \u001b[36m</Text>\u001b[39m\n            \u001b[36m<Text>\u001b[39m\n              \u001b[0mMaya\u001b[0m\n            \u001b[36m</Text>\u001b[39m\n          \u001b[36m</View>\u001b[39m\n          \u001b[36m<Text\u001b[39m\n            \u001b[33maccessibilityRole\u001b[39m=\u001b[32m\"header\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mA little about this meal\u001b[0m\n          \u001b[36m</Text>\u001b[39m\n          \u001b[36m<Text>\u001b[39m\n            \u001b[0mA relaxed dinner with new faces and good food.\u001b[0m\n          \u001b[36m</Text>\u001b[39m\n          \u001b[36m<Text>\u001b[39m\n            \u001b[0m2–4 people including the host · Applications close Sun 25 Oct · 18:00 GMT\u001b[0m\n          \u001b[36m</Text>\u001b[39m\n          \u001b[36m<Text>\u001b[39m\n            \u001b[0mEasy conversation · English\u001b[0m\n          \u001b[36m</Text>\u001b[39m\n          \u001b[36m<Text>\u001b[39m\n            \u001b[0mCuisine: Not provided · Dietary: Not provided\u001b[0m\n          \u001b[36m</Text>\u001b[39m\n          \u001b[36m<Text>\u001b[39m\n            \u001b[0mCuisine and dietary details are declared by the host.\u001b[0m\n          \u001b[36m</Text>\u001b[39m\n          \u001b[36m<Text\u001b[39m\n     "
         }
       ]
+    },
+    {
+      "id": "R204",
+      "testedCommit": "0a4593e7f1ba9c32620e177ede98b1ea1395971e",
+      "command": "Independent real guest projection regression on formal0a4593e; native replay pending",
+      "startedAt": "2026-10-22T00:27:49.348000+00:00",
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "total": 1,
+      "suiteFiles": 1,
+      "assertions": [
+        {
+          "id": "R204-T001",
+          "run": "R204",
+          "path": "apps/ios/src/features/meals/qa-independent-guest-entry.test.tsx",
+          "title": "QA-F48: real guest projection with no APPLY action retains a login entry and exact original target without sending",
+          "status": "passed",
+          "durationMs": 150
+        }
+      ]
     }
   ],
   "qaProbeSourceSha256": {
