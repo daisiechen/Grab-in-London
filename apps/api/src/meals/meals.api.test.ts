@@ -20,12 +20,34 @@ const detail=async(b:Browser,id:string)=>json(await b.request('GET',`/v1/meals/$
 describe('MVP production meal commands and privacy',()=>{
  it('publishes host seat, GROUP JOIN, three jobs and self-reported booking atomically; retries do not duplicate',async()=>{
   const {b}=await actor();const {result,body,key}=await create(b);expect(result.statusCode,result.body).toBe(201);const meal=json(result).data;
-  expect(meal.confirmedCount).toBe(1);expect(meal.bookingDeclaration).toMatchObject({declaredCount:1,stale:false,status:'REPORTED_CONFIRMED'});
+  expect(meal.confirmedCount).toBe(1);expect(meal.bookingDeclaration).toMatchObject({declaredCount:3,stale:false,status:'REPORTED_CONFIRMED'});
   const replay=await b.request('POST','/v1/meals',{body,headers:{'idempotency-key':key}});expect(replay.headers['idempotent-replay']).toBe('true');expect(json(replay).data.id).toBe(meal.id);
   expect((await h.db.pool.query(`SELECT * FROM conversations WHERE meal_id=$1`,[meal.id])).rowCount).toBe(1);
   expect((await h.db.pool.query(`SELECT * FROM seat_events WHERE meal_id=$1`,[meal.id])).rowCount).toBe(1);
   expect((await h.db.pool.query(`SELECT * FROM jobs WHERE resource_id=$1`,[meal.id])).rowCount).toBe(3);
+  expect((await h.db.pool.query(`SELECT * FROM booking_declarations WHERE meal_id=$1`,[meal.id])).rowCount).toBe(1);
   const otherKey=await b.request('POST','/v1/meals',{body,headers:{'idempotency-key':randomUUID()}});expect(otherKey.statusCode).toBe(409);
+ });
+ it.each([2,4,6])('records the personally declared capacity %i with a fresh initial roster baseline',async capacity=>{
+  const host=await actor();const meal=await publish(host.b,{capacity});
+  expect(meal.confirmedCount).toBe(1);expect(meal.bookingDeclaration).toMatchObject({declaredCount:capacity,revision:'1',stale:false});
+ });
+ it('keeps pending fresh, marks an approved full table stale, and refreshes only after host declaration',async()=>{
+  const host=await actor(),guest=await actor();const meal=await publish(host.b,{capacity:2});
+  const application=json(await apply(guest.b,meal.id)).data;
+  let latest=(await detail(host.b,meal.id)).meal;
+  expect(latest.confirmedCount).toBe(1);expect(latest.bookingDeclaration).toMatchObject({declaredCount:2,revision:'1',stale:false});
+  expect((await decide(host.b,application.id)).statusCode).toBe(200);
+  latest=(await detail(host.b,meal.id)).meal;
+  expect(latest.confirmedCount).toBe(2);expect(latest.bookingDeclaration).toMatchObject({declaredCount:2,revision:'1',stale:true});
+  const declaration=await host.b.request('POST',`/v1/meals/${meal.id}/booking-declarations`,{body:{status:'REPORTED_CONFIRMED',count:2},headers:{'idempotency-key':randomUUID(),'if-match':`"${latest.version}"`}});
+  expect(declaration.statusCode,declaration.body).toBe(201);
+  latest=(await detail(host.b,meal.id)).meal;
+  expect(latest.bookingDeclaration).toMatchObject({declaredCount:2,revision:'2',stale:false});
+  const left=await guest.b.request('POST',`/v1/meals/${meal.id}/leave`,{headers:{'idempotency-key':randomUUID(),'if-match':`"${latest.version}"`}});
+  expect(left.statusCode,left.body).toBe(200);
+  latest=(await detail(host.b,meal.id)).meal;
+  expect(latest.confirmedCount).toBe(1);expect(latest.bookingDeclaration).toMatchObject({declaredCount:2,revision:'2',stale:true});
  });
  it('rejects incomplete profile, unknown restaurant and invalid deadlines without publishing',async()=>{
   const {b}=await actor(false);expect((await create(b)).result.statusCode).toBe(403);

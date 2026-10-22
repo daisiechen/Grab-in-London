@@ -70,8 +70,9 @@ export async function publishMeal(tx:Tx,actorId:string,input:CreateMealInput,ver
  await addSeat(tx,meal!,actorId,null,'HOST_CONFIRMED',now,randomUUID());
  await createGroupConversation(tx,{mealId:meal!.id,hostId:actorId,effectiveAt:now});
  await schedule(tx,meal!);
- // The host explicitly acknowledged an external booking, but its state is only self-reported.
- await tx.client.query(`INSERT INTO booking_declarations(meal_id,revision,reported_by,declared_count,reported_at,status,arrangement_hash) VALUES($1,1,$2,1,$3,'REPORTED_CONFIRMED',$4)`,[meal!.id,actorId,now,arrangementHash(meal!,1)]);
+ // The host reports booking the planned capacity; the hash captures the current host-only roster baseline.
+ // Later roster or arrangement changes still make this self-reported declaration stale.
+ await tx.client.query(`INSERT INTO booking_declarations(meal_id,revision,reported_by,declared_count,reported_at,status,arrangement_hash) VALUES($1,1,$2,$3,$4,'REPORTED_CONFIRMED',$5)`,[meal!.id,actorId,input.capacity,now,arrangementHash(meal!,1)]);
  return {meal:meal!,now};
 }
 export async function editArrangement(tx:Tx,mealId:string,actorId:string,expected:string|null,patch:Partial<Arrangement>,verified:VerifiedVenue) {
