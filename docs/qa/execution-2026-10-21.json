@@ -18,9 +18,9 @@
     "nativeClockAlignment": "B44 direct human authorization received; original synthetic runtime aligned to current UTC12:09:06.962Z. Node/DB ACK; business/budget counts and hashes unchanged; historical UNKNOWN reserve preserved; natural second snapshot retained. Native138 normal OTP restoration succeeds. Earlier B43 clock blocker resolved; product journey assertions remain separate. B45 second guarded execution-currentUTC12:23:20.135Z, no crossed business/price/period/snapshot boundary, ledgers unchanged. Native139 passes; WebA rate limit recovers normally."
   },
   "counts": {
-    "PASS": 197,
+    "PASS": 195,
     "BLOCKED": 11,
-    "NOT_RUN": 9
+    "NOT_RUN": 11
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
@@ -17147,7 +17147,7 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "PASS",
+      "status": "NOT_RUN",
       "evidence": [
         "B43-O004",
         "B43-O005",
@@ -17467,13 +17467,11 @@
         "R191-T002",
         "R192-T001"
       ],
-      "coveredExpectedIndexes": [
-        0,
-        1,
-        2
+      "coveredExpectedIndexes": [],
+      "remainingExpected": [
+        "补 Web host / native applicant 方向完整退席、继续聊天、独立退群、重新申请批准、授权历史 union、解散终态。原 native host / Web applicant 方向证据保留。"
       ],
-      "remainingExpected": [],
-      "actual": "OriginalM2 nativeH/WebA approval→normalAseatcancel/stillchat→separateleave→Hgapexcluded→normalAnewround/Happrove→old+newauthorizedunion/gapexcluded→normalhostmealCancel(groupstillchat)→explicitnativeHgroupDissolve; nativeandWebreadonly/noReopen. ExactsameDB narrative andnaturalS0/CSV trace retained. All three original expected assertions covered; no release/real-provider acceptance.",
+      "actual": "B53 audit correction: 原预期子断言已通过，见保留 evidence；原共同前提 Web/iOS 互换各走一次尚未完成。补 Web host / native applicant 方向完整退席、继续聊天、独立退群、重新申请批准、授权历史 union、解散终态。原 native host / Web applicant 方向证据保留。",
       "history": [
         {
           "status": "NOT_RUN",
@@ -17500,6 +17498,23 @@
             "B43-O005"
           ],
           "reason": "B52 all original expected assertions now directly evidenced in original retained same database; remove stale prerequisites, no new gate or targeted-fixture stitching."
+        },
+        {
+          "status": "PASS",
+          "actual": "OriginalM2 nativeH/WebA approval→normalAseatcancel/stillchat→separateleave→Hgapexcluded→normalAnewround/Happrove→old+newauthorizedunion/gapexcluded→normalhostmealCancel(groupstillchat)→explicitnativeHgroupDissolve; nativeandWebreadonly/noReopen. ExactsameDB narrative andnaturalS0/CSV trace retained. All three original expected assertions covered; no release/real-provider acceptance.",
+          "evidence": [
+            "B43-O004",
+            "B43-O005",
+            "B45-O001",
+            "B47-O001",
+            "B51-O003"
+          ],
+          "reason": "B53 audit correction: B52 closure overlooked original shared precondition requiring both Web/iOS role directions in the same database. Passed subassertions retained; not a product failure.",
+          "coveredExpectedIndexes": [
+            0,
+            1,
+            2
+          ]
         }
       ],
       "defectIds": [
@@ -17513,7 +17528,7 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "PASS",
+      "status": "NOT_RUN",
       "evidence": [
         "B51-O001",
         "B51-O002",
@@ -17828,14 +17843,11 @@
         "R5-T010",
         "R5-T011"
       ],
-      "coveredExpectedIndexes": [
-        0,
-        1,
-        2,
-        3
+      "coveredExpectedIndexes": [],
+      "remainingExpected": [
+        "补 native host / Web applicant 方向完整单向隐私、互选、双向私信、撤回、拉黑再解封不恢复。原 Web host / native applicant 方向证据保留。"
       ],
-      "remainingExpected": [],
-      "actual": "OriginalM1 nativeA unilateralagain choice undisclosed/WebH noDM; normalH mutualchoice createsoneDIRECT, actualWebH/nativeA two-waymessages. NormalHwithdraw makesstaleeditorSendrefused/read-only/unsentdraftretained. NormalHblock/unblock doesnotrestorechoice orsend; native153 historyonly/noeditorSend. DBactiveconsents0/messages2/blockhistoryappendonly. All four original expected assertions covered in same original database.",
+      "actual": "B53 audit correction: 原预期子断言已通过，见保留 evidence；原共同前提 Web/iOS 互换各走一次尚未完成。补 native host / Web applicant 方向完整单向隐私、互选、双向私信、撤回、拉黑再解封不恢复。原 Web host / native applicant 方向证据保留。",
       "defectIds": [
         "QA-F44"
       ],
@@ -17872,6 +17884,22 @@
             "B51-O003"
           ],
           "reason": "B52 all original expected assertions now directly evidenced in original retained same database; remove stale prerequisites, no new gate or targeted-fixture stitching."
+        },
+        {
+          "status": "PASS",
+          "actual": "OriginalM1 nativeA unilateralagain choice undisclosed/WebH noDM; normalH mutualchoice createsoneDIRECT, actualWebH/nativeA two-waymessages. NormalHwithdraw makesstaleeditorSendrefused/read-only/unsentdraftretained. NormalHblock/unblock doesnotrestorechoice orsend; native153 historyonly/noeditorSend. DBactiveconsents0/messages2/blockhistoryappendonly. All four original expected assertions covered in same original database.",
+          "evidence": [
+            "B51-O001",
+            "B51-O002",
+            "B52-O001"
+          ],
+          "reason": "B53 audit correction: B52 closure overlooked original shared precondition requiring both Web/iOS role directions in the same database. Passed subassertions retained; not a product failure.",
+          "coveredExpectedIndexes": [
+            0,
+            1,
+            2,
+            3
+          ]
         }
       ]
     },
@@ -22934,5 +22962,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B52 current197PASS/9NOT_RUN/11BLOCKED. Original sameDB J003 cancellation/group independence and J004 mutual-private/withdraw/block/unblock complete all original expected assertions and are PASS. F57 targeted CLOSED with independent newfixture, not stitched as original wholejourney. OriginalM1 lifecycle close16/start17/end19, actualSELFpriority/A5H4, mutualpublicreferences and DM verified; current clock19:01:01Z. NaturalclassRev2 snapshots/S0singlemetricCSV reconciled; fresh currentfeedback Admin/classificationS1/support7d/deletion and remaining specificAI/abnormal assertions still pending. Control failures147–150 and exact151normalblur recovery preserved, no productFAIL inferred. Othercases not held behind invented all217 gate."
+  "currentExecutionSlice": "B53 audit: 195 PASS / 11 NOT_RUN / 11 BLOCKED. J003/J004 reopened solely for original same-database mirrored-client precondition; all prior passing evidence and B52 history retained. J007 still requires native unqualified-user survey and same-database reconciliation. No product FAIL inferred; no external gate closed. Original environment latest observed clock20:00Z, feedback2/2 and independent survey0/1 CSV bytes checked; these partial observations do not close entire journeys."
 }
