@@ -657,3 +657,10 @@
 - J010正常签名包/private/tmp/fancy-native-j010-c3fb355/ENTRY-J010.md已QA独核1522/native205与binary/Hermes，只有QA可装第二sim；root不操作设备。真实Secure cookie、同源会话及原生跨端证据不能由Vite transform或API自测替代，不放宽Secure或擅装证书。
 - P3a staff26项及P2c真实AI HTTP/PG22项冻结；QA分别独跑新增7/3项绿，仍只是自建库前置。P3b role-only30项冻结于/private/tmp/fancy-unified-journey-p3b-support-c3fb355/runner/ENTRY.md（d732f2782d90e81849dac16da23d050791e3b2b1521afeeea97ed3aa67473c0c），ios核46产物/1522源一致无新增阻塞：真实CLI PKCE/nonce后精确C模拟MFA、只新C support一角色、原批准S两角色、正常CTest分类/审计/退出隔离，case grants为零；正常CLI OS临时回调端口例外明确。未装入J010 live，不冒真实IdP或UI通过。
 - P3c同源Admin门户仅只读方案：普通Web登录/profile后手动打开/admin/，不能把/admin塞入已明确拒绝的returnTarget或新增产品登录页。尚未授权实现或启动。原034/proxy/3102/62044与失库历史均保持，未清理。root39afb65远端完整CI39708231033 success已核，本轮只更新协调证据，不把旧CI延伸为新提交结果。整体生产验收未闭环。
+
+## F50 站内通知入口缺失与 Web 第一修复切片
+
+- QA在正式c3fb新J010正常Web H发布/原生A申请/主持审批至2人、minimum3后合法推进截止：餐取消原因insufficient，双方各同event notification1/outboxSENT1/sendCalls1，Web群正常可写，无退款承诺。真实点击Notifications却落入聊天空态：Inbox链接存在但缺静态路由，被/inbox/:conversationId吞入。原生也没有站内通知页面；统一F50，wholeJ010仍失败，support原前置另pending，不把后台SENT当客户端通过。
+- Web新增静态/inbox/notifications页面，真实listNotifications逐页/重复游标拒绝/按ID去重、固定模板文案与未知模板安全回退、meal详情链接；显式markRead用单飞与幂等Intent，服务端成功才更新readAt，失败保未读，初读错误可重试且不假空。复用现有session epoch重挂载及query generation私有围栏，无新通知数据/权限或聊天API改动。
+- 自有3项原路由红已留/private/tmp/fancy-f50-web-red.log；首次实现错误把Instant传ZonedLike格式器导致两项红，改为明确Europe/London的Instant显示，未放宽业务断言。最终4项定向绿/type/lint/Webbuild绿，venues只读交叉审无阻塞。全Web/admin首轮317/318唯一QA地图fallback红保留，显式空VITE公共Maps变量后同53套318项全绿（/private/tmp/fancy-f50-web-admin-controlled.log）；私有dotenv未改/未输出。
+- iosowner独占原生通知入口/页面/route/自有测试并行，尚未冻结，不纳入Web提交；QA证据与research不索引。当前live c3fb冻结目录/API/PG/clock不改，修复需后续正式source匹配新环境与实际双端复验，不以组件测试关闭F50或整条J010。整体生产验收未闭环。

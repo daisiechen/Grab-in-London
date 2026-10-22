@@ -15,6 +15,7 @@ import { EditMealPage } from '../features/create/EditMealPage.tsx';
 import { ApplyPage } from '../features/apply/ApplyPage.tsx';
 import { HostPage } from '../features/host/HostPage.tsx';
 import { InboxPage } from '../features/inbox/InboxPage.tsx';
+import { NotificationsPage } from '../features/inbox/NotificationsPage.tsx';
 import { ChatPage } from '../features/inbox/ChatPage.tsx';
 import { PostMealPage } from '../features/post-meal/PostMealPage.tsx';
 import { ReportStatusPage } from '../features/reports/ReportStatusPage.tsx';
@@ -34,6 +35,7 @@ export const appRoutes: AppRoute[] = [
   { path: '/create', element: <CreatePage /> },
   { path: '/create/terms', element: <CreatePage /> },
   { path: '/inbox', element: <InboxPage /> },
+  { path: '/inbox/notifications', element: <NotificationsPage /> },
   { path: '/inbox/:conversationId', element: <ChatPage /> },
   { path: '/profile', element: <ProfilePage /> },
   { path: '/profile/edit', element: <ProfileEditPage /> },
