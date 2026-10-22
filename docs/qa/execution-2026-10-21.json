@@ -91,7 +91,8 @@
     "browserObservationsB47": "evidence/2026-10-21/browser-b47.json",
     "browserObservationsB48": "evidence/2026-10-21/browser-b48.json",
     "browserObservationsB49": "evidence/2026-10-21/browser-b49.json",
-    "browserObservationsB50": "evidence/2026-10-21/browser-b50.json"
+    "browserObservationsB50": "evidence/2026-10-21/browser-b50.json",
+    "browserObservationsB51": "evidence/2026-10-21/browser-b51.json"
   },
   "cases": [
     {
@@ -16346,7 +16347,12 @@
         "B38-O001",
         "B43-O001",
         "B43-O002",
-        "B43-O004"
+        "B43-O004",
+        "B49-O001",
+        "B50-O001",
+        "B51-O001",
+        "B51-O002",
+        "B51-O003"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -16711,7 +16717,7 @@
       "remainingExpected": [
         "Repeat required wholeguestApply→normalLogin→profile→explicitapplication→approval→group→feedback end-to-end in bothWeb/iOSdirections in one finaldeclared environment, withBprivacy/notifications/sameDBadmintrace. F48nativeprefixalone is nowverified."
       ],
-      "actual": "Actual mainM1 Webhost/Nativeguest and reverseM5 Nativehost/Webguest approval/groupmessages, lifecycle, SELFattendance/privateexperience/publicreferences andexplicitreconnect executed with realPG unique facts (B17/B18/B19). Earlier normalnativeApply12 started already authenticated; it does not establish full guestApply→login→profilegate return. KeepNOT_RUN until that prefix is actually replayed per required client/role and sameDBstafftrace is captured; no composition-based wholepathPASS. Native70 normalguest publicOPENfuturemeal has noRequesttojoin (actualAX+publicHTTP), so prefixfails beforeOTP; independentR203emptyactions reproduces. QA-F48 handednativeowner, wholecaseFAIL notNR. B22-O001 formal0a actual80normalguestApply/login/profile/sameoriginaltarget/noautoSend passes F48targetedfix. StillNOT_RUN untilsameenvironmentbothrolefullpath/admintrace; original70red retained. B37-O004 one-process native117 normal explicit Send produces one PENDING application, hostseat stays1; only WebH normal Approve changes confirmed2/4. Reservation becomes stale, normal re-declaration for2 restores booked, arrangements lock. Remaining original full-journey assertions still unexecuted. B38 native120 actual authorized post-join message read/pre-join history exclusion, normal bubble keyboard dismissal, same-process actual429→finite61s→Retry, GROUP Keep/Replace, no-send checkpoint, keyboard-open explicit Send and WebH receipt passed. Harness118 wrong prehistory assumption/119 wrong header-dismiss assumption retained as failures; no product patch. Original reverse-role and remaining full-journey assertions remain unexecuted. B43 nativeH approves original WebA M2, actual group access, B full-editor rejection/privacy; WebA seat cancellation/group leave/reapply Pending verified. Current second-round approval and full feedback/Admin prerequisites remain.",
+      "actual": "Actual mainM1 Webhost/Nativeguest and reverseM5 Nativehost/Webguest approval/groupmessages, lifecycle, SELFattendance/privateexperience/publicreferences andexplicitreconnect executed with realPG unique facts (B17/B18/B19). Earlier normalnativeApply12 started already authenticated; it does not establish full guestApply→login→profilegate return. KeepNOT_RUN until that prefix is actually replayed per required client/role and sameDBstafftrace is captured; no composition-based wholepathPASS. Native70 normalguest publicOPENfuturemeal has noRequesttojoin (actualAX+publicHTTP), so prefixfails beforeOTP; independentR203emptyactions reproduces. QA-F48 handednativeowner, wholecaseFAIL notNR. B22-O001 formal0a actual80normalguestApply/login/profile/sameoriginaltarget/noautoSend passes F48targetedfix. StillNOT_RUN untilsameenvironmentbothrolefullpath/admintrace; original70red retained. B37-O004 one-process native117 normal explicit Send produces one PENDING application, hostseat stays1; only WebH normal Approve changes confirmed2/4. Reservation becomes stale, normal re-declaration for2 restores booked, arrangements lock. Remaining original full-journey assertions still unexecuted. B38 native120 actual authorized post-join message read/pre-join history exclusion, normal bubble keyboard dismissal, same-process actual429→finite61s→Retry, GROUP Keep/Replace, no-send checkpoint, keyboard-open explicit Send and WebH receipt passed. Harness118 wrong prehistory assumption/119 wrong header-dismiss assumption retained as failures; no product patch. Original reverse-role and remaining full-journey assertions remain unexecuted. B43 nativeH approves original WebA M2, actual group access, B full-editor rejection/privacy; WebA seat cancellation/group leave/reapply Pending verified. Current second-round approval and full feedback/Admin prerequisites remain. B49–B51 originalsameDB lifecycle/SELFpriority/ownexperience/publicreference/unilateralprivacy/mutualDM actuals captured; no wholecasepromotion until remaining fullassertions and current sharedAdmintrace.",
       "defectIds": [
         "QA-F18",
         "QA-F48"
@@ -16772,7 +16778,12 @@
         "B37-O004",
         "B40-O002",
         "B43-O001",
-        "B43-O002"
+        "B43-O002",
+        "B49-O001",
+        "B50-O001",
+        "B51-O001",
+        "B51-O002",
+        "B51-O003"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -17087,7 +17098,7 @@
       "remainingExpected": [
         "Finish same physical test-environment staff/admin trace precondition and verify full expected mapping; actual dual-direction create/booking/approval/lifecycle and host SELF-priority slices already captured, not automatically whole-case PASS."
       ],
-      "actual": "F42targetedclosed formalcd69: originalNative52 missinghostcontrol retained; actual53unknown/no-default/Reviewcancel PG0; actual54HOSTabsent independentlyconfirmed; WebguestSELFpresent then Native55HOSTabsentagain preserves effectiveSELFpresent. R19614/0. Fullbothdirectionjourney still heldNR for thirdprivacyactor/sharedfactsadminprecondition and remainingassertions. B20-O004: sameDBsidecar bootstrap facts verified, but original rig autoexited during legalclockadvance; no sourceadminUI/snapshot/CSV executed. Environmentrecovery developerowned, not user blocker. B37-O004 one-process native117 normal explicit Send produces one PENDING application, hostseat stays1; only WebH normal Approve changes confirmed2/4. Reservation becomes stale, normal re-declaration for2 restores booked, arrangements lock. Remaining original full-journey assertions still unexecuted. B40 nativeH role cold-restore/empty AI CREATE/manual4step/explicitPublish mechanics observed; reservation semantic F55 is separately failing in QA-CREATE-002. Full case remains NOT_RUN; do not grant PASS before F55 and original full expectations close. B43 nativeH normal approval, booking update and actual WebA chat receipt verified in original physical final DB. Whole lifecycle/Admin remains.",
+      "actual": "F42targetedclosed formalcd69: originalNative52 missinghostcontrol retained; actual53unknown/no-default/Reviewcancel PG0; actual54HOSTabsent independentlyconfirmed; WebguestSELFpresent then Native55HOSTabsentagain preserves effectiveSELFpresent. R19614/0. Fullbothdirectionjourney still heldNR for thirdprivacyactor/sharedfactsadminprecondition and remainingassertions. B20-O004: sameDBsidecar bootstrap facts verified, but original rig autoexited during legalclockadvance; no sourceadminUI/snapshot/CSV executed. Environmentrecovery developerowned, not user blocker. B37-O004 one-process native117 normal explicit Send produces one PENDING application, hostseat stays1; only WebH normal Approve changes confirmed2/4. Reservation becomes stale, normal re-declaration for2 restores booked, arrangements lock. Remaining original full-journey assertions still unexecuted. B40 nativeH role cold-restore/empty AI CREATE/manual4step/explicitPublish mechanics observed; reservation semantic F55 is separately failing in QA-CREATE-002. Full case remains NOT_RUN; do not grant PASS before F55 and original full expectations close. B43 nativeH normal approval, booking update and actual WebA chat receipt verified in original physical final DB. Whole lifecycle/Admin remains. B49–B51 originalsameDB lifecycle/SELFpriority/ownexperience/publicreference/unilateralprivacy/mutualDM actuals captured; no wholecasepromotion until remaining fullassertions and current sharedAdmintrace.",
       "relatedBrowserEvidence": [
         "B1"
       ],
@@ -17496,7 +17507,12 @@
         "B19-O008",
         "B19-O009",
         "B19-O010",
-        "B20-O001"
+        "B20-O001",
+        "B49-O001",
+        "B50-O001",
+        "B51-O001",
+        "B51-O002",
+        "B51-O003"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -17814,7 +17830,7 @@
         "撤回后历史只读",
         "解除不复活同意"
       ],
-      "actual": "Original samePG bothrole feedback/mutualDM/withdraw and thirdB privacy retained. F44 native safety gap fixed formal2005991 and actual61–64 independent ownedPG targeted passed; not full original mirroredjourney. SameDBadmintrace still unexecuted; original61973 rig exited during reviewedclockadvance(F47), old trace remains unrecoverable; B39 independently closes protection of new fixture only, not restoration or new full DM journey. No wholecasepass.",
+      "actual": "Original samePG bothrole feedback/mutualDM/withdraw and thirdB privacy retained. F44 native safety gap fixed formal2005991 and actual61–64 independent ownedPG targeted passed; not full original mirroredjourney. SameDBadmintrace still unexecuted; original61973 rig exited during reviewedclockadvance(F47), old trace remains unrecoverable; B39 independently closes protection of new fixture only, not restoration or new full DM journey. No wholecasepass. B49–B51 originalsameDB lifecycle/SELFpriority/ownexperience/publicreference/unilateralprivacy/mutualDM actuals captured; no wholecasepromotion until remaining fullassertions and current sharedAdmintrace.",
       "defectIds": [
         "QA-F44"
       ],
@@ -18573,7 +18589,12 @@
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
       "evidence": [
-        "B37-O002"
+        "B37-O002",
+        "B49-O001",
+        "B50-O001",
+        "B51-O001",
+        "B51-O002",
+        "B51-O003"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -18890,7 +18911,7 @@
         "评分仅合格人次",
         "不混用公开评价或再约"
       ],
-      "actual": "本地生产实现尚需实际执行：未出席账号填产品问卷 → 合格账号填单场评分 → 后台分别下钻CSV。尚缺逐项证据：问卷不要求资格、不归meal；评分仅合格人次；不混用公开评价或再约。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 2026-10-22 survey-partial-ui.md: actual normal H/A/B OTP/profile, A submit/edit/reload, independent-browser B blank/different answer/persistent, A unchanged and H blank verified. Read-only PG product_surveys3 with meals/attendance/experience/public review/pairs/messages0. Questionnaire subset passed; eligible-rating/Admin CSV/cross-client full assertions remain pending; whole NOT_RUN retained. B37 actual unparticipating B normal surveyYes/conversation→No/cost saved/reloaded; product_surveys2/experience0. Same-database qualified score and real Admin/CSV remain unexecuted.",
+      "actual": "本地生产实现尚需实际执行：未出席账号填产品问卷 → 合格账号填单场评分 → 后台分别下钻CSV。尚缺逐项证据：问卷不要求资格、不归meal；评分仅合格人次；不混用公开评价或再约。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 2026-10-22 survey-partial-ui.md: actual normal H/A/B OTP/profile, A submit/edit/reload, independent-browser B blank/different answer/persistent, A unchanged and H blank verified. Read-only PG product_surveys3 with meals/attendance/experience/public review/pairs/messages0. Questionnaire subset passed; eligible-rating/Admin CSV/cross-client full assertions remain pending; whole NOT_RUN retained. B37 actual unparticipating B normal surveyYes/conversation→No/cost saved/reloaded; product_surveys2/experience0. Same-database qualified score and real Admin/CSV remain unexecuted. B49–B51 originalsameDB lifecycle/SELFpriority/ownexperience/publicreference/unilateralprivacy/mutualDM actuals captured; no wholecasepromotion until remaining fullassertions and current sharedAdmintrace.",
       "history": [
         {
           "status": "NOT_RUN",
@@ -22889,5 +22910,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B47 current:195PASS/11NOT_RUN/11BLOCKED. F55/F56 targeted closed; clock prerequisite resolved under direct human plan authorization. Original same-database M2 reverse nativeH/WebA approval, independent seat/group withdrawal, rejoin history exclusion, normal host meal cancellation with group still writable, explicit group dissolution/read-only verified. B48 QA-F57 CLOSED_TARGETED_QA: formal d4a3 fix18API/21fixture independently green; separate new OWN normal H/A actual UI same-clock2→1→2 keepsrev2stale and only normal redeclarationrev3fresh. Original f6d9 failure retained. SameDB natural S0 applications match sealed facts and do not change after later approvals; single-metric export UI/ticket proven but CSV bytes not reconciled. Missing telemetry/real gates remain, no whole-journey promotion. B49 original M1 sameDB exact16CLOSE/17START/19END verified by unique lifecycle marks/cutoff2/startRosterH+A/completed; no automatic SELF/experience. Natural classRev2 snapshots16/17/19 retained, no classification-after S1 claim. Normal WebH/nativeA roles restored;144 harness navigation red retained/145 normalOTP passes. Actual feedback/admin/classification/7d/deletion still pending. B50 actual originalM1 Native146 A SELFpresent/private5, WebH staleHOSTabsent conflict refresh then freshHOSTabsent, Native147 effectiveSELFpresent stillvalid, HSELFpresent/private4 independently stored. Publicreview147scroll/148newsessionnavigation control failures retained, no submissioncount0 at capture;149 activeScroll whole-frame gesture still under keyboard;150 bounded visible-region gesture pending, no publicreference/choice success inferred. Whole journey remains incomplete."
+  "currentExecutionSlice": "B47 current:195PASS/11NOT_RUN/11BLOCKED. F55/F56 targeted closed; clock prerequisite resolved under direct human plan authorization. Original same-database M2 reverse nativeH/WebA approval, independent seat/group withdrawal, rejoin history exclusion, normal host meal cancellation with group still writable, explicit group dissolution/read-only verified. B48 QA-F57 CLOSED_TARGETED_QA: formal d4a3 fix18API/21fixture independently green; separate new OWN normal H/A actual UI same-clock2→1→2 keepsrev2stale and only normal redeclarationrev3fresh. Original f6d9 failure retained. SameDB natural S0 applications match sealed facts and do not change after later approvals; single-metric export UI/ticket proven but CSV bytes not reconciled. Missing telemetry/real gates remain, no whole-journey promotion. B49 original M1 sameDB exact16CLOSE/17START/19END verified by unique lifecycle marks/cutoff2/startRosterH+A/completed; no automatic SELF/experience. Natural classRev2 snapshots16/17/19 retained, no classification-after S1 claim. Normal WebH/nativeA roles restored;144 harness navigation red retained/145 normalOTP passes. Actual feedback/admin/classification/7d/deletion still pending. B50 actual originalM1 Native146 A SELFpresent/private5, WebH staleHOSTabsent conflict refresh then freshHOSTabsent, Native147 effectiveSELFpresent stillvalid, HSELFpresent/private4 independently stored. Publicreview147scroll/148newsessionnavigation control failures retained, no submissioncount0 at capture;149 activeScroll whole-frame gesture still under keyboard;150 bounded visible-region gesture pending, no publicreference/choice success inferred. Whole journey remains incomplete. B51 Native151 normal userblur/publicreference/privatechoice actualpass;147–150 failure/correction chain retained. OriginalsameDB unilateralreview1/consent1/noDIRECT→normalHreciprocalreviewpublished/mutual→DIRECT1 and actualWebH/nativeA bidirectional messages2/2authors. Exact singlemetricCSV localartifact now reconciled bytes/rows/hash/sealedfacts/filters, no blockedbrowser workaround; summarypartial/currentfeedbackAdmintrace still incomplete. Withdrawal/block/unblock no-revival pending."
 }

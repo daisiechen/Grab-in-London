@@ -1,0 +1,256 @@
+{
+  "unilateral": {
+    "identityExact": true,
+    "readOnly": true,
+    "clock": "2026-10-22T19:00:00.000Z",
+    "attendance": [
+      {
+        "subject": "A",
+        "source": "SELF",
+        "value": "present",
+        "version": "1",
+        "created_at": "2026-10-22T19:00:00.000Z"
+      },
+      {
+        "subject": "A",
+        "source": "HOST",
+        "value": "absent",
+        "version": "2",
+        "created_at": "2026-10-22T19:00:00.000Z"
+      },
+      {
+        "subject": "H",
+        "source": "SELF",
+        "value": "present",
+        "version": "1",
+        "created_at": "2026-10-22T19:00:00.000Z"
+      }
+    ],
+    "experience": [
+      {
+        "subject": "A",
+        "score": 5,
+        "revision": "1",
+        "created_at": "2026-10-22T19:00:00.000Z"
+      },
+      {
+        "subject": "H",
+        "score": 4,
+        "revision": "1",
+        "created_at": "2026-10-22T19:00:00.000Z"
+      }
+    ],
+    "reviews": [
+      {
+        "n": 1
+      }
+    ],
+    "consent": [
+      {
+        "n": 1,
+        "active": 1
+      }
+    ],
+    "conversations": [
+      {
+        "kind": "GROUP",
+        "n": 2
+      }
+    ]
+  },
+  "mutual": {
+    "identityExact": true,
+    "readOnly": true,
+    "clock": "2026-10-22T19:00:00.000Z",
+    "attendance": [
+      {
+        "subject": "A",
+        "source": "SELF",
+        "value": "present",
+        "version": "1",
+        "created_at": "2026-10-22T19:00:00.000Z"
+      },
+      {
+        "subject": "A",
+        "source": "HOST",
+        "value": "absent",
+        "version": "2",
+        "created_at": "2026-10-22T19:00:00.000Z"
+      },
+      {
+        "subject": "H",
+        "source": "SELF",
+        "value": "present",
+        "version": "1",
+        "created_at": "2026-10-22T19:00:00.000Z"
+      }
+    ],
+    "experience": [
+      {
+        "subject": "A",
+        "score": 5,
+        "revision": "1",
+        "created_at": "2026-10-22T19:00:00.000Z"
+      },
+      {
+        "subject": "H",
+        "score": 4,
+        "revision": "1",
+        "created_at": "2026-10-22T19:00:00.000Z"
+      }
+    ],
+    "reviews": [
+      {
+        "n": 2
+      }
+    ],
+    "consent": [
+      {
+        "n": 2,
+        "active": 2
+      }
+    ],
+    "conversations": [
+      {
+        "kind": "GROUP",
+        "n": 2
+      },
+      {
+        "kind": "DIRECT",
+        "n": 1
+      }
+    ],
+    "directMessages": [
+      {
+        "n": 2,
+        "authors": 2
+      }
+    ]
+  },
+  "exactCsvArtifactValidation": {
+    "exactTaskArtifactOnly": true,
+    "exists": true,
+    "regularFile": true,
+    "bytes": 1447,
+    "sha256": "d3cb6ff90c029bfe71238f99a970eedb8e16a43184483d53deef77906c007d91",
+    "csvRows": 15,
+    "snapshotBound": true,
+    "rowWidths": [
+      0,
+      2,
+      4,
+      12
+    ],
+    "source": "synthetic_fixture",
+    "definitionVersion": "v4",
+    "asOfMatches": true,
+    "visibleFiltersMatch": true,
+    "filterHashPresent": true,
+    "applicationRows": 3,
+    "sealedStatusesExact": true,
+    "statusCounts": {
+      "CONFIRMED": 1,
+      "PENDING": 1,
+      "CANCELLED": 1
+    },
+    "columns": [
+      "rowId",
+      "inNumerator",
+      "inDenominator",
+      "applicationId",
+      "appliedAt",
+      "area",
+      "decisionHours",
+      "mealId",
+      "pendingWaitHours",
+      "startsAt",
+      "status",
+      "userId"
+    ],
+    "noPrivateContentColumns": true
+  },
+  "minuteCheckpoint": [
+    {
+      "phase": "before",
+      "clock": "2026-10-22T19:00:00.000Z",
+      "ledgers": [
+        {
+          "table": "ai_budget",
+          "count": "2",
+          "sha256": "05fff3a85b30b102496924c71aebe28c89cbaea73bbec3b91270a966ee0e35b6"
+        },
+        {
+          "table": "ai_budget_reconciliations",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "ai_calls",
+          "count": "24",
+          "sha256": "515cfaa63628b5b1cbde4769e87faea06c53f8ab924b1b15488b69127780c3f3"
+        },
+        {
+          "table": "conversations",
+          "count": "3",
+          "sha256": "e449f37be4abfe52329745c57e1a757eb4e817141259b3e32be7bec14eb42713"
+        },
+        {
+          "table": "messages",
+          "count": "12",
+          "sha256": "3d783dffed74dc1657cf11f36fd328021adf5c71d9b67af67ef9c54dfb1f3e93"
+        },
+        {
+          "table": "pair_consents",
+          "count": "2",
+          "sha256": "7a271a04e5995a2ce84e4e91251fa2626d998e2ad3620beaf82ad00e712e4c54"
+        },
+        {
+          "table": "public_review_revisions",
+          "count": "2",
+          "sha256": "0d3eacd48e885b1a5bcb58fb9ad2c7ae94d251a46da6dfbb59830aa8a645f13f"
+        }
+      ]
+    },
+    {
+      "phase": "after",
+      "clock": "2026-10-22T19:01:01.000Z",
+      "ledgers": [
+        {
+          "table": "ai_budget",
+          "count": "2",
+          "sha256": "05fff3a85b30b102496924c71aebe28c89cbaea73bbec3b91270a966ee0e35b6"
+        },
+        {
+          "table": "ai_budget_reconciliations",
+          "count": "0",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "table": "ai_calls",
+          "count": "24",
+          "sha256": "515cfaa63628b5b1cbde4769e87faea06c53f8ab924b1b15488b69127780c3f3"
+        },
+        {
+          "table": "conversations",
+          "count": "3",
+          "sha256": "e449f37be4abfe52329745c57e1a757eb4e817141259b3e32be7bec14eb42713"
+        },
+        {
+          "table": "messages",
+          "count": "12",
+          "sha256": "3d783dffed74dc1657cf11f36fd328021adf5c71d9b67af67ef9c54dfb1f3e93"
+        },
+        {
+          "table": "pair_consents",
+          "count": "2",
+          "sha256": "7a271a04e5995a2ce84e4e91251fa2626d998e2ad3620beaf82ad00e712e4c54"
+        },
+        {
+          "table": "public_review_revisions",
+          "count": "2",
+          "sha256": "0d3eacd48e885b1a5bcb58fb9ad2c7ae94d251a46da6dfbb59830aa8a645f13f"
+        }
+      ]
+    }
+  ]
+}

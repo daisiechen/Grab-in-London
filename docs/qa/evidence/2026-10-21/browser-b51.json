@@ -1,0 +1,48 @@
+{
+  "observations": [
+    {
+      "id": "B51-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Original native reference normal blur recovery, private unilateral choice and mutual public references",
+      "steps": [
+        "147–150 control failures retained.150keyboard keysframe590/outer545 correction means its570gesture was not complete visible-region proof; do not label productFAIL.151 is independent normal cold navigation/retyping, not sameprocess restoration.",
+        "151 ordinary tap actual hittable noninput heading hidesKeyboard; waits existsfalse; normalscroll/Save physicalhittable/screenshot/explicitSave and privateagainchoice pass exit0. No programdismiss/forcedtap/sourcechange or repeatattendance/experience.",
+        "Original readonlyreview1/activeconsent1/GROUP2/DIRECT0, WebH normalpublicprofile no publishedreference and ownchoicefalse, no incoming unilateral disclosure.",
+        "NormalWebH reciprocal reference makes A reference visible on H publicprofile. NormalH againchoice produces mutualnotice/Sayhello. No wholecaseclaim for withdrawal/block/7d."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b51-summary.json"
+      ]
+    },
+    {
+      "id": "B51-O002",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Actual mutual private messages across Web H and native A with normal rate-limit recovery",
+      "steps": [
+        "NormalWebH Sayhello opens DIRECT and explicitly sends firstmessage. Native152 coldInbox actualpeer title, receives exactHmessage and explicitreply/physicalSend/clearedcomposer passes.",
+        "Ownedreadonly DIRECTcount1/messages2/distinctsenders2; no body/identity output. WebH actual429 retained, not interpreted as loss or clearedquota.",
+        "Separately approved exact19Z→19:01:01Z afterfreshfullboundary/idle/AI/grant/budgetprice guards, no crossedbusiness/snapshot/daymonth; originalUNKNOWN ledgers preserved. NormalWebH reload shows exactnativeA reply and originalHmessage."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b51-summary.json"
+      ]
+    },
+    {
+      "id": "B51-O003",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Normal single-metric CSV artifact independently reconciles original sealed S0 facts",
+      "steps": [
+        "B47 normalapplications detail export success/ticket1447bytes/15rows; tool download event absent andchrome protocol navigation rejected, both retained. No browser history/blockedprotocol/extraHTTP/token workaround.",
+        "Materially safer independent read of ONLY exact task-generated localCSV, lstatregular/nosymlink; no Downloadslisting or alternatepath search. File1447bytes/15rows, SHA256 recorded,3applicationdata rows.",
+        "Snapshot/asOf12:09:06.962/datefilters/definitionv4/synthetic_fixture exact; sealed statusesCONFIRMED/PENDING/CANCELLED exact originalfacts even after current business changes. Columnallowlist noemail/body/message/bio. CSV row/hash/ticket match.",
+        "This closes the singlemetricCSV byte gap, not incomplete-source summary export or fullcurrent19ZAdmintrace."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b51-summary.json"
+      ]
+    }
+  ]
+}
