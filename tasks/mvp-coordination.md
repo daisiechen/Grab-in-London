@@ -612,3 +612,11 @@
 - F49新实际79：键盘y590..816，输入y626..720、Ask y733..778，二者hittable=false，断言exit65，未tapAsk/模型调用；这是独立键盘布局缺陷，不重开F45恢复数据结论。root正式cbdbf97只三文件：AI opt-in整Modal KeyboardAvoidingView flex1/padding并排除安全top/left/right，sheet及ScrollView允许收缩；移除原只包内部的KAV，保handled taps。其他Sheet默认不变，无新provider要求；manager/协议未改。
 - root布局祖先/默认Sheet关闭边界原红→绿，最终48套328原生/type/全iOSlint0，日志/private/tmp/fancy-f49-{native,type,lint}-release.log；中间测试误用新版库已移除的UNSAFE query导致红及一次无provider的默认Sheet回归红均保留并修正，未放宽实际79要求。交叉审未发现静态阻塞，提醒安全区/横屏实际几何，已交正常签名cbdbf97新包build-only，再由QA实际keyboard/Ask/mock/旋转复验，不以结构测试冒通过。
 - 034/tmp工具三项独立review问题已修：lstat/uid/canonical/权限/receipt与实际PG身份校验，确认停PG/PID退出/端口拒绝/离线系统ID后才rm；IPC断开仅关自有API/pool；主finally真实清理+ECONNREFUSED后才打印true。真实PG stop失败保数据、路径替换拒绝、一次性合成childwait失败保handle、IPC断开PG事实存活回归绿，产品1400tracked仍2005991exact。独立复审六hash全吻合通过；父SIGKILL/内核不可杀仍未测，startup/runtime错误可能API活着，保PG非静止快照。无standing62046/旧服务连接，需QA安全checkpoint后新环境，不能改原3102冒RAMloss。整体验收未闭环。
+
+
+## B22 游客入口实际关闭与统一旅程环境首片
+
+- QA正式c923457已push/释放Git：193PASS/13NOT_RUN/11BLOCKED。F48 actual80正式0a包游客Discover→Request to join→精确邮箱OTP→完整资料→同meal空Apply/Send存在，正常用户/资料及原餐application0、businessProbe不变，无新增AI请求，定向CLOSED_TARGETED_QA；J001退NOT_RUN，未补两方向全生命周期/同DBAdmin前不记整条PASS。
+- F49正式cbdb包已冻/root核唯一ENTRY：/private/tmp/fancy-native-f49-cbdbf97/ENTRY-F49.md，full1522/native205源exact，正常签名Releasearm64/build0/deepstrict0；binary951de2ab20497848ea8af6fd9be3b33f24a8c10e60475ddcda765f3c310069ba/Hermeseb15719c14182ef7a7075dd3250cc83e2b0a46fa0197d9d7ad5f9965c6d95186，API3102/Mapsblank/NO_DOTENV。未由开发安装，已交QA控制时序，实际79键盘/横屏/Ask仍待测。新CI以远端最新结果为准，旧987成功不延伸新SHA。
+- QA确认J001–012共同前置含H/A+B隐私、角色互换、同物理DB/通知/Admin。3102硬编码draft与034最小SEARCH只能局部证据，不能拼作完整journey通过。统一方案/private/tmp/fancy-unified-journey-plan.md已逐12case映射：默认每case/角色回合独立DB，全端同库；H/A/B正常UI生成业务，staffbootstrap/支持grant/sealer例外独列；controlled显式SEARCH→卡→选M→draft，零外呼。未实现的lifecycle暂停/testmail装配/快照周期等未知明确保留。
+- root已授权环境唯一owner venues仅/tmp统一P1：锁完整c3fb355正式archive，独立randomport及OWN短命PG，不占QA034演练62046；先owner/clock与API临时lifecycle pause协调，产品archive不改，差异manifest。pause仅停timer并等在途sweep，不shutdown RAM；保生产初始化/close语义，HTTPgate/AIpause/workerstop/DB与各Nodeclockack/duebatch/resume分阶段，失败保库。先报精确scope，不实现provider/mail/staff/业务seed，不启动standing/操作设备/旧环境。QA当前独立034短命自有PG演练，root不并占其端口。整体验收未闭环。
