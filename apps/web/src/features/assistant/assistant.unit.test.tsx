@@ -1,6 +1,6 @@
 /** Mock transport UI evidence only; never a real-model or external-provider acceptance claim. */
 import {useState} from 'react';
-import {act,fireEvent,screen,waitFor} from '@testing-library/react';
+import {act,fireEvent,screen,waitFor,within} from '@testing-library/react';
 import {userEvent} from '@testing-library/user-event';
 import {describe,expect,it,vi} from 'vitest';
 import {renderWithProviders} from '../../test/render.tsx';
@@ -81,6 +81,19 @@ describe('Ask Fancy production UI with isolated mock transport',()=>{
   expect(stub.callsTo('requestAI')[0]!.body).toMatchObject({editorText:'My existing private introduction.',explicitMealId:MEAL_ID});
   await userEvent.click(screen.getByRole('button',{name:'Use in application'}));await screen.findByRole('dialog',{name:'Replace your editor text?'});await userEvent.click(screen.getByRole('button',{name:'Keep my text'}));expect(stub.callsTo('validateAIDraft')).toHaveLength(0);expect(applied).not.toHaveBeenCalled();
   await userEvent.click(screen.getByRole('button',{name:'Use in application'}));await userEvent.click(screen.getByRole('button',{name:'Replace with this draft'}));await waitFor(()=>expect(applied).toHaveBeenCalledTimes(1));expect(stub.callsTo('validateAIDraft')[0]!.body).toMatchObject({editorKind:'APPLICATION',targetId:MEAL_ID,editorVersion:'0',replaceConfirmed:true});expect(stub.calls.some(c=>['applyMeal','createMeal','sendMessage'].includes(c.operationId))).toBe(false);
+ });
+ it.each([
+  [429,'RATE_LIMITED','You’ve reached the current request limit. Please try again later.'],
+  [409,'TARGET_CHANGED','This meal or conversation changed. Check the original page before continuing.'],
+ ] as const)('shows a rejected replacement inside its active confirmation (%s)',async(code,error,message)=>{
+  const stub=baseStub(),applied=vi.fn();stub.on('requestAI',call=>ok(status((call.body as {requestId:string}).requestId,true,result({draft:draft()})),202));stub.on('validateAIDraft',()=>fail(code,error));
+  renderAssistant(stub,<Editor apply={applied} initial="Keep my original introduction."/>);await open();await send('Draft an introduction.');
+  await userEvent.click(await screen.findByRole('button',{name:'Use in application'}));const dialog=await screen.findByRole('dialog',{name:'Replace your editor text?'});
+  await userEvent.click(within(dialog).getByRole('button',{name:'Replace with this draft'}));
+  expect((await within(dialog).findByRole('alert')).textContent).toBe(message);expect(applied).not.toHaveBeenCalled();expect(stub.callsTo('validateAIDraft')).toHaveLength(1);
+  await userEvent.click(within(dialog).getByRole('button',{name:'Keep my text'}));await userEvent.click(screen.getByRole('button',{name:'Close assistant'}));
+  expect((screen.getByRole('textbox',{name:'Original editor'}) as HTMLTextAreaElement).value).toBe('Keep my original introduction.');
+  expect(stub.calls.some(c=>['applyMeal','createMeal','sendMessage'].includes(c.operationId))).toBe(false);
  });
  it('leaves a stale or unauthorized draft in the original editor unchanged',async()=>{
   const stub=baseStub(),applied=vi.fn();stub.on('requestAI',call=>ok(status((call.body as {requestId:string}).requestId,true,result({draft:draft()})),202));stub.on('validateAIDraft',()=>fail(409,'TARGET_CHANGED'));

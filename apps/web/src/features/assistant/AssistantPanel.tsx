@@ -74,6 +74,6 @@ export function AssistantPanel(){
   </form>
  </>}
  </div></Sheet>
- <ConfirmSheet open={replace!==null} onOpenChange={value=>{if(!value)setReplace(null);}} title="Replace your editor text?" keepLabel="Keep my text" confirmLabel="Replace with this draft" busy={replacing} onConfirm={()=>{if(!replace)return;setReplacing(true);void a.transfer(replace,true).then(ok=>{if(ok)setReplace(null);}).finally(()=>setReplacing(false));}}><p>Your current text will be replaced, not added to. You can review the result before sending or publishing.</p></ConfirmSheet>
+ <ConfirmSheet open={replace!==null} onOpenChange={value=>{if(!value)setReplace(null);}} title="Replace your editor text?" keepLabel="Keep my text" confirmLabel="Replace with this draft" busy={replacing} error={a.error} onConfirm={()=>{if(!replace)return;setReplacing(true);void a.transfer(replace,true).then(ok=>{if(ok)setReplace(null);}).finally(()=>setReplacing(false));}}><p>Your current text will be replaced, not added to. You can review the result before sending or publishing.</p></ConfirmSheet>
  </>;
 }
