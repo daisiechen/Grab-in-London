@@ -33,6 +33,7 @@ export default function RootLayout() {
           <Stack.Screen name="auth/callback" options={{ title: 'Sign in' }} />
           <Stack.Screen name="profile-setup" options={{ title: 'Your profile', headerBackVisible: false, gestureEnabled: false }} />
           <Stack.Screen name="profile-edit" options={{ title: 'Edit profile' }} />
+          <Stack.Screen name="notifications" options={{ title: 'Notifications' }} />
           <Stack.Screen name="settings" options={{ title: 'Settings' }} />
           <Stack.Screen name="profiles/[userId]" options={{ title: 'Profile' }} />
           <Stack.Screen name="meals/[mealId]/index" options={{ title: 'Meal' }} />

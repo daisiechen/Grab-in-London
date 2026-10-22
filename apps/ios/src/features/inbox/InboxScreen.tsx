@@ -87,6 +87,7 @@ function SignedInInbox() {
         ListHeaderComponent={
           <View style={{ gap: 12, marginBottom: 12 }}>
             <Heading>Inbox</Heading>
+            <Primary label="Notifications" secondary onPress={() => router.push('/notifications')} />
             <ChoiceGroup<'chats' | 'applications'> label="Inbox sections" options={[['chats', q.data?`Chats · ${chats.length}`:'Chats'], ['applications', q.data?`Applications & next steps · ${applications.length}`:'Applications & next steps']]} value={tab} onChange={setTab} />
             {!q.data&&!q.error&&!focusError?<Body>Loading inbox…</Body>:null}
             {q.error||focusError?<><FormMessage message={focusError||(q.error?loadErrorMessage(q.error):'')}/><Primary label="Retry loading inbox" disabled={q.loading||validating} onPress={()=>void refresh()}/></>:null}

@@ -664,3 +664,10 @@
 - Web新增静态/inbox/notifications页面，真实listNotifications逐页/重复游标拒绝/按ID去重、固定模板文案与未知模板安全回退、meal详情链接；显式markRead用单飞与幂等Intent，服务端成功才更新readAt，失败保未读，初读错误可重试且不假空。复用现有session epoch重挂载及query generation私有围栏，无新通知数据/权限或聊天API改动。
 - 自有3项原路由红已留/private/tmp/fancy-f50-web-red.log；首次实现错误把Instant传ZonedLike格式器导致两项红，改为明确Europe/London的Instant显示，未放宽业务断言。最终4项定向绿/type/lint/Webbuild绿，venues只读交叉审无阻塞。全Web/admin首轮317/318唯一QA地图fallback红保留，显式空VITE公共Maps变量后同53套318项全绿（/private/tmp/fancy-f50-web-admin-controlled.log）；私有dotenv未改/未输出。
 - iosowner独占原生通知入口/页面/route/自有测试并行，尚未冻结，不纳入Web提交；QA证据与research不索引。当前live c3fb冻结目录/API/PG/clock不改，修复需后续正式source匹配新环境与实际双端复验，不以组件测试关闭F50或整条J010。整体生产验收未闭环。
+
+## B26 原红归档与 F50 原生通知切片
+
+- QA正式B26 b150e64已push，80Python绿：194PASS/11NOT_RUN/1FAIL/11BLOCKED，J010因F50客户端通知缺失实际失败；同库合法截止后H/A各通知与mailSENT各一次、原生收到Web群消息及Web取消后发送已记录。F51另实际95键盘590..816，原生Message703.67..744.67/Send700.67..745且hittable=false，未强行tap；不是群权限或F49 Sheet旧缺陷，尚未关闭。
+- F50原生五文件新增Inbox Notifications入口/route、真实listNotifications分页和显式markRead。加载与错误不伪空、分页错误保旧列表且重复游标拒绝；mark单飞及同ID失败重试保Intent key，成功才已读，无聊天引用猜权限。focus/foreground先验证session，generation/revision拒旧响应，403/404/410清投影。固定模板文案及未知模板通用通知，无自由正文。
+- root审查发现首轮334绿未覆盖mark在途跨后台后按钮禁用残留，退回补真实AppState deferred回归并修bookkeeping；迟到结果仍不回填。最终定向8项与全49套336项/type/all-iOSlint绿，root最终core:check/native/type/lint通过，日志/private/tmp/fancy-f50-final-{check,ios,ios-type,ios-lint}.log。正常签名正式包与QA actual尚未做，F50不因本地绿关闭。
+- Web53bd8fe已正式push；远端本次CI39711935722失败于Run pnpm/setup@v3，项目check/test未执行，详细日志接口不可用，不能猜产品失败原因或冒CI绿。B26原记录保留，后续新SHA仍须核CI。F51已给iosowner唯一ChatScreen+自有keyboard-layout测试薄片：用实际screen/local坐标转换替换常量88，保持既有header安全布局及业务协议；尚在实施，不混本片提交。旧UC8TVF run/clock16Z/最新QA控制revision10及全部原环境保留，root不写FIFO，整体生产验收未闭环。
