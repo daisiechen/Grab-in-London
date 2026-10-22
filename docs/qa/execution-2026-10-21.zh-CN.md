@@ -14,17 +14,17 @@
 
 | 状态 | 数量 |
 |---|---:|
-| PASS | 195 |
+| PASS | 196 |
 | FAIL | 0 |
 | BLOCKED | 11 |
-| NOT_RUN | 11 |
+| NOT_RUN | 10 |
 | N/A | 0 |
 
 共217条。PASS只授予已核对完整预期的用例；相关测试通过但缺完整步骤/断言证据的仍为NOT_RUN。BLOCKED仍缺真实供应商、真实设备发行、部署或政策批准证据；本地已有可运行模拟器和正常签名原生UI，不能再用旧许可/runtime缺失概括。本地恢复与分步删除已独立通过。FAIL优先于未完成的后续步骤。
 
 ## 实际运行
 
-B53 audit: 195 PASS / 11 NOT_RUN / 11 BLOCKED. J003/J004 reopened solely for original same-database mirrored-client precondition; all prior passing evidence and B52 history retained. J007 still requires native unqualified-user survey and same-database reconciliation. No product FAIL inferred; no external gate closed. Original environment latest observed clock20:00Z, feedback2/2 and independent survey0/1 CSV bytes checked; these partial observations do not close entire journeys.
+B53: 196 PASS / 10 NOT_RUN / 11 BLOCKED. J003/J004 audit-reopened for original mirrored-client precondition; prior passing evidence/history retained. J012 exact original three steps and expectations now PASS from actual S0 CSV, normal classification, natural21Z S1, explicit switch/filter preservation, unchanged old snapshot and normal login. No mirrored Admin requirement added. Original clock21Z, all future clock targets need fresh boundary checks; no budget/price extension or real provider acceptance.
 
 | ID | 结果 | 范围 |
 |---|---|---|
@@ -468,7 +468,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 | QA-AI-049 · 创建与群草稿长度 | PASS | Independent R123 four assertions: application301, create81/1001 and group1001 rejected; exact300/80/1000/1000 allowed in core validator. Failed generation has no transfer artifact or business writes; no editor bypass. Controlled model and real PG for controller cases; pure core group boundary.；证据 R123-T001, R123-T002, R123-T003, R123-T004 |
 | QA-JOURNEY-010 · 截止不足通知路径 | PASS | B31: one new final3a17 physical database has normal synthetic support authorization/role/TEST/logout/drain prerequisites, normal Web H create min3 and native105 A guestApply/login/profile/explicitSend, H approves only2, legitimate exact cutoff advance produces insufficient cancellation. Each current member station notice and controlled cancellation mail once; native106 and Web normal group sends verified cross-client, own notice read persistence/isolation. UI/formal template has no refund promise. Full original010 expected mapping passed in this declared synthetic scope; real services/devices remain separate gates. Original B26 product reds and B31 101/103 setup/control failures retained with104 normal retry recovery, not erased.；证据 B31-O001 |
 | QA-JOURNEY-011 · 支持纠错全路径 | NOT_RUN | 本地生产实现尚需实际执行：CLI OAuth+MFA→授权case→end+7d纠错→新快照→私聊重验→审计。尚缺逐项证据：逐步权限重验；保留原报告；新资格传播，旧普通快照不改；不开放全表/消息正文。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 |
-| QA-JOURNEY-012 · 后台分析分类路径 | NOT_RUN | 本地生产实现尚需实际执行：分析者过滤S0下钻CSV → data_admin改分类生成S1 → 显式切换。尚缺逐项证据：旧链路S0一致；分类不改登录权限；新快照排除测试贡献且保留筛选。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B43 S normal OTP accesses sameDB Admin, but only pre-business initial sealed snapshot exists; empty metrics are not zero/current reconciliation. Derived current S0/S1/classification and explicit switch remain.；证据 B43-O006 |
+| QA-JOURNEY-012 · 后台分析分类路径 | PASS | B51 original S0 actual singlemetric CSV bytes match fixed sameDB facts. B53 normal data_admin classification TEST/rev3, natural21Z S1 and explicit switch preserve original date/language/region/source/user filters; H-hosted meals and contributions excluded, independent Bsurvey retained. Old S0 and older fullfacts hash unchanged. Normal classified H remains authenticated with own meal/attendance/reporting access. Original three steps and expectations satisfied; no invented duplicate nativeAdmin requirement. Synthetic environment only; external release gates remain.；证据 B51-O003, B53-O001 |
 | QA-AI-050 · DeepSeek模型替换准入 | BLOCKED | DeepSeek本地适配及评测准备已通过，基础key认证/models已由开发验证。此条依赖G-AI-MODEL真实生成质量/延迟准入，不是另一项缺账户；尚无真实60样本结果，保持未通过且不冒受控响应为真实模型证据。 |
 | QA-AI-051 · 人民币50月上限并发预留 | PASS | 按所列实际执行的断言核对完整预期通过；既有测试复跑与QA新探针的作者来源见R1/R3。；证据 R1-T484, R1-T486, R1-T239 |
 | QA-AI-052 · 新供应商数据参数兼容 | BLOCKED | DeepSeek官方JSON/nonthinking参数白名单与拒store/tools等受控适配已通过，基础账户已就绪。此条依赖G-AI-DATA明确供应商数据批准及真实参数验收，不是独立缺账户；不能继承其他供应商留存承诺。 |

@@ -1,0 +1,20 @@
+{
+  "observations": [
+    {
+      "id": "B53-O001",
+      "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+      "status": "passed",
+      "title": "Normal statistical classification and natural snapshot exclusion preserve prior snapshot and login",
+      "steps": [
+        "Original staff normal Admin reads synthetic H classification, selects TEST with explicit reason and saves; UI confirms audited revision3 and current snapshot remains pinned.",
+        "Independent owned read-only database identity check before/after retains original snapshot feedback scores4/5 and independent unattended surveyNo/cost; older snapshot fullfacts SHA256 remains 9787d5c998d9a561be6caa1d497f20455dbe4dba8f208fd4876a57ad1abfedc7.",
+        "Fresh exact-owner/current-clock, pending HTTP/worker/AI/grants, owned PG identity, actual daily/monthly budgets and unchanged UNKNOWN, valid synthetic price and all meal/job boundaries checked. User-authorized concrete20→21Z advance acknowledged once; no due meal job crossed, no budget reset or direct fact write.",
+        "Original worker naturally creates21Z classification revision3 snapshot. Independent read-only facts: users2; meals/applications/seats/attendance/experiences/rosters0; independent survey1.",
+        "Normal Admin reload still shows prior20Z and new snapshot notice; explicit switch selects21Z. Languagezh, date range2026-09-25 through2026-10-22 and all region/source/user filters retained. Visible feedback0/0 and survey0/1 match independent facts.",
+        "Normal original H browser reload still authenticates and accesses own meal experience4, attendance and host reporting controls. TEST classification does not disable login.",
+        "Partial source availability remains explicit. No real provider, release or whole mirrored journey acceptance is inferred."
+      ],
+      "artifacts": []
+    }
+  ]
+}
