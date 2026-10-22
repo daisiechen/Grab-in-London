@@ -24,7 +24,7 @@
 
 ## 实际运行
 
-B68:201 PASS/5 NOT_RUN/11 BLOCKED. J008 approval-409 both directions passed; Web 401 draft loss QA-F62. Standing rig (Web53004/API62057) exited ~20:46 BST, PG retained; waiting for coordinator to restore before group 403/410/offline/native 401, J005, F58-F60 retests.
+B68:201 PASS/5 NOT_RUN/11 BLOCKED. Fixes 3ee69fe (F58/F59/F60) and 89dc541 (F61/F62) committed; F58/F59 formal native ENTRY independently verified, not installed. All five fixes stay OPEN until actual retest. Standing rig exited ~20:46 BST, cause unknown; waiting for reviewed restore. Remaining plan: remaining-plan-2026-10-22.zh-CN.md.
 
 | ID | 结果 | 范围 |
 |---|---|---|

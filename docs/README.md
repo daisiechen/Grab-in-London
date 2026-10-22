@@ -203,3 +203,5 @@
 - [QA B67：J001/J002 同库双方向整条审计（两条 PASS）](qa/evidence/2026-10-21/audit-b67-j001-j002.zh-CN.md)。
 
 - [QA B68：J008 双端审批 409、Web 编辑中 401 与 F62；rig 于约 20:46 退出](qa/evidence/2026-10-21/browser-b68.json)。
+
+- [QA 剩余用例最小执行计划（2026-10-22）](qa/remaining-plan-2026-10-22.zh-CN.md)：J004/J005/J008/J009/J011 剩余断言、所需新 AI 调用与 Web 新前端复验接入建议。
