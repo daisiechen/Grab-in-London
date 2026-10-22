@@ -18,9 +18,9 @@
     "nativeClockAlignment": "B44 direct human authorization received; original synthetic runtime aligned to current UTC12:09:06.962Z. Node/DB ACK; business/budget counts and hashes unchanged; historical UNKNOWN reserve preserved; natural second snapshot retained. Native138 normal OTP restoration succeeds. Earlier B43 clock blocker resolved; product journey assertions remain separate. B45 second guarded execution-currentUTC12:23:20.135Z, no crossed business/price/period/snapshot boundary, ledgers unchanged. Native139 passes; WebA rate limit recovers normally."
   },
   "counts": {
-    "PASS": 198,
-    "BLOCKED": 11,
-    "NOT_RUN": 8
+    "PASS": 199,
+    "NOT_RUN": 7,
+    "BLOCKED": 11
   },
   "evidenceCatalog": {
     "automated": "evidence/2026-10-21/automated-runs.json",
@@ -104,7 +104,8 @@
     "browserObservationsB60": "evidence/2026-10-21/browser-b60.json",
     "browserObservationsB61B63": "evidence/2026-10-21/browser-b61-b63.json",
     "browserObservationsB64": "evidence/2026-10-21/browser-b64.json",
-    "browserObservationsB65": "evidence/2026-10-21/browser-b65.json"
+    "browserObservationsB65": "evidence/2026-10-21/browser-b65.json",
+    "browserObservationsB66": "evidence/2026-10-21/browser-b66.json"
   },
   "cases": [
     {
@@ -18726,7 +18727,7 @@
       "priority": "P0",
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "evidence": [
         "B37-O002",
         "B49-O001",
@@ -18735,7 +18736,9 @@
         "B51-O002",
         "B51-O003",
         "B62-O002",
-        "B63-O001"
+        "B63-O001",
+        "B66-O001",
+        "B66-O002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -19046,19 +19049,29 @@
         "R5-T010",
         "R5-T011"
       ],
-      "coveredExpectedIndexes": [],
-      "remainingExpected": [
-        "问卷不要求资格、不归meal",
-        "评分仅合格人次",
-        "不混用公开评价或再约"
+      "coveredExpectedIndexes": [
+        0,
+        1,
+        2
       ],
-      "actual": "本地生产实现尚需实际执行：未出席账号填产品问卷 → 合格账号填单场评分 → 后台分别下钻CSV。尚缺逐项证据：问卷不要求资格、不归meal；评分仅合格人次；不混用公开评价或再约。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 2026-10-22 survey-partial-ui.md: actual normal H/A/B OTP/profile, A submit/edit/reload, independent-browser B blank/different answer/persistent, A unchanged and H blank verified. Read-only PG product_surveys3 with meals/attendance/experience/public review/pairs/messages0. Questionnaire subset passed; eligible-rating/Admin CSV/cross-client full assertions remain pending; whole NOT_RUN retained. B37 actual unparticipating B normal surveyYes/conversation→No/cost saved/reloaded; product_surveys2/experience0. Same-database qualified score and real Admin/CSV remain unexecuted. B49–B51 originalsameDB lifecycle/SELFpriority/ownexperience/publicreference/unilateralprivacy/mutualDM actuals captured; no wholecasepromotion until remaining fullassertions and current sharedAdmintrace. B61–B63 (2026-10-22, archived/continued by Claude Code after Codex usage limit): natural 00Z snapshot and 01Z END on M3 with unchanged ledgers; WebA unknown→SELF present→private5; nativeH SELF present, HOST absent cannot override A SELF, private4, reference, one-sided meet-again. Slice only; whole case stays NOT_RUN.",
+      "remainingExpected": [],
+      "actual": "Same final DB, both clients: not-attended B submits/edits the survey on Web (B37) and on native (B66, prefilled from Web, persisted after relaunch); eligible scores A5 on Web and H4 on native only after explicit present attendance (B62/B63), B never gets a rating control or score. Admin 02:00Z snapshot and separate survey/rating drilldown CSVs (exact row/byte match) show the survey counted per user latest version without meal binding, ratings counted only for eligible attendees with TEST-host meals excluded per Admin PRD, and no public reference or reconnect data in either export. Retention page summary export failure is tracked separately as QA-F61.",
       "history": [
         {
           "status": "NOT_RUN",
           "actual": "本地生产实现尚需实际执行：未出席账号填产品问卷 → 合格账号填单场评分 → 后台分别下钻CSV。尚缺逐项证据：问卷不要求资格、不归meal；评分仅合格人次；不混用公开评价或再约。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 2026-10-22 survey-partial-ui.md: actual normal H/A/B OTP/profile, A submit/edit/reload, independent-browser B blank/different answer/persistent, A unchanged and H blank verified. Read-only PG product_surveys3 with meals/attendance/experience/public review/pairs/messages0. Questionnaire subset passed; eligible-rating/Admin CSV/cross-client full assertions remain pending; whole NOT_RUN retained.",
           "evidence": [],
           "reason": "B37 adds final same-database partial coverage without full-journey promotion."
+        },
+        {
+          "status": "NOT_RUN",
+          "actual": "本地生产实现尚需实际执行：未出席账号填产品问卷 → 合格账号填单场评分 → 后台分别下钻CSV。尚缺逐项证据：问卷不要求资格、不归meal；评分仅合格人次；不混用公开评价或再约。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 2026-10-22 survey-partial-ui.md: actual normal H/A/B OTP/profile, A submit/edit/reload, independent-browser B blank/different answer/persistent, A unchanged and H blank verified. Read-only PG product_surveys3 with meals/attendance/experience/public review/pairs/messages0. Questionnaire subset passed; eligible-rating/Admin CSV/cross-client full assertions remain pending; whole NOT_RUN retained. B37 actual unparticipating B normal surveyYes/conversation→No/cost saved/reloaded; product_surveys2/experience0. Same-database qualified score and real Admin/CSV remain unexecuted. B49–B51 originalsameDB lifecycle/SELFpriority/ownexperience/publicreference/unilateralprivacy/mutualDM actuals captured; no wholecasepromotion until remaining fullassertions and current sharedAdmintrace. B61–B63 (2026-10-22, archived/continued by Claude Code after Codex usage limit): natural 00Z snapshot and 01Z END on M3 with unchanged ledgers; WebA unknown→SELF present→private5; nativeH SELF present, HOST absent cannot override A SELF, private4, reference, one-sided meet-again. Slice only; whole case stays NOT_RUN.",
+          "remainingExpected": [
+            "问卷不要求资格、不归meal",
+            "评分仅合格人次",
+            "不混用公开评价或再约"
+          ],
+          "reason": "2026-10-22 B66 completes remaining same-DB native survey and Admin drilldown CSV"
         }
       ]
     },
@@ -23048,7 +23061,8 @@
     "QA-F57": "CLOSED_TARGETED_QA",
     "QA-F58": "OPEN_CONFIRMED",
     "QA-F59": "OPEN_CONFIRMED",
-    "QA-F60": "OPEN_CONFIRMED"
+    "QA-F60": "OPEN_CONFIRMED",
+    "QA-F61": "OPEN_CONFIRMED"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -23069,5 +23083,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B65:198 PASS/8 NOT_RUN/11 BLOCKED. J004 native-host/Web-applicant: two-way DM, withdraw read-only, block rejects reconnect verified; QA-F58 (native host no post-meal block entry), QA-F59 (native generic 403 copy), QA-F60 (Web block state not loaded, cannot unblock) open with development coordinator. Unblock non-revival waits for F60. Next: J007 native B survey and same-DB Admin/CSV."
+  "currentExecutionSlice": "B66:199 PASS/7 NOT_RUN/11 BLOCKED. J007 PASS (native survey + same-DB Admin drilldown CSV). J004 waits for F58/F60 actual retest (fixes 3ee69fe pending normal install/serve). QA-F61 retention summary export opened. Clock 02:00Z."
 }

@@ -1,0 +1,54 @@
+{
+ "observations": [
+  {
+   "id": "B66-O001",
+   "executedBy": "Claude Code",
+   "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+   "status": "passed",
+   "title": "Native not-attended account updates the independent product survey",
+   "steps": [
+    "native186: normal native sign-out of H, normal OTP sign-in of bystander B (never attended any meal); Settings → Product survey loads the answers B saved earlier on Web (No + Cost). Probe failed afterwards only on its own checkbox-state helper; no write.",
+    "native187/188 helper failures retained (read state via value only); native189 read-only diagnostic shows radio state is exposed via isSelected.",
+    "native190: prefilled No/Cost verified, explicit Yes + Restaurant, Update survey → “Thank you. Your product survey is saved.”; cold relaunch shows Yes/Restaurant/Cost persisted.",
+    "DB read-only: product_surveys B version3 again=true reasons [venue,cost] at 01:02Z; no meal column; B has 0 attendance, 0 experience, 0 public reviews, 0 pair consents."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/b66-native-survey-prefilled-from-web.png",
+    "evidence/2026-10-21/b66-native-survey-persisted-relaunch.png",
+    "evidence/2026-10-21/native186-xcui.swift",
+    "evidence/2026-10-21/native190-xcui.swift"
+   ]
+  },
+  {
+   "id": "B66-O002",
+   "executedBy": "Claude Code",
+   "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+   "status": "passed",
+   "title": "Same-DB Admin snapshot and separate survey/rating drilldown CSV",
+   "steps": [
+    "Guarded clock 01:02Z→02:00Z (no pending/due jobs, no meal boundary, same London day); only analytics_snapshots/facts/subjects changed; AI calls 30/budgets 2 unchanged.",
+    "Staff S normal OTP sign-in; Admin 01:00Z snapshot shows survey willing 0/1 with cost 1 (B v2); 02:00Z snapshot shows 1/1, venue 1, cost 1 (latest native version only); page notes rating and survey are independent and survey is affected only by date and user segment.",
+    "Survey drilldown definition: voluntary Settings survey, sign-in only, not bound to mealId, attendance or feedback window. Normal UI “导出此明细” → POST 201 / GET 200; CSV one row (B, latest), no meal fields; 26 rows and 1287 bytes (CRLF) equal the analytics_exports record.",
+    "Rating coverage drilldown export: feedback 0/0, rating 1–5 all 0, no rows; 17 rows/620 bytes equal the record.",
+    "Read-only trace: all 4 meal scores (A5/H4 on M1 and M3) are from effectively present attendees on meals hosted by H, classified TEST since 20:00Z, so they are excluded per Admin PRD; B has 0 scores. Survey and rating exports contain no public reference or reconnect fields.",
+    "Tool gap: the browser download itself was not lstat/SHA-checked on disk (no Downloads scan); content verified from the received response and the export record."
+   ],
+   "artifacts": [
+    "evidence/2026-10-21/b66-export-survey.csv",
+    "evidence/2026-10-21/b66-export-feedback.csv"
+   ]
+  },
+  {
+   "id": "B66-O003",
+   "executedBy": "Claude Code",
+   "testedCommit": "f6d9a06f47c275431d05bb3831bb1890f2d070c6",
+   "status": "failed",
+   "title": "Retention page summary export fails when one metric source is unavailable",
+   "steps": [
+    "Admin 体验与留存 page “导出指标” on the 02:00Z snapshot → POST /v1/admin/exports 503 PROVIDER_UNAVAILABLE “The laterOpportunity source is not available for this snapshot.”; UI shows “导出失败，请重试。”",
+    "The page itself renders that metric as “未就绪或不适用”, but the summary export aborts entirely instead of exporting the available metrics with an unavailable marker (QA-F61)."
+   ],
+   "artifacts": []
+  }
+ ]
+}
