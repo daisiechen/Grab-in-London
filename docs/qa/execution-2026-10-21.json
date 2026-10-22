@@ -16148,7 +16148,7 @@
         "地址坐标服务端验证",
         "Google地图/照片署名、许可表及缓存符合已批准配置"
       ],
-      "actual": "Google服务端key已配置，开发报告地图/Places两次正常真实调用；不是缺Google账户。仍待QA核验真实placeId、服务端地址坐标、照片署名与许可/缓存全套断言。开发负责交接配置及可复验环境，调用成功不等于整条验收通过。",
+      "actual": "Google服务端key已配置，开发报告地图/Places两次正常真实调用；不是缺Google账户。仍待QA核验真实placeId、服务端地址坐标、照片署名与许可/缓存全套断言。开发负责交接配置及可复验环境，调用成功不等于整条验收通过。 2026-10-22 QA-F63: the formal Google adapter never requests photos (photoRefs always empty), so every venue falls back to the placeholder; PRD requires Places photos with authorAttributions. Development work, not a missing user account; gate stays BLOCKED.",
       "history": [
         {
           "status": "BLOCKED",
@@ -16156,7 +16156,10 @@
           "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
         }
       ],
-      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies",
+      "defectIds": [
+        "QA-F63"
+      ]
     },
     {
       "id": "QA-GATE-003",
@@ -16199,7 +16202,7 @@
         "原生证据包含构建号/OS/设备",
         "WebView或DOM测试不能充当iOS完成"
       ],
-      "actual": "正常签名iOS模拟器及实际UI测试可执行；F49键盘、F50通知、F51聊天发送已定向关闭，原失败保留。完整双向旅程/后台切换等本地剩余断言由开发与QA继续执行；真机证据未具备，Apple发布签名仍待审核。不能将本地待测笼统列作用户缺账户。",
+      "actual": "正常签名iOS模拟器及实际UI测试可执行；F49键盘、F50通知、F51聊天发送已定向关闭，原失败保留。完整双向旅程/后台切换等本地剩余断言由开发与QA继续执行；真机证据未具备，Apple发布签名仍待审核。不能将本地待测笼统列作用户缺账户。 2026-10-22 local mapping (no gate status change): same-DB actual simulator journeys J001/J002/J007 PASS (audit B67, B66) and AI034 cold start/reinstall/API restart 410 are reusable sub-evidence. Foreground/background refresh matrix is not closed: AI026 R84/R85 are component/manager evidence only; local simulator rows are listed in remaining-plan-2026-10-22. Remaining external items: real device, real system identity/maps/photos, Apple sign-in and distribution.",
       "history": [
         {
           "status": "BLOCKED",
@@ -23136,7 +23139,8 @@
     "QA-F59": "OPEN_CONFIRMED",
     "QA-F60": "OPEN_CONFIRMED",
     "QA-F61": "OPEN_CONFIRMED",
-    "QA-F62": "OPEN_CONFIRMED"
+    "QA-F62": "OPEN_CONFIRMED",
+    "QA-F63": "OPEN_CONFIRMED"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
