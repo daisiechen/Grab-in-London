@@ -574,3 +574,13 @@
 - QA发现sidecar复制运行archive遗留local-acceptance端口adaptation及非Git ENTRY，已恢复正式git19d且保前红history：1231regular+4tracked symlink逐Git一致，runtime无原server/lifecycle/localacceptance。精确更正：offline-test自建库seed确import旧httpserver，不能说所有test导入图无server。QA隔离copy自有PG复跑通过。
 - root按已审observer有限只读source核PID63824唯一API/PG、五合成饭局、23迁移逐正式19d校验/PG17/exact01:10，生成0600本地trust descriptor，不读env/.pgpass/Key/正文；因此root只读source连接已发生，不能继续称全系统source0。没有source业务写、bootstrap或clockadvance。descriptor只版本/head metadata不冒全facts证明；新runner须17表同RR只读count/rowdigest基线，正常bootstrap/logoutclose→QA合法+60s/newcheckpoint→RAMreceipt重attach。
 - QA独审factory/descriptor通过，operator仅mock不足真实SQL，root要求新增真实自有PG整链与PGPASSFILE/devnull及白名单env防隐式凭据；默认仍不执行source。专用f44-admin.localhost Origin实际IAB新host非认证marker隔离验证通过，具体52045代理/CSRF仍待正常登录200。Admin无登录表单，准备明确临时QA身份portal走正常OTP/logout，不injectcookies/不擅补staffprofile；无cookie session-read可落正常401但原cookie/bearer仍预检拒，改动重冻审核。原01:10继续冻结。
+
+
+## F45/F46实际缺口与F47一次性环境故障
+
+- F45：权威AI方案46/103要求当前安装token-only安全恢复/TTL内显式Continue，未见后续覆盖决策。QA正式2005991/3102 Native68正常Start后69约2分钟冷启只有Start，服务器同PID42728未重启/session ACTIVE gen1未过期/noPending，未Ask模型/reset，已actual红。owner正实现session/device/revoke/TTL/owner绑定的安全存储及marker清理，不存正文/偏好/草稿；旧guest身份复用不能替代AI上下文Continue，待正式artifact复验。
+- F46：QA Native66本机退出guest而62044远端family仍active，不能猜请求为429；Native67 cold仍guest证明本机未恢复该登录。root新增真实navigation按signedout卸Settings的deferred429回归1红→3绿，连auth29绿/type/lint绿，全局session notice在AppRoot安全区、不依赖Settings局部state；204不警示，晚到失败不附新signin。QA独立network/503卸载回归baseline两红/WIP两绿；尚未正式提交/原生复验关闭，等F45冻后一并全原生验证分片提交。
+- 原库stage1 bootstrap已由QA独立V2真实operator演练放行后执行：hash22tools/1231archive全匹配，正常新合成staff OTP→自身TEST→logout204/全部family撤，17表前后digest23083470f1ff1655bf348cdd7c210ed3bb878e1991b38cc5fa0a6b9a31a5cadb不变；自身listener/pool关闭，rootsession46293停WAIT，未resume/snapshot/clockwrite。
+- F47：QA独立推进前17表digest再核同，按协议仅一次FIFO advance01:11，旧rig随后报LOCAL CLOCK STOPPED current01:10 resetrequired并自动退出；63824/61973消失、PG拒连。旧脚本任一advance阶段错误均fatal，finally无条件dropDB/pg.stop删目录；日志未记录具体失败阶段，不能猜drain或workerstop timeout，Nodecurrent旧也不能证明PG commit是否发生。保留原api.log、descriptor、QA/private/tmp/fancy-qa-stage1-before.json和operatorreceipt；禁止重试advance/resume/snapshot/重启/清理旧环境，不伪造旧IDs/history宣称恢复，旧同库后台trace未闭环。生产代码与独立F44结果不因该fixture丢失重开。
+- venues owner已获准最小F47基础设施修复：阶段安全错误/DBclock OLD/TARGET/UNKNOWN、默认异常保OWNDBPG、显式核owner receipt才清理、PGstop失败不强rm、真实heldrequest/responseabort/workerstop/advance/tick故障回归。app.close原AI recovery元数据副作用须明示，保库不冒静止快照。所有验证只新自有PG，原环境不复建。
+- AI3102正常签名包200已交QA；034独立parent持OWNPG/仅OWN APIchild真SIGKILL再spawn的短生命周期测试通过：同auth/business/clockhash、技术delta空、旧session/result410，测试资源已清理，无standing；最终WIP因F45暂停，不冒native034通过。完整001新case/sameDBstaff/合法clock与默认保数据需后续独立新环境，不拼旧trace。
