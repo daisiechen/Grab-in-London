@@ -41,6 +41,11 @@ class MvpPatchPrdTest(unittest.TestCase):
         text = (ROOT / 'docs/product/mvp-patch-PRD.zh-CN.md').read_text()
         for requirement in ('PATCH-007', 'PATCH-008', 'AC-007g', 'AC-008h',
                             '链接不是免审核邀请券', 'Mentions still notify you',
-                            '尚非用户逐项确认', '普通成员不可操作，服务端同样拒绝越权',
+                            '仅发起人可@所有人', '普通成员不可操作，服务端同样拒绝越权',
                             '不能以模拟横幅代替系统证据'):
             self.assertIn(requirement, text)
+
+    def test_mention_rules_are_confirmed(self):
+        text = (ROOT / 'docs/product/mvp-patch-PRD.zh-CN.md').read_text()
+        self.assertIn('开启免打扰后，@本人和@所有人仍提醒', text)
+        self.assertNotIn('PATCH-008默认细则仍待用户逐项确认', text)
