@@ -58,6 +58,19 @@ describe('PATCH-006 statistics refresh bound to target user + original intent + 
     const later = await seal();
     const { rows: [input] } = await h.db.pool.query(`SELECT revision::text FROM analytics_snapshot_classification_inputs WHERE snapshot_id=$1 AND user_id=$2`, [later, target]);
     expect(BigInt(input.revision)).toBeGreaterThan(BigInt(accepted));
+    // A ready refresh follows the newest valid snapshot that sealed this user's revision.
+    expect(await readStatisticsRefresh(h.db.pool, r.refreshId, admin)).toMatchObject({ state: 'ready', snapshotId: later });
+  });
+
+  it('P10-R02: intents resolved at different times converge on the newest snapshot sealing both users', async () => {
+    const admin = await user(), first = await user(), second = await user();
+    const a = await refresh(admin, first, await classify(first, admin));
+    const s1 = (await statisticsRefreshTick(h.db.pool, seal)).sealed;
+    expect(await readStatisticsRefresh(h.db.pool, a.refreshId, admin)).toMatchObject({ state: 'ready', snapshotId: s1 });
+    const b = await refresh(admin, second, await classify(second, admin));
+    const s2 = (await statisticsRefreshTick(h.db.pool, seal)).sealed;
+    expect(await readStatisticsRefresh(h.db.pool, b.refreshId, admin)).toMatchObject({ state: 'ready', snapshotId: s2 });
+    expect(await readStatisticsRefresh(h.db.pool, a.refreshId, admin)).toMatchObject({ state: 'ready', snapshotId: s2 });
   });
 
   it('A03: a failed seal fails only statistics; retry reopens statistics with zero classification writes', async () => {
