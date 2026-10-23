@@ -27,6 +27,11 @@ export interface OperationDef {
   write: WriteProtocol;
   /** Requires `If-Match: "<version>"`; missing → 428 PRECONDITION_REQUIRED. */
   ifMatch: boolean;
+  /**
+   * P1.1: the original actor may read this operation's sealed intent outcome via
+   * getCommandReceipt (actor+operation+key). Only idempotencyKey writes may opt in.
+   */
+  receipt?: true;
   params?: TObject;
   query?: TObject;
   body?: TSchema;
