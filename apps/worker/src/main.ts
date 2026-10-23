@@ -4,6 +4,7 @@ import {randomUUID,createHmac} from 'node:crypto';
 import {loadConfig,type CoreConfig} from '@fancy/config';
 import {createPool,type Pool} from '@fancy/db';
 import {sealSourceSnapshot} from '../../api/src/admin/snapshots.ts';
+import {statisticsRefreshTick} from '../../api/src/admin/statistics-refresh.ts';
 import {UnavailableDeletionStep,type DeletionSteps} from './deletion/provider.ts';
 import {Auth0DeletionStep} from './deletion/auth0.ts';
 import {deletionHandler} from './handlers/deletion.ts';
@@ -38,6 +39,15 @@ export function createWorkerRuntime(pool:Pool,config:CoreConfig){
  async function tick(){
   if(!await recoveryReady(pool))return {claimed:0,done:0,retried:0,dead:0,lost:0};
   const result=await runner.tick();await mail.tick();
+  // P09: a pending classification statistics refresh seals one snapshot now and resolves in the
+  // same tick, instead of waiting for the hourly snapshot (admin-progress handoff snippet).
+  const {rows:[coverage]}=await pool.query<{started_at:Date}>(`SELECT started_at FROM analytics_delivery_coverage WHERE id=1`);
+  if(coverage){
+   const declared=config.analyticsCoverageStart?new Date(config.analyticsCoverageStart):null;
+   const start=declared&&declared>coverage.started_at?declared:coverage.started_at;
+   const refresh=await statisticsRefreshTick(pool,()=>sealSourceSnapshot(pool,start,{verifiedDiscovery:!!declared,clientTelemetry:!!declared}));
+   if(refresh.sealed)lastSnapshot=Date.now();
+  }
   if(Date.now()-lastSnapshot>=3600_000){
    // Coverage starts at the actual ledger installation, never an invented historical date.
    const {rows:[coverage]}=await pool.query<{started_at:Date}>(`SELECT started_at FROM analytics_delivery_coverage WHERE id=1`);
