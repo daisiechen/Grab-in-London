@@ -1,0 +1,23 @@
+import XCTest
+final class ProbeTests:XCTestCase {
+func testF63NormalLogin210(){
+continueAfterFailure=false
+let app=XCUIApplication(bundleIdentifier:"com.example.fancy.dev");app.launch()
+let create=app.buttons["Create meal"];XCTAssertTrue(create.waitForExistence(timeout:12),app.debugDescription);create.tap()
+let email=app.buttons["Continue with email"];XCTAssertTrue(email.waitForExistence(timeout:8),app.debugDescription);email.tap()
+let field=app.textFields["Email address"];XCTAssertTrue(field.waitForExistence(timeout:8),app.debugDescription);field.tap();field.typeText("qa-f63-web@example.test")
+app.buttons["Send code"].tap()
+let code=app.textFields["6-digit code"];XCTAssertTrue(code.waitForExistence(timeout:10),app.debugDescription)
+let docs=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0];let marker=docs.appendingPathComponent("f63-210-code")
+XCTAssertFalse(FileManager.default.fileExists(atPath:marker.path))
+print("F63_210_CODE_REQUIRED\n"+marker.path)
+let ready=NSPredicate { _,_ in FileManager.default.fileExists(atPath:marker.path) }
+XCTAssertEqual(XCTWaiter.wait(for:[XCTNSPredicateExpectation(predicate:ready,object:nil)],timeout:90),.completed)
+let otp=try! String(contentsOf:marker,encoding:.utf8);XCTAssertNotNil(otp.range(of:"^[0-9]{6}$",options:.regularExpression));code.tap();code.typeText(otp)
+app.buttons["Verify & continue"].tap()
+let title=app.staticTexts["A place at your table."].firstMatch
+XCTAssertTrue(title.waitForExistence(timeout:15),app.debugDescription)
+let a=XCTAttachment(screenshot:app.screenshot());a.name="f63-native-normal-login-return-create";a.lifetime = .keepAlways;add(a)
+print("F63_210_NORMAL_LOGIN_CREATE\n"+app.debugDescription)
+}
+}

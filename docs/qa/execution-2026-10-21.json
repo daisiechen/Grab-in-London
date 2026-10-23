@@ -119,7 +119,8 @@
     "browserObservationsB76": "evidence/2026-10-21/browser-b76.json",
     "browserObservationsB77": "evidence/2026-10-21/browser-b77.json",
     "browserObservationsB78": "evidence/2026-10-21/browser-b78.json",
-    "browserObservationsB79": "evidence/2026-10-21/browser-b79.json"
+    "browserObservationsB79": "evidence/2026-10-21/browser-b79.json",
+    "browserObservationsB80": "evidence/2026-10-21/browser-b80.json"
   },
   "cases": [
     {
@@ -16152,7 +16153,8 @@
       "target": "production implementation in local synthetic environment",
       "status": "BLOCKED",
       "evidence": [
-        "B79-O001"
+        "B79-O001",
+        "B80-O001"
       ],
       "relatedAutomatedAssertions": [],
       "coveredExpectedIndexes": [],
@@ -16161,7 +16163,7 @@
         "地址坐标服务端验证",
         "Google地图/照片署名、许可表及缓存符合已批准配置"
       ],
-      "actual": "Google服务端key已配置，开发报告地图/Places两次正常真实调用；不是缺Google账户。仍待QA核验真实placeId、服务端地址坐标、照片署名与许可/缓存全套断言。开发负责交接配置及可复验环境，调用成功不等于整条验收通过。 2026-10-22 QA-F63: the formal Google adapter never requests photos (photoRefs always empty), so every venue falls back to the placeholder; PRD requires Places photos with authorAttributions. Development work, not a missing user account; gate stays BLOCKED. B79: independent actual synthetic Web photo A/B preview, normal replacement, published list/detail, author-link navigation and null/unavailable placeholders/restored photo passed. No real Google evidence; native/late-response/image-failure/mismatch remain, F63 open.",
+      "actual": "Google服务端key已配置，开发报告地图/Places两次正常真实调用；不是缺Google账户。仍待QA核验真实placeId、服务端地址坐标、照片署名与许可/缓存全套断言。开发负责交接配置及可复验环境，调用成功不等于整条验收通过。 2026-10-22 QA-F63: the formal Google adapter never requests photos (photoRefs always empty), so every venue falls back to the placeholder; PRD requires Places photos with authorAttributions. Development work, not a missing user account; gate stays BLOCKED. B79: independent actual synthetic Web photo A/B preview, normal replacement, published list/detail, author-link navigation and null/unavailable placeholders/restored photo passed. No real Google evidence; native/late-response/image-failure/mismatch remain, F63 open. B80: actual native list/detail B pixels, visible attribution, normal identity and four-step A creation preview verified; script reds209–216 preserved separately, collectors partial. Native switching/late-response/fallback and real provider remain incomplete.",
       "history": [
         {
           "status": "BLOCKED",
@@ -23228,5 +23230,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B79:202 PASS/4 NOT_RUN/11 BLOCKED. F63 synthetic Web photo display/replacement/list/detail/attribution and no-photo/unavailable/recovery subpaths observed. Native/lateA/imagefailure/mismatch and real Google remain unverified; F63 open. No clock/DNS/new real mail action."
+  "currentExecutionSlice": "B80:202 PASS/4 NOT_RUN/11 BLOCKED. Actual native photo list/detail, visible attribution and four-step A preview passed; raw control reds209–216 retained. F63 open: switching/lateA/fallback/imagefailure/mismatch/real Google remain. Google basic-profile consent is awaiting explicit human approval after automatic rejection; no retry. Clock/DNS/new-mail holds unchanged."
 }

@@ -1,0 +1,87 @@
+{
+  "observations": [
+    {
+      "testedCommit": "c0bddd9f8ee7ad0839833ea0f2f5955ce62f0ba3",
+      "clientComposition": "3ee69fe baseline + seven F64 files from9101004 + seven F63 native/five shared files fromc0bddd9;19 overlays",
+      "executedBy": "Codex QA actual XCTest on new dedicated simulator and independent screenshot inspection",
+      "id": "B80-O001",
+      "status": "passed",
+      "title": "F63 native actual list/detail pixels, normal identity, visible attribution and four-step creation preview",
+      "steps": [
+        "Only the new dedicated simulator used the reviewed normal simulator-signed package and isolated synthetic OWN API. Original D92/source-B remained untouched; no Google/model/real-mail calls.",
+        "208 normal Discover list→explicit meal detail displayed real purple B pixels. Both exported screenshots were independently viewed; list attribution was visible.",
+        "212 normal OTP after per-character email/code value checks reached actual native Arrange; its final wrong Web-heading assertion stayed failed. 213 independently reused that normal identity, checked Synthetic Photo QA profile and native Arrange your table, and passed. No extra OTP for213.",
+        "214 tapped list author: Safari foreground, return to App preserved Discover, then explicit meal entry and scroll showed actual purple B and full author in detail. Safari screenshot was still loading/blank, so full external URL/README-body loading is NOT accepted.",
+        "217 completed normal restaurant A selection, date/time, title/description/English, budget and synthetic reservation declaration through all four steps. Actual Review showed green A pixels and author; screenshot independently viewed. Test passed102.929seconds/exit0. No publish occurred.",
+        "Native A/B replacement, late A response, no-photo/provider failure and image decode/network failure/mismatch remain pending. Synthetic assets do not prove real Google integration or licensing; F63 remains open."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f63-native-list-b.png",
+        "evidence/2026-10-21/f63-native-detail-b.png",
+        "evidence/2026-10-21/f63-native-normal-create.png",
+        "evidence/2026-10-21/f63-native-visible-author-b.png",
+        "evidence/2026-10-21/f63-native-author-browser-loading.png",
+        "evidence/2026-10-21/f63-native-create-preview-a.png",
+        "evidence/2026-10-21/native208-f63-xcui.swift",
+        "evidence/2026-10-21/native213-f63-xcui.swift",
+        "evidence/2026-10-21/native214-f63-xcui.swift",
+        "evidence/2026-10-21/native217-f63-xcui.swift"
+      ],
+      "rawEvidence": {
+        "nativeLogSha256": {
+          "208": "4d979c9a5d4fd9ae071a3e10cdf30ba5aa9ff7938785c95530cc5c32e2f879cf",
+          "209": "ad1c8704e6bb924c9ad683feedf82c935a5f8aa88e99a2b38bd55f7428c1d4fd",
+          "210": "909f5c46f6b08962485cc36db62d3df24e17afb02989d606b02c839675aeaf3e",
+          "211": "a0256675bc2ca9ad2ec30a73af8319705a4f0e6b4a4b98fe60229e0d036b10af",
+          "212": "427b6f79d04e081fb6415c45bcb3564d2f889a6981edf63413a804c1df8ce0e8",
+          "213": "b96b277b8ce4f89c4cf653254667cb1874eb1083357d84867d37c54490abe158",
+          "214": "49e1feea937b5a56cd79fd6058179f326cd67b56094170803d91a0dc96725668",
+          "215": "772effe5405b16573a3d9380003df3416e134cac35911736e1a6108a3f7ae3cf",
+          "216": "6975ab79ec9150545821dd361140ae8ab39e9b280ff5c3828b72f06fb8e96af3",
+          "217": "521556a97927f8cb835922ead0822f323d17871b98c467b614c2a442e39e0e54"
+        },
+        "privateBundlesRetained": true
+      }
+    },
+    {
+      "testedCommit": "c0bddd9f8ee7ad0839833ea0f2f5955ce62f0ba3",
+      "clientComposition": "3ee69fe baseline + seven F64 files from9101004 + seven F63 native/five shared files fromc0bddd9;19 overlays",
+      "executedBy": "Codex QA actual XCTest on new dedicated simulator and independent screenshot inspection",
+      "id": "B80-O002",
+      "status": "failed",
+      "title": "Preserved native QA control failures209–216, not product acceptance failures",
+      "steps": [
+        "209 assumed an extra Continue after guest Create; actual direct sign-in contradicted the script. No OTP requested.",
+        "210 rapid XCTest text input left only five OTP digits; actual UI correctly required six, so no completed login.",
+        "211 email input lost a character (q-f63 instead of qa-f63). Host bridge rejected the stale intended-identity code and wrote nothing; runner timed out. No wrong-identity login.",
+        "212 per-character email and OTP values passed and normal login reached native creation; final assertion incorrectly used the Web heading. Original red retained;213 separately verified the resulting identity and actual native heading.",
+        "215 selected A normally but assumed an accessible Other Selected restaurant; actual UI exposed static restaurant name.216 corrected this and completed date/time/entered introduction, then failed because multiline TextView label includes placeholder and required prefix matching.",
+        "215/216 target App and test suite had ended but verbose Xcode diagnostic collectors remained. Only those exact self-owned collectors were terminated after live identity checks; parent exit143 and Staging bundles are partial, not finalized result evidence. Raw failure logs preserved.",
+        "217 used actual observed selectors, explicit English selection and value-checked input. Local xcodebuild help confirmed collect-test-diagnostics never disables only additional sysdiagnose; original assertions, manual screenshot attachments and logs remained.217 completed normally."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native209-f63-xcui.swift",
+        "evidence/2026-10-21/native210-f63-xcui.swift",
+        "evidence/2026-10-21/native211-f63-xcui.swift",
+        "evidence/2026-10-21/native212-f63-xcui.swift",
+        "evidence/2026-10-21/native215-f63-xcui.swift",
+        "evidence/2026-10-21/native216-f63-xcui.swift"
+      ],
+      "rawEvidence": {
+        "nativeLogSha256": {
+          "208": "4d979c9a5d4fd9ae071a3e10cdf30ba5aa9ff7938785c95530cc5c32e2f879cf",
+          "209": "ad1c8704e6bb924c9ad683feedf82c935a5f8aa88e99a2b38bd55f7428c1d4fd",
+          "210": "909f5c46f6b08962485cc36db62d3df24e17afb02989d606b02c839675aeaf3e",
+          "211": "a0256675bc2ca9ad2ec30a73af8319705a4f0e6b4a4b98fe60229e0d036b10af",
+          "212": "427b6f79d04e081fb6415c45bcb3564d2f889a6981edf63413a804c1df8ce0e8",
+          "213": "b96b277b8ce4f89c4cf653254667cb1874eb1083357d84867d37c54490abe158",
+          "214": "49e1feea937b5a56cd79fd6058179f326cd67b56094170803d91a0dc96725668",
+          "215": "772effe5405b16573a3d9380003df3416e134cac35911736e1a6108a3f7ae3cf",
+          "216": "6975ab79ec9150545821dd361140ae8ab39e9b280ff5c3828b72f06fb8e96af3",
+          "217": "521556a97927f8cb835922ead0822f323d17871b98c467b614c2a442e39e0e54"
+        },
+        "originalFailuresRetained": true
+      }
+    }
+  ]
+}
