@@ -8,7 +8,7 @@
 
 ## 切片记录
 
-### P03 原意图回执契约（PATCH-004/006基础）— 已提交，待Codex验收
+### P03 原意图回执契约（PATCH-004/006基础）— 提交 2e133da48695ca9520e0cf7c1078a483ebf8775d，待Codex验收
 
 - 契约：`GET /v1/me/command-receipts/{operation}/{key}`（operationId `getCommandReceipt`，session，只读）。复用既有 `idempotency` 表(actor+operation+key)，**无新迁移**。
 - 白名单：OperationDef新增 `receipt?: true`，仅允许 idempotencyKey 写；当前标记 updateMe、createMeal、editMeal、applyMeal、decideApplication、withdrawApplication、cancelMeal、leaveMeal、reportAttendance、rateExperience、reviewPerson、selectReconnect、revokeConnection、leaveGroup、block、unblock。后台可在自有 operations-admin.ts 对 classifyUser 等加 `receipt: true`（staff操作读取回执时重验role+MFA，已实现），然后重新生成契约；生成由客户端串行执行。
