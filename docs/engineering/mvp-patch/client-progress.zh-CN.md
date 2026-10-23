@@ -8,6 +8,10 @@
 
 ## 切片记录
 
+### P02 冻结稿差异盘点 — 见[delta-map](delta-map.zh-CN.md)
+
+只读Figma CURRENT 565:32377/581:*与代码对照。主要待改：PATCH-004组合反馈状态机、PATCH-001公开支持出口、PATCH-007分享全部、PATCH-008全部、资料/创建unknown回执核对；DST、AI替换确认、简介/申请长度等已符合不重写。
+
 ### P03 原意图回执契约（PATCH-004/006基础）— 提交 2e133da48695ca9520e0cf7c1078a483ebf8775d，待Codex验收
 
 - 契约：`GET /v1/me/command-receipts/{operation}/{key}`（operationId `getCommandReceipt`，session，只读）。复用既有 `idempotency` 表(actor+operation+key)，**无新迁移**。
