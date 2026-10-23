@@ -227,3 +227,5 @@
 - [QA B78：原生持续断网与显式重试通过、真机连接前置核查](qa/evidence/2026-10-21/browser-b78.json)。
 
 - [QA 自造餐厅照片显示夹具（纯合成 A/B，非 Google 素材）](qa/fixtures/restaurant-photos/README.md)。
+
+- [QA B79：合成 Web 餐厅图片实际显示、替换、署名及降级](qa/evidence/2026-10-21/browser-b79.json)。

@@ -1,0 +1,29 @@
+{
+  "observations": [
+    {
+      "id": "B79-O001",
+      "status": "passed",
+      "testedCommit": "c0bddd9f8ee7ad0839833ea0f2f5955ce62f0ba3",
+      "executedBy": "Codex QA actual Chrome UI and independent screenshot inspection",
+      "title": "F63 synthetic Web photos: creation preview, replacement, published list/detail, attribution and fallback",
+      "steps": [
+        "A new isolated OWN database/API/Web used normal random OTP, profile, all four create steps and explicit publish. No source-B or retained user was reused. Google/model/real-mail calls0.",
+        "Review displayed actual green A pixels and Synthetic Author A; normal reselect B required reconfirming time/reservation while preserving introduction. Review then displayed actual purple B pixels and author without old A.",
+        "Explicit publish produced one synthetic meal; actual detail and hosting list displayed purple B and correct attribution. Author links from review and hosting list opened the exact pinned fixture README in a new tab; original create/list URL remained unchanged, no accidental meal navigation.",
+        "Fixed no_photo mode followed by reload showed a neutral placeholder without photo/author in list. Fixed provider-unavailable mode showed placeholder in detail while meal details remained usable. This actual UI observation does not itself establish HTTP503; separate OWN API proof covers503.",
+        "Restoring photo mode and reloading displayed purple B again. Screenshots were directly viewed, not inferred from AX image presence or mocked onLoad.",
+        "Late A response, native UI, image decode/network failure and placeId mismatch are still unverified. Assets and author labels are synthetic, not Google photos/licensing evidence. F63 remains open and G-PLACES blocked."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f63-web-review-a.png",
+        "evidence/2026-10-21/f63-web-review-b.png",
+        "evidence/2026-10-21/f63-web-detail-b.png",
+        "evidence/2026-10-21/f63-web-list-b.png",
+        "evidence/2026-10-21/f63-web-no-photo.png",
+        "evidence/2026-10-21/f63-web-provider-unavailable.png",
+        "evidence/2026-10-21/f63-web-restored-b.png"
+      ],
+      "classification": "partial synthetic-client verification; no whole-case promotion"
+    }
+  ]
+}
