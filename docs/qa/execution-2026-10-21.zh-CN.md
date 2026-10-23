@@ -24,7 +24,7 @@ Current counts202 PASS/4 NOT_RUN/11 BLOCKED. Remaining whole local journeys J005
 
 ## 实际运行
 
-B102: JIT tool QA independent4/4PASS in newOWN PG; initial sandbox listen refusal retained. F67 fix9dccdfb independently passes original1+privacy4 component regressions; actual signed package/device401 remains pending. Whole217 counts202/4/11 unchanged; no targetfamily revocation or runtime cutover.
+B103: F67 signed1785package verified/installed; exactJITrevokeCONFIRMED, sameprocess normalInboxguest reached; sameuser reauth/draft pending.240-242 driver wrongforeground/navigation expectations retained, not productFAIL. UnifiedWeb/F66candidate independently16PASS, one human newgen approval obtained not yetexecuted. F68four numeric grounding reds independently fixed; correctedOWN64 46success4needs2expectedtimeout+8lifecycle, not realmodel acceptance. Whole217counts202/4/11.
 
 | ID | 结果 | 范围 |
 |---|---|---|

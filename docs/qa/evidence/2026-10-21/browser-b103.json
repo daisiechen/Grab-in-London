@@ -1,0 +1,52 @@
+{
+  "observations": [
+    {
+      "id": "B103-O001",
+      "status": "passed",
+      "testedCommit": "9dccdfb3b66140ead12e64b9c423c1b9134b4da7",
+      "title": "F67 normal signed package independently verified and cover-installed",
+      "steps": [
+        "Verified1785 source composition, exact four F67 production overlays plus explicit QA clock overlays; codesign deep strict exit0.",
+        "Binary0fa223e57c0d90f651aca4a73829254bc1676df1fb7b1a063940b7b52ab129e3 and Hermes4f6a1ab2c1b133f49c716dba590fc32301e8018857bcf785d9ad934e0f16cc53 match installed originalD92 package. Normal coverinstall without uninstall, credentials transfer or clock change.",
+        "Actual240 normalH/target/draft preconditions passed. Exact JIT single revoke CONFIRMED/SAFE_PROJECTION_UNCHANGED; no retry. Signed-in foreground-only does not revalidate by AppRoot contract;240 wrong driver expectation retained.241 navigation missed one Back;242 reached actual guest Inbox and normalmeal sign-in gate, driver incorrectly expected guestApply. Product draft recovery still pending normal sameuser authentication; no Send."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B103-O002",
+      "status": "passed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "title": "Unified F66 overlay and observed-clock Web candidate independently accepted in OWN environment",
+      "steps": [
+        "Independent12components plus4 hook/adapter/realOWNPGchild checks allPASS/exit0. Exact1797source/100runtime/141front manifests checked.",
+        "Actual independentAPI44670/newOWN frontend only; normal opaque+CSRF/OTP/profile/booking/worker and stop-preserve-PG verified. No currentPG connection or target cutover.",
+        "Human separately authorized one new sameDB generation and one local secret replacement, no advance/reset/price extension/realAI. Not executed in this evidence."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B103-O003",
+      "status": "failed",
+      "testedCommit": "53b99b2a9fd7ba4c5337567648d84d6bc1f42958",
+      "title": "QA-F68 numeric grounding rejects valid Chinese and English user expressions",
+      "steps": [
+        "Independent originalOWN64 repeats38success10failed4needsinput+8lifecycle;64controllers76fakecallspeak5UNKNOWN2external0.",
+        "ActualvalidatePlan/applyPlan rejects20镑/一镑/二人/two in F01-ZH/P01-ZH/F02-ZH/F02-EN. Four distinct numeric cases are product coverage defects.",
+        "Other D01/D04 bilingual synthetic drafts invent unsupported I enjoy claims and are correctly rejected; fix fixtures without weakening guard. TwoS04uncertain timeouts are expected."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B103-O004",
+      "status": "passed",
+      "testedCommit": "385665c411bbdb61d7e9006abc0dd49bbb95d4d6",
+      "title": "F68 fixed grounding and corrected controlled corpus independently verified",
+      "steps": [
+        "Independent exact170manifest/query246ed747 pins; original4 numeric red become4green. Original8 longer unsupported draft claims still refuse; drafts guard byteexact.",
+        "NewOWN case wxr1do:46SUCCEEDED4NEEDS_INPUT2expectedS04FAILED+8lifecycle,64controllers76fakecallspeak5UNKNOWN2external0, exit0. OwnPG STOPPED/dataRetained.",
+        "Sourcefix independent only, currentruntime not updated. Not real model quality/cost/data acceptance."
+      ],
+      "artifacts": []
+    }
+  ]
+}
