@@ -1,0 +1,32 @@
+{
+  "observations": [
+    {
+      "id": "B77-O001",
+      "status": "failed",
+      "testedCommit": "9101004d92cce4fdbc833232ea8d6841d06bdd90",
+      "apiCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "clientComposition": "3ee69fe baseline plus reviewed seven-file F64 overlay",
+      "executedBy": "Codex QA actual native XCTest",
+      "title": "J008 one actual inbox socket drop occurred; visible offline/explicit retry path not reached",
+      "steps": [
+        "Separately frozen corrected transport allowed at most two normal refresh operations across ARM/RECOVERY, with existing30second deadline, auth-failure terminal handling and no business/AI/DELETE routes. QA independently verified all hashes and56 OWN tests; these are tooling checks, not product acceptance.",
+        "One new PREPARE restored normal H/loaded Inbox in the same App. Actual runner-only fresh ready marker and simctl/canonical path binding preceded PAUSE0, fresh observation and one ARM cap. Clock stayed02:31:30Z.",
+        "Actual proxy OFFLINE_BEFORE_FORWARD event proves one GET inbox socket drop: state RECOVERY, forwarded6, offline1, blocked0, unknown0, inflight0. Unlike204, intended one-request injection happened.",
+        "UI never exposed Retry loading inbox during the8second assertion; actual failure AX retained Chats10. XCTest failed29.139seconds, exit65, before any explicit Retry click. Deadline event later showed forwarded7/offline1/unknown0. An extra request was forwarded; transport-level transparent retry is plausible but per-operation packet identity was not recorded, so not asserted as fact.",
+        "This does not demonstrate sustained offline/error/explicit recovery. Preserve original red; do not replace the assertion with automatic-recovery success or register an unconfirmed product defect. Tool owner is preparing a bounded offline-hold/explicit-restore protocol and anonymous operation/status evidence before another distinct case.",
+        "Holder exited0 and terminal caseEnded true. Later explicit stop attempt encountered ENXIO/no FIFO reader, not a delivered stop. No automatic rerun, clock advance, AI, business write or deletion. J008 remains NOT_RUN."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native205-codex-offline-xcui.swift"
+      ],
+      "rawEvidence": {
+        "xctestLogSha256": "969de046f777c39f873e8ad99115ff6771073f735d13652354bd00d809d5f770",
+        "transportLogSha256": "0b1843578873f2e0bf22dfa9872e0e37a93158e20d4b795a4d07dd1b985f11fb",
+        "bridgeLogSha256": "842d67dc4717c2243a94591294b80fcbae28735b36ced73e5075eeb0d6591b2d",
+        "independentToolOwnLogSha256": "38b75ad68b9a2254f41e21541e6884045a0df67fcb4ae57fa5e4e509d42864f9",
+        "privateBundleRetained": true
+      },
+      "classification": "actual one-request network fault; sustained offline scenario not reproduced; no confirmed product defect"
+    }
+  ]
+}
