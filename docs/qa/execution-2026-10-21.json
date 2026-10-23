@@ -125,7 +125,8 @@
     "browserObservationsB82": "evidence/2026-10-21/browser-b82.json",
     "browserObservationsB83": "evidence/2026-10-21/browser-b83.json",
     "browserObservationsB84": "evidence/2026-10-21/browser-b84.json",
-    "browserObservationsB85": "evidence/2026-10-21/browser-b85.json"
+    "browserObservationsB85": "evidence/2026-10-21/browser-b85.json",
+    "browserObservationsB86": "evidence/2026-10-21/browser-b86.json"
   },
   "cases": [
     {
@@ -16164,7 +16165,8 @@
         "B82-O001",
         "B83-O001",
         "B84-O001",
-        "B85-O001"
+        "B85-O001",
+        "B86-O001"
       ],
       "relatedAutomatedAssertions": [],
       "coveredExpectedIndexes": [],
@@ -16173,7 +16175,7 @@
         "地址坐标服务端验证",
         "Google地图/照片署名、许可表及缓存符合已批准配置"
       ],
-      "actual": "Google服务端key已配置，开发报告地图/Places两次正常真实调用；不是缺Google账户。仍待QA核验真实placeId、服务端地址坐标、照片署名与许可/缓存全套断言。开发负责交接配置及可复验环境，调用成功不等于整条验收通过。 2026-10-22 QA-F63: the formal Google adapter never requests photos (photoRefs always empty), so every venue falls back to the placeholder; PRD requires Places photos with authorAttributions. Development work, not a missing user account; gate stays BLOCKED. B79: independent actual synthetic Web photo A/B preview, normal replacement, published list/detail, author-link navigation and null/unavailable placeholders/restored photo passed. No real Google evidence; native/late-response/image-failure/mismatch remain, F63 open. B80: actual native list/detail B pixels, visible attribution, normal identity and four-step A creation preview verified; script reds209–216 preserved separately, collectors partial. Native switching/late-response/fallback and real provider remain incomplete. B81: native actual no_photo/unavailable list/detail fallback and same-draft A to B photo/author replacement passed; no publish. Late response, image-error/mismatch and real provider evidence remain pending. B82: native author external README body visibly rendered after actual page-loaded predicate; earlier AX-before-render blank screenshot retained. Full URL not separately inspected; F63 open. B83: synthetic Web B image/author retained after delayed A same-request server finish. No publish, no claim client received/decoded A; native late-response pending. B84: native same-draft B image/author remained after delayed A5 server finish; normal new OWN login verified, interrupted228 retained. No publish or claim A client decode. B85: actual synthetic Web text-as-image error and place mismatch fallback/no author, then normal green A/author recovery. Decode metadata total3; per-mount retry cause not proven. Native fault UI pending.",
+      "actual": "Google服务端key已配置，开发报告地图/Places两次正常真实调用；不是缺Google账户。仍待QA核验真实placeId、服务端地址坐标、照片署名与许可/缓存全套断言。开发负责交接配置及可复验环境，调用成功不等于整条验收通过。 2026-10-22 QA-F63: the formal Google adapter never requests photos (photoRefs always empty), so every venue falls back to the placeholder; PRD requires Places photos with authorAttributions. Development work, not a missing user account; gate stays BLOCKED. B79: independent actual synthetic Web photo A/B preview, normal replacement, published list/detail, author-link navigation and null/unavailable placeholders/restored photo passed. No real Google evidence; native/late-response/image-failure/mismatch remain, F63 open. B80: actual native list/detail B pixels, visible attribution, normal identity and four-step A creation preview verified; script reds209–216 preserved separately, collectors partial. Native switching/late-response/fallback and real provider remain incomplete. B81: native actual no_photo/unavailable list/detail fallback and same-draft A to B photo/author replacement passed; no publish. Late response, image-error/mismatch and real provider evidence remain pending. B82: native author external README body visibly rendered after actual page-loaded predicate; earlier AX-before-render blank screenshot retained. Full URL not separately inspected; F63 open. B83: synthetic Web B image/author retained after delayed A same-request server finish. No publish, no claim client received/decoded A; native late-response pending. B84: native same-draft B image/author remained after delayed A5 server finish; normal new OWN login verified, interrupted228 retained. No publish or claim A client decode. B85: actual synthetic Web text-as-image error and place mismatch fallback/no author, then normal green A/author recovery. Decode metadata total3; per-mount retry cause not proven. Native fault UI pending. B86: native actual image-error fallback, fixed mismatch rejection and normal green A/author recovery passed.233 cross-test state assumption red retained. Local synthetic targeted matrix accepted; real Google/licensing/cache gate remains open, no whole-case promotion.",
       "history": [
         {
           "status": "BLOCKED",
@@ -23240,5 +23242,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B85:202 PASS/4 NOT_RUN/11 BLOCKED. Actual Web image-error/mismatch fallback and normal recovery verified. Decode metadata total3 retained, retry cause unproven; native fault UI and real provider pending, F63 open. Existing consent/clock/DNS-new-mail holds unchanged."
+  "currentExecutionSlice": "B86:202 PASS/4 NOT_RUN/11 BLOCKED. Native image-error/mismatch fallback and recovery verified; local synthetic photo matrix targeted acceptance only. Original233 control red retained; Web3/Native2 metadata counts not generalized. Real Google/licensing/cache gate remains open; return to J008 session invalidation. Existing consent/clock/DNS-new-mail holds unchanged."
 }

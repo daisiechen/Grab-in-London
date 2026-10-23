@@ -1,0 +1,52 @@
+{
+  "observations": [
+    {
+      "testedCommit": "c0bddd9f8ee7ad0839833ea0f2f5955ce62f0ba3",
+      "clientComposition": "3ee69fe baseline + seven F64 files from9101004 + seven F63 native/five shared files fromc0bddd9;19 overlays",
+      "executedBy": "Codex QA actual XCTest on new dedicated simulator and independent screenshot inspection",
+      "id": "B86-O001",
+      "status": "passed",
+      "title": "Native image error and place mismatch fallback and recovery",
+      "steps": [
+        "231 normal new OWN OTP login passed.232 normal four-step A draft used exact allowlisted HTTPS README as image, unchanged Image onError path. Metadata8/9 both finished200; exact dedicated-runner checkpoint then actual placeholder/no image/no author assertions passed. Screenshot independently viewed. Two metadata calls are this mount actual count, not a universal bound or direct decoder trace.",
+        "233 assumed Review survived across XCTest; actual activation returned Discover, so failed65 before mismatch actions. Original red retained, no product-failure classification.",
+        "235 normal necessary draft prelude completed mismatch in same process. Metadata10 finished200, then exact runner checkpoint; actual placeholder/no author/no incorrect image screenshot independently viewed.",
+        "Normal Edit costs reached safe checkpoint; host restored photo, then normal Continue yielded metadata11 and real green A/author A. Screenshot independently viewed, test exit0. No publish.",
+        "B79\u2013B86 support targeted local synthetic photo matrix acceptance for these versions/compositions. Real Google/placeId/licensing/cache conditions remain unverified; F63 stays open for external acceptance. Web total3 metadata causality remains source inference, not measured one-refresh proof. No whole-case promotion."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f63-native-decode-error.png",
+        "evidence/2026-10-21/f63-native-place-mismatch.png",
+        "evidence/2026-10-21/f63-native-fault-restored-a.png",
+        "evidence/2026-10-21/native231-f63-xcui.swift",
+        "evidence/2026-10-21/native232-f63-xcui.swift",
+        "evidence/2026-10-21/native233-f63-xcui.swift",
+        "evidence/2026-10-21/native235-f63-xcui.swift"
+      ],
+      "rawEvidence": {
+        "nativeLogSha256": {
+          "231": "7931ca503b059f46c4d336ac89e00b34d067d5314cc9904f645c2aaa08aef074",
+          "232": "72dfe966790fb09f29b4878858552fb8abaca22633bd6d6c02ff6cbcfec7ef72",
+          "233": "0e3a8a56d533cfb9b9e981d491502d2199162f7e239e9e99d29b1e2b7e2167c0",
+          "235": "c130fef38da6688f44c9ea6ac97efe50d11871d81df0dd8909ea0159fb0563c3"
+        },
+        "privateBundlesRetained": true
+      },
+      "serverObservation": {
+        "kind": "curated inspect event transcription, not raw transport bytes",
+        "decode": [
+          8,
+          9
+        ],
+        "mismatch": [
+          10
+        ],
+        "restore": [
+          11
+        ],
+        "all": "A admitted/prepared200/response_finished200",
+        "realGoogleCalls": 0
+      }
+    }
+  ]
+}
