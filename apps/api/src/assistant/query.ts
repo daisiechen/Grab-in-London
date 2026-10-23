@@ -60,8 +60,11 @@ export function applyPlan(plan:QueryPlan,input:string,applied:HardFilters,previo
     }
     let value=p.value;
     if(p.field==='budgetMaxPence'){
-      const amount=/[£]\s*(\d+(?:\.\d{1,2})?)/.exec(source)??/(\d+(?:\.\d{1,2})?)\s*(?:pounds?|英镑)/.exec(source);
-      if(!amount||typeof value!=='number'||!Number.isSafeInteger(value)||value!==Math.round(Number(amount[1])*100)||value<1)return fail();
+      const amount=/(?<![\d.−-])[£]\s*(\d+(?:\.\d{1,2})?)(?![\d.])/.exec(source)??/(?<![\d.一二三四五六七八九十百千万零两−-])(\d+(?:\.\d{1,2})?|[一二三四五六])\s*(?:pounds?\b|英镑|镑)/.exec(source);
+      const beforeSource=input.slice(0,input.indexOf(p.source)).at(-1)??'';
+      const chineseAmounts:Record<string,number>={一:1,二:2,三:3,四:4,五:5,六:6};
+      const pounds=amount?(chineseAmounts[amount[1]!]??Number(amount[1])):NaN;
+      if(!amount||/[\d.一二三四五六七八九十百千万零两−-]/.test(beforeSource)||typeof value!=='number'||!Number.isSafeInteger(value)||value!==Math.round(pounds*100)||value<1)return fail();
     }else if(p.field==='bounds'){
       // Geometry is chosen by the map, never fabricated by the model. Explicit CLEAR is above.
       return fail();
@@ -81,7 +84,10 @@ export function applyPlan(plan:QueryPlan,input:string,applied:HardFilters,previo
       if(p.field==='areas'){
         if(value.some(v=>typeof v!=='string'||!allowedAreas.includes(v)||!source.includes(v.replaceAll('-',' '))))return fail();
       }else if(p.field==='tableSizes'){
-        if(value.some(v=>!Number.isInteger(v)||v<2||v>6||!new RegExp(`(^|[^0-9])${v}([^0-9]|$)`).test(source)))return fail();
+        const words:Record<number,string>={2:'two|二|两',3:'three|三',4:'four|四',5:'five|五',6:'six|六'};
+        const sizeContext=(v:number)=>new RegExp(`\\b(?:tables?|seats?)\\s+for\\s+(?:${words[v]})\\b|\\b(?:${words[v]})\\s+(?:people|persons?|seats?)\\b|(?:${words[v]})(?:人|位|人桌)`,'i').test(input);
+        const ambiguous=/\b(twenty|thirty|forty|fifty|sixty|hundred)\b|\b(two|three|four|five|six)\s*(?:or|to|-)\s*(two|three|four|five|six)\b|[二三四五六]\s*(?:或|至|到)\s*[二三四五六]/i.test(input);
+        if(value.some(v=>!Number.isInteger(v)||v<2||v>6||(!new RegExp(`(^|[^0-9])${v}([^0-9]|$)`).test(source)&&(!sizeContext(v)||ambiguous||!new RegExp(`(?<![a-z一二三四五六七八九十百千万零两])(?:${words[v]})(?![a-z一二三四五六七八九十百千万零两])`,'i').test(source)))))return fail();
       }else{
         const dictionary=aliases[p.field];if(!dictionary||value.some(v=>typeof v!=='string'||!dictionary[v]?.some(alias=>source.includes(alias))))return fail();
       }
