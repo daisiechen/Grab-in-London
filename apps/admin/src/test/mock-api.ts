@@ -52,8 +52,9 @@ export const snapshot = (id: string, asOf: string, status: 'SEALED' | 'REVOKED' 
   },
 });
 
-export const session = (roles: string[] = ['analyst']) => ({
-  user: { roles },
+export const ACCOUNT = '00000000-0000-4000-8000-00000000ac01';
+export const session = (roles: string[] = ['analyst'], id = ACCOUNT) => ({
+  user: { id, roles },
   csrfToken: 'csrf-token-0123456789',
   authTime: '2026-10-18T12:30:00Z',
   amr: ['google', 'mfa'],

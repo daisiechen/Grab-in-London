@@ -1,8 +1,10 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from 'react';
 import type { AdminApi, AdminPageData, AdminPageName, SessionInfo, SnapshotInfo } from '../api/admin-api.ts';
 import { isBlocking, toFailure, type Failure } from '../api/failure.ts';
 import { londonDay } from '../i18n.ts';
 import { queryKey, toQuery, type AdminFilters, type FilterQuery } from './filters.ts';
+import { emptyBook, reduceIntents, statisticsSettled, type IntentBook, type IntentEvent } from '../features/classification/intent.ts';
+import { needsSync, nextDelayMs, SYNC_INTERVAL_MS, syncIntent } from '../features/classification/sync.ts';
 
 export type PageState =
   | { status: 'idle' }
@@ -36,6 +38,11 @@ export interface ConsoleState {
    * tickets/CSV/pages of the old scope can never be saved, announced or cached into the new one.
    */
   fence(): { live(): boolean };
+  /** Classification intents of the signed-in account (memory only; dropped on account change). */
+  intents: IntentBook;
+  dispatchIntent(event: IntentEvent): void;
+  /** False while any intent awaits its outcome or statistics: charts, drilldowns and exports stay hidden. */
+  statisticsSettled: boolean;
   /** Current snapshot + canonical filters; null until a snapshot is selected. */
   binding: { snapshotId: string; query: FilterQuery; filterHash: string | null } | null;
 }
@@ -51,13 +58,14 @@ export const useConsole = (): ConsoleState => {
 const newestSealed = (list: SnapshotInfo[]) =>
   list.filter((s) => s.status === 'SEALED').sort((a, b) => b.asOf.localeCompare(a.asOf) || b.createdAt.localeCompare(a.createdAt))[0] ?? null;
 
-export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChange, children }: {
+export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChange, syncIntervalMs = SYNC_INTERVAL_MS, children }: {
   api: AdminApi;
   page: AdminPageName;
   filters: AdminFilters;
   /** Snapshot id persisted in the URL (null = use newest sealed). */
   snapshotId: string | null;
   onSnapshotChange(id: string | null): void;
+  syncIntervalMs?: number;
   children: ReactNode;
 }) {
   const [gate, setGate] = useState<ConsoleState['gate']>({ status: 'loading' });
@@ -69,6 +77,9 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
   /** Page responses keyed by snapshot|page|filters; cleared entirely on 410/401/403. */
   const cache = useRef(new Map<string, AdminPageData>());
   const [revoked, setRevoked] = useState<ReadonlySet<string>>(new Set());
+  const [intents, dispatchIntent] = useReducer(reduceIntents, emptyBook());
+  const intentsRef = useRef(intents);
+  intentsRef.current = intents;
   /** Data-scope generation; bumped by every event that invalidates in-flight results. */
   const generation = useRef(0);
 
@@ -96,6 +107,7 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
       void api.snapshots().then(setSnapshots, () => undefined);
     } else if (isBlocking(failure.kind)) {
       clearData();
+      dispatchIntent({ type: 'accountChanged', accountId: null });
       setSnapshots([]);
       setGate({ status: 'failed', failure });
     }
@@ -114,6 +126,7 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
         const s = await api.session();
         const list = await api.snapshots();
         if (!live) return;
+        dispatchIntent({ type: 'accountChanged', accountId: s.user.id });
         setSession(s);
         setSnapshots(list);
         setGate({ status: 'ready' });
@@ -151,6 +164,26 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
     // `key` encodes snapshot, page and canonical query; the other values are derived from it.
   }, [key, api]);
 
+  // Reads (never writes) for unresolved intents: receipt while unknown, then the statistics refresh.
+  // Each intent is read at most once at a time and not before its Retry-After.
+  useEffect(() => {
+    const inFlight = new Set<string>();
+    const due = new Map<string, number>();
+    const timer = setInterval(() => {
+      for (const state of Object.values(intentsRef.current.byTarget)) {
+        const key = state.intent.key;
+        if (!needsSync(state) || inFlight.has(key) || (due.get(key) ?? 0) > Date.now()) continue;
+        inFlight.add(key);
+        void syncIntent(api, state).then((event) => {
+          inFlight.delete(key);
+          due.set(key, Date.now() + nextDelayMs(state, syncIntervalMs));
+          if (event) dispatchIntent(event);
+        });
+      }
+    }, syncIntervalMs);
+    return () => clearInterval(timer);
+  }, [api, syncIntervalMs]);
+
   const refreshSnapshots = useCallback(async () => {
     try { setSnapshots(await api.snapshots()); } catch (error) { reportFailure(error); }
   }, [api, reportFailure]);
@@ -176,6 +209,9 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
     openPicker: setPickerOpen,
     refreshSnapshots,
     reportFailure,
+    intents,
+    dispatchIntent,
+    statisticsSettled: statisticsSettled(intents),
     fence() {
       const captured = generation.current;
       return { live: () => generation.current === captured };

@@ -77,7 +77,8 @@ export function allowedActions(state: IntentState | undefined): ReadonlySet<'sub
       if (state.stats.status === 'locating') return new Set(['locateStats']);
       if (state.stats.status === 'failed') return new Set(['retryStats', 'locateStats', 'submit']);
       return new Set(state.stats.status === 'ready' ? ['submit'] : ['locateStats']);
-    case 'conflict': return new Set(['reload']);
+    // A new intent on the reloaded latest version is the explicit re-confirmation.
+    case 'conflict': return new Set(['submit', 'reload']);
     case 'rejected': return new Set(state.reason === 'expired' ? ['reload'] : ['submit', 'reload']);
   }
 }

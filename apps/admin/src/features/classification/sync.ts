@@ -12,8 +12,8 @@ export function needsSync(state: IntentState): boolean {
 }
 
 /** Earliest next read: the server's Retry-After for an in-progress intent, else the poll interval. */
-export const nextDelayMs = (state: IntentState) =>
-  state.phase === 'unknown' && state.reason === 'pending' && state.retryAfterSeconds ? state.retryAfterSeconds * 1000 : SYNC_INTERVAL_MS;
+export const nextDelayMs = (state: IntentState, intervalMs = SYNC_INTERVAL_MS) =>
+  state.phase === 'unknown' && state.reason === 'pending' && state.retryAfterSeconds ? state.retryAfterSeconds * 1000 : intervalMs;
 
 /**
  * One read for an unresolved intent: the original-intent receipt while unknown, then this intent's
