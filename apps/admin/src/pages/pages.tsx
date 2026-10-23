@@ -6,7 +6,6 @@ import { NativeSelect } from '../components/controls.tsx';
 import { Icon } from '../components/Icon.tsx';
 import { Badge, Empty, Panel, Progress } from '../components/Panel.tsx';
 import { itemLabel, listTitle, metricTitle, seriesTitle } from '../dictionary/labels.ts';
-import { ClassificationPanel } from '../features/classification/ClassificationPanel.tsx';
 import { MetricDictionary } from '../features/dictionary/MetricDictionary.tsx';
 import { DrilldownTable, type Binding } from '../features/drilldown/DrilldownTable.tsx';
 import { formatMetric, formatNumber, formatRatio, isRatio,londonDay, type Language, type Translate } from '../i18n.ts';
@@ -198,7 +197,6 @@ function Quality(p: PageProps & { openMetric(id: string): void }) {
         </Panel>
         <SeriesPanel id="quality.sources" p={p} className="integration-list" />
       </div>
-      <ClassificationPanel t={p.t} />
       <MetricDictionary t={p.t} lang={p.lang} onOpen={p.openMetric} />
     </>
   );

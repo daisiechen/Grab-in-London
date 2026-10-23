@@ -9,6 +9,7 @@ import { DrilldownTable, type Binding } from './features/drilldown/DrilldownTabl
 import { ExportButton } from './features/exports/ExportButton.tsx';
 import { FilterBar } from './features/filters/FilterBar.tsx';
 import { SnapshotPicker } from './features/snapshot/SnapshotPicker.tsx';
+import { ClassificationPanel } from './features/classification/ClassificationPanel.tsx';
 import { FailureScreen } from './features/status/FailureScreen.tsx';
 import { formatLondonTime, makeT, type Language, type Translate } from './i18n.ts';
 import { openRow, PageBody, type Detail } from './pages/pages.tsx';
@@ -61,6 +62,8 @@ function Shell({ lang, page, filters, setLang, setFilters, go }: {
 
   // Changing page or snapshot closes drawers (their binding belongs to the previous view).
   useEffect(() => { setDetails([]); window.scrollTo?.({ top: 0 }); }, [page, c.snapshot?.id]);
+  // Pending/failed classification statistics: no drilldown of the old numbers stays open.
+  useEffect(() => { if (!c.statisticsSettled) setDetails([]); }, [c.statisticsSettled]);
 
   return (
     <div className="app-shell">
@@ -103,7 +106,7 @@ function Shell({ lang, page, filters, setLang, setFilters, go }: {
               <h1>{nav[page]}<span className="heading-dot">.</span></h1>
               <p>{descriptions(t)[page]}</p>
             </div>
-            <ExportButton scope={`summary.${page}`} binding={c.gate.status === 'ready' && c.pageState.status === 'ready' ? binding : null} t={t} />
+            <ExportButton scope={`summary.${page}`} binding={c.gate.status === 'ready' && c.pageState.status === 'ready' && c.statisticsSettled ? binding : null} t={t} />
           </div>
           {c.gate.status === 'failed' ? (
             <FailureScreen failure={c.gate.failure} t={t} onRetry={() => location.reload()} />
@@ -120,7 +123,7 @@ function Shell({ lang, page, filters, setLang, setFilters, go }: {
         </main>
       </div>
       <SnapshotPicker t={t} lang={lang} />
-      {detail && c.gate.status === 'ready' && (
+      {detail && c.gate.status === 'ready' && c.statisticsSettled && (
         <DetailDialog t={t} onClose={close} {...(details.length > 1 ? { onBack: () => setDetails((prev) => prev.slice(0, -1)) } : {})}
           title={detail.kind === 'metric' ? metricTitle(t, detail.id) : detail.title}>
           <DetailContent key={details.length} detail={detail} t={t} lang={lang} open={open} />
@@ -192,7 +195,11 @@ function Body({ t, lang, page, filters, setFilters, go, binding, open, evidence,
           <button className="text-button" onClick={() => c.selectSnapshot(c.newerSnapshot!.id)}>{t('切换到新快照', 'Switch to the new snapshot')}</button>
         </p>
       )}
-      {ps.status === 'failed' ? (
+      {!c.statisticsSettled ? (
+        <section aria-label={t('统计更新中', 'Statistics updating')}>
+          <p className="draft-note" role="status">{t('分类统计尚未更新完成：图表、明细与导出已暂停，不展示旧统计。', 'Classification statistics are not updated yet: charts, drilldowns and exports are paused and old statistics are hidden.')}</p>
+        </section>
+      ) : ps.status === 'failed' ? (
         <FailureScreen failure={ps.failure} t={t} onRetry={() => void c.refreshSnapshots()} />
       ) : ps.status !== 'ready' || !binding ? (
         <p role="status">{t('正在加载快照数据…', 'Loading snapshot data…')}</p>
@@ -202,6 +209,8 @@ function Body({ t, lang, page, filters, setFilters, go, binding, open, evidence,
             evidence={evidence} setEvidence={setEvidence} openMetric={(id) => open({ kind: 'metric', id })} />
         </section>
       )}
+      {/* Fixed position: the panel (and its loaded target/draft) survives the statistics gate toggling. */}
+      {(page === 'quality' || !c.statisticsSettled) && <ClassificationPanel t={t} />}
     </>
   );
 }

@@ -210,14 +210,15 @@ describe('classification (data_admin only, server-enforced)', () => {
     expect(screen.queryByLabelText('Classification user ID')).toBeNull();
   });
 
-  it('requires a reason, sends If-Match + idempotency key, and announces the pending snapshot', async () => {
+  it('requires a reason, sends If-Match + idempotency key, and hides old statistics while the refresh is pending', async () => {
     let revision = '3';
     const mock = setup('/?lang=en#quality', {
       'GET /v1/admin/classifications/.+': () => ok({ userId: USER, classification: 'regular', revision, snapshotPending: false }),
       'PUT /v1/admin/classifications/.+': (c) => {
         if (c.headers['if-match'] !== `"${revision}"`) return fail(409, 'VERSION_CONFLICT');
         revision = '4';
-        return ok({ userId: USER, classification: (c.body as { classification: string }).classification, revision, snapshotPending: true });
+        return ok({ userId: USER, classification: (c.body as { classification: string }).classification, revision, snapshotPending: true,
+          statisticsRefresh: { refreshId: '99999999-9999-4999-8999-999999999999', targetUserId: USER, acceptedRevision: revision, state: 'pending', snapshotId: null, failureCode: null, updatedAt: '2026-10-18T13:00:00Z' } });
       },
     }, ['data_admin']);
     await screen.findByLabelText('Page content');
@@ -230,15 +231,17 @@ describe('classification (data_admin only, server-enforced)', () => {
     expect(save.disabled).toBe(true);
     await userEvent.type(screen.getByLabelText('Classification reason'), ' account');
     expect(save.disabled).toBe(false);
-    const snapshotCalls = mock.calls.filter((c) => c.path === '/v1/admin/snapshots').length;
     await userEvent.click(save);
-    await screen.findByText(/A new snapshot is being built/);
+    await screen.findByText(/Statistics are updating; old statistics are hidden/);
     const put = mock.calls.find((c) => c.method === 'PUT')!;
     expect(put.headers['if-match']).toBe('"3"');
     expect(put.headers['idempotency-key']).toMatch(/^[0-9a-f-]{36}$/);
     expect(put.body).toEqual({ classification: 'test', reason: 'qa account' });
-    await waitFor(() => expect(mock.calls.filter((c) => c.path === '/v1/admin/snapshots').length).toBeGreaterThan(snapshotCalls));
-    // Displayed numbers are untouched: the page was requested once for the original snapshot.
+    // Old statistics, drilldowns and exports are hidden; the classification panel stays usable.
+    expect(screen.queryByLabelText('Page content')).toBeNull();
+    expect(screen.getByLabelText('Statistics updating')).toBeTruthy();
+    expect((screen.getByRole('button', { name: 'Export metrics' }) as HTMLButtonElement).disabled).toBe(true);
+    expect(mock.calls.filter((c) => c.method === 'PUT')).toHaveLength(1);
     expect(mock.calls.filter((c) => c.path === '/v1/admin/quality').every((c) => c.query.get('snapshotId') === SNAP_A)).toBe(true);
   });
 
