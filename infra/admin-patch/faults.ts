@@ -4,16 +4,21 @@ import type {EventEmitter} from 'node:events';
 export function makeAdminFaults(origin:string){
  let loseClassification=false;
  let pageFailure:429|503|null=null;
+ let delayedMethod:'GET'|'PUT'|null=null;
  const middleware=(req:IncomingMessage,res:ServerResponse,next:()=>void)=>{
   const path=(req.url??'').split('?')[0]!;
   if(path.startsWith('/__admin-test/fault/')){
    res.setHeader('cache-control','no-store');
    if(req.method!=='POST'||req.headers.origin!==origin){res.statusCode=403;res.end();return;}
    const action=path.slice('/__admin-test/fault/'.length);
-   if(!['lost-classify','503','429','none'].includes(action)){res.statusCode=400;res.end();return;}
+   if(!['lost-classify','slow-classify','slow-classification-read','503','429','none'].includes(action)){res.statusCode=400;res.end();return;}
    loseClassification=action==='lost-classify';
+   delayedMethod=action==='slow-classify'?'PUT':action==='slow-classification-read'?'GET':null;
    pageFailure=action==='503'?503:action==='429'?429:null;
    res.statusCode=204;res.end();return;
+  }
+  if(delayedMethod&&req.method===delayedMethod&&/^\/v1\/admin\/classifications\/[^/?]+(?:\?|$)/.test(req.url??'')){
+   delayedMethod=null;setTimeout(next,5000);return;
   }
   if(pageFailure&&req.method==='GET'&&/^\/v1\/admin\/(overview|journey|supply|retention|quality)$/.test(path)){
    const status=pageFailure;pageFailure=null;

@@ -31,3 +31,16 @@ describe('synthetic admin one-shot fault boundary',()=>{
   proxy.emit('proxyRes',upstream,{method:'PUT',url:'/v1/admin/classifications/synthetic'},res);expect(res.destroy).toHaveBeenCalledOnce();
  });
 });
+
+
+it.each([['slow-classify','PUT'],['slow-classification-read','GET']])('delays only the next matching %s request',async(action,method)=>{
+ vi.useFakeTimers();
+ try{
+  const f=makeAdminFaults(origin);request(f,'/__admin-test/fault/'+action,'POST');
+  expect(request(f,'/v1/auth/session').next).toHaveBeenCalledOnce();
+  const first=request(f,'/v1/admin/classifications/synthetic',method);expect(first.next).not.toHaveBeenCalled();
+  await vi.advanceTimersByTimeAsync(4999);expect(first.next).not.toHaveBeenCalled();
+  await vi.advanceTimersByTimeAsync(1);expect(first.next).toHaveBeenCalledOnce();
+  expect(request(f,'/v1/admin/classifications/synthetic',method).next).toHaveBeenCalledOnce();
+ }finally{vi.useRealTimers();}
+});
