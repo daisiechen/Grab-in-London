@@ -71,7 +71,8 @@ const manifestPath=join(settings.runtime,'manifest.json');
 await writeFile(manifestPath,JSON.stringify(manifest,null,2),{mode:0o600});
 console.warn(`ADMIN PATCH SYNTHETIC READY ${settings.origin}; manifest=${manifestPath}; fixture identity=${email}, local-only OTP=000000`);
 let finish!:()=>void;const stopped=new Promise<void>(resolve=>{finish=resolve;});
-process.once('SIGINT',finish);process.once('SIGTERM',finish);
+// Vite owns SIGTERM and may exit before our async teardown; this rig's explicit stop signal does not.
+process.once('SIGUSR2',finish);process.once('SIGINT',finish);process.once('SIGTERM',finish);
 void worker.catch(()=>{process.exitCode=1;finish();});
 await stopped;
 abort.abort();await worker;if('close' in vite)await vite.close();else await new Promise<void>((resolve,reject)=>vite.httpServer.close((error?:Error)=>error?reject(error):resolve()));await app.close();await db.pool.end();
