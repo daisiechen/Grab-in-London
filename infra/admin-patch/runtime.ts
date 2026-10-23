@@ -5,6 +5,7 @@ import {execFileSync} from 'node:child_process';
 import {createRequire} from 'node:module';
 import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
+import {makeAdminFaults} from './faults.ts';
 import {seedAdminScenario} from './seed.ts';
 import {assertAdminEnvironment} from './guard.ts';
 import {startPostgres17} from '../../packages/testkit/src/postgres/server.ts';
@@ -52,8 +53,10 @@ await copyFile(join(settings.root,'infra/admin-patch/fixture-login.html'),join(p
 const sourceCommit=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const workingTree=()=>execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).trim();
 if(settings.built&&workingTree())throw new Error('ADMIN_BUILT_REQUIRES_CLEAN_SOURCE');
-const proxy={'/v1':{target:process.env.FANCY_API_ORIGIN,changeOrigin:false}};
-const viteConfig={configFile:false as const,envDir:false as const,publicDir,root:join(settings.root,'apps/admin'),plugins:[react()],cacheDir:join(settings.runtime,'vite-cache'),server:{host:'127.0.0.1',port:settings.adminPort,strictPort:true,proxy},preview:{host:'127.0.0.1',port:settings.adminPort,strictPort:true,proxy},build:{outDir:join(settings.runtime,'admin-build')}};
+const faults=makeAdminFaults(settings.origin);
+const installFaults=(server:{middlewares:{use(handler:typeof faults.middleware):unknown}})=>{server.middlewares.use(faults.middleware);};
+const proxy={'/v1':{target:process.env.FANCY_API_ORIGIN,changeOrigin:false,configure:faults.attach}};
+const viteConfig={configFile:false as const,envDir:false as const,publicDir,root:join(settings.root,'apps/admin'),plugins:[react(),{name:'synthetic-admin-faults',configureServer:installFaults,configurePreviewServer:installFaults}],cacheDir:join(settings.runtime,'vite-cache'),server:{host:'127.0.0.1',port:settings.adminPort,strictPort:true,proxy},preview:{host:'127.0.0.1',port:settings.adminPort,strictPort:true,proxy},build:{outDir:join(settings.runtime,'admin-build')}};
 if(settings.built){
  await build(viteConfig);
  if(workingTree()||execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim()!==sourceCommit)throw new Error('ADMIN_SOURCE_CHANGED_DURING_BUILD');

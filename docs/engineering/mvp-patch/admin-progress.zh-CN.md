@@ -121,3 +121,7 @@
 - 同构建真实分类regular→test rev1：Pending隐藏旧统计/导出；Ready未切换仍隐藏；显式切换后coverage48/64=75%。真实CSV包含同snapshotId/canonicalFilterHash及48/64，与页面一致，不含原始分类原因。初始64/80=80%与手算一致。JS SHA256 `5c60a11e9feb50fd464b0426eeefaaab01444c73dc65c2fbc034aa4582b77024`，CSS `ff96821e47abf773756a6f813c3de589cc82778078e048df523e84274c6633ed`。这些是该固定构建范围，后续源码变更需重新构建复核。
 
 接手后补A02表单迟到复现：读取在途时换目标，旧响应仍回填旧用户；保存在途时编辑原因，旧成功响应清空新草稿。两项原实现均红。现增加账号/表单代际、读取序号与卸载保护；保存仍按冻结scope交全局intent book处理，仅当前表单可更新当前分类版本，且只有未修改的原原因才清空。统计重试迟到结果不清除其他scope的新key。新增2项转绿，完整admin82项及core:check通过。后续继续API/DB、独立验收及最终构建核对；尚未宣称A01–A13整体通过或发布批准。
+
+接手切片`3147fd9`已提交推送，HEAD/remote一致。后台适用API/DB/unit回归22文件102项通过（admin API/统计/导出/迁移/worker/seed/guard），完整admin组件82项及core:check通过。首次数据库启动因系统共享内存ID额度不足未执行；已仅按本会话owner marker+postmaster PID/dataDir核对，停止三个退役合成PG（数据保留），当前built PG未动，重跑102项通过。未调整系统参数或触其他环境。
+
+为完成真实浏览器恢复验收，隔离rig新增`faults.ts`和fixture控制：同源POST仅可设置一次丢弃classification响应、一次页面503/429（Retry-After3秒）或clear。classification故障仅在真实API开始响应后丢弃代理响应，因此写入仍正常落库，回执读取不被拦截。控制只加载于infra的dev/preview测试插件，不进入apps/admin或API/worker生产入口；不接受跨域控制。4项负向/一次性单元测试、runtime tsc与eslint通过。下一步固定构建真实浏览器测试，不把故障模块自身测试替代产品恢复结果。
