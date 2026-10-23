@@ -1,0 +1,21 @@
+{
+  "observations": [
+    {
+      "id": "B99-O001",
+      "status": "passed",
+      "testedCommit": "3ee69fec6b79552404217aa5415d4f041853a06f",
+      "qaComposition": "QA_COMPOSITION_3ee69fe_9101004_SEVEN_PLUS_J008_CLOCK024630",
+      "title": "OriginalH opens exactAmeal and fills unsent native application editor",
+      "executedBy": "successor QA originalD92 sole operator",
+      "steps": [
+        "New read26/120s candidate exactnewartifact/releasedAI independently tested. First40PASS1fixtureFAIL OWN_RANDOM_PORT_REJECTED beforeproductassertion; reservedport safetyrefusal retained. Samefreeze second41PASS0FAIL, no code/assertion/portallowlistchange.",
+        "Reviewed one rootrelease actualinspect18to19 and READ_PREPARE_READY. Original239uses same237assertions: normalHcoldlaunch refresh200/session200 then exactAhostmealdf89getMeal200, originalHprofile visible.",
+        "Normal Requesttojoin opens exact APPLICATION target, secondgetMeal200. Typed Synthetic native J008 unsent recovery draft., exactintrovalue assertion and Sendbuttonexists passed. DidnotclickSend; no AI/auth/write/revoke endpoint forwarded.",
+        "QA2391PASS0FAIL20.978s, xcodebuildexit0. Actual5forwards:discover/refresh/session/getMeal/getMeal, all200. SoleproxyPAUSED_ZERO_FORWARD then normalstop exit0.",
+        "OriginalB95red retained. Closes originalHlogin/validtarget/editableunsentdraftpreconditions only; mid-editor401/group403/Admin410/wholeJ008 stillopen. SourceCONTROL19/024630, approvedAI2calls/15remaining/UNKNOWN1 unchanged."
+      ],
+      "artifacts": [],
+      "privateScreenshotSha256": "5ee10cdf06db3b8bb024025e2b3fe424d1f9f9a0e9f3d73347346789ef2c1add"
+    }
+  ]
+}
