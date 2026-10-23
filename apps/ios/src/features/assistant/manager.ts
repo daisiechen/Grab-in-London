@@ -260,13 +260,15 @@ export class AssistantManager {
   }else{this.set({phase:'error',result:null,text:this.state.text||pending?.body.input||'',error:data.state==='SUPERSEDED'?'This result changed or expired. Start a new conversation.':'No answer was confirmed. Your original request is kept below.'});}
  }
  async transfer(draft:AIDraft,replaceConfirmed:boolean){
-  const actionEpoch=this.epoch;if(!(await this.ensureResumed())||actionEpoch!==this.epoch)throw new ApiError({status:503,code:'AI_UNAVAILABLE',message:'Conversation verification required'});
-  const editor=this.editorFor(draft);if(!editor||!this.session)throw new Error('Open the original form first');
-  const epoch=this.epoch;const snapshot=editor.current();const s=this.session;
+  const actionEpoch=this.epoch,actionContext=this.contextOwner,editor=this.editorFor(draft),snapshot=editor?.current();
+  if(!(await this.ensureResumed())||actionEpoch!==this.epoch)throw new ApiError({status:503,code:'AI_UNAVAILABLE',message:'Conversation verification required'});
+  if(!editor||!snapshot||!this.session)throw new Error('Open the original form first');
+  if(this.contextOwner!==actionContext||this.editorFor(draft)!==editor||editor.current().version!==snapshot.version)throw new ApiError({status:409,code:'EDITOR_CONFLICT',message:'Editor changed'});
+  const epoch=this.epoch;const s=this.session;
   if(snapshot.text.trim()&&!replaceConfirmed)throw new Error('Confirm replacement first');
   const reply=await this.deps.api.call('validateAIDraft',{params:{draftId:draft.id},idempotencyKey:this.deps.newId(),body:{sessionId:s.sessionId,generation:s.generation,editorKind:editor.kind,targetId:editor.targetId,editorVersion:snapshot.version,replaceConfirmed}});
   this.guard(epoch);
-  if(this.editorFor(draft)!==editor||editor.current().version!==snapshot.version)throw new ApiError({status:409,code:'EDITOR_CONFLICT',message:'Editor changed'});
+  if(this.contextOwner!==actionContext||this.editorFor(draft)!==editor||editor.current().version!==snapshot.version)throw new ApiError({status:409,code:'EDITOR_CONFLICT',message:'Editor changed'});
   editor.apply(reply.data);this.close();
  }
  async newConversation(){

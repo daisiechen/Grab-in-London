@@ -175,7 +175,7 @@
       ],
       "title": "AI编辑器转入",
       "owner": "Codex client/mobile Web implementation and scoped acceptance",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "acceptance": "Keep/Replace、失效、长度、soft/hard/CLEAR；F66/F68最终构建回归",
       "verification": "fake模型预算并发/数值原例及双端原编辑器",
       "files": [
@@ -183,7 +183,8 @@
         "apps/ios/**",
         "apps/api/src/ai-assistance/**"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "client-progress.zh-CN.md P08: editor instance and pre-await binding regressions fixed; inherited final gates remain"
     },
     {
       "id": "P09",

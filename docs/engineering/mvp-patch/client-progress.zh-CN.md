@@ -105,3 +105,9 @@ packages/client/share.ts 只从显式公开输入构造 HTTPS canonical meal URL
 ### P04 公开支持邮箱的原生复制按钮
 
 分享切片已引入 expo-clipboard 后，补齐 SupportExit 的 Copy email address；只复制公开 SUPPORT_EMAIL，不含 receipt/token/用户描述。false/异常保留 selectable 地址并提示失败，真实成功才 Copied。设置模块 29/29、iOS 类型与 ESLint 通过。原生设备剪贴板验收仍待新构建，历史“需批准新增依赖”遗留已由用户授权接手后的常规实现选择取代。
+
+### P08 AI 转入绑定点击时的编辑器实例
+
+- Web 精确红例：validateAIDraft 在途，关闭助手并重新挂载同 kind/target/version0 的原编辑器；旧结果仍调用 apply 1 次（应0）。修复为点击时捕获 generation/scene/editor 实例，前置会话校验之后及服务端校验之后均复核，不只比较相同字段值。
+- iOS 精确红例：transfer 的第一次 ensureResumed await 期间用相同 key/target/version 替换编辑器，原实现选择新编辑器并成功；现于 await 前捕获实例/current版本/contextOwner，两个 await 后都复核，EDITOR_CONFLICT 且 validate 写0。
+- Web AI 目录43/43、iOS manager/widget46/46；双端类型与 ESLint 通过。已有 Keep my text（QA-AI-016）、Replace/长度/过期/换账号等回归保留；这些是 mock transport 证据，不是模型/真实provider或完整 F66/F68 发布门槛关闭。

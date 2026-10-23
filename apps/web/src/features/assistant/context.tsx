@@ -155,13 +155,16 @@ export function AssistantProvider({children}:{children:ReactNode}) {
   catch(e){if(valid(gen))handleError(e);}finally{if(alive.current)setPreferencesBusy(false);}
  },[api,state.status,preferences.version,clearConversation,handleError]);
  const transfer=useCallback(async(draft:AIDraft,replaceConfirmed:boolean)=>{
+  const actionGeneration=generation.current,actionScene=sceneVersion.current,registered=editorRef.current;
   if(sessionRef.current&&!(await verifyCurrent()))return false;
-  const current=sessionRef.current,registered=editorRef.current;if(!current||!registered){setError('Open the original application, create form or group editor before transferring this draft.');return false;}
+  if(!valid(actionGeneration))return false;
+  if(sceneVersion.current!==actionScene||editorRef.current!==registered){setError('Your editor changed while the draft was checked. Please review and try again.');return false;}
+  const current=sessionRef.current;if(!current||!registered){setError('Open the original application, create form or group editor before transferring this draft.');return false;}
   if(draft.kind!==registered.kind||draft.targetId!==registered.targetId){setError('This draft belongs to a different editor. Open its original page.');return false;}
   if(registered.text.trim()&&!replaceConfirmed)return false;
-  const gen=generation.current;const editorSnapshot={kind:registered.kind,targetId:registered.targetId,version:registered.version};setError('');
+  const gen=generation.current;const editorSnapshot=registered;setError('');
   try{const {data}=await api.client.call('validateAIDraft',{params:{draftId:draft.id},idempotencyKey:newIntentKey(),body:{sessionId:current.sessionId,generation:current.generation,editorKind:registered.kind,targetId:registered.targetId,editorVersion:registered.version,replaceConfirmed}});
-   if(!valid(gen))return false;const latest=editorRef.current;if(!latest||latest.kind!==editorSnapshot.kind||latest.targetId!==editorSnapshot.targetId||latest.version!==editorSnapshot.version){setError('Your editor changed while the draft was checked. Please review and try again.');return false;}latest.apply(data);setNotice('Draft transferred. Review it in the original editor before submitting.');close();return true;
+   if(!valid(gen))return false;const latest=editorRef.current;if(sceneVersion.current!==actionScene||!latest||latest!==editorSnapshot||latest.kind!==editorSnapshot.kind||latest.targetId!==editorSnapshot.targetId||latest.version!==editorSnapshot.version){setError('Your editor changed while the draft was checked. Please review and try again.');return false;}latest.apply(data);setNotice('Draft transferred. Review it in the original editor before submitting.');close();return true;
   }catch(e){if(valid(gen))handleError(e);return false;}
  },[api,close,handleError,verifyCurrent]);
  const registerEditor=useCallback((registered:AssistantEditor|null)=>{editorRef.current=registered;setEditor(registered);},[]);

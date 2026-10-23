@@ -67,6 +67,17 @@ it('requires replacement confirmation and rejects edits during validation withou
  const wait=deferred<unknown>();h.responses.set('validateAIDraft',()=>wait.promise);const transfer=h.manager.transfer(draft,true);await flush();expect(h.call.mock.calls.filter(c=>c[0]==='validateAIDraft')).toHaveLength(1);version='2';wait.resolve({data:draft});
  await expect(transfer).rejects.toMatchObject({code:'EDITOR_CONFLICT'});expect(apply).not.toHaveBeenCalled();
 });
+it('binds transfer before foreground verification, rejecting a replacement editor with the same version',async()=>{
+ const h=setup();await h.manager.continue();const oldApply=jest.fn(),newApply=jest.fn();
+ const draft={id:'draft',kind:'APPLICATION',targetId:'meal',editorVersion:'0',text:'Candidate',fields:null} as unknown as AIDraft;
+ h.responses.set('validateAIDraft',async()=>({data:draft}));
+ h.manager.registerEditor({key:'form',kind:'APPLICATION',targetId:'meal',current:()=>({text:'',version:'0'}),apply:oldApply});
+ const transfer=h.manager.transfer(draft,false);
+ h.manager.registerEditor({key:'form',kind:'APPLICATION',targetId:'meal',current:()=>({text:'',version:'0'}),apply:newApply});
+ await expect(transfer).rejects.toMatchObject({code:'EDITOR_CONFLICT'});
+ expect(oldApply).not.toHaveBeenCalled();expect(newApply).not.toHaveBeenCalled();
+ expect(h.call.mock.calls.filter(c=>c[0]==='validateAIDraft')).toHaveLength(0);
+});
 it('does not apply a late answer while closed, and never implicitly sends editor content',async()=>{
  const h=setup();const pending=deferred<unknown>();h.responses.set('requestAI',()=>pending.promise);
  h.manager.registerEditor({key:'form',kind:'CREATE',targetId:null,current:()=>({text:'Private unfinished form',version:'7'}),apply:jest.fn()});
