@@ -141,3 +141,7 @@ packages/client/share.ts 只从显式公开输入构造 HTTPS canonical meal URL
 ### P04/P05 会话清理的同步重试围栏
 
 将发布重试红例加强为同一个React act内先完成401再释放退避，复现仅靠卸载清理仍多发一次（2次，应1）。创建、编辑餐局和资料编辑现订阅onPrivateStateClear，在会话失效当刻同步reset tracker并清除旧请求快照；卸载同时解除监听。创建页仍保留原有效401的登录gate回流。create/edit、profile、迟到profile和申请/过期草稿合计43/43通过，Web类型及四个修改文件ESLint通过。此切片未改服务端或封存QA探针，未代表P04/P05整体验收完成。
+
+### 当前客户端全量自测切片
+
+业务源码a9cfcf7786bcc62fae0df053f5abd0aa2c8e945e：Web54文件320/320（专属P1.1回放时钟2026-10-23T16:00Z，单worker）；iOS57套406/406（原入口maxWorkers=2）。前次真实时钟/高并发失败及复查过程记录isolation.zh-CN.md，不隐藏失败或放宽断言。新增回放配置的类型、lint和补丁文档验证通过。新消息服务端尚未交回可集成提交，原生UI受Mac锁屏阻挡，后续P13–17和最终跨端验收仍未完成。

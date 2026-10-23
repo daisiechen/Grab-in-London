@@ -73,3 +73,11 @@ Codex新建独立设备集 `/private/tmp/fancy-p11-client-01a162f6/simulator-dev
 从4203d41b7e8e3ec53487c28d51813fb136e08ec9归档到新的native-source-p12 ASCII目录，离线独立安装依赖；prebuild无package/lock变更，生成uk.fancyabite.patch.p11、fancyp11和仅applinks:p11-share.example.invalid的entitlement。专属CocoaPods安装包含ExpoClipboard58.0.3；arm64 Debug xcodebuild用独立DerivedData-p12和module cache、CODE_SIGNING_ALLOWED=NO退出0且BUILD SUCCEEDED。
 
 显式--set补丁设备集+UDID核证后，仅在Fancy P1.1 Client QA安装该bundle；get_app_container落该独立设备data目录，launch返回进程PID。私有native manifest记录commit/二进制hash/安装与启动，nativeAcceptance仍NOT_RUN。Device Hub可访问列表当时仅有默认旧设备，未对其执行任何设备操作；不把CLI启动等同原生UI验收。Metro64178固定使用本快照，EXPO状态/缓存仍专属。首次--localhost监听::1但清单默认发127.0.0.1，检查本地Expo CLI源码后显式REACT_NATIVE_PACKAGER_HOSTNAME=localhost使清单与监听一致，没有暴露LAN；真实bundle加载/分享sheet/剪贴板内容/冷启动UX尚未完成。
+
+### P1.1 Web 回归专属回放时钟
+
+新增infra/patch-client/vitest.web-clock.config.ts和web-clock.setup.ts，仅在新p11-web测试worker中以2026-10-23T16:00Z重放既有合成餐局尚未截止的条件，每项清理时恢复Date。原vitest.config.ts、封存qa-independent探针及清单、OS时钟、旧QA/service时钟均未改。命令为pnpm exec vitest run --config infra/patch-client/vitest.web-clock.config.ts。
+
+真实时钟下先并行运行Web/iOS，分别37/320与11/406失败，包含5000ms超时；低并发iOS57套406/406全绿。Web单文件串行只剩曝光断言0而非1，核证固定合成餐局closesAt为2026-10-23T17:30Z，运行时已过期，业务拒绝曝光符合设计。新runner保持原断言/5000ms，独立固定Date与单worker；不将新回放结果冒充旧QA原运行证据。首次双worker回放319/320，一项重开草稿超时，继续单worker核验。
+
+单worker固定回放最终54文件320/320通过（原5000ms、无probe变更）。infra/patch-client配置类型、两文件ESLint及补丁文档4/4校验通过。iOS57套406/406使用原测试入口并仅限制maxWorkers=2，保持原断言。测试日志保留专属临时根outputs/web-p11-clock-serial.log及ios-a9cfcf7-limited.log；不包含真实provider或原生UI通过声明。
