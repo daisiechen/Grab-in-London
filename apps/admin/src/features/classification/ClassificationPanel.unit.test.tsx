@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
@@ -105,5 +105,33 @@ describe('A01/A03/A05 classification recovery through the real console', () => {
     await screen.findByText(/rev 9/);
     expect(screen.getByLabelText('settled').textContent).toBe('true');
     expect(puts(mock.calls)).toHaveLength(1);
+  });
+});
+
+
+describe('A02 classification form response isolation', () => {
+  it('drops a classification read after the target input changes', async () => {
+    let finish!: (reply: ReturnType<typeof ok>) => void;
+    const held = new Promise<ReturnType<typeof ok>>(resolve => { finish = resolve; });
+    setup({'GET /v1/admin/classifications/.+': () => held});
+    const input = await screen.findByLabelText('Classification user ID');
+    await userEvent.type(input, USER);
+    await userEvent.click(screen.getByRole('button', {name:'Load current class'}));
+    await userEvent.clear(input);
+    await userEvent.type(input, '44444444-4444-4444-8444-444444444444');
+    await act(async () => { finish(ok({userId:USER,classification:'regular',revision:'3',snapshotPending:false})); await held; });
+    expect(screen.queryByText(/Current: Regular/)).toBeNull();
+    expect((input as HTMLInputElement).value).toBe('44444444-4444-4444-8444-444444444444');
+  });
+  it('preserves a later reason draft when the frozen save response arrives', async () => {
+    let finish!: (reply: ReturnType<typeof ok>) => void;
+    const held = new Promise<ReturnType<typeof ok>>(resolve => { finish = resolve; });
+    setup({'PUT /v1/admin/classifications/.+': () => held});
+    await saveTest();
+    const reason = screen.getByLabelText('Classification reason');
+    await userEvent.clear(reason); await userEvent.type(reason, 'later independent draft');
+    await act(async () => { finish(ok({userId:USER,classification:'test',revision:'4',snapshotPending:true,statisticsRefresh:refresh('pending')})); await held; });
+    expect((reason as HTMLInputElement).value).toBe('later independent draft');
+    expect(screen.getByText(/Current: Test · rev 4/)).toBeTruthy();
   });
 });

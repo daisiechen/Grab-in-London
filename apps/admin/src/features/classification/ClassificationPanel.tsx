@@ -32,6 +32,20 @@ export function ClassificationPanel({ t }: { t: Translate }) {
   const retryKey = useRef<{ refreshId: string; key: string } | null>(null);
   const names: Record<ClassificationValue, string> = { regular: t('正式', 'Regular'), test: t('测试', 'Test'), staff: t('员工', 'Staff') };
   const accountId = c.session?.user.id ?? null;
+  const formEpoch = useRef(0);
+  const loadSequence = useRef(0);
+  const mounted = useRef(true);
+  const accountRef = useRef(accountId);
+  accountRef.current = accountId;
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; formEpoch.current++; }; }, []);
+  useEffect(() => {
+    formEpoch.current++;
+    setUserId(''); setCurrent(null); setValue('regular'); setReason(''); setBusy(false); setMessage(null);
+    retryKey.current = null;
+  }, [accountId]);
+  const formIsCurrent = (epoch: number, account: string | null) =>
+    mounted.current && formEpoch.current === epoch && accountRef.current === account;
+
   const target = current?.userId ?? null;
   const actions = allowedActions(target ? c.intents.byTarget[target] : undefined);
   const entries = Object.values(c.intents.byTarget);
@@ -63,16 +77,20 @@ export function ClassificationPanel({ t }: { t: Translate }) {
   const load = async (id = userId.trim().toLowerCase()) => {
     setMessage(null);
     if (!UUID.test(id)) { setCurrent(null); setMessage({ ok: false, text: t('请输入有效的用户编号（UUID）。', 'Enter a valid user ID (UUID).') }); return; }
+    const epoch = formEpoch.current, account = accountRef.current, sequence = ++loadSequence.current;
+    const live = () => formIsCurrent(epoch, account) && loadSequence.current === sequence;
     setBusy(true);
     try {
       const info = await c.api.getClassification(id);
+      if (!live()) return;
       setCurrent(info);
       setValue(info.classification);
     } catch (error) {
+      if (!live()) return;
       setCurrent(null);
       if (isBlocking(toFailure(error).kind)) c.reportFailure(error);
       setMessage({ ok: false, text: loadErrorText(error) });
-    } finally { setBusy(false); }
+    } finally { if (live()) setBusy(false); }
   };
 
   const trimmed = reason.trim();
@@ -80,6 +98,8 @@ export function ClassificationPanel({ t }: { t: Translate }) {
   const save = async () => {
     if (!current || !reasonValid || !accountId || !actions.has('submit')) return;
     const frozen = { accountId, key: newIntentKey(), targetUserId: current.userId, classification: value, reason: trimmed, baseRevision: current.revision };
+    const epoch = formEpoch.current;
+    const live = () => formIsCurrent(epoch, frozen.accountId);
     const saving: IntentState = { phase: 'saving', intent: frozen };
     c.dispatchIntent({ type: 'submit', intent: frozen });
     setBusy(true);
@@ -87,14 +107,17 @@ export function ClassificationPanel({ t }: { t: Translate }) {
     try {
       const saved = await c.api.classify(frozen.targetUserId, { classification: frozen.classification, reason: frozen.reason }, frozen.baseRevision, frozen.key);
       c.dispatchIntent({ type: 'saved', scope: scopeOf(frozen), revision: saved.revision, statisticsRefresh: saved.statisticsRefresh });
-      setReason('');
+      if (live()) {
+        setCurrent(saved);
+        setReason((draft) => draft.trim() === frozen.reason ? '' : draft);
+      }
     } catch (error) {
       const event = saveFailure(saving, error);
       c.dispatchIntent(event);
-      if (isBlocking(toFailure(error).kind) && toFailure(error).kind !== 'signed_out') c.reportFailure(error);
+      if (live() && isBlocking(toFailure(error).kind) && toFailure(error).kind !== 'signed_out') c.reportFailure(error);
       // Version conflict: show the latest version; saving again is a new, explicitly confirmed intent.
-      if (event.type === 'saveFailed' && event.code === 'VERSION_CONFLICT') { setBusy(false); await load(frozen.targetUserId); }
-    } finally { setBusy(false); }
+      if (live() && event.type === 'saveFailed' && event.code === 'VERSION_CONFLICT') { setBusy(false); await load(frozen.targetUserId); }
+    } finally { if (live()) setBusy(false); }
   };
 
   const reload = async (id: string) => { setUserId(id); await load(id); };
@@ -102,11 +125,12 @@ export function ClassificationPanel({ t }: { t: Translate }) {
     if (intent.phase !== 'accepted' || intent.stats.status !== 'failed') return;
     const refreshId = intent.stats.refresh.refreshId;
     if (retryKey.current?.refreshId !== refreshId) retryKey.current = { refreshId, key: newIntentKey() };
+    const epoch = formEpoch.current, account = accountRef.current, key = retryKey.current.key;
     setBusy(true);
-    const event = await retryStatistics(c.api, intent, retryKey.current.key);
-    setBusy(false);
+    const event = await retryStatistics(c.api, intent, key);
+    if (formIsCurrent(epoch, account)) setBusy(false);
     if (event) c.dispatchIntent(event);
-    if (event?.type === 'stats') retryKey.current = null;
+    if (event?.type === 'stats' && accountRef.current === account && retryKey.current?.key === key) retryKey.current = null;
   };
 
   return (
@@ -114,7 +138,7 @@ export function ClassificationPanel({ t }: { t: Translate }) {
       {intro}
       <div className="classification-form">
         <label>{t('用户编号', 'User ID')}
-          <input aria-label={t('分类用户编号', 'Classification user ID')} value={userId} onChange={(e) => { setUserId(e.target.value); setCurrent(null); }} placeholder="00000000-0000-4000-8000-000000000000" />
+          <input aria-label={t('分类用户编号', 'Classification user ID')} value={userId} onChange={(e) => { formEpoch.current++; setUserId(e.target.value); setCurrent(null); setBusy(false); setMessage(null); }} placeholder="00000000-0000-4000-8000-000000000000" />
         </label>
         <button className="button" disabled={busy} onClick={() => void load()}>{t('读取当前分类', 'Load current class')}</button>
       </div>

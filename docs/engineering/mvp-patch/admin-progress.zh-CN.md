@@ -109,3 +109,15 @@
 | coverage | `metrics.ts`按SELF/HOST来源处理attendance | P10c：用固定输入手算核对“本人优先、host补缺、unknown排除、分母为0” |
 
 下一步：P10a（console缓存key＋统计settled门控，约3个文件＋测试），随后P10b（503重试、429倒计时、410/401测试）、P10c（导出key作废、coverage手算）。P09c的Panel接入等待生成回传。
+
+## 2026-10-23 Codex接手执行（用户直接授权）
+
+用户明确“Claude会话到限额了，你接手后面的开发吧”，由本后台Codex接手PATCH-006源码、自测和验收；不再向原Claude排写任务，客户端仍由其独立会话负责。既定共享owner和封存环境边界不变。前文“待统一生成/P09接入/P10未实施”为历史记录，已由以下固定提交推进：
+
+- `db36f76`统一生成、`d8e2b4a`worker、`c849ac7`P03安全NONE；`e0e1b34`/`ff6901a`/`6a13583`真实分类恢复接线。
+- `01baf59`迟到导出保护，`168839c`按最新回执设置绝对下一查询时间，`b91b486`同appliedQuery重试及429等待。
+- `02338fd`/`af14b58`/`85a24c3`Ready必须绑定选中快照并覆盖所有接受意图；`844e532`实际日期默认倒序；`9b24880`coverage手算。
+- 固定构建`1f7cff4`，runtime `dist/admin-patch/run-WKbOZ5`，serveMode=built，新owned PG、合成数据。真实浏览器：1440/1024/864/390文档宽度分别等于viewport，长表overflow:auto；16餐排序17日至12日、下一页11日至6日；搜索soho提交后语言切换仍保持搜索及startsAt排序；明细初始焦点Close details，Escape后回到原View按钮。
+- 同构建真实分类regular→test rev1：Pending隐藏旧统计/导出；Ready未切换仍隐藏；显式切换后coverage48/64=75%。真实CSV包含同snapshotId/canonicalFilterHash及48/64，与页面一致，不含原始分类原因。初始64/80=80%与手算一致。JS SHA256 `5c60a11e9feb50fd464b0426eeefaaab01444c73dc65c2fbc034aa4582b77024`，CSS `ff96821e47abf773756a6f813c3de589cc82778078e048df523e84274c6633ed`。这些是该固定构建范围，后续源码变更需重新构建复核。
+
+接手后补A02表单迟到复现：读取在途时换目标，旧响应仍回填旧用户；保存在途时编辑原因，旧成功响应清空新草稿。两项原实现均红。现增加账号/表单代际、读取序号与卸载保护；保存仍按冻结scope交全局intent book处理，仅当前表单可更新当前分类版本，且只有未修改的原原因才清空。统计重试迟到结果不清除其他scope的新key。新增2项转绿，完整admin82项及core:check通过。后续继续API/DB、独立验收及最终构建核对；尚未宣称A01–A13整体通过或发布批准。
