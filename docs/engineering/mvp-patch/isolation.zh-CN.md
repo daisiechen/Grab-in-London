@@ -25,3 +25,9 @@
 ## 后续更新：产品版本已确定
 
 2026-10-23用户最新确认产品版本 **P1.1**，覆盖此前P1.0口头选择。上节第1项“发布号待批准”现已关闭，真源为[版本元数据](release.json)。运行配置、PG/API/worker、浏览器及原生产物隔离核验仍未关闭；不得将版本号确认视为B03整体PASS或发布批准。
+
+## 客户端与后台分工及隔离入口（2026-10-23）
+
+用户明确本会话只实施iOS/移动Web的PATCH001–005/007/008；后台会话负责PATCH006。双方已确认：后台独占apps/admin、apps/api/src/admin、operations-admin及独立后台DTO，保留迁移0026；客户端持有social、用户端dto、消息/通知/push及从0027起迁移，统一生成契约/client输出、P03基础回执接口和worker公共入口。后台交源码commit及独立模块接入片段，客户端串行集成；不在双方工作区并发改同文件。后台独立端口范围64274–64278。
+
+新增infra/patch-client独立合成rig，显式P1.1 opt-in，拒绝继承DB地址/供应商secret，要求专属临时根及依赖root；自行创建owned PG、随机本地测试DB、会话secret和独立API，AI disabled、测试身份/fixture Places，无旧clock或QA控制通道。启动前单元9/9、独立入口TypeScript、Python项目94/94及diff check通过。此时尚未启动rig；运行manifest及浏览器/原生隔离证据待补。
