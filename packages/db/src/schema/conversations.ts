@@ -9,6 +9,7 @@ export const conversations = pgTable('conversations', {
   kind: text('kind', { enum: ['GROUP', 'DIRECT'] }).notNull(),
   mealId: uuid('meal_id'),
   pairId: uuid('pair_id'),
+  authorizationEpoch: big('authorization_epoch').notNull().default(1n),
   head: big('head').notNull().default(0n),
   dissolvedAt: ts('dissolved_at'),
   dissolvedSeq: big('dissolved_seq'),
