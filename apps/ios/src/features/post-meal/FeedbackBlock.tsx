@@ -10,6 +10,7 @@ import { Field } from '../../ui/Field.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
 import { Sheet } from '../../ui/Sheet.tsx';
 import { Body } from '../../ui/Text.tsx';
+import { useServices } from '../../services.tsx';
 
 export const STATUS_LABEL: Record<ItemStatus, string> = {
   idle: '', skipped: 'Skipped · no changes', saving: 'Saving…', saved: 'Saved', notSavedYet: 'Not saved yet',
@@ -17,15 +18,27 @@ export const STATUS_LABEL: Record<ItemStatus, string> = {
 };
 const ITEM_LABEL: Record<FeedbackItem, string> = { review: 'Public reference', reconnect: 'Reconnect choice' };
 
-interface Memory { accountId: string; runner: FeedbackRunner; drafts: Map<string, FeedbackDraft>; listeners: Set<(key: string) => void> }
+interface Memory { accountId: string; runner: FeedbackRunner; drafts: Map<string, FeedbackDraft>; listeners: Set<(key: string) => void>; alive: boolean }
 let memory: Memory | null = null;
+
+/** Kills the old account's runner (generation fence), drafts and listeners; nothing can write back. */
+function discard(old: Memory | null) {
+  if (!old) return;
+  old.alive = false;
+  old.runner.clear();
+  old.drafts.clear();
+  old.listeners.clear();
+}
 
 /** In-memory per account only; a different account replaces everything (PATCH-004 isolation). */
 function memoryFor(accountId: string, api: ApiClient): Memory {
   if (!memory || memory.accountId !== accountId) {
+    discard(memory);
+    const box = { alive: true };
     const listeners = new Set<(key: string) => void>();
     const runner = new FeedbackRunner(
       async (scope, step, key): Promise<unknown> => {
+        if (!box.alive) throw new Error('FEEDBACK_MEMORY_CLEARED');
         const params = { mealId: scope.mealId, subjectId: scope.subjectId };
         switch (step.operation) {
           case 'reviewPerson': return api.call('reviewPerson', { params, body: { body: step.body }, ifMatch: step.ifMatch, idempotencyKey: key });
@@ -36,12 +49,13 @@ function memoryFor(accountId: string, api: ApiClient): Memory {
       (key) => { for (const l of listeners) l(key); },
       receiptReconciler(api),
     );
-    memory = { accountId, runner, drafts: new Map(), listeners };
+    memory = { accountId, runner, drafts: new Map(), listeners, get alive() { return box.alive; }, set alive(v: boolean) { box.alive = v; } };
   }
   return memory;
 }
 
-export function resetFeedbackMemory() { memory = null; }
+/** Session end (sign-out, 401, account switch, deletion) via services.onSessionEnd, and tests. */
+export function resetFeedbackMemory() { discard(memory); memory = null; }
 
 interface Props {
   api: ApiClient;
@@ -58,6 +72,9 @@ export function FeedbackBlock({ api, scope, snapshot, name, canWriteFeedback, re
   const key = scopeKey(scope);
   const currentKey = useRef(key);
   currentKey.current = key;
+  const { onSessionEnd } = useServices();
+  // Session end (sign-out, 401, account switch, deletion) must kill pending intents and drafts.
+  useEffect(() => { onSessionEnd.add(resetFeedbackMemory); }, [onSessionEnd]);
   const mem = memoryFor(scope.accountId, api);
   const [, rerender] = useState(0);
   const [message, setMessage] = useState<{ text: string; tone: 'error' | 'info' } | null>(null);

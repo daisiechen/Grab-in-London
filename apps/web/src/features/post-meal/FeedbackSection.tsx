@@ -5,6 +5,7 @@ import {
 } from '@fancy/client';
 import { CheckIcon, HeartIcon } from '@radix-ui/react-icons';
 import { useApi } from '../../api/ApiProvider.tsx';
+import { onPrivateStateClear } from '../../lib/drafts.ts';
 import { Field, FormError, Notice, Primary } from '../../ui/components.tsx';
 import { ConfirmSheet } from '../../ui/ConfirmSheet.tsx';
 
@@ -20,8 +21,17 @@ const FAILURE: Record<string, string> = {
   NOT_FOUND: 'This member or meal is no longer available.',
 };
 
-interface Memory { accountId: string; runner: FeedbackRunner; drafts: Map<string, FeedbackDraft>; listeners: Set<(key: string) => void> }
+interface Memory { accountId: string; runner: FeedbackRunner; drafts: Map<string, FeedbackDraft>; listeners: Set<(key: string) => void>; alive: boolean }
 let memory: Memory | null = null;
+
+/** Kills the old account's runner (generation fence), drafts and listeners; nothing can write back. */
+function discard(old: Memory | null) {
+  if (!old) return;
+  old.alive = false;
+  old.runner.clear();
+  old.drafts.clear();
+  old.listeners.clear();
+}
 
 /**
  * Per-account, in-memory only: leaving and returning restores the same scope's draft and its
@@ -30,11 +40,15 @@ let memory: Memory | null = null;
 function useMemory(accountId: string): Memory {
   const { api } = useApi();
   if (!memory || memory.accountId !== accountId) {
+    discard(memory);
+    const box = { alive: true };
     const listeners = new Set<(key: string) => void>();
     const runner = new FeedbackRunner(
       async (scope, step, key) => {
         const params = { mealId: scope.mealId, subjectId: scope.subjectId };
         const call = (): Promise<unknown> => {
+          // Covers internal retries too: a cleared account never sends another attempt.
+          if (!box.alive) return Promise.reject(new Error('FEEDBACK_MEMORY_CLEARED'));
           switch (step.operation) {
             case 'reviewPerson': return api.client.call('reviewPerson', { params, body: { body: step.body }, ifMatch: step.ifMatch, idempotencyKey: key });
             case 'selectReconnect': return api.client.call('selectReconnect', { params, body: { selected: step.selected }, ifMatch: step.ifMatch, idempotencyKey: key });
@@ -47,13 +61,15 @@ function useMemory(accountId: string): Memory {
       (key) => { for (const l of listeners) l(key); },
       receiptReconciler(api.client),
     );
-    memory = { accountId, runner, drafts: new Map(), listeners };
+    memory = { accountId, runner, drafts: new Map(), listeners, get alive() { return box.alive; }, set alive(v: boolean) { box.alive = v; } };
   }
   return memory;
 }
 
 /** Sign-out / account switch hook for tests and session teardown. */
-export function resetFeedbackMemory() { memory = null; }
+/** Session end (sign-out, 401, account switch, deletion) and tests. */
+export function resetFeedbackMemory() { discard(memory); memory = null; }
+onPrivateStateClear(resetFeedbackMemory);
 
 interface Props {
   scope: FeedbackScope;

@@ -6,6 +6,7 @@ import { renderApp } from '../../test/render.tsx';
 import { HOST_ID, MEAL_ID, USER_ID, meal, publicProfile, session } from '../../test/fixtures.ts';
 import { attendanceStatus } from './PostMealPage.tsx';
 import { resetFeedbackMemory } from './FeedbackSection.tsx';
+import { clearAllPrivateState } from '../../lib/drafts.ts';
 
 beforeEach(() => resetFeedbackMemory());
 
@@ -196,6 +197,25 @@ describe('post-meal page (T13/T14/T15)', () => {
     await userEvent.click(within(screen.getByRole('group', { name: 'Choose a tablemate' })).getByLabelText('Maya Chen'));
     expect((screen.getByLabelText(/A public reference/) as HTMLTextAreaElement).value).toBe('Draft for Maya only.');
     expect(s.callsTo('reviewPerson')).toHaveLength(0);
+  });
+
+  it('session teardown clears feedback drafts: the same account signing back in starts empty (P06-R02)', async () => {
+    const { s } = stub({});
+    const view = renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
+    await userEvent.type(await screen.findByLabelText(/A public reference/), 'Unsent draft.');
+    view.unmount();
+    clearAllPrivateState();
+    renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
+    expect((await screen.findByLabelText(/A public reference/) as HTMLTextAreaElement).value).toBe('');
+  });
+
+  it('leaving and returning within the same session restores the draft', async () => {
+    const { s } = stub({});
+    const view = renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
+    await userEvent.type(await screen.findByLabelText(/A public reference/), 'Kept while away.');
+    view.unmount();
+    renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
+    expect((await screen.findByLabelText(/A public reference/) as HTMLTextAreaElement).value).toBe('Kept while away.');
   });
 
   it('after the window closes an OPEN connection can still be withdrawn via Save feedback (AC-004d)', async () => {

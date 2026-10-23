@@ -156,4 +156,23 @@ describe('PostMealScreen (S19/S21)', () => {
     await waitFor(() => expect(app.mock.callsTo('POST', /revoke/)).toHaveLength(1));
     expect(app.mock.callsTo('POST', /revoke/)[0]!.headers['if-match']).toBe('"4"');
   });
+
+  it('session end kills the old account runner: a held reference never continues to the reconnect write (P06-R02)', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    app.mock.on('GET', PATH, ok(state({ attendance: [att(USER_ID, { value: 'present', source: 'SELF' })] })));
+    let release!: () => void;
+    app.mock.on('PUT', `/v1/meals/${MEAL_ID}/reviews/${HOST_ID}`, () => new Promise((r) => { release = () => r(ok({ subjectId: HOST_ID, version: '1', publishAt: null, visibility: 'PENDING' })); }));
+    app.mock.on('PUT', `/v1/meals/${MEAL_ID}/reconnect/${HOST_ID}`, ok({ subjectId: HOST_ID, selected: true, version: '2', connection: 'WAITING' }));
+    await renderApp(app, <PostMealScreen />);
+    await fireEvent.changeText(await screen.findByLabelText('Reference for Maya'), 'A generous host.');
+    await fireEvent.press(screen.getByRole('checkbox', { name: 'I’d meet Maya again' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Save feedback for Maya' }));
+    await waitFor(() => expect(app.mock.callsTo('PUT', /reviews/)).toHaveLength(1));
+    expect(app.services.onSessionEnd.has(resetFeedbackMemory)).toBe(true);
+    for (const end of app.services.onSessionEnd) end();
+    release();
+    await new Promise((r) => setTimeout(r, 10));
+    expect(app.mock.callsTo('PUT', /reconnect/)).toHaveLength(0);
+  });
 });

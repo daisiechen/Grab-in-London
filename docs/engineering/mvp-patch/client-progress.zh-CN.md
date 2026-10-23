@@ -36,3 +36,14 @@ packages/client/src/intents.ts、intents.unit.test.ts。Codex红例 infra/patch-
 - iOS：`FeedbackBlock.tsx`每位同桌一块，同语义；窗口关闭后OPEN仍可撤回。
 - 验证（退出0）：core:check；unit 439/439（含feedback 15、intents 5及Codex两红例中的unit）；web 300/300（post-meal 18）；iOS jest 382/382；api 223/223（含Codex receipt红例、post-meal本人body断言）。
 - 遗留：真实浏览器/模拟器路径未跑（运行rig未加载新代码）；375–430与键盘焦点待UI验收。
+
+### 后台P09源码串行集成 — 3dafd6a/a361ada/5ae5197/9d3cf0e/f775ee7，生成 9b3a7d0，worker b683eb0
+
+cherry-pick -x后台 63b088e、f3b0e0b、ea5a2e2、2d7647f、b111c4c（未pick 08912e1）。contracts.unit.test.ts两处冲突均保留双方operation清单（getCommandReceipt + getStatisticsRefresh/findStatisticsRefreshByIntent/retryStatisticsRefresh）。统一生成单独提交9b3a7d0。worker按admin-progress片段每tick处理pending refresh（有pending封存一次并同tick READY，无pending不额外封存），runtime db测试3/3。验证：core:check 0；unit 441；api 238；db 153。运行rig仍未加载0026/新路由。
+
+### P06-R02 账号内存真正清理 — 本次提交
+
+- 双端`discard()`：账号替换或`resetFeedbackMemory()`时调用旧runner.clear()（代际栅栏）、清drafts与listeners并置alive=false；执行器每次尝试（含withRetry内部重试）先检查alive。
+- Web：`lib/drafts.ts`的`clearAllPrivateState`增加内存清理注册（`onPrivateStateClear`），所有sign-out/401/账号切换/删除路径已统一调用；FeedbackSection在模块加载时注册。iOS：FeedbackBlock把reset注册到`services.onSessionEnd`（session onClear触发）。
+- 同会话离开返回仍恢复草稿；会话结束后同账号重登录不恢复。
+- 测试：Codex红例 apps/web/src/test/p11-feedback-clear.unit.test.tsx 只读运行通过（未stage）；新增Web“teardown后为空/同会话返回保留”、iOS“onSessionEnd后在途公评不继续再约”。core:check 0；unit 441；web 303；iOS 383。
