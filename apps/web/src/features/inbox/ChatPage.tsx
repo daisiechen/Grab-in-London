@@ -1,3 +1,4 @@
+import { VisibleMessage } from './VisibleMessage.tsx';
 import { useAssistantEditor, useAssistantEditorRevision } from '../assistant/index.ts';
 import { useRenderedEvent } from '../../api/telemetry.tsx';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
@@ -10,7 +11,7 @@ import { Intent } from '../../api/webApi.ts';
 import { errorMessage } from '../../api/errors.ts';
 import { findConversation, maxSeq, mergeMessages, type Conversation, type Message } from '../../api/conversations.ts';
 import type { MealDetail } from '../../api/types.ts';
-import { clearDraft, loadDraft, saveDraft } from '../../lib/drafts.ts';
+import { clearDraft, loadDraft, onPrivateStateClear, saveDraft } from '../../lib/drafts.ts';
 import { longDate } from '../../lib/format.ts';
 import { LivePoller, type TickResult } from '../../lib/poller.ts';
 import { usePollerDeps } from '../../lib/pollerContext.tsx';
@@ -63,9 +64,14 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
   // Monotonic for this mounted conversation. A different route gets a fresh keyed instance.
   const historyOnly = useRef(false);
   const mounted = useRef(true);
-  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
+  useEffect(() => {
+    mounted.current = true;
+    const reset = () => { mounted.current = false; poller.current?.stop(); };
+    const unsubscribe = onPrivateStateClear(reset);
+    return () => { unsubscribe(); reset(); };
+  }, []);
   const intent = useRef(new Intent(api.retry));
-  const [renderedThrough,setRenderedThrough] = useState<string|null>(null);
+  const scannedPage = useRef<{through:string;lastMessage:string|null}|null>(null);
   const acknowledged = useRef('0');
   const [visible,setVisible] = useState(document.visibilityState !== 'hidden');
   useRenderedEvent('chat_opened',{conversationId},!!conversation&&conversation.kind==='GROUP'&&hasRead);
@@ -77,8 +83,7 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
     setHasRead(true);
     after.current = maxSeq(after.current, scanned, ...list.map((m) => m.seq));
     if (list.length) setMessages((cur) => mergeMessages(cur, list));
-    const rendered = maxSeq(scanned,...list.map(message=>message.seq));
-    if(rendered)setRenderedThrough(previous=>maxSeq(previous,rendered));
+    if(scanned)scannedPage.current={through:scanned,lastMessage:maxSeq(...list.map(message=>message.seq))};
   }, []);
 
   const readHistory = useCallback(async () => {
@@ -97,9 +102,15 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
     await readHistory();
   },[readHistory]);
 
-  // Effects run after this batch is committed to the DOM. No acknowledgement while hidden,
-  // and a failed write is never optimistically reflected or automatically retried.
-  useEffect(()=>{if(!me||!visible||!renderedThrough||BigInt(renderedThrough)<=BigInt(acknowledged.current))return;acknowledged.current=renderedThrough;void api.client.call('markConversationRead',{params:{conversationId},body:{throughSeq:renderedThrough}}).then(()=>cache.delete('inbox')).catch(()=>{});},[api,cache,conversationId,me,renderedThrough,visible]);
+  const presented = useCallback((seq:string) => {
+    if(!mounted.current||!me||document.visibilityState!=='visible')return;
+    const page=scannedPage.current;
+    const through=page?.lastMessage&&BigInt(seq)>=BigInt(page.lastMessage)?maxSeq(seq,page.through)!:seq;
+    if(BigInt(through)<=BigInt(acknowledged.current))return;
+    // A failed acknowledgement never retries itself. Only newly visible progress can advance it.
+    acknowledged.current=through;
+    void api.client.call('markConversationRead',{params:{conversationId},body:{throughSeq:through}}).then(()=>{if(mounted.current)cache.delete('inbox');}).catch(()=>{});
+  },[api,cache,conversationId,me]);
 
   // Conversation metadata (+ meal for the pinned card / host role).
   useEffect(() => {
@@ -191,10 +202,12 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
         if (!mounted.current || historyOnly.current) throw new ApiError({ status: 403, code: 'FORBIDDEN', message: 'This chat is read-only.' });
         return api.client.call('sendMessage', { params: { conversationId }, body: { body, clientMessageId } });
       }, api.retry);
+      if (!mounted.current) return;
       absorb([res.data]);
       pending.current = null;
       setText('');
     } catch (e) {
+      if (!mounted.current) return;
       if (!(e instanceof ApiError) || !e.retryable) pending.current = null;
       if (e instanceof ApiError && e.status === 403) {
         void toHistory();
@@ -203,7 +216,7 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
         setError(errorMessage(e));
       }
     } finally {
-      setSending(false);
+      if (mounted.current) setSending(false);
     }
   };
 
@@ -269,7 +282,7 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
           lastDay = day;
           const own = m.sender.id === me?.id;
           return (
-            <div key={m.id}>
+            <VisibleMessage key={m.id} seq={m.seq} enabled={!!me&&visible} presented={presented}>
               {sep}
               <div className={`chat-message${own ? ' own' : ''}${m.redacted ? ' redacted' : ''}`}>
                 {!own && <Link to={`/profiles/${m.sender.id}`} aria-label={m.sender.displayName}><Avatar name={m.sender.displayName} url={m.sender.avatarUrl} size={30} /></Link>}
@@ -278,7 +291,7 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
                   <p>{m.redacted ? 'This message was removed.' : m.body}</p>
                 </div>
               </div>
-            </div>
+            </VisibleMessage>
           );
         })}
         <FormError>{error}</FormError>
