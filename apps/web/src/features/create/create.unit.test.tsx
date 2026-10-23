@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { createFetchStub,fail,ok,page,type RecordedCall } from '../../test/fetchStub.ts';
+import { createFetchStub,deferred,fail,ok,page,type RecordedCall } from '../../test/fetchStub.ts';
 import { renderApp } from '../../test/render.tsx';
 import { MEAL_ID, VENUE_REF, meal, session } from '../../test/fixtures.ts';
 import { loadDraft, saveDraft } from '../../lib/drafts.ts';
@@ -129,6 +129,18 @@ describe('create meal flow (T07)', () => {
     expect(stub.callsTo('getCommandReceipt')[0]!.params).toEqual({ operation: 'createMeal', key: [...keys][0] });
     expect(stub.callsTo('createMeal')).toHaveLength(writes);
     expect(loadDraft('create')).toBeNull();
+  });
+
+  it('cancels queued publish retries when a real unauthorized response ends the session', async () => {
+    const held=deferred<void>();
+    const stub=createFetchStub({getSession:()=>ok(session()),getMe:()=>fail(401,'AUTH_REQUIRED'),createMeal:()=>{throw new TypeError('Response lost');}});
+    saveDraft('create',complete());const view=renderApp(stub.fetch,'/create');view.api.retry.sleep=()=>held.promise;
+    await toReview();await userEvent.click(screen.getByRole('checkbox',{name:/checked the arrangements/}));
+    await userEvent.click(screen.getByRole('button',{name:/Publish meal/}));
+    await waitFor(()=>expect(stub.callsTo('createMeal')).toHaveLength(1));
+    await act(async()=>{await view.api.client.call('getMe',{}).catch(()=>{});});
+    await act(async()=>{held.resolve();});
+    expect(stub.callsTo('createMeal')).toHaveLength(1);
   });
 
   it('asks BST or GMT for a repeated London time and resubmits as a new intent with that offset', async () => {

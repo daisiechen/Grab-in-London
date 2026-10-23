@@ -143,7 +143,10 @@ function CreateFlow({terms}:{terms:boolean}) {
     setError('');
     const generation = tracker.generation;
     try {
-      const res = await tracker.run(body, (key) => withRetry(() => api.client.call('createMeal', { body, idempotencyKey: key }), api.retry));
+      const res = await tracker.run(body, (key) => withRetry(() => {
+        if (generation !== tracker.generation) throw new Error('Publish scope ended');
+        return api.client.call('createMeal', { body, idempotencyKey: key });
+      }, api.retry));
       if (generation !== tracker.generation) return;
       published(res.data.id);
     } catch (e) {

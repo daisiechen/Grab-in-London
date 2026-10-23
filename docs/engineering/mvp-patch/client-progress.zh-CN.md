@@ -117,3 +117,7 @@ packages/client/share.ts 只从显式公开输入构造 HTTPS canonical meal URL
 - 新增 Expo +native-intent 的冷/热启动入口，仅把显式配置 HTTPS origin 下的 /meals/UUID 改写为详情页；外域、http、申请子路由、query/hash、protocol-relative、空白标准化和畸形URL拒绝到可读的 Meal link unavailable 页面，不发申请/写操作。非HTTP现有 OAuth 回调保留原路径/state，仍由既有 PKCE/状态逻辑验证。
 - patch-p11 native-config 仅在显式 EXPO_PUBLIC_MEAL_ORIGIN 时添加该单一 applinks hostname，禁止 credentials/path/query/hash/port；默认封存配置不变。未填写 Apple Team ID、未生成或部署 AASA、未更改 DNS/证书。
 - 原生链接与已有 OAuth 回归 33/33，关联配置+分享纯逻辑 19/19，iOS 类型与 ESLint 通过。仍须新原生构建、模拟器冷/热跳转与真实 HTTPS 双向关联验收；单元检查不等于 Universal Link 打通。参考 [Expo native-intent](https://docs.expo.dev/router/advanced/native-intent/) 与 [Universal Links](https://docs.expo.dev/linking/ios-universal-links/)。
+
+### P05 发布内部重试在401后必须停止
+
+真实 SessionProvider 路径红例：createMeal 首次网络失败进入退避，另一个 getMe 返回401结束会话，再放行等待，原实现仍发送共4次（应1）。现每次 withRetry attempt 前验证 tracker generation，会话清理/卸载后不再发送旧发布请求，迟到结果也不导航。create/edit 21/21、Web 类型与 ESLint 通过。此检查不扩大服务端写范围。
