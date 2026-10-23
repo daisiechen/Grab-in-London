@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-23",
+  "scope": "current MVP J008 guest-only TCP transport tool independent OWN verification; excludes patch",
+  "sourceCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+  "sourceManifestSha256": "34ba484674fd1505b0a5a49059b6c12d8e66a8754123c89b105462afccfaad46",
+  "pinsSha256": "ed33113781f42616e724d76f494214ec3d2d3b796b946aa4b1261847e007cccf",
+  "logSha256": "cea10cc9cc3374ba29923bd588cb2b33cb341d1d39f8c56756e93d7a9da92255",
+  "executedBy": "successor independent QA",
+  "result": {
+    "exitCode": 0,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0
+  },
+  "checks": [
+    "Literal route/query boundaries reject auth/admin/analytics and path normalization",
+    "Real TCP socket reset persists until explicit owner recovery; writes/credentials not forwarded; one shot",
+    "Monotonic expiry closes own listener; external/original target refused",
+    "Archived production API and new OWN PostgreSQL permit guest GET with unchanged Origin; fetch fails while faulted and recovers; business counts unchanged",
+    "Frozen DiscoverQuery names match allowlist; archived Web HTML served; source1797 manifest verified"
+  ],
+  "limitations": [
+    "No actual browser error/Retry assertions executed",
+    "No original sourceB connection or target62057 listener",
+    "Not navigator.offline emulation; network transport-error subpath only",
+    "No authenticated draft/401/group403/Admin410 claim; wholeJ008 remains NOT_RUN",
+    "Initial developer sandbox listener failures retained by owner; final independent run does not erase them"
+  ]
+}

@@ -71,3 +71,13 @@ F64以B90定向关闭为准，JSON缺陷摘要OPEN滞后；不再要求重复修
 本地收尾：四条旅程、前后台矩阵及未闭合缺陷分支全部完成；完整MVP：9类真实门槛及AI-050/052闭合、适用P0通过、P1明确处置。最后发布授权独立记录。不能删除真实AI、真机或支持流程来缩小成功定义。
 
 参考：[剩余执行计划](../qa/remaining-plan-2026-10-22.zh-CN.md)、[缺陷记录](../qa/defects-2026-10-21.zh-CN.md)、[测试效率/阻塞审计](../reviews/mvp-test-efficiency-2026-10-23.zh-CN.md)、[开发协调](../../tasks/mvp-coordination.md)、[发布门槛](../engineering/validation-and-release.zh-CN.md)。公开文档不保存运行token、邮箱、个案/设备身份或私有控制地址。
+
+## 2026-10-23 接续执行检查点
+
+- 唯一QA操作权已接收；原保留API的live/ready均实际HTTP200，CONTROL仍revision41/02:31:30Z/nonfailed。未操作测试钟或业务数据。
+- D01候选独立复验完成：4pure+2新OWN实际集成，共6PASS/0FAIL/0SKIP，退出0；冻结产品/工具校验及106项SHA清单通过。[独立证据](../qa/evidence/2026-10-21/support-tools-independent-2026-10-23.json)。只关闭工具交付的自测/独审子项，不关闭J011。原前置失败保留。
+- 当前候选不能热接旧parent；新同库代际与测试密钥影响方案待开发提交、集中确认，不执行替换或预造停止证明。当前与历史端口/PID法证已分离，防止要求无关历史服务停机。
+- Q03 Web访客页面在线6场已实际读取。DevTools仅见No throttling，原生输入未能执行Offline；本轮专用页已关闭，网络未改变。开发另准备独立只读、有限连接中断工具，先OWN验证后交QA；不得把503或工具通过代替实际UI网络失败/显式恢复。
+- F64摘要、B75/B88真实外部证据及下一执行顺序已在执行真源更正；202/4/11不变。
+
+- Q03替代工具独立OWN复验5PASS/0FAIL/0SKIP、退出0，固定源文件pins一致；覆盖实际TCP断连/恢复、严格只读路由、凭据拒绝及到期关闭。[证据](../qa/evidence/2026-10-21/web-transport-independent-2026-10-23.json)。仍缺受审原环境接入入口和实际浏览器错误/Retry恢复断言，不提升J008。
