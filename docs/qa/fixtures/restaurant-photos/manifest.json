@@ -1,0 +1,19 @@
+{
+  "purpose": "F63 synthetic display fixtures only; not Google provider/permission evidence",
+  "files": [
+    {
+      "path": "synthetic-photo-a.png",
+      "sha256": "740c3f2e1b262d114a2479b505f62b7536cb25ae276af9d9dcdcbc51929021fa",
+      "width": 320,
+      "height": 180,
+      "source": "self-generated synthetic QA pixels; no restaurant/photo/person data"
+    },
+    {
+      "path": "synthetic-photo-b.png",
+      "sha256": "5abd24966fdcb1c74b924c13f2f86aa46aa90c7ebeded3d474b47a1ad839fdf9",
+      "width": 320,
+      "height": 180,
+      "source": "self-generated synthetic QA pixels; no restaurant/photo/person data"
+    }
+  ]
+}
