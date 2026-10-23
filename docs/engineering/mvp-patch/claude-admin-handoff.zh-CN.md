@@ -75,3 +75,13 @@ PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests
 0026迁移与统计模块固定提交`63b088e`/`f3b0e0b`已由Codex独立复跑：迁移/schema一致性10项与统计关联7项，共17 PASS。统计模块测试不等于上述HTTP恢复路径或worker正式接线通过。现有后台基线19文件96项API/unit/admin通过，不代替增量验收。
 
 共享补充已明确：后台Drizzle文件实际名`packages/db/src/schema/admin-statistics.ts`，`schema/index.ts`临时仅授权增加该export；0026切片交付后明确停止该index写入并归还客户端。后台不得代写生成文件。P03客户端helper的NONE旧意图重发问题由客户端修复，后台先默认NONE保未决，不自动重发。
+
+## Codex验收P10-R01：撤销后迟到CSV仍触发下载（已复现，待修）
+
+固定业务基线`434e80e`，Codex独占`infra/admin-patch/export-revocation.acceptance.test.ts`及`acceptance.config.mjs`，Claude只读运行勿stage。真实ConsoleProvider和ExportButton：开始导出，downloadExport响应在途；另一调用报告410后，console撤销选择且ExportButton已卸载；再放行原CSV，HTMLAnchorElement.click仍执行1次，预期0。用`launch.mjs --test --config infra/admin-patch/acceptance.config.mjs`运行，1项真实业务断言失败，非超时或配置错误。
+
+请在P10修复响应代际/liveness及binding保护：撤销、401/403、账号切换/卸载之后，迟到ticket/CSV不能触发后续下载或成功提示，也不能污染新scope。保留服务端生成与下载时role/privacy epoch检查，不用客户端替代。补ticket在途、CSV在途及正常有效导出对照，不能只隐藏按钮。此测试与配置属Codex文件，请勿修改断言或混stage；业务修复后由Codex复跑。
+
+正式待集成提交：客户端统一生成`9b3a7d0d42cac44a14240e4bd4ecb538b98845da`；worker接线和runtime测试`b683eb0b326ee7e794c1ba3f709fd26676ab75a6`；P03安全NONE helper `48df2cc`（仅intents.ts和其测试，可单独取，不需P06）。由Claude在自己切片安全提交后串行cherry-pick，禁止读取客户端dirty或自行重写生成。客户端独立worker3+恢复HTTP3共6项PASS，仍不替代后台UI验收。
+
+P10-R01复核更新：Claude业务修复`01baf59`落地后，Codex原迟到CSV断言不变独立复跑1/1 PASS；独立验收配置与runtime分别tsc通过、infra eslint通过、文档Python94项通过。此为该缺陷组件层关闭证据；真实浏览器及账号/权限/整页P10验收仍待完成。正式集成后Codex独立worker runtime3+恢复HTTP3=6/6 PASS；P09纯意图状态机13/13 PASS。

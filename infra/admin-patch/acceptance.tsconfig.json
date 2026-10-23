@@ -1,0 +1,25 @@
+{
+  "extends": "../../apps/admin/tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "react": [
+        "../../apps/admin/node_modules/@types/react/index.d.ts"
+      ],
+      "react/jsx-runtime": [
+        "../../apps/admin/node_modules/@types/react/jsx-runtime.d.ts"
+      ],
+      "@testing-library/react": [
+        "../../apps/admin/node_modules/@testing-library/react/types/index.d.ts"
+      ],
+      "@testing-library/user-event": [
+        "../../apps/admin/node_modules/@testing-library/user-event/dist/types/index.d.ts"
+      ]
+    },
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "./*.acceptance.test.ts"
+  ]
+}
