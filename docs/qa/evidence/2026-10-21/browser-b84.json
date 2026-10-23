@@ -1,0 +1,46 @@
+{
+  "observations": [
+    {
+      "testedCommit": "c0bddd9f8ee7ad0839833ea0f2f5955ce62f0ba3",
+      "clientComposition": "3ee69fe baseline + seven F64 files from9101004 + seven F63 native/five shared files fromc0bddd9;19 overlays",
+      "executedBy": "Codex QA actual XCTest on new dedicated simulator and independent screenshot inspection",
+      "id": "B84-O001",
+      "status": "passed",
+      "title": "Native preserves B after delayed A server finish",
+      "steps": [
+        "227 completed normal new OWN OTP login with value-checked input and exact dedicated-runner fresh-code bridge; existing synthetic profile returned to native Arrange. Actual68.370seconds exit0. No old token copying.",
+        "228 was interrupted at App launch after QA noticed an incorrect Web review heading in the script. Exit75 retained; no acceptance granted.229 uses independently observed native Review your meal heading.",
+        "229 normal four-step A draft issued A5, held admitted by fixed delay. Normal edit selected B, retained introduction, reconfirmed booking and displayed B image/author; B6/7 server finished200.",
+        "After B_READY, host released A and inspected SAME A5 prepared+response_finished200, then wrote exact dedicated-runner one-use checkpoint. Subsequent B image/author and absence of A assertions passed, exit0. Before/after screenshots independently viewed purple B and author B. No publish.",
+        "Server finish means server flush, not client receipt or decoding of A. Synthetic simulator only; image error/mismatch and real provider remain pending, F63 open; no whole-case promotion."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f63-native-late-b-after-a-finish.png",
+        "evidence/2026-10-21/f63-native-late-b-before-a-release.png",
+        "evidence/2026-10-21/native227-f63-xcui.swift",
+        "evidence/2026-10-21/native228-f63-xcui.swift",
+        "evidence/2026-10-21/native229-f63-xcui.swift"
+      ],
+      "rawEvidence": {
+        "nativeLogSha256": {
+          "227": "69ac624291a8f6b51ada342b99e7af234049bad4c248df6dd04531095b42d915",
+          "228": "b66b6e97c4345f5ee60a87642afcfe6df44838ad3f38e486f4cee111d1727f9e",
+          "229": "d2b816339518e75f68535da0b616b76c543400959980127852d7011b816866da"
+        },
+        "privateBundlesRetained": true
+      },
+      "serverObservation": {
+        "kind": "curated exact event sequence, not raw transport bytes",
+        "sequence": [
+          "A5 admitted",
+          "B6 admitted/prepared/response_finished200",
+          "B7 admitted/prepared/response_finished200",
+          "releaseA",
+          "A5 prepared/response_finished200",
+          "exact runner checkpoint",
+          "post-response B screenshot/assertions"
+        ]
+      }
+    }
+  ]
+}
