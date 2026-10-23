@@ -135,7 +135,8 @@
     "browserObservationsB92": "evidence/2026-10-21/browser-b92.json",
     "browserObservationsB93": "evidence/2026-10-21/browser-b93.json",
     "browserObservationsB94": "evidence/2026-10-21/browser-b94.json",
-    "browserObservationsB95": "evidence/2026-10-21/browser-b95.json"
+    "browserObservationsB95": "evidence/2026-10-21/browser-b95.json",
+    "browserObservationsB96": "evidence/2026-10-21/browser-b96.json"
   },
   "cases": [
     {
@@ -23268,5 +23269,5 @@
     "Complete J011 with reviewed support CLI/exact168h boundary tooling; perform J009 last, then actual Admin410/cache/old-export invalidation. No fragment-to-whole promotion.",
     "Close nine real provider/device/policy/deployment gates with exact evidence; AI050/052 share MODEL/DATA dependencies. Consolidate specific human actions after developer preparation."
   ],
-  "currentExecutionSlice": "B95: original native D92 actual read entry started once after freshinspect9to10. Normal refresh200 followed getSession401, visible guestProfile; QA237 failed before editor. Original red retained, proxy normalterminal0. Cause pending; no manualrevoke or productFAIL inferred. Counts202 PASS/4 NOT_RUN/11 BLOCKED remain."
+  "currentExecutionSlice": "B96: latest user correction explicitly allows exactD23synthetic17calls/51408micro and enable; fresh applied/verified rev14, no clockadvance or realnetwork. ActualWeb Z1 KNOWNfailure1request settlesFAILED/UNAVAILABLE2KNOWN/128micro but UIshowsconversationexpired; handwritten73chars retained/noSend. Remaining15calls,oldUNKNOWN1unchanged. Wholecounts202/4/11unchanged; clientfixtureclock correctionpending."
 }

@@ -24,7 +24,7 @@ Current counts202 PASS/4 NOT_RUN/11 BLOCKED. Remaining whole local journeys J005
 
 ## 实际运行
 
-B95: original native D92 actual read entry started once after freshinspect9to10. Normal refresh200 followed getSession401, visible guestProfile; QA237 failed before editor. Original red retained, proxy normalterminal0. Cause pending; no manualrevoke or productFAIL inferred. Counts202 PASS/4 NOT_RUN/11 BLOCKED remain.
+B96: latest user correction explicitly allows exactD23synthetic17calls/51408micro and enable; fresh applied/verified rev14, no clockadvance or realnetwork. ActualWeb Z1 KNOWNfailure1request settlesFAILED/UNAVAILABLE2KNOWN/128micro but UIshowsconversationexpired; handwritten73chars retained/noSend. Remaining15calls,oldUNKNOWN1unchanged. Wholecounts202/4/11unchanged; clientfixtureclock correctionpending.
 
 | ID | 结果 | 范围 |
 |---|---|---|

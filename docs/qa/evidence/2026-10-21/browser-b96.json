@@ -1,0 +1,30 @@
+{
+  "observations": [
+    {
+      "id": "B96-O001",
+      "status": "passed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "title": "User-corrected exact synthetic day budget and controlledAI release independently verified",
+      "steps": [
+        "User first selected refuse then explicitly corrected to allow the exact previously presented scope; latest approval governs. No realAI, reset, extra budget, price extension or clock advance.",
+        "Fresh originalDB RR and actual RAM inspect rev11 confirmed D23 absent, oldUNKNOWN1/max3024, AI/HTTP in-flight0 and original synthetic price valid. QA configureDay11to12 then RR confirmed exactcap51408/callcap17/used0/reserved0/calls0 and oldbudget/liability summaries unchanged.",
+        "Enable12to13 and actualinspect13to14 showed releasedtrue/pausedfalse/controlledAItrue, calls0/realnetwork0/nonfailed. Fixtureclock stayed02:46:30Z. Configuration precondition only, not wholeJ005."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B96-O002",
+      "status": "failed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "title": "Actual Web known-failure request settles but UI presents session expiry",
+      "steps": [
+        "OriginalA normal cookie login opened Z1 application page. Entered73-character synthetic handwritten introduction, opened assistant, sent exact Synthetic known failure W6 N5 once with explicit current APPLICATION target; no manualSend.",
+        "UI showed conversation expired after30minutes with unsentAsk retained rather than intended service-unavailable result. Closing assistant preserved exact handwritten introduction and normalSend button. No blind retry.",
+        "RR audit of D23 identifies exactly1request FAILED/UNAVAILABLE,2calls KNOWN,totalactual128micro,reserved0; daycalls2 of17. GlobalKNOWN31, historicalUNKNOWN1/max3024 remains. Remaining sharedbudget15calls; do not repeat this slot or reset.",
+        "Developer diagnosing frozen client walltime versus fixture024630; no clock/device/TTL changes. Native analogousskew already reproduced inOWN, but this Web rootcause not yet actualfix verified. WholeJ005 remains NOT_RUN."
+      ],
+      "artifacts": [],
+      "privateScreenshotSha256": "03b7a3276d567e49d75693ac9b81d70ef8009c82cd305c46490e7b585a1058a6"
+    }
+  ]
+}
