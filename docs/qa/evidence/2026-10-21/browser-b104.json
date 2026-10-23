@@ -1,0 +1,23 @@
+{
+  "observations": [
+    {
+      "id": "B104-O001",
+      "status": "passed",
+      "testedCommit": "9dccdfb3b66140ead12e64b9c423c1b9134b4da7",
+      "title": "F67 actual native exact-family expiry and same-user normal reauthentication preserve unsent draft",
+      "steps": [
+        "Normal signedF67 QA composition; originalApp process92242 retained from draft through exact JITfamilyrevocation CONFIRMED, Inbox normal read toguest, normal targetmeal login gate. No coldlaunch/unrevoke/repeatedrevocation or applicationSend.",
+        "243 single normal Sendcode refused with Too many attempts. Try again in30s. No resend/OTP read at that phase. Human then specifically authorized024630→030130 once; newfreshRAM22/RR22 zero boundary/queues/grants/CLI and postadvance23 budgets/liabilities exact unchanged.",
+        "244 from same originalApp normalemailpage Sendcode once succeeded, challenge d5ca8de2-3c26-453b-a064-b8dce11e74f1/030130. One-reader privateOTP delivered without code output; normalverify returned originalmeal apply and exact Synthetic native J008 unsent recovery draft. No Sendrequest click.",
+        "XCTest244 PASS1/0,67.286s,xcodeexit0. Exactchallenge JOIN resultfamily/user proves originalH IOS unrevoked with read-only RR25; screenshot shows exact target/intro/originalH. F67 targeted closure, not wholeJ008.",
+        "After evidence captured normalterminate App exit0 for approvedadoption checkpoint; no uninstall/Keychainchange."
+      ],
+      "artifacts": [
+        {
+          "path": "docs/qa/evidence/2026-10-21/b104-native-expiry-draft-restored.png",
+          "description": "Synthetic originalH target and exact unsent introduction after normal reauthentication"
+        }
+      ]
+    }
+  ]
+}

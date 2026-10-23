@@ -23253,7 +23253,7 @@
     "QA-F64": "CLOSED_TARGETED_QA",
     "QA-F65": "CLOSED_TARGETED_QA",
     "QA-F66": "FIX_VERIFIED_DB_RUNTIME_PENDING",
-    "QA-F67": "FIX_VERIFIED_COMPONENT_DEVICE_PENDING",
+    "QA-F67": "CLOSED_TARGETED_QA",
     "QA-F68": "FIX_VERIFIED_ISOLATED_RUNTIME_PENDING"
   },
   "followUp": {
@@ -23277,5 +23277,5 @@
     "Complete J011 with reviewed support CLI/exact168h boundary tooling; perform J009 last, then actual Admin410/cache/old-export invalidation. No fragment-to-whole promotion.",
     "Close nine real provider/device/policy/deployment gates with exact evidence; AI050/052 share MODEL/DATA dependencies. Consolidate specific human actions after developer preparation."
   ],
-  "currentExecutionSlice": "B103: F67 signed1785package verified/installed; exactJITrevokeCONFIRMED, sameprocess normalInboxguest reached; sameuser reauth/draft pending.240-242 driver wrongforeground/navigation expectations retained, not productFAIL. UnifiedWeb/F66candidate independently16PASS, one human newgen approval obtained not yetexecuted. F68four numeric grounding reds independently fixed; correctedOWN64 46success4needs2expectedtimeout+8lifecycle, not realmodel acceptance. Whole217counts202/4/11."
+  "currentExecutionSlice": "B104: F67actualnative targetedPASS: originalprocess draft→exactfamilyrevoke→normalInboxguest→normal sameHOTP→exacttarget/intro restored noSend.244PASS1/0 exit0; wrongdriver240-242 andactual243ratelimit retained. Human024630→030130 executedonce, budgets/UNKNOWN unchanged. App normally stopped for approvedadoption; notwholeJ008. Original217counts202/4/11."
 }
