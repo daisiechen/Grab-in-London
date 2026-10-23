@@ -113,7 +113,8 @@
     "browserObservationsB70": "evidence/2026-10-21/browser-b70.json",
     "browserObservationsB71": "evidence/2026-10-21/browser-b71.json",
     "browserObservationsB72": "evidence/2026-10-21/browser-b72.json",
-    "browserObservationsB73": "evidence/2026-10-21/browser-b73.json"
+    "browserObservationsB73": "evidence/2026-10-21/browser-b73.json",
+    "browserObservationsB74": "evidence/2026-10-21/browser-b74.json"
   },
   "cases": [
     {
@@ -16173,7 +16174,9 @@
       "plannedStage": "external",
       "target": "production implementation in local synthetic environment",
       "status": "BLOCKED",
-      "evidence": [],
+      "evidence": [
+        "B74-O003"
+      ],
       "relatedAutomatedAssertions": [],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
@@ -16181,7 +16184,7 @@
         "实际收件箱可追踪去重",
         "provider accepted不能单独通过"
       ],
-      "actual": "Resend基础发送配置已非空，已有测试邮件delivered运输证据；不是缺邮件账户。生产运输/回执与删除通知168h本地实现已验证，但真实worker业务发信、收件箱去重/渠道矩阵及签名webhook未验；webhook专用配置尚缺。开发负责接线与最小真实验证交接，需真实发信授权另明确。",
+      "actual": "Resend基础发送配置已非空，已有测试邮件delivered运输证据；不是缺邮件账户。生产运输/回执与删除通知168h本地实现已验证，正常业务触发的有界真实运输见B74；收件箱去重/渠道矩阵及签名webhook仍未验；webhook专用配置尚缺。开发负责接线与最小真实验证交接，用户已批准既有开发测试邮箱业务邮件；不再重复索取该范围批准。 B74: three bounded business transport attempts targeted the user-approved existing test mailbox, selected outbox SENT each1; actual inbox delivery/dedup and signed webhook remain unverified. Host excluded from HTTP, but row FAILED/attempts1. No whole gate promotion.",
       "history": [
         {
           "status": "BLOCKED",
@@ -19196,7 +19199,9 @@
         "B68-O002",
         "B68-O003",
         "B72-O002",
-        "B72-O003"
+        "B72-O003",
+        "B74-O001",
+        "B74-O002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -19519,7 +19524,7 @@
       "remainingExpected": [
         "Complete remaining abnormal journey assertions and shared environment/admin trace; targeted F41 return regression alone is not whole-case acceptance."
       ],
-      "actual": "F41 targeted closed at042bc79: Native43 repeats originalNative41 read-chat/Back/Inbox probe and automatically restores five groups without pull; R19513/0. Original36/37/41 reds and manual38 recovery retained. F38 real429 visible/recovery also passed. Other full abnormal path assertions remain NOT_RUN. B43 captures actual native Replace429 visible error/preserved editor and successful normal controlled recovery;137 cold auth clock skew is separate environment precondition, not a completed abnormal-journey matrix. B68 (Claude, same DB M4): approval 409 on both Web host and native host refreshes and creates no seat; Web mid-edit 401 keeps target, no automatic replay, but clears the unsent introduction (QA-F62). Group 403, Admin snapshot 410, offline recovery and native 401 not yet executed; rig exited at ~20:46 BST. B72 (source B): F62 fixed — same-tab 401 caused by sign-out in another tab returns to the apply target, restores the same user’s unsent introduction without replay, and discards it for a different user. Native 401, group 403, Admin snapshot 410 and offline recovery remain.",
+      "actual": "F41 targeted closed at042bc79: Native43 repeats originalNative41 read-chat/Back/Inbox probe and automatically restores five groups without pull; R19513/0. Original36/37/41 reds and manual38 recovery retained. F38 real429 visible/recovery also passed. Other full abnormal path assertions remain NOT_RUN. B43 captures actual native Replace429 visible error/preserved editor and successful normal controlled recovery;137 cold auth clock skew is separate environment precondition, not a completed abnormal-journey matrix. B68 (Claude, same DB M4): approval 409 on both Web host and native host refreshes and creates no seat; Web mid-edit 401 keeps target, no automatic replay, but clears the unsent introduction (QA-F62). Group 403, Admin snapshot 410, offline recovery and native 401 not yet executed; rig exited at ~20:46 BST. B72 (source B): F62 fixed — same-tab 401 caused by sign-out in another tab returns to the apply target, restores the same user’s unsent introduction without replay, and discards it for a different user. Native 401, group 403, Admin snapshot 410 and offline recovery remain. B74: new reviewed F64 native composition restored normal H and loaded Inbox Chats10 after preserving/correcting the202 locator failure; no offline ARM or explicit retry executed, so whole case remains NOT_RUN.",
       "defectIds": [
         "QA-F38",
         "QA-F41",
@@ -23187,7 +23192,7 @@
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
     "userAuthorizedMessaging": true,
-    "status": "claude_code_independent_qa_with_codex_dev_coordinator",
+    "status": "codex_qa_execution_after_verified_claude_handoff",
     "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
     "latestFeedback": "B30 actualF50/F51 closures handed to originaldevelopment; remainingwholejourneys andF52 realnewCLIbrowserchain require normalexecution, nofixturefragment-to-wholepass.",
     "pendingFixtureDependencies": [
@@ -23196,12 +23201,12 @@
       "Realprovider/device/deployment/policy gates remain11separate; localmock/normal-signing simulator cannotreplace them."
     ],
     "handoff": "docs/qa/handoff-2026-10-22-claude.zh-CN.md",
-    "note": "Codex QA chat usage-limited since 2026-10-22 16:11Z (history retained); development coordinator Codex resumed. Claude Code owns docs/qa and QA scripts; defects go to the development coordinator."
+    "note": "Claude explicitly stopped and handed execution/files/Git back. Codex QA now owns QA execution and independent acceptance; development owns production/environment. Original handoff and earlier ownership history remain in the handoff document."
   },
-  "blockerTriage": "11 external gates remain separate real-provider/device/policy/deployment evidence; resourcesready is not integrationPASS.11localwholejourneys still incomplete, not userresourceblockers. AI034/F44/F45/F46/F48/F49/F50/F51 localtargetedclosures have directevidence. F52 normal Chrome synthetic support chain now independently passed exact-target correction; callback/exchange/auth/logout/exit0/drain verified. Whole business journeys and real-provider gates remain pending. Noassumed realcall/billing/deployment approval.",
+  "blockerTriage": "Current counts202 PASS/4 NOT_RUN/11 BLOCKED. Remaining whole local journeys J005/J008/J009/J011 require actual original assertions; these are not missing-user-resource blockers. External gates require their actual service/device/policy/deployment evidence. B74 three real business transport attempts do not prove inbox/webhook; normal simulator does not prove personal device acceptance. Earlier targeted fixes and all original failures remain in evidence.",
   "nextExecution": [
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B72:202 PASS/4 NOT_RUN/11 BLOCKED. F58–F62 closed on source B (F60 except read-failure copy). Clock 02:31:30Z. Next: J005 plan for review (configureDay/enableAI, meals, clock steps), then J008 group 403."
+  "currentExecutionSlice": "B74:202 PASS/4 NOT_RUN/11 BLOCKED. Native Host restoration and loaded Inbox verified on reviewed F64 composition; offline fault/retry and F64 actual deletion receipt still pending. Real three-business-mail transport verified; inbox/webhook not verified. Clock remains02:31:30Z; blocked advance not retried."
 }

@@ -1,0 +1,66 @@
+{
+  "observations": [
+    {
+      "id": "B74-O001",
+      "executedBy": "Codex QA after explicit handoff",
+      "testedCommit": "9101004d92cce4fdbc833232ea8d6841d06bdd90",
+      "apiCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "clientComposition": "3ee69fe baseline plus reviewed 9101004 seven-file F64 overlay",
+      "status": "failed",
+      "title": "J008 prepare: preserved test locator failure after normal Host restoration",
+      "steps": [
+        "New native composition: 3ee69fe baseline plus only seven reviewed F64 files; API remains 89dc541. No whole-build source equivalence claim.",
+        "Normal Profile verified QA Final Host. XCTest incorrectly targeted Inbox, tab, 3 of 5; actual AX shows Inbox, tab, 4 of 5. One test failed after19.558 seconds. This is a QA locator defect, not a product failure.",
+        "Original XCTest bundle and log retained. PREPARE paused with zero forward/inflight then explicitly stopped; holder exited0. No fault, AI, clock advance or DELETE."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native202-codex-j008-prepare-xcui.swift"
+      ],
+      "rawEvidence": {
+        "xctestLogSha256": "706716e93cb51ef4660e40a28e5c3abdb1dff4ecb572b98f2d44fb602286a2ef",
+        "privateBundleRetained": true
+      }
+    },
+    {
+      "id": "B74-O002",
+      "executedBy": "Codex QA after explicit handoff",
+      "testedCommit": "9101004d92cce4fdbc833232ea8d6841d06bdd90",
+      "apiCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "clientComposition": "3ee69fe baseline plus reviewed 9101004 seven-file F64 overlay",
+      "status": "passed",
+      "title": "J008 prepare: normal Host and loaded Inbox on the reviewed native composition",
+      "steps": [
+        "Only test locator changed to the actual Inbox, tab, 4 of 5. Original202 failure preserved.",
+        "Normal Profile again showed QA Final Host; actual Inbox loaded Chats10, applications0, no Retry loading inbox. XCTest passed15.223seconds. Screenshot independently viewed and confirms visible loaded rows; analytics consent banner remains unchosen.",
+        "New one-shot PREPARE used fresh current revision35 at unchanged02:31:30Z. PAUSED_ZERO_FORWARD then explicitstop, both holder and XCTest exited0. No ARM/fault/retry scenario executed; J008 remains NOT_RUN and F64 remains OPEN."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native203-codex-j008-prepare-xcui.swift",
+        "evidence/2026-10-21/native203-codex-loaded-inbox.png"
+      ],
+      "rawEvidence": {
+        "xctestLogSha256": "38547ca05e4d3838e72f6a299415f3aa6820ec7490666311bcab2f97937aba5f",
+        "privateBundleRetained": true
+      }
+    },
+    {
+      "id": "B74-O003",
+      "executedBy": "Development environment owner; independently reviewed by Codex QA",
+      "testedCommit": "9101004d92cce4fdbc833232ea8d6841d06bdd90",
+      "status": "passed",
+      "title": "Bounded real business mail transport: three selected notifications; inbox and webhook still unverified",
+      "steps": [
+        "Independent fresh owned PostgreSQL and normal API produced one approved, one declined and one cancelled guest notification; host cancellation excluded. Existing approved development mailbox only.",
+        "Reviewed single-use cap bound exact three event UUIDs and templates, source, owner, original PG identity, run digest and real10min TTL. Actual execution returned BOUNDED_FINISHED, posts3/max3/attempted3/excluded1; no retry or extra send.",
+        "Read-only post evidence: selected rows each SENT attempts1 with provider ID. Host row FAILED attempts1 with no provider ID: processed as excluded RETRY, not sent; it is not claimed unchanged. Three dispatch rows have no provider_email_id; signed webhook unverified.",
+        "Transport acceptance is not inbox delivery/deduplication proof. Connected Gmail account differs from the approved recipient; an empty narrowly filtered search in that account proves nothing about delivery. No broader mailbox search followed. Owned PG stopped with data retained; original QA runtime unchanged. G-MAIL remains BLOCKED."
+      ],
+      "artifacts": [],
+      "rawEvidence": {
+        "executionLogSha256": "4efa70548c0e8ede336d4b22103cf167c7c697f381b21ad7cd3f8428d22373d5",
+        "safePostEvidenceSha256": "f69a08e16453ab5e9bf42348f51e22fac789eb896c4f32c6db2a4164cab2a1d9",
+        "providerIdsAndRecipientPrivate": true
+      }
+    }
+  ]
+}

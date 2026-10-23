@@ -215,3 +215,5 @@
 - [QA B72：两次经审推进与 F62 同标签页 401 实际复验关闭](qa/evidence/2026-10-21/browser-b72.json)。
 
 - [QA B73：Codex 接手后的原生举报前置与冻结时钟限流证据（J011 未完成）](qa/evidence/2026-10-21/browser-b73.json)。
+
+- [QA B74：原生收件箱准备复验与三封真实业务邮件运输范围](qa/evidence/2026-10-21/browser-b74.json)。
