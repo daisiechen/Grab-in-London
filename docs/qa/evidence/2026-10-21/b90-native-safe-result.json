@@ -1,0 +1,60 @@
+{
+  "version": "F64_4946f689_fresh_login_device_recovery",
+  "scope": "one new OWN synthetic account; dedicated iOS27 simulator; not physical device, real provider or original sourceB",
+  "suite": {
+    "exitCode": 65,
+    "tests": 3,
+    "passed": 2,
+    "failed": 1,
+    "originalFailurePreserved": "test1 bio field exact locator failed after successful normal OTP; account remained profile-incomplete. Account deletion does not require completed profile. No bypass or DB profile seeding.",
+    "test2Seconds": 89.052,
+    "test3Seconds": 48.169
+  },
+  "recoveryAssertions": {
+    "normalExplicitDeletion": true,
+    "server202CommittedAndResponseDropped": true,
+    "clientVisibleNetworkErrorNotSuccess": true,
+    "coldTerminateAndLaunchWithoutReinstall": true,
+    "realRevokedSessionSignedOut": true,
+    "normalGuestEntryUsed": true,
+    "secureStoreReferenceRestoredLength": 43,
+    "forgetReferenceButtonPresent": true,
+    "explicitAnonymousQueryStatus": "PENDING / Status: Requested",
+    "noSecondDeletionPost": true
+  },
+  "hostFinal": {
+    "state": "ACCEPTED_TOMBSTONE",
+    "inflight": 0,
+    "deletionForwarded": 1,
+    "accepted202": 1,
+    "dropped202": 1,
+    "statusQueries": 1,
+    "bindingRejected": 0
+  },
+  "database": {
+    "scope": "LIVE_NEW_OWN_F64_DEVICE_ONLY",
+    "repeatableReadOnly": true,
+    "identityVerified": true,
+    "workerStarted": false,
+    "facts": {
+      "users": 1,
+      "deleting": 1,
+      "deletion_requests": 1,
+      "families": 1,
+      "revoked_families": 1,
+      "ai_calls": 0,
+      "ai_budget": 0,
+      "grants": 0
+    }
+  },
+  "stop": {
+    "state": "STOPPED_OWN_DATA_RETAINED",
+    "dropped": false
+  },
+  "rawLogSha256": "ca750031af5565ace0ef36a54a009cef3496ad060d6ea2d71a33fe1b173f66b3",
+  "probeSha256": "582d4b160dfbadc5387cbcfc341c75ea63441c39d479f42ca2bfd0173f050386",
+  "rawPrivateScreenshotsRetained": true,
+  "rawReceiptValueNotExported": true,
+  "wholeJ009Pass": false,
+  "physicalDeviceGateClosed": false
+}

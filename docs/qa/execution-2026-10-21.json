@@ -129,7 +129,8 @@
     "browserObservationsB86": "evidence/2026-10-21/browser-b86.json",
     "browserObservationsB87": "evidence/2026-10-21/browser-b87.json",
     "browserObservationsB88": "evidence/2026-10-21/browser-b88.json",
-    "browserObservationsB89": "evidence/2026-10-21/browser-b89.json"
+    "browserObservationsB89": "evidence/2026-10-21/browser-b89.json",
+    "browserObservationsB90": "evidence/2026-10-21/browser-b90.json"
   },
   "cases": [
     {
@@ -19584,7 +19585,8 @@
       "status": "NOT_RUN",
       "evidence": [
         "B89-O002",
-        "B89-O003"
+        "B89-O003",
+        "B90-O002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -19902,7 +19904,7 @@
         "receipt无私密数据",
         "旧导出不可再读"
       ],
-      "actual": "本地生产实现尚需实际执行：举报→查本人回执→support个案→reauth删除→断网丢202→receipt查→后台快照撤销。尚缺逐项证据：受理不称处理完成；202同步屏障；receipt无私密数据；旧导出不可再读。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 2026-10-23 QA-F64 opened: native deletion receipt is held only in memory, so after an accepted 202 with a lost response the receipt cannot be recovered (contract data §72, API row 80). Deletion of H/A is deferred until a fixed, normally signed native build is available. B89: original normal native guest receipt-entry failure reproduced on isolated device; a21740c fixed normal guest Profile->status navigation independently passed. Separate newOWN real production-handler/SDK lost202 seven checks passed after preserving three harness failures. Device SecureStore/saved receipt/cold recovery and original full support/delete/Admin flow remain unexecuted; no whole-case promotion.",
+      "actual": "本地生产实现尚需实际执行：举报→查本人回执→support个案→reauth删除→断网丢202→receipt查→后台快照撤销。尚缺逐项证据：受理不称处理完成；202同步屏障；receipt无私密数据；旧导出不可再读。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 2026-10-23 QA-F64 opened: native deletion receipt is held only in memory, so after an accepted 202 with a lost response the receipt cannot be recovered (contract data §72, API row 80). Deletion of H/A is deferred until a fixed, normally signed native build is available. B89: original normal native guest receipt-entry failure reproduced on isolated device; a21740c fixed normal guest Profile->status navigation independently passed. Separate newOWN real production-handler/SDK lost202 seven checks passed after preserving three harness failures. Device SecureStore/saved receipt/cold recovery and original full support/delete/Admin flow remain unexecuted; no whole-case promotion. B90 actual same-App F64 targeted cold recovery passed: real one202drop, visible network error, revoked coldguest, persisted SecureStore43 reference via normal guest entry, explicit anonymous PENDING lookup, no second deletion. NewOWN only/fresh-login branch; test1 profile locator red/suiteexit65 retained. Support/report/reauthUI/Admin invalidation/original role-swap still remain.",
       "defectIds": [
         "QA-F64"
       ]
@@ -23256,5 +23258,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B89:202 PASS/4 NOT_RUN/11 BLOCKED. Actual original guest receipt entry red preserved; a21740c normal signed native guest navigation passed. V4 newOWN production handler/SDK lost202 passed seven bounded checks, not actual device persistence. Claude complete native lost202 task awaits independently reviewed minimal OWN device holder; original sourceB clock remains unreleased."
+  "currentExecutionSlice": "B90:202 PASS/4 NOT_RUN/11 BLOCKED. F64 targeted actual native saved-reference/lost202/coldguest recovery independently passed on dedicated simulator, one synthetic OWN account; explicit safe stop/data retained. Raw suite2PASS/1QA-locatorFAIL/exit65 preserved. WholeJ009, originalsourceB journeys and external gates remain open; no original clock advancement."
 }

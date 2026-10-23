@@ -1,0 +1,43 @@
+{
+  "observations": [
+    {
+      "id": "B90-O001",
+      "status": "failed",
+      "classification": "qa_locator_failure_not_product_failure",
+      "testedCommit": "a21740cbab51a2c672467cef09e853937a1b255a",
+      "executedBy": "Codex QA actual simulator XCTest",
+      "title": "Original profile setup locator red retained",
+      "steps": [
+        "Normal new synthetic IOS OTP login succeeded. Exact bio label lookup failed because actual label includes helper text; test1 failed119.127s.",
+        "Account remained profile-incomplete; no DB profile seed or gate bypass. Normal Profile Settings permits privacy deletion without completing profile.",
+        "This original red remains in raw xcresult/log; suite is exit65 with2passed/1failed, never reported all green. No deleted actor reused or deletion replayed."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b90-native-probe.swift",
+        "evidence/2026-10-21/b90-native-safe-result.json"
+      ]
+    },
+    {
+      "id": "B90-O002",
+      "status": "passed",
+      "testedCommit": "a21740cbab51a2c672467cef09e853937a1b255a",
+      "executedBy": "Codex QA actual same-App normal-signed simulator test2/3; developer independently reviewed safe result and public screenshots",
+      "title": "F64 targeted device saved-reference and cold lost202 recovery",
+      "steps": [
+        "Exact normal signed native composition3ee69fe+seven9101004+guestentrya21740c, CDHash4946f689; explicit API new OWN formalc0, new proof-gated wrapper. Isolated guest device, one new synthetic account, no originalsourceB/oldH-A/physical/provider action.",
+        "Fresh-login age<5min branch, single owner ARM_FAULT. Normal visible Delete button forwarded exactly one POST; real server202committed then dropped before downstream headers. Actual UI shows network-error and no success sheet. test2PASS89.052s.",
+        "Same app terminated/cold launched without reinstall or injected receipt. Real revoked session yields guest; normal new entry opens status screen with SecureStore-restored43-character reference and Forget button. Explicit anonymous lookup returns Status:Requested. test3PASS48.169s.",
+        "Host finalaccepted1/dropped1/forwardedDeletion1/statusQueries1/noinflight/reject0. NewOWN RR identity-verified facts user1DELETING/request1/family1allrevoked/AIbudgetgrant0. Explicit owner stop returned STOPPED_OWN_DATA_RETAINED,droppedfalse.",
+        "All three public screenshots independently viewed; private full-page reference/xcresult/raw logs kept restricted and not exported. Receipt value never included in public evidence.",
+        "F64 CLOSED_TARGETED_QA only. Original suite red retained; no wholeJ009 promotion, no reauthUI/cross-role/Admin410/realremoteprovider/physicaldevice acceptance."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b90-network-error.png",
+        "evidence/2026-10-21/b90-status-requested.png",
+        "evidence/2026-10-21/b90-signed-out-after-cold.png",
+        "evidence/2026-10-21/b90-native-probe.swift",
+        "evidence/2026-10-21/b90-native-safe-result.json"
+      ]
+    }
+  ]
+}
