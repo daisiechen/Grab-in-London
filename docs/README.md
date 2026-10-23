@@ -243,3 +243,5 @@
 - [QA B80：原生餐厅图片、可见署名和四步创建预览实际复核](qa/evidence/2026-10-21/browser-b80.json)。
 
 - [P1.1后台职责接收与共享文件交接](engineering/mvp-patch/admin-handoff.zh-CN.md)：PATCH-006独立工作区准备、文件边界及未关闭门槛。
+
+- [Claude Code后台P1.1执行与验收](engineering/mvp-patch/claude-admin-handoff.zh-CN.md)：已锁定文件边界、后台B03证据与逐项验收矩阵。
