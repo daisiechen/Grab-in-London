@@ -1,0 +1,20 @@
+{
+  "observations": [
+    {
+      "id": "B95-O001",
+      "status": "failed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "title": "Original native H unsent-editor precondition stopped by real session401 after normal refresh200",
+      "executedBy": "successor QA sole D92 operator",
+      "steps": [
+        "Fresh launcher independently verified8/8OWN; exact ENTRY and SUM pins checked. Original D92 existing product app retained, QA237 runner built only.",
+        "Reviewed single root release started once. Launcher performed actual inspect9to10/02:46:30Z then READ_PREPARE_READY62061 within original2second proof contract;120second/26read cap.",
+        "Original App cold launch sent discoverMeals200 and refreshSession200, then getSession401. Finite proxy streamed actual401 and terminated normally, terminal receipt code0. No manual family revoke or synthetic401.",
+        "QA237 expected original QA Final Host profile, but visible Profile instead showed Sign in to set up the profile your tables will see and Sign in or create an account. Test failed17.928seconds before opening target or editing any introduction.",
+        "No application submit, no reinstall, no credential transfer, no clock/budget change. Root asked to diagnose normal refresh200 to session401 and provide normal relogin if necessary. Do not classify as product defect until cause established; keep original red.",
+        "Whole J008 remains NOT_RUN; this is a failed environment/session precondition, not the intended mid-editor401 recovery assertion."
+      ],
+      "artifacts": []
+    }
+  ]
+}
