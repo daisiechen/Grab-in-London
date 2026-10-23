@@ -111,3 +111,9 @@ packages/client/share.ts 只从显式公开输入构造 HTTPS canonical meal URL
 - Web 精确红例：validateAIDraft 在途，关闭助手并重新挂载同 kind/target/version0 的原编辑器；旧结果仍调用 apply 1 次（应0）。修复为点击时捕获 generation/scene/editor 实例，前置会话校验之后及服务端校验之后均复核，不只比较相同字段值。
 - iOS 精确红例：transfer 的第一次 ensureResumed await 期间用相同 key/target/version 替换编辑器，原实现选择新编辑器并成功；现于 await 前捕获实例/current版本/contextOwner，两个 await 后都复核，EDITOR_CONFLICT 且 validate 写0。
 - Web AI 目录43/43、iOS manager/widget46/46；双端类型与 ESLint 通过。已有 Keep my text（QA-AI-016）、Replace/长度/过期/换账号等回归保留；这些是 mock transport 证据，不是模型/真实provider或完整 F66/F68 发布门槛关闭。
+
+### P11 原生公开链接入口与关联域名配置
+
+- 新增 Expo +native-intent 的冷/热启动入口，仅把显式配置 HTTPS origin 下的 /meals/UUID 改写为详情页；外域、http、申请子路由、query/hash、protocol-relative、空白标准化和畸形URL拒绝到可读的 Meal link unavailable 页面，不发申请/写操作。非HTTP现有 OAuth 回调保留原路径/state，仍由既有 PKCE/状态逻辑验证。
+- patch-p11 native-config 仅在显式 EXPO_PUBLIC_MEAL_ORIGIN 时添加该单一 applinks hostname，禁止 credentials/path/query/hash/port；默认封存配置不变。未填写 Apple Team ID、未生成或部署 AASA、未更改 DNS/证书。
+- 原生链接与已有 OAuth 回归 33/33，关联配置+分享纯逻辑 19/19，iOS 类型与 ESLint 通过。仍须新原生构建、模拟器冷/热跳转与真实 HTTPS 双向关联验收；单元检查不等于 Universal Link 打通。参考 [Expo native-intent](https://docs.expo.dev/router/advanced/native-intent/) 与 [Universal Links](https://docs.expo.dev/linking/ios-universal-links/)。

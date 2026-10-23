@@ -36,6 +36,7 @@ export default function RootLayout() {
           <Stack.Screen name="notifications" options={{ title: 'Notifications' }} />
           <Stack.Screen name="settings" options={{ title: 'Settings' }} />
           <Stack.Screen name="profiles/[userId]" options={{ title: 'Profile' }} />
+          <Stack.Screen name="meal-link-unavailable" options={{ title: 'Meal link' }} />
           <Stack.Screen name="meals/[mealId]/index" options={{ title: 'Meal' }} />
           <Stack.Screen name="meals/[mealId]/apply" options={{ title: 'Request to join' }} />
           <Stack.Screen name="meals/[mealId]/host" options={{ title: 'Your table' }} />
