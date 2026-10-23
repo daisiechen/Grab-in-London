@@ -15,11 +15,11 @@ import { otpErrorMessage } from '../auth/otp.ts';
 import { StaleSessionError } from '../auth/session.ts';
 
 type Binding={generation:number;userId:string};
-type Stage = { kind: 'intro' } | { kind: 'reauthEmail'; challengeId: string } | { kind: 'done'; receipt: string; status: string };
+type Stage = { kind: 'intro' } | { kind: 'reauthEmail'; challengeId: string } | { kind: 'done'; ownerId: string; receipt: string; status: string };
 
 /**
  * Account deletion (API §4): 5-minute re-authentication, then a synchronous barrier. The client
- * generates the 256-bit receipt token (only its hash is stored server-side) and shows it once so the
+ * securely saves the 256-bit receipt before the request (only its hash is stored server-side) so the
  * user can check status after every session and local cache has been removed.
  * Reauthentication verifies provider/OTP proof on the existing family; it never redeems a new login handoff.
  */
@@ -41,12 +41,12 @@ export function DeleteAccountScreen() {
   useEffect(()=>{if(previousActor.current!==actor){previousActor.current=actor;intent.current=null;pkce.current=null;setCode('');setError(null);setStage(current=>actor===null&&current.kind==='done'?current:{kind:'intro'});}},[actor]);
   const assertOwner=(binding:Binding)=>{session.assertGeneration(binding.generation);const current=session.getState();if(!mounted.current||current.status!=='signedIn'||current.session.user.id!==binding.userId)throw new StaleSessionError();};
 
-  if (stage.kind === 'done') {
+  if (stage.kind === 'done' && (state.status==='signedOut'||state.status==='signedIn'&&state.session.user.id===stage.ownerId)) {
     return (
       <Screen testID="deletion-receipt">
         <Heading>Your account is being deleted</Heading>
         <Body>{`Status: ${stage.status.toLowerCase()}. You’ve been signed out on this iPhone and its saved data has been removed.`}</Body>
-        <Body>Save this reference now. It’s the only way to check the deletion status later, and it isn’t stored on this device.</Body>
+        <Body>Your reference is saved securely on this device. Save or share a copy to check status elsewhere. You can forget the saved reference on the deletion status screen.</Body>
         <Body>{stage.receipt}</Body>
         <Primary secondary label="Save or share reference" onPress={() => void Share.share({ message: `Fancy account deletion reference: ${stage.receipt}` })} />
         <Primary label="Done" onPress={() => router.replace('/')} />
@@ -61,14 +61,22 @@ export function DeleteAccountScreen() {
     setBusy(true);setError(null);
     try {
       assertOwner(binding);
-      if (!intent.current||intent.current.generation!==binding.generation||intent.current.userId!==binding.userId) intent.current = { key: newId(), receiptToken: base64UrlEncode(services.randomBytes(32)),...binding };
+      if (!intent.current||intent.current.generation!==binding.generation||intent.current.userId!==binding.userId) {
+        let saved;
+        try { saved=await services.deletionReceipts.read();assertOwner(binding);
+          const next=saved?.ownerId===binding.userId?saved:{ownerId:binding.userId,key:newId(),receiptToken:base64UrlEncode(services.randomBytes(32))};
+          await services.deletionReceipts.write(next);assertOwner(binding);
+          intent.current={key:next.key,receiptToken:next.receiptToken,...binding};
+        } catch(e) { if(e instanceof StaleSessionError)throw e;assertOwner(binding);setError('We couldn’t securely save your removal reference. Try again before deleting your account.');return; }
+      }
       const attempt=intent.current;const current=session.getState();if(current.status!=='signedIn')throw new StaleSessionError();
       const res = await api.call('requestDeletion', { body: { confirm: true, receiptToken: attempt.receiptToken }, idempotencyKey: attempt.key, ifMatch: current.session.user.version });
       assertOwner(binding);intent.current = null;
-      setStage({ kind: 'done', receipt:attempt.receiptToken, status: res.data.status });
+      setStage({ kind: 'done', ownerId:binding.userId, receipt:attempt.receiptToken, status: res.data.status });
       await session.endForDeletion();
     } catch (e) {
       if(e instanceof StaleSessionError)return;
+      try {assertOwner(binding);}catch{return;}
       if (e instanceof ApiError && e.code === 'REAUTH_REQUIRED'&&!afterReauth) await startReauth(binding);
       else setError(e instanceof ApiError && e.kind === 'network' ? 'We couldn’t confirm the request. Check your connection and try again.' : 'We couldn’t delete your account. Please try again or contact support.');
     } finally {if(mounted.current)setBusy(false);}

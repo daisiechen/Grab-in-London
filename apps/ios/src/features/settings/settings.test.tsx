@@ -1,3 +1,5 @@
+import * as SecureStore from 'expo-secure-store';
+import {memoryDeletionReceiptStore,secureDeletionReceiptStore} from './deletion-receipt-store.ts';
 import {deferred} from '../../test/deferred.ts';
 import type {MockReply} from '../../test/mock-fetch.ts';
 import { act,fireEvent, screen, waitFor } from '@testing-library/react-native';
@@ -160,4 +162,114 @@ it('does not retry deletion after an invalid email reauth code',async()=>{
  const app=createTestApp();await signIn(app,me());app.mock.on('POST','/v1/me/deletion',fail(403,'REAUTH_REQUIRED'),1);app.mock.on('POST','/v1/auth/reauth',ok({challengeId:'1d6f0a3e-2b7c-4f8e-9a1d-3c5e7f9b2d40',expiresAt:'2026-10-21T10:05:00Z'},201));app.mock.on('POST','/v1/auth/email/verify',fail(422,'VALIDATION_FAILED'));
  await renderApp(app,<DeleteAccountScreen/>);await fireEvent.press(screen.getByRole('button',{name:'Delete my account'}));await screen.findByLabelText('6-digit code');await fireEvent.changeText(screen.getByLabelText('6-digit code'),'111111');await fireEvent.press(screen.getByRole('button',{name:'Confirm and delete'}));await screen.findByText('That code doesn’t match. Check the six digits and try again.');
  expect(app.mock.callsTo('POST','/v1/me/deletion')).toHaveLength(1);expect(app.mock.callsTo('POST','/v1/auth/refresh')).toHaveLength(0);
+});
+
+describe('Native deletion reference survives lost acceptance',()=>{
+ it('saves before request; lost202 then real401 and service remount can explicitly query without destructive resend',async()=>{
+
+  const receipts=memoryDeletionReceiptStore();const app=createTestApp({deletionReceiptStore:receipts});await signIn(app);
+  let accepted=false;
+  app.mock.on('POST','/v1/me/deletion',async call=>{expect((await receipts.read())?.receiptToken===(call.body as {receiptToken:string}).receiptToken).toBe(true);accepted=true;throw new TypeError('Network request failed');});
+  const ui=await renderApp(app,<DeleteAccountScreen/>);await fireEvent.press(screen.getByRole('button',{name:'Delete my account'}));
+  await screen.findByText('We couldn’t confirm the request. Check your connection and try again.');expect(accepted).toBe(true);
+  app.mock.on('GET','/v1/auth/session',fail(401,'AUTH_REQUIRED'));app.mock.on('POST','/v1/auth/refresh',fail(401,'AUTH_REQUIRED'));
+  await act(async()=>{await app.services.session.revalidate();});expect(app.services.session.getState().status).toBe('signedOut');await ui.unmount();
+  const cold=createTestApp({deletionReceiptStore:receipts});await cold.services.session.restore();
+  cold.mock.on('POST','/v1/deletion-status',ok({status:'PENDING',requestedAt:'2026-10-21T10:01:00Z',completedAt:null}));
+  await renderApp(cold,<DeletionStatusScreen/>);await waitFor(()=>expect(screen.getByLabelText('Deletion reference').props.value.length===43).toBe(true));
+  expect(cold.mock.callsTo('POST','/v1/deletion-status')).toHaveLength(0);
+  await fireEvent.press(screen.getByRole('button',{name:'Check status'}));await screen.findByText('Status: Requested');
+  expect(app.mock.callsTo('POST','/v1/me/deletion')).toHaveLength(1);expect(cold.mock.callsTo('POST','/v1/me/deletion')).toHaveLength(0);
+  await fireEvent.press(screen.getByRole('button',{name:'Forget saved reference'}));await waitFor(()=>expect(screen.getByLabelText('Deletion reference').props.value).toBe(''));expect(await receipts.read()).toBeNull();
+  expect(screen.getByText('Saved reference removed from this device. This does not cancel account deletion.')).toBeOnTheScreen();
+ });
+ it.each(['read','write'])('does not delete if secure persistence %s fails',async operation=>{
+  const store={read:async()=>{if(operation==='read')throw new Error('locked');return null;},write:async()=>{throw new Error('locked');},clear:async()=>{}};const app=createTestApp({deletionReceiptStore:store});await signIn(app);
+  await renderApp(app,<DeleteAccountScreen/>);await fireEvent.press(screen.getByRole('button',{name:'Delete my account'}));await screen.findByText('We couldn’t securely save your removal reference. Try again before deleting your account.');expect(app.mock.callsTo('POST','/v1/me/deletion')).toHaveLength(0);
+ });
+ it('does not expose another signed-in actor saved reference or automatically query it',async()=>{
+  const receipts=memoryDeletionReceiptStore();await receipts.write({ownerId:HOST_ID,key:HOST_ID,receiptToken:EXPECTED_RECEIPT});
+  const app=createTestApp({deletionReceiptStore:receipts});await signIn(app,me());await renderApp(app,<DeletionStatusScreen/>);
+  await act(async()=>{});expect(screen.getByLabelText('Deletion reference').props.value).toBe('');expect(screen.queryByRole('button',{name:'Forget saved reference'})).toBeNull();expect(app.mock.callsTo('POST','/v1/deletion-status')).toHaveLength(0);
+ });
+});
+
+
+describe('Removal reference actor and installation boundaries',()=>{
+ it('rejects stale secure-save completion before any destructive request after actor switch',async()=>{
+  const pending=deferred<void>();
+  const store={read:async()=>null,write:jest.fn(()=>pending.promise),clear:async()=>{}};
+  const app=createTestApp({deletionReceiptStore:store});await signIn(app);await renderApp(app,<DeleteAccountScreen/>);
+  await fireEvent.press(screen.getByRole('button',{name:'Delete my account'}));
+  await waitFor(()=>expect(store.write).toHaveBeenCalledTimes(1));
+  await act(async()=>{await signIn(app,me({id:HOST_ID}));pending.resolve();});
+  expect(store.write).toHaveBeenCalledTimes(1);expect(app.mock.callsTo('POST','/v1/me/deletion')).toHaveLength(0);
+ });
+ it('does not show a late restored reference after switching to another actor',async()=>{
+  const pending=deferred<import('./deletion-receipt-store.ts').DeletionReceipt|null>();
+  const store={read:()=>pending.promise,write:async()=>{},clear:async()=>{}};
+  const app=createTestApp({deletionReceiptStore:store});await signIn(app);await renderApp(app,<DeletionStatusScreen/>);
+  const owner=app.services.session.getState();if(owner.status!=='signedIn')throw new Error('test sign-in failed');
+  await act(async()=>{await signIn(app,me({id:HOST_ID}));pending.resolve({ownerId:owner.session.user.id,key:HOST_ID,receiptToken:EXPECTED_RECEIPT});});
+  expect(screen.getByLabelText('Deletion reference').props.value).toBe('');expect(app.mock.callsTo('POST','/v1/deletion-status')).toHaveLength(0);
+ });
+ it('install marker clears old Keychain receipt on reinstall; ordinary session end preserves it',async()=>{
+  const receipts=memoryDeletionReceiptStore();await receipts.write({ownerId:HOST_ID,key:HOST_ID,receiptToken:EXPECTED_RECEIPT});
+  const marker={isPresent:jest.fn(async()=>false),set:jest.fn(async()=>{})};const app=createTestApp({deletionReceiptStore:receipts,installMarker:marker});
+  await app.services.session.restore();expect(await receipts.read()).toBeNull();expect(marker.set).toHaveBeenCalledTimes(1);
+  await receipts.write({ownerId:HOST_ID,key:HOST_ID,receiptToken:EXPECTED_RECEIPT});await app.services.session.expire();expect((await receipts.read())!==null).toBe(true);
+ });
+});
+
+it('receipt-only status does not refresh a stale revoked session and ignores late actor status response',async()=>{
+ let now=Date.parse('2026-10-21T10:00:00Z');const app=createTestApp({now:()=>now});await signIn(app);
+ const pending=deferred<MockReply>();app.mock.on('POST','/v1/deletion-status',()=>pending.promise,1);
+ const ui=await renderApp(app,<DeletionStatusScreen/>);await fireEvent.changeText(screen.getByLabelText('Deletion reference'),EXPECTED_RECEIPT);
+ now+=20*60_000;
+ await fireEvent.press(screen.getByRole('button',{name:'Check status'}));await waitFor(()=>expect(app.mock.callsTo('POST','/v1/deletion-status')).toHaveLength(1));
+ expect(app.mock.callsTo('POST','/v1/auth/refresh')).toHaveLength(0);expect(app.mock.callsTo('POST','/v1/deletion-status')[0]?.headers.authorization).toBeUndefined();
+ now=Date.parse('2026-10-21T10:00:00Z');await act(async()=>{await signIn(app,me({id:HOST_ID}));pending.resolve(ok({status:'COMPLETED',requestedAt:'2026-10-21T10:01:00Z',completedAt:'2026-10-21T10:02:00Z'}));});
+ expect(screen.queryByText('Status: Completed')).toBeNull();
+ app.mock.on('POST','/v1/deletion-status',ok({status:'PENDING',requestedAt:'2026-10-21T10:01:00Z',completedAt:null}));
+ await fireEvent.changeText(screen.getByLabelText('Deletion reference'),EXPECTED_RECEIPT);await fireEvent.press(screen.getByRole('button',{name:'Check status'}));await screen.findByText('Status: Requested');await ui.unmount();
+});
+
+
+it('does not display the successful old actor receipt when another user signs in',async()=>{
+ const app=createTestApp();await signIn(app);app.mock.on('POST','/v1/me/deletion',ok({status:'PENDING',requestedAt:'2026-10-21T10:01:00Z',completedAt:null},202));
+ await renderApp(app,<DeleteAccountScreen/>);await fireEvent.press(screen.getByRole('button',{name:'Delete my account'}));await screen.findByText('Your account is being deleted');
+ await act(async()=>{await signIn(app,me({id:HOST_ID}));});expect(screen.queryByText(EXPECTED_RECEIPT)).toBeNull();expect(screen.queryByText('Your account is being deleted')).toBeNull();
+});
+
+
+it('late saved-reference load does not overwrite typed input, and editing invalidates an older status query',async()=>{
+ const load=deferred<import('./deletion-receipt-store.ts').DeletionReceipt|null>();
+ const app=createTestApp({deletionReceiptStore:{read:()=>load.promise,write:async()=>{},clear:async()=>{}}});await app.services.session.restore();
+ const pending=deferred<MockReply>();app.mock.on('POST','/v1/deletion-status',()=>pending.promise);
+ await renderApp(app,<DeletionStatusScreen/>);const typed='t'.repeat(43);await fireEvent.changeText(screen.getByLabelText('Deletion reference'),typed);
+ await act(async()=>{load.resolve({ownerId:HOST_ID,key:HOST_ID,receiptToken:EXPECTED_RECEIPT});});expect(screen.getByLabelText('Deletion reference').props.value===typed).toBe(true);
+ await fireEvent.press(screen.getByRole('button',{name:'Check status'}));await fireEvent.changeText(screen.getByLabelText('Deletion reference'),'u'.repeat(43));
+ await act(async()=>{pending.resolve(ok({status:'COMPLETED',requestedAt:'2026-10-21T10:01:00Z',completedAt:'2026-10-21T10:02:00Z'}));});expect(screen.queryByText('Status: Completed')).toBeNull();
+});
+
+
+it('real secure receipt adapter survives SessionManager401 and fresh Services, while reinstall marker clears old Keychain reference',async()=>{
+ const keychain=new Map<string,string>();
+ const get=jest.spyOn(SecureStore,'getItemAsync').mockImplementation(async key=>keychain.get(key)??null);
+ const set=jest.spyOn(SecureStore,'setItemAsync').mockImplementation(async(key,value)=>{keychain.set(key,value);});
+ const remove=jest.spyOn(SecureStore,'deleteItemAsync').mockImplementation(async key=>{keychain.delete(key);});
+ try {
+  const marker={isPresent:async()=>true,set:async()=>{}};
+  const app=createTestApp({deletionReceiptStore:secureDeletionReceiptStore(),installMarker:marker});await signIn(app);
+  app.mock.on('POST','/v1/me/deletion',async call=>{const persisted=await app.services.deletionReceipts.read();expect(persisted?.receiptToken===(call.body as {receiptToken:string}).receiptToken).toBe(true);throw new TypeError('Network request failed');});
+  const first=await renderApp(app,<DeleteAccountScreen/>);await fireEvent.press(screen.getByRole('button',{name:'Delete my account'}));await screen.findByText('We couldn’t confirm the request. Check your connection and try again.');
+  app.mock.on('GET','/v1/auth/session',fail(401,'AUTH_REQUIRED'));app.mock.on('POST','/v1/auth/refresh',fail(401,'AUTH_REQUIRED'));
+  await act(async()=>{await app.services.session.revalidate();});expect(app.services.session.getState().status).toBe('signedOut');await first.unmount();
+  const cold=createTestApp({deletionReceiptStore:secureDeletionReceiptStore(),installMarker:marker});await cold.services.session.restore();
+  cold.mock.on('POST','/v1/deletion-status',ok({status:'PENDING',requestedAt:'2026-10-21T10:01:00Z',completedAt:null}));
+  const second=await renderApp(cold,<DeletionStatusScreen/>);await waitFor(()=>expect(screen.getByLabelText('Deletion reference').props.value.length===43).toBe(true));
+  expect(cold.mock.callsTo('POST','/v1/deletion-status')).toHaveLength(0);await fireEvent.press(screen.getByRole('button',{name:'Check status'}));await screen.findByText('Status: Requested');
+  expect(cold.mock.callsTo('POST','/v1/deletion-status')[0]?.headers.authorization).toBeUndefined();expect(cold.mock.callsTo('POST','/v1/auth/refresh')).toHaveLength(0);expect(cold.mock.callsTo('POST','/v1/me/deletion')).toHaveLength(0);await second.unmount();
+  const reinstall=createTestApp({deletionReceiptStore:secureDeletionReceiptStore(),installMarker:{isPresent:async()=>false,set:async()=>{}}});await reinstall.services.session.restore();expect(await reinstall.services.deletionReceipts.read()).toBeNull();
+ } finally {get.mockRestore();set.mockRestore();remove.mockRestore();}
 });

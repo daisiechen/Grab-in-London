@@ -1,7 +1,8 @@
+import {secureDeletionReceiptStore,type DeletionReceiptStore} from './features/settings/deletion-receipt-store.ts';
 import {secureAIConversationStore,type AIConversationStore} from './features/assistant/session-store.ts';
 import {secureGuestCredentialStore,type GuestCredentialStore} from './features/assistant/guest-store.ts';
 import { createContext, useContext, useSyncExternalStore, type ReactNode } from 'react';
-import { createApiClient, newIntentKey, type ApiClient } from '@fancy/client';
+import { createApiClient, newIntentKey, type ApiClient, type ResponseOf } from '@fancy/client';
 import { QueryCache } from './api/cache.ts';
 import type { CredentialStore, InstallMarker } from './features/auth/credential-store.ts';
 import { SessionManager, sessionClient, type SessionState } from './features/auth/session.ts';
@@ -14,6 +15,9 @@ import {AssistantManager} from './features/assistant/manager.ts';
 import { AnalyticsManager } from './analytics/manager.ts';
 
 export interface Services {
+  deletionReceipts: DeletionReceiptStore;
+  /** Receipt-only lookup never refreshes or depends on a revoked user session. */
+  deletionStatus: (receiptToken:string)=>Promise<ResponseOf<'deletionStatus'>>;
   analytics:AnalyticsManager;
   assistant:AssistantManager;
   session: SessionManager;
@@ -32,6 +36,7 @@ export interface Services {
 }
 
 export interface ServiceConfig {
+  deletionReceiptStore?: DeletionReceiptStore;
   baseUrl: string;
   fetch?: typeof fetch;
   guestStore?:GuestCredentialStore;
@@ -57,16 +62,18 @@ export function createServices(config: ServiceConfig): Services {
   const analyticsHolder:{manager?:AnalyticsManager}={};
   const base = (accessToken: () => string | null,loginGuest=false) =>
     createApiClient({ baseUrl: config.baseUrl, credentials: { kind: 'bearer', accessToken },headers:op=>({...analyticsHolder.manager?.headersFor(op),...(loginGuest&&(op==='verifyEmail'||op==='exchangeHandoff')&&!accessToken()&&aiHolder.manager?.credential?{authorization:`Bearer ${aiHolder.manager.credential}`}:{})}), ...(config.fetch ? { fetch: config.fetch } : {}) });
+  const deletionReceipts=config.deletionReceiptStore??secureDeletionReceiptStore();
   const guestStore=config.guestStore??secureGuestCredentialStore();
   const aiConversationStore=config.aiConversationStore??secureAIConversationStore();
   let installation:Promise<void>|null=null;
   const ensureInstallation=()=>{
     if(installation)return installation;
-    const job=(async()=>{if(config.installMarker&&!(await config.installMarker.isPresent())){await config.store.clear();await guestStore.clear();await aiConversationStore.clear();await config.installMarker.set();}})();
+    const job=(async()=>{if(config.installMarker&&!(await config.installMarker.isPresent())){await config.store.clear();await deletionReceipts.clear();await guestStore.clear();await aiConversationStore.clear();await config.installMarker.set();}})();
     installation=job;void job.catch(()=>{if(installation===job)installation=null;});return job;
   };
   const installedGuestStore:GuestCredentialStore={read:async()=>{await ensureInstallation();return guestStore.read();},write:async value=>{await ensureInstallation();await guestStore.write(value);},clear:()=>guestStore.clear()};
   const installedAIStore:AIConversationStore={read:async()=>{await ensureInstallation();return aiConversationStore.read();},write:async value=>{await ensureInstallation();await aiConversationStore.write(value);},clear:()=>aiConversationStore.clear()};
+  const installedDeletionReceipts:DeletionReceiptStore={read:async()=>{await ensureInstallation();return deletionReceipts.read();},write:async value=>{await ensureInstallation();await deletionReceipts.write(value);},clear:async expected=>{await ensureInstallation();await deletionReceipts.clear(expected);}};
   const holder: { session?: SessionManager } = {};
   const transport = base(() => holder.session?.accessToken() ?? null,true);
   const raw:ApiClient={async call(op,request){if((op==='verifyEmail'||op==='exchangeHandoff')&&!holder.session?.accessToken()){await aiHolder.manager?.restoreIdentity();await aiHolder.manager?.prepareLogin();}return transport.call(op,request);}};
@@ -95,6 +102,8 @@ export function createServices(config: ServiceConfig): Services {
   aiHolder.manager=assistant;
   onSessionEnd.add(()=>assistant.clear());
   return {
+    deletionReceipts:installedDeletionReceipts,
+    deletionStatus:receiptToken=>base(()=>null).call('deletionStatus',{body:{receiptToken}}),
     analytics,
     assistant,
     session,
