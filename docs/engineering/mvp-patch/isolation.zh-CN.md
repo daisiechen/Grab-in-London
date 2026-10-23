@@ -43,3 +43,9 @@
 9项环境守卫+3项原生配置测试通过，TypeScript与core:check（全部workspace类型/生成一致性/lint/secret scan）通过。初次core:check的console.info lint失败已修为warn并重验；不掩盖失败历史。仅本轮自建API曾为独立host切换重启，首个自建PG保留，未停止任何封存或后台进程。共享owner/迁移/生成边界已双方确认。产品版本号和方案三方PASS均已锁定。
 
 本PASS允许在专用worktree实施客户端功能；真实provider、原生设备/浏览器全面验收、完整构建、继承用例关闭及发布门槛仍按任务推进，不能对外宣称整版完成。用户最新要求业务功能由Claude Code执行，Codex负责协调与整体独立验收，交接见claude-client-handoff文档。
+
+## 2026-10-23：P1.1 专用原生设备集准备
+
+Codex新建独立设备集 `/private/tmp/fancy-p11-client-01a162f6/simulator-devices`，其中仅有 `Fancy P1.1 Client QA`（iPhone 16 Pro / iOS 27.0，UDID `D5F38916-17FC-4676-8D1D-C2149A34F333`）。通过带明确 `--set` 路径的 `simctl create`、`boot`、`bootstatus -b` 完成创建与首次启动；bootstatus退出0。没有操作默认设备集或旧设备。私有元数据保存于该补丁临时根的 `native-test-environment.json`，权限0600；此时尚未安装App，原生运行验收仍NOT RUN，不能将模拟器启动视为产品通过。
+
+同日Codex在开发中未提交源码上独立复核：原回执purge后的NONE回放保护API测试1/1通过；反馈账号clear时迟到写入、排队reconnect及迟到回执3项均通过；共享反馈/意图相关单元回归合计23/23，Web餐后反馈18/18。iOS餐后反馈首次8通过/2失败（首项5000ms超时，下一项出现前项残留），第二项单独重跑通过，随后原文件保持原超时和断言重跑10/10通过。保留首次不稳定记录，待最终固定提交的全量回归重新判断；这些结果不替代浏览器、已安装原生构建或当前版本整体验收。
