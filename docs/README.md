@@ -250,3 +250,5 @@
 - [PATCH-006后台开发进度](engineering/mvp-patch/admin-progress.zh-CN.md)：Claude Code逐片提交、自测证据、待生成/接入交接与阻塞。
 
 - [P1.1 PATCH-006后台开发与本地验收（2026-10-23）](reviews/admin-p11-development-acceptance-2026-10-23.zh-CN.md)：固定提交、A01–A13证据、真实合成浏览器恢复、测试环境与发布边界。
+
+- [P1.1 消息与推送服务端进度](engineering/mvp-patch/server-p11-progress.zh-CN.md)：P13–P16 唯一文件负责人、接口切片和验证边界。
