@@ -60,6 +60,7 @@
 
 - [浏览器批注与AI恢复](delivery/fancy-comments-ai-2026-10-20.zh-CN.md)：16条批注、Ask Fancy恢复、问卷拆分及验证边界。
 
+- [2026-10-23后台Figma补丁准入评审](reviews/admin-figma-patch-readiness-2026-10-23.zh-CN.md)：直接核对当前补丁设计，记录状态冲突、恢复与联动验收、响应式及冻结门槛。
 - [2026-10-20双端研发前置评审](reviews/development-readiness-2026-10-20.zh-CN.md)：恢复版用户端与当前后台工作区的只读评审，记录未关闭阻塞及原会话修订、复评条件。
 - [双端研发准入评审](reviews/development-readiness-2026-10-19.zh-CN.md)：当时R1基线的历史评审；App及主PRD已回滚，该结论不适用于当前组合。
 
