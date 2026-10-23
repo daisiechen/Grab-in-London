@@ -52,6 +52,9 @@ export async function sealSourceSnapshot(pool: Pool, historyCoverageStart: Date,
     const id = snapshots[0]!.id;
     for (const [kind,facts] of Object.entries({ users,meals,applications,seats,surveys,events,attendance,experiences,rosters,quality,excludedEvents,deliveries:deliveryRows,discoveryReady:!!readiness.verifiedDiscovery,telemetryReady:!!readiness.clientTelemetry })) await db.query(`INSERT INTO analytics_snapshot_facts(snapshot_id,kind,facts) VALUES($1,$2,$3)`, [id,kind,JSON.stringify(facts)]);
     for (const user of users) await db.query(`INSERT INTO analytics_snapshot_subjects(snapshot_id,user_id) VALUES($1,$2)`, [id,user.id]);
+    // Seal the exact per-user revision this transaction read (excluded users included). Readiness
+    // of a classification intent compares only within one user; the global maximum proves nothing.
+    await db.query(`INSERT INTO analytics_snapshot_classification_inputs(snapshot_id,user_id,revision,classification) SELECT $1,u,r,c FROM unnest($2::uuid[],$3::bigint[],$4::text[]) AS t(u,r,c)`, [id,classifications.map(c => c.user_id),classifications.map(c => c.revision),classifications.map(c => c.classification)]);
     await db.query('COMMIT');
     return id;
   } catch (e) { await db.query('ROLLBACK'); throw e; }
