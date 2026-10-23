@@ -133,3 +133,7 @@ packages/client/share.ts 只从显式公开输入构造 HTTPS canonical meal URL
 人类用户在本会话明确选择“交给现有后台会话继续（推荐）”，授权原“开发-后台P1.1”会话在PATCH006后承接群提及/跨端静音/推送所需服务端API、存储和worker。根会话仍只实施客户端/移动Web，停止并行写服务端、0027+及共享契约/生成物；待后台逐文件和单一生成writer确认后继续契约交接。真实provider、DNS/AASA正式部署、生产发布未获授权。
 
 后台PATCH006报告aa8a4c6已交回并整合为374e703；README尾部索引冲突保留双方内容，从同一固定tree补齐报告依赖的3份交接/进度文档和4张合成响应式截图。首次因缺引用文档/截图导致文档验证失败，补齐后3/3通过。tasks仅P09/P10标PASS_ADMIN_LOCAL_SCOPE，具体范围及A01–A13见报告，不扩大为客户端、服务端新增功能或整体发布通过。
+
+### 封存QA探针哈希恢复
+
+全量Python首次93/94通过，失败为QA probe changed after run：P08新增实例回归先前写入了既有qa-independent-session探针，改变了封存清单哈希。已从本轮修改前的52764b2恢复该文件原始字节，并把新增回归独立放p11-transfer-instance.unit.test.tsx；未改QA执行清单/旧探针hash/202-4-11结论。恢复后完整Python94/94、原探针3+新回归1=4/4通过，ESLint通过。此为测试文件隔离纠正，不回退P08业务修复。

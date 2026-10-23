@@ -1,10 +1,10 @@
 /** Mock transport UI evidence only; never a real-model or external-provider acceptance claim. */
 import {useState} from 'react';
-import {act,screen,waitFor} from '@testing-library/react';
+import {screen,waitFor} from '@testing-library/react';
 import {userEvent} from '@testing-library/user-event';
 import {describe,expect,it,vi} from 'vitest';
 import {renderWithProviders} from '../../test/render.tsx';
-import {createFetchStub,deferred,noContent,ok,type StubResponse} from '../../test/fetchStub.ts';
+import {createFetchStub,noContent,ok} from '../../test/fetchStub.ts';
 import {fakePollerDeps} from '../../test/fakePoller.ts';
 import {PollerDepsContext} from '../../lib/pollerContext.tsx';
 import {MEAL_ID,session as userSession} from '../../test/fixtures.ts';
@@ -31,21 +31,6 @@ async function open(){await userEvent.click(screen.getByRole('button',{name:'Ask
 async function send(text='Find a relaxed meal this Friday.'){await userEvent.type(screen.getByRole('textbox',{name:'Ask Fancy'}),text);await userEvent.click(screen.getByRole('button',{name:'Send to Fancy'}));}
 
 describe('independent QA assistant editor and expiry',()=>{
- it('does not transfer an old validation into a remounted editor with the same target and version',async()=>{
-  const held=deferred<StubResponse>(),stub=baseStub(),applied=vi.fn();
-  function Host(){const [revision,setRevision]=useState(0);return <><button onClick={()=>setRevision(v=>v+1)}>Reopen original form</button><Editor key={revision} apply={applied}/></>;}
-  stub.on('requestAI',call=>ok(status((call.body as {requestId:string}).requestId,true,result({draft:draft()})),202));
-  stub.on('validateAIDraft',()=>held.promise);
-  renderAssistant(stub,<Host/>);await open();await send('Draft a friendly application.');
-  await userEvent.click(await screen.findByRole('button',{name:'Use in application'}));
-  await waitFor(()=>expect(stub.callsTo('validateAIDraft')).toHaveLength(1));
-  await userEvent.click(screen.getByRole('button',{name:'Close assistant'}));
-  await userEvent.click(screen.getByRole('button',{name:'Reopen original form'}));
-  await act(async()=>{held.resolve(ok(draft()));});
-  expect(applied).not.toHaveBeenCalled();
-  expect((screen.getByLabelText('Original editor') as HTMLTextAreaElement).value).toBe('');
- });
-
  it('QA-AI-016 explicit Keep my text preserves edited v2 without transfer or append',async()=>{
   const stub=baseStub(),applied=vi.fn();stub.on('requestAI',call=>ok(status((call.body as {requestId:string}).requestId,true,result({draft:draft()})),202));stub.on('validateAIDraft',()=>ok(draft()));renderAssistant(stub,<Editor apply={applied} initial="Original v1 introduction."/>);await open();await send('Draft a friendly application.');await screen.findByRole('button',{name:'Use in application'});
   await userEvent.click(screen.getByRole('button',{name:'Close assistant'}));await waitFor(()=>expect(document.activeElement).toBe(screen.getByRole('button',{name:'Ask Fancy'})));await userEvent.clear(screen.getByLabelText('Original editor'));await userEvent.type(screen.getByLabelText('Original editor'),'Edited v2 that must be kept.');await open();await userEvent.click(screen.getByRole('button',{name:/Continue conversation/}));await userEvent.click(await screen.findByRole('button',{name:'Use in application'}));await screen.findByRole('button',{name:'Keep my text'});await userEvent.click(screen.getByRole('button',{name:'Keep my text'}));expect((screen.getByLabelText('Original editor') as HTMLTextAreaElement).value).toBe('Edited v2 that must be kept.');expect(applied).not.toHaveBeenCalled();expect(stub.callsTo('validateAIDraft')).toHaveLength(0);
