@@ -1,4 +1,4 @@
-# MVP补丁增量开发方案 P1（待独立评审）
+# MVP补丁增量开发方案 P1.1（待受影响范围复评）
 
 日期：2026-10-23 Europe/London。工程标识 `MVP-PATCH/P1`，不是产品发布号。方案/实施协调负责人：开发-MVP补丁版。产品发布号待PM确认；未确认不阻塞方案评审，但阻塞正式构建命名与交付。
 
@@ -92,6 +92,14 @@ iOS Universal Link的AASA只列应用与`/meals/*`，app校验host/path/id；Web
 API先部署向后兼容schema与关闭的v2/投递开关，再上支持客户端；可用capabilities返回mentionsV2/pushConfigured，未支持不能假称提及成功，保留纯文本提示。功能回滚先关入队/投递与v2入口并保留日志/旧消息；旧代码须容忍新表与旧outbox未识别类型（跳过不消费）。若旧worker不具备跳过契约，禁止直接回滚到它，使用兼容禁用版。无破坏性down/drop，修复迁移前向执行。当前仅隔离测试，生产迁移/部署另行批准。
 
 ## 8. 外部能力与失败恢复
+
+### P1.1独立评审修订：本段约束优先于§5/§7的概括
+
+- 分类revision是目标user自身版本，禁止跨用户比较。统计作业及Ready快照必须绑定targetUserId、原intent/requestId、acceptedRevision；密封输入清单包含该user的接受revision或同一user更晚revision，不得用全局最大revision或最新时间猜。P09先核现有返回体再决定最小新增端点。
+- 发送事务为recipient/delivery捕获membershipAuthorizationEpoch及群epoch。退群、移出、撤权或解散事务沿同一锁序推进授权代际，并将旧代际尚未交供应商的recipient/delivery永久标为REVOKED。重入分配新epoch，禁止重置旧终态或将旧event重绑新epoch。
+- worker恢复及外呼前须同时检查原epoch、当前合法代际和不可复活终态；仅当前membership=true或退出前历史仍可读不能放行旧push。领取与撤权通过条件更新及同成员锁序串行化。已经越过供应商边界的在途请求保留审计，不能承诺撤回。
+- 退出空档不生成本人接收人/新提醒；新epoch合法新消息正常提醒。上述作废不删除退出前授权历史或原站内记录，不合并通知已读与聊天已读。
+- §7.4迁移须加入成员/群epoch、recipient/delivery捕获epoch及REVOKED状态。P14验收发送时捕获代际；P16必须测试暂停队列→退出→重入→恢复旧排队push零投递、空档无提醒、新epoch正常提醒；P17验证历史和站内记录保留。以上为UX-P1-01的最小修订，不改PRD/Figma。
 
 | 依赖 | 实施/本地可验证 | 真实关闭证据及授权边界 |
 | --- | --- | --- |

@@ -188,7 +188,7 @@
       "title": "分类回执与统计关联",
       "owner": "开发-MVP补丁版",
       "status": "NOT_STARTED",
-      "acceptance": "acceptedRevision与readySnapshot明确关联；unknown不重复classify",
+      "acceptance": "acceptedRevision与readySnapshot明确关联；unknown不重复classify; Bind targetUserId + original intent/requestId + per-user revision; never compare revisions across users.",
       "verification": "API/DB分类并发、统计失败重试",
       "files": [
         "packages/contracts/**",
@@ -286,7 +286,7 @@
       "title": "发送事务与接收人",
       "owner": "开发-MVP补丁版",
       "status": "NOT_STARTED",
-      "acceptance": "Everyone服务端校验；失效成员降级；同clientMessageId不重复",
+      "acceptance": "Everyone服务端校验；失效成员降级；同clientMessageId不重复; Capture recipient membership authorization epoch in the send transaction.",
       "verification": "并发退群/host变更/重复payload API测试",
       "files": [
         "apps/api/src/**",
@@ -328,8 +328,8 @@
       "title": "提醒outbox及适配",
       "owner": "开发-MVP补丁版",
       "status": "NOT_STARTED",
-      "acceptance": "投递前权限/mute/read重验；1h TTL；UNKNOWN不盲重试",
-      "verification": "fake APNs/WebPush暂停队列/重放/410/429测试",
+      "acceptance": "投递前权限/mute/read重验；1h TTL；UNKNOWN不盲重试; Permanently revoke old-epoch queued deliveries on leave/revocation/dissolve; rejoin cannot revive them.",
+      "verification": "fake APNs/WebPush暂停队列/重放/410/429测试; pause queue -> leave -> rejoin -> resume: zero old push, no gap events, valid new-epoch push",
       "files": [
         "apps/worker/src/**",
         "packages/db/**"
@@ -349,7 +349,7 @@
       "title": "双端提及与提醒界面",
       "owner": "开发-MVP补丁版",
       "status": "NOT_STARTED",
-      "acceptance": "同名候选/标记/普通文本兼容；本机可见不弹；设置冲突恢复",
+      "acceptance": "同名候选/标记/普通文本兼容；本机可见不弹；设置冲突恢复; Preserve authorized history and in-app records while old queued pushes stay revoked.",
       "verification": "Web/iOS组件及双账号矩阵",
       "files": [
         "apps/web/src/**",
