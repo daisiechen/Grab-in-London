@@ -1,0 +1,30 @@
+{
+  "observations": [
+    {
+      "testedCommit": "c0bddd9f8ee7ad0839833ea0f2f5955ce62f0ba3",
+      "clientComposition": "3ee69fe baseline + seven F64 files from9101004 + seven F63 native/five shared files fromc0bddd9;19 overlays",
+      "executedBy": "Codex QA actual XCTest on new dedicated simulator and independent screenshot inspection",
+      "id": "B82-O001",
+      "status": "passed",
+      "title": "Native author external README visible after actual page loading",
+      "steps": [
+        "221 normal author link opened Safari; AX contained full synthetic README, XCTest exit0, but independently viewed screenshot remained blank and TabDocument IsPageLoaded=false. Only content arrival accepted at that checkpoint, not visible rendering. Original incomplete evidence retained.",
+        "222 resumed that exact Safari page, waited actual TabDocument IsPageLoaded=true and body hittable, then captured screenshot. Independently viewed full synthetic README visible. XCTest exit0; normal App activated after screenshot.",
+        "No extra full URL inspection; domain display alone does not prove full URL. Synthetic source and normal dedicated simulator only; no Google/licensing/real-device evidence. F63 remains open; no whole-case promotion."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f63-native-author-ax-before-render.png",
+        "evidence/2026-10-21/native221-f63-xcui.swift",
+        "evidence/2026-10-21/f63-native-author-loaded-body.png",
+        "evidence/2026-10-21/native222-f63-xcui.swift"
+      ],
+      "rawEvidence": {
+        "nativeLogSha256": {
+          "221": "843424f08621680adb1aaa5dd7d556765b9ba41e02e74bb5324b5ee596d53af0",
+          "222": "864309c20cf0d428c9a891e0f8019592ec66287bf3ca13d0a334d622f212fd13"
+        },
+        "privateBundlesRetained": true
+      }
+    }
+  ]
+}
