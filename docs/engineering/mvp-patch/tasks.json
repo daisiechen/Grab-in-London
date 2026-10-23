@@ -9,13 +9,14 @@
       "patches": [],
       "title": "方案独立签收",
       "owner": "开发-MVP补丁版",
-      "status": "NOT_STARTED",
+      "status": "PASS",
       "acceptance": "PM、用户端UX、后台UX对同一提交/哈希分别PASS；阻塞逐条关闭",
       "verification": "文档校验和独立评审记录",
       "files": [
         "docs/engineering/mvp-patch/**"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "review.zh-CN.md: P1.1 final signoff; fixed 8a4a3c50d773f18d08993d7e9c476618710b4bf2"
     },
     {
       "id": "P01",
