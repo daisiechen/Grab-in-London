@@ -11,3 +11,5 @@ describe('PATCH006 environment boundary',()=>{
   expect(()=>assertAdminEnvironment({...env,TMPDIR:'/private/tmp'})).toThrow('ADMIN_TMP_REQUIRED');
  });
 });
+
+it('built mode is explicit and refuses unrecognized modes',()=>{expect(assertAdminEnvironment({...env,ADMIN_PATCH_MODE:'built'}).built).toBe(true);expect(assertAdminEnvironment(env).built).toBe(false);expect(()=>assertAdminEnvironment({...env,ADMIN_PATCH_MODE:'production'})).toThrow('ADMIN_MODE_REFUSED');});

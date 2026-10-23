@@ -45,16 +45,25 @@ await db.pool.query(`DELETE FROM auth_transactions WHERE id=$1 AND kind='EMAIL_O
 const scenario=await seedAdminScenario(db.pool);
 const snapshot=await sealSourceSnapshot(db.pool,new Date());
 const require=createRequire(join(settings.root,'apps/admin/package.json'));
-const {createServer}=await import(pathToFileURL(require.resolve('vite')).href);
+const {createServer,build,preview}=await import(pathToFileURL(require.resolve('vite')).href);
 const {default:react}=await import(pathToFileURL(require.resolve('@vitejs/plugin-react')).href);
 const publicDir=join(settings.runtime,'public');await mkdir(publicDir,{mode:0o700});
 await copyFile(join(settings.root,'infra/admin-patch/fixture-login.html'),join(publicDir,'fixture-login.html'));
-const vite=await createServer({configFile:false,envDir:false,publicDir,root:join(settings.root,'apps/admin'),plugins:[react()],cacheDir:join(settings.runtime,'vite-cache'),server:{host:'127.0.0.1',port:settings.adminPort,strictPort:true,proxy:{'/v1':{target:process.env.FANCY_API_ORIGIN,changeOrigin:false}}},build:{outDir:join(settings.runtime,'admin-build')}});
+const sourceCommit=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+const workingTree=()=>execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).trim();
+if(settings.built&&workingTree())throw new Error('ADMIN_BUILT_REQUIRES_CLEAN_SOURCE');
+const proxy={'/v1':{target:process.env.FANCY_API_ORIGIN,changeOrigin:false}};
+const viteConfig={configFile:false as const,envDir:false as const,publicDir,root:join(settings.root,'apps/admin'),plugins:[react()],cacheDir:join(settings.runtime,'vite-cache'),server:{host:'127.0.0.1',port:settings.adminPort,strictPort:true,proxy},preview:{host:'127.0.0.1',port:settings.adminPort,strictPort:true,proxy},build:{outDir:join(settings.runtime,'admin-build')}};
+if(settings.built){
+ await build(viteConfig);
+ if(workingTree()||execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim()!==sourceCommit)throw new Error('ADMIN_SOURCE_CHANGED_DURING_BUILD');
+}
+const vite=settings.built?await preview(viteConfig):await createServer(viteConfig);
 await app.listen({port:settings.apiPort,host:'127.0.0.1'});
-await vite.listen();
+if('listen' in vite)await vite.listen();
 const abort=new AbortController();
 const worker=createWorkerRuntime(db.pool,config).run(abort.signal);
-const manifest={schemaVersion:1,version:'P1.1',scope:'PATCH-006 synthetic only',parent:'2e33ca2bbdc838c85a36d2e3bbd9b5fe216478ae',commit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),root:await realpath(settings.root),runtime:settings.runtime,dependencyRoot:await realpath(join(settings.root,'node_modules')),pid:process.pid,pg:pg.ownership,database:new URL(db.url).pathname.slice(1),apiOrigin:process.env.FANCY_API_ORIGIN,adminOrigin:settings.origin,snapshot,providers:{identity:'test',places:'fixture',mail:'outbox_test',ai:'disabled'},browserContext:'NOT_CREATED',native:'NOT_APPLICABLE',scenario,status:'RUNNING'};
+const manifest={schemaVersion:1,version:'P1.1',scope:'PATCH-006 synthetic only',serveMode:settings.built?'built':'dev',parent:'2e33ca2bbdc838c85a36d2e3bbd9b5fe216478ae',commit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),root:await realpath(settings.root),runtime:settings.runtime,dependencyRoot:await realpath(join(settings.root,'node_modules')),pid:process.pid,pg:pg.ownership,database:new URL(db.url).pathname.slice(1),apiOrigin:process.env.FANCY_API_ORIGIN,adminOrigin:settings.origin,snapshot,providers:{identity:'test',places:'fixture',mail:'outbox_test',ai:'disabled'},browserContext:'NOT_CREATED',native:'NOT_APPLICABLE',scenario,status:'RUNNING'};
 const manifestPath=join(settings.runtime,'manifest.json');
 await writeFile(manifestPath,JSON.stringify(manifest,null,2),{mode:0o600});
 console.warn(`ADMIN PATCH SYNTHETIC READY ${settings.origin}; manifest=${manifestPath}; fixture identity=${email}, local-only OTP=000000`);
@@ -62,6 +71,6 @@ let finish!:()=>void;const stopped=new Promise<void>(resolve=>{finish=resolve;})
 process.once('SIGINT',finish);process.once('SIGTERM',finish);
 void worker.catch(()=>{process.exitCode=1;finish();});
 await stopped;
-abort.abort();await worker;await vite.close();await app.close();await db.pool.end();
+abort.abort();await worker;if('close' in vite)await vite.close();else await new Promise<void>((resolve,reject)=>vite.httpServer.close((error?:Error)=>error?reject(error):resolve()));await app.close();await db.pool.end();
 // Preserve this owned synthetic database for follow-up tests; no shared resource is stopped.
 await writeFile(manifestPath,JSON.stringify({...manifest,status:'APP_STOPPED_PG_PRESERVED'},null,2),{mode:0o600});

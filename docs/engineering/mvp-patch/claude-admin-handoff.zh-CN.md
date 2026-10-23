@@ -105,3 +105,9 @@ Codex拥有`infra/admin-patch/receipt-wait.acceptance.test.ts`，Claude只读运
 计划§P10明确Ready之后同snapshotId+canonicalFilterHash，A05要求Ready绑定。请在用户显式切换前保持“新统计已就绪，待切换”的旧数据门控（或按冻结设计既定方式绑定有效Ready snapshot）；不能把旧快照视为此分类的Ready统计。任意更新快照也不能仅按时间，需同user/revision密封输入。补组件测试：job Ready但selected旧→统计/明细/导出仍隐藏；选中本次Ready或包含其revision的有效新snapshot→解锁且三者同binding；多个target未全部纳入不能过早解锁。不要以改文案/自动Dismiss绕过。
 
 P09-R02独立关闭：固定修复`168839c`之后，Codex原receipt-wait测试断言不变1/1 PASS，连同撤销导出共2/2 PASS；acceptance tsc、该测试eslint、文档引用3项均通过。P10-R02已在Claude消息11核验送达，Claude明确优先修复selected snapshot未覆盖accepted revision却解锁的门控问题，尚未关闭。
+
+## 固定构建验收入口
+
+`node infra/admin-patch/launch.mjs --built`使用同一清空继承环境和专属PG边界，构建到本runtime的ignored `admin-build/`并通过preview提供页面，关闭HMR。built要求`git status --porcelain`为空，并在构建完成后重新核对HEAD与dirty；发生并发改动直接拒绝。manifest增加`serveMode`，dev模式仍供开发，最终浏览器证据必须标注模式、固定提交与构建产物摘要。fixture登录页仅存在本合成rig的ignored构建，不用于发布。新增mode负向验证后guard11项PASS，runtime tsc与eslint通过。
+
+固定提交`85a24c3`及其依赖的独立复核：admin组件80项＋统计绑定API8项共88 PASS，覆盖P10-R02的旧快照门控、显式选择解锁与多个接受意图的纯状态约束；完整core:check通过。真实built浏览器Ready路径尚待再次核验，不以jsdom代替。
