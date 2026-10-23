@@ -111,8 +111,9 @@ export function reduceIntents(book: IntentBook, event: IntentEvent): IntentBook 
       return event.accountId === book.accountId ? book : emptyBook(event.accountId);
     case 'dismiss': {
       const state = book.byTarget[event.targetUserId.toLowerCase()];
-      // An unsettled intent, or accepted statistics not yet ready, stays until resolved.
-      if (!state || !settled(state)) return book;
+      // Only intents that changed nothing (conflict/rejected) can be dismissed; an accepted one stays
+      // until the selected snapshot seals it, so dismissing can never re-show old statistics.
+      if (!state || (state.phase !== 'conflict' && state.phase !== 'rejected')) return book;
       return { ...book, byTarget: Object.fromEntries(Object.entries(book.byTarget).filter(([id]) => id !== state.intent.targetUserId)) };
     }
     case 'submit': {
@@ -182,11 +183,18 @@ export function reduceIntents(book: IntentBook, event: IntentEvent): IntentBook 
   }
 }
 
-const settled = (s: IntentState) => s.phase === 'conflict' || s.phase === 'rejected' || (s.phase === 'accepted' && s.stats.status === 'ready');
+/** The ready snapshot of an accepted intent: a valid snapshot that sealed this user's accepted (or later) revision. */
+export const readySnapshotOf = (s: IntentState): string | null =>
+  s.phase === 'accepted' && s.stats.status === 'ready' ? s.stats.refresh.snapshotId : null;
 
-/** Old statistics may only be shown when no intent of this account awaits a refresh. */
-export function statisticsSettled(book: IntentBook): boolean {
-  return Object.values(book.byTarget).every(settled);
+/**
+ * Statistics of `selectedSnapshotId` may be shown only when every accepted intent of this account is
+ * sealed in exactly that snapshot (server-resolved from per-user inputs). A ready job alone does not
+ * make an older selected snapshot current; unknown/saving intents keep everything hidden.
+ */
+export function statisticsSettled(book: IntentBook, selectedSnapshotId: string | null): boolean {
+  return Object.values(book.byTarget).every((s) => s.phase === 'conflict' || s.phase === 'rejected'
+    || (selectedSnapshotId !== null && readySnapshotOf(s) === selectedSnapshotId));
 }
 
 export const scopeOf = (intent: FrozenIntent): Scope => ({ accountId: intent.accountId, targetUserId: intent.targetUserId, key: intent.key });

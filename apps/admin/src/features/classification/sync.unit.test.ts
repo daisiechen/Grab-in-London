@@ -51,6 +51,9 @@ describe('classification intent sync (reads only)', () => {
     expect(needsSync({ phase: 'unknown', intent, reason: 'none', retryAfterSeconds: null })).toBe(true);
     expect(needsSync({ phase: 'accepted', intent, acceptedRevision: '7', stats: { status: 'failed', refresh, lookupFailed: false } })).toBe(false);
     expect(needsSync({ phase: 'conflict', intent, currentVersion: '9' })).toBe(false);
+    const ready: IntentState = { phase: 'accepted', intent, acceptedRevision: '7', stats: { status: 'ready', refresh: { ...refresh, state: 'ready', snapshotId: '00000000-0000-4000-8000-0000000000e1' }, lookupFailed: false } };
+    expect(needsSync(ready, '00000000-0000-4000-8000-0000000000e1')).toBe(false);
+    expect(needsSync(ready, '00000000-0000-4000-8000-0000000000e0')).toBe(true);
     // The delay comes from the response just received, not from the state before the read.
     expect(delayAfter({ type: 'receipt', scope, receipt: { ...receipt, state: 'PENDING', retryAfterSeconds: 12 } as never }, 10)).toBe(12000);
     expect(delayAfter({ type: 'receipt', scope, receipt: { ...receipt, state: 'NONE' } as never }, 10)).toBe(10);

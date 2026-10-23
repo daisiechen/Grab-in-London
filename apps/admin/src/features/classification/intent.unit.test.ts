@@ -33,7 +33,7 @@ describe('A01 unknown resolves only through the original intent receipt', () => 
     expect(target(book)).toMatchObject({ phase: 'unknown', reason: 'read_failed' });
     book = run(book, { type: 'receiptFailed', scope, kind: 'signed_out' });
     expect(target(book)).toMatchObject({ phase: 'unknown', reason: 'reauth' });
-    expect(statisticsSettled(book)).toBe(false);
+    expect(statisticsSettled(book, '00000000-0000-4000-8000-0000000000e1')).toBe(false);
   });
   it('SUCCEEDED accepts with the receipt revision only when it names the frozen target', () => {
     const wrong = run(unknownBook(), { type: 'receipt', scope, receipt: receipt({ state: 'SUCCEEDED', resourceId: OTHER_TARGET, resourceVersion: '7' }) });
@@ -90,14 +90,17 @@ describe('A03/A05 accepted classification: statistics only', () => {
   it('pending and failed statistics hide old statistics; failed offers statistics retry, not re-classify of the same intent', () => {
     let book = accepted();
     expect(target(book)).toMatchObject({ phase: 'accepted', stats: { status: 'pending' } });
-    expect(statisticsSettled(book)).toBe(false);
+    expect(statisticsSettled(book, '00000000-0000-4000-8000-0000000000e1')).toBe(false);
     expect(allowedActions(target(book)).has('submit')).toBe(false);
     book = run(book, { type: 'stats', scope, refresh: refresh({ state: 'failed', failureCode: 'SNAPSHOT_FAILED' }) });
     expect(allowedActions(target(book)).has('retryStats')).toBe(true);
-    expect(statisticsSettled(book)).toBe(false);
+    expect(statisticsSettled(book, '00000000-0000-4000-8000-0000000000e1')).toBe(false);
     book = run(book, { type: 'stats', scope, refresh: refresh({ state: 'ready', snapshotId: '00000000-0000-4000-8000-0000000000e1' }) });
     expect(target(book)).toMatchObject({ stats: { status: 'ready', refresh: { snapshotId: '00000000-0000-4000-8000-0000000000e1' } } });
-    expect(statisticsSettled(book)).toBe(true);
+    expect(statisticsSettled(book, '00000000-0000-4000-8000-0000000000e1')).toBe(true);
+    // P10-R02: a ready job does not make an older selected snapshot current.
+    expect(statisticsSettled(book, '00000000-0000-4000-8000-0000000000e0')).toBe(false);
+    expect(statisticsSettled(book, null)).toBe(false);
   });
   it('rejects statistics for another user or another revision (no cross-user revision comparison)', () => {
     const book = accepted();
@@ -113,8 +116,24 @@ describe('A03/A05 accepted classification: statistics only', () => {
   it('cannot dismiss an unsettled intent or unready statistics to re-show old numbers', () => {
     expect(run(unknownBook(), { type: 'dismiss', targetUserId: TARGET }).byTarget[TARGET]).toBeDefined();
     expect(run(accepted(), { type: 'dismiss', targetUserId: TARGET }).byTarget[TARGET]).toBeDefined();
+    // Even ready, an accepted intent cannot be dismissed: only selecting its sealed snapshot settles it.
     const ready = run(accepted(), { type: 'stats', scope, refresh: refresh({ state: 'ready', snapshotId: '00000000-0000-4000-8000-0000000000e1' }) });
-    expect(run(ready, { type: 'dismiss', targetUserId: TARGET }).byTarget[TARGET]).toBeUndefined();
+    expect(run(ready, { type: 'dismiss', targetUserId: TARGET }).byTarget[TARGET]).toBeDefined();
+    const conflict = run(emptyBook(ACCOUNT), { type: 'submit', intent: intent() }, { type: 'saveFailed', scope, kind: 'conflict', code: 'VERSION_CONFLICT', currentVersion: '9' });
+    expect(run(conflict, { type: 'dismiss', targetUserId: TARGET }).byTarget[TARGET]).toBeUndefined();
+  });
+
+  it('P10-R02: several targets unlock only when the selected snapshot seals every one of them', () => {
+    const other = intent({ targetUserId: OTHER_TARGET, key: '00000000-0000-4000-8000-0000000000c2' });
+    const S1 = '00000000-0000-4000-8000-0000000000e1', S2 = '00000000-0000-4000-8000-0000000000e2';
+    let book = run(emptyBook(ACCOUNT), { type: 'submit', intent: intent() }, { type: 'saved', scope, revision: '7', statisticsRefresh: refresh({ state: 'ready', snapshotId: S1 }) },
+      { type: 'submit', intent: other }, { type: 'saved', scope: scopeOf(other), revision: '8', statisticsRefresh: refresh({ targetUserId: OTHER_TARGET, acceptedRevision: '8' }) });
+    expect(statisticsSettled(book, S1)).toBe(false); // second target still pending
+    book = run(book, { type: 'stats', scope: scopeOf(other), refresh: refresh({ targetUserId: OTHER_TARGET, acceptedRevision: '8', state: 'ready', snapshotId: S2 }) });
+    expect(statisticsSettled(book, S1)).toBe(false);
+    expect(statisticsSettled(book, S2)).toBe(false); // first target not (yet) bound to S2
+    book = run(book, { type: 'stats', scope, refresh: refresh({ state: 'ready', snapshotId: S2 }) }); // server re-bound it to the newest sealing snapshot
+    expect(statisticsSettled(book, S2)).toBe(true);
   });
 });
 

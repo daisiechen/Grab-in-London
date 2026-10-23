@@ -43,7 +43,10 @@ export interface ConsoleState {
   /** Classification intents of the signed-in account (memory only; dropped on account change). */
   intents: IntentBook;
   dispatchIntent(event: IntentEvent): void;
-  /** False while any intent awaits its outcome or statistics: charts, drilldowns and exports stay hidden. */
+  /**
+   * False until every accepted intent is sealed in the selected snapshot (and none is unresolved):
+   * charts, drilldowns and exports stay hidden. A ready job never unlocks an older selected snapshot.
+   */
   statisticsSettled: boolean;
   /** Current snapshot + canonical filters; null until a snapshot is selected. */
   binding: { snapshotId: string; query: FilterQuery; filterHash: string | null } | null;
@@ -83,6 +86,7 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
   const [intents, dispatchIntent] = useReducer(reduceIntents, emptyBook());
   const intentsRef = useRef(intents);
   intentsRef.current = intents;
+  const selectedRef = useRef<string | null>(null);
   /** Data-scope generation; bumped by every event that invalidates in-flight results. */
   const generation = useRef(0);
 
@@ -91,6 +95,7 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
     return snapshots.find((s) => s.id === snapshotId && s.status === 'SEALED' && !revoked.has(s.id)) ?? null;
   }, [snapshots, snapshotId, revoked]);
   const snapshotDay = snapshot ? londonDay(snapshot.asOf) : null;
+  selectedRef.current = snapshot?.id ?? null;
   const query = useMemo(() => (snapshotDay ? toQuery(filters, snapshotDay) : null), [filters, snapshotDay]);
 
   const clearData = useCallback(() => {
@@ -178,7 +183,7 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
     const timer = setInterval(() => {
       for (const state of Object.values(intentsRef.current.byTarget)) {
         const key = state.intent.key;
-        if (!needsSync(state) || inFlight.has(key) || (due.get(key) ?? 0) > Date.now()) continue;
+        if (!needsSync(state, selectedRef.current) || inFlight.has(key) || (due.get(key) ?? 0) > Date.now()) continue;
         inFlight.add(key);
         void syncIntent(api, state).then((event) => {
           inFlight.delete(key);
@@ -221,7 +226,7 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
     reportFailure,
     intents,
     dispatchIntent,
-    statisticsSettled: statisticsSettled(intents),
+    statisticsSettled: statisticsSettled(intents, snapshot?.id ?? null),
     fence() {
       const captured = generation.current;
       return { live: () => generation.current === captured };

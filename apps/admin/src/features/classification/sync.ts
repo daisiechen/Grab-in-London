@@ -5,10 +5,15 @@ import { scopeOf, type IntentEvent, type IntentState } from './intent.ts';
 
 export const SYNC_INTERVAL_MS = 4000;
 
-/** Whether the console should read anything for this intent now (reads only; never a write). */
-export function needsSync(state: IntentState): boolean {
+/**
+ * Whether the console should read anything for this intent now (reads only; never a write). A ready
+ * refresh not bound to the selected snapshot keeps being read, because the server re-binds it to
+ * the newest snapshot sealing it.
+ */
+export function needsSync(state: IntentState, selectedSnapshotId: string | null = null): boolean {
   if (state.phase === 'unknown') return state.reason !== 'reauth';
-  return state.phase === 'accepted' && state.stats.status !== 'ready' && state.stats.status !== 'failed';
+  if (state.phase !== 'accepted' || state.stats.status === 'failed') return false;
+  return state.stats.status !== 'ready' || state.stats.refresh.snapshotId !== selectedSnapshotId;
 }
 
 /**
