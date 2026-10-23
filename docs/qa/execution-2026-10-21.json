@@ -114,7 +114,8 @@
     "browserObservationsB71": "evidence/2026-10-21/browser-b71.json",
     "browserObservationsB72": "evidence/2026-10-21/browser-b72.json",
     "browserObservationsB73": "evidence/2026-10-21/browser-b73.json",
-    "browserObservationsB74": "evidence/2026-10-21/browser-b74.json"
+    "browserObservationsB74": "evidence/2026-10-21/browser-b74.json",
+    "browserObservationsB75": "evidence/2026-10-21/browser-b75.json"
   },
   "cases": [
     {
@@ -16175,7 +16176,9 @@
       "target": "production implementation in local synthetic environment",
       "status": "BLOCKED",
       "evidence": [
-        "B74-O003"
+        "B74-O003",
+        "B75-O001",
+        "B75-O002"
       ],
       "relatedAutomatedAssertions": [],
       "coveredExpectedIndexes": [],
@@ -16184,7 +16187,7 @@
         "实际收件箱可追踪去重",
         "provider accepted不能单独通过"
       ],
-      "actual": "Resend基础发送配置已非空，已有测试邮件delivered运输证据；不是缺邮件账户。生产运输/回执与删除通知168h本地实现已验证，正常业务触发的有界真实运输见B74；收件箱去重/渠道矩阵及签名webhook仍未验；webhook专用配置尚缺。开发负责接线与最小真实验证交接，用户已批准既有开发测试邮箱业务邮件；不再重复索取该范围批准。 B74: three bounded business transport attempts targeted the user-approved existing test mailbox, selected outbox SENT each1; actual inbox delivery/dedup and signed webhook remain unverified. Host excluded from HTTP, but row FAILED/attempts1. No whole gate promotion.",
+      "actual": "Resend基础发送配置已非空，已有测试邮件delivered运输证据；不是缺邮件账户。生产运输/回执与删除通知168h本地实现已验证，正常业务触发的有界真实运输见B74；收件箱去重/渠道矩阵及签名webhook仍未验；webhook专用配置尚缺。开发负责接线与最小真实验证交接，用户已批准既有开发测试邮箱业务邮件；不再重复索取该范围批准。 B74: three bounded business transport attempts targeted the user-approved existing test mailbox, selected outbox SENT each1; actual inbox delivery/dedup and signed webhook remain unverified. Host excluded from HTTP, but row FAILED/attempts1. No whole gate promotion. B75: actual approved mailbox now independently observed all three notifications, one each with Inbox label and expected body/dev links. All three original views show DMARC FAIL despite SPF/DKIM PASS; authoritative DNS confirms no DMARC policy, not demonstrated alignment failure (QA-F65 OPEN). Signed webhook/full channel matrix remain unverified; gate stays BLOCKED.",
       "history": [
         {
           "status": "BLOCKED",
@@ -16192,7 +16195,10 @@
           "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
         }
       ],
-      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies",
+      "defectIds": [
+        "QA-F65"
+      ]
     },
     {
       "id": "QA-GATE-004",
@@ -23187,7 +23193,8 @@
     "QA-F61": "CLOSED_TARGETED_QA",
     "QA-F62": "CLOSED_TARGETED_QA",
     "QA-F63": "OPEN_CONFIRMED",
-    "QA-F64": "OPEN_CONFIRMED"
+    "QA-F64": "OPEN_CONFIRMED",
+    "QA-F65": "OPEN_CONFIRMED"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -23208,5 +23215,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B74:202 PASS/4 NOT_RUN/11 BLOCKED. Native Host restoration and loaded Inbox verified on reviewed F64 composition; offline fault/retry and F64 actual deletion receipt still pending. Real three-business-mail transport verified; inbox/webhook not verified. Clock remains02:31:30Z; blocked advance not retried."
+  "currentExecutionSlice": "B75:202 PASS/4 NOT_RUN/11 BLOCKED. Actual three-message Inbox sample verified; missing DMARC policy/receiver FAIL recorded QA-F65 OPEN. Native normal H/Inbox preparation passed; J008 actual offline/explicit retry still pending. Clock02:31:30Z unchanged; prior advance not retried."
 }

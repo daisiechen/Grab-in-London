@@ -1,0 +1,47 @@
+{
+  "observations": [
+    {
+      "id": "B75-O001",
+      "status": "passed",
+      "testedCommit": "9101004d92cce4fdbc833232ea8d6841d06bdd90",
+      "executedBy": "Codex QA independent actual Gmail UI",
+      "title": "Three bounded business notifications reached the approved development Inbox, one each",
+      "steps": [
+        "Approved recipient was compared privately with the existing browser mailbox; it matched. Connected Gmail MCP account did not match and was not used as delivery evidence.",
+        "One exact subject/date search across all folders returned exactly three conversations, each bearing Inbox label: application approved, application declined and meal cancelled, at01:46 BST23October. Opening each showed one notification and the expected non-sensitive template text.",
+        "Approved and cancelled notifications link the same synthetic meal; declined links its separate synthetic meal. Links use the configured local development origin, not a production deployment. No link followed, extra send or resending occurred.",
+        "This proves the observed three-message delivery/no-duplicate sample only. It does not prove signed webhook processing, deleted-account templates, full channel/recipient matrix, or production links. G-MAIL remains BLOCKED."
+      ],
+      "artifacts": [],
+      "rawEvidence": {
+        "privateOriginalViewsRetained": true,
+        "originalViewSha256": {
+          "approved": "838fae08ed5c16527ff5216c015c9343c74658c94eeab215ef0ece04e6309577",
+          "declined": "59c1fc66ec830bee0d16cd9e2c593a00b73607edbbea03536344ad557379bd78",
+          "cancelled": "2992b09911022f519cfe8fda13946e2bd2b07a1d5c00ad6409aad49f7325b94e"
+        },
+        "searchViewSha256": "7ba72142d3111f257de64b619d2cc00ab7ca2d0f276d2e341f492af5f591a87d",
+        "recipientAndMessageIdentifiersNotPublished": true
+      }
+    },
+    {
+      "id": "B75-O002",
+      "status": "failed",
+      "testedCommit": "9101004d92cce4fdbc833232ea8d6841d06bdd90",
+      "executedBy": "Codex QA; development environment owner independently checked public DNS",
+      "title": "QA-F65 missing DMARC policy: receiver UI reports FAIL despite passing SPF and DKIM",
+      "steps": [
+        "All three actual original-message views show SPF PASS and DKIM PASS for mail.fancyabite.uk, but DMARC FAIL; Authentication-Results contains no dmarc result. Preserve this exact observation, not an inferred alignment failure.",
+        "Public domains only: visible From domain mail.fancyabite.uk; passing DKIM d=mail.fancyabite.uk plus amazonses.com; smtp.mailfrom domain rsend.mail.fancyabite.uk. Passing DKIM exactly aligns with From.",
+        "Environment owner queried authoritative DNS: both organizational and sending-subdomain DMARC names returned authoritative NXDOMAIN. Concrete gap is unpublished DMARC policy and no DMARC PASS evidence.",
+        "Minimal proposed change is sending-subdomain-only monitoring policy; not executed. No new report recipient, quarantine/reject/root-domain policy or fourth email was approved or executed. Exact scoped approval and a fresh bounded verification send are needed before closure."
+      ],
+      "artifacts": [],
+      "rawEvidence": {
+        "dnsReviewSha256": "ea3ff79d2f644eb68bc1f45f892d22e979ec5cbd82162a629ae2370dd0f24441",
+        "privateOriginalViewsRetained": true
+      },
+      "classification": "confirmed environment configuration gap; no demonstrated DKIM alignment failure"
+    }
+  ]
+}
