@@ -1,3 +1,4 @@
+import {ApplicationDraftStore} from './features/meals/application-drafts.ts';
 import {secureDeletionReceiptStore,type DeletionReceiptStore} from './features/settings/deletion-receipt-store.ts';
 import {secureAIConversationStore,type AIConversationStore} from './features/assistant/session-store.ts';
 import {secureGuestCredentialStore,type GuestCredentialStore} from './features/assistant/guest-store.ts';
@@ -24,8 +25,10 @@ export interface Services {
   /** Authenticated client (refresh + single replay on 401). Use for every feature call. */
   api: ApiClient;
   cache: QueryCache;
-  /** In-memory drafts (create meal, application messages); never persisted, cleared on session end. */
+  /** Other form drafts, never persisted and cleared on every session end. */
   drafts: QueryCache;
+  /** Expired application text is quarantined in RAM until the same account returns. */
+  applicationDrafts: ApplicationDraftStore;
   /** Clearers registered by features (drafts, pollers); run on every session end. */
   onSessionEnd: Set<() => void>;
   openAuthSession: (url: string, redirectUrl: string) => Promise<WebBrowserAuthSessionResult>;
@@ -55,6 +58,7 @@ export interface ServiceConfig {
 export function createServices(config: ServiceConfig): Services {
   const cache = new QueryCache();
   const drafts = new QueryCache();
+  const applicationDrafts = new ApplicationDraftStore();
   const onSessionEnd = new Set<() => void>();
   const newId = config.newId ?? newIntentKey;
   const now = config.now ?? Date.now;
@@ -88,6 +92,8 @@ export function createServices(config: ServiceConfig): Services {
     ...(config.onClearError ? { onClearError: config.onClearError } : {}),
   });
   holder.session = session;
+  applicationDrafts.sync(session.getState(),session.generation);
+  session.subscribe(state=>applicationDrafts.sync(state,session.generation));
   const analytics=new AnalyticsManager({baseUrl:config.baseUrl,fetch:config.fetch??fetch,newId,now,identity:()=>{
     const current=session.getState();const signedIn=current.status==='signedIn';
     return {key:`${session.generation}:${current.status}:${signedIn?current.session.user.id:'guest'}`,ready:signedIn||current.status==='signedOut',authenticated:signedIn,accessToken:session.accessToken()};
@@ -110,6 +116,7 @@ export function createServices(config: ServiceConfig): Services {
     api: sessionClient(raw, session),
     cache,
     drafts,
+    applicationDrafts,
     onSessionEnd,
     openAuthSession: config.openAuthSession,
     createChallenge: config.createChallenge ?? (() => createAppChallenge()),

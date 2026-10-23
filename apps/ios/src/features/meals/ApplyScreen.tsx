@@ -1,4 +1,5 @@
 import {useAssistantContext,useAssistantEditor} from '../assistant/hooks.ts';
+import type {ApplicationDraft} from './application-drafts.ts';
 import { SessionScope } from '../auth/SessionScope.tsx';
 import { useEffect, useRef, useState } from 'react';
 import { Keyboard } from 'react-native';
@@ -17,7 +18,6 @@ import { seatsLabel, whenLabel } from './format.ts';
 import { mealActionMessage } from './messages.ts';
 
 type Detail = ResponseOf<'getMeal'>['data'];
-interface ApplyDraft { message: string; key: string; keyFor: string }
 
 export const applyDraftKey = (mealId: string) => `apply:${mealId}`;
 
@@ -29,11 +29,16 @@ export function ApplyScreen() {
 function ApplyScreenContent() {
   const { mealId } = useLocalSearchParams<{ mealId: string }>();
   const id = String(mealId);
-  const { api, drafts, newId, cache } = useServices();
+  const { api, applicationDrafts, newId, cache, session } = useServices();
   const state = useSessionState();
   const router = useRouter();
+  const userId=state.status==='signedIn'?state.session.user.id:null;
+  const generation=session.generation;
+  const mounted=useRef(true);
+  useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;};},[]);
+  const current=()=>{const latest=session.getState();return mounted.current&&session.generation===generation&&latest.status==='signedIn'&&latest.session.user.id===userId;};
   const q = useQuery<Detail>(mealKey(id), async () => (await api.call('getMeal', { params: { mealId: id } })).data);
-  const [draft, setDraft] = useState<ApplyDraft>(() => drafts.get<ApplyDraft>(applyDraftKey(id)) ?? { message: '', key: newId(), keyFor: '' });
+  const [draft, setDraft] = useState<ApplicationDraft>(() => applicationDrafts.get(id,userId,generation) ?? { message: '', key: newId(), keyFor: '' });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const editorVersion=useRef(0);
@@ -41,8 +46,8 @@ function ApplyScreenContent() {
   useAssistantEditor({key:`apply:${id}`,kind:'APPLICATION',targetId:id,current:()=>({text:draft.message,version:String(editorVersion.current)}),apply:d=>{if(d.text!==null){editorVersion.current++;setDraft({message:d.text,key:newId(),keyFor:''});}}});
 
   useEffect(() => {
-    drafts.set(applyDraftKey(id), draft);
-  }, [drafts, draft, id]);
+    applicationDrafts.set(id,draft,userId,generation);
+  }, [applicationDrafts, draft, id, userId, generation]);
 
   if (state.status !== 'signedIn') {
     return (
@@ -71,16 +76,18 @@ function ApplyScreenContent() {
     setError(null);
     try {
       await api.call('applyMeal', { params: { mealId: id }, body: { message: text }, idempotencyKey: key });
-      drafts.delete(applyDraftKey(id));
+      if(!current())return;
+      applicationDrafts.delete(id,userId,generation);
       cache.delete(mealKey(id));
       router.replace(`/meals/${id}`);
     } catch (e) {
+      if(!current())return;
       if (e instanceof ApiError && e.code === 'PROFILE_INCOMPLETE') {
         rememberReturnTo(`/meals/${id}/apply`);
         router.push('/profile-setup');
       } else setError(e instanceof ApiError ? mealActionMessage(e) : 'Something went wrong. Please try again.');
     } finally {
-      setBusy(false);
+      if(current())setBusy(false);
     }
   };
 
