@@ -140,7 +140,8 @@
     "browserObservationsB97": "evidence/2026-10-21/browser-b97.json",
     "browserObservationsB98": "evidence/2026-10-21/browser-b98.json",
     "browserObservationsB99": "evidence/2026-10-21/browser-b99.json",
-    "browserObservationsB100": "evidence/2026-10-21/browser-b100.json"
+    "browserObservationsB100": "evidence/2026-10-21/browser-b100.json",
+    "browserObservationsB101": "evidence/2026-10-21/browser-b101.json"
   },
   "cases": [
     {
@@ -23251,7 +23252,8 @@
     "QA-F63": "OPEN_CONFIRMED",
     "QA-F64": "CLOSED_TARGETED_QA",
     "QA-F65": "CLOSED_TARGETED_QA",
-    "QA-F66": "OPEN_CONFIRMED"
+    "QA-F66": "FIX_VERIFIED_DB_RUNTIME_PENDING",
+    "QA-F67": "OPEN_CONFIRMED_COMPONENT"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -23274,5 +23276,5 @@
     "Complete J011 with reviewed support CLI/exact168h boundary tooling; perform J009 last, then actual Admin410/cache/old-export invalidation. No fragment-to-whole promotion.",
     "Close nine real provider/device/policy/deployment gates with exact evidence; AI050/052 share MODEL/DATA dependencies. Consolidate specific human actions after developer preparation."
   ],
-  "currentExecutionSlice": "B100: direct62057adaptiveQAclock9independentPASS/source1783exact,normalbuildpendingactual. QA-F66newconfirmedP1releaseblock: independentfrozenOWN5parallelSEARCH3FAILED/2SUCCEEDED/3PG40P01,exit1. OriginalQA217casecounts202/4/11unchanged,AI2calls/15left/UNKNOWN1untouched;nooverallreleasePASS."
+  "currentExecutionSlice": "B101: F66sourcefix5DB+originalfiveuserharnessindependentPASS,notcurrentruntimeclosed. DirectadaptiveAPI62057QApackageverified/coverinstalled originalD92;240notrun. NewQA-F67componentconfirmed: sameusernormalhandoffafterrealSessionManagerexpiryreturnsblankunsentintro,1FAIL;P1ownerfixpending/device401stillpending. Original217counts202/4/11unchanged;AI2calls/15left/UNKNOWN1untouched."
 }

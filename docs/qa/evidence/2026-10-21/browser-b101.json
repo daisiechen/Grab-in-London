@@ -1,0 +1,47 @@
+{
+  "observations": [
+    {
+      "id": "B101-O001",
+      "status": "passed",
+      "testedCommit": "53b99b2a9fd7ba4c5337567648d84d6bc1f42958",
+      "qaComposition": "BudgetLedger d91517ef lock overlay on independent copiedAPI; currentruntime unchanged",
+      "title": "F66 repaired DB regression and original five-user API harness independently pass",
+      "steps": [
+        "Workingtreebudgethashd91517efe511f5fd726f351a43389683edbe326c29a96b0ed6cab81e2c793604 before/after independent5DBtests exact. Actual2PGbackend postINSERTbarrier cases:validreserves/moneycap/callcap; cancellation/UNKNOWN/reconciliation/disabled dispatch semantics5PASS. Originalred retained.",
+        "Independentpatchedharnessonlybudgetoverlay onsource53b99 copiedAPI:7controllerrequests8fakecalls/peakConcurrency5/UNKNOWN1/noAutomaticRetry/noBusinessWrites/external0. Process exit0; uniqueOWN STOPconfirmed/stoppedtrue/dataRetainedtrue. No originalQA DB.",
+        "Sourcefix verified atthese layers; fixcommit/CI andcurrentrunning sourceB integration notprovedhere, F66notcalledruntimeclosed. No trueMODEL/DATA/COSTgatePASS.",
+        "Developerfixcommit2ac8f7738eca4fec015627f765c41abcf2466ce9 pushed/fetched; onlyBudgetLedgerandcolocatedDBtest. CurrentretainedsourceB89dcunchanged; runtimeacceptancepending."
+      ],
+      "artifacts": [],
+      "fixCommit": "2ac8f7738eca4fec015627f765c41abcf2466ce9"
+    },
+    {
+      "id": "B101-O002",
+      "status": "passed",
+      "testedCommit": "3ee69fec6b79552404217aa5415d4f041853a06f",
+      "qaComposition": "QA_COMPOSITION_3ee69fe_9101004_SEVEN_PLUS_OBSERVED_CLOCK_62057",
+      "title": "Normal directAPI adaptiveQApackage independently pinned and installed originalD92",
+      "steps": [
+        "New1783sourceverification andnormalbuild/codesign deepstrict0; binary1387dce5a0e0388b0596eeac53cffdfbe9eb18d2f15d891896c77905c3c9f342/Hermes8900e9f44e5345529683abce56301924edd38d49b2f3156db7bbee5ed12a9cdb/API62057 pinsindependentlychecked.",
+        "QA normalterminated originalApp andcoverinstalled exit0; installedbinary/Hermeshashmatchreviewedpackage. No uninstall/token transfer/clockchange. OrdinaryUI no perstep proxyrequired; familyfixtureseparate.",
+        "240continuousdraft→exactrevoke→foregroundexpiredUIrunnerbuilt,butnotexecutedwaitingtargetadapter. Sameuserreauth exactdraftretention stillrequiresactualverification."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B101-O003",
+      "status": "failed",
+      "testedCommit": "3ee69fec6b79552404217aa5415d4f041853a06f",
+      "qaComposition": "frozen native baseline3ee+sevenF64files; no productionedits",
+      "title": "QA-F67 same-user native application draft lost across expiry and normal reauthentication",
+      "steps": [
+        "IndependentisolatedJest imports frozenrealApplyScreen/Services/SessionManager/client/normalhandoff testhelper. FakeHTTPonly/RAMstores, no actualdevice/QA API/clock/DB/model.",
+        "Normalhandoff signin→render exactmealApply→type Original unsent native application for the same user.→realSessionManager.expire→visible Sign in to send a request. Your message will be kept.→normalhandoff sameuser signin.",
+        "Expectedoriginaltext, receivedblankintroduction. Test1FAIL0PASS/exit1; setup/render/handoffcompleted, failureisexactdisplayvalueassertion. Originalcode/test/logpreserved.",
+        "QA-F67OPEN_CONFIRMED_COMPONENT/P1. Needsminimalownerfix and sameuserexpiryretain/differentuserdiscard/explicitlogoutdiscard/noautobusinesssendregression, thennativeactual401verification. NotdeviceendtoendPASSorFAILyet."
+      ],
+      "artifacts": [],
+      "privateLogSha256": "d602814bc838242bd58a21dc1700e22e07fdd78d7d552df3f5bdd1fa8b61ebfa"
+    }
+  ]
+}

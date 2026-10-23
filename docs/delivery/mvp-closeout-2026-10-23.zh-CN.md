@@ -144,3 +144,11 @@ F64以B90定向关闭为准，JSON缺陷摘要OPEN滞后；不再要求重复修
 - QA独立新OWN库复现5用户并发SEARCH，3FAILED/2成功、3次40P01死锁、退出1；登记QA-F66 OPEN_CONFIRMED/P1，由开发预算唯一负责人修复，不需新资源。[B100](../qa/evidence/2026-10-21/browser-b100.json)。
 - 关闭须同场景修前稳定红/修后绿，保并发、幂等/预算/UNKNOWN守卫，不用串行/重试/升额掩盖。原217条计数不变，但新增独立确认发布缺陷，不能仅看202/217判断完成率。
 - direct62057自适应QA组合9测试及1783源码独审通过，正常签build-only待交实际包；不改服务器/设备时钟或安全TTL。
+
+### B101 F66源码复验与新增原生保稿缺陷
+
+- F66候选QA独立5真实DB回归及原5用户完整harness均绿；7请求/8fakecalls/峰5/UNKNOWN保留/noRetry/业务0/外网0，当前运行sourceB尚未接入，不能冒runtime已修。
+- directadaptive62057正常签包独审/原D92覆盖安装并核installedhash通过，普通UI不再依赖临时代理。连续240待精确撤权工具，不以旧截图假定RAM持续。
+- QA-F67独立原生组件复现同人会话过期/正常再登录后正文空白，1FAIL/exit1；页面承诺保稿与实际矛盾，P1原生owner最小修复。异人和主动退出应清除私密稿，修后仍需设备实际401验收。[B101](../qa/evidence/2026-10-21/browser-b101.json)。
+
+- F66正式两文件修复`2ac8f7738eca4fec015627f765c41abcf2466ce9`已同步；源码层FIX_VERIFIED_DB_RUNTIME_PENDING，运行sourceB旧版风险仍列明。

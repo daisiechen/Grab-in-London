@@ -24,7 +24,7 @@ Current counts202 PASS/4 NOT_RUN/11 BLOCKED. Remaining whole local journeys J005
 
 ## 实际运行
 
-B100: direct62057adaptiveQAclock9independentPASS/source1783exact,normalbuildpendingactual. QA-F66newconfirmedP1releaseblock: independentfrozenOWN5parallelSEARCH3FAILED/2SUCCEEDED/3PG40P01,exit1. OriginalQA217casecounts202/4/11unchanged,AI2calls/15left/UNKNOWN1untouched;nooverallreleasePASS.
+B101: F66sourcefix5DB+originalfiveuserharnessindependentPASS,notcurrentruntimeclosed. DirectadaptiveAPI62057QApackageverified/coverinstalled originalD92;240notrun. NewQA-F67componentconfirmed: sameusernormalhandoffafterrealSessionManagerexpiryreturnsblankunsentintro,1FAIL;P1ownerfixpending/device401stillpending. Original217counts202/4/11unchanged;AI2calls/15left/UNKNOWN1untouched.
 
 | ID | 结果 | 范围 |
 |---|---|---|
