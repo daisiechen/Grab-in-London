@@ -9,3 +9,5 @@ export { buildOpenApi } from './openapi.ts';
 export * from './return-target.ts';
 export * from './declarations.ts';
 export * as assistantDto from './assistant-dto.ts';
+
+export * from './messaging-dto.ts';

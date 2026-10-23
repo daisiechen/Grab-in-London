@@ -19,7 +19,9 @@ export type WriteProtocol = 'idempotencyKey' | 'clientRequestId' | 'resourceKey'
 export interface OperationDef {
   operationId: string;
   method: HttpMethod;
-  /** OpenAPI path template under /v1, e.g. `/meals/{mealId}`. */
+  /** Explicit version only for additive protocols; existing operations default to v1. */
+  version?: 'v2';
+  /** OpenAPI path template without version, e.g. `/meals/{mealId}`. */
   path: string;
   summary: string;
   auth: AuthMode;
@@ -61,3 +63,6 @@ export function errorsFor(def: OperationDef): ErrorCode[] {
   }
   return [...codes].sort();
 }
+
+/** One path resolver shared by HTTP registration, OpenAPI and generated SDK metadata. */
+export const operationPath = (def: OperationDef): string => `/${def.version ?? 'v1'}${def.path}`;
