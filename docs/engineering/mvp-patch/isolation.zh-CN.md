@@ -67,3 +67,9 @@ Codex新建独立设备集 `/private/tmp/fancy-p11-client-01a162f6/simulator-dev
 固定 P04 ASCII 快照 0dc3bcab57f3d15cea5909a8b27cb00a9056a0ea 的 xcodebuild 已退出 0，日志明确 BUILD SUCCEEDED。仍未安装 App，仅证明专属工具链和 Debug simulator 工程可以构建；当前业务修复及后续补丁需以新的固定快照重新构建，不能沿用此结果称整版 PASS。
 
 分享联调时受控重启：旧 API/worker（2413485）经 PID/CWD 核证后退出0，旧PG保留。新 API/worker manifest 固定854029b，专属随机PG/DB重新创建，seed守卫通过并产生两个合成账号与一场完成餐局。Web单独重启同64174端口、显式 VITE_PUBLIC_MEAL_ORIGIN=https://p11-share.example.invalid（保留域名，不部署/不外呼），实际详情菜单读取新mealId。时间投影已由后台固定修复交回，未触及封存服务、默认设备集或生产DNS。
+
+## 2026-10-23：P11/P12 固定快照新原生构建
+
+从4203d41b7e8e3ec53487c28d51813fb136e08ec9归档到新的native-source-p12 ASCII目录，离线独立安装依赖；prebuild无package/lock变更，生成uk.fancyabite.patch.p11、fancyp11和仅applinks:p11-share.example.invalid的entitlement。专属CocoaPods安装包含ExpoClipboard58.0.3；arm64 Debug xcodebuild用独立DerivedData-p12和module cache、CODE_SIGNING_ALLOWED=NO退出0且BUILD SUCCEEDED。
+
+显式--set补丁设备集+UDID核证后，仅在Fancy P1.1 Client QA安装该bundle；get_app_container落该独立设备data目录，launch返回进程PID。私有native manifest记录commit/二进制hash/安装与启动，nativeAcceptance仍NOT_RUN。Device Hub可访问列表当时仅有默认旧设备，未对其执行任何设备操作；不把CLI启动等同原生UI验收。Metro64178固定使用本快照，EXPO状态/缓存仍专属。首次--localhost监听::1但清单默认发127.0.0.1，检查本地Expo CLI源码后显式REACT_NATIVE_PACKAGER_HOSTNAME=localhost使清单与监听一致，没有暴露LAN；真实bundle加载/分享sheet/剪贴板内容/冷启动UX尚未完成。

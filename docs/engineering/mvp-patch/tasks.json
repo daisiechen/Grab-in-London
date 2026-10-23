@@ -195,8 +195,8 @@
         "PATCH-006"
       ],
       "title": "分类回执与统计关联",
-      "owner": "backend session / backend Claude Code",
-      "status": "EXTERNAL_OWNER",
+      "owner": "开发-后台P1.1 (Codex), dedicated admin branch",
+      "status": "PASS_ADMIN_LOCAL_SCOPE",
       "acceptance": "acceptedRevision与readySnapshot明确关联；unknown不重复classify; Bind targetUserId + original intent/requestId + per-user revision; never compare revisions across users.",
       "verification": "API/DB分类并发、统计失败重试",
       "files": [
@@ -204,7 +204,8 @@
         "apps/api/src/admin/**",
         "apps/worker/src/**"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "docs/reviews/admin-p11-development-acceptance-2026-10-23.zh-CN.md; backend fixed aa8a4c650f71b9e7c22dbc305e982102aec801ed, report integrated 374e703; no whole-P1.1 or release approval"
     },
     {
       "id": "P10",
@@ -215,15 +216,16 @@
         "PATCH-006"
       ],
       "title": "后台查询与导出",
-      "owner": "backend session / backend Claude Code",
-      "status": "EXTERNAL_OWNER",
+      "owner": "开发-后台P1.1 (Codex), dedicated admin branch",
+      "status": "PASS_ADMIN_LOCAL_SCOPE",
       "acceptance": "Ready同snapshot/filter；410清旧cache/ticket；coverage本人优先",
       "verification": "手算fixtures/API导出失效/四档浏览器",
       "files": [
         "apps/admin/src/**",
         "apps/api/src/admin/**"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "docs/reviews/admin-p11-development-acceptance-2026-10-23.zh-CN.md; backend fixed aa8a4c650f71b9e7c22dbc305e982102aec801ed, report integrated 374e703; no whole-P1.1 or release approval"
     },
     {
       "id": "P11",
@@ -275,8 +277,8 @@
         "PATCH-008"
       ],
       "title": "提及协议与存储",
-      "owner": "Codex client/mobile Web implementation and scoped acceptance",
-      "status": "NOT_STARTED",
+      "owner": "开发-后台P1.1 (Codex), server API/storage/worker; user authorized 2026-10-23",
+      "status": "EXTERNAL_OWNER",
       "acceptance": "v2范围坐标/旧v1兼容/唯一约束/迁移，不回填历史提醒",
       "verification": "contract生成与新空库/升级库兼容测试",
       "files": [
@@ -284,7 +286,8 @@
         "packages/db/**",
         "packages/client/**"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "Human explicitly approved existing backend chat to continue API/storage/worker; contracts/migration/generated writer handoff pending acknowledgement; client UI stays here"
     },
     {
       "id": "P14",
@@ -295,15 +298,16 @@
         "PATCH-008"
       ],
       "title": "发送事务与接收人",
-      "owner": "Codex client/mobile Web implementation and scoped acceptance",
-      "status": "NOT_STARTED",
+      "owner": "开发-后台P1.1 (Codex), server API/storage/worker; user authorized 2026-10-23",
+      "status": "EXTERNAL_OWNER",
       "acceptance": "Everyone服务端校验；失效成员降级；同clientMessageId不重复; Capture recipient membership authorization epoch in the send transaction.",
       "verification": "并发退群/host变更/重复payload API测试",
       "files": [
         "apps/api/src/**",
         "packages/db/**"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "Human explicitly approved existing backend chat to continue API/storage/worker; contracts/migration/generated writer handoff pending acknowledgement; client UI stays here"
     },
     {
       "id": "P15",
@@ -315,8 +319,8 @@
         "PATCH-008"
       ],
       "title": "跨端静音与订阅",
-      "owner": "Codex client/mobile Web implementation and scoped acceptance",
-      "status": "NOT_STARTED",
+      "owner": "开发-后台P1.1 (Codex), server API/storage/worker; user authorized 2026-10-23",
+      "status": "EXTERNAL_OWNER",
       "acceptance": "IfMatch409刷新；账号/安装换绑撤销；token不日志",
       "verification": "权限/版本/退出/删除/endpoint SSRF测试",
       "files": [
@@ -324,7 +328,8 @@
         "packages/contracts/**",
         "packages/db/**"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "Human explicitly approved existing backend chat to continue API/storage/worker; contracts/migration/generated writer handoff pending acknowledgement; client UI stays here"
     },
     {
       "id": "P16",
@@ -337,15 +342,16 @@
         "PATCH-008"
       ],
       "title": "提醒outbox及适配",
-      "owner": "Codex client/mobile Web implementation and scoped acceptance",
-      "status": "NOT_STARTED",
+      "owner": "开发-后台P1.1 (Codex), server API/storage/worker; user authorized 2026-10-23",
+      "status": "EXTERNAL_OWNER",
       "acceptance": "投递前权限/mute/read重验；1h TTL；UNKNOWN不盲重试; Permanently revoke old-epoch queued deliveries on leave/revocation/dissolve; rejoin cannot revive them.",
       "verification": "fake APNs/WebPush暂停队列/重放/410/429测试; pause queue -> leave -> rejoin -> resume: zero old push, no gap events, valid new-epoch push",
       "files": [
         "apps/worker/src/**",
         "packages/db/**"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "Human explicitly approved existing backend chat to continue API/storage/worker; contracts/migration/generated writer handoff pending acknowledgement; client UI stays here"
     },
     {
       "id": "P17",
@@ -420,5 +426,5 @@
       "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
     }
   ],
-  "executionMode": "Codex implements client/mobile Web after explicit user takeover authorization; admin separately owned; acceptance evidence remains scoped by snapshot and test"
+  "executionMode": "Codex implements client/mobile Web; existing backend chat owns PATCH006 and user-approved P13-P16 server API/storage/worker; shared contract and generated files require one writer; acceptance scoped by snapshot and test"
 }
