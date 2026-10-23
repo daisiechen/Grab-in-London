@@ -1,0 +1,13 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>PATCH-006 synthetic staff sign-in</title><main><h1>Synthetic admin test environment</h1><p>Local PATCH-006 fixture only. No real email, identity or MFA provider is used.</p><button id="login">Sign in as synthetic data admin</button><p id="status" role="status"></p></main><script type="module">
+const status=document.querySelector('#status'),button=document.querySelector('#login');
+button.addEventListener('click',async()=>{
+ button.disabled=true;status.textContent='Signing in to the isolated synthetic environment…';
+ try{
+  const post=async(path,body)=>{const r=await fetch('/v1/auth/email/'+path,{method:'POST',credentials:'same-origin',headers:{'content-type':'application/json'},body:JSON.stringify({...body,clientRequestId:crypto.randomUUID()})});if(!r.ok)throw new Error('Fixture sign-in failed ('+r.status+').');return r.json();};
+  const start=await post('start',{email:'admin-patch@example.invalid',client:'WEB'});
+  const result=await post('verify',{challengeId:start.data.challengeId,code:'000000'});
+  if(result.data.outcome!=='AUTHENTICATED')throw new Error('Fixture sign-in incomplete.');
+  location.assign('/?lang=en#quality');
+ }catch(error){status.textContent=error.message;button.disabled=false;}
+});
+</script></html>
