@@ -11,7 +11,10 @@ type BodyPart<D> = D extends { body: infer B } ? { body: StaticOf<B> } : { body?
 type KeyPart<D> = D extends { write: 'idempotencyKey' } ? { idempotencyKey: string } : D extends { write: 'resourceKey' } ? { idempotencyKey?: string } : { idempotencyKey?: never };
 type IfMatchPart<D> = D extends { ifMatch: true } ? { ifMatch: string } : { ifMatch?: never };
 
-export type RequestOf<I extends OperationId> = ParamsPart<Def<I>> & QueryPart<Def<I>> & BodyPart<Def<I>> & KeyPart<Def<I>> & IfMatchPart<Def<I>>;
+type RequestFor<D> = D extends unknown ? ParamsPart<D> & QueryPart<D> & BodyPart<D> & KeyPart<D> & IfMatchPart<D> : never;
+/** Distribute once per operation, keeping its fields correlated instead of cross-multiplying unions. */
+type RequestMap = { [I in OperationId]: RequestFor<Def<I>> };
+export type RequestOf<I extends OperationId> = RequestMap[I];
 
 export interface ResponseMeta {
   requestId: string;
