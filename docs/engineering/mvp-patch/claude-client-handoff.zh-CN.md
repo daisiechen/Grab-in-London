@@ -30,3 +30,9 @@
 - Web主机`p11-client.localhost:64174`，新IAB上下文，无旧QA cookie导入。仅本机回环；不要改生产DNS/TLS。
 - 原生用FANCY_APP_VARIANT=patch-p11、EXPO_PUBLIC_API_BASE_URL=http://127.0.0.1:64176，bundle uk.fancyabite.patch.p11、scheme fancyp11。DerivedData/Metro/TMP输出均设专属目录，Metro64178。先build-only，不安装/启动现行设备、不对旧模拟器执行命令；如需新独立模拟器，由Codex核其身份后安排。
 - 不读取/复制真实密钥，不真实外呼，不自动充值，不删除真实账号，不部署，不推进旧测试钟。只停止自己在manifest登记且PID/CWD吻合的进程，不能按端口/进程名批量kill。
+
+## Codex验收 P06-R02：组件必须真正清理账号内存
+
+独立红例 `apps/web/src/test/p11-feedback-clear.unit.test.tsx`（Codex拥有，Claude只读运行勿stage）：reviewPerson在途时执行resetFeedbackMemory并卸载组件，放行响应后selectReconnect仍写1次，预期0。共享runner.clear的代际保护尚未接到组件：双端reset只将memory=null，替换account也未清旧runner；真实session-end无reset调用。请修双端账号切换/退出/401/删除的生命周期，真正清旧runner、draft、listener；同账号重登录不能恢复前会话草稿，迟到finish或内部retry不能继续后项或污染新scope。不要仅修测试helper。保持离开页面再返回同一会话恢复草稿的既定行为。修复、测试及提交由Claude执行；Codex组件红例不得混stage。
+
+当前Codex Git待提交文件：上述组件测试、infra/patch-client/{feedback-late.unit.test.ts,receipt-recovery.api.test.ts}、isolation.zh-CN.md末尾记录，以及本交接补充。请在后台源码/生成/worker集成安全提交后暂停Git提交约一分钟并明确交还窗口给Codex，随后继续其余客户端P04/P05/P07/P08/P11–P17，不以P06局部完成替代全计划。
