@@ -134,7 +134,7 @@ export const operationsAdmin = [
   }),
   op({
     operationId: 'classifyUser', method: 'PUT', path: '/admin/classifications/{userId}', summary: 'data_admin sets regular/test/staff',
-    auth: 'staff', roles: ['data_admin'], write: 'idempotencyKey', ifMatch: true, params: Obj({ userId: Uuid }),
+    auth: 'staff', roles: ['data_admin'], write: 'idempotencyKey', receipt: true, ifMatch: true, params: Obj({ userId: Uuid }),
     body: Obj({ classification: Enum(CLASSIFICATIONS), reason: Text(5, 500) }),
     success: { status: 200, data: ClassificationAccepted }, errors: ['NOT_FOUND'],
   }),
@@ -142,6 +142,12 @@ export const operationsAdmin = [
     operationId: 'getStatisticsRefresh', method: 'GET', path: '/admin/statistics-refresh/{refreshId}',
     summary: 'Statistics refresh of one accepted classification intent (original actor only)',
     auth: 'staff', roles: ['data_admin'], write: 'read', ifMatch: false, params: Obj({ refreshId: Uuid }),
+    success: { status: 200, data: StatisticsRefresh }, errors: ['NOT_FOUND'],
+  }),
+  op({
+    operationId: 'findStatisticsRefreshByIntent', method: 'GET', path: '/admin/statistics-refresh-intents/{intentKey}/{targetUserId}/{acceptedRevision}',
+    summary: 'Recover the statistics refresh of the caller\'s own classifyUser intent; target user and accepted revision must match',
+    auth: 'staff', roles: ['data_admin'], write: 'read', ifMatch: false, params: Obj({ intentKey: Uuid, targetUserId: Uuid, acceptedRevision: DecimalString }),
     success: { status: 200, data: StatisticsRefresh }, errors: ['NOT_FOUND'],
   }),
   op({
