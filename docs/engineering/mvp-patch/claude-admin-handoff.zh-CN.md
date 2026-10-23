@@ -65,3 +65,13 @@ PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests
 | A13 | 最终commit/build/运行源码一致、测试环境可复用且未接触封存环境 | SHA+manifest+进程/DB证据 |
 
 当前业务A01–A13均NOT_RUN，不以入口测试替代。最终必须分别报告开发/自测、独立验收、真实服务/发布门槛，禁止把未测改PASS。
+
+## Codex独立审查P09-R01（待修复，不阻塞其他独立工作）
+
+固定已审P03初版`2e133da48695ca9520e0cf7c1078a483ebf8775d`仅返回脱敏`resourceId`与`resourceVersion`，不返回保存响应body。后台classify响应携带服务端生成的`statisticsRefresh.refreshId`，而目前统计读取只接收refreshId。若classify响应丢失，读原意图即使SUCCEEDED，也无法从该脱敏回执取得原统计job ID；通过当前用户同值猜成功或重放classify取job违反既定Unknown约束。
+
+最小关闭条件：提供受同原actor/data_admin/MFA约束的按原intent key找回同一个统计refresh的后台读取（或等效脱敏关联），返回且验证targetUserId及acceptedRevision；不复制P03、不返回完整body、不创建新job。加入真正HTTP测试：保存响应丢失模拟→原P03回执SUCCEEDED→原intent定位refresh→Ready，分类/audit/job均仅一条；另actor、角色撤销、target错配及不存在intent保持不可误判。请求原始payload/revision与后来编辑稿隔离仍保留。
+
+0026迁移与统计模块固定提交`63b088e`/`f3b0e0b`已由Codex独立复跑：迁移/schema一致性10项与统计关联7项，共17 PASS。统计模块测试不等于上述HTTP恢复路径或worker正式接线通过。现有后台基线19文件96项API/unit/admin通过，不代替增量验收。
+
+共享补充已明确：后台Drizzle文件实际名`packages/db/src/schema/admin-statistics.ts`，`schema/index.ts`临时仅授权增加该export；0026切片交付后明确停止该index写入并归还客户端。后台不得代写生成文件。P03客户端helper的NONE旧意图重发问题由客户端修复，后台先默认NONE保未决，不自动重发。
