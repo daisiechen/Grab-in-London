@@ -24,6 +24,7 @@ export function MyProfileScreen() {
             router.push('/sign-in');
           }}
         />
+        <Primary secondary label="Check deletion status" onPress={() => router.push('/deletion-status')} />
       </Screen>
     );
   }
