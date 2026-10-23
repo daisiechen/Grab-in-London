@@ -1,0 +1,97 @@
+{
+  "observations": [
+    {
+      "testedCommit": "c0bddd9f8ee7ad0839833ea0f2f5955ce62f0ba3",
+      "id": "B83-O001",
+      "status": "passed",
+      "executedBy": "Codex QA actual Chrome normal UI and owner-bound private observer",
+      "title": "Web retains B after delayed A server responses finish",
+      "steps": [
+        "New isolated OWN observer environment; new normal random OTP/profile and four-step draft, no old account/token copying. No publish.",
+        "A photo requests1/2 admitted while fixed A delay active; normal Edit arrangement changed to B, reselected time, retained introduction and reconfirmed booking. Actual purple B and author B independently viewed before release. B3/4 server finished200.",
+        "Release A then inspect proved same A1/2 prepared and response_finished200. Subsequent actual screenshot still purple B/author B; no A image/author.",
+        "Raw finish proves server flush only, not client receipt or decoding of A. Event array is exact curated transcription of inspect, not raw transport bytes. Native late-response/image-error/mismatch and real Google remain; F63 open, no whole-case promotion."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f63-web-late-b-before-release.png",
+        "evidence/2026-10-21/f63-web-late-b-after-a-finish.png"
+      ],
+      "serverObservation": {
+        "kind": "curated exact inspect event transcription, not raw transport bytes",
+        "photoResponses": [
+          {
+            "requestId": 1,
+            "place": "A",
+            "phase": "admitted"
+          },
+          {
+            "requestId": 2,
+            "place": "A",
+            "phase": "admitted"
+          },
+          {
+            "requestId": 3,
+            "place": "B",
+            "phase": "admitted"
+          },
+          {
+            "requestId": 3,
+            "place": "B",
+            "phase": "prepared",
+            "status": 200
+          },
+          {
+            "requestId": 3,
+            "place": "B",
+            "phase": "response_finished",
+            "status": 200
+          },
+          {
+            "requestId": 4,
+            "place": "B",
+            "phase": "admitted"
+          },
+          {
+            "requestId": 4,
+            "place": "B",
+            "phase": "prepared",
+            "status": 200
+          },
+          {
+            "requestId": 4,
+            "place": "B",
+            "phase": "response_finished",
+            "status": 200
+          },
+          {
+            "requestId": 1,
+            "place": "A",
+            "phase": "prepared",
+            "status": 200
+          },
+          {
+            "requestId": 2,
+            "place": "A",
+            "phase": "prepared",
+            "status": 200
+          },
+          {
+            "requestId": 1,
+            "place": "A",
+            "phase": "response_finished",
+            "status": 200
+          },
+          {
+            "requestId": 2,
+            "place": "A",
+            "phase": "response_finished",
+            "status": 200
+          }
+        ],
+        "UI": "purple B/author B before and after late A server finish; screenshots independently viewed",
+        "published": false,
+        "scope": "synthetic Web only; native pending; finish means server flush not client receipt"
+      }
+    }
+  ]
+}
