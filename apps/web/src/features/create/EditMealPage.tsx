@@ -1,3 +1,4 @@
+import { onPrivateStateClear } from '../../lib/drafts.ts';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { ApiError, IntentTracker, IntentUnresolvedError, newIntentKey, type RequestOf } from '@fancy/client';
@@ -53,7 +54,11 @@ function MealEditor({ mealId }: { mealId: string }) {
   const tracker = useMemo(() => new IntentTracker(newIntentKey), []);
   const original = useRef<{body: EditBody; version: string} | null>(null);
   const [unknown, setUnknown] = useState(false);
-  useEffect(() => () => tracker.reset(), [tracker]);
+  useEffect(() => {
+    const reset = () => { tracker.reset(); original.current = null; };
+    const unsubscribe = onPrivateStateClear(reset);
+    return () => { unsubscribe(); reset(); };
+  }, [tracker]);
 
   useEffect(() => {
     if (!q.data) return;

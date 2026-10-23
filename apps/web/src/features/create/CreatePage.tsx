@@ -10,7 +10,7 @@ import { ArrowRightIcon, CheckIcon } from '@radix-ui/react-icons';
 import { useApi } from '../../api/ApiProvider.tsx';
 import { useSession } from '../../api/session.tsx';
 import { errorMessage } from '../../api/errors.ts';
-import { clearDraft, loadDraft, saveDraft } from '../../lib/drafts.ts';
+import { clearDraft, loadDraft, onPrivateStateClear, saveDraft } from '../../lib/drafts.ts';
 import { budgetRange, longDate, offsetLabel } from '../../lib/format.ts';
 import { signInPath } from '../../lib/returnTo.ts';
 import { FormError, Loading, Notice, Primary, PrimaryLink, TextAction } from '../../ui/components.tsx';
@@ -60,7 +60,11 @@ function CreateFlow({terms}:{terms:boolean}) {
   const [busy, setBusy] = useState(false);
   // Publishing tracks one intent; unmount (incl. session-epoch remount) fences late results.
   const tracker = useMemo(() => new IntentTracker(newIntentKey), []);
-  useEffect(() => () => tracker.reset(), [tracker]);
+  useEffect(() => {
+    const reset = () => tracker.reset();
+    const unsubscribe = onPrivateStateClear(reset);
+    return () => { unsubscribe(); reset(); };
+  }, [tracker]);
   const [unknown, setUnknown] = useState(false);
   const published = (mealId: string | null) => {
     setUnknown(false);
@@ -150,7 +154,7 @@ function CreateFlow({terms}:{terms:boolean}) {
       if (generation !== tracker.generation) return;
       published(res.data.id);
     } catch (e) {
-      if (generation !== tracker.generation) return;
+      if (generation !== tracker.generation) { if (e instanceof ApiError && e.status === 401) gate.handle(e, '/create'); return; }
       if (e instanceof IntentUnresolvedError) { setError('Your earlier publish hasn’t been confirmed yet. Check its status before publishing changes.'); return; }
       if (tracker.pending) { setUnknown(true); return; }
       if (gate.handle(e, '/create')) return;

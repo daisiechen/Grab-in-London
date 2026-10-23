@@ -138,8 +138,7 @@ describe('create meal flow (T07)', () => {
     await toReview();await userEvent.click(screen.getByRole('checkbox',{name:/checked the arrangements/}));
     await userEvent.click(screen.getByRole('button',{name:/Publish meal/}));
     await waitFor(()=>expect(stub.callsTo('createMeal')).toHaveLength(1));
-    await act(async()=>{await view.api.client.call('getMe',{}).catch(()=>{});});
-    await act(async()=>{held.resolve();});
+    await act(async()=>{await view.api.client.call('getMe',{}).catch(()=>{});held.resolve();});
     expect(stub.callsTo('createMeal')).toHaveLength(1);
   });
 

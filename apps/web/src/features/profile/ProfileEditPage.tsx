@@ -1,3 +1,4 @@
+import { onPrivateStateClear } from '../../lib/drafts.ts';
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Navigate, useNavigate, useSearchParams } from 'react-router';
 import { ApiError, IntentTracker, IntentUnresolvedError, newIntentKey, withRetry } from '@fancy/client';
@@ -105,7 +106,11 @@ export function ProfileEditPage() {
   const [unknown, setUnknown] = useState(false);
   // Unmount (including the session-epoch remount on sign-out/401/account switch) fences every
   // outstanding save/receipt continuation of this page.
-  useEffect(() => () => tracker.reset(), [tracker]);
+  useEffect(() => {
+    const reset = () => { tracker.reset(); original.current = null; };
+    const unsubscribe = onPrivateStateClear(reset);
+    return () => { unsubscribe(); reset(); };
+  }, [tracker]);
 
   useEffect(() => {
     if (me.data && !form) setForm(toForm(me.data));

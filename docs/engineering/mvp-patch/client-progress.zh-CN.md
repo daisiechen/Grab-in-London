@@ -137,3 +137,7 @@ packages/client/share.ts 只从显式公开输入构造 HTTPS canonical meal URL
 ### 封存QA探针哈希恢复
 
 全量Python首次93/94通过，失败为QA probe changed after run：P08新增实例回归先前写入了既有qa-independent-session探针，改变了封存清单哈希。已从本轮修改前的52764b2恢复该文件原始字节，并把新增回归独立放p11-transfer-instance.unit.test.tsx；未改QA执行清单/旧探针hash/202-4-11结论。恢复后完整Python94/94、原探针3+新回归1=4/4通过，ESLint通过。此为测试文件隔离纠正，不回退P08业务修复。
+
+### P04/P05 会话清理的同步重试围栏
+
+将发布重试红例加强为同一个React act内先完成401再释放退避，复现仅靠卸载清理仍多发一次（2次，应1）。创建、编辑餐局和资料编辑现订阅onPrivateStateClear，在会话失效当刻同步reset tracker并清除旧请求快照；卸载同时解除监听。创建页仍保留原有效401的登录gate回流。create/edit、profile、迟到profile和申请/过期草稿合计43/43通过，Web类型及四个修改文件ESLint通过。此切片未改服务端或封存QA探针，未代表P04/P05整体验收完成。
