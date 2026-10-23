@@ -3,6 +3,7 @@ import { recoveryReady } from '../recovery/replay.ts';
 import { registerProfileRoutes } from '../profiles/routes.ts';
 import { registerSurveyRoutes } from '../surveys/routes.ts';
 import { registerMealRoutes } from '../meals/routes.ts';
+import { registerMentionRoutes } from '../conversations/mentions.ts';
 import { registerConversationRoutes } from '../conversations/routes.ts';
 import { registerAdminRoutes } from '../admin/routes.ts';
 import { registerSupportRoutes } from '../support/routes.ts';
@@ -79,6 +80,7 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   registerVenueRoutes(app, deps, venues);
   registerMealRoutes(app, deps, venues);
   registerConversationRoutes(app, deps);
+  registerMentionRoutes(app,deps);
   registerPostMealRoutes(app, deps);
   registerConnectionRoutes(app, deps);
   registerDeletionRoutes(app, deps);
