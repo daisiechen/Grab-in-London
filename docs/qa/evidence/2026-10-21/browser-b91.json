@@ -1,0 +1,20 @@
+{
+  "observations": [
+    {
+      "id": "B91-O001",
+      "status": "passed",
+      "classification": "approved_dns_publication_subgate_only",
+      "testedCommit": "2e9ecc16439384c92712b6489b7cdda671a9f32e",
+      "executedBy": "successor QA actual Cloudflare DNS UI and independent DNS queries",
+      "title": "Approved DMARC subdomain TXT published; receiver verdict still pending",
+      "steps": [
+        "User explicitly approved only TXT _dmarc.mail.fancyabite.uk = v=DMARC1; p=none; and at most one NEW business verification email to the previously approved development mailbox.",
+        "Actual Cloudflare DNS UI showed3 existing records before action. Added one TXT with exact name/value and automatic TTL; saved once, then observed4 records including exact new TXT. Existing two CNAME and DKIM rows remained. No root-domain, rua, quarantine or reject change.",
+        "Both authoritative servers audrey.ns.cloudflare.com and kayden.ns.cloudflare.com returned NOERROR, AA, ANSWER1, TTL300 and exact TXT. Google8.8.8.8 and Cloudflare1.1.1.1 recursive resolvers also returned NOERROR/ANSWER1/exactTXT. Local system resolver negative cache was not mistaken for absence.",
+        "Private screenshot inspected and retained locally; account identity not published. No NEW email sent in this observation, one-message authorization unconsumed.",
+        "Only DNS publication substep passed. F65 and G-MAIL remain open pending actual receiver DMARC PASS and independent remaining mail assertions."
+      ],
+      "artifacts": []
+    }
+  ]
+}

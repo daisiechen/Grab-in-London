@@ -130,7 +130,8 @@
     "browserObservationsB87": "evidence/2026-10-21/browser-b87.json",
     "browserObservationsB88": "evidence/2026-10-21/browser-b88.json",
     "browserObservationsB89": "evidence/2026-10-21/browser-b89.json",
-    "browserObservationsB90": "evidence/2026-10-21/browser-b90.json"
+    "browserObservationsB90": "evidence/2026-10-21/browser-b90.json",
+    "browserObservationsB91": "evidence/2026-10-21/browser-b91.json"
   },
   "cases": [
     {
@@ -16209,7 +16210,8 @@
       "evidence": [
         "B74-O003",
         "B75-O001",
-        "B75-O002"
+        "B75-O002",
+        "B91-O001"
       ],
       "relatedAutomatedAssertions": [],
       "coveredExpectedIndexes": [],
@@ -16218,7 +16220,7 @@
         "实际收件箱可追踪去重",
         "provider accepted不能单独通过"
       ],
-      "actual": "Resend基础发送配置已非空，已有测试邮件delivered运输证据；不是缺邮件账户。生产运输/回执与删除通知168h本地实现已验证，正常业务触发的有界真实运输见B74；收件箱去重/渠道矩阵及签名webhook仍未验；webhook专用配置尚缺。开发负责接线与最小真实验证交接，用户已批准既有开发测试邮箱业务邮件；不再重复索取该范围批准。 B74: three bounded business transport attempts targeted the user-approved existing test mailbox, selected outbox SENT each1; actual inbox delivery/dedup and signed webhook remain unverified. Host excluded from HTTP, but row FAILED/attempts1. No whole gate promotion. B75: actual approved mailbox now independently observed all three notifications, one each with Inbox label and expected body/dev links. All three original views show DMARC FAIL despite SPF/DKIM PASS; authoritative DNS confirms no DMARC policy, not demonstrated alignment failure (QA-F65 OPEN). Signed webhook/full channel matrix remain unverified; gate stays BLOCKED.",
+      "actual": "Resend基础发送配置已非空，已有测试邮件delivered运输证据；不是缺邮件账户。生产运输/回执与删除通知168h本地实现已验证，正常业务触发的有界真实运输见B74；收件箱去重/渠道矩阵及签名webhook仍未验；webhook专用配置尚缺。开发负责接线与最小真实验证交接，用户已批准既有开发测试邮箱业务邮件；不再重复索取该范围批准。 B74: three bounded business transport attempts targeted the user-approved existing test mailbox, selected outbox SENT each1; actual inbox delivery/dedup and signed webhook remain unverified. Host excluded from HTTP, but row FAILED/attempts1. No whole gate promotion. B75: actual approved mailbox now independently observed all three notifications, one each with Inbox label and expected body/dev links. All three original views show DMARC FAIL despite SPF/DKIM PASS; authoritative DNS confirms no DMARC policy, not demonstrated alignment failure (QA-F65 OPEN). Signed webhook/full channel matrix remain unverified; gate stays BLOCKED. B91 supersedes the DNS-missing part only: user-approved exact DMARC subdomain TXT was saved through normal Cloudflare UI and independently resolved at both authoritative and Google/Cloudflare public recursive resolvers. No new mail sent yet; F65 receiver verdict and signed webhook/full-channel assertions remain open.",
       "history": [
         {
           "status": "BLOCKED",
