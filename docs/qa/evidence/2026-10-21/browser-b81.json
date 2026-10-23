@@ -1,0 +1,37 @@
+{
+  "observations": [
+    {
+      "testedCommit": "c0bddd9f8ee7ad0839833ea0f2f5955ce62f0ba3",
+      "clientComposition": "3ee69fe baseline + seven F64 files from9101004 + seven F63 native/five shared files fromc0bddd9;19 overlays",
+      "executedBy": "Codex QA actual XCTest on new dedicated simulator and independent screenshot inspection",
+      "id": "B81-O001",
+      "status": "passed",
+      "title": "F63 native actual fallback and same-draft restaurant replacement",
+      "steps": [
+        "218: fixed B no_photo; normal Discover list and detail showed neutral Restaurant photo unavailable, no attribution and usable meal. Both screenshots independently inspected. XCTest exit0.",
+        "219: fixed B unavailable; list/detail neutral fallback, no attribution and usable meal; both screenshots independently inspected. XCTest exit0. UI HTTP status was not captured; separate API503 evidence is not substituted.",
+        "220: normal four-step A preview followed by Edit arrangement, choose B, preserve introduction, reconfirm booking and return to Review. Actual green A/author then purple B/author screenshots independently inspected; old A image/author absent. XCTest passed131.525seconds/exit0; no publish.",
+        "Synthetic OWN API and new dedicated simulator only. Original sourceB, retained identity/device, clock, budgets and real providers untouched. Late response, image error/mismatch and real Google remain unaccepted; F63 open."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f63-native-no-photo-detail.png",
+        "evidence/2026-10-21/f63-native-no-photo-list.png",
+        "evidence/2026-10-21/f63-native-unavailable-detail.png",
+        "evidence/2026-10-21/f63-native-unavailable-list.png",
+        "evidence/2026-10-21/f63-native-switched-b.png",
+        "evidence/2026-10-21/f63-native-before-switch-a.png",
+        "evidence/2026-10-21/native218-f63-xcui.swift",
+        "evidence/2026-10-21/native219-f63-xcui.swift",
+        "evidence/2026-10-21/native220-f63-xcui.swift"
+      ],
+      "rawEvidence": {
+        "nativeLogSha256": {
+          "218": "d8cb74de9c09b129b5901dd71d3c283907281816fa3b1790abf2c26d0bdbc378",
+          "219": "6c5e1e6382f5ed94ba8aacc11bd99e943cc8d4d786715b9991bb7b0bda467cc9",
+          "220": "88cf59fc4dd8214f861508fe97a0abe00ee78c6498d1dc781f433914f389e727"
+        },
+        "privateBundlesRetained": true
+      }
+    }
+  ]
+}
