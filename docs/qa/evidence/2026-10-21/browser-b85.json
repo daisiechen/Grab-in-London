@@ -1,0 +1,64 @@
+{
+  "observations": [
+    {
+      "id": "B85-O001",
+      "status": "passed",
+      "testedCommit": "c0bddd9f8ee7ad0839833ea0f2f5955ce62f0ba3",
+      "executedBy": "Codex QA actual Chrome UI/new OWN V3 synthetic fixture",
+      "title": "Web image error and place mismatch fallback with normal photo recovery",
+      "steps": [
+        "New normal OTP/profile and four-step A draft; fixed decode_error returned exact allowlisted HTTPS README as image. Waited image absent then independently viewed neutral placeholder/no author. No mocked onError.",
+        "Decode phase actual metadata requests1/2/3 all server finished200, total3. No image transport/decoder diagnostic captured. Per-mount versus StrictMode/multiple-instance cause unproven; total must not be reduced to one retry or reported as a product defect without diagnosis.",
+        "Normal Previous to Costs then Continue remounted fixed place_mismatch; requests4/5 completed200 and actual placeholder/no author/no wrong pixels.",
+        "Restore photo then same normal step remount produced requests6/7 and independently viewed green A with author A. No publish.",
+        "Synthetic Web subpaths only. Native image-error/mismatch and real-provider evidence remain pending; F63 open, no whole-case promotion."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/f63-web-decode-error.png",
+        "evidence/2026-10-21/f63-web-place-mismatch.png",
+        "evidence/2026-10-21/f63-web-fault-restored-a.png"
+      ],
+      "serverObservation": {
+        "kind": "curated inspect transcription, not raw transport bytes",
+        "decode": {
+          "requestIds": [
+            1,
+            2,
+            3
+          ],
+          "place": "A",
+          "phases": [
+            "admitted",
+            "prepared200",
+            "response_finished200"
+          ]
+        },
+        "mismatch": {
+          "requestIds": [
+            4,
+            5
+          ],
+          "place": "A",
+          "phases": [
+            "admitted",
+            "prepared200",
+            "response_finished200"
+          ]
+        },
+        "restore": {
+          "requestIds": [
+            6,
+            7
+          ],
+          "place": "A",
+          "phases": [
+            "admitted",
+            "prepared200",
+            "response_finished200"
+          ]
+        },
+        "realGoogleCalls": 0
+      }
+    }
+  ]
+}
