@@ -1,0 +1,63 @@
+{
+  "observations": [
+    {
+      "id": "B89-O001",
+      "status": "failed",
+      "testedCommit": "9101004d92cce4fdbc833232ea8d6841d06bdd90",
+      "executedBy": "Codex QA actual new dedicated simulator XCTest",
+      "title": "Original guest has no normal deletion receipt route entry",
+      "steps": [
+        "New simulator61DE isolated from all retained and Claude devices. Original normal signed composition3ee69fe+sevenF64 overlays installed; no sign-in/deletion/oldPG/clock action.",
+        "Normal launch, decline analytics, tap Profile; Your profile/sign-in shown, Settings and Check deletion status absent. Actual XCTest exit65, one expected product assertion failure31.315s.",
+        "Actual screenshot independently viewed. Unreachable62061 causes separate analytics-update warning, not a product finding. Route existence/direct component mount do not prove guest reachability."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b89-original-guest.png",
+        "evidence/2026-10-21/b89-original-probe.swift"
+      ],
+      "rawLogSha256": "5e07ea199801ff4af20312e9c17daa78fbff742fa67e1cdb73eb32628c65e1f0"
+    },
+    {
+      "id": "B89-O002",
+      "status": "passed",
+      "testedCommit": "a21740cbab51a2c672467cef09e853937a1b255a",
+      "executedBy": "Codex QA actual same dedicated simulator XCTest",
+      "title": "Fixed normal guest navigation reaches empty receipt status screen",
+      "steps": [
+        "Independent reviewed exact1782source composition with8overlays, normal simulator signature/CDHash4946f689 and API62061. All SUM and overlay Git bytes independently verified.",
+        "Same dedicated guest-only device normal cover install, Profile shows hittable Check deletion status; actual tap opens real screen and empty reference. No deep link, OTP, receipt injection or status query.",
+        "Actual XCTest exit0 one test12.296s and independently viewed screenshot. Original red preserved. Only guest navigation subpath closed; device saved receipt, lost202 and entire J009 remain pending."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b89-fixed-status-empty.png",
+        "evidence/2026-10-21/b89-fixed-probe.swift"
+      ],
+      "rawLogSha256": "3e91e6b2a5d98f060db3468301104854c96e44d1735620e2643caead419836e5"
+    },
+    {
+      "id": "B89-O003",
+      "status": "passed",
+      "testedCommit": "9101004d92cce4fdbc833232ea8d6841d06bdd90",
+      "executedBy": "Developer new OWN production-handler/SDK selftest independently reviewed by Codex QA",
+      "title": "Bounded lost202 production handler and real SessionManager checks",
+      "steps": [
+        "testedCommit labels native F64 overlay9101004 only; API/native source composition SHA256 pins below identify the explicit archive. Original composition metadata productionExecuted=false is preparation history, actual V4 result is separately retained.",
+        "V1 reauth429 retained; V2 mixed physical ApiError modules independently verified false identity; V3 missing required getMe request produced TypeError without HTTP. All original reds/OWN STOPPED retained, no production assertions weakened.",
+        "V4 uses same native client class, normal realclock cooldown, getMe request{} with strict real401/auth predicate. Actual exit0 seven checks: normal IOSOTP/reauth, true accepted202commit/drop, real401/refresh signout, new manager anonymous receiptPENDING, no automatic resend.",
+        "OWN facts oneuserDELETING/onerequest; forwardedDeletion1/statusQuery1; AIbudgetgrant0; F53 STOPPED owned data retained. Only synthetic newOWN actor deleted. No real remote deletion/mail/provider or original sourceB mutation.",
+        "SDK persistence is in-memory and actualDevice/secureStoreDeviceProof false. This does not prove native UI recovery or close F64/J009."
+      ],
+      "artifacts": [],
+      "privateProofSha256": "e4bdf6143d1cfc472197c66c604a7c1e25fccf9960a096d3647b5d54012da85a",
+      "sourceCompositionPins": {
+        "sourceAPI": "40199e07ee5bcb1a98007afadfad01df2a55d5611b2f081ff6087ee4e5f818da",
+        "sourceNative": "d5ae48d4e0133571ed86a1b8ec936e1d417265d2575258a1b4b5e38364275ecd",
+        "f53Helper": "66766c6890ec0fc7b3ba60e6fe5668e5ac02ff34fc82e4d75566ef44591c0eed",
+        "reviewedTransportUnchanged": "3d4843ba6ceead367ffeec7954ed8c2a7f13532879716f417b1238bfb1383399",
+        "productionExecuted": false,
+        "standingSupported": false,
+        "device": false
+      }
+    }
+  ]
+}
