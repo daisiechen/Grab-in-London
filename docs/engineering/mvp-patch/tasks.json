@@ -26,13 +26,14 @@
       "patches": [],
       "title": "B03专用checkout与隔离",
       "owner": "开发-MVP补丁版",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "acceptance": "父SHA、产品版本、唯一owner及负向核验PASS，未触及封存环境",
       "verification": "隔离manifest realpath/PID/DB/上下文核证",
       "files": [
         "补丁专属环境清单"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "isolation.zh-CN.md: worktree and dependency isolation verified; runtime manifest still pending"
     },
     {
       "id": "P02",
