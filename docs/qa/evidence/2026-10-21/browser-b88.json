@@ -1,0 +1,28 @@
+{
+  "observations": [
+    {
+      "id": "B88-O001",
+      "status": "passed",
+      "testedCommit": "53b99b2a9fd7ba4c5337567648d84d6bc1f42958",
+      "executedBy": "Codex QA normal browser flow and bounded independent RR read-only backend audit",
+      "title": "Real Google Web login callback and reload in auth-only R2",
+      "steps": [
+        "Human explicitly approved this development account basic name/profile-photo/email grant to project Auth0; no mail/contact/file scope.",
+        "Normal Fancy Google sign-in, approved account selection, Google basic-profile consent, Auth0 Development BFF consent, real callback then profile completion route with returnTo profile. No profile/age/community form submitted.",
+        "Reload retained profile completion route.",
+        "Completed GOOGLE/OAUTH/WEB/LOGIN transaction matched one new result family within 2026-10-23T07:49:54.000Z to07:50:43.000Z. Same snapshot confirms exactly one verified tenant Google identity, ACTIVE user, unrevoked/unexpired Web family with google AMR, one live session.",
+        "Read-only audit checked original OWN PG runtime identity/source archive, used RR READ ONLY and count-before-projection; no token, subject, name, email, auth-code output.",
+        "Close only real Google Web callback subgate. Apple, email, linking, native callback and real remote revocation remain separate; whole G-AUTH remains BLOCKED. No original sourceB journey promotion."
+      ],
+      "rawEvidence": {
+        "privateResultSha256": "9bbc298516e0a334bec4f83d04c69288a86264a3a8a12e197959071c77b929c7",
+        "candidateCount": 1,
+        "associationProven": true,
+        "liveSessionCount": 1,
+        "privateScreenshotRetained": true
+      },
+      "caseStatus": "BLOCKED",
+      "artifacts": []
+    }
+  ]
+}

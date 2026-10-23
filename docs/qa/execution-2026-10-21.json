@@ -127,7 +127,8 @@
     "browserObservationsB84": "evidence/2026-10-21/browser-b84.json",
     "browserObservationsB85": "evidence/2026-10-21/browser-b85.json",
     "browserObservationsB86": "evidence/2026-10-21/browser-b86.json",
-    "browserObservationsB87": "evidence/2026-10-21/browser-b87.json"
+    "browserObservationsB87": "evidence/2026-10-21/browser-b87.json",
+    "browserObservationsB88": "evidence/2026-10-21/browser-b88.json"
   },
   "cases": [
     {
@@ -16135,19 +16136,26 @@
       "plannedStage": "external",
       "target": "production implementation in local synthetic environment",
       "status": "BLOCKED",
-      "evidence": [],
+      "evidence": [
+        "B88-O001"
+      ],
       "relatedAutomatedAssertions": [],
       "coveredExpectedIndexes": [],
       "remainingExpected": [
         "真实提供方有效及PKCE/回调/身份映射证据",
         "模拟按钮/Expo Go不能替代"
       ],
-      "actual": "开发2026-10-22白名单核验：Auth0基础配置已非空，Google已到账号选择页，但本人完成回调尚无证据；不能继续称缺账户。专用Management两键未配置，Apple发布/身份配置尚未完成。开发负责接线，QA待真实三方式PKCE/回调/映射验证；需本人登录的步骤单列。",
+      "actual": "B88: user-approved real Google basic profile/email consent and Auth0 BFF consent returned through the real callback to profile completion; reload retained that route. Bounded RR READ ONLY audit uniquely associates this completed Google WEB login transaction with one verified tenant identity, ACTIVE user and one live Web session. Google Web callback subgate passed. Email/Apple, linking, native callback/PKCE and remote revocation remain unproven; G-AUTH remains BLOCKED. No new account configuration request or whole-journey PASS.",
       "history": [
         {
           "status": "BLOCKED",
           "actual": "真实供应商/原生设备/部署演练或批准的数据政策不在当前本地fixture环境；按用户睡前范围不调用真实外部服务。",
           "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
+        },
+        {
+          "status": "BLOCKED",
+          "actual": "开发2026-10-22白名单核验：Auth0基础配置已非空，Google已到账号选择页，但本人完成回调尚无证据；不能继续称缺账户。专用Management两键未配置，Apple发布/身份配置尚未完成。开发负责接线，QA待真实三方式PKCE/回调/映射验证；需本人登录的步骤单列。",
+          "reason": "B88 real Google Web callback independently verified; other authentication gates retained"
         }
       ],
       "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
@@ -23244,5 +23252,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B87:202 PASS/4 NOT_RUN/11 BLOCKED. J008 environment236 red and exact missing prerequisites documented, not product FAIL: no existing H-apply target, A normal login frozen resendTTL30, no target cap/revocation. Read tool OWN28 only. Guest Web offline blocked by current Mac lock; group stale-composer and Admin410 remain. Existing clock/DNS/Google consent questions pending without repetition."
+  "currentExecutionSlice": "B88:202 PASS/4 NOT_RUN/11 BLOCKED. Real Google Web callback subgate now independently passed with normal UI plus unique bounded backend association. Remaining authentication gates stay open. Claude parallel work explicitly authorized; separate OWN F64 native lost202 preparation coordinated, original sourceB clock action remains unreleased. B87 historical environment findings retained; current CUA reports inconsistent window/input state, not assumed ongoing lock."
 }
