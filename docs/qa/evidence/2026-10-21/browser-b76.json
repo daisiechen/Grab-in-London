@@ -1,0 +1,31 @@
+{
+  "observations": [
+    {
+      "id": "B76-O001",
+      "status": "failed",
+      "testedCommit": "9101004d92cce4fdbc833232ea8d6841d06bdd90",
+      "apiCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "clientComposition": "3ee69fe baseline plus reviewed seven-file F64 overlay",
+      "executedBy": "Codex QA actual normal native XCTest",
+      "title": "J008 actual attempt stopped at transport guard before intended inbox fault; original failure retained",
+      "steps": [
+        "One new finite PREPARE restored normal H and loaded Inbox. Same XCTest/App then created a fresh private runner-only ready marker. Actual current runner data container was discovered from this run and independently matched by simctl/canonical path; no business-app state injection.",
+        "Actual PAUSED_ZERO_FORWARD ACK preceded fresh inspect at unchanged02:31:30Z/revision37. Reviewed mint preserved observation timestamp, original immutable bindings and new one-use30s ARM cap1. Actual ARMED_EXACT_NEW_CAP ACK preceded runner-only signal.",
+        "One pull displayed session-unavailable copy and Retry loading inbox. One explicit retry failed to clear the error within8seconds. XCTest failed39.698seconds, exit65. Original log/result/screenshot retained.",
+        "Critical evidence limit: proxy emitted ARMED_ONCE with offline0 but never OFFLINE_BEFORE_FORWARD. Therefore intended inbox fault was not proven injected; this is not a confirmed product recovery defect. Source inspection shows native revalidate always performs refresh before loadSession; the reviewed proxy incorrectly permitted only session/inbox/notifications in ARM and stopped on refresh. This is the supported tooling diagnosis, not a captured HTTP assertion.",
+        "Transport holder independently exited0 with terminal caseEnded true. Later explicit stop write returned no reader (ENXIO), not a successfully delivered stop; no new proxy or automatic fault retry. No clock advance, AI, business write or DELETE. Tool owner received actual failure for a minimal separately reviewed candidate. J008 remains NOT_RUN; no whole-case promotion."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native204-codex-offline-xcui.swift",
+        "evidence/2026-10-21/native204-session-unavailable-tool-guard.png"
+      ],
+      "classification": "QA transport fixture guard failure before intended injection; not confirmed product defect",
+      "rawEvidence": {
+        "xctestLogSha256": "30d786f54f5090422898e59464e79b1704d1a278db9c663789d753a002fc5452",
+        "transportLogSha256": "6b5e331905de8b91b61dddf7144333472c04a6b964ab21ce89b0f37a3f0e85d9",
+        "bridgeLogSha256": "872f95d3a4327cc8a3ea855c0dff0d3eecdea28451b3cff28bd8ae4da269ca27",
+        "privateResultBundleRetained": true
+      }
+    }
+  ]
+}

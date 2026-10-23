@@ -115,7 +115,8 @@
     "browserObservationsB72": "evidence/2026-10-21/browser-b72.json",
     "browserObservationsB73": "evidence/2026-10-21/browser-b73.json",
     "browserObservationsB74": "evidence/2026-10-21/browser-b74.json",
-    "browserObservationsB75": "evidence/2026-10-21/browser-b75.json"
+    "browserObservationsB75": "evidence/2026-10-21/browser-b75.json",
+    "browserObservationsB76": "evidence/2026-10-21/browser-b76.json"
   },
   "cases": [
     {
@@ -19207,7 +19208,8 @@
         "B72-O002",
         "B72-O003",
         "B74-O001",
-        "B74-O002"
+        "B74-O002",
+        "B76-O001"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -19530,7 +19532,7 @@
       "remainingExpected": [
         "Complete remaining abnormal journey assertions and shared environment/admin trace; targeted F41 return regression alone is not whole-case acceptance."
       ],
-      "actual": "F41 targeted closed at042bc79: Native43 repeats originalNative41 read-chat/Back/Inbox probe and automatically restores five groups without pull; R19513/0. Original36/37/41 reds and manual38 recovery retained. F38 real429 visible/recovery also passed. Other full abnormal path assertions remain NOT_RUN. B43 captures actual native Replace429 visible error/preserved editor and successful normal controlled recovery;137 cold auth clock skew is separate environment precondition, not a completed abnormal-journey matrix. B68 (Claude, same DB M4): approval 409 on both Web host and native host refreshes and creates no seat; Web mid-edit 401 keeps target, no automatic replay, but clears the unsent introduction (QA-F62). Group 403, Admin snapshot 410, offline recovery and native 401 not yet executed; rig exited at ~20:46 BST. B72 (source B): F62 fixed — same-tab 401 caused by sign-out in another tab returns to the apply target, restores the same user’s unsent introduction without replay, and discards it for a different user. Native 401, group 403, Admin snapshot 410 and offline recovery remain. B74: new reviewed F64 native composition restored normal H and loaded Inbox Chats10 after preserving/correcting the202 locator failure; no offline ARM or explicit retry executed, so whole case remains NOT_RUN.",
+      "actual": "F41 targeted closed at042bc79: Native43 repeats originalNative41 read-chat/Back/Inbox probe and automatically restores five groups without pull; R19513/0. Original36/37/41 reds and manual38 recovery retained. F38 real429 visible/recovery also passed. Other full abnormal path assertions remain NOT_RUN. B43 captures actual native Replace429 visible error/preserved editor and successful normal controlled recovery;137 cold auth clock skew is separate environment precondition, not a completed abnormal-journey matrix. B68 (Claude, same DB M4): approval 409 on both Web host and native host refreshes and creates no seat; Web mid-edit 401 keeps target, no automatic replay, but clears the unsent introduction (QA-F62). Group 403, Admin snapshot 410, offline recovery and native 401 not yet executed; rig exited at ~20:46 BST. B72 (source B): F62 fixed — same-tab 401 caused by sign-out in another tab returns to the apply target, restores the same user’s unsent introduction without replay, and discards it for a different user. Native 401, group 403, Admin snapshot 410 and offline recovery remain. B74: new reviewed F64 native composition restored normal H and loaded Inbox Chats10 after preserving/correcting the202 locator failure; no offline ARM or explicit retry executed, so whole case remains NOT_RUN. B76 actual same-App attempt failed before intended inbox injection: refresh-first native revalidate is incompatible with ARM allowlist; no OFFLINE_BEFORE_FORWARD event. Original UI red39.698s retained, finite tool holder ended0. Tooling fix required; no product failure or case PASS claimed.",
       "defectIds": [
         "QA-F38",
         "QA-F41",
@@ -23215,5 +23217,5 @@
     "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
     "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
   ],
-  "currentExecutionSlice": "B75:202 PASS/4 NOT_RUN/11 BLOCKED. Actual three-message Inbox sample verified; missing DMARC policy/receiver FAIL recorded QA-F65 OPEN. Native normal H/Inbox preparation passed; J008 actual offline/explicit retry still pending. Clock02:31:30Z unchanged; prior advance not retried."
+  "currentExecutionSlice": "B76:202 PASS/4 NOT_RUN/11 BLOCKED. Actual J008 offline attempt preserved red before intended inbox injection; fixture ARM allowlist stopped native mandatory refresh. Minimal separately reviewed tooling correction pending. B75 actual3Inbox sample verified/F65 DMARC gapOPEN. Clock02:31:30Z unchanged."
 }
