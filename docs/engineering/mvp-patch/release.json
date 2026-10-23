@@ -1,0 +1,12 @@
+{
+  "productVersion": "P1.1",
+  "approvedBy": "user",
+  "approvedOn": "2026-10-23",
+  "supersedesUnrecordedChoice": "P1.0",
+  "engineeringId": "MVP-PATCH/P1",
+  "planRevision": "P1.1",
+  "reviewedPlanCommit": "8a4a3c50d773f18d08993d7e9c476618710b4bf2",
+  "reviewedPlanSha256": "98dece0066dc75621d98f8484b1ae40167bdc10aece3e52bce1bb1c4e458c697",
+  "releaseApproved": false,
+  "implementationGate": "B03 runtime isolation verification pending"
+}
