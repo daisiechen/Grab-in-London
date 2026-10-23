@@ -151,3 +151,7 @@ packages/client/share.ts 只从显式公开输入构造 HTTPS canonical meal URL
 - 后台f097039/8a44f49/88bef0e/9e960d2按序集成为814349a/42231c0/62b7e9c/4b97993并推送核同SHA。contracts操作枚举冲突保留旧统计操作及七个新操作；未运行生成。集成后完整core:check、8文件109契约/客户端测试、独立新临时PG两文件14迁移/存储测试通过。新API业务处理器仍未交付，不能声称可调用/P13完成。
 - Web旧代码把absorb后的DOM提交最高位置当已读，无viewport确认。新增独立回归先因缺少可见性observer失败；现每消息使用IntersectionObserver确认80%可见（与原生列表阈值一致），后台/未支持observer时保持未读，只有页最后消息真实呈现后才允许跨server-scanned空档。重复观察不重复写，失败不自行重试。
 - 会话清理同步停止聊天poller/发送重试，迟到发送结果不再改变旧页。inbox八文件29/29、Web类型与三文件ESLint通过。首次新测试构造器参数属性不兼容erasableSyntaxOnly，改普通字段赋值后重跑类型/lint/新回归通过；未放宽检查。代码提交e2efcf8。本段首次写入受解释器编码错误未落盘，现独立补记；此切片未完成提及/静音/横幅或真实push。
+
+### P17 共用提及草稿实体
+
+新增client手写mentions模块，两端共用：候选稳定userId/精确含空格公开名、host-only @everyone、Unicode code point半开偏移、保留原body空白、不从输入/粘贴/恢复自动推断实体、部分编辑删除实体、删除标记调整后续偏移。明确selection替换即使文字相同也清除被覆盖实体；display label仅本地，wire payload只含契约字段。限制2000 code points和100实体，失败不改原draft。初版把一次跨两端整体替换误当两次独立输入的测试期望，现分别验证顺序输入保留与整体粘贴降级；未增加猜测式重绑定。新增12项及全部client 8文件62/62通过，完整core:check通过；尚未连入两端UI或声称真实发送验收。后台b6f3784真实处理器已交回，下一片按固定提交整合；capability仍待契约交接。

@@ -6,3 +6,4 @@ export { IntentTracker, IntentUnresolvedError, outcomeFromError, outcomeFromRece
 export { FeedbackRunner, planFeedback, receiptReconciler, scopeKey, statusFor, REVIEW_MAX, type FeedbackDraft, type FeedbackItem, type FeedbackPlan, type FeedbackScope, type FeedbackSnapshot, type FeedbackStep, type ItemStatus, type ScopeState } from './feedback.ts';
 export { SUPPORT_EMAIL, supportMailto } from './support.ts';
 export { publicMealOrigin, mealShareUrl, mealPathFromLink, publicMealInvitation, type PublicMealShareInput } from './share.ts';
+export {plainMentionDraft,editMentionDraft,replaceMentionSelection,selectMention,removeSelectedMention,messageMentionPayload,type MentionDraft,type MentionCandidate,type SelectedMention} from './mentions.ts';
