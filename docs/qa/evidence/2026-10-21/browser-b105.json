@@ -1,0 +1,29 @@
+{
+  "observations": [
+    {
+      "id": "B105-O001",
+      "status": "passed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "title": "Approved adoption preflight and single normal stop preserve database",
+      "steps": [
+        "Reviewed exact tool pins and independent8guard tests PASS. Human onegeneration/one local secret replacement approval explicitly bound, no further clock/budget/realprovider authorization.",
+        "SoleQA freshinspect25→26/030130, actual device normally stopped/no browserwrites; preflight read-only F53/ledger/UNKNOWN/safeprojection/PID identity allpassed.",
+        "One finite normalstop26→27 returned STOPPED_PG_RETAINED/nonfailed, noQAsignals, originalPG retained. No newruntime started."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B105-O002",
+      "status": "failed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "title": "QA-ENV-STOP-002 control parent remains alive after normal stop and one reviewed termination signal",
+      "steps": [
+        "Developer confirmExit verified exactparent startup identity and sent its single reviewed SIGTERM. Tool returned PARENT_EXIT_UNKNOWN_NO_RETRY; originalmarker/log retained, noSTOP-OBSERVATION and noafterstop/newlaunch.",
+        "Independentfreshmetadata: originalAPI/worker absent,62057/53016 no listeners, originalPG alive; controlparent stillsamePID/startstamp and active, notzombie. finite NEW_OWNER_NORMAL_STOPPED present; FIFOdescriptors absent/stdin devnull. Exact residualhandle cause unproven.",
+        "Human requested scope for one additional exact SIGTERM only, noKILL/EOF/PG/otherPID/loop; noanswer yet. Narrow executor QA source/syntax/defaultdryrun/hash checked, not executed. Currentlocal businessservice unavailable pending this environmentresolution.",
+        "Original217businesscasecounts remain202/4/11; this is testenvironment failure, not F67 productregression or success ofcutover."
+      ],
+      "artifacts": []
+    }
+  ]
+}

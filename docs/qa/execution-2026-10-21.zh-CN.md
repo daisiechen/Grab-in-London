@@ -24,7 +24,7 @@ Current counts202 PASS/4 NOT_RUN/11 BLOCKED. Remaining whole local journeys J005
 
 ## 实际运行
 
-B104: F67actualnative targetedPASS: originalprocess draft→exactfamilyrevoke→normalInboxguest→normal sameHOTP→exacttarget/intro restored noSend.244PASS1/0 exit0; wrongdriver240-242 andactual243ratelimit retained. Human024630→030130 executedonce, budgets/UNKNOWN unchanged. App normally stopped for approvedadoption; notwholeJ008. Original217counts202/4/11.
+B105: approvedadoption freshpreflight26 PASS; normalstop27 STOPPED_PG_RETAINED. Parentexitguard failed PARENT_EXIT_UNKNOWN after single reviewedTERM; API/worker absent/portsvacant/originalPG alive, exactparentstillalive. Noafterstop/newlaunch/retrysignal. One additional preciseTERM asks humanpending; isolatedshutdownfix workcontinues. F67targetedCLOSED; whole217counts202/4/11.
 
 | ID | 结果 | 范围 |
 |---|---|---|
