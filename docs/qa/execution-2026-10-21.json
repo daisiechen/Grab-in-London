@@ -146,7 +146,8 @@
     "browserObservationsB103": "evidence/2026-10-21/browser-b103.json",
     "browserObservationsB104": "evidence/2026-10-21/browser-b104.json",
     "browserObservationsB105": "evidence/2026-10-21/browser-b105.json",
-    "browserObservationsB106": "evidence/2026-10-21/browser-b106.json"
+    "browserObservationsB106": "evidence/2026-10-21/browser-b106.json",
+    "browserObservationsB107": "evidence/2026-10-21/browser-b107.json"
   },
   "cases": [
     {
@@ -16176,7 +16177,8 @@
           "reason": "B88 real Google Web callback independently verified; other authentication gates retained"
         }
       ],
-      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies",
+      "carryForward": "Next version: preserve original ID, status, remainingExpected and valid evidence; frozen by user on 2026-10-23."
     },
     {
       "id": "QA-GATE-002",
@@ -16213,7 +16215,8 @@
       "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies",
       "defectIds": [
         "QA-F63"
-      ]
+      ],
+      "carryForward": "Next version: preserve original ID, status, remainingExpected and valid evidence; frozen by user on 2026-10-23."
     },
     {
       "id": "QA-GATE-003",
@@ -16247,7 +16250,8 @@
       "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies",
       "defectIds": [
         "QA-F65"
-      ]
+      ],
+      "carryForward": "Next version: preserve original ID, status, remainingExpected and valid evidence; frozen by user on 2026-10-23."
     },
     {
       "id": "QA-GATE-004",
@@ -16277,7 +16281,8 @@
       "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies",
       "defectIds": [
         "QA-F49"
-      ]
+      ],
+      "carryForward": "Next version: preserve original ID, status, remainingExpected and valid evidence; frozen by user on 2026-10-23."
     },
     {
       "id": "QA-GATE-005",
@@ -16301,7 +16306,8 @@
           "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
         }
       ],
-      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies",
+      "carryForward": "Next version: preserve original ID, status, remainingExpected and valid evidence; frozen by user on 2026-10-23."
     },
     {
       "id": "QA-GATE-006",
@@ -16325,7 +16331,8 @@
           "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
         }
       ],
-      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies",
+      "carryForward": "Next version: preserve original ID, status, remainingExpected and valid evidence; frozen by user on 2026-10-23."
     },
     {
       "id": "QA-GATE-007",
@@ -16351,7 +16358,8 @@
           "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
         }
       ],
-      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies",
+      "carryForward": "Next version: preserve original ID, status, remainingExpected and valid evidence; frozen by user on 2026-10-23."
     },
     {
       "id": "QA-GATE-008",
@@ -16376,7 +16384,8 @@
           "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
         }
       ],
-      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies",
+      "carryForward": "Next version: preserve original ID, status, remainingExpected and valid evidence; frozen by user on 2026-10-23."
     },
     {
       "id": "QA-GATE-009",
@@ -16402,7 +16411,8 @@
           "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
         }
       ],
-      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies",
+      "carryForward": "Next version: preserve original ID, status, remainingExpected and valid evidence; frozen by user on 2026-10-23."
     },
     {
       "id": "QA-JOURNEY-001",
@@ -18153,7 +18163,9 @@
         "B38-O001",
         "B38-O002",
         "B43-O001",
-        "B106-O003"
+        "B106-O003",
+        "B107-O002",
+        "B107-O003"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -18470,7 +18482,7 @@
         "在最终环境原双向客户端重验名额/截止；B35仅证明Web旧编辑器在精确截止后取消分支拒绝，不能代替另一端和全部前置",
         "按原客户端完成服务失败后正常申请路径；不以群消息fallback替代全部申请断言"
       ],
-      "actual": "B33 normal Web explicit SEARCH/public card selection/APPLICATION draft/confirmed transfer, guest Send→normal OTP/profile→intact original target/draft, no autoSend, explicit finalSend→one pending application passed. B34 A normal logout/B normal login shows independent blank dialogue/editor; B draft generated and transferred while1/2, H normal approval fills2/2, B normal finalSubmit rejects full while preserving draft, four business table hashes unchanged. B32 controlled provider failure/manual fallback is separate group evidence, not a substitute for application fallback in every client. Original F49 targeted closure and earlier failures preserved in history. Whole005 remains NOT_RUN: final deadline boundary, native/Web role reversal, B privacy assertions and sameDB Admin still require complete final-environment execution. B35 normal A withdrawal releases seat and retains group, B old draft survives reload. At exact stored closesAt, normal worker cancels insufficient meal; B old editor finalSend rejects cancellation, draft retained, four business tables unchanged after transition. This is CANCELLED branch only; full final-environment prerequisites remain unexecuted. B37 final same-database nativeA normal guest SEARCH/card/OTP/profile and explicit APPLICATION Keep/Replace completed; applications remains0, no finalSend. B privacy and forbidden group/Admin plus detectorfalse covered separately B37-O002; complete native/Web reversal and final expectations remain. B37-O004 one-process native117 normal explicit Send produces one PENDING application, hostseat stays1; only WebH normal Approve changes confirmed2/4. Reservation becomes stale, normal re-declaration for2 restores booked, arrangements lock. Remaining original full-journey assertions still unexecuted. B38 native120 actual authorized post-join message read/pre-join history exclusion, normal bubble keyboard dismissal, same-process actual429→finite61s→Retry, GROUP Keep/Replace, no-send checkpoint, keyboard-open explicit Send and WebH receipt passed. Harness118 wrong prehistory assumption/119 wrong header-dismiss assumption retained as failures; no product patch. Original reverse-role and remaining full-journey assertions remain unexecuted. B38-O002 WebH and nativeA normal logout, WebA new normal OTP and existing profile/empty AI account isolation verified. NativeH login/reverse business path still in progress. B43 current B fresh pre-approval editor gets full rejection with exact manual text preserved and zero business delta. This is not an AI-generated native capacity/deadline full-journey substitute. B106 finalretainedDB/newruntime: WebAmanualZ1fallback explicitlyPENDING originaltext; explicitSEARCH/publicX1selection/APPLICATION/Keep/Replace/no-business-write/explicitSendPENDINGpassed. Normalwithdraw429 andBlogin503 held withoutretries; native/full/deadline/B/Adminstillpending.",
+      "actual": "B33 normal Web explicit SEARCH/public card selection/APPLICATION draft/confirmed transfer, guest Send→normal OTP/profile→intact original target/draft, no autoSend, explicit finalSend→one pending application passed. B34 A normal logout/B normal login shows independent blank dialogue/editor; B draft generated and transferred while1/2, H normal approval fills2/2, B normal finalSubmit rejects full while preserving draft, four business table hashes unchanged. B32 controlled provider failure/manual fallback is separate group evidence, not a substitute for application fallback in every client. Original F49 targeted closure and earlier failures preserved in history. Whole005 remains NOT_RUN: final deadline boundary, native/Web role reversal, B privacy assertions and sameDB Admin still require complete final-environment execution. B35 normal A withdrawal releases seat and retains group, B old draft survives reload. At exact stored closesAt, normal worker cancels insufficient meal; B old editor finalSend rejects cancellation, draft retained, four business tables unchanged after transition. This is CANCELLED branch only; full final-environment prerequisites remain unexecuted. B37 final same-database nativeA normal guest SEARCH/card/OTP/profile and explicit APPLICATION Keep/Replace completed; applications remains0, no finalSend. B privacy and forbidden group/Admin plus detectorfalse covered separately B37-O002; complete native/Web reversal and final expectations remain. B37-O004 one-process native117 normal explicit Send produces one PENDING application, hostseat stays1; only WebH normal Approve changes confirmed2/4. Reservation becomes stale, normal re-declaration for2 restores booked, arrangements lock. Remaining original full-journey assertions still unexecuted. B38 native120 actual authorized post-join message read/pre-join history exclusion, normal bubble keyboard dismissal, same-process actual429→finite61s→Retry, GROUP Keep/Replace, no-send checkpoint, keyboard-open explicit Send and WebH receipt passed. Harness118 wrong prehistory assumption/119 wrong header-dismiss assumption retained as failures; no product patch. Original reverse-role and remaining full-journey assertions remain unexecuted. B38-O002 WebH and nativeA normal logout, WebA new normal OTP and existing profile/empty AI account isolation verified. NativeH login/reverse business path still in progress. B43 current B fresh pre-approval editor gets full rejection with exact manual text preserved and zero business delta. This is not an AI-generated native capacity/deadline full-journey substitute. B106 finalretainedDB/newruntime: WebAmanualZ1fallback explicitlyPENDING originaltext; explicitSEARCH/publicX1selection/APPLICATION/Keep/Replace/no-business-write/explicitSendPENDINGpassed. Normalwithdraw429 andBlogin503 held withoutretries; native/full/deadline/B/Adminstillpending. B107: original WebX1 AI candidate explicitly resubmitted after nativeH normal B approval fills2/2; server-full refusal preserves exact98chars, before/after business and budgets/UNKNOWN exact. Y1 candidate ready but deadline and native reversal/fallback remain unexecuted. User froze current MVP; carry original remaining expectations into next version without changing NOT_RUN.",
       "defectIds": [
         "QA-F49"
       ],
@@ -18511,7 +18523,8 @@
           ],
           "reason": "B37 adds final same-database partial coverage without full-journey promotion."
         }
-      ]
+      ],
+      "carryForward": "Next version: preserve original ID, status, remainingExpected and valid evidence; frozen by user on 2026-10-23."
     },
     {
       "id": "QA-JOURNEY-006",
@@ -19595,7 +19608,8 @@
         "QA-F38",
         "QA-F41",
         "QA-F62"
-      ]
+      ],
+      "carryForward": "Next version: preserve original ID, status, remainingExpected and valid evidence; frozen by user on 2026-10-23."
     },
     {
       "id": "QA-JOURNEY-009",
@@ -19928,7 +19942,8 @@
       "actual": "本地生产实现尚需实际执行：举报→查本人回执→support个案→reauth删除→断网丢202→receipt查→后台快照撤销。尚缺逐项证据：受理不称处理完成；202同步屏障；receipt无私密数据；旧导出不可再读。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 2026-10-23 QA-F64 opened: native deletion receipt is held only in memory, so after an accepted 202 with a lost response the receipt cannot be recovered (contract data §72, API row 80). Deletion of H/A is deferred until a fixed, normally signed native build is available. B89: original normal native guest receipt-entry failure reproduced on isolated device; a21740c fixed normal guest Profile->status navigation independently passed. Separate newOWN real production-handler/SDK lost202 seven checks passed after preserving three harness failures. Device SecureStore/saved receipt/cold recovery and original full support/delete/Admin flow remain unexecuted; no whole-case promotion. B90 actual same-App F64 targeted cold recovery passed: real one202drop, visible network error, revoked coldguest, persisted SecureStore43 reference via normal guest entry, explicit anonymous PENDING lookup, no second deletion. NewOWN only/fresh-login branch; test1 profile locator red/suiteexit65 retained. Support/report/reauthUI/Admin invalidation/original role-swap still remain.",
       "defectIds": [
         "QA-F64"
-      ]
+      ],
+      "carryForward": "Next version: preserve original ID, status, remainingExpected and valid evidence; frozen by user on 2026-10-23."
     },
     {
       "id": "QA-API-006",
@@ -22435,7 +22450,8 @@
         "新资格传播，旧普通快照不改",
         "不开放全表/消息正文"
       ],
-      "actual": "本地生产实现尚需实际执行：CLI OAuth+MFA→授权case→end+7d纠错→新快照→私聊重验→审计。尚缺逐项证据：逐步权限重验；保留原报告；新资格传播，旧普通快照不改；不开放全表/消息正文。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B73: normal native H reached M3 meal report and sent once, but no receipt; original XCTest failure preserved. Read-only reports/cases/createReport intents remain0 and H frozen-second write-burst15 is consistent with rate limiting; direct status unobserved. No grant/correction/clock action; whole case remains NOT_RUN."
+      "actual": "本地生产实现尚需实际执行：CLI OAuth+MFA→授权case→end+7d纠错→新快照→私聊重验→审计。尚缺逐项证据：逐步权限重验；保留原报告；新资格传播，旧普通快照不改；不开放全表/消息正文。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B73: normal native H reached M3 meal report and sent once, but no receipt; original XCTest failure preserved. Read-only reports/cases/createReport intents remain0 and H frozen-second write-burst15 is consistent with rate limiting; direct status unobserved. No grant/correction/clock action; whole case remains NOT_RUN.",
+      "carryForward": "Next version: preserve original ID, status, remainingExpected and valid evidence; frozen by user on 2026-10-23."
     },
     {
       "id": "QA-JOURNEY-012",
@@ -22904,7 +22920,8 @@
           "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
         }
       ],
-      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies",
+      "carryForward": "Next version: preserve original ID, status, remainingExpected and valid evidence; frozen by user on 2026-10-23."
     },
     {
       "id": "QA-AI-051",
@@ -23158,7 +23175,8 @@
           "reason": "2026-10-21 user challenged blanket blockers; dependency triage"
         }
       ],
-      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies"
+      "followUpOwner": "开发-三端MVP并行 prepares/fixes; 测试- MVP+AI independently verifies",
+      "carryForward": "Next version: preserve original ID, status, remainingExpected and valid evidence; frozen by user on 2026-10-23."
     }
   ],
   "deliveryValidation": {
@@ -23266,9 +23284,9 @@
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
     "userAuthorizedMessaging": true,
-    "status": "codex_qa_execution_after_verified_claude_handoff",
-    "monitor": "thread heartbeat every 15 minutes; notify only meaningful changes",
-    "latestFeedback": "B30 actualF50/F51 closures handed to originaldevelopment; remainingwholejourneys andF52 realnewCLIbrowserchain require normalexecution, nofixturefragment-to-wholepass.",
+    "status": "frozen_carry_forward_to_next_version",
+    "monitor": "Current MVP continuous testing/development stopped by user; no automatic continuation.",
+    "latestFeedback": "B107 X1 full rejection/preserved AI editor/zero business delta passed. User ended current MVP testing; remaining cases and gates transferred with statuses unchanged.",
     "pendingFixtureDependencies": [
       "RP-only exactnormal supportCLI browser chain after independentfreeze review; no extendingTTL or HTTPconsent bypass.",
       "Wholejourney sameenvironment normalUI H/A paths and exactcasepreconditions; do not require unplannedAdmin/B gates.",
@@ -23279,10 +23297,33 @@
   },
   "blockerTriage": "Whole217 counts202PASS/4NOT_RUN/11BLOCKED; remaining J005/J008/J009/J011 and original iOS matrix. Native401preserve target/draft B104 and Weboffline B94 nowclosedsubpaths; group403/Admin410 pending. F65DMARC targetedclosedB93, fullsignedwebhook/channelmatrix stillopen. Existingaccounts/keys/50CNYmonthly/noautorecharge/deletionnotification168h not missingconfiguration. F66exactfixloadedinactualruntime; F67targetedactualclosed; F68isolatedsourcefixnotcurrentruntime. No realprovider/device/deployment/policygatepromotion.",
   "nextExecution": [
-    "Successor QA accepts exclusive operations only after safe handoff; verify live sourceB, exact versions/clock/ledger and reviewed tool entry before any mutation. No restart or clock-review bypass.",
-    "Complete J005, J008 non-deletion assertions and actual iOS foreground/background matrix; reuse valid B72/B78 and do not rerun closed F64 without a new reason.",
-    "Complete J011 with reviewed support CLI/exact168h boundary tooling; perform J009 last, then actual Admin410/cache/old-export invalidation. No fragment-to-whole promotion.",
-    "Close nine real provider/device/policy/deployment gates with exact evidence; AI050/052 share MODEL/DATA dependencies. Consolidate specific human actions after developer preparation."
+    "Current MVP frozen by user after B107 X1. Do not execute further cases or consume remaining clock approval.",
+    "Next-version owner must import all15 original non-PASS case IDs and open defects/gates from freeze record, retain prior evidence and validate changed areas on final next-version build.",
+    "No next-version requirement changes, implementation, production deployment or real-provider usage authorized by this freeze decision."
   ],
-  "currentExecutionSlice": "B106: exacthumansecondTERMresolvedoldparent; realOWNnonblockcomposition1PASS; actualnewruntimeadoption/zero-matchrecovery/data-budgetUNKNOWNpreserved andcontrolledAIreleased. WebmanualfallbackandcompleteAIapplicationPENDINGpass; generationstage0businessdelta. Currentcalls5/17UNKNOWN1. NormalB503/withdraw429neednewmanagedclockapproval, notquota/reset. Whole217counts202/4/11."
+  "currentExecutionSlice": "B107 FINAL: first R3 checkpoint031630 ACK with exact projections; normalB login/four applications; nativeH normal Y1 and X1 approvals; WebY1 candidate transferred with no business write; final WebX1 server-full rejection retains98chars/zero business delta. D23calls7/17 UNKNOWN1. User froze currentMVP; no0330/0400/61s. Counts202/4/11 unchanged.",
+  "archiveDecision": {
+    "status": "frozen_partial_not_release_acceptance",
+    "date": "2026-10-23",
+    "reason": "User requested stop after current test point and carry remaining untested scope into next version.",
+    "record": "../delivery/mvp-freeze-2026-10-23.zh-CN.md",
+    "remainingCaseIds": [
+      "QA-GATE-001",
+      "QA-GATE-002",
+      "QA-GATE-003",
+      "QA-GATE-004",
+      "QA-GATE-005",
+      "QA-GATE-006",
+      "QA-GATE-007",
+      "QA-GATE-008",
+      "QA-GATE-009",
+      "QA-JOURNEY-005",
+      "QA-JOURNEY-008",
+      "QA-JOURNEY-009",
+      "QA-JOURNEY-011",
+      "QA-AI-050",
+      "QA-AI-052"
+    ],
+    "noFurtherClockExecution": true
+  }
 }

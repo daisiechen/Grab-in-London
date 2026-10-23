@@ -1,0 +1,61 @@
+{
+  "observations": [
+    {
+      "id": "B107-O001",
+      "status": "passed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "qaComposition": "baseline89dc + F66budget2ac/d915 runtime overlay + explicit observed-clock QA Web; native F67 signed composition",
+      "title": "Approved R3 first fixed checkpoint completed without business or ledger changes",
+      "steps": [
+        "Human approved exact R3 scope. Single checkpoint 03:01:30 to 03:16:30 UTC ACK revision8 to9; both API/worker Node and database match target, nonfailed.",
+        "Fresh idle and all10meals/30jobs interval checks passed before send. Six before/after projections business/budgets/AI/targets/jobs/manual-fallback exact; no reset/increase/price extension/real provider.",
+        "Later user instructed freeze after current point. No 03:30/04:00 or +61second checkpoint executed."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B107-O002",
+      "status": "passed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "qaComposition": "baseline89dc + F66budget2ac/d915 runtime overlay + explicit observed-clock QA Web; native F67 signed composition",
+      "title": "Normal B login and four applications; Y1 AI draft prepared without implicit business writes",
+      "steps": [
+        "Normal B OTP login restores original bystander profile; normal submissions to original X1/Y1/X2/Y2 are PENDING. No new actors or seeded seats.",
+        "Same original H app process20098 normally approves B_Y1: 2/3 confirmed. Web A Y1 one controlled APPLICATION request creates candidate, explicit replacement retains98chars in original editor, no Send.",
+        "Y1 generation and transfer business projections identical; D23 calls5 to7/17, used512 to768/reserved0. Existing UNKNOWN1 liability3024 unchanged. Remaining deadline/client reversal assertions deferred by user."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B107-O003",
+      "status": "passed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "qaComposition": "baseline89dc + F66budget2ac/d915 runtime overlay + explicit observed-clock QA Web; native F67 signed composition",
+      "title": "Final current test point: actual Web AI editor rejects newly full X1 and preserves draft",
+      "steps": [
+        "After normal withdrawal of A X1 first PENDING, reopened original editor. Existing successful AI candidate reused through explicit replace confirmation, no new model call.",
+        "Original H on native normally approves B_X1; RR confirms original X1 confirmed2/capacity2, B CONFIRMED and A original application WITHDRAWN.",
+        "Original Web A editor still displays prior1/2 until explicit Send. Server refuses: This table is full. UI updates2/2, preserves exact98char candidate and no longer offers Send.",
+        "RR before/after rejection: meals10/applications14/seatEvents19/messages18 projections exact; all budgets and KNOWN36/UNKNOWN1 exact. No new application/seat/message; D23 remains7/17, synthetic used768/reserved0.",
+        "Business testing stopped here on user instruction. Whole J005 remains NOT_RUN with partial evidence; not promoted to PASS."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/b107-web-x1-full-draft-preserved.jpg"
+      ]
+    },
+    {
+      "id": "B107-O004",
+      "status": "passed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "qaComposition": "baseline89dc + F66budget2ac/d915 runtime overlay + explicit observed-clock QA Web; native F67 signed composition",
+      "title": "Native driver diagnostics retained separately from product acceptance",
+      "steps": [
+        "Native246 normal original H restore and Inbox passed; original app process20098 retained.",
+        "Continuous247 completed Y1 normal approval but later X1 offscreen TAP returned NOT_HITTABLE. Driver finished with failed test; no X1 approval performed by that failed command.",
+        "Continuous248 finished normally after read-only positioning; a swipe on visible Z1 opened its detail, only navigation.",
+        "Continuous249 uses reviewed bounded normal UI short drags plus read-only hittable inspection; X1 approval actually completed. FINISH ok; test runner exited0, original app preserved. No new product patch or cold app launch."
+      ],
+      "artifacts": []
+    }
+  ]
+}
