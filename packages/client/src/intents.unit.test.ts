@@ -25,7 +25,11 @@ describe('intent outcome mapping (P03)', () => {
   });
   it('clears only on SUCCEEDED; NONE and lost lease allow same-key resend', () => {
     expect(outcomeFromReceipt({ ...base, state: 'SUCCEEDED', httpStatus: 200 })).toBe('saved');
-    expect(outcomeFromReceipt(base)).toBe('resend');
+    // NONE without age proof may be a purged completed intent: stays unknown.
+    expect(outcomeFromReceipt(base)).toBe('unknown');
+    expect(outcomeFromReceipt(base, { issuedAt: 0, now: 60_000 })).toBe('resend');
+    expect(outcomeFromReceipt(base, { issuedAt: 0, now: 30 * 24 * 3600_000 })).toBe('unknown');
+    expect(outcomeFromReceipt(base, { issuedAt: 10_000, now: 0 })).toBe('unknown');
     expect(outcomeFromReceipt({ ...base, state: 'PENDING', retryable: true })).toBe('resend');
     expect(outcomeFromReceipt({ ...base, state: 'PENDING', retryAfterSeconds: 5 })).toBe('pending');
     expect(outcomeFromReceipt({ ...base, state: 'REJECTED', httpStatus: 409, conflict: 'VERSION' })).toBe('conflict');

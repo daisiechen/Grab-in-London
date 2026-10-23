@@ -25,12 +25,19 @@ export function outcomeFromError(error: unknown): IntentOutcome {
   return 'rejected';
 }
 
-export function outcomeFromReceipt(receipt: CommandReceipt): IntentOutcome {
+/**
+ * A row exists for INTENT_RETENTION_DAYS (30) after the server claimed it. Only an intent issued
+ * clearly inside that window (29 days, leaving a day for clock skew) can read NONE as "never
+ * recorded"; without that age proof NONE may be a purged completed intent, so it stays unknown.
+ */
+export const RESEND_SAFE_AGE_MS = 29 * 24 * 60 * 60 * 1000;
+
+export function outcomeFromReceipt(receipt: CommandReceipt, age?: { issuedAt: number; now: number }): IntentOutcome {
   switch (receipt.state) {
     case 'SUCCEEDED': return 'saved';
     case 'PENDING': return receipt.expired ? 'expired' : receipt.retryable ? 'resend' : 'pending';
-    // No record is not a definite failure: only the identical request with the same key may be resent.
-    case 'NONE': return 'resend';
+    // No record is not a definite failure. Resend (same key and body only) needs age proof.
+    case 'NONE': return age && age.now - age.issuedAt >= 0 && age.now - age.issuedAt < RESEND_SAFE_AGE_MS ? 'resend' : 'unknown';
     case 'REJECTED':
       if (receipt.conflict === 'VERSION') return 'conflict';
       if (receipt.conflict === 'IN_PROGRESS') return receipt.expired ? 'expired' : 'pending';
@@ -39,10 +46,10 @@ export function outcomeFromReceipt(receipt: CommandReceipt): IntentOutcome {
 }
 
 /** Reads the original intent's receipt; a failed read keeps the intent `unknown`. */
-export async function reconcileIntent(client: ApiClient, operation: string, key: string): Promise<{ outcome: IntentOutcome; receipt: CommandReceipt | null }> {
+export async function reconcileIntent(client: ApiClient, operation: string, key: string, issuedAt?: number, now: () => number = Date.now): Promise<{ outcome: IntentOutcome; receipt: CommandReceipt | null }> {
   try {
     const response = await client.call('getCommandReceipt', { params: { operation, key } });
-    return { outcome: outcomeFromReceipt(response.data), receipt: response.data };
+    return { outcome: outcomeFromReceipt(response.data, issuedAt === undefined ? undefined : { issuedAt, now: now() }), receipt: response.data };
   } catch (error) {
     return { outcome: outcomeFromError(error) === 'reauth' ? 'reauth' : 'unknown', receipt: null };
   }
