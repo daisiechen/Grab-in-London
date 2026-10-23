@@ -24,7 +24,7 @@ Current counts202 PASS/4 NOT_RUN/11 BLOCKED. Remaining whole local journeys J005
 
 ## 实际运行
 
-B99: actual239original237assertionsPASS1/0/20.978s/exit0: originalHnormalrestore200/exactAmealdetailApply200/localunsentintroexact/Sendexists,noSend. Readholderpause0stop0,CONTROL19/024630. OriginalB95redretained;mid-editor401/group403/Admin410pending. Counts202/4/11unchanged;AI2calls/15left/UNKNOWN1.
+B100: direct62057adaptiveQAclock9independentPASS/source1783exact,normalbuildpendingactual. QA-F66newconfirmedP1releaseblock: independentfrozenOWN5parallelSEARCH3FAILED/2SUCCEEDED/3PG40P01,exit1. OriginalQA217casecounts202/4/11unchanged,AI2calls/15left/UNKNOWN1untouched;nooverallreleasePASS.
 
 | ID | 结果 | 范围 |
 |---|---|---|

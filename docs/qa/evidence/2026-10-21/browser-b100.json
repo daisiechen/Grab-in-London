@@ -1,0 +1,30 @@
+{
+  "observations": [
+    {
+      "id": "B100-O001",
+      "status": "passed",
+      "testedCommit": "3ee69fec6b79552404217aa5415d4f041853a06f",
+      "qaComposition": "direct62057 adaptive QA clock overlay; source-ready not yet installed",
+      "title": "Independent directAPI adaptiveclock9tests and1783sourceverify pass",
+      "steps": [
+        "Observedclock62061baseline9tests independentlypass; QA identified originmismatch beforeactualbuild. Newdirect62057composition explicitlychangeshelperwhitelist andnormalAPIenv, preserving1781baselinefiles plusoneentryoverlay/onenewhelper1783total.",
+        "NewassembledrealServices/SessionManager9/9independenttestsPASS andsourceverify1783exact; rootauthorizednormalbuild-onlyafterdualreview. NoUI/wholeJ008PASS, noAPI/DB/deviceclock/TTLchange."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B100-O002",
+      "status": "failed",
+      "testedCommit": "53b99b2a9fd7ba4c5337567648d84d6bc1f42958",
+      "title": "QA-F66 independently reproduced five-user budget reservation deadlock in newOWNPG",
+      "steps": [
+        "Ran frozenentry-red5--own with13criticalsourcepinsverified against53b99archive. NewOWNPG17/normalHTTPauth+AIrequests/fakeprovider; externalfetchforbidden, nooriginalPG orrealAI.",
+        "FiveindependentnormalSEARCHrequestsparallel:3FAILED/UNAVAILABLE and2SUCCEEDED. ActualPGrecorded3deadlock40P01 forqueryhash030966ad5cab231269dd53d860a0b37307244b77bd283c10f80e7b2c912f7ec9; fakeprovidercalls2. allSUCCEEDEDassertionfailed,process exit1.",
+        "Querymapsbudget.tslockPeriods SELECTai_budget ORDERBYperiod FORUPDATE. Candidatecausalmechanism: earlierai_callsINSERT holdsFKKEYSHARE onperiodrows, concurrentFORUPDATEupgradesdeadlock. Rootrequiresstablebarrierregressionbeforeminimalnon-keylockfix; mechanismnotyetQAfixverified.",
+        "QA-F66 OPEN_CONFIRMED P1releaseblock. Do notserialize/retry/increasebudgettosuppress. IsolatedOWNcleanupfinallyonlyownresources; originalQA217cases/ledger/D23calls2/UNKNOWN1unaffected. LaterharnessassertionsNOT_RUN."
+      ],
+      "artifacts": [],
+      "privateLogSha256": "7aefada4fe9ba355afe5c6e95b67a0ab2f7d9d011ff0437818ce02fe7d5f773e"
+    }
+  ]
+}
