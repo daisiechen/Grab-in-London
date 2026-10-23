@@ -4,7 +4,7 @@ import { isBlocking, toFailure, type Failure } from '../api/failure.ts';
 import { londonDay } from '../i18n.ts';
 import { queryKey, toQuery, type AdminFilters, type FilterQuery } from './filters.ts';
 import { emptyBook, reduceIntents, statisticsSettled, type IntentBook, type IntentEvent } from '../features/classification/intent.ts';
-import { needsSync, nextDelayMs, SYNC_INTERVAL_MS, syncIntent } from '../features/classification/sync.ts';
+import { delayAfter, needsSync, SYNC_INTERVAL_MS, syncIntent } from '../features/classification/sync.ts';
 
 export type PageState =
   | { status: 'idle' }
@@ -176,7 +176,7 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
         inFlight.add(key);
         void syncIntent(api, state).then((event) => {
           inFlight.delete(key);
-          due.set(key, Date.now() + nextDelayMs(state, syncIntervalMs));
+          due.set(key, Date.now() + delayAfter(event, syncIntervalMs));
           if (event) dispatchIntent(event);
         });
       }

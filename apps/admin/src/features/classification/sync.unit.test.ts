@@ -3,7 +3,7 @@ import { ApiError } from '@fancy/client';
 import { createAdminApi } from '../../api/admin-api.ts';
 import { fail, mockFetch, ok } from '../../test/mock-api.ts';
 import type { FrozenIntent, IntentState, StatisticsRefreshView } from './intent.ts';
-import { needsSync, nextDelayMs, retryStatistics, saveFailure, syncIntent } from './sync.ts';
+import { delayAfter, needsSync, retryStatistics, saveFailure, syncIntent } from './sync.ts';
 
 const intent: FrozenIntent = { accountId: '00000000-0000-4000-8000-0000000000a1', key: '00000000-0000-4000-8000-0000000000c1', targetUserId: '00000000-0000-4000-8000-0000000000b1', classification: 'test', reason: 'Synthetic', baseRevision: '3' };
 const refresh: StatisticsRefreshView = { refreshId: '00000000-0000-4000-8000-0000000000d1', targetUserId: intent.targetUserId, acceptedRevision: '7', state: 'pending', snapshotId: null, failureCode: null, updatedAt: '2026-10-23T12:00:00.000Z' };
@@ -51,7 +51,11 @@ describe('classification intent sync (reads only)', () => {
     expect(needsSync({ phase: 'unknown', intent, reason: 'none', retryAfterSeconds: null })).toBe(true);
     expect(needsSync({ phase: 'accepted', intent, acceptedRevision: '7', stats: { status: 'failed', refresh, lookupFailed: false } })).toBe(false);
     expect(needsSync({ phase: 'conflict', intent, currentVersion: '9' })).toBe(false);
-    expect(nextDelayMs({ phase: 'unknown', intent, reason: 'pending', retryAfterSeconds: 12 })).toBe(12000);
+    // The delay comes from the response just received, not from the state before the read.
+    expect(delayAfter({ type: 'receipt', scope, receipt: { ...receipt, state: 'PENDING', retryAfterSeconds: 12 } as never }, 10)).toBe(12000);
+    expect(delayAfter({ type: 'receipt', scope, receipt: { ...receipt, state: 'NONE' } as never }, 10)).toBe(10);
+    expect(delayAfter({ type: 'receiptFailed', scope, kind: 'network' }, 10)).toBe(10);
+    expect(delayAfter(null, 10)).toBe(10);
   });
   it('maps save errors with their code and current version', () => {
     expect(saveFailure({ phase: 'saving', intent }, new ApiError({ status: 409, code: 'VERSION_CONFLICT', message: 'x', currentVersion: '9' }))).toEqual({ type: 'saveFailed', scope, kind: 'conflict', code: 'VERSION_CONFLICT', currentVersion: '9' });

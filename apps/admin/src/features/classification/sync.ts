@@ -11,9 +11,15 @@ export function needsSync(state: IntentState): boolean {
   return state.phase === 'accepted' && state.stats.status !== 'ready' && state.stats.status !== 'failed';
 }
 
-/** Earliest next read: the server's Retry-After for an in-progress intent, else the poll interval. */
-export const nextDelayMs = (state: IntentState, intervalMs = SYNC_INTERVAL_MS) =>
-  state.phase === 'unknown' && state.reason === 'pending' && state.retryAfterSeconds ? state.retryAfterSeconds * 1000 : intervalMs;
+/**
+ * Delay before the next read of this intent, taken from the response just received: a receipt's
+ * Retry-After (PENDING / in progress) wins, otherwise the poll interval. The caller makes it an
+ * absolute deadline at receipt time, so a new Retry-After applies to the very next read.
+ */
+export function delayAfter(event: IntentEvent | null, intervalMs = SYNC_INTERVAL_MS): number {
+  const seconds = event?.type === 'receipt' ? event.receipt.retryAfterSeconds : null;
+  return seconds ? Math.max(seconds * 1000, intervalMs) : intervalMs;
+}
 
 /**
  * One read for an unresolved intent: the original-intent receipt while unknown, then this intent's
