@@ -22,7 +22,7 @@ export const saveDraft = (key: DraftKey, value: unknown): void => {
 export const clearDraft = (key: DraftKey): void => remove(`draft.${key}`);
 const memoryResets = new Set<() => void>();
 /** In-memory private state (e.g. pending feedback intents) registers here to die with the session. */
-export const onPrivateStateClear = (reset: () => void): void => { memoryResets.add(reset); };
+export const onPrivateStateClear = (reset: () => void): (() => void) => { memoryResets.add(reset); return () => { memoryResets.delete(reset); }; };
 /** Every sign-out / 401 / account switch / deletion path: storage and registered memory together. */
 export const clearAllPrivateState = (): void => { clearAll(); for (const reset of memoryResets) reset(); };
 

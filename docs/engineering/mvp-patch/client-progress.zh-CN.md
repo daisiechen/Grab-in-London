@@ -121,3 +121,9 @@ packages/client/share.ts 只从显式公开输入构造 HTTPS canonical meal URL
 ### P05 发布内部重试在401后必须停止
 
 真实 SessionProvider 路径红例：createMeal 首次网络失败进入退避，另一个 getMe 返回401结束会话，再放行等待，原实现仍发送共4次（应1）。现每次 withRetry attempt 前验证 tracker generation，会话清理/卸载后不再发送旧发布请求，迟到结果也不导航。create/edit 21/21、Web 类型与 ESLint 通过。此检查不扩大服务端写范围。
+
+### P05 申请页作用域与迟到保稿
+
+- 两项精确红例：真实401结束会话后，等待中的申请重试仍发送4次；同一餐局离开并重新打开后，新草稿被旧成功响应清除。现申请/撤回/退席每次尝试和await后检查组件scope，卸载或账号内存清理同步失效。
+- 仅等React卸载仍有一次额外重试窗口，故接入既有onPrivateStateClear同步注册，并给注册API增加unsubscribe返回值以避免每次挂载累积监听。保持原触发401的登录回流：WebApi已将旧账号响应转换STATE_CONFLICT，只有原有效401进入gate.handle；未丢失原账号隔离的过期草稿恢复。
+- 首轮同步围栏修复导致原401回流2项失败（未导航登录），保留记录；恢复合法401处理后apply+expired-draft+真实feedback clear共15/15通过，Web类型与ESLint通过。旧响应不再删除新草稿，登录后仍须用户主动提交。

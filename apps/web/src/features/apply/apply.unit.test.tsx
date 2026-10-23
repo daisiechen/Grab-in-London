@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { screen, waitFor, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { createFetchStub, fail, ok, type RecordedCall } from '../../test/fetchStub.ts';
+import { createFetchStub, deferred, fail, ok, type StubResponse, type RecordedCall } from '../../test/fetchStub.ts';
 import { renderApp } from '../../test/render.tsx';
 import { APPLICATION_ID, MEAL_ID, meal, session } from '../../test/fixtures.ts';
 import { loadDraft, saveDraft } from '../../lib/drafts.ts';
@@ -22,6 +22,29 @@ function stub(opts: { myApplication?: unknown; allowed?: string[]; applyMeal?: (
 }
 
 describe('apply (T09)', () => {
+  it('stops queued application retries after a real 401 ends the session',async()=>{
+    const held=deferred<void>(),s=stub({applyMeal:()=>{throw new TypeError('Response lost');}});
+    s.on('getMe',()=>fail(401,'AUTH_REQUIRED'));
+    const view=renderApp(s.fetch,`/meals/${MEAL_ID}/apply`);view.api.retry.sleep=()=>held.promise;
+    await userEvent.type(await screen.findByLabelText('Your introduction'),INTRO);
+    await userEvent.click(screen.getByRole('button',{name:/Send request/}));
+    await waitFor(()=>expect(s.callsTo('applyMeal')).toHaveLength(1));
+    await act(async()=>{await view.api.client.call('getMe',{}).catch(()=>{});held.resolve();});
+    expect(s.callsTo('applyMeal')).toHaveLength(1);
+  });
+  it('does not erase a reopened form draft when the old application finishes late',async()=>{
+    const held=deferred<StubResponse>(),s=stub();s.on('applyMeal',()=>held.promise);
+    const first=renderApp(s.fetch,`/meals/${MEAL_ID}/apply`);
+    await userEvent.type(await screen.findByLabelText('Your introduction'),INTRO);
+    await userEvent.click(screen.getByRole('button',{name:/Send request/}));
+    await waitFor(()=>expect(s.callsTo('applyMeal')).toHaveLength(1));first.unmount();
+    renderApp(s.fetch,`/meals/${MEAL_ID}/apply`);
+    const box=await screen.findByLabelText('Your introduction');await userEvent.clear(box);await userEvent.type(box,'A new introduction kept after returning.');
+    await act(async()=>{held.resolve(ok(app('PENDING'),201));});
+    expect(loadDraft<{intro:string}>(`apply:${MEAL_ID}`)?.intro).toBe('A new introduction kept after returning.');
+    expect((screen.getByLabelText('Your introduction') as HTMLTextAreaElement).value).toBe('A new introduction kept after returning.');
+  });
+
   it('validates length, sends once with an Idempotency-Key and shows the pending status', async () => {
     const s = stub();
     renderApp(s.fetch, `/meals/${MEAL_ID}/apply`);

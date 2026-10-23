@@ -1,5 +1,5 @@
 import { useAssistantEditor, useAssistantEditorRevision } from '../assistant/index.ts';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { ApiError } from '@fancy/client';
 import { LANGUAGES, LIFE_STATUSES } from '@fancy/contracts';
@@ -10,7 +10,7 @@ import { useQuery } from '../../api/useQuery.ts';
 import { Intent } from '../../api/webApi.ts';
 import { errorMessage } from '../../api/errors.ts';
 import type { Application, MealDetail } from '../../api/types.ts';
-import { clearDraft, loadDraft, saveDraft } from '../../lib/drafts.ts';
+import { clearDraft, loadDraft, onPrivateStateClear, saveDraft } from '../../lib/drafts.ts';
 import { longDate } from '../../lib/format.ts';
 import { Avatar, Field, FormError, Loading, PageHeader, Primary, PrimaryLink, TextAction } from '../../ui/components.tsx';
 import { ConfirmSheet } from '../../ui/ConfirmSheet.tsx';
@@ -49,6 +49,12 @@ function ApplicationEditorPage({ mealId }: { mealId: string }) {
   const [sheet, setSheet] = useState<'' | 'withdraw' | 'leave'>('');
   const [composeAgain, setComposeAgain] = useState(false);
   const intent = useMemo(() => new Intent(api.retry), [api]);
+  const scope = useRef(0);
+  useEffect(() => {
+    const reset = () => { scope.current++; };
+    const unsubscribe = onPrivateStateClear(reset);
+    return () => { unsubscribe(); reset(); };
+  }, []);
 
   useEffect(() => { if (intro) saveDraft(draftKey, { intro }); else clearDraft(draftKey); }, [draftKey, intro]);
   const editorVersion = useAssistantEditorRevision(intro);
@@ -73,46 +79,65 @@ function ApplicationEditorPage({ mealId }: { mealId: string }) {
       return;
     }
     if (!gate.check(here)) return;
+    const generation = scope.current;
     setBusy(true);
     setError('');
     try {
       const body = { message };
-      await intent.run(body, (key) => api.client.call('applyMeal', { params: { mealId }, body, idempotencyKey: key }));
+      await intent.run(body, (key) => {
+        if (generation !== scope.current) throw new Error('Application scope ended');
+        return api.client.call('applyMeal', { params: { mealId }, body, idempotencyKey: key });
+      });
+      if (generation !== scope.current) return;
       clearDraft(draftKey);
       setIntro('');
       setComposeAgain(false);
       notify('Request sent.');
       await afterWrite();
     } catch (e) {
+      if (generation !== scope.current) {
+        // The triggering 401 still owns sign-in recovery. Old-account replies are
+        // converted to STATE_CONFLICT by WebApi and cannot enter this branch.
+        if (e instanceof ApiError && e.status === 401) gate.handle(e, here);
+        return;
+      }
       if (gate.handle(e, here)) return;
       setError(errorMessage(e));
       if (e instanceof ApiError && e.kind === 'conflict') await q.reload();
     } finally {
-      setBusy(false);
+      if (generation === scope.current) setBusy(false);
     }
   };
 
   const confirmAction = async () => {
     if (!myApplication) return;
+    const generation = scope.current;
     setBusy(true);
     setError('');
     try {
       if (sheet === 'withdraw') {
-        await intent.run({ w: myApplication.id, v: myApplication.version }, (key) =>
-          api.client.call('withdrawApplication', { params: { applicationId: myApplication.id }, ifMatch: myApplication.version, idempotencyKey: key }));
+        await intent.run({ w: myApplication.id, v: myApplication.version }, (key) => {
+          if (generation !== scope.current) throw new Error('Application scope ended');
+          return api.client.call('withdrawApplication', { params: { applicationId: myApplication.id }, ifMatch: myApplication.version, idempotencyKey: key });
+        });
+        if (generation !== scope.current) return;
         notify('Request withdrawn.');
       } else {
-        await intent.run({ l: meal.id, v: meal.version }, (key) =>
-          api.client.call('leaveMeal', { params: { mealId: meal.id }, ifMatch: meal.version, idempotencyKey: key }));
+        await intent.run({ l: meal.id, v: meal.version }, (key) => {
+          if (generation !== scope.current) throw new Error('Application scope ended');
+          return api.client.call('leaveMeal', { params: { mealId: meal.id }, ifMatch: meal.version, idempotencyKey: key });
+        });
+        if (generation !== scope.current) return;
         notify('Your place is cancelled. Your group chat stays open.');
       }
       setSheet('');
       await afterWrite();
     } catch (e) {
+      if (generation !== scope.current) return;
       setError(errorMessage(e));
       if (e instanceof ApiError && e.kind === 'conflict') await q.reload();
     } finally {
-      setBusy(false);
+      if (generation === scope.current) setBusy(false);
     }
   };
 
