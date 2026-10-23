@@ -49,3 +49,11 @@
 Codex新建独立设备集 `/private/tmp/fancy-p11-client-01a162f6/simulator-devices`，其中仅有 `Fancy P1.1 Client QA`（iPhone 16 Pro / iOS 27.0，UDID `D5F38916-17FC-4676-8D1D-C2149A34F333`）。通过带明确 `--set` 路径的 `simctl create`、`boot`、`bootstatus -b` 完成创建与首次启动；bootstatus退出0。没有操作默认设备集或旧设备。私有元数据保存于该补丁临时根的 `native-test-environment.json`，权限0600；此时尚未安装App，原生运行验收仍NOT RUN，不能将模拟器启动视为产品通过。
 
 同日Codex在开发中未提交源码上独立复核：原回执purge后的NONE回放保护API测试1/1通过；反馈账号clear时迟到写入、排队reconnect及迟到回执3项均通过；共享反馈/意图相关单元回归合计23/23，Web餐后反馈18/18。iOS餐后反馈首次8通过/2失败（首项5000ms超时，下一项出现前项残留），第二项单独重跑通过，随后原文件保持原超时和断言重跑10/10通过。保留首次不稳定记录，待最终固定提交的全量回归重新判断；这些结果不替代浏览器、已安装原生构建或当前版本整体验收。
+
+## 2026-10-23：独立原生构建工具链
+
+系统Ruby 2.6安装CocoaPods失败（Xcode SDK缺少其ruby/config.h），故未改系统配置，改在同一P1.1临时根 `native-tools/` 构建官方Ruby 3.4.12（官网SHA256 `5e5d85ad93b0adcccbad47733680f4892bd0078e3342437f7babce01c1872479`）、OpenSSL 3.5.9（官方发布SHA256 `603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a`）与LibYAML 0.2.5（下载SHA256 `c642ae9b75fee120b2d96c712538bd2cf283228d2337df2cf2988e3c02678ef4`）；补齐Ruby openssl/psych扩展。RubyGems安装目录为该根的`gems/`，显式SSL_CERT_FILE使用系统证书包`/etc/ssl/cert.pem`，未关闭证书校验。`native-tools/gems/bin/pod --version`在显式GEM_HOME/GEM_PATH/PATH下退出0，返回1.17.0。未修改shell配置、系统Ruby、全局gem库或旧构建依赖。此项仅证明构建工具可调用，尚未运行原生prebuild/build/install或App设备验收。
+
+来源：[Ruby官网](https://www.ruby-lang.org/en/downloads/)、[OpenSSL官方发布](https://openssl-library.org/source/)、[LibYAML官方安装说明](https://pyyaml.org/wiki/LibYAML)、[CocoaPods官方安装说明](https://guides.cocoapods.org/using/getting-started.html)。全部源码与构建日志保存在临时工具根，不进入公开Git。
+
+原生工程生成随后验证：`expo prebuild --platform ios --no-install --skip-dependency-update expo,react,react-native`成功，package.json/app.json/lockfile无改动；生成bundle `uk.fancyabite.patch.p11`、scheme `fancyp11`。首次pods因缺UTF-8 locale失败；补LANG/LC_ALL后Hermes podspec仍遇中文依赖路径的BINARY/UTF-8冲突。该失败尝试读取了经过校验的全局ReactNative tar缓存（未作为验收输入），没有操作旧App或设备。为保证最终构建输入路径与缓存可控，Codex从固定提交`0dc3bcab57f3d15cea5909a8b27cb00a9056a0ea`用git archive建立ASCII目录`native-source-p04/`，离线独立安装node_modules并重新prebuild；pods显式`RCT_SKIP_CACHES=1`绕过全局ReactNative缓存，CP_HOME_DIR/CP_CACHE_DIR仍指向补丁专属目录。该快照pods安装退出0；当前xcodebuild使用该快照、独立DerivedData/clang/swift缓存及模拟器通用目标，尚未完成编译或安装。此P04快照仅验证原生构建环境，不代表后续P05或整版P1.1验收。
