@@ -1,6 +1,6 @@
 # 后台 Figma · MVP 补丁前端开发准入评审
 
-日期：2026-10-23。**最新状态：AF-01～05设计交付阻塞均已关闭；B03最终实施基线与隔离环境尚未关闭，不能整体正式开工。** 详见文末正式版本交付核证。
+日期：2026-10-23。**最新状态：PATCH-006后台可进入P1.1前端开发；AF-01～05、后台增量方案和本地合成实施环境B03准入已关闭。** 详见文末实施准入核证；不代表全补丁或发布验收通过。
 
 初评结论：**不能按整套设计已冻结、可直接进入前端开发签收**。五页范围及主要路径已具备；发现统计失败状态冲突，且共享恢复、响应式及交接验收仍未关闭。可先开展不依赖这些状态的基础组件、页面结构与查询适配方案，不能据此宣称PATCH-006整体通过。
 
@@ -84,3 +84,19 @@ AF-01是直接观察到的设计冲突；AF-02至04主要是已有设计的闭�
 - B03核查发现当前MVP仍在收尾，最新阶段QA sourceB客户端`3ee69fe`、API`89dc541`并非最终MVP交接。还需锁定补丁发布编号、唯一实施文件负责人，以及实际建立并验证隔离工作区和运行环境；候选端口空闲不等于已预留。详细正式回执待开发对接报告归档。
 
 本次仅关闭设计版本交付缺口，不授权功能开发或改变现行MVP/QA环境。B03实际证据到齐后再给出整体实施准入结论。
+
+
+## P1.1 后台实施准入核证（2026-10-23）
+
+**结论：PATCH-006后台可以进入前端开发，原AF-01～05及本地后台B03准入项已关闭。** 当前已进入开发及切片验收；实现缺陷与真实服务/发布门槛仍由开发及QA流程处理，不重新混成Figma设计阻塞。
+
+核证范围：仅后台，不代签iOS、移动Web或全补丁B03。
+
+- 方案固定受评提交`8a4a3c50d773f18d08993d7e9c476618710b4bf2`，SHA256 `98dece0066dc75621d98f8484b1ae40167bdc10aece3e52bce1bb1c4e458c697`；后台UX已独立PASS，实际读取后台分支review确认PM/用户端UX同版PASS。
+- 版本元数据实际为产品P1.1、releaseApproved=false；父封存`2e33ca2bbdc838c85a36d2e3bbd9b5fe216478ae`。后台实际分支`codex/admin-patch-p11`，managed worktree `admin-patch-p11`，直接验证父提交为HEAD祖先、方案文件哈希与签收版一致、node_modules是独立实体目录。
+- 唯一责任见后台分支`docs/engineering/mvp-patch/claude-admin-handoff.zh-CN.md`：Claude后台业务，Codex隔离及验收；后台0026迁移/独立DTO及admin操作契约；客户端会话持有公共回执、生成产物与worker主入口，按精确提交串行集成。此前跨会话授权/owner待定文字为历史，后续明确回执已取代。
+- 后台交接记录B03实测PASS：依赖3399链接未越root；guard负向10项、基线admin API5项、独立tsconfig/eslint/core:check；独立PG、API与浏览器合成登录，provider test/fixture/outbox_test、AI disabled。该运行核证由开发协调执行，本会话读取其交接及实际本地manifest，不冒称独立重跑服务测试。
+- 本会话直接核查初始验收manifest与后续运行manifest：两者均位于后台worktree ignored运行根；当前清单scope=PATCH-006 synthetic only，依赖/PG实际路径在该root内，独立后台origin `p11-admin.localhost:64275`、API回环64276，测试provider与AI停用状态一致。最初验收runtime已结束，开发后使用新runtime/源码提交；本结论不声称旧进程仍在运行或当前业务构建已验收。每次换代仍按owner流程验证，不动封存现场。
+- 实施证据真源在后台分支的`claude-admin-handoff.zh-CN.md`、`admin-handoff.zh-CN.md`、版本元数据及本地受限manifest；私有路径、数据库连接和凭据不复制到公开报告。继承的旧isolation文档及release implementationGate=pending是拆分前记录，后台最新专属实测记录为准。
+
+尚未关闭的是产品实现验收与真实依赖/发布门槛，不是此次“能否开始后台前端开发”的准入项。P09/P10仍须按方案完成HTTP恢复、并发、整页状态、四档浏览器与独立QA；不得把方案/隔离PASS写成这些业务验证已完成。旧封存15条未闭用例及风险继续保留。
