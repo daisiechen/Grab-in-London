@@ -57,7 +57,7 @@ export class ProfileSaver {
       if (error instanceof StaleSessionError) { this.tracker.reset(); return { kind: 'failed', message: 'You’ve been signed out.', retryable: false }; }
       if (this.tracker.pending) return { kind: 'unknown', message: UNKNOWN };
       if (!(error instanceof ApiError)) return { kind: 'failed', message: 'Something went wrong. Please try again.', retryable: true };
-      if (error.code === 'VERSION_CONFLICT') return this.conflict();
+      if (error.code === 'VERSION_CONFLICT') return this.conflict(generation);
       if (error.kind === 'validation') return { kind: 'invalid', ...serverFieldMessage(error.fieldErrors) };
       return { kind: 'failed', message: 'We couldn’t save your profile. Please try again.', retryable: error.retryable };
     }
@@ -71,20 +71,24 @@ export class ProfileSaver {
     if (stale) return stale;
     if (outcome === 'saved') {
       try { const me = (await this.api.call('getMe', {})).data; if (this.stale(generation)) return this.stale(generation)!; this.session.updateUser(me); return { kind: 'saved', me }; }
-      catch { return { kind: 'failed', message: 'Your profile saved, but we couldn’t refresh it. Pull to refresh.', retryable: true }; }
+      catch { return this.stale(generation) ?? { kind: 'failed', message: 'Your profile saved, but we couldn’t refresh it. Pull to refresh.', retryable: true }; }
     }
     if (outcome === 'resend' && this.original) return this.save(this.original.patch, this.original.version);
-    if (outcome === 'conflict' || outcome === 'expired') return this.conflict();
+    if (outcome === 'conflict' || outcome === 'expired') return this.conflict(generation);
     if (outcome === 'rejected') return { kind: 'failed', message: 'That save wasn’t accepted. Your changes are kept.', retryable: false };
     return { kind: 'unknown', message: 'Still no confirmed result. Your changes are kept; check again shortly.' };
   }
 
-  private async conflict(): Promise<SaveResult> {
+  private async conflict(generation: number): Promise<SaveResult> {
     let me: Me | null;
     try {
       me = (await this.api.call('getMe', {})).data;
+      const stale = this.stale(generation);
+      if (stale) return stale;
       this.session.updateUser(me);
     } catch {
+      const stale = this.stale(generation);
+      if (stale) return stale;
       me = null;
     }
     return { kind: 'conflict', me, message: 'Your profile changed on another device. Review your details and save again.' };

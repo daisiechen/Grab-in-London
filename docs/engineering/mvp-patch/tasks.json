@@ -49,7 +49,7 @@
         "PATCH-006"
       ],
       "title": "冻结稿差异盘点",
-      "owner": "client Claude Code implementation; Codex acceptance",
+      "owner": "Codex client/mobile Web implementation and scoped acceptance",
       "status": "NOT_STARTED",
       "acceptance": "每PATCH逐页面映射现有文件、复用或具体差异；无无关重写",
       "verification": "人工核对代码/Figma/需求映射",
@@ -68,7 +68,7 @@
         "PATCH-006"
       ],
       "title": "原意图回执契约",
-      "owner": "client Claude Code implementation; Codex acceptance",
+      "owner": "Codex client/mobile Web implementation and scoped acceptance",
       "status": "NOT_STARTED",
       "acceptance": "原actor/operation/key，pending与确定拒绝区分，409分类，不泄露正文",
       "verification": "contract生成和授权/重放/超时API测试",
@@ -88,7 +88,7 @@
         "PATCH-001"
       ],
       "title": "资料及删除恢复",
-      "owner": "client Claude Code implementation; Codex acceptance",
+      "owner": "Codex client/mobile Web implementation and scoped acceptance",
       "status": "NOT_STARTED",
       "acceptance": "trim20–1000，pending/409/unknown保稿，receipt不误称删除完成",
       "verification": "Web/iOS组件与隔离恢复路径",
@@ -108,7 +108,7 @@
         "PATCH-003"
       ],
       "title": "发现创建及DST",
-      "owner": "client Claude Code implementation; Codex acceptance",
+      "owner": "Codex client/mobile Web implementation and scoped acceptance",
       "status": "NOT_STARTED",
       "acceptance": "失败/迟到/满员/截止保稿；DST两字段显选且服务端拒不存在；批准后锁定",
       "verification": "领域/API并发及Web/iOS代表路径",
@@ -128,7 +128,7 @@
         "PATCH-004"
       ],
       "title": "反馈与连接恢复",
-      "owner": "client Claude Code implementation; Codex acceptance",
+      "owner": "Codex client/mobile Web implementation and scoped acceptance",
       "status": "NOT_STARTED",
       "acceptance": "确认前零写；分项顺序/部分/未知/409准确；七天后独立撤回可用",
       "verification": "状态机组合测试/API与双端旅程",
@@ -149,7 +149,7 @@
         "PATCH-008"
       ],
       "title": "授权只读与可见已读",
-      "owner": "client Claude Code implementation; Codex acceptance",
+      "owner": "Codex client/mobile Web implementation and scoped acceptance",
       "status": "NOT_STARTED",
       "acceptance": "退群隐藏名册，403进入授权历史；仅可见位置读；通知已读独立",
       "verification": "双端权限历史/已读集成",
@@ -168,7 +168,7 @@
         "PATCH-005"
       ],
       "title": "AI编辑器转入",
-      "owner": "client Claude Code implementation; Codex acceptance",
+      "owner": "Codex client/mobile Web implementation and scoped acceptance",
       "status": "NOT_STARTED",
       "acceptance": "Keep/Replace、失效、长度、soft/hard/CLEAR；F66/F68最终构建回归",
       "verification": "fake模型预算并发/数值原例及双端原编辑器",
@@ -227,7 +227,7 @@
         "PATCH-007"
       ],
       "title": "分享公开链接与回流",
-      "owner": "client Claude Code implementation; Codex acceptance",
+      "owner": "Codex client/mobile Web implementation and scoped acceptance",
       "status": "NOT_STARTED",
       "acceptance": "无敏感参数、同mealId门槛后主动申请；无外部重定向",
       "verification": "URL纯函数/公开投影/跨端回流测试",
@@ -247,7 +247,7 @@
         "PATCH-007"
       ],
       "title": "分享渠道与降级",
-      "owner": "client Claude Code implementation; Codex acceptance",
+      "owner": "Codex client/mobile Web implementation and scoped acceptance",
       "status": "NOT_STARTED",
       "acceptance": "系统取消不称发送；WhatsApp预填/微信复制/复制失败降级",
       "verification": "隔离浏览器/模拟器；真实渠道单独记录",
@@ -266,7 +266,7 @@
         "PATCH-008"
       ],
       "title": "提及协议与存储",
-      "owner": "client Claude Code implementation; Codex acceptance",
+      "owner": "Codex client/mobile Web implementation and scoped acceptance",
       "status": "NOT_STARTED",
       "acceptance": "v2范围坐标/旧v1兼容/唯一约束/迁移，不回填历史提醒",
       "verification": "contract生成与新空库/升级库兼容测试",
@@ -286,7 +286,7 @@
         "PATCH-008"
       ],
       "title": "发送事务与接收人",
-      "owner": "client Claude Code implementation; Codex acceptance",
+      "owner": "Codex client/mobile Web implementation and scoped acceptance",
       "status": "NOT_STARTED",
       "acceptance": "Everyone服务端校验；失效成员降级；同clientMessageId不重复; Capture recipient membership authorization epoch in the send transaction.",
       "verification": "并发退群/host变更/重复payload API测试",
@@ -306,7 +306,7 @@
         "PATCH-008"
       ],
       "title": "跨端静音与订阅",
-      "owner": "client Claude Code implementation; Codex acceptance",
+      "owner": "Codex client/mobile Web implementation and scoped acceptance",
       "status": "NOT_STARTED",
       "acceptance": "IfMatch409刷新；账号/安装换绑撤销；token不日志",
       "verification": "权限/版本/退出/删除/endpoint SSRF测试",
@@ -328,7 +328,7 @@
         "PATCH-008"
       ],
       "title": "提醒outbox及适配",
-      "owner": "client Claude Code implementation; Codex acceptance",
+      "owner": "Codex client/mobile Web implementation and scoped acceptance",
       "status": "NOT_STARTED",
       "acceptance": "投递前权限/mute/read重验；1h TTL；UNKNOWN不盲重试; Permanently revoke old-epoch queued deliveries on leave/revocation/dissolve; rejoin cannot revive them.",
       "verification": "fake APNs/WebPush暂停队列/重放/410/429测试; pause queue -> leave -> rejoin -> resume: zero old push, no gap events, valid new-epoch push",
@@ -349,7 +349,7 @@
         "PATCH-008"
       ],
       "title": "双端提及与提醒界面",
-      "owner": "client Claude Code implementation; Codex acceptance",
+      "owner": "Codex client/mobile Web implementation and scoped acceptance",
       "status": "NOT_STARTED",
       "acceptance": "同名候选/标记/普通文本兼容；本机可见不弹；设置冲突恢复; Preserve authorized history and in-app records while old queued pushes stay revoked.",
       "verification": "Web/iOS组件及双账号矩阵",
@@ -382,7 +382,7 @@
         "PATCH-008"
       ],
       "title": "最终隔离构建与继承回归",
-      "owner": "client Claude Code implementation; Codex acceptance",
+      "owner": "Codex client/mobile Web implementation and scoped acceptance",
       "status": "NOT_STARTED",
       "acceptance": "每原ID保留断言/状态证据；精确commit/build；真实门槛未测不PASS",
       "verification": "core:check和适用unit/db/api/clients/build及独立QA",
@@ -411,5 +411,5 @@
       "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
     }
   ],
-  "executionMode": "Claude Code implements client/mobile Web; Codex coordinates and independently accepts; admin separately owned"
+  "executionMode": "Codex implements client/mobile Web after explicit user takeover authorization; admin separately owned; acceptance evidence remains scoped by snapshot and test"
 }

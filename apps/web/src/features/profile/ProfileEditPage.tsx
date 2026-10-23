@@ -135,27 +135,33 @@ export function ProfileEditPage() {
     try {
       original.current = { body, version };
       const res = await tracker.run({ body, version }, (key) =>
-        withRetry(() => api.client.call('updateMe', { body, ifMatch: version, idempotencyKey: key }), api.retry));
+        withRetry(() => {
+          if (generation !== tracker.generation) throw new Error('Profile scope ended');
+          return api.client.call('updateMe', { body, ifMatch: version, idempotencyKey: key });
+        }, api.retry));
       if (generation !== tracker.generation) return;
-      await saved(res.data);
+      await saved(res.data, generation);
     } catch (e) {
       if (generation !== tracker.generation) return;
       if (e instanceof IntentUnresolvedError) { setFormError('Your earlier save hasn’t been confirmed yet. Check its status before saving changes.'); return; }
       setUnknown(tracker.pending !== null);
       if (e instanceof ApiError && e.code === 'VERSION_CONFLICT') {
         await me.reload(); // newer version for the next save; the user's edits stay in the form
+        if (generation !== tracker.generation) return;
       }
       setErrors(fieldErrorsOf(e));
       setFormError(tracker.pending ? '' : errorMessage(e));
     } finally {
-      setBusy(false);
+      if (generation === tracker.generation) setBusy(false);
     }
   };
 
-  const saved = async (data: Me) => {
+  const saved = async (data: Me, generation: number) => {
+    if (generation !== tracker.generation) return;
     setUnknown(false);
     me.setData(data);
     await refresh();
+    if (generation !== tracker.generation) return;
     notify('Profile saved.');
     navigate(returnTo, { replace: true });
   };
@@ -168,13 +174,16 @@ export function ProfileEditPage() {
     try {
       const outcome = await tracker.reconcile(api.client, 'updateMe');
       if (generation !== tracker.generation) return;
-      if (outcome === 'saved') { const fresh = (await api.client.call('getMe', {})).data; await saved(fresh); return; }
+      if (outcome === 'saved') { const fresh = (await api.client.call('getMe', {})).data; if (generation !== tracker.generation) return; await saved(fresh, generation); return; }
       if (outcome === 'resend' && original.current) { setBusy(false); await submit(original.current.body, original.current.version); return; }
-      if (outcome === 'conflict' || outcome === 'expired') { setUnknown(false); await me.reload(); setFormError('Your profile changed elsewhere. The latest version is loaded and your edits are kept. Review and save again.'); return; }
+      if (outcome === 'conflict' || outcome === 'expired') { setUnknown(false); await me.reload(); if (generation !== tracker.generation) return; setFormError('Your profile changed elsewhere. The latest version is loaded and your edits are kept. Review and save again.'); return; }
       if (outcome === 'rejected') { setUnknown(false); setFormError('That save wasn’t accepted. Your edits are kept.'); return; }
       setFormError('Still no confirmed result. Your edits are kept; try checking again shortly.');
+    } catch (e) {
+      if (generation !== tracker.generation) return;
+      setFormError(errorMessage(e));
     } finally {
-      setBusy(false);
+      if (generation === tracker.generation) setBusy(false);
     }
   };
 

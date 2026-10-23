@@ -36,3 +36,19 @@
 独立红例 `apps/web/src/test/p11-feedback-clear.unit.test.tsx`（Codex拥有，Claude只读运行勿stage）：reviewPerson在途时执行resetFeedbackMemory并卸载组件，放行响应后selectReconnect仍写1次，预期0。共享runner.clear的代际保护尚未接到组件：双端reset只将memory=null，替换account也未清旧runner；真实session-end无reset调用。请修双端账号切换/退出/401/删除的生命周期，真正清旧runner、draft、listener；同账号重登录不能恢复前会话草稿，迟到finish或内部retry不能继续后项或污染新scope。不要仅修测试helper。保持离开页面再返回同一会话恢复草稿的既定行为。修复、测试及提交由Claude执行；Codex组件红例不得混stage。
 
 当前Codex Git待提交文件：上述组件测试、infra/patch-client/{feedback-late.unit.test.ts,receipt-recovery.api.test.ts}、isolation.zh-CN.md末尾记录，以及本交接补充。请在后台源码/生成/worker集成安全提交后暂停Git提交约一分钟并明确交还窗口给Codex，随后继续其余客户端P04/P05/P07/P08/P11–P17，不以P06局部完成替代全计划。
+
+## Codex验收 P04-R01：IntentTracker重置后的迟到结果
+
+新增Codex独占测试 `infra/patch-client/intent-tracker-late.unit.test.ts` 2项均红：reset后旧run迟到网络失败重建旧pending；reset后新run已产生unknown pending，再放行旧run成功却将新pending清空。请在run与reconcile的全部await continuation加代际/具体意图标识保护，并在真实资料页/创建页生命周期正确reset；旧响应不更新新账号session或表单。另run当前只在catch记录unresolved，并发调用前没有in-flight保护，请核查连续触发不会产生两个key。测试只读运行勿stage，修业务及自身回归后提交；不要仅修helper却漏接真实session清理。
+
+P04-R01复测补充：原3项及迟到receipt查询共4项已在dirty修复通过（含意图单测合计14）。请同时逐await核对UI层：Web checkStatus的SUCCEEDED分支在getMe之后、saved中的refresh之后，以及iOS ProfileSaver.conflict的getMe之后仍须验证原generation再更新/navigate；仅在第一个await后校验不足以证明整个恢复链隔离。固定提交后由Codex复验，勿以helper绿代替双端生命周期验证。
+
+## Codex验收 P04-R02：iOS冲突恢复第二次await缺少围栏
+
+已独立复现，并非推测：`pnpm exec vitest run --config infra/patch-client/vitest.native-logic.config.ts`运行Codex独占`profile-conflict-late.acceptance.test.ts`。updateMe返回409后进入getMe，等待期间saver.reset，再放行旧getMe，session.updateUser仍调用1次（预期0）。请在ProfileSaver.conflict获取getMe之后验证原generation，也核对Web checkStatus getMe后及saved refresh后。独立配置仅用于原生纯逻辑，显式仓库TS基线避免Vite无法解析Expo tsconfig；不是放宽断言。测试和配置属Codex，Claude只读运行勿stage。P04已提交0dc3bca，此修复请独立提交。
+
+## 2026-10-23 用户授权 Codex 接手
+
+Claude 会话已限额，用户明确要求 Codex 接手后续开发。此前“Claude实施、Codex只读验收”的实现限制由此项新授权替代；客户端及移动 Web 由本会话继续，后台仍独立负责。不得恢复 Claude 并发写同一文件。历史问题记录保留作为证据。
+
+P04-R02 已由 Codex 修复业务：iOS conflict 第二次 await 后保护；Web 回执查询 getMe、refresh、reload、重试入口保护，且捕获会话失效 rejection。精确 iOS 红例 1/1、Web 8/8 复验退出 0，双端类型检查通过。此为局部关闭，不代替后续整包及真实界面验收。

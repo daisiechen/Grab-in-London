@@ -1,6 +1,6 @@
-# P1.1 客户端实施进度（Claude Code）
+# P1.1 客户端实施进度
 
-执行：Claude Code，工作区 managed worktree `mvp-patch-p1/约饭App`，分支 `codex/mvp-patch-p1`。Codex协调并独立验收；本文件只记录客户端切片事实，不代替验收结论。真实provider/设备/外部App未测项不称PASS。
+执行：原由 Claude Code 实施；2026-10-23 用户明确授权“Claude会话到限额了，你接手后面的开发吧”后，由 Codex 接手客户端与移动 Web 实施。后台仍由独立会话负责。工作区 managed worktree `mvp-patch-p1/约饭App`，分支 `codex/mvp-patch-p1`。历史切片保留原作者与验证记录；接手后由 Codex 实施并以明确范围的回归核证，本文件只记录客户端切片事实，不代替验收结论。真实provider/设备/外部App未测项不称PASS。
 
 ## 测试环境约定
 
@@ -62,3 +62,9 @@ cherry-pick -x后台 63b088e、f3b0e0b、ea5a2e2、2d7647f、b111c4c（未pick 0
 - DST/不存在时间/批准后锁定等既有逻辑未改（delta-map判定已符合）；BST/GMT选择仍为422确定拒绝后形成新意图。
 - 验证（退出0）：core:check；unit 451；web 308；iOS 388。
 - 遗留：editMeal仍用原Intent（同key重试、409加载最新），未接回执核对；发现/申请迟到结果与Places状态逐节点核对待后续切片。
+
+### P04-R02 接手后的资料恢复竞态修复
+
+- iOS ProfileSaver.conflict 将原 generation 贯穿 getMe，迟到成功或失败均不更新已重置会话。
+- Web 在状态回执之后的 getMe、保存后的 refresh、冲突 reload 及重试入口复核 generation；离开会话不提示成功或跳转。状态查询捕获会话失效异常，防止未处理 rejection，仍保留同会话未知结果的编辑。
+- 精确红例转绿：iOS 409→getMe 在途→reset→响应，session.updateUser 为 0；Web 真实 SessionProvider.clearLocal 后放行 receipt-confirmed getMe，仍停留 /sign-in 且无成功提示。Web 8/8、iOS 纯逻辑 1/1，双端及独立严格类型检查通过；未据此称 P04 全面验收完成。
