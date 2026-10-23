@@ -3,13 +3,14 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { validate as validateOpenApi } from '@readme/openapi-parser';
 import { ERROR_CODES, ERROR_STATUS } from './errors.ts';
-import { errorsFor, type OperationDef } from './operation.ts';
+import { errorsFor, operationPath, type OperationDef } from './operation.ts';
 import { operations, operationsById } from './registry.ts';
 import { buildClientMetadata, buildOpenApi } from './openapi.ts';
 import { ADMIN_DRILLDOWN_TARGETS, ADMIN_PAGE_KEYS, ADMIN_PAGES, CUISINES, DIETARY, MOODS, SURVEY_REASONS } from './dictionaries.ts';
 import { isAllowedReturnTarget } from './return-target.ts';
 import { normalizeHostDeclarations } from './declarations.ts';
 import { CliCredentials, IosCredentials, ReturnTarget, LoopbackRedirectUri } from './operations/auth.ts';
+import { PushSubscription } from './messaging-dto.ts';
 import { validator } from './test-ajv.ts';
 
 const ROOT = join(import.meta.dirname, '../../..');
@@ -50,7 +51,7 @@ describe('registry matches the reviewed API contract', () => {
     const extra = all.map((d) => d.operationId).filter((id) => !documented.some((d) => d.id === id));
     expect(extra.sort()).toEqual(['getVenuePhoto','getBlock', 'markConversationRead', 'getClassification', 'getExport', 'createGuestSession', 'readAIPreferences', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'readAI', 'activityAI', 'resetAI', 'requestAI', 'pollAI', 'validateAIDraft',
       // P1.1 reviewed patch plan §4 (docs/engineering/mvp-patch/plan.zh-CN.md), not the frozen MVP contract.
-      'getCommandReceipt', 'getStatisticsRefresh', 'findStatisticsRefreshByIntent', 'retryStatisticsRefresh'].sort());
+      'sendGroupMessageV2', 'readGroupMessagesV2', 'mentionCandidates', 'getConversationNotificationSettings', 'putConversationNotificationSettings', 'registerPushSubscription', 'deletePushSubscription', 'getCommandReceipt', 'getStatisticsRefresh', 'findStatisticsRefreshByIntent', 'retryStatisticsRefresh'].sort());
     expect(doc).toContain('GET /admin/exports/:id');
   });
 
@@ -64,7 +65,7 @@ describe('registry matches the reviewed API contract', () => {
 
   it('has unique operationIds and method+path pairs', () => {
     expect(new Set(all.map((d) => d.operationId)).size).toBe(all.length);
-    expect(new Set(all.map((d) => `${d.method} ${d.path}`)).size).toBe(all.length);
+    expect(new Set(all.map((d) => `${d.method} ${operationPath(d)}`)).size).toBe(all.length);
   });
 
   it('declares every documented error code', () => {
@@ -81,7 +82,7 @@ describe('write protocol', () => {
       'block', 'cancelMeal', 'classifyUser', 'declareBooking', 'decideApplication', 'dissolveGroup', 'editMeal', 'leaveGroup',
       'leaveMeal', 'putSurvey', 'rateExperience', 'reportAttendance', 'requestDeletion', 'resolveCase', 'reviewPerson',
       'revokeConnection', 'selectReconnect', 'unblock', 'updateMe', 'withdrawApplication',
-      'replaceAIPreferences', 'deleteAIPreferences',
+      'replaceAIPreferences', 'deleteAIPreferences', 'putConversationNotificationSettings',
     ].sort());
     for (const id of ['createMeal', 'applyMeal', 'sendMessage', 'createReport']) expect(byId(id)!.ifMatch, id).toBe(false);
   });
@@ -93,7 +94,7 @@ describe('write protocol', () => {
     }
     const clientRequest = all.filter((d) => d.write === 'clientRequestId').map((d) => d.operationId).sort();
     expect(clientRequest).toEqual(['createGuestSession', 'exchangeHandoff', 'logout', 'refreshSession', 'startEmail', 'startOAuth', 'startReauth', 'verifyEmail']);
-    expect(all.filter((d) => d.write === 'resourceKey').map((d) => d.operationId).sort()).toEqual(['markConversationRead', 'ingestEvents', 'sendMessage', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'activityAI', 'resetAI', 'requestAI', 'validateAIDraft'].sort());
+    expect(all.filter((d) => d.write === 'resourceKey').map((d) => d.operationId).sort()).toEqual(['sendGroupMessageV2', 'markConversationRead', 'ingestEvents', 'sendMessage', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'activityAI', 'resetAI', 'requestAI', 'validateAIDraft'].sort());
   });
 
   it('derives transport error codes from protocol flags', () => {
@@ -325,5 +326,33 @@ describe('P1.1 command receipt whitelist', () => {
     for (const o of flagged) expect(o.write, o.operationId).toBe('idempotencyKey');
     expect(byId('getCommandReceipt')).toMatchObject({ method: 'GET', auth: 'session', write: 'read' });
     for (const id of ['reviewPerson', 'selectReconnect', 'revokeConnection', 'updateMe', 'applyMeal', 'createMeal']) expect(byId(id).receipt, id).toBe(true);
+  });
+});
+
+
+describe('P1.1 messaging version and credential boundary', () => {
+  it('resolves the same actual v2 path for server, OpenAPI and SDK while keeping v1', () => {
+    const spec = buildOpenApi() as { paths: Record<string, unknown> };
+    const v2 = byId('sendGroupMessageV2')!;
+    expect(operationPath(v2)).toBe('/v2/conversations/{conversationId}/messages');
+    expect(operationPath(byId('sendMessage')!)).toBe('/v1/conversations/{conversationId}/messages');
+    expect(spec.paths).toHaveProperty('/v2/conversations/{conversationId}/messages');
+    expect(spec.paths).not.toHaveProperty('/v1/v2/conversations/{conversationId}/messages');
+    expect(buildClientMetadata()).toContain("sendGroupMessageV2: { method: 'POST', path: '/v2/conversations/{conversationId}/messages'");
+  });
+  it('rejects caller-controlled actor, recipients and malformed mention variants', () => {
+    const check = validator(byId('sendGroupMessageV2')!.body!);
+    const message = { body: '@everyone hello', clientMessageId: 'a5bb3c1a-a8d6-4542-99c4-21db9b562f18', mentions: [{ kind: 'everyone', start: 0, end: 9 }] };
+    expect(check(message)).toBe(true);
+    expect(check({ ...message, actorId: message.clientMessageId })).toBe(false);
+    expect(check({ ...message, recipientIds: [] })).toBe(false);
+    expect(check({ ...message, mentions: [{ kind: 'user', start: 0, end: 2 }] })).toBe(false);
+    expect(check({ ...message, mentions: Array.from({ length: 101 }, () => message.mentions[0]) })).toBe(false);
+  });
+  it('requires a version and intent for mute writes and returns no destination credentials', () => {
+    expect(byId('putConversationNotificationSettings')).toMatchObject({ write: 'idempotencyKey', ifMatch: true });
+    const response = PushSubscription;
+    expect(response.properties).not.toHaveProperty('tokenOrEndpoint');
+    expect(response.properties).not.toHaveProperty('keys');
   });
 });

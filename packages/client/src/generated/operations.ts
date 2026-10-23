@@ -79,5 +79,12 @@ export const OPERATIONS = {
   validateAIDraft: { method: 'POST', path: '/v1/ai/drafts/{draftId}/transfer', pathParams: ['draftId'], auth: 'optionalSession', write: 'resourceKey', ifMatch: false, receipt: false, successStatus: 200, list: false, hasBody: true },
   pollAI: { method: 'GET', path: '/v1/ai/requests/{requestId}', pathParams: ['requestId'], auth: 'optionalSession', write: 'read', ifMatch: false, receipt: false, successStatus: 200, list: false, hasBody: false },
   getCommandReceipt: { method: 'GET', path: '/v1/me/command-receipts/{operation}/{key}', pathParams: ['operation', 'key'], auth: 'session', write: 'read', ifMatch: false, receipt: false, successStatus: 200, list: false, hasBody: false },
+  sendGroupMessageV2: { method: 'POST', path: '/v2/conversations/{conversationId}/messages', pathParams: ['conversationId'], auth: 'session', write: 'resourceKey', ifMatch: false, receipt: false, successStatus: 201, list: false, hasBody: true },
+  readGroupMessagesV2: { method: 'GET', path: '/v2/conversations/{conversationId}/messages', pathParams: ['conversationId'], auth: 'session', write: 'read', ifMatch: false, receipt: false, successStatus: 200, list: true, hasBody: false },
+  mentionCandidates: { method: 'GET', path: '/v1/conversations/{conversationId}/mention-candidates', pathParams: ['conversationId'], auth: 'session', write: 'read', ifMatch: false, receipt: false, successStatus: 200, list: true, hasBody: false },
+  getConversationNotificationSettings: { method: 'GET', path: '/v1/conversations/{conversationId}/notification-settings', pathParams: ['conversationId'], auth: 'session', write: 'read', ifMatch: false, receipt: false, successStatus: 200, list: false, hasBody: false },
+  putConversationNotificationSettings: { method: 'PUT', path: '/v1/conversations/{conversationId}/notification-settings', pathParams: ['conversationId'], auth: 'session', write: 'idempotencyKey', ifMatch: true, receipt: false, successStatus: 200, list: false, hasBody: true },
+  registerPushSubscription: { method: 'POST', path: '/v1/me/push-subscriptions', pathParams: [], auth: 'session', write: 'idempotencyKey', ifMatch: false, receipt: false, successStatus: 201, list: false, hasBody: true },
+  deletePushSubscription: { method: 'DELETE', path: '/v1/me/push-subscriptions/{subscriptionId}', pathParams: ['subscriptionId'], auth: 'session', write: 'idempotencyKey', ifMatch: false, receipt: false, successStatus: 204, list: false, hasBody: false },
 } as const;
 export type OperationId = keyof typeof OPERATIONS;

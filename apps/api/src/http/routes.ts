@@ -4,7 +4,7 @@
  * and the auth mode, CSRF, If-Match and Idempotency-Key rules are enforced before the handler.
  */
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { Meta, operationsById, PageInfo, T, type OperationDef, type OperationId } from '@fancy/contracts';
+import { Meta, operationPath, operationsById, PageInfo, T, type OperationDef, type OperationId } from '@fancy/contracts';
 import { DomainError } from '../common/errors.ts';
 import { claimIntent, completeIntent, releaseIntent, replayIfAuthorized } from '../common/idempotency.ts';
 import { requestHash } from '../common/canonical.ts';
@@ -92,7 +92,7 @@ function restoreRetryAfter(reply:FastifyReply,body:unknown){
  }
 }
 
-const routePath = (def: OperationDef) => '/v1' + def.path.replace(/\{([A-Za-z]+)\}/g, ':$1');
+const routePath = (def: OperationDef) => operationPath(def).replace(/\{([A-Za-z]+)\}/g, ':$1');
 
 function schemaFor(def: OperationDef) {
   const response = envelopeSchema(def);
