@@ -6,6 +6,7 @@ import { defineRoute, defineWrite } from '../http/routes.ts';
 import { DomainError } from '../common/errors.ts';
 import { readAdminPage } from './pages.ts';
 import { readDrilldown } from './drilldown.ts';
+import { createStatisticsRefresh, readStatisticsRefresh, retryStatisticsRefresh } from './statistics-refresh.ts';
 import {encodeCursor,decodeCursor} from '../common/cursor.ts';
 import {createHash} from 'node:crypto';
 import type { Static } from '@sinclair/typebox';
@@ -43,7 +44,17 @@ export function registerAdminRoutes(app: FastifyInstance, deps: AppDeps) {
     const { rows: inserted } = await tx.client.query<{ revision: string }>(`INSERT INTO account_classifications(user_id,classification,actor_id,reason) VALUES($1,$2,$3,$4) RETURNING revision::text`, [userId, body.classification, auth.userId, reason]);
     const revision = inserted[0]!.revision;
     await appendAudit(tx.client, { actorKind: 'SUPPORT', actorId: auth.userId, action: 'account.classified', aggregateType: 'user', aggregateId: userId, requestId: request.id, reason, payload: { classification: body.classification, revision } });
-    return { data: { userId, classification: body.classification, revision, snapshotPending: true }, version: revision, resourceId: userId };
+    // The refresh commits with the classification and is sealed into this intent's receipt, so an
+    // unknown outcome resolves by reading the original actor+operation+key, never by re-sending.
+    const statisticsRefresh = await createStatisticsRefresh(tx.client, { actorId: auth.userId, intentKey: request.headers['idempotency-key'] as string, requestId: request.id, targetUserId: userId, acceptedRevision: revision });
+    return { data: { userId, classification: body.classification, revision, snapshotPending: true, statisticsRefresh }, version: revision, resourceId: userId };
+  });
+  defineRoute(app, deps, 'getStatisticsRefresh', async ({ request, auth }) => ({ data: await readStatisticsRefresh(deps.pool, (request.params as { refreshId: string }).refreshId, auth!.userId) }));
+  defineWrite(app, deps, 'retryStatisticsRefresh', async ({ request, auth }, tx) => {
+    const { rows: roles } = await tx.client.query(`SELECT role FROM roles WHERE user_id=$1 AND role='data_admin' FOR SHARE`, [auth.userId]);
+    if (!roles.length) throw new DomainError('FORBIDDEN', 'You do not have permission to refresh statistics.');
+    const refreshId = (request.params as { refreshId: string }).refreshId;
+    return { data: await retryStatisticsRefresh(tx.client, refreshId, auth.userId), resourceId: refreshId };
   });
   // A missing source pipeline produces an empty list, never synthetic fixture snapshots.
   defineRoute(app, deps, 'listSnapshots', async ({ request,auth }) => {

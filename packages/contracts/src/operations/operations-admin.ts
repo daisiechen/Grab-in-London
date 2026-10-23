@@ -7,6 +7,7 @@ import {
   AdminPageData, AttendanceCorrection, Classification, DeletionStatus, DrilldownRow, ExportTicket, IngestResult, Notification,
   ReportReceipt, SnapshotInfo, SupportCase,
 } from '../dto.ts';
+import { ClassificationAccepted, StatisticsRefresh } from '../admin-dto.ts';
 import { op } from '../operation.ts';
 
 /** 256-bit secret generated and stored by the client before requesting deletion; only its hash is kept. */
@@ -135,7 +136,19 @@ export const operationsAdmin = [
     operationId: 'classifyUser', method: 'PUT', path: '/admin/classifications/{userId}', summary: 'data_admin sets regular/test/staff',
     auth: 'staff', roles: ['data_admin'], write: 'idempotencyKey', ifMatch: true, params: Obj({ userId: Uuid }),
     body: Obj({ classification: Enum(CLASSIFICATIONS), reason: Text(5, 500) }),
-    success: { status: 200, data: Classification }, errors: ['NOT_FOUND'],
+    success: { status: 200, data: ClassificationAccepted }, errors: ['NOT_FOUND'],
+  }),
+  op({
+    operationId: 'getStatisticsRefresh', method: 'GET', path: '/admin/statistics-refresh/{refreshId}',
+    summary: 'Statistics refresh of one accepted classification intent (original actor only)',
+    auth: 'staff', roles: ['data_admin'], write: 'read', ifMatch: false, params: Obj({ refreshId: Uuid }),
+    success: { status: 200, data: StatisticsRefresh }, errors: ['NOT_FOUND'],
+  }),
+  op({
+    operationId: 'retryStatisticsRefresh', method: 'POST', path: '/admin/statistics-refresh/{refreshId}/retry',
+    summary: 'Reopen a failed statistics refresh; never re-sends the classification',
+    auth: 'staff', roles: ['data_admin'], write: 'idempotencyKey', ifMatch: false, params: Obj({ refreshId: Uuid }),
+    success: { status: 200, data: StatisticsRefresh }, errors: ['NOT_FOUND'],
   }),
   op({
     operationId: 'ingestEvents', method: 'POST', path: '/analytics/events', summary: 'Client analytics batch (deduped by eventId)',
