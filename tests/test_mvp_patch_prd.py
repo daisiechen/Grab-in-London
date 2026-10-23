@@ -78,3 +78,17 @@ class MvpPatchPrdTest(unittest.TestCase):
                      '串行先公评后再约', 'Not saved yet',
                      '迟到结果不写入新对象界面'):
             self.assertIn(rule, text)
+
+    def test_revoke_has_no_post_meal_window_gate(self):
+        text = (ROOT / 'docs/product/mvp-patch-PRD.zh-CN.md').read_text()
+        for rule in ('AC-004d', '按各operation实际适用规则逐项重验',
+                     '不新增mealId、七天窗口或共同出席门槛',
+                     '这是本次组合保存的暂停，不表示revoke本身过期'):
+            self.assertIn(rule, text)
+
+    def test_deletion_support_is_available_without_restoring_session(self):
+        text = (ROOT / 'docs/product/mvp-patch-PRD.zh-CN.md').read_text()
+        for rule in ('mailto:xcheniepaut26@gmail.com', 'AC-001a',
+                     '不预填/发送receiptToken', '不代表已发出或已受理',
+                     '不作为查询个人数据、改变删除状态或恢复账号的授权凭证'):
+            self.assertIn(rule, text)
