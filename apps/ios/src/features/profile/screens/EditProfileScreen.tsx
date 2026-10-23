@@ -1,5 +1,5 @@
 import { SessionScope } from '../../auth/SessionScope.tsx';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Keyboard } from 'react-native';
 import { Primary } from '../../../ui/Button.tsx';
@@ -24,6 +24,12 @@ function EditProfileScreenContent() {
   const [error, setError] = useState<{ field: ProfileField | null; message: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const saver = useMemo(() => new ProfileSaver(services.api, services.session, services.newId), [services]);
+  // Session end (sign-out/401/account switch/deletion) and unmount fence any in-flight save.
+  useEffect(() => {
+    const reset = () => saver.reset();
+    services.onSessionEnd.add(reset);
+    return () => { services.onSessionEnd.delete(reset); saver.reset(); };
+  }, [saver, services]);
   if (!me || !form) return <Screen><Body>Please sign in to edit your profile.</Body></Screen>;
 
   const save = async () => {
@@ -38,10 +44,19 @@ function EditProfileScreenContent() {
     setError({ field: res.kind === 'invalid' ? res.field : null, message: res.message });
   };
 
+  const check = async () => {
+    setBusy(true);
+    const res = await saver.checkStatus();
+    setBusy(false);
+    if (res.kind === 'saved') return router.back();
+    setError({ field: res.kind === 'invalid' ? res.field : null, message: res.message });
+  };
+
   return (
     <Screen testID="profile-edit">
       <ProfileFormView form={form} onChange={setForm} error={error} mode="edit" />
       <FormMessage message={error?.message ?? null} />
+      {saver.unresolved ? <Primary secondary label="Check status" disabled={busy} onPress={() => void check()} /> : null}
       <Primary label="Save profile" busy={busy} onPress={() => void save()} />
     </Screen>
   );

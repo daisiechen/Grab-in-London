@@ -1,5 +1,5 @@
 import { SessionScope } from '../../auth/SessionScope.tsx';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Keyboard } from 'react-native';
 import { Primary } from '../../../ui/Button.tsx';
@@ -29,6 +29,12 @@ function ProfileSetupScreenContent() {
   const [error, setError] = useState<{ field: ProfileField | null; message: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const saver = useMemo(() => new ProfileSaver(services.api, services.session, services.newId), [services]);
+  // Session end (sign-out/401/account switch/deletion) and unmount fence any in-flight save.
+  useEffect(() => {
+    const reset = () => saver.reset();
+    services.onSessionEnd.add(reset);
+    return () => { services.onSessionEnd.delete(reset); saver.reset(); };
+  }, [saver, services]);
 
   if (!me || !form) {
     return (
@@ -47,6 +53,17 @@ function ProfileSetupScreenContent() {
     setBusy(true);
     const res = await saver.save(buildPatch(form, { policyVersion: requireConsent ? POLICY_VERSION : null }), me.version);
     setBusy(false);
+    handle(res);
+  };
+
+  const check = async () => {
+    setBusy(true);
+    const res = await saver.checkStatus();
+    setBusy(false);
+    handle(res);
+  };
+
+  const handle = (res: Awaited<ReturnType<typeof saver.save>>) => {
     if (res.kind === 'saved') {
       setError(null);
       if (res.me.profileGate.profileComplete) router.replace(takeReturnTo('/') as never);
@@ -64,6 +81,7 @@ function ProfileSetupScreenContent() {
       <Body muted>Add work, school, hometown and more interests in Edit profile whenever you like.</Body>
       {requireConsent ? <CheckRow label="I’m 18 or older and I’ll keep this community welcoming, respectful and friendship-first." checked={consent} onChange={setConsent} /> : null}
       <FormMessage message={error?.message ?? null} />
+      {saver.unresolved ? <Primary secondary label="Check status" disabled={busy} onPress={() => void check()} /> : null}
       <Primary label="Take your seat" busy={busy} onPress={() => void submit()} />
     </Screen>
   );

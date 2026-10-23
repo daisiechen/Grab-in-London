@@ -6,6 +6,7 @@ import { Field } from '../../ui/Field.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
 import { Screen } from '../../ui/Screen.tsx';
 import { Body, Heading } from '../../ui/Text.tsx';
+import { SupportExit } from './SupportExit.tsx';
 
 type Status = ResponseOf<'deletionStatus'>['data'];
 const LABELS: Record<Status['status'], string> = { PENDING: 'Requested', PROCESSING: 'In progress', COMPLETED: 'Completed', NEEDS_SUPPORT: 'Our support team is completing this' };
@@ -36,6 +37,9 @@ export function DeletionStatusScreen() {
   const [activity,setActivity]=useState({scope,busy:false});
   const busy=activity.scope===scope&&activity.busy;
   const setBusy=(value:boolean)=>setActivity({scope,busy:value});
+  const [unavailable,setUnavailableState]=useState({scope,value:false});
+  const receiptUnavailable=unavailable.scope===scope&&unavailable.value;
+  const setUnavailable=(value:boolean)=>setUnavailableState({scope,value});
 
   const check = async () => {
     const t = token.trim();
@@ -45,10 +49,11 @@ export function DeletionStatusScreen() {
     setError(null);
     try {
       const result=await deletionStatus(t);
-      if(currentScope.current===scope&&requestVersion.current===version)setStatus(result.data);
+      if(currentScope.current===scope&&requestVersion.current===version){setStatus(result.data);setUnavailable(false);}
     } catch (e) {
       if(currentScope.current!==scope||requestVersion.current!==version)return;
       setStatus(null);
+      setUnavailable(e instanceof ApiError && (e.kind === 'gone' || e.kind === 'not_found'));
       setError(e instanceof ApiError && e.kind === 'gone' ? 'This reference has expired.' : e instanceof ApiError && e.kind === 'not_found' ? 'We couldn’t find that reference.' : 'We couldn’t check the status. Please try again.');
     } finally {
       if(currentScope.current===scope&&requestVersion.current===version)setBusy(false);
@@ -63,6 +68,7 @@ export function DeletionStatusScreen() {
       {savedToken.scope===scope&&savedToken.token?<Primary secondary label="Forget saved reference" onPress={()=>{const expected=savedToken.token;requestVersion.current+=1;setBusy(false);void deletionReceipts.clear(expected).then(()=>{if(currentScope.current===scope){setToken('');setSavedToken({scope,token:''});setStatus(null);setError('Saved reference removed from this device. This does not cancel account deletion.');}},()=>{if(currentScope.current===scope)setError('We couldn’t forget the saved reference. Please try again.');});}}/>:null}
       <FormMessage message={error} />
       {status ? <Body>{`Status: ${LABELS[status.status]}`}</Body> : null}
+      {session.status!=='signedIn'&&(status?.status==='NEEDS_SUPPORT'?<SupportExit reason="needsSupport"/>:receiptUnavailable||!(savedToken.scope===scope&&savedToken.token)?<SupportExit reason="receiptUnavailable"/>:null)}
     </Screen>
   );
 }

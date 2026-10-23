@@ -6,6 +6,7 @@ import { Intent } from '../../api/webApi.ts';
 import { errorMessage } from '../../api/errors.ts';
 import { browser } from '../../lib/browser.ts';
 import { Field, FormError, Loading, Notice, PageHeader, Primary, PrimaryLink } from '../../ui/components.tsx';
+import { SupportExit } from './SupportExit.tsx';
 import { ensureDeletionReceipt, readDeletionReceipt, readSavedDeletionStatus, rememberDeletionStatus } from './deletionReceipt.ts';
 
 type Status = ResponseOf<'deletionStatus'>['data'];
@@ -28,6 +29,7 @@ export function DeletionPage() {
   const [reauth, setReauth] = useState(false);
   const [challenge, setChallenge] = useState<string | null>(null);
   const [code, setCode] = useState('');
+  const [receiptUnavailable, setReceiptUnavailable] = useState(false);
   if (state.status === 'loading') return <Loading />;
   const status=state.status==='signed-in'?null:savedStatus;
   const run = async (action: () => Promise<void>) => {
@@ -69,7 +71,12 @@ export function DeletionPage() {
         await refresh(); setReauth(false); setChallenge(null); setCode(''); setChecked(false);
       })}>Verify code</Primary></>}
     </section>}
-    {receipt && state.status !== 'signed-in' && <Primary secondary disabled={busy} onClick={() => void run(async () => { const result = await api.client.call('deletionStatus', { body: { receiptToken: receipt } }); rememberDeletionStatus(result.data); setStatus(result.data); })}>Check removal status</Primary>}
+    {receipt && state.status !== 'signed-in' && <Primary secondary disabled={busy} onClick={() => void run(async () => {
+      try { const result = await api.client.call('deletionStatus', { body: { receiptToken: receipt } }); rememberDeletionStatus(result.data); setStatus(result.data); setReceiptUnavailable(false); }
+      catch (e) { if (e instanceof ApiError && (e.kind === 'gone' || e.kind === 'not_found')) setReceiptUnavailable(true); throw e; }
+    })}>Check removal status</Primary>}
     <FormError>{error}</FormError>
+    {state.status !== 'signed-in' && (status?.status === 'NEEDS_SUPPORT' ? <SupportExit reason="needsSupport" />
+      : (receiptUnavailable || !receipt) ? <SupportExit reason="receiptUnavailable" /> : null)}
   </div></>;
 }

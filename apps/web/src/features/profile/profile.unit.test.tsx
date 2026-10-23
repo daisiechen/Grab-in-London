@@ -115,3 +115,31 @@ describe('public profile (T05)', () => {
     expect(stub.callsTo('getPublicProfile')[0]!.params.userId).toBe(HOST_ID);
   });
 });
+
+describe('profile save unknown result (PATCH-001 P04)', () => {
+  it('a lost response is Status unknown; Check status reads the receipt and never re-sends on SUCCEEDED', async () => {
+    let current = me({ ...gateIncomplete, bio: 'I moved to London last spring and love food.', lifeStatus: 'NEW_TO_LONDON', languages: ['en'], interests: ['FOOD'], ageConfirmedVersion: '2026-10', communityAcceptedVersion: '2026-10', profileGate: { ageConfirmed: true, communityAccepted: true, profileComplete: true, missing: [] } });
+    let writes = 0;
+    const stub = createFetchStub({
+      getSession: () => ok({ ...session(), user: current }),
+      getMe: () => ok(current),
+      updateMe: (call) => { writes++; current = me({ ...current, ...(call.body as object), version: '4' }); throw new TypeError('response lost'); },
+      getCommandReceipt: (c) => ok({ operation: c.params.operation, key: c.params.key, state: 'SUCCEEDED', retryable: false, expired: false, retryAfterSeconds: null, httpStatus: 200, errorCode: null, conflict: null, resourceId: null, resourceVersion: '4', currentVersion: null, completedAt: '2026-10-24T10:00:00.000Z', expiresAt: '2026-11-23T10:00:00.000Z' }),
+    });
+    renderApp(stub.fetch, '/profile/edit');
+    const name = await screen.findByLabelText('Your name');
+    await userEvent.clear(name); await userEvent.type(name, 'Sam R');
+    await userEvent.click(screen.getByRole('button', { name: /Save profile/ }));
+    expect(await screen.findByText(/Status unknown/)).toBeTruthy();
+    expect(new Set(stub.callsTo('updateMe').map((c) => c.headers['idempotency-key'])).size).toBe(1);
+    // A different draft is refused until the original intent is reconciled.
+    await userEvent.type(name, 'x');
+    await userEvent.click(screen.getByRole('button', { name: /Save profile/ }));
+    expect((await screen.findByRole('alert')).textContent).toMatch(/hasn’t been confirmed yet/);
+    const before = writes;
+    await userEvent.click(screen.getByRole('button', { name: 'Check status' }));
+    await waitFor(() => expect(stub.callsTo('getCommandReceipt')).toHaveLength(1));
+    expect(stub.callsTo('getCommandReceipt')[0]!.params.operation).toBe('updateMe');
+    expect(writes).toBe(before);
+  });
+});

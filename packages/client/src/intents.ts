@@ -54,3 +54,84 @@ export async function reconcileIntent(client: ApiClient, operation: string, key:
     return { outcome: outcomeFromError(error) === 'reauth' ? 'reauth' : 'unknown', receipt: null };
   }
 }
+
+/** A write whose result is not yet known: the exact request fingerprint, key and issue time. */
+export interface UnresolvedWrite { key: string; fingerprint: string; issuedAt: number }
+
+/**
+ * Single-form intent tracking (profile, create, edit). Transient/unknown failures keep the key
+ * and fingerprint; while unresolved, a different draft is refused until the original intent is
+ * reconciled (an equal current value never proves the original succeeded).
+ */
+export class IntentTracker {
+  private unresolved: UnresolvedWrite | null = null;
+  private inflight: { fingerprint: string; promise: Promise<unknown> } | null = null;
+  /** Bumped by reset(): continuations of an earlier session can never touch this tracker again. */
+  private epoch = 0;
+  private readonly newKey: () => string;
+  private readonly now: () => number;
+
+  constructor(newKey: () => string, now: () => number = Date.now) {
+    this.newKey = newKey;
+    this.now = now;
+  }
+
+  get pending(): UnresolvedWrite | null { return this.unresolved; }
+  /** Callers capture this before awaiting and drop the result if it changed (old session). */
+  get generation(): number { return this.epoch; }
+
+  /** True when `fingerprint` would have to wait for an earlier, different, unresolved write. */
+  blocks(fingerprint: unknown): boolean {
+    return !!this.unresolved && this.unresolved.fingerprint !== JSON.stringify(fingerprint);
+  }
+
+  /**
+   * One request at a time: a repeated tap with the same fingerprint joins the in-flight request
+   * (never a second key); a different draft while one is in flight or unresolved is refused.
+   */
+  run<T>(fingerprint: unknown, attempt: (key: string) => Promise<T>): Promise<T> {
+    const fp = JSON.stringify(fingerprint);
+    if (this.inflight) {
+      if (this.inflight.fingerprint === fp) return this.inflight.promise as Promise<T>;
+      return Promise.reject(new IntentUnresolvedError());
+    }
+    if (this.unresolved && this.unresolved.fingerprint !== fp) return Promise.reject(new IntentUnresolvedError());
+    const epoch = this.epoch;
+    const write = this.unresolved ?? { key: this.newKey(), fingerprint: fp, issuedAt: this.now() };
+    const promise = (async () => {
+      try {
+        const result = await attempt(write.key);
+        if (epoch === this.epoch) this.unresolved = null;
+        return result;
+      } catch (error) {
+        if (epoch === this.epoch) {
+          const outcome = outcomeFromError(error);
+          this.unresolved = outcome === 'unknown' || outcome === 'pending' || outcome === 'reauth' ? write : null;
+        }
+        throw error;
+      } finally {
+        if (epoch === this.epoch) this.inflight = null;
+      }
+    })();
+    this.inflight = { fingerprint: fp, promise };
+    return promise;
+  }
+
+  /** Receipt check of the unresolved write; clears it only on a definite outcome of that same write. */
+  async reconcile(client: ApiClient, operation: string): Promise<IntentOutcome> {
+    const write = this.unresolved;
+    if (!write) return 'saved';
+    const epoch = this.epoch;
+    const { outcome } = await reconcileIntent(client, operation, write.key, write.issuedAt, this.now);
+    if (epoch !== this.epoch || this.unresolved !== write) return 'unknown';
+    if (outcome === 'saved' || outcome === 'conflict' || outcome === 'rejected' || outcome === 'expired') this.unresolved = null;
+    return outcome;
+  }
+
+  /** Session end / unmount: forget the intent and fence every outstanding continuation. */
+  reset(): void { this.epoch++; this.unresolved = null; this.inflight = null; }
+}
+
+export class IntentUnresolvedError extends Error {
+  constructor() { super('An earlier save has no confirmed result yet.'); this.name = 'IntentUnresolvedError'; }
+}

@@ -67,4 +67,40 @@ describe('account deletion', () => {
     saveDraft('create', { title: 'My dinner', venue: { venueRef: 'ref', placeId: 'place', available: true, name: 'Provider name', address: 'Provider address', location: { lat: 1, lng: 2 }, attributions: ['provider'], displayExpiresAt: 'tomorrow' } });
     expect(loadDraft('create')).toEqual({ title: 'My dinner', venue: { venueRef: 'ref', placeId: 'place', available: true, name: null, address: null, location: null, attributions: [], displayExpiresAt: null } });
   });
+
+  it('NEEDS_SUPPORT shows the public support exit without sign-in; the mail link carries no receipt (AC-001a)', async () => {
+    ensureDeletionReceipt(); rememberDeletionStatus({ ...pending, status: 'NEEDS_SUPPORT' });
+    const stub = createFetchStub({ getSession: () => fail(401, 'AUTH_REQUIRED') });
+    renderApp(stub.fetch, '/settings/deletion');
+    expect(await screen.findByRole('heading', { name: 'Contact support' })).toBeTruthy();
+    expect(screen.getByTestId('support-email').textContent).toBe('xcheniepaut26@gmail.com');
+    const link = screen.getByRole('link', { name: 'Email support' }) as HTMLAnchorElement;
+    expect(link.href.startsWith('mailto:xcheniepaut26@gmail.com')).toBe(true);
+    expect(link.href).not.toContain(readDeletionReceipt()!);
+    expect(screen.getByText('Opening your email app doesn’t send anything by itself.')).toBeTruthy();
+    expect(stub.calls.filter((c) => c.operationId !== 'getSession')).toHaveLength(0);
+  });
+  it('copy says Copied only after the clipboard accepted it, otherwise asks for manual selection (AC-001b)', async () => {
+    ensureDeletionReceipt(); rememberDeletionStatus({ ...pending, status: 'NEEDS_SUPPORT' });
+    const stub = createFetchStub({ getSession: () => fail(401, 'AUTH_REQUIRED') });
+    const write = vi.fn().mockRejectedValueOnce(new Error('denied')).mockResolvedValueOnce(undefined);
+    renderApp(stub.fetch, '/settings/deletion');
+    // userEvent.setup() installs its own clipboard; replace it afterwards.
+    const user = userEvent.setup();
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText: write }, configurable: true });
+    await user.click(await screen.findByRole('button', { name: 'Copy email address' }));
+    expect(await screen.findByText('Couldn’t copy. Select the address above to copy it.')).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: 'Copy email address' }));
+    expect(await screen.findByText('Copied.')).toBeTruthy();
+    expect(write).toHaveBeenLastCalledWith('xcheniepaut26@gmail.com');
+  });
+  it('an expired or unknown reference offers support instead of a dead end', async () => {
+    ensureDeletionReceipt(); rememberDeletionStatus(pending);
+    const stub = createFetchStub({ getSession: () => fail(401, 'AUTH_REQUIRED'), deletionStatus: () => fail(410, 'RECEIPT_EXPIRED') });
+    renderApp(stub.fetch, '/settings/deletion');
+    const user = userEvent.setup();
+    expect(screen.queryByRole('heading', { name: 'Contact support' })).toBeNull();
+    await user.click(await screen.findByRole('button', { name: 'Check removal status' }));
+    expect(await screen.findByRole('heading', { name: 'Contact support' })).toBeTruthy();
+  });
 });

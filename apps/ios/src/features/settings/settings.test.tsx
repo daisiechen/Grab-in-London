@@ -1,3 +1,4 @@
+import { Linking } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import {memoryDeletionReceiptStore,secureDeletionReceiptStore} from './deletion-receipt-store.ts';
 import {deferred} from '../../test/deferred.ts';
@@ -100,6 +101,33 @@ describe('DeletionStatusScreen', () => {
     const [call] = app.mock.callsTo('POST', '/v1/deletion-status');
     expect(call?.url).not.toContain(EXPECTED_RECEIPT);
     expect(call?.body).toEqual({ receiptToken: EXPECTED_RECEIPT });
+  });
+
+  it('NEEDS_SUPPORT shows the public support exit; the mail link has no reference (AC-001a)', async () => {
+    const app = createTestApp();
+    app.mock.on('POST', '/v1/deletion-status', ok({ status: 'NEEDS_SUPPORT', requestedAt: '2026-10-21T10:01:00Z', completedAt: null }));
+    const open = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined);
+    await renderApp(app, <DeletionStatusScreen />);
+    await fireEvent.changeText(screen.getByLabelText('Deletion reference'), EXPECTED_RECEIPT);
+    await fireEvent.press(screen.getByRole('button', { name: 'Check status' }));
+    expect(await screen.findByText('Our support team needs to finish removing your account. You don’t need to sign in to contact us.')).toBeOnTheScreen();
+    expect(screen.getByLabelText('Support email xcheniepaut26@gmail.com')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Email support' }));
+    expect(open).toHaveBeenCalledWith(expect.stringMatching(/^mailto:xcheniepaut26@gmail\.com\?subject=/));
+    expect(String(open.mock.calls[0]![0])).not.toContain(EXPECTED_RECEIPT);
+    expect(screen.getByText('Opening your email app doesn’t send anything by itself.')).toBeOnTheScreen();
+  });
+
+  it('an expired reference or missing mail app still leaves a usable support path', async () => {
+    const app = createTestApp();
+    app.mock.on('POST', '/v1/deletion-status', fail(410, 'RECEIPT_EXPIRED'));
+    jest.spyOn(Linking, 'openURL').mockRejectedValueOnce(new Error('no mail app'));
+    await renderApp(app, <DeletionStatusScreen />);
+    await fireEvent.changeText(screen.getByLabelText('Deletion reference'), EXPECTED_RECEIPT);
+    await fireEvent.press(screen.getByRole('button', { name: 'Check status' }));
+    expect(await screen.findByText('This reference has expired.')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Email support' }));
+    expect(await screen.findByText('No email app is available. Select the address above to copy it.')).toBeOnTheScreen();
   });
 });
 

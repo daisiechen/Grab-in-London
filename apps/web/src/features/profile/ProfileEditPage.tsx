@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Navigate, useNavigate, useSearchParams } from 'react-router';
-import { ApiError } from '@fancy/client';
+import { ApiError, IntentTracker, IntentUnresolvedError, newIntentKey, withRetry } from '@fancy/client';
 import {
   INTERESTS, LANGUAGES, LIFE_STATUSES,
   type InterestCode, type LanguageCode, type LifeStatusCode,
@@ -9,11 +9,10 @@ import { ArrowRightIcon, CheckIcon } from '@radix-ui/react-icons';
 import { useApi } from '../../api/ApiProvider.tsx';
 import { useSession } from '../../api/session.tsx';
 import { useQuery } from '../../api/useQuery.ts';
-import { Intent } from '../../api/webApi.ts';
 import { errorMessage, fieldErrorsOf } from '../../api/errors.ts';
 import type { Me, MePatch } from '../../api/types.ts';
 import { safeReturnTo, signInPath } from '../../lib/returnTo.ts';
-import { ChoiceGroup, Field, FormError, Loading, Primary, TextAction } from '../../ui/components.tsx';
+import { ChoiceGroup, Field, FormError, Loading, Notice, Primary, TextAction } from '../../ui/components.tsx';
 import { Sheet } from '../../ui/Sheet.tsx';
 import { useToast } from '../../ui/toast.tsx';
 import { AGE_CONFIRMATION_VERSION, COMMUNITY_PRINCIPLES_VERSION } from '../auth/consentVersions.ts';
@@ -100,7 +99,13 @@ export function ProfileEditPage() {
   const [formError, setFormError] = useState('');
   const [busy, setBusy] = useState(false);
   const [showPrinciples, setShowPrinciples] = useState(false);
-  const intent = useMemo(() => new Intent(api.retry), [api]);
+  // One tracker per mounted session (the session epoch remounts this page on account change).
+  const tracker = useMemo(() => new IntentTracker(newIntentKey), []);
+  const original = useRef<{ body: ReturnType<typeof toPatch>; version: string } | null>(null);
+  const [unknown, setUnknown] = useState(false);
+  // Unmount (including the session-epoch remount on sign-out/401/account switch) fences every
+  // outstanding save/receipt continuation of this page.
+  useEffect(() => () => tracker.reset(), [tracker]);
 
   useEffect(() => {
     if (me.data && !form) setForm(toForm(me.data));
@@ -121,21 +126,53 @@ export function ProfileEditPage() {
       setFormError(issues.acknowledged ?? 'Add your name (2+ characters), introduction (20+), London life, languages and interests.');
       return;
     }
-    const body = toPatch(form, current);
+    await submit(toPatch(form, current), current.version);
+  };
+
+  const submit = async (body: ReturnType<typeof toPatch>, version: string) => {
     setBusy(true);
+    const generation = tracker.generation;
     try {
-      const res = await intent.run({ body, v: current.version }, (key) =>
-        api.client.call('updateMe', { body, ifMatch: current.version, idempotencyKey: key }));
-      me.setData(res.data);
-      await refresh();
-      notify('Profile saved.');
-      navigate(returnTo, { replace: true });
+      original.current = { body, version };
+      const res = await tracker.run({ body, version }, (key) =>
+        withRetry(() => api.client.call('updateMe', { body, ifMatch: version, idempotencyKey: key }), api.retry));
+      if (generation !== tracker.generation) return;
+      await saved(res.data);
     } catch (e) {
+      if (generation !== tracker.generation) return;
+      if (e instanceof IntentUnresolvedError) { setFormError('Your earlier save hasn’t been confirmed yet. Check its status before saving changes.'); return; }
+      setUnknown(tracker.pending !== null);
       if (e instanceof ApiError && e.code === 'VERSION_CONFLICT') {
         await me.reload(); // newer version for the next save; the user's edits stay in the form
       }
       setErrors(fieldErrorsOf(e));
-      setFormError(errorMessage(e));
+      setFormError(tracker.pending ? '' : errorMessage(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const saved = async (data: Me) => {
+    setUnknown(false);
+    me.setData(data);
+    await refresh();
+    notify('Profile saved.');
+    navigate(returnTo, { replace: true });
+  };
+
+  /** Unknown result: read the original intent's receipt; never infer success from equal values. */
+  const checkStatus = async () => {
+    setBusy(true);
+    setFormError('');
+    const generation = tracker.generation;
+    try {
+      const outcome = await tracker.reconcile(api.client, 'updateMe');
+      if (generation !== tracker.generation) return;
+      if (outcome === 'saved') { const fresh = (await api.client.call('getMe', {})).data; await saved(fresh); return; }
+      if (outcome === 'resend' && original.current) { setBusy(false); await submit(original.current.body, original.current.version); return; }
+      if (outcome === 'conflict' || outcome === 'expired') { setUnknown(false); await me.reload(); setFormError('Your profile changed elsewhere. The latest version is loaded and your edits are kept. Review and save again.'); return; }
+      if (outcome === 'rejected') { setUnknown(false); setFormError('That save wasn’t accepted. Your edits are kept.'); return; }
+      setFormError('Still no confirmed result. Your edits are kept; try checking again shortly.');
     } finally {
       setBusy(false);
     }
@@ -178,6 +215,7 @@ export function ProfileEditPage() {
         </>
       )}
       <FormError>{formError}</FormError>
+      {unknown && <Notice role="status">Status unknown: we couldn’t confirm whether your profile saved. Your edits are kept. <TextAction disabled={busy} onClick={() => void checkStatus()}>Check status</TextAction></Notice>}
       <Primary type="submit" disabled={busy}>{gate ? <>Take your seat <ArrowRightIcon /></> : <>Save profile <CheckIcon /></>}</Primary>
       <Sheet open={showPrinciples} onOpenChange={setShowPrinciples} title="Community & privacy principles">
         <CommunityPrinciples />

@@ -62,12 +62,43 @@ describe('ProfileSetupScreen (S05, QA-AUTH-005)', () => {
     app.mock.on('PATCH', '/v1/me', ok(me({ version: '4' })));
     await renderApp(app, <EditProfileScreen />);
     await fireEvent.press(screen.getByRole('button', { name: 'Save profile' }));
-    expect(await screen.findByRole('alert')).toHaveTextContent(/offline/);
+    expect(await screen.findByRole('alert')).toHaveTextContent(/Status unknown/);
     await fireEvent.press(screen.getByRole('button', { name: 'Save profile' }));
     await waitFor(() => expect(mockRouter.back).toHaveBeenCalled());
     const keys = app.mock.callsTo('PATCH', '/v1/me').map((c) => c.headers['idempotency-key']);
     expect(keys).toHaveLength(2);
     expect(keys[0]).toBe(keys[1]);
+  });
+
+  it('session end during an in-flight save fences the late response: no navigation, no user update (P04-R01)', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    let release!: () => void;
+    app.mock.on('PATCH', '/v1/me', () => new Promise((r) => { release = () => r(ok(me({ version: '9', displayName: 'Late Name' }))); }));
+    await renderApp(app, <EditProfileScreen />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Save profile' }));
+    await waitFor(() => expect(app.mock.callsTo('PATCH', '/v1/me')).toHaveLength(1));
+    for (const end of app.services.onSessionEnd) end();
+    release();
+    await new Promise((r) => setTimeout(r, 10));
+    expect(mockRouter.back).not.toHaveBeenCalled();
+    const state = app.services.session.getState();
+    expect(state.status === 'signedIn' ? state.session.user.version : null).not.toBe('9');
+  });
+
+  it('Check status reads the original receipt; SUCCEEDED refreshes Me without writing again (P04)', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    app.mock.on('PATCH', '/v1/me', () => { throw new TypeError('Network request failed'); });
+    app.mock.on('GET', /^\/v1\/me\/command-receipts\/updateMe\//, (c) => ok({ operation: 'updateMe', key: c.path.split('/').pop(), state: 'SUCCEEDED', retryable: false, expired: false, retryAfterSeconds: null, httpStatus: 200, errorCode: null, conflict: null, resourceId: null, resourceVersion: '4', currentVersion: null, completedAt: '2026-10-21T10:00:00Z', expiresAt: '2026-11-20T10:00:00Z' }));
+    app.mock.on('GET', '/v1/me', ok(me({ version: '4' })));
+    await renderApp(app, <EditProfileScreen />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Save profile' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent(/Status unknown/);
+    await fireEvent.press(screen.getByRole('button', { name: 'Check status' }));
+    await waitFor(() => expect(mockRouter.back).toHaveBeenCalled());
+    expect(app.mock.callsTo('PATCH', '/v1/me')).toHaveLength(1);
+    expect(app.mock.callsTo('GET', /command-receipts/)[0]!.path).toBe(`/v1/me/command-receipts/updateMe/${app.mock.callsTo('PATCH', '/v1/me')[0]!.headers['idempotency-key']}`);
   });
 
   it('a version conflict keeps the edits and refreshes Me for the next save', async () => {
