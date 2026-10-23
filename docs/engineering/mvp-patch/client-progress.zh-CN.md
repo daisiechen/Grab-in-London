@@ -85,3 +85,7 @@ cherry-pick -x后台 63b088e、f3b0e0b、ea5a2e2、2d7647f、b111c4c（未pick 0
 ### 后台共享固定增量接入
 
 后台明确交回 02338fd 与 844e532，客户端串行 cherry-pick 为 f840cb0 / ee02370：统计 Ready 绑定最新有效快照、明细默认实际日期倒序。无契约生成或 worker 变动，未取后台 UI/环境。专属临时数据库下 API 8/8、排序 unit 4/4 通过，已同步远程。
+
+### P11 分享公开投影基础（尚未完成双端分享）
+
+packages/client/share.ts 只从显式公开输入构造 HTTPS canonical meal URL、London 时间/offset、区域、状态与 View meal 文本，WhatsApp 仅生成 wa.me 预填链接；不序列化整个 DTO。严格拒绝带凭据/路径/query/hash 的 origin、非 UUID ID、非公开 runtime 状态；入站链接仅接受配置 origin 下的单一 meal 详情，拒绝外部/申请子路由/私密 query。11 项单元测试、client 类型与 ESLint 通过。双端菜单、剪贴板、Universal Link/AASA/OG 与真实渠道验收仍待后续，未部署正式域名。
