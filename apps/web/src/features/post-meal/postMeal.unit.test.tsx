@@ -1,10 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { createFetchStub, fail, ok } from '../../test/fetchStub.ts';
+import { createFetchStub, fail, ok, type RecordedCall } from '../../test/fetchStub.ts';
 import { renderApp } from '../../test/render.tsx';
 import { HOST_ID, MEAL_ID, USER_ID, meal, publicProfile, session } from '../../test/fixtures.ts';
 import { attendanceStatus } from './PostMealPage.tsx';
+import { resetFeedbackMemory } from './FeedbackSection.tsx';
+
+beforeEach(() => resetFeedbackMemory());
 
 const EMMA = '16161616-1616-4161-8161-161616161616';
 const DIRECT = '17171717-1717-4171-8171-171717171717';
@@ -92,38 +95,127 @@ describe('post-meal page (T13/T14/T15)', () => {
     expect(screen.queryByRole('group', { name: 'Your attendance' })).toBeNull();
   });
 
-  it('saves a public reference and shows it as pending until mutual or 7 days', async () => {
+  it('saves a public reference through Save feedback and shows it as pending until mutual or 7 days', async () => {
     const { s, set } = stub({ attendance: [{ subjectId: USER_ID, value: 'present', source: 'SELF', selfValue: 'present', hostValue: null, version: '1' }] });
     renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
     await userEvent.type(await screen.findByLabelText(/A public reference/), 'Made everyone feel included.');
-    set({ attendance: [{ subjectId: USER_ID, value: 'present', source: 'SELF', selfValue: 'present', hostValue: null, version: '1' }], reviews: [{ subjectId: HOST_ID, version: '1', visibility: 'PENDING' }] });
-    await userEvent.click(screen.getByRole('button', { name: /Save reference/ }));
+    set({ attendance: [{ subjectId: USER_ID, value: 'present', source: 'SELF', selfValue: 'present', hostValue: null, version: '1' }], reviews: [{ subjectId: HOST_ID, version: '1', visibility: 'PENDING', body: 'Made everyone feel included.' }] });
+    await userEvent.click(screen.getByRole('button', { name: /Save feedback/ }));
     await waitFor(() => expect(s.callsTo('reviewPerson')).toHaveLength(1));
     expect(s.callsTo('reviewPerson')[0]!.params.subjectId).toBe(HOST_ID);
+    expect(s.callsTo('reviewPerson')[0]!.body).toEqual({ body: 'Made everyone feel included.' });
     expect(s.callsTo('reviewPerson')[0]!.headers['if-match']).toBe('"0"');
+    expect(s.callsTo('selectReconnect')).toHaveLength(0);
     expect(await screen.findByText(/waiting to be published/)).toBeTruthy();
+    expect(screen.getByRole('list', { name: 'Save results' }).textContent).toMatch(/Public reference: Saved.*Reconnect choice: Skipped/);
+  });
+
+  it('no changes is a zero-write notice, and an existing reference cannot be cleared (AC-004a)', async () => {
+    const { s } = stub({ reviews: [{ subjectId: HOST_ID, version: '2', visibility: 'PENDING', body: 'Lovely evening together.' }] });
+    renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
+    const field = await screen.findByLabelText(/Your public reference/);
+    expect((field as HTMLTextAreaElement).value).toBe('Lovely evening together.');
+    await userEvent.click(screen.getByRole('button', { name: /Save feedback/ }));
+    expect(await screen.findByText('No changes to save.')).toBeTruthy();
+    await userEvent.clear(field);
+    await userEvent.click(screen.getByRole('button', { name: /Save feedback/ }));
+    expect((await screen.findByRole('alert')).textContent).toMatch(/can’t be cleared/);
+    expect(s.callsTo('reviewPerson')).toHaveLength(0);
+    expect(s.callsTo('selectReconnect')).toHaveLength(0);
   });
 
   it('a reconnect choice stays private: WAITING never reveals the other side', async () => {
     const { s } = stub({});
     renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
     await userEvent.click(await screen.findByRole('checkbox', { name: /share a table again/ }));
+    expect(s.callsTo('selectReconnect')).toHaveLength(0);
+    await userEvent.click(screen.getByRole('button', { name: /Save feedback/ }));
     await waitFor(() => expect(s.callsTo('selectReconnect')[0]?.body).toEqual({ selected: true }));
     expect(await screen.findByText('Your wish to meet again is private until mutual.')).toBeTruthy();
     expect(screen.queryByText(/both want to meet again/)).toBeNull();
     expect(screen.queryByRole('button', { name: /Say hello/ })).toBeNull();
   });
 
-  it('a mutual connection opens the direct conversation; withdrawing needs confirmation', async () => {
+  it('OPEN cancel asks first: Keep writes nothing; confirming saves the reference before revoke (AC-004c)', async () => {
     const { s } = stub({ reconnect: [{ subjectId: HOST_ID, selected: true, version: '2', connection: 'OPEN' }] });
     renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
     expect(await screen.findByText(/both want to meet again/)).toBeTruthy();
+    await userEvent.type(screen.getByLabelText(/A public reference/), 'A generous host.');
     await userEvent.click(screen.getByRole('checkbox', { name: /share a table again/ }));
-    const dialog = await screen.findByRole('dialog', { name: 'Withdraw your connection?' });
-    expect(s.callsTo('selectReconnect')).toHaveLength(0);
+    await userEvent.click(screen.getByRole('button', { name: /Save feedback/ }));
+    let dialog = await screen.findByRole('dialog', { name: 'Withdraw your connection?' });
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Keep connection' }));
+    expect(s.calls.filter((c) => ['reviewPerson', 'selectReconnect', 'revokeConnection'].includes(c.operationId))).toHaveLength(0);
+    expect((screen.getByLabelText(/A public reference/) as HTMLTextAreaElement).value).toBe('A generous host.');
+    await userEvent.click(screen.getByRole('button', { name: /Save feedback/ }));
+    dialog = await screen.findByRole('dialog', { name: 'Withdraw your connection?' });
     await userEvent.click(within(dialog).getByRole('button', { name: 'Withdraw connection' }));
     await waitFor(() => expect(s.callsTo('revokeConnection')).toHaveLength(1));
+    expect(s.calls.filter((c) => ['reviewPerson', 'revokeConnection'].includes(c.operationId)).map((c) => c.operationId)).toEqual(['reviewPerson', 'revokeConnection']);
     expect(s.callsTo('revokeConnection')[0]!.headers['if-match']).toBe('"2"');
+    expect(s.callsTo('selectReconnect')).toHaveLength(0);
+  });
+
+  it('reference saved + reconnect rejected is a partial result; a first-item unknown pauses the second', async () => {
+    const { s } = stub({}, USER_ID, { selectReconnect: () => fail(409, 'STATE_CONFLICT') });
+    renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
+    await userEvent.type(await screen.findByLabelText(/A public reference/), 'Made everyone feel included.');
+    await userEvent.click(screen.getByRole('checkbox', { name: /share a table again/ }));
+    await userEvent.click(screen.getByRole('button', { name: /Save feedback/ }));
+    expect(await screen.findByText('Public reference saved. Your reconnect choice isn’t saved yet.')).toBeTruthy();
+    expect(screen.getByRole('list', { name: 'Save results' }).textContent).toMatch(/Public reference: Saved.*Reconnect choice: Couldn’t be saved/);
+  });
+
+  it('unknown keeps the original intent; Check status reads the receipt and never writes again on SUCCEEDED', async () => {
+    let attempts = 0;
+    const { s } = stub({}, USER_ID, {
+      reviewPerson: () => { attempts++; throw new TypeError('offline'); },
+      getCommandReceipt: (c: RecordedCall) => ok({ operation: c.params.operation, key: c.params.key, state: 'SUCCEEDED', retryable: false, expired: false, retryAfterSeconds: null, httpStatus: 200, errorCode: null, conflict: null, resourceId: MEAL_ID, resourceVersion: '1', currentVersion: null, completedAt: '2026-10-24T10:00:00.000Z', expiresAt: '2026-11-23T10:00:00.000Z' }),
+    });
+    renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
+    await userEvent.type(await screen.findByLabelText(/A public reference/), 'Made everyone feel included.');
+    await userEvent.click(screen.getByRole('checkbox', { name: /share a table again/ }));
+    await userEvent.click(screen.getByRole('button', { name: /Save feedback/ }));
+    expect(await screen.findByText(/couldn’t confirm whether this saved/)).toBeTruthy();
+    expect(screen.getByRole('list', { name: 'Save results' }).textContent).toMatch(/Public reference: Status unknown.*Reconnect choice: Not saved yet/);
+    const keys = new Set(s.callsTo('reviewPerson').map((c) => c.headers['idempotency-key']));
+    expect(keys.size).toBe(1);
+    const tries = attempts;
+    await userEvent.click(screen.getByRole('button', { name: /Check status and continue/ }));
+    await waitFor(() => expect(s.callsTo('selectReconnect')).toHaveLength(1));
+    expect(s.callsTo('getCommandReceipt')[0]!.params).toEqual({ operation: 'reviewPerson', key: [...keys][0] });
+    expect(attempts).toBe(tries);
+  });
+
+  it('switching member keeps each member’s draft and never submits for the other member', async () => {
+    const { s } = stub({});
+    renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
+    await userEvent.type(await screen.findByLabelText(/A public reference/), 'Draft for Maya only.');
+    await userEvent.click(within(screen.getByRole('group', { name: 'Choose a tablemate' })).getByLabelText('Emma Hill'));
+    expect((screen.getByLabelText(/A public reference/) as HTMLTextAreaElement).value).toBe('');
+    await userEvent.click(within(screen.getByRole('group', { name: 'Choose a tablemate' })).getByLabelText('Maya Chen'));
+    expect((screen.getByLabelText(/A public reference/) as HTMLTextAreaElement).value).toBe('Draft for Maya only.');
+    expect(s.callsTo('reviewPerson')).toHaveLength(0);
+  });
+
+  it('after the window closes an OPEN connection can still be withdrawn via Save feedback (AC-004d)', async () => {
+    const { s } = stub({ windowOpen: false, reconnect: [{ subjectId: HOST_ID, selected: true, version: '5', connection: 'OPEN' }] });
+    renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
+    await userEvent.click(await screen.findByRole('checkbox', { name: /share a table again/ }));
+    await userEvent.click(screen.getByRole('button', { name: /Save feedback/ }));
+    await userEvent.click(within(await screen.findByRole('dialog', { name: 'Withdraw your connection?' })).getByRole('button', { name: 'Withdraw connection' }));
+    await waitFor(() => expect(s.callsTo('revokeConnection')).toHaveLength(1));
+    expect(s.callsTo('revokeConnection')[0]!.headers['if-match']).toBe('"5"');
+  });
+
+  it('the independent Withdraw connection entry stays available and needs confirmation', async () => {
+    const { s } = stub({ reconnect: [{ subjectId: HOST_ID, selected: true, version: '2', connection: 'OPEN' }] });
+    renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
+    await userEvent.click(await screen.findByRole('button', { name: 'Withdraw connection' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Withdraw your connection?' });
+    expect(s.callsTo('revokeConnection')).toHaveLength(0);
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Withdraw connection' }));
+    await waitFor(() => expect(s.callsTo('revokeConnection')).toHaveLength(1));
   });
 
   it('“Say hello” resolves the direct conversation and navigates to it', async () => {

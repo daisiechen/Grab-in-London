@@ -209,7 +209,8 @@ export const PostMealState = Obj({
   eligibleMembers: T.Array(PublicProfile, { maxItems: 6 }),
   attendance: T.Array(AttendanceState, { maxItems: 6 }),
   experience: T.Union([Obj({ score: T.Integer({ minimum: 1, maximum: 5 }), version: DecimalString }), T.Null()]),
-  reviews: T.Array(Obj({ subjectId: Uuid, version: DecimalString, visibility: Enum(['PENDING', 'PUBLISHED', 'WITHDRAWN'] as const) }), { maxItems: 5 }),
+  /** P1.1: `body` is the caller's own latest authored reference (author-only), the authoritative snapshot for dirty checks. */
+  reviews: T.Array(Obj({ subjectId: Uuid, version: DecimalString, visibility: Enum(['PENDING', 'PUBLISHED', 'WITHDRAWN'] as const), body: T.String({ minLength: 1, maxLength: 500 }) }), { maxItems: 5 }),
   reconnect: T.Array(Obj({ subjectId: Uuid, selected: T.Boolean(), version: DecimalString, connection: Enum(CONNECTION_STATES) }), { maxItems: 5 }),
 });
 

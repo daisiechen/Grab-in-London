@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { ApiError, type ResponseOf } from '@fancy/client';
-import { ChatBubbleIcon, CheckIcon, HeartIcon } from '@radix-ui/react-icons';
+import { ChatBubbleIcon, HeartIcon } from '@radix-ui/react-icons';
 import { useApi } from '../../api/ApiProvider.tsx';
 import { useSession } from '../../api/session.tsx';
 import { useQuery } from '../../api/useQuery.ts';
@@ -10,10 +10,11 @@ import { errorMessage } from '../../api/errors.ts';
 import type { MealDetail } from '../../api/types.ts';
 import { longDate } from '../../lib/format.ts';
 import { signInPath } from '../../lib/returnTo.ts';
-import { Avatar, ChoiceGroup, Field, FormError, Loading, Notice, PageHeader, Primary, PrimaryLink, TextAction } from '../../ui/components.tsx';
+import { Avatar, ChoiceGroup, FormError, Loading, Notice, PageHeader, Primary, PrimaryLink, TextAction } from '../../ui/components.tsx';
 import { ConfirmSheet } from '../../ui/ConfirmSheet.tsx';
 import { useToast } from '../../ui/toast.tsx';
 import { ReportSheet } from '../reports/ReportSheet.tsx';
+import { FeedbackSection } from './FeedbackSection.tsx';
 
 type PostMeal = ResponseOf<'postMealState'>['data'];
 type Attendance = PostMeal['attendance'][number];
@@ -52,9 +53,8 @@ export function PostMealPage() {
   const pm = useQuery<PostMeal>(me ? `postMeal:${mealId}` : null, async (c) => (await c.call('postMealState', { params: { mealId } })).data);
   const meal = useQuery<MealDetail>(me ? `meal:${mealId}:${me.id}` : null, async (c) => (await c.call('getMeal', { params: { mealId } })).data);
   const [subjectId, setSubjectId] = useState<string | null>(null);
-  const [review, setReview] = useState('');
   const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
+  const [, setBusy] = useState(false);
   const [sheet, setSheet] = useState<'' | 'revoke' | 'report'>('');
   const intent = useMemo(() => new Intent(api.retry), [api]);
 
@@ -103,24 +103,6 @@ export function PostMealPage() {
     void write({ score, version }, (key) =>
       api.client.call('rateExperience', { params: { mealId }, body: { score }, ifMatch: version, idempotencyKey: key }),
     'Thank you. Your private meal experience is saved.');
-  };
-
-  const saveReview = async () => {
-    if (!subjectId) return;
-    const body = review.trim();
-    if (!body || body.length > 500) { setError('Write a reference of up to 500 characters.'); return; }
-    const version = myReview?.version ?? '0';
-    if (await write({ subjectId, body, version }, (key) =>
-      api.client.call('reviewPerson', { params: { mealId, subjectId }, body: { body }, ifMatch: version, idempotencyKey: key }), 'Reference saved.')) setReview('');
-  };
-
-  const choose = (selected: boolean) => {
-    if (!subjectId) return;
-    if (!selected && reconnect?.connection === 'OPEN') { setSheet('revoke'); return; }
-    const version = reconnect?.version ?? '0';
-    void write({ subjectId, selected, version }, (key) =>
-      api.client.call('selectReconnect', { params: { mealId, subjectId }, body: { selected }, ifMatch: version, idempotencyKey: key }),
-    'Saved. Your reconnect choice stays private.');
   };
 
   const revoke = async () => {
@@ -189,7 +171,7 @@ export function PostMealPage() {
             <h2>Sharing a table with {subject?.displayName ?? 'your tablemates'}</h2>
             {others.length > 1 && (
               <ChoiceGroup<string> label="Choose a tablemate" value={subjectId} options={others.map((o) => [o.id, o.displayName] as const)}
-                onChange={(id) => { setSubjectId(id); setReview(''); setError(''); }} />
+                onChange={(id) => { setSubjectId(id); setError(''); }} />
             )}
             {subject && (
               <div className="host-line">
@@ -197,19 +179,11 @@ export function PostMealPage() {
                 <div><strong>{subject.displayName}</strong></div>
               </div>
             )}
-            {myReview && <div className="summary-box"><strong>Your reference</strong><p>{VISIBILITY[myReview.visibility]}</p></div>}
-            {data.windowOpen && (
-              <>
-                <Field label={myReview ? 'Update your public reference' : 'A public reference · optional'} hint={`Describe the shared experience, rather than rating a person. ${review.length}/500`}>
-                  {(p) => <textarea {...p} rows={4} maxLength={500} placeholder="What was it like sharing a table?" value={review} onChange={(e) => setReview(e.target.value)} />}
-                </Field>
-                <Primary secondary disabled={busy || !review.trim()} onClick={() => void saveReview()}>Save reference <CheckIcon /></Primary>
-                <label className="check-row reconnect">
-                  <input type="checkbox" checked={reconnect?.selected ?? false} disabled={busy} onChange={(e) => choose(e.target.checked)} />
-                  <span><strong>I’d like to share a table again</strong><small>Private unless you both choose this.</small></span>
-                  <HeartIcon />
-                </label>
-              </>
+            {subject && me && (
+              <FeedbackSection key={`${me.id}:${mealId}`} scope={{ accountId: me.id, mealId, subjectId: subject.id }} subjectName={subject.displayName}
+                snapshot={{ windowOpen: data.windowOpen, review: myReview ? { body: myReview.body, version: myReview.version } : null,
+                  reconnect: { selected: reconnect?.selected ?? false, version: reconnect?.version ?? '0', connection: reconnect?.connection ?? 'CLOSED' } }}
+                visibilityNote={myReview ? VISIBILITY[myReview.visibility] : null} reload={pm.reload} />
             )}
             {reconnect?.selected && reconnect.connection === 'WAITING' && <p className="muted">Your wish to meet again is private until mutual.</p>}
             {reconnect?.connection === 'OPEN' && (

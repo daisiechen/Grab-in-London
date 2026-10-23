@@ -7,11 +7,11 @@ import { useServices, useSessionState } from '../../services.tsx';
 import { loadErrorMessage, useQuery } from '../../api/useQuery.ts';
 import { Primary, TextAction } from '../../ui/Button.tsx';
 import { ChoiceGroup } from '../../ui/ChoiceGroup.tsx';
-import { Field } from '../../ui/Field.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
 import { Screen } from '../../ui/Screen.tsx';
 import {Sheet} from '../../ui/Sheet.tsx';
 import { Body, Heading, SectionTitle } from '../../ui/Text.tsx';
+import { FeedbackBlock } from './FeedbackBlock.tsx';
 
 type State = ResponseOf<'postMealState'>['data'];
 type Attendance = State['attendance'][number];
@@ -44,7 +44,6 @@ function PostMealScreenContent() {
   const [message, setMessage] = useState<{ text: string; tone: 'error' | 'info' } | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [score, setScore] = useState<string | null>(null);
-  const [reviews, setReviews] = useState<Record<string, string>>({});
   const scope=useMemo(()=>({active:true}),[id,manager.generation]);
   const scopeRef=useRef(scope);scopeRef.current=scope;
   useEffect(()=>{scope.active=true;return()=>{scope.active=false;};},[scope]);
@@ -175,39 +174,27 @@ function PostMealScreenContent() {
             onPress={() => score && void run(`exp:${score}:${s.experience?.version ?? NEW_RECORD_VERSION}`, (k) => api.call('rateExperience', { params: { mealId: id }, body: { score: Number(score) }, idempotencyKey: k, ifMatch: s.experience?.version ?? NEW_RECORD_VERSION }), 'Saved privately.')}
           />
 
-          <SectionTitle>Public references</SectionTitle>
-          <Body muted>References appear on profiles once both of you have written one, or after 7 days.</Body>
-          {s.eligibleMembers.filter((m) => m.id !== meId).map((m) => {
-            const existing = s.reviews.find((r) => r.subjectId === m.id);
-            const body = reviews[m.id] ?? '';
-            return (
-              <View key={m.id} style={{ gap: 6 }}>
-                <Field label={`Reference for ${m.displayName}`} value={body} onChangeText={(v) => setReviews({ ...reviews, [m.id]: v })} maxLength={500} multiline hint={existing ? `Status: ${existing.visibility.toLowerCase()}` : 'Up to 500 characters.'} />
-                <Primary
-                  secondary
-                  label={`Save reference for ${m.displayName}`}
-                  disabled={!body.trim() || busy !== null}
-                  onPress={() => void run(`rev:${m.id}:${existing?.version ?? NEW_RECORD_VERSION}:${body.trim()}`, (k) => api.call('reviewPerson', { params: { mealId: id, subjectId: m.id }, body: { body: body.trim() }, idempotencyKey: k, ifMatch: existing?.version ?? NEW_RECORD_VERSION }), 'Reference saved.')}
-                />
-              </View>
-            );
-          })}
-
-          <SectionTitle>Meet again? (private)</SectionTitle>
-          <Body muted>Only a mutual choice opens a private conversation. The other person never sees a one-sided choice.</Body>
-          {s.reconnect.map((r) => (
-            <View key={r.subjectId} style={{ gap: 4 }}>
-              <Body>{`${nameOf(r.subjectId)} · ${r.connection === 'OPEN' ? 'Connected' : r.selected ? 'You chose to meet again' : 'Not chosen'}`}</Body>
-              <TextAction
-                label={r.selected ? `Undo choice for ${nameOf(r.subjectId)}` : `I’d meet ${nameOf(r.subjectId)} again`}
-                disabled={busy !== null}
-                onPress={() => void run(`rc:${r.subjectId}:${!r.selected}:${r.version}`, (k) => api.call('selectReconnect', { params: { mealId: id, subjectId: r.subjectId }, body: { selected: !r.selected }, idempotencyKey: k, ifMatch: r.version }), 'Choice saved privately.')}
-              />
-            </View>
-          ))}
         </>
       ) : s.windowOpen ? (
         <Body muted>Ratings, references and meet-again choices open once your attendance is recorded as present.</Body>
+      ) : null}
+
+      {meId && ((attended && s.windowOpen) || s.reconnect.some((r) => r.connection === 'OPEN')) ? (
+        <>
+          <SectionTitle>Feedback for your tablemates</SectionTitle>
+          <Body muted>References appear on profiles once both of you have written one, or after 7 days. Meeting again stays private unless you both choose it.</Body>
+          {s.eligibleMembers.filter((m) => m.id !== meId).map((m) => {
+            const existing = s.reviews.find((r) => r.subjectId === m.id);
+            const rc = s.reconnect.find((r) => r.subjectId === m.id);
+            if (!(attended && s.windowOpen) && rc?.connection !== 'OPEN') return null;
+            return (
+              <FeedbackBlock key={m.id} api={api} name={m.displayName} canWriteFeedback={attended} reload={q.reload}
+                scope={{ accountId: meId, mealId: id, subjectId: m.id }}
+                snapshot={{ windowOpen: s.windowOpen, review: existing ? { body: existing.body, version: existing.version } : null,
+                  reconnect: { selected: rc?.selected ?? false, version: rc?.version ?? NEW_RECORD_VERSION, connection: rc?.connection ?? 'CLOSED' } }} />
+            );
+          })}
+        </>
       ) : null}
 
       <SectionTitle>Help shape Fancy</SectionTitle>

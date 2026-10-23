@@ -137,3 +137,7 @@
 .composer textarea { min-width: 0; flex: 1; background: #f4f5ef; border: 1px solid var(--line); padding: 11px 13px; border-radius: 22px; font-size: 16px; resize: none; max-height: 120px; }
 .composer button { width: 40px; height: 40px; border-radius: 50%; background: var(--forest); color: white; display: grid; place-items: center; flex: none; align-self: flex-end; }
 .group-member { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+
+/* PATCH-004 per-item save results: text carries the state, never colour alone. */
+.feedback-results { list-style: none; margin: 8px 0; padding: 0; display: grid; gap: 4px; font-size: 14px; }
+.feedback-results li[data-status='saved'] strong::after { content: ' ✓'; }

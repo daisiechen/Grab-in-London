@@ -18133,7 +18133,8 @@
               "required": [
                 "subjectId",
                 "version",
-                "visibility"
+                "visibility",
+                "body"
               ],
               "properties": {
                 "subjectId": {
@@ -18151,6 +18152,11 @@
                     "PUBLISHED",
                     "WITHDRAWN"
                   ]
+                },
+                "body": {
+                  "minLength": 1,
+                  "maxLength": 500,
+                  "type": "string"
                 }
               }
             }

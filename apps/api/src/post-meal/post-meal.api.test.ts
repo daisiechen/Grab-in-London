@@ -45,6 +45,11 @@ describe('post-meal qualified revisions and private connections',()=>{
   const review=await write(f.host.b,'PUT',`/v1/meals/${f.mealId}/reviews/${f.guest.id}`,{body:'Thoughtful and friendly conversation.'});expect(json(review).data.visibility).toBe('PENDING');expect(await publishedReviewsForProfile(h.db.pool,f.guest.id)).toHaveLength(0);
   const reciprocal=await write(f.guest.b,'PUT',`/v1/meals/${f.mealId}/reviews/${f.host.id}`,{body:'A welcoming host and a pleasant evening.'});expect(json(reciprocal).data.visibility).toBe('PUBLISHED');expect(await publishedReviewsForProfile(h.db.pool,f.guest.id)).toHaveLength(1);
   expect((await write(f.host.b,'PUT',`/v1/meals/${f.mealId}/reviews/${f.host.id}`,{body:'Self review'})).statusCode).toBe(403);
+  // P1.1: post-meal state returns only the caller's own authored body (dirty-check snapshot), never the other author's text.
+  const hostState=json(await f.host.b.request('GET',`/v1/meals/${f.mealId}/post-meal`)).data;
+  expect(hostState.reviews).toEqual([expect.objectContaining({subjectId:f.guest.id,body:'Thoughtful and friendly conversation.'})]);
+  const guestState=json(await f.guest.b.request('GET',`/v1/meals/${f.mealId}/post-meal`)).data;
+  expect(guestState.reviews.map((r:{body:string})=>r.body)).toEqual(['A welcoming host and a pleasant evening.']);
   await attendance(f.guest.b,f.mealId,f.guest.id,'absent','1');expect(await publishedReviewsForProfile(h.db.pool,f.guest.id)).toHaveLength(0);
  });
  it('closes the self-service window at exactly seven continuous days; unpaired references publish after the deadline',async()=>{

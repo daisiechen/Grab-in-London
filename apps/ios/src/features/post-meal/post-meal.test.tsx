@@ -2,7 +2,8 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { PostMealScreen, attendanceText } from './PostMealScreen.tsx';
 import { createTestApp, renderApp, signIn } from '../../test/render.tsx';
 import { mockRouter, resetRouter, routeParams } from '../../test/router.ts';
-import { fail, ok } from '../../test/mock-fetch.ts';
+import { fail, networkDown, ok } from '../../test/mock-fetch.ts';
+import { resetFeedbackMemory } from './FeedbackBlock.tsx';
 import { HOST_ID, MEAL_ID, USER_ID, me, publicProfile } from '../../test/fixtures.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
@@ -21,6 +22,7 @@ function state(o: object = {}) {
 }
 
 beforeEach(() => {
+  resetFeedbackMemory();
   resetRouter();
   routeParams.current = { mealId: MEAL_ID };
 });
@@ -57,12 +59,12 @@ describe('PostMealScreen (S19/S21)', () => {
     app.mock.on('GET', PATH, ok(state({ attendance: [att(USER_ID, { value: 'present', source: 'SELF' })] })));
     app.mock.on('PUT', `/v1/meals/${MEAL_ID}/reconnect/${HOST_ID}`, fail(403, 'FORBIDDEN'));
     await renderApp(app, <PostMealScreen />);
-    await fireEvent.press(await screen.findByRole('button', { name: 'I’d meet Maya again' }));
-    expect(await screen.findByText('This action isn’t available to you right now.')).toBeOnTheScreen();
-    expect(screen.queryByText(/Please try again|blocked|blocking/i)).toBeNull();
+    await fireEvent.press(await screen.findByRole('checkbox', { name: 'I’d meet Maya again' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Save feedback for Maya' }));
+    expect(await screen.findByText('Reconnect choice: Couldn’t be saved')).toBeOnTheScreen();
+    expect(screen.queryByText(/blocked|blocking/i)).toBeNull();
     expect(app.mock.callsTo('PUT', /reconnect/)).toHaveLength(1);
-    expect(app.mock.callsTo('GET', PATH)).toHaveLength(1);
-    expect(screen.getByText('Maya · Not chosen')).toBeOnTheScreen();
+    expect(screen.getByText('Not chosen')).toBeOnTheScreen();
   });
 
   it('self attendance uses If-Match; feedback opens only once present', async () => {
@@ -92,15 +94,66 @@ describe('PostMealScreen (S19/S21)', () => {
     expect(screen.queryByRole('button', { name: 'I came' })).toBeNull();
   });
 
-  it('meet-again is private and reloads on 409', async () => {
+  it('meet-again version conflict reloads the latest state and keeps the draft', async () => {
     const app = createTestApp();
     await signIn(app, me());
     app.mock.on('GET', PATH, ok(state({ attendance: [att(USER_ID, { value: 'present', source: 'SELF' })] })));
-    app.mock.on('PUT', `/v1/meals/${MEAL_ID}/reconnect/${HOST_ID}`, fail(409, 'STATE_CONFLICT'));
+    app.mock.on('PUT', `/v1/meals/${MEAL_ID}/reconnect/${HOST_ID}`, fail(409, 'VERSION_CONFLICT', { currentVersion: '2' }));
     await renderApp(app, <PostMealScreen />);
-    await fireEvent.press(await screen.findByRole('button', { name: 'I’d meet Maya again' }));
-    expect(await screen.findByText(/We’ve refreshed it/)).toBeOnTheScreen();
+    await fireEvent.press(await screen.findByRole('checkbox', { name: 'I’d meet Maya again' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Save feedback for Maya' }));
+    expect(await screen.findByText('Reconnect choice: Version conflict')).toBeOnTheScreen();
     await waitFor(() => expect(app.mock.callsTo('GET', PATH).length).toBeGreaterThanOrEqual(2));
     expect(app.mock.callsTo('PUT', /reconnect/)[0]).toMatchObject({ body: { selected: true }, headers: { 'if-match': '"1"' } });
+    expect(screen.getByRole('checkbox', { name: 'I’d meet Maya again' }).props.accessibilityState.checked).toBe(true);
+  });
+
+  it('Save feedback writes only dirty items, reference first, and no-change writes nothing', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    app.mock.on('GET', PATH, ok(state({ attendance: [att(USER_ID, { value: 'present', source: 'SELF' })] })));
+    app.mock.on('PUT', `/v1/meals/${MEAL_ID}/reviews/${HOST_ID}`, ok({ subjectId: HOST_ID, version: '1', publishAt: null, visibility: 'PENDING' }));
+    app.mock.on('PUT', `/v1/meals/${MEAL_ID}/reconnect/${HOST_ID}`, ok({ subjectId: HOST_ID, selected: true, version: '2', connection: 'WAITING' }));
+    await renderApp(app, <PostMealScreen />);
+    await fireEvent.press(await screen.findByRole('button', { name: 'Save feedback for Maya' }));
+    expect(await screen.findByText('No changes to save.')).toBeOnTheScreen();
+    expect(app.mock.callsTo('PUT', /reviews|reconnect/)).toHaveLength(0);
+    await fireEvent.changeText(screen.getByLabelText('Reference for Maya'), '  A generous host.  ');
+    await fireEvent.press(screen.getByRole('checkbox', { name: 'I’d meet Maya again' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Save feedback for Maya' }));
+    await waitFor(() => expect(app.mock.callsTo('PUT', /reconnect/)).toHaveLength(1));
+    expect(app.mock.callsTo('PUT', /reviews|reconnect/).map((c) => c.path.includes('reviews') ? 'review' : 'reconnect')).toEqual(['review', 'reconnect']);
+    expect(app.mock.callsTo('PUT', /reviews/)[0]).toMatchObject({ body: { body: 'A generous host.' }, headers: { 'if-match': '"0"' } });
+  });
+
+  it('a network failure on the reference is Status unknown and pauses the reconnect choice', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    app.mock.on('GET', PATH, ok(state({ attendance: [att(USER_ID, { value: 'present', source: 'SELF' })] })));
+    app.mock.on('PUT', `/v1/meals/${MEAL_ID}/reviews/${HOST_ID}`, networkDown);
+    await renderApp(app, <PostMealScreen />);
+    await fireEvent.changeText(await screen.findByLabelText('Reference for Maya'), 'A generous host.');
+    await fireEvent.press(screen.getByRole('checkbox', { name: 'I’d meet Maya again' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Save feedback for Maya' }));
+    expect(await screen.findByText('Public reference: Status unknown')).toBeOnTheScreen();
+    expect(screen.getByText('Reconnect choice: Not saved yet')).toBeOnTheScreen();
+    expect(app.mock.callsTo('PUT', /reconnect/)).toHaveLength(0);
+    expect(screen.getByRole('button', { name: 'Check status for Maya' })).toBeOnTheScreen();
+  });
+
+  it('withdrawing an OPEN connection after the window closed needs confirmation; Keep writes nothing', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    app.mock.on('GET', PATH, ok(state({ windowOpen: false, reconnect: [{ subjectId: HOST_ID, selected: true, version: '4', connection: 'OPEN' }] })));
+    app.mock.on('POST', `/v1/connections/${HOST_ID}/revoke`, ok({ subjectId: HOST_ID, selected: false, version: '5', connection: 'CLOSED' }));
+    await renderApp(app, <PostMealScreen />);
+    await fireEvent.press(await screen.findByRole('checkbox', { name: 'I’d meet Maya again' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Save feedback for Maya' }));
+    await fireEvent.press(await screen.findByRole('button', { name: 'Keep connection' }));
+    expect(app.mock.callsTo('POST', /revoke/)).toHaveLength(0);
+    await fireEvent.press(screen.getByRole('button', { name: 'Save feedback for Maya' }));
+    await fireEvent.press(await screen.findByRole('button', { name: 'Withdraw connection' }));
+    await waitFor(() => expect(app.mock.callsTo('POST', /revoke/)).toHaveLength(1));
+    expect(app.mock.callsTo('POST', /revoke/)[0]!.headers['if-match']).toBe('"4"');
   });
 });
