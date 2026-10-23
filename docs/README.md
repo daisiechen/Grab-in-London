@@ -223,3 +223,5 @@
 - [QA B76：同 App 断网尝试的工具前置失败（保留原红，不冒产品缺陷）](qa/evidence/2026-10-21/browser-b76.json)。
 
 - [QA B77：实际单请求断网已触发，持续断网与显式重试尚未复现](qa/evidence/2026-10-21/browser-b77.json)。
+
+- [QA B78：原生持续断网与显式重试通过、真机连接前置核查](qa/evidence/2026-10-21/browser-b78.json)。

@@ -1,0 +1,9 @@
+{
+  "kind": "READ_ONLY_DEVICE_METADATA_PREFLIGHT",
+  "deviceRows": 3,
+  "physicalRows": 0,
+  "simulatedRows": 3,
+  "noDeviceContentRead": true,
+  "noInstallPairOrUnlock": true,
+  "rawMetadataSha256": "ef4431565f82352c9bfef1556bb510d3366baa10d715fbe258a17e4efac38f5e"
+}

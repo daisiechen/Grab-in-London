@@ -1,0 +1,49 @@
+{
+  "observations": [
+    {
+      "id": "B78-O001",
+      "status": "passed",
+      "testedCommit": "9101004d92cce4fdbc833232ea8d6841d06bdd90",
+      "apiCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "clientComposition": "3ee69fe baseline plus reviewed seven-file F64 overlay",
+      "executedBy": "Codex QA actual native XCTest and independent screenshot review",
+      "title": "J008 native sustained offline error and one explicit Retry recover in the same App",
+      "steps": [
+        "Separate HOLD tooling passed63 independent OWN checks, not product acceptance. One new PREPARE restored normal H and Inbox, then the same App/runner produced fresh ready evidence. Actual runner container/canonical binding, PAUSE0 and fresh ARM occurred without clock changes.",
+        "Anonymous real transport sequence5 refresh200/6 session200 preceded three inbox socket resets7/8/9 in OFFLINE_HOLD. All failed before upstream forwarding; HOLD had zero inbox REQUEST_FORWARD, total forwarded6, unknown0. No automatic recovery.",
+        "Actual native UI displayed You appear to be offline. Check your connection and try again. and a hittable Retry loading inbox button. Original cached Chats10 remained with the explicit error, not a fake success. Independent screenshot inspection confirmed both visible copy and button.",
+        "Only after the actual visible-error runner marker, host sent recover with the same current ARM cap and unchanged expiry. Child validated HOLD/inflight0 and parent emitted top-level RECOVERY_READY. Only that ACK released the runner recovery-ready signal. One explicit Retry then performed refresh200(sequence10), session200(11), inbox200(12).",
+        "Actual UI cleared Retry/error and restored ordinary Inbox rows/Chats10, independently confirmed in the recovered screenshot. XCTest passed29.083seconds/exit0. Tool totalforward9/offline3/unknown0. Prior204/205 failures remain unchanged; this is a later corrected fixture, not deletion of historical reds.",
+        "Explicit stop was actually delivered; holder and XCTest each exited0. Target App already terminated at test end, independently confirmed by simctl found nothing to terminate. No clock advance, AI, new OTP, business write or deletion. Only native offline subpath accepted; wholeJ008 remains NOT_RUN."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native206-codex-offline-xcui.swift",
+        "evidence/2026-10-21/native206-offline-visible-error.png",
+        "evidence/2026-10-21/native206-explicit-retry-recovered.png"
+      ],
+      "rawEvidence": {
+        "xctestLogSha256": "95f21779e3b7651fe160009377168661a091aba109d6f343a4f6a3ef27b5d873",
+        "transportLogSha256": "aa0604d268812be1533acaf3346b0eb6885dcfbad3ee4bea97fbba6809b0e89c",
+        "bridgeLogSha256": "96b9d76ebe37090bf42d836a70ced846ed431ca39b441e1169f3de9647bad43d",
+        "toolOwnLogSha256": "ec67bfab7a7d35c3159fc2054ffdc4b7b4deb95286d19da56e6200520ee6011c",
+        "privateBundleRetained": true
+      }
+    },
+    {
+      "id": "B78-O002",
+      "status": "passed",
+      "testedCommit": "c8afa18544bacccf03af2a6c2ae3cf52d044fbc0",
+      "executedBy": "Codex QA read-only device metadata preflight",
+      "title": "Device listing distinguishes three simulated iPhones from an actual physical target",
+      "steps": [
+        "Read-only devicectl listing returned three iPhone rows. Each explicitly has reality=simulated and transport=sameMachine; actual physical targets observed0. Do not count iPhone-labelled rows as real hardware.",
+        "No pairing, installation, unlock or personal device content access occurred. User already has an iPhone; this observation means no physical target was currently observed, not missing ownership.",
+        "G-IOS remains BLOCKED. Development must first prepare a real iphoneos-signed build and bounded reachable test endpoint, then request only necessary connection/trust/permissions. Simulator arm64/FakeTeam signature is not an installable device artifact."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/device-preflight-b78-safe.json"
+      ],
+      "classification": "read-only preflight completed; no actual device acceptance"
+    }
+  ]
+}
