@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import type { Failure } from '../../api/failure.ts';
 import { Icon } from '../../components/Icon.tsx';
 import type { Translate } from '../../i18n.ts';
@@ -14,15 +15,30 @@ const copy = (t: Translate, kind: Failure['kind']): [string, string] => {
   }
 };
 
+/** Seconds left until an absolute retry time; ticks while waiting and stops at zero. */
+function useWait(retryAt: number | undefined) {
+  const left = () => (retryAt ? Math.max(0, Math.ceil((retryAt - Date.now()) / 1000)) : 0);
+  const [seconds, setSeconds] = useState(left);
+  useEffect(() => {
+    setSeconds(left());
+    if (!retryAt) return;
+    const timer = setInterval(() => { const s = left(); setSeconds(s); if (!s) clearInterval(timer); }, 1000);
+    return () => clearInterval(timer);
+  }, [retryAt]);
+  return seconds;
+}
+
 export function FailureScreen({ failure, t, onRetry }: { failure: Failure; t: Translate; onRetry?: () => void }) {
   const [title, body] = copy(t, failure.kind);
+  const wait = useWait(failure.retryAt);
   return (
     <div className="panel load-error" role="alert">
       <Icon name="quality" size={36} />
       <h2>{title}</h2>
       <p>{body}</p>
       {failure.requestId && <p className="mono">requestId: {failure.requestId}</p>}
-      {onRetry && <button className="button primary" onClick={onRetry}>{t('重试加载', 'Retry loading')}</button>}
+      {wait > 0 && <p role="status">{t(`请求过于频繁，${wait} 秒后可重试。`, `Too many requests. You can retry in ${wait} s.`)}</p>}
+      {onRetry && <button className="button primary" disabled={wait > 0} onClick={onRetry}>{t('重试加载', 'Retry loading')}</button>}
     </div>
   );
 }

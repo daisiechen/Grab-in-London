@@ -19,6 +19,12 @@ describe('toFailure', () => {
     expect(toFailure(new Error('boom'))).toEqual({ kind: 'error', requestId: null });
   });
 
+  it('turns a 429 Retry-After into an absolute retry time and leaves other failures without one', () => {
+    expect(toFailure(new ApiError({ status: 429, code: 'RATE_LIMITED', message: 'x', retryAfterSeconds: 30 }), 1_000)).toMatchObject({ kind: 'rate_limited', retryAt: 31_000 });
+    expect(toFailure(new ApiError({ status: 429, code: 'RATE_LIMITED', message: 'x' }), 1_000).retryAt).toBeUndefined();
+    expect(toFailure(new ApiError({ status: 503, code: 'PROVIDER_UNAVAILABLE', message: 'x', retryAfterSeconds: 30 }), 1_000).retryAt).toBeUndefined();
+  });
+
   it('treats only auth/role failures as blocking', () => {
     expect(['signed_out', 'forbidden', 'reauth'].every((k) => isBlocking(k as never))).toBe(true);
     expect(isBlocking('revoked')).toBe(false);

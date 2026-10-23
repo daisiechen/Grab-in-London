@@ -200,7 +200,7 @@ function Body({ t, lang, page, filters, setFilters, go, binding, open, evidence,
           <p className="draft-note" role="status">{t('分类统计尚未更新完成：图表、明细与导出已暂停，不展示旧统计。', 'Classification statistics are not updated yet: charts, drilldowns and exports are paused and old statistics are hidden.')}</p>
         </section>
       ) : ps.status === 'failed' ? (
-        <FailureScreen failure={ps.failure} t={t} onRetry={() => void c.refreshSnapshots()} />
+        <FailureScreen failure={ps.failure} t={t} onRetry={c.retryPage} />
       ) : ps.status !== 'ready' || !binding ? (
         <p role="status">{t('正在加载快照数据…', 'Loading snapshot data…')}</p>
       ) : (

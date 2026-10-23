@@ -30,6 +30,8 @@ export interface ConsoleState {
   selectSnapshot(id: string): void;
   openPicker(open: boolean): void;
   refreshSnapshots(): Promise<void>;
+  /** Re-requests the current page for the same snapshot and applied query (503/429/network retry). */
+  retryPage(): void;
   /** Shared 410/401/403 handling for every snapshot-bound call (page, drilldown, export). */
   reportFailure(error: unknown): Failure;
   /**
@@ -74,7 +76,8 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
   const [pickerOpen, setPickerOpen] = useState(false);
   const [revokedNotice, setRevokedNotice] = useState(false);
   const [pageState, setPageState] = useState<PageState>({ status: 'idle' });
-  /** Page responses keyed by snapshot|page|filters; cleared entirely on 410/401/403. */
+  const [reloadToken, setReloadToken] = useState(0);
+  /** Page responses keyed by account|roles|snapshot|page|filters; cleared entirely on 410/401/403. */
   const cache = useRef(new Map<string, AdminPageData>());
   const [revoked, setRevoked] = useState<ReadonlySet<string>>(new Set());
   const [intents, dispatchIntent] = useReducer(reduceIntents, emptyBook());
@@ -144,7 +147,10 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
     if (newest && newest.id !== snapshotId) onSnapshotChange(newest.id);
   }, [gate.status, snapshot, snapshots, snapshotId, revoked, revokedNotice, onSnapshotChange]);
 
-  const key = snapshot && query ? `${snapshot.id}|${page}|${queryKey(query)}` : null;
+  // Responses are locale-independent (labels are translated client-side), so locale is not a key part:
+  // switching language neither refetches nor resets the applied query.
+  const account = session ? `${session.user.id}|${[...session.user.roles].sort().join(',')}` : null;
+  const key = account && snapshot && query ? `${account}|${snapshot.id}|${page}|${queryKey(query)}` : null;
   useEffect(() => {
     if (!key || !snapshot || !query) return;
     const hit = cache.current.get(key);
@@ -161,8 +167,8 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
       if (failure.kind !== 'revoked' && !isBlocking(failure.kind)) setPageState({ status: 'failed', failure });
     });
     return () => { live = false; };
-    // `key` encodes snapshot, page and canonical query; the other values are derived from it.
-  }, [key, api]);
+    // `key` encodes account, snapshot, page and canonical query; the other values are derived from it.
+  }, [key, api, reloadToken]);
 
   // Reads (never writes) for unresolved intents: receipt while unknown, then the statistics refresh.
   // Each intent is read at most once at a time and not before its Retry-After.
@@ -208,6 +214,10 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
     },
     openPicker: setPickerOpen,
     refreshSnapshots,
+    retryPage() {
+      if (key) cache.current.delete(key);
+      setReloadToken((n) => n + 1);
+    },
     reportFailure,
     intents,
     dispatchIntent,
