@@ -56,6 +56,18 @@ class QAExecutionTest(unittest.TestCase):
         c.update(status='PASS',evidence=['B3-T002'],remainingExpected=[],coveredExpectedIndexes=list(range(len(expected))))
         with self.assertRaises(AssertionError):validator.validate(self.data)
 
+    def test_support_correction_plan_preserves_overdue_boundary_contract(self):
+        plan=(ROOT/'docs/qa/remaining-plan-2026-10-22.zh-CN.md').read_text()
+        active=plan.split('## J011 窗口更正记录')[0]
+        self.assertNotIn('结束后 7 日内',active)
+        self.assertIn('结束满 7 日起',active)
+        contract=(ROOT/'docs/engineering/data-and-command-contract.zh-CN.md').read_text()
+        self.assertIn('support仅t≥end+7d',contract)
+        self.assertIn('end+7d−1ms',plan)
+        self.assertIn('409 CORRECTION_WINDOW_OPEN',plan)
+        for ref in ('../product/PRD.zh-CN.md','../engineering/data-and-command-contract.zh-CN.md','../engineering/acceptance-scenarios.json'):
+            self.assertTrue((ROOT/'docs/qa'/ref).is_file())
+
     def test_report_is_reproducible(self):
         p=ROOT/'docs/qa/execution-2026-10-21.zh-CN.md';before=p.read_bytes()
         subprocess.run(['python3',str(ROOT/'scripts/render-qa-execution.py')],check=True,cwd=ROOT)
