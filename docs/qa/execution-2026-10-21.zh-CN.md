@@ -24,7 +24,7 @@ Current counts202 PASS/4 NOT_RUN/11 BLOCKED. Remaining whole local journeys J005
 
 ## 实际运行
 
-B101: F66sourcefix5DB+originalfiveuserharnessindependentPASS,notcurrentruntimeclosed. DirectadaptiveAPI62057QApackageverified/coverinstalled originalD92;240notrun. NewQA-F67componentconfirmed: sameusernormalhandoffafterrealSessionManagerexpiryreturnsblankunsentintro,1FAIL;P1ownerfixpending/device401stillpending. Original217counts202/4/11unchanged;AI2calls/15left/UNKNOWN1untouched.
+B102: JIT tool QA independent4/4PASS in newOWN PG; initial sandbox listen refusal retained. F67 fix9dccdfb independently passes original1+privacy4 component regressions; actual signed package/device401 remains pending. Whole217 counts202/4/11 unchanged; no targetfamily revocation or runtime cutover.
 
 | ID | 结果 | 范围 |
 |---|---|---|

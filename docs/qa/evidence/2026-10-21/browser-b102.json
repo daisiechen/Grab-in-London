@@ -1,0 +1,29 @@
+{
+  "observations": [
+    {
+      "id": "B102-O001",
+      "status": "passed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "title": "Exact-family JIT tool independently passes isolated OWN acceptance",
+      "steps": [
+        "QA reviewed frozen JIT source including runJit OWN integration and fixed inspect driver; no target execution.",
+        "Initial sandbox run3PASS1FAIL at port allocation before PG startup retained. Approved local-listen rerun4PASS0FAIL exit0 with newOWN PG44288: exact revoke/API401, safeProjection unchanged, repeated approval refusal, provider0, original1000ms checkpoint.",
+        "Tool acceptance only; actual native expiry and same-user draft recovery remain pending."
+      ],
+      "artifacts": [],
+      "privateLogSha256": "6a23adb69a3bd821dfa261e70c3954734a4caeda78a239c91420ad57cb22dfa1"
+    },
+    {
+      "id": "B102-O002",
+      "status": "passed",
+      "testedCommit": "9dccdfb3b66140ead12e64b9c423c1b9134b4da7",
+      "title": "F67 source fix independently verified; device acceptance pending",
+      "steps": [
+        "Original component reproduction rerun against fixed source1/1PASS; privacy/isolation regressions4/4PASS.",
+        "Developer native379 tests/54suites, type and lint passed; commit fetched and local/remote SHA equal.",
+        "Fresh signed F67 package not accepted or installed yet; build and tooling evidence do not close J008."
+      ],
+      "artifacts": []
+    }
+  ]
+}
