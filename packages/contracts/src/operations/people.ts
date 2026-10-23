@@ -33,7 +33,7 @@ export const peopleOperations = [
   }),
   op({
     operationId: 'updateMe', method: 'PATCH', path: '/me', summary: 'Edit own profile (allow-listed fields)',
-    auth: 'session', write: 'idempotencyKey', ifMatch: true, body: MePatch,
+    auth: 'session', write: 'idempotencyKey', receipt: true, ifMatch: true, body: MePatch,
     success: { status: 200, data: Me }, errors: [],
   }),
   op({

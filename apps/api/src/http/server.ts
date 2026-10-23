@@ -18,6 +18,7 @@ import { startAssistantLifecycle } from '../assistant/lifecycle.ts';
 import {DomainError} from '../common/errors.ts';
 import { registerExportRoutes } from '../admin/exports.ts';
 import { registerVenueRoutes } from '../venues/routes.ts';
+import { registerReceiptRoutes } from '../receipts/routes.ts';
 import { VenueService } from '../venues/service.ts';
 import { PostgresVenueReferences } from '../venues/repository.ts';
 import { FixturePlacesProvider } from '../venues/fixture-provider.ts';
@@ -86,6 +87,7 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   registerAnalyticsIngest(app, deps);
   registerResendWebhook(app,deps);
   registerSupportRoutes(app, deps);
+  registerReceiptRoutes(app, deps);
   const assistant = new AssistantController({ allowedAreas: [], ...deps.assistant, pool: deps.pool, sessions: new SessionService(deps.pool, deps.assistantRuntime), secret: deps.config.sessionSecret,
     venueDisplay:async venueRef=>{
       const {rows:[reference]}=await deps.pool.query<{place_id:string}>(`SELECT place_id FROM venues WHERE id=$1`,[venueRef]);

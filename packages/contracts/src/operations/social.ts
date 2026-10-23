@@ -32,7 +32,7 @@ export const socialOperations = [
   }),
   op({
     operationId: 'leaveGroup', method: 'POST', path: '/conversations/{conversationId}/leave', summary: 'Leave group chat (seat unchanged)',
-    auth: 'session', write: 'idempotencyKey', ifMatch: true, params: ConversationId, body: Obj({ confirm: T.Literal(true) }),
+    auth: 'session', write: 'idempotencyKey', receipt: true, ifMatch: true, params: ConversationId, body: Obj({ confirm: T.Literal(true) }),
     success: { status: 200, data: Conversation }, errors: ['FORBIDDEN', 'NOT_FOUND', 'STATE_CONFLICT'],
   }),
   op({
@@ -47,27 +47,27 @@ export const socialOperations = [
   }),
   op({
     operationId: 'reportAttendance', method: 'PUT', path: '/meals/{mealId}/attendance/{subjectId}', summary: 'SELF (own) or HOST report in [end,end+7d)',
-    auth: 'session', write: 'idempotencyKey', ifMatch: true, params: MealSubject, body: Obj({ value: Enum(ATTENDANCE_VALUES) }),
+    auth: 'session', write: 'idempotencyKey', receipt: true, ifMatch: true, params: MealSubject, body: Obj({ value: Enum(ATTENDANCE_VALUES) }),
     success: { status: 200, data: AttendanceState }, errors: ['FORBIDDEN', 'NOT_FOUND', 'STATE_CONFLICT'],
   }),
   op({
     operationId: 'rateExperience', method: 'PUT', path: '/meals/{mealId}/experience', summary: 'Private 1–5 meal score',
-    auth: 'session', write: 'idempotencyKey', ifMatch: true, params: Obj({ mealId: Uuid }), body: Obj({ score: T.Integer({ minimum: 1, maximum: 5 }) }),
+    auth: 'session', write: 'idempotencyKey', receipt: true, ifMatch: true, params: Obj({ mealId: Uuid }), body: Obj({ score: T.Integer({ minimum: 1, maximum: 5 }) }),
     success: { status: 200, data: Revision }, errors: ['FORBIDDEN', 'NOT_FOUND', 'STATE_CONFLICT'],
   }),
   op({
     operationId: 'reviewPerson', method: 'PUT', path: '/meals/{mealId}/reviews/{subjectId}', summary: 'Public reference (mutual or after 7 days)',
-    auth: 'session', write: 'idempotencyKey', ifMatch: true, params: MealSubject, body: Obj({ body: Text(1, 500) }),
+    auth: 'session', write: 'idempotencyKey', receipt: true, ifMatch: true, params: MealSubject, body: Obj({ body: Text(1, 500) }),
     success: { status: 200, data: ReviewRevision }, errors: ['FORBIDDEN', 'NOT_FOUND', 'STATE_CONFLICT'],
   }),
   op({
     operationId: 'selectReconnect', method: 'PUT', path: '/meals/{mealId}/reconnect/{subjectId}', summary: 'Private reconnect choice; WAITING never reveals the other side',
-    auth: 'session', write: 'idempotencyKey', ifMatch: true, params: MealSubject, body: Obj({ selected: T.Boolean() }),
+    auth: 'session', write: 'idempotencyKey', receipt: true, ifMatch: true, params: MealSubject, body: Obj({ selected: T.Boolean() }),
     success: { status: 200, data: ReconnectState }, errors: ['FORBIDDEN', 'NOT_FOUND', 'STATE_CONFLICT'],
   }),
   op({
     operationId: 'revokeConnection', method: 'POST', path: '/connections/{subjectId}/revoke', summary: 'Clear both consents; history read-only',
-    auth: 'session', write: 'idempotencyKey', ifMatch: true, params: Subject,
+    auth: 'session', write: 'idempotencyKey', receipt: true, ifMatch: true, params: Subject,
     success: { status: 200, data: ReconnectState }, errors: ['NOT_FOUND'],
   }),
   op({
@@ -77,12 +77,12 @@ export const socialOperations = [
   }),
   op({
     operationId: 'block', method: 'PUT', path: '/blocks/{subjectId}', summary: 'Block; clears both consents, keeps shared group',
-    auth: 'session', write: 'idempotencyKey', ifMatch: true, params: Subject,
+    auth: 'session', write: 'idempotencyKey', receipt: true, ifMatch: true, params: Subject,
     success: { status: 200, data: BlockState }, errors: ['NOT_FOUND', 'FORBIDDEN'],
   }),
   op({
     operationId: 'unblock', method: 'DELETE', path: '/blocks/{subjectId}', summary: 'Unblock; consents are not restored',
-    auth: 'session', write: 'idempotencyKey', ifMatch: true, params: Subject,
+    auth: 'session', write: 'idempotencyKey', receipt: true, ifMatch: true, params: Subject,
     success: { status: 200, data: BlockState }, errors: ['NOT_FOUND'],
   }),
   op({

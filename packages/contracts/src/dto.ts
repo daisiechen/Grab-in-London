@@ -336,3 +336,36 @@ export const SessionInfo = Obj({
 export const LinkedIdentity = Obj({ provider: Enum(['EMAIL', ...AUTH_PROVIDERS] as const), linkedAt: Instant });
 
 export { LocalDate };
+
+/**
+ * P1.1 original-intent receipt (actor+operation+Idempotency-Key). Carries only status, codes,
+ * ids and versions: never the request/response body, another person's choice or credentials.
+ * NONE means no record exists (never arrived, released after a 5xx, or purged); it is not a
+ * definitive failure, and clients must not mint a new key for the same intent because of it.
+ */
+export const CommandReceipt = Obj({
+  operation: T.String({ pattern: '^[a-z][A-Za-z0-9]{1,63}$' }),
+  key: Uuid,
+  state: Enum(['NONE', 'PENDING', 'SUCCEEDED', 'REJECTED'] as const),
+  /**
+   * PENDING only: the previous attempt lost its lease, so the same key+body may be resent.
+   * Always false once `expired`, because the server refuses any reuse of an expired key.
+   */
+  retryable: T.Boolean(),
+  /**
+   * The 30-day intent window has passed but the row is not yet purged. The stored outcome is
+   * still reported; the key can never be replayed. Reload the resource and let the person confirm
+   * a new intent explicitly (never auto-mint a key). An expired PENDING stays unresolved.
+   */
+  expired: T.Boolean(),
+  retryAfterSeconds: T.Union([T.Integer({ minimum: 1, maximum: 60 }), T.Null()]),
+  httpStatus: T.Union([T.Integer({ minimum: 200, maximum: 499 }), T.Null()]),
+  errorCode: T.Union([T.String({ pattern: '^[A-Z][A-Z_]{1,63}$' }), T.Null()]),
+  /** 409 class: VERSION (reload and re-confirm), IN_PROGRESS (keep polling), PAYLOAD (key reused), STATE (business rule). */
+  conflict: T.Union([Enum(['VERSION', 'IN_PROGRESS', 'PAYLOAD', 'STATE'] as const), T.Null()]),
+  resourceId: T.Union([Uuid, T.Null()]),
+  resourceVersion: T.Union([DecimalString, T.Null()]),
+  currentVersion: T.Union([DecimalString, T.Null()]),
+  completedAt: T.Union([Instant, T.Null()]),
+  expiresAt: T.Union([Instant, T.Null()]),
+});

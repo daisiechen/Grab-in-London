@@ -48,7 +48,9 @@ describe('registry matches the reviewed API contract', () => {
 
   it('keeps additional reviewed operations explicitly enumerated', () => {
     const extra = all.map((d) => d.operationId).filter((id) => !documented.some((d) => d.id === id));
-    expect(extra.sort()).toEqual(['getVenuePhoto','getBlock', 'markConversationRead', 'getClassification', 'getExport', 'createGuestSession', 'readAIPreferences', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'readAI', 'activityAI', 'resetAI', 'requestAI', 'pollAI', 'validateAIDraft', 'getStatisticsRefresh', 'retryStatisticsRefresh'].sort());
+    expect(extra.sort()).toEqual(['getVenuePhoto','getBlock', 'markConversationRead', 'getClassification', 'getExport', 'createGuestSession', 'readAIPreferences', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'readAI', 'activityAI', 'resetAI', 'requestAI', 'pollAI', 'validateAIDraft',
+      // P1.1 reviewed patch plan §4 (docs/engineering/mvp-patch/plan.zh-CN.md), not the frozen MVP contract.
+      'getCommandReceipt', 'getStatisticsRefresh', 'retryStatisticsRefresh'].sort());
     expect(doc).toContain('GET /admin/exports/:id');
   });
 
@@ -313,5 +315,15 @@ describe('generated OpenAPI and SDK metadata', () => {
   it('has no drift between the registry and committed artefacts', () => {
     expect(read('packages/contracts/generated/openapi.json')).toBe(JSON.stringify(buildOpenApi(), null, 2) + '\n');
     expect(read('packages/client/src/generated/operations.ts')).toBe(buildClientMetadata());
+  });
+});
+
+describe('P1.1 command receipt whitelist', () => {
+  it('only idempotency-key writes opt into receipts, and the receipt read itself is side-effect free', () => {
+    const flagged = all.filter((o) => o.receipt);
+    expect(flagged.length).toBeGreaterThan(0);
+    for (const o of flagged) expect(o.write, o.operationId).toBe('idempotencyKey');
+    expect(byId('getCommandReceipt')).toMatchObject({ method: 'GET', auth: 'session', write: 'read' });
+    for (const id of ['reviewPerson', 'selectReconnect', 'revokeConnection', 'updateMe', 'applyMeal', 'createMeal']) expect(byId(id).receipt, id).toBe(true);
   });
 });
