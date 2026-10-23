@@ -113,7 +113,8 @@ export class BudgetLedger {
     return row;
   }
   private async lockPeriods(c: PoolClient, call: CallRow) {
-    const { rows } = await c.query<{ enabled: boolean; used_micro_cny: string; reserved_micro_cny: string; cap_micro_cny: string; calls: number; call_cap: number }>(`SELECT * FROM ai_budget WHERE period=ANY($1::text[]) ORDER BY period FOR UPDATE`, [periods(call)]);
+    // Balance writers still serialize; period keys stay unchanged, so FK KEY SHARE locks need not upgrade.
+    const { rows } = await c.query<{ enabled: boolean; used_micro_cny: string; reserved_micro_cny: string; cap_micro_cny: string; calls: number; call_cap: number }>(`SELECT * FROM ai_budget WHERE period=ANY($1::text[]) ORDER BY period FOR NO KEY UPDATE`, [periods(call)]);
     return rows;
   }
   private async charge(c: PoolClient, call: CallRow, actual: bigint) {
