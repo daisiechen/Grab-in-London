@@ -49,8 +49,8 @@
    ```
 
    接入后应补worker runtime测试：有pending时封存一次，并在同一tick将其置为ready。
-3. **边界说明，请Codex确认**：`packages/db/src/schema/index.ts`追加的1行export是0026的Drizzle一致性要求（否则`migrate.db.test`失败）；`contracts.unit.test.ts`在“额外已审operation”列表中追加了`getStatisticsRefresh`、`retryStatisticsRefresh`两项。二者都是本切片最小必需改动。若需由原owner执行，可以单独revert这两处，交对方重做。
-4. **P03依赖**：Unknown状态的“只查原意图”需要通用`GET /me/command-receipts/{operation}/{key}`返回已封存的`classifyUser`响应（其中带有statisticsRefresh）。未交付前，后台UI不自造第二套回执，Unknown只保留原intent并禁止重写。
+3. **边界说明（已由两方Codex锁定，见下节）**：`packages/db/src/schema/index.ts`追加的1行export是0026的Drizzle一致性要求（否则`migrate.db.test`失败）；`contracts.unit.test.ts`在“额外已审operation”列表中追加了`getStatisticsRefresh`、`retryStatisticsRefresh`两项。二者都是本切片最小必需改动。若需由原owner执行，可以单独revert这两处，交对方重做。
+4. ~~P03依赖：回执返回已封存的classifyUser响应body~~（**已更正**：P03不返回body，该前提不成立，见下节P09-R01修复）。
 5. **隐私保留**：两张新表保存user_id/revision，归类与`account_classifications`相同（删除流程不清除分类历史）。若隐私负责人要求删除时清除，需要在deletion handler（worker，客户端会话持有）中追加处理。
 6. **运行环境**：本切片不要求重启rig。下一片做浏览器验证前，需要Codex按owner PID重启API（使0026迁移和新路由生效）。
 
@@ -61,3 +61,23 @@
 - P10b：410统一清除cache/selection/drawer/export ticket；401/403清除私密缓存并回到原route/query；429遵循绝对Retry-After，503保留appliedQuery。
 - P10c：导出生成和下载时重验role/epoch，捕获snapshot/filter，不自动换快照；coverage本人优先、host补缺的手算fixture。
 - 最后：四档浏览器、双语、焦点/键盘，以及A01–A13自测证据，交Codex独立验收。
+
+## 2026-10-23 P09-R01修复：按原意图找回统计refresh
+
+起点为本地`8c6e7e7`（Codex的审查记录）。共3个提交：
+
+| 提交 | 内容 |
+| --- | --- |
+| `08912e1` | 串行cherry-pick P03固定提交`2e133da48695ca9520e0cf7c1078a483ebf8775d`（源码＋生成产物）。冲突只出现在`docs/README.md`和`contracts.unit.test.ts`的operation列表，已合并。README未纳入`claude-client-handoff.zh-CN.md`链接（本分支无该文件，否则会成为断链）。未读取客户端dirty。 |
+| `2d7647f` | 修复：`classifyUser`标记`receipt: true`。新增`findStatisticsRefreshByIntent` `GET /admin/statistics-refresh-intents/{intentKey}/{targetUserId}/{acceptedRevision}`（data_admin＋MFA，仅原actor）。必须与原intent的target及revision一致，不一致、他人key或不存在一律404。不重放classify、不新建job、不返回body。文件：`operations-admin.ts`、`routes.ts`、`statistics-refresh.ts`、`contracts.unit.test.ts`（列表追加）。 |
+| `b111c4c` | 单独的HTTP恢复测试`statistics-refresh-recovery.api.test.ts`：classify响应视为丢失→P03回执SUCCEEDED（无body）→用冻结target＋回执`resourceVersion`按原key定位→tick后Ready且refreshId不变。classification/audit/refresh各1行。另actor（回执NONE）、target错配、revision错配、未知key均404；角色撤销后回执与定位均403；查询不产生任何行。 |
+
+更正：P03不返回保存的响应body，所以前文“依赖回执body取得refreshId”的前提不成立，已由上述按原意图找回替代。UI恢复路径为：回执SUCCEEDED→用冻结的targetUserId＋`resourceVersion`调用`findStatisticsRefreshByIntent`。回执NONE时保持未决，不自动重发（客户端helper的NONE问题由客户端修复）。
+
+设计取舍：以query对象传参时，生成后`packages/client/src/http.ts:35`触发TS2590（RequestOf联合类型过于复杂）。经本地对照，去掉该operation即消失；改为仅用路径参数后同样消失。因此采用路径参数，不修改客户端`http.ts`。
+
+自测（隔离入口）：admin＋receipts API 13个文件48项通过；deletion/worker/db 14个文件62项通过；本地试生成后`pnpm -r typecheck` 0错误，contracts/client/admin unit 10个文件115项通过（试生成产物已restore，未提交）；eslint与diff check通过。未运行：完整`core:check`（需统一生成）、浏览器。
+
+共享文件归还：`packages/db/src/schema/index.ts`只在`63b088e`追加了`admin-statistics.ts`这1行export。此后本会话不再修改index，即日归还客户端。`admin-statistics.ts`仍由后台独占。
+
+待统一生成：请客户端在P03基础上cherry-pick `63b088e`、`f3b0e0b`、`ea5a2e2`、`2d7647f`后生成，回传生成commit。生成前`check:generated`、client typecheck失败属预期。
