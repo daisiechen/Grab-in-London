@@ -6,7 +6,7 @@ import { defineRoute, defineWrite } from '../http/routes.ts';
 import { DomainError } from '../common/errors.ts';
 import { readAdminPage } from './pages.ts';
 import { readDrilldown } from './drilldown.ts';
-import { createStatisticsRefresh, readStatisticsRefresh, retryStatisticsRefresh } from './statistics-refresh.ts';
+import { createStatisticsRefresh, readStatisticsRefresh, readStatisticsRefreshByIntent, retryStatisticsRefresh } from './statistics-refresh.ts';
 import {encodeCursor,decodeCursor} from '../common/cursor.ts';
 import {createHash} from 'node:crypto';
 import type { Static } from '@sinclair/typebox';
@@ -50,6 +50,10 @@ export function registerAdminRoutes(app: FastifyInstance, deps: AppDeps) {
     return { data: { userId, classification: body.classification, revision, snapshotPending: true, statisticsRefresh }, version: revision, resourceId: userId };
   });
   defineRoute(app, deps, 'getStatisticsRefresh', async ({ request, auth }) => ({ data: await readStatisticsRefresh(deps.pool, (request.params as { refreshId: string }).refreshId, auth!.userId) }));
+  defineRoute(app, deps, 'findStatisticsRefreshByIntent', async ({ request, auth }) => {
+    const { intentKey, targetUserId, acceptedRevision } = request.params as { intentKey: string; targetUserId: string; acceptedRevision: string };
+    return { data: await readStatisticsRefreshByIntent(deps.pool, { actorId: auth!.userId, intentKey, targetUserId, acceptedRevision }) };
+  });
   defineWrite(app, deps, 'retryStatisticsRefresh', async ({ request, auth }, tx) => {
     const { rows: roles } = await tx.client.query(`SELECT role FROM roles WHERE user_id=$1 AND role='data_admin' FOR SHARE`, [auth.userId]);
     if (!roles.length) throw new DomainError('FORBIDDEN', 'You do not have permission to refresh statistics.');

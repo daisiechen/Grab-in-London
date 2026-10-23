@@ -63,6 +63,18 @@ export async function readStatisticsRefresh(pool: Pool, refreshId: string, actor
   return project(rows[0]!);
 }
 
+/**
+ * Lost-response recovery for the caller's own classifyUser intent (P09-R01). The caller presents
+ * the frozen target and the accepted revision from the original-intent receipt; any mismatch,
+ * other actor or unknown key is the same NOT_FOUND. Never replays classify, never creates a job.
+ */
+export async function readStatisticsRefreshByIntent(pool: Pool, input: { actorId: string; intentKey: string; targetUserId: string; acceptedRevision: string }): Promise<StatisticsRefresh> {
+  const { rows } = await pool.query<{ id: string }>(`SELECT id FROM admin_statistics_refreshes WHERE actor_id=$1 AND intent_key=$2 AND target_user_id=$3 AND accepted_revision=$4::bigint`,
+    [input.actorId, input.intentKey.toLowerCase(), input.targetUserId.toLowerCase(), input.acceptedRevision]);
+  if (!rows[0]) throw new DomainError('NOT_FOUND', 'This statistics refresh is unavailable.');
+  return readStatisticsRefresh(pool, rows[0].id, input.actorId);
+}
+
 /** Accepted classification, failed statistics: reopen the statistics only. Zero classification writes. */
 export async function retryStatisticsRefresh(db: PoolClient, refreshId: string, actorId: string): Promise<StatisticsRefresh> {
   const { rows } = await db.query(`SELECT ${COLUMNS},actor_id FROM admin_statistics_refreshes WHERE id=$1 FOR UPDATE`, [refreshId]);
