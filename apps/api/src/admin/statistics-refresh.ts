@@ -38,8 +38,10 @@ export async function createStatisticsRefresh(db: PoolClient, input: { actorId: 
 }
 
 /**
- * Binds open refreshes to the newest valid snapshot that sealed the same user's accepted or later
- * revision; a READY refresh whose snapshot was revoked or left the privacy epoch reopens first.
+ * Binds each refresh to the newest valid snapshot that sealed the same user's accepted or later
+ * revision (sealed per-user inputs, never time or a global maximum). A READY refresh follows newer
+ * qualifying snapshots, so intents resolved at different times converge on one selectable snapshot;
+ * one whose snapshot was revoked or left the privacy epoch reopens first.
  */
 export async function resolveStatisticsRefreshes(db: Db, refreshId?: string): Promise<number> {
   await db.query(`UPDATE admin_statistics_refreshes r SET state='PENDING',snapshot_id=NULL,updated_at=clock_timestamp()
@@ -49,8 +51,8 @@ export async function resolveStatisticsRefreshes(db: Db, refreshId?: string): Pr
     FROM (SELECT DISTINCT ON (o.id) o.id,i.snapshot_id FROM admin_statistics_refreshes o
       JOIN analytics_snapshot_classification_inputs i ON i.user_id=o.target_user_id AND i.revision>=o.accepted_revision
       JOIN analytics_snapshots s ON s.id=i.snapshot_id AND s.revoked_at IS NULL AND s.privacy_epoch=(SELECT epoch FROM privacy_control WHERE id=1)
-      WHERE o.state<>'READY' AND ($1::uuid IS NULL OR o.id=$1) ORDER BY o.id,s.as_of DESC,s.id DESC) m
-    WHERE r.id=m.id AND r.state<>'READY'`, [refreshId ?? null]);
+      WHERE ($1::uuid IS NULL OR o.id=$1) ORDER BY o.id,s.as_of DESC,s.id DESC) m
+    WHERE r.id=m.id AND (r.state<>'READY' OR r.snapshot_id IS DISTINCT FROM m.snapshot_id)`, [refreshId ?? null]);
   return rowCount ?? 0;
 }
 
