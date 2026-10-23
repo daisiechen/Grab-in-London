@@ -9,10 +9,11 @@ import type { AppDeps } from '../http/context.ts';
 import { allocateMessageSeq, dissolveConversation, leaveConversation } from '../membership/intervals.ts';
 import { assertDirectAuthorized, directLockPlan } from '../connections/service.ts';
 import { londonTime } from '../meals/time.ts';
+import { enqueueMessageEvents, storedMentions } from './message-events.ts';
 import { applicationDto } from '../meals/read.ts';
 
 interface ConversationRow { id: string; kind: 'GROUP' | 'DIRECT'; meal_id: string | null; pair_id: string | null; version: string; head: string; dissolved_at: Date | null; title: string | null; host_id: string | null }
-async function conversation(db: Pool | PoolClient, id: string, userId: string, live = false): Promise<ConversationRow> {
+export async function conversation(db: Pool | PoolClient, id: string, userId: string, live = false): Promise<ConversationRow> {
   const { rows: [row] } = await db.query<ConversationRow>(`SELECT c.*,CASE WHEN c.kind='DIRECT' THEN
       CASE WHEN peer.status='ACTIVE' THEN COALESCE(profile.display_name,'Fancy member') ELSE 'Deleted member' END
       ELSE m.title END AS title,m.host_id
@@ -31,7 +32,7 @@ async function conversation(db: Pool | PoolClient, id: string, userId: string, l
 }
 const dto = (c: ConversationRow, canSend: boolean) => ({ id: c.id, version: c.version, kind: c.kind, mealId: c.meal_id, title: c.title ?? 'Conversation', canSend, dissolved: !!c.dissolved_at, head: c.head });
 const visible = `EXISTS (SELECT 1 FROM membership_intervals i WHERE i.conversation_id = msg.conversation_id AND i.user_id = $2 AND i.join_seq < msg.seq AND (i.leave_seq IS NULL OR msg.seq < i.leave_seq))`;
-async function messageDto(db: Pool | PoolClient, id: string) {
+export async function messageDto(db: Pool | PoolClient, id: string) {
   const { rows: [r] } = await db.query(`SELECT msg.*, u.status, p.display_name, p.bio, p.languages, p.interests FROM messages msg JOIN users u ON u.id = msg.sender_id LEFT JOIN profiles p ON p.user_id = u.id WHERE msg.id = $1`, [id]);
   const redacted = r.redacted || r.status !== 'ACTIVE';
   return { id: r.id, seq: r.seq, body: redacted ? '[Message unavailable]' : r.body, redacted, createdAt: r.created_at.toISOString(), sender: { id: r.sender_id, displayName: redacted ? 'Former member' : r.display_name ?? 'Member', avatarUrl: null, bio: redacted ? null : r.bio, languages: redacted ? [] : r.languages ?? [], interests: redacted ? [] : r.interests ?? [] } };
@@ -110,13 +111,16 @@ export function registerConversationRoutes(app: FastifyInstance, deps: AppDeps) 
       const now = await tx.effectiveNow();
       const seq = await allocateMessageSeq(tx, conversationId, auth!.userId, now);
       const { rows: [row] } = await tx.client.query(`INSERT INTO messages (conversation_id,seq,sender_id,client_message_id,body,created_at) VALUES ($1,$2,$3,$4,$5,$6) RETURNING id`, [conversationId, String(seq), auth!.userId, input.clientMessageId, body, now]);
+      await enqueueMessageEvents(tx.client,{messageId:row.id,conversationId,senderId:auth!.userId,createdAt:now,mentions:[]});
       return { data: await messageDto(tx.client, row.id) };
     });
   });
-  defineRoute(app, deps, 'readMessages', async ({ request, auth }) => {
+  for (const readOperation of ['readMessages','readGroupMessagesV2'] as const) defineRoute(app, deps, readOperation, async ({ request, auth }) => {
     const { conversationId } = request.params as { conversationId: string };
     const q = request.query as { mode: 'HISTORY' | 'LIVE'; afterSeq?: string; cursor?: string; limit?: number };
-    const c = await conversation(deps.pool, conversationId, auth!.userId, q.mode === 'LIVE');
+    const c = await conversation(deps.pool, conversationId, auth!.userId, readOperation === 'readMessages' && q.mode === 'LIVE');
+    if (readOperation === 'readGroupMessagesV2' && c.kind !== 'GROUP') throw new DomainError('FORBIDDEN','This is not a group.');
+    if (readOperation === 'readGroupMessagesV2' && q.mode === 'LIVE') await conversation(deps.pool,conversationId,auth!.userId,true);
     const { rows: [epoch] } = await deps.pool.query(`SELECT count(*)::text || ':' || COALESCE(max(leave_seq)::text,'open') AS value FROM membership_intervals WHERE conversation_id = $1 AND user_id = $2`, [conversationId, auth!.userId]);
     const scope = { actor: auth!.userId, resource: `messages:${conversationId}`, filterHash: q.mode, epoch: `${epoch.value}:${c.dissolved_at?.toISOString() ?? 'active'}` };
     const key = q.cursor ? decodeCursor(deps.config.sessionSecret, scope, q.cursor) : q.mode === 'LIVE' ? q.afterSeq ?? '0' : String(BigInt(c.head) + 1n);
@@ -125,7 +129,11 @@ export function registerConversationRoutes(app: FastifyInstance, deps: AppDeps) 
     const { rows } = await deps.pool.query<{ id: string; seq: string }>(`SELECT msg.id, msg.seq FROM messages msg WHERE msg.conversation_id = $1 AND ${visible}
       AND msg.seq ${q.mode === 'LIVE' ? '>' : '<'} $3 AND msg.seq <= $4 ORDER BY msg.seq ${q.mode === 'LIVE' ? 'ASC' : 'DESC'} LIMIT $5`, [conversationId, auth!.userId, key, c.head, limit + 1]);
     const hasMore = rows.length > limit; const page = rows.slice(0, limit); const last = page.at(-1)?.seq ?? key;
-    const data = await Promise.all(page.map((r) => messageDto(deps.pool, r.id)));
+    const data = await Promise.all(page.map(async (r) => {
+      const message = await messageDto(deps.pool,r.id);
+      if (readOperation === 'readMessages') return message;
+      return {...message,mentions:message.redacted?[]:await storedMentions(deps.pool,r.id),warnings:{droppedMentionIds:[]}};
+    }));
     return { data, page: { hasMore, nextCursor: hasMore ? encodeCursor(deps.config.sessionSecret, scope, last) : null, scannedThroughSeq: q.mode === 'LIVE' && hasMore ? last : c.head } };
   });
   for (const op of ['leaveGroup', 'dissolveGroup'] as const) defineWrite(app, deps, op, async ({ request, auth, ifMatch }, tx) => {
