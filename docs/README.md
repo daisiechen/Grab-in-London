@@ -42,6 +42,8 @@
 
 ## 发布与验收
 
+- [当前 MVP 收尾任务与 QA 接续](delivery/mvp-closeout-2026-10-23.zh-CN.md)：开发任务指令、QA唯一执行责任、集中人工事项与关闭标准；排除全部补丁范围。
+
 - [MVP 测试效率与剩余阻塞分析（2026-10-23）](reviews/mvp-test-efficiency-2026-10-23.zh-CN.md)：仅主 MVP，截至 B90 的效率原因、本地剩余旅程及9类真实验收门槛。
 
 - [平台配置交接](delivery/platform-configuration-2026-10-21.zh-CN.md)：账号、DNS、密钥安全加载方式和真实接入边界，供后续开发会话使用。
