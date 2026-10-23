@@ -30,6 +30,12 @@ export interface ConsoleState {
   refreshSnapshots(): Promise<void>;
   /** Shared 410/401/403 handling for every snapshot-bound call (page, drilldown, export). */
   reportFailure(error: unknown): Failure;
+  /**
+   * Captures the current data scope. `live()` turns false once the selection is revoked (410), the
+   * session is blocked (401/403), the snapshot or account changes or the console unmounts, so late
+   * tickets/CSV/pages of the old scope can never be saved, announced or cached into the new one.
+   */
+  fence(): { live(): boolean };
   /** Current snapshot + canonical filters; null until a snapshot is selected. */
   binding: { snapshotId: string; query: FilterQuery; filterHash: string | null } | null;
 }
@@ -63,6 +69,8 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
   /** Page responses keyed by snapshot|page|filters; cleared entirely on 410/401/403. */
   const cache = useRef(new Map<string, AdminPageData>());
   const [revoked, setRevoked] = useState<ReadonlySet<string>>(new Set());
+  /** Data-scope generation; bumped by every event that invalidates in-flight results. */
+  const generation = useRef(0);
 
   const snapshot = useMemo(() => {
     if (!snapshotId) return null;
@@ -72,6 +80,7 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
   const query = useMemo(() => (snapshotDay ? toQuery(filters, snapshotDay) : null), [filters, snapshotDay]);
 
   const clearData = useCallback(() => {
+    generation.current++;
     cache.current.clear();
     setPageState({ status: 'idle' });
   }, []);
@@ -92,6 +101,10 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
     }
     return failure;
   }, [api, clearData, onSnapshotChange, snapshotId]);
+
+  // A new snapshot selection or API/account instance starts a new scope; unmount ends all scopes.
+  useEffect(() => { generation.current++; }, [snapshot?.id, api]);
+  useEffect(() => () => { generation.current++; }, []);
 
   // Session first (CSRF + roles for display), then sealed snapshot metadata.
   useEffect(() => {
@@ -163,6 +176,10 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
     openPicker: setPickerOpen,
     refreshSnapshots,
     reportFailure,
+    fence() {
+      const captured = generation.current;
+      return { live: () => generation.current === captured };
+    },
     binding: snapshot && query ? {
       snapshotId: snapshot.id,
       query,

@@ -1,5 +1,5 @@
 import { newIntentKey } from '@fancy/client';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ExportScope, RowQuery } from '../../api/admin-api.ts';
 import type { FailureKind } from '../../api/failure.ts';
 import { Icon } from '../../components/Icon.tsx';
@@ -17,9 +17,16 @@ export function saveCsv(csv: string, filename: string) {
   URL.revokeObjectURL(url);
 }
 
+/** Everything the export body depends on; a key is only reused for the identical intent. */
+const signature = (scope: ExportScope, binding: Binding, rows: RowQuery | undefined) =>
+  JSON.stringify([scope, binding.snapshotId, binding.filterHash, binding.query, rows ?? {}]);
+
 /**
  * Short-lived export of the same snapshot + filters as the page (T23): POST /admin/exports then GET
- * the CSV once. One click = one idempotency key, reused if the same intent is retried after a network error.
+ * the CSV once. One click = one idempotency key, reused only when the identical intent is retried
+ * after a network error. Each await is fenced: after unmount, 410, 401/403, an account/snapshot
+ * change or a different binding, a late ticket or CSV is dropped (no download, no success notice).
+ * Role and privacy epoch are still re-checked by the server on create and download.
  */
 export function ExportButton({ scope, binding, rows, t, className = 'button export-button', label }: {
   scope: ExportScope; binding: Binding | null; rows?: RowQuery; t: Translate; className?: string; label?: string;
@@ -27,7 +34,11 @@ export function ExportButton({ scope, binding, rows, t, className = 'button expo
   const c = useConsole();
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
-  const pendingKey = useRef<string | null>(null);
+  const pendingKey = useRef<{ signature: string; key: string } | null>(null);
+  const mounted = useRef(true);
+  const current = useRef({ binding, scope, rows });
+  current.current = { binding, scope, rows };
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
 
   const failText = (kind: FailureKind) => kind === 'revoked'
     ? t('快照已撤销，导出已失效，请选择新快照。', 'Snapshot revoked; the export is no longer available. Choose a new snapshot.')
@@ -39,22 +50,35 @@ export function ExportButton({ scope, binding, rows, t, className = 'button expo
 
   const run = async () => {
     if (!binding) return;
+    const sig = signature(scope, binding, rows);
+    const fence = c.fence();
+    const live = () => mounted.current && fence.live();
+    const sameIntent = () => { const now = current.current; return !!now.binding && signature(now.scope, now.binding, now.rows) === sig; };
+    const cancelled = () => {
+      if (mounted.current) setMessage({ ok: false, text: t('快照或筛选已变化，导出已取消，请重新导出。', 'The snapshot or filters changed; the export was cancelled. Export again.') });
+    };
     setBusy(true);
     setMessage(null);
-    pendingKey.current ??= newIntentKey();
+    if (pendingKey.current?.signature !== sig) pendingKey.current = { signature: sig, key: newIntentKey() };
     try {
-      const ticket = await c.api.createExport({ snapshotId: binding.snapshotId, metric: scope, filters: { ...binding.query, ...rows } }, pendingKey.current);
-      if (ticket.snapshotId !== binding.snapshotId) throw new Error('Export bound to a different snapshot');
+      const ticket = await c.api.createExport({ snapshotId: binding.snapshotId, metric: scope, filters: { ...binding.query, ...rows } }, pendingKey.current.key);
       pendingKey.current = null;
+      if (!live()) return;
+      if (!sameIntent()) { cancelled(); return; }
+      if (ticket.snapshotId !== binding.snapshotId) throw new Error('Export bound to a different snapshot');
       const csv = await c.api.downloadExport(ticket.exportId);
+      if (!live()) return;
+      if (!sameIntent()) { cancelled(); return; }
       saveCsv(csv, `fancy-${scope}-${binding.snapshotId}.csv`);
       setMessage({ ok: true, text: t('已导出当前快照与筛选的指标', 'Exported metrics for this snapshot and filters') });
     } catch (error) {
+      // A failure of a superseded scope must not revoke, sign out or message the current one.
+      if (!live()) return;
       const failure = c.reportFailure(error);
       if (failure.kind !== 'network') pendingKey.current = null;
-      setMessage({ ok: false, text: failText(failure.kind) });
+      if (mounted.current) setMessage({ ok: false, text: failText(failure.kind) });
     } finally {
-      setBusy(false);
+      if (mounted.current) setBusy(false);
     }
   };
 
