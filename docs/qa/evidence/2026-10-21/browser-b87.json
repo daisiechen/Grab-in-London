@@ -1,0 +1,28 @@
+{
+  "observations": [
+    {
+      "id": "B87-O001",
+      "status": "failed",
+      "classification": "environment_and_missing_prerequisites_not_product_failure",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "executedBy": "Codex QA actual original native236 plus independent read-only projection review",
+      "title": "J008 exact current prerequisites; no session revocation executed",
+      "steps": [
+        "236 used original D92/F64 package and found actual offline guest-until-sign-in-check banner. The old62061 proxy had already stopped; QA incorrectly assumed reachability. Test exit65 retained. This does not prove expired session or a product defect. No logout/OTP/deletion/revocation performed. After test simctl found no target App to terminate.",
+        "Original-database RR read-only projection independently reviewed: runtime89dc/dataf6d9/CONTROL41 fixture02:31:30; six physically/projected OPEN meals all hosted by H, H HOST_CONFIRMED/group active, candidateForH0. A host-owned meal cannot be used as H application-editor target.",
+        "Exact previously consumed A WEB EMAIL_OTP challenge provenance was supplied without code/token. Read-only A preflight showed ACTIVE/profile complete, writes1/60,burst1/10, historical email OTP1/IP4, resend TTL30 and no unconsumed live challenge. Current browser actually guest; DB live families do not authorize copying tokens. Frozen fixture clock means real-wall waiting cannot clear this TTL. No new OTP/IP change/quota reset attempted.",
+        "Independent exact-meal read PREPARE OWN28 tests passed; no actual target cap/proxy started and no arbitrary meal guessed. Normal A-create-one-meal is authorized original role-swap prelude but awaits usable normal authentication. Existing exact clock approval remains unresolved; not a new account/Key requirement.",
+        "Already dissolved group history is not a stale composer receiving real send403. Original write-rejection expectation remains untested. Guest Web Discover online six-meal baseline viewed, but per-tab offline action not executed: native CUA reported Mac locked. No system network/CA/service change or lock bypass.",
+        "J008 stays NOT_RUN. Reuse B78 native offline and B72 Web401 evidence; do not rerun them or promote whole case. Admin410/export invalidation remains tied to deletion-last sequence."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native236-j008-xcui.swift"
+      ],
+      "rawEvidence": {
+        "native236LogSha256": "54f6e6904e0b32aba0e832a61182f8c6d4893dc8f1905a570f5dfd522033262b",
+        "privateProjectionsRetained": true
+      },
+      "caseStatus": "NOT_RUN"
+    }
+  ]
+}
