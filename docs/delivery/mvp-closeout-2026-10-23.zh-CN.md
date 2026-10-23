@@ -127,3 +127,8 @@ F64以B90定向关闭为准，JSON缺陷摘要OPEN滞后；不再要求重复修
 - 原生QA独立组合仅_layout注入024630，正常构建签名及1782源码/二进制/Hermes核验通过，原D92原位安装并核安装后hash一致；数据与Keychain保留。正常H登录入口待交，未实际重跑237。[B97](../qa/evidence/2026-10-21/browser-b97.json)。
 - Web候选独立4组件+2OWN适配测试通过，实际接入尚需新的完整同库连续性/时钟对齐方案。前次单次换代许可已消费，不自动再换secret或调钟；固定024630不能冒随阶段推进。
 - 原237测试红保留，xcodebuild挂起收尾由soleQA仅正常终止自有PID后exit143；非整suite通过。AI仍2calls/128micro、剩15、UNKNOWN1；计数202/4/11不变。
+
+### B98 原生H正常登录实际通过
+
+- 原D92一次发码201，经两个各自有限认证窗口正常Verify200/Handoff200/Session200，页面确认原QA Final Host；QA238实际1PASS/0FAIL、144.146秒、退出0。两个代理均pause0后stop退出0，无重发/延TTL/搬token。[B98](../qa/evidence/2026-10-21/browser-b98.json)。
+- 原库RR精确challenge→result_family→原H的IOS会话族验证，CONTROL18/024630，历史AI责任保持。只关闭登录前置；原237红保留，下一步新只读窗口打开A目标填未发稿，再精确会话失效；计数202/4/11不变。

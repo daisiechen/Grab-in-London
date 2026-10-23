@@ -1,0 +1,22 @@
+{
+  "observations": [
+    {
+      "id": "B98-O001",
+      "status": "passed",
+      "testedCommit": "3ee69fec6b79552404217aa5415d4f041853a06f",
+      "qaComposition": "QA_COMPOSITION_3ee69fe_9101004_SEVEN_PLUS_J008_CLOCK024630",
+      "title": "Original native H normal emailOTP login and exact sessionfamily independently verified",
+      "executedBy": "successor QA sole originalD92 UI and finite control operator",
+      "steps": [
+        "NormalHauth finitecandidate independent32/32OWN passed. ExistingQA238runner compiled with explicit second-window-READY gate. No app reinstall during login and no token transfer.",
+        "A freshinspect14to15 and finite120second35routewindowREADY. NormaloriginalD92 Profile→Sign in→Email→oneSendcode returned201, actualcodefieldREADY. A pause0/stop normalexit0.",
+        "QA sole exactroleHchallenge15to16 and otp16to17; one-reader consumedprivately once, code entered originalUI, waited explicitBREADY withoutVerify. No resend or TTL extension.",
+        "B separatefreshinspect17to18/READY. QA releasedexplicitgate; normalverifyEmail200/exchangeHandoff200/getSession200, UI QA Final Host. QA2381PASS0FAIL144.146s and xcodebuildexit0. B pause0/stopnormalexit0.",
+        "IndependentRR READONLY exactoriginalchallenge JOINresult_family_id→family.user_id confirms originalH/IOS/unrevoked, safeIDs/auth_time/created/xmin only, CONTROLrev18/024630unchanged duringaudit. No token/code/email/body in publicevidence.",
+        "Only normalnativeHloginprecondition closes. OriginalB95failure retained; mid-editor401/targetdraft/group403/Admin410 and wholeJ008 stillopen. AIprevious2calls128micro/15left/UNKNOWN1 unchanged."
+      ],
+      "artifacts": [],
+      "privateScreenshotSha256": "ff3c19d949eafa85360482265f1328cfa973a1170539fc6155b3fa4ca673b501"
+    }
+  ]
+}
