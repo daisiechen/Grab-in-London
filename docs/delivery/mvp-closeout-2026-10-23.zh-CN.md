@@ -195,3 +195,11 @@ F64以B90定向关闭为准，JSON缺陷摘要OPEN滞后；不再要求重复修
 
 - 新代际前置独审及实际只读核验通过；QA一次normalstop成功保PG，CONTROL27 STOPPED_PG_RETAINED。父退出检查返回UNKNOWN，真实父仍在，API/worker已退且端口空。[B105](../qa/evidence/2026-10-21/browser-b105.json)
 - 当前本地业务服务不可用；不假称换代完成、不重复stop/信号、不提前启动。仅精确父进程一次额外SIGTERM许可已问待答，禁止擅自扩KILL/EOF/PG。开发并行新OWN退出复现/修复，外部门槛准备继续。
+
+
+### B106 实际接入恢复及Web申请完成项
+
+- 人类批准第二次精确TERM后旧父真实退出；新审计保原UNKNOWN失败，非阻塞真实组合1/1独验正常退出/PG账保。实际新代际已启动，原库安全投影/预算UNKNOWN保持；F66d915加载1次，HTTP/worker/受控AI已恢复，无重配/延价/新钟动作。[B106](../qa/evidence/2026-10-21/browser-b106.json)
+- WebA正常恢复原cookie；Z1原手写正文明确提交PENDING。完整AI SEARCH→选X1→生成→Keep保原文→显式Replace→本人Send PENDING通过，生成阶段4业务投影exact不变。D23已用5/17、剩12，UNKNOWN1未增。
+- 正常Withdraw命中固定测试钟1秒写限流，B正常OTP受新代际horizon影响503，均未重试/清桶。正准备031630/033000/040000及有界61秒节拍的集中具体批准，未批准不执行。
+- 纠正代理附加前置：原用例要求Web/iOS互换host/applicant客户端，不要求H/A账号互换业务身份。复用既有X1/Y1/X2/Y2，H保持host、A保持applicant；未发布额外新饭局，不弱化双端/名额/截止/B隐私断言。

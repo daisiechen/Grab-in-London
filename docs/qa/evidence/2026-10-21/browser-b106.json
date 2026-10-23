@@ -1,0 +1,54 @@
+{
+  "observations": [
+    {
+      "id": "B106-O001",
+      "status": "passed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "title": "Approved exact second TERM and real shutdown regression resolve retained-parent prerequisite",
+      "steps": [
+        "Human directly approved one additional exactSIGTERM only. Reviewedexecutor rechecked parentstartup/PPID/CONTROL27/no businesslisteners/F53/ledger then sent once. Independentps thenproved allthree oldruntimePIDsabsent with originalPGalive. NoKILL/EOF/loops.",
+        "Readonly exitobservation includes explicit SECOND_SIGTERM_USER_APPROVED/new human reply and retains original PARENT_EXIT_UNKNOWN history. afterstopRR baseline/threebudgets/UNKNOWN exact; newmanifest/pin generated only after actualexit.",
+        "Independent oldFIFOmechanism/newnonblock4OWN PASS; additional realVite/API/worker/newFIFO OWN1PASS exit0 signalnull, allchildren/listenersgone,PGidentity/budgetUNKNOWN retained. This closes previous fakeaccess coveragegap."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B106-O002",
+      "status": "passed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "qaComposition": "baseline89dc + exactF66budget2ac/d915 runtimeoverlay + explicitobserved-clockQAWeb",
+      "title": "Same original database adopted into reviewed new runtime without quota or history reset",
+      "steps": [
+        "Single firstlaunch from reviewedJ4GdsSmanifest using nonblockingtransport. Actualnewowner/generation and children; startupHTTPclosed/workerstopped/AIpaused. No repeatedlaunch.",
+        "Actualstatusbudgetd915/load1. StartuprecoverySQL executed0matchingrows; before=after=prestopbaseline, subsequentreadonlylivebaseline/threebudgets/UNKNOWN exact. Clock030130/initialoriginal/priceoriginal retained.",
+        "Finite boundnewowner driver thenreleaseBusiness,releaseWorker,enableexistingcontrolledAI,inspect allnonfailed. No configureDay/advance/newcap/priceextension/realprovider. Existing17sharedcap remains."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B106-O003",
+      "status": "passed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "title": "Actual Web manual fallback and full AI application path pass after adoption",
+      "steps": [
+        "NormalexistingWebAcookie restored oncanonicalorigin without newOTP/token copying. Exactoriginal73char handwrittenZ1 introduction explicitlysubmitted; UIpending and readonlyoriginalA/meal/round1/messageexact proved. No hostapproval/seatassignment.",
+        "Oneexplicit findmeals/date2026-10-23 succeeds; publicX1cardexplicitlyselected; original71char editor typed beforeone APPLICATIONrequest. Candidate98char appears, originalunchanged.",
+        "Readonlybefore/afterdraft safeprojected meals/applications/seatevents/messages exact. Keepmytext preserves71chars; explicitReplace transfers98chars, no autoSend. Only userSend createspendingX1application; no autonomousapproval.",
+        "D23calls5/17 used512/reserved0, UNKNOWN1/max3024 unchanged. WholeJ005 stillpending full/deadline/native/Bprivacy/backendmatrix."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B106-O004",
+      "status": "passed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "title": "Remaining prerequisites identified without changing rate limits or adding unnecessary reverse-account meals",
+      "steps": [
+        "NormalX1Withdraw singleattempthitsRATE_LIMITED retry1second; fixedfixtureclock cannot resolve bywall waiting. NormalB separatebrowserSendcode singleattempt503 conservativehorizon, noOTP/code retrieval or repeats.",
+        "Originalcase requiresWeb/iOS host/applicantclientrole swap, not changingH/A businessidentities. Reuse existingX1/Y1/X2/Y2 withHhost/Aapplicant on oppositeclients; unfinished createformclosed withoutpublish.",
+        "Readonlyall10meals/30job projection: onlyY1close0330 andY2close0400 before0400, bothcurrently1<minimum2. MustnormallyconfirmB beforedeadline tokeepOPEN. Proposed031630/033000/040000 plus bounded61secondcheckpoints awaitsnewhumanapproval; no clockaction underthis proposal."
+      ],
+      "artifacts": []
+    }
+  ]
+}

@@ -13,10 +13,7 @@
         "After evidence captured normalterminate App exit0 for approvedadoption checkpoint; no uninstall/Keychainchange."
       ],
       "artifacts": [
-        {
-          "path": "docs/qa/evidence/2026-10-21/b104-native-expiry-draft-restored.png",
-          "description": "Synthetic originalH target and exact unsent introduction after normal reauthentication"
-        }
+        "evidence/2026-10-21/b104-native-expiry-draft-restored.png"
       ]
     }
   ]
