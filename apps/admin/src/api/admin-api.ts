@@ -1,4 +1,4 @@
-import { createApiClient, newIntentKey, type ApiClient, type RequestOf, type ResponseOf } from '@fancy/client';
+import { createApiClient, newIntentKey, type ApiClient, type CommandReceipt, type RequestOf, type ResponseOf } from '@fancy/client';
 import type { FilterQuery } from '../state/filters.ts';
 
 export type SnapshotInfo = ResponseOf<'listSnapshots'>['data'][number];
@@ -10,6 +10,8 @@ export type ExportTicket = ResponseOf<'adminExport'>['data'];
 export type SessionInfo = ResponseOf<'getSession'>['data'];
 export type ClassificationInfo = ResponseOf<'getClassification'>['data'];
 export type ClassificationValue = ClassificationInfo['classification'];
+export type ClassificationAccepted = ResponseOf<'classifyUser'>['data'];
+export type StatisticsRefresh = ResponseOf<'getStatisticsRefresh'>['data'];
 export type DrilldownTarget = RequestOf<'adminDrilldown'>['params']['metric'];
 export type ExportScope = RequestOf<'adminExport'>['body']['metric'];
 export type RowQuery = Omit<NonNullable<RequestOf<'adminDrilldown'>['query']>, 'snapshotId' | 'filterHash' | 'cursor' | 'limit' | keyof FilterQuery>;
@@ -27,8 +29,15 @@ export interface AdminApi {
   createExport(input: { snapshotId: string; metric: ExportScope; filters: FilterQuery & RowQuery }, idempotencyKey?: string): Promise<ExportTicket>;
   downloadExport(exportId: string): Promise<string>;
   getClassification(userId: string): Promise<ClassificationInfo>;
-  /** data_admin only (server-enforced); If-Match = current revision; returns snapshotPending for the new snapshot. */
-  classify(userId: string, input: { classification: ClassificationValue; reason: string }, revision: string, idempotencyKey: string): Promise<ClassificationInfo>;
+  /** data_admin only (server-enforced); If-Match = current revision; the receipt carries this intent's statistics refresh. */
+  classify(userId: string, input: { classification: ClassificationValue; reason: string }, revision: string, idempotencyKey: string): Promise<ClassificationAccepted>;
+  /** Original-intent receipt of the caller's own key (no stored body). */
+  classifyReceipt(idempotencyKey: string): Promise<CommandReceipt>;
+  /** Locates this intent's refresh by the caller's own key + frozen target + receipt revision. */
+  findStatisticsRefresh(idempotencyKey: string, targetUserId: string, acceptedRevision: string): Promise<StatisticsRefresh>;
+  statisticsRefresh(refreshId: string): Promise<StatisticsRefresh>;
+  /** Reopens failed statistics only; never re-sends the classification. */
+  retryStatisticsRefresh(refreshId: string, idempotencyKey: string): Promise<StatisticsRefresh>;
 }
 
 export interface AdminApiOptions {
@@ -78,6 +87,22 @@ export function createAdminApi(options: AdminApiOptions = {}): AdminApi {
     },
     async classify(userId, input, revision, idempotencyKey) {
       const { data } = await client.call('classifyUser', { params: { userId }, body: input, ifMatch: revision, idempotencyKey });
+      return data;
+    },
+    async classifyReceipt(key) {
+      const { data } = await client.call('getCommandReceipt', { params: { operation: 'classifyUser', key } });
+      return data;
+    },
+    async findStatisticsRefresh(intentKey, targetUserId, acceptedRevision) {
+      const { data } = await client.call('findStatisticsRefreshByIntent', { params: { intentKey, targetUserId, acceptedRevision } });
+      return data;
+    },
+    async statisticsRefresh(refreshId) {
+      const { data } = await client.call('getStatisticsRefresh', { params: { refreshId } });
+      return data;
+    },
+    async retryStatisticsRefresh(refreshId, idempotencyKey) {
+      const { data } = await client.call('retryStatisticsRefresh', { params: { refreshId }, idempotencyKey });
       return data;
     },
   };

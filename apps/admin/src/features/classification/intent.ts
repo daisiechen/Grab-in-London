@@ -1,4 +1,5 @@
 import type { CommandReceipt } from '@fancy/client';
+import type { StatisticsRefresh } from '../../api/admin-api.ts';
 import type { FailureKind } from '../../api/failure.ts';
 
 /**
@@ -23,16 +24,7 @@ export interface FrozenIntent {
   readonly baseRevision: string;
 }
 
-/** Mirrors contracts admin-dto StatisticsRefresh until the generated client exposes it. */
-export interface StatisticsRefreshView {
-  refreshId: string;
-  targetUserId: string;
-  acceptedRevision: string;
-  state: 'pending' | 'ready' | 'failed';
-  snapshotId: string | null;
-  failureCode: 'SNAPSHOT_FAILED' | 'NOT_INCORPORATED' | null;
-  updatedAt: string;
-}
+export type StatisticsRefreshView = StatisticsRefresh;
 
 export type StatsState =
   | { status: 'locating'; lookupFailed: boolean }
