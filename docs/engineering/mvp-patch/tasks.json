@@ -50,13 +50,14 @@
       ],
       "title": "冻结稿差异盘点",
       "owner": "Codex client/mobile Web implementation and scoped acceptance",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "acceptance": "每PATCH逐页面映射现有文件、复用或具体差异；无无关重写",
       "verification": "人工核对代码/Figma/需求映射",
       "files": [
         "docs/engineering/mvp-patch/delta-map.zh-CN.md"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "client-progress.zh-CN.md: fixed slice history and scoped regression; final acceptance incomplete"
     },
     {
       "id": "P03",
@@ -69,7 +70,7 @@
       ],
       "title": "原意图回执契约",
       "owner": "Codex client/mobile Web implementation and scoped acceptance",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "acceptance": "原actor/operation/key，pending与确定拒绝区分，409分类，不泄露正文",
       "verification": "contract生成和授权/重放/超时API测试",
       "files": [
@@ -77,7 +78,8 @@
         "packages/client/**",
         "apps/api/src/**"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "client-progress.zh-CN.md: fixed slice history and scoped regression; final acceptance incomplete"
     },
     {
       "id": "P04",
@@ -89,14 +91,15 @@
       ],
       "title": "资料及删除恢复",
       "owner": "Codex client/mobile Web implementation and scoped acceptance",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "acceptance": "trim20–1000，pending/409/unknown保稿，receipt不误称删除完成",
       "verification": "Web/iOS组件与隔离恢复路径",
       "files": [
         "apps/web/src/**",
         "apps/ios/**"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "client-progress.zh-CN.md: fixed slice history and scoped regression; final acceptance incomplete"
     },
     {
       "id": "P05",
@@ -109,7 +112,7 @@
       ],
       "title": "发现创建及DST",
       "owner": "Codex client/mobile Web implementation and scoped acceptance",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "acceptance": "失败/迟到/满员/截止保稿；DST两字段显选且服务端拒不存在；批准后锁定",
       "verification": "领域/API并发及Web/iOS代表路径",
       "files": [
@@ -117,7 +120,8 @@
         "apps/ios/**",
         "apps/api/src/meals/**"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "client-progress.zh-CN.md: fixed slice history and scoped regression; final acceptance incomplete"
     },
     {
       "id": "P06",
@@ -129,7 +133,7 @@
       ],
       "title": "反馈与连接恢复",
       "owner": "Codex client/mobile Web implementation and scoped acceptance",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "acceptance": "确认前零写；分项顺序/部分/未知/409准确；七天后独立撤回可用",
       "verification": "状态机组合测试/API与双端旅程",
       "files": [
@@ -137,7 +141,8 @@
         "apps/ios/**",
         "packages/client/**"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "client-progress.zh-CN.md: fixed slice history and scoped regression; final acceptance incomplete"
     },
     {
       "id": "P07",
@@ -150,14 +155,15 @@
       ],
       "title": "授权只读与可见已读",
       "owner": "Codex client/mobile Web implementation and scoped acceptance",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "acceptance": "退群隐藏名册，403进入授权历史；仅可见位置读；通知已读独立",
       "verification": "双端权限历史/已读集成",
       "files": [
         "apps/web/src/**",
         "apps/ios/**"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "client-progress.zh-CN.md: fixed slice history and scoped regression; final acceptance incomplete"
     },
     {
       "id": "P08",
@@ -228,7 +234,7 @@
       ],
       "title": "分享公开链接与回流",
       "owner": "Codex client/mobile Web implementation and scoped acceptance",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "acceptance": "无敏感参数、同mealId门槛后主动申请；无外部重定向",
       "verification": "URL纯函数/公开投影/跨端回流测试",
       "files": [
@@ -236,7 +242,8 @@
         "apps/ios/**",
         "apps/api/src/meals/**"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "client-progress.zh-CN.md: fixed slice history and scoped regression; final acceptance incomplete"
     },
     {
       "id": "P12",
@@ -248,14 +255,15 @@
       ],
       "title": "分享渠道与降级",
       "owner": "Codex client/mobile Web implementation and scoped acceptance",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "acceptance": "系统取消不称发送；WhatsApp预填/微信复制/复制失败降级",
       "verification": "隔离浏览器/模拟器；真实渠道单独记录",
       "files": [
         "apps/web/src/**",
         "apps/ios/**"
       ],
-      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner",
+      "evidence": "client-progress.zh-CN.md: fixed slice history and scoped regression; final acceptance incomplete"
     },
     {
       "id": "P13",

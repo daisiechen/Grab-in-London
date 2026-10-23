@@ -65,3 +65,5 @@ Codex新建独立设备集 `/private/tmp/fancy-p11-client-01a162f6/simulator-dev
 按 manifest/PID/CWD 核对后，仅停止旧客户端 rig，保留旧合成集群；新 rig 固定加载 2413485，API 64176、Web p11-client.localhost:64174，新 PG 随机端口与新数据库登记在本机私有 manifest。匿名 /v1/meals 返回 200、receipt 返回 401。seed.ts 先验证本工作区、回环 origin、PG owner marker 与实际 data_directory/current_database，且只接受空 users 表；创建两个 example.invalid 合成账号、一场已结束合成餐局及两份实际 attendance，通过 API 验证反馈窗口开放且 eligibleMembers=2。bootstrap 会话随后登出。私有 fixture manifest 权限 0600，不含 token；二次运行在认证前以 FIXTURE_REQUIRES_FRESH_OWN_DB 拒绝，核证数据仍为 2 users/1 meal。
 
 固定 P04 ASCII 快照 0dc3bcab57f3d15cea5909a8b27cb00a9056a0ea 的 xcodebuild 已退出 0，日志明确 BUILD SUCCEEDED。仍未安装 App，仅证明专属工具链和 Debug simulator 工程可以构建；当前业务修复及后续补丁需以新的固定快照重新构建，不能沿用此结果称整版 PASS。
+
+分享联调时受控重启：旧 API/worker（2413485）经 PID/CWD 核证后退出0，旧PG保留。新 API/worker manifest 固定854029b，专属随机PG/DB重新创建，seed守卫通过并产生两个合成账号与一场完成餐局。Web单独重启同64174端口、显式 VITE_PUBLIC_MEAL_ORIGIN=https://p11-share.example.invalid（保留域名，不部署/不外呼），实际详情菜单读取新mealId。时间投影已由后台固定修复交回，未触及封存服务、默认设备集或生产DNS。

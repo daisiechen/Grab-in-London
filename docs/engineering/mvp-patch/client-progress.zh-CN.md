@@ -89,3 +89,15 @@ cherry-pick -x后台 63b088e、f3b0e0b、ea5a2e2、2d7647f、b111c4c（未pick 0
 ### P11 分享公开投影基础（尚未完成双端分享）
 
 packages/client/share.ts 只从显式公开输入构造 HTTPS canonical meal URL、London 时间/offset、区域、状态与 View meal 文本，WhatsApp 仅生成 wa.me 预填链接；不序列化整个 DTO。严格拒绝带凭据/路径/query/hash 的 origin、非 UUID ID、非公开 runtime 状态；入站链接仅接受配置 origin 下的单一 meal 详情，拒绝外部/申请子路由/私密 query。11 项单元测试、client 类型与 ESLint 通过。双端菜单、剪贴板、Universal Link/AASA/OG 与真实渠道验收仍待后续，未部署正式域名。
+
+### P11/P12 双端分享菜单（局部交付，原生设备/外部渠道未验收）
+
+- Web/iOS 详情接入可访问名称 Share meal；沿用现有 Sheet/按钮/tokens，菜单含 More sharing options、WhatsApp、Copy link for WeChat、Copy link、Copy invitation text 和可选中文本。配置必须显式提供 HTTPS origin，无生产默认、不回退当前私密 URL。Web 为 VITE_PUBLIC_MEAL_ORIGIN，iOS 为 EXPO_PUBLIC_MEAL_ORIGIN。
+- Web 分享取消（AbortError）不称成功；不支持时仅因用户点击执行复制。剪贴板成功后才显示 Copied，失败保持链接/邀请文本。iOS 引入当前本地 Expo SDK 兼容表指定的官方 expo-clipboard 58.0.3；setStringAsync false/异常均走手动选择。原生 Share resolve/dismiss 不作收件证明。全部异步菜单反馈在关闭/卸载后拒绝迟到更新。
+- Web Sheet 新增可选 onCloseAutoFocus，无默认行为改变；Share 使用该回调恢复触发按钮焦点。小屏 sheet-body 原有滚动承载完整文本及关闭按钮。
+- 验证：共享投影 unit 11；Web 菜单 4，分享/meal 23；Web 稳定源码全量 316/316；iOS 分享 2，全量 392/392，仍输出已有 act(...) 警告（profile/postmeal/VirtualizedList），未掩盖。最终布局修改后相关 Web 23/23 及 core:check 均退出 0。首次 Web 全量在提示文案修改过程中出现旧组件/新断言混合输入，随后停止编辑并完整重跑 316/316；保留首次失败事实，不称其为产品通过。
+- 真实 IAB：独立合成餐局、API 固定 854029b，Web 本轮待提交菜单；375/390/393/430 四档 document scrollWidth=viewportWidth，截图核对，375 的关闭按钮可通过 Tab 自动滚入可视区；Escape 返回 Share meal 焦点。控制台 error/warn 为空。复制按钮真实显示 Copied，但自动化 clipboard.readText 与预期公开链接比较为 false（不输出未知剪贴板内容），因此**只确认 UI/API resolve，未独立确认真实剪贴板内容**。WhatsApp/微信未打开外部应用，原生分享未安装设备验收。
+- 浏览器发现时间带秒时 API 返回 BST offset59；根会话尝试新增 API 测试被自动审批以用户限定客户端/Web范围拒绝，未绕过。交后台 owner 修复为04f1cd2，串行接入854029b，固定6项时间单测通过；仅受控停止自己已核 PID/CWD 的 API/worker，保留旧PG并建立新合成库、再次seed，真实菜单重验得到 BST60 和 Ended/View meal。
+- 参考：[Web Share](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share)、[React Native Share](https://reactnative.dev/docs/share)、[Expo Clipboard](https://docs.expo.dev/versions/latest/sdk/clipboard/)。Universal Link/AASA/OG、登录回流和外部真实渠道仍待 P11/P12 后续，完整补丁仍未完成。新增原生依赖要求重新 prebuild/pods/build，旧 P04 build-only 证据不能覆盖。
+
+服务端后续归属：按用户“这里仅客户端和移动Web”边界，P13–P16 服务端拟交后台会话；该会话正在向用户确认在 PATCH006 后承接，尚未获得其确认，不并发写 migration0027+/生成/worker。客户端可继续纯UI及现有接口切片。

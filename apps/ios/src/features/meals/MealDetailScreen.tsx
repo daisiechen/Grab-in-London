@@ -1,3 +1,4 @@
+import {MealShare} from '../share/MealShare.tsx';
 import {useAssistantContext} from '../assistant/hooks.ts';
 import { useAnalyticsPresentation } from '../../analytics/hooks.ts';
 import { useState } from 'react';
@@ -88,6 +89,7 @@ export function MealDetailScreen() {
     <Screen testID="meal-detail">
       <Eyebrow>{`${areaLabel(meal.areaCode).toUpperCase()} · ${meal.capacity === 2 ? 'A TABLE FOR TWO' : 'A SMALL TABLE'}`}</Eyebrow>
       <Heading>{meal.title}</Heading>
+      <MealShare key={`${meal.id}:${meal.version}`} meal={{id:meal.id,title:meal.title,startsAt:meal.startsAt,area:areaLabel(meal.areaCode),status:meal.status}}/>
       <Body>{whenLabel(meal.startsAt)}</Body>
       <Body>{seatsLabel(meal)}</Body>
       {meal.status === 'CANCELLED' ? <FormMessage message="This meal was cancelled. Existing members can still chat in Inbox." tone="info" /> : null}

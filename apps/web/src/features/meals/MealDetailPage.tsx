@@ -1,3 +1,4 @@
+import {MealShare} from '../share/MealShare.tsx';
 import {VenuePhoto} from '../venues/VenuePhoto.tsx';
 import {mealReturn} from '../discover/returnContext.ts';
 import { Link,useLocation,useParams } from 'react-router';
@@ -41,6 +42,7 @@ export function MealDetailPage() {
       <div className="body-pad">
         <div className="eyebrow">{areaName(meal.areaCode).toUpperCase()} · {tableKind(meal.capacity)}</div>
         <h1>{meal.title}</h1>
+        <MealShare key={`${meal.id}:${meal.version}`} meal={{id:meal.id,title:meal.title,startsAt:meal.startsAt,area:areaName(meal.areaCode),status:meal.status}}/>
         <div className="fact-grid">
           <div><CalendarIcon /><strong>{longDate(meal.startsAt.localDate)}</strong><span>{timeLabel(meal.startsAt)}</span></div>
           <div><PersonIcon /><strong>{meal.confirmedCount} of {meal.capacity} confirmed</strong><span>Including the host</span></div>
