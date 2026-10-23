@@ -31,3 +31,15 @@
 用户明确本会话只实施iOS/移动Web的PATCH001–005/007/008；后台会话负责PATCH006。双方已确认：后台独占apps/admin、apps/api/src/admin、operations-admin及独立后台DTO，保留迁移0026；客户端持有social、用户端dto、消息/通知/push及从0027起迁移，统一生成契约/client输出、P03基础回执接口和worker公共入口。后台交源码commit及独立模块接入片段，客户端串行集成；不在双方工作区并发改同文件。后台独立端口范围64274–64278。
 
 新增infra/patch-client独立合成rig，显式P1.1 opt-in，拒绝继承DB地址/供应商secret，要求专属临时根及依赖root；自行创建owned PG、随机本地测试DB、会话secret和独立API，AI disabled、测试身份/fixture Places，无旧clock或QA控制通道。启动前单元9/9、独立入口TypeScript、Python项目94/94及diff check通过。此时尚未启动rig；运行manifest及浏览器/原生隔离证据待补。
+
+## 客户端实施入口隔离核验：PASS（不等于产品验收）
+
+2026-10-23已实际建立新的合成运行环境：Web64174、API64176（API/worker同一测试rig进程），PG17新owned实例随机回环端口，dataDir在专属fancy-p11-client临时根内。已通过私有manifest及PID/CWD、PG当前库/端口核证；全新用户库只有本次合成登录账户。没有输入封存/后台连接URL，不复制旧库，未使用旧clock、session、账本或控制通道。
+
+浏览器改用IAB与专属p11-client.localhost主机，旧QA为Chrome不同主机。实际看到访客发现页，合成邮箱OTP000000登录进入资料门槛，并只读核对新PG中的合成账户；不冒称真实身份/邮件验收。Web缓存/node_modules/构建输出在专用worktree；env通过清空继承变量、显式白名单传入。API配置test identity/fixture Places/outbox-test、AI disabled且无secret注入，只有随机本地会话secret。
+
+原生先build-only：独立FANCY_APP_VARIANT=patch-p11保护，强制补丁API，bundle uk.fancyabite.patch.p11、回调fancyp11；专属DerivedData/Metro缓存/输出目录已创建，Metro64178未启用。默认原配置保持不变与拒绝错误API的3项测试通过。没有构建/安装/启动任何旧设备或旧模拟器；原生实际构建/新模拟器路径在后续自测前仍须逐次核对专属标识，不以此PASS冒称设备测试通过。
+
+9项环境守卫+3项原生配置测试通过，TypeScript与core:check（全部workspace类型/生成一致性/lint/secret scan）通过。初次core:check的console.info lint失败已修为warn并重验；不掩盖失败历史。仅本轮自建API曾为独立host切换重启，首个自建PG保留，未停止任何封存或后台进程。共享owner/迁移/生成边界已双方确认。产品版本号和方案三方PASS均已锁定。
+
+本PASS允许在专用worktree实施客户端功能；真实provider、原生设备/浏览器全面验收、完整构建、继承用例关闭及发布门槛仍按任务推进，不能对外宣称整版完成。用户最新要求业务功能由Claude Code执行，Codex负责协调与整体独立验收，交接见claude-client-handoff文档。

@@ -28,6 +28,8 @@
 
 ## 核心开发执行方案
 
+- [P1.1客户端Claude Code执行交接](engineering/mvp-patch/claude-client-handoff.zh-CN.md)：客户端/移动Web由Claude执行，Codex协调验收；共享文件与后台串行交接，封存环境不动。
+
 - [MVP补丁增量方案P1](engineering/mvp-patch/plan.zh-CN.md)、[专属任务表](engineering/mvp-patch/tasks.json)、[封存继承映射](engineering/mvp-patch/inheritance.json)与[独立评审记录](engineering/mvp-patch/review.zh-CN.md)及[隔离准备记录](engineering/mvp-patch/isolation.zh-CN.md)：锁定2026-10-23封存父SHA及两份冻结Figma；P1.1已获PM/双UX同版独立通过，B03隔离准备中，未开始功能实施。
 
 - [核心架构与决策](engineering/core-development-plan.zh-CN.md)：非AI业务核心的待实施技术基线；与本包真实AI方案共同交付。

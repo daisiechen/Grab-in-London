@@ -19,12 +19,12 @@ if(!process.env.FANCY_PG_BIN)throw new Error('PATCH_PG_BIN_REQUIRED');
 const pg=await startPostgres17({FANCY_PG_BIN:process.env.FANCY_PG_BIN});
 if(!pg.ownership||!pg.ownership.root.startsWith(tmp+'/'))throw new Error('PATCH_PG_OWNERSHIP_REQUIRED');
 const db=await createMigratedDatabase(pg.url,migrate);
-const config=loadConfig({ENVIRONMENT:'development',DATABASE_URL:db.url,AUTH_ADAPTER:'test',PLACES_ADAPTER:'fixture',MAIL_ADAPTER:'outbox_test',AI_PROVIDER:'disabled',WEB_ORIGIN:'http://127.0.0.1:64174',PORT:'64176',SESSION_SECRET:randomBytes(32).toString('hex'),IOS_REDIRECT_URI:'fancyp11://auth/callback'});
+const config=loadConfig({ENVIRONMENT:'development',DATABASE_URL:db.url,AUTH_ADAPTER:'test',PLACES_ADAPTER:'fixture',MAIL_ADAPTER:'outbox_test',AI_PROVIDER:'disabled',WEB_ORIGIN:'http://p11-client.localhost:64174',PORT:'64176',SESSION_SECRET:randomBytes(32).toString('hex'),IOS_REDIRECT_URI:'fancyp11://auth/callback'});
 const identity=localFixtureIdentity({FANCY_LOCAL_ACCEPTANCE:'1'});
 const app=await buildServer({config,pool:db.pool,identity,publicOrigin:config.webOrigin});
 const stop=new AbortController();process.once('SIGINT',()=>stop.abort());process.once('SIGTERM',()=>stop.abort());
 await app.listen({host:'127.0.0.1',port:64176});
 const manifest={version:'P1.1',mode:'synthetic',root,head:execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),pid:process.pid,webOrigin:config.webOrigin,apiOrigin:'http://127.0.0.1:64176',pg:{...pg.ownership,marker:undefined},database:new URL(db.url).pathname.slice(1),providers:'disabled',clock:'real',outputs:resolve(tmp,'outputs')};
 await writeFile(resolve(tmp,'manifest.json'),JSON.stringify(manifest,null,2),{mode:0o600});
-console.info(`P1.1 CLIENT RIG READY; synthetic OTP 000000; manifest=${resolve(tmp,'manifest.json')}`);
-try{await createWorkerRuntime(db.pool,config).run(stop.signal);}finally{await app.close();await db.pool.end();console.info('P1.1 API/worker stopped; owned PG preserved.');}
+console.warn(`P1.1 CLIENT RIG READY; synthetic OTP 000000; manifest=${resolve(tmp,'manifest.json')}`);
+try{await createWorkerRuntime(db.pool,config).run(stop.signal);}finally{await app.close();await db.pool.end();console.warn('P1.1 API/worker stopped; owned PG preserved.');}
