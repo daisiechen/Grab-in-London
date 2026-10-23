@@ -5,16 +5,30 @@ import type{OperationById}from'@fancy/contracts';
 import{DomainError}from'../common/errors.ts';
 import{canonicalJson}from'../common/canonical.ts';
 import{loadAdminSnapshot}from'./pages.ts';
+import type{Row}from'./metrics.ts';
 import{encodeCursor,decodeCursor}from'../common/cursor.ts';
 type DrillQuery=Static<OperationById<'adminDrilldown'>['query']>;
+/**
+ * Admin PRD: lists default to the record's actual date, newest first. The actual date is the
+ * record's own event time (event/application/survey), else the meal start, else the cohort or
+ * observation date. Rows without a date sort last in either direction; rowId breaks ties so
+ * cursors stay stable.
+ */
+const ACTUAL_DATE=['occurredAt','appliedAt','submittedAt','startsAt','firstAttendedAt','firstObservedAt','receivedAt','week'] as const;
+export const actualDate=(row:Row):string|null=>{for(const key of ACTUAL_DATE){const v=row.attributes[key];if(typeof v==='string'&&v)return v;}return null;};
+export function sortRows(rows:Row[],sort:string|undefined,order:'asc'|'desc'|undefined){
+ const direction=order==='asc'?1:-1;
+ const value=(r:Row)=>{const v=sort?r.attributes[sort]:actualDate(r);return v===null||v===undefined||v===''?null:String(v);};
+ return rows.sort((a,b)=>{const av=value(a),bv=value(b);if(av===null||bv===null)return av===bv?a.rowId.localeCompare(b.rowId):av===null?1:-1;return av.localeCompare(bv)*direction||a.rowId.localeCompare(b.rowId);});
+}
 export async function loadDrilldownRows(pool:Pool,metric:string,query:DrillQuery){
  const loaded=await loadAdminSnapshot(pool,query);
  if(query.filterHash!==loaded.filterHash)throw new DomainError('STATE_CONFLICT','The filters do not match this snapshot view. Reload the page.');
  const source=loaded.calculated.rows[metric];
  if(!source)throw new DomainError('PROVIDER_UNAVAILABLE','This metric source is not available for this snapshot.');
  const rows=source.filter(r=>{const a=r.attributes;return(!query.mealId||a.mealId===query.mealId)&&(!query.userId||a.userId===query.userId)&&(!query.cohortWeek||a.cohortWeek===query.cohortWeek)&&(!query.attendanceStatus||a.attendanceStatus===query.attendanceStatus)&&(!query.q||Object.values(a).some(v=>typeof v==='string'&&v.toLowerCase().includes(query.q!.toLowerCase())));});
- const sort=query.sort;const direction=query.order==='desc'?-1:1;
- rows.sort((a,b)=>{const av=sort?a.attributes[sort]:a.rowId;const bv=sort?b.attributes[sort]:b.rowId;return String(av??'').localeCompare(String(bv??''))*direction||a.rowId.localeCompare(b.rowId);});
+ const sort=query.sort;
+ sortRows(rows,sort,query.order);
  const binding=createHash('sha256').update(canonicalJson({snapshotId:query.snapshotId,metric,filterHash:query.filterHash,mealId:query.mealId,userId:query.userId,cohortWeek:query.cohortWeek,attendanceStatus:query.attendanceStatus,q:query.q,sort,order:query.order})).digest('hex');
  return{loaded,rows,binding};
 }
