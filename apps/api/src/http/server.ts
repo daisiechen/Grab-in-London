@@ -51,11 +51,11 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   app.decorateRequest('auth', null);
   app.addHook('onSend', async (request, reply) => {
     reply.header('x-request-id', request.id);
-    if (request.url.startsWith('/v1/')) reply.header('cache-control', 'private, no-store');
+    if ((/^\/v[12]\//).test(request.url)) reply.header('cache-control', 'private, no-store');
   });
 
   app.addHook('onRequest',async(request,reply)=>{
-    if(request.url.startsWith('/v1/')){
+    if((/^\/v[12]\//).test(request.url)){
       try{if(await recoveryReady(deps.pool))return;}catch{/* Missing gate or database: fail closed. */}
       return reply.status(503).send(errorBody(request,'SERVICE_UNAVAILABLE','Recovery verification is required.'));
     }

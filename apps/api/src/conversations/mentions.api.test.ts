@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, inject, it } from 'vitest';
+import { requireRecovery } from '../recovery/replay.ts';
 import { withTransaction } from '../common/transaction.ts';
 import { createGroupConversation, createDirectConversation, joinConversation, leaveConversation } from '../membership/intervals.ts';
 import { Browser, createHarness, json, type Harness } from '../test/harness.ts';
@@ -111,6 +112,17 @@ describe('P1.1 group mention API', () => {
   expect((await sendV2(a.b,conversationId,'no group protocol')).statusCode).toBe(403);
   expect((await history(a.b,conversationId)).statusCode).toBe(403);
   expect((await a.b.request('GET',`/v1/conversations/${conversationId}/mention-candidates`)).statusCode).toBe(403);
+ });
+
+ it('applies recovery fencing and private no-store headers to the actual v2 ingress', async () => {
+  const f=await setup();
+  expect((await history(f.host.b,f.id)).headers['cache-control']).toBe('private, no-store');
+  await requireRecovery(h.db.pool,{version:1,entries:[]});
+  try {
+   expect((await sendV2(f.host.b,f.id,'fenced')).statusCode).toBe(503);
+   expect((await history(f.host.b,f.id)).statusCode).toBe(503);
+   expect((await h.db.pool.query(`SELECT * FROM messages WHERE conversation_id=$1`,[f.id])).rows).toEqual([]);
+  } finally { await h.db.pool.query(`UPDATE recovery_control SET state='READY' WHERE id=1`); }
  });
 
 });
