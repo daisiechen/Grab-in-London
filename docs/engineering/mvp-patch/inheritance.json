@@ -1,0 +1,211 @@
+{
+  "source": "docs/delivery/mvp-freeze-2026-10-23.zh-CN.md",
+  "counts": {
+    "PASS": 202,
+    "NOT_RUN": 4,
+    "BLOCKED": 11
+  },
+  "cases": [
+    {
+      "originalId": "QA-GATE-001",
+      "originalStatus": "BLOCKED",
+      "taskIds": [
+        "P19"
+      ],
+      "owner": "开发-MVP补丁版负责准备；独立QA执行验收",
+      "requiredEvidence": "真实提供方有效及PKCE/回调/身份映射证据；模拟按钮/Expo Go不能替代",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "originalId": "QA-GATE-002",
+      "originalStatus": "BLOCKED",
+      "taskIds": [
+        "P19"
+      ],
+      "owner": "开发-MVP补丁版负责准备；独立QA执行验收",
+      "requiredEvidence": "真实placeId正确；地址坐标服务端验证；Google地图/照片署名、许可表及缓存符合已批准配置",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "originalId": "QA-GATE-003",
+      "originalStatus": "BLOCKED",
+      "taskIds": [
+        "P19"
+      ],
+      "owner": "开发-MVP补丁版负责准备；独立QA执行验收",
+      "requiredEvidence": "收件人渠道符合P-02；实际收件箱可追踪去重；provider accepted不能单独通过",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "originalId": "QA-GATE-004",
+      "originalStatus": "BLOCKED",
+      "taskIds": [
+        "P19"
+      ],
+      "owner": "开发-MVP补丁版负责准备；独立QA执行验收",
+      "requiredEvidence": "原生证据包含构建号/OS/设备；WebView或DOM测试不能充当iOS完成",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "originalId": "QA-GATE-005",
+      "originalStatus": "BLOCKED",
+      "taskIds": [
+        "P19"
+      ],
+      "owner": "开发-MVP补丁版负责准备；独立QA执行验收",
+      "requiredEvidence": "有责任人批准及实际执行证据；无凭据/生产原文进公开仓库",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "originalId": "QA-GATE-006",
+      "originalStatus": "BLOCKED",
+      "taskIds": [
+        "P19"
+      ],
+      "owner": "开发-MVP补丁版负责准备；独立QA执行验收",
+      "requiredEvidence": "记录p95/错误率/worker延迟及实测RPO/RTO对比24h/4h设计目标；API1副本Recreate无重叠，旧AI410保未发字",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "originalId": "QA-GATE-007",
+      "originalStatus": "BLOCKED",
+      "taskIds": [
+        "P19"
+      ],
+      "owner": "开发-MVP补丁版负责准备；独立QA执行验收",
+      "requiredEvidence": "四项零容忍0例；其他意图字段≥90%、草稿人工可用≥90%；P95≤10秒、30秒终结；保留逐样本实际偏差",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "originalId": "QA-GATE-008",
+      "originalStatus": "BLOCKED",
+      "taskIds": [
+        "P19"
+      ],
+      "owner": "开发-MVP补丁版负责准备；独立QA执行验收",
+      "requiredEvidence": "store:false不冒称零留存；第三方边界有明确批准；未闭合不向真实用户开放",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "originalId": "QA-GATE-009",
+      "originalStatus": "BLOCKED",
+      "taskIds": [
+        "P19"
+      ],
+      "owner": "开发-MVP补丁版负责准备；独立QA执行验收",
+      "requiredEvidence": "实际usage/账单与call一致；无超已批准应用上界；未批准金额保持关闭；最终CNY等值不超过人民币50/月；不是域名/签名/其他云资源或自动充值授权",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "originalId": "QA-JOURNEY-005",
+      "originalStatus": "NOT_RUN",
+      "taskIds": [
+        "P18"
+      ],
+      "owner": "开发-MVP补丁版负责准备；独立QA执行验收",
+      "requiredEvidence": "在同一最终环境完成原Web/iOS双向申请路径及B隐私/后台核账前置；在最终环境原双向客户端重验名额/截止；B35仅证明Web旧编辑器在精确截止后取消分支拒绝，不能代替另一端和全部前置；按原客户端完成服务失败后正常申请路径；不以群消息fallback替代全部申请断言",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "originalId": "QA-JOURNEY-008",
+      "originalStatus": "NOT_RUN",
+      "taskIds": [
+        "P18"
+      ],
+      "owner": "开发-MVP补丁版负责准备；独立QA执行验收",
+      "requiredEvidence": "Group403 must transition to authorized read-only history on both clients, with original privacy and same-environment evidence.；Admin snapshot410 must clear old cache/select new snapshot and keep revoked old exports unreadable.；Complete remaining shared DB/notification/Admin assertions; native and Web sustained offline subpaths B78/B94 and dualclient401 draft preservation B72/B104 are already covered.",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "originalId": "QA-JOURNEY-009",
+      "originalStatus": "NOT_RUN",
+      "taskIds": [
+        "P18"
+      ],
+      "owner": "开发-MVP补丁版负责准备；独立QA执行验收",
+      "requiredEvidence": "受理不称处理完成；202同步屏障；receipt无私密数据；旧导出不可再读",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "originalId": "QA-JOURNEY-011",
+      "originalStatus": "NOT_RUN",
+      "taskIds": [
+        "P18"
+      ],
+      "owner": "开发-MVP补丁版负责准备；独立QA执行验收",
+      "requiredEvidence": "逐步权限重验；保留原报告；新资格传播，旧普通快照不改；不开放全表/消息正文",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "originalId": "QA-AI-050",
+      "originalStatus": "BLOCKED",
+      "taskIds": [
+        "P19"
+      ],
+      "owner": "开发-MVP补丁版负责准备；独立QA执行验收",
+      "requiredEvidence": "不静默沿用旧供应商model/参数或留存声明；全量原质量/延迟/零容忍门槛保持；真实可用性未测则G-AI-MODEL未关闭",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "originalId": "QA-AI-052",
+      "originalStatus": "BLOCKED",
+      "taskIds": [
+        "P19"
+      ],
+      "owner": "开发-MVP补丁版负责准备；独立QA执行验收",
+      "requiredEvidence": "只用已验证适配参数；不支持能力显式阻塞/ADR替代；不能继承其他供应商数据承诺或用无效参数关闭G-AI-DATA",
+      "status": "INHERITED_UNCLOSED"
+    }
+  ],
+  "risks": [
+    {
+      "id": "F60",
+      "taskIds": [
+        "P18"
+      ],
+      "owner": "开发-MVP补丁版；独立QA复验",
+      "requiredEvidence": "真实读取失败恢复证据未关闭",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "id": "F63",
+      "taskIds": [
+        "P05",
+        "P19"
+      ],
+      "owner": "开发-MVP补丁版；独立QA复验",
+      "requiredEvidence": "合成矩阵有效，真实Google许可署名缓存未闭",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "id": "F68",
+      "taskIds": [
+        "P08",
+        "P18"
+      ],
+      "owner": "开发-MVP补丁版；独立QA复验",
+      "requiredEvidence": "源码入父基线，原运行未包含，最终构建重验原数值场景",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "id": "D08",
+      "taskIds": [
+        "P08",
+        "P19"
+      ],
+      "owner": "开发-MVP补丁版；独立QA复验",
+      "requiredEvidence": "仅成本保护候选；迁移/启动接线/metadata及实账未闭",
+      "status": "INHERITED_UNCLOSED"
+    },
+    {
+      "id": "OPTIONAL_ANALYTICS",
+      "taskIds": [
+        "P04",
+        "P18"
+      ],
+      "owner": "开发-MVP补丁版；独立QA复验",
+      "requiredEvidence": "拒绝后服务端更新失败观察，核请求路由响应及持久性，非已确认P1",
+      "status": "INHERITED_UNCLOSED"
+    }
+  ]
+}

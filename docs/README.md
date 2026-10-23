@@ -28,6 +28,8 @@
 
 ## 核心开发执行方案
 
+- [MVP补丁增量方案P1](engineering/mvp-patch/plan.zh-CN.md)、[专属任务表](engineering/mvp-patch/tasks.json)、[封存继承映射](engineering/mvp-patch/inheritance.json)与[独立评审记录](engineering/mvp-patch/review.zh-CN.md)：锁定2026-10-23封存父SHA及两份冻结Figma；待PM/UX独立评审和B03隔离核证，未开始功能实施。
+
 - [核心架构与决策](engineering/core-development-plan.zh-CN.md)：非AI业务核心的待实施技术基线；与本包真实AI方案共同交付。
 - [数据与命令契约](engineering/data-and-command-contract.zh-CN.md)：事务、历史资格、消息区间、删除及快照。
 - [API与客户端契约](engineering/api-and-client-contract.zh-CN.md)：接口、权限、Web/iOS与后台适配、通知渠道。
@@ -65,7 +67,7 @@
 
 - [浏览器批注与AI恢复](delivery/fancy-comments-ai-2026-10-20.zh-CN.md)：16条批注、Ask Fancy恢复、问卷拆分及验证边界。
 
-- [2026-10-23补丁B03实施基线与隔离核查](reviews/mvp-patch-b03-handoff-2026-10-23.zh-CN.md)：AF-RC1正式版本已核证；最终基线、发布编号、实施owner及实际隔离环境未锁定，B03保持未关闭。
+- [2026-10-23补丁B03实施基线与隔离核查](reviews/mvp-patch-b03-handoff-2026-10-23.zh-CN.md)：保留封存前历史并追加封存后判断；稳定tag已核证可作候选父基线，独立方案签收、发布编号、实施owner及实际隔离仍待关闭。
 - [2026-10-23后台Figma补丁准入评审](reviews/admin-figma-patch-readiness-2026-10-23.zh-CN.md)：AF-RC1复评及正式命名版本核证：AF-01～05设计交付关闭，B03实施条件仍待关闭。
 - [2026-10-23完整MVP补丁Figma准入评审](reviews/mvp-patch-figma-readiness-2026-10-23.zh-CN.md)：对照PATCH-001—008直接读取两份补丁画布，区分确定状态冲突、关键路径待核证与冻结交接门槛。
 - [2026-10-20双端研发前置评审](reviews/development-readiness-2026-10-20.zh-CN.md)：恢复版用户端与当前后台工作区的只读评审，记录未关闭阻塞及原会话修订、复评条件。

@@ -1,0 +1,412 @@
+{
+  "schemaVersion": 1,
+  "engineeringId": "MVP-PATCH/P1",
+  "parent": "2e33ca2bbdc838c85a36d2e3bbd9b5fe216478ae",
+  "tasks": [
+    {
+      "id": "P00",
+      "dependsOn": [],
+      "patches": [],
+      "title": "方案独立签收",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "PM、用户端UX、后台UX对同一提交/哈希分别PASS；阻塞逐条关闭",
+      "verification": "文档校验和独立评审记录",
+      "files": [
+        "docs/engineering/mvp-patch/**"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P01",
+      "dependsOn": [
+        "P00"
+      ],
+      "patches": [],
+      "title": "B03专用checkout与隔离",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "父SHA、产品版本、唯一owner及负向核验PASS，未触及封存环境",
+      "verification": "隔离manifest realpath/PID/DB/上下文核证",
+      "files": [
+        "补丁专属环境清单"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P02",
+      "dependsOn": [
+        "P01"
+      ],
+      "patches": [
+        "PATCH-001",
+        "PATCH-002",
+        "PATCH-003",
+        "PATCH-004",
+        "PATCH-005",
+        "PATCH-006"
+      ],
+      "title": "冻结稿差异盘点",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "每PATCH逐页面映射现有文件、复用或具体差异；无无关重写",
+      "verification": "人工核对代码/Figma/需求映射",
+      "files": [
+        "docs/engineering/mvp-patch/delta-map.zh-CN.md"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P03",
+      "dependsOn": [
+        "P02"
+      ],
+      "patches": [
+        "PATCH-004",
+        "PATCH-006"
+      ],
+      "title": "原意图回执契约",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "原actor/operation/key，pending与确定拒绝区分，409分类，不泄露正文",
+      "verification": "contract生成和授权/重放/超时API测试",
+      "files": [
+        "packages/contracts/**",
+        "packages/client/**",
+        "apps/api/src/**"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P04",
+      "dependsOn": [
+        "P02"
+      ],
+      "patches": [
+        "PATCH-001"
+      ],
+      "title": "资料及删除恢复",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "trim20–1000，pending/409/unknown保稿，receipt不误称删除完成",
+      "verification": "Web/iOS组件与隔离恢复路径",
+      "files": [
+        "apps/web/src/**",
+        "apps/ios/**"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P05",
+      "dependsOn": [
+        "P02"
+      ],
+      "patches": [
+        "PATCH-002",
+        "PATCH-003"
+      ],
+      "title": "发现创建及DST",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "失败/迟到/满员/截止保稿；DST两字段显选且服务端拒不存在；批准后锁定",
+      "verification": "领域/API并发及Web/iOS代表路径",
+      "files": [
+        "apps/web/src/**",
+        "apps/ios/**",
+        "apps/api/src/meals/**"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P06",
+      "dependsOn": [
+        "P03"
+      ],
+      "patches": [
+        "PATCH-004"
+      ],
+      "title": "反馈与连接恢复",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "确认前零写；分项顺序/部分/未知/409准确；七天后独立撤回可用",
+      "verification": "状态机组合测试/API与双端旅程",
+      "files": [
+        "apps/web/src/**",
+        "apps/ios/**",
+        "packages/client/**"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P07",
+      "dependsOn": [
+        "P02"
+      ],
+      "patches": [
+        "PATCH-004",
+        "PATCH-008"
+      ],
+      "title": "授权只读与可见已读",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "退群隐藏名册，403进入授权历史；仅可见位置读；通知已读独立",
+      "verification": "双端权限历史/已读集成",
+      "files": [
+        "apps/web/src/**",
+        "apps/ios/**"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P08",
+      "dependsOn": [
+        "P02"
+      ],
+      "patches": [
+        "PATCH-005"
+      ],
+      "title": "AI编辑器转入",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "Keep/Replace、失效、长度、soft/hard/CLEAR；F66/F68最终构建回归",
+      "verification": "fake模型预算并发/数值原例及双端原编辑器",
+      "files": [
+        "apps/web/src/**",
+        "apps/ios/**",
+        "apps/api/src/ai-assistance/**"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P09",
+      "dependsOn": [
+        "P03"
+      ],
+      "patches": [
+        "PATCH-006"
+      ],
+      "title": "分类回执与统计关联",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "acceptedRevision与readySnapshot明确关联；unknown不重复classify",
+      "verification": "API/DB分类并发、统计失败重试",
+      "files": [
+        "packages/contracts/**",
+        "apps/api/src/admin/**",
+        "apps/worker/src/**"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P10",
+      "dependsOn": [
+        "P09"
+      ],
+      "patches": [
+        "PATCH-006"
+      ],
+      "title": "后台查询与导出",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "Ready同snapshot/filter；410清旧cache/ticket；coverage本人优先",
+      "verification": "手算fixtures/API导出失效/四档浏览器",
+      "files": [
+        "apps/admin/src/**",
+        "apps/api/src/admin/**"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P11",
+      "dependsOn": [
+        "P02"
+      ],
+      "patches": [
+        "PATCH-007"
+      ],
+      "title": "分享公开链接与回流",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "无敏感参数、同mealId门槛后主动申请；无外部重定向",
+      "verification": "URL纯函数/公开投影/跨端回流测试",
+      "files": [
+        "apps/web/src/**",
+        "apps/ios/**",
+        "apps/api/src/meals/**"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P12",
+      "dependsOn": [
+        "P11"
+      ],
+      "patches": [
+        "PATCH-007"
+      ],
+      "title": "分享渠道与降级",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "系统取消不称发送；WhatsApp预填/微信复制/复制失败降级",
+      "verification": "隔离浏览器/模拟器；真实渠道单独记录",
+      "files": [
+        "apps/web/src/**",
+        "apps/ios/**"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P13",
+      "dependsOn": [
+        "P02"
+      ],
+      "patches": [
+        "PATCH-008"
+      ],
+      "title": "提及协议与存储",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "v2范围坐标/旧v1兼容/唯一约束/迁移，不回填历史提醒",
+      "verification": "contract生成与新空库/升级库兼容测试",
+      "files": [
+        "packages/contracts/**",
+        "packages/db/**",
+        "packages/client/**"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P14",
+      "dependsOn": [
+        "P13"
+      ],
+      "patches": [
+        "PATCH-008"
+      ],
+      "title": "发送事务与接收人",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "Everyone服务端校验；失效成员降级；同clientMessageId不重复",
+      "verification": "并发退群/host变更/重复payload API测试",
+      "files": [
+        "apps/api/src/**",
+        "packages/db/**"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P15",
+      "dependsOn": [
+        "P13",
+        "P03"
+      ],
+      "patches": [
+        "PATCH-008"
+      ],
+      "title": "跨端静音与订阅",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "IfMatch409刷新；账号/安装换绑撤销；token不日志",
+      "verification": "权限/版本/退出/删除/endpoint SSRF测试",
+      "files": [
+        "apps/api/src/**",
+        "packages/contracts/**",
+        "packages/db/**"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P16",
+      "dependsOn": [
+        "P14",
+        "P15",
+        "P07"
+      ],
+      "patches": [
+        "PATCH-008"
+      ],
+      "title": "提醒outbox及适配",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "投递前权限/mute/read重验；1h TTL；UNKNOWN不盲重试",
+      "verification": "fake APNs/WebPush暂停队列/重放/410/429测试",
+      "files": [
+        "apps/worker/src/**",
+        "packages/db/**"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P17",
+      "dependsOn": [
+        "P14",
+        "P15",
+        "P07"
+      ],
+      "patches": [
+        "PATCH-008"
+      ],
+      "title": "双端提及与提醒界面",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "同名候选/标记/普通文本兼容；本机可见不弹；设置冲突恢复",
+      "verification": "Web/iOS组件及双账号矩阵",
+      "files": [
+        "apps/web/src/**",
+        "apps/ios/**"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P18",
+      "dependsOn": [
+        "P04",
+        "P05",
+        "P06",
+        "P08",
+        "P10",
+        "P12",
+        "P16",
+        "P17"
+      ],
+      "patches": [
+        "PATCH-001",
+        "PATCH-002",
+        "PATCH-003",
+        "PATCH-004",
+        "PATCH-005",
+        "PATCH-006",
+        "PATCH-007",
+        "PATCH-008"
+      ],
+      "title": "最终隔离构建与继承回归",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "每原ID保留断言/状态证据；精确commit/build；真实门槛未测不PASS",
+      "verification": "core:check和适用unit/db/api/clients/build及独立QA",
+      "files": [
+        "补丁测试证据与构建清单"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    },
+    {
+      "id": "P19",
+      "dependsOn": [
+        "P18"
+      ],
+      "patches": [
+        "PATCH-007",
+        "PATCH-008"
+      ],
+      "title": "真实依赖与发布评估",
+      "owner": "开发-MVP补丁版",
+      "status": "NOT_STARTED",
+      "acceptance": "具体授权后渠道/推送/供应商证据；发布blocker未闭不得上线",
+      "verification": "独立QA签收与发布决定；不自动部署",
+      "files": [
+        "补丁真实验收记录"
+      ],
+      "splitBeforeImplementation": "超过5文件或不同子系统时细分并锁定文件owner"
+    }
+  ]
+}
