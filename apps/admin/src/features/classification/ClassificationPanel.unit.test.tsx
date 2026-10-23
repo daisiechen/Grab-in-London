@@ -95,16 +95,24 @@ describe('A01/A03/A05 classification recovery through the real console', () => {
   });
 
   it('a version conflict reloads the latest version and needs an explicit new save', async () => {
-    let gets = 0;
+    let gets = 0, attempts = 0;
     const { mock } = setup({
       'GET /v1/admin/classifications/.+': () => ok({ userId: USER, classification: gets++ ? 'staff' : 'regular', revision: gets > 1 ? '9' : '3', snapshotPending: false }),
-      'PUT /v1/admin/classifications/.+': () => fail(409, 'VERSION_CONFLICT'),
+      'PUT /v1/admin/classifications/.+': () => ++attempts === 1 ? fail(409, 'VERSION_CONFLICT') : ok({userId:USER,classification:'test',revision:'10',snapshotPending:true,statisticsRefresh:refresh('pending','10')}),
     });
     await saveTest();
     await screen.findByText(/changed meanwhile/);
     await screen.findByText(/rev 9/);
     expect(screen.getByLabelText('settled').textContent).toBe('true');
     expect(puts(mock.calls)).toHaveLength(1);
+    await userEvent.click(screen.getByRole('button',{name:'Reload current class'}));
+    await screen.findByText(/rev 9/);
+    await userEvent.selectOptions(screen.getByLabelText('Account class'),'test');
+    expect((screen.getByRole('button',{name:'Save classification'}) as HTMLButtonElement).disabled).toBe(false);
+    await userEvent.click(screen.getByRole('button',{name:'Save classification'}));
+    await waitFor(()=>expect(puts(mock.calls)).toHaveLength(2));
+    expect(puts(mock.calls)[1]!.headers['if-match']).toBe('"9"');
+    expect(puts(mock.calls)[1]!.headers['idempotency-key']).not.toBe(puts(mock.calls)[0]!.headers['idempotency-key']);
   });
 });
 

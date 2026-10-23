@@ -125,3 +125,15 @@
 接手切片`3147fd9`已提交推送，HEAD/remote一致。后台适用API/DB/unit回归22文件102项通过（admin API/统计/导出/迁移/worker/seed/guard），完整admin组件82项及core:check通过。首次数据库启动因系统共享内存ID额度不足未执行；已仅按本会话owner marker+postmaster PID/dataDir核对，停止三个退役合成PG（数据保留），当前built PG未动，重跑102项通过。未调整系统参数或触其他环境。
 
 为完成真实浏览器恢复验收，隔离rig新增`faults.ts`和fixture控制：同源POST仅可设置一次丢弃classification响应、一次页面503/429（Retry-After3秒）或clear。classification故障仅在真实API开始响应后丢弃代理响应，因此写入仍正常落库，回执读取不被拦截。控制只加载于infra的dev/preview测试插件，不进入apps/admin或API/worker生产入口；不接受跨域控制。4项负向/一次性单元测试、runtime tsc与eslint通过。下一步固定构建真实浏览器测试，不把故障模块自身测试替代产品恢复结果。
+
+## 固定构建efc2308的真实恢复验收
+
+运行`run-otzPYI`，serveMode=built，Node PID49920，owned PG PID49954/port54919（详细私有manifest在ignored runtime内）。真实浏览器注入503：旧图隐藏，Retry后同URL/查询恢复64/80；429：初始Retry disabled，3秒截止后enabled并恢复读取。
+
+真实PUT响应丢失：先出现Unknown且统计暂停，随后原意图查询自动恢复Ready；未选新快照仍不解锁，显式切换后coverage48/64。独立库核对classification/audit/refresh各1行。另对第二个目标在合成DB临时设置快照INSERT失败触发器，worker将对应job置FAILED/SNAPSHOT_FAILED；浏览器保持分类accepted且旧统计/导出隐藏。撤销该测试触发器后，仅点击Retry statistics update，两个job均READY并指向同snapshot，classification/audit/refresh仍各2行；显式切换后coverage32/48=66.7%，Export启用。测试触发器/函数已移除。
+
+410真实明细场景：打开Meal drawer，撤销本合成snapshot，改变明细排序触发410；旧drawer关闭、Page content清空、Export禁用、URL移除snapshot，snapshot picker显示该项Revoked disabled。403真实角色撤销：备份并暂撤本合成角色，新的retention请求返回No access，Page content为0且Export禁用；恢复角色并Retry后URL、snapshot与route保持不变。角色备份仅在ignored runtime，角色已恢复。没有触及真实或封存数据。
+
+409复核：扩展原组件测试到“显式Reload→改为Test→再次Save”，原实现已通过，无额外源码修复。断言第二次PUT If-Match为最新9且新key不同于第一次。保留此完整链回归，不将先前怀疑当作已确认缺陷。
+
+共享依赖临时交接：客户端真实分享验收发现`meals/time.ts`对带秒/毫秒的instant产生BST59/GMT-1。客户端请求后台临时独占此模块及其测试，后台接受后未触客户端dirty。新增5个秒毫秒/DST/跨日投影例原实现均红；以UTC分钟向下取整与分钟精度wall相减，保留原instant的秒毫秒，修复后6项精确时间测试＋饭局API18＋生命周期4共28 PASS。显式DST重复时段选择及不存在时间拒绝不变。修复将以独立共享源码commit交回，不把此依赖修复视为分享功能验收完成。
