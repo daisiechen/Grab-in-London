@@ -6,7 +6,9 @@ export function londonTime(at: Date): ZonedTime {
   const parts = Object.fromEntries(format.formatToParts(at).map((p) => [p.type, p.value]));
   const localDate = `${parts.year}-${parts.month}-${parts.day}`, localTime = `${parts.hour}:${parts.minute}`;
   const wall = Date.parse(`${localDate}T${localTime}:00Z`);
-  return { instant: at.toISOString(), localDate, localTime, timeZone: 'Europe/London', utcOffsetMinutes: Math.round((wall - at.getTime()) / 60_000) };
+  // Both sides must use minute precision; seconds/milliseconds are not part of a zone offset.
+  const utcMinute = Math.floor(at.getTime() / 60_000) * 60_000;
+  return { instant: at.toISOString(), localDate, localTime, timeZone: 'Europe/London', utcOffsetMinutes: (wall - utcMinute) / 60_000 };
 }
 /** Match possible offsets against IANA zone data; no silent DST normalisation. */
 export function resolveLondonTime(input: TimeInput): ZonedTime {
