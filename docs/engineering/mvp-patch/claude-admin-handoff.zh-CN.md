@@ -85,3 +85,23 @@ PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests
 正式待集成提交：客户端统一生成`9b3a7d0d42cac44a14240e4bd4ecb538b98845da`；worker接线和runtime测试`b683eb0b326ee7e794c1ba3f709fd26676ab75a6`；P03安全NONE helper `48df2cc`（仅intents.ts和其测试，可单独取，不需P06）。由Claude在自己切片安全提交后串行cherry-pick，禁止读取客户端dirty或自行重写生成。客户端独立worker3+恢复HTTP3共6项PASS，仍不替代后台UI验收。
 
 P10-R01复核更新：Claude业务修复`01baf59`落地后，Codex原迟到CSV断言不变独立复跑1/1 PASS；独立验收配置与runtime分别tsc通过、infra eslint通过、文档Python94项通过。此为该缺陷组件层关闭证据；真实浏览器及账号/权限/整页P10验收仍待完成。正式集成后Codex独立worker runtime3+恢复HTTP3=6/6 PASS；P09纯意图状态机13/13 PASS。
+
+## Codex运行环境更新（2026-10-23，继续开发中）
+
+旧合成runtime PID52681已核对CWD与64275/64276监听后精确SIGTERM，旧launcher退出143，旧PG保留。新runtime `dist/admin-patch/run-SSNSRS`（ignored）PID1004，新owned PG PID1086/port51590、dataDir在该runtime/tmp，数据库`fancy_test_393d62c789b0`，启动时HEAD`e0e1b344f9bb5e3c3ddc1f1ca356c80a5fdeadbe`；当时前端开发中dirty，故不是最终固定构建验收。API ready与admin均200。未触封存或客户端服务。
+
+新IAB tab2通过fixture-login合成登录，真实supply页显示Formation16/16，coverage64/80=80%，Present48/Absent16/Unknown16，Meal records六行第一页且Next可用；与seed手算一致。合成DB只读核对meals16。浏览器证明截图保存在本地`/private/tmp/admin-p11-supply-coverage.png`，不含真实用户。最终A13仍需固定提交后重核运行/源码/build一致，不能用这次开发中截图代签全功能。
+
+浏览器顺带观察：Meal records默认排序控件标作“Default (actual date)”且按钮“Newest first”，实际第一页Starts顺序12/10、15/10、08/10、02/10、17/10、14/10；`api/admin/drilldown.ts`未指定sort时按rowId排序。请P10核对默认排序的用户语义，按已确认契约修复默认字段或准确标签，并保持cursor binding。不要把UUID顺序称为实际日期排序。此项需组件/API及浏览器复核，不要求改PRD。
+
+## Codex验收P09-R02：首个PENDING的Retry-After未约束下一轮（独立红例）
+
+Codex拥有`infra/admin-patch/receipt-wait.acceptance.test.ts`，Claude只读运行勿stage。真实ConsoleProvider中network unknown第一次查询返回PENDING/retryAfterSeconds120，推进5秒却已查询2次，预期仍1次。命令`launch.mjs --test --config infra/admin-patch/acceptance.config.mjs infra/admin-patch/receipt-wait.acceptance.test.ts`，1项真实断言失败。原因：poll的then设置due时调用`nextDelayMs(state)`，state是请求前unknown(network)，没有使用新收到PENDING的120秒。因此首次新Retry-After被旧默认4秒覆盖。请按当前响应生成绝对due（收到响应时刻+延迟），不能仅在后续状态生效。保留每intent单在途与账号代际隔离，补正常轮询/延迟变更测试。业务由Claude修，Codex测试不改断言。
+
+## Codex浏览器P10-R02：Ready后解锁旧快照统计（需修）
+
+真实合成分类：target`20000000-0000-4000-8000-000000000001` regular→test，响应accepted rev1；浏览器立即隐藏旧统计并禁用Export，Pending正确。随后质量页状态“Statistics are updated in a new snapshot that includes this classification”，但仅给Switch按钮，未切换。转supply仍展示80%64/80且Export可用，URL snapshot=`56d98241-6816-4476-b8db-2b8e13d3ded8`。同owned PG只读核对该唯一refresh READY绑定snapshot=`315ce9fc-7851-49cf-bf11-6efcd4e653fb`，classification行数1。即statisticsSettled仅看job READY，忽略当前selected snapshot是否含接受revision，造成旧统计重新解锁。
+
+计划§P10明确Ready之后同snapshotId+canonicalFilterHash，A05要求Ready绑定。请在用户显式切换前保持“新统计已就绪，待切换”的旧数据门控（或按冻结设计既定方式绑定有效Ready snapshot）；不能把旧快照视为此分类的Ready统计。任意更新快照也不能仅按时间，需同user/revision密封输入。补组件测试：job Ready但selected旧→统计/明细/导出仍隐藏；选中本次Ready或包含其revision的有效新snapshot→解锁且三者同binding；多个target未全部纳入不能过早解锁。不要以改文案/自动Dismiss绕过。
+
+P09-R02独立关闭：固定修复`168839c`之后，Codex原receipt-wait测试断言不变1/1 PASS，连同撤销导出共2/2 PASS；acceptance tsc、该测试eslint、文档引用3项均通过。P10-R02已在Claude消息11核验送达，Claude明确优先修复selected snapshot未覆盖accepted revision却解锁的门控问题，尚未关闭。
