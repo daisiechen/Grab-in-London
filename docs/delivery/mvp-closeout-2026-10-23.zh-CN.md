@@ -105,3 +105,8 @@ F64以B90定向关闭为准，JSON缺陷摘要OPEN滞后；不再要求重复修
 - 原申请人A已正常新OTP登录并直接回创建页，四步显式发布A主持的反向测试饭局，原H已有合法可申请目标。没有账号/资料/饭局seed。该步骤只完成J008前置，非原生401验收。
 - 唯一新验证邮件已实际入箱，接收方SPF/DKIM/DMARC全部PASS，精确Message-ID+in:inbox查询唯一命中；F65定向关闭。G-MAIL的webhook/完整渠道矩阵仍开放，不再使用已消费发信许可。[B93](../qa/evidence/2026-10-21/browser-b93.json)。
 - 整条计数仍202 PASS/4 NOT_RUN/11 BLOCKED，不以工具检查、运行恢复或邮件子项代替完整旅程与门槛。
+
+### B94 Web实际网络错误恢复
+
+- 独立访客域连接原MVP公开饭局，单次真实TCP断开后显示offline错误；明确恢复连接后页面等待用户点击Try again，随后保留J008筛选并恢复2条正确饭局。此前Web transport/retry工具限制解除。[B94](../qa/evidence/2026-10-21/browser-b94.json)。
+- 首次未注入前generic错误及首次沙箱EPERM均保留；不冒称完整系统断网或整条J008通过。原生401、群组403、Admin410仍待执行。计数202/4/11不变。

@@ -1,0 +1,24 @@
+{
+  "observations": [
+    {
+      "id": "B94-O001",
+      "status": "passed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "title": "Actual Web guest transport failure and explicit retry recovery",
+      "executedBy": "successor QA sole UI and finite proxy operator",
+      "steps": [
+        "Revised helper pins verified; independent OWN 3/3 and SessionProvider component1/1 passed. Initial sandbox EPERM retained as environment failure, escalated OWN run exited0.",
+        "Fresh original-source inspect revision9/02:46:30Z nonfailed; HTTP active0/handler0, AI paused/unreleased/inflightfalse, worker idle. Root exact context/cap reviewed; single15min guest wrapper started once, independent hostname, public GET only. No source FIFO or clock change during test.",
+        "Initial browser Discover showed generic error before any arm. Explicit Try again loaded7meals. Initial unexplained error retained separately; not attributed to injected fault.",
+        "Arm exact /v1/meals?keyword=J008 once; normal More filters keyword J008 and Show meals produced visible We could not load meals / You appear to be offline / Try again. Actual socket reset rather than fabricated503 or navigator.offline.",
+        "Explicit owner recover acknowledged; UI stayed on error until user Try again. One click loaded2 matching J008 meals with keyword URL/filter preserved.",
+        "Finite wrapper stop exited0; consumed cap never reused. Only Web guest transport/retry subpath passes, not full offline, native401, group403, Admin410 or wholeJ008."
+      ],
+      "artifacts": [],
+      "privateScreenshotHashes": {
+        "error": "f60048b5b7f65cd1281820aaa902ca44357ebbf4d20c4ff22ad50b1a479eed92",
+        "recovered": "b43dc62d370b567890d0b932dd27054547fde8e75417a9084dfee6d94f3f3097"
+      }
+    }
+  ]
+}
