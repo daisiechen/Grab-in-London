@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { ApiError, type RequestOf } from '@fancy/client';
+import { ApiError, IntentTracker, IntentUnresolvedError, newIntentKey, type RequestOf } from '@fancy/client';
 import { CheckIcon } from '@radix-ui/react-icons';
 import { useApi } from '../../api/ApiProvider.tsx';
 import { useQuery } from '../../api/useQuery.ts';
-import { Intent } from '../../api/webApi.ts';
 import { errorMessage } from '../../api/errors.ts';
 import type { MealDetail } from '../../api/types.ts';
 import { FormError, Loading, Notice, PageHeader, Primary } from '../../ui/components.tsx';
@@ -40,6 +39,9 @@ export function editPatch(before: MealDraft, after: MealDraft): EditBody | null 
  */
 export function EditMealPage() {
   const { mealId = '' } = useParams();
+  return <MealEditor key={mealId} mealId={mealId} />;
+}
+function MealEditor({ mealId }: { mealId: string }) {
   const { api, cache } = useApi();
   const navigate = useNavigate();
   const notify = useToast();
@@ -48,7 +50,10 @@ export function EditMealPage() {
   const [draft, setDraft] = useState<MealDraft | null>(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  const intent = useMemo(() => new Intent(api.retry), [api]);
+  const tracker = useMemo(() => new IntentTracker(newIntentKey), []);
+  const original = useRef<{body: EditBody; version: string} | null>(null);
+  const [unknown, setUnknown] = useState(false);
+  useEffect(() => () => tracker.reset(), [tracker]);
 
   useEffect(() => {
     if (!q.data) return;
@@ -72,18 +77,53 @@ export function EditMealPage() {
     if (min === null || max === null || min <= 0 || max < min) { setError('Enter a valid budget per person.'); return; }
     const body = editPatch(before, draft);
     if (!body) { navigate(`/meals/${mealId}`,{state:{backTo:'/meals?section=HOSTING'}}); return; }
-    setBusy(true);
+    await submit(body, meal.version);
+  };
+
+  const saved = () => {
+    setUnknown(false);
+    cache.delete(`meal:${mealId}`);
+    cache.delete(`meal:${mealId}:edit`);
+    notify('Meal updated.');
+    navigate(`/meals/${mealId}`, { replace: true, state: {backTo:'/meals?section=HOSTING'} });
+  };
+  const submit = async (body: EditBody, version: string) => {
+    const generation = tracker.generation;
+    setBusy(true); setError('');
     try {
-      await intent.run({ body, v: meal.version }, (key) => api.client.call('editMeal', { params: { mealId }, body, ifMatch: meal.version, idempotencyKey: key }));
-      cache.delete(`meal:${mealId}`);
-      notify('Meal updated.');
-      navigate(`/meals/${mealId}`, { replace: true,state:{backTo:'/meals?section=HOSTING'} });
+      original.current = {body, version};
+      await tracker.run({body, version}, key => api.client.call('editMeal', {params:{mealId}, body, ifMatch:version, idempotencyKey:key}));
+      if (generation !== tracker.generation) return;
+      saved();
     } catch (e) {
-      if (e instanceof ApiError && (e.code === 'VERSION_CONFLICT' || e.code === 'ARRANGEMENT_LOCKED')) await q.reload();
+      if (generation !== tracker.generation) return;
+      if (e instanceof IntentUnresolvedError) { setError('Your earlier edit hasn’t been confirmed yet. Check its status before saving changes.'); return; }
+      setUnknown(tracker.pending !== null);
+      if (tracker.pending) { setError('Status unknown: your changes are kept. Check status before saving again.'); return; }
+      if (e instanceof ApiError && (e.code === 'VERSION_CONFLICT' || e.code === 'ARRANGEMENT_LOCKED')) {
+        await q.reload();
+        if (generation !== tracker.generation) return;
+      }
       setError(errorMessage(e));
-    } finally {
-      setBusy(false);
-    }
+    } finally { if (generation === tracker.generation) setBusy(false); }
+  };
+  const checkStatus = async () => {
+    const generation = tracker.generation;
+    setBusy(true); setError('');
+    try {
+      const outcome = await tracker.reconcile(api.client, 'editMeal');
+      if (generation !== tracker.generation) return;
+      if (outcome === 'saved') { saved(); return; }
+      if (outcome === 'resend' && original.current) { await submit(original.current.body, original.current.version); return; }
+      if (outcome === 'conflict' || outcome === 'expired' || outcome === 'rejected') {
+        setUnknown(false);
+        await q.reload();
+        if (generation !== tracker.generation) return;
+        setError('That edit wasn’t accepted. The latest arrangements are loaded and your changes are kept. Review before saving again.'); return;
+      }
+      setError('Still no confirmed result. Your changes are kept; check again shortly.');
+    } catch (e) { if (generation === tracker.generation) setError(errorMessage(e)); }
+    finally { if (generation === tracker.generation) setBusy(false); }
   };
 
   return (
@@ -98,9 +138,10 @@ export function EditMealPage() {
             <IntroduceStep draft={draft} update={update} />
             <CostsStep draft={draft} update={update} showBooking={false} />
             <FormError>{error}</FormError>
-            <Primary disabled={busy} onClick={() => void save()}>Save changes <CheckIcon /></Primary>
+            <Primary disabled={busy || unknown} onClick={() => void save()}>Save changes <CheckIcon /></Primary>
           </>
         )}
+        {unknown && <Primary secondary disabled={busy} onClick={() => void checkStatus()}>Check status</Primary>}
         {locked && <FormError>{error}</FormError>}
       </div>
     </>

@@ -212,6 +212,50 @@ describe('create meal flow (T07)', () => {
 });
 
 describe('edit meal (T07)', () => {
+  it('reconciles an unknown edit from its receipt without writing a second edit', async () => {
+    const stub = createFetchStub({
+      getSession: () => ok(session()),
+      getMeal: () => ok({ meal: meal({ allowedActions: ['EDIT'] }), myApplication: null, conversationId: null }),
+      editMeal: () => { throw new TypeError('Response lost'); },
+      getCommandReceipt: (c) => ok({ operation: c.params.operation, key: c.params.key, state: 'SUCCEEDED', retryable: false, expired: false, retryAfterSeconds: null, httpStatus: 200, errorCode: null, conflict: null, resourceId: MEAL_ID, resourceVersion: '8', currentVersion: null, completedAt: '2026-10-24T10:00:00.000Z', expiresAt: '2026-11-23T10:00:00.000Z' }),
+    });
+    renderApp(stub.fetch, `/meals/${MEAL_ID}/edit`);
+    const title = await screen.findByLabelText('Give your meal a name');
+    await userEvent.clear(title); await userEvent.type(title, 'A revised dinner');
+    await userEvent.click(screen.getByRole('button', { name: /Save changes/ }));
+    await screen.findByRole('button', { name: 'Check status' });
+    expect((screen.getByLabelText('Give your meal a name') as HTMLInputElement).value).toBe('A revised dinner');
+    const count = stub.callsTo('editMeal').length;
+    await userEvent.click(screen.getByRole('button', { name: 'Check status' }));
+    await waitFor(() => expect(stub.callsTo('getCommandReceipt')).toHaveLength(1));
+    expect(stub.callsTo('getCommandReceipt')[0]!.params.operation).toBe('editMeal');
+    expect(stub.callsTo('editMeal')).toHaveLength(count);
+    expect(await screen.findByText('Meal updated.')).toBeTruthy();
+  });
+
+  it('resends only the original edit key, body and version when NONE is within retention', async () => {
+    let edits = 0;
+    const stub = createFetchStub({
+      getSession: () => ok(session()),
+      getMeal: () => ok({ meal: meal({ allowedActions: ['EDIT'] }), myApplication: null, conversationId: null }),
+      editMeal: () => { if (++edits === 1) throw new TypeError('Response lost'); return ok(meal({version:'8'})); },
+      getCommandReceipt: (c) => ok({ operation:c.params.operation, key:c.params.key, state:'NONE', retryable:false, expired:false }),
+    });
+    renderApp(stub.fetch, `/meals/${MEAL_ID}/edit`);
+    const title = await screen.findByLabelText('Give your meal a name');
+    await userEvent.clear(title); await userEvent.type(title, 'Original edit');
+    await userEvent.click(screen.getByRole('button', {name:/Save changes/}));
+    await screen.findByRole('button', {name:'Check status'});
+    await userEvent.clear(title); await userEvent.type(title, 'Later draft');
+    await userEvent.click(screen.getByRole('button', {name:'Check status'}));
+    await waitFor(() => expect(stub.callsTo('editMeal')).toHaveLength(2));
+    const [first, second] = stub.callsTo('editMeal');
+    expect(second!.body).toEqual(first!.body);
+    expect(second!.body).toEqual({title:'Original edit'});
+    expect(second!.headers['idempotency-key']).toBe(first!.headers['idempotency-key']);
+    expect(second!.headers['if-match']).toBe(first!.headers['if-match']);
+  });
+
   it('shows the permanent lock instead of the form once arrangements are locked', async () => {
     const stub = createFetchStub({
       getSession: () => ok(session()),

@@ -75,3 +75,13 @@ cherry-pick -x后台 63b088e、f3b0e0b、ea5a2e2、2d7647f、b111c4c（未pick 0
 - iOS 将发送入口与重试同时受当前发送权限约束；退群、解散、403 同步关闭发送围栏。失败正文仍保留，可删除；权限撤回不再丢正文。
 - Web 每次 withRetry 尝试前检查历史只读与组件存活状态，终止退群或卸载后排队的尝试，保留未发送文本。已有授权历史读取、聊天已读/通知已读独立行为保持。
 - 验证范围：iOS chat/dissolve/poller，Web inbox 全目录及精确迟到重试回归；名册/候选/mute 的新增界面仍随 P17，不能据此称 P07/P17 整体关闭。
+
+### P05-R01 Web 修改餐局未知结果恢复
+
+- EditMealPage 以 mealId 键控子组件及 IntentTracker 代替旧 Intent；网络未知后保留草稿、原 body/version/key，显示 Check status，阻止另建意图。
+- SUCCEEDED 只清缓存并返回详情，零次额外 editMeal；NONE 在保留期内仅原 key/body/version 重发，即使表单随后已编辑。冲突/拒绝/过期重新读取权威安排并保留草稿；首批准后的永久锁仍优先。卸载重置并拒绝迟到更新。
+- 精确缺失入口红例转绿；create/edit 共 20/20 通过（含原 DST、首次发布、永久锁用例），Web 类型与 ESLint 通过。iOS 当前没有 editMeal 调用，尚需按冻结范围核对其入口；发现/申请和最终 UI 验收仍待推进。
+
+### 后台共享固定增量接入
+
+后台明确交回 02338fd 与 844e532，客户端串行 cherry-pick 为 f840cb0 / ee02370：统计 Ready 绑定最新有效快照、明细默认实际日期倒序。无契约生成或 worker 变动，未取后台 UI/环境。专属临时数据库下 API 8/8、排序 unit 4/4 通过，已同步远程。
