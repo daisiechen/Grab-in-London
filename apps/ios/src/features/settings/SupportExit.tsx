@@ -1,3 +1,4 @@
+import * as Clipboard from 'expo-clipboard';
 import { useState } from 'react';
 import { Linking, StyleSheet, Text, View } from 'react-native';
 import { SUPPORT_EMAIL, supportMailto } from '@fancy/client';
@@ -12,6 +13,12 @@ import { colors, type } from '../../ui/tokens.ts';
  */
 export function SupportExit({ reason }: { reason: 'needsSupport' | 'receiptUnavailable' }) {
   const [note, setNote] = useState('Opening your email app doesn’t send anything by itself.');
+  const copy = async () => {
+    try {
+      if (!await Clipboard.setStringAsync(SUPPORT_EMAIL)) throw new Error('Copy unavailable');
+      setNote('Copied.');
+    } catch { setNote('Couldn’t copy. Select the address above to copy it.'); }
+  };
   const open = async () => {
     try { await Linking.openURL(supportMailto()); }
     catch { setNote('No email app is available. Select the address above to copy it.'); }
@@ -24,6 +31,7 @@ export function SupportExit({ reason }: { reason: 'needsSupport' | 'receiptUnava
         : 'Your removal reference isn’t available. You can still contact support without signing in.'}</Body>
       <Text selectable accessibilityLabel={`Support email ${SUPPORT_EMAIL}`} style={styles.email}>{SUPPORT_EMAIL}</Text>
       <Body muted>Describe the issue in your own words. Don’t include passwords or your removal reference.</Body>
+      <Primary secondary label="Copy email address" onPress={() => void copy()} />
       <Primary secondary label="Email support" onPress={() => void open()} />
       <Body muted>{note}</Body>
     </View>

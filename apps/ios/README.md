@@ -156,3 +156,14 @@ and receipt. It never signs in a replacement family to complete reauthentication
 account switch or screen unmount stops the pending path; repeated REAUTH_REQUIRED after a verified
 attempt shows failure instead of recursively launching another deletion attempt. Local synthetic
 protocol and race tests do not replace real Auth0/Google/Apple configuration and device acceptance.
+
+## Isolated P1.1 sharing
+
+The patch variant uses `FANCY_APP_VARIANT=patch-p11` with the dedicated API at
+`EXPO_PUBLIC_API_BASE_URL=http://127.0.0.1:64176`. Set `EXPO_PUBLIC_MEAL_ORIGIN`
+to the explicitly approved public HTTPS origin for meal links; it has no production default.
+Synthetic local acceptance uses `https://p11-share.example.invalid`, which is not deployed.
+`expo-clipboard` 58.0.3 matches the installed Expo SDK compatibility matrix. The new native
+module requires fresh prebuild/pods and a new isolated development build; the earlier P04
+build cannot establish sharing or clipboard acceptance. See the patch isolation and client
+progress records in `docs/engineering/mvp-patch/`.

@@ -101,3 +101,7 @@ packages/client/share.ts 只从显式公开输入构造 HTTPS canonical meal URL
 - 参考：[Web Share](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share)、[React Native Share](https://reactnative.dev/docs/share)、[Expo Clipboard](https://docs.expo.dev/versions/latest/sdk/clipboard/)。Universal Link/AASA/OG、登录回流和外部真实渠道仍待 P11/P12 后续，完整补丁仍未完成。新增原生依赖要求重新 prebuild/pods/build，旧 P04 build-only 证据不能覆盖。
 
 服务端后续归属：按用户“这里仅客户端和移动Web”边界，P13–P16 服务端拟交后台会话；该会话正在向用户确认在 PATCH006 后承接，尚未获得其确认，不并发写 migration0027+/生成/worker。客户端可继续纯UI及现有接口切片。
+
+### P04 公开支持邮箱的原生复制按钮
+
+分享切片已引入 expo-clipboard 后，补齐 SupportExit 的 Copy email address；只复制公开 SUPPORT_EMAIL，不含 receipt/token/用户描述。false/异常保留 selectable 地址并提示失败，真实成功才 Copied。设置模块 29/29、iOS 类型与 ESLint 通过。原生设备剪贴板验收仍待新构建，历史“需批准新增依赖”遗留已由用户授权接手后的常规实现选择取代。
