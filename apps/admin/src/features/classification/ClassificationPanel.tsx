@@ -145,7 +145,7 @@ export function ClassificationPanel({ t }: { t: Translate }) {
                 {ready && c.snapshot?.id !== ready && c.snapshots.some((s) => s.id === ready && s.status === 'SEALED') && (
                   <button className="button" onClick={() => c.selectSnapshot(ready)}>{t('切换到包含此分类的快照', 'Switch to the snapshot with this classification')}</button>
                 )}
-                {allowed.has('submit') && state.phase !== 'saving' && (
+                {(state.phase === 'conflict' || state.phase === 'rejected') && (
                   <button className="text-button" onClick={() => c.dispatchIntent({ type: 'dismiss', targetUserId: state.intent.targetUserId })}>{t('关闭', 'Dismiss')}</button>
                 )}
               </li>

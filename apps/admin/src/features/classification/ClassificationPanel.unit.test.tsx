@@ -47,7 +47,7 @@ async function saveTest() {
 const puts = (calls: Call[]) => calls.filter((c) => c.method === 'PUT');
 
 describe('A01/A03/A05 classification recovery through the real console', () => {
-  it('lost response: NONE stays unknown, SUCCEEDED recovers the same refresh, ready re-enables statistics; one PUT only', async () => {
+  it('lost response: NONE stays unknown, SUCCEEDED recovers the same refresh, ready unlocks only after selecting its sealed snapshot; one PUT only', async () => {
     let receiptState = 'NONE';
     let refreshState: 'pending' | 'ready' = 'pending';
     const { mock, addSnapshot } = setup({
@@ -70,9 +70,12 @@ describe('A01/A03/A05 classification recovery through the real console', () => {
     expect(locate.path).toBe(`/v1/admin/statistics-refresh-intents/${key}/${USER}/4`);
     addSnapshot(); refreshState = 'ready';
     await screen.findByText(/Statistics are updated in a new snapshot/);
-    expect(screen.getByLabelText('settled').textContent).toBe('true');
+    // P10-R02: the job is ready but the old snapshot is still selected → old statistics stay locked.
+    expect(screen.getByLabelText('snapshot').textContent).toBe(SNAP_A);
+    expect(screen.getByLabelText('settled').textContent).toBe('false');
     await userEvent.click(await screen.findByRole('button', { name: 'Switch to the snapshot with this classification' }));
     expect(screen.getByLabelText('snapshot').textContent).toBe(SNAP_B);
+    await waitFor(() => expect(screen.getByLabelText('settled').textContent).toBe('true'));
     expect(puts(mock.calls)).toHaveLength(1);
   });
 
