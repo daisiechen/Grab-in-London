@@ -121,3 +121,9 @@ F64以B90定向关闭为准，JSON缺陷摘要OPEN滞后；不再要求重复修
 
 - 用户纠正误点拒绝，明确允许仅新增D23合成额度17内部调用/51408micro及enable；QA fresh核后执行并实际核验，旧额度/UNKNOWN保留，测试钟未动，真实外呼0。[B96](../qa/evidence/2026-10-21/browser-b96.json)。
 - Web Z1单次KNOWN失败请求实际FAILED/UNAVAILABLE，消耗2KNOWN/128micro、reserved0；UI却显示会话过期，手写73字正文仍在且未发送。剩15共享调用；不重跑该槽位或reset。两客户端合成钟对齐修正中，整J005未通过。
+
+### B97 两端测试钟修正交付边界
+
+- 原生QA独立组合仅_layout注入024630，正常构建签名及1782源码/二进制/Hermes核验通过，原D92原位安装并核安装后hash一致；数据与Keychain保留。正常H登录入口待交，未实际重跑237。[B97](../qa/evidence/2026-10-21/browser-b97.json)。
+- Web候选独立4组件+2OWN适配测试通过，实际接入尚需新的完整同库连续性/时钟对齐方案。前次单次换代许可已消费，不自动再换secret或调钟；固定024630不能冒随阶段推进。
+- 原237测试红保留，xcodebuild挂起收尾由soleQA仅正常终止自有PID后exit143；非整suite通过。AI仍2calls/128micro、剩15、UNKNOWN1；计数202/4/11不变。

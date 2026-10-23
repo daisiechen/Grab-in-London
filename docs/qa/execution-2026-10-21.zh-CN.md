@@ -24,7 +24,7 @@ Current counts202 PASS/4 NOT_RUN/11 BLOCKED. Remaining whole local journeys J005
 
 ## 实际运行
 
-B96: latest user correction explicitly allows exactD23synthetic17calls/51408micro and enable; fresh applied/verified rev14, no clockadvance or realnetwork. ActualWeb Z1 KNOWNfailure1request settlesFAILED/UNAVAILABLE2KNOWN/128micro but UIshowsconversationexpired; handwritten73chars retained/noSend. Remaining15calls,oldUNKNOWN1unchanged. Wholecounts202/4/11unchanged; clientfixtureclock correctionpending.
+B97: QA-only native024630clockcomposition normalbuilt/independentlypinsverified/coverinstalled originalD92; noUITestPASS. NormalHlogin238readybutnotrun. Webclockcandidate4component+2OWNadapterindependentPASS; actualcutoverrequiresnewconcretecontinuity/alignmentapproval,notexecuted. OriginalB95/B96redsretained;AI2calls128micro/15left/UNKNOWN1;counts202/4/11unchanged.
 
 | ID | 结果 | 范围 |
 |---|---|---|

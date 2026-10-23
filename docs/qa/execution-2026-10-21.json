@@ -136,7 +136,8 @@
     "browserObservationsB93": "evidence/2026-10-21/browser-b93.json",
     "browserObservationsB94": "evidence/2026-10-21/browser-b94.json",
     "browserObservationsB95": "evidence/2026-10-21/browser-b95.json",
-    "browserObservationsB96": "evidence/2026-10-21/browser-b96.json"
+    "browserObservationsB96": "evidence/2026-10-21/browser-b96.json",
+    "browserObservationsB97": "evidence/2026-10-21/browser-b97.json"
   },
   "cases": [
     {
@@ -23269,5 +23270,5 @@
     "Complete J011 with reviewed support CLI/exact168h boundary tooling; perform J009 last, then actual Admin410/cache/old-export invalidation. No fragment-to-whole promotion.",
     "Close nine real provider/device/policy/deployment gates with exact evidence; AI050/052 share MODEL/DATA dependencies. Consolidate specific human actions after developer preparation."
   ],
-  "currentExecutionSlice": "B96: latest user correction explicitly allows exactD23synthetic17calls/51408micro and enable; fresh applied/verified rev14, no clockadvance or realnetwork. ActualWeb Z1 KNOWNfailure1request settlesFAILED/UNAVAILABLE2KNOWN/128micro but UIshowsconversationexpired; handwritten73chars retained/noSend. Remaining15calls,oldUNKNOWN1unchanged. Wholecounts202/4/11unchanged; clientfixtureclock correctionpending."
+  "currentExecutionSlice": "B97: QA-only native024630clockcomposition normalbuilt/independentlypinsverified/coverinstalled originalD92; noUITestPASS. NormalHlogin238readybutnotrun. Webclockcandidate4component+2OWNadapterindependentPASS; actualcutoverrequiresnewconcretecontinuity/alignmentapproval,notexecuted. OriginalB95/B96redsretained;AI2calls128micro/15left/UNKNOWN1;counts202/4/11unchanged."
 }

@@ -1,0 +1,34 @@
+{
+  "observations": [
+    {
+      "id": "B97-O001",
+      "status": "passed",
+      "testedCommit": "3ee69fec6b79552404217aa5415d4f041853a06f",
+      "title": "QA-only native fixtureclock composition built, independently verified and cover-installed on originalD92",
+      "steps": [
+        "Baseline3ee+sevenF64files retained; exactlyone extra QA_layout config.now overlay024630. Independent source verifier1782exact, realcreateServices3testsPASS. ProductionSessionManager/client/TTL and device/API/DBclock unchanged.",
+        "Normal ReleaseSimulator build and codesign deepstrict0. QA independently verified fullsource manifest/binary/Hermes/BundleID, then normalterminated originalD92App and coverinstalled newpackage exit0. No uninstall or data/Keychain transfer.",
+        "InstalledApp executable andHermes independently hashmatch reviewedpackage. App not launched without normalauthproxy. Original237 failed precondition preserved; xcodebuild resultcleanup hungafter1FAIL17.928s, ownexactPID normalINT thenTERM ended143. No originalservice/PG process touched.",
+        "This is phase-limited QA composition, not productionfix/releasebuild or native401 acceptance. NormalH relogin required;238runner built, not yet executed."
+      ],
+      "binarySha256": "bc35d0d3a7fd354cd7145ffa52ae1c2d85ea90691021a6e7d0dc71579f683f93",
+      "hermesSha256": "9c37fca2f0820e328c733ca2b253eb9717d3a1fc3094f29c4b1228e6b18e1d9e",
+      "artifacts": [],
+      "qaComposition": "QA_COMPOSITION_3ee69fe_9101004_SEVEN_PLUS_J008_CLOCK024630"
+    },
+    {
+      "id": "B97-O002",
+      "status": "passed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "title": "Web clock candidate independent4component+2OWNadapter tests pass; actualcutover not approved/executed",
+      "steps": [
+        "Independent realAssistantProvider/Panel4testsPASS: failedAPPLICATION visible andeditorpreserved, explicitReplace no businesswrite, original30minexpiry retainsunsent, EDIT throttle stillusesrealelapsedtime.",
+        "IndependentOWNadapter2testsPASS: missing/wrongapprovalmanifest reject; actualOWNVite servesoverlay andpublicproxy then closesonlyownlisteners. No originalPG or realAI connection.",
+        "Currentparent has no frontend-only replacemententry. Candidate requires anothergeneration/secret and possibly clockhorizon handling; previoussinglecutoverapproval consumed. Need complete boundedcontinuity/alignment proposal before userconfirmation, not autoexecute.",
+        "Constant024630overlay cannot automaticallyfollowlaterclockphases; developer asked to avoid repeatedbuild/cutovercycle. OriginalWeb failedrequest2KNOWN128micro retained, remaining15calls. Whole217casecounts unchanged."
+      ],
+      "artifacts": [],
+      "qaComposition": "QA-only Web sessionclock overlay"
+    }
+  ]
+}
