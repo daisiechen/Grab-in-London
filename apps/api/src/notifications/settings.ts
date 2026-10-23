@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { DomainError } from '../common/errors.ts';
+import { DomainError, InvariantError } from '../common/errors.ts';
 import { lockActiveActor } from '../common/actor.ts';
 import { withTransaction } from '../common/transaction.ts';
 import { defineRoute, defineWrite } from '../http/routes.ts';
@@ -28,10 +28,11 @@ export function registerNotificationSettingsRoutes(app: FastifyInstance, deps: A
   const {rows:[current]}=await tx.client.query<{version:string}>(`SELECT version FROM conversation_notification_settings WHERE conversation_id=$1 AND user_id=$2`,[conversationId,auth.userId]);
   if((current?.version??'0')!==ifMatch)throw new DomainError('VERSION_CONFLICT','This notification setting changed.',{currentVersion:current?.version??'0'});
   const {rows:[setting]}=await tx.client.query<{muted:boolean;version:string}>(`INSERT INTO conversation_notification_settings(conversation_id,user_id,muted) VALUES($1,$2,$3) ON CONFLICT(conversation_id,user_id) DO UPDATE SET muted=EXCLUDED.muted,version=conversation_notification_settings.version+1 RETURNING muted,version`,[conversationId,auth.userId,muted]);
+  if(!setting)throw new InvariantError('Notification setting write returned no row.');
   return {data:setting,version:setting.version,resourceId:conversationId};
  },async (auth,{request})=>{
   const {conversationId}=request.params as {conversationId:string};
   const {rows:[row]}=await deps.pool.query<{allowed:boolean}>(`SELECT EXISTS(SELECT 1 FROM conversations c JOIN membership_intervals i ON i.conversation_id=c.id WHERE c.id=$1 AND c.kind='GROUP' AND c.dissolved_at IS NULL AND i.user_id=$2 AND i.leave_seq IS NULL) AS allowed`,[conversationId,auth.userId]);
-  return row.allowed;
+  return row?.allowed??false;
  });
 }
