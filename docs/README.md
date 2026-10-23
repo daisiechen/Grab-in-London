@@ -213,3 +213,5 @@
 - [QA B71：F61 整页导出实际复验关闭](qa/evidence/2026-10-21/browser-b71.json)。
 
 - [QA B72：两次经审推进与 F62 同标签页 401 实际复验关闭](qa/evidence/2026-10-21/browser-b72.json)。
+
+- [QA B73：Codex 接手后的原生举报前置与冻结时钟限流证据（J011 未完成）](qa/evidence/2026-10-21/browser-b73.json)。

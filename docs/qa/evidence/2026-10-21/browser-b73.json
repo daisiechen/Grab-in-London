@@ -1,0 +1,29 @@
+{
+  "observations": [
+    {
+      "id": "B73-O001",
+      "executedBy": "Codex QA after explicit Claude handoff",
+      "clientCommit": "3ee69fec6b79552404217aa5415d4f041853a06f",
+      "apiCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "status": "failed",
+      "title": "J011 normal native meal-report prerequisite reached but no receipt at the frozen write-rate window",
+      "steps": [
+        "Installed Simulator app identity was read independently: CDHash 8e35fda4386d113090312d67c60129edd1789046; no app rebuild, uninstall or resign. Normal Profile showed QA Final Host.",
+        "Normal Meals > Past opened the completed M3 meal and its Report this meal action. Report a concern accepted fixed synthetic attendance-dispute text. Exactly one Send report action was performed.",
+        "The actual XCTest expected Report received but failed after 47.140 seconds; the visible error was We couldn’t send your report. Please try again. Original failure is retained; no automatic send retry was performed.",
+        "Read-only metadata before: reports0. After: reports0, support_cases0, createReport idempotency records0; current H write-burst count15, following the earlier frozen-second count14. This is consistent with the existing write-burst limit10 before intent execution; no direct HTTP status was captured, so no specific response status or new product defect is claimed.",
+        "The synthetic clock remained 02:31:30Z. The separately blocked 02:46:30 advance was not retried or run by another executor. No grant, correction, role change, budget operation or account deletion occurred. J011 remains NOT_RUN."
+      ],
+      "artifacts": [
+        "evidence/2026-10-21/native201-codex-report-xcui.swift"
+      ],
+      "rawEvidence": {
+        "xctestLogSha256": "cdc876259a197028856fe7e7baaeff2c87a938f0631ca7c64c2d5f02beab4fe2",
+        "result": "1 actual UI test failed; no whole-case promotion",
+        "privateBundleRetained": true
+      },
+      "testedCommit": "3ee69fec6b79552404217aa5415d4f041853a06f",
+      "classification": "environment checkpoint failure; not a confirmed product defect"
+    }
+  ]
+}

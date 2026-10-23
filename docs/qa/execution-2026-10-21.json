@@ -112,7 +112,8 @@
     "browserObservationsB69": "evidence/2026-10-21/browser-b69.json",
     "browserObservationsB70": "evidence/2026-10-21/browser-b70.json",
     "browserObservationsB71": "evidence/2026-10-21/browser-b71.json",
-    "browserObservationsB72": "evidence/2026-10-21/browser-b72.json"
+    "browserObservationsB72": "evidence/2026-10-21/browser-b72.json",
+    "browserObservationsB73": "evidence/2026-10-21/browser-b73.json"
   },
   "cases": [
     {
@@ -22040,7 +22041,9 @@
       "plannedStage": "implementation",
       "target": "production implementation in local synthetic environment",
       "status": "NOT_RUN",
-      "evidence": [],
+      "evidence": [
+        "B73-O001"
+      ],
       "relatedAutomatedAssertions": [
         "R1-T054",
         "R1-T055",
@@ -22357,7 +22360,7 @@
         "新资格传播，旧普通快照不改",
         "不开放全表/消息正文"
       ],
-      "actual": "本地生产实现尚需实际执行：CLI OAuth+MFA→授权case→end+7d纠错→新快照→私聊重验→审计。尚缺逐项证据：逐步权限重验；保留原报告；新资格传播，旧普通快照不改；不开放全表/消息正文。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。"
+      "actual": "本地生产实现尚需实际执行：CLI OAuth+MFA→授权case→end+7d纠错→新快照→私聊重验→审计。尚缺逐项证据：逐步权限重验；保留原报告；新资格传播，旧普通快照不改；不开放全表/消息正文。已有相关自动化只作检索参考，不授予本条PASS；未归外部环境阻塞。 B73: normal native H reached M3 meal report and sent once, but no receipt; original XCTest failure preserved. Read-only reports/cases/createReport intents remain0 and H frozen-second write-burst15 is consistent with rate limiting; direct status unobserved. No grant/correction/clock action; whole case remains NOT_RUN."
     },
     {
       "id": "QA-JOURNEY-012",
