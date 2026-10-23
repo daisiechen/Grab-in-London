@@ -97,3 +97,11 @@ F64以B90定向关闭为准，JSON缺陷摘要OPEN滞后；不再要求重复修
 - 接续QA独立原库RR READ ONLY核验身份和固定clock，当前检查点revision42/02:31:30Z；支持grant、AI PENDING/IN_FLIGHT、RUNNING job及有效SUPPORT_CLI family均0。此为DB证据，不替代开发现场RAM/HTTP/portal排空。原费用used3712/reserved3024/calls30、UNKNOWN1保持，D23仍不存在。
 - 已正常保存批准的DMARC单条记录，两权威DNS及Google/Cloudflare公共解析器均返回精确TXT；[B91证据](../qa/evidence/2026-10-21/browser-b91.json)。F65仍等接收方PASS，不冒称邮件门槛关闭。
 - 最多1封新业务邮件工具独立OWN复验8PASS/0FAIL/0SKIP，退出0；测试为假运输且外网禁止，未计实际发信。已交开发按精确新recipient确认/正常业务事件/ONEcap准备单次发送，QA不并发发信。
+
+### B92/B93 实际收尾结果
+
+- 已按批准正常停止原代际、保原PG、接入新代际并独立核验manifest/pin；QA已接收唯一新控制权。新入口初始HTTP关闭/worker停止/AI暂停，随后分别恢复正常HTTP与worker。
+- 已通过适用审批执行唯一15分钟推进至02:46:30Z，API/worker Node与DB ACK一致、nonfailed。推进前真实HTTP/AI在途0且饭局边界0；推进后费用/UNKNOWN不变。只有worker自然新增02:46:30快照及关联派生表，旧快照安全投影哈希不变，不声称全部表未变化。[B92](../qa/evidence/2026-10-21/browser-b92.json)。
+- 原申请人A已正常新OTP登录并直接回创建页，四步显式发布A主持的反向测试饭局，原H已有合法可申请目标。没有账号/资料/饭局seed。该步骤只完成J008前置，非原生401验收。
+- 唯一新验证邮件已实际入箱，接收方SPF/DKIM/DMARC全部PASS，精确Message-ID+in:inbox查询唯一命中；F65定向关闭。G-MAIL的webhook/完整渠道矩阵仍开放，不再使用已消费发信许可。[B93](../qa/evidence/2026-10-21/browser-b93.json)。
+- 整条计数仍202 PASS/4 NOT_RUN/11 BLOCKED，不以工具检查、运行恢复或邮件子项代替完整旅程与门槛。

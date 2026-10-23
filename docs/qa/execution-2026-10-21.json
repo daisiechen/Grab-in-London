@@ -131,7 +131,9 @@
     "browserObservationsB88": "evidence/2026-10-21/browser-b88.json",
     "browserObservationsB89": "evidence/2026-10-21/browser-b89.json",
     "browserObservationsB90": "evidence/2026-10-21/browser-b90.json",
-    "browserObservationsB91": "evidence/2026-10-21/browser-b91.json"
+    "browserObservationsB91": "evidence/2026-10-21/browser-b91.json",
+    "browserObservationsB92": "evidence/2026-10-21/browser-b92.json",
+    "browserObservationsB93": "evidence/2026-10-21/browser-b93.json"
   },
   "cases": [
     {
@@ -16211,7 +16213,8 @@
         "B74-O003",
         "B75-O001",
         "B75-O002",
-        "B91-O001"
+        "B91-O001",
+        "B93-O001"
       ],
       "relatedAutomatedAssertions": [],
       "coveredExpectedIndexes": [],
@@ -16220,7 +16223,7 @@
         "实际收件箱可追踪去重",
         "provider accepted不能单独通过"
       ],
-      "actual": "Resend基础发送配置已非空，已有测试邮件delivered运输证据；不是缺邮件账户。生产运输/回执与删除通知168h本地实现已验证，正常业务触发的有界真实运输见B74；收件箱去重/渠道矩阵及签名webhook仍未验；webhook专用配置尚缺。开发负责接线与最小真实验证交接，用户已批准既有开发测试邮箱业务邮件；不再重复索取该范围批准。 B74: three bounded business transport attempts targeted the user-approved existing test mailbox, selected outbox SENT each1; actual inbox delivery/dedup and signed webhook remain unverified. Host excluded from HTTP, but row FAILED/attempts1. No whole gate promotion. B75: actual approved mailbox now independently observed all three notifications, one each with Inbox label and expected body/dev links. All three original views show DMARC FAIL despite SPF/DKIM PASS; authoritative DNS confirms no DMARC policy, not demonstrated alignment failure (QA-F65 OPEN). Signed webhook/full channel matrix remain unverified; gate stays BLOCKED. B91 supersedes the DNS-missing part only: user-approved exact DMARC subdomain TXT was saved through normal Cloudflare UI and independently resolved at both authoritative and Google/Cloudflare public recursive resolvers. No new mail sent yet; F65 receiver verdict and signed webhook/full-channel assertions remain open.",
+      "actual": "Resend基础发送配置已非空，已有测试邮件delivered运输证据；不是缺邮件账户。生产运输/回执与删除通知168h本地实现已验证，正常业务触发的有界真实运输见B74；收件箱去重/渠道矩阵及签名webhook仍未验；webhook专用配置尚缺。开发负责接线与最小真实验证交接，用户已批准既有开发测试邮箱业务邮件；不再重复索取该范围批准。 B74: three bounded business transport attempts targeted the user-approved existing test mailbox, selected outbox SENT each1; actual inbox delivery/dedup and signed webhook remain unverified. Host excluded from HTTP, but row FAILED/attempts1. No whole gate promotion. B75: actual approved mailbox now independently observed all three notifications, one each with Inbox label and expected body/dev links. All three original views show DMARC FAIL despite SPF/DKIM PASS; authoritative DNS confirms no DMARC policy, not demonstrated alignment failure (QA-F65 OPEN). Signed webhook/full channel matrix remain unverified; gate stays BLOCKED. B91 supersedes the DNS-missing part only: user-approved exact DMARC subdomain TXT was saved through normal Cloudflare UI and independently resolved at both authoritative and Google/Cloudflare public recursive resolvers. No new mail sent yet; F65 receiver verdict and signed webhook/full-channel assertions remain open. B93: one NEW user-approved bounded business notification actually received. Latest-message Show original and exact RFC Message-ID in:inbox lookup independently verified SPF/DKIM/DMARC PASS, DKIM/From mail.fancyabite.uk. F65 targeted closed; one cap consumed/no more send; signed webhook/full-channel gate remains open.",
       "history": [
         {
           "status": "BLOCKED",
@@ -19245,7 +19248,8 @@
         "B76-O001",
         "B77-O001",
         "B78-O001",
-        "B87-O001"
+        "B87-O001",
+        "B92-O002"
       ],
       "relatedAutomatedAssertions": [
         "R1-T054",
@@ -19571,7 +19575,7 @@
         "Admin snapshot410 clears old cache and selects a new snapshot; revoked old export remains unreadable.",
         "Web sustained offline/error/explicit recovery and remaining shared DB/notification/Admin evidence. Native offline B78 is complete and should be reused."
       ],
-      "actual": "F41 targeted closed at042bc79: Native43 repeats originalNative41 read-chat/Back/Inbox probe and automatically restores five groups without pull; R19513/0. Original36/37/41 reds and manual38 recovery retained. F38 real429 visible/recovery also passed. Other full abnormal path assertions remain NOT_RUN. B43 captures actual native Replace429 visible error/preserved editor and successful normal controlled recovery;137 cold auth clock skew is separate environment precondition, not a completed abnormal-journey matrix. B68 (Claude, same DB M4): approval 409 on both Web host and native host refreshes and creates no seat; Web mid-edit 401 keeps target, no automatic replay, but clears the unsent introduction (QA-F62). Group 403, Admin snapshot 410, offline recovery and native 401 not yet executed; rig exited at ~20:46 BST. B72 (source B): F62 fixed — same-tab 401 caused by sign-out in another tab returns to the apply target, restores the same user’s unsent introduction without replay, and discards it for a different user. Native 401, group 403, Admin snapshot 410 and offline recovery remain. B74: new reviewed F64 native composition restored normal H and loaded Inbox Chats10 after preserving/correcting the202 locator failure; no offline ARM or explicit retry executed, so whole case remains NOT_RUN. B76 actual same-App attempt failed before intended inbox injection: refresh-first native revalidate is incompatible with ARM allowlist; no OFFLINE_BEFORE_FORWARD event. Original UI red39.698s retained, finite tool holder ended0. Tooling fix required; no product failure or case PASS claimed. B77: actual205 logged one OFFLINE_BEFORE_FORWARD, but UI stayed Chats10/no Retry; original29.139s red retained, no explicit Retry click. Extra forward observed without operation identity, so transparent retry only hypothesis. Sustained offline/explicit recovery remains unexecuted; tooling hold/restore design pending. B78: native same-App sustained offline now independently passed: real HOLD3 inbox resets/0inboxforward→visible error/Retry→explicit recover parentACK→one userRetry→real refresh/session/inbox200 and visible normal Inbox. Reuses original expectations, preserves204/205 reds. Only native offline subpath closed; full matrix remains NOT_RUN. B87 prerequisites audit: original native236 offline due stopped62061 proxy, environment red retained not product failure; read-only six OPEN meals all H-hosted, no H-apply target. A current browser guest and frozen resendTTL30 block normal new host prelude; no new OTP/quota bypass. Exact read tool OWN28 passed, no target cap/revoke. Group stale-composer prerequisite and Web per-tab offline (Mac locked) remain unexecuted. Existing B78/B72 evidence reused.",
+      "actual": "F41 targeted closed at042bc79: Native43 repeats originalNative41 read-chat/Back/Inbox probe and automatically restores five groups without pull; R19513/0. Original36/37/41 reds and manual38 recovery retained. F38 real429 visible/recovery also passed. Other full abnormal path assertions remain NOT_RUN. B43 captures actual native Replace429 visible error/preserved editor and successful normal controlled recovery;137 cold auth clock skew is separate environment precondition, not a completed abnormal-journey matrix. B68 (Claude, same DB M4): approval 409 on both Web host and native host refreshes and creates no seat; Web mid-edit 401 keeps target, no automatic replay, but clears the unsent introduction (QA-F62). Group 403, Admin snapshot 410, offline recovery and native 401 not yet executed; rig exited at ~20:46 BST. B72 (source B): F62 fixed — same-tab 401 caused by sign-out in another tab returns to the apply target, restores the same user’s unsent introduction without replay, and discards it for a different user. Native 401, group 403, Admin snapshot 410 and offline recovery remain. B74: new reviewed F64 native composition restored normal H and loaded Inbox Chats10 after preserving/correcting the202 locator failure; no offline ARM or explicit retry executed, so whole case remains NOT_RUN. B76 actual same-App attempt failed before intended inbox injection: refresh-first native revalidate is incompatible with ARM allowlist; no OFFLINE_BEFORE_FORWARD event. Original UI red39.698s retained, finite tool holder ended0. Tooling fix required; no product failure or case PASS claimed. B77: actual205 logged one OFFLINE_BEFORE_FORWARD, but UI stayed Chats10/no Retry; original29.139s red retained, no explicit Retry click. Extra forward observed without operation identity, so transparent retry only hypothesis. Sustained offline/explicit recovery remains unexecuted; tooling hold/restore design pending. B78: native same-App sustained offline now independently passed: real HOLD3 inbox resets/0inboxforward→visible error/Retry→explicit recover parentACK→one userRetry→real refresh/session/inbox200 and visible normal Inbox. Reuses original expectations, preserves204/205 reds. Only native offline subpath closed; full matrix remains NOT_RUN. B87 prerequisites audit: original native236 offline due stopped62061 proxy, environment red retained not product failure; read-only six OPEN meals all H-hosted, no H-apply target. A current browser guest and frozen resendTTL30 block normal new host prelude; no new OTP/quota bypass. Exact read tool OWN28 passed, no target cap/revoke. Group stale-composer prerequisite and Web per-tab offline (Mac locked) remain unexecuted. Existing B78/B72 evidence reused. B92: approved sameDB new generation and exact15min checkpoint completed; A normal OTP login and explicit four-step Publish created original-role reverse target under A. Only prerequisite closed; no native401/group403/Webtransport/Admin410 promotion.",
       "defectIds": [
         "QA-F38",
         "QA-F41",
@@ -23239,7 +23243,7 @@
     "QA-F62": "CLOSED_TARGETED_QA",
     "QA-F63": "OPEN_CONFIRMED",
     "QA-F64": "CLOSED_TARGETED_QA",
-    "QA-F65": "OPEN_CONFIRMED"
+    "QA-F65": "CLOSED_TARGETED_QA"
   },
   "followUp": {
     "developmentThread": "01a15beb-8e16-7de1-b12b-4b604dfa3069",
@@ -23262,5 +23266,5 @@
     "Complete J011 with reviewed support CLI/exact168h boundary tooling; perform J009 last, then actual Admin410/cache/old-export invalidation. No fragment-to-whole promotion.",
     "Close nine real provider/device/policy/deployment gates with exact evidence; AI050/052 share MODEL/DATA dependencies. Consolidate specific human actions after developer preparation."
   ],
-  "currentExecutionSlice": "B90:202 PASS/4 NOT_RUN/11 BLOCKED. F64 targeted actual native saved-reference/lost202/coldguest recovery independently passed on dedicated simulator, one synthetic OWN account; explicit safe stop/data retained. Raw suite2PASS/1QA-locatorFAIL/exit65 preserved. WholeJ009, originalsourceB journeys and external gates remain open; no original clock advancement."
+  "currentExecutionSlice": "B92/B93:202 PASS/4 NOT_RUN/11 BLOCKED unchanged. Approved sameDB generation/secret replacement independently checked; exact02:31:30to02:46:30 transition ACK, AI ledger/UNKNOWN unchanged, one natural new snapshot with old snapshot hash unchanged. Original A normal OTP and explicit new reverse-role target ready. Exactly one new real approved notification received, SPF/DKIM/DMARC PASS, F65 targeted closed. Remaining whole journeys/external gates stay open."
 }

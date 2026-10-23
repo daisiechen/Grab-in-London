@@ -1,0 +1,34 @@
+{
+  "observations": [
+    {
+      "id": "B92-O001",
+      "status": "passed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "executedBy": "developer performed reviewed cutover; successor QA independently verified release and executed new finite control",
+      "title": "Same retained database new generation and explicitly approved15min clock transition",
+      "steps": [
+        "User individually approved one normal sameDB generation replacement and local test-secret replacement, and exact02:31:30Z to02:46:30Z transition. Developer normally stopped only prior runtime, retained PostgreSQL, observed stopped proof, started reviewed new generation with HTTP closed/worker stopped/AI paused.",
+        "Successor independently ran frozen assertTargetRelease against actual private manifest/pin, confirmed unchanged original initial/price boundary and no real-provider/mail/remote-delete authorization. New finite inspect: API/worker/DB clocks agree, HTTPactive0/handler0, AIpaused/unreleased/inFlightfalse, no support window.",
+        "Fresh identity-verified RR READ ONLY preflight: grants0, activeCLI0, AIpending0/inflight0, RUNNINGjobs0, UNKNOWNmail0, no meal close/start/end within approved15min. OTP conservative horizon exactly02:46:30Z.",
+        "Successor separately released business HTTP and worker, then fresh inspected and executed the single approved advance through applicable tool approval. ActualACK from02:31:30Z to02:46:30Z, API+worker Node/DB all exact, oneDueBatchOnly, nonfailed. No D23/configureDay/enableAI action.",
+        "Post RR proof: day/month used3712/reserved3024/calls30 and UNKNOWN1/max3024 unchanged. Only snapshot family gained one natural worker snapshot asOf02:46:30Z; original snapshot safe-projection hash/count unchanged, other safe business projections/counts unchanged. Initial readonly diagnostic incorrectly requested nonexistent status column, preserved as script failure, then corrected to actual timestamp columns; not product failure.",
+        "No whole journey promoted. This proves bounded local cutover/clock prerequisite, not real vendor/device/release acceptance."
+      ],
+      "artifacts": []
+    },
+    {
+      "id": "B92-O002",
+      "status": "passed",
+      "testedCommit": "89dc5414bf0f9e91327075216ce0830d2b51d060",
+      "executedBy": "successor QA actual Chrome UI and reviewed roleA one-reader OTP fixture",
+      "title": "Original applicant normal OTP login and explicit reverse-role meal creation",
+      "steps": [
+        "Normal guest Create -> Sign in -> email -> one code request at approved fixedclock. Exactly bound roleA challenge, private single-reader code, normal Verify returned directly to Create without profile seed or token/cookie transfer.",
+        "Actual four steps: chose fixture North restaurant, capacity3/minimum2,24Oct19:00 London/default deadline18:00, typed synthetic title/description, budget20to35, explicit synthetic external-reservation attestation and final review check.",
+        "Clicked Publish once, observed new meal detail title QA J008 reverse-role table, host QA Final Applicant, confirmed1of3, normal host manage/edit/group controls. Private exact meal ref retained for original host native401 next step. No real restaurant/payment action.",
+        "This closes missing original-role target precondition only. Native original-host draft/precise-family401, other J008 assertions and whole journey remain unexecuted."
+      ],
+      "artifacts": []
+    }
+  ]
+}

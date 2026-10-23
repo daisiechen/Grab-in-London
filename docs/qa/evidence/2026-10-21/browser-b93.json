@@ -1,0 +1,30 @@
+{
+  "observations": [
+    {
+      "id": "B93-O001",
+      "status": "passed",
+      "testedCommit": "9101004d92cce4fdbc833232ea8d6841d06bdd90",
+      "executedBy": "developer bounded real transport; successor QA independent original-message and inbox UI verification",
+      "title": "Exactly one new approved business email received with SPF DKIM DMARC PASS",
+      "steps": [
+        "User approved at most one NEW normal business verification email to existing approved mailbox after exactDMARC subdomain publication. Successor independently ran8OWN one-cap tests and checked actual new run/cap/pin/template/recipient-equality/expiry/config identity without printing key/address.",
+        "Developer actual transport result posts1/max1/attempted1, application_approved SENT/attempts1/providerUUID present, persistent cap consumed. Other3 outbox rows excluded from external transport. No retries or replacement cap.",
+        "Gmail connector was bound to a different account, so successor used the already signed-in browser approved mailbox. Focused sender/date search, opened latest approved notification only. Thread contained one historical notification and one new23Oct11:02 London notification, not two new sends.",
+        "Latest-message Show original: Date23Oct2026 10:02:01UTC, receiver reports delivered after1s. SPF PASS, DKIM PASS domain mail.fancyabite.uk, DMARC PASS. Authentication-Results explicitly dmarc=pass(p=NONE sp=NONE dis=NONE) header.from=mail.fancyabite.uk.",
+        "Exact new RFC Message-ID plus in:inbox search returned one conversation result. Raw full header, recipient and screenshot retained privately, not published.",
+        "F65 CLOSED_TARGETED_QA. G-MAIL stays BLOCKED for signed webhook/full channel matrix; no extra real send allowed under consumed cap."
+      ],
+      "artifacts": [],
+      "safeReceiverSummary": {
+        "spf": "PASS",
+        "dkim": "PASS",
+        "dkimDomain": "mail.fancyabite.uk",
+        "dmarc": "PASS",
+        "policy": "none",
+        "receivedDateUtc": "2026-10-23T10:02:01Z",
+        "messageIdSha256": "06eed334022744a21d5414b824fc2013fdb26040fa106878c4595fd8cff936cd",
+        "privateScreenshotSha256": "7937353e609093da03409451f97935c738550ddf8fa1a67a8e74a73e17ae8a59"
+      }
+    }
+  ]
+}
