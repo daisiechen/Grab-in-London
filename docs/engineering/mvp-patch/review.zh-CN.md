@@ -23,3 +23,11 @@
 2026-10-23已向上述三个既有会话发送独立评审请求，明确只读且分别限各自范围。固定评审提交 `23a0843776ffcf95cdf948d4564e5044fe2b4613`，方案文件SHA256 `f999fed76b05447813fa63a07c21f6b91d35a33a0b34e0a8037e919643bbb697`。本记录后续提交不改变该评审对象。
 
 作者验证：`python3 docs/engineering/mvp-patch/validate.py` 3项通过；`python3 -m unittest discover -s tests -p 'test_documentation.py'` 3项通过；`git diff --check`通过。上述仅文档验证，不是业务测试。方案提交已推送，提交后本地/远端main均为`23a0843776ffcf95cdf948d4564e5044fe2b4613`。未混入研究、B61/B62或qa目录外来改动。
+
+## P1独立评审回执与P1.1修订
+
+三方均实际读取固定23a0843及匹配方案哈希，未修改产物。PM为PASS（范围/继承/方案）；产品发布号保留待用户批准，不阻塞方案评审，正式构建命名/交付前须关闭。后台UX为PASS（仅PATCH006）；补充非阻塞细化：目标user局部classification revision不能跨用户比较，应按targetUserId和原request/intent关联密封输入。
+
+用户端UX暂不PASS：UX-P1-01为方案blocker。发送时排队、退出、1h内重入、worker恢复时，仅查当前成员及可读历史可能复活旧push。需授权epoch/不可复活终态及退出后重入测试。
+
+P1.1在方案新增优先约束段及P09/P14/P16/P17验收最小修订：目标user快照关联；发送捕获授权代际，退出/失权/解散原子推进并永久作废旧未投递；重入新epoch不复活；保留授权历史/站内记录与供应商已受理不可撤回边界。等待三方对同一新固定提交确认受影响范围，当前全方案仍非PASS，未创建实施环境或功能代码。
