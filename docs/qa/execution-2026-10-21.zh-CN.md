@@ -1,12 +1,12 @@
 # 独立QA执行报告 · 2026-10-21
 
-**结论：部分执行，尚不能完成整体验收；不构成发布通过。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18, QA-F19, QA-F20, QA-F21, QA-F22, QA-F23, QA-F24, QA-F25, QA-F26, QA-F27, QA-F28, QA-F29, QA-F30, QA-F31, QA-F32, QA-F33, QA-F34, QA-F35, QA-F36, QA-F37, QA-F38, QA-F39, QA-F40, QA-F41, QA-F42, QA-F44, QA-F45, QA-F46, QA-F47, QA-F48, QA-F49, QA-F50, QA-F51, QA-F52, QA-F53, QA-F54, QA-F55, QA-F56, QA-F57, QA-F58, QA-F59, QA-F61, QA-F62；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
+**结论：部分执行，尚不能完成整体验收；不构成发布通过。** 已定向关闭：QA-F01, QA-F03, QA-F04, QA-F05, QA-F06, QA-F07, QA-F08, QA-F09, QA-F10, QA-F11, QA-F12, QA-F13, QA-F14, QA-F15, QA-F16, QA-F17, QA-F18, QA-F19, QA-F20, QA-F21, QA-F22, QA-F23, QA-F24, QA-F25, QA-F26, QA-F27, QA-F28, QA-F29, QA-F30, QA-F31, QA-F32, QA-F33, QA-F34, QA-F35, QA-F36, QA-F37, QA-F38, QA-F39, QA-F40, QA-F41, QA-F42, QA-F44, QA-F45, QA-F46, QA-F47, QA-F48, QA-F49, QA-F50, QA-F51, QA-F52, QA-F53, QA-F54, QA-F55, QA-F56, QA-F57, QA-F58, QA-F59, QA-F61, QA-F62, QA-F64；组件修复验证：QA-F02。保留修前失败历史和未执行断言。
 
 原测试计划基线4659fdb；被测交接`8ba6fc7c9974cf6be1ac06d8b16e0380fb3beced`，业务代码`8bc1e9280153491b6a63c68cd6ba6a49f8061978`。Inbox分页修复在`cd66d87a153b3171cebbe7ae74680eceb356aed1`仅做定向复验；QA-F01及第二批P0探针在04cb601验证，第三批边界、删除/恢复和适配在d4582f7及后续仅CI增量版本定向验证，具体版本见运行表；更早证据沿用对应固定基线。
 
 ## 阻塞澄清与跟进
 
-Current counts202 PASS/4 NOT_RUN/11 BLOCKED. Remaining whole local journeys J005/J008/J009/J011 require actual original assertions; these are not missing-user-resource blockers. External gates require their actual service/device/policy/deployment evidence. B74 three real business transport attempts do not prove inbox/webhook; normal simulator does not prove personal device acceptance. Earlier targeted fixes and all original failures remain in evidence.
+Current counts202 PASS/4 NOT_RUN/11 BLOCKED. Remaining whole local journeys J005/J008/J009/J011 and actual iOS foreground/background matrix require original assertions. B75 independently verifies three real business notifications in the approved inbox, one each; signed webhook/full channel matrix and F65 DMARC remain open. B88 real Google Web callback passed only its subgate. B90 closes F64 targeted simulator receipt recovery, not wholeJ009 or real remote deletion. F63 synthetic matrix passed; real Google/licensing/cache remains. Existing accounts/keys, CNY50/month no auto recharge, and deletion notification168h approval are not missing-user-resource blockers.
 
 15分钟仅为兜底唤醒，无项目规定；发现问题直接交开发、有修复即复验，不等待定时周期。原14条已逐条交原开发会话处理，两条本地删除/恢复用例已通过，其余本地准备继续推进。
 
@@ -237,7 +237,7 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 
 曾以错误的pnpm参数调用iOS测试，得到“No tests found”且退出0；该次不计入证据。更正为Jest exec后实际169项通过。部分初始命令误命中Xcode shim并返回69；通过既有infra/dev-env.sh选择工具链后执行，未修改系统许可。
 
-本地隔离PostgreSQL是真数据库；身份、餐厅、邮件及AI为test/fixture/mock。没有调用真实外部服务。既有研究文档未提交修改不属于测试基线，本轮不暂存。截图和快照仅包含合成测试资料；原始token、验证码、日志及本机凭据不发布。
+本地隔离PostgreSQL是真数据库；身份、餐厅、邮件及AI为test/fixture/mock。早期自动化使用合成适配；后续真实业务邮件及Google Web回调分别见B74/B75/B88，不能再泛称全部未调用真实服务。既有研究文档未提交修改不属于测试基线，本轮不暂存。截图和快照仅包含合成测试资料；原始token、验证码、日志及本机凭据不发布。
 
 交付验证：适用生产修复检查见原开发交接与每轮运行记录；历史R188全Web/admin为312通过（含当时F38工作树修复），F38正式定向关闭另见R189/B18。80 Python documentation/configuration tests passed; added fail-closed owned-native-safety guard. Native and actual journey evidence remain separately scoped. 历史失败、源hash、报告可重现性均验证，不把测试数量换算成217条用例通过。
 
@@ -475,7 +475,9 @@ R1/R2为QA独立复跑既有实施测试；R3是QA新增29项API/数据库/纯�
 
 ## 下一批执行顺序
 
-1. Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.
-2. Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval.
+1. Successor QA accepts exclusive operations only after safe handoff; verify live sourceB, exact versions/clock/ledger and reviewed tool entry before any mutation. No restart or clock-review bypass.
+2. Complete J005, J008 non-deletion assertions and actual iOS foreground/background matrix; reuse valid B72/B78 and do not rerun closed F64 without a new reason.
+3. Complete J011 with reviewed support CLI/exact168h boundary tooling; perform J009 last, then actual Admin410/cache/old-export invalidation. No fragment-to-whole promotion.
+4. Close nine real provider/device/policy/deployment gates with exact evidence; AI050/052 share MODEL/DATA dependencies. Consolidate specific human actions after developer preparation.
 
 Claude参与此前测试设计建议；本次动态执行及结论由Codex负责。Claude提出静态发现后由开发筛选复现修复至ac09af4，QA已独立定向复跑28项API/DB通过；不算Claude动态测试或完整交叉签收。

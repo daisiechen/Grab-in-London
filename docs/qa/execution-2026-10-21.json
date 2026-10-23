@@ -23236,7 +23236,7 @@
     "QA-F61": "CLOSED_TARGETED_QA",
     "QA-F62": "CLOSED_TARGETED_QA",
     "QA-F63": "OPEN_CONFIRMED",
-    "QA-F64": "OPEN_CONFIRMED",
+    "QA-F64": "CLOSED_TARGETED_QA",
     "QA-F65": "OPEN_CONFIRMED"
   },
   "followUp": {
@@ -23253,10 +23253,12 @@
     "handoff": "docs/qa/handoff-2026-10-22-claude.zh-CN.md",
     "note": "Claude explicitly stopped and handed execution/files/Git back. Codex QA now owns QA execution and independent acceptance; development owns production/environment. Original handoff and earlier ownership history remain in the handoff document."
   },
-  "blockerTriage": "Current counts202 PASS/4 NOT_RUN/11 BLOCKED. Remaining whole local journeys J005/J008/J009/J011 require actual original assertions; these are not missing-user-resource blockers. External gates require their actual service/device/policy/deployment evidence. B74 three real business transport attempts do not prove inbox/webhook; normal simulator does not prove personal device acceptance. Earlier targeted fixes and all original failures remain in evidence.",
+  "blockerTriage": "Current counts202 PASS/4 NOT_RUN/11 BLOCKED. Remaining whole local journeys J005/J008/J009/J011 and actual iOS foreground/background matrix require original assertions. B75 independently verifies three real business notifications in the approved inbox, one each; signed webhook/full channel matrix and F65 DMARC remain open. B88 real Google Web callback passed only its subgate. B90 closes F64 targeted simulator receipt recovery, not wholeJ009 or real remote deletion. F63 synthetic matrix passed; real Google/licensing/cache remains. Existing accounts/keys, CNY50/month no auto recharge, and deletion notification168h approval are not missing-user-resource blockers.",
   "nextExecution": [
-    "Review unifiedjourney plan then executeH/A/B normalAPI, Web/iOS role swaps, legalworkerclock, notificationoutbox andsameDBadmintrace forremaining001–012; no fragment-to-wholepass.",
-    "Retain11real-provider/device/policy/deploymentblocked gates; exactCI987success is not releaseapproval."
+    "Successor QA accepts exclusive operations only after safe handoff; verify live sourceB, exact versions/clock/ledger and reviewed tool entry before any mutation. No restart or clock-review bypass.",
+    "Complete J005, J008 non-deletion assertions and actual iOS foreground/background matrix; reuse valid B72/B78 and do not rerun closed F64 without a new reason.",
+    "Complete J011 with reviewed support CLI/exact168h boundary tooling; perform J009 last, then actual Admin410/cache/old-export invalidation. No fragment-to-whole promotion.",
+    "Close nine real provider/device/policy/deployment gates with exact evidence; AI050/052 share MODEL/DATA dependencies. Consolidate specific human actions after developer preparation."
   ],
   "currentExecutionSlice": "B90:202 PASS/4 NOT_RUN/11 BLOCKED. F64 targeted actual native saved-reference/lost202/coldguest recovery independently passed on dedicated simulator, one synthetic OWN account; explicit safe stop/data retained. Raw suite2PASS/1QA-locatorFAIL/exit65 preserved. WholeJ009, originalsourceB journeys and external gates remain open; no original clock advancement."
 }
