@@ -145,3 +145,9 @@ packages/client/share.ts 只从显式公开输入构造 HTTPS canonical meal URL
 ### 当前客户端全量自测切片
 
 业务源码a9cfcf7786bcc62fae0df053f5abd0aa2c8e945e：Web54文件320/320（专属P1.1回放时钟2026-10-23T16:00Z，单worker）；iOS57套406/406（原入口maxWorkers=2）。前次真实时钟/高并发失败及复查过程记录isolation.zh-CN.md，不隐藏失败或放宽断言。新增回放配置的类型、lint和补丁文档验证通过。新消息服务端尚未交回可集成提交，原生UI受Mac锁屏阻挡，后续P13–17和最终跨端验收仍未完成。
+
+### P13固定契约/存储集成与P17 Web可见已读切片
+
+- 后台f097039/8a44f49/88bef0e/9e960d2按序集成为814349a/42231c0/62b7e9c/4b97993并推送核同SHA。contracts操作枚举冲突保留旧统计操作及七个新操作；未运行生成。集成后完整core:check、8文件109契约/客户端测试、独立新临时PG两文件14迁移/存储测试通过。新API业务处理器仍未交付，不能声称可调用/P13完成。
+- Web旧代码把absorb后的DOM提交最高位置当已读，无viewport确认。新增独立回归先因缺少可见性observer失败；现每消息使用IntersectionObserver确认80%可见（与原生列表阈值一致），后台/未支持observer时保持未读，只有页最后消息真实呈现后才允许跨server-scanned空档。重复观察不重复写，失败不自行重试。
+- 会话清理同步停止聊天poller/发送重试，迟到发送结果不再改变旧页。inbox八文件29/29、Web类型与三文件ESLint通过。首次新测试构造器参数属性不兼容erasableSyntaxOnly，改普通字段赋值后重跑类型/lint/新回归通过；未放宽检查。代码提交e2efcf8。本段首次写入受解释器编码错误未落盘，现独立补记；此切片未完成提及/静音/横幅或真实push。
