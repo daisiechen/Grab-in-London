@@ -245,3 +245,10 @@
 - [QA B79：合成 Web 餐厅图片实际显示、替换、署名及降级](qa/evidence/2026-10-21/browser-b79.json)。
 
 - [QA B80：原生餐厅图片、可见署名和四步创建预览实际复核](qa/evidence/2026-10-21/browser-b80.json)。
+
+- [P1.1后台职责接收与共享文件交接](engineering/mvp-patch/admin-handoff.zh-CN.md)：PATCH-006独立工作区准备、文件边界及未关闭门槛。
+
+- [Claude Code后台P1.1执行与验收](engineering/mvp-patch/claude-admin-handoff.zh-CN.md)：已锁定文件边界、后台B03证据与逐项验收矩阵。
+- [PATCH-006后台开发进度](engineering/mvp-patch/admin-progress.zh-CN.md)：Claude Code逐片提交、自测证据、待生成/接入交接与阻塞。
+
+- [P1.1 PATCH-006后台开发与本地验收（2026-10-23）](reviews/admin-p11-development-acceptance-2026-10-23.zh-CN.md)：固定提交、A01–A13证据、真实合成浏览器恢复、测试环境与发布边界。
