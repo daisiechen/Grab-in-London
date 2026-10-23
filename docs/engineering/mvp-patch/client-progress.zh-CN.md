@@ -48,10 +48,17 @@ cherry-pick -x后台 63b088e、f3b0e0b、ea5a2e2、2d7647f、b111c4c（未pick 0
 - 同会话离开返回仍恢复草稿；会话结束后同账号重登录不恢复。
 - 测试：Codex红例 apps/web/src/test/p11-feedback-clear.unit.test.tsx 只读运行通过（未stage）；新增Web“teardown后为空/同会话返回保留”、iOS“onSessionEnd后在途公评不继续再约”。core:check 0；unit 441；web 303；iOS 383。
 
-### P04 资料与删除恢复（PATCH-001，AC-001/a/b）＋P04-R01 — 本次提交，待Codex验收
+### P04 资料与删除恢复（PATCH-001，AC-001/a/b）＋P04-R01 — 提交 0dc3bca，待Codex验收
 
 - 公开支持出口：`packages/client/src/support.ts`（xcheniepaut26@gmail.com，mailto仅subject，无receipt/token/正文）。Web `features/settings/SupportExit.tsx`接入DeletionPage：NEEDS_SUPPORT、回执410/404、未登录且本机无回执时显示；`Copy email address`仅clipboard真实成功才`Copied.`，失败提示手动选中；“打开邮件不等于已发送”。iOS `features/settings/SupportExit.tsx`接入DeletionStatusScreen：selectable地址＋Linking打开邮件，无邮件App时提示手动复制。iOS无剪贴板模块（未新增依赖），复制以系统文本选择实现——如需按钮复制需批准新增expo-clipboard（见遗留）。
 - 资料保存：`IntentTracker`（packages/client/src/intents.ts）——unknown/pending/reauth保留原key+body，未决时不同草稿被拒并提示先核对；`Check status`读P03回执：SUCCEEDED刷新Me不再写，NONE（年龄内）原key重发，冲突/过期加载最新并保留编辑，rejected说明不接受。Web ProfileEditPage、iOS ProfileSaver（Edit/Setup两屏）接入。409仍加载最新版本并保留表单编辑。
 - **P04-R01**：IntentTracker加epoch栅栏（reset后旧run失败/成功、旧receipt均不改新状态）＋in-flight去重（同fingerprint连点加入同一请求，不产生第二key；不同草稿拒绝）。真实生命周期：Web页面卸载（含session epoch重挂载：sign-out/401/账号切换/删除）reset；iOS两屏注册services.onSessionEnd并在卸载reset；调用方按generation丢弃旧响应，不更新新账号session/表单/导航。Codex红例 infra/patch-client/intent-tracker-late.unit.test.ts 只读运行2/2通过（未stage）。创建页（P05）尚未接入tracker，将在P05切片同样接入。
 - 验证（退出0）：core:check；unit 451；web 307（一次全量运行出现1项偶发失败，随后两次全量307/307，未复现，待观察）；iOS 387。
 - 遗留：iOS按钮式复制需新增依赖决定；真实邮件收件/支持处理不在本地验证范围。
+
+### P05 发布未知结果与回执（PATCH-003）— 本次提交，待Codex验收
+
+- Web CreatePage、iOS Create Review改用IntentTracker：网络/5xx后为`Status unknown`并保留草稿与原key；`Check status`读createMeal回执，SUCCEEDED用回执`resourceId`进入该meal详情并清草稿，不再写；NONE（年龄内）同key重发；未决时不同草稿被拒。卸载/会话结束reset（Web页面卸载，iOS onSessionEnd＋卸载），旧结果不导航。tracker新增`lastReceipt`。
+- DST/不存在时间/批准后锁定等既有逻辑未改（delta-map判定已符合）；BST/GMT选择仍为422确定拒绝后形成新意图。
+- 验证（退出0）：core:check；unit 451；web 308；iOS 388。
+- 遗留：editMeal仍用原Intent（同key重试、409加载最新），未接回执核对；发现/申请迟到结果与Places状态逐节点核对待后续切片。

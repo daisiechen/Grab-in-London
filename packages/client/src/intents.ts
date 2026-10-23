@@ -65,6 +65,7 @@ export interface UnresolvedWrite { key: string; fingerprint: string; issuedAt: n
  */
 export class IntentTracker {
   private unresolved: UnresolvedWrite | null = null;
+  private receipt: CommandReceipt | null = null;
   private inflight: { fingerprint: string; promise: Promise<unknown> } | null = null;
   /** Bumped by reset(): continuations of an earlier session can never touch this tracker again. */
   private epoch = 0;
@@ -77,6 +78,8 @@ export class IntentTracker {
   }
 
   get pending(): UnresolvedWrite | null { return this.unresolved; }
+  /** Receipt read by the latest reconcile() of the current generation (e.g. resourceId of a create). */
+  get lastReceipt(): CommandReceipt | null { return this.receipt; }
   /** Callers capture this before awaiting and drop the result if it changed (old session). */
   get generation(): number { return this.epoch; }
 
@@ -122,14 +125,15 @@ export class IntentTracker {
     const write = this.unresolved;
     if (!write) return 'saved';
     const epoch = this.epoch;
-    const { outcome } = await reconcileIntent(client, operation, write.key, write.issuedAt, this.now);
+    const { outcome, receipt } = await reconcileIntent(client, operation, write.key, write.issuedAt, this.now);
     if (epoch !== this.epoch || this.unresolved !== write) return 'unknown';
+    this.receipt = receipt;
     if (outcome === 'saved' || outcome === 'conflict' || outcome === 'rejected' || outcome === 'expired') this.unresolved = null;
     return outcome;
   }
 
   /** Session end / unmount: forget the intent and fence every outstanding continuation. */
-  reset(): void { this.epoch++; this.unresolved = null; this.inflight = null; }
+  reset(): void { this.epoch++; this.unresolved = null; this.inflight = null; this.receipt = null; }
 }
 
 export class IntentUnresolvedError extends Error {

@@ -156,11 +156,26 @@ describe('Create Review publish (S10, QA-TIME-004..007, QA-CREATE-002)', () => {
     app.mock.on('POST', '/v1/meals', ok(meal(), 201));
     await renderApp(app, <CreateStepScreen step={3} />);
     await fireEvent.press(screen.getByRole('button', { name: 'Publish meal' }));
-    expect(await screen.findByRole('alert')).toHaveTextContent(/couldn’t confirm this with Fancy/);
+    expect(await screen.findByRole('alert')).toHaveTextContent(/Status unknown/);
     await fireEvent.press(screen.getByRole('button', { name: 'Publish meal' }));
     await waitFor(() => expect(mockRouter.replace).toHaveBeenCalledWith(`/meals/${MEAL_ID}`));
     const keys = app.mock.callsTo('POST', '/v1/meals').map((c) => c.headers['idempotency-key']);
     expect(keys[0]).toBe(keys[1]);
+  });
+
+  it('Check status after an unknown publish uses the receipt resourceId and never creates again (P05)', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    app.services.drafts.set(CREATE_DRAFT_KEY, { ...readyDraft(), reviewConfirmed: true });
+    app.mock.on('POST', '/v1/meals', () => { throw new TypeError('Network request failed'); });
+    app.mock.on('GET', /^\/v1\/me\/command-receipts\/createMeal\//, (c) => ok({ operation: 'createMeal', key: c.path.split('/').pop(), state: 'SUCCEEDED', retryable: false, expired: false, retryAfterSeconds: null, httpStatus: 201, errorCode: null, conflict: null, resourceId: MEAL_ID, resourceVersion: '1', currentVersion: null, completedAt: '2026-10-21T10:00:00Z', expiresAt: '2026-11-20T10:00:00Z' }));
+    await renderApp(app, <CreateStepScreen step={3} />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Publish meal' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent(/Status unknown/);
+    await fireEvent.press(screen.getByRole('button', { name: 'Check status' }));
+    await waitFor(() => expect(mockRouter.replace).toHaveBeenCalledWith(`/meals/${MEAL_ID}`));
+    expect(app.mock.callsTo('POST', '/v1/meals')).toHaveLength(1);
+    expect(app.services.drafts.get(CREATE_DRAFT_KEY)).toBeUndefined();
   });
 
   it('logout clears the create draft', async () => {

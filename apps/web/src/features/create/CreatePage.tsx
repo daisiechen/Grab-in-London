@@ -4,17 +4,16 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTelemetry } from '../../api/telemetry.tsx';
 import { serverValidationMetrics,validationMetric } from './validationMetrics.ts';
 import { Link,useLocation,useNavigate } from 'react-router';
-import { ApiError, type TimeChoice } from '@fancy/client';
+import { ApiError, IntentTracker, IntentUnresolvedError, newIntentKey, withRetry, type TimeChoice } from '@fancy/client';
 import { LANGUAGES, MOODS } from '@fancy/contracts';
 import { ArrowRightIcon, CheckIcon } from '@radix-ui/react-icons';
 import { useApi } from '../../api/ApiProvider.tsx';
 import { useSession } from '../../api/session.tsx';
-import { Intent } from '../../api/webApi.ts';
 import { errorMessage } from '../../api/errors.ts';
 import { clearDraft, loadDraft, saveDraft } from '../../lib/drafts.ts';
 import { budgetRange, longDate, offsetLabel } from '../../lib/format.ts';
 import { signInPath } from '../../lib/returnTo.ts';
-import { FormError, Loading, Primary, PrimaryLink, TextAction } from '../../ui/components.tsx';
+import { FormError, Loading, Notice, Primary, PrimaryLink, TextAction } from '../../ui/components.tsx';
 import { useToast } from '../../ui/toast.tsx';
 import { useActionGate } from '../auth/gate.ts';
 import { cuisineLabel, dietaryLabel } from '../meals/present.ts';
@@ -59,7 +58,30 @@ function CreateFlow({terms}:{terms:boolean}) {
   const [error, setError] = useState('');
   const [ambiguity, setAmbiguity] = useState<Ambiguity | null>(null);
   const [busy, setBusy] = useState(false);
-  const intent = useMemo(() => new Intent(api.retry), [api]);
+  // Publishing tracks one intent; unmount (incl. session-epoch remount) fences late results.
+  const tracker = useMemo(() => new IntentTracker(newIntentKey), []);
+  useEffect(() => () => tracker.reset(), [tracker]);
+  const [unknown, setUnknown] = useState(false);
+  const published = (mealId: string | null) => {
+    setUnknown(false);
+    clearDraft('create');
+    cache.delete('myMeals');
+    notify('Meal published.');
+    navigate(mealId ? `/meals/${mealId}` : '/meals?section=HOSTING', { replace: true, state: { backTo: '/meals?section=HOSTING' } });
+  };
+  /** Unknown publish: check the original intent; never create a second meal by re-sending a new key. */
+  const checkPublish = async () => {
+    setBusy(true); setError('');
+    const generation = tracker.generation;
+    try {
+      const outcome = await tracker.reconcile(api.client, 'createMeal');
+      if (generation !== tracker.generation) return;
+      if (outcome === 'saved') return published(tracker.lastReceipt?.resourceId ?? null);
+      if (outcome === 'resend') { setBusy(false); return void publish(); }
+      if (outcome === 'rejected' || outcome === 'conflict' || outcome === 'expired') { setUnknown(false); setError('That publish wasn’t accepted. Your draft is kept; review it and publish again.'); return; }
+      setError('Still no confirmed result. Your draft is kept; check again shortly.');
+    } finally { if (generation === tracker.generation) setBusy(false); }
+  };
   const telemetry=useTelemetry();
   const started=useRef(new Set<string>()),arranged=useRef(new Set<string>());
   const begin=()=>{
@@ -119,13 +141,15 @@ function CreateFlow({terms}:{terms:boolean}) {
     if (!body) return;
     setBusy(true);
     setError('');
+    const generation = tracker.generation;
     try {
-      const res = await intent.run(body, (key) => api.client.call('createMeal', { body, idempotencyKey: key }));
-      clearDraft('create');
-      cache.delete('myMeals');
-      notify('Meal published.');
-      navigate(`/meals/${res.data.id}`, { replace: true,state:{backTo:'/meals?section=HOSTING'} });
+      const res = await tracker.run(body, (key) => withRetry(() => api.client.call('createMeal', { body, idempotencyKey: key }), api.retry));
+      if (generation !== tracker.generation) return;
+      published(res.data.id);
     } catch (e) {
+      if (generation !== tracker.generation) return;
+      if (e instanceof IntentUnresolvedError) { setError('Your earlier publish hasn’t been confirmed yet. Check its status before publishing changes.'); return; }
+      if (tracker.pending) { setUnknown(true); return; }
       if (gate.handle(e, '/create')) return;
       const field = e instanceof ApiError ? timeFieldOf(e.fieldErrors) : null;
       if(field&&e instanceof ApiError&&['TIME_AMBIGUOUS','TIME_NONEXISTENT','INVALID_OFFSET'].includes(e.code))telemetry.emit('form_error',{attemptId:draft.attemptId,step:'arrange',field:field==='start'?'time':'closeTime',errorCode:e.code==='TIME_AMBIGUOUS'?'time_ambiguous':e.code==='TIME_NONEXISTENT'?'time_nonexistent':'invalid'});
@@ -213,6 +237,7 @@ function CreateFlow({terms}:{terms:boolean}) {
         </>
       )}
       <FormError>{error}</FormError>
+      {unknown && <Notice role="status">Status unknown: we couldn’t confirm whether your meal was published. Your draft is kept. <TextAction disabled={busy} onClick={() => void checkPublish()}>Check status</TextAction></Notice>}
       <Primary disabled={busy || (ambiguity !== null && chosenOffset === null)} onClick={() => void (step === 3 ? publish() : next())}>
         {step === 3 ? 'Publish meal' : 'Continue'} <ArrowRightIcon />
       </Primary>

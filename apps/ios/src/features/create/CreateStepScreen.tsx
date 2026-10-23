@@ -2,10 +2,10 @@ import {NativeMap} from '../maps/NativeMap.tsx';
 import { useAnalyticsPresentation } from '../../analytics/hooks.ts';
 import { formErrorProperties,serverFormErrors } from '../../analytics/form-errors.ts';
 import {useAssistantContext,useAssistantEditor} from '../assistant/hooks.ts';
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { Keyboard, ScrollView, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ApiError, type ResponseOf, type TimeChoice } from '@fancy/client';
+import { ApiError, IntentTracker, IntentUnresolvedError, type ResponseOf, type TimeChoice } from '@fancy/client';
 import { CUISINES, DIETARY, MOODS, type CuisineCode, type DietaryCode, type LanguageCode, type MoodCode } from '@fancy/contracts';
 import { useServices, useSessionState } from '../../services.tsx';
 import { POLICY_VERSION } from '../../config.ts';
@@ -229,7 +229,37 @@ function Review({ draft, update, today }: Part & { today: string }) {
   const [error, setError] = useState<string | null>(null);
   const [time, setTime] = useState<TimeResolution | null>(null);
   const [picked, setPicked] = useState<number | null>(null);
-  const intent = useRef<{ key: string; body: string } | null>(null);
+  const tracker = useMemo(() => new IntentTracker(services.newId), [services]);
+  const [unknown, setUnknown] = useState(false);
+  // Session end and unmount fence any late publish result (no navigation for an old session).
+  useEffect(() => {
+    const reset = () => tracker.reset();
+    services.onSessionEnd.add(reset);
+    return () => { services.onSessionEnd.delete(reset); tracker.reset(); };
+  }, [tracker, services]);
+  const latest = useRef<CreateDraft>(draft);
+  latest.current = draft;
+
+  const published = (mealId: string | null) => {
+    setUnknown(false);
+    services.drafts.delete(CREATE_DRAFT_KEY);
+    services.cache.invalidate('myMeals:');
+    router.replace(mealId ? `/meals/${mealId}` : '/meals');
+  };
+
+  /** Unknown publish: read the original intent's receipt; never mint a second create. */
+  const checkPublish = async () => {
+    setBusy(true); setError(null);
+    const generation = tracker.generation;
+    try {
+      const outcome = await tracker.reconcile(services.api, 'createMeal');
+      if (generation !== tracker.generation) return;
+      if (outcome === 'saved') return published(tracker.lastReceipt?.resourceId ?? null);
+      if (outcome === 'resend') { setBusy(false); return void publish(latest.current); }
+      if (outcome === 'rejected' || outcome === 'conflict' || outcome === 'expired') { setUnknown(false); return setError('That publish wasn’t accepted. Your draft is kept; review it and publish again.'); }
+      setError('Still no confirmed result. Your draft is kept; check again shortly.');
+    } finally { if (generation === tracker.generation) setBusy(false); }
+  };
 
   const publish = async (d: CreateDraft) => {
     Keyboard.dismiss();
@@ -237,17 +267,17 @@ function Review({ draft, update, today }: Part & { today: string }) {
     if (issue) {const properties=formErrorProperties(d.attemptId,issue);if(properties)services.analytics.emit('form_error',properties);return setError(issue);}
     services.analytics.emit('create_arranged',{attemptId:d.attemptId});
     const body = toCreateBody(d, POLICY_VERSION);
-    const serialized = JSON.stringify(body);
-    if (!intent.current || intent.current.body !== serialized) intent.current = { key: services.newId(), body: serialized };
     setBusy(true);
     setError(null);
+    const generation = tracker.generation;
     try {
-      const meal = (await services.api.call('createMeal', { body, idempotencyKey: intent.current.key })).data;
-      intent.current = null;
-      services.drafts.delete(CREATE_DRAFT_KEY);
-      services.cache.invalidate('myMeals:');
-      router.replace(`/meals/${meal.id}`);
+      const meal = (await tracker.run(body, (idempotencyKey) => services.api.call('createMeal', { body, idempotencyKey }))).data;
+      if (generation !== tracker.generation) return;
+      published(meal.id);
     } catch (e) {
+      if (generation !== tracker.generation) return;
+      if (e instanceof IntentUnresolvedError) return setError('Your earlier publish hasn’t been confirmed yet. Check its status before publishing changes.');
+      if (tracker.pending) { setUnknown(true); return setError('Status unknown: we couldn’t confirm whether your meal was published. Your draft is kept.'); }
       if (!(e instanceof ApiError)) return setError('Something went wrong. Please try again.');
       const resolution = timeResolution(e);
       if(resolution)services.analytics.emit('form_error',{attemptId:d.attemptId,step:'arrange',field:resolution.target==='start'?'time':'closeTime',errorCode:e.code==='TIME_AMBIGUOUS'?'time_ambiguous':e.code==='TIME_NONEXISTENT'?'time_nonexistent':'invalid'});
@@ -265,7 +295,7 @@ function Review({ draft, update, today }: Part & { today: string }) {
       if (e.code === 'NOT_FOUND') return setError('This restaurant can’t be verified right now. Go back and choose it again.');
       setError(e.kind === 'validation' ? 'Some details need another look. Check each step and try again.' : mealActionMessage(e));
     } finally {
-      setBusy(false);
+      if (generation === tracker.generation) setBusy(false);
     }
   };
 
@@ -301,6 +331,7 @@ function Review({ draft, update, today }: Part & { today: string }) {
       <CheckRow label="I’ve reviewed these details. Guests see them when they apply." checked={draft.reviewConfirmed} onChange={(v) => update({ reviewConfirmed: v })} />
       <FormMessage message={error ?? (time && time.kind !== 'choose' ? time.message : null)} />
       {time && time.kind !== 'choose' ? <TextAction label={time.target === 'start' ? 'Change the meal time' : 'Change the deadline'} onPress={() => { setTime(null); edit(0); }} /> : null}
+      {unknown ? <Primary secondary label="Check status" disabled={busy} onPress={() => void checkPublish()} /> : null}
       <Primary label="Publish meal" busy={busy} onPress={() => void publish(draft)} />
       <Sheet visible={time?.kind === 'choose'} title="Which time do you mean?" onClose={() => setTime(null)}>
         <Body>{`Clocks go back in London on this date, so ${time?.target === 'close' ? draft.closeTime : draft.time} happens twice. Choose one.`}</Body>

@@ -108,6 +108,29 @@ describe('create meal flow (T07)', () => {
     expect(loadDraft('create')).toBeNull();
   });
 
+  it('an unknown publish never creates a second meal: Check status uses the receipt resourceId (P05)', async () => {
+    const stub = createFetchStub({
+      getSession: () => ok(session()),
+      createMeal: () => { throw new TypeError('response lost'); },
+      getCommandReceipt: (c) => ok({ operation: c.params.operation, key: c.params.key, state: 'SUCCEEDED', retryable: false, expired: false, retryAfterSeconds: null, httpStatus: 201, errorCode: null, conflict: null, resourceId: MEAL_ID, resourceVersion: '1', currentVersion: null, completedAt: '2026-10-24T10:00:00.000Z', expiresAt: '2026-11-23T10:00:00.000Z' }),
+      getMeal: () => ok({ meal: meal(), myApplication: null, conversationId: null }),
+    });
+    saveDraft('create', complete({ reviewConfirmed: true }));
+    renderApp(stub.fetch, '/create');
+    await toReview();
+    await userEvent.click(screen.getByRole('button', { name: /Publish meal/ }));
+    expect(await screen.findByText(/Status unknown/)).toBeTruthy();
+    const keys = new Set(stub.callsTo('createMeal').map((c) => c.headers['idempotency-key']));
+    expect(keys.size).toBe(1);
+    expect(loadDraft('create')).not.toBeNull();
+    const writes = stub.callsTo('createMeal').length;
+    await userEvent.click(screen.getByRole('button', { name: 'Check status' }));
+    expect(await screen.findByRole('heading', { name: 'Friday dinner & new faces' })).toBeTruthy();
+    expect(stub.callsTo('getCommandReceipt')[0]!.params).toEqual({ operation: 'createMeal', key: [...keys][0] });
+    expect(stub.callsTo('createMeal')).toHaveLength(writes);
+    expect(loadDraft('create')).toBeNull();
+  });
+
   it('asks BST or GMT for a repeated London time and resubmits as a new intent with that offset', async () => {
     let n = 0;
     const stub = createStub(() => (++n === 1
