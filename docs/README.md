@@ -42,6 +42,8 @@
 
 ## 发布与验收
 
+- [MVP 测试效率与剩余阻塞分析（2026-10-23）](reviews/mvp-test-efficiency-2026-10-23.zh-CN.md)：仅主 MVP，截至 B90 的效率原因、本地剩余旅程及9类真实验收门槛。
+
 - [平台配置交接](delivery/platform-configuration-2026-10-21.zh-CN.md)：账号、DNS、密钥安全加载方式和真实接入边界，供后续开发会话使用。
 
 - [政策审核清单](policies/README.md)、[隐私通知英文草稿](policies/privacy-notice.draft.en.md)与[社区规则英文草稿](policies/community-guidelines.draft.en.md)：个人发布主体的英文初稿、申请进度与发布前待确认项；未批准、未生效。
@@ -61,6 +63,7 @@
 - [浏览器批注与AI恢复](delivery/fancy-comments-ai-2026-10-20.zh-CN.md)：16条批注、Ask Fancy恢复、问卷拆分及验证边界。
 
 - [2026-10-23后台Figma补丁准入评审](reviews/admin-figma-patch-readiness-2026-10-23.zh-CN.md)：直接核对当前补丁设计，记录状态冲突、恢复与联动验收、响应式及冻结门槛。
+- [2026-10-23完整MVP补丁Figma准入评审](reviews/mvp-patch-figma-readiness-2026-10-23.zh-CN.md)：对照PATCH-001—008直接读取两份补丁画布，区分确定状态冲突、关键路径待核证与冻结交接门槛。
 - [2026-10-20双端研发前置评审](reviews/development-readiness-2026-10-20.zh-CN.md)：恢复版用户端与当前后台工作区的只读评审，记录未关闭阻塞及原会话修订、复评条件。
 - [双端研发准入评审](reviews/development-readiness-2026-10-19.zh-CN.md)：当时R1基线的历史评审；App及主PRD已回滚，该结论不适用于当前组合。
 
