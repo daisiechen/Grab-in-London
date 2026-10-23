@@ -105,6 +105,8 @@ function AuthenticatedChatScreen() {
   const isHost=state.status==='signedIn'&&host?.mealId===conversation?.mealId&&host?.id===state.session.user.id;
   const signedIn = state.status === 'signedIn';
   const live = !!conversation && conversation.canSend && !conversation.dissolved && !readOnly;
+  const sendAllowed = useRef(live);
+  sendAllowed.current = live;
   const leaveKey = useRef(newId());
   useAssistantContext({sourcePage:'INBOX',...(conversation?.kind==='GROUP'?{explicitConversationId:id}:{})});
   useAssistantEditor({key:`chat:${id}`,kind:'GROUP',targetId:id,current:()=>({text,version:String(editorVersion.current)}),apply:d=>{if(conversation?.kind==='GROUP'&&live&&d.text!==null){editorVersion.current++;setText(d.text);}}});
@@ -151,6 +153,7 @@ function AuthenticatedChatScreen() {
         onPage:page=>readAck.scannedThrough(page.scannedThroughSeq??'0',page.messages.at(-1)?.seq??null),
         onMessages: (m) => setMessages((cur) => mergeMessages(cur, m)),
         onForbidden: () => {
+          sendAllowed.current = false;
           setReadOnly(true);
           setNotice('You can no longer send messages here. Earlier messages you were allowed to see stay read-only.');
         },
@@ -191,6 +194,7 @@ function AuthenticatedChatScreen() {
   );
 
   const send = async (item: Outgoing) => {
+    if (!sendAllowed.current) return;
     setOutgoing((cur) => cur.map((o) => (o.clientMessageId === item.clientMessageId ? { ...o, status: 'sending' } : o)));
     try {
       const res = await api.call('sendMessage', { params: { conversationId: id }, body: { body: item.body, clientMessageId: item.clientMessageId } });
@@ -199,9 +203,10 @@ function AuthenticatedChatScreen() {
       poller.seed(res.data.seq);
     } catch (e) {
       if (e instanceof ApiError && (e.kind === 'forbidden' || e.code === 'CONNECTION_NOT_AUTHORIZED')) {
+        sendAllowed.current = false;
         setReadOnly(true);
         poller.stop();
-        setOutgoing((cur) => cur.filter((o) => o.clientMessageId !== item.clientMessageId));
+        setOutgoing((cur) => cur.map((o) => o.clientMessageId === item.clientMessageId ? { ...o, status: 'failed' } : o));
         setNotice('You can no longer send messages here. Your message wasn’t sent.');
         return;
       }
@@ -210,6 +215,7 @@ function AuthenticatedChatScreen() {
   };
 
   const submit = () => {
+    if (!sendAllowed.current) return;
     const body = text.trim();
     if (!body) return;
     if (body.length > 2000) return setNotice('Messages can be up to 2,000 characters.');
@@ -227,6 +233,7 @@ function AuthenticatedChatScreen() {
       cache.set(conversationKey(id), updated);
       cache.delete('inbox');
       setConversation(updated);
+      sendAllowed.current = false;
       setReadOnly(true);
       poller.stop();
       setSheet(false);
@@ -252,7 +259,7 @@ function AuthenticatedChatScreen() {
       const found=items.map((item:InboxItem)=>item.conversation).find(c=>c?.id===id);
       if(!found||found.kind!=='GROUP')throw new Error('GROUP_UNAVAILABLE');
       cache.set(conversationKey(id),found);setConversation(found);setDissolveBlocked(false);
-      if(found.dissolved||!found.canSend){setReadOnly(true);poller.stop();setNotice('This group is read-only. Earlier messages remain available.');}
+      if(found.dissolved||!found.canSend){sendAllowed.current=false;setReadOnly(true);poller.stop();setNotice('This group is read-only. Earlier messages remain available.');}
       else setNotice('This group changed. Review it and confirm again.');
     }catch{if(session.generation===generation&&revision===metadataRevision.current){setDissolveBlocked(true);setNotice('We couldn’t refresh this group. Reload group details before trying again.');}}
     finally{refreshingMetadata.current=false;if(session.generation===generation)setMetadataLoading(false);}
@@ -263,7 +270,7 @@ function AuthenticatedChatScreen() {
     if(dissolveKey.current?.version!==conversation.version)dissolveKey.current={version:conversation.version,key:newId()};
     try{
       const updated=(await api.call('dissolveGroup',{params:{conversationId:id},body:{confirm:true},ifMatch:conversation.version,idempotencyKey:dissolveKey.current.key})).data;
-      session.assertGeneration(generation);cache.set(conversationKey(id),updated);cache.delete('inbox');setConversation(updated);setReadOnly(true);poller.stop();setDissolveSheet(false);setNotice('Group dissolved. Everyone’s earlier messages remain read-only.');
+      session.assertGeneration(generation);cache.set(conversationKey(id),updated);cache.delete('inbox');setConversation(updated);sendAllowed.current=false;setReadOnly(true);poller.stop();setDissolveSheet(false);setNotice('Group dissolved. Everyone’s earlier messages remain read-only.');
     }catch(error){
       if(session.generation!==generation)return;
       if(error instanceof ApiError&&error.kind==='conflict'){setDissolveBlocked(true);setDissolveSheet(false);dissolveKey.current=null;await refreshGroup();}
@@ -306,7 +313,7 @@ function AuthenticatedChatScreen() {
                   {o.status === 'sending' ? <Text style={styles.meta}>Sending…</Text> : (
                     <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
                       <Text style={[styles.meta, { color: colors.danger }]}>Not sent</Text>
-                      <TextAction label="Retry" onPress={() => void send(o)} />
+                      {live && <TextAction label="Retry" onPress={() => void send(o)} />}
                       <TextAction label="Delete" onPress={() => setOutgoing((cur) => cur.filter((x) => x.clientMessageId !== o.clientMessageId))} />
                     </View>
                   )}

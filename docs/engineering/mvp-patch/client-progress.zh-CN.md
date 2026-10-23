@@ -68,3 +68,10 @@ cherry-pick -x后台 63b088e、f3b0e0b、ea5a2e2、2d7647f、b111c4c（未pick 0
 - iOS ProfileSaver.conflict 将原 generation 贯穿 getMe，迟到成功或失败均不更新已重置会话。
 - Web 在状态回执之后的 getMe、保存后的 refresh、冲突 reload 及重试入口复核 generation；离开会话不提示成功或跳转。状态查询捕获会话失效异常，防止未处理 rejection，仍保留同会话未知结果的编辑。
 - 精确红例转绿：iOS 409→getMe 在途→reset→响应，session.updateUser 为 0；Web 真实 SessionProvider.clearLocal 后放行 receipt-confirmed getMe，仍停留 /sign-in 且无成功提示。Web 8/8、iOS 纯逻辑 1/1，双端及独立严格类型检查通过；未据此称 P04 全面验收完成。
+
+### P07-R01 群聊只读后的旧消息发送边界
+
+- 精确组件红例：iOS 网络失败后退群仍显示 Retry；Web 发送进入 retry 退避等待后退群，放行等待仍发送 4 次（应仅 1 次）。两者均先复现后修复。
+- iOS 将发送入口与重试同时受当前发送权限约束；退群、解散、403 同步关闭发送围栏。失败正文仍保留，可删除；权限撤回不再丢正文。
+- Web 每次 withRetry 尝试前检查历史只读与组件存活状态，终止退群或卸载后排队的尝试，保留未发送文本。已有授权历史读取、聊天已读/通知已读独立行为保持。
+- 验证范围：iOS chat/dissolve/poller，Web inbox 全目录及精确迟到重试回归；名册/候选/mute 的新增界面仍随 P17，不能据此称 P07/P17 整体关闭。

@@ -62,6 +62,8 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
   const poller = useRef<LivePoller | null>(null);
   // Monotonic for this mounted conversation. A different route gets a fresh keyed instance.
   const historyOnly = useRef(false);
+  const mounted = useRef(true);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
   const intent = useRef(new Intent(api.retry));
   const [renderedThrough,setRenderedThrough] = useState<string|null>(null);
   const acknowledged = useRef('0');
@@ -185,7 +187,10 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
     setSending(true);
     setError('');
     try {
-      const res = await withRetry(() => api.client.call('sendMessage', { params: { conversationId }, body: { body, clientMessageId } }), api.retry);
+      const res = await withRetry(() => {
+        if (!mounted.current || historyOnly.current) throw new ApiError({ status: 403, code: 'FORBIDDEN', message: 'This chat is read-only.' });
+        return api.client.call('sendMessage', { params: { conversationId }, body: { body, clientMessageId } });
+      }, api.retry);
       absorb([res.data]);
       pending.current = null;
       setText('');

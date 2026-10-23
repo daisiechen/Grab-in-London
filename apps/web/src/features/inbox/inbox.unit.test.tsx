@@ -132,6 +132,26 @@ describe('group chat (T12)', () => {
     expect(s.callsTo('sendMessage')[0]!.body).not.toHaveProperty('sender');
   });
 
+  it('does not retry a queued send after the user leaves the group', async () => {
+    const f = fakePollerDeps(), held = deferred<void>();
+    const s = chatStub(() => page([]), {}, {
+      sendMessage: () => { throw new TypeError('Failed to fetch'); },
+      leaveGroup: () => ok(conversation({ canSend: false, version: '4' })),
+    });
+    const view = renderApp(s.fetch, `/inbox/${CONV}`, { pollerDeps: f.deps });
+    view.api.retry.sleep = () => held.promise;
+    await userEvent.type(await screen.findByLabelText('Message'), 'Keep this draft');
+    await userEvent.click(screen.getByRole('button', { name: 'Send message' }));
+    await waitFor(() => expect(s.callsTo('sendMessage')).toHaveLength(1));
+    await userEvent.click(screen.getByRole('button', { name: 'Group settings' }));
+    await userEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Leave group' }));
+    await userEvent.click(within(await screen.findByRole('dialog', { name: 'Leave this group?' })).getByRole('button', { name: 'Leave group' }));
+    await screen.findByText(/Your earlier messages remain read-only/);
+    await act(async () => { held.resolve(); await f.flush(); });
+    expect(s.callsTo('sendMessage')).toHaveLength(1);
+    expect(screen.getByText('Unsent text: Keep this draft')).toBeTruthy();
+  });
+
   it('keeps unsent text when sending is refused', async () => {
     const f = fakePollerDeps();
     const s = chatStub((call) => (call.url.searchParams.get('mode') === 'HISTORY' ? page([]) : page([])), {}, {

@@ -120,6 +120,42 @@ describe('ChatScreen (S14)', () => {
     expect(screen.getByText('See you at 7!')).toBeOnTheScreen();
   });
 
+  it('keeps a failed outgoing body but removes Retry after leaving the group', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    app.services.cache.set(conversationKey(CONVERSATION_ID), conversation());
+    app.mock.on('GET', MSG_PATH, page([]));
+    app.mock.on('POST', MSG_PATH, () => { throw new TypeError('Network request failed'); });
+    app.mock.on('POST', `/v1/conversations/${CONVERSATION_ID}/leave`, ok(conversation({ canSend: false, version: '5' })));
+    await renderApp(app, <ChatScreen />);
+    await fireEvent.changeText(await screen.findByLabelText('Message'), 'Keep my unsent text');
+    await fireEvent.press(screen.getByRole('button', { name: 'Send' }));
+    await screen.findByRole('button', { name: 'Retry' });
+    await fireEvent.press(screen.getByRole('button', { name: 'Leave group' }));
+    const buttons = screen.getAllByRole('button', { name: 'Leave group' });
+    await fireEvent.press(buttons[buttons.length - 1]!);
+    await screen.findByText(/You left the group/);
+    expect(screen.queryByRole('button', { name: 'Retry' })).toBeNull();
+    expect(screen.getByText('Keep my unsent text')).toBeOnTheScreen();
+    expect(app.mock.callsTo('POST', MSG_PATH)).toHaveLength(1);
+  });
+
+  it('preserves the outgoing body when send permission is revoked', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    app.services.cache.set(conversationKey(CONVERSATION_ID), conversation());
+    app.mock.on('GET', MSG_PATH, page([]));
+    app.mock.on('POST', MSG_PATH, fail(403, 'FORBIDDEN'));
+    await renderApp(app, <ChatScreen />);
+    await fireEvent.changeText(await screen.findByLabelText('Message'), 'Keep this after permission ends');
+    await fireEvent.press(screen.getByRole('button', { name: 'Send' }));
+    await screen.findByText(/Your message wasn’t sent/);
+    expect(screen.getByText('Keep this after permission ends')).toBeOnTheScreen();
+    expect(screen.queryByRole('button', { name: 'Retry' })).toBeNull();
+    expect(screen.queryByLabelText('Message')).toBeNull();
+    expect(app.mock.callsTo('POST', MSG_PATH)).toHaveLength(1);
+  });
+
   it('403 while polling switches to read-only history and stops polling', async () => {
     jest.useFakeTimers();
     const app = createTestApp();
