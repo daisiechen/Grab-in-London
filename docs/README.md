@@ -241,3 +241,5 @@
 - [QA B79：合成 Web 餐厅图片实际显示、替换、署名及降级](qa/evidence/2026-10-21/browser-b79.json)。
 
 - [QA B80：原生餐厅图片、可见署名和四步创建预览实际复核](qa/evidence/2026-10-21/browser-b80.json)。
+
+- [P1.1后台职责接收与共享文件交接](engineering/mvp-patch/admin-handoff.zh-CN.md)：PATCH-006独立工作区准备、文件边界及未关闭门槛。
