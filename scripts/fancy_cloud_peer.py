@@ -155,9 +155,11 @@ def execute(req, conf):
     os.environ['CODEX_HOME'] = conf['codex_home']
     if action == 'read':
         with contextlib.closing(CodexControl()) as c:
-            thread = c.rpc('thread/read', {'threadId': conf['target_thread'], 'includeTurns': True})['thread']
+            thread = c.rpc('thread/read', {'threadId': conf['target_thread'], 'includeTurns': False})['thread']
+            page = c.rpc('thread/turns/list', {'threadId': conf['target_thread'], 'limit': 3,
+                                                'sortDirection': 'desc', 'itemsView': 'summary'})
         turns = []
-        for turn in thread.get('turns', [])[-3:]:
+        for turn in page.get('data', []):
             messages = [item.get('text', '')[-8000:] for item in turn.get('items', []) if item.get('type') == 'agentMessage']
             turns.append({'id': turn.get('id'), 'status': turn.get('status'), 'messages': messages[-3:]})
         return {'thread_id': conf['target_thread'], 'status': thread.get('status'), 'turns': turns}

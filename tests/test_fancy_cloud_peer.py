@@ -50,3 +50,25 @@ class PeerTest(unittest.TestCase):
                 self.assertEqual(run.call_count, 1)
                 with self.assertRaises(ValueError):
                     peer.execute({**req, 'text': 'different'}, conf)
+
+    def test_read_uses_bounded_recent_turns_instead_of_full_history(self):
+        from unittest.mock import patch
+        import os
+        class Control:
+            def __init__(self): self.calls = []
+            def close(self): pass
+            def rpc(self, method, params):
+                self.calls.append((method, params))
+                if method == 'thread/read':
+                    assert params['includeTurns'] is False
+                    return {'thread': {'status': {'type': 'idle'}}}
+                assert params == {'threadId': ID, 'limit': 3, 'sortDirection': 'desc', 'itemsView': 'summary'}
+                return {'data': [{'id': ID, 'status': 'completed', 'items': [
+                    {'type': 'agentMessage', 'text': 'receipt'},
+                    {'type': 'commandExecution', 'output': 'private tool output'}]}]}
+        control = Control()
+        with patch.dict(os.environ), patch.object(peer, 'CodexControl', return_value=control):
+            result = peer.execute({'action': 'read'}, {'codex_home': '/unused', 'target_thread': ID})
+        self.assertEqual(result['turns'][0]['messages'], ['receipt'])
+        self.assertNotIn('private tool output', str(result))
+        self.assertEqual(len(control.calls), 2)
