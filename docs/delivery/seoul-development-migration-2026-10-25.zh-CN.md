@@ -1,0 +1,55 @@
+# Fancy 首尔开发环境迁移（2026-10-25）
+
+用户授权将整个本地 Fancy 项目迁移至既有首尔服务器，作为后续开发维护环境；另明确批准通过 SSH 加密迁移项目环境配置与现有 GitHub 凭据。迁移保留本地原件，不切换生产流量。
+
+## 范围与恢复
+
+服务器开发根目录为 `/home/ubuntu/fancy/development-20261025`，主仓库在 `Fancy/`（`main/` 为兼容符号链接），两个补丁工作区在 `worktrees/admin-patch-p11/` 与 `worktrees/mvp-patch-p1/`。保留 Git 对象、分支、标签、未提交与未跟踪文件、项目规则、技能及相对链接；修复 Git worktree 中的 Mac 绝对路径。依赖缓存和 node_modules 在 Linux 重装，不复制 Mac 二进制。既有 `fancy/releases/`、`fancy/shared/` 和服务器其他项目不受迁移影响。
+
+复制开始时主仓库 HEAD 为 `dc8b926`，后台补丁为 `4da1395`，用户端补丁为 `89a8c10`。主仓库原有调研及 QA 未提交内容、后台补丁未提交代码原样迁移，保持未提交；本轮不替其业务负责人提交。迁移后的主仓库另外包含本迁移记录提交。
+
+## 使用方式
+
+连接服务器后：
+
+```sh
+source /home/ubuntu/fancy/development-20261025/activate.sh
+cd /home/ubuntu/fancy/development-20261025/Fancy
+node -v
+pnpm -v
+git status --short --branch
+```
+
+修改后台或用户端补丁时分别进入对应工作区，保留原分支与唯一写入负责人边界。本地与远程不应同时编辑同一文件；本地保留副本作为迁移恢复来源，之后以服务器工作区为开发入口。已有聊天不会因目录复制自动迁移；在远程开发工具中打开上述目录，读取项目规则及文档索引继续工作。
+
+需要在 Mac 浏览器查看开发页面时，在 Mac 建立端口转发：
+
+```sh
+ssh -N -L 5174:127.0.0.1:5174 -L 5175:127.0.0.1:5175 -L 3000:127.0.0.1:3000 tencent-seoul
+```
+
+浏览器继续使用 `http://localhost:5174` 或 `http://127.0.0.1:5174`，保持现有 OAuth 回调和 Web Origin。若本地端口被旧开发服务占用，先停止对应旧服务。此迁移不批准公网暴露开发端口或部署生产服务。
+
+## 授权边界与验证
+
+- GitHub：现有用户凭据从本地安全存储经 SSH 传输至服务器权限0600私有文件；项目凭据助手仅向 HTTPS github.com 提供认证。已从服务器查询目标仓库，确认 pull/push 权限。凭据不写入 remote URL，不进入 Git 或本报告。
+- Auth0：原配置保留；服务器访问既有租户 OIDC discovery 返回200。客户端 secret 与交互登录完整回流需在真实浏览器复验。
+- DeepSeek：服务器使用既有凭据查询 `/models` 返回200；未调用生成模型，不改变模型、价格、数据或预算门槛。
+- Resend：保留现有 Sending access Key；不为验证迁移发送邮件，业务邮件及投递验收仍为 NOT_RUN。
+- Google Maps/Places 与 Google OAuth：保留原配置；真实地图、首尔出口限制和交互登录仍需复验，未以复制配置替代服务验收。
+- Codex/Claude/Figma 等桌面插件授权属于客户端账户会话，文件迁移不等于服务器重新授权；继续使用原桌面账户，远程工具需按其自身登录机制核对。
+- Node 24.22.1 与 pnpm 11.25.0 安装在独立 `runtime/`，不替换服务器全局 Node 20。PostgreSQL 17.11 同样安装在项目私有目录，临时空库 SQL 及启停检查通过，随后已停止。
+
+现有 QA 的 PASS/NOT_RUN/BLOCKED 和 MVP 封存状态保持原义；迁移环境检查不重启封存业务验收，不代表发布批准。平台历史配置与未关闭门槛见[平台配置交接](platform-configuration-2026-10-21.zh-CN.md)，开发命令见[运行说明](../../infra/README.md)。
+
+## 最终环境验证
+
+- 三个工作区完成 Linux 锁文件依赖安装；源与目标按内容校验，源码和项目配置无漏传。时间戳和符号链接模式差异不改变内容。Mac node_modules、构建目录及 CocoaPods 依赖不作为 Linux 验证结果。
+- 主仓库 pnpm core:check、Web与后台客户端构建、用户端与后台Demo构建通过。后台Demo按自己的pnpm锁文件安装并再次构建通过。
+- 首尔94项文档/配置测试通过。首次目录名main触发现有测试对项目名的字符串误判；改用Fancy目录并保留main兼容链接后通过，未修改断言。
+- PostgreSQL17.11临时空库SQL和启停检查通过，随后已停止；未运行封存业务旅程。
+- GitHub fetch和push --dry-run通过；本轮文档提交从首尔实际推送，再核对Mac、首尔及远程SHA。
+- Codex桌面现有Fancy项目仍指向Mac目录；工具不允许操作该桌面入口，需要用户在tencent-seoul连接中添加上述Fancy目录。原聊天及桌面插件登录不会随目录复制迁移。
+- iOS源码与原生工程保留；Xcode、iOS模拟器及Apple签名构建仍由Mac承担。
+
+开发环境迁移和可执行检查已完成；OAuth交互登录、Google真实地图/Places、Resend业务发信以及桌面插件在远程会话中的可用性仍未全部验收，不能宣称所有授权链路已验证。
