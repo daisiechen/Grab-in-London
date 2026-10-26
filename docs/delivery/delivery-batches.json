@@ -1,0 +1,1500 @@
+{
+  "schemaVersion": 1,
+  "revision": "r04",
+  "pmStartAllowed": false,
+  "activeBatch": null,
+  "defaultExecution": "按order逐批串行；未决/外部门槛阻塞仅影响其依赖分支，由PJ在有效授权内明确下一独立批次，不自动派单",
+  "batches": [
+    {
+      "id": "M01-01",
+      "module": "M01",
+      "version": "D01",
+      "title": "访客入口与邮箱登录",
+      "dependsOn": [],
+      "inScope": "欢迎页先浏览；邮箱验证码登录/取消/失败；返回入口意图保持且不代做动作。",
+      "outOfScope": "Google/Apple、首次资料表单、资料编辑、设置；发现结果本身归M02。",
+      "doneWhen": "本人能邮箱登录或取消成为访客；错误/过期不绕过认证，原意图未被执行。",
+      "acceptanceIds": [
+        "D01-AC01",
+        "D01-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 1
+    },
+    {
+      "id": "M01-02",
+      "module": "M01",
+      "version": "D01",
+      "title": "Google登录",
+      "dependsOn": [
+        "M01-01"
+      ],
+      "inScope": "Google授权、取消、失败与已有身份回流；不自动合并同邮箱身份。",
+      "outOfScope": "Apple、资料表单、业务申请和新增身份管理界面。",
+      "doneWhen": "Google登录成功/取消/失败可区分，返回原意图且不自动绑定身份。",
+      "acceptanceIds": [
+        "D01-AC01",
+        "D01-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 2
+    },
+    {
+      "id": "M01-03",
+      "module": "M01",
+      "version": "D01",
+      "title": "Apple登录",
+      "dependsOn": [
+        "M01-01"
+      ],
+      "inScope": "Apple授权、取消、失败及iOS回调回流，沿用统一身份边界。",
+      "outOfScope": "Google改版、资料表单、分发/上架与新身份平台。",
+      "doneWhen": "iOS Apple登录回调和取消可恢复，旧请求不产生另一账号会话。",
+      "acceptanceIds": [
+        "D01-AC01",
+        "D01-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 3
+    },
+    {
+      "id": "M01-04",
+      "module": "M01",
+      "version": "D01",
+      "title": "首次资料与参与门槛",
+      "dependsOn": [
+        "M01-01"
+      ],
+      "inScope": "新用户必填公开资料、年龄/社区确认、长度校验、失败保稿；完成后回原入口。",
+      "outOfScope": "修改既有资料、头像上传扩展、自动申请、设置和删除。",
+      "doneWhen": "缺项阻止参与；合格资料能保存，回流后仍需本人主动业务提交。",
+      "acceptanceIds": [
+        "D01-AC01",
+        "D01-AC02"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 4
+    },
+    {
+      "id": "M01-05",
+      "module": "M01",
+      "version": "D01",
+      "title": "公开主页与本人资料编辑",
+      "dependsOn": [
+        "M01-04"
+      ],
+      "inScope": "公开主页必要字段、本人编辑/取消、成功更新、失败保稿与版本冲突。",
+      "outOfScope": "首次注册重做、公开信誉分、饭后评价内容和新头像上传。",
+      "doneWhen": "本人编辑与公开展示一致，取消不改值、失败保稿、其他账号不能修改。",
+      "acceptanceIds": [
+        "D01-AC02"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 5
+    },
+    {
+      "id": "M01-06",
+      "module": "M01",
+      "version": "D01",
+      "title": "基本设置、可选统计与安全退出",
+      "dependsOn": [
+        "M01-01",
+        "M01-04"
+      ],
+      "inScope": "既有设置/可选统计选择的保存与恢复、退出和会话失效清理、入口分流。",
+      "outOfScope": "问卷内容、删除作业、AI偏好、通知订阅；尚未可用的关联入口不可假称完成。",
+      "doneWhen": "设置显示权威保存结果，退出后无旧账号回填；保留可选统计持久性观察直到实际关闭。",
+      "acceptanceIds": [
+        "D01-AC02",
+        "D01-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 6
+    },
+    {
+      "id": "M02-01",
+      "module": "M02",
+      "version": "D02",
+      "title": "地图和列表浏览",
+      "dependsOn": [
+        "M01-01"
+      ],
+      "inScope": "公开饭局集合、区域/席位数量语义、地图列表切换、空态与查询失败。",
+      "outOfScope": "筛选弹层、完整详情、实时导航、登录新流程。",
+      "doneWhen": "同一集合的地图/列表/计数一致，切换不丢选中项，无结果与加载失败可区分。",
+      "acceptanceIds": [
+        "D02-AC01"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 7
+    },
+    {
+      "id": "M02-02",
+      "module": "M02",
+      "version": "D02",
+      "title": "筛选、应用与取消",
+      "dependsOn": [
+        "M02-01"
+      ],
+      "inScope": "日期/人数快捷筛选、其余既有筛选、草稿与Apply/Clear、零结果及返回保留。",
+      "outOfScope": "新增筛选维度、AI排序、详情动作、自动读取定位。",
+      "doneWhen": "多日期OR/字段AND正确；取消不应用草稿，Apply后列表和计数一致。",
+      "acceptanceIds": [
+        "D02-AC01",
+        "D02-AC02"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 8
+    },
+    {
+      "id": "M02-03",
+      "module": "M02",
+      "version": "D02",
+      "title": "详情、权限状态与原路返回",
+      "dependsOn": [
+        "M02-02",
+        "M01-05"
+      ],
+      "inScope": "饭局事实、公开成员主页入口、申请动作状态、不可用对象与返回位置。",
+      "outOfScope": "实际申请/审批、分享菜单、群消息和订位执行。",
+      "doneWhen": "详情与最新饭局状态一致，不能申请时原因明确，返回筛选及位置不丢。",
+      "acceptanceIds": [
+        "D02-AC02",
+        "D02-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 9
+    },
+    {
+      "id": "M03-01",
+      "module": "M03",
+      "version": "D03",
+      "title": "创建草稿与选店",
+      "dependsOn": [
+        "M01-04"
+      ],
+      "inScope": "四步创建草稿容器；查找并确认餐厅、照片/署名适用规则、返回/替换保留。",
+      "outOfScope": "发布、日期人数校验展开、预算声明、平台订位库存。",
+      "doneWhen": "可确认真实餐厅并保存到创建草稿；搜索失败/空结果不清除既有选择。",
+      "acceptanceIds": [
+        "D03-AC01"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 10
+    },
+    {
+      "id": "M03-02",
+      "module": "M03",
+      "version": "D03",
+      "title": "日期、时间、人数与截止",
+      "dependsOn": [
+        "M03-01"
+      ],
+      "inScope": "安排输入和伦敦DST选择、minimum/capacity/截止关系、步骤切换保稿。",
+      "outOfScope": "发布、审批、自动成团/取消、餐厅新能力和预算步骤。",
+      "doneWhen": "不存在时间拒绝，重复时间明确选择；人数/截止错误可修正且不丢草稿。",
+      "acceptanceIds": [
+        "D03-AC02"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 11
+    },
+    {
+      "id": "M03-03",
+      "module": "M03",
+      "version": "D03",
+      "title": "介绍、费用声明与发布",
+      "dependsOn": [
+        "M03-02"
+      ],
+      "inScope": "介绍/预算/外订声明、Review主动确认、发布及未知结果找回。",
+      "outOfScope": "已发布编辑、审批、退款、自动订位、AI预填和生命周期任务扩展。",
+      "doneWhen": "从既有草稿发布唯一饭局，字段及声明准确，失败保稿且重试不重复创建。",
+      "acceptanceIds": [
+        "D03-AC01",
+        "D03-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 12
+    },
+    {
+      "id": "M04-01",
+      "module": "M04",
+      "version": "D04",
+      "title": "申请、待审与撤回",
+      "dependsOn": [
+        "M02-03",
+        "M03-03",
+        "M01-04"
+      ],
+      "inScope": "申请留言/门槛/同意、提交/原意图查询、Pending展示、主动撤回及规则内重申。",
+      "outOfScope": "主持审批、确认席位退席、群聊、AI草稿。",
+      "doneWhen": "申请可追踪且Pending不占位，撤回正确，失败/满员/截止保稿不重复提交。",
+      "acceptanceIds": [
+        "D04-AC01",
+        "D04-AC02"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 13
+    },
+    {
+      "id": "M04-02",
+      "module": "M04",
+      "version": "D04",
+      "title": "主持审核与最后名额",
+      "dependsOn": [
+        "M04-01"
+      ],
+      "inScope": "读申请及公开主页、批准/拒绝、原子名额/截止校验、确认及最小入群授权事件。",
+      "outOfScope": "群消息界面、退席、外订声明编辑、安排改动和付款保留。",
+      "doneWhen": "批准直接确认、拒绝本场不能重申，最后席位并发不超额；入群权限事件准确。",
+      "acceptanceIds": [
+        "D04-AC01",
+        "D04-AC02",
+        "D04-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 14
+    },
+    {
+      "id": "M04-03",
+      "module": "M04",
+      "version": "D04",
+      "title": "退席与新轮次申请",
+      "dependsOn": [
+        "M04-02"
+      ],
+      "inScope": "开饭前退出释放席位、允许时新轮次重申、历史保留和Meals当前状态。",
+      "outOfScope": "退群、整场取消、自动搬迁、已开始出席纠错。",
+      "doneWhen": "退席与再次申请轮次清楚，旧状态不覆盖新轮次，群资格不因退席自动删除。",
+      "acceptanceIds": [
+        "D04-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 15
+    },
+    {
+      "id": "M03-04",
+      "module": "M03",
+      "version": "D03",
+      "title": "编辑安排与首次批准后的锁定",
+      "dependsOn": [
+        "M03-03",
+        "M04-02"
+      ],
+      "inScope": "无人获准前编辑/未知恢复、批准后永久锁定、声明人数变化待更新及重申明。",
+      "outOfScope": "取消重建整条旅程、重新审核、截止自动作业和群设置。",
+      "doneWhen": "可编辑阶段保存有效；审批竞态拒绝旧修改并保稿；人数变化要求更新声明。",
+      "acceptanceIds": [
+        "D03-AC02",
+        "D03-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 16
+    },
+    {
+      "id": "M03-05",
+      "module": "M03",
+      "version": "D03",
+      "title": "主动取消整场",
+      "dependsOn": [
+        "M03-04",
+        "M04-03"
+      ],
+      "inScope": "host确认/返回、原因、关闭待审/通知目标、终态及保留聊天授权事实。",
+      "outOfScope": "平台退款、自动重开/搬迁、群解散和自动人数不足判定。",
+      "doneWhen": "确认前可退出；确认后全场状态一致且不可复活，群身份不被错误删除。",
+      "acceptanceIds": [
+        "D03-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 17
+    },
+    {
+      "id": "M03-06",
+      "module": "M03",
+      "version": "D03",
+      "title": "截止、最低人数与开始资格",
+      "dependsOn": [
+        "M04-03",
+        "M03-05"
+      ],
+      "inScope": "截止停止申请/审批、待审过期、人数不足/开饭前跌破最低取消、开始资格冻结。",
+      "outOfScope": "自助饭后表单、人工出席纠错、群只读或计划外生命周期新规则。",
+      "doneWhen": "精确截止/开始边界与成员历史一致，迟到执行不跳终局，开饭后不再取消掩盖事实。",
+      "acceptanceIds": [
+        "D03-AC02",
+        "D03-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 18
+    },
+    {
+      "id": "M05-01",
+      "module": "M05",
+      "version": "D05",
+      "title": "Inbox与既有业务通知",
+      "dependsOn": [
+        "M04-02",
+        "M03-05"
+      ],
+      "inScope": "申请/审批/取消等既有站内记录、会话列表路由和通知读取；原邮件渠道合同核对。",
+      "outOfScope": "群发言、@提醒、系统推送和新增邮件类型。",
+      "doneWhen": "本人看到正确业务进度并能回对应饭局，无权账号不能读，通知去重且不称邮件已入箱。",
+      "acceptanceIds": [
+        "D05-AC01",
+        "D05-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 19
+    },
+    {
+      "id": "M05-02",
+      "module": "M05",
+      "version": "D05",
+      "title": "群消息收发与断网保稿",
+      "dependsOn": [
+        "M05-01",
+        "M04-02"
+      ],
+      "inScope": "有权群历史、主动发收文字、同消息重试去重、断网保稿/重试与会话失效围栏。",
+      "outOfScope": "主动退群/解散界面、@、mute、AI、私聊和系统通知。",
+      "doneWhen": "两个iOS会话正常往返，Pending访问被拒；断网保稿，失权/退出停止旧发送。",
+      "acceptanceIds": [
+        "D05-AC01",
+        "D05-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 20
+    },
+    {
+      "id": "M05-03",
+      "module": "M05",
+      "version": "D05",
+      "title": "独立退群与只读历史",
+      "dependsOn": [
+        "M05-02",
+        "M04-03"
+      ],
+      "inScope": "退群确认/取消、只读设置、隐藏实时名册、历史区间与重新获准入群。",
+      "outOfScope": "退席、host解散、退出空档消息补读、提及选择和私聊。",
+      "doneWhen": "退群不改席位，名册隐藏，旧发送停止；重入仅能读历次授权区间。",
+      "acceptanceIds": [
+        "D05-AC02",
+        "D05-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 21
+    },
+    {
+      "id": "M05-04",
+      "module": "M05",
+      "version": "D05",
+      "title": "发起人解散群聊",
+      "dependsOn": [
+        "M05-03"
+      ],
+      "inScope": "host解散确认/取消、全员写权限撤销、历史只读和不可重开。",
+      "outOfScope": "取消饭局/退款、退席、成员搬迁、通知新渠道。",
+      "doneWhen": "确认解散后所有成员不可发送，原合法历史仍可读，饭局状态不因此被改写。",
+      "acceptanceIds": [
+        "D05-AC02"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 22
+    },
+    {
+      "id": "M05-05",
+      "module": "M05",
+      "version": "D05",
+      "title": "可见已读与未读恢复",
+      "dependsOn": [
+        "M05-02",
+        "M05-03"
+      ],
+      "inScope": "当前实际可见位置更新、滚动旧消息保持未读、重进/切页恢复及通知已读独立。",
+      "outOfScope": "在线presence、跨设备零重复承诺、@/mute横幅和锁屏通知。",
+      "doneWhen": "打开聊天不等于全读，真正可见才更新；群读取不自动把通知列表标读。",
+      "acceptanceIds": [
+        "D05-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 23
+    },
+    {
+      "id": "M06-01",
+      "module": "M06",
+      "version": "D06",
+      "title": "出席报告与host补缺",
+      "dependsOn": [
+        "M03-06",
+        "M04-03"
+      ],
+      "inScope": "计划结束入口、开始资格、自报出席/修改、host补缺、unknown与7天窗口。",
+      "outOfScope": "单场评分、公评、再约、支持纠错和留存统计页面。",
+      "doneWhen": "本人优先、host补缺、未知不作缺席，窗口与名单边界准确。",
+      "acceptanceIds": [
+        "D06-AC01"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 24
+    },
+    {
+      "id": "M06-02",
+      "module": "M06",
+      "version": "D06",
+      "title": "本顿饭的私密体验评分",
+      "dependsOn": [
+        "M06-01"
+      ],
+      "inScope": "合格present的1–5评分、更新/版本、失败保稿与隐私读取边界。",
+      "outOfScope": "公开个人评价、再约、产品问卷和评分排名。",
+      "doneWhen": "本人可保存/修改私评分，同桌/host看不到，资格失效或窗口外不可提交。",
+      "acceptanceIds": [
+        "D06-AC02",
+        "D06-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 25
+    },
+    {
+      "id": "M06-03",
+      "module": "M06",
+      "version": "D06",
+      "title": "公开个人文字评价",
+      "dependsOn": [
+        "M06-01",
+        "M01-05"
+      ],
+      "inScope": "合格对象/禁止自评、公评保存修改、双方提交或7天发布、公开主页展示。",
+      "outOfScope": "星级排名、单方再约、私聊和支持纠错操作。",
+      "doneWhen": "公评按发布条件可见，未发布第三人不可读；保存部分/未知结果如实保稿。",
+      "acceptanceIds": [
+        "D06-AC02",
+        "D06-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 26
+    },
+    {
+      "id": "M06-04",
+      "module": "M06",
+      "version": "D06",
+      "title": "独立可选产品问卷",
+      "dependsOn": [
+        "M01-06"
+      ],
+      "inScope": "设置入口、again/原因独立选择/清除/更新、至少一项与未答null。",
+      "outOfScope": "绑定饭局/出席、饭后7天限制、单场私评分和统计分析页。",
+      "doneWhen": "未出席用户也可答；未答不作No，问卷不混进本顿饭评分。",
+      "acceptanceIds": [
+        "D06-AC02"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 27
+    },
+    {
+      "id": "M06-05",
+      "module": "M06",
+      "version": "D07",
+      "title": "私密再约与互选资格",
+      "dependsOn": [
+        "M06-01"
+      ],
+      "inScope": "按人私密选择、有效共同出席/窗口、双方同意后开放私聊入口。",
+      "outOfScope": "实际私聊传输、撤回/拉黑界面、算法推荐和公开意愿名单。",
+      "doneWhen": "单方意愿保密，互选且有资格才开放入口，不泄露给第三人。",
+      "acceptanceIds": [
+        "D07-AC01"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 28
+    },
+    {
+      "id": "M06-06",
+      "module": "M06",
+      "version": "D07",
+      "title": "私聊发送与撤回联系",
+      "dependsOn": [
+        "M06-05",
+        "M05-02"
+      ],
+      "inScope": "有权私聊传输、任一方撤回清双方同意、历史只读和重新选择资格。",
+      "outOfScope": "拉黑设置、陌生私信、AI私聊草稿与出席人工纠错。",
+      "doneWhen": "撤回后未来发送被拒，原历史按授权只读；旧同意不自动复活。",
+      "acceptanceIds": [
+        "D07-AC01",
+        "D07-AC02"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 29
+    },
+    {
+      "id": "M06-07",
+      "module": "M06",
+      "version": "D07",
+      "title": "拉黑、解除与联系资格收回",
+      "dependsOn": [
+        "M06-06"
+      ],
+      "inScope": "拉黑/解除、清双方同意、同群身份保持及其他有效共同场次规则。",
+      "outOfScope": "新增安全后台、踢出共享群、自动恢复旧关系和支持个案界面。",
+      "doneWhen": "解除不恢复旧同意，失效联系停止发言；合法其他联系不误伤且不暴露私密意愿。",
+      "acceptanceIds": [
+        "D07-AC02",
+        "D07-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 30
+    },
+    {
+      "id": "M08-01",
+      "module": "M08",
+      "version": "D10",
+      "title": "授权后台入口与查询范围",
+      "dependsOn": [
+        "M04-02"
+      ],
+      "inScope": "内部角色登录、有效快照选择、日期/筛选/locale公共查询、权限失败/撤销清理。",
+      "outOfScope": "五页指标全部展开、分类写入、导出、客服功能和iOS移动Web前台。",
+      "doneWhen": "分析者只读有权范围，查询可保存/恢复，失权/撤销无旧结果残留。",
+      "acceptanceIds": [
+        "D10-AC02",
+        "D10-AC03"
+      ],
+      "platform": "admin-web",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 31
+    },
+    {
+      "id": "M08-02",
+      "module": "M08",
+      "version": "D10",
+      "title": "产品概览",
+      "dependsOn": [
+        "M08-01",
+        "M06-01"
+      ],
+      "inScope": "概览指标/趋势/分母/缺失、必要口径与该页下钻，沿既定四档/中英。",
+      "outOfScope": "用户旅程/供需/留存整页、分类与导出。",
+      "doneWhen": "概览数据与手算和所选快照一致，未知不作0；该页下钻返回保查询。",
+      "acceptanceIds": [
+        "D10-AC01",
+        "D10-AC02",
+        "D10-AC03"
+      ],
+      "platform": "admin-web",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 32
+    },
+    {
+      "id": "M08-03",
+      "module": "M08",
+      "version": "D10",
+      "title": "用户旅程",
+      "dependsOn": [
+        "M08-01",
+        "M04-03"
+      ],
+      "inScope": "加入/发起漏斗、申请与审核时长、申请列表和相关伪名追溯。",
+      "outOfScope": "概览重做、供需/留存新页面、原始留言读取和分类写入。",
+      "doneWhen": "用户旅程分母/时长与权威轮次一致，关联返回保查询且不读私密原文。",
+      "acceptanceIds": [
+        "D10-AC01",
+        "D10-AC02",
+        "D10-AC03"
+      ],
+      "platform": "admin-web",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 33
+    },
+    {
+      "id": "M08-04",
+      "module": "M08",
+      "version": "D10",
+      "title": "饭局与供需",
+      "dependsOn": [
+        "M08-01",
+        "M06-01",
+        "M03-06"
+      ],
+      "inScope": "供给/成团/取消/出席分布、来源追溯及饭局列表独立筛选。",
+      "outOfScope": "留存/问卷、人工出席核实队列、导出和财务商家。",
+      "doneWhen": "本人优先/补缺/unknown口径与手算一致，下方列表筛选不篡改上方分母。",
+      "acceptanceIds": [
+        "D10-AC01",
+        "D10-AC02",
+        "D10-AC03"
+      ],
+      "platform": "admin-web",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 34
+    },
+    {
+      "id": "M08-05",
+      "module": "M08",
+      "version": "D11",
+      "title": "数据与定义的只读解释",
+      "dependsOn": [
+        "M08-02",
+        "M08-03",
+        "M08-04"
+      ],
+      "inScope": "来源状态、缺失/延迟、指标字典、来源追溯与测试/员工分类查看。",
+      "outOfScope": "保存分类、重建统计、导出和业务原文全量查看。",
+      "doneWhen": "用户可解释指标/来源与空值，分类只读不伪称已经修改。",
+      "acceptanceIds": [
+        "D11-AC01"
+      ],
+      "platform": "admin-web",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 35
+    },
+    {
+      "id": "M08-06",
+      "module": "M08",
+      "version": "D11",
+      "title": "账号分类保存与原次结果恢复",
+      "dependsOn": [
+        "M08-05"
+      ],
+      "inScope": "指定用户分类、冻结意图、未知结果查询、409重新确认和逐用户acceptedRevision。",
+      "outOfScope": "统计重建实现、旧图继续可用、聚合导出和其他用户代改。",
+      "doneWhen": "丢响应找回原结果不重复classify；已接受与统计未就绪分开并阻断旧结果。",
+      "acceptanceIds": [
+        "D11-AC01",
+        "D11-AC02"
+      ],
+      "platform": "admin-web",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 36
+    },
+    {
+      "id": "M08-07",
+      "module": "M08",
+      "version": "D11",
+      "title": "统计刷新、失败重试与就绪切换",
+      "dependsOn": [
+        "M08-06"
+      ],
+      "inScope": "Accepted→Pending/Failed/Ready、只重试统计、覆盖接受版本的有效快照绑定。",
+      "outOfScope": "重新分类、导出下载、新分析页面和任意快照恢复。",
+      "doneWhen": "失败不显示旧统计，重试不增分类，选有效Ready后同快照解锁各已有页。",
+      "acceptanceIds": [
+        "D11-AC01",
+        "D11-AC02"
+      ],
+      "platform": "admin-web",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 37
+    },
+    {
+      "id": "M08-08",
+      "module": "M08",
+      "version": "D11",
+      "title": "聚合导出与失效撤销",
+      "dependsOn": [
+        "M08-07"
+      ],
+      "inScope": "按当前snapshot/filter导出、脱敏/公式安全、创建及下载重验、410清旧票据。",
+      "outOfScope": "原始个人导出、导入平台、新统计指标和账号删除作业。",
+      "doneWhen": "下载内容与当前页面一致；角色/隐私/快照撤销后旧文件仍拒读，失败不报成功。",
+      "acceptanceIds": [
+        "D11-AC02",
+        "D11-AC03"
+      ],
+      "platform": "admin-web",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 38
+    },
+    {
+      "id": "M08-09",
+      "module": "M08",
+      "version": "D12",
+      "title": "体验与问卷分析",
+      "dependsOn": [
+        "M08-07",
+        "M06-02",
+        "M06-04"
+      ],
+      "inScope": "体验页单场评分/反馈覆盖、独立问卷日期/分群规则及下钻。",
+      "outOfScope": "30天留存队列、新问卷问题、按饭局条件过滤产品问卷。",
+      "doneWhen": "评分与问卷分开、最新答案asOf和版本提交日正确，不回捞旧答案。",
+      "acceptanceIds": [
+        "D12-AC01",
+        "D12-AC02"
+      ],
+      "platform": "admin-web",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 39
+    },
+    {
+      "id": "M08-10",
+      "module": "M08",
+      "version": "D12",
+      "title": "成熟队列与重复赴约",
+      "dependsOn": [
+        "M08-09",
+        "M04-03"
+      ],
+      "inScope": "留存/成熟观察、后续机会与重复赴约、零分母/观察中解释和队列追溯。",
+      "outOfScope": "新增预测/因果模型、增长看板、问卷改版和批量业务修改。",
+      "doneWhen": "未成熟不作流失，成熟/unknown分母与手算一致，筛选返回和导出同快照。",
+      "acceptanceIds": [
+        "D12-AC01",
+        "D12-AC03"
+      ],
+      "platform": "admin-web",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 40
+    },
+    {
+      "id": "M07-01",
+      "module": "M07",
+      "version": "D08",
+      "title": "私密举报与本人受理回执",
+      "dependsOn": [
+        "M01-04",
+        "M02-03"
+      ],
+      "inScope": "举报提交/失败保稿、最小回执、本人受理/处理中/已回复查询。",
+      "outOfScope": "客服平台、实际纠错、删除作业和读取他人案件。",
+      "doneWhen": "受理不显示已解决，本人可查且他人无权，通知不含举报正文。",
+      "acceptanceIds": [
+        "D08-AC01"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 41
+    },
+    {
+      "id": "M07-02",
+      "module": "M07",
+      "version": "D08",
+      "title": "支持人员的个案授权处理",
+      "dependsOn": [
+        "M07-01"
+      ],
+      "inScope": "支持身份/个案访问核验、处理状态/回复与审计；无常规分析页写权限。",
+      "outOfScope": "逾期出席修订、全表/聊天开放、通用工单产品。",
+      "doneWhen": "授权支持按个案处理，每步失权停止；用户看到实际状态且原举报保留。",
+      "acceptanceIds": [
+        "D08-AC01"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 42
+    },
+    {
+      "id": "M07-03",
+      "module": "M07",
+      "version": "D08",
+      "title": "逾期出席纠错与影响传播",
+      "dependsOn": [
+        "M07-02",
+        "M06-07",
+        "M08-08"
+      ],
+      "inScope": "结束满7天后原因/操作者修订、出席/公评/联系/新统计传播与旧快照保留。",
+      "outOfScope": "改写原报告、常规争议审核队列、删除账号和新增法律裁决。",
+      "doneWhen": "精确7天边界正确，资格及新快照重算，旧报告/旧快照不改；J011按本版平台补联验。",
+      "acceptanceIds": [
+        "D08-AC02",
+        "D08-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 43
+    },
+    {
+      "id": "M07-04",
+      "module": "M07",
+      "version": "D09",
+      "title": "重新认证申请删除与同步屏障",
+      "dependsOn": [
+        "M01-06",
+        "M03-05",
+        "M04-03",
+        "M05-04",
+        "M06-07",
+        "M08-08"
+      ],
+      "inScope": "本人确认/取消/重新认证；202之前同步撤销会话/联系/群区间，取消未开始主持场、退出参与/待审，立即隐藏公开身份并撤销受影响快照/旧导出，保存最小回执。",
+      "outOfScope": "异步供应商撤销、正文/文件物理清理、清库、通用匿名支持API和冒称已全部删除。",
+      "doneWhen": "同步屏障全部成功才返回202；失败整体回滚，丢响应可查原回执，已开始场次保留他人资格，旧快照/导出即不可读。",
+      "acceptanceIds": [
+        "D09-AC01",
+        "D09-AC02"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 44
+    },
+    {
+      "id": "M07-05",
+      "module": "M07",
+      "version": "D09",
+      "title": "删除处理、结果恢复与公开支持出口",
+      "dependsOn": [
+        "M07-04",
+        "M07-03"
+      ],
+      "inScope": "同步屏障后的供应商撤销、正文/文件物理清理或去标识及批准保留、删除进度/故障恢复、回执失效/NEEDS_SUPPORT与公开邮件出口。",
+      "outOfScope": "把取消/退席/公开隐藏/快照撤销延后到本批、新增客服平台、凭参考号开放私密查询或无授权真实删除。",
+      "doneWhen": "实际处理与受理分开，旧数据/导出不可读；失效回执可联系支持不泄token，J009未齐不报完成。",
+      "acceptanceIds": [
+        "D09-AC01",
+        "D09-AC02",
+        "D09-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 45
+    },
+    {
+      "id": "M09-01",
+      "module": "M09",
+      "version": "D13",
+      "title": "明确确认的偏好与助手会话",
+      "dependsOn": [
+        "M01-06",
+        "M02-02"
+      ],
+      "inScope": "偏好查看/确认/替换/删除、软硬条件基础、设备会话/闲置/清理与账号隔离。",
+      "outOfScope": "模型生成、读取完整聊天、自动画像、跨设备对话历史。",
+      "doneWhen": "普通输入不自动记住，删除/切账号不再用旧偏好，原业务编辑器文字不被清会话删除。",
+      "acceptanceIds": [
+        "D13-AC01",
+        "D13-AC02"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 46
+    },
+    {
+      "id": "M09-02",
+      "module": "M09",
+      "version": "D13",
+      "title": "查找、比较与本人状态解释",
+      "dependsOn": [
+        "M09-01",
+        "M02-03",
+        "M04-02"
+      ],
+      "inScope": "主动检索/最小澄清、最多3候选、硬条件/软排序、解释事实、模型失败与预算/数据门槛。",
+      "outOfScope": "草稿/业务写入、代订位、推断成员隐私、任意联网或新增费用授权。",
+      "doneWhen": "结果符合明确条件且来源可追，清条件不恢复；无结果/失败/未知分开，真实评测门槛单列。",
+      "acceptanceIds": [
+        "D13-AC01",
+        "D13-AC02",
+        "D13-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 47
+    },
+    {
+      "id": "M09-03",
+      "module": "M09",
+      "version": "D14",
+      "title": "AI申请草稿转入",
+      "dependsOn": [
+        "M09-02",
+        "M04-01"
+      ],
+      "inScope": "明确饭局生成申请文字、保留/替换、转入原编辑器、名额/截止重验与手动提交。",
+      "outOfScope": "创建/群消息/私聊草稿、自动申请、自动同意条款。",
+      "doneWhen": "生成/转入前业务写入为零，过期/满员/换编辑器保人工稿，最终本人主动申请。",
+      "acceptanceIds": [
+        "D14-AC01",
+        "D14-AC02",
+        "D14-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 48
+    },
+    {
+      "id": "M09-04",
+      "module": "M09",
+      "version": "D14",
+      "title": "AI创建草稿转入",
+      "dependsOn": [
+        "M09-02",
+        "M03-04"
+      ],
+      "inScope": "标题/说明及已知字段候选、选店原流程确认、转入/替换与本人Review发布。",
+      "outOfScope": "自动选店/勾声明、群消息/私聊草稿、自动发布。",
+      "doneWhen": "不造餐厅或时点、不勾条款；旧稿/长度/状态变化正确保留，主动发布前不创建饭局。",
+      "acceptanceIds": [
+        "D14-AC01",
+        "D14-AC02",
+        "D14-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 49
+    },
+    {
+      "id": "M09-05",
+      "module": "M09",
+      "version": "D14",
+      "title": "AI群消息草稿转入",
+      "dependsOn": [
+        "M09-02",
+        "M05-04",
+        "M05-05"
+      ],
+      "inScope": "明确有权群生成协调文字、转入原框、保留/替换、离群失权与旧实例重验。",
+      "outOfScope": "读群聊正文、私聊草稿、自动发送和陌生人代发。",
+      "doneWhen": "转入未发送，失权拒旧稿且保人工字；本人发送仍走原授权，原预算数值/失败场景适用回归。",
+      "acceptanceIds": [
+        "D14-AC01",
+        "D14-AC02",
+        "D14-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 50
+    },
+    {
+      "id": "M10-01",
+      "module": "M10",
+      "version": "D16",
+      "title": "iOS分享菜单与复制",
+      "dependsOn": [
+        "M02-03"
+      ],
+      "inScope": "公开投影、系统分享/复制/WhatsApp预填/微信复制入口、取消与复制失败降级。",
+      "outOfScope": "链接冷/热落地、未安装接收者兜底、移动Web、代外发和渠道分析。",
+      "doneWhen": "系统取消保留详情，实际复制文本正确且无私密字段；回调不称朋友已收到。",
+      "acceptanceIds": [
+        "D16-AC01"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 51
+    },
+    {
+      "id": "M10-02",
+      "module": "M10",
+      "version": "D16",
+      "title": "已安装iOS的邀请链接落地",
+      "dependsOn": [
+        "M10-01",
+        "M01-04",
+        "M04-01"
+      ],
+      "inScope": "配置域名关联、同一mealId冷/热打开、最新状态/权限、登录后主动申请。",
+      "outOfScope": "移动Web落地、未安装App兜底、自动占位/批准和新域名部署授权。",
+      "doneWhen": "已安装接收者落同一饭局，非法/不可见链接不泄露，登录不自动申请；记录实际设备结果。",
+      "acceptanceIds": [
+        "D16-AC02"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 52
+    },
+    {
+      "id": "M10-03",
+      "module": "M10",
+      "version": "D16",
+      "title": "外部邀请接收与未安装路径",
+      "dependsOn": [
+        "M10-02"
+      ],
+      "inScope": "WhatsApp/微信/系统渠道实际主动分享及接收；按明确产品决定补未安装接收路径。",
+      "outOfScope": "默认启动移动Web、造可用网页/渠道回执、邀请奖励和联系人采集。",
+      "doneWhen": "Q-SHARE-01明确后按批准路径闭合接收；未决保持该批阻塞，不挡其他独立批次。",
+      "acceptanceIds": [
+        "D16-AC01",
+        "D16-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [
+        "Q-SHARE-01"
+      ],
+      "order": 53
+    },
+    {
+      "id": "M11-01",
+      "module": "M11",
+      "version": "D17",
+      "title": "提及选择与草稿实体",
+      "dependsOn": [
+        "M05-02",
+        "M05-03"
+      ],
+      "inScope": "同名候选稳定识别、@成员/host Everyone选择、编辑删除/粘贴纯文本兼容。",
+      "outOfScope": "实际提及通知投递、mute设置、应用内横幅和系统push。",
+      "doneWhen": "同名选对人，手打/粘贴不伪造实体，删除/编辑后实体与文字一致；失权隐藏实时候选。",
+      "acceptanceIds": [
+        "D17-AC01"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 54
+    },
+    {
+      "id": "M11-02",
+      "module": "M11",
+      "version": "D17",
+      "title": "发送提及与本人站内记录",
+      "dependsOn": [
+        "M11-01"
+      ],
+      "inScope": "发送时权限/Everyone/接收人重验、失效降级、去重、本人提及通知列表及定位。",
+      "outOfScope": "应用内横幅、mute表单、APNs/Web Push、逐条普通消息通知。",
+      "doneWhen": "正确目标收到唯一记录，无权Everyone被拒，离群/重入不复活空档提醒，点击重新鉴权。",
+      "acceptanceIds": [
+        "D17-AC01",
+        "D17-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 55
+    },
+    {
+      "id": "M11-03",
+      "module": "M11",
+      "version": "D17",
+      "title": "跨iOS会话群免打扰",
+      "dependsOn": [
+        "M11-02",
+        "M05-05"
+      ],
+      "inScope": "本人+群mute持久化/默认值、保存中、普通失败恢复、409权威刷新/重试。",
+      "outOfScope": "横幅实际显示、系统投递、改变别人设置和隐藏群消息。",
+      "doneWhen": "两会话冲突不覆盖新值，失败不报已保存；消息/未读保留且说明提及仍提醒。",
+      "acceptanceIds": [
+        "D17-AC02",
+        "D17-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 56
+    },
+    {
+      "id": "M11-04",
+      "module": "M11",
+      "version": "D17",
+      "title": "应用内横幅与可见性矩阵",
+      "dependsOn": [
+        "M11-03",
+        "M05-05"
+      ],
+      "inScope": "普通/个人提及/Everyone本机横幅、mute规则、可见消息不弹、旧消息定位/关闭。",
+      "outOfScope": "在线presence、全设备零重复、锁屏或Web通知。",
+      "doneWhen": "同一本机状态正确抑制/提醒，不强制滚动，通知已读与聊天已读独立且无隐私泄露。",
+      "acceptanceIds": [
+        "D17-AC02",
+        "D17-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 57
+    },
+    {
+      "id": "M12-01",
+      "module": "M12",
+      "version": "D18",
+      "title": "iOS通知授权与订阅生命周期",
+      "dependsOn": [
+        "M01-06",
+        "M11-03",
+        "M07-04"
+      ],
+      "inScope": "主动权限申请/拒绝、安装与账号绑定、撤订阅/失效、退出换账号和删除撤权。",
+      "outOfScope": "真实消息批量投递、锁屏到达结论、Web Push与反复索权。",
+      "doneWhen": "拒绝仍可用站内消息，旧账号订阅不投给新账号，权限/系统限制如实展示。",
+      "acceptanceIds": [
+        "D18-AC01",
+        "D18-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 58
+    },
+    {
+      "id": "M12-02",
+      "module": "M12",
+      "version": "D18",
+      "title": "iOS普通消息与提及通知",
+      "dependsOn": [
+        "M12-01",
+        "M11-04"
+      ],
+      "inScope": "通用隐私payload、普通/提及去重投递、点击定位鉴权、后台/锁屏真机行为。",
+      "outOfScope": "过期/恢复故障全矩阵、Web Push、短信邮件和发送者收到保证。",
+      "doneWhen": "授权真机收到对应提醒或如实记录平台限制，锁屏无私密正文，点击只读有权内容。",
+      "acceptanceIds": [
+        "D18-AC01"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 59
+    },
+    {
+      "id": "M12-03",
+      "module": "M12",
+      "version": "D18",
+      "title": "排队提醒的抑制与恢复",
+      "dependsOn": [
+        "M12-02",
+        "M05-04",
+        "M07-04"
+      ],
+      "inScope": "已读/mute/退群/重入/解散/删除/TTL、UNKNOWN对账不盲重试及队列重放。",
+      "outOfScope": "presence、旧通知强制撤回保证、Web Push或放宽原权限。",
+      "doneWhen": "旧授权排队提醒永久不复活，过期不轰炸，合法新授权仍可投递；结果可追溯。",
+      "acceptanceIds": [
+        "D18-AC02",
+        "D18-AC03"
+      ],
+      "platform": "ios",
+      "scopeStatus": "current",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 60
+    },
+    {
+      "id": "M10-W01",
+      "module": "M10",
+      "version": "D15",
+      "title": "移动Web分享与复制",
+      "dependsOn": [
+        "M10-01"
+      ],
+      "inScope": "后续Web分享/复制/失败降级和公开文本。",
+      "outOfScope": "本版实施、iOS重做、未批准Web重建。",
+      "doneWhen": "后续启用时实际浏览器复制/取消/降级正确。",
+      "acceptanceIds": [
+        "D15-AC02",
+        "D15-AC03"
+      ],
+      "platform": "mobile-web",
+      "scopeStatus": "deferred",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 61
+    },
+    {
+      "id": "M10-W02",
+      "module": "M10",
+      "version": "D15",
+      "title": "移动Web邀请落地",
+      "dependsOn": [
+        "M10-W01",
+        "M04-01"
+      ],
+      "inScope": "后续公开详情、身份回流及接收方主动申请。",
+      "outOfScope": "本版实施、免审核/占位和私密参数。",
+      "doneWhen": "后续启用时访客同一mealId落地且不自动申请。",
+      "acceptanceIds": [
+        "D15-AC01"
+      ],
+      "platform": "mobile-web",
+      "scopeStatus": "deferred",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 62
+    },
+    {
+      "id": "M12-W01",
+      "module": "M12",
+      "version": "D19",
+      "title": "Web通知授权与订阅",
+      "dependsOn": [
+        "M11-03"
+      ],
+      "inScope": "后续支持/拒绝/不支持浏览器与Web订阅生命周期。",
+      "outOfScope": "本版实施、APNs和新增通知渠道。",
+      "doneWhen": "后续启用时授权/拒绝、失效/换绑不串账号。",
+      "acceptanceIds": [
+        "D19-AC01"
+      ],
+      "platform": "mobile-web",
+      "scopeStatus": "deferred",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 63
+    },
+    {
+      "id": "M12-W02",
+      "module": "M12",
+      "version": "D19",
+      "title": "Web通知投递与恢复",
+      "dependsOn": [
+        "M12-W01",
+        "M11-04"
+      ],
+      "inScope": "后续投递/点击鉴权、失效/429、队列权限/TTL抑制。",
+      "outOfScope": "本版实施、借iOS设备PASS关Web门槛。",
+      "doneWhen": "后续浏览器实际结果及抑制矩阵单独通过。",
+      "acceptanceIds": [
+        "D19-AC02",
+        "D19-AC03"
+      ],
+      "platform": "mobile-web",
+      "scopeStatus": "deferred",
+      "status": "not-issued",
+      "pmStartAllowed": false,
+      "productDecisions": [],
+      "order": 64
+    }
+  ],
+  "integrationCheckpoints": [
+    {
+      "id": "I01",
+      "title": "iOS基础约饭闭环",
+      "after": [
+        "M01-06",
+        "M02-03",
+        "M03-06",
+        "M04-03",
+        "M05-05"
+      ],
+      "outcome": "不同iOS身份从正常入口发布、申请、审批、沟通、退席/退群，名额/安排锁/截止/消息授权一致。"
+    },
+    {
+      "id": "I02",
+      "title": "饭后、联系与后台统计",
+      "after": [
+        "M06-07",
+        "M08-10"
+      ],
+      "outcome": "同一饭局报告、评价、互选/撤回与后台来源/问卷/快照/留存一致，单方隐私不泄露。"
+    },
+    {
+      "id": "I03",
+      "title": "支持纠错和删除传播",
+      "after": [
+        "M07-03",
+        "M07-05",
+        "M08-10"
+      ],
+      "outcome": "J011/J009及关联J008在iOS/后台适用范围补齐：原材料、资格、新旧快照、导出和旧会话撤权符合原断言。"
+    },
+    {
+      "id": "I04",
+      "title": "AI、分享与提醒最终候选",
+      "after": [
+        "M09-05",
+        "M10-03",
+        "M12-03"
+      ],
+      "outcome": "固定最终构建下AI转入及J005、外部邀请、提及/mute/push、真实模型/数据/成本及设备门槛逐项核证；Q-SHARE-01未决不能报整版通过。"
+    }
+  ]
+}

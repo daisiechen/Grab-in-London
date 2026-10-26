@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "r03",
+  "revision": "r04",
   "status": "owner-review-pending",
   "implementationAuthorizedByThisPackage": false,
   "modules": [
@@ -433,5 +433,13 @@
       "status": "unresolved",
       "constraint": "不以此自动启动移动Web或承诺不存在的公开落地页"
     }
-  ]
+  ],
+  "dispatchPolicy": {
+    "pmStartAllowed": false,
+    "activeBatch": null,
+    "maxIssuedPMBatches": 1,
+    "meaning": "仅拆分文档，不向PM或其他worker派单；后续按具体有界授权逐批签发"
+  },
+  "batchCatalogPath": "docs/delivery/delivery-batches.json",
+  "dependencyLevel": "version dependsOn为领域背景，具体开工依赖以delivery-batches.json的批次DAG为准，避免整模块等待造成环路"
 }
