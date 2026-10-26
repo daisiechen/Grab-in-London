@@ -1,0 +1,19 @@
+{
+  "journey": "J10",
+  "revision": "PM-r01",
+  "sourceRevision": "r07",
+  "files": {
+    "docs/product/journeys/j10/requirements.zh-CN.md": "3a2436f5463073f4257733d8edcd83f509160bf7dd97f8d898e8229718d11afd",
+    "docs/product/journeys/j10/coverage.json": "965064ee5619ced9b1949d89fd05589e9b134d5716ba801b09777d45df1a02fe",
+    "docs/product/journeys/j10/author-verification.zh-CN.md": "376cfa5328f8d917a04b6413e5f2ee07cfe7d788d5335c7ec2cfe853470bcdab",
+    "demo/journeys/j10/index.html": "0de0fd418522942ce491e66bb305c5070fef218e785c2ff984f7f1226ab089ae",
+    "demo/journeys/j10/model.mjs": "91970acb21fb2d4ba8d65deeb16dc2b34144ab0267d92e8851149e452b9c44d6",
+    "tests/test_pm_j10.py": "76bb0f56ec024e827f90b4eb692a53fb116b1c216842128c8ace8f870a41e1b6"
+  },
+  "stagesStarted": {
+    "PM": true,
+    "UX": false,
+    "RD": false,
+    "QA": false
+  }
+}

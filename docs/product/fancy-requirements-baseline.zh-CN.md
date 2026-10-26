@@ -1,6 +1,6 @@
 # Fancy MVP项目需求
 
-> 当前执行更新（r08）：用户已授权3个PM并行完成首发J01—J11各自的需求与Demo，见[并行派工记录](../delivery/pm-parallel-dispatch.zh-CN.md)。下文r07“未开工”是此前核对阶段状态；现只签发PM，UX/RD/QA及J12—J15仍未启动。
+> 当前执行更新（r08）：用户已授权3个PM并行完成首发J01—J11各自的需求与Demo，见[并行派工记录](../delivery/pm-parallel-dispatch.zh-CN.md)。本轮11个独立PM候选待用户审阅；UX/RD/QA及J12—J15仍未启动。
 修订：r07｜日期：2026-10-26（Europe/London）｜本版平台：iOS App、管理后台Web｜功能说明：待审阅草稿。
 
 ## 1. 产品解决什么问题
@@ -116,4 +116,4 @@ AI除J01/J02/J03业务路径外，J05承接My preferences显式保存/替换/删
 
 详细规则以[主PRD](PRD.zh-CN.md)§0/首期功能、[补丁PRD](mvp-patch-PRD.zh-CN.md)、[后台PRD](admin/PRD.zh-CN.md)和[采集契约](admin/measurement-contract.zh-CN.md)为准。原主PRD中完整Demo的模拟支付/订位不进入真实首期。
 
-[旅程范围数据](journey-modules.json)保留原60切片映射，旧M/D编号只作历史领域与证据索引，不能继续充当PM用户模块。旧邮箱片段Demo不是J01候选；r07只是重新拆分，未启动新的PM/UX/RD/QA，不改原PRD/Demo，不改变已有专业文件owner。项目团队的工作方式另见[项目管理方案](../delivery/project-management-plan.zh-CN.md)。
+[旅程范围数据](journey-modules.json)保留原60切片映射，旧M/D编号只作历史领域与证据索引，不能继续充当PM用户模块。旧邮箱片段Demo不是J01候选；r07定义范围，r08已完成首发11个PM独立候选；UX/RD/QA尚未启动，不改原PRD/旧Demo，不改变既有专业文件owner。项目团队的工作方式另见[项目管理方案](../delivery/project-management-plan.zh-CN.md)。

@@ -3,9 +3,9 @@
 
 文档导航：[项目文档索引](docs/README.md)。Agent 规则见 [AGENTS.md](AGENTS.md)，通用项目技能位于 `.agents/skills/`，待审核候选保存于 `.agents/candidates/`。
 
-## 当前产品与交付规划（r07）
+## 当前产品与交付（r07范围／r08 PM候选）
 
-以[完整用户旅程](docs/product/journey-modules.zh-CN.md)划分模块，[MVP需求](docs/product/fancy-requirements-baseline.zh-CN.md)定义产品行为，[项目管理方案](docs/delivery/project-management-plan.zh-CN.md)定义团队流程。登录/注册/补资料嵌入申请或发起旅程，不单独交半条体验；旧60功能切片停止作为PM派单单位。当前只完成重拆，新的PM/UX/RD/QA未开工。
+以[完整用户旅程](docs/product/journey-modules.zh-CN.md)划分模块，[MVP需求](docs/product/fancy-requirements-baseline.zh-CN.md)定义产品行为，[项目管理方案](docs/delivery/project-management-plan.zh-CN.md)定义团队流程。登录/注册/补资料嵌入申请或发起旅程，不单独交半条体验；旧60功能切片停止作为PM派单单位。用户已授权3个PM并行完成首发J01—J11，每旅程各自交付需求与Demo，见[成对评审入口](docs/delivery/pm-first-release-review.zh-CN.md)。当前停在PM候选待审阅，UX/RD/QA未启动。
 
 ## 历史交付与业务来源
 

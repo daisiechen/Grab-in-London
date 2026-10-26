@@ -1,6 +1,6 @@
 # Fancy用户旅程的执行与联调方案
 
-> 当前执行更新（r08）：用户已授权3个PM并行完成首发J01—J11各自的需求与Demo，见[并行派工记录](pm-parallel-dispatch.zh-CN.md)。下文r07“未开工”是此前核对阶段状态；现只签发PM，UX/RD/QA及J12—J15仍未启动。
+> 当前执行更新（r08）：用户已授权3个PM并行完成首发J01—J11各自的需求与Demo，见[并行派工记录](pm-parallel-dispatch.zh-CN.md)。本轮11个独立PM候选待用户审阅；UX/RD/QA及J12—J15仍未启动。
 修订：r07｜状态：planning-only，不自动开工。
 
 ## 1. 当前产品模块与优先级
@@ -42,7 +42,7 @@
 | C-SUPPORT | 个案授权、举报受理、纠错/删除与回执 | J07、J08、J09 |
 | C-ANALYTICS | 指标、分类、快照、隐私撤销与导出 | J08、J09、J10、J11、J12 |
 | C-AI | 获准上下文、偏好、草稿、预算及会话 | J01、J02、J03、J05、J08 |
-| C-NOTIFY | 首发站内业务通知及关键审批/取消邮件；后续普通群消息/提及、mute、订阅和系统投递，按版本分段 | J01、J02、J03、J07、J09、J14、J15 |
+| C-NOTIFY | 首发站内业务通知及关键审批/取消邮件；后续普通群消息/提及、mute、订阅和系统投递，按版本分段 | J01、J02、J03、J07、J08、J09、J14、J15 |
 | C-PROFILE | 公开资料、首次必填与本人资料/隐私保存 | J05、J06 |
 
 ## 3. 版本间联调
@@ -60,7 +60,7 @@
 
 PM工作包需包含一名用户的一次完整目标、触发/终点、正常路径与必要分支、前置数据/角色、做与不做、业务规则、Demo及验收。若必须读同一旅程的几份页面文档才能拼成结果，PM负责将其整合为一份完整说明。
 
-并行须有固定输入与兼容候选，无文件/状态/环境/时钟/配额冲突。原通用版本/迁移/单writer规则见[项目管理方案](project-management-plan.zh-CN.md)。执行数据见[journey-execution.json](journey-execution.json)，activeJourneys为空，所有阶段not-started；不得把本规划当自动派单信号。
+并行须有固定输入与兼容候选，无文件/状态/环境/时钟/配额冲突。原通用版本/迁移/单writer规则见[项目管理方案](project-management-plan.zh-CN.md)。执行数据见[journey-execution.json](journey-execution.json)，首发PM候选已交回、activeJourneys为空，UX/RD/QA仍not-started；候选交付不自动派发下一专业阶段。
 
 ## 5. 旧产物迁移
 

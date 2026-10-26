@@ -1,0 +1,21 @@
+{
+  "journey": "J04",
+  "revision": "PM-r01",
+  "version": "IOS-0.1.0",
+  "status": "pm-candidate",
+  "files": {
+    "demo/journeys/j04/index.html": "0156de9d9420cdca35f1343cc887a56a3f6fb0661e53c657d0ad996f0f53d043",
+    "demo/journeys/j04/model.mjs": "27b2bf43ee0bba44fb441e3a295ccfeef76037786584e06cad0b8690ba7cca49",
+    "docs/product/journeys/j04/author-verification.zh-CN.md": "cbfd0bd4831e9ec0286fd49ef5a1fd5152fe5894f85d80359e21409bfe1bf612",
+    "docs/product/journeys/j04/coverage.json": "2714dd57dbd12a49bb99c5852465b4e36570b40229088715b5405ff3ad12c9e1",
+    "docs/product/journeys/j04/requirements.zh-CN.md": "8172b103c759b19b6b70a2dea946bd50cc7286405a31dc73b4012cf169da72a7",
+    "tests/test_pm_j04.py": "1fe3972a9e250344ec25fad8345ef5ae83abe5fdda2e0b348c5c2361606e10d4"
+  },
+  "stagesStarted": {
+    "PM": true,
+    "UX": false,
+    "RD": false,
+    "QA": false
+  },
+  "realServicesVerified": false
+}

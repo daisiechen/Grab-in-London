@@ -23,10 +23,9 @@
       "journeys": [
         "J01",
         "J05",
-        "J06",
-        "J08"
+        "J06"
       ],
-      "currentJourney": "J01",
+      "currentJourney": null,
       "writeAllowlist": [
         "docs/product/journeys/j01/",
         "demo/journeys/j01/",
@@ -36,12 +35,9 @@
         "tests/test_pm_j05.py",
         "docs/product/journeys/j06/",
         "demo/journeys/j06/",
-        "tests/test_pm_j06.py",
-        "docs/product/journeys/j08/",
-        "demo/journeys/j08/",
-        "tests/test_pm_j08.py"
+        "tests/test_pm_j06.py"
       ],
-      "status": "running"
+      "status": "candidate-delivered"
     },
     {
       "id": "PM-2",
@@ -50,7 +46,7 @@
         "J03",
         "J04"
       ],
-      "currentJourney": "J02",
+      "currentJourney": null,
       "writeAllowlist": [
         "docs/product/journeys/j02/",
         "demo/journeys/j02/",
@@ -62,7 +58,7 @@
         "demo/journeys/j04/",
         "tests/test_pm_j04.py"
       ],
-      "status": "running"
+      "status": "candidate-delivered"
     },
     {
       "id": "PM-3",
@@ -70,9 +66,10 @@
         "J10",
         "J11",
         "J07",
-        "J09"
+        "J09",
+        "J08"
       ],
-      "currentJourney": "J10",
+      "currentJourney": null,
       "writeAllowlist": [
         "docs/product/journeys/j10/",
         "demo/journeys/j10/",
@@ -85,9 +82,22 @@
         "tests/test_pm_j07.py",
         "docs/product/journeys/j09/",
         "demo/journeys/j09/",
-        "tests/test_pm_j09.py"
+        "tests/test_pm_j09.py",
+        "docs/product/journeys/j08/",
+        "demo/journeys/j08/",
+        "tests/test_pm_j08.py"
       ],
-      "status": "running"
+      "status": "candidate-delivered"
     }
-  ]
+  ],
+  "handoffs": [
+    {
+      "journey": "J08",
+      "from": "PM-1",
+      "to": "PM-3",
+      "sourceState": "empty directories only; original owner confirmed stop-writing",
+      "reason": "利用已完成四包的PM-3继续并行；无既有产物覆盖。"
+    }
+  ],
+  "status": "candidates-awaiting-review"
 }

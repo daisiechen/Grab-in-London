@@ -1,21 +1,9 @@
 {
   "schemaVersion": 1,
   "revision": "r08",
-  "status": "pm-in-progress",
+  "status": "pm-candidates-awaiting-review",
   "pmStartAllowed": true,
-  "activeJourneys": [
-    "J01",
-    "J02",
-    "J03",
-    "J04",
-    "J05",
-    "J06",
-    "J07",
-    "J08",
-    "J09",
-    "J10",
-    "J11"
-  ],
+  "activeJourneys": [],
   "stages": [
     "PM",
     "UX",
@@ -26,10 +14,10 @@
     {
       "id": "J01",
       "priority": 1,
-      "status": "pm-in-progress",
+      "status": "pm-candidate-delivered",
       "currentStage": "PM",
       "stages": {
-        "PM": "in-progress",
+        "PM": "candidate-delivered",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -47,15 +35,17 @@
         "J05"
       ],
       "plannedVersion": "IOS-0.1.0",
-      "pmOwner": "PM-1"
+      "pmOwner": "PM-1",
+      "pmCandidateRevision": "PM-r01",
+      "acceptedForNextStage": false
     },
     {
       "id": "J02",
       "priority": 2,
-      "status": "pm-in-progress",
+      "status": "pm-candidate-delivered",
       "currentStage": "PM",
       "stages": {
-        "PM": "in-progress",
+        "PM": "candidate-delivered",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -74,15 +64,17 @@
         "J04"
       ],
       "plannedVersion": "IOS-0.1.0",
-      "pmOwner": "PM-2"
+      "pmOwner": "PM-2",
+      "pmCandidateRevision": "PM-r01",
+      "acceptedForNextStage": false
     },
     {
       "id": "J03",
       "priority": 3,
-      "status": "pm-issued-queued",
+      "status": "pm-candidate-delivered",
       "currentStage": "PM",
       "stages": {
-        "PM": "queued",
+        "PM": "candidate-delivered",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -102,15 +94,17 @@
         "J08"
       ],
       "plannedVersion": "IOS-0.1.0",
-      "pmOwner": "PM-2"
+      "pmOwner": "PM-2",
+      "pmCandidateRevision": "PM-r01",
+      "acceptedForNextStage": false
     },
     {
       "id": "J04",
       "priority": 4,
-      "status": "pm-issued-queued",
+      "status": "pm-candidate-delivered",
       "currentStage": "PM",
       "stages": {
-        "PM": "queued",
+        "PM": "candidate-delivered",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -130,15 +124,17 @@
         "J12"
       ],
       "plannedVersion": "IOS-0.1.0",
-      "pmOwner": "PM-2"
+      "pmOwner": "PM-2",
+      "pmCandidateRevision": "PM-r01",
+      "acceptedForNextStage": false
     },
     {
       "id": "J05",
       "priority": 5,
-      "status": "pm-issued-queued",
+      "status": "pm-candidate-delivered",
       "currentStage": "PM",
       "stages": {
-        "PM": "queued",
+        "PM": "candidate-delivered",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -155,15 +151,17 @@
         "J08"
       ],
       "plannedVersion": "IOS-0.1.0",
-      "pmOwner": "PM-1"
+      "pmOwner": "PM-1",
+      "pmCandidateRevision": "PM-r01",
+      "acceptedForNextStage": false
     },
     {
       "id": "J06",
       "priority": 6,
-      "status": "pm-issued-queued",
+      "status": "pm-candidate-delivered",
       "currentStage": "PM",
       "stages": {
-        "PM": "queued",
+        "PM": "candidate-delivered",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -178,15 +176,17 @@
         "J12"
       ],
       "plannedVersion": "IOS-0.1.0",
-      "pmOwner": "PM-1"
+      "pmOwner": "PM-1",
+      "pmCandidateRevision": "PM-r01",
+      "acceptedForNextStage": false
     },
     {
       "id": "J07",
       "priority": 7,
-      "status": "pm-issued-queued",
+      "status": "pm-candidate-delivered",
       "currentStage": "PM",
       "stages": {
-        "PM": "queued",
+        "PM": "candidate-delivered",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -200,15 +200,17 @@
         "J09"
       ],
       "plannedVersion": "IOS-0.1.0",
-      "pmOwner": "PM-3"
+      "pmOwner": "PM-3",
+      "pmCandidateRevision": "PM-r01",
+      "acceptedForNextStage": false
     },
     {
       "id": "J08",
       "priority": 8,
-      "status": "pm-issued-queued",
+      "status": "pm-candidate-delivered",
       "currentStage": "PM",
       "stages": {
-        "PM": "queued",
+        "PM": "candidate-delivered",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -220,7 +222,8 @@
         "C-MESSAGE",
         "C-SUPPORT",
         "C-ANALYTICS",
-        "C-AI"
+        "C-AI",
+        "C-NOTIFY"
       ],
       "jointValidationWith": [
         "J03",
@@ -229,15 +232,17 @@
         "J11"
       ],
       "plannedVersion": "IOS-0.1.0",
-      "pmOwner": "PM-1"
+      "pmOwner": "PM-3",
+      "pmCandidateRevision": "PM-r01",
+      "acceptedForNextStage": false
     },
     {
       "id": "J09",
       "priority": 9,
-      "status": "pm-issued-queued",
+      "status": "pm-candidate-delivered",
       "currentStage": "PM",
       "stages": {
-        "PM": "queued",
+        "PM": "candidate-delivered",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -256,15 +261,17 @@
         "J11"
       ],
       "plannedVersion": "SUPPORT-0.1.0",
-      "pmOwner": "PM-3"
+      "pmOwner": "PM-3",
+      "pmCandidateRevision": "PM-r01",
+      "acceptedForNextStage": false
     },
     {
       "id": "J10",
       "priority": 10,
-      "status": "pm-in-progress",
+      "status": "pm-candidate-delivered",
       "currentStage": "PM",
       "stages": {
-        "PM": "in-progress",
+        "PM": "candidate-delivered",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -283,15 +290,17 @@
         "J11"
       ],
       "plannedVersion": "ADMIN-0.1.0",
-      "pmOwner": "PM-3"
+      "pmOwner": "PM-3",
+      "pmCandidateRevision": "PM-r01",
+      "acceptedForNextStage": false
     },
     {
       "id": "J11",
       "priority": 11,
-      "status": "pm-issued-queued",
+      "status": "pm-candidate-delivered",
       "currentStage": "PM",
       "stages": {
-        "PM": "queued",
+        "PM": "candidate-delivered",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -306,7 +315,9 @@
         "J09"
       ],
       "plannedVersion": "ADMIN-0.1.0",
-      "pmOwner": "PM-3"
+      "pmOwner": "PM-3",
+      "pmCandidateRevision": "PM-r01",
+      "acceptedForNextStage": false
     },
     {
       "id": "J12",
@@ -526,6 +537,7 @@
         "J02",
         "J03",
         "J07",
+        "J08",
         "J09",
         "J14",
         "J15"
@@ -625,5 +637,31 @@
   "requirementsLedger": "docs/product/requirements-traceability.json",
   "versionMeaning": "规划交付集合编号，非已发布build或已批准排期；不得据此开工。",
   "pmDispatch": "docs/delivery/pm-parallel-dispatch.json",
-  "authorization": "用户明确要求多个PM并行制作需求与Demo；仅首发集合PM阶段。"
+  "authorization": "用户明确要求多个PM并行制作需求与Demo；仅首发集合PM阶段。",
+  "issuedJourneys": [
+    "J01",
+    "J02",
+    "J03",
+    "J04",
+    "J05",
+    "J06",
+    "J07",
+    "J08",
+    "J09",
+    "J10",
+    "J11"
+  ],
+  "awaitingReviewJourneys": [
+    "J01",
+    "J02",
+    "J03",
+    "J04",
+    "J05",
+    "J06",
+    "J07",
+    "J08",
+    "J09",
+    "J10",
+    "J11"
+  ]
 }

@@ -1,0 +1,19 @@
+{
+  "journey": "J11",
+  "revision": "PM-r01",
+  "sourceRevision": "r07",
+  "files": {
+    "docs/product/journeys/j11/requirements.zh-CN.md": "40921832dd47a5c0df9615b2ddbe483bfa54e51890b527083410d8c09f1451a3",
+    "docs/product/journeys/j11/coverage.json": "a919258c7e549294a5492c25431c2af6bad180b44d1da1a3511737c80d87c321",
+    "docs/product/journeys/j11/author-verification.zh-CN.md": "a81cf7f2fc33701fc51c8842bf5894676bf32856e66853924cd8d8bd1ec4d6ec",
+    "demo/journeys/j11/index.html": "99e76d60fc40aee3463b3149c4dbb79266899c59591fb70fa850800c46c25f38",
+    "demo/journeys/j11/model.mjs": "14445ef2d9be4ee66c614acbfb70ad6f77345d4e106891cef195a39b90122f7b",
+    "tests/test_pm_j11.py": "9be43079b9e2ca7cef19ea7a04287ee6f0555f4a262186a691e01a79a0ecd8e7"
+  },
+  "stagesStarted": {
+    "PM": true,
+    "UX": false,
+    "RD": false,
+    "QA": false
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "journey": "J01",
+  "revision": "PM-r01",
+  "status": "pm-candidate-for-owner-review",
+  "inputCommit": "e7f2b895d945ed478c4af2fb725ff543e8826eb5",
+  "requirements": "docs/product/journeys/j01/requirements.zh-CN.md",
+  "demo": "demo/journeys/j01/index.html",
+  "stagesStarted": {
+    "PM": true,
+    "UX": false,
+    "RD": false,
+    "QA": false
+  },
+  "files": {
+    "docs/product/journeys/j01/requirements.zh-CN.md": "af6f88ac83dbf85dc3fe103fcc6bc1ae445ecafb630fb8fa68fe0be9eacb1568",
+    "docs/product/journeys/j01/coverage.json": "d694e66eb87e67bae8fe8bbfd280ad9ad48fccb907f4a62391d545864b534ff8",
+    "docs/product/journeys/j01/author-verification.zh-CN.md": "ac1bbe3c784c87dd518525cd8895d9ad8d32fa1bc31f8c5d4de89eeb46f4c3ac",
+    "demo/journeys/j01/preview.template.html": "c08991e2cad9808cf1008ce52081d285eafc3084752c4d3f710be7d4e9b27e98",
+    "demo/journeys/j01/model.mjs": "907f6bff29627abe382feb9c5875c9c4ec3270d909b22abf0d9f981ba81acc02",
+    "demo/journeys/j01/style.css": "c79b633a17615b4a8c6af2a2be2b3cafd0ede6a6d00fad06cb9a4233eb198e57",
+    "demo/journeys/j01/index.html": "3248039a0dc1b470cb51d9e9ee3a12b986690fea7374cced3de0b36c25313f6f",
+    "demo/journeys/j01/app.mjs": "5240a532e626bad6337dced00ed6e7cc39f7602af2048ca0566e833d5179276f",
+    "demo/journeys/j01/build.mjs": "93d74768f5fe83878b3ca9170a192ccd09bb2a5adf6dbc372e239a8de53b0d5c",
+    "tests/test_pm_j01.py": "2b34c1208b9673ff395f229a333c8470578156eacf7536e997e375c36cd1c2b9"
+  }
+}

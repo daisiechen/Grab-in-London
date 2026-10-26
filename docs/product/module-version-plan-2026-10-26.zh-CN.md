@@ -1,6 +1,6 @@
 # Fancy按用户旅程组织的产品版本
 
-> 当前执行更新（r08）：用户已授权3个PM并行完成首发J01—J11各自的需求与Demo，见[并行派工记录](../delivery/pm-parallel-dispatch.zh-CN.md)。下文r07“未开工”是此前核对阶段状态；现只签发PM，UX/RD/QA及J12—J15仍未启动。
+> 当前执行更新（r08）：用户已授权3个PM并行完成首发J01—J11各自的需求与Demo，见[并行派工记录](../delivery/pm-parallel-dispatch.zh-CN.md)。本轮11个独立PM候选待用户审阅；UX/RD/QA及J12—J15仍未启动。
 修订：r07｜当前方案；原按60切片逐批交付方案已停止使用。
 
 ## 首发与后续模块
@@ -42,7 +42,7 @@
 
 ## 说明
 
-旧M01—M12和D01—D19只作为领域规则/历史资产索引，不能继续签发为PM交付批次。当前只重拆规划，不启动新旅程或修补旧登录Demo；执行状态见[旅程方案](../delivery/journey-execution.zh-CN.md)。
+旧M01—M12和D01—D19只作为领域规则/历史资产索引，不能继续签发为PM交付批次。当前首发PM候选已交回，J12—J15及UX/RD/QA未启动；不修补旧登录Demo；执行状态见[旅程方案](../delivery/journey-execution.zh-CN.md)。
 
 ## 精确交付版本与原需求对应
 

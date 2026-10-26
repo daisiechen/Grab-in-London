@@ -7,11 +7,27 @@
 - [MVP项目需求](product/fancy-requirements-baseline.zh-CN.md)：产品使用者、完整用户目标、首发/增量及业务边界。
 - [15个用户旅程模块](product/journey-modules.zh-CN.md)、[结构化范围](product/journey-modules.json)：触发→完整路径→结果与异常；首个交付应为J01找到并申请饭局，注册登录/资料不单独切片。
 - [产品版本与旧补丁映射](product/module-version-plan-2026-10-26.zh-CN.md)：iOS J01—J08＋支持J09、后台J10/J11首发；J12—J15后续，移动Web后置。
-- [项目管理方案](delivery/project-management-plan.zh-CN.md)、[旅程执行与联调](delivery/journey-execution.zh-CN.md)、[当前执行数据](delivery/journey-execution.json)：团队独立四阶段、共用合同、条件并行与版本取证；当前仅规划，无新PM任务。
+- [项目管理方案](delivery/project-management-plan.zh-CN.md)、[旅程执行与联调](delivery/journey-execution.zh-CN.md)、[当前执行数据](delivery/journey-execution.json)：团队独立四阶段、共用合同、条件并行与版本取证；首发11个PM候选待审阅，UX/RD/QA未启动。
 
 - [完整需求核对报告](product/requirements-audit.zh-CN.md)、[逐条旅程/版本映射](product/requirements-traceability.zh-CN.md)、[结构化台账](product/requirements-traceability.json)：25份原文、64个旧切片、57个验收编号，保留有效/历史/后置/未决区别。
 
 - [首发PM并行派工](delivery/pm-parallel-dispatch.zh-CN.md)、[派工数据](delivery/pm-parallel-dispatch.json)：3个PM独立目录交付J01—J11需求与Demo，仅PM阶段。
+
+## 首发旅程PM独立候选（r08）
+
+- [成对评审索引](delivery/pm-first-release-review.zh-CN.md)：每条旅程独立PRD、Demo及作者验证，只到PM候选。
+
+- J01：[需求](product/journeys/j01/requirements.zh-CN.md)、[Demo](../demo/journeys/j01/index.html)、[作者验证](product/journeys/j01/author-verification.zh-CN.md)、[范围映射](product/journeys/j01/coverage.json)、[固定清单](product/journeys/j01/artifact-manifest.json)。
+- J02：[需求](product/journeys/j02/requirements.zh-CN.md)、[Demo](../demo/journeys/j02/index.html)、[作者验证](product/journeys/j02/author-verification.zh-CN.md)、[范围映射](product/journeys/j02/coverage.json)、[固定清单](product/journeys/j02/artifact-manifest.json)。
+- J03：[需求](product/journeys/j03/requirements.zh-CN.md)、[Demo](../demo/journeys/j03/index.html)、[作者验证](product/journeys/j03/author-verification.zh-CN.md)、[范围映射](product/journeys/j03/coverage.json)、[固定清单](product/journeys/j03/artifact-manifest.json)。
+- J04：[需求](product/journeys/j04/requirements.zh-CN.md)、[Demo](../demo/journeys/j04/index.html)、[作者验证](product/journeys/j04/author-verification.zh-CN.md)、[范围映射](product/journeys/j04/coverage.json)、[固定清单](product/journeys/j04/artifact-manifest.json)。
+- J05：[需求](product/journeys/j05/requirements.zh-CN.md)、[Demo](../demo/journeys/j05/index.html)、[作者验证](product/journeys/j05/author-verification.zh-CN.md)、[范围映射](product/journeys/j05/coverage.json)、[固定清单](product/journeys/j05/artifact-manifest.json)。
+- J06：[需求](product/journeys/j06/requirements.zh-CN.md)、[Demo](../demo/journeys/j06/index.html)、[作者验证](product/journeys/j06/author-verification.zh-CN.md)、[范围映射](product/journeys/j06/coverage.json)、[固定清单](product/journeys/j06/artifact-manifest.json)。
+- J07：[需求](product/journeys/j07/requirements.zh-CN.md)、[Demo](../demo/journeys/j07/index.html)、[作者验证](product/journeys/j07/author-verification.zh-CN.md)、[范围映射](product/journeys/j07/coverage.json)、[固定清单](product/journeys/j07/artifact-manifest.json)。
+- J08：[需求](product/journeys/j08/requirements.zh-CN.md)、[Demo](../demo/journeys/j08/index.html)、[作者验证](product/journeys/j08/author-verification.zh-CN.md)、[范围映射](product/journeys/j08/coverage.json)、[固定清单](product/journeys/j08/artifact-manifest.json)。
+- J09：[需求](product/journeys/j09/requirements.zh-CN.md)、[Demo](../demo/journeys/j09/index.html)、[作者验证](product/journeys/j09/author-verification.zh-CN.md)、[范围映射](product/journeys/j09/coverage.json)、[固定清单](product/journeys/j09/artifact-manifest.json)。
+- J10：[需求](product/journeys/j10/requirements.zh-CN.md)、[Demo](../demo/journeys/j10/index.html)、[作者验证](product/journeys/j10/author-verification.zh-CN.md)、[范围映射](product/journeys/j10/coverage.json)、[固定清单](product/journeys/j10/artifact-manifest.json)。
+- J11：[需求](product/journeys/j11/requirements.zh-CN.md)、[Demo](../demo/journeys/j11/index.html)、[作者验证](product/journeys/j11/author-verification.zh-CN.md)、[范围映射](product/journeys/j11/coverage.json)、[固定清单](product/journeys/j11/artifact-manifest.json)。
 
 ## 业务详细来源
 
