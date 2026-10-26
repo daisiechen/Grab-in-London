@@ -24,6 +24,8 @@ class DocumentationTest(unittest.TestCase):
                     target = (document.parent / unquote(url.path)).resolve()
                     self.assertTrue(target.is_relative_to(ROOT), 'Link escapes project')
                     self.assertTrue(target.exists(), 'Missing document or image')
+                    if document.name.startswith('project-status-'):
+                        self.assertTrue(target.is_file(), 'Status evidence must point to a file')
 
     def test_index_covers_every_project_document(self):
         index = ROOT / 'docs/README.md'
