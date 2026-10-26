@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "r06",
+  "revision": "r07",
   "status": "journey-scope-draft",
   "platforms": [
     "ios",
@@ -14,7 +14,7 @@
       "trigger": "想找一顿合适的饭，或打开某场饭局入口。",
       "steps": [
         "浏览地图/列表，筛选并查看饭局详情、发起人公开介绍和参加条件。",
-        "需要帮助时可用AI查找/比较或起草介绍，也可全程手动操作。",
+        "需要帮助时可用AI查找/比较、解释本人状态或起草介绍；中英文、硬条件与软偏好、澄清/无结果/失败路径均保留，也可全程手动操作。",
         "主动申请时若未登录，在原意图中完成注册或登录；新用户完成验证码/供应方验证、必要公开资料及年龄/社区确认，已有用户不重复填资料。",
         "回到同一饭局，核对最新名额/截止、修改申请介绍并主动提交。",
         "看到申请已受理、待发起人审核及后续查看入口；等待期间可撤回，符合规则时可重新提交。"
@@ -40,7 +40,8 @@
         "J03",
         "J05"
       ],
-      "releaseGroup": "ios-first"
+      "releaseGroup": "ios-first",
+      "plannedVersion": "IOS-0.1.0"
     },
     {
       "id": "J02",
@@ -72,7 +73,8 @@
         "J03",
         "J04"
       ],
-      "releaseGroup": "ios-first"
+      "releaseGroup": "ios-first",
+      "plannedVersion": "IOS-0.1.0"
     },
     {
       "id": "J03",
@@ -104,7 +106,8 @@
         "J04",
         "J08"
       ],
-      "releaseGroup": "ios-first"
+      "releaseGroup": "ios-first",
+      "plannedVersion": "IOS-0.1.0"
     },
     {
       "id": "J04",
@@ -136,7 +139,8 @@
         "J10",
         "J12"
       ],
-      "releaseGroup": "ios-first"
+      "releaseGroup": "ios-first",
+      "plannedVersion": "IOS-0.1.0"
     },
     {
       "id": "J05",
@@ -145,7 +149,7 @@
       "trigger": "从自己的资料/设置进入，想更新公开介绍或调整既有隐私/可选统计选择。",
       "steps": [
         "查看当前公开资料及明确可修改项，知道哪些内容会公开。",
-        "编辑姓名、介绍、语言等既有字段，或调整既有隐私/统计选择。",
+        "编辑姓名、介绍、语言等既有字段，或调整既有隐私/统计选择；通过My preferences明确确认、替换或删除AI偏好，不建立隐藏画像。",
         "保存并查看权威结果，再返回原页面；不愿修改时取消保持原值。",
         "需要退出账号时明确退出，回到访客入口，旧账号内容不继续回填。"
       ],
@@ -162,7 +166,8 @@
         "J06",
         "J08"
       ],
-      "releaseGroup": "ios-first"
+      "releaseGroup": "ios-first",
+      "plannedVersion": "IOS-0.1.0"
     },
     {
       "id": "J06",
@@ -184,7 +189,8 @@
         "J05",
         "J12"
       ],
-      "releaseGroup": "ios-first"
+      "releaseGroup": "ios-first",
+      "plannedVersion": "IOS-0.1.0"
     },
     {
       "id": "J07",
@@ -205,7 +211,8 @@
       "integrationWith": [
         "J09"
       ],
-      "releaseGroup": "ios-first"
+      "releaseGroup": "ios-first",
+      "plannedVersion": "IOS-0.1.0"
     },
     {
       "id": "J08",
@@ -231,7 +238,8 @@
         "J09",
         "J11"
       ],
-      "releaseGroup": "ios-first"
+      "releaseGroup": "ios-first",
+      "plannedVersion": "IOS-0.1.0"
     },
     {
       "id": "J09",
@@ -257,7 +265,8 @@
         "J04",
         "J11"
       ],
-      "releaseGroup": "support-first"
+      "releaseGroup": "support-first",
+      "plannedVersion": "SUPPORT-0.1.0"
     },
     {
       "id": "J10",
@@ -266,7 +275,7 @@
       "trigger": "想知道用户在哪一步未约成、供给不足还是出席证据缺失。",
       "steps": [
         "进入有权后台，选择日期/分群及适用筛选，使用有效统计快照。",
-        "从概览查看结果，再沿同一问题进入用户旅程或饭局供需。",
+        "从概览查看结果，再沿同一问题进入用户旅程或饭局供需；概览既有14天激活、30天再赴约及观察中指标仍在首发，专门体验与留存页另属J12。",
         "打开指标口径/来源和必要的伪名记录，分辨0、unknown、缺失和观察期。",
         "逐层返回原查询和位置，得到有证据范围的业务判断。"
       ],
@@ -286,7 +295,8 @@
         "J04",
         "J11"
       ],
-      "releaseGroup": "admin-first"
+      "releaseGroup": "admin-first",
+      "plannedVersion": "ADMIN-0.1.0"
     },
     {
       "id": "J11",
@@ -312,7 +322,8 @@
         "J08",
         "J09"
       ],
-      "releaseGroup": "admin-first"
+      "releaseGroup": "admin-first",
+      "plannedVersion": "ADMIN-0.1.0"
     },
     {
       "id": "J12",
@@ -338,7 +349,8 @@
         "J09",
         "J11"
       ],
-      "releaseGroup": "later"
+      "releaseGroup": "later",
+      "plannedVersion": "ADMIN-0.2.0"
     },
     {
       "id": "J13",
@@ -362,20 +374,21 @@
       "integrationWith": [
         "J01"
       ],
-      "releaseGroup": "later"
+      "releaseGroup": "later",
+      "plannedVersion": "IOS-0.2.0"
     },
     {
       "id": "J14",
-      "title": "提及成员并让对方看到提醒",
+      "title": "发送普通群消息或提及并让对方收到提醒",
       "actor": "有权群成员、发起人和接收者",
-      "trigger": "在群里需要某人注意一条安排消息。",
+      "trigger": "在群里发送安排消息，或需要某人注意一条消息。",
       "steps": [
-        "选定当前同名成员或host允许的Everyone，形成明确提及而非纯文本猜测。",
-        "编辑并主动发送，服务校验合法接收人并去重。",
+        "有权群成员发送普通群消息或选择具体成员提及；仅发起人可@所有人，发送时确定合法去重接收人。",
+        "接收方按所在页面/消息可见位置收到适用的应用内横幅或提及记录；普通群消息不逐条写通知列表，群未读仍保留。",
         "接收方在站内记录/应用内横幅或主动授权的iOS系统通知中看到提醒。",
         "点击后定位有权消息；已可见、已读、退群/失权、过期和系统限制按规则处理。"
       ],
-      "end": "从提及选择到接收方实际有权看到消息闭合，不把事件入队或供应商接受当已送达。",
+      "end": "从普通群消息或提及发送到接收方实际有权看到提醒与消息闭合，不把事件入队或供应商接受当已送达。",
       "recovery": "失效成员降级、发送者失权保稿；纯文本不伪提及，退群重入不复活旧事件；拒绝系统权限仍有站内路径。",
       "outOfScope": "presence、全端零重复、强制系统弹出、Web Push、群消息邮件和代外发。",
       "legacySlices": [
@@ -390,7 +403,8 @@
         "J03",
         "J15"
       ],
-      "releaseGroup": "later"
+      "releaseGroup": "later",
+      "plannedVersion": "IOS-0.3.0"
     },
     {
       "id": "J15",
@@ -413,7 +427,8 @@
         "J03",
         "J14"
       ],
-      "releaseGroup": "later"
+      "releaseGroup": "later",
+      "plannedVersion": "IOS-0.3.0"
     }
   ],
   "deferredPlatform": "mobile-web",
@@ -423,5 +438,6 @@
     "M12-W01",
     "M12-W02"
   ],
-  "rule": "交付单位是用户目标到可观察结果的完整旅程；认证/资料/页面/控件/服务方法不再单独签发PM模块。"
+  "rule": "交付单位是用户目标到可观察结果的完整旅程；认证/资料/页面/控件/服务方法不再单独签发PM模块。",
+  "requirementsLedger": "docs/product/requirements-traceability.json"
 }

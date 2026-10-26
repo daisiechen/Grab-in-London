@@ -3,7 +3,7 @@
 
 文档导航：[项目文档索引](docs/README.md)。Agent 规则见 [AGENTS.md](AGENTS.md)，通用项目技能位于 `.agents/skills/`，待审核候选保存于 `.agents/candidates/`。
 
-## 当前产品与交付规划（r06）
+## 当前产品与交付规划（r07）
 
 以[完整用户旅程](docs/product/journey-modules.zh-CN.md)划分模块，[MVP需求](docs/product/fancy-requirements-baseline.zh-CN.md)定义产品行为，[项目管理方案](docs/delivery/project-management-plan.zh-CN.md)定义团队流程。登录/注册/补资料嵌入申请或发起旅程，不单独交半条体验；旧60功能切片停止作为PM派单单位。当前只完成重拆，新的PM/UX/RD/QA未开工。
 

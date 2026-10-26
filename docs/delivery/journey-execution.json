@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "r06",
+  "revision": "r07",
   "status": "planning-only",
   "pmStartAllowed": false,
   "activeJourneys": [],
@@ -26,13 +26,15 @@
         "C-AUTH",
         "C-PUBLIC",
         "C-MEMBERSHIP",
-        "C-AI"
+        "C-AI",
+        "C-NOTIFY"
       ],
       "jointValidationWith": [
         "J02",
         "J03",
         "J05"
-      ]
+      ],
+      "plannedVersion": "IOS-0.1.0"
     },
     {
       "id": "J02",
@@ -50,13 +52,15 @@
         "C-PUBLIC",
         "C-MEAL",
         "C-MEMBERSHIP",
-        "C-AI"
+        "C-AI",
+        "C-NOTIFY"
       ],
       "jointValidationWith": [
         "J01",
         "J03",
         "J04"
-      ]
+      ],
+      "plannedVersion": "IOS-0.1.0"
     },
     {
       "id": "J03",
@@ -74,14 +78,16 @@
         "C-MEAL",
         "C-MEMBERSHIP",
         "C-MESSAGE",
-        "C-AI"
+        "C-AI",
+        "C-NOTIFY"
       ],
       "jointValidationWith": [
         "J01",
         "J02",
         "J04",
         "J08"
-      ]
+      ],
+      "plannedVersion": "IOS-0.1.0"
     },
     {
       "id": "J04",
@@ -107,7 +113,8 @@
         "J09",
         "J10",
         "J12"
-      ]
+      ],
+      "plannedVersion": "IOS-0.1.0"
     },
     {
       "id": "J05",
@@ -122,14 +129,16 @@
       },
       "requiredContracts": [
         "C-AUTH",
-        "C-PROFILE"
+        "C-PROFILE",
+        "C-AI"
       ],
       "jointValidationWith": [
         "J01",
         "J02",
         "J06",
         "J08"
-      ]
+      ],
+      "plannedVersion": "IOS-0.1.0"
     },
     {
       "id": "J06",
@@ -150,7 +159,8 @@
       "jointValidationWith": [
         "J05",
         "J12"
-      ]
+      ],
+      "plannedVersion": "IOS-0.1.0"
     },
     {
       "id": "J07",
@@ -165,11 +175,13 @@
       },
       "requiredContracts": [
         "C-AUTH",
-        "C-SUPPORT"
+        "C-SUPPORT",
+        "C-NOTIFY"
       ],
       "jointValidationWith": [
         "J09"
-      ]
+      ],
+      "plannedVersion": "IOS-0.1.0"
     },
     {
       "id": "J08",
@@ -188,14 +200,16 @@
         "C-MEMBERSHIP",
         "C-MESSAGE",
         "C-SUPPORT",
-        "C-ANALYTICS"
+        "C-ANALYTICS",
+        "C-AI"
       ],
       "jointValidationWith": [
         "J03",
         "J04",
         "J09",
         "J11"
-      ]
+      ],
+      "plannedVersion": "IOS-0.1.0"
     },
     {
       "id": "J09",
@@ -212,14 +226,16 @@
         "C-AUTH",
         "C-SUPPORT",
         "C-FEEDBACK",
-        "C-ANALYTICS"
+        "C-ANALYTICS",
+        "C-NOTIFY"
       ],
       "jointValidationWith": [
         "J07",
         "J08",
         "J04",
         "J11"
-      ]
+      ],
+      "plannedVersion": "SUPPORT-0.1.0"
     },
     {
       "id": "J10",
@@ -244,7 +260,8 @@
         "J02",
         "J04",
         "J11"
-      ]
+      ],
+      "plannedVersion": "ADMIN-0.1.0"
     },
     {
       "id": "J11",
@@ -265,7 +282,8 @@
         "J10",
         "J08",
         "J09"
-      ]
+      ],
+      "plannedVersion": "ADMIN-0.1.0"
     },
     {
       "id": "J12",
@@ -287,7 +305,8 @@
         "J06",
         "J09",
         "J11"
-      ]
+      ],
+      "plannedVersion": "ADMIN-0.2.0"
     },
     {
       "id": "J13",
@@ -307,7 +326,8 @@
       ],
       "jointValidationWith": [
         "J01"
-      ]
+      ],
+      "plannedVersion": "IOS-0.2.0"
     },
     {
       "id": "J14",
@@ -327,7 +347,8 @@
       "jointValidationWith": [
         "J03",
         "J15"
-      ]
+      ],
+      "plannedVersion": "IOS-0.3.0"
     },
     {
       "id": "J15",
@@ -347,7 +368,8 @@
       "jointValidationWith": [
         "J03",
         "J14"
-      ]
+      ],
+      "plannedVersion": "IOS-0.3.0"
     }
   ],
   "sharedContracts": [
@@ -466,15 +488,22 @@
       "consumers": [
         "J01",
         "J02",
-        "J03"
+        "J03",
+        "J05",
+        "J08"
       ],
       "writer": null,
       "revision": null
     },
     {
       "id": "C-NOTIFY",
-      "scope": "提及、mute、订阅和通知投递",
+      "scope": "首发站内业务通知及关键审批/取消邮件；后续普通群消息/提及、mute、订阅和系统投递，按版本分段",
       "consumers": [
+        "J01",
+        "J02",
+        "J03",
+        "J07",
+        "J09",
         "J14",
         "J15"
       ],
@@ -569,5 +598,7 @@
     "status": "historical-incomplete-candidate",
     "acceptedAsJourney": false,
     "reason": "仅邮箱验证，注册/资料/申请链不完整；不再是当前评审或继续实施对象"
-  }
+  },
+  "requirementsLedger": "docs/product/requirements-traceability.json",
+  "versionMeaning": "规划交付集合编号，非已发布build或已批准排期；不得据此开工。"
 }

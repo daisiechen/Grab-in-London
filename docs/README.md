@@ -2,12 +2,14 @@
 
 项目入口：[README](../README.md)。本目录保存项目知识；Agent 协作规则见 [AGENTS.md](../AGENTS.md)，正式方法在 `.agents/skills/`，待审核候选在 `.agents/candidates/`，不作为现行执行规则。
 
-## 当前产品与管理输入（r06）
+## 当前产品与管理输入（r07）
 
 - [MVP项目需求](product/fancy-requirements-baseline.zh-CN.md)：产品使用者、完整用户目标、首发/增量及业务边界。
 - [15个用户旅程模块](product/journey-modules.zh-CN.md)、[结构化范围](product/journey-modules.json)：触发→完整路径→结果与异常；首个交付应为J01找到并申请饭局，注册登录/资料不单独切片。
 - [产品版本与旧补丁映射](product/module-version-plan-2026-10-26.zh-CN.md)：iOS J01—J08＋支持J09、后台J10/J11首发；J12—J15后续，移动Web后置。
 - [项目管理方案](delivery/project-management-plan.zh-CN.md)、[旅程执行与联调](delivery/journey-execution.zh-CN.md)、[当前执行数据](delivery/journey-execution.json)：团队独立四阶段、共用合同、条件并行与版本取证；当前仅规划，无新PM任务。
+
+- [完整需求核对报告](product/requirements-audit.zh-CN.md)、[逐条旅程/版本映射](product/requirements-traceability.zh-CN.md)、[结构化台账](product/requirements-traceability.json)：25份原文、64个旧切片、57个验收编号，保留有效/历史/后置/未决区别。
 
 ## 业务详细来源
 

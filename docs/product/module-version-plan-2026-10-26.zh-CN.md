@@ -1,6 +1,6 @@
 # Fancy按用户旅程组织的产品版本
 
-修订：r06｜当前方案；原按60切片逐批交付方案已停止使用。
+修订：r07｜当前方案；原按60切片逐批交付方案已停止使用。
 
 ## 首发与后续模块
 
@@ -21,7 +21,7 @@
 | J11 | [调整统计分类并拿到可信导出](journey-modules.zh-CN.md#j11) | admin-first |
 | J12 | [分析饭后体验与后续赴约](journey-modules.zh-CN.md#j12) | later |
 | J13 | [邀请朋友查看并申请饭局](journey-modules.zh-CN.md#j13) | later |
-| J14 | [提及成员并让对方看到提醒](journey-modules.zh-CN.md#j14) | later |
+| J14 | [发送普通群消息或提及并让对方收到提醒](journey-modules.zh-CN.md#j14) | later |
 | J15 | [减少群消息打扰但保留重要提及](journey-modules.zh-CN.md#j15) | later |
 
 首发iOS为J01—J08加支持运营J09，首发后台为J10/J11；后续J12—J15，移动Web不进入本版。旧能力和规则没有删除，变的是交付边界。
@@ -42,3 +42,7 @@
 ## 说明
 
 旧M01—M12和D01—D19只作为领域规则/历史资产索引，不能继续签发为PM交付批次。当前只重拆规划，不启动新旅程或修补旧登录Demo；执行状态见[旅程方案](../delivery/journey-execution.zh-CN.md)。
+
+## 精确交付版本与原需求对应
+
+以[MVP需求§7](fancy-requirements-baseline.zh-CN.md#7-原需求逐条归属与交付版本)及[全量范围台账](requirements-audit.zh-CN.md)为准；每条原需求都带旅程和版本。J01—J08=IOS-0.1.0，J09=SUPPORT-0.1.0，J10/J11=ADMIN-0.1.0，J12=ADMIN-0.2.0，J13=IOS-0.2.0，J14/J15=IOS-0.3.0。Web及未来探索无批准排期。上述为规划编号，不是已发布状态。
