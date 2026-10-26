@@ -1,0 +1,22 @@
+{
+  "batch": "M01-01",
+  "pmRevision": "PM-r01",
+  "sourceCommit": "b9d95a98e958071fc4d076d5038ab5b4d9b62db4",
+  "sourceDemo": "demo/batches/m01-01/index.html",
+  "sourceSha256": "ecde56080e9351b48fcf09726465df855ad0f7b78cc00d790725c41ddac5fefe",
+  "hostingSourceCommit": "f22264d4e1f59aed3459e88150f194b17886b8b0",
+  "siteId": "appgprj_6adfae9864b481919c7116d25ce63945",
+  "deploymentId": "appgdep_6adfaf30eb8481918dfa0f2ff2e02ed4",
+  "versionId": "appgprj_6adfae9864b481919c7116d25ce63945~appgver_f7acf48505048191a10ebef1b23a1981",
+  "deploymentStatus": "succeeded",
+  "audience": "owner-private",
+  "url": "https://fancy-m01-01-pm-preview-b9d95a9.daisie-chen-94.chatgpt.site",
+  "requirementsUrl": "https://fancy-m01-01-pm-preview-b9d95a9.daisie-chen-94.chatgpt.site/requirements.html",
+  "transportChange": {
+    "from": "../../../docs/product/batches/m01-01/requirements.zh-CN.md",
+    "to": "/requirements.html"
+  },
+  "hostedHtmlSha256": "685ed6a72a7ea8fd1f4ee010620279fd6ca2598127799f1dedb0ea7acfa6d715",
+  "newProfessionalStagesStarted": [],
+  "realAuthentication": false
+}

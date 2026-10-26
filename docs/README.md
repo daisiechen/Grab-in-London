@@ -4,7 +4,7 @@
 
 ## 当前单批PM候选：M01-01待用户审阅
 
-- [M01-01需求 PM-r01](product/batches/m01-01/requirements.zh-CN.md)与[交互Demo](../demo/batches/m01-01/index.html)：仅访客入口/邮箱验证码/恢复与意图回流；iOS流程模拟，未接真实认证。
+- [M01-01需求 PM-r01](product/batches/m01-01/requirements.zh-CN.md)与[HTTPS私有交互Demo](https://fancy-m01-01-pm-preview-b9d95a9.daisie-chen-94.chatgpt.site)：仅访客入口/邮箱验证码/恢复与意图回流；iOS流程模拟，未接真实认证。
 - [M01-01作者验证](product/batches/m01-01/author-verification.zh-CN.md)、[成对产物清单](product/batches/m01-01/artifact-manifest.json)：作者自检与未测边界，不代表UX/RD/QA或产品批准。
 
 ## 产品与需求
@@ -68,6 +68,8 @@
 - [MVP运行与交付](../infra/README.md)：本机临时联调、API/worker入口、CI、首尔目录隔离及待授权的真实部署/恢复边界。
 
 ## 项目管理与执行
+
+- [M01-01预览访问修复](delivery/m01-01-preview-access.zh-CN.md)、[固定托管记录](delivery/m01-01-preview-access.json)：已成功托管的owner-private HTTPS入口，避免首尔本地路径不可访问。
 
 - [M01-01 PM单批工作包](delivery/work-packages/m01-01-pm.zh-CN.md)：仅授权该批需求＋交互Demo，独立新产物作者；用户先看，后续UX/RD/QA及其他批次不启动。
 

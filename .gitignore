@@ -21,3 +21,6 @@ coverage/
 .claude/projects/
 .claude/cache/
 CLAUDE.local.md
+
+# Isolated owner-private static Demo hosting checkout
+.preview-sites/
