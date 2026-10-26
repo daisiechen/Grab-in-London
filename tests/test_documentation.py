@@ -38,6 +38,16 @@ class DocumentationTest(unittest.TestCase):
             with self.subTest(document=document.relative_to(ROOT)):
                 self.assertIn(document.resolve(), indexed)
 
+    def test_module_plan_retains_all_patch_sources(self):
+        source = (ROOT / 'docs/product/mvp-patch-PRD.zh-CN.md').read_text()
+        plan = (ROOT / 'docs/product/module-version-plan-2026-10-26.zh-CN.md').read_text()
+        source_ids = set(re.findall(r'PATCH-00[1-8]', source))
+        mapped_ids = set(re.findall(r'^\| (PATCH-00[1-8]) \|', plan, re.MULTILINE))
+        self.assertEqual(source_ids, mapped_ids, 'Approved patch scope lost during decomposition')
+        for case_id in ('J005', 'J008', 'J009', 'J011', 'AI-050', 'AI-052'):
+            with self.subTest(inherited_case=case_id):
+                self.assertIn(case_id, plan)
+
     def test_root_points_to_index_and_candidates_are_not_skills(self):
         self.assertIn('docs/README.md', LINK.findall((ROOT / 'README.md').read_text()))
         self.assertIn('.agents/candidates/', (ROOT / 'AGENTS.md').read_text())

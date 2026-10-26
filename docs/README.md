@@ -6,6 +6,7 @@
 
 | 文档 | 用途与权威关系 |
 | --- | --- |
+| [模块与需求版本拆分](product/module-version-plan-2026-10-26.zh-CN.md) | 用户要求先拆分再推进：12个业务模块、D01—D19需求交付范围与继承映射；不自动开工，不改现行业务规则 |
 | [主 PRD](product/PRD.zh-CN.md) | 当前v0.8需求真源；§0为已确认首期规格，沿用星期日恢复版界面 |
 | [MVP 补丁版本 PRD](product/mvp-patch-PRD.zh-CN.md) | 下一版增量需求、UX 问答及 Figma / 补丁 Demo 映射；需求梳理中，不改变当前 MVP 开发与测试基线 |
 | [产品简介](product/product-brief.md) | 产品定位与摘要；详细规则以主 PRD 为准 |
