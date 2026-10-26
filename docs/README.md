@@ -15,7 +15,7 @@
 
 ## 首发旅程PM独立候选（r08）
 
-- [成对评审索引](delivery/pm-first-release-review.zh-CN.md)：每条旅程独立PRD、Demo及作者验证，只到PM候选。
+- [成对评审索引](delivery/pm-first-release-review.zh-CN.md)、[不含私有入口的发布摘要](delivery/pm-preview-release.json)：每条旅程独立PRD、Demo及作者验证，只到PM候选。
 
 - J01：[需求](product/journeys/j01/requirements.zh-CN.md)、[Demo](../demo/journeys/j01/index.html)、[作者验证](product/journeys/j01/author-verification.zh-CN.md)、[范围映射](product/journeys/j01/coverage.json)、[固定清单](product/journeys/j01/artifact-manifest.json)。
 - J02：[需求](product/journeys/j02/requirements.zh-CN.md)、[Demo](../demo/journeys/j02/index.html)、[作者验证](product/journeys/j02/author-verification.zh-CN.md)、[范围映射](product/journeys/j02/coverage.json)、[固定清单](product/journeys/j02/artifact-manifest.json)。

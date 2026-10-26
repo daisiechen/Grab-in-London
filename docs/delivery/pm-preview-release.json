@@ -1,0 +1,46 @@
+{
+  "revision": "PM-r01",
+  "scopeRevision": "r07",
+  "dispatchRevision": "r08",
+  "candidateCommit": "a2184bb965a62445e11799ecc25a5002a7fa3e8b",
+  "deploymentStatus": "succeeded",
+  "audience": "owner-private",
+  "userAuthorizedPrivatePreview": true,
+  "professionalStagesStarted": [
+    "PM"
+  ],
+  "professionalStagesNotStarted": [
+    "UX",
+    "RD",
+    "QA"
+  ],
+  "verificationBoundary": "181项仓库检查通过；jsdom状态/DOM/入口验证。真实浏览器视觉、原生iOS及真实服务未验证；发布工具仅证明静态预览部署成功。",
+  "prototypeHashes": {
+    "J01": "3248039a0dc1b470cb51d9e9ee3a12b986690fea7374cced3de0b36c25313f6f",
+    "J02": "d876732ddbdc667816a473a91969464c6a49d574d3fc2fc745d207b8a68989bc",
+    "J03": "12d823bf051ea6782a194576c5dba26895c51e3ea506ab31f4a9072a261a50af",
+    "J04": "0156de9d9420cdca35f1343cc887a56a3f6fb0661e53c657d0ad996f0f53d043",
+    "J05": "3555b563bc43c5e5455eba55527406edc47e6edf11bca0a070dea6693ab09b19",
+    "J06": "f3b9eb2071f1a520ddccae4f06251b4d6f650fb435feb23c1c5c91a8144eb942",
+    "J07": "903de8829a0cc6b68678faee022030e9a3921baddacb16f7acf2edf582cdf228",
+    "J08": "c73bce06dbb3e60fd3b6860362ce17aa27b389ea9badc67aac60170a16922768",
+    "J09": "12889d647c3c2e2bead17a9ef3b52b66543d9e0fdffbf80b48e0d2d513ae18fd",
+    "J10": "0de0fd418522942ce491e66bb305c5070fef218e785c2ff984f7f1226ab089ae",
+    "J11": "99e76d60fc40aee3463b3149c4dbb79266899c59591fb70fa850800c46c25f38"
+  },
+  "requirementHashes": {
+    "J01": "af6f88ac83dbf85dc3fe103fcc6bc1ae445ecafb630fb8fa68fe0be9eacb1568",
+    "J02": "6a6211922d649a12899803721b709cb67f2e37e6bea428d804cee399d3df4299",
+    "J03": "c1c04088090495498d995e73f1cf7c1a74e8af2c5bf3e09f4fb3cda142876ca6",
+    "J04": "8172b103c759b19b6b70a2dea946bd50cc7286405a31dc73b4012cf169da72a7",
+    "J05": "f26790768fcafd143f17ba57a4914b3bc9af66635dd048dba0bb6d257f39f492",
+    "J06": "f61c525aa2cc344b274897146b602a1f42e28d49f20d2226be59e0bd1322c6f7",
+    "J07": "5dd9c7a3dc993a621f288ad4f0ac977129ced8a9fd3db802c6f5e6b08fd8c2bd",
+    "J08": "3f747817145b1c8574ba90ba886ebb5d72d3fd801911b99c9421ebef28193203",
+    "J09": "a168fbe0061d462db602a1240da95e1e3182cea1946acc7458412deb7960261c",
+    "J10": "3a2436f5463073f4257733d8edcd83f509160bf7dd97f8d898e8229718d11afd",
+    "J11": "40921832dd47a5c0df9615b2ddbe483bfa54e51890b527083410d8c09f1451a3"
+  },
+  "privateMetadataExcluded": true,
+  "publicationEvidence": "Sites owner-private发布操作返回succeeded；私有URL及项目/部署标识仅存私有记录，不进入公开仓库。"
+}
