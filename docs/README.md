@@ -6,13 +6,31 @@
 
 | 文档 | 用途与权威关系 |
 | --- | --- |
-| [模块与需求版本拆分](product/module-version-plan-2026-10-26.zh-CN.md) | 用户要求先拆分再推进：12个业务模块、D01—D19需求交付范围与继承映射；不自动开工，不改现行业务规则 |
+| [整体需求基线r02](product/fancy-requirements-baseline.zh-CN.md) | PJ上游需求输入：产品背景、角色、自然路径与模块导航；待用户审阅，不替代原PRD、不授权实施 |
+| [需求版本与工作包规则r02](product/module-version-plan-2026-10-26.zh-CN.md) | D01—D19依赖、worker任务边界、原PATCH与15条未闭验收继承；整体背景先读需求基线 |
 | [主 PRD](product/PRD.zh-CN.md) | 当前v0.8需求真源；§0为已确认首期规格，沿用星期日恢复版界面 |
 | [MVP 补丁版本 PRD](product/mvp-patch-PRD.zh-CN.md) | 下一版增量需求、UX 问答及 Figma / 补丁 Demo 映射；需求梳理中，不改变当前 MVP 开发与测试基线 |
 | [产品简介](product/product-brief.md) | 产品定位与摘要；详细规则以主 PRD 为准 |
 | [首期运营指标与采集契约](product/admin/measurement-contract.zh-CN.md) | 后台全部指标算法、App采集入口与生产数据接入验收 |
 | [管理端 PRD](product/admin/PRD.zh-CN.md) | 管理端范围及指标；引用主 PRD，不替代共享业务规则 |
 | [历史R1原型与模拟交接](../shared/README.md) | 历史参考，非现行研发契约；业务真源为主PRD§0 |
+
+## 模块需求说明（r02）
+
+以下为PJ供产品/设计/研发/QA展开的模块输入，均待用户审阅。业务详细真源仍为上表原PRD及采集契约；结构化入口为[需求目录](product/requirements-catalog.json)。
+
+- [M01 账号与个人资料](product/modules/m01-account-profile.zh-CN.md)：D01。
+- [M02 发现饭局与查看详情](product/modules/m02-discovery-detail.zh-CN.md)：D02。
+- [M03 发起饭局与管理安排](product/modules/m03-hosting-arrangements.zh-CN.md)：D03。
+- [M04 申请参加与成员管理](product/modules/m04-applications-membership.zh-CN.md)：D04。
+- [M05 基础Inbox与授权聊天](product/modules/m05-inbox-messaging.zh-CN.md)：D05。
+- [M06 出席反馈与持续联系](product/modules/m06-attendance-connections.zh-CN.md)：D06、D07。
+- [M07 举报支持与账号删除](product/modules/m07-support-deletion.zh-CN.md)：D08、D09。
+- [M08 产品数据与管理后台](product/modules/m08-analytics-admin.zh-CN.md)：D10、D11、D12。
+- [M09 AI查询与草稿助手](product/modules/m09-ai-assistant.zh-CN.md)：D13、D14。
+- [M10 分享饭局与邀请落地](product/modules/m10-sharing-invitations.zh-CN.md)：D15、D16。
+- [M11 群提及与应用内免打扰](product/modules/m11-mentions-muting.zh-CN.md)：D17。
+- [M12 后台与锁屏系统通知](product/modules/m12-system-notifications.zh-CN.md)：D18、D19。
 
 ## 调研与商业模式
 

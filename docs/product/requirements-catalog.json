@@ -1,0 +1,375 @@
+{
+  "schemaVersion": 1,
+  "revision": "r02",
+  "status": "owner-review-pending",
+  "implementationAuthorizedByThisPackage": false,
+  "modules": [
+    {
+      "id": "M01",
+      "title": "账号与个人资料",
+      "path": "docs/product/modules/m01-account-profile.zh-CN.md",
+      "patches": [
+        "PATCH-001"
+      ],
+      "versions": [
+        {
+          "id": "D01",
+          "title": "账号与资料闭环",
+          "dependsOn": [],
+          "acceptanceIds": [
+            "D01-AC01",
+            "D01-AC02",
+            "D01-AC03"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M02",
+      "title": "发现饭局与查看详情",
+      "path": "docs/product/modules/m02-discovery-detail.zh-CN.md",
+      "patches": [
+        "PATCH-002"
+      ],
+      "versions": [
+        {
+          "id": "D02",
+          "title": "发现与详情闭环",
+          "dependsOn": [],
+          "acceptanceIds": [
+            "D02-AC01",
+            "D02-AC02",
+            "D02-AC03"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M03",
+      "title": "发起饭局与管理安排",
+      "path": "docs/product/modules/m03-hosting-arrangements.zh-CN.md",
+      "patches": [
+        "PATCH-003"
+      ],
+      "versions": [
+        {
+          "id": "D03",
+          "title": "创建与安排闭环",
+          "dependsOn": [
+            "D01"
+          ],
+          "acceptanceIds": [
+            "D03-AC01",
+            "D03-AC02",
+            "D03-AC03"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M04",
+      "title": "申请参加与成员管理",
+      "path": "docs/product/modules/m04-applications-membership.zh-CN.md",
+      "patches": [
+        "PATCH-002",
+        "PATCH-003"
+      ],
+      "versions": [
+        {
+          "id": "D04",
+          "title": "申请与成员闭环",
+          "dependsOn": [
+            "D01",
+            "D02",
+            "D03"
+          ],
+          "acceptanceIds": [
+            "D04-AC01",
+            "D04-AC02",
+            "D04-AC03"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M05",
+      "title": "基础Inbox与授权聊天",
+      "path": "docs/product/modules/m05-inbox-messaging.zh-CN.md",
+      "patches": [
+        "PATCH-004",
+        "PATCH-008"
+      ],
+      "versions": [
+        {
+          "id": "D05",
+          "title": "基础沟通闭环",
+          "dependsOn": [
+            "D04"
+          ],
+          "acceptanceIds": [
+            "D05-AC01",
+            "D05-AC02",
+            "D05-AC03"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M06",
+      "title": "出席反馈与持续联系",
+      "path": "docs/product/modules/m06-attendance-connections.zh-CN.md",
+      "patches": [
+        "PATCH-004"
+      ],
+      "versions": [
+        {
+          "id": "D06",
+          "title": "出席与反馈",
+          "dependsOn": [
+            "D03",
+            "D04"
+          ],
+          "acceptanceIds": [
+            "D06-AC01",
+            "D06-AC02",
+            "D06-AC03"
+          ]
+        },
+        {
+          "id": "D07",
+          "title": "再约与连接",
+          "dependsOn": [
+            "D05",
+            "D06"
+          ],
+          "acceptanceIds": [
+            "D07-AC01",
+            "D07-AC02",
+            "D07-AC03"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M07",
+      "title": "举报支持与账号删除",
+      "path": "docs/product/modules/m07-support-deletion.zh-CN.md",
+      "patches": [
+        "PATCH-001",
+        "PATCH-004"
+      ],
+      "versions": [
+        {
+          "id": "D08",
+          "title": "举报与支持纠错",
+          "dependsOn": [
+            "D01",
+            "D06",
+            "D07"
+          ],
+          "acceptanceIds": [
+            "D08-AC01",
+            "D08-AC02",
+            "D08-AC03"
+          ]
+        },
+        {
+          "id": "D09",
+          "title": "删除与结果恢复",
+          "dependsOn": [
+            "D01",
+            "D04",
+            "D05",
+            "D07",
+            "D08"
+          ],
+          "acceptanceIds": [
+            "D09-AC01",
+            "D09-AC02",
+            "D09-AC03"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M08",
+      "title": "产品数据与管理后台",
+      "path": "docs/product/modules/m08-analytics-admin.zh-CN.md",
+      "patches": [
+        "PATCH-006"
+      ],
+      "versions": [
+        {
+          "id": "D10",
+          "title": "基础统计与追溯",
+          "dependsOn": [
+            "D03",
+            "D04",
+            "D06"
+          ],
+          "acceptanceIds": [
+            "D10-AC01",
+            "D10-AC02",
+            "D10-AC03"
+          ]
+        },
+        {
+          "id": "D11",
+          "title": "分类、快照与导出",
+          "dependsOn": [
+            "D10"
+          ],
+          "acceptanceIds": [
+            "D11-AC01",
+            "D11-AC02",
+            "D11-AC03"
+          ]
+        },
+        {
+          "id": "D12",
+          "title": "体验与留存",
+          "dependsOn": [
+            "D06",
+            "D07",
+            "D10",
+            "D11"
+          ],
+          "acceptanceIds": [
+            "D12-AC01",
+            "D12-AC02",
+            "D12-AC03"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M09",
+      "title": "AI查询与草稿助手",
+      "path": "docs/product/modules/m09-ai-assistant.zh-CN.md",
+      "patches": [
+        "PATCH-005"
+      ],
+      "versions": [
+        {
+          "id": "D13",
+          "title": "查询、解释与偏好",
+          "dependsOn": [
+            "D01",
+            "D02"
+          ],
+          "acceptanceIds": [
+            "D13-AC01",
+            "D13-AC02",
+            "D13-AC03"
+          ]
+        },
+        {
+          "id": "D14",
+          "title": "草稿与原编辑器转入",
+          "dependsOn": [
+            "D03",
+            "D04",
+            "D05",
+            "D13"
+          ],
+          "acceptanceIds": [
+            "D14-AC01",
+            "D14-AC02",
+            "D14-AC03"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M10",
+      "title": "分享饭局与邀请落地",
+      "path": "docs/product/modules/m10-sharing-invitations.zh-CN.md",
+      "patches": [
+        "PATCH-007"
+      ],
+      "versions": [
+        {
+          "id": "D15",
+          "title": "Web分享与接收",
+          "dependsOn": [
+            "D02",
+            "D04"
+          ],
+          "acceptanceIds": [
+            "D15-AC01",
+            "D15-AC02",
+            "D15-AC03"
+          ]
+        },
+        {
+          "id": "D16",
+          "title": "iOS分享与公开链接",
+          "dependsOn": [
+            "D15"
+          ],
+          "acceptanceIds": [
+            "D16-AC01",
+            "D16-AC02",
+            "D16-AC03"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M11",
+      "title": "群提及与应用内免打扰",
+      "path": "docs/product/modules/m11-mentions-muting.zh-CN.md",
+      "patches": [
+        "PATCH-008"
+      ],
+      "versions": [
+        {
+          "id": "D17",
+          "title": "站内提及与免打扰",
+          "dependsOn": [
+            "D05"
+          ],
+          "acceptanceIds": [
+            "D17-AC01",
+            "D17-AC02",
+            "D17-AC03"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M12",
+      "title": "后台与锁屏系统通知",
+      "path": "docs/product/modules/m12-system-notifications.zh-CN.md",
+      "patches": [
+        "PATCH-008"
+      ],
+      "versions": [
+        {
+          "id": "D18",
+          "title": "iOS系统投递",
+          "dependsOn": [
+            "D17"
+          ],
+          "acceptanceIds": [
+            "D18-AC01",
+            "D18-AC02",
+            "D18-AC03"
+          ]
+        },
+        {
+          "id": "D19",
+          "title": "Web系统投递",
+          "dependsOn": [
+            "D17"
+          ],
+          "acceptanceIds": [
+            "D19-AC01",
+            "D19-AC02",
+            "D19-AC03"
+          ]
+        }
+      ]
+    }
+  ]
+}
