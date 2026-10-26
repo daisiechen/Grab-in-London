@@ -82,17 +82,17 @@ class RequirementsTraceabilityTest(unittest.TestCase):
         notify = next(c for c in self.execution['sharedContracts'] if c['id'] == 'C-NOTIFY')
         self.assertTrue({'J02', 'J03', 'J14', 'J15'} <= set(notify['consumers']))
 
-    def test_versions_are_consistent_and_no_professional_work_is_issued(self):
+    def test_versions_and_historical_audit_authority_remain_consistent(self):
         assignments = self.ledger['versionAssignments']
         for plan in (self.product, self.execution):
             for j in plan['journeys']:
                 self.assertEqual(j['plannedVersion'], assignments[j['id']])
         self.assertFalse(self.ledger['pmStartAllowed'])
-        self.assertFalse(self.execution['pmStartAllowed'])
-        self.assertEqual(self.execution['activeJourneys'], [])
+        # Audit snapshot grants no work; newer explicit user authorization grants PM only.
+        self.assertTrue(self.execution['pmStartAllowed'])
         for j in self.execution['journeys']:
-            self.assertEqual(j['status'], 'not-issued')
-            self.assertEqual(set(j['stages'].values()), {'not-started'})
+            for stage in ('UX', 'RD', 'QA'):
+                self.assertEqual(j['stages'][stage], 'not-started')
 
     def test_readable_table_is_current_and_both_authorities_reference_it(self):
         rendered = script('render_requirements_traceability').render()

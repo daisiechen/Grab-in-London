@@ -1,5 +1,6 @@
 # Fancy项目管理方案：按完整用户旅程交付
 
+> 当前执行更新（r08）：用户已授权3个PM并行完成首发J01—J11各自的需求与Demo，见[并行派工记录](pm-parallel-dispatch.zh-CN.md)。下文r07“未开工”是此前核对阶段状态；现只签发PM，UX/RD/QA及J12—J15仍未启动。
 修订：r07｜当前仅重拆规划，activeJourneys=[]，PM/UX/RD/QA均未签发新任务。
 
 ## 1. 当前交付单位

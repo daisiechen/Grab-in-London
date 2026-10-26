@@ -1,9 +1,21 @@
 {
   "schemaVersion": 1,
-  "revision": "r07",
-  "status": "planning-only",
-  "pmStartAllowed": false,
-  "activeJourneys": [],
+  "revision": "r08",
+  "status": "pm-in-progress",
+  "pmStartAllowed": true,
+  "activeJourneys": [
+    "J01",
+    "J02",
+    "J03",
+    "J04",
+    "J05",
+    "J06",
+    "J07",
+    "J08",
+    "J09",
+    "J10",
+    "J11"
+  ],
   "stages": [
     "PM",
     "UX",
@@ -14,10 +26,10 @@
     {
       "id": "J01",
       "priority": 1,
-      "status": "not-issued",
-      "currentStage": null,
+      "status": "pm-in-progress",
+      "currentStage": "PM",
       "stages": {
-        "PM": "not-started",
+        "PM": "in-progress",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -34,15 +46,16 @@
         "J03",
         "J05"
       ],
-      "plannedVersion": "IOS-0.1.0"
+      "plannedVersion": "IOS-0.1.0",
+      "pmOwner": "PM-1"
     },
     {
       "id": "J02",
       "priority": 2,
-      "status": "not-issued",
-      "currentStage": null,
+      "status": "pm-in-progress",
+      "currentStage": "PM",
       "stages": {
-        "PM": "not-started",
+        "PM": "in-progress",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -60,15 +73,16 @@
         "J03",
         "J04"
       ],
-      "plannedVersion": "IOS-0.1.0"
+      "plannedVersion": "IOS-0.1.0",
+      "pmOwner": "PM-2"
     },
     {
       "id": "J03",
       "priority": 3,
-      "status": "not-issued",
-      "currentStage": null,
+      "status": "pm-issued-queued",
+      "currentStage": "PM",
       "stages": {
-        "PM": "not-started",
+        "PM": "queued",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -87,15 +101,16 @@
         "J04",
         "J08"
       ],
-      "plannedVersion": "IOS-0.1.0"
+      "plannedVersion": "IOS-0.1.0",
+      "pmOwner": "PM-2"
     },
     {
       "id": "J04",
       "priority": 4,
-      "status": "not-issued",
-      "currentStage": null,
+      "status": "pm-issued-queued",
+      "currentStage": "PM",
       "stages": {
-        "PM": "not-started",
+        "PM": "queued",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -114,15 +129,16 @@
         "J10",
         "J12"
       ],
-      "plannedVersion": "IOS-0.1.0"
+      "plannedVersion": "IOS-0.1.0",
+      "pmOwner": "PM-2"
     },
     {
       "id": "J05",
       "priority": 5,
-      "status": "not-issued",
-      "currentStage": null,
+      "status": "pm-issued-queued",
+      "currentStage": "PM",
       "stages": {
-        "PM": "not-started",
+        "PM": "queued",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -138,15 +154,16 @@
         "J06",
         "J08"
       ],
-      "plannedVersion": "IOS-0.1.0"
+      "plannedVersion": "IOS-0.1.0",
+      "pmOwner": "PM-1"
     },
     {
       "id": "J06",
       "priority": 6,
-      "status": "not-issued",
-      "currentStage": null,
+      "status": "pm-issued-queued",
+      "currentStage": "PM",
       "stages": {
-        "PM": "not-started",
+        "PM": "queued",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -160,15 +177,16 @@
         "J05",
         "J12"
       ],
-      "plannedVersion": "IOS-0.1.0"
+      "plannedVersion": "IOS-0.1.0",
+      "pmOwner": "PM-1"
     },
     {
       "id": "J07",
       "priority": 7,
-      "status": "not-issued",
-      "currentStage": null,
+      "status": "pm-issued-queued",
+      "currentStage": "PM",
       "stages": {
-        "PM": "not-started",
+        "PM": "queued",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -181,15 +199,16 @@
       "jointValidationWith": [
         "J09"
       ],
-      "plannedVersion": "IOS-0.1.0"
+      "plannedVersion": "IOS-0.1.0",
+      "pmOwner": "PM-3"
     },
     {
       "id": "J08",
       "priority": 8,
-      "status": "not-issued",
-      "currentStage": null,
+      "status": "pm-issued-queued",
+      "currentStage": "PM",
       "stages": {
-        "PM": "not-started",
+        "PM": "queued",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -209,15 +228,16 @@
         "J09",
         "J11"
       ],
-      "plannedVersion": "IOS-0.1.0"
+      "plannedVersion": "IOS-0.1.0",
+      "pmOwner": "PM-1"
     },
     {
       "id": "J09",
       "priority": 9,
-      "status": "not-issued",
-      "currentStage": null,
+      "status": "pm-issued-queued",
+      "currentStage": "PM",
       "stages": {
-        "PM": "not-started",
+        "PM": "queued",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -235,15 +255,16 @@
         "J04",
         "J11"
       ],
-      "plannedVersion": "SUPPORT-0.1.0"
+      "plannedVersion": "SUPPORT-0.1.0",
+      "pmOwner": "PM-3"
     },
     {
       "id": "J10",
       "priority": 10,
-      "status": "not-issued",
-      "currentStage": null,
+      "status": "pm-in-progress",
+      "currentStage": "PM",
       "stages": {
-        "PM": "not-started",
+        "PM": "in-progress",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -261,15 +282,16 @@
         "J04",
         "J11"
       ],
-      "plannedVersion": "ADMIN-0.1.0"
+      "plannedVersion": "ADMIN-0.1.0",
+      "pmOwner": "PM-3"
     },
     {
       "id": "J11",
       "priority": 11,
-      "status": "not-issued",
-      "currentStage": null,
+      "status": "pm-issued-queued",
+      "currentStage": "PM",
       "stages": {
-        "PM": "not-started",
+        "PM": "queued",
         "UX": "not-started",
         "RD": "not-started",
         "QA": "not-started"
@@ -283,7 +305,8 @@
         "J08",
         "J09"
       ],
-      "plannedVersion": "ADMIN-0.1.0"
+      "plannedVersion": "ADMIN-0.1.0",
+      "pmOwner": "PM-3"
     },
     {
       "id": "J12",
@@ -600,5 +623,7 @@
     "reason": "仅邮箱验证，注册/资料/申请链不完整；不再是当前评审或继续实施对象"
   },
   "requirementsLedger": "docs/product/requirements-traceability.json",
-  "versionMeaning": "规划交付集合编号，非已发布build或已批准排期；不得据此开工。"
+  "versionMeaning": "规划交付集合编号，非已发布build或已批准排期；不得据此开工。",
+  "pmDispatch": "docs/delivery/pm-parallel-dispatch.json",
+  "authorization": "用户明确要求多个PM并行制作需求与Demo；仅首发集合PM阶段。"
 }

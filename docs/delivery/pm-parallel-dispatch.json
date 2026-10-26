@@ -1,0 +1,93 @@
+{
+  "revision": "r08",
+  "scopeBaseline": "e7f2b895d945ed478c4af2fb725ff543e8826eb5",
+  "authorization": "用户明确要求多个PM并行制作需求与Demo；仅首发集合PM阶段。",
+  "allowedStages": [
+    "PM"
+  ],
+  "forbiddenStages": [
+    "UX",
+    "RD",
+    "QA"
+  ],
+  "maxConcurrentPM": 3,
+  "laterJourneysNotIssued": [
+    "J12",
+    "J13",
+    "J14",
+    "J15"
+  ],
+  "lanes": [
+    {
+      "id": "PM-1",
+      "journeys": [
+        "J01",
+        "J05",
+        "J06",
+        "J08"
+      ],
+      "currentJourney": "J01",
+      "writeAllowlist": [
+        "docs/product/journeys/j01/",
+        "demo/journeys/j01/",
+        "tests/test_pm_j01.py",
+        "docs/product/journeys/j05/",
+        "demo/journeys/j05/",
+        "tests/test_pm_j05.py",
+        "docs/product/journeys/j06/",
+        "demo/journeys/j06/",
+        "tests/test_pm_j06.py",
+        "docs/product/journeys/j08/",
+        "demo/journeys/j08/",
+        "tests/test_pm_j08.py"
+      ],
+      "status": "running"
+    },
+    {
+      "id": "PM-2",
+      "journeys": [
+        "J02",
+        "J03",
+        "J04"
+      ],
+      "currentJourney": "J02",
+      "writeAllowlist": [
+        "docs/product/journeys/j02/",
+        "demo/journeys/j02/",
+        "tests/test_pm_j02.py",
+        "docs/product/journeys/j03/",
+        "demo/journeys/j03/",
+        "tests/test_pm_j03.py",
+        "docs/product/journeys/j04/",
+        "demo/journeys/j04/",
+        "tests/test_pm_j04.py"
+      ],
+      "status": "running"
+    },
+    {
+      "id": "PM-3",
+      "journeys": [
+        "J10",
+        "J11",
+        "J07",
+        "J09"
+      ],
+      "currentJourney": "J10",
+      "writeAllowlist": [
+        "docs/product/journeys/j10/",
+        "demo/journeys/j10/",
+        "tests/test_pm_j10.py",
+        "docs/product/journeys/j11/",
+        "demo/journeys/j11/",
+        "tests/test_pm_j11.py",
+        "docs/product/journeys/j07/",
+        "demo/journeys/j07/",
+        "tests/test_pm_j07.py",
+        "docs/product/journeys/j09/",
+        "demo/journeys/j09/",
+        "tests/test_pm_j09.py"
+      ],
+      "status": "running"
+    }
+  ]
+}

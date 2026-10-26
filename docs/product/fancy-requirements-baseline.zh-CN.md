@@ -1,5 +1,6 @@
 # Fancy MVP项目需求
 
+> 当前执行更新（r08）：用户已授权3个PM并行完成首发J01—J11各自的需求与Demo，见[并行派工记录](../delivery/pm-parallel-dispatch.zh-CN.md)。下文r07“未开工”是此前核对阶段状态；现只签发PM，UX/RD/QA及J12—J15仍未启动。
 修订：r07｜日期：2026-10-26（Europe/London）｜本版平台：iOS App、管理后台Web｜功能说明：待审阅草稿。
 
 ## 1. 产品解决什么问题

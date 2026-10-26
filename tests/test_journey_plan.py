@@ -59,15 +59,20 @@ class JourneyPlanTest(unittest.TestCase):
         self.assertIn('J02', self.journeys['J01']['integrationWith'])
         self.assertIn('J01', self.journeys['J02']['integrationWith'])
 
-    def test_new_journeys_and_professional_stages_are_not_started(self):
-        self.assertFalse(self.execution['pmStartAllowed'])
-        self.assertEqual(self.execution['activeJourneys'], [])
+    def test_only_authorized_first_release_pm_stages_are_issued(self):
+        self.assertTrue(self.execution['pmStartAllowed'])
+        self.assertEqual(set(self.execution['activeJourneys']), {f'J{i:02d}' for i in range(1, 12)})
         self.assertEqual(self.execution['oldPMCandidate']['status'], 'historical-incomplete-candidate')
         self.assertFalse(self.execution['oldPMCandidate']['acceptedAsJourney'])
         for j in self.execution['journeys']:
-            self.assertEqual(j['status'], 'not-issued')
-            self.assertIsNone(j['currentStage'])
-            self.assertEqual(j['stages'], dict.fromkeys(['PM', 'UX', 'RD', 'QA'], 'not-started'))
+            for stage in ('UX', 'RD', 'QA'):
+                self.assertEqual(j['stages'][stage], 'not-started')
+            if j['id'] in self.execution['activeJourneys']:
+                self.assertEqual(j['currentStage'], 'PM')
+                self.assertIn(j['pmOwner'], ('PM-1', 'PM-2', 'PM-3'))
+            else:
+                self.assertEqual(j['status'], 'not-issued')
+                self.assertIsNone(j['currentStage'])
 
     def test_first_release_preserves_prior_minimum_capabilities(self):
         profiles = self.execution['releaseProfiles']
