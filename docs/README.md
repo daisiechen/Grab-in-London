@@ -6,18 +6,18 @@
 
 | 文档 | 用途与权威关系 |
 | --- | --- |
-| [整体需求基线r02](product/fancy-requirements-baseline.zh-CN.md) | PJ上游需求输入：产品背景、角色、自然路径与模块导航；待用户审阅，不替代原PRD、不授权实施 |
-| [需求版本与工作包规则r02](product/module-version-plan-2026-10-26.zh-CN.md) | D01—D19依赖、worker任务边界、原PATCH与15条未闭验收继承；整体背景先读需求基线 |
-| [主 PRD](product/PRD.zh-CN.md) | 当前v0.8需求真源；§0为已确认首期规格，沿用星期日恢复版界面 |
-| [MVP 补丁版本 PRD](product/mvp-patch-PRD.zh-CN.md) | 下一版增量需求、UX 问答及 Figma / 补丁 Demo 映射；需求梳理中，不改变当前 MVP 开发与测试基线 |
+| [MVP项目需求r03](product/fancy-requirements-baseline.zh-CN.md) | 产品依据：iOS和管理后台的使用者、目标、功能、业务规则及可观察结果；移动Web后置 |
+| [MVP产品版本与范围r03](product/module-version-plan-2026-10-26.zh-CN.md) | 产品需求附件：12模块、19个功能范围；D15/D19后续，D16未安装App邀请落地待决 |
+| [主 PRD](product/PRD.zh-CN.md) | v0.8业务规则来源；§0优先，本版平台以MVP项目需求r03的iOS＋管理后台为准 |
+| [MVP 补丁版本 PRD](product/mvp-patch-PRD.zh-CN.md) | 历史P1.1增量规则、UX问答及设计映射来源；本版按r03拆模块并后置移动Web，不作为整包开工指令 |
 | [产品简介](product/product-brief.md) | 产品定位与摘要；详细规则以主 PRD 为准 |
 | [首期运营指标与采集契约](product/admin/measurement-contract.zh-CN.md) | 后台全部指标算法、App采集入口与生产数据接入验收 |
 | [管理端 PRD](product/admin/PRD.zh-CN.md) | 管理端范围及指标；引用主 PRD，不替代共享业务规则 |
 | [历史R1原型与模拟交接](../shared/README.md) | 历史参考，非现行研发契约；业务真源为主PRD§0 |
 
-## 模块需求说明（r02）
+## 模块产品需求（r03）
 
-以下为PJ供产品/设计/研发/QA展开的模块输入，均待用户审阅。业务详细真源仍为上表原PRD及采集契约；结构化入口为[需求目录](product/requirements-catalog.json)。
+以下说明产品使用者、路径、业务规则及完成结果，均为需求草稿。项目岗位、worker流程、依赖与测试环境统一在独立的[项目管理方案](delivery/project-management-plan.zh-CN.md)；结构化执行入口为[工程目录](delivery/requirements-catalog.json)。
 
 - [M01 账号与个人资料](product/modules/m01-account-profile.zh-CN.md)：D01。
 - [M02 发现饭局与查看详情](product/modules/m02-discovery-detail.zh-CN.md)：D02。
@@ -28,9 +28,9 @@
 - [M07 举报支持与账号删除](product/modules/m07-support-deletion.zh-CN.md)：D08、D09。
 - [M08 产品数据与管理后台](product/modules/m08-analytics-admin.zh-CN.md)：D10、D11、D12。
 - [M09 AI查询与草稿助手](product/modules/m09-ai-assistant.zh-CN.md)：D13、D14。
-- [M10 分享饭局与邀请落地](product/modules/m10-sharing-invitations.zh-CN.md)：D15、D16。
+- [M10 分享饭局与邀请落地](product/modules/m10-sharing-invitations.zh-CN.md)：D15（后续移动Web）、D16（本版iOS，邀请落地待决）。
 - [M11 群提及与应用内免打扰](product/modules/m11-mentions-muting.zh-CN.md)：D17。
-- [M12 后台与锁屏系统通知](product/modules/m12-system-notifications.zh-CN.md)：D18、D19。
+- [M12 后台与锁屏系统通知](product/modules/m12-system-notifications.zh-CN.md)：D18（本版iOS）、D19（后续Web Push）。
 
 ## 调研与商业模式
 
@@ -60,6 +60,10 @@
 - [Claude执行入口](../tasks/plan.md)与[唯一任务表](../tasks/todo.md)：43个切片，已获用户授权启动实施，实际状态及验证证据以任务表为准。
 - [MVP实施协调与资源准备](../tasks/mvp-coordination.md)：三端开发文件分工、DeepSeek人民币50元/月预算、首尔服务器只读核查、外部门槛及自测后测试会话交接条件。
 - [MVP运行与交付](../infra/README.md)：本机临时联调、API/worker入口、CI、首尔目录隔离及待授权的真实部署/恢复边界。
+
+## 项目管理与执行
+
+- [项目管理方案r03](delivery/project-management-plan.zh-CN.md)：团队职责、worker工作包、iOS/后台执行依赖、环境验证、证据继承及发布检查；与产品用户需求分开。
 
 ## 发布与验收
 

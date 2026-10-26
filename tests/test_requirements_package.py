@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class RequirementsPackageTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.catalog = json.loads((ROOT / 'docs/product/requirements-catalog.json').read_text())
+        cls.catalog = json.loads((ROOT / 'docs/delivery/requirements-catalog.json').read_text())
         cls.modules = cls.catalog['modules']
 
     def test_catalog_points_to_modules_and_actual_acceptance(self):
@@ -92,10 +92,43 @@ class RequirementsPackageTest(unittest.TestCase):
 
         collect(execution)
         self.assertEqual(len(found), 15, 'Inherited nonpass baseline changed; review mappings')
-        plan = (ROOT / 'docs/product/module-version-plan-2026-10-26.zh-CN.md').read_text()
+        plan = (ROOT / 'docs/delivery/project-management-plan.zh-CN.md').read_text()
         for case_id in found:
             with self.subTest(inherited_case=case_id):
                 self.assertIn(case_id, plan)
+
+    def test_product_users_and_delivery_roles_are_separate(self):
+        baseline = (ROOT / 'docs/product/fancy-requirements-baseline.zh-CN.md').read_text()
+        roles = baseline.split('## 3. 产品使用者与权限', 1)[1].split('## 4.', 1)[0]
+        for row in re.findall(r'^\|.+$', roles, re.MULTILINE):
+            self.assertNotRegex(row, r'PJ|PM|QA|RD|UX|worker|项目协调|研发')
+        management = (ROOT / 'docs/delivery/project-management-plan.zh-CN.md').read_text()
+        for role in ('项目协调负责人（PJ）', '产品经理（PM）', '研发（RD）', '质量验证（QA）'):
+            self.assertIn(role, management)
+        for module in self.modules:
+            text = (ROOT / module['path']).read_text()
+            self.assertNotIn('worker', text)
+            self.assertNotIn('最小测试前置', text)
+            self.assertNotIn('允许文件', text)
+            self.assertIn('### ' + module['id'], management)
+            for version in module['versions']:
+                for acceptance_id in version['acceptanceIds']:
+                    self.assertIn(acceptance_id, management)
+
+    def test_current_platforms_and_deferred_versions_are_explicit(self):
+        self.assertEqual(self.catalog['platformScope']['current'], ['ios', 'admin-web'])
+        self.assertEqual(self.catalog['platformScope']['deferred'], ['mobile-web'])
+        versions = {v['id']: v for m in self.modules for v in m['versions']}
+        deferred = {vid for vid, v in versions.items() if v['scopeStatus'] == 'deferred'}
+        self.assertEqual(deferred, {'D15', 'D19'})
+        for vid, version in versions.items():
+            if version['scopeStatus'] == 'current':
+                self.assertIn(version['platform'], ('ios', 'admin-web'))
+                self.assertFalse(set(version['dependsOn']) & deferred,
+                                 f'{vid} still requires a deferred Web delivery')
+        self.assertEqual(versions['D16']['openQuestions'], ['Q-SHARE-01'])
+        questions = {q['id']: q for q in self.catalog['openProductQuestions']}
+        self.assertEqual(questions['Q-SHARE-01']['status'], 'unresolved')
 
     def test_requirement_draft_is_not_an_execution_approval(self):
         self.assertEqual(self.catalog['status'], 'owner-review-pending')

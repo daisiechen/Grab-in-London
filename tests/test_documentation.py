@@ -44,9 +44,10 @@ class DocumentationTest(unittest.TestCase):
         source_ids = set(re.findall(r'PATCH-00[1-8]', source))
         mapped_ids = set(re.findall(r'^\| (PATCH-00[1-8]) \|', plan, re.MULTILINE))
         self.assertEqual(source_ids, mapped_ids, 'Approved patch scope lost during decomposition')
+        management = (ROOT / 'docs/delivery/project-management-plan.zh-CN.md').read_text()
         for case_id in ('J005', 'J008', 'J009', 'J011', 'AI-050', 'AI-052'):
             with self.subTest(inherited_case=case_id):
-                self.assertIn(case_id, plan)
+                self.assertIn(case_id, management)
 
     def test_root_points_to_index_and_candidates_are_not_skills(self):
         self.assertIn('docs/README.md', LINK.findall((ROOT / 'README.md').read_text()))

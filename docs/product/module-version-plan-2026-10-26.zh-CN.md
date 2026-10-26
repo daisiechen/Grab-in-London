@@ -1,68 +1,38 @@
-# Fancy 需求版本与worker工作包规则
+# Fancy MVP产品需求版本与功能范围
 
-修订：r02｜适用需求包：r02｜状态：待用户审阅，尚未签发实施工作包。
+修订：r03｜本版：iOS App与管理后台Web｜移动Web后置。
 
-## 1. 用途与版本含义
+## 1. 版本说明
 
-Fancy帮助伦敦成年人发现、组织并参加聚餐，饭后在双方愿意时延续联系。[整体需求基线](fancy-requirements-baseline.zh-CN.md)说明产品背景、角色、范围及自然用户路径；12份模块需求描述具体结果和验收。本文件供项目协调负责人安排交付、供worker判断接任务边界，不替代模块业务说明。
+[MVP项目需求](fancy-requirements-baseline.zh-CN.md)描述产品目标与使用者；本表将各模块功能分成可单独核对的需求版本。M编号代表业务模块，D编号代表功能范围，不代表每个编号单独上线。本版功能规则不因拆分改变，移动Web专属需求标为后续。
 
-M01—M12表示长期业务模块；D01—D19表示需求交付范围；r02表示需求包文字/组织修订；代码提交、Figma冻结版本和产品发布号分别登记。需求版不是一个worker的大任务，也不意味着每版立即上线。
+## 2. 功能版本目录
 
-用户要求先完成需求拆分和文档编写，因此当前活动是需求审阅准备。没有有效工作包时，不从本计划自动启动设计、开发、测试环境或外部调用；先前代码与有效证据保留。已有专业唯一作者不因本表重新分配。
-
-## 2. 需求交付目录与依赖
-
-| 需求版 | 模块与版本说明 | 直接需求版依赖 |
+| 需求版 | 功能范围与说明 | 平台与本版状态 |
 | --- | --- | --- |
-| D01 | [M01 账号与资料闭环](modules/m01-account-profile.zh-CN.md) | 最小共用服务 |
-| D02 | [M02 发现与详情闭环](modules/m02-discovery-detail.zh-CN.md) | 最小共用服务 |
-| D03 | [M03 创建与安排闭环](modules/m03-hosting-arrangements.zh-CN.md) | D01 |
-| D04 | [M04 申请与成员闭环](modules/m04-applications-membership.zh-CN.md) | D01、D02、D03 |
-| D05 | [M05 基础沟通闭环](modules/m05-inbox-messaging.zh-CN.md) | D04 |
-| D06 | [M06 出席与反馈](modules/m06-attendance-connections.zh-CN.md) | D03、D04 |
-| D07 | [M06 再约与连接](modules/m06-attendance-connections.zh-CN.md) | D05、D06 |
-| D08 | [M07 举报与支持纠错](modules/m07-support-deletion.zh-CN.md) | D01、D06、D07 |
-| D09 | [M07 删除与结果恢复](modules/m07-support-deletion.zh-CN.md) | D01、D04、D05、D07、D08 |
-| D10 | [M08 基础统计与追溯](modules/m08-analytics-admin.zh-CN.md) | D03、D04、D06 |
-| D11 | [M08 分类、快照与导出](modules/m08-analytics-admin.zh-CN.md) | D10 |
-| D12 | [M08 体验与留存](modules/m08-analytics-admin.zh-CN.md) | D06、D07、D10、D11 |
-| D13 | [M09 查询、解释与偏好](modules/m09-ai-assistant.zh-CN.md) | D01、D02 |
-| D14 | [M09 草稿与原编辑器转入](modules/m09-ai-assistant.zh-CN.md) | D03、D04、D05、D13 |
-| D15 | [M10 Web分享与接收](modules/m10-sharing-invitations.zh-CN.md) | D02、D04 |
-| D16 | [M10 iOS分享与公开链接](modules/m10-sharing-invitations.zh-CN.md) | D15 |
-| D17 | [M11 站内提及与免打扰](modules/m11-mentions-muting.zh-CN.md) | D05 |
-| D18 | [M12 iOS系统投递](modules/m12-system-notifications.zh-CN.md) | D17 |
-| D19 | [M12 Web系统投递](modules/m12-system-notifications.zh-CN.md) | D17 |
+| D01 | [M01 账号与资料闭环](modules/m01-account-profile.zh-CN.md) | 本版：iOS |
+| D02 | [M02 发现与详情闭环](modules/m02-discovery-detail.zh-CN.md) | 本版：iOS |
+| D03 | [M03 创建与安排闭环](modules/m03-hosting-arrangements.zh-CN.md) | 本版：iOS |
+| D04 | [M04 申请与成员闭环](modules/m04-applications-membership.zh-CN.md) | 本版：iOS |
+| D05 | [M05 基础沟通闭环](modules/m05-inbox-messaging.zh-CN.md) | 本版：iOS |
+| D06 | [M06 出席与反馈](modules/m06-attendance-connections.zh-CN.md) | 本版：iOS |
+| D07 | [M06 再约与连接](modules/m06-attendance-connections.zh-CN.md) | 本版：iOS |
+| D08 | [M07 举报与支持纠错](modules/m07-support-deletion.zh-CN.md) | 本版：iOS |
+| D09 | [M07 删除与结果恢复](modules/m07-support-deletion.zh-CN.md) | 本版：iOS |
+| D10 | [M08 基础统计与追溯](modules/m08-analytics-admin.zh-CN.md) | 本版：管理后台 |
+| D11 | [M08 分类、快照与导出](modules/m08-analytics-admin.zh-CN.md) | 本版：管理后台 |
+| D12 | [M08 体验与留存](modules/m08-analytics-admin.zh-CN.md) | 本版：管理后台 |
+| D13 | [M09 查询、解释与偏好](modules/m09-ai-assistant.zh-CN.md) | 本版：iOS |
+| D14 | [M09 草稿与原编辑器转入](modules/m09-ai-assistant.zh-CN.md) | 本版：iOS |
+| D15 | [M10 Web分享与接收](modules/m10-sharing-invitations.zh-CN.md) | 后续：移动Web |
+| D16 | [M10 iOS分享与公开链接](modules/m10-sharing-invitations.zh-CN.md) | 本版：iOS；未安装App的邀请落地待明确 |
+| D17 | [M11 站内提及与免打扰](modules/m11-mentions-muting.zh-CN.md) | 本版：iOS |
+| D18 | [M12 iOS系统投递](modules/m12-system-notifications.zh-CN.md) | 本版：iOS |
+| D19 | [M12 Web系统投递](modules/m12-system-notifications.zh-CN.md) | 后续：移动Web |
 
-上述依赖指需要稳定的业务输入；具体模块另列接口/联合验证要求。跨模块合同准备与整模块完成是不同条件：例如D08/D09可用最小统计/导出接口验证，完整后台展示的联验保留到D10—D12，不能据此假称D09全通过，也不要求先重做全部后台。
+D16的iOS分享功能仍在本版范围，未安装App者如何接收邀请是单独待决的产品问题。本版不承诺存在移动Web邀请页，也不把一个分享菜单视为完整邀请体验。
 
-优先顺序按账号→发现/发起→申请→沟通→饭后→支持的用户链核对已有资产，后台按数据依赖接入，AI/分享/提及/系统通知独立排期。编号不是从头重写的命令。一次只明确一个主要交付目标；若另行并发，PJ必须明确不重叠文件、接口writer及环境，不由worker自行开启。
-
-## 3. 开工前必须明确的工作包
-
-每份工作包仅选择一条自然用户路径、一个页面或一个接口合同，可引用多个验收编号但必须有同一个可观察终点。D10的三页、D14的三种草稿、D17的实体编辑/设置/站内显示应分别交小任务，不让单worker自定整版实现。
-
-| 输入 | 必须写清的内容 | 信息缺失时 |
-| --- | --- | --- |
-| 目标与范围 | 模块/需求版、具体用户问题、预期结果、本次不做事项及验收编号 | 交PJ/PM明确，不推演新功能 |
-| 有效版本 | 需求包提交与模块路径、代码父提交、未提交清单、Figma命名版本/节点 | 不用“最新稿/之前讨论”代替；先核对来源 |
-| 角色与文件 | 唯一实现作者、允许文件清单、共享契约/迁移/生成物writer、评审与QA责任人 | 不自动取得其他模块写权限；先交接 |
-| 依赖与环境 | 输入/输出合同、最小角色/数据/时钟、运行入口、环境修复负责人、真实服务授权边界 | 仅阻塞相关断言，不扩建无关全平台 |
-| 完成与回交 | 必须通过的路径、适用测试、确切提交/构建/环境、未测/阻塞、下一接收人 | 不把命令退出0或截图数量作为全部完成 |
-
-本表是签发要求，不是已填好的授权。具体owner、白名单和Figma节点仍待原负责人盘点；本需求包未分派任何worker。
-
-## 4. 专业交付的顺序与停止边界
-
-1. **产品经理核对需求。** 给出需求→用户行为→验收→现有PRD/Demo差异表；保留/修改/新增/范围外分别说明来源。正文保持当前有效规则，历史放来源记录，不用末尾附录覆盖冲突。
-2. **体验设计交最小冻结稿。** 正常路径、必要失败/返回/取消、共享组件及节点映射齐全；无设计变更不重绘。新增字段/按钮/画板必须有本版需求依据。
-3. **研发完成有界实现及自测。** 先代表页面/最短业务闭环对照冻结稿，再展开同类；跨模块契约和生成物串行交接，验证后回交精确提交。
-4. **环境负责人交可用前置，QA验证。** 固定代码/构建/数据/时钟，不把真实账号就绪当业务门槛已通过。故障分类后交原owner，保留首次失败，模块验证后再做必要联合旅程。
-5. **PJ收敛证据与未闭项。** 只在本工作包断言实际闭合时确认该范围完成；设计、模拟、真实依赖及发布各有状态，不互相替代。
-
-同一文件同一时间一个writer，PRD/Demo原作者职责见[协作说明](../agent-collaboration.md)。文档编写授权不代替产品范围、真实费用或发布批准；不增加通用审批环节来代替已有有效授权。
-
-## 5. 旧需求映射与验收继承
+## 3. 已有补丁需求的对应关系
 
 | 旧范围 | 本次归属 |
 | --- | --- |
@@ -75,32 +45,8 @@ M01—M12表示长期业务模块；D01—D19表示需求交付范围；r02表�
 | PATCH-007 | D15/16分享 |
 | PATCH-008 | D05基础可见已读/历史权限；D17提及与mute；D18/19系统通知 |
 
-原MVP15条非PASS保留原完整ID、remainingExpected、历史失败及适用子证据：
+这张表只说明需求归属，不表示功能已经实现。移动Web对应部分保留为后续，iOS/后台部分保留原业务要求。
 
-| 原ID | 需求归属与联合验证 |
-| --- | --- |
-| QA-JOURNEY-005（J005） | D14双向AI申请及原普通申请合同 |
-| QA-JOURNEY-008（J008） | D01会话、D05授权历史、D09删除、D11快照撤销 |
-| QA-JOURNEY-009（J009） | D09完整删除与后台旧导出撤销 |
-| QA-JOURNEY-011（J011） | D08个案纠错及D06/D07/D12资格/统计影响 |
-| QA-GATE-001 AUTH | D01身份及各受限模块真实鉴权 |
-| QA-GATE-002 PLACES | D02/D03真实餐厅/照片/署名许可 |
-| QA-GATE-003 MAIL | D01/D04/D05/D07涉及的原邮件渠道与签名/收件矩阵 |
-| QA-GATE-004 IOS | 所有iOS适用版本的最终签名/设备和真实链路 |
-| QA-GATE-005 PRIVACY | D07/D09及全部受影响模块，保留/删除实际执行与政策 |
-| QA-GATE-006 HOST | 最终目标环境恢复、负载、部署行为与适用客户端恢复 |
-| QA-GATE-007 AI-MODEL | D13/D14真实模型质量与延迟 |
-| QA-GATE-008 AI-DATA | D13/D14供应商数据参数与批准边界 |
-| QA-GATE-009 AI-COST | D13/D14实际usage/账单与费用硬闸 |
-| QA-AI-050（AI-050） | D13/D14模型替换门槛，依赖AI-MODEL |
-| QA-AI-052（AI-052） | D13/D14供应商参数兼容，依赖AI-DATA |
+## 4. 文档关系
 
-继承真源为[封存清单](../delivery/mvp-freeze-2026-10-23.zh-CN.md)及其中结构化执行记录，原202 PASS/4 NOT_RUN/11 BLOCKED不因重组改变。F60、F63、F68、D08成本保护及可选统计设置观察按封存清单逐项纳入对应范围；这里的D08成本保护是历史工程标识，不是本计划的D08需求版。发布组合确定后逐项检查原门槛，不把它们移到某个模块就从发布要求消失。
-
-原P1.1分支与冻结Figma、PATCH-006本地验收、客户端切片证据是候选资产。原负责人按需求版确认“已具备/需修改/未验证”，注明精确构建/测试环境后才能继承。未变化部分不重复重做；不同运行组合不拼成整版PASS。
-
-## 6. 文档维护与当前下一步
-
-[需求目录](requirements-catalog.json)索引本包模块、版本、依赖及验收编号；业务规则只写模块说明及其权威引用，不在JSON再复制。新worker先读整体基线、自己的模块和工作包，按需补共用合同，不要求读全部历史聊天。
-
-本包当前交付为独立可读的需求说明，待用户审阅。后续先由原产品负责人核对每模块与现有PRD/Demo的差异，再签发具体任务；本轮不自动推进D01或恢复P1.1整包。产品发布范围、日期及真实部署仍须按实际证据和既有授权决定。
+12份模块说明列出用户路径、业务规则和产品结果；[项目管理方案](../delivery/project-management-plan.zh-CN.md)单独说明项目人员、执行依赖、工作包、环境和验收取证。产品功能的先后与范围不赋予任何工程写入权限。
