@@ -1,0 +1,573 @@
+{
+  "schemaVersion": 1,
+  "revision": "r06",
+  "status": "planning-only",
+  "pmStartAllowed": false,
+  "activeJourneys": [],
+  "stages": [
+    "PM",
+    "UX",
+    "RD",
+    "QA"
+  ],
+  "journeys": [
+    {
+      "id": "J01",
+      "priority": 1,
+      "status": "not-issued",
+      "currentStage": null,
+      "stages": {
+        "PM": "not-started",
+        "UX": "not-started",
+        "RD": "not-started",
+        "QA": "not-started"
+      },
+      "requiredContracts": [
+        "C-AUTH",
+        "C-PUBLIC",
+        "C-MEMBERSHIP",
+        "C-AI"
+      ],
+      "jointValidationWith": [
+        "J02",
+        "J03",
+        "J05"
+      ]
+    },
+    {
+      "id": "J02",
+      "priority": 2,
+      "status": "not-issued",
+      "currentStage": null,
+      "stages": {
+        "PM": "not-started",
+        "UX": "not-started",
+        "RD": "not-started",
+        "QA": "not-started"
+      },
+      "requiredContracts": [
+        "C-AUTH",
+        "C-PUBLIC",
+        "C-MEAL",
+        "C-MEMBERSHIP",
+        "C-AI"
+      ],
+      "jointValidationWith": [
+        "J01",
+        "J03",
+        "J04"
+      ]
+    },
+    {
+      "id": "J03",
+      "priority": 3,
+      "status": "not-issued",
+      "currentStage": null,
+      "stages": {
+        "PM": "not-started",
+        "UX": "not-started",
+        "RD": "not-started",
+        "QA": "not-started"
+      },
+      "requiredContracts": [
+        "C-AUTH",
+        "C-MEAL",
+        "C-MEMBERSHIP",
+        "C-MESSAGE",
+        "C-AI"
+      ],
+      "jointValidationWith": [
+        "J01",
+        "J02",
+        "J04",
+        "J08"
+      ]
+    },
+    {
+      "id": "J04",
+      "priority": 4,
+      "status": "not-issued",
+      "currentStage": null,
+      "stages": {
+        "PM": "not-started",
+        "UX": "not-started",
+        "RD": "not-started",
+        "QA": "not-started"
+      },
+      "requiredContracts": [
+        "C-AUTH",
+        "C-MEAL",
+        "C-MEMBERSHIP",
+        "C-FEEDBACK",
+        "C-MESSAGE"
+      ],
+      "jointValidationWith": [
+        "J02",
+        "J03",
+        "J09",
+        "J10",
+        "J12"
+      ]
+    },
+    {
+      "id": "J05",
+      "priority": 5,
+      "status": "not-issued",
+      "currentStage": null,
+      "stages": {
+        "PM": "not-started",
+        "UX": "not-started",
+        "RD": "not-started",
+        "QA": "not-started"
+      },
+      "requiredContracts": [
+        "C-AUTH",
+        "C-PROFILE"
+      ],
+      "jointValidationWith": [
+        "J01",
+        "J02",
+        "J06",
+        "J08"
+      ]
+    },
+    {
+      "id": "J06",
+      "priority": 6,
+      "status": "not-issued",
+      "currentStage": null,
+      "stages": {
+        "PM": "not-started",
+        "UX": "not-started",
+        "RD": "not-started",
+        "QA": "not-started"
+      },
+      "requiredContracts": [
+        "C-AUTH",
+        "C-PROFILE",
+        "C-FEEDBACK"
+      ],
+      "jointValidationWith": [
+        "J05",
+        "J12"
+      ]
+    },
+    {
+      "id": "J07",
+      "priority": 7,
+      "status": "not-issued",
+      "currentStage": null,
+      "stages": {
+        "PM": "not-started",
+        "UX": "not-started",
+        "RD": "not-started",
+        "QA": "not-started"
+      },
+      "requiredContracts": [
+        "C-AUTH",
+        "C-SUPPORT"
+      ],
+      "jointValidationWith": [
+        "J09"
+      ]
+    },
+    {
+      "id": "J08",
+      "priority": 8,
+      "status": "not-issued",
+      "currentStage": null,
+      "stages": {
+        "PM": "not-started",
+        "UX": "not-started",
+        "RD": "not-started",
+        "QA": "not-started"
+      },
+      "requiredContracts": [
+        "C-AUTH",
+        "C-MEAL",
+        "C-MEMBERSHIP",
+        "C-MESSAGE",
+        "C-SUPPORT",
+        "C-ANALYTICS"
+      ],
+      "jointValidationWith": [
+        "J03",
+        "J04",
+        "J09",
+        "J11"
+      ]
+    },
+    {
+      "id": "J09",
+      "priority": 9,
+      "status": "not-issued",
+      "currentStage": null,
+      "stages": {
+        "PM": "not-started",
+        "UX": "not-started",
+        "RD": "not-started",
+        "QA": "not-started"
+      },
+      "requiredContracts": [
+        "C-AUTH",
+        "C-SUPPORT",
+        "C-FEEDBACK",
+        "C-ANALYTICS"
+      ],
+      "jointValidationWith": [
+        "J07",
+        "J08",
+        "J04",
+        "J11"
+      ]
+    },
+    {
+      "id": "J10",
+      "priority": 10,
+      "status": "not-issued",
+      "currentStage": null,
+      "stages": {
+        "PM": "not-started",
+        "UX": "not-started",
+        "RD": "not-started",
+        "QA": "not-started"
+      },
+      "requiredContracts": [
+        "C-AUTH",
+        "C-MEAL",
+        "C-MEMBERSHIP",
+        "C-FEEDBACK",
+        "C-ANALYTICS"
+      ],
+      "jointValidationWith": [
+        "J01",
+        "J02",
+        "J04",
+        "J11"
+      ]
+    },
+    {
+      "id": "J11",
+      "priority": 11,
+      "status": "not-issued",
+      "currentStage": null,
+      "stages": {
+        "PM": "not-started",
+        "UX": "not-started",
+        "RD": "not-started",
+        "QA": "not-started"
+      },
+      "requiredContracts": [
+        "C-AUTH",
+        "C-ANALYTICS"
+      ],
+      "jointValidationWith": [
+        "J10",
+        "J08",
+        "J09"
+      ]
+    },
+    {
+      "id": "J12",
+      "priority": 12,
+      "status": "not-issued",
+      "currentStage": null,
+      "stages": {
+        "PM": "not-started",
+        "UX": "not-started",
+        "RD": "not-started",
+        "QA": "not-started"
+      },
+      "requiredContracts": [
+        "C-ANALYTICS",
+        "C-FEEDBACK"
+      ],
+      "jointValidationWith": [
+        "J04",
+        "J06",
+        "J09",
+        "J11"
+      ]
+    },
+    {
+      "id": "J13",
+      "priority": 13,
+      "status": "not-issued",
+      "currentStage": null,
+      "stages": {
+        "PM": "not-started",
+        "UX": "not-started",
+        "RD": "not-started",
+        "QA": "not-started"
+      },
+      "requiredContracts": [
+        "C-PUBLIC",
+        "C-AUTH",
+        "C-MEMBERSHIP"
+      ],
+      "jointValidationWith": [
+        "J01"
+      ]
+    },
+    {
+      "id": "J14",
+      "priority": 14,
+      "status": "not-issued",
+      "currentStage": null,
+      "stages": {
+        "PM": "not-started",
+        "UX": "not-started",
+        "RD": "not-started",
+        "QA": "not-started"
+      },
+      "requiredContracts": [
+        "C-MESSAGE",
+        "C-NOTIFY"
+      ],
+      "jointValidationWith": [
+        "J03",
+        "J15"
+      ]
+    },
+    {
+      "id": "J15",
+      "priority": 15,
+      "status": "not-issued",
+      "currentStage": null,
+      "stages": {
+        "PM": "not-started",
+        "UX": "not-started",
+        "RD": "not-started",
+        "QA": "not-started"
+      },
+      "requiredContracts": [
+        "C-MESSAGE",
+        "C-NOTIFY"
+      ],
+      "jointValidationWith": [
+        "J03",
+        "J14"
+      ]
+    }
+  ],
+  "sharedContracts": [
+    {
+      "id": "C-AUTH",
+      "scope": "身份、完整注册/资料门槛、会话与回流",
+      "consumers": [
+        "J01",
+        "J02",
+        "J03",
+        "J04",
+        "J05",
+        "J06",
+        "J07",
+        "J08",
+        "J09",
+        "J10",
+        "J11",
+        "J13"
+      ],
+      "writer": null,
+      "revision": null
+    },
+    {
+      "id": "C-PUBLIC",
+      "scope": "餐厅和公开饭局/主页读取",
+      "consumers": [
+        "J01",
+        "J02",
+        "J13"
+      ],
+      "writer": null,
+      "revision": null
+    },
+    {
+      "id": "C-MEAL",
+      "scope": "安排、声明、截止/最低人数/开始资格",
+      "consumers": [
+        "J02",
+        "J03",
+        "J04",
+        "J08",
+        "J10"
+      ],
+      "writer": null,
+      "revision": null
+    },
+    {
+      "id": "C-MEMBERSHIP",
+      "scope": "申请轮次、审核、席位及群授权事件",
+      "consumers": [
+        "J01",
+        "J02",
+        "J03",
+        "J04",
+        "J08",
+        "J10",
+        "J13"
+      ],
+      "writer": null,
+      "revision": null
+    },
+    {
+      "id": "C-MESSAGE",
+      "scope": "群/私聊授权、历史区间、可见已读",
+      "consumers": [
+        "J03",
+        "J04",
+        "J08",
+        "J14",
+        "J15"
+      ],
+      "writer": null,
+      "revision": null
+    },
+    {
+      "id": "C-FEEDBACK",
+      "scope": "出席来源、私评分、公评、互选与产品问卷",
+      "consumers": [
+        "J04",
+        "J06",
+        "J09",
+        "J10",
+        "J12"
+      ],
+      "writer": null,
+      "revision": null
+    },
+    {
+      "id": "C-SUPPORT",
+      "scope": "个案授权、举报受理、纠错/删除与回执",
+      "consumers": [
+        "J07",
+        "J08",
+        "J09"
+      ],
+      "writer": null,
+      "revision": null
+    },
+    {
+      "id": "C-ANALYTICS",
+      "scope": "指标、分类、快照、隐私撤销与导出",
+      "consumers": [
+        "J08",
+        "J09",
+        "J10",
+        "J11",
+        "J12"
+      ],
+      "writer": null,
+      "revision": null
+    },
+    {
+      "id": "C-AI",
+      "scope": "获准上下文、偏好、草稿、预算及会话",
+      "consumers": [
+        "J01",
+        "J02",
+        "J03"
+      ],
+      "writer": null,
+      "revision": null
+    },
+    {
+      "id": "C-NOTIFY",
+      "scope": "提及、mute、订阅和通知投递",
+      "consumers": [
+        "J14",
+        "J15"
+      ],
+      "writer": null,
+      "revision": null
+    },
+    {
+      "id": "C-PROFILE",
+      "scope": "公开资料、首次必填与本人资料/隐私保存",
+      "consumers": [
+        "J05",
+        "J06"
+      ],
+      "writer": null,
+      "revision": null
+    }
+  ],
+  "releaseProfiles": [
+    {
+      "id": "IOS-JOURNEY-FIRST",
+      "featureJourneys": [
+        "J01",
+        "J02",
+        "J03",
+        "J04",
+        "J05",
+        "J06",
+        "J07",
+        "J08"
+      ],
+      "requiredSupportJourneys": [
+        "J09"
+      ],
+      "releaseApproved": false
+    },
+    {
+      "id": "ADMIN-JOURNEY-FIRST",
+      "featureJourneys": [
+        "J10",
+        "J11"
+      ],
+      "requiredSupportJourneys": [],
+      "releaseApproved": false
+    }
+  ],
+  "jointGroups": [
+    {
+      "id": "T-MEET",
+      "journeys": [
+        "J01",
+        "J02",
+        "J03"
+      ],
+      "result": "真实同库发布→申请→注册/资料→审批→群沟通；席位/安排/截止一致"
+    },
+    {
+      "id": "T-AFTER",
+      "journeys": [
+        "J03",
+        "J04",
+        "J06",
+        "J10",
+        "J12"
+      ],
+      "result": "饭后、联系与统计；J12只在其后续发布阶段加入，不强迫首发依赖未发布体验/留存页"
+    },
+    {
+      "id": "T-SAFETY",
+      "journeys": [
+        "J04",
+        "J07",
+        "J08",
+        "J09",
+        "J11"
+      ],
+      "result": "举报处理、纠错和删除的权限/联系/统计/导出传播"
+    },
+    {
+      "id": "T-REMIND",
+      "journeys": [
+        "J03",
+        "J14",
+        "J15"
+      ],
+      "result": "发送→实际提醒→定位及mute/退群/重入抑制，后续增量验证"
+    }
+  ],
+  "dependencySemantics": "requiredContracts是固定输入合同，不是等待整个关联旅程完成；jointValidationWith是联调关系，允许双向。不能把J01与J02互等做成整模块阻塞DAG。",
+  "oldPMCandidate": {
+    "batch": "M01-01",
+    "revision": "PM-r01",
+    "status": "historical-incomplete-candidate",
+    "acceptedAsJourney": false,
+    "reason": "仅邮箱验证，注册/资料/申请链不完整；不再是当前评审或继续实施对象"
+  }
+}

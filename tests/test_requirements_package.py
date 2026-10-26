@@ -110,10 +110,7 @@ class RequirementsPackageTest(unittest.TestCase):
             self.assertNotIn('worker', text)
             self.assertNotIn('最小测试前置', text)
             self.assertNotIn('允许文件', text)
-            self.assertIn('### ' + module['id'], management)
-            for version in module['versions']:
-                for acceptance_id in version['acceptanceIds']:
-                    self.assertIn(acceptance_id, management)
+            self.assertIn('历史领域规则参考', text)
 
     def test_current_platforms_and_deferred_versions_are_explicit(self):
         self.assertEqual(self.catalog['platformScope']['current'], ['ios', 'admin-web'])
@@ -134,8 +131,10 @@ class RequirementsPackageTest(unittest.TestCase):
         self.assertEqual(self.catalog['status'], 'owner-review-pending')
         self.assertFalse(self.catalog['implementationAuthorizedByThisPackage'])
         baseline = (ROOT / 'docs/product/fancy-requirements-baseline.zh-CN.md').read_text()
-        for module in self.modules:
-            self.assertIn(Path(module['path']).name, baseline)
+        journeys = json.loads((ROOT / 'docs/product/journey-modules.json').read_text())
+        for journey in journeys['journeys']:
+            self.assertIn(journey['id'] + ' ', baseline)
+        self.assertEqual(self.catalog['planStatus'], 'superseded-domain-reference')
 
 
 if __name__ == '__main__':

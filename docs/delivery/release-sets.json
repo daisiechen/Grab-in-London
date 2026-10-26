@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "revision": "r05",
-  "status": "release-scope-plan",
+  "status": "superseded-slice-release-plan",
   "actualDeployments": [],
   "profiles": [
     {
@@ -409,5 +409,6 @@
       "source": "https://developer.apple.com/app-store/review/"
     }
   ],
-  "evidenceBoundary": "集合及依赖闭包是计划结果；Apple审核、真实环境门槛和实际发布均未通过本文件取得批准。发现实现缺口时先开有界纠偏工作包，每包仍走PM/UX/RD/QA，不增加完整安全后台。"
+  "evidenceBoundary": "集合及依赖闭包是计划结果；Apple审核、真实环境门槛和实际发布均未通过本文件取得批准。发现实现缺口时先开有界纠偏工作包，每包仍走PM/UX/RD/QA，不增加完整安全后台。",
+  "supersededBy": "docs/delivery/journey-execution.json"
 }

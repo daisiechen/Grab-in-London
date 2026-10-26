@@ -3,7 +3,11 @@
 
 文档导航：[项目文档索引](docs/README.md)。Agent 规则见 [AGENTS.md](AGENTS.md)，通用项目技能位于 `.agents/skills/`，待审核候选保存于 `.agents/candidates/`。
 
-## 当前交付
+## 当前产品与交付规划（r06）
+
+以[完整用户旅程](docs/product/journey-modules.zh-CN.md)划分模块，[MVP需求](docs/product/fancy-requirements-baseline.zh-CN.md)定义产品行为，[项目管理方案](docs/delivery/project-management-plan.zh-CN.md)定义团队流程。登录/注册/补资料嵌入申请或发起旅程，不单独交半条体验；旧60功能切片停止作为PM派单单位。当前只完成重拆，新的PM/UX/RD/QA未开工。
+
+## 历史交付与业务来源
 
 - [商业模式评估与设计报告](docs/business/business-assessment.zh-CN.md)：问题、用户、市场、产品方案、商家与个人收入、经济模型、安全及创业/科研路径评估；[PDF](outputs/business-2026-10-17/business-report.zh-CN.pdf)、[网页阅读版](outputs/business-2026-10-17/business-report.zh-CN.html)、[Pitch PPT](outputs/business-2026-10-17/pitch.zh-CN.pptx)、[可编辑经济模型](outputs/business-2026-10-17/economic-model.xlsx)。公开数据与作者假设分开，非真实经营业绩。
 - [中文版产品需求文档](docs/product/PRD.zh-CN.md)：背景、目标、用户路径、前后端模块、逐功能交互、输入输出、状态、异常与验收。

@@ -2,41 +2,43 @@
 
 项目入口：[README](../README.md)。本目录保存项目知识；Agent 协作规则见 [AGENTS.md](../AGENTS.md)，正式方法在 `.agents/skills/`，待审核候选在 `.agents/candidates/`，不作为现行执行规则。
 
-## 当前单批PM候选：M01-01待用户审阅
+## 当前产品与管理输入（r06）
 
-- [M01-01需求 PM-r01](product/batches/m01-01/requirements.zh-CN.md)与[HTTPS私有交互Demo](https://fancy-m01-01-pm-preview-b9d95a9.daisie-chen-94.chatgpt.site)：仅访客入口/邮箱验证码/恢复与意图回流；iOS流程模拟，未接真实认证。
-- [M01-01作者验证](product/batches/m01-01/author-verification.zh-CN.md)、[成对产物清单](product/batches/m01-01/artifact-manifest.json)：作者自检与未测边界，不代表UX/RD/QA或产品批准。
+- [MVP项目需求](product/fancy-requirements-baseline.zh-CN.md)：产品使用者、完整用户目标、首发/增量及业务边界。
+- [15个用户旅程模块](product/journey-modules.zh-CN.md)、[结构化范围](product/journey-modules.json)：触发→完整路径→结果与异常；首个交付应为J01找到并申请饭局，注册登录/资料不单独切片。
+- [产品版本与旧补丁映射](product/module-version-plan-2026-10-26.zh-CN.md)：iOS J01—J08＋支持J09、后台J10/J11首发；J12—J15后续，移动Web后置。
+- [项目管理方案](delivery/project-management-plan.zh-CN.md)、[旅程执行与联调](delivery/journey-execution.zh-CN.md)、[当前执行数据](delivery/journey-execution.json)：团队独立四阶段、共用合同、条件并行与版本取证；当前仅规划，无新PM任务。
 
-## 产品与需求
+## 业务详细来源
 
-| 文档 | 用途与权威关系 |
+| 文档 | 用途 |
 | --- | --- |
-| [MVP项目需求r05](product/fancy-requirements-baseline.zh-CN.md) | 产品依据：iOS和管理后台的使用者、目标、功能、业务规则及可观察结果；移动Web后置 |
-| [MVP产品版本与范围r05](product/module-version-plan-2026-10-26.zh-CN.md) | 产品需求附件：12模块、19个功能范围；D15/D19后续，D16未安装App邀请落地待决 |
-| [MVP分批功能范围r05](product/mvp-batch-scope.zh-CN.md) | 产品附件：本版60小批及后续Web4批，每批做/不做/产品前提/完成结果 |
-| [主 PRD](product/PRD.zh-CN.md) | v0.8业务规则来源；§0优先，本版平台以MVP项目需求r05的iOS＋管理后台为准 |
-| [MVP 补丁版本 PRD](product/mvp-patch-PRD.zh-CN.md) | 历史P1.1增量规则、UX问答及设计映射来源；本版按r05拆批次并后置移动Web，不作为整包开工指令 |
-| [产品简介](product/product-brief.md) | 产品定位与摘要；详细规则以主 PRD 为准 |
-| [首期运营指标与采集契约](product/admin/measurement-contract.zh-CN.md) | 后台全部指标算法、App采集入口与生产数据接入验收 |
-| [管理端 PRD](product/admin/PRD.zh-CN.md) | 管理端范围及指标；引用主 PRD，不替代共享业务规则 |
-| [历史R1原型与模拟交接](../shared/README.md) | 历史参考，非现行研发契约；业务真源为主PRD§0 |
+| [主PRD](product/PRD.zh-CN.md) | 业务规则真源；§0真实首期优先于模拟支付/订位 |
+| [补丁PRD](product/mvp-patch-PRD.zh-CN.md) | 已确认增量规则，按当前旅程组织，不沿旧整包派单 |
+| [后台PRD](product/admin/PRD.zh-CN.md) | 内部分析范围与权限 |
+| [采集契约](product/admin/measurement-contract.zh-CN.md) | 指标、统计与真实接入口径 |
+| [产品简介](product/product-brief.md) | 定位摘要 |
+| [历史R1说明](../shared/README.md) | 历史模拟参考 |
 
-## 模块产品需求（r05）
+## 历史领域规格与切片（不可继续按此派PM）
 
-以下说明产品使用者、路径、业务规则及完成结果，均为需求草稿。项目岗位、worker流程、依赖与测试环境统一在独立的[项目管理方案](delivery/project-management-plan.zh-CN.md)；结构化执行入口为[工程目录](delivery/requirements-catalog.json)。
+- [旧60片功能清单](product/mvp-batch-scope.zh-CN.md)、[领域目录](delivery/requirements-catalog.json)：当前能力映射来源，不是新旅程工作包。
+- [M01 账号与个人资料](product/modules/m01-account-profile.zh-CN.md)：历史领域规则参考。
+- [M02 发现饭局与查看详情](product/modules/m02-discovery-detail.zh-CN.md)：历史领域规则参考。
+- [M03 发起饭局与管理安排](product/modules/m03-hosting-arrangements.zh-CN.md)：历史领域规则参考。
+- [M04 申请参加与成员管理](product/modules/m04-applications-membership.zh-CN.md)：历史领域规则参考。
+- [M05 基础Inbox与授权聊天](product/modules/m05-inbox-messaging.zh-CN.md)：历史领域规则参考。
+- [M06 出席反馈与持续联系](product/modules/m06-attendance-connections.zh-CN.md)：历史领域规则参考。
+- [M07 举报支持与账号删除](product/modules/m07-support-deletion.zh-CN.md)：历史领域规则参考。
+- [M08 产品数据与管理后台](product/modules/m08-analytics-admin.zh-CN.md)：历史领域规则参考。
+- [M09 AI查询与草稿助手](product/modules/m09-ai-assistant.zh-CN.md)：历史领域规则参考。
+- [M10 分享饭局与邀请落地](product/modules/m10-sharing-invitations.zh-CN.md)：历史领域规则参考。
+- [M11 群提及与应用内免打扰](product/modules/m11-mentions-muting.zh-CN.md)：历史领域规则参考。
+- [M12 后台与锁屏系统通知](product/modules/m12-system-notifications.zh-CN.md)：历史领域规则参考。
 
-- [M01 账号与个人资料](product/modules/m01-account-profile.zh-CN.md)：D01。
-- [M02 发现饭局与查看详情](product/modules/m02-discovery-detail.zh-CN.md)：D02。
-- [M03 发起饭局与管理安排](product/modules/m03-hosting-arrangements.zh-CN.md)：D03。
-- [M04 申请参加与成员管理](product/modules/m04-applications-membership.zh-CN.md)：D04。
-- [M05 基础Inbox与授权聊天](product/modules/m05-inbox-messaging.zh-CN.md)：D05。
-- [M06 出席反馈与持续联系](product/modules/m06-attendance-connections.zh-CN.md)：D06、D07。
-- [M07 举报支持与账号删除](product/modules/m07-support-deletion.zh-CN.md)：D08、D09。
-- [M08 产品数据与管理后台](product/modules/m08-analytics-admin.zh-CN.md)：D10、D11、D12。
-- [M09 AI查询与草稿助手](product/modules/m09-ai-assistant.zh-CN.md)：D13、D14。
-- [M10 分享饭局与邀请落地](product/modules/m10-sharing-invitations.zh-CN.md)：D15（后续移动Web）、D16（本版iOS，邀请落地待决）。
-- [M11 群提及与应用内免打扰](product/modules/m11-mentions-muting.zh-CN.md)：D17。
-- [M12 后台与锁屏系统通知](product/modules/m12-system-notifications.zh-CN.md)：D18（本版iOS）、D19（后续Web Push）。
+## 历史PM片段候选（非当前J01）
+
+- [M01-01 PM-r01需求](product/batches/m01-01/requirements.zh-CN.md)、[原Demo源](../demo/batches/m01-01/index.html)、[作者自检](product/batches/m01-01/author-verification.zh-CN.md)、[原产物清单](product/batches/m01-01/artifact-manifest.json)：只有邮箱验证，未被接受为完整注册/参与旅程；保留历史，不继续送审。
 
 ## 调研与商业模式
 
@@ -67,19 +69,19 @@
 - [MVP实施协调与资源准备](../tasks/mvp-coordination.md)：三端开发文件分工、DeepSeek人民币50元/月预算、首尔服务器只读核查、外部门槛及自测后测试会话交接条件。
 - [MVP运行与交付](../infra/README.md)：本机临时联调、API/worker入口、CI、首尔目录隔离及待授权的真实部署/恢复边界。
 
-## 项目管理与执行
+## 工作流与历史执行记录
 
 - [M01-01预览访问修复](delivery/m01-01-preview-access.zh-CN.md)、[固定托管记录](delivery/m01-01-preview-access.json)：已成功托管的owner-private HTTPS入口，避免首尔本地路径不可访问。
 
-- [M01-01 PM单批工作包](delivery/work-packages/m01-01-pm.zh-CN.md)：仅授权该批需求＋交互Demo，独立新产物作者；用户先看，后续UX/RD/QA及其他批次不启动。
+- [M01-01 PM单批工作包](delivery/work-packages/m01-01-pm.zh-CN.md)：历史单批授权与回交，已停止作为当前旅程交付。
 
-- [逐批工作流与版本管理r05](delivery/batch-workflow-and-versioning.zh-CN.md)：每批PM→UX→RD→QA、条件并行、隔离、返工、版本联调及集成/回退。
-- [首次iOS提交与后台上线集合r05](delivery/release-sets.zh-CN.md)、[精确集合数据](delivery/release-sets.json)：iOS40批、后台8批、首发依赖闭包48批；Apple适用核查与未闭门槛，非已发布证明。
+- [逐批工作流与版本管理r05](delivery/batch-workflow-and-versioning.zh-CN.md)：当前按完整旅程PM→UX→RD→QA、隔离、返工与版本联调。
+- [首次iOS提交与后台上线集合r05](delivery/release-sets.zh-CN.md)、[精确集合数据](delivery/release-sets.json)：历史切片集合及Apple核查；当前旅程首发范围见上方执行方案。
 
 - [项目管理方案r05](delivery/project-management-plan.zh-CN.md)：团队职责、worker工作包、iOS/后台执行依赖、环境验证、证据继承及发布检查；与产品用户需求分开。
 
-- [具体交付批次与顺序r05](delivery/delivery-batches.zh-CN.md)：直接依赖、最小跨模块合同、I01—I04联合检查、单批PM限制；仅M01-01获PM需求＋Demo授权。
-- [结构化批次表](delivery/delivery-batches.json)：仅M01-01允许PM需求＋Demo，其余63批未签发，后续专业阶段保持停止。
+- [具体交付批次与顺序r05](delivery/delivery-batches.zh-CN.md)：历史切片排序/取证，已由旅程执行方案取代。
+- [结构化批次表](delivery/delivery-batches.json)：历史切片状态；M01-01候选被替代，不再派单。
 
 ## 发布与验收
 

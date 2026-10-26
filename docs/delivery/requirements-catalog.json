@@ -436,26 +436,23 @@
   ],
   "dispatchPolicy": {
     "pmStartAllowed": false,
-    "activeBatch": "M01-01",
-    "activeBatches": [
-      "M01-01"
-    ],
+    "activeBatch": null,
+    "activeBatches": [],
     "maxIssuedPMBatchesPerLane": 1,
     "initialLanes": [
       "ios",
       "admin-web"
     ],
     "parallelAllowedWhenIsolated": true,
-    "meaning": "M01-01 PM-r01需求与Demo已成对交付待用户审阅，作者停止写入；其他63批及所有UX/RD/QA不启动。",
-    "authorizedBatchIds": [
-      "M01-01"
-    ],
-    "allowedStages": [
-      "PM"
-    ],
+    "meaning": "旧领域/切片不再派单；当前r06仅按完整旅程重拆，PM尚未开工",
+    "authorizedBatchIds": [],
+    "allowedStages": [],
     "nextStagesAllowed": false
   },
   "batchCatalogPath": "docs/delivery/delivery-batches.json",
   "dependencyLevel": "version dependsOn为领域背景，具体开工依赖以delivery-batches.json的批次DAG为准，避免整模块等待造成环路",
-  "releaseSetsPath": "docs/delivery/release-sets.json"
+  "releaseSetsPath": "docs/delivery/release-sets.json",
+  "planStatus": "superseded-domain-reference",
+  "activeExecutionPlan": "docs/delivery/journey-execution.json",
+  "activeProductPlan": "docs/product/journey-modules.json"
 }

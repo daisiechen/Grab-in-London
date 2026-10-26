@@ -1,4 +1,4 @@
-"""Validate bounded PM batches, dependency order, scope and no-start instructions."""
+"""Preserve retired slice coverage; current journey workflow is checked separately."""
 import json
 from pathlib import Path
 import re
@@ -51,28 +51,20 @@ class DeliveryBatchesTest(unittest.TestCase):
         self.assertEqual(sum(b['scopeStatus'] == 'current' for b in self.batches), 60)
         self.assertEqual(sum(b['scopeStatus'] == 'deferred' for b in self.batches), 4)
 
-    def test_pm_authorization_is_limited_to_first_batch_and_decisions_preserved(self):
-        self.assertEqual(self.data['activeBatch'], 'M01-01')
-        self.assertEqual(self.data['authorization']['batchIds'], ['M01-01'])
-        self.assertEqual(self.data['authorization']['allowedStages'], ['PM'])
-        self.assertFalse(self.data['authorization']['nextStagesAllowed'])
-        self.assertFalse(self.data['authorization']['nextBatchesAllowed'])
-        self.assertTrue(self.data['authorization']['ownerReviewBeforeNextStage'])
-        self.assertEqual(self.catalog['dispatchPolicy']['authorizedBatchIds'], ['M01-01'])
-        self.assertEqual(self.catalog['dispatchPolicy']['allowedStages'], ['PM'])
-        self.assertEqual(self.catalog['dispatchPolicy']['maxIssuedPMBatchesPerLane'], 1)
+    def test_old_slice_plan_is_readonly_and_cannot_dispatch_pm(self):
+        self.assertEqual(self.data['planStatus'], 'superseded-readonly')
+        self.assertIsNone(self.data['activeBatch'])
+        self.assertFalse(self.data['pmStartAllowed'])
+        self.assertEqual(self.data['authorization']['batchIds'], [])
+        self.assertEqual(self.data['authorization']['allowedStages'], [])
+        self.assertEqual(self.catalog['dispatchPolicy']['authorizedBatchIds'], [])
+        self.assertEqual(self.catalog['activeExecutionPlan'], 'docs/delivery/journey-execution.json')
         decisions = {q['id'] for q in self.catalog['openProductQuestions']}
         for batch in self.batches:
             with self.subTest(batch=batch['id']):
-                if batch['id'] == 'M01-01':
-                    self.assertIn(batch['status'], ('pm-in-progress', 'awaiting-owner-review'))
-                    self.assertEqual(batch['pmStartAllowed'], self.data['pmStartAllowed'])
-                else:
-                    self.assertEqual(batch['status'], 'not-issued')
-                    self.assertFalse(batch['pmStartAllowed'])
+                self.assertFalse(batch['pmStartAllowed'])
+                self.assertEqual(batch['status'], 'superseded-candidate' if batch['id'] == 'M01-01' else 'not-issued')
                 self.assertTrue(set(batch['productDecisions']) <= decisions)
-        self.assertEqual(self.by_id['M10-03']['productDecisions'], ['Q-SHARE-01'])
-        self.assertEqual({b['id'] for b in self.batches if b['productDecisions']}, {'M10-03'})
 
     def test_product_scope_and_execution_table_reconcile_with_catalog(self):
         ids = re.findall(r'^### (M\d{2}-(?:\d{2}|W\d{2})) ', self.product, re.MULTILINE)

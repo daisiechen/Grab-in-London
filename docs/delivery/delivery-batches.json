@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "revision": "r05",
   "pmStartAllowed": false,
-  "activeBatch": "M01-01",
+  "activeBatch": null,
   "defaultExecution": "order为优先级与依赖的参考串行拓扑序，不是全局串行锁；未来有明确开工授权后可在依赖、文件和环境隔离均满足时多泳道并行；当前仍未签发",
   "batches": [
     {
@@ -20,15 +20,15 @@
       ],
       "platform": "ios",
       "scopeStatus": "current",
-      "status": "awaiting-owner-review",
+      "status": "superseded-candidate",
       "pmStartAllowed": false,
       "productDecisions": [],
       "order": 1,
       "workflow": {
-        "currentStage": "PM",
+        "currentStage": null,
         "stages": {
           "PM": {
-            "status": "in-review",
+            "status": "superseded",
             "inputRevision": "fe611a2 / r05 + M01-01 PM工作包r01",
             "outputRevision": "PM-r01",
             "evidence": [
@@ -3616,6 +3616,22 @@
   },
   "releaseSetsPath": "docs/delivery/release-sets.json",
   "authorization": {
+    "batchIds": [],
+    "allowedStages": [],
+    "nextStagesAllowed": false,
+    "nextBatchesAllowed": false,
+    "ownerReviewBeforeNextStage": true,
+    "scope": "旧切片规划停止使用，当前仅重拆旅程，不派发PM"
+  },
+  "review": {
+    "batch": "M01-01",
+    "revision": "PM-r01",
+    "status": "historical-incomplete-candidate",
+    "acceptedAsJourney": false
+  },
+  "planStatus": "superseded-readonly",
+  "supersededBy": "docs/delivery/journey-execution.json",
+  "historicalAuthorization": {
     "workPackage": "docs/delivery/work-packages/m01-01-pm.zh-CN.md",
     "batchIds": [
       "M01-01"
@@ -3631,17 +3647,5 @@
     "nextBatchesAllowed": false,
     "ownerReviewBeforeNextStage": true,
     "scope": "用户仅授权M01-01需求与Demo成对交付，未批准其他批次/UX/RD/QA"
-  },
-  "review": {
-    "batch": "M01-01",
-    "status": "awaiting-owner-review",
-    "revision": "PM-r01",
-    "artifacts": [
-      "docs/product/batches/m01-01/requirements.zh-CN.md",
-      "demo/batches/m01-01/index.html",
-      "docs/product/batches/m01-01/author-verification.zh-CN.md",
-      "docs/product/batches/m01-01/artifact-manifest.json"
-    ],
-    "professionalStagesStarted": false
   }
 }
