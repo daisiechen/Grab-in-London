@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><title>Fancy · M01-01 · PM preview</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="review-shell">
+  <aside class="review-info" lang="zh-CN">
+    <p class="eyebrow">FANCY · M01-01 · PM r01</p><h1>先看看，再用邮箱登录。</h1>
+    <p class="intro">这一批只说明访客入口与邮箱验证。选择一条来源，从手机画面走完正常流程或取消，再试必要的失败恢复。</p>
+    <a class="document-link" href="../../../docs/product/batches/m01-01/requirements.zh-CN.md">阅读本批对应需求 ↗</a>
+    <div class="review-note"><strong>交互演示，不是真实服务</strong><p>这是 iOS 流程的静态模拟，不发邮件、不创建账号、不实现饭局或资料表单。仅使用 <code>@example.test</code> 合成邮箱，刷新即清空。</p></div>
+    <details class="controls"><summary>演示控制与边界</summary>
+      <label for="origin">登录来源</label><select id="origin"><option value="discover">主动登录 → Discover</option><option value="meal">饭局触发 → 同一场饭局</option></select>
+      <label for="profile">合成账号状态</label><select id="profile"><option value="complete">已有账号 · 资料完整</option><option value="incomplete">首次账号 · 资料未完成</option></select>
+      <button id="reset" class="tool">按当前来源重新开始</button>
+      <p>模拟验证码 <code id="demo-code">123456</code>；过期 5 分钟，重发冷却 30 秒。控制时钟只影响本页。</p>
+      <div class="tool-row"><button id="advance30" class="tool">推进 30 秒</button><button id="advance300" class="tool">推进 5 分钟</button></div>
+      <div class="tool-row"><button id="failSend" class="tool">下次请求失败</button><button id="failVerify" class="tool">下次验证失败</button></div>
+      <p>这些是作者演示工具，不是拟交付给 App 用户的功能。修改来源或账号状态后需重新开始。</p>
+    </details>
+    <p id="review-status" class="review-status" aria-live="polite"></p>
+  </aside>
+  <section class="phone" aria-label="iOS flow preview">
+    <div class="statusbar" aria-hidden="true"><span>9:41</span><span>••• ▰</span></div>
+    <div id="app"></div><div class="homebar" aria-hidden="true"></div>
+  </section>
+</main>
+<script type="module" src="app.mjs"></script>
+</body></html>

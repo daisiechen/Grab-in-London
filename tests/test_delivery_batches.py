@@ -51,16 +51,25 @@ class DeliveryBatchesTest(unittest.TestCase):
         self.assertEqual(sum(b['scopeStatus'] == 'current' for b in self.batches), 60)
         self.assertEqual(sum(b['scopeStatus'] == 'deferred' for b in self.batches), 4)
 
-    def test_pm_remains_unstarted_and_product_decision_is_not_bypassed(self):
-        self.assertFalse(self.data['pmStartAllowed'])
-        self.assertIsNone(self.data['activeBatch'])
-        self.assertFalse(self.catalog['dispatchPolicy']['pmStartAllowed'])
+    def test_pm_authorization_is_limited_to_first_batch_and_decisions_preserved(self):
+        self.assertEqual(self.data['activeBatch'], 'M01-01')
+        self.assertEqual(self.data['authorization']['batchIds'], ['M01-01'])
+        self.assertEqual(self.data['authorization']['allowedStages'], ['PM'])
+        self.assertFalse(self.data['authorization']['nextStagesAllowed'])
+        self.assertFalse(self.data['authorization']['nextBatchesAllowed'])
+        self.assertTrue(self.data['authorization']['ownerReviewBeforeNextStage'])
+        self.assertEqual(self.catalog['dispatchPolicy']['authorizedBatchIds'], ['M01-01'])
+        self.assertEqual(self.catalog['dispatchPolicy']['allowedStages'], ['PM'])
         self.assertEqual(self.catalog['dispatchPolicy']['maxIssuedPMBatchesPerLane'], 1)
         decisions = {q['id'] for q in self.catalog['openProductQuestions']}
         for batch in self.batches:
             with self.subTest(batch=batch['id']):
-                self.assertEqual(batch['status'], 'not-issued')
-                self.assertFalse(batch['pmStartAllowed'])
+                if batch['id'] == 'M01-01':
+                    self.assertIn(batch['status'], ('pm-in-progress', 'awaiting-owner-review'))
+                    self.assertEqual(batch['pmStartAllowed'], self.data['pmStartAllowed'])
+                else:
+                    self.assertEqual(batch['status'], 'not-issued')
+                    self.assertFalse(batch['pmStartAllowed'])
                 self.assertTrue(set(batch['productDecisions']) <= decisions)
         self.assertEqual(self.by_id['M10-03']['productDecisions'], ['Q-SHARE-01'])
         self.assertEqual({b['id'] for b in self.batches if b['productDecisions']}, {'M10-03'})

@@ -1,0 +1,35 @@
+{
+  "batch": "M01-01",
+  "revision": "PM-r01",
+  "inputCommit": "fe611a2f2781b83a5f6ea11ebbbb838135feee0f",
+  "status": "pm-author-candidate-for-user-review",
+  "demoEntry": "demo/batches/m01-01/index.html",
+  "requirements": "docs/product/batches/m01-01/requirements.zh-CN.md",
+  "stagesStarted": {
+    "PM": true,
+    "UX": false,
+    "RD": false,
+    "QA": false
+  },
+  "files": {
+    "demo/batches/m01-01/preview.template.html": "2b53eeba0affaddb42383dc3438110c9ffc99ac889acced33d34a408d82d9159",
+    "demo/batches/m01-01/model.mjs": "faf18366baefd8581c02df06489af9a7b5a43833f48051220d9b343a4e9927d6",
+    "demo/batches/m01-01/style.css": "1fa94b90f1bc6d749ba9a7e1452f70861155954aa09b1ca0a71ed4419d57c198",
+    "demo/batches/m01-01/index.html": "ecde56080e9351b48fcf09726465df855ad0f7b78cc00d790725c41ddac5fefe",
+    "demo/batches/m01-01/app.mjs": "4e9331165d74fab15875166bd2cef92a1d8890459bc72dfc0ebd28e3c12accba",
+    "demo/batches/m01-01/build-preview.mjs": "43df393a1356ddf0aa0099adb484dae7490128104d676a1ccce481c4bd89080f",
+    "docs/product/batches/m01-01/requirements.zh-CN.md": "9b6c204901532e327e253ed6346fdf5d6afbf1002e2795e4e49f6ade58428a4c",
+    "docs/product/batches/m01-01/author-verification.zh-CN.md": "a18fad7837070e553df98ebc932b1ddc29fb1c5dc644e7d10e50fce1e0d7714c",
+    "tests/test_m01_01_pm_demo.py": "18436660e31f44465690c2d1b0863a1c1c9a0b4eb99c8f197098026decdd8dad"
+  },
+  "inputFiles": {
+    "docs/product/fancy-requirements-baseline.zh-CN.md": "c8407f64ac1c94689c517caf852ec901c54248ead079f0847a485369ec4e65c8",
+    "docs/product/modules/m01-account-profile.zh-CN.md": "a199285aecd7fd77bda9a56f7c2e58ef07afc7ffbf885fc31d35c443a16f34c8",
+    "docs/product/mvp-batch-scope.zh-CN.md": "fe2ebb9e2b15681b88bfa796e03514d01da59c903e2ef1f6d68b08ccfa22313d",
+    "docs/delivery/work-packages/m01-01-pm.zh-CN.md": "aed039d8946592b7d16a236824e30268488387fc8ac9d81f0593f584fdceb23f",
+    "docs/delivery/batch-workflow-and-versioning.zh-CN.md": "fa819ad2d45ef9ce22f94b985ffada51f05ae354e0f2f507bf1371daca3146c7",
+    ".agents/skills/product-management/SKILL.md": "8c5f0c5683fe0c0ee43d508b260f4187158878624ae7d137b8b24811d3e4cede",
+    ".agents/skills/product-management/references/requirements-and-prd.md": "6e9be89436e0bf6934f6d79048b84475adf55c23217dc9b3ef08335f70ded7cd",
+    ".agents/skills/product-management/references/validation-and-delivery.md": "8f88bfc771d32b795a64480ae74107b747bd18b02d981406acba3f8dce707a9b"
+  }
+}

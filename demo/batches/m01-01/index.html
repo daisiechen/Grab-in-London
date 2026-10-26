@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><title>Fancy · M01-01 · PM preview</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#123f35;background:#e9e8df;font-synthesis:none}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button,a,input,select,summary{touch-action:manipulation}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #e96943;outline-offset:3px}button{cursor:pointer}button:disabled{cursor:default;opacity:.5}.review-shell{max-width:1040px;margin:auto;min-height:100vh;display:grid;grid-template-columns:1fr 390px;gap:90px;align-items:start;padding:62px 40px}.review-info{padding:34px 0}.eyebrow{font-size:11px;letter-spacing:.18em;font-weight:700}.review-info h1{font-size:36px;line-height:1.3;letter-spacing:-.04em;font-weight:650;margin:22px 0}.intro{font-size:15px;line-height:1.85;color:#4e6258}.document-link{color:#123f35;font-size:14px;text-underline-offset:5px;display:inline-block;margin:12px 0 26px}.review-note{border-left:2px solid #9aac80;padding-left:16px;color:#4d5e55;font-size:13px;line-height:1.8}.review-note strong{color:#123f35;font-weight:600}.review-note p{margin:5px 0}.controls{margin-top:25px;font-size:12px;line-height:1.7}.controls summary{cursor:pointer;font-weight:650}.controls label{display:block;margin:13px 0 4px}.controls select{width:100%;padding:9px;background:#f5f2e8;border:1px solid #bcc4b8;border-radius:6px;font-size:13px}.tool{background:transparent;border:1px solid #aebcae;border-radius:6px;padding:8px 10px;color:#123f35;font-size:12px;min-height:36px}.controls>.tool{margin-top:12px}.tool-row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}.review-status{font-size:11px;line-height:1.7;color:#576b60;border-top:1px solid #c9cec2;padding-top:14px;margin-top:24px}.phone{width:390px;min-height:790px;background:#f5f2e8;border:1px solid #cbcfc3;border-radius:40px;overflow:hidden;position:relative;box-shadow:0 18px 54px #123f3512}.statusbar{height:56px;padding:20px 30px 0;display:flex;justify-content:space-between;font-size:12px;font-weight:650}.homebar{height:5px;width:130px;background:#183f34;border-radius:9px;position:absolute;bottom:10px;left:50%;transform:translateX(-50%)}.screen{min-height:734px;padding:23px 30px 46px;display:flex;flex-direction:column}.brand{font-size:31px;letter-spacing:-.09em;font-weight:800;margin:0;line-height:1.2}.topnav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:40px}.navbutton{border:0;background:transparent;padding:9px 0;color:#38594a;font-size:13px;min-height:38px}.welcome .brand{font-size:40px}.meal-mark{height:166px;position:relative;margin:38px 0 19px;display:grid;place-items:center}.plate{height:132px;width:132px;border:2px solid #123f35;border-radius:50%;background:#d7ee79;display:grid;place-items:center}.plate:before{content:"";height:95px;width:95px;border:1px solid #67884a;border-radius:50%}.utensil{position:absolute;left:61px;width:2px;height:119px;background:#123f35;border-radius:3px;transform:rotate(-8deg)}.utensil:after{content:"";position:absolute;top:0;left:-5px;width:12px;height:32px;border:2px solid #123f35;border-top:0;border-radius:0 0 8px 8px}.knife{left:auto;right:62px;transform:rotate(8deg);width:3px}.knife:after{width:8px;height:54px;border:0;border-radius:9px 2px 0 2px;background:#123f35;left:-5px}.screen h2{font-size:35px;line-height:1.12;letter-spacing:-.045em;margin:9px 0 17px;font-weight:650}.screen p{font-size:15px;line-height:1.6;color:#5a6c60;margin:0 0 22px}.screen .small{font-size:12px;line-height:1.6}.spacer{flex:1;min-height:26px}.primary,.secondary{width:100%;min-height:52px;padding:13px 18px;border-radius:12px;font-weight:600;font-size:14px}.primary{background:#123f35;color:#f5f2e8;border:1px solid #123f35}.secondary{margin-top:12px;background:transparent;color:#123f35;border:1px solid #a8b9a4}.linkbutton{background:none;border:0;color:#355b48;text-decoration:underline;text-underline-offset:4px;font-size:13px;min-height:42px;padding:9px 3px}.field-label{display:block;font-size:12px;font-weight:650;margin:15px 0 9px}.field{width:100%;min-height:54px;border:1px solid #a7b49e;border-radius:9px;background:#fbfaf5;padding:13px 14px;color:#123f35;outline-offset:2px}.field.code{font-size:27px;letter-spacing:.25em;font-variant-numeric:tabular-nums}.error{color:#a44830!important;font-size:12px!important;margin:11px 0 16px!important;min-height:20px}.error:empty{margin-top:8px!important;margin-bottom:8px!important}.email-note{overflow-wrap:anywhere;font-weight:550;color:#123f35}.badge{display:inline-block;align-self:flex-start;background:#e1e7d4;color:#355b48;border-radius:20px;padding:6px 10px;font-size:11px;font-weight:650;margin:2px 0 22px}.success-mark{height:58px;width:58px;display:grid;place-items:center;border-radius:50%;background:#d7ee79;font-size:26px;margin:36px 0 25px}.divider{border:0;border-top:1px solid #d5d9cc;width:100%;margin:19px 0}.boundary{background:#e7eadc;border:1px solid #ccd4be;padding:16px;border-radius:12px}.boundary p{font-size:13px;margin-bottom:0}.screen form{display:flex;flex-direction:column}.screen form>.primary{margin-top:8px}.countdown{font-size:12px;color:#698068;margin-top:3px}.welcome .small{text-align:center;margin-top:15px}.intent-note{border-left:2px solid #b1c993;padding-left:13px;font-size:13px!important;margin-bottom:25px!important}@media(max-width:760px){.review-shell{grid-template-columns:1fr;gap:24px;padding:20px 16px}.review-info{padding:0;max-width:390px;margin:auto}.review-info h1{font-size:27px;margin:12px 0}.review-note{font-size:12px}.phone{width:min(390px,100%);margin:auto;min-height:790px}.intro{font-size:13px}.document-link{margin:2px 0 14px}.controls{margin-top:14px}.review-status{margin-top:14px}.review-shell{padding-bottom:35px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+</style>
+</head>
+<body>
+<main class="review-shell">
+  <aside class="review-info" lang="zh-CN">
+    <p class="eyebrow">FANCY · M01-01 · PM r01</p><h1>先看看，再用邮箱登录。</h1>
+    <p class="intro">这一批只说明访客入口与邮箱验证。选择一条来源，从手机画面走完正常流程或取消，再试必要的失败恢复。</p>
+    <a class="document-link" href="../../../docs/product/batches/m01-01/requirements.zh-CN.md">阅读本批对应需求 ↗</a>
+    <div class="review-note"><strong>交互演示，不是真实服务</strong><p>这是 iOS 流程的静态模拟，不发邮件、不创建账号、不实现饭局或资料表单。仅使用 <code>@example.test</code> 合成邮箱，刷新即清空。</p></div>
+    <details class="controls"><summary>演示控制与边界</summary>
+      <label for="origin">登录来源</label><select id="origin"><option value="discover">主动登录 → Discover</option><option value="meal">饭局触发 → 同一场饭局</option></select>
+      <label for="profile">合成账号状态</label><select id="profile"><option value="complete">已有账号 · 资料完整</option><option value="incomplete">首次账号 · 资料未完成</option></select>
+      <button id="reset" class="tool">按当前来源重新开始</button>
+      <p>模拟验证码 <code id="demo-code">123456</code>；过期 5 分钟，重发冷却 30 秒。控制时钟只影响本页。</p>
+      <div class="tool-row"><button id="advance30" class="tool">推进 30 秒</button><button id="advance300" class="tool">推进 5 分钟</button></div>
+      <div class="tool-row"><button id="failSend" class="tool">下次请求失败</button><button id="failVerify" class="tool">下次验证失败</button></div>
+      <p>这些是作者演示工具，不是拟交付给 App 用户的功能。修改来源或账号状态后需重新开始。</p>
+    </details>
+    <p id="review-status" class="review-status" aria-live="polite"></p>
+  </aside>
+  <section class="phone" aria-label="iOS flow preview">
+    <div class="statusbar" aria-hidden="true"><span>9:41</span><span>••• ▰</span></div>
+    <div id="app"></div><div class="homebar" aria-hidden="true"></div>
+  </section>
+</main>
+<script>
+(() => {
+/** M01-01 PM simulation only: no provider, storage, or business commands. */
+const SYNTHETIC_MEAL_ID = '11111111-1111-4111-8111-111111111111';
+const OTP_TTL = 300;
+const RESEND_COOLDOWN = 30;
+const DEMO_CODES = ['123456', '246810', '135790'];
+function demoCode(s) { return DEMO_CODES[Math.max(0, s.challenge - 1) % DEMO_CODES.length]; }
+function createState(options = {}) {
+  return { screen: 'welcome', email: '', code: '', error: '', now: 0,
+    issuedAt: null, resendAt: null, challenge: 0, verified: false,
+    origin: options.origin === 'meal' ? 'meal' : 'discover',
+    targetId: options.origin === 'meal' ? SYNTHETIC_MEAL_ID : null,
+    profileComplete: options.profileComplete !== false, boundary: null,
+    sendFailure: false, verifyFailure: false, businessWrites: 0 };
+}
+function resendRemaining(s) { return s.resendAt === null ? 0 : Math.max(0, s.resendAt - s.now); }
+function expired(s) { return s.issuedAt !== null && s.now - s.issuedAt >= OTP_TTL; }
+function transition(state, event) {
+  const s = { ...state };
+  switch (event.type) {
+    case 'START': s.screen = 'email'; s.error = ''; break;
+    case 'BROWSE': s.screen = 'boundary'; s.boundary = 'discover'; s.error = ''; break;
+    case 'EMAIL': s.email = event.value; s.error = ''; break;
+    case 'CODE': s.code = event.value.replace(/\D/g, '').slice(0, 6); s.error = ''; break;
+    case 'SEND': {
+      if (s.screen !== 'email') break;
+      const email = s.email.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { s.error = 'Enter a valid email address.'; break; }
+      if (!email.toLowerCase().endsWith('@example.test')) { s.error = 'For this preview, use an @example.test address.'; break; }
+      if (s.sendFailure) { s.sendFailure = false; s.error = 'We couldn’t request a code. Your email is still here. Try again.'; break; }
+      s.email = email; s.issuedAt = s.now; s.resendAt = s.now + RESEND_COOLDOWN;
+      s.challenge += 1; s.code = ''; s.error = ''; s.screen = 'code'; s.verified = false; break;
+    }
+    case 'RESEND':
+      if (s.screen !== 'code' || resendRemaining(s) > 0) break;
+      if (s.sendFailure) { s.sendFailure = false; s.error = 'We couldn’t request a new code. Try again.'; break; }
+      s.issuedAt = s.now; s.resendAt = s.now + RESEND_COOLDOWN;
+      s.challenge += 1; s.code = ''; s.error = ''; break;
+    case 'VERIFY':
+      if (s.screen !== 'code') break;
+      if (expired(s)) { s.error = 'This code has expired. Request a new code.'; break; }
+      if (s.code.length !== 6) { s.error = 'Enter the 6-digit code.'; break; }
+      if (s.verifyFailure) { s.verifyFailure = false; s.error = 'We couldn’t verify your code. Your input is still here. Try again.'; break; }
+      if (s.code !== demoCode(s)) { s.error = 'That code doesn’t match. Try again.'; break; }
+      s.verified = true; s.code = ''; s.error = ''; s.screen = 'verified'; break;
+    case 'CHANGE_EMAIL':
+      s.screen = 'email'; s.code = ''; s.error = ''; s.issuedAt = null; s.resendAt = null; break;
+    case 'CANCEL':
+      s.screen = 'boundary'; s.boundary = s.origin; s.code = ''; s.error = ''; s.issuedAt = null; s.resendAt = null; break;
+    case 'CONTINUE':
+      if (!s.verified) break;
+      s.screen = 'boundary'; s.boundary = s.profileComplete ? s.origin : 'profile'; break;
+    case 'ADVANCE': s.now += Math.max(0, Number(event.seconds) || 0); break;
+    case 'FAIL_SEND': s.sendFailure = true; break;
+    case 'FAIL_VERIFY': s.verifyFailure = true; break;
+    default: break;
+  }
+  return s;
+}
+
+const app = document.querySelector('#app');
+let state = createState();
+const escapeText = (value) => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function dispatch(event) { state = transition(state, event); render(); }
+function top() { return `<div class="topnav"><p class="brand">fancy</p><button class="navbutton" data-action="CANCEL">Cancel</button></div>`; }
+function error() { return `<p class="error" id="error" role="alert">${escapeText(state.error)}</p>`; }
+function render() {
+  const focused = document.activeElement?.id;
+  const selection = document.activeElement?.selectionStart;
+  let content = '';
+  if (state.screen === 'welcome') {
+    content = `<section class="screen welcome"><p class="brand">fancy</p><div class="meal-mark" aria-hidden="true"><i class="utensil"></i><div class="plate"></div><i class="utensil knife"></i></div><p class="eyebrow">THERE’S A SEAT FOR YOU HERE</p><h2>Fancy a bite?</h2><p>Meet new people over a meal.<br>A little conversation starts here.</p><div class="spacer"></div><button class="primary" data-action="START">Continue with email</button><button class="secondary" data-action="BROWSE">Explore tables first</button><p class="small">No need to sign in just to have a look.</p></section>`;
+  } else if (state.screen === 'email') {
+    content = `<section class="screen">${top()}<span class="badge">A seat starts with hello</span><h2>Your email.<br>Your way in.</h2><p>We’ll send a 6-digit code. No password to remember.</p>${state.origin === 'meal' ? '<p class="intent-note">Your meal will still be here after you sign in.</p>' : ''}<form id="email-form" novalidate><label class="field-label" for="email">Email address</label><input class="field" id="email" type="email" inputmode="email" autocomplete="off" placeholder="alex@example.test" value="${escapeText(state.email)}" aria-describedby="error" aria-invalid="${!!state.error}">${error()}<button class="primary" type="submit">Send code</button></form><div class="spacer"></div><p class="small">You can change your mind and keep exploring.</p></section>`;
+  } else if (state.screen === 'code') {
+    content = `<section class="screen">${top()}<span class="badge">One more little step</span><h2>Check your<br>inbox.</h2><p>Enter the code for<br><span class="email-note">${escapeText(state.email)}</span></p><button class="linkbutton" data-action="CHANGE_EMAIL">Use a different email</button><form id="code-form" novalidate><label class="field-label" for="code">6-digit code</label><input class="field code" id="code" type="text" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="000000" value="${escapeText(state.code)}" aria-describedby="error" aria-invalid="${!!state.error}">${error()}<button class="primary" type="submit">Verify email</button></form><div class="spacer"></div><button class="linkbutton" id="resend" data-action="RESEND" ${resendRemaining(state) > 0 ? 'disabled' : ''}>${resendLabel()}</button><p class="small">The code expires after 5 minutes. Only the latest code works.</p></section>`;
+  } else if (state.screen === 'verified') {
+    content = `<section class="screen"><p class="brand">fancy</p><div class="success-mark" aria-hidden="true">✓</div><h2>${state.profileComplete ? 'You’re signed in.' : 'Email verified.'}</h2><p>${state.profileComplete ? 'Pick up where you left off. Nothing has been submitted for you.' : 'Before joining or hosting, you’ll need to finish your public introduction.'}</p><div class="spacer"></div><button class="primary" data-action="CONTINUE">${state.profileComplete ? (state.origin === 'meal' ? 'Return to your meal' : 'Continue exploring') : 'See your next step'}</button><p class="small">Your next action is always yours to choose.</p></section>`;
+  } else {
+    const labels = { discover: ['Explore as you are.', 'Discover is the next destination.'], meal: ['Back to your meal.', 'The same meal is waiting. No application has been sent.'], profile: ['A little about you.', 'Your email is verified. Complete your profile before participating.'] };
+    const [title, text] = labels[state.boundary] || labels.discover;
+    content = `<section class="screen"><p class="brand">fancy</p><div class="spacer"></div><span class="badge">Preview boundary</span><h2>${title}</h2><p>${text}</p><div class="boundary"><p>${state.boundary === 'profile' ? 'Profile completion belongs to M01-04. This preview does not include the form.' : 'This preview stops at the handoff. Discover, meal details and applications are not included.'}</p></div><div class="spacer"></div><button class="secondary" data-action="RESTART">Restart this preview</button></section>`;
+  }
+  app.innerHTML = content;
+  app.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => button.dataset.action === 'RESTART' ? reset() : dispatch({ type: button.dataset.action })));
+  const email = app.querySelector('#email');
+  email?.addEventListener('input', e => { state = transition(state, {type:'EMAIL', value:e.target.value}); });
+  app.querySelector('#email-form')?.addEventListener('submit', e => { e.preventDefault(); dispatch({type:'SEND'}); });
+  const code = app.querySelector('#code');
+  code?.addEventListener('input', e => { state = transition(state, {type:'CODE', value:e.target.value}); e.target.value = state.code; });
+  app.querySelector('#code-form')?.addEventListener('submit', e => { e.preventDefault(); dispatch({type:'VERIFY'}); });
+  const previous = focused ? document.getElementById(focused) : null;
+  if (previous) { previous.focus(); if (typeof selection === 'number' && previous.type !== 'email') previous.setSelectionRange?.(selection, selection); }
+  updateReview();
+}
+function resendLabel() { const remaining = resendRemaining(state); return remaining ? `Resend code in ${remaining}s` : 'Resend code'; }
+function updateReview() {
+  document.getElementById('demo-code').textContent = demoCode(state);
+  document.getElementById('review-status').textContent = `模拟状态：${state.screen} · 来源：${state.origin}${state.targetId ? ' / ' + state.targetId : ''} · ${state.verified ? '邮箱已验证' : '未验证'} · 业务写入：${state.businessWrites} · 模拟时钟：${state.now}s${state.sendFailure ? ' · 下次请求失败' : ''}${state.verifyFailure ? ' · 下次验证失败' : ''}`;
+}
+function reset() { state = createState({origin:document.getElementById('origin').value, profileComplete:document.getElementById('profile').value === 'complete'}); render(); }
+document.getElementById('reset').addEventListener('click', reset);
+document.getElementById('advance30').addEventListener('click', () => dispatch({type:'ADVANCE',seconds:30}));
+document.getElementById('advance300').addEventListener('click', () => dispatch({type:'ADVANCE',seconds:300}));
+document.getElementById('failSend').addEventListener('click', () => dispatch({type:'FAIL_SEND'}));
+document.getElementById('failVerify').addEventListener('click', () => dispatch({type:'FAIL_VERIFY'}));
+setInterval(() => {
+  state = transition(state,{type:'ADVANCE',seconds:1});
+  const resend = document.getElementById('resend');
+  if (resend) { resend.disabled = resendRemaining(state)>0; resend.textContent=resendLabel(); }
+  updateReview();
+},1000);
+render();
+
+})();
+</script>
+</body></html>

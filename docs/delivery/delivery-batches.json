@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "revision": "r05",
   "pmStartAllowed": false,
-  "activeBatch": null,
+  "activeBatch": "M01-01",
   "defaultExecution": "order为优先级与依赖的参考串行拓扑序，不是全局串行锁；未来有明确开工授权后可在依赖、文件和环境隔离均满足时多泳道并行；当前仍未签发",
   "batches": [
     {
@@ -20,18 +20,24 @@
       ],
       "platform": "ios",
       "scopeStatus": "current",
-      "status": "not-issued",
+      "status": "awaiting-owner-review",
       "pmStartAllowed": false,
       "productDecisions": [],
       "order": 1,
       "workflow": {
-        "currentStage": null,
+        "currentStage": "PM",
         "stages": {
           "PM": {
-            "status": "not-started",
-            "inputRevision": null,
-            "outputRevision": null,
-            "evidence": []
+            "status": "in-review",
+            "inputRevision": "fe611a2 / r05 + M01-01 PM工作包r01",
+            "outputRevision": "PM-r01",
+            "evidence": [
+              "docs/product/batches/m01-01/requirements.zh-CN.md",
+              "demo/batches/m01-01/index.html",
+              "docs/product/batches/m01-01/author-verification.zh-CN.md",
+              "docs/product/batches/m01-01/artifact-manifest.json"
+            ],
+            "authorChecks": "4/4 Node/DOM/entry/hash author checks; real browser/native/provider NOT_RUN"
           },
           "UX": {
             "status": "not-started",
@@ -3608,5 +3614,34 @@
       ]
     }
   },
-  "releaseSetsPath": "docs/delivery/release-sets.json"
+  "releaseSetsPath": "docs/delivery/release-sets.json",
+  "authorization": {
+    "workPackage": "docs/delivery/work-packages/m01-01-pm.zh-CN.md",
+    "batchIds": [
+      "M01-01"
+    ],
+    "allowedStages": [
+      "PM"
+    ],
+    "deliverables": [
+      "batch-requirements",
+      "interactive-ios-flow-demo"
+    ],
+    "nextStagesAllowed": false,
+    "nextBatchesAllowed": false,
+    "ownerReviewBeforeNextStage": true,
+    "scope": "用户仅授权M01-01需求与Demo成对交付，未批准其他批次/UX/RD/QA"
+  },
+  "review": {
+    "batch": "M01-01",
+    "status": "awaiting-owner-review",
+    "revision": "PM-r01",
+    "artifacts": [
+      "docs/product/batches/m01-01/requirements.zh-CN.md",
+      "demo/batches/m01-01/index.html",
+      "docs/product/batches/m01-01/author-verification.zh-CN.md",
+      "docs/product/batches/m01-01/artifact-manifest.json"
+    ],
+    "professionalStagesStarted": false
+  }
 }

@@ -26,7 +26,7 @@ class ReleaseWorkflowTest(unittest.TestCase):
                     pending.append(dependency)
         return result
 
-    def test_each_batch_has_its_own_ordered_unstarted_stages(self):
+    def test_each_batch_has_its_own_stages_with_only_m01_01_pm_started(self):
         self.assertEqual(self.data['workflow']['stages'], ['PM', 'UX', 'RD', 'QA'])
         self.assertTrue(self.data['workflow']['oneActiveStagePerBatch'])
         self.assertTrue(self.data['workflow']['batchAcceptedOnlyAfterQAPass'])
@@ -34,14 +34,23 @@ class ReleaseWorkflowTest(unittest.TestCase):
             with self.subTest(batch=batch['id']):
                 stages = batch['workflow']['stages']
                 self.assertEqual(list(stages), ['PM', 'UX', 'RD', 'QA'])
-                self.assertIsNone(batch['workflow']['currentStage'])
-                self.assertEqual(batch['status'], 'not-issued')
-                self.assertFalse(batch['pmStartAllowed'])
-                for stage in stages.values():
-                    self.assertEqual(stage['status'], 'not-started')
-                    self.assertIsNone(stage['inputRevision'])
-                    self.assertIsNone(stage['outputRevision'])
-                    self.assertEqual(stage['evidence'], [])
+                allowed_pm = batch['id'] == 'M01-01'
+                if allowed_pm:
+                    self.assertEqual(batch['workflow']['currentStage'], 'PM')
+                    self.assertIn(batch['status'], ('pm-in-progress', 'awaiting-owner-review'))
+                else:
+                    self.assertIsNone(batch['workflow']['currentStage'])
+                    self.assertEqual(batch['status'], 'not-issued')
+                    self.assertFalse(batch['pmStartAllowed'])
+                for name, stage in stages.items():
+                    if allowed_pm and name == 'PM':
+                        self.assertIn(stage['status'], ('in-progress', 'in-review'))
+                        self.assertTrue(stage['inputRevision'])
+                    else:
+                        self.assertEqual(stage['status'], 'not-started')
+                        self.assertIsNone(stage['inputRevision'])
+                        self.assertIsNone(stage['outputRevision'])
+                        self.assertEqual(stage['evidence'], [])
 
     def test_parallelism_requires_isolation_not_just_distinct_ids(self):
         policy = self.data['workflow']['parallelPolicy']
@@ -53,7 +62,8 @@ class ReleaseWorkflowTest(unittest.TestCase):
             'isolated-runtime-and-data', 'fixed-input-revisions',
             'single-shared-contract-writer'})
         self.assertIn('different-module-id', policy['notSufficient'])
-        self.assertFalse(self.data['pmStartAllowed'])
+        self.assertEqual(self.data['authorization']['allowedStages'], ['PM'])
+        self.assertFalse(self.data['authorization']['nextStagesAllowed'])
 
     def test_release_closures_are_exact_and_exclude_deferred_web(self):
         for profile in self.profiles.values():

@@ -2,6 +2,11 @@
 
 项目入口：[README](../README.md)。本目录保存项目知识；Agent 协作规则见 [AGENTS.md](../AGENTS.md)，正式方法在 `.agents/skills/`，待审核候选在 `.agents/candidates/`，不作为现行执行规则。
 
+## 当前单批PM候选：M01-01待用户审阅
+
+- [M01-01需求 PM-r01](product/batches/m01-01/requirements.zh-CN.md)与[交互Demo](../demo/batches/m01-01/index.html)：仅访客入口/邮箱验证码/恢复与意图回流；iOS流程模拟，未接真实认证。
+- [M01-01作者验证](product/batches/m01-01/author-verification.zh-CN.md)、[成对产物清单](product/batches/m01-01/artifact-manifest.json)：作者自检与未测边界，不代表UX/RD/QA或产品批准。
+
 ## 产品与需求
 
 | 文档 | 用途与权威关系 |
@@ -64,13 +69,15 @@
 
 ## 项目管理与执行
 
+- [M01-01 PM单批工作包](delivery/work-packages/m01-01-pm.zh-CN.md)：仅授权该批需求＋交互Demo，独立新产物作者；用户先看，后续UX/RD/QA及其他批次不启动。
+
 - [逐批工作流与版本管理r05](delivery/batch-workflow-and-versioning.zh-CN.md)：每批PM→UX→RD→QA、条件并行、隔离、返工、版本联调及集成/回退。
 - [首次iOS提交与后台上线集合r05](delivery/release-sets.zh-CN.md)、[精确集合数据](delivery/release-sets.json)：iOS40批、后台8批、首发依赖闭包48批；Apple适用核查与未闭门槛，非已发布证明。
 
 - [项目管理方案r05](delivery/project-management-plan.zh-CN.md)：团队职责、worker工作包、iOS/后台执行依赖、环境验证、证据继承及发布检查；与产品用户需求分开。
 
-- [具体交付批次与顺序r05](delivery/delivery-batches.zh-CN.md)：直接依赖、最小跨模块合同、I01—I04联合检查、单批PM限制；当前禁止开工。
-- [结构化批次表](delivery/delivery-batches.json)：64批状态均未签发，PM未获开工许可。
+- [具体交付批次与顺序r05](delivery/delivery-batches.zh-CN.md)：直接依赖、最小跨模块合同、I01—I04联合检查、单批PM限制；仅M01-01获PM需求＋Demo授权。
+- [结构化批次表](delivery/delivery-batches.json)：仅M01-01允许PM需求＋Demo，其余63批未签发，后续专业阶段保持停止。
 
 ## 发布与验收
 

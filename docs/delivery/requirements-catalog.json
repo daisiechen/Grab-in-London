@@ -436,15 +436,24 @@
   ],
   "dispatchPolicy": {
     "pmStartAllowed": false,
-    "activeBatch": null,
-    "activeBatches": [],
+    "activeBatch": "M01-01",
+    "activeBatches": [
+      "M01-01"
+    ],
     "maxIssuedPMBatchesPerLane": 1,
     "initialLanes": [
       "ios",
       "admin-web"
     ],
     "parallelAllowedWhenIsolated": true,
-    "meaning": "流程和首发集合规划；未下达实际PM/UX/RD/QA派单，不自动开工"
+    "meaning": "M01-01 PM-r01需求与Demo已成对交付待用户审阅，作者停止写入；其他63批及所有UX/RD/QA不启动。",
+    "authorizedBatchIds": [
+      "M01-01"
+    ],
+    "allowedStages": [
+      "PM"
+    ],
+    "nextStagesAllowed": false
   },
   "batchCatalogPath": "docs/delivery/delivery-batches.json",
   "dependencyLevel": "version dependsOn为领域背景，具体开工依赖以delivery-batches.json的批次DAG为准，避免整模块等待造成环路",
