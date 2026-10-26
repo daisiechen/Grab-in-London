@@ -42,5 +42,14 @@
     "J11": "40921832dd47a5c0df9615b2ddbe483bfa54e51890b527083410d8c09f1451a3"
   },
   "privateMetadataExcluded": true,
-  "publicationEvidence": "Sites owner-private发布操作返回succeeded；私有URL及项目/部署标识仅存私有记录，不进入公开仓库。"
+  "publicationEvidence": "Sites owner-private发布操作返回succeeded；私有URL及项目/部署标识仅存私有记录，不进入公开仓库。",
+  "previewShellRevision": "r02-inline-prd",
+  "previewShellCommit": "3ba9d047110872f292b1a6a28c6a7852c45b96cc",
+  "prdReaderVerification": {
+    "localDocumentOpenReadReturn": "11/11 passed",
+    "authorizedHomepageHTTP": 200,
+    "embeddedPRDs": 11,
+    "hashReaderPresent": true,
+    "realBrowserVisual": "not verified; browser stopped at sign-in"
+  }
 }
