@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "revision": "r04",
+  "revision": "r05",
   "pmStartAllowed": false,
   "activeBatch": null,
-  "defaultExecution": "按order逐批串行；未决/外部门槛阻塞仅影响其依赖分支，由PJ在有效授权内明确下一独立批次，不自动派单",
+  "defaultExecution": "order为优先级与依赖的参考串行拓扑序，不是全局串行锁；未来有明确开工授权后可在依赖、文件和环境隔离均满足时多泳道并行；当前仍未签发",
   "batches": [
     {
       "id": "M01-01",
@@ -23,7 +23,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 1
+      "order": 1,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M01-02",
@@ -45,7 +78,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 2
+      "order": 2,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M01-03",
@@ -67,7 +133,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 3
+      "order": 3,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M01-04",
@@ -89,7 +188,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 4
+      "order": 4,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M01-05",
@@ -110,7 +242,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 5
+      "order": 5,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M01-06",
@@ -133,7 +298,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 6
+      "order": 6,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M02-01",
@@ -154,7 +352,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 7
+      "order": 7,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M02-02",
@@ -176,7 +407,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 8
+      "order": 8,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M02-03",
@@ -199,7 +463,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 9
+      "order": 9,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M03-01",
@@ -220,7 +517,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 10
+      "order": 10,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M03-02",
@@ -241,7 +571,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 11
+      "order": 11,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M03-03",
@@ -263,7 +626,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 12
+      "order": 12,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M04-01",
@@ -287,7 +683,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 13
+      "order": 13,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M04-02",
@@ -310,7 +739,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 14
+      "order": 14,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M04-03",
@@ -331,7 +793,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 15
+      "order": 15,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M03-04",
@@ -354,7 +849,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 16
+      "order": 16,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M03-05",
@@ -376,7 +904,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 17
+      "order": 17,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M03-06",
@@ -399,7 +960,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 18
+      "order": 18,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M05-01",
@@ -422,7 +1016,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 19
+      "order": 19,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M05-02",
@@ -445,7 +1072,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 20
+      "order": 20,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M05-03",
@@ -468,7 +1128,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 21
+      "order": 21,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M05-04",
@@ -489,7 +1182,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 22
+      "order": 22,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M05-05",
@@ -511,7 +1237,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 23
+      "order": 23,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M06-01",
@@ -533,7 +1292,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 24
+      "order": 24,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M06-02",
@@ -555,7 +1347,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 25
+      "order": 25,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M06-03",
@@ -578,7 +1403,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 26
+      "order": 26,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M06-04",
@@ -599,7 +1457,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 27
+      "order": 27,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M06-05",
@@ -620,7 +1511,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 28
+      "order": 28,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M06-06",
@@ -643,7 +1567,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 29
+      "order": 29,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M06-07",
@@ -665,7 +1622,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 30
+      "order": 30,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M08-01",
@@ -687,7 +1677,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 31
+      "order": 31,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "ADMIN-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M08-02",
@@ -711,7 +1734,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 32
+      "order": 32,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "ADMIN-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M08-03",
@@ -735,7 +1791,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 33
+      "order": 33,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "ADMIN-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M08-04",
@@ -760,7 +1849,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 34
+      "order": 34,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "ADMIN-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M08-05",
@@ -783,7 +1905,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 35
+      "order": 35,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "ADMIN-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M08-06",
@@ -805,7 +1960,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 36
+      "order": 36,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "ADMIN-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M08-07",
@@ -827,7 +2015,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 37
+      "order": 37,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "ADMIN-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M08-08",
@@ -849,7 +2070,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 38
+      "order": 38,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "ADMIN-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M08-09",
@@ -873,7 +2127,38 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 39
+      "order": 39,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [],
+      "releaseStage": "post-first-release"
     },
     {
       "id": "M08-10",
@@ -896,7 +2181,38 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 40
+      "order": 40,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [],
+      "releaseStage": "post-first-release"
     },
     {
       "id": "M07-01",
@@ -918,7 +2234,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 41
+      "order": 41,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M07-02",
@@ -939,7 +2288,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 42
+      "order": 42,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M07-03",
@@ -963,7 +2345,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 43
+      "order": 43,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M07-04",
@@ -990,7 +2405,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 44
+      "order": 44,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M07-05",
@@ -1014,7 +2462,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 45
+      "order": 45,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M09-01",
@@ -1037,7 +2518,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 46
+      "order": 46,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M09-02",
@@ -1062,7 +2576,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 47
+      "order": 47,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M09-03",
@@ -1086,7 +2633,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 48
+      "order": 48,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M09-04",
@@ -1110,7 +2690,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 49
+      "order": 49,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M09-05",
@@ -1135,7 +2748,40 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 50
+      "order": 50,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [
+        "IOS-MIN-01"
+      ],
+      "releaseStage": "first-release"
     },
     {
       "id": "M10-01",
@@ -1156,7 +2802,38 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 51
+      "order": 51,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [],
+      "releaseStage": "post-first-release"
     },
     {
       "id": "M10-02",
@@ -1179,7 +2856,38 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 52
+      "order": 52,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [],
+      "releaseStage": "post-first-release"
     },
     {
       "id": "M10-03",
@@ -1203,7 +2911,38 @@
       "productDecisions": [
         "Q-SHARE-01"
       ],
-      "order": 53
+      "order": 53,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [],
+      "releaseStage": "post-first-release"
     },
     {
       "id": "M11-01",
@@ -1225,7 +2964,38 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 54
+      "order": 54,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [],
+      "releaseStage": "post-first-release"
     },
     {
       "id": "M11-02",
@@ -1247,7 +3017,38 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 55
+      "order": 55,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [],
+      "releaseStage": "post-first-release"
     },
     {
       "id": "M11-03",
@@ -1270,7 +3071,38 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 56
+      "order": 56,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [],
+      "releaseStage": "post-first-release"
     },
     {
       "id": "M11-04",
@@ -1293,7 +3125,38 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 57
+      "order": 57,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [],
+      "releaseStage": "post-first-release"
     },
     {
       "id": "M12-01",
@@ -1317,7 +3180,38 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 58
+      "order": 58,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [],
+      "releaseStage": "post-first-release"
     },
     {
       "id": "M12-02",
@@ -1339,7 +3233,38 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 59
+      "order": 59,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [],
+      "releaseStage": "post-first-release"
     },
     {
       "id": "M12-03",
@@ -1363,7 +3288,38 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 60
+      "order": 60,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [],
+      "releaseStage": "post-first-release"
     },
     {
       "id": "M10-W01",
@@ -1385,7 +3341,38 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 61
+      "order": 61,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [],
+      "releaseStage": "deferred-web"
     },
     {
       "id": "M10-W02",
@@ -1407,7 +3394,38 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 62
+      "order": 62,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [],
+      "releaseStage": "deferred-web"
     },
     {
       "id": "M12-W01",
@@ -1428,7 +3446,38 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 63
+      "order": 63,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [],
+      "releaseStage": "deferred-web"
     },
     {
       "id": "M12-W02",
@@ -1451,7 +3500,38 @@
       "status": "not-issued",
       "pmStartAllowed": false,
       "productDecisions": [],
-      "order": 64
+      "order": 64,
+      "workflow": {
+        "currentStage": null,
+        "stages": {
+          "PM": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "UX": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "RD": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          },
+          "QA": {
+            "status": "not-started",
+            "inputRevision": null,
+            "outputRevision": null,
+            "evidence": []
+          }
+        }
+      },
+      "releaseMembership": [],
+      "releaseStage": "deferred-web"
     }
   ],
   "integrationCheckpoints": [
@@ -1496,5 +3576,37 @@
       ],
       "outcome": "固定最终构建下AI转入及J005、外部邀请、提及/mute/push、真实模型/数据/成本及设备门槛逐项核证；Q-SHARE-01未决不能报整版通过。"
     }
-  ]
+  ],
+  "workflow": {
+    "stages": [
+      "PM",
+      "UX",
+      "RD",
+      "QA"
+    ],
+    "oneActiveStagePerBatch": true,
+    "stageEvidenceMustMatchRevision": true,
+    "batchAcceptedOnlyAfterQAPass": true,
+    "parallelPolicy": {
+      "enabledForFutureDispatch": true,
+      "maxActivePMBatchesPerLane": 1,
+      "initialLanes": [
+        "ios",
+        "admin-web"
+      ],
+      "requires": [
+        "dependency-contract-ready",
+        "disjoint-write-set",
+        "isolated-runtime-and-data",
+        "fixed-input-revisions",
+        "single-shared-contract-writer"
+      ],
+      "notSufficient": [
+        "different-module-id",
+        "different-branch-name",
+        "different-agent"
+      ]
+    }
+  },
+  "releaseSetsPath": "docs/delivery/release-sets.json"
 }

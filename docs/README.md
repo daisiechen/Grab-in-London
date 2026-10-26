@@ -6,17 +6,17 @@
 
 | 文档 | 用途与权威关系 |
 | --- | --- |
-| [MVP项目需求r04](product/fancy-requirements-baseline.zh-CN.md) | 产品依据：iOS和管理后台的使用者、目标、功能、业务规则及可观察结果；移动Web后置 |
-| [MVP产品版本与范围r04](product/module-version-plan-2026-10-26.zh-CN.md) | 产品需求附件：12模块、19个功能范围；D15/D19后续，D16未安装App邀请落地待决 |
-| [MVP分批功能范围r04](product/mvp-batch-scope.zh-CN.md) | 产品附件：本版60小批及后续Web4批，每批做/不做/产品前提/完成结果 |
-| [主 PRD](product/PRD.zh-CN.md) | v0.8业务规则来源；§0优先，本版平台以MVP项目需求r04的iOS＋管理后台为准 |
-| [MVP 补丁版本 PRD](product/mvp-patch-PRD.zh-CN.md) | 历史P1.1增量规则、UX问答及设计映射来源；本版按r04拆批次并后置移动Web，不作为整包开工指令 |
+| [MVP项目需求r05](product/fancy-requirements-baseline.zh-CN.md) | 产品依据：iOS和管理后台的使用者、目标、功能、业务规则及可观察结果；移动Web后置 |
+| [MVP产品版本与范围r05](product/module-version-plan-2026-10-26.zh-CN.md) | 产品需求附件：12模块、19个功能范围；D15/D19后续，D16未安装App邀请落地待决 |
+| [MVP分批功能范围r05](product/mvp-batch-scope.zh-CN.md) | 产品附件：本版60小批及后续Web4批，每批做/不做/产品前提/完成结果 |
+| [主 PRD](product/PRD.zh-CN.md) | v0.8业务规则来源；§0优先，本版平台以MVP项目需求r05的iOS＋管理后台为准 |
+| [MVP 补丁版本 PRD](product/mvp-patch-PRD.zh-CN.md) | 历史P1.1增量规则、UX问答及设计映射来源；本版按r05拆批次并后置移动Web，不作为整包开工指令 |
 | [产品简介](product/product-brief.md) | 产品定位与摘要；详细规则以主 PRD 为准 |
 | [首期运营指标与采集契约](product/admin/measurement-contract.zh-CN.md) | 后台全部指标算法、App采集入口与生产数据接入验收 |
 | [管理端 PRD](product/admin/PRD.zh-CN.md) | 管理端范围及指标；引用主 PRD，不替代共享业务规则 |
 | [历史R1原型与模拟交接](../shared/README.md) | 历史参考，非现行研发契约；业务真源为主PRD§0 |
 
-## 模块产品需求（r04）
+## 模块产品需求（r05）
 
 以下说明产品使用者、路径、业务规则及完成结果，均为需求草稿。项目岗位、worker流程、依赖与测试环境统一在独立的[项目管理方案](delivery/project-management-plan.zh-CN.md)；结构化执行入口为[工程目录](delivery/requirements-catalog.json)。
 
@@ -64,9 +64,12 @@
 
 ## 项目管理与执行
 
-- [项目管理方案r04](delivery/project-management-plan.zh-CN.md)：团队职责、worker工作包、iOS/后台执行依赖、环境验证、证据继承及发布检查；与产品用户需求分开。
+- [逐批工作流与版本管理r05](delivery/batch-workflow-and-versioning.zh-CN.md)：每批PM→UX→RD→QA、条件并行、隔离、返工、版本联调及集成/回退。
+- [首次iOS提交与后台上线集合r05](delivery/release-sets.zh-CN.md)、[精确集合数据](delivery/release-sets.json)：iOS40批、后台8批、首发依赖闭包48批；Apple适用核查与未闭门槛，非已发布证明。
 
-- [具体交付批次与顺序r04](delivery/delivery-batches.zh-CN.md)：直接依赖、最小跨模块合同、I01—I04联合检查、单批PM限制；当前禁止开工。
+- [项目管理方案r05](delivery/project-management-plan.zh-CN.md)：团队职责、worker工作包、iOS/后台执行依赖、环境验证、证据继承及发布检查；与产品用户需求分开。
+
+- [具体交付批次与顺序r05](delivery/delivery-batches.zh-CN.md)：直接依赖、最小跨模块合同、I01—I04联合检查、单批PM限制；当前禁止开工。
 - [结构化批次表](delivery/delivery-batches.json)：64批状态均未签发，PM未获开工许可。
 
 ## 发布与验收

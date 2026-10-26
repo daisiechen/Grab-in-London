@@ -55,7 +55,7 @@ class DeliveryBatchesTest(unittest.TestCase):
         self.assertFalse(self.data['pmStartAllowed'])
         self.assertIsNone(self.data['activeBatch'])
         self.assertFalse(self.catalog['dispatchPolicy']['pmStartAllowed'])
-        self.assertEqual(self.catalog['dispatchPolicy']['maxIssuedPMBatches'], 1)
+        self.assertEqual(self.catalog['dispatchPolicy']['maxIssuedPMBatchesPerLane'], 1)
         decisions = {q['id'] for q in self.catalog['openProductQuestions']}
         for batch in self.batches:
             with self.subTest(batch=batch['id']):

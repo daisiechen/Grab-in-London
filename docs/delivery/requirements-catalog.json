@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "r04",
+  "revision": "r05",
   "status": "owner-review-pending",
   "implementationAuthorizedByThisPackage": false,
   "modules": [
@@ -437,9 +437,16 @@
   "dispatchPolicy": {
     "pmStartAllowed": false,
     "activeBatch": null,
-    "maxIssuedPMBatches": 1,
-    "meaning": "仅拆分文档，不向PM或其他worker派单；后续按具体有界授权逐批签发"
+    "activeBatches": [],
+    "maxIssuedPMBatchesPerLane": 1,
+    "initialLanes": [
+      "ios",
+      "admin-web"
+    ],
+    "parallelAllowedWhenIsolated": true,
+    "meaning": "流程和首发集合规划；未下达实际PM/UX/RD/QA派单，不自动开工"
   },
   "batchCatalogPath": "docs/delivery/delivery-batches.json",
-  "dependencyLevel": "version dependsOn为领域背景，具体开工依赖以delivery-batches.json的批次DAG为准，避免整模块等待造成环路"
+  "dependencyLevel": "version dependsOn为领域背景，具体开工依赖以delivery-batches.json的批次DAG为准，避免整模块等待造成环路",
+  "releaseSetsPath": "docs/delivery/release-sets.json"
 }
