@@ -1,0 +1,56 @@
+{
+  "iteration": "IOS-0.1.0-dev.1",
+  "reviewer": "Independent RD architecture reviewer, not author",
+  "status": "plan-approved-with-issuance-gates",
+  "inputSHA256": {
+    "docs/engineering/r11/ios-0.1.0-dev.1/test-matrix.json": "316c3b4c39ff56f088e53ddf5ca0a0c9bae779865e17e4beeee8dba857aee63d",
+    "docs/engineering/r11/ios-0.1.0-dev.1/input-manifest.json": "bd74f5ec8861de9bf5adfd2d291b230f9a4e237b7bc3bd6441d81230169b3027",
+    "docs/engineering/r11/ios-0.1.0-dev.1/plan.zh-CN.md": "dd8d0eb62dc1b3bfeaf34fe9a227edde2c2e4172aaf7954fc77993f5a0468e23",
+    "docs/engineering/r11/ios-0.1.0-dev.1/work-packages.json": "6c4adcfb5676988dff0b7472d9f02caf59bb26a684d100bd0ebb84b4c0ea4ab5",
+    "docs/engineering/r11/ios-0.1.0-dev.1/interfaces.json": "4559714ef76e348460249e2540d9b0ae9ce8a751cddde63e81e81e30d3a0816a"
+  },
+  "issues": [
+    {
+      "id": "R11-EI1-01",
+      "status": "closed-by-independent-plan-retest",
+      "severity": "required",
+      "finding": "P04 depends on whole P03 and P05 depends P04, making C01 analytics-choice gap a transitive blocker despite P03-only claim. Bind actual shared identity/profile contract or independently completed slice instead.",
+      "evidence": [
+        "docs/engineering/r11/ios-0.1.0-dev.1/work-packages.json"
+      ],
+      "resolution": "P04 now depends P00 existing identity/preference contracts only. Explicit propagation counterexample confirms C01 blocks P03 plus final P06 aggregate, not P00/P01/P02/P04/P05. Shared-file leases remain required."
+    },
+    {
+      "id": "R11-EI1-02",
+      "status": "closed-by-independent-plan-retest",
+      "severity": "required",
+      "finding": "UNKNOWN recovery must specify ordinary-write original method/path/body/key and original If-Match replay; current resource read cannot prove original intent. Credential-bearing auth uses existing clientRequestId/single-use protocol separately, not generic idempotent replay.",
+      "evidence": [
+        "docs/engineering/r11/ios-0.1.0-dev.1/interfaces.json",
+        "apps/api/src/http/routes.ts",
+        "apps/api/src/common/idempotency.ts",
+        "apps/ios/src/features/auth/otp.ts"
+      ],
+      "resolution": "Ordinary writes freeze actor/operation/method/path/body/key/original If-Match. Current GET equality is not intent proof; original If-Match7 remains7 after commit8. Auth clientRequestId/single-use credentials/rotating refresh/logout and AI resourceKey/CAS/exact requestId polling use distinct existing protocols."
+    }
+  ],
+  "implementationAuthorized": false,
+  "QAStarted": false,
+  "verified": [
+    "30 registered operation source/hash/method/path checked by existing 4 planning tests",
+    "real candidate files and existing regression paths",
+    "I1-C01 is explicitly proposed and existing ingestEvents not claimed settings persistence",
+    "AI permission/send/manual transfer and six-preference invariants retained",
+    "r11 independent per-version progression and CI/PR/main/deployment gates retained"
+  ],
+  "testResult": "python3 -m unittest tests.test_r11_ios1_plan -v: 6 passed, including transitive blocker counterexample and immutable original precondition/protocol checks; planning integrity only",
+  "retestScope": "Only original R11-EI1-01/02 author revisions; other scope unchanged",
+  "issuanceGates": [
+    "Assign actual RD owner and exact shared-writer file leases",
+    "Register I1-C01 analytics-choice contract/storage/CAS and consumer withdrawal behavior before P03 real save; only final aggregate P06 waits full feature completion",
+    "Use retained original intents and separate credential/AI protocols without persisting token/model response in ordinary idempotency table",
+    "Minimal environment checks, isolated module tests then actual provider/native/cross-version tests with same candidate evidence",
+    "Independent code review and required CI/PR main merge before exact tested build/SHA deployment"
+  ],
+  "boundedConclusion": "I1 plan may proceed to scoped work-package issuance without waiting I2/I3 entire versions. No business implementation, product QA or deployment authorized by this review."
+}

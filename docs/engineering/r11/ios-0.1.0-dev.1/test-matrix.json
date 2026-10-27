@@ -1,0 +1,568 @@
+{
+  "revision": "I1-tests-r11-2",
+  "version": "IOS-0.1.0-dev.1",
+  "status": "planned-not-executed",
+  "productQAStarted": false,
+  "cases": [
+    {
+      "id": "I1-T01",
+      "acceptanceIds": [
+        "J01-AC01"
+      ],
+      "package": "I1-P01",
+      "priority": "P1",
+      "actor": "guest",
+      "scenario": "地图/列表/区域同结果",
+      "expected": "toggle/list/back preserves selected meal/filter; count is meals, capacity includes host",
+      "layers": [
+        "component",
+        "api"
+      ],
+      "fixtureOrSeam": "filters/discovery",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T02",
+      "acceptanceIds": [
+        "J01-AC01"
+      ],
+      "package": "I1-P01",
+      "priority": "P1",
+      "actor": "guest",
+      "scenario": "多日期草稿Apply/Clear/Cancel",
+      "expected": "date OR, others AND; future unavailable selectable, past disabled; cancel keeps confirmed values",
+      "layers": [
+        "unit",
+        "component"
+      ],
+      "fixtureOrSeam": "filters",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T03",
+      "acceptanceIds": [
+        "J01-AC01"
+      ],
+      "package": "I1-P01",
+      "priority": "P1",
+      "actor": "guest",
+      "scenario": "空结果与断网",
+      "expected": "empty accepted result differs provider/service failure; retry preserves query",
+      "layers": [
+        "api",
+        "component"
+      ],
+      "fixtureOrSeam": "discovery",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T04",
+      "acceptanceIds": [
+        "J01-AC01"
+      ],
+      "package": "I1-P01",
+      "priority": "P1",
+      "actor": "other account",
+      "scenario": "公开投影",
+      "expected": "no email/application body/private prefs/messages/private ratings in public DTO or UI",
+      "layers": [
+        "contract",
+        "api"
+      ],
+      "fixtureOrSeam": "public-profile",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T05",
+      "acceptanceIds": [
+        "J01-AC02"
+      ],
+      "package": "I1-P02",
+      "priority": "P1",
+      "actor": "new or old user",
+      "scenario": "OTP边界与OAuth取消",
+      "expected": "5m equality expired,30s equality resend allowed, stale code invalid; provider cancel/failed no auto merge, return same meal",
+      "layers": [
+        "unit",
+        "api",
+        "native-provider"
+      ],
+      "fixtureOrSeam": "auth",
+      "status": "NOT_RUN",
+      "evidence": null,
+      "authUnknown": "OTP start metadata uses retained clientRequestId for same transport attempt, explicit resend is separate/cooldown. Consumed verifyEmail/OAuth callback/handoff and rotated refresh responses cannot use generic persistent idempotent replay; restart the existing sign-in protocol and retain permitted business intent."
+    },
+    {
+      "id": "I1-T06",
+      "acceptanceIds": [
+        "J01-AC03"
+      ],
+      "package": "I1-P02",
+      "priority": "P1",
+      "actor": "new user",
+      "scenario": "公开资料与本人同意",
+      "expected": "trim length and required dictionaries; selecting avatar cannot set age/community; no submit before explicit agreement",
+      "layers": [
+        "component",
+        "api"
+      ],
+      "fixtureOrSeam": "profile/auth",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T07",
+      "acceptanceIds": [
+        "J01-AC03"
+      ],
+      "package": "I1-P02",
+      "priority": "P1",
+      "actor": "existing complete user",
+      "scenario": "原饭局回流",
+      "expected": "old profile skips setup; auth cancel keeps original intent and allowed draft; account switch cannot inherit other private draft",
+      "layers": [
+        "component",
+        "api"
+      ],
+      "fixtureOrSeam": "auth/intent",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T08",
+      "acceptanceIds": [
+        "J01-AC04"
+      ],
+      "package": "I1-P02",
+      "priority": "P1",
+      "actor": "applicant",
+      "scenario": "主动申请与唯一Pending",
+      "expected": "20–300 and arrangement ack; one manual Send creates one application, pending zero seat/group rights",
+      "layers": [
+        "api",
+        "db",
+        "component"
+      ],
+      "fixtureOrSeam": "apply",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T09",
+      "acceptanceIds": [
+        "J01-AC04"
+      ],
+      "package": "I1-P02",
+      "priority": "P1",
+      "actor": "applicant",
+      "scenario": "未知结果与幂等",
+      "expected": "Lost ordinary-write response freezes original actor/operation/method/path/body/key/If-Match. Explicit retry replays unchanged intent; current GET equality/version is not original-intent proof; no fresh key/seat/duplicate. Original If-Match7 remains7 after server commit8; same key with newer If-Match8 rejects as changed payload.",
+      "layers": [
+        "api",
+        "db"
+      ],
+      "fixtureOrSeam": "apply",
+      "status": "NOT_RUN",
+      "evidence": null,
+      "counterexamples": [
+        "other device writes same value before GET",
+        "original success response lost; resource advanced again",
+        "same key with updated If-Match differs from original request hash"
+      ]
+    },
+    {
+      "id": "I1-T10",
+      "acceptanceIds": [
+        "J01-AC04"
+      ],
+      "package": "I1-P02",
+      "priority": "P1",
+      "actor": "applicant",
+      "scenario": "撤回/取消/新轮次",
+      "expected": "cancel leaves Pending; confirmed withdrawal WITHDRAWN, eligible reapply new round; Declined/Expired lockout",
+      "layers": [
+        "api",
+        "component"
+      ],
+      "fixtureOrSeam": "withdraw",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T11",
+      "acceptanceIds": [
+        "J01-AC05"
+      ],
+      "package": "I1-P02",
+      "priority": "P1",
+      "actor": "applicant/host",
+      "scenario": "资格晚变与迟响应",
+      "expected": "full/closed/cancelled/own-host denied preserving draft; old account/editor response ignored",
+      "layers": [
+        "db",
+        "api",
+        "component"
+      ],
+      "fixtureOrSeam": "application-scope",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T12",
+      "acceptanceIds": [
+        "J05-AC01"
+      ],
+      "package": "I1-P03",
+      "priority": "P1",
+      "actor": "self profile",
+      "scenario": "资料保存与公开展示",
+      "expected": "valid save reads canonical projection; cancel restores confirmed values; unmodified or invalid drafts do not claim saved",
+      "layers": [
+        "api",
+        "component"
+      ],
+      "fixtureOrSeam": "profile",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T13",
+      "acceptanceIds": [
+        "J05-AC01"
+      ],
+      "package": "I1-P03",
+      "priority": "P1",
+      "actor": "self multi-device",
+      "scenario": "profile409",
+      "expected": "read current authority and retain local proposal; explicit review/version required before retry, no silent overwrite",
+      "layers": [
+        "api",
+        "db",
+        "component"
+      ],
+      "fixtureOrSeam": "profile",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T14",
+      "acceptanceIds": [
+        "J05-AC02"
+      ],
+      "package": "I1-P03",
+      "priority": "P1",
+      "actor": "other account",
+      "scenario": "本人隐私边界",
+      "expected": "own-only write; public profile excludes all private fields; versioned stats choice independent of profile",
+      "layers": [
+        "contract",
+        "api"
+      ],
+      "fixtureOrSeam": "privacy",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T15",
+      "acceptanceIds": [
+        "J05-AC02"
+      ],
+      "package": "I1-P03",
+      "priority": "P1",
+      "actor": "self multi-device",
+      "scenario": "可选统计真实保存",
+      "expected": "toggle draft not service success; Cancel/reentry reflects confirmed choice; offline/409/unknown preserve draft and check authority; lost ordinary save response uses original PUT/path/body/key/If-Match; current choice equality alone is not proof of original intent.",
+      "layers": [
+        "contract",
+        "api",
+        "db",
+        "component"
+      ],
+      "fixtureOrSeam": "analytics-choice",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T16",
+      "acceptanceIds": [
+        "J05-AC05"
+      ],
+      "package": "I1-P03",
+      "priority": "P1",
+      "actor": "self switching account",
+      "scenario": "退出与旧响应",
+      "expected": "cancel keeps session; logout clears private local draft/tokens/AI and late callbacks, persistent prefs remain; revoke failure not falsely remote-complete",
+      "layers": [
+        "component",
+        "api",
+        "native-securestore"
+      ],
+      "fixtureOrSeam": "logout",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T17",
+      "acceptanceIds": [
+        "J05-AC03"
+      ],
+      "package": "I1-P04",
+      "priority": "P1",
+      "actor": "self",
+      "scenario": "六字段明确提议",
+      "expected": "only allowed six, no date/cuisine/profile inference; visible complete proposal then explicit Confirm; replace/409 keeps proposal vs authority",
+      "layers": [
+        "contract",
+        "api",
+        "component"
+      ],
+      "fixtureOrSeam": "preferences",
+      "status": "NOT_RUN",
+      "evidence": null,
+      "unknownRecovery": "AI preference intent/CAS is not ordinary persisted response replay. Read latest confirmed fields as current state only; retain proposal, explicitly review version on AI_CONFLICT, no implicit new overwrite."
+    },
+    {
+      "id": "I1-T18",
+      "acceptanceIds": [
+        "J05-AC03"
+      ],
+      "package": "I1-P04",
+      "priority": "P1",
+      "actor": "self active devices",
+      "scenario": "删除偏好",
+      "expected": "cancel preserves; failure not deleted; success invalidates referencing AI generations/candidates but not business editor/sent actions",
+      "layers": [
+        "db",
+        "api",
+        "component"
+      ],
+      "fixtureOrSeam": "preferences",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T19",
+      "acceptanceIds": [
+        "J05-AC04"
+      ],
+      "package": "I1-P04",
+      "priority": "P1",
+      "actor": "guest/self multi-device",
+      "scenario": "偏好/会话生命周期",
+      "expected": "guest memory not migrated, account persisted version shared; conversation device-only, NEW/idle30m/clear/account changes follow distinct retain rules",
+      "layers": [
+        "unit",
+        "db",
+        "component"
+      ],
+      "fixtureOrSeam": "assistant-lifecycle",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T20",
+      "acceptanceIds": [
+        "J01-AC06"
+      ],
+      "package": "I1-P05",
+      "priority": "P1",
+      "actor": "guest/self",
+      "scenario": "许可+主动Send",
+      "expected": "opening/Allow alone zero provider requests; refusal manual; context whitelist and current-scope consent; no hidden private data",
+      "layers": [
+        "unit",
+        "api",
+        "component",
+        "provider"
+      ],
+      "fixtureOrSeam": "ai-permission",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T21",
+      "acceptanceIds": [
+        "J01-AC06"
+      ],
+      "package": "I1-P05",
+      "priority": "P1",
+      "actor": "guest/self",
+      "scenario": "硬软/CLEAR/歧义",
+      "expected": "hard precedence, soft£35 can rank£45, explicit35 excludes; any budget/area suppress old soft in later turns; no Discover mutation; Spanish/date/DST clarify",
+      "layers": [
+        "unit",
+        "api",
+        "eval"
+      ],
+      "fixtureOrSeam": "ai-query",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T22",
+      "acceptanceIds": [
+        "J01-AC06"
+      ],
+      "package": "I1-P05",
+      "priority": "P1",
+      "actor": "self",
+      "scenario": "结果/比较/解释与成本",
+      "expected": "≤20 permission-filtered candidates/≤3 grounded cards with version/time; model vs data vs empty distinguished; CNY50 hard reservation/UNKNOWN retained",
+      "layers": [
+        "unit",
+        "db",
+        "provider-eval"
+      ],
+      "fixtureOrSeam": "ai-grounding-budget",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T23",
+      "acceptanceIds": [
+        "J01-AC07"
+      ],
+      "package": "I1-P05",
+      "priority": "P1",
+      "actor": "self with manual draft",
+      "scenario": "Keep/Replace逐字转入",
+      "expected": "only explicit target; Keep no overwrite, Replace exact candidate ≤500 then target20–300; no truncation, no auto ack or submit",
+      "layers": [
+        "unit",
+        "api",
+        "component"
+      ],
+      "fixtureOrSeam": "ai-transfer",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T24",
+      "acceptanceIds": [
+        "J01-AC07"
+      ],
+      "package": "I1-P05",
+      "priority": "P1",
+      "actor": "self changed target",
+      "scenario": "旧编辑器/失权",
+      "expected": "old editorVersion/meal/account/epoch rejects transfer; active draft/Send revalidates current permissions",
+      "layers": [
+        "db",
+        "api",
+        "component"
+      ],
+      "fixtureOrSeam": "ai-transfer",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T25",
+      "acceptanceIds": [
+        "J05-AC04"
+      ],
+      "package": "I1-P05",
+      "priority": "P1",
+      "actor": "self",
+      "scenario": "超时/NEW/停用",
+      "expected": "one inflight; >3s processing,30s hard final, idle30m and NEW retain distinct draft/prefs; model disabled still manual and preferences read/delete",
+      "layers": [
+        "unit",
+        "db",
+        "component"
+      ],
+      "fixtureOrSeam": "ai-lifecycle",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T26",
+      "acceptanceIds": [
+        "J01-AC01",
+        "J01-AC03",
+        "J05-AC02"
+      ],
+      "package": "I1-P06",
+      "priority": "P1",
+      "actor": "native iOS",
+      "scenario": "视觉/操作恢复",
+      "expected": "same-state v13 alignment and DS tokens; original assets/real SVG, 44pt targets, safe insets/keyboard/Back/long text; consent actions do not share unintended side effects",
+      "layers": [
+        "native-device",
+        "visual"
+      ],
+      "fixtureOrSeam": "native-quality",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T27",
+      "acceptanceIds": [
+        "J01-AC04",
+        "J01-AC05"
+      ],
+      "package": "I1-P06",
+      "priority": "P1",
+      "actor": "actual host/applicant",
+      "scenario": "I2真实跨版联调",
+      "expected": "same candidate host publish→apply→approve/decline and latest application; fixture only is not joint pass",
+      "layers": [
+        "cross-version-api",
+        "native"
+      ],
+      "fixtureOrSeam": "I1-X01",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I1-T28",
+      "acceptanceIds": [
+        "J05-AC02",
+        "J05-AC03",
+        "J05-AC05"
+      ],
+      "package": "I1-P06",
+      "priority": "P1",
+      "actor": "privacy revoke/deleting account",
+      "scenario": "跨版撤权/统计回归",
+      "expected": "I4 deletion invalidates old sessions/AI; I3 Pending cannot chat; analytics respects confirmed consent and private-content exclusion",
+      "layers": [
+        "cross-version-api",
+        "native"
+      ],
+      "fixtureOrSeam": "I1-X02/I1-X03/I1-X04",
+      "status": "NOT_RUN",
+      "evidence": null
+    }
+  ],
+  "commands": {
+    "unit": "pnpm exec vitest run --project unit <exact-owned-unit-test-files>",
+    "api": "pnpm exec vitest run --project api <exact-owned-api-test-files>",
+    "db": "pnpm exec vitest run --project db <exact-owned-db-test-files>",
+    "ios": "pnpm --filter @fancy/ios exec jest --ci --runTestsByPath <exact-relative-owned-tests>",
+    "integrationRequiredCI": "pnpm core:check; targeted suites plus affected contracts/client/identity/profile/assistant regressions; CI exact merged SHA required"
+  },
+  "existingRegressionCandidates": [
+    "apps/ios/src/features/auth/flows.test.ts",
+    "apps/ios/src/features/auth/screens/auth-screens.test.tsx",
+    "apps/ios/src/features/auth/session.test.ts",
+    "apps/ios/src/features/discover/filters.test.ts",
+    "apps/ios/src/features/meals/guest-apply-entry.test.tsx",
+    "apps/ios/src/features/meals/expired-application-draft.test.tsx",
+    "apps/ios/src/features/profile/screens/profile-screens.test.tsx",
+    "apps/ios/src/features/settings/settings.test.tsx",
+    "apps/ios/src/features/assistant/manager.test.ts",
+    "apps/ios/src/features/assistant/widget.test.tsx",
+    "apps/api/src/identity/identity.api.test.ts",
+    "apps/api/src/meals/meals.api.test.ts",
+    "apps/api/src/profiles/profiles.api.test.ts",
+    "apps/api/src/assistant/controller.db.test.ts",
+    "apps/api/src/assistant/budget-concurrency.db.test.ts",
+    "apps/api/src/assistant/privacy-review.db.test.ts"
+  ],
+  "regressionPolicy": "Run owned slice tests + direct shared-contract consumers; broaden only changed shared interface/failed concern justifies. No repeated whole-repo run for unchanged evidence.",
+  "passDefinition": "all required own cases have actual candidate-bound evidence; required cross-version/provider/native cases marked separately until executed; never count mock as real-service success"
+}

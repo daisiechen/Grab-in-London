@@ -5,8 +5,8 @@
   "baselineCommit": "6675dc5",
   "businessCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
   "visualBaseline": "v13 / 361ab04ed6fc55c0f1e041bb5d6cc5d216d1a7b2",
-  "status": "changes-required",
-  "designReady": false,
+  "status": "design-scope-recheck-passed",
+  "designReady": true,
   "reviewedFiles": {
     "DS": "yUMVg2xpLXQHKPr2ZWpkO3",
     "I1": "CS9oRCq8h3Clg09up2aISj"
@@ -49,7 +49,7 @@
     {
       "id": "R11-I1-01",
       "severity": "P1",
-      "status": "open",
+      "status": "closed-by-independent-native-and-visual-recheck",
       "title": "Selecting a portrait automatically supplies adult/community consent",
       "repairOwner": "UX-1",
       "prd": "J01 §3 / J01-AC03",
@@ -98,7 +98,7 @@
     {
       "id": "R11-I1-02",
       "severity": "P1",
-      "status": "open",
+      "status": "closed-by-independent-native-and-visual-recheck",
       "title": "Optional analytics cannot be changed, and saved settings is a dead end",
       "repairOwner": "UX-1",
       "prd": "J05 §3 / J05-AC02",
@@ -132,7 +132,7 @@
     {
       "id": "R11-I1-03",
       "severity": "P1",
-      "status": "open",
+      "status": "closed-by-independent-native-and-visual-recheck",
       "title": "Saving blank preference example introduces two unconfirmed fields",
       "repairOwner": "UX-1",
       "prd": "J05 §4 / J05-AC03",
@@ -171,7 +171,7 @@
     {
       "id": "R11-I1-04",
       "severity": "P2",
-      "status": "open",
+      "status": "closed-by-independent-native-and-visual-recheck",
       "title": "Main authentication/application recovery controls are inert",
       "repairOwner": "UX-1",
       "prd": "J01 §3–4 / J01-AC02/04/05",
@@ -210,7 +210,7 @@
     {
       "id": "R11-I1-05",
       "severity": "P2",
-      "status": "open",
+      "status": "closed-by-independent-native-and-visual-recheck",
       "title": "AI transfer silently drops a sentence from an in-range draft",
       "repairOwner": "UX-1",
       "prd": "J01 §5.3 / J01-AC07",
@@ -254,7 +254,7 @@
     {
       "id": "R11-I1-06",
       "severity": "P1",
-      "status": "open",
+      "status": "original-visible-response-allegation-not-confirmed",
       "title": "First permission page already displays a completed AI response",
       "repairOwner": "UX-1",
       "prd": "J01 §5.1–5.2 / J01-AC06",
@@ -297,7 +297,33 @@
       "observed": "Permission frame already contains a user request Find a meal for Friday in Soho, any budget and Fancy No available tables response. The graph requires no prior Allow or Send to reach this generated-result state.",
       "expected": "Before permission and explicit request, show disclosure/manual alternative and no fabricated completed assistant turn. Provider/legal facts can remain a configuration gate for real calls; no invented provider details required here.",
       "closureCondition": "Remove/fence preconsent result/history from this first-use route; Allow alone should not imply a new user request. Demonstrate permitted explicit Send → sample response/draft and refusal → manual original meal.",
-      "method": "actual native reaction/text readback and listed rendered screenshots; not claimed Presentation clicks"
+      "method": "actual native reaction/text readback and listed rendered screenshots; not claimed Presentation clicks",
+      "reviewCorrection": "Original text traversal did not filter ancestor visibility. Author demonstrated ancestor visible=false; withdraw assertion that response was visible before permission. New physical cleanup and explicit Send separation are verified independently."
+    },
+    {
+      "id": "R11-I1-07",
+      "severity": "P1",
+      "status": "closed-by-independent-native-and-visual-recheck",
+      "title": "Refusing AI permission on guest meal bypasses identity flow",
+      "repairOwner": "UX-1",
+      "prd": "J01 §3/5.2; AC02/03/06",
+      "evidence": [
+        {
+          "nodeId": "5:195",
+          "url": "https://www.figma.com/design/CS9oRCq8h3Clg09up2aISj?node-id=5-195"
+        },
+        {
+          "nodeId": "12:453",
+          "url": "https://www.figma.com/design/CS9oRCq8h3Clg09up2aISj?node-id=12-453"
+        }
+      ],
+      "reproduction": [
+        "Guest meal detail→Ask Fancy→first permission→Continue manually"
+      ],
+      "observed": "12:453 NAVIGATE to authenticated Alex application 11:753 rather than original guest meal detail or original identity intent. Refusing model permission bypasses registration/login representative gate.",
+      "expected": "Continue manually returns same guest/actor original meal context; identity still required before sending application.",
+      "closureCondition": "Return to 5:195 or identity-intent preserving equivalent; manual fallback cannot acquire authenticated application just by permission refusal.",
+      "method": "actual native current reaction readback; browser click not yet claimed"
     }
   ],
   "acceptanceAudit": [
@@ -36127,5 +36153,37 @@
       "docs/reviews/r11/ios1-ds-review.json",
       "docs/reviews/r11/ios1-ds-review.md"
     ]
+  },
+  "rechecks": [
+    {
+      "scope": "01/02/03/05",
+      "method": "Live native state/reaction and rendered screenshot 27:132/31:257/28:672; exact full AI text verified.",
+      "status": "passed-with-original-case-specific-limits"
+    },
+    {
+      "scope": "04",
+      "status": "retain Pending when leaving pending detail; native 32:284 still public Discover source",
+      "expectedMinimalFix": "Back to current Pending Inbox 31:394 or state guard"
+    },
+    {
+      "scope": "06",
+      "status": "original visible allegation withdrawn; current explicit Send gate passes native review"
+    }
+  ],
+  "boundedApproval": "Scoped DS/I1 design candidate may proceed to this-version engineering planning; not backend/iOS/QA approval. Original 06 visible-response allegation withdrawn for hidden ancestor; other original cases and new guest-intent case independently rechecked.",
+  "approvedCandidateManifestSHA256": "996931535115a5bd3e7668e48240f6f4d7f2927e9c7b174fd151ee749c83a2f9",
+  "finalRecheck": {
+    "04": {
+      "pendingBack": "32:284 → 31:394 current Pending Inbox",
+      "sameMeal": "application remains An easy Friday supper / Maya / Fri23Oct19:00, no new Apply on current Pending detail"
+    },
+    "07": {
+      "manualFallback": "12:453 → 5:195 guest meal",
+      "aiTransferGuest": "12:296 sets AI intent then signedIn conditional: false→10:65 auth, true→12:574 Keep/Replace",
+      "authCompletion": "27:254 and13:247 set signedIn then AI-intent conditional, do not auto-Send",
+      "logout": "author tests reset intent/signedIn; current prototype-only state not real identity"
+    },
+    "05": "Full candidate including final question matches both editor samples; separate unchecked consent and manual Send remain.",
+    "browserRetest": "Continuation running; no full registration success claim until concrete result. Native/visual correction recheck is independently sufficient for scoped design planning approval."
   }
 }

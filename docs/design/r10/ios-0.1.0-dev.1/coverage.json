@@ -1,5 +1,5 @@
 {
-  "revision": "UX-r02",
+  "revision": "UX-r03",
   "journeys": [
     "J01",
     "J05"
@@ -28,7 +28,8 @@
         "10:134",
         "10:184",
         "13:107",
-        "13:220"
+        "13:220",
+        "13:174"
       ],
       "level": "interactive-representative+specified",
       "spec": "states.zh-CN.md",
@@ -41,7 +42,9 @@
       "figmaNodes": [
         "10:236",
         "10:375",
-        "11:753"
+        "11:753",
+        "27:132",
+        "27:272"
       ],
       "level": "interactive-representative",
       "spec": "states.zh-CN.md",
@@ -55,7 +58,9 @@
         "12:474",
         "11:978",
         "11:2510",
-        "11:1191"
+        "11:1191",
+        "31:394",
+        "32:156"
       ],
       "level": "interactive-representative+specified",
       "spec": "states.zh-CN.md",
@@ -80,7 +85,9 @@
       "figmaNodes": [
         "12:313",
         "11:2260",
-        "12:97"
+        "12:97",
+        "33:152",
+        "33:285"
       ],
       "level": "interactive-representative+specified",
       "spec": "states.zh-CN.md",
@@ -117,7 +124,11 @@
       "demo": "demo/journeys/j05/index.html",
       "figmaNodes": [
         "11:1753",
-        "12:882"
+        "12:882",
+        "28:672",
+        "28:778",
+        "28:884",
+        "28:990"
       ],
       "level": "interactive-representative+specified",
       "spec": "states.zh-CN.md",
@@ -130,7 +141,8 @@
       "figmaNodes": [
         "11:1854",
         "11:1982",
-        "13:355"
+        "13:355",
+        "31:257"
       ],
       "level": "interactive-representative+specified",
       "spec": "states.zh-CN.md",
@@ -162,5 +174,6 @@
     }
   ],
   "allCombinationsInteractive": false,
-  "prdAmended": false
+  "prdAmended": false,
+  "repairNotes": "r11-repair.zh-CN.md"
 }

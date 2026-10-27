@@ -14,19 +14,55 @@
     "boundary": "Independent native graph + rendered visual/counterexample review; full arbitrary-input/native provider and production QA not claimed."
   },
   "developmentPlan": {
-    "status": "candidate-independent-engineering-review-requested",
+    "status": "plan-approved-with-issuance-gates",
     "directory": "docs/engineering/r11/ios-0.1.0-dev.1/",
     "implementationStarted": false,
     "packageCount": 7,
     "plannedTestCaseCount": 28,
-    "artifactChecks": "4 passed",
-    "independentReviewer": "PJ-IOS2 / ux_host_social (requested, not self-approved)"
+    "artifactChecks": "6 targeted planning tests passed",
+    "independentReviewer": "Independent RD architecture reviewer, not author",
+    "reviewTransfer": "Independent RD recheck completed; no author self-signature",
+    "reviewReport": "docs/reviews/r11/ios1-engineering-review.json",
+    "independentlyApproved": true,
+    "authorRepair": {
+      "issues": [
+        "R11-EI1-01",
+        "R11-EI1-02"
+      ],
+      "revision": "r11-2",
+      "status": "closed-by-independent-plan-retest"
+    },
+    "reviewEvidenceSHA256": {
+      "docs/reviews/r11/ios1-engineering-review.json": "d7d1ea71ac6a8f731c70572d96ffadfcb69b307bf628dd320d25e659c6a0d316",
+      "docs/reviews/r11/ios1-engineering-review.md": "cc4add239b4a62f3a3799d4e7cf435acf1dcd27d4ebbd7759a90ec6e9a68eca1"
+    },
+    "currentPlanSHA256": {
+      "docs/engineering/r11/ios-0.1.0-dev.1/plan.zh-CN.md": "977403792045dc22e94e4226f594fbbc898c8daf4cabe1ef555fd9079524d76a",
+      "docs/engineering/r11/ios-0.1.0-dev.1/input-manifest.json": "a47b8bd62d43f8992e704a88fcb81c2cd9c8cb2525f14963091a02168f334795",
+      "docs/engineering/r11/ios-0.1.0-dev.1/interfaces.json": "4559714ef76e348460249e2540d9b0ae9ce8a751cddde63e81e81e30d3a0816a",
+      "docs/engineering/r11/ios-0.1.0-dev.1/work-packages.json": "6c4adcfb5676988dff0b7472d9f02caf59bb26a684d100bd0ebb84b4c0ea4ab5",
+      "docs/engineering/r11/ios-0.1.0-dev.1/test-matrix.json": "316c3b4c39ff56f088e53ddf5ca0a0c9bae779865e17e4beeee8dba857aee63d"
+    },
+    "issuanceGates": [
+      "Assign actual RD owner and exact shared-writer file leases",
+      "Register I1-C01 analytics-choice contract/storage/CAS and consumer withdrawal behavior before P03 real save; only final aggregate P06 waits full feature completion",
+      "Use retained original intents and separate credential/AI protocols without persisting token/model response in ordinary idempotency table",
+      "Minimal environment checks, isolated module tests then actual provider/native/cross-version tests with same candidate evidence",
+      "Independent code review and required CI/PR main merge before exact tested build/SHA deployment"
+    ],
+    "issuance": {
+      "actualRDOwner": null,
+      "sharedFileLeases": "not-issued",
+      "environmentPreflight": "NOT_RUN",
+      "I1-C01": "proposed-not-registered",
+      "productQA": "not-issued"
+    }
   },
   "currentIssues": [
-    "I1-C01 optional analytics choice own read/save contract extension"
+    "I1-C01 optional analytics choice own read/save contract extension; scoped to P03 and final P06 completeness"
   ],
   "realBlockers": [],
-  "nextStep": "Independent engineering review of this version plan; then issue only authorized exact code leases. No business implementation is currently issued.",
+  "nextStep": "Root PJ may create independent I1 planning branch/PR; assign scoped RD owner/leases and satisfy per-package issuance gates before implementation. No wait for whole I2/I3.",
   "evidence": [
     "docs/reviews/r11/ios1-ds-review.json",
     "docs/design/r10/ios-0.1.0-dev.1/artifact-manifest.json",
@@ -91,5 +127,11 @@
     "build": null,
     "status": "not-submitted",
     "firstReleaseCollection": "I1+I2+I3+I4+minimum support, independent implementation does not wait full design set"
+  },
+  "planningValidation": {
+    "command": "python3 -m unittest tests.test_r11_ios1_plan -v",
+    "passed": 6,
+    "classification": "Targeted planning and independent-RD counterexample contracts only; no business execution/QA",
+    "scope": "Six planning checks including independent sign-off evidence/hash consistency, dependency propagation and operation-specific UNKNOWN; no runtime QA"
   }
 }

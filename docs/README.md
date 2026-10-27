@@ -373,3 +373,11 @@
 
 - [iOS dev.4 · ios4-engineering-review](reviews/r11/ios4-engineering-review.md)。
 - [后台及支持三个版本的独立设计复验](reviews/r11/admin-support-review.md)。
+
+- [iOS dev.1 · r11-repair.zh-CN](design/r10/ios-0.1.0-dev.1/r11-repair.zh-CN.md)。
+
+- [iOS dev.1 · plan.zh-CN](engineering/r11/ios-0.1.0-dev.1/plan.zh-CN.md)。
+
+- [iOS dev.1 · ios1-engineering-review](reviews/r11/ios1-engineering-review.md)。
+
+- [iOS dev.1工作台 · README.zh-CN](delivery/versions/ios-0.1.0-dev.1/README.zh-CN.md)。
