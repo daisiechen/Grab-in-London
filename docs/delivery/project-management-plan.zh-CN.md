@@ -1,5 +1,7 @@
 # Fancy项目管理方案：按完整用户旅程交付
 
+> 当前执行按[r11版本PJ并行工作流](parallel-version-workflow-r11.zh-CN.md)及[版本执行入口](execution-r11.json)：各版独立评审、修复、方案与测试，不再等待全部7份设计Ready。本文件的r10范围与历史证据保留；旧全套等待门槛不再生效。
+
 > 当前执行更新（r10）：按[开发版本方案](development-versions-r10.zh-CN.md)复用已认可MVP Demo视觉，UX补通用规范/版本路径，RD仅并行做技术方案；上一批UX-r01仅历史，业务实现和QA未启动。
 执行修订：r10｜业务范围仍r07，正式产品编号不变，内部dev.N及逐版本Ready以[版本登记](development-versions-r10.json)为准。
 

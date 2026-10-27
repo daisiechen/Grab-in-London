@@ -473,7 +473,9 @@
     "initialDesignSetReady": false,
     "includesSharedFoundation": true,
     "futureUnissuedJourneysRequired": false,
-    "reason": "首次业务代码开工前，DS及本轮7份版本Figma全部Ready；之后按版本/模块/租约/环境顺序签发，不边画边混合开发"
+    "reason": "首次业务代码开工前，DS及本轮7份版本Figma全部Ready；之后按版本/模块/租约/环境顺序签发，不边画边混合开发",
+    "supersededBy": "docs/delivery/execution-r11.json#designGate",
+    "historicalPolicyOnly": true
   },
   "brandDesign": {
     "id": "BRAND-0.1.0",
@@ -498,5 +500,6 @@
     "recommendedDirection": "A",
     "pjVisualReview": "reviewed-comparison-and-refined-A-not-selected"
   },
-  "reviewIndex": "docs/delivery/r10-deliverables-review.zh-CN.md"
+  "reviewIndex": "docs/delivery/r10-deliverables-review.zh-CN.md",
+  "currentExecution": "docs/delivery/execution-r11.json"
 }

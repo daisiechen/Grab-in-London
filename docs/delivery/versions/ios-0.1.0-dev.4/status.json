@@ -1,0 +1,36 @@
+{
+  "id": "IOS-0.1.0-dev.4",
+  "pj": "PJ-IOS2 / UX-2",
+  "productVersion": "IOS-0.1.0",
+  "journeys": [
+    "J07",
+    "J08"
+  ],
+  "designReview": "awaiting-independent-retest",
+  "independentReviewer": "PJ-IOS1 / UX-1",
+  "developmentPlan": "not-started-pending-this-version-design-review",
+  "issues": [
+    {
+      "id": "R11-I34-02",
+      "status": "author-fixed-awaiting-independent-retest"
+    },
+    {
+      "id": "R11-I34-03",
+      "status": "author-fixed-awaiting-independent-retest"
+    }
+  ],
+  "actualBlockers": [
+    "This version has not yet passed independent design correction review."
+  ],
+  "integrationDependenciesOnly": [
+    "Shared identity/DS/commands follow frozen contracts; another version does not block local planning once own design passed."
+  ],
+  "nextStep": "independent-review",
+  "evidence": [
+    "docs/reviews/r11/ios34-review.json",
+    "docs/design/r10/ios-0.1.0-dev.4/artifact-manifest.json"
+  ],
+  "implementationStarted": false,
+  "QAStarted": false,
+  "branchPR": "No implementation branch/PR created; planning only; PJ owns review and root owns serial Git sync."
+}

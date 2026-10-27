@@ -1,0 +1,57 @@
+{
+  "id": "IOS-0.1.0-dev.3",
+  "pj": "PJ-IOS2 / UX-2",
+  "productVersion": "IOS-0.1.0",
+  "journeys": [
+    "J03",
+    "J04",
+    "J06"
+  ],
+  "designReview": "author-corrections-in-progress",
+  "independentReviewer": "PJ-IOS1 / UX-1",
+  "developmentPlan": "not-started-pending-this-version-design-review",
+  "issues": [
+    {
+      "id": "R11-I34-01",
+      "status": "open"
+    },
+    {
+      "id": "R11-I34-04",
+      "status": "open"
+    },
+    {
+      "id": "R11-I34-05",
+      "status": "open"
+    },
+    {
+      "id": "R11-I34-06",
+      "status": "open"
+    },
+    {
+      "id": "R11-I34-07",
+      "status": "open"
+    },
+    {
+      "id": "R11-I34-08",
+      "status": "open"
+    },
+    {
+      "id": "R11-I34-09",
+      "status": "open"
+    }
+  ],
+  "actualBlockers": [
+    "This version has not yet passed independent design correction review."
+  ],
+  "integrationDependenciesOnly": [
+    "Shared identity/DS/commands follow frozen contracts; another version does not block local planning once own design passed."
+  ],
+  "nextStep": "complete-source-bound-states-and-recovery-corrections",
+  "evidence": [
+    "docs/reviews/r11/ios34-review.json",
+    "docs/design/r10/ios-0.1.0-dev.3/artifact-manifest.json"
+  ],
+  "implementationStarted": false,
+  "QAStarted": false,
+  "branchPR": "No implementation branch/PR created; planning only; PJ owns review and root owns serial Git sync."
+}

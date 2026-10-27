@@ -1,0 +1,58 @@
+{
+  "id": "ADMIN-0.1.0-dev.2",
+  "pj": "PJ-ADMIN",
+  "journeys": [
+    "J11"
+  ],
+  "designReview": {
+    "status": "repair-candidate-awaiting-independent-retest",
+    "independentReviewer": "总PJ",
+    "authorSelfApproval": false,
+    "issues": [
+      {
+        "id": "R11-A02",
+        "status": "repair-candidate",
+        "owner": "PJ-ADMIN / original UX author"
+      }
+    ],
+    "figmaUrl": "https://www.figma.com/design/gin01YJX9boaVymXsm1zJg?node-id=6-3187"
+  },
+  "independentReviewer": "总PJ",
+  "developmentPlan": {
+    "status": "preparation-not-approved",
+    "path": "docs/engineering/r11/admin-0.1.0-dev.2/",
+    "implementationAuthorized": false
+  },
+  "testing": {
+    "plan": "test-plan.zh-CN.md",
+    "designEvidenceTests": "python3 -m unittest discover -s tests -p test_ux_r10_admin_support.py",
+    "designEvidenceResult": "9 passed",
+    "productQAStarted": false,
+    "realServiceTested": false
+  },
+  "issues": [
+    "R11-A02"
+  ],
+  "trueBlockers": [
+    "本版定向恢复设计等待总PJ独立复验；不等待其他版本或全7份设计。"
+  ],
+  "nextAction": "总PJ独立实点复验本版；通过即激活本版开发方案。",
+  "evidence": [
+    "docs/design/r10/admin-0.1.0-dev.2/evidence/r11-recovery-readback.json",
+    "docs/design/r10/admin-0.1.0-dev.2/handoff.zh-CN.md"
+  ],
+  "stages": {
+    "code": "not-started",
+    "singleVersionTest": "not-started",
+    "integration": "not-started",
+    "merge": "not-started",
+    "deploy": "not-started"
+  },
+  "candidateBinding": {
+    "sha": null,
+    "build": null,
+    "apiContract": null,
+    "migration": null,
+    "environment": null
+  }
+}

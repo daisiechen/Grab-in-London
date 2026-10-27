@@ -1,0 +1,11 @@
+{
+  "id": "IOS-0.1.0-dev.1",
+  "pj": "PJ-IOS1 / ux_participant_account",
+  "journeys": ["J01", "J05"],
+  "designReview": {"status": "author-repair-in-progress", "independentReviewer": "PJ-IOS2 / ux_host_social", "independentlyApproved": false, "report": "docs/reviews/r11/ios1-ds-review.json"},
+  "developmentPlan": {"status": "preparing-after-targeted-design-recheck", "implementationStarted": false},
+  "currentIssues": ["R11-I1-01", "R11-I1-02", "R11-I1-03", "R11-I1-04", "R11-I1-05", "R11-I1-06"],
+  "realBlockers": [],
+  "nextStep": "Finish targeted repairs, request UX-2 independent recheck, then prepare this iteration's module/interface/test plan without waiting for other versions.",
+  "evidence": ["docs/reviews/r11/ios1-ds-review.json", "docs/design/r10/ios-0.1.0-dev.1/artifact-manifest.json"]
+}
