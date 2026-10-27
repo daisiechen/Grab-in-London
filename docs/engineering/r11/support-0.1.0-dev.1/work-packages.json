@@ -1,0 +1,234 @@
+{
+  "id": "SUPPORT-0.1.0-dev.1",
+  "status": "plan-approved-with-issuance-gates",
+  "implementationAuthorized": false,
+  "basis": "r10 architecture interfaces retained; r11 independent gates supersede all-seven gate",
+  "inputs": {
+    "docs/product/journeys/j09/requirements.zh-CN.md": "a168fbe0061d462db602a1240da95e1e3182cea1946acc7458412deb7960261c"
+  },
+  "design": {
+    "manifest": "docs/design/r10/support-0.1.0-dev.1/manifest.json",
+    "fileKey": "mCBDxN4qzTbCGCx9UIPbwW",
+    "independentReview": "passed-by-total-PJ-fixed-representative-paths",
+    "actualPresentationClicks": true,
+    "scope": "not real services QA"
+  },
+  "workPackages": [
+    {
+      "id": "S1",
+      "title": "本案事实读取与授权",
+      "proposedRole": "RD-SUPPORT",
+      "assignedWriter": null,
+      "status": "not-issued",
+      "candidateProductionPath": "apps/api/src/support/routes.ts",
+      "exactWriteLease": [],
+      "interface": "Existing supportCase GET /support/cases/{caseId UUID} returns basic SupportCase only, not attendance facts. New case-grant/MFA protected minimal correction facts DTO/operation required; never assemble correction authority from analytics DTO.",
+      "acceptance": "无授权不暴露事实；仅本案读取与窗口边界测试。",
+      "maxProductionFilesPerIssue": 3,
+      "tests": "targeted module/contract/database and affected consumer regression, exact paths assigned with lease"
+    },
+    {
+      "id": "S2",
+      "title": "保原报告的支持追加",
+      "proposedRole": "RD-SUPPORT",
+      "assignedWriter": null,
+      "status": "not-issued",
+      "candidateProductionPath": "apps/api/src/support/routes.ts",
+      "exactWriteLease": [],
+      "interface": "correctAttendance POST /support/cases/{caseId}/attendance-corrections, Idempotency-Key; body mealId/subjectId UUID,value,reason5..500,expectedVersion=attendance subject version (not case If-Match). UNKNOWN replays same original POST actor/key/body via defineWrite; recordAttendanceRevision+invalidateIneligiblePairs reused.",
+      "acceptance": "409加载本对象最新事实+保本地选择，新确认才新意图；UNKNOWN查询原次、重复不增修订。",
+      "maxProductionFilesPerIssue": 3,
+      "tests": "targeted module/contract/database and affected consumer regression, exact paths assigned with lease"
+    },
+    {
+      "id": "S3",
+      "title": "本人可见回复与影响交接",
+      "proposedRole": "RD-SUPPORT",
+      "assignedWriter": null,
+      "status": "not-issued",
+      "candidateProductionPath": "apps/api/src/support/routes.ts",
+      "exactWriteLease": [],
+      "interface": "resolveCase POST /support/cases/{caseId}/status, case If-Match + Idempotency-Key; body status/publicOutcome/reason5..500. Distinct case version from attendance expectedVersion. publicOutcome write is routes.ts; privacy.ts remains read policy helper, not reply implementation.",
+      "acceptance": "仅回复无CORR；其他共同依据不误伤；撤回/拉黑不复活。",
+      "maxProductionFilesPerIssue": 3,
+      "tests": "targeted module/contract/database and affected consumer regression, exact paths assigned with lease"
+    },
+    {
+      "id": "S4",
+      "title": "受限个案CLI完整动作与确认",
+      "proposedRole": "RD-SUPPORT",
+      "assignedWriter": null,
+      "status": "not-issued",
+      "candidateProductionPath": "apps/api/src/support/routes.ts",
+      "newPlannedPath": "apps/api/src/support/cli.ts",
+      "exactWriteLease": [],
+      "maxProductionFilesPerIssue": 3,
+      "interface": "New CLI uses authenticated case-grant API: open case/facts→show original/current and UTC window→select value/reason→explicit confirm/cancel→same POST replay on unknown→show correction/impact→reply/status with separate case If-Match. No tokens/private material logged.",
+      "acceptance": "CLI transcript fixtures preserve original report/version, cancellation no write, new confirmation changes only intended object; reply-only never calls correctAttendance. Not a Web UI.",
+      "tests": "new cli.unit.test.ts + current support/correction API tests; precise file lease at issue"
+    }
+  ],
+  "realIntegrationDependencies": [
+    "IOS-0.1.0-dev.1身份/MFA与授权合同",
+    "饭后名单/出席与再约公评、J07/J08个案/删除、Analytics快照需真实组合联调"
+  ],
+  "globalDesignWait": false,
+  "engineeringReview": {
+    "status": "plan-approved-with-issuance-gates",
+    "reviewer": "Independent RD architecture reviewer; not plan author",
+    "authorSelfApproval": false,
+    "issues": [
+      {
+        "id": "R11-ES1-01",
+        "status": "closed-by-independent-plan-retest"
+      },
+      {
+        "id": "R11-ES1-02",
+        "status": "closed-by-independent-plan-retest"
+      }
+    ],
+    "signoffEvidence": {
+      "path": "docs/reviews/r11/support1-engineering-review.json",
+      "sha256": "bfb44e0f88e18e156c3ec3e47ba52cca4e38106550db2c2df42f51935bf93060",
+      "reviewer": "Independent RD architecture reviewer; not plan author",
+      "status": "plan-approved-with-issuance-gates",
+      "boundedConclusion": "Support plan implementable as restricted API plus new CLI; not new Web product, not implemented UI or QA; no whole-version waiting.",
+      "closedIssues": [
+        "R11-ES1-01",
+        "R11-ES1-02"
+      ],
+      "reviewedInputSHA256": {
+        "docs/engineering/r11/support-0.1.0-dev.1/plan.zh-CN.md": "d97ca06a5858d5f5d451f031ada48c7021e33dcbdda202a356472f3879fcffe3",
+        "docs/engineering/r11/support-0.1.0-dev.1/work-packages.json": "2e5ec2ba26d7436dc01021c96353116679825514f4293bda487206724d477e93",
+        "docs/delivery/versions/support-0.1.0-dev.1/test-plan.zh-CN.md": "77dbe05d11ea19e55940e8f267641739882fda12a27ab5d80548588f5064b144"
+      },
+      "note": "Only signoff metadata updated after independently reviewed candidate; business scope/interfaces unchanged."
+    }
+  },
+  "deliveryCarrier": {
+    "selected": "existing restricted support API + new restricted CLI, no full support Web application",
+    "figmaMeaning": "minimum authorised case actions/confirmations mapped to CLI prompts and API outcomes; not claim API-only delivery completed interactive Figma UI",
+    "newCLI": "apps/api/src/support/cli.ts",
+    "uiScope": "no support queue/navigation/global search, no new mobile Web"
+  },
+  "newPlannedPaths": [
+    {
+      "path": "apps/api/src/support/cli.ts",
+      "status": "not-created",
+      "writer": "RD-SUPPORT",
+      "purpose": "case facts/read, explicit correction confirmation, same-intent replay, reply with case version; no secret output"
+    },
+    {
+      "path": "apps/api/src/support/cli.unit.test.ts",
+      "status": "not-created",
+      "writer": "RD-SUPPORT",
+      "purpose": "fixture-driven CLI confirmation/cancel, separate revisions, no unauthorised fact leakage"
+    }
+  ],
+  "currentImplementationGaps": [
+    "SupportCase only basic case metadata/details; no self/host reports, start_roster, scheduledEndAt, attendance subject version/current effective facts",
+    "No production Support UI; restricted CLI must be added rather than claiming routes complete design interaction"
+  ],
+  "contractIncrement": {
+    "writer": "RD-CONTRACTS",
+    "existingPaths": [
+      "packages/contracts/src/dto.ts",
+      "packages/contracts/src/operations/operations-admin.ts"
+    ],
+    "status": "proposed-not-existing",
+    "proposedOperation": {
+      "operationId": "supportCorrectionFacts",
+      "method": "GET",
+      "path": "/support/cases/{caseId}/attendance-facts",
+      "query": "subjectId UUID",
+      "status": "new proposal, independent RD/contract writer must approve"
+    },
+    "minimumDTO": [
+      "caseId/caseVersion/status",
+      "mealId/subjectId UUID",
+      "scheduledEndAt UTC and correctionWindowEndsAt UTC",
+      "meal cancelled state and startRoster eligibility",
+      "original self report/value/version, original host report/value/version",
+      "current effective attendance/value and attendanceVersion",
+      "case grant/permission-derived allowed actions only; no unrelated/private facts"
+    ],
+    "authorization": "same actor MFA/support role + case grant and case target/meal/subject scope, privacy redaction rechecked; absent permission no facts. Not assembled from analyst DTO."
+  },
+  "versionSemantics": {
+    "attendance": "correctAttendance body expectedVersion from attendanceVersion only",
+    "case": "resolveCase If-Match from caseVersion only",
+    "unknown": "repeat identical original POST actor/key/body and original case If-Match when applicable; do not use latest case/attendance version as proof original intent succeeded",
+    "conflict": "load permitted current facts, preserve local value/reason, cancel no write; new intent only after explicit human confirmation against correct current version"
+  },
+  "propagationReuse": {
+    "existingPaths": [
+      "apps/api/src/post-meal/attendance.ts",
+      "apps/api/src/support/routes.ts",
+      "apps/api/src/admin/snapshots.ts"
+    ],
+    "functions": [
+      "recordAttendanceRevision",
+      "invalidateIneligiblePairs",
+      "sealSourceSnapshot"
+    ],
+    "rule": "append SUPPORT revision, retain originals; existing eligibility pair invalidation and new analytics snapshot path, never another attendance writing layer or SQL overwrite"
+  },
+  "candidateDAG": [
+    {
+      "from": "RD-CONTRACTS minimal facts schema/operation",
+      "to": "S1",
+      "reason": "new facts DTO not already implemented"
+    },
+    {
+      "from": "S1",
+      "to": "S2",
+      "reason": "same routes.ts unique RD-SUPPORT writer serial"
+    },
+    {
+      "from": "S2",
+      "to": "S3",
+      "reason": "same routes.ts plus J07/I4 shared writer lease serialized by root; no concurrent writes to shared routes"
+    },
+    {
+      "from": "fixed API contract fixtures",
+      "to": "S4",
+      "reason": "restricted CLI prompts can be prepared independently; real integration after API candidate"
+    }
+  ],
+  "targetedExistingTests": [
+    "apps/api/src/support/support.api.test.ts",
+    "apps/api/src/support/correction.api.test.ts",
+    "apps/api/src/support/privacy.api.test.ts",
+    "packages/contracts/src/contracts.unit.test.ts"
+  ],
+  "requiredNewTestCases": [
+    "facts read denied without MFA/case grant or wrong target/subject; no analysis DTO reconstruction",
+    "attendance expectedVersion and case If-Match deliberately differ; using one for other rejected",
+    "Unknown repeats original correctAttendance or resolveCase POST/key/body and original case If-Match",
+    "CLI explicit confirmation/cancel, local reason retained, no credentials/private facts printed",
+    "reply-only calls resolveCase and does not append attendance revision",
+    "7-day exact UTC boundary and original reports retained; propagation uses existing eligibility rules"
+  ],
+  "issuanceGates": [
+    {
+      "gate": "RD-CONTRACTS fixes exact new facts DTO/query/auth/schema; recheck case target/meal/subject grant and redaction each read/write",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Actual owner and exact leases; routes changes serialized with I4/J07",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Restricted CLI must use authenticated APIs and retain same original intent across transport uncertainty; permitted terminal facts differ from persisted logs, no token/unrelated private text in logs",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Run separate facts auth, two-version, original replay, exact UTC boundary, CLI confirm/cancel/reply-only and propagation tests; real API/native/integration evidence separate",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Independent code review/required CI/PR main merge before tested SHA/build deployment",
+      "status": "not-issued"
+    }
+  ]
+}
