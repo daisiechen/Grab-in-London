@@ -1,0 +1,111 @@
+{
+  "iteration": "SUPPORT-0.1.0-dev.1",
+  "journeys": [
+    "J09"
+  ],
+  "uxRevision": "UX-r02",
+  "businessInputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "scenarios": [
+    {
+      "scenarioId": "J09-S01",
+      "pmDescription": "有权support读本案→开始处理；analyst、MFA失效或无case权限时事实不展示且写入拒绝。",
+      "figmaNodes": [
+        "3:430",
+        "3:526",
+        "3:1239"
+      ],
+      "mode": "representative-native-prototype-and-shared-state-contract",
+      "contract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "limits": "固定状态；任意输入、完整错误矩阵、真实服务及平台运行行为不由Figma执行。"
+    },
+    {
+      "scenarioId": "J09-S02",
+      "pmDescription": "结束后7天前1ms提交被拒；恰好满7天可追加present/absent修订，原self/host报告不变。",
+      "figmaNodes": [
+        "3:610",
+        "3:707"
+      ],
+      "mode": "representative-native-prototype-and-shared-state-contract",
+      "contract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "limits": "固定状态；任意输入、完整错误矩阵、真实服务及平台运行行为不由Figma执行。"
+    },
+    {
+      "scenarioId": "J09-S03",
+      "pmDescription": "409加载新版本/保留理由再确认；503确定失败保稿，无新增修订；取消不写。",
+      "figmaNodes": [
+        "3:1150",
+        "3:610",
+        "3:526"
+      ],
+      "mode": "representative-native-prototype-and-shared-state-contract",
+      "contract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "limits": "固定状态；任意输入、完整错误矩阵、真实服务及平台运行行为不由Figma执行。"
+    },
+    {
+      "scenarioId": "J09-S04",
+      "pmDescription": "纠错absent→公评隐藏/体验排除/单场依赖联系暂停→新snapshot，旧snapshot不变；增加其他有效依据则联系保留；回复保存后有REPLIED与审计。",
+      "figmaNodes": [
+        "3:781",
+        "3:867",
+        "3:936",
+        "3:1037",
+        "3:1104"
+      ],
+      "mode": "representative-native-prototype-and-shared-state-contract",
+      "contract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "limits": "固定状态；任意输入、完整错误矩阵、真实服务及平台运行行为不由Figma执行。"
+    }
+  ],
+  "sourceFamilies": [
+    {
+      "sourceRequirements": "J09 / M07-02/03 / D08-AC01 / 主PRD§0.5/0.6",
+      "prdSection": "完整路径；精确规则、字段及权限",
+      "pmMode": "interactive-synthetic",
+      "figmaNodes": [
+        "3:1239",
+        "3:430",
+        "3:526",
+        "3:610",
+        "3:707"
+      ],
+      "designContract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "mode": "native-scenes-and-shared-contract"
+    },
+    {
+      "sourceRequirements": "D08-AC02 / QA-JOURNEY-011 / SupportCorrection合同",
+      "prdSection": "精确规则、字段及权限；异常、返回与取消",
+      "pmMode": "interactive-synthetic; real evidence NOT_RUN",
+      "figmaNodes": [
+        "3:1150",
+        "3:526",
+        "3:610",
+        "3:707"
+      ],
+      "designContract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "mode": "native-scenes-and-shared-contract"
+    },
+    {
+      "sourceRequirements": "D08-AC03 / 反馈联系资格/新快照传播",
+      "prdSection": "传播与状态",
+      "pmMode": "interactive-synthetic finite model",
+      "figmaNodes": [
+        "3:1037",
+        "3:1104",
+        "3:781",
+        "3:867",
+        "3:936"
+      ],
+      "designContract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "mode": "native-scenes-and-shared-contract"
+    },
+    {
+      "sourceRequirements": "真实case/MFA授权、幂等结果未知查询、事务锁与跨服务可靠传播/保留策略",
+      "prdSection": "精确规则、字段及权限；异常、返回与取消；不做与验收边界",
+      "pmMode": "documented-only",
+      "figmaNodes": [],
+      "designContract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "mode": "documented-only-preserved"
+    }
+  ],
+  "boundary": "规则/权限以冻结PRD，视觉/密度以原admin；不把固定样例或链接数量称全部可交互。"
+}

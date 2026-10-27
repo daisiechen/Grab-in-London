@@ -1,0 +1,42 @@
+{
+  "revision": "r10",
+  "scopeRevision": "r07",
+  "businessBaseline": {
+    "commit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+    "scopeLedger": "docs/product/requirements-traceability.json",
+    "rule": "PM逐旅程PRD/coverage决定规则，PM简化Demo不是视觉规格"
+  },
+  "visualBaseline": {
+    "siteVersion": 13,
+    "githubCommit": "361ab04ed6fc55c0f1e041bb5d6cc5d216d1a7b2",
+    "releaseEvidence": "demo/qa/picker-refinement-2026-10-21/release.json",
+    "pathsSHA256": {
+      "demo/src/Prototype.tsx": "50945a3a1261108d855b483342e31b252b0c99c74977011e92426cf1887e58a8",
+      "demo/src/prototype.css": "8ec652ea30fc06b74846f1adcc5d910c05f4366bcf31d8e6b8b73ced530025bb",
+      "demo/DESIGN.md": "abd6031d7e2b24b2e4f19b2a99ef54b9e76a2f1807717e590ac71c9eb7bfb63a",
+      "demo/UX-CONTRACT.md": "c74557722202a3de27191a8eca885460d7b48c92b202f320b7a2c738436c78fc"
+    },
+    "rule": "原Demo的布局/视觉/交互为基准；有效业务规则优先，历史模拟支付/平台订位不恢复"
+  },
+  "iteration": {
+    "id": "ADMIN-0.1.0-dev.2",
+    "productVersion": "ADMIN-0.1.0",
+    "name": "修订分类并取得可信聚合导出",
+    "journeys": [
+      "J11"
+    ],
+    "dependsOn": [
+      "ADMIN-0.1.0-dev.1"
+    ],
+    "inputs": {
+      "J11": {
+        "requirementsRevision": "PM-r01",
+        "demoRevision": "PM-r02",
+        "sha256": {
+          "docs/product/journeys/j11/requirements.zh-CN.md": "40921832dd47a5c0df9615b2ddbe483bfa54e51890b527083410d8c09f1451a3",
+          "demo/journeys/j11/index.html": "eaec916ca907e571fa7be9f27a4928b4d75964e968b89c702420f12b4b578d33"
+        }
+      }
+    }
+  }
+}

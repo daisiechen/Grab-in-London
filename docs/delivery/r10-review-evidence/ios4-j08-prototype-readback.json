@@ -1,0 +1,170 @@
+{
+  "reviewer": "PJ",
+  "kind": "read-only-native-graph-review",
+  "limitations": "Node destinations checked, not Presentation end-to-end or real services.",
+  "fileKey": "TxashjRfQDvnc4jQieeaWu",
+  "page": "J08 · Account deletion and receipt",
+  "starts": [
+    {
+      "nodeId": "5:16",
+      "name": "J08 · Account deletion request"
+    },
+    {
+      "nodeId": "5:307",
+      "name": "J08 · Support without business login"
+    }
+  ],
+  "roots": [
+    {
+      "id": "5:16",
+      "name": "J08-01 / Settings · Account actions"
+    },
+    {
+      "id": "5:50",
+      "name": "J08-02 / Deletion effects · Before you leave"
+    },
+    {
+      "id": "5:89",
+      "name": "J08-03 / Reauthenticate existing account"
+    },
+    {
+      "id": "5:122",
+      "name": "J08-04 / Final confirmation · Not selected"
+    },
+    {
+      "id": "5:152",
+      "name": "J08-05 / Final confirmation · Selected"
+    },
+    {
+      "id": "5:182",
+      "name": "J08-06 / Request accepted · Pending"
+    },
+    {
+      "id": "5:214",
+      "name": "J08-07 / Lost response · Check original receipt"
+    },
+    {
+      "id": "5:243",
+      "name": "J08-08 / Processing · External worker state"
+    },
+    {
+      "id": "5:275",
+      "name": "J08-09 / Needs support · External worker state"
+    },
+    {
+      "id": "5:307",
+      "name": "J08-10 / Unauthenticated support exit"
+    },
+    {
+      "id": "5:348",
+      "name": "J08-11 / Completed · External all-steps-success state"
+    },
+    {
+      "id": "5:380",
+      "name": "J08 · Reviewer transitions and deletion barriers"
+    }
+  ],
+  "links": [
+    {
+      "source": "5:48",
+      "label": "Delete account →",
+      "destination": "5:50"
+    },
+    {
+      "source": "5:85",
+      "label": "Action / Continue to verify identity",
+      "destination": "5:89"
+    },
+    {
+      "source": "5:87",
+      "label": "Action / Keep my account",
+      "destination": "5:16"
+    },
+    {
+      "source": "5:116",
+      "label": "Action / Verify identity",
+      "destination": "5:122"
+    },
+    {
+      "source": "5:118",
+      "label": "Action / Cancel deletion",
+      "destination": "5:16"
+    },
+    {
+      "source": "5:144",
+      "label": "check-row / final deletion consent",
+      "destination": "5:152"
+    },
+    {
+      "source": "5:150",
+      "label": "Action / Keep my account",
+      "destination": "5:16"
+    },
+    {
+      "source": "5:178",
+      "label": "Action / Request account deletion",
+      "destination": "5:182"
+    },
+    {
+      "source": "5:179",
+      "label": "Action / Keep my account",
+      "destination": "5:16"
+    },
+    {
+      "source": "5:212",
+      "label": "Action / Contact support",
+      "destination": "5:307"
+    },
+    {
+      "source": "5:239",
+      "label": "Action / Check original request",
+      "destination": "5:182"
+    },
+    {
+      "source": "5:241",
+      "label": "Action / Contact support",
+      "destination": "5:307"
+    },
+    {
+      "source": "5:304",
+      "label": "Action / Contact support",
+      "destination": "5:307"
+    },
+    {
+      "source": "5:343",
+      "label": "Action / Retry saved receipt",
+      "destination": "5:182"
+    },
+    {
+      "source": "5:345",
+      "label": "Action / Back to deletion status",
+      "destination": "5:182"
+    },
+    {
+      "source": "5:383",
+      "label": "Action / Lost 202 response",
+      "destination": "5:214"
+    },
+    {
+      "source": "5:385",
+      "label": "Action / Worker is processing · external",
+      "destination": "5:243"
+    },
+    {
+      "source": "5:387",
+      "label": "Action / Worker needs support · external",
+      "destination": "5:275"
+    },
+    {
+      "source": "5:389",
+      "label": "Action / All required steps completed · external",
+      "destination": "5:348"
+    },
+    {
+      "source": "5:391",
+      "label": "Action / Receipt lost · unauthenticated support",
+      "destination": "5:307"
+    }
+  ],
+  "missing": []
+}

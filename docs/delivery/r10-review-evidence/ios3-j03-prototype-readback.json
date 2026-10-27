@@ -1,0 +1,184 @@
+{
+  "reviewer": "PJ",
+  "kind": "read-only-native-graph-review",
+  "limitations": "Node destinations checked, not Presentation end-to-end or real services.",
+  "fileKey": "mKXV0NvBavRb6fnmQ2g2xV",
+  "page": "J03 · Meal communication",
+  "starts": [
+    {
+      "nodeId": "13:14",
+      "name": "J03 · Inbox to authorised group and independent departure"
+    },
+    {
+      "nodeId": "6:129",
+      "name": "J03 · Independent group departure"
+    }
+  ],
+  "roots": [
+    {
+      "id": "2:2",
+      "name": "J03-01 / Group chat · current member"
+    },
+    {
+      "id": "6:4",
+      "name": "J03-02 / Unsent message"
+    },
+    {
+      "id": "6:64",
+      "name": "J03-03 / Message sent"
+    },
+    {
+      "id": "6:129",
+      "name": "J03-04 / Group settings"
+    },
+    {
+      "id": "6:174",
+      "name": "J03-05 / Confirm leaving group"
+    },
+    {
+      "id": "6:252",
+      "name": "J03-06 / Group settings · Left group"
+    },
+    {
+      "id": "6:282",
+      "name": "J03-07 / Authorised history · Read-only"
+    },
+    {
+      "id": "6:349",
+      "name": "J03-08 / Ask Fancy · Group draft"
+    },
+    {
+      "id": "6:427",
+      "name": "J03-09 / Replace unsent text confirmation"
+    },
+    {
+      "id": "6:500",
+      "name": "J03-10 / AI draft in chat · Not sent"
+    },
+    {
+      "id": "6:560",
+      "name": "J03 · State and role contracts"
+    },
+    {
+      "id": "10:35",
+      "name": "J03-11 / AI group message sent"
+    },
+    {
+      "id": "13:14",
+      "name": "J03-00 / Inbox · Existing meal group entry"
+    }
+  ],
+  "links": [
+    {
+      "source": "2:18",
+      "label": "Original SVG / source node 7",
+      "destination": "6:129"
+    },
+    {
+      "source": "2:45",
+      "label": "Message input · original pill",
+      "destination": "6:4"
+    },
+    {
+      "source": "6:20",
+      "label": "Original SVG / source node 7",
+      "destination": "6:129"
+    },
+    {
+      "source": "6:49",
+      "label": "Send · empty disabled",
+      "destination": "6:64"
+    },
+    {
+      "source": "6:52",
+      "label": "Ask Fancy · original draggable dock",
+      "destination": "6:349"
+    },
+    {
+      "source": "6:80",
+      "label": "Original SVG / source node 7",
+      "destination": "6:129"
+    },
+    {
+      "source": "6:172",
+      "label": "Action / Leave group",
+      "destination": "6:174"
+    },
+    {
+      "source": "6:190",
+      "label": "Original SVG / source node 7",
+      "destination": "6:129"
+    },
+    {
+      "source": "6:250",
+      "label": "Action / Leave group",
+      "destination": "6:252"
+    },
+    {
+      "source": "6:277",
+      "label": "Action / Read earlier authorised messages",
+      "destination": "6:282"
+    },
+    {
+      "source": "6:298",
+      "label": "Original SVG / source node 7",
+      "destination": "6:252"
+    },
+    {
+      "source": "6:365",
+      "label": "Original SVG / source node 7",
+      "destination": "6:129"
+    },
+    {
+      "source": "6:424",
+      "label": "Action / Review in meal chat",
+      "destination": "6:427"
+    },
+    {
+      "source": "6:443",
+      "label": "Original SVG / source node 7",
+      "destination": "6:129"
+    },
+    {
+      "source": "6:498",
+      "label": "Action / Replace with draft",
+      "destination": "6:500"
+    },
+    {
+      "source": "6:516",
+      "label": "Original SVG / source node 7",
+      "destination": "6:129"
+    },
+    {
+      "source": "6:545",
+      "label": "Send · empty disabled",
+      "destination": "10:35"
+    },
+    {
+      "source": "6:563",
+      "label": "Action / Current member",
+      "destination": "2:2"
+    },
+    {
+      "source": "6:565",
+      "label": "Action / Left group, history only",
+      "destination": "6:252"
+    },
+    {
+      "source": "6:567",
+      "label": "Action / AI draft, explicit transfer",
+      "destination": "6:349"
+    },
+    {
+      "source": "10:51",
+      "label": "Original SVG / source node 7",
+      "destination": "6:129"
+    },
+    {
+      "source": "13:39",
+      "label": "inbox-row / A little supper club",
+      "destination": "2:2"
+    }
+  ],
+  "missing": []
+}

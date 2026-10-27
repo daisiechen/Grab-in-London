@@ -1,0 +1,505 @@
+{
+  "scenes": [
+    {
+      "key": "case",
+      "nodeId": "3:430",
+      "name": "SUPPORT-0.1.0-dev.1 / case",
+      "width": 1440,
+      "height": 1000,
+      "fonts": [
+        "Arial",
+        "Noto Sans SC"
+      ],
+      "counts": {
+        "INSTANCE": 3,
+        "FRAME": 19,
+        "TEXT": 20,
+        "VECTOR": 3
+      },
+      "texts": [
+        "Fancy",
+        "/",
+        "支持个案",
+        "EN",
+        "查看事实，留下处理依据",
+        "CASE-SYN-09 · Support · 本案授权/MFA有效 · Received",
+        "本案必要事实",
+        "仅展示此案处理所需信息",
+        "scheduledEndAt：2026-10-10T20:00:00Z（London 21:00 BST）",
+        "开始资格名单内；饭局未取消。",
+        "mealId",
+        "subjectId",
+        "revision",
+        "M-SYN-09",
+        "U-203",
+        "1",
+        "本人原报告：absent",
+        "host原报告：present",
+        "当前有效：absent",
+        "开始处理此案"
+      ],
+      "links": [
+        {
+          "source": "I3:497;3:495",
+          "label": "Action / 开始处理此案",
+          "destination": "3:526",
+          "visible": true,
+          "opacity": 1
+        }
+      ],
+      "imageNodes": [],
+      "disabledExports": []
+    },
+    {
+      "key": "active",
+      "nodeId": "3:526",
+      "name": "SUPPORT-0.1.0-dev.1 / active",
+      "width": 1440,
+      "height": 1000,
+      "fonts": [
+        "Arial",
+        "Noto Sans SC"
+      ],
+      "counts": {
+        "INSTANCE": 4,
+        "FRAME": 15,
+        "TEXT": 17,
+        "VECTOR": 3
+      },
+      "texts": [
+        "Fancy",
+        "/",
+        "支持个案",
+        "EN",
+        "处理此案",
+        "CASE-SYN-09 · In progress · 仍为本案授权",
+        "核对最小事实",
+        "计划结束满连续7天后才可追加支持逾期修订；窗口内仍走自助报告。",
+        "举报处理可只回复；删除实际执行归J08。",
+        "M-SYN-09",
+        "U-203",
+        "expectedVersion 1",
+        "self absent",
+        "host present",
+        "有效absent",
+        "追加逾期纠错",
+        "仅回复本案"
+      ],
+      "links": [
+        {
+          "source": "I3:587;3:583",
+          "label": "Action / 追加逾期纠错",
+          "destination": "3:610",
+          "visible": true,
+          "opacity": 1
+        },
+        {
+          "source": "I3:587;3:585",
+          "label": "Action / 仅回复本案",
+          "destination": "3:1037",
+          "visible": true,
+          "opacity": 1
+        }
+      ],
+      "imageNodes": [],
+      "disabledExports": []
+    },
+    {
+      "key": "correction",
+      "nodeId": "3:610",
+      "name": "SUPPORT-0.1.0-dev.1 / correction",
+      "width": 1440,
+      "height": 1000,
+      "fonts": [
+        "Arial",
+        "Noto Sans SC"
+      ],
+      "counts": {
+        "INSTANCE": 7,
+        "FRAME": 17,
+        "TEXT": 17,
+        "VECTOR": 4
+      },
+      "texts": [
+        "Fancy",
+        "/",
+        "支持个案",
+        "EN",
+        "追加支持修订",
+        "CASE-SYN-09 · M-SYN-09 · U-203 · expectedVersion 1",
+        "本次修订",
+        "窗口结束：2026-10-17T20:00:00.000Z；当前恰好满7天。",
+        "保留本人及发起人的原始报告，支持修订另行记录。",
+        "明确出席结果",
+        "未出席",
+        "纠错原因（必填）",
+        "核对本案材料后确认未出席",
+        "期望版本",
+        "1",
+        "追加修订并核对影响",
+        "取消本次修改"
+      ],
+      "links": [
+        {
+          "source": "I3:685;3:681",
+          "label": "Action / 追加修订并核对影响",
+          "destination": "3:781",
+          "visible": true,
+          "opacity": 1
+        },
+        {
+          "source": "I3:685;3:683",
+          "label": "Action / 取消本次修改",
+          "destination": "3:526",
+          "visible": true,
+          "opacity": 1
+        }
+      ],
+      "imageNodes": [],
+      "disabledExports": []
+    },
+    {
+      "key": "window",
+      "nodeId": "3:707",
+      "name": "SUPPORT-0.1.0-dev.1 / window",
+      "width": 1440,
+      "height": 1000,
+      "fonts": [
+        "Arial",
+        "Noto Sans SC"
+      ],
+      "counts": {
+        "INSTANCE": 3,
+        "FRAME": 14,
+        "TEXT": 14,
+        "VECTOR": 3
+      },
+      "texts": [
+        "Fancy",
+        "/",
+        "支持个案",
+        "EN",
+        "仍在自助窗口内",
+        "409 CORRECTION_WINDOW_OPEN · 本案仍有授权",
+        "本次不能执行逾期纠错",
+        "原因和选择保留。达到边界后仍需重新验证窗口、名单、取消事实与版本。",
+        "当前UTC",
+        "窗口结束UTC",
+        "2026-10-17T19:59:59.999Z",
+        "2026-10-17T20:00:00.000Z",
+        "当前为结束后7天前1毫秒，未追加修订。",
+        "返回个案"
+      ],
+      "links": [
+        {
+          "source": "I3:763;3:761",
+          "label": "Action / 返回个案",
+          "destination": "3:526",
+          "visible": true,
+          "opacity": 1
+        }
+      ],
+      "imageNodes": [],
+      "disabledExports": []
+    },
+    {
+      "key": "impact",
+      "nodeId": "3:781",
+      "name": "SUPPORT-0.1.0-dev.1 / impact",
+      "width": 1440,
+      "height": 1000,
+      "fonts": [
+        "Arial",
+        "Noto Sans SC"
+      ],
+      "counts": {
+        "INSTANCE": 4,
+        "FRAME": 15,
+        "TEXT": 18,
+        "VECTOR": 3
+      },
+      "texts": [
+        "Fancy",
+        "/",
+        "支持个案",
+        "EN",
+        "修订已追加，核对业务影响",
+        "CASE-SYN-09 · SUPPORT · revision 2 · CORR-1",
+        "资格与新统计",
+        "本例原self absent/host present，支持核对仍absent；状态继续不适用，并非本次从可用变失效。",
+        "另一有效共同场次及双方有效同意的联系保持，不误伤其他依据；不复活已撤回/拉黑同意。",
+        "旧snapshot SYN-BEFORE保留原asOf；新snapshot SYN-AFTER-2依据本次修订生成。",
+        "公开个人评价",
+        "单场体验统计",
+        "仅依赖本场的联系",
+        "不公开",
+        "排除",
+        "暂停新发送，历史保留",
+        "回复并记录处理结果",
+        "返回本案"
+      ],
+      "links": [
+        {
+          "source": "I3:843;3:839",
+          "label": "Action / 回复并记录处理结果",
+          "destination": "3:867",
+          "visible": true,
+          "opacity": 1
+        },
+        {
+          "source": "I3:843;3:841",
+          "label": "Action / 返回本案",
+          "destination": "3:526",
+          "visible": true,
+          "opacity": 1
+        }
+      ],
+      "imageNodes": [],
+      "disabledExports": []
+    },
+    {
+      "key": "reply",
+      "nodeId": "3:867",
+      "name": "SUPPORT-0.1.0-dev.1 / reply",
+      "width": 1440,
+      "height": 1000,
+      "fonts": [
+        "Arial",
+        "Noto Sans SC"
+      ],
+      "counts": {
+        "INSTANCE": 5,
+        "FRAME": 9,
+        "TEXT": 12,
+        "VECTOR": 3
+      },
+      "texts": [
+        "Fancy",
+        "/",
+        "支持个案",
+        "EN",
+        "回复并记录处理结果",
+        "CASE-SYN-09 · In progress · 已有CORR-1",
+        "提交者可见结论",
+        "仅本案可公开结论或下一步；不包含他人举报、聊天、私密意愿或内部调查材料。",
+        "提交者可见回复（必填）",
+        "已核对本案记录并记录适用处理结果",
+        "保存处理结果与回复",
+        "取消回复编辑"
+      ],
+      "links": [
+        {
+          "source": "I3:923;3:919",
+          "label": "Action / 保存处理结果与回复",
+          "destination": "3:936",
+          "visible": true,
+          "opacity": 1
+        },
+        {
+          "source": "I3:923;3:921",
+          "label": "Action / 取消回复编辑",
+          "destination": "3:526",
+          "visible": true,
+          "opacity": 1
+        }
+      ],
+      "imageNodes": [],
+      "disabledExports": []
+    },
+    {
+      "key": "replied",
+      "nodeId": "3:936",
+      "name": "SUPPORT-0.1.0-dev.1 / replied",
+      "width": 1440,
+      "height": 1000,
+      "fonts": [
+        "Arial",
+        "Noto Sans SC"
+      ],
+      "counts": {
+        "INSTANCE": 3,
+        "FRAME": 14,
+        "TEXT": 17,
+        "VECTOR": 3
+      },
+      "texts": [
+        "Fancy",
+        "/",
+        "支持个案",
+        "EN",
+        "处理结果与回复已保存",
+        "CASE-SYN-09 · Replied",
+        "提交者可见回复",
+        "已核对本案记录并记录适用处理结果。",
+        "修订与审计",
+        "原始self absent / host present保留；case/actor/reason/time/version及原意图可追踪。",
+        "受理、开始、支持修订与实际回复分别记录。",
+        "CORR-1",
+        "SUPPORT-01",
+        "absent / revision 2",
+        "REPLY",
+        "SUPPORT-01",
+        "CASE-SYN-09"
+      ],
+      "links": [],
+      "imageNodes": [],
+      "disabledExports": []
+    },
+    {
+      "key": "replyonly",
+      "nodeId": "3:1037",
+      "name": "SUPPORT-0.1.0-dev.1 / replyonly",
+      "width": 1440,
+      "height": 1000,
+      "fonts": [
+        "Arial",
+        "Noto Sans SC"
+      ],
+      "counts": {
+        "INSTANCE": 5,
+        "FRAME": 9,
+        "TEXT": 11,
+        "VECTOR": 3
+      },
+      "texts": [
+        "Fancy",
+        "/",
+        "支持个案",
+        "EN",
+        "仅回复本案",
+        "CASE-SYN-09 · In progress · 不追加出席修订",
+        "提交者可见结论",
+        "提交者可见回复（必填）",
+        "已收到并核对此案，后续指引见本回复",
+        "保存回复",
+        "取消回复编辑"
+      ],
+      "links": [
+        {
+          "source": "I3:1092;3:1088",
+          "label": "Action / 保存回复",
+          "destination": "3:1104",
+          "visible": true,
+          "opacity": 1
+        },
+        {
+          "source": "I3:1092;3:1090",
+          "label": "Action / 取消回复编辑",
+          "destination": "3:526",
+          "visible": true,
+          "opacity": 1
+        }
+      ],
+      "imageNodes": [],
+      "disabledExports": []
+    },
+    {
+      "key": "replyonlydone",
+      "nodeId": "3:1104",
+      "name": "SUPPORT-0.1.0-dev.1 / replyonlydone",
+      "width": 1440,
+      "height": 1000,
+      "fonts": [
+        "Arial",
+        "Noto Sans SC"
+      ],
+      "counts": {
+        "INSTANCE": 2,
+        "FRAME": 6,
+        "TEXT": 9,
+        "VECTOR": 3
+      },
+      "texts": [
+        "Fancy",
+        "/",
+        "支持个案",
+        "EN",
+        "回复已保存",
+        "CASE-SYN-09 · Replied · 无出席修订",
+        "回复与审计",
+        "已收到并核对此案，后续指引见本回复。",
+        "REPLY · SUPPORT-01 · CASE-SYN-09。没有CORR写入，不制造出席纠错。"
+      ],
+      "links": [],
+      "imageNodes": [],
+      "disabledExports": []
+    },
+    {
+      "key": "conflict",
+      "nodeId": "3:1150",
+      "name": "SUPPORT-0.1.0-dev.1 / conflict",
+      "width": 1440,
+      "height": 1000,
+      "fonts": [
+        "Arial",
+        "Noto Sans SC"
+      ],
+      "counts": {
+        "INSTANCE": 5,
+        "FRAME": 11,
+        "TEXT": 15,
+        "VECTOR": 3
+      },
+      "texts": [
+        "Fancy",
+        "/",
+        "支持个案",
+        "EN",
+        "记录已发生变化",
+        "409 · 当前合法版本已加载 · 本案权限仍需重验",
+        "核对后形成新意图",
+        "本人核对当前事实后再确认，不能静默覆盖或借其他对象版本猜本次成功。",
+        "当前revision",
+        "2",
+        "本地选择",
+        "absent",
+        "原因（保留）",
+        "核对本案材料后确认未出席",
+        "本次没有覆盖新版本，原因和选择保留。"
+      ],
+      "links": [],
+      "imageNodes": [],
+      "disabledExports": []
+    },
+    {
+      "key": "denied",
+      "nodeId": "3:1239",
+      "name": "SUPPORT-0.1.0-dev.1 / denied",
+      "width": 1440,
+      "height": 1000,
+      "fonts": [
+        "Arial",
+        "Noto Sans SC"
+      ],
+      "counts": {
+        "INSTANCE": 2,
+        "FRAME": 6,
+        "TEXT": 9,
+        "VECTOR": 3
+      },
+      "texts": [
+        "Fancy",
+        "/",
+        "支持个案",
+        "EN",
+        "无权查看此个案",
+        "403 · 身份/MFA或本案授权无效",
+        "重新验证本案权限",
+        "事项事实和写入口已清除。",
+        "分析者统计权限不包含支持操作；已知caseId也不代表可读取本案。"
+      ],
+      "links": [],
+      "imageNodes": [],
+      "disabledExports": []
+    }
+  ],
+  "missingTargets": [],
+  "pageId": "0:1",
+  "flowStartingPoints": [
+    {
+      "nodeId": "3:430",
+      "name": "SUPPORT-0.1.0-dev.1 · 完整代表路径"
+    }
+  ],
+  "componentCounts": 22
+}

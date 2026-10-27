@@ -1,0 +1,119 @@
+{
+  "reviewer": "PJ",
+  "kind": "read-only-native-graph-review",
+  "limitations": "Node destinations checked, not Presentation end-to-end or real services.",
+  "fileKey": "mKXV0NvBavRb6fnmQ2g2xV",
+  "page": "J06 · Product survey",
+  "starts": [
+    {
+      "nodeId": "8:14",
+      "name": "J06 · Settings to optional product survey"
+    }
+  ],
+  "roots": [
+    {
+      "id": "8:14",
+      "name": "J06-01 / Settings · Product survey entry"
+    },
+    {
+      "id": "8:63",
+      "name": "J06-02 / Product survey · Unanswered"
+    },
+    {
+      "id": "8:133",
+      "name": "J06-03 / Reasons only · Again unanswered"
+    },
+    {
+      "id": "8:203",
+      "name": "J06-04 / Saved latest · Reasons only"
+    },
+    {
+      "id": "8:279",
+      "name": "J06-05 / Updating again and reasons"
+    },
+    {
+      "id": "8:350",
+      "name": "J06-06 / Saved latest · Yes and reasons"
+    },
+    {
+      "id": "8:424",
+      "name": "J06-07 / Settings · Latest reason-only answer"
+    },
+    {
+      "id": "8:473",
+      "name": "J06-08 / Settings · Latest Yes answer"
+    },
+    {
+      "id": "8:522",
+      "name": "J06 · Optional survey state contract"
+    }
+  ],
+  "links": [
+    {
+      "source": "8:61",
+      "label": "Product survey →",
+      "destination": "8:63"
+    },
+    {
+      "source": "8:105",
+      "label": "Choice / Company",
+      "destination": "8:133"
+    },
+    {
+      "source": "8:189",
+      "label": "Action / Save survey",
+      "destination": "8:203"
+    },
+    {
+      "source": "8:275",
+      "label": "Action / Back to Settings",
+      "destination": "8:424"
+    },
+    {
+      "source": "8:277",
+      "label": "Action / Update answers",
+      "destination": "8:279"
+    },
+    {
+      "source": "8:335",
+      "label": "Action / Save survey",
+      "destination": "8:350"
+    },
+    {
+      "source": "8:349",
+      "label": "Clear answer",
+      "destination": "8:133"
+    },
+    {
+      "source": "8:422",
+      "label": "Action / Back to Settings",
+      "destination": "8:473"
+    },
+    {
+      "source": "8:471",
+      "label": "Product survey →",
+      "destination": "8:203"
+    },
+    {
+      "source": "8:520",
+      "label": "Product survey →",
+      "destination": "8:350"
+    },
+    {
+      "source": "8:525",
+      "label": "Action / Initial unanswered",
+      "destination": "8:63"
+    },
+    {
+      "source": "8:527",
+      "label": "Action / Latest reason-only answer",
+      "destination": "8:203"
+    },
+    {
+      "source": "8:529",
+      "label": "Action / Clear again retains reason",
+      "destination": "8:279"
+    }
+  ],
+  "missing": []
+}

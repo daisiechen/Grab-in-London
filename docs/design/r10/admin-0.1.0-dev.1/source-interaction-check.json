@@ -1,0 +1,34 @@
+{
+  "role": "UX-source-author-check",
+  "sourceOnly": true,
+  "implementationStarted": false,
+  "qaStarted": false,
+  "dateInputs": 2,
+  "localeRetainsQuery": true,
+  "applied": {
+    "start": "2026-09-22",
+    "end": "2026-10-17"
+  },
+  "viewports": [
+    {
+      "width": 1440,
+      "documentWidth": 1440,
+      "tableOwnScroll": true
+    },
+    {
+      "width": 1024,
+      "documentWidth": 1024,
+      "tableOwnScroll": true
+    },
+    {
+      "width": 864,
+      "documentWidth": 864,
+      "tableOwnScroll": true
+    },
+    {
+      "width": 390,
+      "documentWidth": 390,
+      "tableOwnScroll": true
+    }
+  ]
+}

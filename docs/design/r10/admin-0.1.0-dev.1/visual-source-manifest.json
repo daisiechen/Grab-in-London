@@ -1,0 +1,22 @@
+{
+  "source": "admin/ original product Demo",
+  "lastAdminCommit": "a396397dddf010b6ab3c555176b5cd25732eb53a",
+  "sha256": {
+    "admin/DESIGN.md": "4c77ecb6b45ec175bb385804d75bc948a5a954c4f0016f1f971edabdc8a2bfd3",
+    "admin/UX-CONTRACT.md": "5fac6df0ebb83fee50c4585e912e13ba16e1cf7cc09ebfec0a13dfd8f666ab4c",
+    "admin/src/styles.css": "9678a840e23413b16ea03f99115955b6826941ea575c0e2b7e990ac7098af379",
+    "admin/src/components.tsx": "c37553225306a902a8d2599d56f9aeb55e89544c5006837df8374cae266b6d72",
+    "admin/src/App.tsx": "6b5182310a8f75ec885a32b8ffe0369a1b1a00fa09b669a6f477f2c35f142d92",
+    "admin/src/analytics.ts": "eb4fc71f6bc68870b2d1828b6fd5dd82d0a2f805b5ff9fab46b83651c9930fd6",
+    "admin/src/fixtures.ts": "9815fd48dc323f9a005df80c7507f94d364a3fa6fd23cfd4ee7e8aa251617c09",
+    "admin/src/metrics.ts": "1c9e4d2cb221f89fb8dd67b2f5191ac38dda6d52c02f137af727b698699f80aa"
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "runtime": "isolated existing Vite frontend, synthetic fixture only",
+  "fontMapping": "source browser Arial→temporary Liberation Sans; Figma Latin Arial / Chinese Noto Sans SC / wordmark Georgia",
+  "implementationStarted": false,
+  "qaStarted": false
+}

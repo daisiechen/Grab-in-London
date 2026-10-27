@@ -1,0 +1,118 @@
+{
+  "iteration": "ADMIN-0.1.0-dev.1",
+  "journeys": [
+    "J10"
+  ],
+  "uxRevision": "UX-r02",
+  "businessInputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "scenarios": [
+    {
+      "scenarioId": "J10-S01",
+      "pmDescription": "日期应用/非法日期恢复→区域等多选→导航中英切换保持查询；六条分页/搜索排序。",
+      "figmaNodes": [
+        "9:2",
+        "17:830"
+      ],
+      "mode": "representative-native-prototype-and-shared-state-contract",
+      "contract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "limits": "固定状态；任意输入、完整错误矩阵、真实服务及平台运行行为不由Figma执行。"
+    },
+    {
+      "scenarioId": "J10-S02",
+      "pmDescription": "点指标→口径与分母→来源记录→饭局本人/host报告→伪名历史→逐层返回，原快照/筛选保留。",
+      "figmaNodes": [
+        "9:900",
+        "17:830",
+        "21:1309",
+        "21:1843"
+      ],
+      "mode": "representative-native-prototype-and-shared-state-contract",
+      "contract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "limits": "固定状态；任意输入、完整错误矩阵、真实服务及平台运行行为不由Figma执行。"
+    },
+    {
+      "scenarioId": "J10-S03",
+      "pmDescription": "扩大日期到9月可见成熟14/30天指标；近期显示观察中和零分母—；本人present优先于host absent。",
+      "figmaNodes": [
+        "9:2"
+      ],
+      "mode": "representative-native-prototype-and-shared-state-contract",
+      "contract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "limits": "固定状态；任意输入、完整错误矩阵、真实服务及平台运行行为不由Figma执行。"
+    },
+    {
+      "scenarioId": "J10-S04",
+      "pmDescription": "review注入401/403/410/429/503，受限内容清除、查询保留、重新验证/重试可恢复。",
+      "figmaNodes": [
+        "21:2375",
+        "22:2620"
+      ],
+      "mode": "representative-native-prototype-and-shared-state-contract",
+      "contract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "limits": "固定状态；任意输入、完整错误矩阵、真实服务及平台运行行为不由Figma执行。"
+    }
+  ],
+  "sourceFamilies": [
+    {
+      "sourceRequirements": "D10-AC01 / PATCH-006 AC-006 / 后台PRD§3–4",
+      "prdSection": "指标与数据权威",
+      "pmMode": "interactive-synthetic",
+      "figmaNodes": [
+        "17:830",
+        "21:1309",
+        "21:1843",
+        "9:2",
+        "9:900"
+      ],
+      "designContract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "mode": "native-scenes-and-shared-contract"
+    },
+    {
+      "sourceRequirements": "D10-AC02 / 采集v4§4–7",
+      "prdSection": "查询、列表与导航；权限、异常与边界",
+      "pmMode": "interactive-synthetic",
+      "figmaNodes": [
+        "17:830",
+        "21:1309",
+        "21:1843",
+        "21:2375",
+        "22:2620",
+        "9:900"
+      ],
+      "designContract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "mode": "native-scenes-and-shared-contract"
+    },
+    {
+      "sourceRequirements": "D10-AC03 / 后台PRD§3.1–3.3",
+      "prdSection": "平台与不做事项",
+      "pmMode": "responsive-code; visual/manual NOT_RUN",
+      "figmaNodes": [
+        "17:830",
+        "21:2375",
+        "22:2620",
+        "9:2"
+      ],
+      "designContract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "mode": "native-scenes-and-shared-contract"
+    },
+    {
+      "sourceRequirements": "J10首发概览 activation/retention；AUD-03/04",
+      "prdSection": "指标与数据权威",
+      "pmMode": "interactive-synthetic",
+      "figmaNodes": [
+        "9:2"
+      ],
+      "designContract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "mode": "native-scenes-and-shared-contract"
+    },
+    {
+      "sourceRequirements": "来源/新老分群、快捷日期、真实审核分布、创建漏斗、源连接/采集/权限与生产计算",
+      "prdSection": "查询、列表与导航；指标与数据权威",
+      "pmMode": "documented-only; no production claim",
+      "figmaNodes": [],
+      "designContract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "mode": "documented-only-preserved"
+    }
+  ],
+  "boundary": "规则/权限以冻结PRD，视觉/密度以原admin；不把固定样例或链接数量称全部可交互。"
+}

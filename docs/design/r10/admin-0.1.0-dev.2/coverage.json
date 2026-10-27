@@ -1,0 +1,122 @@
+{
+  "iteration": "ADMIN-0.1.0-dev.2",
+  "journeys": [
+    "J11"
+  ],
+  "uxRevision": "UX-r02",
+  "businessInputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "scenarios": [
+    {
+      "scenarioId": "J11-S01",
+      "pmDescription": "新分类+原因→保存Unknown→查原次→Pending；分类只提交一次，结果/导出不可读。",
+      "figmaNodes": [
+        "6:430",
+        "6:775",
+        "6:1032"
+      ],
+      "mode": "representative-native-prototype-and-shared-state-contract",
+      "contract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "limits": "固定状态；任意输入、完整错误矩阵、真实服务及平台运行行为不由Figma执行。"
+    },
+    {
+      "scenarioId": "J11-S02",
+      "pmDescription": "Pending→review统计失败→Failed→仅重试统计→Ready新快照；分类提交数不变。",
+      "figmaNodes": [
+        "6:1032",
+        "6:1287",
+        "6:1544"
+      ],
+      "mode": "representative-native-prototype-and-shared-state-contract",
+      "contract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "limits": "固定状态；任意输入、完整错误矩阵、真实服务及平台运行行为不由Figma执行。"
+    },
+    {
+      "scenarioId": "J11-S03",
+      "pmDescription": "409载入对方最新staff值并保留原因；分析者不能保存；普通失败保输入。",
+      "figmaNodes": [
+        "6:3187",
+        "6:3732",
+        "6:3479"
+      ],
+      "mode": "representative-native-prototype-and-shared-state-contract",
+      "contract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "limits": "固定状态；任意输入、完整错误矩阵、真实服务及平台运行行为不由Figma执行。"
+    },
+    {
+      "scenarioId": "J11-S04",
+      "pmDescription": "先生成旧导出→隐私撤销→旧页面/下载拒读→新快照可用但旧票据不复活。",
+      "figmaNodes": [
+        "6:2418",
+        "6:2675",
+        "6:2932"
+      ],
+      "mode": "representative-native-prototype-and-shared-state-contract",
+      "contract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "limits": "固定状态；任意输入、完整错误矩阵、真实服务及平台运行行为不由Figma执行。"
+    },
+    {
+      "scenarioId": "J11-S05",
+      "pmDescription": "在有效快照应用查询范围→生成聚合票据→读取并下载本地合成CSV，内容携同snapshot/filter/definition v4。",
+      "figmaNodes": [
+        "6:1544",
+        "6:1840",
+        "6:2127"
+      ],
+      "mode": "representative-native-prototype-and-shared-state-contract",
+      "contract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "limits": "固定状态；任意输入、完整错误矩阵、真实服务及平台运行行为不由Figma执行。"
+    }
+  ],
+  "sourceFamilies": [
+    {
+      "sourceRequirements": "D11-AC01 / M08-06/07 / PATCH-006",
+      "prdSection": "状态与恢复；完整路径与角色",
+      "pmMode": "interactive-synthetic",
+      "figmaNodes": [
+        "6:1032",
+        "6:1287",
+        "6:1544",
+        "6:3187",
+        "6:3479",
+        "6:3732",
+        "6:430",
+        "6:775"
+      ],
+      "designContract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "mode": "native-scenes-and-shared-contract"
+    },
+    {
+      "sourceRequirements": "D11-AC02 / 删除隐私屏障 / QA-JOURNEY-008/009相关",
+      "prdSection": "分类、统计与导出规则",
+      "pmMode": "interactive-synthetic; real deletion gate NOT_RUN",
+      "figmaNodes": [
+        "6:2418",
+        "6:2675",
+        "6:2932"
+      ],
+      "designContract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "mode": "native-scenes-and-shared-contract"
+    },
+    {
+      "sourceRequirements": "D11-AC03 / 采集v4 / 后台PRD§3/5/6",
+      "prdSection": "分类、统计与导出规则；页面与完整返回",
+      "pmMode": "interactive-synthetic",
+      "figmaNodes": [
+        "6:1544",
+        "6:1840",
+        "6:2127"
+      ],
+      "designContract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "mode": "native-scenes-and-shared-contract"
+    },
+    {
+      "sourceRequirements": "完整分类席位重建、MVCC/epoch、MFA、真实管线/CSV权限与备份恢复",
+      "prdSection": "分类、统计与导出规则；不做与真实依赖",
+      "pmMode": "documented-only",
+      "figmaNodes": [],
+      "designContract": "handoff.zh-CN.md#完整路径字段状态与权限",
+      "mode": "documented-only-preserved"
+    }
+  ],
+  "boundary": "规则/权限以冻结PRD，视觉/密度以原admin；不把固定样例或链接数量称全部可交互。"
+}

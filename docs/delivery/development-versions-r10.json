@@ -250,9 +250,9 @@
       "uxOwner": "UX-3",
       "uxRevision": "UX-r02",
       "uxDirectory": "docs/design/r10/support-0.1.0-dev.1/",
-      "uxStatus": "in-progress",
-      "figmaFileKey": null,
-      "figmaEntryNodeId": null,
+      "uxStatus": "candidate-delivered",
+      "figmaFileKey": "mCBDxN4qzTbCGCx9UIPbwW",
+      "figmaEntryNodeId": "3:430",
       "inputs": {
         "J09": {
           "requirementsRevision": "PM-r01",
@@ -269,7 +269,10 @@
       "qaStatus": "not-started",
       "codeOwner": null,
       "runtimeBuild": null,
-      "releaseApproved": false
+      "releaseApproved": false,
+      "figmaPreviewNodeId": "3:430",
+      "figmaPreviewURL": "https://www.figma.com/design/mCBDxN4qzTbCGCx9UIPbwW?node-id=3-430",
+      "previewStatus": "candidate-not-development-ready"
     },
     {
       "id": "ADMIN-0.1.0-dev.1",
@@ -285,9 +288,9 @@
       "uxOwner": "UX-3",
       "uxRevision": "UX-r02",
       "uxDirectory": "docs/design/r10/admin-0.1.0-dev.1/",
-      "uxStatus": "in-progress",
+      "uxStatus": "candidate-delivered",
       "figmaFileKey": "EwpDxDGeTJEF3PYMYLH8eP",
-      "figmaEntryNodeId": null,
+      "figmaEntryNodeId": "9:2",
       "inputs": {
         "J10": {
           "requirementsRevision": "PM-r01",
@@ -307,7 +310,7 @@
       "releaseApproved": false,
       "figmaPreviewNodeId": "9:2",
       "figmaPreviewURL": "https://www.figma.com/design/EwpDxDGeTJEF3PYMYLH8eP?node-id=9-2",
-      "previewStatus": "work-in-progress-not-development-ready"
+      "previewStatus": "candidate-not-development-ready"
     },
     {
       "id": "ADMIN-0.1.0-dev.2",
@@ -323,9 +326,9 @@
       "uxOwner": "UX-3",
       "uxRevision": "UX-r02",
       "uxDirectory": "docs/design/r10/admin-0.1.0-dev.2/",
-      "uxStatus": "in-progress",
-      "figmaFileKey": null,
-      "figmaEntryNodeId": null,
+      "uxStatus": "candidate-delivered",
+      "figmaFileKey": "gin01YJX9boaVymXsm1zJg",
+      "figmaEntryNodeId": "6:430",
       "inputs": {
         "J11": {
           "requirementsRevision": "PM-r01",
@@ -342,7 +345,10 @@
       "qaStatus": "not-started",
       "codeOwner": null,
       "runtimeBuild": null,
-      "releaseApproved": false
+      "releaseApproved": false,
+      "figmaPreviewNodeId": "6:430",
+      "figmaPreviewURL": "https://www.figma.com/design/gin01YJX9boaVymXsm1zJg?node-id=6-430",
+      "previewStatus": "candidate-not-development-ready"
     }
   ],
   "plannedLater": [
@@ -440,7 +446,7 @@
         "ADMIN-0.1.0-dev.1",
         "ADMIN-0.1.0-dev.2"
       ],
-      "status": "running"
+      "status": "candidate-delivered"
     },
     "RD-ARCH": {
       "directory": "docs/engineering/r10/",

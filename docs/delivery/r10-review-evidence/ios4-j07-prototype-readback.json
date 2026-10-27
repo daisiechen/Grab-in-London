@@ -1,0 +1,104 @@
+{
+  "reviewer": "PJ",
+  "kind": "read-only-native-graph-review",
+  "limitations": "Node destinations checked, not Presentation end-to-end or real services.",
+  "fileKey": "TxashjRfQDvnc4jQieeaWu",
+  "page": "J07 · Private report and progress",
+  "starts": [
+    {
+      "nodeId": "2:4",
+      "name": "J07 · Private report and follow-up"
+    }
+  ],
+  "roots": [
+    {
+      "id": "2:4",
+      "name": "J07-01 / Member profile · Private concern entry"
+    },
+    {
+      "id": "4:2",
+      "name": "J07-02 / Report form · Reason required"
+    },
+    {
+      "id": "4:78",
+      "name": "J07-03 / Report draft · Ready to submit"
+    },
+    {
+      "id": "4:154",
+      "name": "J07-04 / Report received · Not investigated"
+    },
+    {
+      "id": "4:194",
+      "name": "J07-05 / Your reports"
+    },
+    {
+      "id": "4:222",
+      "name": "J07-06 / Submission status unknown"
+    },
+    {
+      "id": "4:249",
+      "name": "J07-07 / In progress · External support state"
+    },
+    {
+      "id": "4:286",
+      "name": "J07-08 / Reply available · External support state"
+    },
+    {
+      "id": "4:327",
+      "name": "J07 · Reviewer roles and recovery contract"
+    }
+  ],
+  "links": [
+    {
+      "source": "2:45",
+      "label": "Report or block this member",
+      "destination": "4:2"
+    },
+    {
+      "source": "2:46",
+      "label": "Your reports",
+      "destination": "4:194"
+    },
+    {
+      "source": "4:67",
+      "label": "Field control",
+      "destination": "4:78"
+    },
+    {
+      "source": "4:150",
+      "label": "Action / Send private report",
+      "destination": "4:154"
+    },
+    {
+      "source": "4:188",
+      "label": "Action / Your reports",
+      "destination": "4:194"
+    },
+    {
+      "source": "4:216",
+      "label": "inbox-row · existing source list pattern",
+      "destination": "4:154"
+    },
+    {
+      "source": "4:247",
+      "label": "Action / Check original request",
+      "destination": "4:154"
+    },
+    {
+      "source": "4:330",
+      "label": "Action / Unknown response recovery",
+      "destination": "4:222"
+    },
+    {
+      "source": "4:332",
+      "label": "Action / External support begins review",
+      "destination": "4:249"
+    },
+    {
+      "source": "4:334",
+      "label": "Action / External support reply exists",
+      "destination": "4:286"
+    }
+  ],
+  "missing": []
+}

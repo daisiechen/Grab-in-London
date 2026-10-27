@@ -1,0 +1,252 @@
+{
+  "reviewer": "PJ",
+  "kind": "read-only-native-graph-review",
+  "limitations": "Confirms node destinations exist; not Presentation end-to-end or real services.",
+  "fileKey": "gin01YJX9boaVymXsm1zJg",
+  "page": "ADMIN-0.1.0-dev.2 · UX-r02",
+  "roots": [
+    {
+      "id": "3:430",
+      "name": "Components · original admin roles",
+      "type": "FRAME"
+    },
+    {
+      "id": "6:429",
+      "name": "ADMIN-0.1.0-dev.2 · source-derived components",
+      "type": "FRAME"
+    },
+    {
+      "id": "6:430",
+      "name": "ADMIN-0.1.0-dev.2 / edit",
+      "type": "FRAME"
+    },
+    {
+      "id": "6:775",
+      "name": "ADMIN-0.1.0-dev.2 / unknown",
+      "type": "FRAME"
+    },
+    {
+      "id": "6:1032",
+      "name": "ADMIN-0.1.0-dev.2 / pending",
+      "type": "FRAME"
+    },
+    {
+      "id": "6:1287",
+      "name": "ADMIN-0.1.0-dev.2 / failed",
+      "type": "FRAME"
+    },
+    {
+      "id": "6:1544",
+      "name": "ADMIN-0.1.0-dev.2 / ready",
+      "type": "FRAME"
+    },
+    {
+      "id": "6:1840",
+      "name": "ADMIN-0.1.0-dev.2 / export",
+      "type": "FRAME"
+    },
+    {
+      "id": "6:2127",
+      "name": "ADMIN-0.1.0-dev.2 / download",
+      "type": "FRAME"
+    },
+    {
+      "id": "6:2418",
+      "name": "ADMIN-0.1.0-dev.2 / oldexport",
+      "type": "FRAME"
+    },
+    {
+      "id": "6:2675",
+      "name": "ADMIN-0.1.0-dev.2 / revoked",
+      "type": "FRAME"
+    },
+    {
+      "id": "6:2932",
+      "name": "ADMIN-0.1.0-dev.2 / privacyready",
+      "type": "FRAME"
+    },
+    {
+      "id": "6:3187",
+      "name": "ADMIN-0.1.0-dev.2 / conflict",
+      "type": "FRAME"
+    },
+    {
+      "id": "6:3479",
+      "name": "ADMIN-0.1.0-dev.2 / cancelled",
+      "type": "FRAME"
+    },
+    {
+      "id": "6:3732",
+      "name": "ADMIN-0.1.0-dev.2 / denied",
+      "type": "FRAME"
+    }
+  ],
+  "links": [
+    {
+      "source": "6:703",
+      "label": "Action / 保存分类",
+      "destination": "6:775"
+    },
+    {
+      "source": "6:705",
+      "label": "Action / 取消修改",
+      "destination": "6:3479"
+    },
+    {
+      "source": "6:760",
+      "label": "Action / 生成当前聚合导出",
+      "destination": "6:2418"
+    },
+    {
+      "source": "6:1022",
+      "label": "Action / 查询原次结果",
+      "destination": "6:1032"
+    },
+    {
+      "source": "6:1278",
+      "label": "Action / 查看统计更新结果",
+      "destination": "6:1287"
+    },
+    {
+      "source": "6:1534",
+      "label": "Action / 仅重试统计",
+      "destination": "6:1544"
+    },
+    {
+      "source": "6:1826",
+      "label": "Action / 生成当前聚合导出",
+      "destination": "6:1840"
+    },
+    {
+      "source": "6:2100",
+      "label": "Action / 读取 / 下载CSV",
+      "destination": "6:2127"
+    },
+    {
+      "source": "6:2102",
+      "label": "Action / 返回当前统计",
+      "destination": "6:1544"
+    },
+    {
+      "source": "6:2391",
+      "label": "Action / 返回同口径统计",
+      "destination": "6:1544"
+    },
+    {
+      "source": "6:2663",
+      "label": "Action / 读取 / 下载旧记录",
+      "destination": "6:2675"
+    },
+    {
+      "source": "6:2665",
+      "label": "Action / 返回分类修改",
+      "destination": "6:430"
+    },
+    {
+      "source": "6:2922",
+      "label": "Action / 选择新的有效快照",
+      "destination": "6:2932"
+    },
+    {
+      "source": "6:3178",
+      "label": "Action / 核对旧票据仍失效",
+      "destination": "6:2675"
+    },
+    {
+      "source": "6:3724",
+      "label": "Action / 重新编辑分类",
+      "destination": "6:430"
+    },
+    {
+      "source": "6:444",
+      "label": "Button / 导出指标",
+      "destination": "6:2418"
+    },
+    {
+      "source": "I6:707;6:703",
+      "label": "Action / 保存分类",
+      "destination": "6:775"
+    },
+    {
+      "source": "I6:707;6:705",
+      "label": "Action / 取消修改",
+      "destination": "6:3479"
+    },
+    {
+      "source": "I6:762;6:760",
+      "label": "Action / 生成当前聚合导出",
+      "destination": "6:2418"
+    },
+    {
+      "source": "I6:1024;6:1022",
+      "label": "Action / 查询原次结果",
+      "destination": "6:1032"
+    },
+    {
+      "source": "I6:1280;6:1278",
+      "label": "Action / 查看统计更新结果",
+      "destination": "6:1287"
+    },
+    {
+      "source": "I6:1536;6:1534",
+      "label": "Action / 仅重试统计",
+      "destination": "6:1544"
+    },
+    {
+      "source": "6:1558",
+      "label": "Button / 导出指标",
+      "destination": "6:1840"
+    },
+    {
+      "source": "I6:1828;6:1826",
+      "label": "Action / 生成当前聚合导出",
+      "destination": "6:1840"
+    },
+    {
+      "source": "I6:2104;6:2100",
+      "label": "Action / 读取 / 下载CSV",
+      "destination": "6:2127"
+    },
+    {
+      "source": "I6:2104;6:2102",
+      "label": "Action / 返回当前统计",
+      "destination": "6:1544"
+    },
+    {
+      "source": "6:2141",
+      "label": "Button / 导出指标",
+      "destination": "6:1840"
+    },
+    {
+      "source": "I6:2393;6:2391",
+      "label": "Action / 返回同口径统计",
+      "destination": "6:1544"
+    },
+    {
+      "source": "I6:2667;6:2663",
+      "label": "Action / 读取 / 下载旧记录",
+      "destination": "6:2675"
+    },
+    {
+      "source": "I6:2667;6:2665",
+      "label": "Action / 返回分类修改",
+      "destination": "6:430"
+    },
+    {
+      "source": "I6:2924;6:2922",
+      "label": "Action / 选择新的有效快照",
+      "destination": "6:2932"
+    },
+    {
+      "source": "I6:3180;6:3178",
+      "label": "Action / 核对旧票据仍失效",
+      "destination": "6:2675"
+    },
+    {
+      "source": "I6:3726;6:3724",
+      "label": "Action / 重新编辑分类",
+      "destination": "6:430"
+    }
+  ],
+  "missing": []
+}

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "iteration": "ADMIN-0.1.0-dev.2",
+  "journeys": [
+    "J11"
+  ],
+  "uxRevision": "UX-r02",
+  "status": "candidate-awaiting-pj-owner-review",
+  "owner": "UX-3",
+  "ownerApproved": false,
+  "designReady": false,
+  "implementationStarted": false,
+  "qaStarted": false,
+  "businessInputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "planningProjection": "planning-input-projection.json",
+  "planningProjectionSHA256": "79e621e98c61ba09dda508bff2939af4ef6e386f5d19ed3ba1c89aba5e70505a",
+  "requirementsRevision": "PM-r01",
+  "demoRevision": "PM-r02",
+  "inputHashes": {
+    "docs/product/journeys/j11/requirements.zh-CN.md": "40921832dd47a5c0df9615b2ddbe483bfa54e51890b527083410d8c09f1451a3",
+    "demo/journeys/j11/index.html": "eaec916ca907e571fa7be9f27a4928b4d75964e968b89c702420f12b4b578d33",
+    "docs/product/journeys/j11/coverage.json": "a919258c7e549294a5492c25431c2af6bad180b44d1da1a3511737c80d87c321",
+    "docs/product/journeys/j11/artifact-manifest.json": "b891e300ea4396d1ac5637483444ee11f3b2955a2f33d91122cf88269e4e3672",
+    "admin/DESIGN.md": "4c77ecb6b45ec175bb385804d75bc948a5a954c4f0016f1f971edabdc8a2bfd3",
+    "admin/UX-CONTRACT.md": "5fac6df0ebb83fee50c4585e912e13ba16e1cf7cc09ebfec0a13dfd8f666ab4c",
+    "admin/src/styles.css": "9678a840e23413b16ea03f99115955b6826941ea575c0e2b7e990ac7098af379",
+    "admin/src/components.tsx": "c37553225306a902a8d2599d56f9aeb55e89544c5006837df8374cae266b6d72",
+    "admin/src/App.tsx": "6b5182310a8f75ec885a32b8ffe0369a1b1a00fa09b669a6f477f2c35f142d92",
+    "admin/src/analytics.ts": "eb4fc71f6bc68870b2d1828b6fd5dd82d0a2f805b5ff9fab46b83651c9930fd6",
+    "admin/src/metrics.ts": "1c9e4d2cb221f89fb8dd67b2f5191ac38dda6d52c02f137af727b698699f80aa",
+    "admin/src/fixtures.ts": "9815fd48dc323f9a005df80c7507f94d364a3fa6fd23cfd4ee7e8aa251617c09"
+  },
+  "visualSource": {
+    "directory": "admin/",
+    "manifest": "../admin-0.1.0-dev.1/visual-source-manifest.json",
+    "rejectedUXr01Used": false
+  },
+  "designSystem": {
+    "id": "DS-0.1.0",
+    "fileKey": "yUMVg2xpLXQHKPr2ZWpkO3",
+    "binding": "shared semantics; retain pre-existing admin platform layout/type"
+  },
+  "figma": {
+    "fileKey": "gin01YJX9boaVymXsm1zJg",
+    "url": "https://www.figma.com/design/gin01YJX9boaVymXsm1zJg?node-id=6-430",
+    "entryNodeId": "6:430",
+    "nodeIds": [
+      "6:430",
+      "6:775",
+      "6:1032",
+      "6:1287",
+      "6:1544",
+      "6:1840",
+      "6:2127",
+      "6:2418",
+      "6:2675",
+      "6:2932",
+      "6:3187",
+      "6:3479",
+      "6:3732"
+    ],
+    "namedVersionId": null,
+    "frozen": false,
+    "mutable": true
+  },
+  "readinessPending": [
+    "PJ/Owner UX-r02 sign-off",
+    "DS-0.1.0 and all initial iteration designs ready",
+    "precise named version or accepted node/read-back snapshot lock"
+  ],
+  "verificationBoundary": "Source UI real browser + Figma native read-back and screenshots; fixed samples, no full Presentation runtime/production service/QA claim",
+  "files": {
+    "docs/design/r10/admin-0.1.0-dev.2/coverage.json": "c14d691eeb3a3f0c76e298463091474bc5c258c3668028f5839f3c9b8c9b8e12",
+    "docs/design/r10/admin-0.1.0-dev.2/evidence/classification.png": "7e261421add4e434a5dadfb4f6375e02165c069106446ba48488548336555e79",
+    "docs/design/r10/admin-0.1.0-dev.2/evidence/source-quality-1440.png": "2b296f15d0ae6605bfd9a9afa13f3014fd3e64ae255596530a865c7d230b7dbb",
+    "docs/design/r10/admin-0.1.0-dev.2/evidence/statistics-failed.png": "e42f3e85ea5bd25f0a8af76243648ea8b66dfc22ca850c6d4d03b77a2921b6b5",
+    "docs/design/r10/admin-0.1.0-dev.2/figma-readback.json": "b2fdd18ad5309235ba55bdd43dcb6e169d32be5453e0f8b88a85012ddf94143b",
+    "docs/design/r10/admin-0.1.0-dev.2/handoff.zh-CN.md": "d4671891107844d458f8f6ccbd7ddf07615fa98f28abda17bd2a3ecc65717b38",
+    "docs/design/r10/admin-0.1.0-dev.2/planning-input-projection.json": "79e621e98c61ba09dda508bff2939af4ef6e386f5d19ed3ba1c89aba5e70505a"
+  }
+}

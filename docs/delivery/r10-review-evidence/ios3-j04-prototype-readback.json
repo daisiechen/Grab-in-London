@@ -1,0 +1,149 @@
+{
+  "reviewer": "PJ",
+  "kind": "read-only-native-graph-review",
+  "limitations": "Node destinations checked, not Presentation end-to-end or real services.",
+  "fileKey": "mKXV0NvBavRb6fnmQ2g2xV",
+  "page": "J04 · After the meal",
+  "starts": [
+    {
+      "nodeId": "2:62",
+      "name": "J04 · After the meal"
+    },
+    {
+      "nodeId": "7:659",
+      "name": "J04 · Mutual connection, external precondition"
+    }
+  ],
+  "roots": [
+    {
+      "id": "2:62",
+      "name": "J04-01 / Attendance not reported"
+    },
+    {
+      "id": "7:14",
+      "name": "J04-02 / Attended · no score selected"
+    },
+    {
+      "id": "7:123",
+      "name": "J04-03 / Private score chosen"
+    },
+    {
+      "id": "7:228",
+      "name": "J04-04 / Private meal score saved"
+    },
+    {
+      "id": "7:334",
+      "name": "J04-05 / Public reference and private choice draft"
+    },
+    {
+      "id": "7:440",
+      "name": "J04-06 / Saved · private choice waiting"
+    },
+    {
+      "id": "7:553",
+      "name": "J04-07 / Partial save · retry only unsaved"
+    },
+    {
+      "id": "7:659",
+      "name": "J04-08 / Mutual connection open"
+    },
+    {
+      "id": "7:766",
+      "name": "J04-09 / Private chat · Open"
+    },
+    {
+      "id": "7:805",
+      "name": "J04-10 / Private message sent"
+    },
+    {
+      "id": "7:850",
+      "name": "J04-11 / Confirm withdrawing open connection"
+    },
+    {
+      "id": "7:907",
+      "name": "J04-12 / Private history · Read-only"
+    },
+    {
+      "id": "7:954",
+      "name": "J04 · Review-only scenarios and state contract"
+    }
+  ],
+  "links": [
+    {
+      "source": "2:96",
+      "label": "Choice / I attended",
+      "destination": "7:14"
+    },
+    {
+      "source": "7:100",
+      "label": "Choice / 4",
+      "destination": "7:123"
+    },
+    {
+      "source": "7:184",
+      "label": "Action / Save meal experience",
+      "destination": "7:228"
+    },
+    {
+      "source": "7:304",
+      "label": "field / A public reference · optional",
+      "destination": "7:334"
+    },
+    {
+      "source": "7:425",
+      "label": "Action / Save feedback",
+      "destination": "7:440"
+    },
+    {
+      "source": "7:551",
+      "label": "Action / Edit my reconnect choice",
+      "destination": "7:334"
+    },
+    {
+      "source": "7:657",
+      "label": "Action / Retry unsaved items",
+      "destination": "7:440"
+    },
+    {
+      "source": "7:764",
+      "label": "Action / Say hello to Maya",
+      "destination": "7:766"
+    },
+    {
+      "source": "7:789",
+      "label": "Withdraw connection",
+      "destination": "7:850"
+    },
+    {
+      "source": "7:802",
+      "label": "Send · empty disabled",
+      "destination": "7:805"
+    },
+    {
+      "source": "7:828",
+      "label": "Withdraw connection",
+      "destination": "7:850"
+    },
+    {
+      "source": "7:905",
+      "label": "Action / Withdraw connection",
+      "destination": "7:907"
+    },
+    {
+      "source": "7:957",
+      "label": "Action / Attendance not reported",
+      "destination": "2:62"
+    },
+    {
+      "source": "7:959",
+      "label": "Action / Partial save recovery",
+      "destination": "7:553"
+    },
+    {
+      "source": "7:961",
+      "label": "Action / Other person has independently chosen · external precondition",
+      "destination": "7:659"
+    }
+  ],
+  "missing": []
+}

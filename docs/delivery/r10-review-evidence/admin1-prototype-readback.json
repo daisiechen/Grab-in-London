@@ -1,0 +1,126 @@
+{
+  "reviewer": "PJ",
+  "kind": "read-only-native-graph-review",
+  "limitations": "Confirms node destinations exist; not Presentation end-to-end or real services.",
+  "fileKey": "EwpDxDGeTJEF3PYMYLH8eP",
+  "page": "ADMIN dev.1 · UX-r02 · source reuse",
+  "roots": [
+    {
+      "id": "9:2",
+      "name": "ADMIN dev.1 · Overview · source-aligned",
+      "type": "FRAME"
+    },
+    {
+      "id": "9:451",
+      "name": "Components · original admin roles",
+      "type": "FRAME"
+    },
+    {
+      "id": "9:900",
+      "name": "ADMIN dev.1 · Weekly definition drawer · source-aligned",
+      "type": "FRAME"
+    },
+    {
+      "id": "9:1391",
+      "name": "Components · original admin roles",
+      "type": "FRAME"
+    },
+    {
+      "id": "17:830",
+      "name": "ADMIN dev.1 · Supply evidence · source-aligned",
+      "type": "FRAME"
+    },
+    {
+      "id": "17:1317",
+      "name": "Components · original admin roles",
+      "type": "FRAME"
+    },
+    {
+      "id": "21:1309",
+      "name": "ADMIN dev.1 / meal M-062",
+      "type": "FRAME"
+    },
+    {
+      "id": "21:1843",
+      "name": "ADMIN dev.1 / user U-002",
+      "type": "FRAME"
+    },
+    {
+      "id": "21:2375",
+      "name": "ADMIN dev.1 / revoked",
+      "type": "FRAME"
+    },
+    {
+      "id": "22:2620",
+      "name": "ADMIN dev.1 / recovered-valid-snapshot",
+      "type": "FRAME"
+    }
+  ],
+  "links": [
+    {
+      "source": "9:499",
+      "label": "MetricCard / 每周确认出席用户数",
+      "destination": "9:900"
+    },
+    {
+      "source": "9:600",
+      "label": "Panel / 先看数据是否完整",
+      "destination": "17:830"
+    },
+    {
+      "source": "21:2899",
+      "label": "text-button / 查看关联来源记录",
+      "destination": "17:830"
+    },
+    {
+      "source": "17:1616",
+      "label": "Panel / 只读追溯 · 点击查看参与及证据",
+      "destination": "21:1309"
+    },
+    {
+      "source": "I21:1351;9:1275",
+      "label": "Button - 关闭详情",
+      "destination": "17:830"
+    },
+    {
+      "source": "21:1407",
+      "label": "text-button / U-002相关业务历史",
+      "destination": "21:1843"
+    },
+    {
+      "source": "21:1412",
+      "label": "text-button / 返回脱敏来源记录",
+      "destination": "17:830"
+    },
+    {
+      "source": "I21:1885;9:1275",
+      "label": "Button - 关闭详情",
+      "destination": "17:830"
+    },
+    {
+      "source": "21:1939",
+      "label": "text-button / 返回 M-062",
+      "destination": "21:1309"
+    },
+    {
+      "source": "21:1944",
+      "label": "text-button / 返回来源列表",
+      "destination": "17:830"
+    },
+    {
+      "source": "21:2468",
+      "label": "text-button / 重新验证并恢复查询",
+      "destination": "22:2620"
+    }
+  ],
+  "missing": [],
+  "fixVerified": {
+    "method": "independent use_figma readback after author stopped writing",
+    "returnName": "21:1939 = 返回 M-062",
+    "recoveredNoOldSnapshotLinks": [
+      "22:2643",
+      "22:2649"
+    ],
+    "recoveredDrilldowns": "disabled until same-new-snapshot downstream exists"
+  }
+}

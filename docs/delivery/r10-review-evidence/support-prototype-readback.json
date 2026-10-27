@@ -1,0 +1,197 @@
+{
+  "reviewer": "PJ",
+  "kind": "read-only-native-graph-review",
+  "limitations": "Confirms node destinations exist; not Presentation end-to-end or real services.",
+  "fileKey": "mCBDxN4qzTbCGCx9UIPbwW",
+  "page": "SUPPORT-0.1.0-dev.1 · UX-r02",
+  "roots": [
+    {
+      "id": "2:430",
+      "name": "Components · original admin roles",
+      "type": "FRAME"
+    },
+    {
+      "id": "3:429",
+      "name": "SUPPORT-0.1.0-dev.1 · source-derived components",
+      "type": "FRAME"
+    },
+    {
+      "id": "3:430",
+      "name": "SUPPORT-0.1.0-dev.1 / case",
+      "type": "FRAME"
+    },
+    {
+      "id": "3:526",
+      "name": "SUPPORT-0.1.0-dev.1 / active",
+      "type": "FRAME"
+    },
+    {
+      "id": "3:610",
+      "name": "SUPPORT-0.1.0-dev.1 / correction",
+      "type": "FRAME"
+    },
+    {
+      "id": "3:707",
+      "name": "SUPPORT-0.1.0-dev.1 / window",
+      "type": "FRAME"
+    },
+    {
+      "id": "3:781",
+      "name": "SUPPORT-0.1.0-dev.1 / impact",
+      "type": "FRAME"
+    },
+    {
+      "id": "3:867",
+      "name": "SUPPORT-0.1.0-dev.1 / reply",
+      "type": "FRAME"
+    },
+    {
+      "id": "3:936",
+      "name": "SUPPORT-0.1.0-dev.1 / replied",
+      "type": "FRAME"
+    },
+    {
+      "id": "3:1037",
+      "name": "SUPPORT-0.1.0-dev.1 / replyonly",
+      "type": "FRAME"
+    },
+    {
+      "id": "3:1104",
+      "name": "SUPPORT-0.1.0-dev.1 / replyonlydone",
+      "type": "FRAME"
+    },
+    {
+      "id": "3:1150",
+      "name": "SUPPORT-0.1.0-dev.1 / conflict",
+      "type": "FRAME"
+    },
+    {
+      "id": "3:1239",
+      "name": "SUPPORT-0.1.0-dev.1 / denied",
+      "type": "FRAME"
+    }
+  ],
+  "links": [
+    {
+      "source": "3:495",
+      "label": "Action / 开始处理此案",
+      "destination": "3:526"
+    },
+    {
+      "source": "3:583",
+      "label": "Action / 追加逾期纠错",
+      "destination": "3:610"
+    },
+    {
+      "source": "3:585",
+      "label": "Action / 仅回复本案",
+      "destination": "3:1037"
+    },
+    {
+      "source": "3:681",
+      "label": "Action / 追加修订并核对影响",
+      "destination": "3:781"
+    },
+    {
+      "source": "3:683",
+      "label": "Action / 取消本次修改",
+      "destination": "3:526"
+    },
+    {
+      "source": "3:761",
+      "label": "Action / 返回个案",
+      "destination": "3:526"
+    },
+    {
+      "source": "3:839",
+      "label": "Action / 回复并记录处理结果",
+      "destination": "3:867"
+    },
+    {
+      "source": "3:841",
+      "label": "Action / 返回本案",
+      "destination": "3:526"
+    },
+    {
+      "source": "3:919",
+      "label": "Action / 保存处理结果与回复",
+      "destination": "3:936"
+    },
+    {
+      "source": "3:921",
+      "label": "Action / 取消回复编辑",
+      "destination": "3:526"
+    },
+    {
+      "source": "3:1088",
+      "label": "Action / 保存回复",
+      "destination": "3:1104"
+    },
+    {
+      "source": "3:1090",
+      "label": "Action / 取消回复编辑",
+      "destination": "3:526"
+    },
+    {
+      "source": "I3:497;3:495",
+      "label": "Action / 开始处理此案",
+      "destination": "3:526"
+    },
+    {
+      "source": "I3:587;3:583",
+      "label": "Action / 追加逾期纠错",
+      "destination": "3:610"
+    },
+    {
+      "source": "I3:587;3:585",
+      "label": "Action / 仅回复本案",
+      "destination": "3:1037"
+    },
+    {
+      "source": "I3:685;3:681",
+      "label": "Action / 追加修订并核对影响",
+      "destination": "3:781"
+    },
+    {
+      "source": "I3:685;3:683",
+      "label": "Action / 取消本次修改",
+      "destination": "3:526"
+    },
+    {
+      "source": "I3:763;3:761",
+      "label": "Action / 返回个案",
+      "destination": "3:526"
+    },
+    {
+      "source": "I3:843;3:839",
+      "label": "Action / 回复并记录处理结果",
+      "destination": "3:867"
+    },
+    {
+      "source": "I3:843;3:841",
+      "label": "Action / 返回本案",
+      "destination": "3:526"
+    },
+    {
+      "source": "I3:923;3:919",
+      "label": "Action / 保存处理结果与回复",
+      "destination": "3:936"
+    },
+    {
+      "source": "I3:923;3:921",
+      "label": "Action / 取消回复编辑",
+      "destination": "3:526"
+    },
+    {
+      "source": "I3:1092;3:1088",
+      "label": "Action / 保存回复",
+      "destination": "3:1104"
+    },
+    {
+      "source": "I3:1092;3:1090",
+      "label": "Action / 取消回复编辑",
+      "destination": "3:526"
+    }
+  ],
+  "missing": []
+}
