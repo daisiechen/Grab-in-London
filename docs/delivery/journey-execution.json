@@ -1,9 +1,21 @@
 {
   "schemaVersion": 1,
-  "revision": "r08",
-  "status": "pm-candidates-awaiting-review",
+  "revision": "r09",
+  "status": "ux-in-progress",
   "pmStartAllowed": true,
-  "activeJourneys": [],
+  "activeJourneys": [
+    "J01",
+    "J02",
+    "J03",
+    "J04",
+    "J05",
+    "J06",
+    "J07",
+    "J08",
+    "J09",
+    "J10",
+    "J11"
+  ],
   "stages": [
     "PM",
     "UX",
@@ -14,11 +26,11 @@
     {
       "id": "J01",
       "priority": 1,
-      "status": "pm-candidate-delivered",
-      "currentStage": "PM",
+      "status": "ux-in-progress",
+      "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "not-started",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -39,16 +51,19 @@
       "pmCandidateRevision": "PM-r02",
       "acceptedForNextStage": false,
       "requirementsRevision": "PM-r01",
-      "demoRevision": "PM-r02"
+      "demoRevision": "PM-r02",
+      "uxOwner": "UX-1",
+      "pmAcceptedForUX": true,
+      "uxCandidateRevision": "UX-r01"
     },
     {
       "id": "J02",
       "priority": 2,
-      "status": "pm-candidate-delivered",
-      "currentStage": "PM",
+      "status": "ux-in-progress",
+      "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "not-started",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -70,16 +85,19 @@
       "pmCandidateRevision": "PM-r01",
       "acceptedForNextStage": false,
       "requirementsRevision": "PM-r01",
-      "demoRevision": "PM-r01"
+      "demoRevision": "PM-r01",
+      "uxOwner": "UX-2",
+      "pmAcceptedForUX": true,
+      "uxCandidateRevision": "UX-r01"
     },
     {
       "id": "J03",
       "priority": 3,
-      "status": "pm-candidate-delivered",
-      "currentStage": "PM",
+      "status": "ux-in-progress",
+      "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "not-started",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -102,16 +120,19 @@
       "pmCandidateRevision": "PM-r01",
       "acceptedForNextStage": false,
       "requirementsRevision": "PM-r01",
-      "demoRevision": "PM-r01"
+      "demoRevision": "PM-r01",
+      "uxOwner": "UX-2",
+      "pmAcceptedForUX": true,
+      "uxCandidateRevision": "UX-r01"
     },
     {
       "id": "J04",
       "priority": 4,
-      "status": "pm-candidate-delivered",
-      "currentStage": "PM",
+      "status": "ux-in-progress",
+      "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "not-started",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -134,16 +155,19 @@
       "pmCandidateRevision": "PM-r02",
       "acceptedForNextStage": false,
       "requirementsRevision": "PM-r01",
-      "demoRevision": "PM-r02"
+      "demoRevision": "PM-r02",
+      "uxOwner": "UX-2",
+      "pmAcceptedForUX": true,
+      "uxCandidateRevision": "UX-r01"
     },
     {
       "id": "J05",
       "priority": 5,
-      "status": "pm-candidate-delivered",
-      "currentStage": "PM",
+      "status": "ux-in-progress",
+      "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "not-started",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -163,16 +187,19 @@
       "pmCandidateRevision": "PM-r02",
       "acceptedForNextStage": false,
       "requirementsRevision": "PM-r02",
-      "demoRevision": "PM-r02"
+      "demoRevision": "PM-r02",
+      "uxOwner": "UX-1",
+      "pmAcceptedForUX": true,
+      "uxCandidateRevision": "UX-r01"
     },
     {
       "id": "J06",
       "priority": 6,
-      "status": "pm-candidate-delivered",
-      "currentStage": "PM",
+      "status": "ux-in-progress",
+      "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "not-started",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -190,16 +217,19 @@
       "pmCandidateRevision": "PM-r02",
       "acceptedForNextStage": false,
       "requirementsRevision": "PM-r01",
-      "demoRevision": "PM-r02"
+      "demoRevision": "PM-r02",
+      "uxOwner": "UX-1",
+      "pmAcceptedForUX": true,
+      "uxCandidateRevision": "UX-r01"
     },
     {
       "id": "J07",
       "priority": 7,
-      "status": "pm-candidate-delivered",
-      "currentStage": "PM",
+      "status": "ux-in-progress",
+      "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "not-started",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -216,16 +246,19 @@
       "pmCandidateRevision": "PM-r02",
       "acceptedForNextStage": false,
       "requirementsRevision": "PM-r01",
-      "demoRevision": "PM-r02"
+      "demoRevision": "PM-r02",
+      "uxOwner": "UX-3",
+      "pmAcceptedForUX": true,
+      "uxCandidateRevision": "UX-r01"
     },
     {
       "id": "J08",
       "priority": 8,
-      "status": "pm-candidate-delivered",
-      "currentStage": "PM",
+      "status": "ux-in-progress",
+      "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "not-started",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -250,16 +283,19 @@
       "pmCandidateRevision": "PM-r02",
       "acceptedForNextStage": false,
       "requirementsRevision": "PM-r01",
-      "demoRevision": "PM-r02"
+      "demoRevision": "PM-r02",
+      "uxOwner": "UX-1",
+      "pmAcceptedForUX": true,
+      "uxCandidateRevision": "UX-r01"
     },
     {
       "id": "J09",
       "priority": 9,
-      "status": "pm-candidate-delivered",
-      "currentStage": "PM",
+      "status": "ux-in-progress",
+      "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "not-started",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -281,16 +317,19 @@
       "pmCandidateRevision": "PM-r02",
       "acceptedForNextStage": false,
       "requirementsRevision": "PM-r01",
-      "demoRevision": "PM-r02"
+      "demoRevision": "PM-r02",
+      "uxOwner": "UX-3",
+      "pmAcceptedForUX": true,
+      "uxCandidateRevision": "UX-r01"
     },
     {
       "id": "J10",
       "priority": 10,
-      "status": "pm-candidate-delivered",
-      "currentStage": "PM",
+      "status": "ux-in-progress",
+      "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "not-started",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -312,16 +351,19 @@
       "pmCandidateRevision": "PM-r02",
       "acceptedForNextStage": false,
       "requirementsRevision": "PM-r01",
-      "demoRevision": "PM-r02"
+      "demoRevision": "PM-r02",
+      "uxOwner": "UX-3",
+      "pmAcceptedForUX": true,
+      "uxCandidateRevision": "UX-r01"
     },
     {
       "id": "J11",
       "priority": 11,
-      "status": "pm-candidate-delivered",
-      "currentStage": "PM",
+      "status": "ux-in-progress",
+      "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "not-started",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -339,7 +381,10 @@
       "pmCandidateRevision": "PM-r02",
       "acceptedForNextStage": false,
       "requirementsRevision": "PM-r01",
-      "demoRevision": "PM-r02"
+      "demoRevision": "PM-r02",
+      "uxOwner": "UX-3",
+      "pmAcceptedForUX": true,
+      "uxCandidateRevision": "UX-r01"
     },
     {
       "id": "J12",
@@ -659,7 +704,7 @@
   "requirementsLedger": "docs/product/requirements-traceability.json",
   "versionMeaning": "规划交付集合编号，非已发布build或已批准排期；不得据此开工。",
   "pmDispatch": "docs/delivery/pm-parallel-dispatch.json",
-  "authorization": "用户明确要求多个PM并行制作需求与Demo；仅首发集合PM阶段。",
+  "authorization": "用户明确要求多个UX按首发11旅程并行设计，每旅程单独交付Figma，严格对应确认PRD/Demo，沿用规范，不扩必要范围；RD/QA不启动。",
   "issuedJourneys": [
     "J01",
     "J02",
@@ -673,20 +718,12 @@
     "J10",
     "J11"
   ],
-  "awaitingReviewJourneys": [
-    "J01",
-    "J02",
-    "J03",
-    "J04",
-    "J05",
-    "J06",
-    "J07",
-    "J08",
-    "J09",
-    "J10",
-    "J11"
-  ],
-  "reviewStatus": "pj-reviewed-awaiting-user",
+  "awaitingReviewJourneys": [],
+  "reviewStatus": "owner-authorized-ux-only",
   "reviewRole": "PJ",
-  "reviewDate": "2026-10-27"
+  "reviewDate": "2026-10-27",
+  "uxDispatch": "docs/delivery/ux-parallel-dispatch.json",
+  "uxStartAllowed": true,
+  "rdStartAllowed": false,
+  "qaStartAllowed": false
 }

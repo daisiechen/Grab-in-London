@@ -2,18 +2,20 @@
 
 项目入口：[README](../README.md)。本目录保存项目知识；Agent 协作规则见 [AGENTS.md](../AGENTS.md)，正式方法在 `.agents/skills/`，待审核候选在 `.agents/candidates/`，不作为现行执行规则。
 
-## 当前产品与管理输入（r07范围／r08并行PM）
+## 当前产品与管理输入（r07范围／r09并行UX）
 
 - [MVP项目需求](product/fancy-requirements-baseline.zh-CN.md)：产品使用者、完整用户目标、首发/增量及业务边界。
 - [15个用户旅程模块](product/journey-modules.zh-CN.md)、[结构化范围](product/journey-modules.json)：触发→完整路径→结果与异常；首个交付应为J01找到并申请饭局，注册登录/资料不单独切片。
 - [产品版本与旧补丁映射](product/module-version-plan-2026-10-26.zh-CN.md)：iOS J01—J08＋支持J09、后台J10/J11首发；J12—J15后续，移动Web后置。
-- [项目管理方案](delivery/project-management-plan.zh-CN.md)、[旅程执行与联调](delivery/journey-execution.zh-CN.md)、[当前执行数据](delivery/journey-execution.json)：团队独立四阶段、共用合同、条件并行与版本取证；首发11个PM候选待审阅，UX/RD/QA未启动。
+- [项目管理方案](delivery/project-management-plan.zh-CN.md)、[旅程执行与联调](delivery/journey-execution.zh-CN.md)、[当前执行数据](delivery/journey-execution.json)：团队独立四阶段、共用合同、条件并行与版本取证；首发11旅程以固定PM输入进入UX并行，RD/QA未启动。
 
 - [完整需求核对报告](product/requirements-audit.zh-CN.md)、[逐条旅程/版本映射](product/requirements-traceability.zh-CN.md)、[结构化台账](product/requirements-traceability.json)：25份原文、64个旧切片、57个验收编号，保留有效/历史/后置/未决区别。
 
 - [首发PM并行派工](delivery/pm-parallel-dispatch.zh-CN.md)、[派工数据](delivery/pm-parallel-dispatch.json)：3个PM独立目录交付J01—J11需求与Demo，仅PM阶段。
 
-## 首发旅程PM独立候选（r08）
+- [首发UX并行派工](delivery/ux-parallel-dispatch.zh-CN.md)、[固定输入与负责人](delivery/ux-parallel-dispatch.json)：3个UX、11份独立Figma，逐旅程候选审阅，RD/QA不启动。
+
+## 首发旅程PM独立候选（r08历史／r09 UX输入）
 
 - [成对评审索引](delivery/pm-first-release-review.zh-CN.md)、[不含私有入口的发布摘要](delivery/pm-preview-release.json)：每条旅程独立PRD、Demo及作者验证，只到PM候选。
 

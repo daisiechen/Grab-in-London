@@ -29,9 +29,11 @@ class PJReviewEvidenceTest(unittest.TestCase):
 
     def test_review_does_not_dispatch_downstream_stages(self):
         execution = json.loads((ROOT / 'docs/delivery/journey-execution.json').read_text())
-        self.assertEqual(execution['reviewStatus'], 'pj-reviewed-awaiting-user')
+        self.assertEqual(execution['reviewStatus'], 'owner-authorized-ux-only')
+        evidence = json.loads((ROOT / 'docs/reviews/evidence/pm-journeys-2026-10-27/flows.json').read_text())
+        self.assertEqual(evidence['stagesNotStarted'], ['UX', 'RD', 'QA'])
         for row in execution['journeys']:
             if row['id'] in {f'J{i:02}' for i in range(1, 12)}:
                 self.assertFalse(row['acceptedForNextStage'])
-                for stage in ('UX', 'RD', 'QA'):
+                for stage in ('RD', 'QA'):
                     self.assertEqual(row['stages'][stage], 'not-started')

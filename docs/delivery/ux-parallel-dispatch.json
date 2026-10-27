@@ -1,0 +1,227 @@
+{
+  "revision": "r09",
+  "date": "2026-10-27",
+  "status": "issued",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "pjReviewCommit": "906bc9b40307060031b360313cca80e92f6fbe9b",
+  "authorization": "用户明确要求多个UX按首发11旅程并行设计，每旅程单独交付Figma，严格对应确认PRD/Demo，沿用规范，不扩必要范围；RD/QA不启动。",
+  "allowedStages": [
+    "UX"
+  ],
+  "forbiddenStages": [
+    "RD",
+    "QA"
+  ],
+  "maxConcurrentUX": 3,
+  "laterJourneysNotIssued": [
+    "J12",
+    "J13",
+    "J14",
+    "J15"
+  ],
+  "lanes": [
+    {
+      "id": "UX-1",
+      "journeys": [
+        "J01",
+        "J05",
+        "J06",
+        "J08"
+      ],
+      "writeAllowlist": [
+        "docs/design/journeys/j01/",
+        "tests/test_ux_j01.py",
+        "docs/design/journeys/j05/",
+        "tests/test_ux_j05.py",
+        "docs/design/journeys/j06/",
+        "tests/test_ux_j06.py",
+        "docs/design/journeys/j08/",
+        "tests/test_ux_j08.py"
+      ]
+    },
+    {
+      "id": "UX-2",
+      "journeys": [
+        "J02",
+        "J03",
+        "J04"
+      ],
+      "writeAllowlist": [
+        "docs/design/journeys/j02/",
+        "tests/test_ux_j02.py",
+        "docs/design/journeys/j03/",
+        "tests/test_ux_j03.py",
+        "docs/design/journeys/j04/",
+        "tests/test_ux_j04.py"
+      ]
+    },
+    {
+      "id": "UX-3",
+      "journeys": [
+        "J10",
+        "J11",
+        "J07",
+        "J09"
+      ],
+      "writeAllowlist": [
+        "docs/design/journeys/j10/",
+        "tests/test_ux_j10.py",
+        "docs/design/journeys/j11/",
+        "tests/test_ux_j11.py",
+        "docs/design/journeys/j07/",
+        "tests/test_ux_j07.py",
+        "docs/design/journeys/j09/",
+        "tests/test_ux_j09.py"
+      ]
+    }
+  ],
+  "inputs": {
+    "J01": {
+      "owner": "UX-1",
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02",
+      "sha256": {
+        "docs/product/journeys/j01/requirements.zh-CN.md": "af6f88ac83dbf85dc3fe103fcc6bc1ae445ecafb630fb8fa68fe0be9eacb1568",
+        "demo/journeys/j01/index.html": "91464863d9c58380592a7d8bea3279fa690479bc74e1a52caa7ed5ee0d5a09ce"
+      },
+      "deliverableDirectory": "docs/design/journeys/j01/",
+      "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
+      "uxRevision": "UX-r01",
+      "status": "in-progress"
+    },
+    "J02": {
+      "owner": "UX-2",
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r01",
+      "sha256": {
+        "docs/product/journeys/j02/requirements.zh-CN.md": "6a6211922d649a12899803721b709cb67f2e37e6bea428d804cee399d3df4299",
+        "demo/journeys/j02/index.html": "d876732ddbdc667816a473a91969464c6a49d574d3fc2fc745d207b8a68989bc"
+      },
+      "deliverableDirectory": "docs/design/journeys/j02/",
+      "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
+      "uxRevision": "UX-r01",
+      "status": "in-progress"
+    },
+    "J03": {
+      "owner": "UX-2",
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r01",
+      "sha256": {
+        "docs/product/journeys/j03/requirements.zh-CN.md": "c1c04088090495498d995e73f1cf7c1a74e8af2c5bf3e09f4fb3cda142876ca6",
+        "demo/journeys/j03/index.html": "12d823bf051ea6782a194576c5dba26895c51e3ea506ab31f4a9072a261a50af"
+      },
+      "deliverableDirectory": "docs/design/journeys/j03/",
+      "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
+      "uxRevision": "UX-r01",
+      "status": "in-progress"
+    },
+    "J04": {
+      "owner": "UX-2",
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02",
+      "sha256": {
+        "docs/product/journeys/j04/requirements.zh-CN.md": "8172b103c759b19b6b70a2dea946bd50cc7286405a31dc73b4012cf169da72a7",
+        "demo/journeys/j04/index.html": "e93934a96472977cc9c28cc2c9e8d245ce0cf68ff815f38a01c8709e92a09dbe"
+      },
+      "deliverableDirectory": "docs/design/journeys/j04/",
+      "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
+      "uxRevision": "UX-r01",
+      "status": "in-progress"
+    },
+    "J05": {
+      "owner": "UX-1",
+      "requirementsRevision": "PM-r02",
+      "demoRevision": "PM-r02",
+      "sha256": {
+        "docs/product/journeys/j05/requirements.zh-CN.md": "50a482a514dbb17b75b9e1baf7c174f24a6d7e155c3d2e48fa1e72bcd5d03e6b",
+        "demo/journeys/j05/index.html": "5445e92756b85325e774d77f27743dcf0a342b27980215dc436214355501b99c"
+      },
+      "deliverableDirectory": "docs/design/journeys/j05/",
+      "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
+      "uxRevision": "UX-r01",
+      "status": "in-progress"
+    },
+    "J06": {
+      "owner": "UX-1",
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02",
+      "sha256": {
+        "docs/product/journeys/j06/requirements.zh-CN.md": "f61c525aa2cc344b274897146b602a1f42e28d49f20d2226be59e0bd1322c6f7",
+        "demo/journeys/j06/index.html": "916abf341ab34cdefba446813eea9f447bf1e4cf143929fe8e654b9ddfe2eb3f"
+      },
+      "deliverableDirectory": "docs/design/journeys/j06/",
+      "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
+      "uxRevision": "UX-r01",
+      "status": "in-progress"
+    },
+    "J07": {
+      "owner": "UX-3",
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02",
+      "sha256": {
+        "docs/product/journeys/j07/requirements.zh-CN.md": "5dd9c7a3dc993a621f288ad4f0ac977129ced8a9fd3db802c6f5e6b08fd8c2bd",
+        "demo/journeys/j07/index.html": "0985a543d5443b829bbb0d65295c667ea3e223da161f983cc648cfc5f99d61f0"
+      },
+      "deliverableDirectory": "docs/design/journeys/j07/",
+      "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
+      "uxRevision": "UX-r01",
+      "status": "in-progress"
+    },
+    "J08": {
+      "owner": "UX-1",
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02",
+      "sha256": {
+        "docs/product/journeys/j08/requirements.zh-CN.md": "3f747817145b1c8574ba90ba886ebb5d72d3fd801911b99c9421ebef28193203",
+        "demo/journeys/j08/index.html": "8997140330db7de963856048ffd47ef2d63a6ff1d9c8776af2ed54015cb5eeff"
+      },
+      "deliverableDirectory": "docs/design/journeys/j08/",
+      "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
+      "uxRevision": "UX-r01",
+      "status": "in-progress"
+    },
+    "J09": {
+      "owner": "UX-3",
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02",
+      "sha256": {
+        "docs/product/journeys/j09/requirements.zh-CN.md": "a168fbe0061d462db602a1240da95e1e3182cea1946acc7458412deb7960261c",
+        "demo/journeys/j09/index.html": "801842c556eca92763fd1d0ff5cab45fb97e5035c3bb42d55e46648654ffe2ca"
+      },
+      "deliverableDirectory": "docs/design/journeys/j09/",
+      "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
+      "uxRevision": "UX-r01",
+      "status": "in-progress"
+    },
+    "J10": {
+      "owner": "UX-3",
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02",
+      "sha256": {
+        "docs/product/journeys/j10/requirements.zh-CN.md": "3a2436f5463073f4257733d8edcd83f509160bf7dd97f8d898e8229718d11afd",
+        "demo/journeys/j10/index.html": "e098eb42a89f591c669793d8d923f2ea634699084c587489076e4fbb00e74fbd"
+      },
+      "deliverableDirectory": "docs/design/journeys/j10/",
+      "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
+      "uxRevision": "UX-r01",
+      "status": "in-progress"
+    },
+    "J11": {
+      "owner": "UX-3",
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02",
+      "sha256": {
+        "docs/product/journeys/j11/requirements.zh-CN.md": "40921832dd47a5c0df9615b2ddbe483bfa54e51890b527083410d8c09f1451a3",
+        "demo/journeys/j11/index.html": "eaec916ca907e571fa7be9f27a4928b4d75964e968b89c702420f12b4b578d33"
+      },
+      "deliverableDirectory": "docs/design/journeys/j11/",
+      "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
+      "uxRevision": "UX-r01",
+      "status": "in-progress"
+    }
+  },
+  "sharedFilesWriter": "PJ",
+  "sourceArtifactsReadOnly": true,
+  "oldFigmaReadOnly": true,
+  "ownerAcceptanceRequiredBeforeRD": true
+}

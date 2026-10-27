@@ -88,10 +88,10 @@ class RequirementsTraceabilityTest(unittest.TestCase):
             for j in plan['journeys']:
                 self.assertEqual(j['plannedVersion'], assignments[j['id']])
         self.assertFalse(self.ledger['pmStartAllowed'])
-        # Audit snapshot grants no work; newer explicit user authorization grants PM only.
+        # Audit snapshot grants no work; newer user authorization grants PM and then UX only.
         self.assertTrue(self.execution['pmStartAllowed'])
         for j in self.execution['journeys']:
-            for stage in ('UX', 'RD', 'QA'):
+            for stage in ('RD', 'QA'):
                 self.assertEqual(j['stages'][stage], 'not-started')
 
     def test_readable_table_is_current_and_both_authorities_reference_it(self):

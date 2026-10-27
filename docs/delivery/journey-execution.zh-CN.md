@@ -1,7 +1,7 @@
 # Fancy用户旅程的执行与联调方案
 
-> 当前执行更新（r08）：用户已授权3个PM并行完成首发J01—J11各自的需求与Demo，见[并行派工记录](pm-parallel-dispatch.zh-CN.md)。本轮11个独立PM候选待用户审阅；UX/RD/QA及J12—J15仍未启动。
-修订：r07｜状态：planning-only，不自动开工。
+> 当前执行更新（r09）：用户已确认首发J01—J11的PRD/Demo作为UX输入，授权3个UX并行、每旅程独立Figma；见[UX派工与交付边界](ux-parallel-dispatch.zh-CN.md)。RD、QA和J12—J15未签发。
+执行修订：r09｜范围仍为r07；首发11旅程进入UX，逐旅程候选交回审阅，不自动进入RD或QA。
 
 ## 1. 当前产品模块与优先级
 

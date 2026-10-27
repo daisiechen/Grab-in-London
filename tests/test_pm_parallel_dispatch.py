@@ -29,7 +29,7 @@ class PMParallelDispatchTest(unittest.TestCase):
         for j in execution['journeys']:
             if j['id'] in assigned:
                 self.assertEqual(j['pmOwner'], next(l['id'] for l in data['lanes'] if j['id'] in l['journeys']))
-            for stage in ('UX', 'RD', 'QA'):
+            for stage in ('RD', 'QA'):
                 self.assertEqual(j['stages'][stage], 'not-started')
 
 
