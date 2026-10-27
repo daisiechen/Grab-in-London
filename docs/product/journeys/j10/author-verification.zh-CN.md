@@ -1,18 +1,29 @@
-# J10 PM-r01 作者验证
+# J10 PM-r02 作者修订验证
 
-入口：本包[Demo](../../../../demo/journeys/j10/index.html)，直接打开index.html，无服务器、构建、外网、字体或第三方脚本依赖。
+需求配对：requirementsRevision=PM-r01；Demo与产物manifest为PM-r02。原业务PRD、coverage、model.mjs保持原样，本轮仅修候选交互缺陷；未启动UX、RD或独立QA。
 
-## 方法与证据边界
+入口：[自包含Demo](../../../../demo/journeys/j10/index.html)。直接打开index.html，无服务器、构建、外网、字体或第三方脚本依赖。PM模拟说明/故障控制保留在独立review details，不冒充真实接入。
 
-- 作者使用Node状态模型断言，检查本旅程主要业务状态、不允许动作和恢复。
-- 使用jsdom实际HTML加载与DOM click/change/submit事件，验证入口→操作→结果，含必要失败恢复；这不是原生iOS或真实浏览器视觉测试。
-- Python校验HTML内嵌模型与model.mjs一致、无外部script依赖、覆盖台账与当前版本一致、产物哈希有效。
-- 测试命令：`python3 -m unittest discover -s tests -p 'test_pm_j10.py' -v`。
+## 问题与修正
 
-作者自检包含状态模型、实际DOM事件和内嵌/哈希检查，共3项。本包3项已执行并通过（状态模型、jsdom实际DOM事件、内嵌及哈希一致性）。
+PJ在真实Chromium自然点击发现：r01的通用click处理器抢先render并移除普通submit按钮/表单，使浏览器默认submit被取消。r01作者DOM检查直接派发submit事件，未覆盖此默认动作，不能用旧通过记录证明自然点击可用。
 
-## 未执行与非完成项
+r02普通表单submit按钮交由原生submit handler处理；只有导航/评审等明确操作由click处理。作者DOM回归全部改为真实按钮.click，禁止直接dispatch submit掩盖缺陷。没有改变业务规则或放宽校验。
 
-真实浏览器视觉/键盘与1440/1024/864/390人工走查：NOT_RUN。原生iOS：NOT_RUN。真实认证/后端/数据库/外部服务/投递/生产数据：NOT_RUN。Figma、UX、RD、独立QA均未启动；作者自检不更新原QA结论。所有示例标识为虚构，不包含真实用户资料。
+## 本轮执行结果
 
-Demo所有正常页只呈现产品任务；合成说明、角色/外部结果和故障控制位于独立PM review notes，不在正常流程中假造真实成功。
+- Node状态模型：PASS，保留本包权限、状态、不允许动作及恢复边界断言。
+- jsdom实际HTML事件：PASS，表单通过真实按钮.click触发，而非直接派发submit。
+- 独立headless Chromium：PASS，使用全新无登录context打开本地file，观察自然点击、结果、必要错误/恢复及pageerror；没有读取凭据或访问线上服务。
+- 自包含/模型内嵌与产物哈希一致性：PASS。
+- 本包共4项作者测试全部通过（其中1项为显式配置浏览器环境的真实Chromium回归）；未配置浏览器模块时该项SKIP，不能据默认跳过结果宣称真实浏览器已验证。
+
+本包真实浏览器路径：真实点击应用日期：09-01到10-26生效→Soho筛选→指标/来源/饭局/伪名历史多层抽屉→返回；1440/1024/864/390四档及中英页面测量无整页溢出。390px document.scrollWidth由修前605降为390，长表555px内容在324px自身容器横滚；导航可横向滚动定位，未通过body裁剪掩盖内容。
+
+执行命令：配置FANCY_PM_PLAYWRIGHT_MODULE与隔离Chromium运行依赖后，运行`python3 -m unittest discover -s tests -p 'test_pm_j10.py' -v`。本轮截图位于会话临时目录，供PJ本机复核，不作为真实环境或独立QA证据。
+
+## 仍未完成的范围
+
+原生iOS、真实认证/后端/数据库/外部服务/生产数据及独立QA：NOT_RUN。真实浏览器仅核对上述明确自然路径与布局，不外推完整无障碍、读屏、全部设备/OS或全功能通过。J10本轮四档尺寸测量与390px截图已检查，但不等于整个后台视觉交付或Figma冻结。所有示例数据为合成，没有真实报告、删除、外发、分类写入或持久数据处理。
+
+作者交付后停止写入，由PJ独立复核具体线上候选并统一提交、发布；作者自检不更新原QA结论。

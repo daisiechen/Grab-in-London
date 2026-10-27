@@ -22,6 +22,20 @@ class PMJ01Test(unittest.TestCase):
         p = subprocess.run([node(),'--input-type=module','-e',code],cwd=ROOT,text=True,capture_output=True)
         self.assertEqual(p.returncode,0,p.stdout+p.stderr)
 
+    def test_review_prd_link_hosted_and_repository_paths(self):
+        self.run_js(r"""
+import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {JSDOM} from 'jsdom';
+const html=readFileSync('./demo/journeys/j01/index.html','utf8');
+for(const [url,expected] of [
+ ['https://review.example.test/j01/','https://review.example.test/#prd-j01'],
+ ['https://review.example.test/j01/index.html','https://review.example.test/#prd-j01'],
+ ['file:///repo/demo/journeys/j01/index.html','file:///repo/docs/product/journeys/j01/requirements.zh-CN.md'],
+ ['https://repo.example.test/demo/journeys/j01/index.html','https://repo.example.test/docs/product/journeys/j01/requirements.zh-CN.md'],
+ ['https://review.example.test/nested/j01/index.html','https://review.example.test/docs/product/journeys/j01/requirements.zh-CN.md']]){
+ const dom=new JSDOM(html,{url,runScripts:'dangerously'});const link=dom.window.document.getElementById('review-prd');let clicked=null;link.addEventListener('click',e=>{e.preventDefault();clicked=link.href;});link.click();assert.equal(clicked,expected);dom.window.close();
+}
+""")
+
     def test_model_complete_application_and_ai_boundaries(self):
         self.run_js(r"""
 import assert from 'node:assert/strict';import {initial,step as t,MEALS,otp,results} from './demo/journeys/j01/model.mjs';

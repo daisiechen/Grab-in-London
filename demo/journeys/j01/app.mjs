@@ -1,4 +1,5 @@
 import {initial,step,MEALS,currentMeal,otp,results} from './model.mjs';
+const reviewPrd=document.getElementById('review-prd');if(location.protocol!=='file:'&&/^\/j01\/(?:index\.html)?$/.test(location.pathname))reviewPrd.setAttribute('href','../#prd-j01');
 let s=initial();const app=document.getElementById('app');const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const button=(label,event,cls='primary',extra='')=>`<button class="${cls}" data-event="${event}" ${extra}>${label}</button>`;
 function go(e){s=step(s,e);render();}const error=()=>`<p class="error" role="alert">${esc(s.error)}</p>`;

@@ -22,6 +22,20 @@ class PMJ06Test(unittest.TestCase):
         p = subprocess.run([node(),'--input-type=module','-e',code],cwd=ROOT,text=True,capture_output=True)
         self.assertEqual(p.returncode,0,p.stdout+p.stderr)
 
+    def test_review_prd_link_hosted_and_repository_paths(self):
+        self.run_js(r"""
+import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {JSDOM} from 'jsdom';
+const html=readFileSync('./demo/journeys/j06/index.html','utf8');
+for(const [url,expected] of [
+ ['https://review.example.test/j06/','https://review.example.test/#prd-j06'],
+ ['https://review.example.test/j06/index.html','https://review.example.test/#prd-j06'],
+ ['file:///repo/demo/journeys/j06/index.html','file:///repo/docs/product/journeys/j06/requirements.zh-CN.md'],
+ ['https://repo.example.test/demo/journeys/j06/index.html','https://repo.example.test/docs/product/journeys/j06/requirements.zh-CN.md'],
+ ['https://review.example.test/nested/j06/index.html','https://review.example.test/docs/product/journeys/j06/requirements.zh-CN.md']]){
+ const dom=new JSDOM(html,{url,runScripts:'dangerously'});const link=dom.window.document.getElementById('review-prd');let clicked=null;link.addEventListener('click',e=>{e.preventDefault();clicked=link.href;});link.click();assert.equal(clicked,expected);dom.window.close();
+}
+""")
+
     def test_survey_null_reason_update_and_no_meal_gate(self):
         self.run_js(r"""
 import assert from 'node:assert/strict';import {initial,step as t,REASONS} from './demo/journeys/j06/model.mjs';let s=initial();assert.equal(Object.keys(REASONS).length,7);s=t(s,{type:'OPEN'});assert.equal(s.again,null);s=t(s,{type:'SAVE'});assert.ok(s.error);assert.equal(s.saved,null);s=t(s,{type:'REASON',value:'company'});s=t(s,{type:'SAVE'});assert.equal(s.saved.again,null);assert.deepEqual(s.saved.reasons,['company']);assert.equal(s.saved.userId,'user-alex');assert.equal('mealId' in s.saved,false);let id=s.saved.userId;s=t(s,{type:'OPEN'});s=t(s,{type:'AGAIN',value:false});s=t(s,{type:'REASON',value:'company'});s=t(s,{type:'FAULT',value:'unused'});s=t(s,{type:'FAIL'});s=t(s,{type:'SAVE'});assert.ok(s.error);assert.equal(s.saved.again,null);assert.equal(s.again,false);s=t(s,{type:'SAVE'});assert.equal(s.saved.again,false);assert.deepEqual(s.saved.reasons,[]);assert.equal(s.saved.userId,id);assert.equal(s.version,2);s=t(s,{type:'ADVANCE'});s=t(s,{type:'OPEN'});s=t(s,{type:'AGAIN',value:null});s=t(s,{type:'REASON',value:'conversation'});s=t(s,{type:'SAVE'});assert.equal(s.saved.again,null);assert.equal(s.version,3);assert.equal(s.attended,false);assert.ok(s.daysAfterMeal>7);

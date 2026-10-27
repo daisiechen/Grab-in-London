@@ -1,15 +1,15 @@
 {
   "journey": "J04",
-  "revision": "PM-r01",
+  "revision": "PM-r02",
   "version": "IOS-0.1.0",
   "status": "pm-candidate",
   "files": {
-    "demo/journeys/j04/index.html": "0156de9d9420cdca35f1343cc887a56a3f6fb0661e53c657d0ad996f0f53d043",
+    "demo/journeys/j04/index.html": "e93934a96472977cc9c28cc2c9e8d245ce0cf68ff815f38a01c8709e92a09dbe",
     "demo/journeys/j04/model.mjs": "27b2bf43ee0bba44fb441e3a295ccfeef76037786584e06cad0b8690ba7cca49",
-    "docs/product/journeys/j04/author-verification.zh-CN.md": "cbfd0bd4831e9ec0286fd49ef5a1fd5152fe5894f85d80359e21409bfe1bf612",
+    "docs/product/journeys/j04/author-verification.zh-CN.md": "26b5b0a6f1d03e4d29bb21cb3c17fcdf22aea4b369b7cbdfbededbaa0d12133b",
     "docs/product/journeys/j04/coverage.json": "2714dd57dbd12a49bb99c5852465b4e36570b40229088715b5405ff3ad12c9e1",
     "docs/product/journeys/j04/requirements.zh-CN.md": "8172b103c759b19b6b70a2dea946bd50cc7286405a31dc73b4012cf169da72a7",
-    "tests/test_pm_j04.py": "1fe3972a9e250344ec25fad8345ef5ae83abe5fdda2e0b348c5c2361606e10d4"
+    "tests/test_pm_j04.py": "ee9b36bd96a504e97e3d82241e66f964188bb84050a2c971b71811c69f31c8ac"
   },
   "stagesStarted": {
     "PM": true,
@@ -17,5 +17,8 @@
     "RD": false,
     "QA": false
   },
-  "realServicesVerified": false
+  "realServicesVerified": false,
+  "requirementsRevision": "PM-r01",
+  "demoRevision": "PM-r02",
+  "revisionNote": "本轮仅修复PM候选窄屏表达缺陷；PRD与coverage仍为PM-r01业务输入，业务逻辑未改。"
 }

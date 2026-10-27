@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "journey": "J01",
-  "revision": "PM-r01",
+  "revision": "PM-r02",
   "status": "pm-candidate-for-owner-review",
   "inputCommit": "e7f2b895d945ed478c4af2fb725ff543e8826eb5",
   "requirements": "docs/product/journeys/j01/requirements.zh-CN.md",
@@ -15,13 +15,15 @@
   "files": {
     "docs/product/journeys/j01/requirements.zh-CN.md": "af6f88ac83dbf85dc3fe103fcc6bc1ae445ecafb630fb8fa68fe0be9eacb1568",
     "docs/product/journeys/j01/coverage.json": "d694e66eb87e67bae8fe8bbfd280ad9ad48fccb907f4a62391d545864b534ff8",
-    "docs/product/journeys/j01/author-verification.zh-CN.md": "ac1bbe3c784c87dd518525cd8895d9ad8d32fa1bc31f8c5d4de89eeb46f4c3ac",
-    "demo/journeys/j01/preview.template.html": "c08991e2cad9808cf1008ce52081d285eafc3084752c4d3f710be7d4e9b27e98",
+    "docs/product/journeys/j01/author-verification.zh-CN.md": "efe532a7e491faffb9f5629fff16a3fce9323f7706916b328da0fc972c555b2a",
+    "demo/journeys/j01/preview.template.html": "5b452b98afef86e7938b1f0472aaf06fcbb43f7d613e469a227f5c3cdcafedbe",
     "demo/journeys/j01/model.mjs": "907f6bff29627abe382feb9c5875c9c4ec3270d909b22abf0d9f981ba81acc02",
     "demo/journeys/j01/style.css": "c79b633a17615b4a8c6af2a2be2b3cafd0ede6a6d00fad06cb9a4233eb198e57",
-    "demo/journeys/j01/index.html": "3248039a0dc1b470cb51d9e9ee3a12b986690fea7374cced3de0b36c25313f6f",
-    "demo/journeys/j01/app.mjs": "5240a532e626bad6337dced00ed6e7cc39f7602af2048ca0566e833d5179276f",
+    "demo/journeys/j01/index.html": "91464863d9c58380592a7d8bea3279fa690479bc74e1a52caa7ed5ee0d5a09ce",
+    "demo/journeys/j01/app.mjs": "cc064f5c0a837d25d0db736c419060f545667e48065b80318116ada37c3a535b",
     "demo/journeys/j01/build.mjs": "93d74768f5fe83878b3ca9170a192ccd09bb2a5adf6dbc372e239a8de53b0d5c",
-    "tests/test_pm_j01.py": "2b34c1208b9673ff395f229a333c8470578156eacf7536e997e375c36cd1c2b9"
-  }
+    "tests/test_pm_j01.py": "dc5fd9fd0ea577def2422acaf73739abcb88eff9e3a2ce5f1b4252e01cb8fb7b"
+  },
+  "requirementsRevision": "PM-r01",
+  "demoRevision": "PM-r02"
 }

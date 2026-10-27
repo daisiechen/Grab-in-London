@@ -1,6 +1,6 @@
 """Author evidence for J04 independent objects, partial saves, and consent boundaries."""
 from pathlib import Path
-import hashlib,json,shutil,subprocess,unittest
+import hashlib,json,os,shutil,subprocess,unittest
 ROOT=Path(__file__).resolve().parents[1]
 NODE=str(ROOT.parent/'runtime/node/bin/node') if (ROOT.parent/'runtime/node/bin/node').exists() else shutil.which('node')
 class J04PMTest(unittest.TestCase):
@@ -30,6 +30,44 @@ let other=linked();other=t(other,{type:'OTHER_BASIS'});other=t(other,{type:'SUPP
  def test_actual_dom_feedback_partial_retry_private_chat_and_withdraw(self):
   self.node("""
 import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {JSDOM} from 'jsdom';const dom=new JSDOM(readFileSync('demo/journeys/j04/index.html','utf8'),{runScripts:'dangerously',url:'file:///j04/index.html'});const d=dom.window.document;const click=s=>{const e=d.querySelector(s);assert.ok(e,s);e.click();};const input=(id,v)=>{const e=d.getElementById(id);assert.ok(e,id);if(e.type==='checkbox')e.checked=v;else e.value=v;e.dispatchEvent(new dom.window.Event('input',{bubbles:true}));};click('[data-action="REPORT_SELF"][data-value="present"]');input('score','4');click('[data-action="SAVE_SCORE"]');assert.match(d.querySelector('#notice').textContent,/private meal score/);click('[data-action="OPEN_FEEDBACK"]');input('reference','A great conversation and a welcoming table.');input('reconnect',true);click('[data-action="RECONNECT_FAULT"][data-value="failed"]');click('[data-action="SAVE"]');assert.match(d.querySelector('#app').textContent,/Reconnect choice could not be saved/);click('[data-action="RETRY_FAILED"]');click('[data-action="OTHER_RECONNECT"]');click('[data-action="OPEN_DM"]');input('dm-message','Would you like to meet again?');click('[data-action="SEND_DM"]');assert.match(d.querySelector('#app').textContent,/Would you like to meet again/);click('[data-action="REVOKE_REQUEST"]');click('[data-action="REVOKE_YES"]');assert.ok(!d.querySelector('#dm-message'));assert.match(d.querySelector('#app').textContent,/Read-only history/);dom.window.close();
+""")
+ @unittest.skipUnless(os.environ.get('FANCY_PM_LAYOUT_BROWSER') == '1', 'Opt in to isolated Chromium author layout check')
+ def test_mobile_layout_in_isolated_chromium(self):
+  self.node(r"""
+import assert from 'node:assert/strict';
+import {chromium} from '/tmp/taskboard-pm-browser/node_modules/playwright/index.mjs';
+import {mkdirSync} from 'node:fs';
+import {pathToFileURL} from 'node:url';
+const browser=await chromium.launch({headless:true});
+const evidence='/tmp/fancy-j04-mobile-layout-repair';mkdirSync(evidence,{recursive:true});
+try {
+ for(const width of [320,390,480,720,1440]) {
+  const context=await browser.newContext({viewport:{width,height:844}});
+  const page=await context.newPage();const errors=[];page.on('pageerror',error=>errors.push(error.message));
+  await page.goto(pathToFileURL(process.cwd()+'/demo/journeys/j04/index.html').href);
+  async function fits(scene) {
+   const geometry=await page.evaluate(()=>({viewport:innerWidth,document:document.documentElement.scrollWidth,app:document.querySelector('#app').getBoundingClientRect().toJSON(),phone:document.querySelector('.phone').getBoundingClientRect().toJSON(),review:document.querySelector('.review').getBoundingClientRect().toJSON(),status:document.querySelector('#review-state').getBoundingClientRect().toJSON(),clipped:[...document.querySelectorAll('#app input,#app textarea,#app button,.review button')].filter(el=>el.getBoundingClientRect().right>innerWidth+1).map(el=>el.textContent)}));
+   assert.ok(geometry.document<=width,JSON.stringify({width,scene,geometry}));
+   for(const key of ['app','phone','review','status']) assert.ok(geometry[key].right<=width+1,JSON.stringify({width,scene,key,geometry}));
+   assert.deepEqual(geometry.clipped,[],JSON.stringify({width,scene,geometry}));
+   assert.ok((await page.locator('#review-state').innerText()).includes('external writes: 0.'),'Status is retained, not truncated');
+   if(width===390)await page.screenshot({path:evidence+'/'+scene+'-390.png',fullPage:true});
+  }
+  await fits('attendance');
+  await page.locator('[data-action="REPORT_SELF"][data-value="present"]').click();
+  await page.locator('[data-action="OPEN_FEEDBACK"]').click();
+  await page.locator('#reference').fill('A'.repeat(500));
+  await page.locator('#reconnect').check();await page.locator('[data-action="SAVE"]').click();
+  await fits('feedback');
+  await page.locator('[data-action="OTHER_RECONNECT"]').click();
+  await page.locator('[data-action="OPEN_DM"]').click();
+  await page.locator('#dm-message').fill('B'.repeat(2000));await page.locator('[data-action="SEND_DM"]').click();
+  await fits('private-chat-long-message');
+  await page.locator('[data-action="REVOKE_REQUEST"]').click();await fits('withdraw-confirmation');
+  await page.locator('[data-action="REVOKE_YES"]').click();await fits('read-only-history');
+  assert.deepEqual(errors,[],JSON.stringify({width,errors}));await context.close();
+ }
+} finally {await browser.close();}
 """)
  def test_manifest_and_self_contained(self):
   html=(ROOT/'demo/journeys/j04/index.html').read_text();self.assertNotIn('<script src=',html);self.assertNotIn('fetch(',html)

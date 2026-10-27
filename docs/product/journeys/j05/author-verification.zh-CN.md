@@ -1,10 +1,10 @@
 # J05 PM作者验证
 
-PM-r01／IOS-0.1.0，输入e7f2b895/r07。交付[PRD](requirements.zh-CN.md)与[自包含Demo](../../../../demo/journeys/j05/index.html)，不替用户批准或UX/RD/独立QA。
+产物PM-r02／需求PM-r02／Demo PM-r01／IOS-0.1.0，输入e7f2b895/r07。交付[PRD](requirements.zh-CN.md)与[自包含Demo](../../../../demo/journeys/j05/index.html)，不替用户批准或UX/RD/独立QA。
 
 ## 实际执行
 
-`python3 -m unittest discover -s tests -p test_pm_j05.py -v`：4项作者检查通过，既有Node24与jsdom，无新依赖/服务。
+`python3 -m unittest discover -s tests -p test_pm_j05.py -v`：5项作者检查通过，既有Node24与jsdom，无新依赖/服务。
 
 - 模型：资料非法保稿/取消不改；偏好409保留提议、加载另一会话权威值、本人再确认；CLEAR后续查询不恢复；删除立即清旧条件但原编辑器稿保留；退出移除本人显示。
 - DOM事件：编辑介绍保存到公开主页→设置→改偏好→另一设备冲突→复核保存→CLEAR再查询→删除确认→退出到访客，读取实际状态/可见文案。
@@ -16,3 +16,15 @@ PM-r01／IOS-0.1.0，输入e7f2b895/r07。交付[PRD](requirements.zh-CN.md)与[
 真实浏览器布局/键盘/读屏、原生iOS、跨设备持久化/并发版本、真实会话撤销/可选统计采集、模型上下文/成本/供应商均NOT_RUN。模拟“另一设备”只是本地故障分支，不是跨设备服务证据；jsdom不是浏览器。涉及J01/J02/J03原编辑器或J08删除的真实传播按共享合同另验。
 
 查看直接打开index.html；源改动后`node demo/journeys/j05/build.mjs`重建。所有合成资料仅页面内存，刷新重置，不更改真实资料/偏好或发送请求。作者验证完成后停在本候选，不自动进入后续专业。
+
+## PM-r02 范围澄清
+
+核对主PRD FR-13§13.6后，删除§4菜系字典的“若适用”扩展；长期偏好仅区域、预算、人数、饮食、语言、氛围。菜系只作本次查找条件或host声明，不进入本版长期偏好。本轮仅澄清已有需求范围，coverage及Demo/model均未改动。
+
+新增字段范围回归同时检查PRD明确边界、Demo初始偏好恰含六字段及需求/Demo独立版本。5项作者检查通过；manifest全部文件SHA256匹配。此记录不将root独立浏览器走查归为本作者实测，不启动UX/RD/QA。
+
+## Demo PM-r02 评审链接修正
+
+仅当非file协议且路径精确为托管根/j05/或/j05/index.html时，评审区PRD链接指向../#prd-j05；真实仓库file路径及仓库/demo/journeys路径保留原相对Markdown链接，无私有地址或业务改动。新增jsdom实际点击事件检查托管两入口、file路径、仓库HTTP路径及嵌套路径，验证解析后的目标；拦截默认导航，因此不声称已测试真实托管阅读器加载。保持自包含，无真实浏览器或后端新测试。
+
+本轮 `python3 -m unittest discover -s tests -p test_pm_j05.py -v`：6项作者检查通过，包含原有流程、链接点击、最终文件哈希和自包含一致性。

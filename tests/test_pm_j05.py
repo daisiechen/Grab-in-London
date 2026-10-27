@@ -22,6 +22,29 @@ class PMJ05Test(unittest.TestCase):
         p = subprocess.run([node(),'--input-type=module','-e',code],cwd=ROOT,text=True,capture_output=True)
         self.assertEqual(p.returncode,0,p.stdout+p.stderr)
 
+    def test_review_prd_link_hosted_and_repository_paths(self):
+        self.run_js(r"""
+import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {JSDOM} from 'jsdom';
+const html=readFileSync('./demo/journeys/j05/index.html','utf8');
+for(const [url,expected] of [
+ ['https://review.example.test/j05/','https://review.example.test/#prd-j05'],
+ ['https://review.example.test/j05/index.html','https://review.example.test/#prd-j05'],
+ ['file:///repo/demo/journeys/j05/index.html','file:///repo/docs/product/journeys/j05/requirements.zh-CN.md'],
+ ['https://repo.example.test/demo/journeys/j05/index.html','https://repo.example.test/docs/product/journeys/j05/requirements.zh-CN.md'],
+ ['https://review.example.test/nested/j05/index.html','https://review.example.test/docs/product/journeys/j05/requirements.zh-CN.md']]){
+ const dom=new JSDOM(html,{url,runScripts:'dangerously'});const link=dom.window.document.getElementById('review-prd');let clicked=null;link.addEventListener('click',e=>{e.preventDefault();clicked=link.href;});link.click();assert.equal(clicked,expected);dom.window.close();
+}
+""")
+
+    def test_long_term_preference_field_scope(self):
+        prd=(DOC/'requirements.zh-CN.md').read_text()
+        self.assertIn('允许字段：区域、预计人均预算上限、含host总人数、host声明的饮食、交流语言、氛围。',prd)
+        self.assertIn('菜系可作本次查找条件或host声明，不作为本版长期偏好字段。',prd)
+        self.assertNotIn('（若适用）',prd)
+        self.run_js("import assert from 'node:assert/strict';import {initial} from './demo/journeys/j05/model.mjs';assert.deepEqual(Object.keys(initial().prefs).sort(),['area','budget','diet','language','mood','size']);")
+        manifest=json.loads((DOC/'artifact-manifest.json').read_text())
+        self.assertEqual((manifest['revision'],manifest['requirementsRevision'],manifest['demoRevision']),('PM-r02','PM-r02','PM-r02'))
+
     def test_profile_preferences_conflict_clear_and_logout(self):
         self.run_js(r"""
 import assert from 'node:assert/strict';import {initial,step as t} from './demo/journeys/j05/model.mjs';let s=initial();s=t(s,{type:'EDIT'});s=t(s,{type:'PROFILE_FIELD',key:'bio',value:'short'});s=t(s,{type:'SAVE_PROFILE'});assert.ok(s.error);assert.notEqual(s.profile.bio,'short');s=t(s,{type:'CANCEL'});assert.notEqual(s.profile.bio,'short');

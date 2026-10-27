@@ -25,6 +25,21 @@ class PMReviewHubTest(unittest.TestCase):
         self.assertIn('彼此不共享模拟账号或状态',html)
 
 
+    def test_reader_formats_tables_and_resolves_document_links_safely(self):
+        spec=importlib.util.spec_from_file_location('build_pm_review',ROOT/'scripts/build_pm_review.py')
+        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        sha='a'*40
+        source='# Title\n\n## Fields\n\n| Input | Rule |\n| --- | --- |\n| Name | **Required** |\n\n[Demo](../../../../demo/journeys/j01/index.html) [Source](../../PRD.zh-CN.md)\n\n<script>alert(1)</script> [Unsafe](javascript:alert)'
+        rendered=module.render_prd(source,'j01',sha)
+        self.assertIn('<h3>Fields</h3>',rendered)
+        self.assertIn('<table>',rendered)
+        self.assertIn('<strong>Required</strong>',rendered)
+        self.assertIn('href="j01/"',rendered)
+        self.assertIn('/blob/'+sha+'/docs/product/PRD.zh-CN.md',rendered)
+        self.assertNotIn('<script>',rendered)
+        self.assertNotIn('href="javascript:',rendered)
+        self.assertIn('查看 Markdown 原文',rendered)
+
     def test_prd_click_reads_full_document_and_returns_without_another_page(self):
         import subprocess
         import tempfile

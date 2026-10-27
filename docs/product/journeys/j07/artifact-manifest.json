@@ -1,19 +1,21 @@
 {
   "journey": "J07",
-  "revision": "PM-r01",
+  "revision": "PM-r02",
   "sourceRevision": "r07",
   "files": {
     "docs/product/journeys/j07/requirements.zh-CN.md": "5dd9c7a3dc993a621f288ad4f0ac977129ced8a9fd3db802c6f5e6b08fd8c2bd",
     "docs/product/journeys/j07/coverage.json": "549f073c0fd65dc98ebed75e645ccb9d95b115a380b4b6b0ee57305c9fa593cf",
-    "docs/product/journeys/j07/author-verification.zh-CN.md": "b08bc2685994fdcb90c449101c42b5f0581727245416d7218acf3c825b2cc465",
-    "demo/journeys/j07/index.html": "903de8829a0cc6b68678faee022030e9a3921baddacb16f7acf2edf582cdf228",
+    "docs/product/journeys/j07/author-verification.zh-CN.md": "e21e49a5021dbc47c52ed679251276e1af7c4df36ad0463c8f82fc4c344ffd52",
+    "demo/journeys/j07/index.html": "0985a543d5443b829bbb0d65295c667ea3e223da161f983cc648cfc5f99d61f0",
     "demo/journeys/j07/model.mjs": "fe54bdcce76e85a14a7c545a428745ecd35a93148e496a02f87d7782bc9f5c5d",
-    "tests/test_pm_j07.py": "2677e02849c7c3b0850e0ee7246611ae9041200f87029cecb75ef7fd3e3daa93"
+    "tests/test_pm_j07.py": "35ff4d239177cf6da554adb5af5ef705175cd36649034a556ad83922d9b2e47d"
   },
   "stagesStarted": {
     "PM": true,
     "UX": false,
     "RD": false,
     "QA": false
-  }
+  },
+  "requirementsRevision": "PM-r01",
+  "demoRevision": "PM-r02"
 }

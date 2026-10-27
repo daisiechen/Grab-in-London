@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "journey": "J05",
-  "revision": "PM-r01",
+  "revision": "PM-r02",
   "status": "pm-candidate-for-owner-review",
   "inputCommit": "e7f2b895d945ed478c4af2fb725ff543e8826eb5",
   "requirements": "docs/product/journeys/j05/requirements.zh-CN.md",
@@ -13,15 +13,17 @@
     "QA": false
   },
   "files": {
-    "docs/product/journeys/j05/requirements.zh-CN.md": "f26790768fcafd143f17ba57a4914b3bc9af66635dd048dba0bb6d257f39f492",
+    "docs/product/journeys/j05/requirements.zh-CN.md": "50a482a514dbb17b75b9e1baf7c174f24a6d7e155c3d2e48fa1e72bcd5d03e6b",
     "docs/product/journeys/j05/coverage.json": "d586ba39cd93068fb6e757fd19d9b6be4a55291e274fe4baa5c0aaca2c6eaff5",
-    "docs/product/journeys/j05/author-verification.zh-CN.md": "d6b64797d338c029f3594e22aa32314d257f1d03fb4ec1bf9c41c3677cea1aa6",
-    "demo/journeys/j05/preview.template.html": "29810e0abc350012ab3986987757b1bf4a243ec2b73c9315d63ef33fa29923da",
+    "docs/product/journeys/j05/author-verification.zh-CN.md": "bb4b105988a321b3470fd748bd297a4b87043cb9fdd7a9345aa932228cb7bc10",
+    "demo/journeys/j05/preview.template.html": "b4b122d61c5414ac9afc74d79e75bca0159999041254e7ba25b5312c2b2585ca",
     "demo/journeys/j05/model.mjs": "f7b071d4a7ba84b04e045cc2fb9faf482d4cb835f27df9a1247c919685aa6add",
     "demo/journeys/j05/style.css": "c79b633a17615b4a8c6af2a2be2b3cafd0ede6a6d00fad06cb9a4233eb198e57",
-    "demo/journeys/j05/index.html": "3555b563bc43c5e5455eba55527406edc47e6edf11bca0a070dea6693ab09b19",
-    "demo/journeys/j05/app.mjs": "6142b27fd24c5f1c1b6f1914af79af89c6441cb683ca1eb2b208803ea05d18c1",
+    "demo/journeys/j05/index.html": "5445e92756b85325e774d77f27743dcf0a342b27980215dc436214355501b99c",
+    "demo/journeys/j05/app.mjs": "dfd6d10e54512182b95363e086deb26d188d9b31901907bcf7a65a33a3dba8bb",
     "demo/journeys/j05/build.mjs": "93d74768f5fe83878b3ca9170a192ccd09bb2a5adf6dbc372e239a8de53b0d5c",
-    "tests/test_pm_j05.py": "1b65fbaaba745c2b93955a9e4eccf52a37d9848eccab3c645396fa6a32da476c"
-  }
+    "tests/test_pm_j05.py": "641f49c0f18a60fc5eca3872d6a1eb155ca1bc2168d26efccb72932e384efc1b"
+  },
+  "requirementsRevision": "PM-r02",
+  "demoRevision": "PM-r02"
 }

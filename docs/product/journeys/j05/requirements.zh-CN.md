@@ -1,6 +1,6 @@
 # J05 更新个人介绍或隐私选择
 
-候选PM-r01｜IOS-0.1.0｜输入r07／e7f2b895｜产品包待用户审阅，未进入UX/RD/QA。
+候选PM-r02｜IOS-0.1.0｜输入r07／e7f2b895｜产品包待用户审阅，未进入UX/RD/QA。
 
 [交互Demo](../../../../demo/journeys/j05/index.html) · [覆盖清单](coverage.json) · [作者验证](author-verification.zh-CN.md)
 
@@ -31,7 +31,7 @@
 <a id="preferences"></a>
 ## 4. AI偏好明确确认、替换与删除
 
-允许字段：区域、预计人均预算上限、含host总人数、host声明的饮食、交流语言、氛围。日期/具体时刻只作本次查询；不从Profile兴趣、评分、聊天或一次查询自动建画像，不把饮食推断为健康或宗教。真实允许值用批准字典：菜系EUROPEAN/JAPANESE/SPANISH/CHINESE（若适用）、饮食VEGETARIAN_OPTIONS/VEGAN、氛围EASY_CONVERSATION/FOOD_DISCOVERIES/TRAVEL_CULTURE及既有语言code。界面用自然语言标签。
+允许字段：区域、预计人均预算上限、含host总人数、host声明的饮食、交流语言、氛围。日期/具体时刻只作本次查询；不从Profile兴趣、评分、聊天或一次查询自动建画像，不把饮食推断为健康或宗教。菜系可作本次查找条件或host声明，不作为本版长期偏好字段。长期偏好的真实允许值用批准字典：饮食VEGETARIAN_OPTIONS/VEGAN、氛围EASY_CONVERSATION/FOOD_DISCOVERIES/TRAVEL_CULTURE及既有语言code。界面用自然语言标签。
 
 My preferences是唯一查看/替换/删除入口。自然语句先列待确认变更，只有本人Confirm and remember或明确Save后才生效；普通查询不保存。记录允许字段、version、confirmedAt和本人确认来源，不保存整段对话作记忆。账号偏好按userId持久、其他iOS会话读同版本；游客仅当次内存，登录不自动迁入。
 

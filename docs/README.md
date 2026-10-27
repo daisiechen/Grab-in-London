@@ -56,6 +56,8 @@
 - [M11 群提及与应用内免打扰](product/modules/m11-mentions-muting.zh-CN.md)：历史领域规则参考。
 - [M12 后台与锁屏系统通知](product/modules/m12-system-notifications.zh-CN.md)：历史领域规则参考。
 
+- [11旅程PJ逐项复核](reviews/pm-journeys-pj-review-2026-10-27.zh-CN.md)：真实浏览器打开、完整流程、PRD对应及修订闭合；不启动UX/RD/QA。
+
 ## 历史PM片段候选（非当前J01）
 
 - [M01-01 PM-r01需求](product/batches/m01-01/requirements.zh-CN.md)、[原Demo源](../demo/batches/m01-01/index.html)、[作者自检](product/batches/m01-01/author-verification.zh-CN.md)、[原产物清单](product/batches/m01-01/artifact-manifest.json)：只有邮箱验证，未被接受为完整注册/参与旅程；保留历史，不继续送审。

@@ -1,19 +1,21 @@
 {
   "journey": "J08",
-  "revision": "PM-r01",
+  "revision": "PM-r02",
   "sourceRevision": "r07",
   "files": {
     "docs/product/journeys/j08/requirements.zh-CN.md": "3f747817145b1c8574ba90ba886ebb5d72d3fd801911b99c9421ebef28193203",
     "docs/product/journeys/j08/coverage.json": "e4c3b859904fa911718d93250050beba2911129eb0f402147ae797a2771af651",
-    "docs/product/journeys/j08/author-verification.zh-CN.md": "880d31339748093c2ba32a61dba6954c8a1817cc132f0d809a982faeff7e52e7",
-    "demo/journeys/j08/index.html": "c73bce06dbb3e60fd3b6860362ce17aa27b389ea9badc67aac60170a16922768",
+    "docs/product/journeys/j08/author-verification.zh-CN.md": "ce69031de75349f26d8cf08b1b0a80320de121cd7cd4056218e543da017fcfdb",
+    "demo/journeys/j08/index.html": "8997140330db7de963856048ffd47ef2d63a6ff1d9c8776af2ed54015cb5eeff",
     "demo/journeys/j08/model.mjs": "0018487e583589b1f5a76b648fba6c5267faa6f0f1ff2edfc1112e5ca722bd96",
-    "tests/test_pm_j08.py": "8c88bf98a77e880728ba0f93e32012a1e5a65542976693f06948557bb3468c84"
+    "tests/test_pm_j08.py": "dc782ac78912ca4c21ede8c5a5522c5a6d0c7ebc0b2a2bf93f36ec67f943af93"
   },
   "stagesStarted": {
     "PM": true,
     "UX": false,
     "RD": false,
     "QA": false
-  }
+  },
+  "requirementsRevision": "PM-r01",
+  "demoRevision": "PM-r02"
 }

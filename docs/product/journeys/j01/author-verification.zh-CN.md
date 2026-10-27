@@ -20,3 +20,9 @@
 [自包含Demo](../../../../demo/journeys/j01/index.html)直接file打开；[PRD](requirements.zh-CN.md)供用户同看。源有改动时用现有Node运行`node demo/journeys/j01/build.mjs`重建，不需要服务或打包依赖。
 
 本包仅PM候选。后续由用户审阅，产品批准、UX/RD/QA与正式实现均另记；此作者记录不代签验收。
+
+## Demo PM-r02 评审链接修正
+
+仅当非file协议且路径精确为托管根/j01/或/j01/index.html时，评审区PRD链接指向../#prd-j01；真实仓库file路径及仓库/demo/journeys路径保留原相对Markdown链接，无私有地址或业务改动。新增jsdom实际点击事件检查托管两入口、file路径、仓库HTTP路径及嵌套路径，验证解析后的目标；拦截默认导航，因此不声称已测试真实托管阅读器加载。保持自包含，无真实浏览器或后端新测试。
+
+本轮 `python3 -m unittest discover -s tests -p test_pm_j01.py -v`：5项作者检查通过，包含原有流程、链接点击、最终文件哈希和自包含一致性。

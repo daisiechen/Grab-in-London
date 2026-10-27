@@ -1,4 +1,5 @@
 import {initial,step} from './model.mjs';
+const reviewPrd=document.getElementById('review-prd');if(location.protocol!=='file:'&&/^\/j05\/(?:index\.html)?$/.test(location.pathname))reviewPrd.setAttribute('href','../#prd-j05');
 let s=initial();const app=document.getElementById('app');const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const b=(l,t,c='primary')=>`<button class="${c}" data-e="${t}">${l}</button>`;const field=(id,l,v,area=false)=>`<label class="label" for="${id}">${l}</label>${area?`<textarea id="${id}">${esc(v)}</textarea>`:`<input id="${id}" value="${esc(v)}">`}`;
 const pick=(id,title,values,value)=>`<label class="label" for="${id}">${title}</label><select id="${id}">${values.map(([v,l])=>`<option value="${v}" ${String(v)===String(value)?'selected':''}>${l}</option>`).join('')}</select>`;
 function go(e){s=step(s,e);render();}
