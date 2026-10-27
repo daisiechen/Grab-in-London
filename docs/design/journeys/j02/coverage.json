@@ -1,0 +1,282 @@
+{
+  "journey": "J02",
+  "uxRevision": "UX-r01",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "prd": "docs/product/journeys/j02/requirements.zh-CN.md",
+  "pmCoverage": "docs/product/journeys/j02/coverage.json",
+  "scenarios": [
+    {
+      "scenarioId": "J02-R01",
+      "prdScenario": "§2",
+      "sourceRequirementIds": [
+        "FR-11",
+        "PATCH-001"
+      ],
+      "demo": "demo/journeys/j02/index.html",
+      "demoScenes": [
+        "C01身份门槛"
+      ],
+      "figmaNodes": [
+        "3:715",
+        "3:734",
+        "3:758",
+        "3:779",
+        "3:804"
+      ],
+      "stateKeys": [
+        "welcome",
+        "auth",
+        "verify",
+        "profile",
+        "arrange"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未制作全部Google/Apple/验证码供应方分支、Google地图/照片许可素材与每一DST日期组合；继承PRD§2–3及J01输入，不以合成餐厅样例替代生产范围。时钟、并发末位、真实发布/通知、任意字段组合与输入均不在Figma运行。"
+    },
+    {
+      "scenarioId": "J02-R02",
+      "prdScenario": "§3",
+      "sourceRequirementIds": [
+        "FR-05",
+        "P-05",
+        "PATCH-003"
+      ],
+      "demo": "demo/journeys/j02/index.html",
+      "demoScenes": [
+        "C02候选选择"
+      ],
+      "figmaNodes": [
+        "3:804",
+        "3:825",
+        "3:1258"
+      ],
+      "stateKeys": [
+        "arrange",
+        "arranged",
+        "searcherror"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未制作全部Google/Apple/验证码供应方分支、Google地图/照片许可素材与每一DST日期组合；继承PRD§2–3及J01输入，不以合成餐厅样例替代生产范围。时钟、并发末位、真实发布/通知、任意字段组合与输入均不在Figma运行。"
+    },
+    {
+      "scenarioId": "J02-R03",
+      "prdScenario": "§3",
+      "sourceRequirementIds": [
+        "P-03",
+        "D03-AC02"
+      ],
+      "demo": "demo/journeys/j02/index.html",
+      "demoScenes": [
+        "C03安排校验"
+      ],
+      "figmaNodes": [
+        "3:825",
+        "3:1276"
+      ],
+      "stateKeys": [
+        "arranged",
+        "dst"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未制作全部Google/Apple/验证码供应方分支、Google地图/照片许可素材与每一DST日期组合；继承PRD§2–3及J01输入，不以合成餐厅样例替代生产范围。时钟、并发末位、真实发布/通知、任意字段组合与输入均不在Figma运行。"
+    },
+    {
+      "scenarioId": "J02-R04",
+      "prdScenario": "§4",
+      "sourceRequirementIds": [
+        "FR-05"
+      ],
+      "demo": "demo/journeys/j02/index.html",
+      "demoScenes": [
+        "C04四步发布"
+      ],
+      "figmaNodes": [
+        "3:855",
+        "3:932",
+        "3:962",
+        "3:986",
+        "3:1014",
+        "3:1030"
+      ],
+      "stateKeys": [
+        "introduce",
+        "introduced",
+        "costs",
+        "review",
+        "terms",
+        "ready"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未制作全部Google/Apple/验证码供应方分支、Google地图/照片许可素材与每一DST日期组合；继承PRD§2–3及J01输入，不以合成餐厅样例替代生产范围。时钟、并发末位、真实发布/通知、任意字段组合与输入均不在Figma运行。"
+    },
+    {
+      "scenarioId": "J02-R05",
+      "prdScenario": "§5",
+      "sourceRequirementIds": [
+        "D03-AC01"
+      ],
+      "demo": "demo/journeys/j02/index.html",
+      "demoScenes": [
+        "C04四步发布"
+      ],
+      "figmaNodes": [
+        "3:962",
+        "3:986",
+        "3:1030"
+      ],
+      "stateKeys": [
+        "costs",
+        "review",
+        "ready"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未制作全部Google/Apple/验证码供应方分支、Google地图/照片许可素材与每一DST日期组合；继承PRD§2–3及J01输入，不以合成餐厅样例替代生产范围。时钟、并发末位、真实发布/通知、任意字段组合与输入均不在Figma运行。"
+    },
+    {
+      "scenarioId": "J02-R06",
+      "prdScenario": "§5",
+      "sourceRequirementIds": [
+        "D03-AC01"
+      ],
+      "demo": "demo/journeys/j02/index.html",
+      "demoScenes": [
+        "C05故障恢复"
+      ],
+      "figmaNodes": [
+        "3:1030",
+        "3:1051",
+        "3:1222",
+        "3:1240"
+      ],
+      "stateKeys": [
+        "ready",
+        "published",
+        "unknown",
+        "publisherror"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未制作全部Google/Apple/验证码供应方分支、Google地图/照片许可素材与每一DST日期组合；继承PRD§2–3及J01输入，不以合成餐厅样例替代生产范围。时钟、并发末位、真实发布/通知、任意字段组合与输入均不在Figma运行。"
+    },
+    {
+      "scenarioId": "J02-R07",
+      "prdScenario": "§6",
+      "sourceRequirementIds": [
+        "D04-AC01",
+        "D03-AC02"
+      ],
+      "demo": "demo/journeys/j02/index.html",
+      "demoScenes": [
+        "C07招募审核"
+      ],
+      "figmaNodes": [
+        "3:1077",
+        "3:1102",
+        "3:1128",
+        "3:1149",
+        "3:1165"
+      ],
+      "stateKeys": [
+        "applicant",
+        "approved",
+        "declared",
+        "declined",
+        "applicantfull"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未制作全部Google/Apple/验证码供应方分支、Google地图/照片许可素材与每一DST日期组合；继承PRD§2–3及J01输入，不以合成餐厅样例替代生产范围。时钟、并发末位、真实发布/通知、任意字段组合与输入均不在Figma运行。"
+    },
+    {
+      "scenarioId": "J02-R08",
+      "prdScenario": "§7",
+      "sourceRequirementIds": [
+        "D03-AC03"
+      ],
+      "demo": "demo/journeys/j02/index.html",
+      "demoScenes": [
+        "C09截止与人数"
+      ],
+      "figmaNodes": [
+        "3:1315",
+        "3:1331",
+        "3:1202"
+      ],
+      "stateKeys": [
+        "closed",
+        "started",
+        "cancelled"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未制作全部Google/Apple/验证码供应方分支、Google地图/照片许可素材与每一DST日期组合；继承PRD§2–3及J01输入，不以合成餐厅样例替代生产范围。时钟、并发末位、真实发布/通知、任意字段组合与输入均不在Figma运行。"
+    },
+    {
+      "scenarioId": "J02-R09",
+      "prdScenario": "§7",
+      "sourceRequirementIds": [
+        "PATCH-003"
+      ],
+      "demo": "demo/journeys/j02/index.html",
+      "demoScenes": [
+        "C10取消"
+      ],
+      "figmaNodes": [
+        "3:1181",
+        "3:1202"
+      ],
+      "stateKeys": [
+        "cancel",
+        "cancelled"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未制作全部Google/Apple/验证码供应方分支、Google地图/照片许可素材与每一DST日期组合；继承PRD§2–3及J01输入，不以合成餐厅样例替代生产范围。时钟、并发末位、真实发布/通知、任意字段组合与输入均不在Figma运行。"
+    },
+    {
+      "scenarioId": "J02-R10",
+      "prdScenario": "§4",
+      "sourceRequirementIds": [
+        "AC-AI07",
+        "AC-AI09",
+        "AC-AI12"
+      ],
+      "demo": "demo/journeys/j02/index.html",
+      "demoScenes": [
+        "C06AI草稿"
+      ],
+      "figmaNodes": [
+        "3:887",
+        "3:909",
+        "3:932",
+        "3:1297"
+      ],
+      "stateKeys": [
+        "ai",
+        "replace",
+        "introduced",
+        "aierror"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未制作全部Google/Apple/验证码供应方分支、Google地图/照片许可素材与每一DST日期组合；继承PRD§2–3及J01输入，不以合成餐厅样例替代生产范围。时钟、并发末位、真实发布/通知、任意字段组合与输入均不在Figma运行。"
+    }
+  ],
+  "sourceUnitInheritance": {
+    "path": "docs/product/journeys/j02/coverage.json",
+    "sha256": "0224c28064d9da6382b8f5de0a037f4c542417c16234e57980f1e47203cce84f",
+    "unitCount": 942,
+    "meaning": "继承该固定PM覆盖文件的全部原文有效性/历史/后置/documented-only处置；节点表映射本旅程需求和代表状态，不把每个原文单元宣称为可点击或真实实现。"
+  },
+  "stagesStarted": {
+    "PM": true,
+    "UX": true,
+    "RD": false,
+    "QA": false
+  }
+}

@@ -1,0 +1,1285 @@
+{
+  "journey": "J02",
+  "reviewRole": "UX author",
+  "status": "UX-r01 candidate; not frozen or Owner approved",
+  "wrapperId": "3:682",
+  "screens": [
+    {
+      "key": "welcome",
+      "id": "3:715",
+      "name": "J02 / welcome / A good meal starts with you.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:721",
+      "contentHeight": 340,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "A good meal starts with you.",
+        "Pick a restaurant, share your plan, and welcome a few new people.",
+        "2–6 people · Friendship first",
+        "You arrange the restaurant booking. Everyone pays at the restaurant.",
+        "Create a meal",
+        "Discover",
+        "Meals",
+        "+",
+        "Create meal",
+        "Inbox",
+        "Profile"
+      ],
+      "links": [
+        {
+          "nodeId": "3:727",
+          "name": "Action / Create a meal",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:734"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "auth",
+      "id": "3:734",
+      "name": "J02 / auth / Let’s make it yours.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:740",
+      "contentHeight": 453,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Let’s make it yours.",
+        "Sign in or create your account to host this meal.",
+        "Email",
+        "alex@example.com",
+        "Continue with email",
+        "Continue with Google",
+        "Continue with Apple",
+        "Back"
+      ],
+      "links": [
+        {
+          "nodeId": "3:746",
+          "name": "Action / Continue with email",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:758"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:748",
+          "name": "Action / Continue with Google",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:779"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:750",
+          "name": "Action / Continue with Apple",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:779"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:752",
+          "name": "Action / Back",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:715"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "verify",
+      "id": "3:758",
+      "name": "J02 / verify / Check your inbox.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:764",
+      "contentHeight": 369,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Check your inbox.",
+        "Enter the six-digit code sent to alex@example.com.",
+        "Verification code",
+        "123456",
+        "Wrong or expired code? Your meal draft stays here.",
+        "Verify and continue",
+        "Use another email"
+      ],
+      "links": [
+        {
+          "nodeId": "3:771",
+          "name": "Action / Verify and continue",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:779"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:773",
+          "name": "Action / Use another email",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:734"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "profile",
+      "id": "3:779",
+      "name": "J02 / profile / A little about you.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:785",
+      "contentHeight": 572,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "A little about you.",
+        "Help people feel comfortable joining your table.",
+        "Name · 2–40 characters",
+        "Alex",
+        "Introduction · 20–1000",
+        "I enjoy relaxed conversations and discovering new food.",
+        "Language · Life status · Interest",
+        "English · Working · Food",
+        "✓ I am 18 or older\n✓ I agree to the community guidelines",
+        "Save and continue"
+      ],
+      "links": [
+        {
+          "nodeId": "3:798",
+          "name": "Action / Save and continue",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:804"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "arrange",
+      "id": "3:804",
+      "name": "J02 / arrange / Choose your table.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:810",
+      "contentHeight": 410,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Choose your table.",
+        "Arrange · Introduce · Costs · Review",
+        "Find a restaurant",
+        "Olive Table, Soho",
+        "Olive Table",
+        "Soho, London\nRestaurant information is a provider result, not a reservation.",
+        "Use this restaurant"
+      ],
+      "links": [
+        {
+          "nodeId": "3:819",
+          "name": "Action / Use this restaurant",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:825"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "arranged",
+      "id": "3:825",
+      "name": "J02 / arranged / Choose your table.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:831",
+      "contentHeight": 665,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Choose your table.",
+        "Arrange · Introduce · Costs · Review",
+        "Selected · Olive Table",
+        "Soho, London",
+        "Date · Time · London",
+        "30 October 2026 · 19:00 GMT",
+        "Minimum · Capacity · includes you",
+        "3 minimum · 4 total",
+        "Applications close",
+        "1 hour before · 18:00 GMT",
+        "Changing the restaurant clears time and booking confirmation.",
+        "Continue",
+        "Change restaurant"
+      ],
+      "links": [
+        {
+          "nodeId": "3:847",
+          "name": "Action / Continue",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:855"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:849",
+          "name": "Action / Change restaurant",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:804"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "introduce",
+      "id": "3:855",
+      "name": "J02 / introduce / Set the mood.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:861",
+      "contentHeight": 761,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Set the mood.",
+        "Arrange · Introduce · Costs · Review",
+        "Meal title · 5–80 characters",
+        "A relaxed Friday supper",
+        "Introduction · 20–1000 characters",
+        "Meet new people over a friendly dinner and a good conversation.",
+        "Language · Atmosphere",
+        "English · Easy conversation",
+        "Cuisine · Dietary options",
+        "Not provided · Not provided",
+        "Host-reported options are not an allergy guarantee.",
+        "Continue",
+        "Ask Fancy for an introduction",
+        "Previous"
+      ],
+      "links": [
+        {
+          "nodeId": "3:877",
+          "name": "Action / Continue",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:962"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:879",
+          "name": "Action / Ask Fancy for an introduction",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:887"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:881",
+          "name": "Action / Previous",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:825"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "ai",
+      "id": "3:887",
+      "name": "J02 / ai / A starting point, in your words.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:893",
+      "contentHeight": 453,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "A starting point, in your words.",
+        "Ask Fancy · Creation draft",
+        "Introduction draft",
+        "A relaxed supper for people who enjoy thoughtful conversation and discovering new food in London.",
+        "Review and edit before publishing. No restaurant or agreement is selected for you.",
+        "Use this draft",
+        "Keep writing myself"
+      ],
+      "links": [
+        {
+          "nodeId": "3:900",
+          "name": "Action / Use this draft",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:909"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:902",
+          "name": "Action / Keep writing myself",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:855"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "replace",
+      "id": "3:909",
+      "name": "J02 / replace / Replace your introduction?",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:915",
+      "contentHeight": 513,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Replace your introduction?",
+        "Your existing text stays unless you choose Replace.",
+        "Current introduction",
+        "Meet new people over a friendly dinner and a good conversation.",
+        "New draft",
+        "A relaxed supper for people who enjoy thoughtful conversation and discovering new food in London.",
+        "Replace with draft",
+        "Keep my text"
+      ],
+      "links": [
+        {
+          "nodeId": "3:924",
+          "name": "Action / Replace with draft",
+          "actions": [
+            {
+              "type": "SET_VARIABLE",
+              "variableId": "VariableID:8:108",
+              "variableValue": {
+                "value": "A relaxed supper for people who enjoy thoughtful conversation and discovering new food in London.",
+                "type": "STRING",
+                "resolvedType": "STRING"
+              }
+            },
+            {
+              "type": "NODE",
+              "destinationId": "3:932"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:926",
+          "name": "Action / Keep my text",
+          "actions": [
+            {
+              "type": "BACK"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "introduced",
+      "id": "3:932",
+      "name": "J02 / introduced / Set the mood.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:938",
+      "contentHeight": 702,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Set the mood.",
+        "Arrange · Introduce · Costs · Review",
+        "Meal title",
+        "A relaxed Friday supper",
+        "Introduction",
+        "A relaxed supper for people who enjoy thoughtful conversation and discovering new food in London.",
+        "Language · Atmosphere",
+        "English · Easy conversation",
+        "Cuisine · Dietary options",
+        "Not provided · Not provided",
+        "Draft added. You still choose whether to publish.",
+        "Continue",
+        "Previous"
+      ],
+      "links": [
+        {
+          "nodeId": "3:954",
+          "name": "Action / Continue",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:962"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:956",
+          "name": "Action / Previous",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:825"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "costs",
+      "id": "3:962",
+      "name": "J02 / costs / Keep costs clear.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:968",
+      "contentHeight": 563,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Keep costs clear.",
+        "Arrange · Introduce · Costs · Review",
+        "Pay at the restaurant",
+        "Everyone pays their own bill. This budget is an estimate, not a charge.",
+        "Budget per person · GBP",
+        "£20.00 – £35.00",
+        "✓ I will contact the restaurant and arrange a table for this place, time and total number of people.\n\nThis is your report. Fancy has not confirmed a reservation.",
+        "Continue",
+        "Previous"
+      ],
+      "links": [
+        {
+          "nodeId": "3:978",
+          "name": "Action / Continue",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:986"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:980",
+          "name": "Action / Previous",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:855"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "review",
+      "id": "3:986",
+      "name": "J02 / review / Ready to welcome people?",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:992",
+      "contentHeight": 798,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Ready to welcome people?",
+        "Arrange · Introduce · Costs · Review",
+        "A relaxed Friday supper",
+        "Olive Table · Soho, London\n30 October · 19:00 GMT\n3 minimum / 4 total · closes 18:00\n£20–£35 each · pay at restaurant\nEnglish · Easy conversation",
+        "Meet new people over a friendly dinner and a good conversation.",
+        "Cuisine / dietary: Not provided.\nBooking: host-reported for this arrangement.",
+        "□ I reviewed the arrangements and agree to the cancellation terms.",
+        "□ I reviewed the plan and agree",
+        "Read cancellation terms",
+        "Edit arrangements",
+        "Edit introduction",
+        "Edit costs"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1000",
+          "name": "Action / □ I reviewed the plan and agree",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1030"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1002",
+          "name": "Action / Read cancellation terms",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1014"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1004",
+          "name": "Action / Edit arrangements",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:825"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1006",
+          "name": "Action / Edit introduction",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:855"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1008",
+          "name": "Action / Edit costs",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:962"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "terms",
+      "id": "3:1014",
+      "name": "J02 / terms / Cancellation terms",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1020",
+      "contentHeight": 379,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Cancellation terms",
+        "Read without changing your agreement.",
+        "Before the meal, the host may cancel. The meal is cancelled if recruitment closes below its minimum, or later falls below it before the start.\n\nEveryone pays at the restaurant. Fancy takes no deposit and issues no refund. The host contacts the restaurant.\n\nCancelling the meal does not close its existing group chat.",
+        "Back to review"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1024",
+          "name": "Action / Back to review",
+          "actions": [
+            {
+              "type": "BACK"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "ready",
+      "id": "3:1030",
+      "name": "J02 / ready / Your plan is ready.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1036",
+      "contentHeight": 526,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Your plan is ready.",
+        "Review · your confirmation is selected",
+        "A relaxed Friday supper",
+        "Olive Table · 30 October · 19:00 GMT\n3–4 people including you\nCloses 18:00 · £20–£35 per person\nEnglish · Easy conversation",
+        "Meet new people over a friendly dinner and a good conversation.",
+        "✓ I reviewed the arrangements and agree to the cancellation terms.\nHost-reported booking; no platform reservation.",
+        "Publish meal",
+        "Back to review"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1043",
+          "name": "Action / Publish meal",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1051"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1045",
+          "name": "Action / Back to review",
+          "actions": [
+            {
+              "type": "BACK"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "published",
+      "id": "3:1051",
+      "name": "J02 / published / Your meal is published.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1057",
+      "contentHeight": 571,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Your meal is published.",
+        "Hosting · A relaxed Friday supper",
+        "1 / 4 confirmed · Minimum 3",
+        "Olive Table · 30 October · 19:00 GMT\nBooking: host-reported for 1 person\nArrangements can be edited before the first approval.",
+        "Applications",
+        "No applications yet. Your meal is available to discover.",
+        "View applications",
+        "Edit arrangements",
+        "Cancel this meal"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1066",
+          "name": "Action / View applications",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1077"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1068",
+          "name": "Action / Edit arrangements",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:825"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1070",
+          "name": "Action / Cancel this meal",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1181"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "applicant",
+      "id": "3:1077",
+      "name": "J02 / applicant / Meet Mia.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1083",
+      "contentHeight": 551,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Meet Mia.",
+        "Hosting · Application pending",
+        "Mia",
+        "New to London, enjoys relaxed conversations and trying new food.",
+        "For this meal",
+        "A relaxed Friday supper\n1 / 4 confirmed · Minimum 3\nPending applications do not take a seat.",
+        "Approve Mia",
+        "Decline Mia",
+        "Back to hosting"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1092",
+          "name": "Action / Approve Mia",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1102"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1094",
+          "name": "Action / Decline Mia",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1149"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1096",
+          "name": "Action / Back to hosting",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1051"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "approved",
+      "id": "3:1102",
+      "name": "J02 / approved / Mia’s seat is confirmed.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1108",
+      "contentHeight": 546,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Mia’s seat is confirmed.",
+        "Hosting · 2 / 4 confirmed · Minimum 3",
+        "Key arrangements locked",
+        "The first guest is approved. To change key arrangements, cancel and create a new meal.",
+        "Booking · Needs update",
+        "Your previous declaration was for 1 person. Contact the restaurant and update it for the current 2 people.",
+        "Mia has group access. Approval is not a restaurant booking confirmation.",
+        "Update booking declaration",
+        "Cancel this meal"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1118",
+          "name": "Action / Update booking declaration",
+          "actions": [
+            {
+              "type": "SET_VARIABLE",
+              "variableId": "VariableID:8:112",
+              "variableValue": {
+                "value": "Booking · Host-reported for 2 people",
+                "type": "STRING",
+                "resolvedType": "STRING"
+              }
+            },
+            {
+              "type": "SET_VARIABLE",
+              "variableId": "VariableID:8:113",
+              "variableValue": {
+                "value": "Updated by you for the current 2 confirmed people. This is not restaurant verification.",
+                "type": "STRING",
+                "resolvedType": "STRING"
+              }
+            },
+            {
+              "type": "NODE",
+              "destinationId": "3:1128"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1122",
+          "name": "Action / Cancel this meal",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1181"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "declared",
+      "id": "3:1128",
+      "name": "J02 / declared / Booking declaration updated.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1134",
+      "contentHeight": 473,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Booking declaration updated.",
+        "Hosting · 2 / 4 confirmed",
+        "Host-reported · 2 people",
+        "Olive Table · 30 October · 19:00 GMT\nUpdated by you for the current confirmed count. This is not restaurant verification.",
+        "Key arrangements stay locked. Members receive an in-app update.",
+        "Back to hosting",
+        "Cancel this meal"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1141",
+          "name": "Action / Back to hosting",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1102"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1143",
+          "name": "Action / Cancel this meal",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1181"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "declined",
+      "id": "3:1149",
+      "name": "J02 / declined / Application declined.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1155",
+      "contentHeight": 259,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Application declined.",
+        "Hosting · Mia",
+        "Mia’s application is declined. No seat was added. This application cannot be approved or submitted again for this meal.",
+        "Back to hosting"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1159",
+          "name": "Action / Back to hosting",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1051"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "applicantfull",
+      "id": "3:1165",
+      "name": "J02 / applicantfull / This seat is no longer available.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1171",
+      "contentHeight": 300,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "This seat is no longer available.",
+        "Hosting · Latest meal status",
+        "The last seat has been filled, or recruitment has closed. This application was not approved. Refresh to see the latest result.",
+        "Return to hosting"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1175",
+          "name": "Action / Return to hosting",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1102"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "cancel",
+      "id": "3:1181",
+      "name": "J02 / cancel / Cancel this meal for everyone?",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1187",
+      "contentHeight": 490,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Cancel this meal for everyone?",
+        "This action affects the whole table.",
+        "Pending applications will close. The host and current applicants and confirmed guests will be notified.\n\nExisting group chat stays available. Contact the restaurant yourself.",
+        "Reason",
+        "My plans changed",
+        "Keep meal",
+        "Confirm cancellation"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1194",
+          "name": "Action / Keep meal",
+          "actions": [
+            {
+              "type": "BACK"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1196",
+          "name": "Action / Confirm cancellation",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1202"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "cancelled",
+      "id": "3:1202",
+      "name": "J02 / cancelled / This meal is cancelled.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1208",
+      "contentHeight": 373,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "This meal is cancelled.",
+        "Hosting · Cancelled",
+        "A relaxed Friday supper",
+        "No new applications or approvals. Pending applications are expired. This meal cannot reopen.",
+        "The existing group chat remains available. Contact the restaurant to cancel your booking. Members must actively apply to any new meal.",
+        "Back to Meals"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1215",
+          "name": "Action / Back to Meals",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:715"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "unknown",
+      "id": "3:1222",
+      "name": "J02 / unknown / Publication status unknown.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1228",
+      "contentHeight": 339,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Publication status unknown.",
+        "Your arrangements are safe.",
+        "Check this publication before trying again. Do not create a second meal while the result is unknown.",
+        "Check publication status",
+        "Review saved arrangements"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1232",
+          "name": "Action / Check publication status",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1051"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1234",
+          "name": "Action / Review saved arrangements",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1030"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "publisherror",
+      "id": "3:1240",
+      "name": "J02 / publisherror / Couldn’t publish your meal.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1246",
+      "contentHeight": 339,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Couldn’t publish your meal.",
+        "Your arrangements are still here.",
+        "Try again when connected. Your original publication request is retained.",
+        "Try publishing again",
+        "Return to review"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1250",
+          "name": "Action / Try publishing again",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1051"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1252",
+          "name": "Action / Return to review",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1030"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "searcherror",
+      "id": "3:1258",
+      "name": "J02 / searcherror / Restaurant search is unavailable.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1264",
+      "contentHeight": 339,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Restaurant search is unavailable.",
+        "Your confirmed restaurant is unchanged.",
+        "Try another search when connected. A restaurant preview or typed name does not select a restaurant.",
+        "Try again",
+        "Return to arrangements"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1268",
+          "name": "Action / Try again",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:804"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1270",
+          "name": "Action / Return to arrangements",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:825"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "dst",
+      "id": "3:1276",
+      "name": "J02 / dst / This London time happens twice.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1282",
+      "contentHeight": 430,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "This London time happens twice.",
+        "Arrange · 25 October · 01:30",
+        "Choose one time",
+        "01:30 BST (UTC+1) / 01:30 GMT (UTC+0)",
+        "Choose the intended offset. A nonexistent spring-forward time is rejected; no time is silently changed.",
+        "Choose 01:30 GMT",
+        "Back without choosing"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1289",
+          "name": "Action / Choose 01:30 GMT",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:825"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1291",
+          "name": "Action / Back without choosing",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:825"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "aierror",
+      "id": "3:1297",
+      "name": "J02 / aierror / Ask Fancy is unavailable.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1303",
+      "contentHeight": 339,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Ask Fancy is unavailable.",
+        "Your introduction has not changed.",
+        "You can keep writing yourself. Retrying never appends the same draft automatically.",
+        "Write myself",
+        "Try generating again"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1307",
+          "name": "Action / Write myself",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:855"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:1309",
+          "name": "Action / Try generating again",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:887"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "closed",
+      "id": "3:1315",
+      "name": "J02 / closed / Recruitment closed below minimum.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1321",
+      "contentHeight": 340,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "Recruitment closed below minimum.",
+        "Hosting · Cancelled",
+        "There were fewer than 3 confirmed people at the deadline. Pending applications are expired. The meal is cancelled and cannot reopen.\n\nThe group is retained; contact the restaurant.",
+        "Back to Meals"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1325",
+          "name": "Action / Back to Meals",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:715"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "started",
+      "id": "3:1331",
+      "name": "J02 / started / This meal has already started.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:1337",
+      "contentHeight": 300,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Hosting",
+        "This meal has already started.",
+        "Hosting · In progress",
+        "You can no longer cancel this meal. Contact support about problems. Past participation cannot be erased by cancellation.",
+        "Back to meal"
+      ],
+      "links": [
+        {
+          "nodeId": "3:1341",
+          "name": "Action / Back to meal",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:1102"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "FRAME": 209,
+    "TEXT": 311,
+    "INSTANCE": 78,
+    "VECTOR": 9,
+    "RECTANGLE": 29
+  },
+  "wrongFonts": [],
+  "narrowLabels": [],
+  "imageFilledNodes": [],
+  "flowStartingPoints": [
+    {
+      "nodeId": "3:715",
+      "name": "J02 · Main journey"
+    },
+    {
+      "nodeId": "3:1165",
+      "name": "J02 · Necessary recovery"
+    }
+  ],
+  "stagesStarted": [
+    "PM",
+    "UX"
+  ],
+  "stagesNotStarted": [
+    "RD",
+    "QA"
+  ]
+}

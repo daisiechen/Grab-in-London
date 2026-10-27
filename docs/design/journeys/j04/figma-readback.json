@@ -1,0 +1,1379 @@
+{
+  "journey": "J04",
+  "reviewRole": "UX author",
+  "status": "UX-r01 candidate; not frozen or Owner approved",
+  "wrapperId": "1:2",
+  "screens": [
+    {
+      "key": "past",
+      "id": "1:35",
+      "name": "J04 / past / How was your evening?",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:41",
+      "contentHeight": 492,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "How was your evening?",
+        "Meals · Past",
+        "Friday at Olive Table",
+        "Friday 30 October · 19:00 London\nUpdate attendance and feedback until 6 November, 21:00 London.",
+        "Your attendance · Not reported",
+        "Your own report takes priority over a host report. Not reported is not absence.",
+        "I attended",
+        "I did not attend",
+        "Discover",
+        "Meals",
+        "+",
+        "Create meal",
+        "Inbox",
+        "Profile"
+      ],
+      "links": [
+        {
+          "nodeId": "1:50",
+          "name": "Action / I attended",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:59"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:52",
+          "name": "Action / I did not attend",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:85"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "present",
+      "id": "1:59",
+      "name": "J04 / present / Your attendance is saved.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:65",
+      "contentHeight": 584,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Your attendance is saved.",
+        "Friday at Olive Table · Attended",
+        "Rate this meal privately",
+        "Only your overall experience of this meal. Your table cannot see your score.",
+        "Meal score · optional",
+        "Choose 1–5",
+        "Your table · Alex",
+        "A friendly conversation over dinner.",
+        "Save private meal score",
+        "Leave a reference or reconnect",
+        "Discover",
+        "Meals",
+        "+",
+        "Create meal",
+        "Inbox",
+        "Profile"
+      ],
+      "links": [
+        {
+          "nodeId": "1:72",
+          "name": "Field / Meal score · optional",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:211"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:79",
+          "name": "Action / Leave a reference or reconnect",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:126"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "absent",
+      "id": "1:85",
+      "name": "J04 / absent / Attendance saved.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:91",
+      "contentHeight": 338,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Attendance saved.",
+        "Friday at Olive Table · Did not attend",
+        "You cannot leave a meal score, public reference or reconnect choice without valid attendance. If this is incorrect, update your own attendance while the reporting window is open.",
+        "Update: I attended",
+        "Back to Past meals",
+        "Discover",
+        "Meals",
+        "+",
+        "Create meal",
+        "Inbox",
+        "Profile"
+      ],
+      "links": [
+        {
+          "nodeId": "1:95",
+          "name": "Action / Update: I attended",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:59"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:97",
+          "name": "Action / Back to Past meals",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:35"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "scored",
+      "id": "1:103",
+      "name": "J04 / scored / Your meal score is saved.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:109",
+      "contentHeight": 527,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Your meal score is saved.",
+        "Friday at Olive Table · Private meal score",
+        "Only your meal experience",
+        "This score is not shared with your table. It does not create a public reference or reconnect choice.",
+        "Alex",
+        "You both have valid attendance for this meal.",
+        "Leave a reference or reconnect",
+        "Back to meal",
+        "Choose 1–5",
+        "Discover",
+        "Meals",
+        "+",
+        "Create meal",
+        "Inbox",
+        "Profile"
+      ],
+      "links": [
+        {
+          "nodeId": "1:118",
+          "name": "Action / Leave a reference or reconnect",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:126"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:120",
+          "name": "Action / Back to meal",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:59"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "feedback",
+      "id": "1:126",
+      "name": "J04 / feedback / Keep the good part going.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:132",
+      "contentHeight": 618,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Keep the good part going.",
+        "About Alex · Friday at Olive Table",
+        "A public reference and your private reconnect choice are separate.",
+        "Public reference · optional · 1–500",
+        "",
+        "Published when both people submit, or after the 7-day window, while attendance stays valid.",
+        "□ I would like to meet Alex again\nYour choice stays private until you both choose to reconnect.",
+        "Save feedback",
+        "Back to meal"
+      ],
+      "links": [
+        {
+          "nodeId": "1:137",
+          "name": "Field / Public reference · optional · 1–500",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:149"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:141",
+          "name": "Action / Save feedback",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:170"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:143",
+          "name": "Action / Back to meal",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:103"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "draft",
+      "id": "1:149",
+      "name": "J04 / draft / Keep the good part going.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:155",
+      "contentHeight": 510,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Keep the good part going.",
+        "About Alex · Friday at Olive Table",
+        "Public reference · optional · 1–500",
+        "A thoughtful and friendly dinner companion.",
+        "✓ I would like to meet Alex again\nA reference does not automatically agree to reconnect. Your choice is private.",
+        "Save feedback",
+        "Back to meal"
+      ],
+      "links": [
+        {
+          "nodeId": "1:162",
+          "name": "Action / Save feedback",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:211"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:164",
+          "name": "Action / Back to meal",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:103"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "nochanges",
+      "id": "1:170",
+      "name": "J04 / nochanges / No changes to save.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:176",
+      "contentHeight": 259,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "No changes to save.",
+        "About Alex",
+        "Nothing was saved. You can leave either a public reference or a private reconnect choice; neither is required.",
+        "Back to feedback"
+      ],
+      "links": [
+        {
+          "nodeId": "1:180",
+          "name": "Action / Back to feedback",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:126"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "partial",
+      "id": "1:186",
+      "name": "J04 / partial / Some feedback is saved.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:192",
+      "contentHeight": 506,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Some feedback is saved.",
+        "About Alex · Save results",
+        "Public reference · Saved",
+        "Your reference is saved, not public yet.",
+        "Reconnect choice · Not saved",
+        "Your choice could not be saved. Your input is preserved.",
+        "Only the unsaved item will be retried. Your saved reference will not be sent again.",
+        "Retry unsaved items",
+        "Back to feedback"
+      ],
+      "links": [
+        {
+          "nodeId": "1:202",
+          "name": "Action / Retry unsaved items",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:211"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:204",
+          "name": "Action / Back to feedback",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:149"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "waiting",
+      "id": "1:211",
+      "name": "J04 / waiting / Your feedback is saved.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:217",
+      "contentHeight": 531,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Your feedback is saved.",
+        "About Alex · Save results",
+        "Public reference · Saved",
+        "Not public yet. Publication waits for both references or the end of the window.",
+        "Reconnect choice · Saved privately",
+        "Your choice is saved. No information about another person’s one-sided choice is shown.",
+        "Back to meal",
+        "Edit my reconnect choice",
+        "Block person"
+      ],
+      "links": [
+        {
+          "nodeId": "1:226",
+          "name": "Action / Back to meal",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:103"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:228",
+          "name": "Action / Edit my reconnect choice",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:161"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:230",
+          "name": "Action / Block person",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:343"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "mutual",
+      "id": "1:236",
+      "name": "J04 / mutual / You both chose to reconnect.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:242",
+      "contentHeight": 532,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "You both chose to reconnect.",
+        "About Alex",
+        "Private chat is ready when you are.",
+        "You both chose to reconnect and have valid attendance. Opening the chat does not send a message.",
+        "Your reference and your private reconnect choice remain separate.",
+        "Open private chat",
+        "Withdraw connection",
+        "Block person"
+      ],
+      "links": [
+        {
+          "nodeId": "1:249",
+          "name": "Action / Open private chat",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:259"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:251",
+          "name": "Action / Withdraw connection",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:303"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:253",
+          "name": "Action / Block person",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:343"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "dm",
+      "id": "1:259",
+      "name": "J04 / dm / Alex",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:265",
+      "contentHeight": 488,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Alex",
+        "Private chat · Mutual connection",
+        "Only authorised participants can read this conversation.",
+        "Message · 1–2000 characters",
+        "It was lovely meeting you. Fancy another meal soon?",
+        "Send message",
+        "Back to feedback",
+        "Withdraw connection"
+      ],
+      "links": [
+        {
+          "nodeId": "1:272",
+          "name": "Action / Send message",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:282"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:274",
+          "name": "Action / Back to feedback",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:236"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:276",
+          "name": "Action / Withdraw connection",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:303"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "dmsent",
+      "id": "1:282",
+      "name": "J04 / dmsent / Alex",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:288",
+      "contentHeight": 412,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Alex",
+        "Private chat · Message sent",
+        "You · Just now",
+        "It was lovely meeting you. Fancy another meal soon?",
+        "This message was sent only because you chose Send. It is not automatically marked read.",
+        "Back to feedback",
+        "Withdraw connection"
+      ],
+      "links": [
+        {
+          "nodeId": "1:295",
+          "name": "Action / Back to feedback",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:236"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:297",
+          "name": "Action / Withdraw connection",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:303"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "withdraw",
+      "id": "1:303",
+      "name": "J04 / withdraw / Withdraw this connection?",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:309",
+      "contentHeight": 419,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Withdraw this connection?",
+        "You can do this at any time.",
+        "Both reconnect choices will be cleared. Previous private chat stays read-only. New choices are needed from both people to reconnect.\n\nIf this confirmation came from Save feedback, cancelling saves no part of that feedback and keeps your draft.",
+        "Keep connection",
+        "Withdraw"
+      ],
+      "links": [
+        {
+          "nodeId": "1:313",
+          "name": "Action / Keep connection",
+          "actions": [
+            {
+              "type": "BACK"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:315",
+          "name": "Action / Withdraw",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:321"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "readonly",
+      "id": "1:321",
+      "name": "J04 / readonly / Alex",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:327",
+      "contentHeight": 524,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Alex",
+        "Read-only private history",
+        "You · Previous message",
+        "It was lovely meeting you. Fancy another meal soon?",
+        "New messages are unavailable. Your previous chat remains read-only. Reconnecting requires new choices from both people.",
+        "Unsent text · copy or delete",
+        "I hope your week is going well.",
+        "Back to feedback"
+      ],
+      "links": [
+        {
+          "nodeId": "1:337",
+          "name": "Action / Back to feedback",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:180"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "block",
+      "id": "1:343",
+      "name": "J04 / block / Block this person?",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:349",
+      "contentHeight": 318,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Block this person?",
+        "Shared meal groups are unchanged.",
+        "Both reconnect choices will be cleared and future private messages blocked. Your shared meal group membership is not changed.",
+        "Keep connection",
+        "Confirm block"
+      ],
+      "links": [
+        {
+          "nodeId": "1:353",
+          "name": "Action / Keep connection",
+          "actions": [
+            {
+              "type": "BACK"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:355",
+          "name": "Action / Confirm block",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:362"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "blocked",
+      "id": "1:362",
+      "name": "J04 / blocked / Alex is blocked.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:368",
+      "contentHeight": 318,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Alex is blocked.",
+        "Private contact is unavailable.",
+        "Previous private chat remains read-only. Shared meal groups are unchanged. You can report a safety concern separately.",
+        "Unblock person",
+        "Read previous private chat"
+      ],
+      "links": [
+        {
+          "nodeId": "1:372",
+          "name": "Action / Unblock person",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:380"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:374",
+          "name": "Action / Read previous private chat",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:321"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "unblocked",
+      "id": "1:380",
+      "name": "J04 / unblocked / Alex is unblocked.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:386",
+      "contentHeight": 318,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Alex is unblocked.",
+        "Previous reconnect choices were not restored.",
+        "Unblocking only removes this block. You both need new valid choices to reconnect. Previous history stays read-only.",
+        "Read previous private chat",
+        "Back to meal"
+      ],
+      "links": [
+        {
+          "nodeId": "1:390",
+          "name": "Action / Read previous private chat",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:321"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:392",
+          "name": "Action / Back to meal",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:103"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "unknown",
+      "id": "1:398",
+      "name": "J04 / unknown / Saved status is unknown.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:404",
+      "contentHeight": 493,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Saved status is unknown.",
+        "About Alex · Save results",
+        "Public reference · Status unknown",
+        "Check the original save before trying again.",
+        "Reconnect choice · Not saved yet",
+        "This item has not been attempted. It waits until the public reference result is known.",
+        "Check saved status",
+        "Back to feedback"
+      ],
+      "links": [
+        {
+          "nodeId": "1:413",
+          "name": "Action / Check saved status",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:211"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:415",
+          "name": "Action / Back to feedback",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:149"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "conflict",
+      "id": "1:421",
+      "name": "J04 / conflict / A newer version is available.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:427",
+      "contentHeight": 527,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "A newer version is available.",
+        "About Alex · Your draft is preserved.",
+        "Latest saved reference",
+        "Thank you for a welcoming dinner.",
+        "Your local draft",
+        "A thoughtful and friendly dinner companion.",
+        "Reconnect choice is not saved yet. Check the latest version before confirming your changes.",
+        "Confirm against latest version",
+        "Keep editing"
+      ],
+      "links": [
+        {
+          "nodeId": "1:437",
+          "name": "Action / Confirm against latest version",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:211"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:439",
+          "name": "Action / Keep editing",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:149"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "expired",
+      "id": "1:445",
+      "name": "J04 / expired / The feedback window is closed.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:451",
+      "contentHeight": 473,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "The feedback window is closed.",
+        "Friday at Olive Table · 7-day window ended",
+        "You can no longer edit attendance, meal score, public references or new reconnect choices for this meal. Contact support about a correction.",
+        "Existing mutual connection",
+        "Independent Withdraw remains available at any time, even after the feedback window.",
+        "Withdraw connection",
+        "Read previous private chat"
+      ],
+      "links": [
+        {
+          "nodeId": "1:458",
+          "name": "Action / Withdraw connection",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:303"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:460",
+          "name": "Action / Read previous private chat",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:259"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "hostgap",
+      "id": "1:466",
+      "name": "J04 / hostgap / Guest attendance",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:472",
+      "contentHeight": 432,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Guest attendance",
+        "Friday at Olive Table · Host",
+        "Mia · Not reported",
+        "Fill gaps only. A guest’s own report takes priority over your report.",
+        "Do not default all guests to attended. You can only report eligible people on this meal’s start list during the window.",
+        "Report Mia attended",
+        "Back to meal"
+      ],
+      "links": [
+        {
+          "nodeId": "1:479",
+          "name": "Action / Report Mia attended",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:487"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:481",
+          "name": "Action / Back to meal",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:59"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "hostreported",
+      "id": "1:487",
+      "name": "J04 / hostreported / Host report saved.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:493",
+      "contentHeight": 259,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Host report saved.",
+        "Mia · Host-reported attended",
+        "Mia can still make her own report while the window is open. Her own report takes priority. Your report is kept in history.",
+        "Back to guest attendance"
+      ],
+      "links": [
+        {
+          "nodeId": "1:497",
+          "name": "Action / Back to guest attendance",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:466"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "corrected",
+      "id": "1:504",
+      "name": "J04 / corrected / Attendance was corrected.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:510",
+      "contentHeight": 459,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Attendance was corrected.",
+        "Friday at Olive Table",
+        "Your valid attendance for this meal is unavailable. Related references are no longer public and this meal cannot support new private messages. Existing history remains read-only.\n\nA connection supported by another valid shared meal remains eligible; a past withdrawal or block is never undone.",
+        "Read previous private history",
+        "Back to Past meals"
+      ],
+      "links": [
+        {
+          "nodeId": "1:514",
+          "name": "Action / Read previous private history",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:321"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:516",
+          "name": "Action / Back to Past meals",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:35"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "choiceeditor",
+      "id": "3:161",
+      "name": "J04 / choiceeditor / Edit your reconnect choice",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:167",
+      "contentHeight": 510,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Edit your reconnect choice",
+        "About Alex · Friday at Olive Table",
+        "Public reference · optional · 1–500",
+        "A thoughtful and friendly dinner companion.",
+        "✓ I would like to meet Alex again\nYour saved public reference is unchanged. This only updates your own private choice.",
+        "Save feedback",
+        "Back to meal"
+      ],
+      "links": [
+        {
+          "nodeId": "3:172",
+          "name": "✓ I would like to meet Alex again Your saved public reference is unchanged. This only updates your own private choice.",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "4:230"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:173",
+          "name": "Action / Save feedback",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:211"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:174",
+          "name": "Action / Back to meal",
+          "actions": [
+            {
+              "type": "BACK"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "choiceremoved",
+      "id": "3:180",
+      "name": "J04 / choiceremoved / Your reconnect choice is cleared.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:186",
+      "contentHeight": 572,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Your reconnect choice is cleared.",
+        "About Alex · Save results",
+        "Public reference · Saved",
+        "Not public yet. Publication waits for both references or the end of the window.",
+        "Reconnect choice · Not selected",
+        "You have not chosen to reconnect. Your saved public reference is unchanged.",
+        "Back to meal",
+        "Edit my reconnect choice",
+        "Block person"
+      ],
+      "links": [
+        {
+          "nodeId": "3:195",
+          "name": "Action / Back to meal",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:103"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:196",
+          "name": "Action / Edit my reconnect choice",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:161"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:197",
+          "name": "Action / Block person",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:343"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "scorepicker",
+      "id": "3:211",
+      "name": "J04 / scorepicker / Choose a private meal score",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:217",
+      "contentHeight": 525,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Choose a private meal score",
+        "Your table cannot see this score. You may skip it.",
+        "1 / 5",
+        "2 / 5",
+        "3 / 5",
+        "4 / 5",
+        "5 / 5",
+        "Skip score"
+      ],
+      "links": [
+        {
+          "nodeId": "3:318",
+          "name": "Action / 1 / 5",
+          "actions": [
+            {
+              "type": "SET_VARIABLE",
+              "variableId": "VariableID:3:210",
+              "variableValue": {
+                "value": "1 / 5",
+                "type": "STRING",
+                "resolvedType": "STRING"
+              }
+            },
+            {
+              "type": "NODE",
+              "destinationId": "3:264"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:321",
+          "name": "Action / 2 / 5",
+          "actions": [
+            {
+              "type": "SET_VARIABLE",
+              "variableId": "VariableID:3:210",
+              "variableValue": {
+                "value": "2 / 5",
+                "type": "STRING",
+                "resolvedType": "STRING"
+              }
+            },
+            {
+              "type": "NODE",
+              "destinationId": "3:264"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:324",
+          "name": "Action / 3 / 5",
+          "actions": [
+            {
+              "type": "SET_VARIABLE",
+              "variableId": "VariableID:3:210",
+              "variableValue": {
+                "value": "3 / 5",
+                "type": "STRING",
+                "resolvedType": "STRING"
+              }
+            },
+            {
+              "type": "NODE",
+              "destinationId": "3:264"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:327",
+          "name": "Action / 4 / 5",
+          "actions": [
+            {
+              "type": "SET_VARIABLE",
+              "variableId": "VariableID:3:210",
+              "variableValue": {
+                "value": "4 / 5",
+                "type": "STRING",
+                "resolvedType": "STRING"
+              }
+            },
+            {
+              "type": "NODE",
+              "destinationId": "3:264"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:330",
+          "name": "Action / 5 / 5",
+          "actions": [
+            {
+              "type": "SET_VARIABLE",
+              "variableId": "VariableID:3:210",
+              "variableValue": {
+                "value": "5 / 5",
+                "type": "STRING",
+                "resolvedType": "STRING"
+              }
+            },
+            {
+              "type": "NODE",
+              "destinationId": "3:264"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:333",
+          "name": "Action / Skip score",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:59"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "scoreselected",
+      "id": "3:264",
+      "name": "J04 / scoreselected / Your attendance is saved.",
+      "width": 393,
+      "height": 852,
+      "contentId": "3:270",
+      "contentHeight": 584,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Your attendance is saved.",
+        "Friday at Olive Table · Attended",
+        "Rate this meal privately",
+        "Only your overall experience of this meal. Your table cannot see your score.",
+        "Meal score · optional",
+        "Choose 1–5",
+        "Your table · Alex",
+        "A friendly conversation over dinner.",
+        "Save private meal score",
+        "Leave a reference or reconnect",
+        "Discover",
+        "Meals",
+        "+",
+        "Create meal",
+        "Inbox",
+        "Profile"
+      ],
+      "links": [
+        {
+          "nodeId": "3:277",
+          "name": "Field / Meal score · optional",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:211"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:281",
+          "name": "Action / Save private meal score",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:103"
+            }
+          ]
+        },
+        {
+          "nodeId": "3:282",
+          "name": "Action / Leave a reference or reconnect",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:126"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "choiceunchecked",
+      "id": "4:230",
+      "name": "J04 / choiceunchecked / Edit your reconnect choice · unchecked",
+      "width": 393,
+      "height": 852,
+      "contentId": "4:236",
+      "contentHeight": 510,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   After your meal",
+        "Edit your reconnect choice",
+        "About Alex · Friday at Olive Table",
+        "Public reference · optional · 1–500",
+        "A thoughtful and friendly dinner companion.",
+        "□ I would like to meet Alex again\nYour saved public reference is unchanged. This only updates your own private choice.",
+        "Save feedback",
+        "Back to meal"
+      ],
+      "links": [
+        {
+          "nodeId": "4:241",
+          "name": "□ I would like to meet Alex again Your saved public reference is unchanged. This only updates your own private choice.",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:161"
+            }
+          ]
+        },
+        {
+          "nodeId": "4:242",
+          "name": "Action / Save feedback",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "3:180"
+            }
+          ]
+        },
+        {
+          "nodeId": "4:243",
+          "name": "Action / Back to meal",
+          "actions": [
+            {
+              "type": "BACK"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "FRAME": 252,
+    "TEXT": 318,
+    "INSTANCE": 74,
+    "VECTOR": 45,
+    "RECTANGLE": 28
+  },
+  "wrongFonts": [],
+  "narrowLabels": [],
+  "imageFilledNodes": [],
+  "flowStartingPoints": [
+    {
+      "nodeId": "1:35",
+      "name": "J04 · Main journey"
+    },
+    {
+      "nodeId": "1:170",
+      "name": "J04 · Necessary recovery"
+    }
+  ],
+  "stagesStarted": [
+    "PM",
+    "UX"
+  ],
+  "stagesNotStarted": [
+    "RD",
+    "QA"
+  ]
+}

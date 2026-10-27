@@ -1,0 +1,251 @@
+{
+  "journey": "J04",
+  "uxRevision": "UX-r01",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "prd": "docs/product/journeys/j04/requirements.zh-CN.md",
+  "pmCoverage": "docs/product/journeys/j04/coverage.json",
+  "scenarios": [
+    {
+      "scenarioId": "J04-R01",
+      "prdScenario": "§2",
+      "sourceRequirementIds": [
+        "D06-AC01",
+        "PRD-0.5"
+      ],
+      "demo": "demo/journeys/j04/index.html",
+      "demoScenes": [
+        "C01出席"
+      ],
+      "figmaNodes": [
+        "1:35",
+        "1:59",
+        "1:85",
+        "1:445",
+        "1:466",
+        "1:487"
+      ],
+      "stateKeys": [
+        "past",
+        "present",
+        "absent",
+        "expired",
+        "hostgap",
+        "hostreported"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "原型采用固定输入样本与独立分支快照；私评分picker变量之外，不声称完整持久业务模型。任意跨分支组合、自由文本/键盘、HTTP/版本/幂等/七天时钟、真实对方同意、支持权限、跨旅程统计和私信传输未在Figma运行。"
+    },
+    {
+      "scenarioId": "J04-R02",
+      "prdScenario": "§2",
+      "sourceRequirementIds": [
+        "PRD-0.2",
+        "PRD-0.5"
+      ],
+      "demo": "demo/journeys/j04/index.html",
+      "demoScenes": [
+        "C01出席"
+      ],
+      "figmaNodes": [
+        "1:35",
+        "1:59",
+        "1:466",
+        "1:504"
+      ],
+      "stateKeys": [
+        "past",
+        "present",
+        "hostgap",
+        "corrected"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "原型采用固定输入样本与独立分支快照；私评分picker变量之外，不声称完整持久业务模型。任意跨分支组合、自由文本/键盘、HTTP/版本/幂等/七天时钟、真实对方同意、支持权限、跨旅程统计和私信传输未在Figma运行。"
+    },
+    {
+      "scenarioId": "J04-R03",
+      "prdScenario": "§3",
+      "sourceRequirementIds": [
+        "D06-AC02"
+      ],
+      "demo": "demo/journeys/j04/index.html",
+      "demoScenes": [
+        "C02私评分"
+      ],
+      "figmaNodes": [
+        "1:59",
+        "3:211",
+        "3:264",
+        "1:103"
+      ],
+      "stateKeys": [
+        "present",
+        "scorepicker",
+        "scoreselected",
+        "scored"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "原型采用固定输入样本与独立分支快照；私评分picker变量之外，不声称完整持久业务模型。任意跨分支组合、自由文本/键盘、HTTP/版本/幂等/七天时钟、真实对方同意、支持权限、跨旅程统计和私信传输未在Figma运行。"
+    },
+    {
+      "scenarioId": "J04-R04",
+      "prdScenario": "§3",
+      "sourceRequirementIds": [
+        "FR-10",
+        "D06-AC02"
+      ],
+      "demo": "demo/journeys/j04/index.html",
+      "demoScenes": [
+        "C03公评"
+      ],
+      "figmaNodes": [
+        "1:126",
+        "1:149",
+        "1:170",
+        "1:211"
+      ],
+      "stateKeys": [
+        "feedback",
+        "draft",
+        "nochanges",
+        "waiting"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "原型采用固定输入样本与独立分支快照；私评分picker变量之外，不声称完整持久业务模型。任意跨分支组合、自由文本/键盘、HTTP/版本/幂等/七天时钟、真实对方同意、支持权限、跨旅程统计和私信传输未在Figma运行。"
+    },
+    {
+      "scenarioId": "J04-R05",
+      "prdScenario": "§4",
+      "sourceRequirementIds": [
+        "AC-004a",
+        "AC-004b",
+        "AC-004c",
+        "AC-004d",
+        "D06-AC03"
+      ],
+      "demo": "demo/journeys/j04/index.html",
+      "demoScenes": [
+        "C04组合保存"
+      ],
+      "figmaNodes": [
+        "1:149",
+        "1:186",
+        "1:398",
+        "1:421",
+        "1:303"
+      ],
+      "stateKeys": [
+        "draft",
+        "partial",
+        "unknown",
+        "conflict",
+        "withdraw"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "原型采用固定输入样本与独立分支快照；私评分picker变量之外，不声称完整持久业务模型。任意跨分支组合、自由文本/键盘、HTTP/版本/幂等/七天时钟、真实对方同意、支持权限、跨旅程统计和私信传输未在Figma运行。"
+    },
+    {
+      "scenarioId": "J04-R06",
+      "prdScenario": "§5",
+      "sourceRequirementIds": [
+        "D07-AC01"
+      ],
+      "demo": "demo/journeys/j04/index.html",
+      "demoScenes": [
+        "C06互选私聊"
+      ],
+      "figmaNodes": [
+        "1:211",
+        "1:236",
+        "1:259",
+        "1:282"
+      ],
+      "stateKeys": [
+        "waiting",
+        "mutual",
+        "dm",
+        "dmsent"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "原型采用固定输入样本与独立分支快照；私评分picker变量之外，不声称完整持久业务模型。任意跨分支组合、自由文本/键盘、HTTP/版本/幂等/七天时钟、真实对方同意、支持权限、跨旅程统计和私信传输未在Figma运行。"
+    },
+    {
+      "scenarioId": "J04-R07",
+      "prdScenario": "§5",
+      "sourceRequirementIds": [
+        "D07-AC02",
+        "D07-AC03",
+        "C004-C"
+      ],
+      "demo": "demo/journeys/j04/index.html",
+      "demoScenes": [
+        "C07边界"
+      ],
+      "figmaNodes": [
+        "3:161",
+        "4:230",
+        "3:180",
+        "1:303",
+        "1:321",
+        "1:343",
+        "1:362",
+        "1:380",
+        "1:445"
+      ],
+      "stateKeys": [
+        "choiceeditor",
+        "choiceunchecked",
+        "choiceremoved",
+        "withdraw",
+        "readonly",
+        "block",
+        "blocked",
+        "unblocked",
+        "expired"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "原型采用固定输入样本与独立分支快照；私评分picker变量之外，不声称完整持久业务模型。任意跨分支组合、自由文本/键盘、HTTP/版本/幂等/七天时钟、真实对方同意、支持权限、跨旅程统计和私信传输未在Figma运行。"
+    },
+    {
+      "scenarioId": "J04-R08",
+      "prdScenario": "§6",
+      "sourceRequirementIds": [
+        "D07-AC03",
+        "PRD-0.5"
+      ],
+      "demo": "demo/journeys/j04/index.html",
+      "demoScenes": [
+        "C08修订传播"
+      ],
+      "figmaNodes": [
+        "1:504",
+        "1:321"
+      ],
+      "stateKeys": [
+        "corrected",
+        "readonly"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "原型采用固定输入样本与独立分支快照；私评分picker变量之外，不声称完整持久业务模型。任意跨分支组合、自由文本/键盘、HTTP/版本/幂等/七天时钟、真实对方同意、支持权限、跨旅程统计和私信传输未在Figma运行。"
+    }
+  ],
+  "sourceUnitInheritance": {
+    "path": "docs/product/journeys/j04/coverage.json",
+    "sha256": "2714dd57dbd12a49bb99c5852465b4e36570b40229088715b5405ff3ad12c9e1",
+    "unitCount": 712,
+    "meaning": "继承该固定PM覆盖文件的全部原文有效性/历史/后置/documented-only处置；节点表映射本旅程需求和代表状态，不把每个原文单元宣称为可点击或真实实现。"
+  },
+  "stagesStarted": {
+    "PM": true,
+    "UX": true,
+    "RD": false,
+    "QA": false
+  }
+}

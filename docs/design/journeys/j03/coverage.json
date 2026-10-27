@@ -1,0 +1,239 @@
+{
+  "journey": "J03",
+  "uxRevision": "UX-r01",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "prd": "docs/product/journeys/j03/requirements.zh-CN.md",
+  "pmCoverage": "docs/product/journeys/j03/coverage.json",
+  "scenarios": [
+    {
+      "scenarioId": "J03-R01",
+      "prdScenario": "§2",
+      "sourceRequirementIds": [
+        "FR-09",
+        "D05-AC01"
+      ],
+      "demo": "demo/journeys/j03/index.html",
+      "demoScenes": [
+        "C01Inbox/角色"
+      ],
+      "figmaNodes": [
+        "1:35",
+        "1:61",
+        "1:84",
+        "1:409",
+        "1:429"
+      ],
+      "stateKeys": [
+        "inbox",
+        "noticeread",
+        "meal",
+        "pending",
+        "mealprogress"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未在Figma模拟自由文本、完整键盘、多设备读位/分页与前后台、网络传输、真实OAuth/邮件/幂等、服务端区间鉴权。重入与host解散是独立合成角色/外部事件快照，不是主用户可执行的权限开关。"
+    },
+    {
+      "scenarioId": "J03-R02",
+      "prdScenario": "§3",
+      "sourceRequirementIds": [
+        "D05-AC01",
+        "D05-AC03"
+      ],
+      "demo": "demo/journeys/j03/index.html",
+      "demoScenes": [
+        "C02收发"
+      ],
+      "figmaNodes": [
+        "1:107",
+        "1:137",
+        "1:166",
+        "1:382"
+      ],
+      "stateKeys": [
+        "chat",
+        "sent",
+        "failed",
+        "history"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未在Figma模拟自由文本、完整键盘、多设备读位/分页与前后台、网络传输、真实OAuth/邮件/幂等、服务端区间鉴权。重入与host解散是独立合成角色/外部事件快照，不是主用户可执行的权限开关。"
+    },
+    {
+      "scenarioId": "J03-R03",
+      "prdScenario": "§3",
+      "sourceRequirementIds": [
+        "D05-AC03"
+      ],
+      "demo": "demo/journeys/j03/index.html",
+      "demoScenes": [
+        "C03读位"
+      ],
+      "figmaNodes": [
+        "1:35",
+        "1:61",
+        "1:531",
+        "1:137"
+      ],
+      "stateKeys": [
+        "inbox",
+        "noticeread",
+        "older",
+        "sent"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未在Figma模拟自由文本、完整键盘、多设备读位/分页与前后台、网络传输、真实OAuth/邮件/幂等、服务端区间鉴权。重入与host解散是独立合成角色/外部事件快照，不是主用户可执行的权限开关。"
+    },
+    {
+      "scenarioId": "J03-R04",
+      "prdScenario": "§4",
+      "sourceRequirementIds": [
+        "D04-AC03",
+        "D05-AC02"
+      ],
+      "demo": "demo/journeys/j03/index.html",
+      "demoScenes": [
+        "C04两种退出"
+      ],
+      "figmaNodes": [
+        "1:84",
+        "1:303",
+        "1:321",
+        "1:342",
+        "1:360"
+      ],
+      "stateKeys": [
+        "meal",
+        "seatconfirm",
+        "seatleft",
+        "groupconfirm",
+        "leftsettings"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未在Figma模拟自由文本、完整键盘、多设备读位/分页与前后台、网络传输、真实OAuth/邮件/幂等、服务端区间鉴权。重入与host解散是独立合成角色/外部事件快照，不是主用户可执行的权限开关。"
+    },
+    {
+      "scenarioId": "J03-R05",
+      "prdScenario": "§4",
+      "sourceRequirementIds": [
+        "D05-AC02",
+        "AC-008n"
+      ],
+      "demo": "demo/journeys/j03/index.html",
+      "demoScenes": [
+        "C05重入"
+      ],
+      "figmaNodes": [
+        "1:360",
+        "1:382",
+        "1:409",
+        "1:445"
+      ],
+      "stateKeys": [
+        "leftsettings",
+        "history",
+        "pending",
+        "reentered"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未在Figma模拟自由文本、完整键盘、多设备读位/分页与前后台、网络传输、真实OAuth/邮件/幂等、服务端区间鉴权。重入与host解散是独立合成角色/外部事件快照，不是主用户可执行的权限开关。"
+    },
+    {
+      "scenarioId": "J03-R06",
+      "prdScenario": "§4",
+      "sourceRequirementIds": [
+        "D05-AC02"
+      ],
+      "demo": "demo/journeys/j03/index.html",
+      "demoScenes": [
+        "C06终态"
+      ],
+      "figmaNodes": [
+        "1:472",
+        "1:493",
+        "1:511"
+      ],
+      "stateKeys": [
+        "hostsettings",
+        "dissolve",
+        "dissolved"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未在Figma模拟自由文本、完整键盘、多设备读位/分页与前后台、网络传输、真实OAuth/邮件/幂等、服务端区间鉴权。重入与host解散是独立合成角色/外部事件快照，不是主用户可执行的权限开关。"
+    },
+    {
+      "scenarioId": "J03-R07",
+      "prdScenario": "§5",
+      "sourceRequirementIds": [
+        "AC-AI08",
+        "AC-AI09"
+      ],
+      "demo": "demo/journeys/j03/index.html",
+      "demoScenes": [
+        "C07AI群稿"
+      ],
+      "figmaNodes": [
+        "1:107",
+        "1:190",
+        "1:211",
+        "1:235",
+        "1:259",
+        "1:552"
+      ],
+      "stateKeys": [
+        "chat",
+        "ai",
+        "replace",
+        "inserted",
+        "aisent",
+        "aifailed"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未在Figma模拟自由文本、完整键盘、多设备读位/分页与前后台、网络传输、真实OAuth/邮件/幂等、服务端区间鉴权。重入与host解散是独立合成角色/外部事件快照，不是主用户可执行的权限开关。"
+    },
+    {
+      "scenarioId": "J03-R08",
+      "prdScenario": "§6",
+      "sourceRequirementIds": [
+        "P-02",
+        "PATCH-004"
+      ],
+      "demo": "demo/journeys/j03/index.html",
+      "demoScenes": [
+        "C08通知"
+      ],
+      "figmaNodes": [
+        "1:35",
+        "1:61",
+        "1:409"
+      ],
+      "stateKeys": [
+        "inbox",
+        "noticeread",
+        "pending"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "未在Figma模拟自由文本、完整键盘、多设备读位/分页与前后台、网络传输、真实OAuth/邮件/幂等、服务端区间鉴权。重入与host解散是独立合成角色/外部事件快照，不是主用户可执行的权限开关。"
+    }
+  ],
+  "sourceUnitInheritance": {
+    "path": "docs/product/journeys/j03/coverage.json",
+    "sha256": "8d6641509b1a4d757d1034ceefcebe73956f42ad6257be71b6801ea0e06c4adb",
+    "unitCount": 957,
+    "meaning": "继承该固定PM覆盖文件的全部原文有效性/历史/后置/documented-only处置；节点表映射本旅程需求和代表状态，不把每个原文单元宣称为可点击或真实实现。"
+  },
+  "stagesStarted": {
+    "PM": true,
+    "UX": true,
+    "RD": false,
+    "QA": false
+  }
+}

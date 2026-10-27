@@ -1,0 +1,1102 @@
+{
+  "journey": "J03",
+  "reviewRole": "UX author",
+  "status": "UX-r01 candidate; not frozen or Owner approved",
+  "wrapperId": "1:2",
+  "screens": [
+    {
+      "key": "inbox",
+      "id": "1:35",
+      "name": "J03 / inbox / Inbox",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:41",
+      "contentHeight": 531,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Inbox",
+        "Your plans, in one place.",
+        "Confirmed · Friday at Olive Table",
+        "Friday 30 October · 19:00 London\nYour seat is confirmed.",
+        "1 unread notification",
+        "Your application was approved. Your seat is confirmed.",
+        "Open group · 1 unread",
+        "View meal",
+        "Mark notification read",
+        "Discover",
+        "Meals",
+        "+",
+        "Create meal",
+        "Inbox",
+        "Profile"
+      ],
+      "links": [
+        {
+          "nodeId": "1:50",
+          "name": "Action / Open group · 1 unread",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:107"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:52",
+          "name": "Action / View meal",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:84"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:54",
+          "name": "Action / Mark notification read",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:61"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "noticeread",
+      "id": "1:61",
+      "name": "J03 / noticeread / Inbox",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:67",
+      "contentHeight": 492,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Inbox",
+        "Your plans, in one place.",
+        "Confirmed · Friday at Olive Table",
+        "Friday 30 October · 19:00 London",
+        "Notifications · Read",
+        "Your application was approved. Your seat is confirmed.\nGroup unread is independent of notification read status.",
+        "Open group · 1 unread",
+        "View meal",
+        "Discover",
+        "Meals",
+        "+",
+        "Create meal",
+        "Inbox",
+        "Profile"
+      ],
+      "links": [
+        {
+          "nodeId": "1:76",
+          "name": "Action / Open group · 1 unread",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:107"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:78",
+          "name": "Action / View meal",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:84"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "meal",
+      "id": "1:84",
+      "name": "J03 / meal / Friday at Olive Table",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:90",
+      "contentHeight": 491,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Friday at Olive Table",
+        "Olive Table · Soho · 30 October · 19:00 GMT",
+        "Your seat · Confirmed",
+        "Meal · Open\nYour seat and your group membership are separate.",
+        "Leave your seat before the meal starts. Leaving your seat does not leave the group.",
+        "Open group chat",
+        "Leave meal seat",
+        "Back to Inbox"
+      ],
+      "links": [
+        {
+          "nodeId": "1:97",
+          "name": "Action / Open group chat",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:107"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:99",
+          "name": "Action / Leave meal seat",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:303"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:101",
+          "name": "Action / Back to Inbox",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:35"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "chat",
+      "id": "1:107",
+      "name": "J03 / chat / Friday at Olive Table",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:113",
+      "contentHeight": 721,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Friday at Olive Table",
+        "Group chat · You are a current member",
+        "Alex · 18:04",
+        "Looking forward to Friday. Shall we meet by the entrance?",
+        "You · 18:05",
+        "Sounds good! I’ll be there a few minutes early.",
+        "Message · 1–2000 characters",
+        "I’ll meet you by the entrance.",
+        "Send message",
+        "Ask Fancy for a group draft",
+        "Group settings",
+        "Back to Inbox"
+      ],
+      "links": [
+        {
+          "nodeId": "1:125",
+          "name": "Action / Send message",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:137"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:127",
+          "name": "Action / Ask Fancy for a group draft",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:190"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:129",
+          "name": "Action / Group settings",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:280"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:131",
+          "name": "Action / Back to Inbox",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:35"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "sent",
+      "id": "1:137",
+      "name": "J03 / sent / Friday at Olive Table",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:143",
+      "contentHeight": 716,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Friday at Olive Table",
+        "Group chat · Message sent",
+        "Alex · 18:04",
+        "Looking forward to Friday. Shall we meet by the entrance?",
+        "You · Just now",
+        "I’ll meet you by the entrance.",
+        "Sent to this conversation. This does not mean the other person has read it.",
+        "Message",
+        "",
+        "Group settings",
+        "View meal",
+        "Back to Inbox"
+      ],
+      "links": [
+        {
+          "nodeId": "1:156",
+          "name": "Action / Group settings",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:280"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:158",
+          "name": "Action / View meal",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:84"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:160",
+          "name": "Action / Back to Inbox",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:35"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "failed",
+      "id": "1:166",
+      "name": "J03 / failed / Message not sent.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:172",
+      "contentHeight": 523,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Message not sent.",
+        "Your text is safe. Try again when connected.",
+        "Friday at Olive Table",
+        "Your group membership is unchanged.",
+        "Unsent message",
+        "I’ll meet you by the entrance.",
+        "Nothing will be sent automatically when you reconnect.",
+        "Try sending again",
+        "Return to chat"
+      ],
+      "links": [
+        {
+          "nodeId": "1:182",
+          "name": "Action / Try sending again",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:137"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:184",
+          "name": "Action / Return to chat",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:107"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "ai",
+      "id": "1:190",
+      "name": "J03 / ai / Help with your message.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:196",
+      "contentHeight": 412,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Help with your message.",
+        "Ask Fancy · Group draft",
+        "Suggested draft",
+        "Hi everyone! Shall we meet at the restaurant entrance a few minutes before 19:00?",
+        "Uses the meal’s public time and place and your request. Your conversation is not read to generate this draft.",
+        "Use this draft",
+        "Keep writing myself"
+      ],
+      "links": [
+        {
+          "nodeId": "1:203",
+          "name": "Action / Use this draft",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:211"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:205",
+          "name": "Action / Keep writing myself",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:107"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "replace",
+      "id": "1:211",
+      "name": "J03 / replace / Replace your unsent message?",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:217",
+      "contentHeight": 493,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Replace your unsent message?",
+        "A draft is not sent automatically.",
+        "Your current text",
+        "I’ll meet you by the entrance.",
+        "New draft",
+        "Hi everyone! Shall we meet at the restaurant entrance a few minutes before 19:00?",
+        "Replace with draft",
+        "Keep as it is"
+      ],
+      "links": [
+        {
+          "nodeId": "1:226",
+          "name": "Action / Replace with draft",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:235"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:228",
+          "name": "Action / Keep as it is",
+          "actions": [
+            {
+              "type": "BACK"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "inserted",
+      "id": "1:235",
+      "name": "J03 / inserted / Friday at Olive Table",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:241",
+      "contentHeight": 543,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Friday at Olive Table",
+        "Group chat · Draft added",
+        "Alex · 18:04",
+        "Looking forward to Friday. Shall we meet by the entrance?",
+        "Message · edit before sending",
+        "Hi everyone! Shall we meet at the restaurant entrance a few minutes before 19:00?",
+        "Your draft has not been sent.",
+        "Send message",
+        "Group settings"
+      ],
+      "links": [
+        {
+          "nodeId": "1:251",
+          "name": "Action / Send message",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:259"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:253",
+          "name": "Action / Group settings",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:280"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "aisent",
+      "id": "1:259",
+      "name": "J03 / aisent / Friday at Olive Table",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:265",
+      "contentHeight": 412,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Friday at Olive Table",
+        "Group chat · Message sent",
+        "You · Just now",
+        "Hi everyone! Shall we meet at the restaurant entrance a few minutes before 19:00?",
+        "Only you chose to send this message. It has not been marked read by anyone else.",
+        "Group settings",
+        "Back to Inbox"
+      ],
+      "links": [
+        {
+          "nodeId": "1:272",
+          "name": "Action / Group settings",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:280"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:274",
+          "name": "Action / Back to Inbox",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:35"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "settings",
+      "id": "1:280",
+      "name": "J03 / settings / Group settings",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:286",
+      "contentHeight": 471,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Group settings",
+        "Friday at Olive Table",
+        "Current members · 2",
+        "Alex · Host\nMia · You",
+        "Group membership and meal participation are separate. Leaving this group does not release your seat.",
+        "Read chat",
+        "View meal participation",
+        "Leave group"
+      ],
+      "links": [
+        {
+          "nodeId": "1:293",
+          "name": "Action / Read chat",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:137"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:295",
+          "name": "Action / View meal participation",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:84"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:297",
+          "name": "Action / Leave group",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:342"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "seatconfirm",
+      "id": "1:303",
+      "name": "J03 / seatconfirm / Leave your meal seat?",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:309",
+      "contentHeight": 298,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Leave your meal seat?",
+        "Your group membership will stay active.",
+        "Your seat will be released. You remain a group member and can still coordinate with the group.",
+        "Keep my seat",
+        "Confirm leaving seat"
+      ],
+      "links": [
+        {
+          "nodeId": "1:313",
+          "name": "Action / Keep my seat",
+          "actions": [
+            {
+              "type": "BACK"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:315",
+          "name": "Action / Confirm leaving seat",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:321"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "seatleft",
+      "id": "1:321",
+      "name": "J03 / seatleft / You left your meal seat.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:327",
+      "contentHeight": 432,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "You left your meal seat.",
+        "Meal participation · Cancelled",
+        "Friday at Olive Table",
+        "Your seat has been released. You are still a group member.",
+        "Your host receives an in-app update. If the table falls below its minimum after the deadline, the meal may be cancelled.",
+        "Continue group chat",
+        "Back to Inbox"
+      ],
+      "links": [
+        {
+          "nodeId": "1:334",
+          "name": "Action / Continue group chat",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:107"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:336",
+          "name": "Action / Back to Inbox",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:35"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "groupconfirm",
+      "id": "1:342",
+      "name": "J03 / groupconfirm / Leave this group?",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:348",
+      "contentHeight": 358,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Leave this group?",
+        "Your meal seat will stay as it is.",
+        "You can read your authorised history, but will not receive new group messages.\n\nLeaving the group does not release your confirmed meal seat.",
+        "Keep as it is",
+        "Confirm leaving group"
+      ],
+      "links": [
+        {
+          "nodeId": "1:352",
+          "name": "Action / Keep as it is",
+          "actions": [
+            {
+              "type": "BACK"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:354",
+          "name": "Action / Confirm leaving group",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:360"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "leftsettings",
+      "id": "1:360",
+      "name": "J03 / leftsettings / Group settings",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:366",
+      "contentHeight": 392,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Group settings",
+        "Left group · Read-only",
+        "Friday at Olive Table",
+        "Your meal participation has not changed.",
+        "You can read only your authorised chat history. Current members are not shown.",
+        "Read authorised chat history",
+        "View meal participation"
+      ],
+      "links": [
+        {
+          "nodeId": "1:373",
+          "name": "Action / Read authorised chat history",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:382"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:375",
+          "name": "Action / View meal participation",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:84"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "history",
+      "id": "1:382",
+      "name": "J03 / history / Friday at Olive Table",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:388",
+      "contentHeight": 657,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Friday at Olive Table",
+        "Read-only history · You left the group",
+        "Alex · Before you left",
+        "Looking forward to Friday. Shall we meet by the entrance?",
+        "You · Before you left",
+        "I’ll meet you by the entrance.",
+        "Your unsent text · copy or delete",
+        "I’ll be a few minutes early.",
+        "New messages are unavailable. Messages sent while you were away are not shown.",
+        "Back to group settings",
+        "View meal participation"
+      ],
+      "links": [
+        {
+          "nodeId": "1:401",
+          "name": "Action / Back to group settings",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:360"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:403",
+          "name": "Action / View meal participation",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:84"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "pending",
+      "id": "1:409",
+      "name": "J03 / pending / Inbox",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:415",
+      "contentHeight": 358,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Inbox",
+        "Application · Awaiting approval",
+        "Friday at Olive Table",
+        "Your current application is pending. It does not give you a group seat or new chat access.",
+        "View meal progress",
+        "Read earlier authorised history",
+        "Discover",
+        "Meals",
+        "+",
+        "Create meal",
+        "Inbox",
+        "Profile"
+      ],
+      "links": [
+        {
+          "nodeId": "1:421",
+          "name": "Action / View meal progress",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:429"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:423",
+          "name": "Action / Read earlier authorised history",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:382"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "mealprogress",
+      "id": "1:429",
+      "name": "J03 / mealprogress / Your application is pending.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:435",
+      "contentHeight": 300,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Your application is pending.",
+        "Friday at Olive Table",
+        "Group access opens only after the host approves your application. A previous read-only interval does not grant new messages.",
+        "Back to Inbox"
+      ],
+      "links": [
+        {
+          "nodeId": "1:439",
+          "name": "Action / Back to Inbox",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:409"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "reentered",
+      "id": "1:445",
+      "name": "J03 / reentered / Friday at Olive Table",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:451",
+      "contentHeight": 657,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Friday at Olive Table",
+        "You were approved again · Group chat",
+        "Earlier authorised history",
+        "Your messages from your previous membership are still available.",
+        "Alex · After your return",
+        "Welcome back. See you at the restaurant.",
+        "Messages sent while you were away are not shown. New messages use your new membership interval.",
+        "Message",
+        "Looking forward to it.",
+        "Send message",
+        "Group settings"
+      ],
+      "links": [
+        {
+          "nodeId": "1:464",
+          "name": "Action / Send message",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:137"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:466",
+          "name": "Action / Group settings",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:280"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "hostsettings",
+      "id": "1:472",
+      "name": "J03 / hostsettings / Group settings",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:478",
+      "contentHeight": 412,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Group settings",
+        "Friday at Olive Table · Host",
+        "Current members · 2",
+        "Alex · You · Host\nMia · Guest",
+        "Dissolving this group does not cancel the meal or change any seat.",
+        "Read chat",
+        "Dissolve group for everyone"
+      ],
+      "links": [
+        {
+          "nodeId": "1:485",
+          "name": "Action / Read chat",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:107"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:487",
+          "name": "Action / Dissolve group for everyone",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:493"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "dissolve",
+      "id": "1:493",
+      "name": "J03 / dissolve / Dissolve this group for everyone?",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:499",
+      "contentHeight": 339,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Dissolve this group for everyone?",
+        "This is permanent.",
+        "No one will be able to send new messages. Authorised history remains read-only. Meal seats are unchanged.",
+        "Keep as it is",
+        "Confirm dissolution"
+      ],
+      "links": [
+        {
+          "nodeId": "1:503",
+          "name": "Action / Keep as it is",
+          "actions": [
+            {
+              "type": "BACK"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:505",
+          "name": "Action / Confirm dissolution",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:511"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "dissolved",
+      "id": "1:511",
+      "name": "J03 / dissolved / Friday at Olive Table",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:517",
+      "contentHeight": 373,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Friday at Olive Table",
+        "Group dissolved · Read-only history",
+        "Alex · Authorised history",
+        "Looking forward to Friday. Shall we meet by the entrance?",
+        "No one can send new messages. Meal seats and attendance are unchanged. A later approval does not reopen this group.",
+        "Back to Inbox"
+      ],
+      "links": [
+        {
+          "nodeId": "1:524",
+          "name": "Action / Back to Inbox",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:35"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "older",
+      "id": "1:531",
+      "name": "J03 / older / Earlier messages",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:537",
+      "contentHeight": 412,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Earlier messages",
+        "Friday at Olive Table",
+        "Authorised history",
+        "The entrance is on the side street.",
+        "2 new messages\nReading older messages does not clear unseen messages or the notification list.",
+        "Go to latest messages",
+        "Back to Inbox"
+      ],
+      "links": [
+        {
+          "nodeId": "1:544",
+          "name": "Action / Go to latest messages",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:137"
+            }
+          ]
+        },
+        {
+          "nodeId": "1:546",
+          "name": "Action / Back to Inbox",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:35"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "aifailed",
+      "id": "1:552",
+      "name": "J03 / aifailed / Ask Fancy is unavailable.",
+      "width": 393,
+      "height": 852,
+      "contentId": "1:558",
+      "contentHeight": 300,
+      "text": [
+        "9:41                                                     ▰",
+        "‹   Meal chat",
+        "Ask Fancy is unavailable.",
+        "Your unsent message stays here.",
+        "You can write and send your own message. Leaving or losing access to the group prevents draft generation, transfer and sending.",
+        "Write myself"
+      ],
+      "links": [
+        {
+          "nodeId": "1:562",
+          "name": "Action / Write myself",
+          "actions": [
+            {
+              "type": "NODE",
+              "destinationId": "1:107"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "FRAME": 209,
+    "TEXT": 275,
+    "INSTANCE": 60,
+    "VECTOR": 27,
+    "RECTANGLE": 24
+  },
+  "wrongFonts": [],
+  "narrowLabels": [],
+  "imageFilledNodes": [],
+  "flowStartingPoints": [
+    {
+      "nodeId": "1:35",
+      "name": "J03 · Main journey"
+    },
+    {
+      "nodeId": "1:166",
+      "name": "J03 · Necessary recovery"
+    }
+  ],
+  "stagesStarted": [
+    "PM",
+    "UX"
+  ],
+  "stagesNotStarted": [
+    "RD",
+    "QA"
+  ]
+}

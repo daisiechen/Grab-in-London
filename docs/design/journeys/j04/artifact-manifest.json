@@ -1,0 +1,73 @@
+{
+  "journey": "J04",
+  "revision": "UX-r01",
+  "status": "candidate-awaiting-owner-review",
+  "owner": "UX-2",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "requirementsRevision": "PM-r01",
+  "demoRevision": "PM-r02",
+  "inputHashes": {
+    "docs/product/journeys/j04/requirements.zh-CN.md": "8172b103c759b19b6b70a2dea946bd50cc7286405a31dc73b4012cf169da72a7",
+    "demo/journeys/j04/index.html": "e93934a96472977cc9c28cc2c9e8d245ce0cf68ff815f38a01c8709e92a09dbe",
+    "docs/product/journeys/j04/coverage.json": "2714dd57dbd12a49bb99c5852465b4e36570b40229088715b5405ff3ad12c9e1",
+    "docs/product/journeys/j04/artifact-manifest.json": "119f815e317b34cc1140f00dfaddf9da77654767f13f2a299b2be9b79d3c80d8",
+    "docs/design/brand-direction.zh-CN.md": "76c7a9d5c2487649d103fbb000b584a75215bc1adc68184493b2674ca9af38da",
+    "demo/DESIGN.md": "abd6031d7e2b24b2e4f19b2a99ef54b9e76a2f1807717e590ac71c9eb7bfb63a",
+    "demo/UX-CONTRACT.md": "c74557722202a3de27191a8eca885460d7b48c92b202f320b7a2c738436c78fc"
+  },
+  "figma": {
+    "fileKey": "UvgjBArZae7tQuSAXu8cWA",
+    "url": "https://www.figma.com/design/UvgjBArZae7tQuSAXu8cWA?node-id=1-35",
+    "pageId": "0:1",
+    "entryNodeId": "1:35",
+    "nodeIds": [
+      "1:35",
+      "1:59",
+      "1:85",
+      "1:103",
+      "1:126",
+      "1:149",
+      "1:170",
+      "1:186",
+      "1:211",
+      "1:236",
+      "1:259",
+      "1:282",
+      "1:303",
+      "1:321",
+      "1:343",
+      "1:362",
+      "1:380",
+      "1:398",
+      "1:421",
+      "1:445",
+      "1:466",
+      "1:487",
+      "1:504",
+      "3:161",
+      "3:180",
+      "3:211",
+      "3:264",
+      "4:230"
+    ],
+    "boardNodeId": "1:2",
+    "namedVersionId": null,
+    "frozen": false,
+    "mutableFile": true
+  },
+  "stagesStarted": {
+    "PM": true,
+    "UX": true,
+    "RD": false,
+    "QA": false
+  },
+  "ownerApproved": false,
+  "evidenceBoundary": "作者实际读回节点、原型目标、字体并查看整板及代表截图；未执行完整Presentation点击/自由输入/真实服务或独立QA。",
+  "files": {
+    "docs/design/journeys/j04/coverage.json": "e42624e5b76bbef9d49e017dc13c66ebab5539aea57eea694e9465b4cbb29ca8",
+    "docs/design/journeys/j04/evidence/private-choice.png": "dc92c2a7594574be479566b883bbe522cc9b9144a49df99a497cf2ba29825270",
+    "docs/design/journeys/j04/evidence/score-picker.png": "2e6fa7805f6cf8a3aca1d7b8d41ff7e3415b60825499cb2cd88a10951b41847f",
+    "docs/design/journeys/j04/figma-readback.json": "b3eccce8a9552012b9e08ab1033a1feea73ffe18080259c47d7a15fe2db77569",
+    "docs/design/journeys/j04/handoff.zh-CN.md": "98d024188907eac84f2c8569c254937d39b7886b0609ddb5268e4b2702be17e2"
+  }
+}
