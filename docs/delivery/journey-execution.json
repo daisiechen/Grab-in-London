@@ -87,7 +87,7 @@
       "acceptedForNextStage": false,
       "requirementsRevision": "PM-r01",
       "demoRevision": "PM-r01",
-      "uxOwner": "UX-1",
+      "uxOwner": "UX-2",
       "pmAcceptedForUX": true,
       "uxCandidateRevision": "UX-r02",
       "developmentIteration": "IOS-0.1.0-dev.2"
@@ -99,7 +99,7 @@
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -135,7 +135,7 @@
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -204,7 +204,7 @@
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -235,7 +235,7 @@
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -265,7 +265,7 @@
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },

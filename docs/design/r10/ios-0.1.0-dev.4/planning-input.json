@@ -1,0 +1,29 @@
+{
+  "id": "IOS-0.1.0-dev.4",
+  "productVersion": "IOS-0.1.0",
+  "journeys": [
+    "J07",
+    "J08"
+  ],
+  "dependsOn": [
+    "IOS-0.1.0-dev.3"
+  ],
+  "inputs": {
+    "J07": {
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02",
+      "sha256": {
+        "docs/product/journeys/j07/requirements.zh-CN.md": "5dd9c7a3dc993a621f288ad4f0ac977129ced8a9fd3db802c6f5e6b08fd8c2bd",
+        "demo/journeys/j07/index.html": "0985a543d5443b829bbb0d65295c667ea3e223da161f983cc648cfc5f99d61f0"
+      }
+    },
+    "J08": {
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02",
+      "sha256": {
+        "docs/product/journeys/j08/requirements.zh-CN.md": "3f747817145b1c8574ba90ba886ebb5d72d3fd801911b99c9421ebef28193203",
+        "demo/journeys/j08/index.html": "8997140330db7de963856048ffd47ef2d63a6ff1d9c8776af2ed54015cb5eeff"
+      }
+    }
+  }
+}

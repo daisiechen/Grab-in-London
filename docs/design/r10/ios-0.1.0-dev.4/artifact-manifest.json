@@ -1,0 +1,90 @@
+{
+  "revision": "UX-r02",
+  "iteration": "IOS-0.1.0-dev.4",
+  "productVersion": "IOS-0.1.0",
+  "journeys": [
+    "J07",
+    "J08"
+  ],
+  "businessCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "inputSHA256": {
+    "docs/product/journeys/j07/requirements.zh-CN.md": "5dd9c7a3dc993a621f288ad4f0ac977129ced8a9fd3db802c6f5e6b08fd8c2bd",
+    "docs/product/journeys/j07/coverage.json": "549f073c0fd65dc98ebed75e645ccb9d95b115a380b4b6b0ee57305c9fa593cf",
+    "docs/product/journeys/j07/artifact-manifest.json": "1dddef92e89f504804a4c4d0150d82af5707f65fd16e258f0d3d2209640db378",
+    "demo/journeys/j07/index.html": "0985a543d5443b829bbb0d65295c667ea3e223da161f983cc648cfc5f99d61f0",
+    "docs/product/journeys/j08/requirements.zh-CN.md": "3f747817145b1c8574ba90ba886ebb5d72d3fd801911b99c9421ebef28193203",
+    "docs/product/journeys/j08/coverage.json": "e4c3b859904fa911718d93250050beba2911129eb0f402147ae797a2771af651",
+    "docs/product/journeys/j08/artifact-manifest.json": "8d1935e1c4535a94ae550a72c5c586484714b2763da46f8136eaf5a0d9da74b4",
+    "demo/journeys/j08/index.html": "8997140330db7de963856048ffd47ef2d63a6ff1d9c8776af2ed54015cb5eeff"
+  },
+  "visualSource": {
+    "siteVersion": 13,
+    "commit": "361ab04ed6fc55c0f1e041bb5d6cc5d216d1a7b2",
+    "url": "https://grab-in-london-demo.daisie-chen-94.chatgpt.site",
+    "pathSHA256": {
+      "demo/src/Prototype.tsx": "50945a3a1261108d855b483342e31b252b0c99c74977011e92426cf1887e58a8",
+      "demo/src/prototype.css": "8ec652ea30fc06b74846f1adcc5d910c05f4366bcf31d8e6b8b73ced530025bb",
+      "demo/DESIGN.md": "abd6031d7e2b24b2e4f19b2a99ef54b9e76a2f1807717e590ac71c9eb7bfb63a",
+      "demo/UX-CONTRACT.md": "c74557722202a3de27191a8eca885460d7b48c92b202f320b7a2c738436c78fc"
+    }
+  },
+  "planningSnapshotCommit": "3c81b2751b5313f0d3d7b9edc14c35ddf8ff9a79",
+  "planningProjectionSHA256": "9641191753bac4a639ded7e90ced9736f1b3375d8912bab33a2b768b8e33abd3",
+  "designSystem": {
+    "revision": "DS-0.1.0",
+    "fileKey": "yUMVg2xpLXQHKPr2ZWpkO3",
+    "tokensPath": "docs/design/r10/system/tokens.json",
+    "owner": "UX-1",
+    "status": "reference-candidate-pending-final-consistency"
+  },
+  "figma": {
+    "fileKey": "TxashjRfQDvnc4jQieeaWu",
+    "url": "https://www.figma.com/design/TxashjRfQDvnc4jQieeaWu",
+    "pages": {
+      "J07": "0:1",
+      "J08": "1:2"
+    },
+    "entryNodes": {
+      "J07": "2:4",
+      "J08": "5:16"
+    },
+    "namedVersionId": null,
+    "frozen": false,
+    "mutableFile": true
+  },
+  "ownerApproved": false,
+  "implementationReady": false,
+  "stages": {
+    "RDImplementation": false,
+    "QA": false
+  },
+  "validation": {
+    "nativeReadback": true,
+    "visualInspected": true,
+    "presentationEndToEnd": false,
+    "freeInput": false,
+    "realServices": false,
+    "evidenceTests": {
+      "command": "python3 -m unittest discover -s tests -p test_ux_r10_ios34.py",
+      "passed": 2
+    }
+  },
+  "filesSHA256": {
+    "coverage.json": "5ed15e1f3ecfa0d9afe562a0e788818bb77d3f4ce3d6af53aa7eacf4841703f8",
+    "evidence/README.zh-CN.md": "f06ccd16c3b1ed70d1953da7746306b765564846da472f5728818d23f16e4640",
+    "evidence/figma-pending.png": "c035f93b968137b3a83df55dec4d31872c3cebe421645e740a724bcebc887aa6",
+    "evidence/figma-report-form.png": "f3b68f630ebc821e1d5eff8cce8bc9e03af9c59b9c897d29824b0bdc017afa96",
+    "evidence/figma-support.png": "f3a94fb5b2021e324483732d5f56851728dee999be0c08f7c45a0eae00ea3a1e",
+    "evidence/readback-0-1.json": "4ded6e78bb40c6de72a937778a958935504b45a24ba2f38aa7e6e2008358a135",
+    "evidence/readback-1-2.json": "da27e4e47adbb368d88e3f01b357362a29c76f5233eb052e935fa6e851ec968c",
+    "evidence/source-member-dom.json": "2b9b7bcd1a8620f5719f96da12d3d8ebc6df8cfeaf3c853422a3516877201cd8",
+    "evidence/source-report-sheet-v13.png": "1e1b84186e861b403c5b4d674e6d6ed4ef93f80b2998979218bc96bd4c7a7d5a",
+    "evidence/source-settings-dom.json": "8ea056f7227b055e8d889eb7daa323e7ab792d2725edf239a953ef5ade2d56ec",
+    "evidence/source-settings-v13.png": "7c7410f5c3bff5672823f0f50bc742f9a38211d5b1d2aadd765701a148d3a0e7",
+    "figma-readback.json": "739aaa8153c28a9371b40264f102d0b55a4ea1f9623aee111db502e900671515",
+    "handoff.zh-CN.md": "89edcaef61ee9775ad55fd1156dd3632a73c4f5eb249cf57b7cf78102f0aee86",
+    "planning-input.json": "9641191753bac4a639ded7e90ced9736f1b3375d8912bab33a2b768b8e33abd3",
+    "state-contracts.zh-CN.md": "895f23b56bb3545125873a056d34072249e82d4c8d5619633f01c1b3933e94af",
+    "visual-comparison.html": "6041ed6c99677199e07f639ed4f081ec9b5508bc196acf4fa7565834db614743"
+  }
+}

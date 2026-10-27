@@ -1,0 +1,8 @@
+{
+  "initialFallback": "DejaVu Sans",
+  "calibratedBrowserFont": "Liberation Sans",
+  "figmaFont": "Arial",
+  "reason": "原HTML指定Arial/Helvetica；初始测试机缺字体回退DejaVu并改变换行。临时使用Arial度量兼容Liberation Sans重采，未改产品源码/字体规范。",
+  "actualEvidence": "source-platform-fonts.json",
+  "systemChromeAndEmoji": "动态时钟、预览设备外壳/触点、emoji平台字形不作为产品视觉改版。"
+}

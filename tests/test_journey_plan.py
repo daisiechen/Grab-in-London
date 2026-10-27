@@ -62,7 +62,7 @@ class JourneyPlanTest(unittest.TestCase):
     def test_only_authorized_first_release_pm_and_ux_stages_are_issued(self):
         self.assertTrue(self.execution['pmStartAllowed'])
         versions = json.loads((ROOT / self.execution['currentExecution']).read_text())
-        active = {j for v in versions['iterations'] if v['uxStatus'] == 'in-progress' for j in v['journeys']}
+        active = {j for v in versions['iterations'] if v['uxStatus'] in ('in-progress', 'candidate-delivered') and not v['designReady'] for j in v['journeys']}
         self.assertEqual(set(self.execution['activeJourneys']), active)
         self.assertEqual(set(self.execution['issuedJourneys']), {f'J{i:02d}' for i in range(1, 12)})
         self.assertEqual(self.execution['oldPMCandidate']['status'], 'historical-incomplete-candidate')

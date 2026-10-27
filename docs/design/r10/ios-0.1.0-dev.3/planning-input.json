@@ -1,0 +1,38 @@
+{
+  "id": "IOS-0.1.0-dev.3",
+  "productVersion": "IOS-0.1.0",
+  "journeys": [
+    "J03",
+    "J04",
+    "J06"
+  ],
+  "dependsOn": [
+    "IOS-0.1.0-dev.2"
+  ],
+  "inputs": {
+    "J03": {
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r01",
+      "sha256": {
+        "docs/product/journeys/j03/requirements.zh-CN.md": "c1c04088090495498d995e73f1cf7c1a74e8af2c5bf3e09f4fb3cda142876ca6",
+        "demo/journeys/j03/index.html": "12d823bf051ea6782a194576c5dba26895c51e3ea506ab31f4a9072a261a50af"
+      }
+    },
+    "J04": {
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02",
+      "sha256": {
+        "docs/product/journeys/j04/requirements.zh-CN.md": "8172b103c759b19b6b70a2dea946bd50cc7286405a31dc73b4012cf169da72a7",
+        "demo/journeys/j04/index.html": "e93934a96472977cc9c28cc2c9e8d245ce0cf68ff815f38a01c8709e92a09dbe"
+      }
+    },
+    "J06": {
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02",
+      "sha256": {
+        "docs/product/journeys/j06/requirements.zh-CN.md": "f61c525aa2cc344b274897146b602a1f42e28d49f20d2226be59e0bd1322c6f7",
+        "demo/journeys/j06/index.html": "916abf341ab34cdefba446813eea9f447bf1e4cf143929fe8e654b9ddfe2eb3f"
+      }
+    }
+  }
+}

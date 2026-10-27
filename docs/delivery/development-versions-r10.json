@@ -109,7 +109,7 @@
         "IOS-0.1.0-dev.1"
       ],
       "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
-      "uxOwner": "UX-1",
+      "uxOwner": "UX-2",
       "uxRevision": "UX-r02",
       "uxDirectory": "docs/design/r10/ios-0.1.0-dev.2/",
       "uxStatus": "in-progress",
@@ -149,9 +149,9 @@
       "uxOwner": "UX-2",
       "uxRevision": "UX-r02",
       "uxDirectory": "docs/design/r10/ios-0.1.0-dev.3/",
-      "uxStatus": "in-progress",
+      "uxStatus": "candidate-delivered",
       "figmaFileKey": "mKXV0NvBavRb6fnmQ2g2xV",
-      "figmaEntryNodeId": null,
+      "figmaEntryNodeId": "13:14",
       "inputs": {
         "J03": {
           "requirementsRevision": "PM-r01",
@@ -185,9 +185,9 @@
       "codeOwner": null,
       "runtimeBuild": null,
       "releaseApproved": false,
-      "figmaPreviewNodeId": "2:2",
-      "figmaPreviewURL": "https://www.figma.com/design/mKXV0NvBavRb6fnmQ2g2xV?node-id=2-2",
-      "previewStatus": "work-in-progress-not-development-ready"
+      "figmaPreviewNodeId": "13:14",
+      "figmaPreviewURL": "https://www.figma.com/design/mKXV0NvBavRb6fnmQ2g2xV?node-id=13-14",
+      "previewStatus": "candidate-not-development-ready"
     },
     {
       "id": "IOS-0.1.0-dev.4",
@@ -204,9 +204,9 @@
       "uxOwner": "UX-2",
       "uxRevision": "UX-r02",
       "uxDirectory": "docs/design/r10/ios-0.1.0-dev.4/",
-      "uxStatus": "in-progress",
+      "uxStatus": "candidate-delivered",
       "figmaFileKey": "TxashjRfQDvnc4jQieeaWu",
-      "figmaEntryNodeId": null,
+      "figmaEntryNodeId": "2:4",
       "inputs": {
         "J07": {
           "requirementsRevision": "PM-r01",
@@ -232,9 +232,9 @@
       "codeOwner": null,
       "runtimeBuild": null,
       "releaseApproved": false,
-      "figmaPreviewNodeId": null,
-      "figmaPreviewURL": "https://www.figma.com/design/TxashjRfQDvnc4jQieeaWu",
-      "previewStatus": "work-in-progress-not-development-ready"
+      "figmaPreviewNodeId": "2:4",
+      "figmaPreviewURL": "https://www.figma.com/design/TxashjRfQDvnc4jQieeaWu?node-id=2-4",
+      "previewStatus": "candidate-not-development-ready"
     },
     {
       "id": "SUPPORT-0.1.0-dev.1",
@@ -421,17 +421,18 @@
   "dispatch": {
     "UX-1": {
       "iterations": [
-        "IOS-0.1.0-dev.1",
-        "IOS-0.1.0-dev.2"
+        "IOS-0.1.0-dev.1"
       ],
       "status": "running"
     },
     "UX-2": {
       "iterations": [
+        "IOS-0.1.0-dev.2",
         "IOS-0.1.0-dev.3",
         "IOS-0.1.0-dev.4"
       ],
-      "status": "running"
+      "status": "running",
+      "handoff": "UX-1明确停止dev.2空目录写入后移交；dev.3/4已交候选不再改写"
     },
     "UX-3": {
       "iterations": [

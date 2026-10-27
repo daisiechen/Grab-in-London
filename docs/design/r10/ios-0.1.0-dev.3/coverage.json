@@ -1,0 +1,474 @@
+{
+  "revision": "UX-r02",
+  "iteration": "IOS-0.1.0-dev.3",
+  "journeys": [
+    "J03",
+    "J04",
+    "J06"
+  ],
+  "businessCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "mapping": [
+    {
+      "journey": "J03",
+      "pmRequirement": {
+        "id": "J03-R01",
+        "prdSection": "§2",
+        "sourceRequirementIds": [
+          "FR-09",
+          "D05-AC01"
+        ],
+        "demoScenes": [
+          "C01Inbox/角色"
+        ],
+        "demoDisposition": "simulated",
+        "realServiceStatus": "not-verified"
+      },
+      "figmaNodes": [
+        "13:14",
+        "2:2"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J03",
+      "pmRequirement": {
+        "id": "J03-R02",
+        "prdSection": "§3",
+        "sourceRequirementIds": [
+          "D05-AC01",
+          "D05-AC03"
+        ],
+        "demoScenes": [
+          "C02收发"
+        ],
+        "demoDisposition": "simulated",
+        "realServiceStatus": "not-verified"
+      },
+      "figmaNodes": [
+        "6:4",
+        "6:64"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J03",
+      "pmRequirement": {
+        "id": "J03-R03",
+        "prdSection": "§3",
+        "sourceRequirementIds": [
+          "D05-AC03"
+        ],
+        "demoScenes": [
+          "C03读位"
+        ],
+        "demoDisposition": "simulated",
+        "realServiceStatus": "not-verified"
+      },
+      "figmaNodes": [
+        "2:2"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J03",
+      "pmRequirement": {
+        "id": "J03-R04",
+        "prdSection": "§4",
+        "sourceRequirementIds": [
+          "D04-AC03",
+          "D05-AC02"
+        ],
+        "demoScenes": [
+          "C04两种退出"
+        ],
+        "demoDisposition": "simulated",
+        "realServiceStatus": "not-verified"
+      },
+      "figmaNodes": [
+        "6:129",
+        "6:174",
+        "6:252",
+        "6:282"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J03",
+      "pmRequirement": {
+        "id": "J03-R05",
+        "prdSection": "§4",
+        "sourceRequirementIds": [
+          "D05-AC02",
+          "AC-008n"
+        ],
+        "demoScenes": [
+          "C05重入"
+        ],
+        "demoDisposition": "simulated",
+        "realServiceStatus": "not-verified"
+      },
+      "figmaNodes": [
+        "6:252"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J03",
+      "pmRequirement": {
+        "id": "J03-R06",
+        "prdSection": "§4",
+        "sourceRequirementIds": [
+          "D05-AC02"
+        ],
+        "demoScenes": [
+          "C06终态"
+        ],
+        "demoDisposition": "simulated",
+        "realServiceStatus": "not-verified"
+      },
+      "figmaNodes": [
+        "6:282"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J03",
+      "pmRequirement": {
+        "id": "J03-R07",
+        "prdSection": "§5",
+        "sourceRequirementIds": [
+          "AC-AI08",
+          "AC-AI09"
+        ],
+        "demoScenes": [
+          "C07AI群稿"
+        ],
+        "demoDisposition": "simulated",
+        "realServiceStatus": "not-verified"
+      },
+      "figmaNodes": [
+        "6:349",
+        "6:427",
+        "6:500",
+        "10:35"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J03",
+      "pmRequirement": {
+        "id": "J03-R08",
+        "prdSection": "§6",
+        "sourceRequirementIds": [
+          "P-02",
+          "PATCH-004"
+        ],
+        "demoScenes": [
+          "C08通知"
+        ],
+        "demoDisposition": "simulated",
+        "realServiceStatus": "not-verified"
+      },
+      "figmaNodes": [
+        "13:14"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J04",
+      "pmRequirement": {
+        "id": "J04-R01",
+        "prdSection": "§2",
+        "sourceRequirementIds": [
+          "D06-AC01",
+          "PRD-0.5"
+        ],
+        "demoScenes": [
+          "C01出席"
+        ],
+        "demoDisposition": "simulated",
+        "realServiceStatus": "not-verified"
+      },
+      "figmaNodes": [
+        "2:62",
+        "7:14"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J04",
+      "pmRequirement": {
+        "id": "J04-R02",
+        "prdSection": "§2",
+        "sourceRequirementIds": [
+          "PRD-0.2",
+          "PRD-0.5"
+        ],
+        "demoScenes": [
+          "C01出席"
+        ],
+        "demoDisposition": "simulated",
+        "realServiceStatus": "not-verified"
+      },
+      "figmaNodes": [
+        "2:62"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J04",
+      "pmRequirement": {
+        "id": "J04-R03",
+        "prdSection": "§3",
+        "sourceRequirementIds": [
+          "D06-AC02"
+        ],
+        "demoScenes": [
+          "C02私评分"
+        ],
+        "demoDisposition": "simulated",
+        "realServiceStatus": "not-verified"
+      },
+      "figmaNodes": [
+        "7:123",
+        "7:228"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J04",
+      "pmRequirement": {
+        "id": "J04-R04",
+        "prdSection": "§3",
+        "sourceRequirementIds": [
+          "FR-10",
+          "D06-AC02"
+        ],
+        "demoScenes": [
+          "C03公评"
+        ],
+        "demoDisposition": "simulated",
+        "realServiceStatus": "not-verified"
+      },
+      "figmaNodes": [
+        "7:334"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J04",
+      "pmRequirement": {
+        "id": "J04-R05",
+        "prdSection": "§4",
+        "sourceRequirementIds": [
+          "AC-004a",
+          "AC-004b",
+          "AC-004c",
+          "AC-004d",
+          "D06-AC03"
+        ],
+        "demoScenes": [
+          "C04组合保存"
+        ],
+        "demoDisposition": "simulated",
+        "realServiceStatus": "not-verified"
+      },
+      "figmaNodes": [
+        "7:440",
+        "7:553"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J04",
+      "pmRequirement": {
+        "id": "J04-R06",
+        "prdSection": "§5",
+        "sourceRequirementIds": [
+          "D07-AC01"
+        ],
+        "demoScenes": [
+          "C06互选私聊"
+        ],
+        "demoDisposition": "simulated",
+        "realServiceStatus": "not-verified"
+      },
+      "figmaNodes": [
+        "7:659",
+        "7:766",
+        "7:805"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J04",
+      "pmRequirement": {
+        "id": "J04-R07",
+        "prdSection": "§5",
+        "sourceRequirementIds": [
+          "D07-AC02",
+          "D07-AC03",
+          "C004-C"
+        ],
+        "demoScenes": [
+          "C07边界"
+        ],
+        "demoDisposition": "simulated",
+        "realServiceStatus": "not-verified"
+      },
+      "figmaNodes": [
+        "7:850",
+        "7:907"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J04",
+      "pmRequirement": {
+        "id": "J04-R08",
+        "prdSection": "§6",
+        "sourceRequirementIds": [
+          "D07-AC03",
+          "PRD-0.5"
+        ],
+        "demoScenes": [
+          "C08修订传播"
+        ],
+        "demoDisposition": "simulated",
+        "realServiceStatus": "not-verified"
+      },
+      "figmaNodes": [
+        "7:553",
+        "7:907"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J06",
+      "pmRequirement": "J06-AC01",
+      "figmaNodes": [
+        "8:14",
+        "8:63"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J06",
+      "pmRequirement": "J06-AC02",
+      "figmaNodes": [
+        "8:133",
+        "8:203"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J06",
+      "pmRequirement": "J06-AC03",
+      "figmaNodes": [
+        "8:279",
+        "8:350"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J06",
+      "pmRequirement": "J06-AC04",
+      "figmaNodes": [
+        "8:424",
+        "8:473"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J06",
+      "pmRequirement": "J06-AC05",
+      "figmaNodes": [
+        "8:63",
+        "8:133"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    }
+  ],
+  "sourceUnitInheritance": [
+    {
+      "journey": "J03",
+      "path": "docs/product/journeys/j03/coverage.json",
+      "sha256": "8d6641509b1a4d757d1034ceefcebe73956f42ad6257be71b6801ea0e06c4adb",
+      "sourceUnitCount": 957,
+      "treatment": "inherited-full; shared/service-only rules documented in state contract, not simulated by new user controls"
+    },
+    {
+      "journey": "J04",
+      "path": "docs/product/journeys/j04/coverage.json",
+      "sha256": "2714dd57dbd12a49bb99c5852465b4e36570b40229088715b5405ff3ad12c9e1",
+      "sourceUnitCount": 712,
+      "treatment": "inherited-full; shared/service-only rules documented in state contract, not simulated by new user controls"
+    },
+    {
+      "journey": "J06",
+      "path": "docs/product/journeys/j06/coverage.json",
+      "sha256": "a2b02c6d9ccb3c292fa9b8ab5ddc94cc505007225033735f805ac6f9e55bdac1",
+      "sourceUnitCount": 511,
+      "treatment": "inherited-full; shared/service-only rules documented in state contract, not simulated by new user controls"
+    }
+  ],
+  "stateContracts": {
+    "J03": [
+      [
+        "正常",
+        "当前成员可看名册/发送；退出群不等于退出饭局",
+        "Inbox→群聊→设置→确认退出→Left group→获授权历史；取消返回群设置",
+        "固定手写样例与AI草稿分别发送，草稿转入不自动发送"
+      ],
+      [
+        "只读/失败",
+        "离群/饭局终态不发新消息、不展示实时名册；重入按服务授权重新判定",
+        "失败保留未发送文本，重试避免重复；读位只在实际可见消息推进",
+        "通知开关影响通知展示，不抹去Inbox事实；真实推送/读位/跨设备仅状态合同"
+      ]
+    ],
+    "J04": [
+      [
+        "正常",
+        "本人报告出席，评分无默认；私评分/公开短评/私密选择为独立对象",
+        "逐项回执；部分成功仅重试未存项；取消不撤销已存项",
+        "WAITING只允许修改本人私密选择，不暴露对方、不显示OPEN私聊"
+      ],
+      [
+        "互选/恢复",
+        "真实OPEN才可发私聊；撤回需本人确认，历史只读",
+        "拉黑/撤回关闭发信；解除拉黑不复活旧同意，需新互选",
+        "他人选择为独立评审层前置，不是用户推进按钮；公开编辑/删除传播由合同规定"
+      ]
+    ],
+    "J06": [
+      [
+        "独立问卷",
+        "Settings独立入口，不要求出席、饭后或七天",
+        "再次使用和多原因独立可选；可只存原因；空提交不产生记录",
+        "返回保留规则按PRD；保存更新最新记录，失败保留草稿；清空某题不清空另一题"
+      ]
+    ]
+  }
+}

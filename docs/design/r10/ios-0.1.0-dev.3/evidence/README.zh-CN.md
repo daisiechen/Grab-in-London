@@ -1,0 +1,1 @@
+源v13截图已在隔离Arial度量兼容Liberation Sans环境重采。source-*-dom.json仅采集.grab-app，portal浮层不在DOM快照范围；浮层视觉以source-report-sheet/source-helper-draft截图和原源码为准。source-helper-*-dom不冒充浮层采样。Figma截图为原生可编辑节点导出，不回填为设计。动态时间/硬件外壳/emoji平台渲染豁免。

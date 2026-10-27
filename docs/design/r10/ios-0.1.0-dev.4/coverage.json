@@ -1,0 +1,188 @@
+{
+  "revision": "UX-r02",
+  "iteration": "IOS-0.1.0-dev.4",
+  "journeys": [
+    "J07",
+    "J08"
+  ],
+  "businessCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "mapping": [
+    {
+      "journey": "J07",
+      "pmRequirement": {
+        "sourceRequirements": "J07 / M07-01 / D08-AC01 / 主PRD§0.6 / FR-10/12",
+        "prdSection": "用户目标、入口与完成结果；正常与取消路径",
+        "demoScenario": "J07-S01/S02",
+        "mode": "interactive-synthetic"
+      },
+      "figmaNodes": [
+        "2:4",
+        "4:2",
+        "4:78",
+        "4:154"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J07",
+      "pmRequirement": {
+        "sourceRequirements": "举报私密投影/原次结果恢复/账号隔离",
+        "prdSection": "输入、数据与权限；状态、失败与恢复",
+        "demoScenario": "J07-S03/S04",
+        "mode": "interactive-synthetic"
+      },
+      "figmaNodes": [
+        "4:194",
+        "4:222",
+        "4:249",
+        "4:286"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J07",
+      "pmRequirement": {
+        "sourceRequirements": "真实支持投递、内部鉴权、法定保留和iOS原生行为",
+        "prdSection": "平台、验收与不做",
+        "demoScenario": "原型不调用真实服务",
+        "mode": "documented-only"
+      },
+      "figmaNodes": [
+        "4:154"
+      ],
+      "treatment": "documented-only",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J08",
+      "pmRequirement": {
+        "sourceRequirements": "J08 / D09-AC01 / M07-04 / 主PRD§0.6",
+        "prdSection": "正常路径与取消；同步受理屏障",
+        "demoScenario": "J08-S01/S02",
+        "mode": "interactive-synthetic"
+      },
+      "figmaNodes": [
+        "5:16",
+        "5:50",
+        "5:89",
+        "5:122",
+        "5:152",
+        "5:182"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J08",
+      "pmRequirement": {
+        "sourceRequirements": "D09-AC02 / M07-05 / PATCH-001 AC-001a/b、补丁§13",
+        "prdSection": "最小回执、失败与恢复；公开支持出口与返回",
+        "demoScenario": "J08-S03/S04",
+        "mode": "interactive-synthetic"
+      },
+      "figmaNodes": [
+        "5:214",
+        "5:307"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J08",
+      "pmRequirement": {
+        "sourceRequirements": "D09-AC03 / 删除privacy epoch/旧export撤销 / QA-JOURNEY-009",
+        "prdSection": "同步受理屏障；权限、平台与不做",
+        "demoScenario": "J08-S02/S05",
+        "mode": "interactive-synthetic; real service NOT_RUN"
+      },
+      "figmaNodes": [
+        "5:182",
+        "5:243"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J08",
+      "pmRequirement": {
+        "sourceRequirements": "FR-13 AC-AI14 / 偏好/会话清理 / 异步供应商与物理清理",
+        "prdSection": "同步受理屏障；正常路径与取消",
+        "demoScenario": "J08-S05/S06",
+        "mode": "interactive-synthetic"
+      },
+      "figmaNodes": [
+        "5:348"
+      ],
+      "treatment": "representative-native-prototype-and-state-contract",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    },
+    {
+      "journey": "J08",
+      "pmRequirement": {
+        "sourceRequirements": "真实认证/256-bit receipt安全存储、DB事务锁、提供方撤销、法律/备份策略与跨旅程传播",
+        "prdSection": "正常路径与取消；同步受理屏障；权限、平台与不做",
+        "demoScenario": "原型不调用真实服务",
+        "mode": "documented-only; real gates remain open"
+      },
+      "figmaNodes": [
+        "5:307"
+      ],
+      "treatment": "documented-only",
+      "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
+    }
+  ],
+  "sourceUnitInheritance": [
+    {
+      "journey": "J07",
+      "path": "docs/product/journeys/j07/coverage.json",
+      "sha256": "549f073c0fd65dc98ebed75e645ccb9d95b115a380b4b6b0ee57305c9fa593cf",
+      "sourceUnitCount": 554,
+      "treatment": "inherited-full; shared/service-only rules documented in state contract, not simulated by new user controls"
+    },
+    {
+      "journey": "J08",
+      "path": "docs/product/journeys/j08/coverage.json",
+      "sha256": "e4c3b859904fa911718d93250050beba2911129eb0f402147ae797a2771af651",
+      "sourceUnitCount": 757,
+      "treatment": "inherited-full; shared/service-only rules documented in state contract, not simulated by new user controls"
+    }
+  ],
+  "stateContracts": {
+    "J07": [
+      [
+        "举报",
+        "登录本人对成员私密举报，原因必填，说明可空",
+        "空原因就地校验；取消不提交；受理后返回本人记录",
+        "受理不等调查完成；响应丢失先查原次结果，防重复"
+      ],
+      [
+        "支持状态",
+        "他人不可见举报；内部处理权限仅支持端",
+        "IN_PROGRESS/回复由外部支持事件产生，独立评审层展示",
+        "检查状态仅刷新当前状态，不伪造处理完成；真实通知投递未测"
+      ]
+    ],
+    "J08": [
+      [
+        "申请前",
+        "登录本人→影响说明→再认证→最终本人确认；确认无默认",
+        "取消返回Settings且不提交；验证码123456仅固定演示输入",
+        "真实验证码、会话/重认证/限流未接入"
+      ],
+      [
+        "受理后",
+        "受理不等删除完成；同步关闭账号访问，不返回账号页",
+        "保存最小私密回执；响应丢失检查原次；PENDING/PROCESSING/NEEDS_SUPPORT/COMPLETED由外部worker",
+        "未登录可凭原回执查进度和联系支持；COMPLETED仅所有必要步骤成功"
+      ],
+      [
+        "公开支持",
+        "公开参考号不具私密授权能力；邮箱全文只读可手动复制",
+        "mailto仅地址，不带token/回执/query；打开编辑器不等发送",
+        "复制/系统邮件/安全存储/供应商撤销及物理清理未实测；失败不声称完成"
+      ]
+    ]
+  }
+}

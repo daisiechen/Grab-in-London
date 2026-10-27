@@ -1,0 +1,10 @@
+{
+  "fonts": [
+    {
+      "familyName": "Liberation Sans",
+      "postScriptName": "LiberationSans",
+      "isCustomFont": false,
+      "glyphCount": 86
+    }
+  ]
+}
