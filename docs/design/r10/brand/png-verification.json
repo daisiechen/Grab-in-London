@@ -1,0 +1,80 @@
+[
+  {
+    "path": "docs/design/r10/brand/assets/a-app-icon-1024.png",
+    "width": 1024,
+    "height": 1024,
+    "alphaMin": 255,
+    "alphaMax": 255,
+    "cornerRGBA": [
+      18,
+      63,
+      53,
+      255
+    ]
+  },
+  {
+    "path": "docs/design/r10/brand/assets/a-mark-24.png",
+    "width": 24,
+    "height": 24,
+    "alphaMin": 0,
+    "alphaMax": 255,
+    "cornerRGBA": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "path": "docs/design/r10/brand/assets/a-mark-32.png",
+    "width": 32,
+    "height": 32,
+    "alphaMin": 0,
+    "alphaMax": 255,
+    "cornerRGBA": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "path": "docs/design/r10/brand/assets/b-app-icon-1024.png",
+    "width": 1024,
+    "height": 1024,
+    "alphaMin": 255,
+    "alphaMax": 255,
+    "cornerRGBA": [
+      18,
+      63,
+      53,
+      255
+    ]
+  },
+  {
+    "path": "docs/design/r10/brand/assets/b-mark-24.png",
+    "width": 24,
+    "height": 24,
+    "alphaMin": 0,
+    "alphaMax": 255,
+    "cornerRGBA": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "path": "docs/design/r10/brand/assets/b-mark-32.png",
+    "width": 32,
+    "height": 32,
+    "alphaMin": 0,
+    "alphaMax": 255,
+    "cornerRGBA": [
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+]

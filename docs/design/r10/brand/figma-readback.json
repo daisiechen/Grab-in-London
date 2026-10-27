@@ -1,0 +1,397 @@
+{
+  "fileKey": "8qCNU0sacee6OWP4hQF230",
+  "pageId": "0:1",
+  "comparisonNodeId": "2:77",
+  "smallSizesNodeId": "2:132",
+  "rulesNodeId": "2:171",
+  "components": [
+    {
+      "id": "2:10",
+      "name": "A / Mark / forest",
+      "width": 128,
+      "height": 128,
+      "cornerRadius": 0,
+      "fills": [
+        {
+          "type": "SOLID",
+          "visible": false,
+          "opacity": 1,
+          "blendMode": "NORMAL",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          },
+          "boundVariables": {}
+        }
+      ],
+      "vectorCount": 2,
+      "texts": []
+    },
+    {
+      "id": "2:14",
+      "name": "A / Mark / inverse",
+      "width": 128,
+      "height": 128,
+      "cornerRadius": 0,
+      "fills": [
+        {
+          "type": "SOLID",
+          "visible": false,
+          "opacity": 1,
+          "blendMode": "NORMAL",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          },
+          "boundVariables": {}
+        }
+      ],
+      "vectorCount": 2,
+      "texts": []
+    },
+    {
+      "id": "2:18",
+      "name": "A / Mark / accent",
+      "width": 128,
+      "height": 128,
+      "cornerRadius": 0,
+      "fills": [
+        {
+          "type": "SOLID",
+          "visible": false,
+          "opacity": 1,
+          "blendMode": "NORMAL",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          },
+          "boundVariables": {}
+        }
+      ],
+      "vectorCount": 2,
+      "texts": []
+    },
+    {
+      "id": "2:24",
+      "name": "B / Mark / forest",
+      "width": 128,
+      "height": 128,
+      "cornerRadius": 0,
+      "fills": [
+        {
+          "type": "SOLID",
+          "visible": false,
+          "opacity": 1,
+          "blendMode": "NORMAL",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          },
+          "boundVariables": {}
+        }
+      ],
+      "vectorCount": 4,
+      "texts": []
+    },
+    {
+      "id": "2:30",
+      "name": "B / Mark / inverse",
+      "width": 128,
+      "height": 128,
+      "cornerRadius": 0,
+      "fills": [
+        {
+          "type": "SOLID",
+          "visible": false,
+          "opacity": 1,
+          "blendMode": "NORMAL",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          },
+          "boundVariables": {}
+        }
+      ],
+      "vectorCount": 4,
+      "texts": []
+    },
+    {
+      "id": "2:42",
+      "name": "A / Lockup / forest",
+      "width": 520,
+      "height": 150,
+      "cornerRadius": 0,
+      "fills": [],
+      "vectorCount": 2,
+      "texts": [
+        {
+          "id": "2:41",
+          "text": "Fancy",
+          "font": {
+            "family": "Arial",
+            "style": "Bold"
+          },
+          "size": 102,
+          "letterSpacing": {
+            "unit": "PIXELS",
+            "value": -7
+          }
+        }
+      ]
+    },
+    {
+      "id": "2:48",
+      "name": "A / Lockup / inverse",
+      "width": 520,
+      "height": 150,
+      "cornerRadius": 0,
+      "fills": [
+        {
+          "type": "SOLID",
+          "visible": true,
+          "opacity": 1,
+          "blendMode": "NORMAL",
+          "color": {
+            "r": 0.07058823853731155,
+            "g": 0.24705882370471954,
+            "b": 0.2078431397676468
+          },
+          "boundVariables": {
+            "color": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:2:3"
+            }
+          }
+        }
+      ],
+      "vectorCount": 2,
+      "texts": [
+        {
+          "id": "2:47",
+          "text": "Fancy",
+          "font": {
+            "family": "Arial",
+            "style": "Bold"
+          },
+          "size": 102,
+          "letterSpacing": {
+            "unit": "PIXELS",
+            "value": -7
+          }
+        }
+      ]
+    },
+    {
+      "id": "2:53",
+      "name": "A / App icon / 1024 square",
+      "width": 1024,
+      "height": 1024,
+      "cornerRadius": 0,
+      "fills": [
+        {
+          "type": "SOLID",
+          "visible": true,
+          "opacity": 1,
+          "blendMode": "NORMAL",
+          "color": {
+            "r": 0.07058823853731155,
+            "g": 0.24705882370471954,
+            "b": 0.2078431397676468
+          },
+          "boundVariables": {
+            "color": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:2:3"
+            }
+          }
+        }
+      ],
+      "vectorCount": 2,
+      "texts": []
+    },
+    {
+      "id": "2:61",
+      "name": "B / Lockup / forest",
+      "width": 520,
+      "height": 150,
+      "cornerRadius": 0,
+      "fills": [],
+      "vectorCount": 4,
+      "texts": [
+        {
+          "id": "2:60",
+          "text": "Fancy",
+          "font": {
+            "family": "Arial",
+            "style": "Bold"
+          },
+          "size": 102,
+          "letterSpacing": {
+            "unit": "PIXELS",
+            "value": -7
+          }
+        }
+      ]
+    },
+    {
+      "id": "2:69",
+      "name": "B / Lockup / inverse",
+      "width": 520,
+      "height": 150,
+      "cornerRadius": 0,
+      "fills": [
+        {
+          "type": "SOLID",
+          "visible": true,
+          "opacity": 1,
+          "blendMode": "NORMAL",
+          "color": {
+            "r": 0.07058823853731155,
+            "g": 0.24705882370471954,
+            "b": 0.2078431397676468
+          },
+          "boundVariables": {
+            "color": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:2:3"
+            }
+          }
+        }
+      ],
+      "vectorCount": 4,
+      "texts": [
+        {
+          "id": "2:68",
+          "text": "Fancy",
+          "font": {
+            "family": "Arial",
+            "style": "Bold"
+          },
+          "size": 102,
+          "letterSpacing": {
+            "unit": "PIXELS",
+            "value": -7
+          }
+        }
+      ]
+    },
+    {
+      "id": "2:76",
+      "name": "B / App icon / 1024 square",
+      "width": 1024,
+      "height": 1024,
+      "cornerRadius": 0,
+      "fills": [
+        {
+          "type": "SOLID",
+          "visible": true,
+          "opacity": 1,
+          "blendMode": "NORMAL",
+          "color": {
+            "r": 0.07058823853731155,
+            "g": 0.24705882370471954,
+            "b": 0.2078431397676468
+          },
+          "boundVariables": {
+            "color": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:2:3"
+            }
+          }
+        }
+      ],
+      "vectorCount": 4,
+      "texts": []
+    }
+  ],
+  "types": {
+    "COMPONENT": 11,
+    "VECTOR": 80,
+    "INSTANCE": 26,
+    "TEXT": 24,
+    "FRAME": 9
+  },
+  "imageNodes": [],
+  "fonts": [
+    "Arial"
+  ],
+  "variables": [
+    {
+      "name": "forest",
+      "id": "VariableID:2:3",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL",
+        "STROKE_COLOR"
+      ],
+      "valuesByMode": {
+        "2:0": {
+          "r": 0.07058823853731155,
+          "g": 0.24705882370471954,
+          "b": 0.2078431397676468,
+          "a": 1
+        }
+      }
+    },
+    {
+      "name": "cream",
+      "id": "VariableID:2:4",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL",
+        "STROKE_COLOR"
+      ],
+      "valuesByMode": {
+        "2:0": {
+          "r": 0.9607843160629272,
+          "g": 0.9490196108818054,
+          "b": 0.9098039269447327,
+          "a": 1
+        }
+      }
+    },
+    {
+      "name": "citrus",
+      "id": "VariableID:2:5",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL",
+        "STROKE_COLOR"
+      ],
+      "valuesByMode": {
+        "2:0": {
+          "r": 0.843137264251709,
+          "g": 0.9333333373069763,
+          "b": 0.4745098054409027,
+          "a": 1
+        }
+      }
+    },
+    {
+      "name": "orange",
+      "id": "VariableID:2:6",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL",
+        "STROKE_COLOR"
+      ],
+      "valuesByMode": {
+        "2:0": {
+          "r": 0.9137254953384399,
+          "g": 0.4117647111415863,
+          "b": 0.26274511218070984,
+          "a": 1
+        }
+      }
+    }
+  ]
+}

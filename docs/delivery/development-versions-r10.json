@@ -468,7 +468,7 @@
     "id": "BRAND-0.1.0",
     "requestedByOwner": true,
     "owner": "UX-BRAND",
-    "status": "in-progress",
+    "status": "candidate-delivered",
     "directory": "docs/design/r10/brand/",
     "scope": [
       "symbol",
@@ -477,10 +477,14 @@
       "iOS-app-icon-candidate",
       "usage-and-small-size-rules"
     ],
-    "fileKey": null,
+    "fileKey": "8qCNU0sacee6OWP4hQF230",
     "selectedDirection": null,
     "adoptionStatus": "candidate-only-not-applied",
     "interfaceRedesignAuthorized": false,
-    "relationship": "独立并行品牌包，交UX-1纳入DS版本引用，不阻塞已认可界面复用，不自动替换原Demo/UI"
+    "relationship": "独立并行品牌包，交UX-1纳入DS版本引用，不阻塞已认可界面复用，不自动替换原Demo/UI",
+    "previewURL": "https://www.figma.com/design/8qCNU0sacee6OWP4hQF230?node-id=2-77",
+    "handoff": "docs/design/r10/brand/handoff.zh-CN.md",
+    "recommendedDirection": "A",
+    "pjVisualReview": "reviewed-comparison-and-refined-A-not-selected"
   }
 }

@@ -1,0 +1,10 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="A / App icon / 1024 square">
+<rect width="1024" height="1024" fill="#123F35"/>
+<g id="A / Mark / inverse">
+<path id="Table" d="M667 238H357C304.533 238 262 280.533 262 333V403C262 455.467 304.533 498 357 498H667C719.467 498 762 455.467 762 403V333C762 280.533 719.467 238 667 238Z" stroke="#F5F2E8" stroke-width="60"/>
+<path id="Chair" d="M402 628V668C402 708 437 738 477 738H547C587 738 622 708 622 668V628" stroke="#D7EE79" stroke-width="60" stroke-linecap="round"/>
+</g>
+</g>
+</svg>
+

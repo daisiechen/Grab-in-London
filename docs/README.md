@@ -323,3 +323,6 @@
 - [QA B79：合成 Web 餐厅图片实际显示、替换、署名及降级](qa/evidence/2026-10-21/browser-b79.json)。
 
 - [QA B80：原生餐厅图片、可见署名和四步创建预览实际复核](qa/evidence/2026-10-21/browser-b80.json)。
+
+- [Fancy Logo 候选 brief · BRAND-0.1.0](design/r10/brand/brand-brief.zh-CN.md)。
+- [Fancy Logo、字标与 App 图标交接](design/r10/brand/handoff.zh-CN.md)。

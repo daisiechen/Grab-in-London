@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "revision": "BRAND-0.1.0",
+  "status": "candidate-awaiting-owner-selection",
+  "directions": {
+    "A": {
+      "name": "One open seat / 空位邀请",
+      "markNodeId": "2:10",
+      "inverseNodeId": "2:14",
+      "lockupNodeId": "2:42",
+      "appIconNodeId": "2:53"
+    },
+    "B": {
+      "name": "Pull up a chair / 拉把椅子坐下",
+      "markNodeId": "2:24",
+      "inverseNodeId": "2:30",
+      "lockupNodeId": "2:61",
+      "appIconNodeId": "2:76"
+    }
+  },
+  "recommendedDirection": "A",
+  "ownerSelectedDirection": null,
+  "ownerApproved": false,
+  "uiReplacementStarted": false,
+  "trademarkChecked": false,
+  "uniqueOriginalityVerified": false,
+  "figma": {
+    "fileKey": "8qCNU0sacee6OWP4hQF230",
+    "url": "https://www.figma.com/design/8qCNU0sacee6OWP4hQF230?node-id=2-77",
+    "entryNodeId": "2:77",
+    "smallSizesNodeId": "2:132",
+    "rulesNodeId": "2:171",
+    "namedVersionId": null,
+    "mutableFile": true
+  },
+  "usage": {
+    "minimumSymbolPx": 24,
+    "minimumLockupWidthPx": 120,
+    "clearSpaceFractionOfSymbolHeight": 0.25,
+    "appIconSourcePx": 1024,
+    "bakedDeviceCorners": false,
+    "fontFamily": "Arial",
+    "fontStyle": "Bold",
+    "svgTextOutlined": true,
+    "figmaWordmarkEditable": true
+  },
+  "palette": {
+    "forest": "#123f35",
+    "cream": "#f5f2e8",
+    "citrus": "#d7ee79",
+    "orange": "#e96943"
+  },
+  "sourceMethod": "hand-authored native vector geometry; no generated image, clipart or font binary included",
+  "inputHashes": {
+    "docs/design/brand-direction.zh-CN.md": "76c7a9d5c2487649d103fbb000b584a75215bc1adc68184493b2674ca9af38da",
+    "demo/src/brand.ts": "8c69f5b5be1e827d278bfbd3e5af76ef3a5c5deed798e6d5ff8f20d2b33c0e46",
+    "demo/DESIGN.md": "abd6031d7e2b24b2e4f19b2a99ef54b9e76a2f1807717e590ac71c9eb7bfb63a",
+    "demo/src/prototype.css": "8ec652ea30fc06b74846f1adcc5d910c05f4366bcf31d8e6b8b73ced530025bb"
+  },
+  "files": {
+    "docs/design/r10/brand/assets/a-app-icon-1024.png": "f58a070576c07b872eb57ec0cad3f13152438ceca6626a33aac1e9243f92d56d",
+    "docs/design/r10/brand/assets/a-app-icon-1024.svg": "036596a7bf8d017eba7e64d72cb5e0b9772c3886d13738c3bc40031c02a488d6",
+    "docs/design/r10/brand/assets/a-lockup-forest.svg": "d5ba64d6dc577f61daed59f16d1c86e56350687531aee52984b31545cb82a6e9",
+    "docs/design/r10/brand/assets/a-lockup-inverse.svg": "27f132fab8f6b8c53a716fa934e8780adcc85fecbc75c99967ab334caf8e8d40",
+    "docs/design/r10/brand/assets/a-mark-24.png": "1ea97659696ba0c6a338b98a62d71e55c5f21b7d6aaec62ff9cd53f08e510c3b",
+    "docs/design/r10/brand/assets/a-mark-32.png": "2a732559bbe520341f744d454ac19bc705250af236482ea20f845f35b0df6045",
+    "docs/design/r10/brand/assets/a-mark-accent.svg": "3cedef1a896d73d1ebc808c3975d0fbd79679d7ccb75678a73f24efbe3fe308e",
+    "docs/design/r10/brand/assets/a-mark-forest.svg": "f5d08d734f860d6913818ccc6a027ce7411ad5cc471a157cfa69d69ed6219873",
+    "docs/design/r10/brand/assets/a-mark-inverse.svg": "77a14c25b6fd4bb10b544ce5dfa1605e8dc043173e2321136f1ca124cf208acc",
+    "docs/design/r10/brand/assets/b-app-icon-1024.png": "d45e05c04d55848f14883dc2dabb4ce851018c17cd97a156fb3fdbc67fe71aca",
+    "docs/design/r10/brand/assets/b-app-icon-1024.svg": "385d11a581141a3c130de72cbdfc7b2a9916dc8b1afcb42963ee7e566ea31f60",
+    "docs/design/r10/brand/assets/b-lockup-forest.svg": "26a7a70674173904f44703915853047e81ee2cb2cd2760039097321425ae274d",
+    "docs/design/r10/brand/assets/b-lockup-inverse.svg": "a1b13009d59aaf1a6a49d811dcef8140b1cc2e1c5185ebbbbd6ed9c215ce5e61",
+    "docs/design/r10/brand/assets/b-mark-24.png": "ea6b822fe2112ce10d40f85e0aa24d09e3b9844fa803b8cef5bc3267f98a18cc",
+    "docs/design/r10/brand/assets/b-mark-32.png": "74355d23866257426fe8931bcdf17a87c5663f2ec09a69b0b6ba23029701c840",
+    "docs/design/r10/brand/assets/b-mark-forest.svg": "4c173fd602bb59b873e4941e9ffefc6f5b7f21ee8f3f387cf8085d35da1cd54d",
+    "docs/design/r10/brand/assets/b-mark-inverse.svg": "7390f9a513edbf1b8c0222e109dfc703d46b2a682449e1edc621adf70a9b77d8",
+    "docs/design/r10/brand/brand-brief.zh-CN.md": "eec57b73e36d4516621f37b2b1335e9db2c649a90636311f4814832374355b05",
+    "docs/design/r10/brand/evidence/comparison.png": "60d92832aafe8ebc4d6c290642d3cd513ed5bcddfdbb96d8128271bd1126e8d0",
+    "docs/design/r10/brand/evidence/small-sizes.png": "1c5ec6a2fc4b0b81b12bfbd4cd0d0134790c77f63f9633675b32e46579a5826b",
+    "docs/design/r10/brand/figma-readback.json": "1fc326b18ed2ea1ebb3ea8d8666c5dbfc18d9e8ec0c351d27f0e354287559502",
+    "docs/design/r10/brand/handoff.zh-CN.md": "d0d4bfb2d345d5f1af6c5bc346a24a0d36e80a3e0f786153c8a79aca2f2200ec",
+    "docs/design/r10/brand/png-verification.json": "6ce3687c8a89dc155fa47a80b0be0feac28f3a9a243c42b64abc8c6e5747c7f7",
+    "tests/test_brand_r10.py": "941a337f791080394d9fbede94c6b25caa55783611d7de9f74b6e35fac47cc5b"
+  },
+  "verification": {
+    "actualFigmaReadback": true,
+    "comparisonScreenshotViewed": true,
+    "actual24And32ScreenshotViewed": true,
+    "svgExports": 11,
+    "pngExports": 6,
+    "appIconsOpaqueSquare": true,
+    "testCommand": "python3 -m unittest discover -s tests -p 'test_brand_r10.py' -v",
+    "professionalQA": false,
+    "testsPassed": 4
+  },
+  "handoffOwner": "UX-1 DS unique writer; reference candidate only until selected",
+  "scopeBoundary": "Independent Logo only; no App/PRD/Demo/architecture/management files or business implementation changed.",
+  "visualBaselineCommit": "361ab04ed6fc55c0f1e041bb5d6cc5d216d1a7b2"
+}
