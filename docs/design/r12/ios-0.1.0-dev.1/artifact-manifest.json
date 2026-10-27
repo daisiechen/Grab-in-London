@@ -1,0 +1,75 @@
+{
+  "version": "IOS-0.1.0-dev.1",
+  "revision": "UX-r12-03",
+  "fileKey": "CS9oRCq8h3Clg09up2aISj",
+  "baselineCommit": "ecfb54e",
+  "visualBaseline": "MVP v13 / 361ab04ed6fc55c0f1e041bb5d6cc5d216d1a7b2 with explicit Owner feedback overrides",
+  "businessBaseline": "14db532 + r12 Owner English-launch/conversation-language clarification",
+  "status": "candidate-canvas-stopped-awaiting-independent-review",
+  "mutableFigma": true,
+  "namedVersionId": null,
+  "ownerApproved": false,
+  "independentlyApproved": false,
+  "originalSignedSnapshotPreserved": true,
+  "report": "docs/reviews/r12/ios1-user-feedback-2026-10-28.json",
+  "reportSHA256": "6097ed225d66ec09e2c30bfe801d2035bbf570585d80c5ac9e53379ce1e91d39",
+  "inputSHA256": {
+    "docs/product/PRD.zh-CN.md": "47f6cc2d0314b486c762852f2f61c18eab1e6f6fd63245d852b216527703c305",
+    "docs/product/journeys/j01/requirements.zh-CN.md": "af6f88ac83dbf85dc3fe103fcc6bc1ae445ecafb630fb8fa68fe0be9eacb1568",
+    "docs/product/journeys/j05/requirements.zh-CN.md": "50a482a514dbb17b75b9e1baf7c174f24a6d7e155c3d2e48fa1e72bcd5d03e6b",
+    "docs/design/r10/ios-0.1.0-dev.1/artifact-manifest.json": "37b91e7192268246b5cda4eab2d0fd91592d9d31ade354f2f220f2bee08bb89a",
+    "demo/src/domain.ts": "f7bcffb1fecf5d45ea6cb263375fcd2e8a4de94db57158e900cea5f4c4076f7d",
+    "demo/src/readiness.ts": "5f969ae0b408c924d7e1c16e486b729c328d3cc722d8e5ea6f31ca69a4d25a96"
+  },
+  "filesSHA256": {
+    "coverage.json": "c8c1b85579ee67e008229a59a4e3ede917e1b37822889bb2298839c50d685e10",
+    "evidence/ai-detail-long.png": "ed5d750d6595debc5b93aaa9ac0a7c7cf0a2bbf2be92e05673a1fd5f0abe8567",
+    "evidence/application.png": "b89f4c0ef06bf99a1ed429d4b74861602b9d812d61fb1d0af52277d5c5260d76",
+    "evidence/detail-long.png": "908d6120c3a56eb749f6f987b80c9057bfde7358004515bb47cd6e007c754e43",
+    "evidence/detail-summary-readback.json": "c225dae41aed5030d1910a87f9b4f6bcfc732c233c76bbe867d7e10eb2b43c90",
+    "evidence/detail.png": "954fdd4e5f47f0dc236de027388eb9357da1bc2a6e19fb1dc367fa602744613f",
+    "evidence/discover.png": "ea681ceb093b8f61f74e224a8fdff0d63941594123a47281bb1ab813aeb89e1c",
+    "evidence/emma.png": "40e709bf4c31d3700f9a3792234f43ca586475d772e246a838c8d202a53305b6",
+    "evidence/form-review-grid.png": "fbf9b738a81a02149e409af0e79eafed06a610afd157f69bfc82826f83e5c211",
+    "evidence/j01-readback.json": "5a934086cbab1810ef89145375d06c89b8f79a97b4dfbe452928ffe2aa895563",
+    "evidence/j05-readback.json": "79f91926e0fd7817959cdc6739f159115e1003e2cca7c8fb44d6e1b16d6029ac",
+    "evidence/language-choice.png": "71aa934427b5b70dd8c0d7786f4cc9c367c65c16fb75762bc84c2b327fd81849",
+    "evidence/language-draft-long.png": "2a2865329f9045fc3d520df3ce916d6b33d02204dfb34dfdefd2328b10520980",
+    "evidence/language-draft.png": "5e5ec897857b01139714289cf76b5499bbca05495d475d90bffd0bdb3fd8c952",
+    "evidence/language-info.png": "8d8f8b438e33dd264e310fb9ad157107b3d5c9c2433dad4d731232428f4d3c5f",
+    "evidence/language-saved.png": "3fa37d874de84a0f096d3ec12de9ecb43c14f3220a645a06aaa77ce3c75d5efe",
+    "evidence/leo.png": "bb8f812cf73bb3eb3405a28b83587b094d5ba9c141c9e81b28f80b610b532332",
+    "evidence/login.png": "66592c94050c228adf834b33ea05408b904fb93d58b50562afef423ca6dcf63b",
+    "evidence/maya.png": "cfb4c5aad26f88b0cce59c91c92e9a005b1b32ac17637fbe1782acd57dfd50ad",
+    "evidence/pending-detail-long.png": "166f0d0c3418358fe8714028d46182d9f7d7de8a1a37c6e8895c577aa06adfc7",
+    "evidence/profile-edit-long.png": "89812add86c51a4f6961fa11c2c8d537133d564fa22e50481c782d4bbf0128c3",
+    "evidence/profile-edit.png": "202476fb1082c3b88920101826d645bfe09e024e9cf7fd257cbffda8f1b11a2d",
+    "evidence/register-long.png": "e87703064598a4be4e1021ad18638db35dc00d21e33f245cd1d5a70cffa6b675",
+    "evidence/register.png": "1f3b35fbe5ba4c86aac00dcbaf9c4993336260e1333edceb75b38dccb1ddd470",
+    "evidence/visual-review-grid.png": "d8c63e5e5b2693fad8497bb8589cc46ee97b24165f40a2e24705a6e44e8bdcfd",
+    "evidence/withdrawn.png": "6827342dfba20cb48ff88f43a496f00c90d7b89f6d5f9a2669e6f77254491252",
+    "handoff.zh-CN.md": "a0b2bac67b3c21e987ef4ddcac59b55cef318e821977272b8403ecda74322ab0"
+  },
+  "validation": {
+    "visualScreenshotsInspected": true,
+    "actualClicks": "BLOCKED: insufficient_credits; no run created",
+    "realServices": false,
+    "implementation": false,
+    "QA": false,
+    "evidenceChecks": {
+      "passed": 8,
+      "command": "python3 -m unittest tests.test_ios_feedback_r12_ios1 -v"
+    }
+  },
+  "testSHA256": "a12dcd27fb7610bb79b1eb3c865c910256c6e22e7dc1f04c03c26e6e47164868",
+  "contextRepair": {
+    "id": "R12-I1-C12-CONTEXT",
+    "status": "independent-actual-result-relayed-by-root; formal evidence reviewer-owned",
+    "readbackSHA256": "79f91926e0fd7817959cdc6739f159115e1003e2cca7c8fb44d6e1b16d6029ac"
+  },
+  "summarySupplement": {
+    "readback": "evidence/detail-summary-readback.json",
+    "readbackSHA256": "c225dae41aed5030d1910a87f9b4f6bcfc732c233c76bbe867d7e10eb2b43c90",
+    "onlySevenDetailSummaries": true
+  }
+}
