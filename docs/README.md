@@ -373,3 +373,9 @@
 
 - [iOS dev.4 · ios4-engineering-review](reviews/r11/ios4-engineering-review.md)。
 - [后台及支持三个版本的独立设计复验](reviews/r11/admin-support-review.md)。
+
+- [admin-0.1.0-dev.2 · test-plan.zh-CN](delivery/versions/admin-0.1.0-dev.2/test-plan.zh-CN.md)。
+
+- [admin-0.1.0-dev.2 · plan.zh-CN](engineering/r11/admin-0.1.0-dev.2/plan.zh-CN.md)。
+
+- [admin-0.1.0-dev.2 · admin2-engineering-review](reviews/r11/admin2-engineering-review.md)。

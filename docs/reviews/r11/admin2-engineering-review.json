@@ -1,0 +1,60 @@
+{
+  "iteration": "ADMIN-0.1.0-DEV.2",
+  "baselineCommit": "0dc558892402aa403bbee6306ef224953af7ea16",
+  "reviewer": "Independent RD architecture reviewer; not plan author",
+  "status": "plan-approved-with-issuance-gates",
+  "inputSHA256": {
+    "docs/engineering/r11/admin-0.1.0-dev.2/plan.zh-CN.md": "be59dcc04da0e62bc39abceb487d104eddc8a38cb9e675ace8a12a39dc945d14",
+    "docs/engineering/r11/admin-0.1.0-dev.2/work-packages.json": "b5bddc521048c26a9cc177914a5d4076adb2866159b8f38c3c5a231158e4c0c5",
+    "docs/delivery/versions/admin-0.1.0-dev.2/test-plan.zh-CN.md": "17acab3e6aeb846100b11469e809a25073c8475dc8c2748688941cf5036e6038"
+  },
+  "issues": [
+    {
+      "id": "R11-EA2-01",
+      "status": "closed-by-independent-plan-retest",
+      "severity": "required",
+      "finding": "分类实际落点routes.ts；固定PUT If-Match与原意图重放，不能用当前分类猜旧意图成功。",
+      "evidence": [
+        "apps/api/src/admin/routes.ts",
+        "apps/api/src/common/idempotency.ts"
+      ],
+      "resolution": "Verified routes.ts classifyUser PUT/body/If-Match/Idempotency-Key and same original PUT replay; latest getClassification is not original intent proof."
+    },
+    {
+      "id": "R11-EA2-02",
+      "status": "closed-by-independent-plan-retest",
+      "severity": "required",
+      "finding": "subject输入覆盖与统计Pending/Failed/Retry缺现有持久证明/任务契约，需明确本版增量及旧读屏障。",
+      "evidence": [
+        "apps/api/src/admin/snapshots.ts",
+        "packages/contracts/src/dto.ts",
+        "apps/worker/src/main.ts",
+        "apps/admin/src/features/classification/ClassificationPanel.tsx"
+      ],
+      "resolution": "Verified honest existing gaps and proposed durable task, excluded-subject sealed input proof, status/retry operations and actor/query old-read barrier across pages/drilldown/exports; not claimed already implemented."
+    }
+  ],
+  "implementationAuthorized": false,
+  "QAStarted": false,
+  "verification": "Read existing production files/contracts and per-version plan; no runtime/product QA executed",
+  "workflow": "r11 per-version gate; other versions only block concrete integration; exact leases and CI/main deployment remain required",
+  "retestBaseline": "9825193 policy plus author-revised shared candidate",
+  "issuanceGates": [
+    "RD-CONTRACTS fixes task handle linkage from accepted classify result and exact proposed status/retry DTO, auth/MFA/actor ownership, error and idempotency contracts before dependent leases",
+    "RD-DATA reserves migration and transactionally binds accepted revision/task enqueue; seals per-subject included/excluded input proof",
+    "Exact owners/file leases serialize shared routes/snapshot/barrier changes; no broad all-path lease",
+    "Tests distinguish UNKNOWN original write, pending/failed task, superseded same-subject intent and another-subject high revision; real integration separate",
+    "Required code review/CI/PR main merge and exact tested SHA/build before deployment"
+  ],
+  "boundedConclusion": "A2 plan implementable as explicitly proposed incremental work, not existing runtime capability; no code/QA authorization and no whole-version A1 wait.",
+  "staticRecheck": {
+    "inputSHA256": "all matched revised candidate",
+    "existingPathsAndTests": "all exist",
+    "newPlannedPaths": "not-created confirmed, not claimed existing",
+    "issueClosure": "all independently closed",
+    "authorization": "implementation and QA false",
+    "registryMapping": "existing operations checked against production registry; new operations explicitly proposals",
+    "diffCheck": "passed",
+    "runtimeTests": "not run; plan review only"
+  }
+}

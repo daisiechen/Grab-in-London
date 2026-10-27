@@ -69,3 +69,9 @@ CSV仅当前允许聚合指标、分子/分母、单位与快照/口径/筛选�
 - Ready待核：PJ/Owner对本UX-r02版本签收；DS-0.1.0与本轮全部迭代设计集共同Ready核对；锁定命名Figma版本或明确可审阅节点快照/文件hash。当前文件仍可变、namedVersionId为空，不伪造冻结。
 - 全套初始设计门槛及精确模块owner/文件租约/接口和隔离环境预检齐备前，不启动任何RD实现（含共享骨架）；QA与发布未获本轮启动。真实服务门槛属于后续相应专业证据，不借设计自检关闭。
 - 唯一作者UX-3，白名单为本目录及tests/test_ux_r10_admin_support.py；不改PM/原Demo/旧Figma/UX-r01/业务代码/全局管理文件，不操作Git索引。
+
+## r11 定向恢复修订（候选）
+
+A02：6:3187核对staff/revision2与保留test/原因→21:2329本人确认INTENT-2→21:2749受理revision3但统计不可读；取消21:2539保持staff/revision2并可恢复本地选择。新意图受理后的统计更新/失败只重试统计沿已有合同；本代表新增分支止于更新中，不连回旧INTENT-1/SYN-C2。
+
+原生读回见evidence/r11-recovery-readback.json；已实际截图核对新筛选/新意图/新回执。最终独立Presentation复验由PJ完成；本作者不签收自己。文件仍可变、未Owner冻结，未启动实现或QA。
