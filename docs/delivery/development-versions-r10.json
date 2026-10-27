@@ -463,5 +463,24 @@
     "includesSharedFoundation": true,
     "futureUnissuedJourneysRequired": false,
     "reason": "首次业务代码开工前，DS及本轮7份版本Figma全部Ready；之后按版本/模块/租约/环境顺序签发，不边画边混合开发"
+  },
+  "brandDesign": {
+    "id": "BRAND-0.1.0",
+    "requestedByOwner": true,
+    "owner": "UX-BRAND",
+    "status": "in-progress",
+    "directory": "docs/design/r10/brand/",
+    "scope": [
+      "symbol",
+      "Fancy-wordmark-lockup",
+      "monochrome-and-reverse",
+      "iOS-app-icon-candidate",
+      "usage-and-small-size-rules"
+    ],
+    "fileKey": null,
+    "selectedDirection": null,
+    "adoptionStatus": "candidate-only-not-applied",
+    "interfaceRedesignAuthorized": false,
+    "relationship": "独立并行品牌包，交UX-1纳入DS版本引用，不阻塞已认可界面复用，不自动替换原Demo/UI"
   }
 }

@@ -60,6 +60,11 @@ class DevelopmentVersionsR10Test(unittest.TestCase):
                 for field in ('requirementsRevision', 'demoRevision'):
                     self.assertEqual(source[field], pm.get(field, pm['revision']))
         self.assertFalse(self.data['historicalDesign']['usableForDevelopment'])
+        brand = self.data['brandDesign']
+        self.assertTrue(brand['requestedByOwner'])
+        self.assertEqual(brand['id'], 'BRAND-0.1.0')
+        self.assertFalse(brand['interfaceRedesignAuthorized'])
+        self.assertEqual(brand['adoptionStatus'], 'candidate-only-not-applied')
         self.assertIn('移动Web及平台交易/订位后置', self.data['authorization']['businessScope'])
 
     def test_preparation_does_not_issue_implementation_or_qa(self):
