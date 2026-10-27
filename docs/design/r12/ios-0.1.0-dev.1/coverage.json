@@ -1,0 +1,191 @@
+{
+  "revision": "UX-r12-03",
+  "feedbackIds": [
+    "C01",
+    "C02",
+    "C03",
+    "C04",
+    "C05",
+    "C06",
+    "C07",
+    "C08",
+    "C09",
+    "C10",
+    "C11",
+    "C12",
+    "C13"
+  ],
+  "cases": [
+    {
+      "id": "C01",
+      "nodes": [
+        "5:31",
+        "5:32",
+        "5:36"
+      ],
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17&starting-point-node-id=5%3A17",
+      "visualEvidence": [
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/discover.png"
+      ],
+      "clickStatus": "BLOCKED"
+    },
+    {
+      "id": "C02",
+      "nodes": [
+        "5:114"
+      ],
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17&starting-point-node-id=5%3A17",
+      "visualEvidence": [
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/discover.png"
+      ],
+      "clickStatus": "BLOCKED"
+    },
+    {
+      "id": "C03",
+      "nodes": [
+        "5:126",
+        "5:128",
+        "5:130",
+        "77:175",
+        "77:277",
+        "77:379"
+      ],
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17&starting-point-node-id=5%3A17",
+      "visualEvidence": [
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/maya.png",
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/leo.png",
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/emma.png"
+      ],
+      "clickStatus": "BLOCKED"
+    },
+    {
+      "id": "C04",
+      "nodes": [
+        "5:219",
+        "5:218"
+      ],
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-195&starting-point-node-id=5%3A195",
+      "visualEvidence": [
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/detail.png",
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/detail-long.png",
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/ai-detail-long.png",
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/pending-detail-long.png"
+      ],
+      "clickStatus": "BLOCKED"
+    },
+    {
+      "id": "C05",
+      "nodes": [
+        "5:287"
+      ],
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-195&starting-point-node-id=5%3A195",
+      "visualEvidence": [
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/detail-long.png"
+      ],
+      "clickStatus": "BLOCKED"
+    },
+    {
+      "id": "C06",
+      "nodes": [
+        "5:303",
+        "5:304"
+      ],
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-195&starting-point-node-id=5%3A195",
+      "visualEvidence": [
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/detail-long.png"
+      ],
+      "clickStatus": "BLOCKED"
+    },
+    {
+      "id": "C07",
+      "nodes": [
+        "5:315",
+        "5:318",
+        "5:320",
+        "5:323"
+      ],
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-195&starting-point-node-id=5%3A195",
+      "visualEvidence": [
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/detail-long.png",
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/pending-detail-long.png"
+      ],
+      "clickStatus": "BLOCKED"
+    },
+    {
+      "id": "C08",
+      "nodes": [],
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=10-65&starting-point-node-id=10%3A65",
+      "visualEvidence": [
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/register.png",
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/login.png",
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/register-long.png"
+      ],
+      "clickStatus": "BLOCKED"
+    },
+    {
+      "id": "C09",
+      "nodes": [
+        "10:101",
+        "10:107",
+        "13:133",
+        "13:138"
+      ],
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=10-65&starting-point-node-id=10%3A65",
+      "visualEvidence": [
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/register.png",
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/login.png"
+      ],
+      "clickStatus": "BLOCKED"
+    },
+    {
+      "id": "C10",
+      "nodes": [
+        "11:1235"
+      ],
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1191&starting-point-node-id=11%3A1191",
+      "visualEvidence": [
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/withdrawn.png"
+      ],
+      "clickStatus": "BLOCKED"
+    },
+    {
+      "id": "C11",
+      "nodes": [],
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-753&starting-point-node-id=11%3A753",
+      "visualEvidence": [
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/application.png"
+      ],
+      "clickStatus": "BLOCKED"
+    },
+    {
+      "id": "C12",
+      "nodes": [
+        "78:297",
+        "11:1689",
+        "78:1174",
+        "78:807",
+        "78:944",
+        "78:1037"
+      ],
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1513&starting-point-node-id=11%3A1513",
+      "visualEvidence": [
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/language-info.png",
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/language-choice.png",
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/language-draft-long.png",
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/language-saved.png"
+      ],
+      "clickStatus": "BLOCKED",
+      "contextRepair": "R12-I1-C12-CONTEXT author repaired; independent actual retest pending"
+    },
+    {
+      "id": "C13",
+      "nodes": [],
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1611&starting-point-node-id=11%3A1611",
+      "visualEvidence": [
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/profile-edit-long.png",
+        "docs/design/r12/ios-0.1.0-dev.1/evidence/register-long.png"
+      ],
+      "clickStatus": "BLOCKED"
+    }
+  ]
+}

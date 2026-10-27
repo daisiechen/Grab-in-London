@@ -1,0 +1,1023 @@
+{
+  "date": "2026-10-28",
+  "reviewer": "PJ-ADMIN independent of original UX1/UX2",
+  "baselineCommit": "ecfb54e70fe5356ed87e82f2e8b2ea1defcf1602",
+  "status": "ALL21_ACCEPTED_BOUNDED_FIXED_SAMPLE",
+  "inputSHA256": {
+    "docs/design/r12/ios-0.1.0-dev.1/artifact-manifest.json": "b63a365887fe02c3d5f45f99e6c6bb03805f8479c41e1cdcf331631fe125462f",
+    "docs/design/r12/ios-0.1.0-dev.1/coverage.json": "c8c1b85579ee67e008229a59a4e3ede917e1b37822889bb2298839c50d685e10",
+    "docs/design/r12/ios-0.1.0-dev.1/handoff.zh-CN.md": "a0b2bac67b3c21e987ef4ddcac59b55cef318e821977272b8403ecda74322ab0",
+    "docs/reviews/r12/ios1-user-feedback-2026-10-28.json": "6097ed225d66ec09e2c30bfe801d2035bbf570585d80c5ac9e53379ce1e91d39",
+    "docs/reviews/r12/ios1-user-feedback-2026-10-28.md": "feabf5defbbdfb9c8510df77a805cd9863509856b48af81618abb2d733759044",
+    "docs/design/r12/ios-0.1.0-dev.1/evidence/j01-readback.json": "5a934086cbab1810ef89145375d06c89b8f79a97b4dfbe452928ffe2aa895563",
+    "docs/design/r12/ios-0.1.0-dev.1/evidence/j05-readback.json": "79f91926e0fd7817959cdc6739f159115e1003e2cca7c8fb44d6e1b16d6029ac",
+    "docs/reviews/r12/ios3-local-browser-retest-2026-10-28.json": "467d8302cef0e85c10dc88a93a50a35158a848d1700b6018d1f2c45568abb7a5",
+    "docs/design/r12/ios-0.1.0-dev.3/artifact-manifest.json": "d2cdc45ab893eb6a71c52f5aa42c4d2c4eacdd3d4535b9a75ea7b49c17681a38",
+    "docs/product/r12/ios-feedback-requirements-2026-10-28.json": "02bb1e070f6b54e4c98c9a4d7e5b77e1d8cd3128b8eb09a54c2154e9ae1f1dfc",
+    "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json": "9697772135328734cec73727e5ed5b758c73003236486a6eaa17c0897884b5ef",
+    "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.md": "aa52d7c9ca689a2c0eafde11b38056d12452fe27ad7bace1c6c84110f7fc8e02",
+    "docs/design/r12/ios-0.1.0-dev.2/artifact-manifest.json": "b8191f7064fca438de92bfbe38f0a8898e01256920c294552839d5ee44f9c860",
+    "docs/design/r12/ios-0.1.0-dev.2/coverage.json": "6854dc0833889910ebe296c280deb67ca0747d873ce98b0bcb66547214c62bfb",
+    "docs/design/r12/ios-0.1.0-dev.2/state-contracts.zh-CN.md": "48b931dce01f2cd743870345508a266d8d6c916b2e00374ebc0f4ab283d1b406",
+    "docs/design/r12/ios-0.1.0-dev.2/handoff.zh-CN.md": "b4b16b0eea45406d62523d782758cf8964f1edaf54e0717f8ea3a0a91bfbf00c",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/c20-applicant-null.png": "243bdd2ad4ee473bbb26e591d0bac77e9cc6f232d7e2d2b85a6005707a7de0df",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/c14-place-pins.png": "23abb9311f57fc331da0e4a35e1bff47168a84e62fb41fda5074709578de5844",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/shared-detail-published.png": "058191baae440392b8467ac44f806bb5920bed1147e6b2f21c6c1546e0dba20b",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/c20-applicant-reason.png": "69e112b0397c2c79a6f6691b066ab80e4f9cdb4f389b1de01352deaef69acd63",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/interaction-nodes.json": "0719835454e0de6e515ca8ad5aad71c7e355ccd70184c600449583e0fa4b9232",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/c20-host-receipt-final.png": "29d18a4bb32cce5f6fbf8352bd0a147effb1681e4360b21a493ada47eae34f55",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/range-apply-readback.json": "456b7958124eaf23ce73464577addb80d8b07ba7a09ab7efc2e98829c8ef09aa",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/c20-confirm-before-privacy-native-radio.png": "6b2f911bdb226dff07fa100da19daa0a1cea114b59249606157b023d46ed3ef4",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/c13-label-readback.json": "96b7592cb9794a6652f7143921be59cb94ef97a6e8d3f4d45d5fa9be70aeff7c",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/shared-detail-pending.png": "3beb2e31344586164984ae3fcc366fe76cf69c7b90f06af97491fb974951ee5f",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/c18-public-profile-before-known-data.png": "170fd1728a24aa40b0e96c16cbe1664dcc02785888b2fd99db9df24c8d406b58",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/c15-range-sheet.png": "7ac8f9b803913ebbf9ecc8cfdfdbafa9a9391f50be664da7589b109635dfbb66",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/viewport-readback.json": "3807ec734cd081f0a6201159674211b10df366f32c6f5144df0c4ce1caa62533",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/c19-save-changes.png": "dad4c65892ce04630b9c6ec133252add8c766669e527f30f794b159b9dd68f4c",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/shared-money-icon-source.json": "92d7539dc44432bcd98b789c7ac6154401b5f61ade8717ba0bc2f9d865bacf18",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/visual-readback.json": "21f64a5716b39d6544e061bbd0f69da8ff38e7dcf1ee84c07ac32bf2782cfa9f",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/c20-host-receipt.png": "b86a53d23a481b0cf48f3dc34f5c80326e6bcf8789841afafbaf0a323f574bb9",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/c20-confirm-native-radio.png": "953de4556f35a814ed359109c8618e45147eb40f8dd71351903eb3e3804e00ab",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/c20-confirm.png": "6b2f911bdb226dff07fa100da19daa0a1cea114b59249606157b023d46ed3ef4",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/range-title-readback.json": "307feb13767a40dd27c21339a2b649b334cda4c6d5440d7387a8a6f413062077",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/decline-readback-before-native-radio.json": "42ccdad023d20d0d48dad463ebe42f1994dbcdba87fa0f153311307baeab55b8",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/shadow-radio-mutations.json": "243d17a0ddb0ce655907949e5e2284294b1d3f9d7ed4a0f9bfef784a514f2d5c",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/shared-detail-final-readback.json": "ec63c68150b097d05a26ae3095d45dda9d5fee1a52c745a577a195d9705c75f4",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/c18-attendee-scale.png": "cb2f120e9aa412766adc8a395a4beb3b7897f03da20d5ae3c944cce22895c188",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/c16-c17-costs.png": "1053112280d48335121ab4506600ebbd2f24752170011733566dbb3149351c20",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/range-readback.json": "cf5c4201d530990a7e7690b5d11ccec8da4141bd658688bc6d1f32f64bf90734",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/decline-readback.json": "7b6ace5148aecae0263df424fb0d343ede984ebdae3044e2606e97279ee8dbff",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/c18-public-profile.png": "2d95433c0d15f1af711466bc9b2a1c40d70304d61385b571a46162e39ad9b65a",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/shared-detail-cancelled.png": "68024e0f00affeb8183dc5624b7fbcab1eb38e3cb75d5d607520db8a0af2ae52",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/final-consistency-readback.json": "65575d5c293a1a7ff534804b955bcc5550e9540b62b11cf7a295ee619f6f86e8",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/shared-detail-mutations.json": "4fb52db63e4a123354007f474fca148e0828f56bd1e0897d55457a4795ae5529",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/shared-detail-approved.png": "591eba55dbcd7caaeeaa4e7af85dfa7f4139539d94c7cdd3c9c3e7192999545a"
+  },
+  "feedbackScopeProjectionSHA256": "f0414c81260bffb38a1b2a72beae7889e6ed0fdc68c109333e22275f044f8472",
+  "cases": [
+    {
+      "id": "C01",
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "request": "城市位置移至标题右侧，不单独占一行",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17&starting-point-node-id=5%3A17",
+      "resolution": "INDEPENDENTLY_ACCEPTED_FIXED_SAMPLE",
+      "visual": {
+        "status": "PASS",
+        "method": "actual-browser-PNG + original-author rendered PNG review",
+        "observed": "真实Discover首屏London在标题右侧同行，未再独占一行。",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-discover-final-loaded.png"
+        ]
+      },
+      "interaction": {
+        "status": "NOT_APPLICABLE",
+        "method": "visual-only requested change; no invented click pass",
+        "steps": []
+      }
+    },
+    {
+      "id": "C02",
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "request": "预算补图标，元信息图标列与文字基线对齐",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17&starting-point-node-id=5%3A17",
+      "resolution": "INDEPENDENTLY_ACCEPTED_FIXED_SAMPLE",
+      "visual": {
+        "status": "PASS",
+        "method": "actual-browser-PNG + original-author rendered PNG review",
+        "observed": "卡片£25–35预算前已见money小图标；地点/日期/预算/人数的图标列和文字基线逐行对齐。",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-discover-final-loaded.png"
+        ]
+      },
+      "interaction": {
+        "status": "NOT_APPLICABLE",
+        "method": "visual-only requested change; no invented click pass",
+        "steps": []
+      }
+    },
+    {
+      "id": "C03",
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "request": "参与者头像打开对应公开个人主页，不卡片饭局详情",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17&starting-point-node-id=5%3A17",
+      "resolution": "INDEPENDENTLY_ACCEPTED_FIXED_SAMPLE",
+      "visual": {
+        "status": "PASS",
+        "method": "actual-browser-PNG + original-author rendered PNG review",
+        "observed": "实际依次点击三个头像，分别到Maya77:175、Leo77:277、Emma77:379公开主页；各Back均回Discover5:17，未进入饭局详情。",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-avatar-maya.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-avatar-leo.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-avatar-emma.png"
+        ]
+      },
+      "interaction": {
+        "status": "PASS",
+        "method": "real local Chromium mouse/wheel",
+        "steps": [
+          {
+            "step": "Discover avatar Maya",
+            "mouse": [
+              575,
+              690
+            ],
+            "resultNode": "77:175",
+            "visible": "Maya",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=77-175"
+          },
+          {
+            "step": "Back",
+            "mouse": [
+              448,
+              117
+            ],
+            "resultNode": "5:17",
+            "visible": "same Discover card",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17"
+          },
+          {
+            "step": "Discover avatar Leo",
+            "mouse": [
+              613,
+              690
+            ],
+            "resultNode": "77:277",
+            "visible": "Leo",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=77-277"
+          },
+          {
+            "step": "Back",
+            "mouse": [
+              448,
+              117
+            ],
+            "resultNode": "5:17",
+            "visible": "same card",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17"
+          },
+          {
+            "step": "Discover avatar Emma",
+            "mouse": [
+              649,
+              690
+            ],
+            "resultNode": "77:379",
+            "visible": "Emma",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=77-379"
+          },
+          {
+            "step": "Back",
+            "mouse": [
+              448,
+              117
+            ],
+            "resultNode": "5:17",
+            "visible": "same card",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17"
+          }
+        ]
+      }
+    },
+    {
+      "id": "C04",
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "request": "详情首屏优先重要安排，图片降级不占顶部大图",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-195&starting-point-node-id=5%3A195",
+      "resolution": "INDEPENDENTLY_ACCEPTED_FIXED_SAMPLE",
+      "visual": {
+        "status": "PASS",
+        "method": "actual-browser-PNG + original-author rendered PNG review",
+        "observed": "最新真实详情首屏先有日期19:00London、confirmed3of4、Minimum3含host、money£25–35/person、host与外订各付说明，110px照片在这些之后；1224×609 scale-down也看见整设备。",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-budget-min-final.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-final-609-top.png"
+        ]
+      },
+      "interaction": {
+        "status": "NOT_APPLICABLE",
+        "method": "visual-only requested change; no invented click pass",
+        "steps": []
+      },
+      "crossVersionIOS2": {
+        "status": "PASS",
+        "evidence": "own published-after-edit-save-2-5.png shows info-first minimum2/1of5/budget before photo and unique deadline; own edit-introduce-no-optional.png shows Cuisine / Dietary options without optional",
+        "rootTrace": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json"
+      }
+    },
+    {
+      "id": "C05",
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "request": "移除重复人数信息，保留唯一必要截止信息",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-195&starting-point-node-id=5%3A195",
+      "resolution": "INDEPENDENTLY_ACCEPTED_FIXED_SAMPLE",
+      "visual": {
+        "status": "PASS",
+        "method": "actual-browser-PNG + original-author rendered PNG review",
+        "observed": "confirmed3of4与Minimum3分别表达已确认数/最低事实，不将最低人数误删；下部只有Applications close23Oct18:00，无旧重复3–4说明段。",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-budget-min-scroll-final.png"
+        ]
+      },
+      "interaction": {
+        "status": "NOT_APPLICABLE",
+        "method": "visual-only requested change; no invented click pass",
+        "steps": []
+      },
+      "crossVersionIOS2": {
+        "status": "PASS",
+        "evidence": "own published-after-edit-save-2-5.png shows info-first minimum2/1of5/budget before photo and unique deadline; own edit-introduce-no-optional.png shows Cuisine / Dietary options without optional",
+        "rootTrace": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json"
+      }
+    },
+    {
+      "id": "C06",
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "request": "外订状态标签无串行与文字截断",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-195&starting-point-node-id=5%3A195",
+      "resolution": "INDEPENDENTLY_ACCEPTED_FIXED_SAMPLE",
+      "visual": {
+        "status": "PASS",
+        "method": "actual-browser-PNG + original-author rendered PNG review",
+        "observed": "实际wheel长页后Host books externally标签完整，不与地点/地图说明串行或截断。",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-budget-min-scroll-final.png"
+        ]
+      },
+      "interaction": {
+        "status": "NOT_APPLICABLE",
+        "method": "visual-only requested change; no invented click pass",
+        "steps": []
+      }
+    },
+    {
+      "id": "C07",
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "request": "费用与支付右列不越界、不裁切",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-195&starting-point-node-id=5%3A195",
+      "resolution": "INDEPENDENTLY_ACCEPTED_FIXED_SAMPLE",
+      "visual": {
+        "status": "PASS",
+        "method": "actual-browser-PNG + original-author rendered PNG review",
+        "observed": "费用右列£25–35及At restaurant均完整，右内边距可见，没有越界/裁切。",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-budget-min-scroll-final.png"
+        ]
+      },
+      "interaction": {
+        "status": "NOT_APPLICABLE",
+        "method": "visual-only requested change; no invented click pass",
+        "steps": []
+      }
+    },
+    {
+      "id": "C08",
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "request": "删除认证字标旁无用红箭头",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=10-65&starting-point-node-id=10%3A65",
+      "resolution": "INDEPENDENTLY_ACCEPTED_FIXED_SAMPLE",
+      "visual": {
+        "status": "PASS",
+        "method": "actual-browser-PNG + original-author rendered PNG review",
+        "observed": "实际Create与Log in首屏均无字标旁多余红箭头，只保留正常返回控件。",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-auth-create.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-auth-login.png"
+        ]
+      },
+      "interaction": {
+        "status": "NOT_APPLICABLE",
+        "method": "visual-only requested change; no invented click pass",
+        "steps": []
+      }
+    },
+    {
+      "id": "C09",
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "request": "注册登录模式切换同步选中加粗与对勾",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=13-107&starting-point-node-id=13%3A107",
+      "resolution": "INDEPENDENTLY_ACCEPTED_FIXED_SAMPLE",
+      "visual": {
+        "status": "PASS",
+        "method": "actual-browser-PNG + original-author rendered PNG review",
+        "observed": "实际Create→Log in后选中粗体/边框/勾同步，Email进入13:174；Back→Create选态复原，Email进入5:355。未发送验证码或调用供应方。",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-auth-create.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-auth-login.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-auth-email-login.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-auth-email-create.png"
+        ]
+      },
+      "interaction": {
+        "status": "PASS",
+        "method": "real local Chromium mouse/wheel",
+        "steps": [
+          {
+            "step": "Apply from detail",
+            "mouse": [
+              608,
+              774
+            ],
+            "resultNode": "10:65",
+            "visible": "Create an account bold/check",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=10-65"
+          },
+          {
+            "step": "Log in",
+            "mouse": [
+              692,
+              375
+            ],
+            "resultNode": "13:107",
+            "visible": "Log in bold/check, Create unselected",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=13-107"
+          },
+          {
+            "step": "Continue with email",
+            "mouse": [
+              609,
+              460
+            ],
+            "resultNode": "13:174",
+            "visible": "email sample screen, no email sent",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=13-174"
+          },
+          {
+            "step": "Back then Create",
+            "mouse": [
+              518,
+              374
+            ],
+            "resultNode": "10:65",
+            "visible": "Create bold/check",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=10-65"
+          },
+          {
+            "step": "Continue with email",
+            "mouse": [
+              610,
+              460
+            ],
+            "resultNode": "5:355",
+            "visible": "create email sample",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-355"
+          }
+        ]
+      }
+    },
+    {
+      "id": "C10",
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "request": "撤回结果移除Track in Inbox追踪入口",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1191&starting-point-node-id=11%3A1191",
+      "resolution": "INDEPENDENTLY_ACCEPTED_FIXED_SAMPLE",
+      "visual": {
+        "status": "PASS",
+        "method": "actual-browser-PNG + original-author rendered PNG review",
+        "observed": "直接Pending11:978为合成前提，真实Withdraw request→11:2510确认→Withdraw→11:1191；最终Withdrawn没有Track in Inbox。非仅直达终态截图。",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-pending-for-withdraw.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-withdraw-confirm.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-withdrawn-actual.png"
+        ]
+      },
+      "interaction": {
+        "status": "PASS",
+        "method": "real local Chromium mouse/wheel",
+        "steps": [
+          {
+            "step": "Open Pending sample precondition",
+            "directEntry": true,
+            "resultNode": "11:978",
+            "visible": "Application pending/Withdraw request",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-978"
+          },
+          {
+            "step": "Withdraw request",
+            "mouse": [
+              612,
+              597
+            ],
+            "resultNode": "11:2510",
+            "visible": "Withdraw request? Keep/Withdraw",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-2510"
+          },
+          {
+            "step": "Withdraw confirmation",
+            "mouse": [
+              609,
+              811
+            ],
+            "resultNode": "11:1191",
+            "visible": "Your request is withdrawn; no Track",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1191"
+          }
+        ]
+      }
+    },
+    {
+      "id": "C11",
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "request": "申请页本人身份行移除无用Edit",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-753&starting-point-node-id=11%3A753",
+      "resolution": "INDEPENDENTLY_ACCEPTED_FIXED_SAMPLE",
+      "visual": {
+        "status": "PASS",
+        "method": "actual-browser-PNG + original-author rendered PNG review",
+        "observed": "真实Request a seat页本人Alex身份行未再出现无用Edit。",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-application.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-application-609.png"
+        ]
+      },
+      "interaction": {
+        "status": "NOT_APPLICABLE",
+        "method": "visual-only requested change; no invented click pass",
+        "steps": []
+      }
+    },
+    {
+      "id": "C12",
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "request": "明确App语言首发范围，交流语言能从资料修改",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1753&starting-point-node-id=11%3A1753",
+      "resolution": "INDEPENDENTLY_ACCEPTED_FIXED_SAMPLE",
+      "visual": {
+        "status": "PASS",
+        "method": "actual-browser-PNG + original-author rendered PNG review",
+        "observed": "实际Settings English说明→Back→再开→Edit profile→wheel语言字段→selector。首次底图Settings错误已交原UX修；刷新后底图为Edit profile，Cancel保English；选English+Spanish→Save→Profile已存E/S→Edit重进仍E/S→Back仍已存。界面继续English，并非locale切换。",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-info.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-selector.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-selector-fixed.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-selector-cancel-fixed.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-cancel-English.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-Spanish-draft-fixed.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-saved-fixed.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-saved-reentry.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-saved-cancel.png"
+        ]
+      },
+      "interaction": {
+        "status": "PASS",
+        "method": "real local Chromium mouse/wheel",
+        "steps": [
+          {
+            "step": "Settings English",
+            "mouse": [
+              761,
+              793
+            ],
+            "resultNode": "78:297",
+            "visible": "App language English-at-launch explanation",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=78-297"
+          },
+          {
+            "step": "Back to settings",
+            "mouse": [
+              611,
+              736
+            ],
+            "resultNode": "11:1753",
+            "visible": "Settings unchanged",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1753"
+          },
+          {
+            "step": "Reopen then Edit conversation languages",
+            "mouse": [
+              611,
+              794
+            ],
+            "resultNode": "11:1611",
+            "visible": "Edit profile",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1611"
+          },
+          {
+            "step": "Wheel520 then language field",
+            "mouse": [
+              610,
+              510
+            ],
+            "wheel": 520,
+            "resultNode": "78:1174",
+            "visible": "after repair: Edit profile background + English selector",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=78-1174"
+          },
+          {
+            "step": "Cancel selector",
+            "mouse": [
+              609,
+              736
+            ],
+            "resultNode": "11:1611",
+            "visible": "editor returned top; further wheel confirms English unchanged",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1611"
+          },
+          {
+            "step": "Reopen selector and English+Spanish",
+            "mouse": [
+              610,
+              794
+            ],
+            "resultNode": "78:807",
+            "visible": "draft English, Spanish",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=78-807"
+          },
+          {
+            "step": "Save profile",
+            "mouse": [
+              609,
+              782
+            ],
+            "resultNode": "78:944",
+            "visible": "public profile English, Spanish",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=78-944"
+          },
+          {
+            "step": "Edit profile",
+            "mouse": [
+              608,
+              377
+            ],
+            "resultNode": "78:1037",
+            "visible": "saved edit still English, Spanish",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=78-1037"
+          },
+          {
+            "step": "Back cancel saved edit",
+            "mouse": [
+              448,
+              117
+            ],
+            "resultNode": "78:944",
+            "visible": "public confirmed English, Spanish",
+            "resultUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=78-944"
+          }
+        ]
+      }
+    },
+    {
+      "id": "C13",
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "request": "去除逐项optional标注，仅标必填项",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1611&starting-point-node-id=11%3A1611",
+      "resolution": "INDEPENDENTLY_ACCEPTED_FIXED_SAMPLE",
+      "visual": {
+        "status": "PASS",
+        "method": "actual-browser-PNG + original-author rendered PNG review",
+        "observed": "实际Profile编辑首屏及wheel下段，Work/School/Hometown无逐项optional，姓名/介绍/生活状态/交流语言/兴趣必填星号保留。原作者长注册/编辑PNG也逐张核对。",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-profile-edit.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-field.png",
+          "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-saved-reentry.png"
+        ]
+      },
+      "interaction": {
+        "status": "NOT_APPLICABLE",
+        "method": "visual-only requested change; no invented click pass",
+        "steps": []
+      },
+      "crossVersionIOS2": {
+        "status": "PASS",
+        "evidence": "own published-after-edit-save-2-5.png shows info-first minimum2/1of5/budget before photo and unique deadline; own edit-introduce-no-optional.png shows Cuisine / Dietary options without optional",
+        "rootTrace": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json"
+      }
+    },
+    {
+      "id": "C14",
+      "version": "IOS-0.1.0-dev.2",
+      "owner": "original UX-2",
+      "request": "选餐厅地图使用合理小pin，不用饭局聚合大气泡",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=1-24&starting-point-node-id=1%3A24",
+      "resolution": "ACCEPTED_FROM_ROOT_REAL_BROWSER_TRACE_WITH_INDEPENDENT_SUPPLEMENT",
+      "visual": {
+        "status": "PASS",
+        "observed": "Create map uses three small location pins rather than numbered meal-count clusters.",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-map-repaint.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-place-picker.png"
+        ]
+      },
+      "interaction": {
+        "status": "PASS",
+        "method": "real local Chromium mouse/wheel",
+        "steps": [
+          "From1:24 click map pin601,634→3:2492 Choose a restaurant",
+          "Observe The Little Table sample candidate; click Use this restaurant610,775→1:24"
+        ],
+        "observed": "Actual pin opens confirmation sheet and returns selected sample restaurant; not real Places/provider execution."
+      }
+    },
+    {
+      "id": "C15",
+      "version": "IOS-0.1.0-dev.2",
+      "owner": "original UX-2",
+      "request": "人数范围合成一组最小值最大值选择",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=1-24&starting-point-node-id=1%3A24",
+      "resolution": "ACCEPTED_FROM_ROOT_REAL_BROWSER_TRACE_WITH_INDEPENDENT_SUPPLEMENT",
+      "visual": {
+        "status": "PASS",
+        "observed": "One compact Group size outline containing Min3—Max4 and one People including you helper, replacing separate large fields.",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-range-control.png",
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-range-applied-visible.png",
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-range-invalid-repaint.png",
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-range-cancel.png",
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-actual-review-range.png"
+        ]
+      },
+      "interaction": {
+        "status": "PASS",
+        "method": "real local Chromium mouse/wheel",
+        "steps": [
+          "Open range from visible Min511,454→90:399",
+          "Attempt Max2 while Min3: invalid attempt warning, confirmed values unchanged",
+          "Choose Min2 and Max5→Use range610,865→1:24; actual scroll shows2—5",
+          "Reopen→attempt Min6 above Max5: warning; actual screenshot after browser repaint shows still2/5",
+          "Choose Min4 then Cancel742,577→1:24; scroll shows original2/5",
+          "Continue Arrange→Introduce1:340→Costs1:449: declaration now for5 people",
+          "Explicitly check reservation→4:164→Review1:594: Minimum2 / Capacity5 and booking5",
+          "Explicitly check arrangements→3:2365→Publish→1:719:1of5 confirmed"
+        ],
+        "observed": "Create valid changes, invalid guard, Cancel and Review/booking/publication actual PASS. Independent version PJ separately actually verified Edit draft2–5 Cancel restores published3–4; explicit Review/consent/Save commits minimum2/capacity5, see independent supplement."
+      },
+      "independentSupplement": {
+        "method": "real local Chromium mouse/wheel, 1224x1000 scale-down; direct Published synthetic precondition",
+        "steps": [
+          "Published1:719 minimum3/1of4 → Edit56:290 → range90:399 → Min2/Max5 → Use → Edit2–5 → Cancel → Published minimum3/1of4",
+          "Reenter Edit → original3–4 restored; choose2–5 → Arrange Continue → Introduce56:584 → Costs56:725 → explicitly check reservation for5 →56:857 → Review56:990 minimum2/capacity5",
+          "Review unchecked Save disabled; explicitly check →56:1111 → scroll and click Save changes → Published1:719 minimum2/1of5",
+          "After original-author title-only repair refresh Published → Edit → range90:399; actual underlay title Edit meal"
+        ],
+        "status": "PASS",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios2-pj/alex-public-profile.png",
+          "docs/reviews/r12/evidence/ios2-pj/edit-before-range.png",
+          "docs/reviews/r12/evidence/ios2-pj/edit-draft-range-2-5-visible.png",
+          "docs/reviews/r12/evidence/ios2-pj/edit-draft-range-2-5.png",
+          "docs/reviews/r12/evidence/ios2-pj/edit-introduce-no-optional.png",
+          "docs/reviews/r12/evidence/ios2-pj/edit-picker-draft-2-5.png",
+          "docs/reviews/r12/evidence/ios2-pj/edit-range-before-picker.png",
+          "docs/reviews/r12/evidence/ios2-pj/edit-range-picker.png",
+          "docs/reviews/r12/evidence/ios2-pj/edit-range-title-repaired.png",
+          "docs/reviews/r12/evidence/ios2-pj/edit-review-2-5-unchecked.png",
+          "docs/reviews/r12/evidence/ios2-pj/edit-save-arrange-lower.png",
+          "docs/reviews/r12/evidence/ios2-pj/profile-back-published.png",
+          "docs/reviews/r12/evidence/ios2-pj/published-after-edit-cancel.png",
+          "docs/reviews/r12/evidence/ios2-pj/published-after-edit-save-2-5.png",
+          "docs/reviews/r12/evidence/ios2-pj/published-before-edit.png",
+          "docs/reviews/r12/evidence/ios2-pj/published-edit-entry.png",
+          "docs/reviews/r12/evidence/ios2-pj/reopened-edit-restores-3-4.png"
+        ]
+      }
+    },
+    {
+      "id": "C16",
+      "version": "IOS-0.1.0-dev.2",
+      "owner": "original UX-2",
+      "request": "预算金额遵守卡内边距和文字基线",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=1-449&starting-point-node-id=1%3A449",
+      "resolution": "ACCEPTED_FROM_ROOT_REAL_BROWSER_TRACE_WITH_INDEPENDENT_SUPPLEMENT",
+      "visual": {
+        "status": "PASS",
+        "observed": "Actual Costs receipt amount £25–35 has visible ~18px right inner padding and aligned baseline.",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-costs.png",
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-edit-costs-unchecked.png"
+        ]
+      },
+      "interaction": {
+        "status": "NOT_APPLICABLE",
+        "method": "visual-only requested alignment",
+        "steps": []
+      }
+    },
+    {
+      "id": "C17",
+      "version": "IOS-0.1.0-dev.2",
+      "owner": "original UX-2",
+      "request": "勾号居中，复选框与说明正文对齐",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=56-857&starting-point-node-id=56%3A857",
+      "resolution": "ACCEPTED_FROM_ROOT_REAL_BROWSER_TRACE_WITH_INDEPENDENT_SUPPLEMENT",
+      "visual": {
+        "status": "PASS",
+        "observed": "Actual requested Edit Costs56:857 after mouse check and scroll has centered white tick within square, aligned to description first line, with amount inside receipt padding.",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-checkbox-edit-repaint.png"
+        ]
+      },
+      "interaction": {
+        "status": "PASS",
+        "method": "real local Chromium mouse/wheel",
+        "steps": [
+          "Open explicit Edit Costs precondition56:725",
+          "Scroll430; unchecked Continue610,748 stays56:725",
+          "Click checkbox449,502→56:857; scroll430 and observe centered checked state",
+          "Continue610,748→56:990 Review"
+        ],
+        "observed": "Exact requested edit source checkbox toggles and preserves explicit progression gate; no backend effects."
+      }
+    },
+    {
+      "id": "C18",
+      "version": "IOS-0.1.0-dev.2",
+      "owner": "original UX-2",
+      "request": "成员头像小于发起人身份头像",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=1-719&starting-point-node-id=1%3A719",
+      "resolution": "ACCEPTED_FROM_ROOT_REAL_BROWSER_TRACE_WITH_INDEPENDENT_SUPPLEMENT",
+      "visual": {
+        "status": "PASS",
+        "observed": "Roster avatar32px smaller than host44px; final public Alex profile preserves known public bio/interests/language rather than false empty placeholders.",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-published-top.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-published-roster.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-alex-full.png"
+        ]
+      },
+      "interaction": {
+        "status": "NOT_APPLICABLE",
+        "method": "visual requested size; additional real mouse navigation",
+        "steps": [
+          "Published1:719 roster460,827→92:363 Alex public profile",
+          "Back449,151→1:719; final profile fresh-loaded separately after author data fix"
+        ],
+        "observed": "Correct public identity, no private contact or unsolicited DM action."
+      },
+      "independentSupplement": {
+        "status": "PASS",
+        "method": "real avatar click from Published to92:363 and Back to1:719",
+        "evidence": [
+          "docs/reviews/r12/evidence/ios2-pj/alex-public-profile.png",
+          "docs/reviews/r12/evidence/ios2-pj/profile-back-published.png"
+        ],
+        "observed": "public known Alex bio/interests/language; no private application/contact;32pt roster vs44pt host hierarchy visible"
+      }
+    },
+    {
+      "id": "C19",
+      "version": "IOS-0.1.0-dev.2",
+      "owner": "original UX-2",
+      "request": "Save changes单行完整显示在按钮内",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=56-1111&starting-point-node-id=56%3A1111",
+      "resolution": "ACCEPTED_FROM_ROOT_REAL_BROWSER_TRACE_WITH_INDEPENDENT_SUPPLEMENT",
+      "visual": {
+        "status": "PASS",
+        "observed": "Actual requested Edit Review56:1111 and disabled56:990 both display Save changes on one line entirely within button; exact56:1111 full-scene checkpoint captured after fresh load, not only a partial repaint.",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-save-ready-full.png",
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-save-unchecked.png"
+        ]
+      },
+      "interaction": {
+        "status": "PASS",
+        "method": "real local Chromium mouse/wheel",
+        "steps": [
+          "From56:725 checkbox→56:857; Continue→56:990",
+          "Click disabled Save610,780: remains56:990",
+          "Explicit arrangements checkbox449,677→56:1111",
+          "Actual scroll to button; click Save610,780→1:719",
+          "Fresh56:1111 is an explicit checked-state visual precondition for full-scene screenshot; not substituted for upstream gate test"
+        ],
+        "observed": "Save stays disabled before consent; explicit Save returns Published with Your changes are saved and1of4 for the fixed sample. No real backend persistence claimed."
+      }
+    },
+    {
+      "id": "C20",
+      "version": "IOS-0.1.0-dev.2",
+      "owner": "original UX-2",
+      "request": "拒绝申请提供可选预设原因与清楚结果",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=6-185&starting-point-node-id=6%3A185",
+      "resolution": "ACCEPTED_FROM_ROOT_REAL_BROWSER_TRACE_WITH_INDEPENDENT_SUPPLEMENT",
+      "visual": {
+        "status": "PASS",
+        "observed": "Optional three-choice decline sheet with fixed equal native rings; private recipient notice; receipt safely below application text, without overlap.",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-initial.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-selected.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-confirmed.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-cancel.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-reset.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-none.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-applicant-reason-full.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-applicant-null-full.png"
+        ]
+      },
+      "interaction": {
+        "status": "PASS",
+        "method": "real local Chromium mouse/wheel",
+        "steps": [
+          "Explicit Pending1:880 precondition; Decline530,669→94:373",
+          "Choose Small600,743: exactly one dot; Confirm610,811→6:185 with Host’s reason: I’m keeping this group small.",
+          "Fresh Pending; Decline→Plans600,693→Cancel610,866→Pending1:880 unchanged",
+          "Reopen Decline: all three rings unselected, same size; Confirm610,811 without selecting→6:185 No reason provided.",
+          "Open recipient reason94:497 and null/legacy94:513 as explicit read-only role fixtures, not simulated cross-account delivery; full canvas repaint confirms title, receipt and privacy"
+        ],
+        "observed": "Selection/Confirm, Cancel/no write, no-reason/default reset actually executed. Real notification, auth, API and persistence not exercised."
+      }
+    },
+    {
+      "id": "C21",
+      "version": "IOS-0.1.0-dev.3",
+      "owner": "original UX-2",
+      "request": "修复底部Inbox换行及中央加号裁切",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV?node-id=13-14&starting-point-node-id=13%3A14",
+      "resolution": "ACCEPTED_FROM_ROOT_INDEPENDENT_TRACE",
+      "visual": {
+        "status": "PASS",
+        "method": "independent read/view of root actual browser screenshots",
+        "observed": "Inbox单行，加号圆完整，Current/Left/Dissolved来源底栏一致；7张PNG实际查看，非native图冒充Browser。"
+      },
+      "interaction": {
+        "status": "PASS_FROM_ROOT_TRACE",
+        "method": "root local-isolated-chromium-real-mouse-click; reviewer did not repeat click",
+        "report": "docs/reviews/r12/ios3-local-browser-retest-2026-10-28.json"
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "R12-C12-CONTEXT-01",
+      "status": "closed-after-original-author-repair-and-real-click-retest",
+      "firstObserved": "Conversation-language selector from Edit profile showed Settings background",
+      "firstScreenshot": "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-selector.png",
+      "retestScreenshot": "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-selector-fixed.png",
+      "owner": "original UX1",
+      "scope": "selector background only; no business change"
+    },
+    {
+      "id": "R12-C04-SUMMARY-01",
+      "status": "closed-after-original-author-followup-and-independent-refreshed-screenshot",
+      "firstObservedBy": "root screenshot review of intermediate repair",
+      "firstObserved": "Budget still below photo/introduction/member list, despite key-information-first request",
+      "firstScreenshot": "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail.png",
+      "retestScreenshot": "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-budget-min-final.png",
+      "owner": "original UX1"
+    },
+    {
+      "id": "R12-C05-MINIMUM-01",
+      "status": "closed-after-original-author-followup-and-independent-refreshed-screenshot",
+      "firstObservedBy": "root screenshot review of intermediate repair",
+      "firstObserved": "Removing repeated3–4 line must retain unique minimum fact",
+      "retestObserved": "Minimum3 incl.host in top facts, confirmed3of4 unchanged, single lower deadline retained",
+      "owner": "original UX1"
+    },
+    {
+      "id": "R12-C15-CONTEXT-01",
+      "status": "closed-after-original-author-title-only-repair-and-real-click-retest",
+      "firstObserved": "Edit range picker displayed Create a meal background title",
+      "firstScreenshot": "docs/reviews/r12/evidence/ios2-pj/edit-range-picker.png",
+      "retestScreenshot": "docs/reviews/r12/evidence/ios2-pj/edit-range-title-repaired.png",
+      "owner": "original UX2",
+      "scope": "dynamic source header only; numeric/Cancel/Use/Save unchanged"
+    }
+  ],
+  "viewports": [
+    {
+      "width": 1224,
+      "height": 1000,
+      "mode": "original / later scale-down"
+    },
+    {
+      "width": 1224,
+      "height": 609,
+      "mode": "initial unscaled viewer clipped; then explicit scaling=scale-down&content-scaling=fixed showed full device; not native responsiveness"
+    }
+  ],
+  "validation": {
+    "command": "python3 -m unittest discover -s tests -p test_ios_feedback_r12_ios1.py",
+    "passed": 8,
+    "meaning": "static artifact/counterexample guards, not click proof",
+    "browserClosed": true,
+    "realServiceCalled": false,
+    "productionQAStarted": false,
+    "ios2StaticChecks": {
+      "command": "python3 -m unittest discover -s tests -p test_ios_feedback_r12_ios2.py",
+      "passed": 9,
+      "meaning": "artifact/counterexample guards, not click proof"
+    },
+    "ios2ManifestFilesChecked": 35,
+    "ios2ManifestMismatches": []
+  },
+  "limitations": [
+    "C12 selector Cancel returned editor top, values preserved; native resetScrollPosition:false is not proof actual scroll position retained.",
+    "Language flow fixed English+Spanish sample, no arbitrary locale/language selection or cross-refresh/server persistence claim.",
+    "Some early screenshots preceded asset rendering; final Discover screenshot has fully loaded map/photo/avatars.",
+    "At609 fixed-size viewer initially clips; explicit scale-down fits full device; no claim native iOS layout adaptation tested.",
+    "Floating helper may cover non-target description in long scroll; this review certifies requested C01-13 target areas, not every possible helper/scroll combination.",
+    "Direct Pending/Settings entry establishes synthetic precondition, not real authentication or backend state.",
+    "I2 root actual trace is independently reviewed evidence, not a claim this reviewer repeated every root click.",
+    "Edit2–5 Save and Cancel tested in one live prototype session; no arbitrary values/backend persistence or real restaurant booking claim.",
+    "Original manifest candidate/independentlyApproved=false preserves author history; current independent acceptance is this review, not author self-signature."
+  ],
+  "evidenceSHA256": {
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-selector-cancel-fixed.png": "182e9565ce2dde9bf8fecb7410acbe83645c768c89722b0c79a063f0e7e1b9fb",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-avatar-leo.png": "100c4213731b2fb32afb0c8e4864741e4b14e18a3b01c3cf2e0a8375a5c65490",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-field.png": "a826232d3896096a0eda88c93860a594de6f90d92ae27275b374556820f56a23",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-final-609-scroll.png": "f5d6f1fcc88958131a8673801314c3528a4de627ff564260d81703b0e34108ff",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-final-609-top.png": "b969d4c137480343c5ff60207f359cec5af56f1b1db8d1d8a7870e0ab3d8b48f",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-info.png": "21ae39fda1bde0a9d8b4f74def06df8561443bf20207861b6da72a40c2ba38d9",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail.png": "503961230a96bab7c1a8ae06e3da0d065f6cd49b7a20905b7c91e3e2a521b73c",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-profile-edit.png": "182e9565ce2dde9bf8fecb7410acbe83645c768c89722b0c79a063f0e7e1b9fb",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-auth-login.png": "16276b801307b933522b0e44ce8fe1f1a38f3a17bfe5a8aacceaf611ed566c3c",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-withdrawn.png": "0478b1e26fb924424dd692dac468b124b514bd114fb4509445ddb12a5247c06e",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-avatar-maya.png": "af42b3802084bb7d87c524439a9be65507839d734c4f4c0f5d7316fafa773929",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-withdraw-confirm.png": "29852ed34679a0024042c3d535e0e82dc37f226e10bb8a65b7c16fd1cd8e47be",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-saved-cancel.png": "bb3566bd8b0d71577fc652a014501ba02873a0e2c114ca7d3a3cae87e60e8a99",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-cancel-English.png": "c3bec73949aa2f8f0c0c01ad2dc9b71f9ed6b4ebadb94a83716e359dc8ec023b",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-auth-email-create.png": "3debaaffb346f7b7ecf598850468bc3311cd80e8ce94989cafcaa62a944db8e7",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-selector.png": "806ff6920576c28e8c2d30952822b07c777399d912146470d4f0529c182d0a57",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-selector-fixed.png": "46c274777eae76eaa28e846e963605344a1c65eaa21e945f9256fa3347463f9a",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-auth-email-login.png": "203e46270173e6cc9f22ad0979bda569835094778103b9f849788032f2b2a502",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-saved-reentry.png": "b648bf9e41e215bc6925f0e06d43e0161a5c2ed494781c88900502fc08ff7659",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-discover.png": "41faac5e148b299f2aff7f84da1d5d1416e7efae1873db2a8477f7742b8fe95c",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-scroll520-final.png": "8dc94ad7ef53de65574cc9d9568de62759fe1d67f2efa82e5d3d39bdd4c31f28",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-bottom.png": "c88e2c5c9ed0d2ec770032772b1db4b1cb97800e56b4ed094d5676312a2b9cbc",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-avatar-emma.png": "6480ede37c0a4f73d34289a9e36b1c2b2deaafbb422752e9a49dda433906e9ac",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-cancel-profile.png": "2f5ae8ef672d248c1facaaa0391860e276a5fb99e94f57f98eac101dc1506f77",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-pending-for-withdraw.png": "9c41a902baae334a6f9ea2c635e42b3518e677a608705a8919e8c0ac9fdfd905",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-saved-fixed.png": "bb3566bd8b0d71577fc652a014501ba02873a0e2c114ca7d3a3cae87e60e8a99",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-budget-min-scroll-final.png": "5e1d6e2f277a52889fcc6a935f00fd968d1b67831d50df88b26a4201df59c14b",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-application.png": "158d434860c17aa4db640a71c31af680777165ce9a011655be71f6188080385a",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-budget-min-final.png": "88fa2a1cb33283377782a114ce9d8b6baecb3fe02a3b8c82d6af9e9eeb3d5e36",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-auth-create.png": "4c37e7ef13e7d3cd07dfeee98fb7759db02105487f6b2018a7868fb33b1d9d7b",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-withdrawn-actual.png": "431bb9b1a62f7e8b2f42c58e51ef5a01e38e5f21a3068e44dab0b292402b430a",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-discover-final-loaded.png": "2a524aa1a2a605d1419995c3aed4399627ce26b3e026a4d483f73532733100d2",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-Spanish-draft-fixed.png": "b259ad508cab397c9639ef4ed731b898e8d05607b1175920e0d7e3e23ffe4d8f",
+    "docs/reviews/r12/evidence/ios1-independent/r12-i1-application-609.png": "cb050a068d535a55fad264371cf8a84b4420b0bd2bd0cd6412363264a3736fc0",
+    "docs/reviews/r12/evidence/ios2-pj/alex-public-profile.png": "55c8333d3ad2147434a46e16902a8e6845ebee91e1b9819e4168e8c640a827ba",
+    "docs/reviews/r12/evidence/ios2-pj/edit-before-range.png": "473b9b7a9828a77b0bb934c98044b881eb5a715b59c2b82d2cff14426532277c",
+    "docs/reviews/r12/evidence/ios2-pj/edit-draft-range-2-5-visible.png": "be375034cb68234de20852f0c99d52432fe4387d2213591099a90ea4415ed3a2",
+    "docs/reviews/r12/evidence/ios2-pj/edit-draft-range-2-5.png": "473b9b7a9828a77b0bb934c98044b881eb5a715b59c2b82d2cff14426532277c",
+    "docs/reviews/r12/evidence/ios2-pj/edit-introduce-no-optional.png": "f9d03e07aeb2841c4c6a27619ab81615498c92737058dc4e674fe61803324f0b",
+    "docs/reviews/r12/evidence/ios2-pj/edit-picker-draft-2-5.png": "83af53dce89054b205dfef5e2953e6a430a43ac0884830ea40928f0d42c44b08",
+    "docs/reviews/r12/evidence/ios2-pj/edit-range-before-picker.png": "a058694cbf62d33fbea9d298f3185c122f9d08a2c94193285b5c712534984674",
+    "docs/reviews/r12/evidence/ios2-pj/edit-range-picker.png": "b06e04b8d928c6265f0f8d26e44a60be002a9623e457f047582f505a735ff843",
+    "docs/reviews/r12/evidence/ios2-pj/edit-range-title-repaired.png": "d08115d3521bea744221393e8b4418b9f9264c50638a1856c221a5fbe5480ffb",
+    "docs/reviews/r12/evidence/ios2-pj/edit-review-2-5-unchecked.png": "f51a394e6e84d54d7f02b01c26260f4e5dac92a58fedde0d71b138efd0136bdb",
+    "docs/reviews/r12/evidence/ios2-pj/edit-save-arrange-lower.png": "65d3efeceec49b627dcad8436937a63347c6857854423316ccd1e2b8757a0f60",
+    "docs/reviews/r12/evidence/ios2-pj/profile-back-published.png": "c8a26d0b89a3e2beb70769a76d360c41a45c6e0bbaa4899b0e0ee974e5937d0d",
+    "docs/reviews/r12/evidence/ios2-pj/published-after-edit-cancel.png": "2a022ec6863fb6cd48bb404a81d6946dd50086d950ba5b4dd689d4963553f7bb",
+    "docs/reviews/r12/evidence/ios2-pj/published-after-edit-save-2-5.png": "8bdc101e46f3a4ee67ecaf4f59e6161649654a9d2629bc6437a19201bd66ba53",
+    "docs/reviews/r12/evidence/ios2-pj/published-before-edit.png": "c8a26d0b89a3e2beb70769a76d360c41a45c6e0bbaa4899b0e0ee974e5937d0d",
+    "docs/reviews/r12/evidence/ios2-pj/published-edit-entry.png": "2ac6091d5f8d8d8f627141e53b55d8983626b49e45fc96aa031a04cc487421c5",
+    "docs/reviews/r12/evidence/ios2-pj/reopened-edit-restores-3-4.png": "bc634e14c06d2d95c06cb3b9e063e5bdcf03a82e607c437f2253d88f7203e2c4",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-actual-review-range.png": "331076695ff0336fc28b902f6c729c9f44da825c112d56a5d47f1611bf9450cd",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-checkbox-edit-repaint.png": "4ce66c1c1c718b458b17d1a5d8d46d65cb184bd60d21b326c73d43ce36810a3b",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-costs.png": "74e90162a860e05b9bbcbdfbfaa305f55539a0144270b27c702ab6d1cae71d10",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-edit-costs-unchecked.png": "d213c47828d58e481b0701bbe7e73cd283ad56b44eba33541a4bc086a5271126",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-range-applied-visible.png": "2f2a01f20243e5d4887ffab20e3336a6d2801141873fd3daf6281efcf765f03a",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-range-cancel.png": "2f2a01f20243e5d4887ffab20e3336a6d2801141873fd3daf6281efcf765f03a",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-range-invalid-repaint.png": "da443ed9904ed9234c22bc1a846a6dbd613086bc069ed0cf445418abc917bd3e",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-save-ready-full.png": "55de47d1309a8097e57fc7f8e9b2d6589549c713ebaa275ad53895a52cec89c5",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-save-unchecked.png": "0075e74b6e44a57ab5e57c5f2cc8840bc4fd1e8e9e0b94b2b7aff6d2b7571965",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-alex-full.png": "e5382f7a071fc4aeda743f3088483188d29f62abc32793509d3ff4004bb31e7d",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-applicant-null-full.png": "43f4ab52f98a4e52aec8964586a2708c7c16d1e91499df61f8aa525cce158eb8",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-applicant-reason-full.png": "a9822cb11b1fd1ef7145a8a71049c0110c6710cb56bfbb8c3a193bb522a7d9b7",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-map-repaint.png": "ba47db6d8f0fdcbc3e26c60e511ca808c4316f787fd7c181f93d916eac20e8d0",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-place-picker.png": "4505b79763a8cd19eeb3db1c3cde6c7aa317b7cb82b7ea701d7619c3ca6262cc",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-published-roster.png": "fb24c0effada28bf59ed7a5cf17df63f2a3c912fb9a06737c15e7b746331d057",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-published-top.png": "212a02093feb93f10f2f5d089a4c6a4ccd3918c112eca1e4e427512113f6f196",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-range-control.png": "4f9d61f20731a9f627cd3c712f452328daed21e3487b5b1d601d73a81b927e9e",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-cancel.png": "ad32993d80b285e2b4e2a29541281bcf550bbcd698eae7e994ba2ecdf5dda71b",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-confirmed.png": "26020d1db8435f4d811811184f4527ef6a33328c1a27dd30b0a0cca3229d3d04",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-initial.png": "6240ca60763dea22f4b16d6b3c489cd4d3a51209d40b77fc4e2889c42e69ef04",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-none.png": "2e8dc1b504e466ef83d87ceda8b1f3b821c2b426fe21f6a2c48a4d2a73d60e76",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-reset.png": "6240ca60763dea22f4b16d6b3c489cd4d3a51209d40b77fc4e2889c42e69ef04",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-selected.png": "34f2ecd8ecf5151a5dcc38571678e2f0216a1053acd6811b563f03c913319d55"
+  },
+  "summary": {
+    "visualAccepted": 21,
+    "interactiveAccepted": 10,
+    "interactionScope": [
+      "C03",
+      "C09",
+      "C10",
+      "C12",
+      "C14",
+      "C15",
+      "C17",
+      "C19",
+      "C20",
+      "C21"
+    ],
+    "all21Approved": true,
+    "meaning": "design fixed sample and requested target areas; not production QA"
+  },
+  "freeze": {
+    "reviewWritesStopped": true,
+    "designFilesRemainMutable": true,
+    "scope": "requested21 fixed-sample design feedback only; no real services, native device QA, deployment or implementation authorization"
+  }
+}

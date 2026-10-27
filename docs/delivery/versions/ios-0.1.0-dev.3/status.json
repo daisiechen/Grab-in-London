@@ -135,5 +135,29 @@
     ],
     "designChanged": false,
     "realServiceQASigned": false
+  },
+  "r12Feedback": {
+    "ids": [
+      "C21"
+    ],
+    "status": "resolved-by-independent-local-browser-retest",
+    "report": "docs/reviews/r12/ios3-user-feedback-2026-10-28.json",
+    "actualBrowserStatus": "PASS-bounded-fixed-sample",
+    "implementationAuthorized": false,
+    "authorAttemptStatus": "BLOCKED-network-0-clicks",
+    "independentEvidence": "docs/reviews/r12/ios3-local-browser-retest-2026-10-28.json"
+  },
+  "userFeedbackR12": {
+    "comments": [
+      "C21"
+    ],
+    "status": "resolved-by-original-UX-and-independent-local-browser-retest",
+    "authorCandidate": "docs/design/r12/ios-0.1.0-dev.3/artifact-manifest.json",
+    "independentEvidence": "docs/reviews/r12/ios3-local-browser-retest-2026-10-28.json",
+    "independentEvidenceSHA256": "467d8302cef0e85c10dc88a93a50a35158a848d1700b6018d1f2c45568abb7a5",
+    "firstAttempt": "Original author Browser Use network BLOCKED preserved in ios3-user-feedback-2026-10-28.json; independent Browser Use insufficient credits; local fallback successful",
+    "scope": "Inbox label/central plus rendering; actual group entry and return; no new cross-version routing, backend or native-device QA",
+    "integratedIndependentReview": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json",
+    "integratedIndependentReviewSHA256": "9ec0c59fcfa785dcb67aefce4dc48899e027047c2296eb9512b0da470834c6c4"
   }
 }

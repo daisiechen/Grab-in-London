@@ -1,0 +1,96 @@
+{
+  "comment": "C21",
+  "status": "PASS",
+  "reviewer": "overall PJ independent of original UX-2",
+  "method": "local-isolated-chromium-real-mouse-click",
+  "baselineCommit": "ecfb54e70fe5356ed87e82f2e8b2ea1defcf1602",
+  "inputSHA256": {
+    "docs/design/r12/ios-0.1.0-dev.3/artifact-manifest.json": "d2cdc45ab893eb6a71c52f5aa42c4d2c4eacdd3d4535b9a75ea7b49c17681a38",
+    "docs/design/r12/ios-0.1.0-dev.3/evidence/c21-navigation-readback.json": "cbb75f2b728c6ebb0cedd6e78ecafb070b7dc5df19a6b6ef7375742b93828685"
+  },
+  "viewports": [
+    {
+      "width": 1224,
+      "height": 1000,
+      "scaling": "original"
+    },
+    {
+      "width": 1224,
+      "height": 609,
+      "scaling": "scale-down",
+      "contentScaling": "fixed"
+    }
+  ],
+  "visualObserved": "实际浏览器完整画面中Inbox单行、加号圆完整上浮、底部文字与home indicator分离；Current/Left/Dissolved三来源同样正确。609 viewport使用Figma scale-down查看完整设备，不宣称iOS原生自适应已验。",
+  "scenarios": [
+    {
+      "id": "C21-current",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV?node-id=13-14&starting-point-node-id=13%3A14&scaling=scale-down&content-scaling=fixed",
+      "precondition": "Current group sample",
+      "steps": [
+        "Click selected Inbox at685,820: stays13:14",
+        "Click group row598,340: reaches2:2",
+        "Observe group screen then click Back449,119: returns13:14"
+      ],
+      "observed": "Inbox单行，+完整；当前组有composer，返回原Inbox。",
+      "status": "PASS"
+    },
+    {
+      "id": "C21-left",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV?node-id=30-14&starting-point-node-id=30%3A14&scaling=scale-down&content-scaling=fixed",
+      "precondition": "Directly opened Left Inbox representative source, not actual leave request",
+      "steps": [
+        "Click group row593,236: reaches6:252",
+        "Observe Left group · Read-only; no composer",
+        "Click Back519,105: returns30:14"
+      ],
+      "observed": "只读群设置并保留席位上下文；返回同来源，未恢复写态。",
+      "status": "PASS"
+    },
+    {
+      "id": "C21-dissolved",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV?node-id=30-399&starting-point-node-id=30%3A399&scaling=scale-down&content-scaling=fixed",
+      "precondition": "Directly opened Dissolved Inbox source, not actual dissolution event",
+      "steps": [
+        "Click group row593,236: reaches30:307",
+        "Observe This group is dissolved / earlier authorised history read-only; no composer",
+        "Click Back519,105: returns30:399"
+      ],
+      "observed": "群解散只读，返回同来源，底栏正确。",
+      "status": "PASS"
+    }
+  ],
+  "history": [
+    {
+      "status": "BLOCKED",
+      "channel": "Browser Use first author attempt",
+      "cause": "ERR_QUIC_PROTOCOL_ERROR and ERR_SOCKS_CONNECTION_FAILED",
+      "businessClicks": 0
+    },
+    {
+      "status": "BLOCKED",
+      "channel": "Browser Use independent retry",
+      "cause": "insufficient_credits; no run created; no repeat",
+      "businessClicks": 0
+    },
+    {
+      "status": "PASS",
+      "channel": "Existing local Playwright Chromium with inherited network settings; no login",
+      "businessClicks": "actual mouse actions recorded above"
+    }
+  ],
+  "screenshots": [
+    "docs/reviews/r12/evidence/c21-inbox-local.png",
+    "docs/reviews/r12/evidence/c21-fit-609-local.png",
+    "docs/reviews/r12/evidence/c21-group-local.png",
+    "docs/reviews/r12/evidence/c21-left-local.png",
+    "docs/reviews/r12/evidence/c21-left-readonly-local.png",
+    "docs/reviews/r12/evidence/c21-dissolved-local.png",
+    "docs/reviews/r12/evidence/c21-dissolved-readonly-local.png"
+  ],
+  "remainingUnverified": [
+    "Other-version tab destinations are not implemented in this Figma file, not declared passed",
+    "Real backend authorization/native-device/accessibility QA not run"
+  ],
+  "realServicesCalled": false
+}

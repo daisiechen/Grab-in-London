@@ -1,0 +1,21 @@
+{
+  "iteration": "IOS-0.1.0-dev.3",
+  "revision": "UX-r12-C21-candidate",
+  "fileKey": "mKXV0NvBavRb6fnmQ2g2xV",
+  "nodes": [
+    "13:14",
+    "30:14",
+    "30:399"
+  ],
+  "ownerApproved": false,
+  "independentlyReviewed": false,
+  "namedVersionId": null,
+  "frozen": false,
+  "businessChanged": false,
+  "filesSHA256": {
+    "handoff.zh-CN.md": "571cea62cf834fd29088a9cf4eea4680092c7a0d9bd7a06e8bca08ae5975a6a3",
+    "evidence/c21-navigation-readback.json": "cbb75f2b728c6ebb0cedd6e78ecafb070b7dc5df19a6b6ef7375742b93828685",
+    "evidence/c21-inbox.png": "1cede16cf78081f75e3a4e7b9822b8d0a3aab855a81add0b18566e547b4fabb9",
+    "evidence/c21-inbox-left.png": "dff01d5b08fb799601bf887c069f41bc4831f861d2623052aceb9eb339369c07"
+  }
+}

@@ -1,0 +1,241 @@
+{
+  "date": "2026-10-28",
+  "status": "PASS-bounded-fixed-sample-with-independent-edit-supplement",
+  "reviewer": "overall PJ independent of original UX-2",
+  "method": "real local Chromium mouse/wheel",
+  "baselineCommit": "ecfb54e70fe5356ed87e82f2e8b2ea1defcf1602",
+  "viewports": [
+    {
+      "width": 1224,
+      "height": 1000,
+      "scaling": "scale-down",
+      "contentScaling": "fixed"
+    }
+  ],
+  "cases": [
+    {
+      "id": "C14",
+      "visual": {
+        "status": "PASS",
+        "observed": "Create map uses three small location pins rather than numbered meal-count clusters.",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-map-repaint.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-place-picker.png"
+        ]
+      },
+      "interaction": {
+        "status": "PASS",
+        "method": "real local Chromium mouse/wheel",
+        "steps": [
+          "From1:24 click map pin601,634→3:2492 Choose a restaurant",
+          "Observe The Little Table sample candidate; click Use this restaurant610,775→1:24"
+        ],
+        "observed": "Actual pin opens confirmation sheet and returns selected sample restaurant; not real Places/provider execution."
+      }
+    },
+    {
+      "id": "C15",
+      "visual": {
+        "status": "PASS",
+        "observed": "One compact Group size outline containing Min3—Max4 and one People including you helper, replacing separate large fields.",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-range-control.png",
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-range-applied-visible.png",
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-range-invalid-repaint.png",
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-range-cancel.png",
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-actual-review-range.png"
+        ]
+      },
+      "interaction": {
+        "status": "PASS",
+        "method": "real local Chromium mouse/wheel",
+        "steps": [
+          "Open range from visible Min511,454→90:399",
+          "Attempt Max2 while Min3: invalid attempt warning, confirmed values unchanged",
+          "Choose Min2 and Max5→Use range610,865→1:24; actual scroll shows2—5",
+          "Reopen→attempt Min6 above Max5: warning; actual screenshot after browser repaint shows still2/5",
+          "Choose Min4 then Cancel742,577→1:24; scroll shows original2/5",
+          "Continue Arrange→Introduce1:340→Costs1:449: declaration now for5 people",
+          "Explicitly check reservation→4:164→Review1:594: Minimum2 / Capacity5 and booking5",
+          "Explicitly check arrangements→3:2365→Publish→1:719:1of5 confirmed"
+        ],
+        "observed": "Create valid changes, invalid guard, Cancel and Review/booking/publication actual PASS. Independent version PJ separately actually verified Edit draft2–5 Cancel restores published3–4; explicit Review/consent/Save commits minimum2/capacity5, see independent supplement."
+      },
+      "independentSupplement": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json"
+    },
+    {
+      "id": "C16",
+      "visual": {
+        "status": "PASS",
+        "observed": "Actual Costs receipt amount £25–35 has visible ~18px right inner padding and aligned baseline.",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-costs.png",
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-edit-costs-unchecked.png"
+        ]
+      },
+      "interaction": {
+        "status": "NOT_APPLICABLE",
+        "method": "visual-only requested alignment",
+        "steps": []
+      }
+    },
+    {
+      "id": "C17",
+      "visual": {
+        "status": "PASS",
+        "observed": "Actual requested Edit Costs56:857 after mouse check and scroll has centered white tick within square, aligned to description first line, with amount inside receipt padding.",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-checkbox-edit-repaint.png"
+        ]
+      },
+      "interaction": {
+        "status": "PASS",
+        "method": "real local Chromium mouse/wheel",
+        "steps": [
+          "Open explicit Edit Costs precondition56:725",
+          "Scroll430; unchecked Continue610,748 stays56:725",
+          "Click checkbox449,502→56:857; scroll430 and observe centered checked state",
+          "Continue610,748→56:990 Review"
+        ],
+        "observed": "Exact requested edit source checkbox toggles and preserves explicit progression gate; no backend effects."
+      }
+    },
+    {
+      "id": "C18",
+      "visual": {
+        "status": "PASS",
+        "observed": "Roster avatar32px smaller than host44px; final public Alex profile preserves known public bio/interests/language rather than false empty placeholders.",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-published-top.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-published-roster.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-alex-full.png"
+        ]
+      },
+      "interaction": {
+        "status": "NOT_APPLICABLE",
+        "method": "visual requested size; additional real mouse navigation",
+        "steps": [
+          "Published1:719 roster460,827→92:363 Alex public profile",
+          "Back449,151→1:719; final profile fresh-loaded separately after author data fix"
+        ],
+        "observed": "Correct public identity, no private contact or unsolicited DM action."
+      }
+    },
+    {
+      "id": "C19",
+      "visual": {
+        "status": "PASS",
+        "observed": "Actual requested Edit Review56:1111 and disabled56:990 both display Save changes on one line entirely within button; exact56:1111 full-scene checkpoint captured after fresh load, not only a partial repaint.",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-save-ready-full.png",
+          "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-save-unchecked.png"
+        ]
+      },
+      "interaction": {
+        "status": "PASS",
+        "method": "real local Chromium mouse/wheel",
+        "steps": [
+          "From56:725 checkbox→56:857; Continue→56:990",
+          "Click disabled Save610,780: remains56:990",
+          "Explicit arrangements checkbox449,677→56:1111",
+          "Actual scroll to button; click Save610,780→1:719",
+          "Fresh56:1111 is an explicit checked-state visual precondition for full-scene screenshot; not substituted for upstream gate test"
+        ],
+        "observed": "Save stays disabled before consent; explicit Save returns Published with Your changes are saved and1of4 for the fixed sample. No real backend persistence claimed."
+      }
+    },
+    {
+      "id": "C20",
+      "visual": {
+        "status": "PASS",
+        "observed": "Optional three-choice decline sheet with fixed equal native rings; private recipient notice; receipt safely below application text, without overlap.",
+        "screenshots": [
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-initial.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-selected.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-confirmed.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-cancel.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-reset.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-none.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-applicant-reason-full.png",
+          "docs/reviews/r12/evidence/ios2-independent/r12-final-applicant-null-full.png"
+        ]
+      },
+      "interaction": {
+        "status": "PASS",
+        "method": "real local Chromium mouse/wheel",
+        "steps": [
+          "Explicit Pending1:880 precondition; Decline530,669→94:373",
+          "Choose Small600,743: exactly one dot; Confirm610,811→6:185 with Host’s reason: I’m keeping this group small.",
+          "Fresh Pending; Decline→Plans600,693→Cancel610,866→Pending1:880 unchanged",
+          "Reopen Decline: all three rings unselected, same size; Confirm610,811 without selecting→6:185 No reason provided.",
+          "Open recipient reason94:497 and null/legacy94:513 as explicit read-only role fixtures, not simulated cross-account delivery; full canvas repaint confirms title, receipt and privacy"
+        ],
+        "observed": "Selection/Confirm, Cancel/no write, no-reason/default reset actually executed. Real notification, auth, API and persistence not exercised."
+      }
+    }
+  ],
+  "crossVersionCases": [
+    {
+      "id": "C04",
+      "version": "IOS-0.1.0-dev.2",
+      "status": "PASS",
+      "observed": "Published first screen time/confirmed capacity/minimum/budget and host before 110px secondary photo",
+      "screenshots": [
+        "docs/reviews/r12/evidence/ios2-independent/r12-final-published-top.png"
+      ]
+    },
+    {
+      "id": "C05",
+      "version": "IOS-0.1.0-dev.2",
+      "status": "PASS",
+      "observed": "Roster removes duplicate capacity line; unique Applications close23Oct18:00 retained",
+      "screenshots": [
+        "docs/reviews/r12/evidence/ios2-independent/r12-final-published-roster.png"
+      ]
+    }
+  ],
+  "history": [
+    "Original Browser Use network failed with zero business clicks; retained author report",
+    "Independent Browser Use insufficient_credits; no run created",
+    "Local isolated Playwright Chromium actual mouse/wheel used successfully, no login"
+  ],
+  "limitations": [
+    "Only synthetic fixed-sample Figma prototype actions, no arbitrary keyboard-input or real provider capability claim",
+    "Real auth/Places/backend persistence/notification/native-device/product QA NOT_RUN",
+    "Direct state or role node URLs are explicit visual/test preconditions; not proof of real role switching, messaging, or earlier actions",
+    "WebGL partial repaint/loading captures discarded; full scene captured after normal native viewport/scroll repaint; no DOM/canvas manipulation",
+    "Changed Edit range Cancel/Save and cross-version C13 have separate independent version PJ actual evidence; consult independent review, not root source readback."
+  ],
+  "realServicesCalled": false,
+  "evidenceSHA256": {
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-actual-review-range.png": "331076695ff0336fc28b902f6c729c9f44da825c112d56a5d47f1611bf9450cd",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-checkbox-edit-repaint.png": "4ce66c1c1c718b458b17d1a5d8d46d65cb184bd60d21b326c73d43ce36810a3b",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-costs.png": "74e90162a860e05b9bbcbdfbfaa305f55539a0144270b27c702ab6d1cae71d10",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-edit-costs-unchecked.png": "d213c47828d58e481b0701bbe7e73cd283ad56b44eba33541a4bc086a5271126",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-range-applied-visible.png": "2f2a01f20243e5d4887ffab20e3336a6d2801141873fd3daf6281efcf765f03a",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-range-cancel.png": "2f2a01f20243e5d4887ffab20e3336a6d2801141873fd3daf6281efcf765f03a",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-range-invalid-repaint.png": "da443ed9904ed9234c22bc1a846a6dbd613086bc069ed0cf445418abc917bd3e",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-save-ready-full.png": "55de47d1309a8097e57fc7f8e9b2d6589549c713ebaa275ad53895a52cec89c5",
+    "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-save-unchecked.png": "0075e74b6e44a57ab5e57c5f2cc8840bc4fd1e8e9e0b94b2b7aff6d2b7571965",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-alex-full.png": "e5382f7a071fc4aeda743f3088483188d29f62abc32793509d3ff4004bb31e7d",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-applicant-null-full.png": "43f4ab52f98a4e52aec8964586a2708c7c16d1e91499df61f8aa525cce158eb8",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-applicant-reason-full.png": "a9822cb11b1fd1ef7145a8a71049c0110c6710cb56bfbb8c3a193bb522a7d9b7",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-map-repaint.png": "ba47db6d8f0fdcbc3e26c60e511ca808c4316f787fd7c181f93d916eac20e8d0",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-place-picker.png": "4505b79763a8cd19eeb3db1c3cde6c7aa317b7cb82b7ea701d7619c3ca6262cc",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-published-roster.png": "fb24c0effada28bf59ed7a5cf17df63f2a3c912fb9a06737c15e7b746331d057",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-published-top.png": "212a02093feb93f10f2f5d089a4c6a4ccd3918c112eca1e4e427512113f6f196",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-range-control.png": "4f9d61f20731a9f627cd3c712f452328daed21e3487b5b1d601d73a81b927e9e",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-cancel.png": "ad32993d80b285e2b4e2a29541281bcf550bbcd698eae7e994ba2ecdf5dda71b",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-confirmed.png": "26020d1db8435f4d811811184f4527ef6a33328c1a27dd30b0a0cca3229d3d04",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-initial.png": "6240ca60763dea22f4b16d6b3c489cd4d3a51209d40b77fc4e2889c42e69ef04",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-none.png": "2e8dc1b504e466ef83d87ceda8b1f3b821c2b426fe21f6a2c48a4d2a73d60e76",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-reset.png": "6240ca60763dea22f4b16d6b3c489cd4d3a51209d40b77fc4e2889c42e69ef04",
+    "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-selected.png": "34f2ecd8ecf5151a5dcc38571678e2f0216a1053acd6811b563f03c913319d55"
+  },
+  "inputSHA256": {
+    "docs/design/r12/ios-0.1.0-dev.2/artifact-manifest.json": "b8191f7064fca438de92bfbe38f0a8898e01256920c294552839d5ee44f9c860",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/final-consistency-readback.json": "65575d5c293a1a7ff534804b955bcc5550e9540b62b11cf7a295ee619f6f86e8",
+    "docs/design/r12/ios-0.1.0-dev.2/evidence/range-apply-readback.json": "456b7958124eaf23ce73464577addb80d8b07ba7a09ab7efc2e98829c8ef09aa",
+    "docs/product/r12/ios-feedback-requirements-2026-10-28.json": "02bb1e070f6b54e4c98c9a4d7e5b77e1d8cd3128b8eb09a54c2154e9ae1f1dfc"
+  }
+}
