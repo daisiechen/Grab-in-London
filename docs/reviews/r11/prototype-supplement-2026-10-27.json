@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-27",
+  "kind": "additional prototype coverage; not a replacement for signed design or engineering snapshots",
+  "ios1": {
+    "emailApplication": "Actual public prototype email/code/profile/explicit consent/application/Pending/Inbox/withdraw/cancel reached.",
+    "profilePrivacy": "Profile editor and privacy save states reached.",
+    "notCoveredInThisBrowserRun": [
+      "AI My preferences route from supplied starts",
+      "external Google/Apple provider system UI"
+    ],
+    "nativePreferenceRouteChecked": [
+      "Settings11:1753 helper11:1838 to home11:2113",
+      "home11:2222 to preferences11:1854",
+      "saved preferences remain independent explicit Save"
+    ],
+    "boundary": "Native routes are not mislabeled as browser clicks. External provider and real persistence remain implementation/QA gates."
+  },
+  "ios2": {
+    "actualBrowserPassed": [
+      "host-only stays1/4",
+      "pending/declined state persists",
+      "updated booking preserves2 people",
+      "cancelled cannot restore active page",
+      "minimum-not-met reason persists",
+      "full synthetic address and explicit unchecked Publish gate"
+    ],
+    "lateVisualFinding": "R11-I2-05 fixed helper covered budget on long scroll; author subsequently fixed with original tucked/bottom-dock pattern and independent visual/native recheck closed it.",
+    "visualRecheckBoundary": "Images/live bounds/native toggle inspected; not claimed as actual Presentation scroll after the repair."
+  },
+  "noRealServicesCalled": true,
+  "noCredentialsOrInternalSessionIDsPublished": true
+}

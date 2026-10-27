@@ -1,0 +1,315 @@
+{
+  "version": "IOS-0.1.0-dev.2",
+  "candidate": {
+    "sourceSHA": null,
+    "build": null,
+    "APIHash": null,
+    "migrationHead": null,
+    "environment": null
+  },
+  "cases": [
+    {
+      "id": "I2-T01",
+      "requirements": [
+        "J02-AC01"
+      ],
+      "expected": "signed-out→OTP/Google/Apple→explicit profile confirmations→same create draft, qualified user not forced to repeat profile",
+      "level": "native+identity-contract",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T02",
+      "requirements": [
+        "J02-AC01"
+      ],
+      "expected": "provider cancel/error/expired OTP preserves allowed draft; logout/account switch clears private values and ignores old responses",
+      "level": "native+identity integration",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T03",
+      "requirements": [
+        "J02-AC02"
+      ],
+      "expected": "Places no-result/network/quota retains original confirmed selection; a preview or search string never becomes selected venue",
+      "level": "contract+native+real-provider",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T04",
+      "requirements": [
+        "J02-AC02",
+        "J02-AC04"
+      ],
+      "expected": "different branch placeId is distinct; change confirmed venue clears date/time/offset/declaration/Review but keeps unrelated introduction",
+      "level": "pure-model+native",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T05",
+      "requirements": [
+        "J02-AC03"
+      ],
+      "expected": "2026-10-25 01:30 start and close ambiguity require explicit BST/GMT offsets, neither silently normalized",
+      "level": "unit+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T06",
+      "requirements": [
+        "J02-AC03"
+      ],
+      "expected": "2027-03-28 01:30 nonexistent start/close rejected with retained draft and field-linked recovery",
+      "level": "unit+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T07",
+      "requirements": [
+        "J02-AC03",
+        "J02-AC04"
+      ],
+      "expected": "default minimum3/capacity4; all 2<=min<=cap<=6 boundaries; GBP positive <=2 decimals to pence; absent cuisine/dietary null",
+      "level": "unit+contract+native",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T08",
+      "requirements": [
+        "J02-AC03"
+      ],
+      "expected": "close<=start-30min and close>DB now under lock; now exactly close rejects new apply/approve; clocks use one effectiveNow",
+      "level": "DB+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T09",
+      "requirements": [
+        "J02-AC04"
+      ],
+      "expected": "four-step forward/edit/back preserves appropriate draft, dependent changes reset explicit confirmations, keyboard and long content usable",
+      "level": "native-device",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T10",
+      "requirements": [
+        "J02-AC04"
+      ],
+      "expected": "terms open/close does not consent; declaration unchecked blocks Costs and Review unchecked blocks publish; cancel retains source draft",
+      "level": "native+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T11",
+      "requirements": [
+        "J02-AC04",
+        "J02-AC05"
+      ],
+      "expected": "same publication attempt/key repeated yields one meal, one host seat/group and one durable job set; success clears draft and sets Hosting parent",
+      "level": "API+DB+native",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T12",
+      "requirements": [
+        "J02-AC05"
+      ],
+      "expected": "lost create response repeats original actor/method/path/body/key/attemptId; current getMeal/myMeals not proof, new key forbidden while unknown",
+      "level": "API+DB+fault-injection",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T13",
+      "requirements": [
+        "J02-AC05",
+        "J02-AC07",
+        "J02-AC08",
+        "J02-AC10"
+      ],
+      "expected": "ordinary write freezes original If-Match; decision uses Application.version, edit/booking/cancel Meal.version; 409 then explicit new intent only",
+      "level": "API+native",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T14",
+      "requirements": [
+        "J02-AC06"
+      ],
+      "expected": "permission then active request only; CREATE context excludes group/private review/report data; no guessed placeId or automatic declarations",
+      "level": "assistant unit+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T15",
+      "requirements": [
+        "J02-AC06"
+      ],
+      "expected": "Keep preserves exact text; Replace preserves full candidate only after editorVersion/CAS/replaceConfirmed; no Review/Publish side effect",
+      "level": "assistant+native",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T16",
+      "requirements": [
+        "J02-AC06"
+      ],
+      "expected": "30min TTL/late generation/account change/CLEAR and CNY50 hard quota failures preserve hand-written path without late draft overwrite",
+      "level": "assistant+real-budget-gate",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T17",
+      "requirements": [
+        "J02-AC07"
+      ],
+      "expected": "two hosts/decisions racing last seat cannot oversell; Pending not counted; approve directlyConfirmed+membership no payment step",
+      "level": "DB+API concurrency",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T18",
+      "requirements": [
+        "J02-AC07"
+      ],
+      "expected": "nonhost cannot approve/list other private rounds; host sees only current case public profile/message; deleted actor private data unavailable",
+      "level": "API authorization",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T19",
+      "requirements": [
+        "J02-AC07"
+      ],
+      "expected": "first guest locks permanently; editing before response races approval→409 authority lock and retained draft; later departures do not unlock",
+      "level": "DB+API+native",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T20",
+      "requirements": [
+        "J02-AC07"
+      ],
+      "expected": "Declined cannot reapply same meal; repeat decide cannot duplicate seats; pending/declined/confirmed sheet source facts do not mutate on open/cancel",
+      "level": "API+native",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T21",
+      "requirements": [
+        "J02-AC08"
+      ],
+      "expected": "initial declaration planned capacity differs from host-only roster; later re-declare explicit currentconfirmed party inclhost, stale meal version/count rejected; seat count round-trip cannot revive old declaration",
+      "level": "DB+API+native",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T22",
+      "requirements": [
+        "J02-AC08"
+      ],
+      "expected": "FAILED/CANCELLED external booking is not meal cancellation or group close; visible host_reported label and time/version persist",
+      "level": "API+native",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T23",
+      "requirements": [
+        "J02-AC09"
+      ],
+      "expected": "minimum at exact close historical seat events; worker late reconstructs close/start/end, insufficient cancellation once and no future roster substituted",
+      "level": "worker+DB+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T24",
+      "requirements": [
+        "J02-AC09",
+        "J02-AC10"
+      ],
+      "expected": "after-close-before-start drop below min cancels; exactly-start exit is ineligible; after-start count change does not re-cancel; end+2h handoff",
+      "level": "worker+DB",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T25",
+      "requirements": [
+        "J02-AC10"
+      ],
+      "expected": "cancel Keep returns exact host-only/pending/declined/updated source; cancelled parent never revives old write page; insufficient reason not rewritten host",
+      "level": "native+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T26",
+      "requirements": [
+        "J02-AC10"
+      ],
+      "expected": "host cancel only prestart; host/booking/other reasons; Pending expire; proper host/currentPending/Confirmed recipients; group historical permission retained",
+      "level": "API+DB",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T27",
+      "requirements": [
+        "J02-AC07",
+        "J02-AC09",
+        "J02-AC10"
+      ],
+      "expected": "approval/rejection/expiry/cancel mail+inapp matrix; application/withdraw/leave tohost; declaration tomembers; channel Unknown provider stableID recovery, no private text or false delivered claim",
+      "level": "outbox+mail+inbox",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T28",
+      "requirements": [
+        "J02-AC01",
+        "J02-AC07",
+        "J02-AC09"
+      ],
+      "expected": "real I2 publish→real I1 applicant→hostdecision→I3 authorized group; event source and analytics consent aligned; fixtures do not close real integration",
+      "level": "cross-version real integration",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I2-T29",
+      "requirements": [
+        "J02-AC04",
+        "J02-AC08"
+      ],
+      "expected": "393pt and supported native widths/large text/keyboard/scroll: AskFancy cannot cover budget or confirmation; final R11-I2-05 visual snapshot rebound before accepted build",
+      "level": "native-device+visual",
+      "run": "NOT_RUN",
+      "evidence": null
+    }
+  ],
+  "currentExecution": "plan checks only; product tests not started"
+}

@@ -34,7 +34,6 @@
     "PJ-IOS2": {
       "agent": "ux_host_social",
       "versions": [
-        "IOS-0.1.0-dev.2",
         "IOS-0.1.0-dev.3",
         "IOS-0.1.0-dev.4"
       ]
@@ -45,6 +44,12 @@
         "SUPPORT-0.1.0-dev.1",
         "ADMIN-0.1.0-dev.1",
         "ADMIN-0.1.0-dev.2"
+      ]
+    },
+    "PJ-IOS-DEV2": {
+      "agent": "pj_ios_dev2",
+      "versions": [
+        "IOS-0.1.0-dev.2"
       ]
     }
   },
@@ -78,7 +83,7 @@
       "journeys": [
         "J02"
       ],
-      "pj": "PJ-IOS2",
+      "pj": "PJ-IOS-DEV2",
       "independentReviewer": "PJ-ADMIN",
       "status": "design-review-and-repair",
       "designPassed": false,
@@ -284,5 +289,6 @@
       "https://developer.apple.com/app-store/review/guidelines/"
     ]
   },
-  "liveStatusAuthority": "Each version directory/status.json; coordinator fields are initial snapshots, not gates."
+  "liveStatusAuthority": "Each version directory/status.json; coordinator fields are initial snapshots, not gates.",
+  "staffingDecision": "I2 engineering/status handed from original UX-2 PJ to a dedicated version PJ after explicit stop; original Figma writer unchanged."
 }

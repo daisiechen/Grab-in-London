@@ -3,7 +3,7 @@
   "baseline": "6675dc527ab0a0aa586e13e2cc13c2b235ec06bf",
   "journey": "J02",
   "iteration": "IOS-0.1.0-dev.2",
-  "decision": "CHANGES_REQUIRED",
+  "decision": "DESIGN_APPROVED_FIXED_REPRESENTATIVE_SCOPE",
   "figma": {
     "fileKey": "c04Fi5iarZm7gTPw4u2f7f",
     "entry": "1:24",
@@ -34,7 +34,19 @@
       ],
       "expected": "弹层与取消返回均保留来源人数、申请状态、永久锁定与最新声明；只有显式Approve改变成员事实。",
       "evidenceType": "live-native-node-text-and-reactions",
-      "retest": "从未批准、已批准、已拒绝、声明已更新四种来源进入/Keep/返回；事实不变，只有本人批准才新增成员。"
+      "retest": "从未批准、已批准、已拒绝、声明已更新四种来源进入/Keep/返回；事实不变，只有本人批准才新增成员。",
+      "status": "closed-by-independent-design-retest",
+      "independentRetest": {
+        "nodes": [
+          "19:1152",
+          "19:1324",
+          "19:997",
+          "19:650",
+          "19:765",
+          "19:875"
+        ],
+        "result": "独立live原生读取host-only1/4无Emma/锁定；Pending/Declined/Updated各Keep精确回原来源，只有Approve改变成员。"
+      }
     },
     {
       "id": "R11-I2-02",
@@ -51,7 +63,18 @@
       ],
       "expected": "依PRD§5显式呈现许可地址，不能用区域Soho替代分店地址。",
       "evidenceType": "live-native-text-and-screenshot-1:594",
-      "retest": "Review/ReviewReady及其恢复态显示与已选placeId对应的完整合成地址；不伪装真实provider已验证。"
+      "retest": "Review/ReviewReady及其恢复态显示与已选placeId对应的完整合成地址；不伪装真实provider已验证。",
+      "status": "closed-by-independent-design-retest",
+      "independentRetest": {
+        "nodes": [
+          "1:594",
+          "3:2365",
+          "3:3113",
+          "3:3248",
+          "3:3387"
+        ],
+        "result": "Review及衍生态完整14 Sample Lane, London W1；PM sample-place-soho-01/Olive Table Soho与v13 The Little Table视觉别名在manifest明确，未声称真实provider。"
+      }
     },
     {
       "id": "R11-I2-03",
@@ -72,7 +95,19 @@
       ],
       "expected": "发生业务终态后返回应指向保留最新事实的详情/列表；不能由历史导航恢复旧业务动作。",
       "evidenceType": "live-native-BACK-reaction-and-history-sequence-not-Presentation-click",
-      "retest": "取消后返回/拒绝后多次返回始终保留终态，不能重新批准、重新取消或重开已完成草稿。"
+      "retest": "取消后返回/拒绝后多次返回始终保留终态，不能重新批准、重新取消或重开已完成草稿。",
+      "status": "closed-by-independent-design-retest",
+      "independentRetest": {
+        "nodes": [
+          "19:211",
+          "19:239",
+          "19:241",
+          "3:4231",
+          "3:4642",
+          "19:548"
+        ],
+        "result": "独立读五个互斥EQUALS动作和入口SET_VARIABLE；approved/pending/declined/updated/insufficient各回对应已取消事实，终态无BACK；拒绝父级只回Declined；不足原因Minimum not met。"
+      }
     },
     {
       "id": "R11-I2-04",
@@ -96,7 +131,79 @@
       ],
       "expected": "确认说明正常换行可读，链接文字不覆盖声明；unchecked Publish用既有禁用反馈。",
       "evidenceType": "actual-Presentation-observation-and-live-native-bounding-box",
-      "retest": "Costs/CostsConfirmed、Review/ReviewReady在393宽完整阅读且不重叠；条款可独立打开，打开不自动勾选，未勾选不可发布。"
+      "retest": "Costs/CostsConfirmed、Review/ReviewReady在393宽完整阅读且不重叠；条款可独立打开，打开不自动勾选，未勾选不可发布。",
+      "status": "closed-by-independent-design-retest",
+      "independentRetest": {
+        "nodes": [
+          "1:551",
+          "1:687",
+          "4:238",
+          "3:2440",
+          "1:694"
+        ],
+        "result": "独立live原生核Costs322×84单段；Review前句22pt与条款44pt区隔4pt；条款独立反应，不自动勾选；Publish opacity0.45且无reaction。滚动区子节点直接截图被祖先clip，未将空crop称视觉通过。"
+      }
+    },
+    {
+      "id": "R11-I2-05",
+      "priority": "P1",
+      "owner": "PJ-IOS2 / original UX author",
+      "title": "Costs正向滚动时助手遮住预算金额",
+      "status": "closed-by-independent-design-retest",
+      "nodes": [
+        "1:449",
+        "4:164",
+        "1:577",
+        "4:269",
+        "36:293",
+        "36:308",
+        "1:589",
+        "4:281"
+      ],
+      "originalCounterexample": {
+        "scroll": 451.5625,
+        "budgetY": [
+          175.9749755859375,
+          203.9749755859375
+        ],
+        "oldHelperY": [
+          118,
+          206
+        ],
+        "overlap": true
+      },
+      "independentRetest": {
+        "source": "live Figma node/variable/reaction reads plus actually viewed before/after/scroll420 PNG; no new Browser run",
+        "roots": [
+          "1:449",
+          "4:164"
+        ],
+        "default": "expanded=false,tucked=true; original source style right-edge x349/y678/64x64",
+        "toggle": "each root independent bool pair: tucked click sets tucked false/expanded true; original hide sets expanded false/tucked true; no AI/business service write",
+        "geometry": {
+          "maxBudgetBottom": 655.53759765625,
+          "expandedHelperTop": 678,
+          "expandedHideTop": 670,
+          "tuckedTop": 678,
+          "smallestVerticalGap": 14.46240234375,
+          "scrollRule": "For any normal positive scroll s>=0, budgetBottom-s <=655.54 <670; helper stays docked so both expanded and tucked stay below budget."
+        },
+        "contentRestored": "live scroll content y0 in both roots; no temporary -420 transform left in design",
+        "screenshotsViewed": [
+          "evidence/r11-costs-helper-before.png",
+          "evidence/r11-costs-helper-after.png",
+          "evidence/r11-costs-helper-scroll420.png"
+        ],
+        "screenshotBoundary": "scroll420 is producer temporary content translation -420 then restored0, not Presentation actual scrolling; screenshots show default tucked state, expanded safety based on live geometry/bool actions",
+        "tests": {
+          "command": "python3 -m unittest discover -s tests -p test_ux_r10_ios2.py",
+          "passed": 3
+        },
+        "limits": [
+          "Only Costs helper budget overlap fixed; other screens untouched.",
+          "No actual new Presentation scrolling/toggle click, arbitrary drag or real assistant service claim."
+        ]
+      }
     }
   ],
   "requirementReview": [
@@ -118,7 +225,7 @@
     },
     {
       "id": "J02-R05",
-      "result": "Costs默认无Continue动作；显式勾选后可进Review；Review默认无Publish动作。地址缺项见02"
+      "result": "Costs/Review确认门槛、完整合成地址与可读确认布局已独立复验；真实地址许可仍未验证。"
     },
     {
       "id": "J02-R06",
@@ -126,15 +233,15 @@
     },
     {
       "id": "J02-R07",
-      "result": "公开资料/批准/拒绝/首批准锁定代表态存在；来源与返回缺陷见01/03"
+      "result": "来源人数/审批/锁定事实与拒绝终态返回已独立复验，真实原子并发未验证。"
     },
     {
       "id": "J02-R08",
-      "result": "截止不足取消和开始冻结/迟到合同存在；insufficient示例转通用Host reason终态，原因需保持系统insufficient"
+      "result": "Minimum not met系统原因与终态条件返回已独立复验；历史时钟/worker矩阵仅合同。"
     },
     {
       "id": "J02-R09",
-      "result": "取消Keep用BACK保返回；成功终态历史返回见03；真实通知不验证"
+      "result": "Keep各自保源事实，终态父级无BACK复活；真实通知未验证。"
     },
     {
       "id": "J02-R10",
@@ -152,7 +259,7 @@
       "figma-arrange.png"
     ],
     "visual": "旧MVP四步层级、字体、留白、地图和助手位置同态；硬件岛/平台glyph差异不判为重设计",
-    "presentation": "ACTUAL_REPRESENTATIVE_PATH_PASSED_WITH_OPEN_DEFECTS",
+    "presentation": "Original four repaired functional counterexamples passed actual public/proto retest reported by root PJ; new05 independently passed live geometry/actions and screenshots, not actual Presentation scrolling.",
     "actualFigmaClicksPassed": true,
     "realServices": false,
     "QAStarted": false,
@@ -170,7 +277,7 @@
       "Cancel confirmation",
       "Cancelled"
     ],
-    "presentationObservedIssues": [
+    "initialPresentationObservedIssues": [
       "Review Publish按钮未勾选时仍深绿色，但点击无效。",
       "Costs与Review复选框长句重叠已由原生边界证实，见R11-I2-04。"
     ]
@@ -184,5 +291,38 @@
     "docs/product/journeys/j02/coverage.json": "0224c28064d9da6382b8f5de0a037f4c542417c16234e57980f1e47203cce84f",
     "demo/journeys/j02/index.html": "d876732ddbdc667816a473a91969464c6a49d574d3fc2fc745d207b8a68989bc",
     "docs/design/r10/ios-0.1.0-dev.2/artifact-manifest.json": "531dea7a444125191a4aca4bd2b4fee16589f55039a09f51326d1c2336c71425"
+  },
+  "independentReviewer": "PJ-ADMIN; not I2 author",
+  "retest": {
+    "status": "passed-fixed-representative-design",
+    "scope": "原四项功能+新增05 Costs预算避让的固定代表设计范围；非工程方案/业务实现/真实QA/Owner冻结",
+    "liveNativeReads": true,
+    "actualConditionalActionsRead": true,
+    "consentGeometryRead": true,
+    "tests": [
+      {
+        "command": "python3 -m unittest discover -s tests -p test_ux_r10_ios2.py",
+        "passed": 3,
+        "scope": "current05 layout plus existing source/boundary evidence"
+      },
+      {
+        "command": "python3 -m unittest discover -s tests -p test_r11_ios2_plan.py",
+        "passed": 2,
+        "scope": "original four independent-retest round, not rerun for layout-only05"
+      }
+    ],
+    "presentationRetest": "Root PJ continued existing public/proto task and reported final functional retest of original four counterexamples passed; this review accepts that actual-click evidence as coordinated independent evidence. New05 uses screenshots/live geometry/reactions, not new Presentation scrolling.",
+    "presentationOriginalEvidence": "Earlier original review actually clicked four steps/publish/approve/booking/cancel; historical only, not evidence of every repaired branch",
+    "readyForNext": "本版可独立进入开发方案；不等待其它版，工程仍须独立评审",
+    "inputSHA256": {
+      "docs/design/r10/ios-0.1.0-dev.2/figma-readback.json": "cb2b2209088639619db594016d850d4a3360df4c6a6f063341c5c5da31a0419b",
+      "docs/design/r10/ios-0.1.0-dev.2/artifact-manifest.json": "182ff1be7886a7c9f43e497d77bd3c5d9d8aa1d419503dca148a6e658571278f",
+      "docs/design/r10/ios-0.1.0-dev.2/r11-repair.zh-CN.md": "cd6cfcbad4f83ffbe14d77d79823afc4538935c9ea85915d4194d2f694f6e5b7",
+      "docs/design/r10/ios-0.1.0-dev.2/evidence/r11-costs-helper-readback.json": "2f05f05830eaaa73ac0952b4fddc2c8f24969e2002443c73e4349a7016175e04",
+      "docs/design/r10/ios-0.1.0-dev.2/evidence/r11-costs-helper-before.png": "8e119517ed2b2dfc31e29f2e198ac2cad3cd3cbbe17a22cedfa8bc8ed28a2da7",
+      "docs/design/r10/ios-0.1.0-dev.2/evidence/r11-costs-helper-after.png": "bee34ce96e32a644d10a70aa91a04415a3ae100dd005715ff271d88f05cbd273",
+      "docs/design/r10/ios-0.1.0-dev.2/evidence/r11-costs-helper-scroll420.png": "745e407ed91dbea46b92484d7379d88929a9d46d7465a65b18879dd1c680322a",
+      "tests/test_ux_r10_ios2.py": "87d4eb0458c7335451e88d3bb9a6d9e2e82b415c4f9e312922e11b8369a21ae8"
+    }
   }
 }

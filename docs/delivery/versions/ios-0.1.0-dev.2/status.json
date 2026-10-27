@@ -1,43 +1,100 @@
 {
   "id": "IOS-0.1.0-dev.2",
-  "pj": "PJ-IOS2 / UX-2",
+  "pj": "PJ-IOS-DEV2",
   "productVersion": "IOS-0.1.0",
   "journeys": [
     "J02"
   ],
-  "designReview": "author-corrections-in-progress",
+  "designReview": "independent-fixed-representative-design-scope-passed",
   "independentReviewer": "PJ-ADMIN / UX-3",
-  "developmentPlan": "not-started-pending-this-version-design-review",
+  "developmentPlan": "plan-approved-with-issuance-gates",
   "issues": [
     {
       "id": "R11-I2-01",
-      "status": "open"
+      "status": "closed-by-independent-design-retest"
     },
     {
       "id": "R11-I2-02",
-      "status": "open"
+      "status": "closed-by-independent-design-retest"
     },
     {
       "id": "R11-I2-03",
-      "status": "open"
+      "status": "closed-by-independent-design-retest"
     },
     {
       "id": "R11-I2-04",
-      "status": "open"
+      "status": "closed-by-independent-design-retest"
+    },
+    {
+      "id": "R11-I2-05",
+      "status": "closed-by-independent-design-retest"
     }
   ],
-  "actualBlockers": [
-    "This version has not yet passed independent design correction review."
-  ],
+  "actualBlockers": [],
   "integrationDependenciesOnly": [
     "Shared identity/DS/commands follow frozen contracts; another version does not block local planning once own design passed."
   ],
-  "nextStep": "complete-source-bound-states-and-recovery-corrections",
+  "nextStep": "root-version-PR-integration; later issue exact scoped implementation packages",
   "evidence": [
     "docs/reviews/r11/ios2-review.json",
     "docs/design/r10/ios-0.1.0-dev.2/artifact-manifest.json"
   ],
   "implementationStarted": false,
   "QAStarted": false,
-  "branchPR": "No implementation branch/PR created; planning only; PJ owns review and root owns serial Git sync."
+  "branchPR": "No implementation branch/PR created; planning only; PJ owns review and root owns serial Git sync.",
+  "engineeringApproved": true,
+  "independentDesignEvidence": {
+    "file": "docs/reviews/r11/ios2-review.json",
+    "sha256": "202c41e194e8fc4dc652abb007e722468fcf460b3e2700a77c83cfa3d59829cd",
+    "decision": "DESIGN_APPROVED_FIXED_REPRESENTATIVE_SCOPE",
+    "scope": "Original four functional public-proto steps passed;05 closed via independent screenshots/live bbox/native behavior, not claimed Presentation scrolling."
+  },
+  "workPackages": "docs/engineering/r11/ios-0.1.0-dev.2/work-packages.json",
+  "testMatrix": "docs/engineering/r11/ios-0.1.0-dev.2/test-matrix.json",
+  "independentEngineeringReview": {
+    "reviewFile": "docs/reviews/r11/ios2-engineering-review.json",
+    "reviewSHA256": "ab86ec7fcfe46c800e6ba79910b626c54e60a9aaf0a6e07db3567564432007cf",
+    "reviewMarkdown": "docs/reviews/r11/ios2-engineering-review.md",
+    "reviewMarkdownSHA256": "611b291756edcec6959aaa4432dd0d3b9828d644daf715438a7a60a1822bdc32",
+    "reviewer": "Independent RD architecture reviewer, not PJ-IOS-DEV2 author",
+    "decision": "plan-approved-with-issuance-gates",
+    "reviewedInputSHA256": {
+      "docs/engineering/r11/ios-0.1.0-dev.2/test-matrix.json": "f84ebeb7ab9cc140cf9c018e47121d95054cb2b92f010642331b0aad5ead5724",
+      "docs/engineering/r11/ios-0.1.0-dev.2/input-manifest.json": "aafd2b35442b19a0966b8f4321615000629298dc1fdb0d798b86a1dc12bcd9a5",
+      "docs/engineering/r11/ios-0.1.0-dev.2/plan.zh-CN.md": "70783e9aa0bcb43a1a71d26c162d618d01ee29ccec185cc24cf24c8eaf97b8df",
+      "docs/engineering/r11/ios-0.1.0-dev.2/work-packages.json": "f914c103ad27c76923451ae36ede327d65c2eec91b16a481154bb658452ad5e7"
+    }
+  },
+  "currentPlanSHA256": {
+    "docs/engineering/r11/ios-0.1.0-dev.2/plan.zh-CN.md": "48b141461fc30649a97146723466cb7bf5a6ed3934f6cc9bda961e6d34b6cb28",
+    "docs/engineering/r11/ios-0.1.0-dev.2/work-packages.json": "f914c103ad27c76923451ae36ede327d65c2eec91b16a481154bb658452ad5e7",
+    "docs/engineering/r11/ios-0.1.0-dev.2/test-matrix.json": "f84ebeb7ab9cc140cf9c018e47121d95054cb2b92f010642331b0aad5ead5724",
+    "docs/engineering/r11/ios-0.1.0-dev.2/input-manifest.json": "eef0a7aab5c53f0e3dc94cb5118b2ae89d041b3a5e8b61ddb1fa89028acbd043"
+  },
+  "issuanceGates": [
+    {
+      "requirement": "Assign actual RD owner and <=5 exact production/test file lease; no broad candidate inventory authorization",
+      "status": "not-issued"
+    },
+    {
+      "requirement": "Serialize shared commands.ts/routes.ts changes with I1 application and I3 membership transition writers, and assistant manager/Widget/drafts with I1/I3; root records actual same-file writer before issue",
+      "status": "not-issued"
+    },
+    {
+      "requirement": "Register EditMealScreen/route solely through RD-PLATFORM; Hosting section must be actually consumed by parent, not unused URL parameter",
+      "status": "not-issued"
+    },
+    {
+      "requirement": "Implement C01 defaults/reset and C03 lock-protected current-party/CAS/seat watermark checks with respective focused regression tests before claiming completion",
+      "status": "not-issued"
+    },
+    {
+      "requirement": "Run actual DST/late lifecycle/native/provider and required real I1/I3 joint tests on same candidate; preflight toolchain/environment and15min/3fail budget",
+      "status": "not-issued"
+    },
+    {
+      "requirement": "Independent code review and required CI/PR main merge before exact tested SHA/build/migration/environment deployment; no business-state reversal on code rollback",
+      "status": "not-issued"
+    }
+  ]
 }

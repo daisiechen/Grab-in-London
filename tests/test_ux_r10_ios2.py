@@ -38,7 +38,7 @@ class HostJourneyDesignEvidence(unittest.TestCase):
         self.assertEqual(coverage['inheritedSourceUnits']['count'], len(source['sourceUnits']))
         self.assertEqual({a['id'] for a in coverage['acceptanceMapping']}, {f'J02-AC{i:02}' for i in range(1, 11)})
         roots = {r['id']: r for r in json.loads((D / 'figma-readback.json').read_text())['roots']}
-        self.assertEqual(len(roots), 26)
+        self.assertGreaterEqual(len(roots), 42)
         for row in coverage['mapping'] + coverage['acceptanceMapping']:
             for node in row['figmaNodes']:
                 self.assertIn(node, roots)
@@ -88,6 +88,25 @@ class HostJourneyDesignEvidence(unittest.TestCase):
         for name in ('arrange', 'introduce', 'review', 'approved', 'cancel-confirm'):
             self.assertEqual((D / f'evidence/figma-{name}.png').read_bytes()[:8], b'\x89PNG\r\n\x1a\n')
         self.assertTrue((D / 'evidence/old-introduce-unfocused.png').exists())
+
+    def test_costs_helper_never_covers_budget_on_downward_scroll(self):
+        proof=json.loads((ROOT/'docs/design/r10/ios-0.1.0-dev.2/evidence/r11-costs-helper-readback.json').read_text())
+        self.assertEqual({r['id'] for r in proof['roots']},{'1:449','4:164'})
+        before=proof['originalCounterexample']
+        self.assertLess(before['budgetY'][0],before['oldHelperY'][1])
+        self.assertGreater(before['budgetY'][1],before['oldHelperY'][0])
+        for root in proof['roots']:
+            self.assertEqual(root['scrollOrigin'],0)
+            full,hide,tucked=root['helpers']
+            self.assertFalse(full['visible'])
+            self.assertTrue(tucked['visible'])
+            self.assertEqual((tucked['x'],tucked['y'],tucked['width'],tucked['height']),(349,678,64,64))
+            for scroll in [0,120,420,451.5625]:
+                self.assertTrue(all(a['y']+a['height']-scroll < full['y'] for a in root['amounts']))
+            for control,values in [(tucked,[False,True]),(hide,[False,True])]:
+                actions=control['reactions'][0]['actions']
+                self.assertEqual([a['type'] for a in actions],['SET_VARIABLE','SET_VARIABLE'])
+                self.assertEqual([a['variableValue']['value'] for a in actions],values)
 
 if __name__ == '__main__':
     unittest.main()

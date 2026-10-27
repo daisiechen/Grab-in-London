@@ -4,6 +4,8 @@
 
 ## 当前产品与管理输入（r07范围／r11版本PJ并行执行）
 
+- [七个版本的评审、方案、负责人和独立PR总览](delivery/version-progress-r11.zh-CN.md)。
+
 - [当前版本PJ并行工作流与商店/分支发布策略](delivery/parallel-version-workflow-r11.zh-CN.md)、[7个版本执行登记](delivery/execution-r11.json)：按版评审修复，通过本版门槛即可编制本版开发方案，不等全套设计。
 
 - [分版Figma、Logo与架构统一交付入口及PJ核对记录](delivery/r10-deliverables-review.zh-CN.md)。
@@ -370,6 +372,12 @@
 - [evidence · README.zh-CN](design/r10/ios-0.1.0-dev.2/evidence/README.zh-CN.md)。
 
 - [ios-0.1.0-dev.2 · handoff.zh-CN](design/r10/ios-0.1.0-dev.2/handoff.zh-CN.md)。
+
+- [iOS dev.2 · r11-repair.zh-CN](design/r10/ios-0.1.0-dev.2/r11-repair.zh-CN.md)。
+
+- [iOS dev.2 · plan.zh-CN](engineering/r11/ios-0.1.0-dev.2/plan.zh-CN.md)。
+
+- [iOS dev.2 · ios2-engineering-review](reviews/r11/ios2-engineering-review.md)。
 
 - [ios-0.1.0-dev.2 · state-contracts.zh-CN](design/r10/ios-0.1.0-dev.2/state-contracts.zh-CN.md)。
 
