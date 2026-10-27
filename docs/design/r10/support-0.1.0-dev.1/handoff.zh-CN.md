@@ -65,3 +65,9 @@
 - Ready待核：PJ/Owner对本UX-r02版本签收；DS-0.1.0与本轮全部迭代设计集共同Ready核对；锁定命名Figma版本或明确可审阅节点快照/文件hash。当前文件仍可变、namedVersionId为空，不伪造冻结。
 - 全套初始设计门槛及精确模块owner/文件租约/接口和隔离环境预检齐备前，不启动任何RD实现（含共享骨架）；QA与发布未获本轮启动。真实服务门槛属于后续相应专业证据，不借设计自检关闭。
 - 唯一作者UX-3，白名单为本目录及tests/test_ux_r10_admin_support.py；不改PM/原Demo/旧Figma/UX-r01/业务代码/全局管理文件，不操作Git索引。
+
+## r11 定向恢复修订（候选）
+
+S01：3:1150保留当前revision2、本地absent与原因→14:360本人核对self absent/host present、有效absent、7天/权限等→主动确认14:430追加CORR-2/expectedVersion2→revision3；取消14:395保持revision2。原报告不覆盖、仍absent继续不适用；新分支止于修订回执，回复尚未保存，不串回CORR-1旧回复。
+
+原生读回见evidence/r11-recovery-readback.json；已实际截图核对新筛选/新意图/新回执。最终独立Presentation复验由PJ完成；本作者不签收自己。文件仍可变、未Owner冻结，未启动实现或QA。

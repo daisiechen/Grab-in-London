@@ -22,29 +22,55 @@
   },
   "independentReviewer": "总PJ",
   "developmentPlan": {
-    "status": "candidate-awaiting-independent-RD-review",
+    "status": "plan-approved-with-issuance-gates",
     "path": "docs/engineering/r11/support-0.1.0-dev.1/",
     "implementationAuthorized": false,
     "documents": [
       "docs/engineering/r11/support-0.1.0-dev.1/plan.zh-CN.md",
       "docs/engineering/r11/support-0.1.0-dev.1/work-packages.json"
     ],
-    "independentReviewer": null,
-    "engineeringApproved": false
+    "independentReviewer": "Independent RD architecture reviewer; not plan author",
+    "engineeringApproved": true,
+    "reviewSource": "docs/reviews/r11/support1-engineering-review.json",
+    "signoffEvidence": {
+      "path": "docs/reviews/r11/support1-engineering-review.json",
+      "sha256": "bfb44e0f88e18e156c3ec3e47ba52cca4e38106550db2c2df42f51935bf93060",
+      "reviewer": "Independent RD architecture reviewer; not plan author",
+      "status": "plan-approved-with-issuance-gates",
+      "boundedConclusion": "Support plan implementable as restricted API plus new CLI; not new Web product, not implemented UI or QA; no whole-version waiting.",
+      "closedIssues": [
+        "R11-ES1-01",
+        "R11-ES1-02"
+      ],
+      "reviewedInputSHA256": {
+        "docs/engineering/r11/support-0.1.0-dev.1/plan.zh-CN.md": "d97ca06a5858d5f5d451f031ada48c7021e33dcbdda202a356472f3879fcffe3",
+        "docs/engineering/r11/support-0.1.0-dev.1/work-packages.json": "2e5ec2ba26d7436dc01021c96353116679825514f4293bda487206724d477e93",
+        "docs/delivery/versions/support-0.1.0-dev.1/test-plan.zh-CN.md": "77dbe05d11ea19e55940e8f267641739882fda12a27ab5d80548588f5064b144"
+      },
+      "note": "Only signoff metadata updated after independently reviewed candidate; business scope/interfaces unchanged."
+    }
   },
   "testing": {
     "plan": "test-plan.zh-CN.md",
     "designEvidenceTests": "python3 -m unittest discover -s tests -p test_r11_support1_plan.py",
-    "designEvidenceResult": "4 standalone checks passed; independent actual design click signoff separately recorded by total PJ",
+    "designEvidenceResult": "5 standalone plan/evidence checks passed; independent RD plan signoff recorded; runtime QA not run",
     "productQAStarted": false,
     "realServiceTested": false,
-    "siblingArtifactsRequired": false
+    "siblingArtifactsRequired": false,
+    "engineeringReviewEvidence": "docs/reviews/r11/support1-engineering-review.json"
   },
-  "issues": [],
-  "trueBlockers": [
-    "开发方案候选待独立RD核真实生产路径、operation registry/schema、共享writer与迁移可实施性；不是设计或其它版本等待。"
+  "issues": [
+    {
+      "id": "R11-ES1-01",
+      "status": "closed-by-independent-plan-retest"
+    },
+    {
+      "id": "R11-ES1-02",
+      "status": "closed-by-independent-plan-retest"
+    }
   ],
-  "nextAction": "独立RD审本版方案与精确接口/候选文件；通过后仍须单独签发代码writer与白名单，当前不实施。",
+  "trueBlockers": [],
+  "nextAction": "由根PJ按本版独立分支/PR集成方案；后续逐包签发真实writer/精确租约、固定契约及最小环境，仍未授权代码或QA。",
   "evidence": [
     "docs/design/r10/support-0.1.0-dev.1/evidence/r11-recovery-readback.json",
     "docs/design/r10/support-0.1.0-dev.1/handoff.zh-CN.md"
@@ -54,7 +80,8 @@
     "singleVersionTest": "not-started",
     "integration": "not-started",
     "merge": "not-started",
-    "deploy": "not-started"
+    "deploy": "not-started",
+    "engineeringPlan": "independently-approved-with-issuance-gates"
   },
   "candidateBinding": {
     "sha": null,
@@ -62,5 +89,27 @@
     "apiContract": null,
     "migration": null,
     "environment": null
-  }
+  },
+  "issuanceGates": [
+    {
+      "gate": "RD-CONTRACTS fixes exact new facts DTO/query/auth/schema; recheck case target/meal/subject grant and redaction each read/write",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Actual owner and exact leases; routes changes serialized with I4/J07",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Restricted CLI must use authenticated APIs and retain same original intent across transport uncertainty; permitted terminal facts differ from persisted logs, no token/unrelated private text in logs",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Run separate facts auth, two-version, original replay, exact UTC boundary, CLI confirm/cancel/reply-only and propagation tests; real API/native/integration evidence separate",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Independent code review/required CI/PR main merge before tested SHA/build deployment",
+      "status": "not-issued"
+    }
+  ]
 }
