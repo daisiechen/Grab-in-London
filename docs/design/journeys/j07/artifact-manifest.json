@@ -1,0 +1,54 @@
+{
+  "journey": "J07",
+  "revision": "UX-r01",
+  "status": "candidate-awaiting-owner-review",
+  "owner": "UX-3",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "requirementsRevision": "PM-r01",
+  "demoRevision": "PM-r02",
+  "inputHashes": {
+    "docs/product/journeys/j07/requirements.zh-CN.md": "5dd9c7a3dc993a621f288ad4f0ac977129ced8a9fd3db802c6f5e6b08fd8c2bd",
+    "demo/journeys/j07/index.html": "0985a543d5443b829bbb0d65295c667ea3e223da161f983cc648cfc5f99d61f0",
+    "docs/product/journeys/j07/coverage.json": "549f073c0fd65dc98ebed75e645ccb9d95b115a380b4b6b0ee57305c9fa593cf",
+    "docs/product/journeys/j07/artifact-manifest.json": "1dddef92e89f504804a4c4d0150d82af5707f65fd16e258f0d3d2209640db378",
+    "docs/design/brand-direction.zh-CN.md": "76c7a9d5c2487649d103fbb000b584a75215bc1adc68184493b2674ca9af38da",
+    "demo/DESIGN.md": "abd6031d7e2b24b2e4f19b2a99ef54b9e76a2f1807717e590ac71c9eb7bfb63a",
+    "demo/UX-CONTRACT.md": "c74557722202a3de27191a8eca885460d7b48c92b202f320b7a2c738436c78fc"
+  },
+  "figma": {
+    "fileKey": "tnrVOL7tRST2d67ZFFSOid",
+    "url": "https://www.figma.com/design/tnrVOL7tRST2d67ZFFSOid?node-id=1-25",
+    "pageId": "0:1",
+    "entryNodeId": "1:25",
+    "nodeIds": [
+      "1:25",
+      "1:44",
+      "1:72",
+      "1:89",
+      "1:109",
+      "1:132",
+      "1:151",
+      "1:170",
+      "1:194",
+      "1:213",
+      "1:229"
+    ],
+    "namedVersionId": null,
+    "frozen": false,
+    "mutableFile": true
+  },
+  "stagesStarted": {
+    "PM": true,
+    "UX": true,
+    "RD": false,
+    "QA": false
+  },
+  "ownerApproved": false,
+  "evidenceBoundary": "作者实际读回节点、目标、字体并查看截图；未执行完整Presentation点击/真实服务或独立QA。",
+  "files": {
+    "docs/design/journeys/j07/coverage.json": "899febcac415813e64a44e2d978ed5cc99badf31db1e81442206a1e515b6337b",
+    "docs/design/journeys/j07/evidence/report-form.png": "63d3b193f8ea6394c138fe2906f1b7bbba33a6a3e3cddd67526ca75b3df3f870",
+    "docs/design/journeys/j07/figma-readback.json": "66e99571521a9a4bb8b5b52b0673aba265f0e536075fcb6bfec2fd24b8a3cbeb",
+    "docs/design/journeys/j07/handoff.zh-CN.md": "d7a13e0eaacd44b8cb1cf86d973a7fd3f098a530e104a795bcaabad96afe04b1"
+  }
+}

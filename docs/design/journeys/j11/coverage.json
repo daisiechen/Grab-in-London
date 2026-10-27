@@ -1,0 +1,126 @@
+{
+  "journey": "J11",
+  "uxRevision": "UX-r01",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "prd": "docs/product/journeys/j11/requirements.zh-CN.md",
+  "pmCoverage": "docs/product/journeys/j11/coverage.json",
+  "scenarios": [
+    {
+      "scenarioId": "J11-S01",
+      "prdScenario": "新分类+原因→保存Unknown→查原次→Pending；分类只提交一次，结果/导出不可读。",
+      "demo": "demo/journeys/j11/index.html",
+      "figmaNodes": [
+        "1:25",
+        "1:59",
+        "1:80"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    },
+    {
+      "scenarioId": "J11-S02",
+      "prdScenario": "Pending→review统计失败→Failed→仅重试统计→Ready新快照；分类提交数不变。",
+      "demo": "demo/journeys/j11/index.html",
+      "figmaNodes": [
+        "1:80",
+        "1:101",
+        "1:122"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    },
+    {
+      "scenarioId": "J11-S03",
+      "prdScenario": "409载入对方最新staff值并保留原因；分析者不能保存；普通失败保输入。",
+      "demo": "demo/journeys/j11/index.html",
+      "figmaNodes": [
+        "1:280",
+        "1:327",
+        "1:307"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    },
+    {
+      "scenarioId": "J11-S04",
+      "prdScenario": "先生成旧导出→隐私撤销→旧页面/下载拒读→新快照可用但旧票据不复活。",
+      "demo": "demo/journeys/j11/index.html",
+      "figmaNodes": [
+        "1:215",
+        "1:237",
+        "1:258"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    },
+    {
+      "scenarioId": "J11-S05",
+      "prdScenario": "在有效快照应用查询范围→生成聚合票据→读取并下载本地合成CSV，内容携同snapshot/filter/definition v4。",
+      "demo": "demo/journeys/j11/index.html",
+      "figmaNodes": [
+        "1:122",
+        "1:154",
+        "1:178"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    }
+  ],
+  "sourceFamilies": [
+    {
+      "sourceRequirements": "D11-AC01 / M08-06/07 / PATCH-006",
+      "prdSection": "状态与恢复；完整路径与角色",
+      "pmDemoCoverageMode": "interactive-synthetic",
+      "designContract": "handoff.zh-CN.md#共享状态与交付契约",
+      "figmaNodes": [
+        "1:101",
+        "1:122",
+        "1:25",
+        "1:280",
+        "1:307",
+        "1:327",
+        "1:59",
+        "1:80"
+      ],
+      "coverageMode": "representative-design-plus-shared-contract"
+    },
+    {
+      "sourceRequirements": "D11-AC02 / 删除隐私屏障 / QA-JOURNEY-008/009相关",
+      "prdSection": "分类、统计与导出规则",
+      "pmDemoCoverageMode": "interactive-synthetic; real deletion gate NOT_RUN",
+      "designContract": "handoff.zh-CN.md#共享状态与交付契约",
+      "figmaNodes": [
+        "1:215",
+        "1:237",
+        "1:258"
+      ],
+      "coverageMode": "representative-design-plus-shared-contract"
+    },
+    {
+      "sourceRequirements": "D11-AC03 / 采集v4 / 后台PRD§3/5/6",
+      "prdSection": "分类、统计与导出规则；页面与完整返回",
+      "pmDemoCoverageMode": "interactive-synthetic",
+      "designContract": "handoff.zh-CN.md#共享状态与交付契约",
+      "figmaNodes": [
+        "1:122",
+        "1:154",
+        "1:178"
+      ],
+      "coverageMode": "representative-design-plus-shared-contract"
+    },
+    {
+      "sourceRequirements": "完整分类席位重建、MVCC/epoch、MFA、真实管线/CSV权限与备份恢复",
+      "prdSection": "分类、统计与导出规则；不做与真实依赖",
+      "pmDemoCoverageMode": "documented-only",
+      "designContract": "handoff.zh-CN.md#共享状态与交付契约",
+      "figmaNodes": [],
+      "coverageMode": "documented-only-preserved"
+    }
+  ],
+  "boundary": "原PM文档要求仍有效；代表画板/连线不等同所有需求已可交互或生产验证。"
+}

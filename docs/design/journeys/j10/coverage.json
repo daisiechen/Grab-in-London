@@ -1,0 +1,128 @@
+{
+  "journey": "J10",
+  "uxRevision": "UX-r01",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "prd": "docs/product/journeys/j10/requirements.zh-CN.md",
+  "pmCoverage": "docs/product/journeys/j10/coverage.json",
+  "scenarios": [
+    {
+      "scenarioId": "J10-S01",
+      "prdScenario": "日期应用/非法日期恢复→区域等多选→导航中英切换保持查询；六条分页/搜索排序。",
+      "demo": "demo/journeys/j10/index.html",
+      "figmaNodes": [
+        "2:544",
+        "2:611",
+        "2:853"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    },
+    {
+      "scenarioId": "J10-S02",
+      "prdScenario": "点指标→口径与分母→来源记录→饭局本人/host报告→伪名历史→逐层返回，原快照/筛选保留。",
+      "demo": "demo/journeys/j10/index.html",
+      "figmaNodes": [
+        "2:650",
+        "2:679",
+        "2:726",
+        "2:777"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    },
+    {
+      "scenarioId": "J10-S03",
+      "prdScenario": "扩大日期到9月可见成熟14/30天指标；近期显示观察中和零分母—；本人present优先于host absent。",
+      "demo": "demo/journeys/j10/index.html",
+      "figmaNodes": [
+        "2:544",
+        "2:817"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    },
+    {
+      "scenarioId": "J10-S04",
+      "prdScenario": "review注入401/403/410/429/503，受限内容清除、查询保留、重新验证/重试可恢复。",
+      "demo": "demo/journeys/j10/index.html",
+      "figmaNodes": [
+        "2:957",
+        "2:929"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    }
+  ],
+  "sourceFamilies": [
+    {
+      "sourceRequirements": "D10-AC01 / PATCH-006 AC-006 / 后台PRD§3–4",
+      "prdSection": "指标与数据权威",
+      "pmDemoCoverageMode": "interactive-synthetic",
+      "designContract": "handoff.zh-CN.md#共享状态与交付契约",
+      "figmaNodes": [
+        "2:544",
+        "2:611",
+        "2:650",
+        "2:679",
+        "2:726",
+        "2:777",
+        "2:817",
+        "2:853"
+      ],
+      "coverageMode": "representative-design-plus-shared-contract"
+    },
+    {
+      "sourceRequirements": "D10-AC02 / 采集v4§4–7",
+      "prdSection": "查询、列表与导航；权限、异常与边界",
+      "pmDemoCoverageMode": "interactive-synthetic",
+      "designContract": "handoff.zh-CN.md#共享状态与交付契约",
+      "figmaNodes": [
+        "2:650",
+        "2:679",
+        "2:726",
+        "2:777",
+        "2:929",
+        "2:957"
+      ],
+      "coverageMode": "representative-design-plus-shared-contract"
+    },
+    {
+      "sourceRequirements": "D10-AC03 / 后台PRD§3.1–3.3",
+      "prdSection": "平台与不做事项",
+      "pmDemoCoverageMode": "responsive-code; visual/manual NOT_RUN",
+      "designContract": "handoff.zh-CN.md#共享状态与交付契约",
+      "figmaNodes": [
+        "2:544",
+        "2:611",
+        "2:853",
+        "2:929",
+        "2:957"
+      ],
+      "coverageMode": "representative-design-plus-shared-contract"
+    },
+    {
+      "sourceRequirements": "J10首发概览 activation/retention；AUD-03/04",
+      "prdSection": "指标与数据权威",
+      "pmDemoCoverageMode": "interactive-synthetic",
+      "designContract": "handoff.zh-CN.md#共享状态与交付契约",
+      "figmaNodes": [
+        "2:544",
+        "2:817"
+      ],
+      "coverageMode": "representative-design-plus-shared-contract"
+    },
+    {
+      "sourceRequirements": "来源/新老分群、快捷日期、真实审核分布、创建漏斗、源连接/采集/权限与生产计算",
+      "prdSection": "查询、列表与导航；指标与数据权威",
+      "pmDemoCoverageMode": "documented-only; no production claim",
+      "designContract": "handoff.zh-CN.md#共享状态与交付契约",
+      "figmaNodes": [],
+      "coverageMode": "documented-only-preserved"
+    }
+  ],
+  "boundary": "原PM文档要求仍有效；代表画板/连线不等同所有需求已可交互或生产验证。"
+}

@@ -1,0 +1,55 @@
+{
+  "journey": "J09",
+  "revision": "UX-r01",
+  "status": "candidate-awaiting-owner-review",
+  "owner": "UX-3",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "requirementsRevision": "PM-r01",
+  "demoRevision": "PM-r02",
+  "inputHashes": {
+    "docs/product/journeys/j09/requirements.zh-CN.md": "a168fbe0061d462db602a1240da95e1e3182cea1946acc7458412deb7960261c",
+    "demo/journeys/j09/index.html": "801842c556eca92763fd1d0ff5cab45fb97e5035c3bb42d55e46648654ffe2ca",
+    "docs/product/journeys/j09/coverage.json": "c75c7d3014a6fd8d6b076373e089270c549d3a3fa4e76b356b5fc5f50dbfb9c4",
+    "docs/product/journeys/j09/artifact-manifest.json": "8af1a0fbac3963b4c359aed31e3876496e9050c36aaa800dd1939ffe2eb414ae",
+    "docs/design/brand-direction.zh-CN.md": "76c7a9d5c2487649d103fbb000b584a75215bc1adc68184493b2674ca9af38da",
+    "demo/DESIGN.md": "abd6031d7e2b24b2e4f19b2a99ef54b9e76a2f1807717e590ac71c9eb7bfb63a",
+    "demo/UX-CONTRACT.md": "c74557722202a3de27191a8eca885460d7b48c92b202f320b7a2c738436c78fc",
+    "admin/DESIGN.md": "4c77ecb6b45ec175bb385804d75bc948a5a954c4f0016f1f971edabdc8a2bfd3",
+    "admin/UX-CONTRACT.md": "5fac6df0ebb83fee50c4585e912e13ba16e1cf7cc09ebfec0a13dfd8f666ab4c"
+  },
+  "figma": {
+    "fileKey": "m6kRIdrsctVT63PIN42kwD",
+    "url": "https://www.figma.com/design/m6kRIdrsctVT63PIN42kwD?node-id=1-25",
+    "pageId": "0:1",
+    "entryNodeId": "1:25",
+    "nodeIds": [
+      "1:25",
+      "1:42",
+      "1:59",
+      "1:84",
+      "1:100",
+      "1:129",
+      "1:150",
+      "1:168",
+      "1:185",
+      "1:199"
+    ],
+    "namedVersionId": null,
+    "frozen": false,
+    "mutableFile": true
+  },
+  "stagesStarted": {
+    "PM": true,
+    "UX": true,
+    "RD": false,
+    "QA": false
+  },
+  "ownerApproved": false,
+  "evidenceBoundary": "作者实际读回节点、目标、字体并查看截图；未执行完整Presentation点击/真实服务或独立QA。",
+  "files": {
+    "docs/design/journeys/j09/coverage.json": "1d3c527b8555e0db62eb21ac0d2557353e1d68a4263150a33f0ee385b0e10633",
+    "docs/design/journeys/j09/evidence/correction-impact.png": "20d39a1a447ebc8e4fee46f3b6bca88bf030b136fd130c0b3e4cdca2bfa6bd40",
+    "docs/design/journeys/j09/figma-readback.json": "b3e3030d9f73c3f56343fa80acd72f36ed90e5ba639499c4812f7c952bb4d08b",
+    "docs/design/journeys/j09/handoff.zh-CN.md": "dda8e361304729709e31abde03a73cf5c520794be2aab70e2083bfb202fcb17d"
+  }
+}

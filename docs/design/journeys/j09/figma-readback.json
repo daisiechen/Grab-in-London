@@ -1,0 +1,646 @@
+{
+  "pageId": "0:1",
+  "screens": [
+    {
+      "key": "case",
+      "nodeId": "1:25",
+      "name": "case · 查看事实，留下处理依据",
+      "width": 1440,
+      "height": 505,
+      "texts": [
+        {
+          "id": "1:27",
+          "text": "fancy"
+        },
+        {
+          "id": "1:28",
+          "text": "Support · authorised case"
+        },
+        {
+          "id": "1:31",
+          "text": "查看事实，留下处理依据"
+        },
+        {
+          "id": "1:32",
+          "text": "单一个案 · CASE-SYN-09 · 本案已授权"
+        },
+        {
+          "id": "1:34",
+          "text": "出席记录更正请求 · Received"
+        },
+        {
+          "id": "1:35",
+          "text": "提交者请求复核本人出席记录。仅显示本案必要事实。"
+        },
+        {
+          "id": "1:36",
+          "text": "M-SYN-09 · U-203 · scheduledEndAt 2026-10-10 21:00 BST"
+        },
+        {
+          "id": "1:37",
+          "text": "本人原报告absent；host原报告present；当前有效absent。"
+        },
+        {
+          "id": "1:38",
+          "text": "当前修订1；开始资格名单内、饭局未取消。"
+        },
+        {
+          "id": "I1:39;1:20",
+          "text": "开始处理此案"
+        },
+        {
+          "id": "1:41",
+          "text": "仅显示此案授权范围内的必要事实。"
+        }
+      ],
+      "scrollFrames": []
+    },
+    {
+      "key": "active",
+      "nodeId": "1:42",
+      "name": "active · 处理此案",
+      "width": 1440,
+      "height": 501,
+      "texts": [
+        {
+          "id": "1:44",
+          "text": "fancy"
+        },
+        {
+          "id": "1:45",
+          "text": "Support · authorised case"
+        },
+        {
+          "id": "1:48",
+          "text": "处理此案"
+        },
+        {
+          "id": "1:49",
+          "text": "CASE-SYN-09 · In progress · revision 1"
+        },
+        {
+          "id": "1:51",
+          "text": "已核对最小事实"
+        },
+        {
+          "id": "1:52",
+          "text": "本人原报告absent；host原报告present；当前有效absent。"
+        },
+        {
+          "id": "1:53",
+          "text": "仅满连续7天后可追加逾期支持纠错；窗口内仍走自助报告。"
+        },
+        {
+          "id": "I1:54;1:20",
+          "text": "追加逾期纠错"
+        },
+        {
+          "id": "I1:56;1:22",
+          "text": "只回复本案"
+        },
+        {
+          "id": "1:58",
+          "text": "仅显示此案授权范围内的必要事实。"
+        }
+      ],
+      "scrollFrames": []
+    },
+    {
+      "key": "correction",
+      "nodeId": "1:59",
+      "name": "correction · 追加支持修订",
+      "width": 1440,
+      "height": 744,
+      "texts": [
+        {
+          "id": "1:61",
+          "text": "fancy"
+        },
+        {
+          "id": "1:62",
+          "text": "Support · authorised case"
+        },
+        {
+          "id": "1:65",
+          "text": "追加支持修订"
+        },
+        {
+          "id": "1:66",
+          "text": "M-SYN-09 · U-203 · expectedVersion 1"
+        },
+        {
+          "id": "1:68",
+          "text": "纠错依据"
+        },
+        {
+          "id": "1:69",
+          "text": "明确出席结果"
+        },
+        {
+          "id": "1:71",
+          "text": "absent · 未出席"
+        },
+        {
+          "id": "1:72",
+          "text": "原因（必填）"
+        },
+        {
+          "id": "1:74",
+          "text": "核对本案提供材料后确认未出席。"
+        },
+        {
+          "id": "I1:75;1:20",
+          "text": "追加修订并核对影响"
+        },
+        {
+          "id": "I1:77;1:22",
+          "text": "取消本次修改"
+        },
+        {
+          "id": "1:80",
+          "text": "适用条件"
+        },
+        {
+          "id": "1:81",
+          "text": "scheduledEndAt + 7天 = 2026-10-17T20:00:00Z"
+        },
+        {
+          "id": "1:82",
+          "text": "必须在开始资格名单且未取消；原始本人/host报告保留。"
+        },
+        {
+          "id": "1:83",
+          "text": "仅显示此案授权范围内的必要事实。"
+        }
+      ],
+      "scrollFrames": []
+    },
+    {
+      "key": "window",
+      "nodeId": "1:84",
+      "name": "window · 仍在7天自助窗口内",
+      "width": 1440,
+      "height": 475,
+      "texts": [
+        {
+          "id": "1:86",
+          "text": "fancy"
+        },
+        {
+          "id": "1:87",
+          "text": "Support · authorised case"
+        },
+        {
+          "id": "1:90",
+          "text": "仍在7天自助窗口内"
+        },
+        {
+          "id": "1:91",
+          "text": "409 CORRECTION_WINDOW_OPEN · 尚未追加修订"
+        },
+        {
+          "id": "1:93",
+          "text": "本次不能执行逾期纠错"
+        },
+        {
+          "id": "1:94",
+          "text": "当前时间：2026-10-17T19:59:59.999Z"
+        },
+        {
+          "id": "1:95",
+          "text": "自助窗口结束：2026-10-17T20:00:00.000Z"
+        },
+        {
+          "id": "1:96",
+          "text": "原因与选择保留。满7天后仍需重新核对授权和记录。"
+        },
+        {
+          "id": "I1:97;1:22",
+          "text": "返回个案"
+        },
+        {
+          "id": "1:99",
+          "text": "仅显示此案授权范围内的必要事实。"
+        }
+      ],
+      "scrollFrames": []
+    },
+    {
+      "key": "impact",
+      "nodeId": "1:100",
+      "name": "impact · 修订已追加，请核对影响",
+      "width": 1440,
+      "height": 649,
+      "texts": [
+        {
+          "id": "1:102",
+          "text": "fancy"
+        },
+        {
+          "id": "1:103",
+          "text": "Support · authorised case"
+        },
+        {
+          "id": "1:106",
+          "text": "修订已追加，请核对影响"
+        },
+        {
+          "id": "1:107",
+          "text": "CASE-SYN-09 · U-203 · absent · revision 2"
+        },
+        {
+          "id": "1:110",
+          "text": "公开个人评价"
+        },
+        {
+          "id": "1:111",
+          "text": "不公开"
+        },
+        {
+          "id": "1:113",
+          "text": "单场体验统计"
+        },
+        {
+          "id": "1:114",
+          "text": "已排除"
+        },
+        {
+          "id": "1:116",
+          "text": "持续联系"
+        },
+        {
+          "id": "1:117",
+          "text": "暂停新发送"
+        },
+        {
+          "id": "1:119",
+          "text": "资格与统计"
+        },
+        {
+          "id": "1:120",
+          "text": "本例复核仍为absent；依赖本场的公评/体验/联系继续不适用，并非本次从可用变失效。已授权历史保留。"
+        },
+        {
+          "id": "1:121",
+          "text": "若另有有效共同场次及双方有效同意，联系仍开放；不因本场absent全局关闭。"
+        },
+        {
+          "id": "1:122",
+          "text": "旧快照SYN-BEFORE保留原asOf；新快照SYN-AFTER-2依据本次修订生成。"
+        },
+        {
+          "id": "1:123",
+          "text": "不恢复已撤回或拉黑的同意，不重复计数。"
+        },
+        {
+          "id": "I1:124;1:22",
+          "text": "返回个案"
+        },
+        {
+          "id": "I1:126;1:20",
+          "text": "回复并记录结果"
+        },
+        {
+          "id": "1:128",
+          "text": "仅显示此案授权范围内的必要事实。"
+        }
+      ],
+      "scrollFrames": []
+    },
+    {
+      "key": "reply",
+      "nodeId": "1:129",
+      "name": "reply · 回复并记录处理结果",
+      "width": 1440,
+      "height": 633,
+      "texts": [
+        {
+          "id": "1:131",
+          "text": "fancy"
+        },
+        {
+          "id": "1:132",
+          "text": "Support · authorised case"
+        },
+        {
+          "id": "1:135",
+          "text": "回复并记录处理结果"
+        },
+        {
+          "id": "1:136",
+          "text": "CASE-SYN-09 · In progress"
+        },
+        {
+          "id": "1:138",
+          "text": "提交者可见结论"
+        },
+        {
+          "id": "1:139",
+          "text": "回复（必填，纯文本）"
+        },
+        {
+          "id": "1:141",
+          "text": "我们已核对本案相关记录，并按适用规则记录处理结果。"
+        },
+        {
+          "id": "I1:142;1:20",
+          "text": "保存处理结果与回复"
+        },
+        {
+          "id": "I1:144;1:22",
+          "text": "返回本案"
+        },
+        {
+          "id": "1:147",
+          "text": "仅分享本案可公开信息"
+        },
+        {
+          "id": "1:148",
+          "text": "回复不包含他人的举报、聊天、私密意愿或内部调查材料。"
+        },
+        {
+          "id": "1:149",
+          "text": "仅显示此案授权范围内的必要事实。"
+        }
+      ],
+      "scrollFrames": []
+    },
+    {
+      "key": "replied",
+      "nodeId": "1:150",
+      "name": "replied · 处理结果与回复已保存",
+      "width": 1440,
+      "height": 560,
+      "texts": [
+        {
+          "id": "1:152",
+          "text": "fancy"
+        },
+        {
+          "id": "1:153",
+          "text": "Support · authorised case"
+        },
+        {
+          "id": "1:156",
+          "text": "处理结果与回复已保存"
+        },
+        {
+          "id": "1:157",
+          "text": "CASE-SYN-09 · Replied"
+        },
+        {
+          "id": "1:159",
+          "text": "提交者可见回复"
+        },
+        {
+          "id": "1:160",
+          "text": "我们已核对本案相关记录，并按适用规则记录处理结果。"
+        },
+        {
+          "id": "1:162",
+          "text": "修订与审计"
+        },
+        {
+          "id": "1:163",
+          "text": "适用的支持修订另列在本案修订历史；只回复时不创建出席修订。"
+        },
+        {
+          "id": "1:164",
+          "text": "原始self=absent / host=present保留。"
+        },
+        {
+          "id": "1:165",
+          "text": "REPLY · SUPPORT-01 · CASE-SYN-09"
+        },
+        {
+          "id": "1:166",
+          "text": "受理、开始处理、修订与实际回复分别记录。"
+        },
+        {
+          "id": "1:167",
+          "text": "仅显示此案授权范围内的必要事实。"
+        }
+      ],
+      "scrollFrames": []
+    },
+    {
+      "key": "conflict",
+      "nodeId": "1:168",
+      "name": "conflict · 记录已发生变化",
+      "width": 1440,
+      "height": 501,
+      "texts": [
+        {
+          "id": "1:170",
+          "text": "fancy"
+        },
+        {
+          "id": "1:171",
+          "text": "Support · authorised case"
+        },
+        {
+          "id": "1:174",
+          "text": "记录已发生变化"
+        },
+        {
+          "id": "1:175",
+          "text": "409 · 已加载当前合法revision与事实"
+        },
+        {
+          "id": "1:177",
+          "text": "核对后再确认"
+        },
+        {
+          "id": "1:178",
+          "text": "原因与选择已保留。不要覆盖他人的新修订。"
+        },
+        {
+          "id": "1:179",
+          "text": "核对对象、报告及当前版本后，由本人明确创建新意图。"
+        },
+        {
+          "id": "I1:180;1:20",
+          "text": "返回核对当前事实"
+        },
+        {
+          "id": "I1:182;1:22",
+          "text": "取消本次修改"
+        },
+        {
+          "id": "1:184",
+          "text": "仅显示此案授权范围内的必要事实。"
+        }
+      ],
+      "scrollFrames": []
+    },
+    {
+      "key": "failed",
+      "nodeId": "1:185",
+      "name": "failed · 修订未执行",
+      "width": 1440,
+      "height": 415,
+      "texts": [
+        {
+          "id": "1:187",
+          "text": "fancy"
+        },
+        {
+          "id": "1:188",
+          "text": "Support · authorised case"
+        },
+        {
+          "id": "1:191",
+          "text": "修订未执行"
+        },
+        {
+          "id": "1:192",
+          "text": "503 · 原因和选择已保留"
+        },
+        {
+          "id": "1:194",
+          "text": "本次没有新增修订"
+        },
+        {
+          "id": "1:195",
+          "text": "确定未执行时可按原意图重试。若结果未知，应先查询原操作，不能重复追加。"
+        },
+        {
+          "id": "I1:196;1:22",
+          "text": "返回本次编辑"
+        },
+        {
+          "id": "1:198",
+          "text": "仅显示此案授权范围内的必要事实。"
+        }
+      ],
+      "scrollFrames": []
+    },
+    {
+      "key": "denied",
+      "nodeId": "1:199",
+      "name": "denied · 无权查看此个案",
+      "width": 1440,
+      "height": 389,
+      "texts": [
+        {
+          "id": "1:201",
+          "text": "fancy"
+        },
+        {
+          "id": "1:202",
+          "text": "Support · authorised case"
+        },
+        {
+          "id": "1:205",
+          "text": "无权查看此个案"
+        },
+        {
+          "id": "1:206",
+          "text": "403 · 事项内容与写入口已清除"
+        },
+        {
+          "id": "1:208",
+          "text": "重新验证本案权限"
+        },
+        {
+          "id": "1:209",
+          "text": "请通过内部身份验证MFA并取得此个案授权。"
+        },
+        {
+          "id": "1:210",
+          "text": "分析者的统计读取权限不能用于支持操作。已知caseId也不代表有权读取。"
+        },
+        {
+          "id": "1:211",
+          "text": "仅显示此案授权范围内的必要事实。"
+        }
+      ],
+      "scrollFrames": []
+    }
+  ],
+  "links": [
+    {
+      "source": "1:39",
+      "label": "Action / 开始处理此案",
+      "destination": "1:42"
+    },
+    {
+      "source": "1:54",
+      "label": "Action / 追加逾期纠错",
+      "destination": "1:59"
+    },
+    {
+      "source": "1:56",
+      "label": "Action / 只回复本案",
+      "destination": "1:129"
+    },
+    {
+      "source": "1:75",
+      "label": "Action / 追加修订并核对影响",
+      "destination": "1:100"
+    },
+    {
+      "source": "1:77",
+      "label": "Action / 取消本次修改",
+      "destination": "1:42"
+    },
+    {
+      "source": "1:97",
+      "label": "Action / 返回个案",
+      "destination": "1:42"
+    },
+    {
+      "source": "1:124",
+      "label": "Action / 返回个案",
+      "destination": "1:42"
+    },
+    {
+      "source": "1:126",
+      "label": "Action / 回复并记录结果",
+      "destination": "1:129"
+    },
+    {
+      "source": "1:142",
+      "label": "Action / 保存处理结果与回复",
+      "destination": "1:150"
+    },
+    {
+      "source": "1:144",
+      "label": "Action / 返回本案",
+      "destination": "1:42"
+    },
+    {
+      "source": "1:180",
+      "label": "Action / 返回核对当前事实",
+      "destination": "1:59"
+    },
+    {
+      "source": "1:182",
+      "label": "Action / 取消本次修改",
+      "destination": "1:42"
+    },
+    {
+      "source": "1:196",
+      "label": "Action / 返回本次编辑",
+      "destination": "1:59"
+    }
+  ],
+  "missingTargets": [],
+  "nodeTypes": {
+    "FRAME": 62,
+    "COMPONENT": 3,
+    "TEXT": 121,
+    "INSTANCE": 13
+  },
+  "imageNodes": [],
+  "fonts": [
+    "Noto Sans SC",
+    "Georgia"
+  ],
+  "flowStartingPoints": [
+    {
+      "nodeId": "1:25",
+      "name": "J09 · complete representative journey"
+    }
+  ]
+}

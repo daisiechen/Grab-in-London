@@ -1,0 +1,60 @@
+{
+  "journey": "J11",
+  "revision": "UX-r01",
+  "status": "candidate-awaiting-owner-review",
+  "owner": "UX-3",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "requirementsRevision": "PM-r01",
+  "demoRevision": "PM-r02",
+  "inputHashes": {
+    "docs/product/journeys/j11/requirements.zh-CN.md": "40921832dd47a5c0df9615b2ddbe483bfa54e51890b527083410d8c09f1451a3",
+    "demo/journeys/j11/index.html": "eaec916ca907e571fa7be9f27a4928b4d75964e968b89c702420f12b4b578d33",
+    "docs/product/journeys/j11/coverage.json": "a919258c7e549294a5492c25431c2af6bad180b44d1da1a3511737c80d87c321",
+    "docs/product/journeys/j11/artifact-manifest.json": "b891e300ea4396d1ac5637483444ee11f3b2955a2f33d91122cf88269e4e3672",
+    "docs/design/brand-direction.zh-CN.md": "76c7a9d5c2487649d103fbb000b584a75215bc1adc68184493b2674ca9af38da",
+    "demo/DESIGN.md": "abd6031d7e2b24b2e4f19b2a99ef54b9e76a2f1807717e590ac71c9eb7bfb63a",
+    "demo/UX-CONTRACT.md": "c74557722202a3de27191a8eca885460d7b48c92b202f320b7a2c738436c78fc",
+    "admin/DESIGN.md": "4c77ecb6b45ec175bb385804d75bc948a5a954c4f0016f1f971edabdc8a2bfd3",
+    "admin/UX-CONTRACT.md": "5fac6df0ebb83fee50c4585e912e13ba16e1cf7cc09ebfec0a13dfd8f666ab4c"
+  },
+  "figma": {
+    "fileKey": "IHhXcDFmp4x5eOPrVW88m9",
+    "url": "https://www.figma.com/design/IHhXcDFmp4x5eOPrVW88m9?node-id=1-25",
+    "pageId": "0:1",
+    "entryNodeId": "1:25",
+    "nodeIds": [
+      "1:25",
+      "1:59",
+      "1:80",
+      "1:101",
+      "1:122",
+      "1:154",
+      "1:178",
+      "1:215",
+      "1:237",
+      "1:258",
+      "1:280",
+      "1:307",
+      "1:327",
+      "1:347"
+    ],
+    "namedVersionId": null,
+    "frozen": false,
+    "mutableFile": true
+  },
+  "stagesStarted": {
+    "PM": true,
+    "UX": true,
+    "RD": false,
+    "QA": false
+  },
+  "ownerApproved": false,
+  "evidenceBoundary": "作者实际读回节点、目标、字体并查看截图；未执行完整Presentation点击/真实服务或独立QA。",
+  "files": {
+    "docs/design/journeys/j11/coverage.json": "31c3a2dcd3296b5f19489212b2e019da45cd2c5131fea7840ebb7e1a2593ab13",
+    "docs/design/journeys/j11/evidence/download-ready.png": "f6bfb82ae48bf72b32fddca0fef1758724da0fb50e3dabe844cda15fc41cbf38",
+    "docs/design/journeys/j11/evidence/statistics-failed.png": "57970ab73fbb1825fa9a8abbedf848474b0b3e5369b849f93bcaaa8213f7f30a",
+    "docs/design/journeys/j11/figma-readback.json": "ba30ed4cf10b756eb1891ac47387c248ce36ea3df9b0388cde7ea1dce246683f",
+    "docs/design/journeys/j11/handoff.zh-CN.md": "3d06a6966ee99eaa49c5e07d58068eaebdc0f9e3460295105d5fa0f221001d03"
+  }
+}

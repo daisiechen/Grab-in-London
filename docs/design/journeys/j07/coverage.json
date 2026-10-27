@@ -1,0 +1,103 @@
+{
+  "journey": "J07",
+  "uxRevision": "UX-r01",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "prd": "docs/product/journeys/j07/requirements.zh-CN.md",
+  "pmCoverage": "docs/product/journeys/j07/coverage.json",
+  "scenarios": [
+    {
+      "scenarioId": "J07-S01",
+      "prdScenario": "成员→举报表单→原因校验/保留说明→取消返回且不创建报告→主动提交→Received回执。",
+      "demo": "demo/journeys/j07/index.html",
+      "figmaNodes": [
+        "1:25",
+        "1:44",
+        "1:170",
+        "1:89"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    },
+    {
+      "scenarioId": "J07-S02",
+      "prdScenario": "回本人列表重开同报告→review模拟支持开始→In progress→实际模拟回复→Reply available，受理不等于处理完。",
+      "demo": "demo/journeys/j07/index.html",
+      "figmaNodes": [
+        "1:109",
+        "1:89",
+        "1:132",
+        "1:151"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    },
+    {
+      "scenarioId": "J07-S03",
+      "prdScenario": "review失败保留草稿；Unknown先查原次，accepted requests始终1，不重复创建。",
+      "demo": "demo/journeys/j07/index.html",
+      "figmaNodes": [
+        "1:194",
+        "1:72",
+        "1:89"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    },
+    {
+      "scenarioId": "J07-S04",
+      "prdScenario": "换账号后列表为空、无法按旧ID读回执；回原账号可找回同次事项；未登录提交被阻止。",
+      "demo": "demo/journeys/j07/index.html",
+      "figmaNodes": [
+        "1:213",
+        "1:229"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    }
+  ],
+  "sourceFamilies": [
+    {
+      "sourceRequirements": "J07 / M07-01 / D08-AC01 / 主PRD§0.6 / FR-10/12",
+      "prdSection": "用户目标、入口与完成结果；正常与取消路径",
+      "pmDemoCoverageMode": "interactive-synthetic",
+      "designContract": "handoff.zh-CN.md#共享状态与交付契约",
+      "figmaNodes": [
+        "1:109",
+        "1:132",
+        "1:151",
+        "1:170",
+        "1:25",
+        "1:44",
+        "1:89"
+      ],
+      "coverageMode": "representative-design-plus-shared-contract"
+    },
+    {
+      "sourceRequirements": "举报私密投影/原次结果恢复/账号隔离",
+      "prdSection": "输入、数据与权限；状态、失败与恢复",
+      "pmDemoCoverageMode": "interactive-synthetic",
+      "designContract": "handoff.zh-CN.md#共享状态与交付契约",
+      "figmaNodes": [
+        "1:194",
+        "1:213",
+        "1:229",
+        "1:72",
+        "1:89"
+      ],
+      "coverageMode": "representative-design-plus-shared-contract"
+    },
+    {
+      "sourceRequirements": "真实支持投递、内部鉴权、法定保留和iOS原生行为",
+      "prdSection": "平台、验收与不做",
+      "pmDemoCoverageMode": "documented-only",
+      "designContract": "handoff.zh-CN.md#共享状态与交付契约",
+      "figmaNodes": [],
+      "coverageMode": "documented-only-preserved"
+    }
+  ],
+  "boundary": "原PM文档要求仍有效；代表画板/连线不等同所有需求已可交互或生产验证。"
+}

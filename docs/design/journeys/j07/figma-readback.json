@@ -1,0 +1,975 @@
+{
+  "pageId": "0:1",
+  "screens": [
+    {
+      "key": "member",
+      "nodeId": "1:25",
+      "name": "member · Alex",
+      "width": 390,
+      "height": 844,
+      "texts": [
+        {
+          "id": "3:24",
+          "text": "9:41"
+        },
+        {
+          "id": "4:24",
+          "text": "‹ Back"
+        },
+        {
+          "id": "1:27",
+          "text": "fancy"
+        },
+        {
+          "id": "1:28",
+          "text": ""
+        },
+        {
+          "id": "1:31",
+          "text": "Alex"
+        },
+        {
+          "id": "1:32",
+          "text": "Member · U-TARGET · Camden meal"
+        },
+        {
+          "id": "1:34",
+          "text": "Member details"
+        },
+        {
+          "id": "1:35",
+          "text": "A seat at the same table."
+        },
+        {
+          "id": "1:36",
+          "text": "You can report a concern privately."
+        },
+        {
+          "id": "I1:37;1:24",
+          "text": "Report member"
+        },
+        {
+          "id": "I1:39;1:22",
+          "text": "Your reports"
+        },
+        {
+          "id": "1:41",
+          "text": "If you are in immediate danger, use local emergency services. Fancy is not an emergency response service."
+        },
+        {
+          "id": "1:43",
+          "text": "━━━━━━━━"
+        }
+      ],
+      "scrollFrames": [
+        {
+          "id": "1:29",
+          "overflow": "VERTICAL",
+          "width": 390,
+          "height": 712
+        }
+      ]
+    },
+    {
+      "key": "form",
+      "nodeId": "1:44",
+      "name": "form · Tell us what happened",
+      "width": 390,
+      "height": 844,
+      "texts": [
+        {
+          "id": "3:26",
+          "text": "9:41"
+        },
+        {
+          "id": "4:27",
+          "text": "‹ Back"
+        },
+        {
+          "id": "1:46",
+          "text": "fancy"
+        },
+        {
+          "id": "1:47",
+          "text": ""
+        },
+        {
+          "id": "1:50",
+          "text": "Tell us what happened"
+        },
+        {
+          "id": "1:51",
+          "text": "Private report · Reporting Alex · U-TARGET"
+        },
+        {
+          "id": "1:53",
+          "text": "Your report"
+        },
+        {
+          "id": "1:54",
+          "text": "Reason"
+        },
+        {
+          "id": "1:56",
+          "text": "Harassment or unwanted contact"
+        },
+        {
+          "id": "1:57",
+          "text": "Harassment or unwanted contact / Safety concern / Something else"
+        },
+        {
+          "id": "1:58",
+          "text": "What would you like us to know? (optional)"
+        },
+        {
+          "id": "1:60",
+          "text": "I received unwanted contact after our meal."
+        },
+        {
+          "id": "I1:61;1:20",
+          "text": "Send private report"
+        },
+        {
+          "id": "I1:63;1:22",
+          "text": "Cancel"
+        },
+        {
+          "id": "1:66",
+          "text": "Who can review this?"
+        },
+        {
+          "id": "1:67",
+          "text": "Only support people authorised for this report can review the necessary information."
+        },
+        {
+          "id": "1:68",
+          "text": "Submitting does not mean it has been investigated."
+        },
+        {
+          "id": "1:69",
+          "text": "Your draft stays with this account and this member. Nothing is sent until you choose Send private report."
+        },
+        {
+          "id": "1:71",
+          "text": "━━━━━━━━"
+        }
+      ],
+      "scrollFrames": [
+        {
+          "id": "1:48",
+          "overflow": "VERTICAL",
+          "width": 390,
+          "height": 712
+        }
+      ]
+    },
+    {
+      "key": "unknown",
+      "nodeId": "1:72",
+      "name": "unknown · Check your report",
+      "width": 390,
+      "height": 844,
+      "texts": [
+        {
+          "id": "3:28",
+          "text": "9:41"
+        },
+        {
+          "id": "4:30",
+          "text": "‹ Back"
+        },
+        {
+          "id": "1:74",
+          "text": "fancy"
+        },
+        {
+          "id": "1:75",
+          "text": ""
+        },
+        {
+          "id": "1:78",
+          "text": "Check your report"
+        },
+        {
+          "id": "1:79",
+          "text": "We haven’t received a definite result yet."
+        },
+        {
+          "id": "1:81",
+          "text": "Your words are kept"
+        },
+        {
+          "id": "1:82",
+          "text": "Please check the original request before submitting again."
+        },
+        {
+          "id": "1:83",
+          "text": "Your report has not been sent again."
+        },
+        {
+          "id": "I1:84;1:20",
+          "text": "Check original request"
+        },
+        {
+          "id": "1:86",
+          "text": "A report reference helps support locate your report; it does not grant access to anyone else’s report."
+        },
+        {
+          "id": "1:88",
+          "text": "━━━━━━━━"
+        }
+      ],
+      "scrollFrames": [
+        {
+          "id": "1:76",
+          "overflow": "VERTICAL",
+          "width": 390,
+          "height": 712
+        }
+      ]
+    },
+    {
+      "key": "received",
+      "nodeId": "1:89",
+      "name": "received · Received",
+      "width": 390,
+      "height": 844,
+      "texts": [
+        {
+          "id": "3:30",
+          "text": "9:41"
+        },
+        {
+          "id": "4:33",
+          "text": "‹ Back"
+        },
+        {
+          "id": "1:91",
+          "text": "fancy"
+        },
+        {
+          "id": "1:92",
+          "text": ""
+        },
+        {
+          "id": "1:95",
+          "text": "Received"
+        },
+        {
+          "id": "1:96",
+          "text": "Your private report · Reference R-SYN-1"
+        },
+        {
+          "id": "1:98",
+          "text": "We have received your report"
+        },
+        {
+          "id": "1:99",
+          "text": "We will review it. This is a receipt, not a completed investigation."
+        },
+        {
+          "id": "1:100",
+          "text": "Reason: Harassment or unwanted contact"
+        },
+        {
+          "id": "1:101",
+          "text": "Your description: I received unwanted contact after our meal."
+        },
+        {
+          "id": "I1:102;1:20",
+          "text": "Your reports"
+        },
+        {
+          "id": "I1:104;1:22",
+          "text": "Back to member"
+        },
+        {
+          "id": "1:106",
+          "text": "Only your own reports appear in your account."
+        },
+        {
+          "id": "1:108",
+          "text": "━━━━━━━━"
+        }
+      ],
+      "scrollFrames": [
+        {
+          "id": "1:93",
+          "overflow": "VERTICAL",
+          "width": 390,
+          "height": 712
+        }
+      ]
+    },
+    {
+      "key": "list",
+      "nodeId": "1:109",
+      "name": "list · Your reports",
+      "width": 390,
+      "height": 844,
+      "texts": [
+        {
+          "id": "3:32",
+          "text": "9:41"
+        },
+        {
+          "id": "4:36",
+          "text": "‹ Back"
+        },
+        {
+          "id": "1:111",
+          "text": "fancy"
+        },
+        {
+          "id": "1:112",
+          "text": ""
+        },
+        {
+          "id": "1:115",
+          "text": "Your reports"
+        },
+        {
+          "id": "1:116",
+          "text": "Your support"
+        },
+        {
+          "id": "1:118",
+          "text": "R-SYN-1 · Alex"
+        },
+        {
+          "id": "1:119",
+          "text": "Received"
+        },
+        {
+          "id": "I1:120;1:20",
+          "text": "View report"
+        },
+        {
+          "id": "1:123",
+          "text": "Status updates"
+        },
+        {
+          "id": "1:124",
+          "text": "When support starts reviewing or replies, the status will update here."
+        },
+        {
+          "id": "I1:125;1:22",
+          "text": "Check for an update"
+        },
+        {
+          "id": "I1:127;1:22",
+          "text": "Back to member"
+        },
+        {
+          "id": "1:129",
+          "text": "Checking for an update never submits a second report."
+        },
+        {
+          "id": "1:131",
+          "text": "━━━━━━━━"
+        }
+      ],
+      "scrollFrames": [
+        {
+          "id": "1:113",
+          "overflow": "VERTICAL",
+          "width": 390,
+          "height": 712
+        }
+      ]
+    },
+    {
+      "key": "progress",
+      "nodeId": "1:132",
+      "name": "progress · In progress",
+      "width": 390,
+      "height": 844,
+      "texts": [
+        {
+          "id": "3:34",
+          "text": "9:41"
+        },
+        {
+          "id": "4:39",
+          "text": "‹ Back"
+        },
+        {
+          "id": "1:134",
+          "text": "fancy"
+        },
+        {
+          "id": "1:135",
+          "text": ""
+        },
+        {
+          "id": "1:138",
+          "text": "In progress"
+        },
+        {
+          "id": "1:139",
+          "text": "Your private report · Reference R-SYN-1"
+        },
+        {
+          "id": "1:141",
+          "text": "Your report is being reviewed"
+        },
+        {
+          "id": "1:142",
+          "text": "A reply will appear here when available."
+        },
+        {
+          "id": "1:143",
+          "text": "Your report remains private."
+        },
+        {
+          "id": "I1:144;1:20",
+          "text": "Check for an update"
+        },
+        {
+          "id": "I1:146;1:22",
+          "text": "Your reports"
+        },
+        {
+          "id": "1:148",
+          "text": "Your report stays private. Nothing is sent automatically."
+        },
+        {
+          "id": "1:150",
+          "text": "━━━━━━━━"
+        }
+      ],
+      "scrollFrames": [
+        {
+          "id": "1:136",
+          "overflow": "VERTICAL",
+          "width": 390,
+          "height": 712
+        }
+      ]
+    },
+    {
+      "key": "reply",
+      "nodeId": "1:151",
+      "name": "reply · Reply available",
+      "width": 390,
+      "height": 844,
+      "texts": [
+        {
+          "id": "3:36",
+          "text": "9:41"
+        },
+        {
+          "id": "4:42",
+          "text": "‹ Back"
+        },
+        {
+          "id": "1:153",
+          "text": "fancy"
+        },
+        {
+          "id": "1:154",
+          "text": ""
+        },
+        {
+          "id": "1:157",
+          "text": "Reply available"
+        },
+        {
+          "id": "1:158",
+          "text": "Your private report · Reference R-SYN-1"
+        },
+        {
+          "id": "1:160",
+          "text": "Support reply"
+        },
+        {
+          "id": "1:161",
+          "text": "We have reviewed the information you shared. Please avoid further contact and let us know if you need more help."
+        },
+        {
+          "id": "1:162",
+          "text": "This reply contains only the information support can share with you."
+        },
+        {
+          "id": "I1:163;1:20",
+          "text": "Your reports"
+        },
+        {
+          "id": "I1:165;1:22",
+          "text": "Back to member"
+        },
+        {
+          "id": "1:167",
+          "text": "Your report stays private. Nothing is sent automatically."
+        },
+        {
+          "id": "1:169",
+          "text": "━━━━━━━━"
+        }
+      ],
+      "scrollFrames": [
+        {
+          "id": "1:155",
+          "overflow": "VERTICAL",
+          "width": 390,
+          "height": 712
+        }
+      ]
+    },
+    {
+      "key": "validation",
+      "nodeId": "1:170",
+      "name": "validation · Choose a reason",
+      "width": 390,
+      "height": 844,
+      "texts": [
+        {
+          "id": "3:38",
+          "text": "9:41"
+        },
+        {
+          "id": "4:45",
+          "text": "‹ Back"
+        },
+        {
+          "id": "1:172",
+          "text": "fancy"
+        },
+        {
+          "id": "1:173",
+          "text": ""
+        },
+        {
+          "id": "1:176",
+          "text": "Choose a reason"
+        },
+        {
+          "id": "1:177",
+          "text": "Your report has not been sent."
+        },
+        {
+          "id": "1:179",
+          "text": "Your draft is kept"
+        },
+        {
+          "id": "1:180",
+          "text": "Reason"
+        },
+        {
+          "id": "1:182",
+          "text": "Choose a reason"
+        },
+        {
+          "id": "1:183",
+          "text": "Select a reason to continue."
+        },
+        {
+          "id": "1:184",
+          "text": "Your description (optional)"
+        },
+        {
+          "id": "1:186",
+          "text": "I received unwanted contact after our meal."
+        },
+        {
+          "id": "I1:187;1:20",
+          "text": "Choose a reason"
+        },
+        {
+          "id": "I1:189;1:22",
+          "text": "Cancel"
+        },
+        {
+          "id": "1:191",
+          "text": "Your report stays private. Nothing is sent automatically."
+        },
+        {
+          "id": "1:193",
+          "text": "━━━━━━━━"
+        }
+      ],
+      "scrollFrames": [
+        {
+          "id": "1:174",
+          "overflow": "VERTICAL",
+          "width": 390,
+          "height": 712
+        }
+      ]
+    },
+    {
+      "key": "failure",
+      "nodeId": "1:194",
+      "name": "failure · Your report wasn’t sent",
+      "width": 390,
+      "height": 844,
+      "texts": [
+        {
+          "id": "3:40",
+          "text": "9:41"
+        },
+        {
+          "id": "4:48",
+          "text": "‹ Back"
+        },
+        {
+          "id": "1:196",
+          "text": "fancy"
+        },
+        {
+          "id": "1:197",
+          "text": ""
+        },
+        {
+          "id": "1:200",
+          "text": "Your report wasn’t sent"
+        },
+        {
+          "id": "1:201",
+          "text": "Please try again when you’re ready."
+        },
+        {
+          "id": "1:203",
+          "text": "Your draft is kept"
+        },
+        {
+          "id": "1:204",
+          "text": "Reason: Harassment or unwanted contact"
+        },
+        {
+          "id": "1:205",
+          "text": "I received unwanted contact after our meal."
+        },
+        {
+          "id": "I1:206;1:20",
+          "text": "Try sending again"
+        },
+        {
+          "id": "I1:208;1:22",
+          "text": "Back to report"
+        },
+        {
+          "id": "1:210",
+          "text": "A definite failure can be retried. An unknown result must be checked first."
+        },
+        {
+          "id": "1:212",
+          "text": "━━━━━━━━"
+        }
+      ],
+      "scrollFrames": [
+        {
+          "id": "1:198",
+          "overflow": "VERTICAL",
+          "width": 390,
+          "height": 712
+        }
+      ]
+    },
+    {
+      "key": "otheraccount",
+      "nodeId": "1:213",
+      "name": "otheraccount · Your reports",
+      "width": 390,
+      "height": 844,
+      "texts": [
+        {
+          "id": "3:42",
+          "text": "9:41"
+        },
+        {
+          "id": "4:51",
+          "text": "‹ Back"
+        },
+        {
+          "id": "1:215",
+          "text": "fancy"
+        },
+        {
+          "id": "1:216",
+          "text": ""
+        },
+        {
+          "id": "1:219",
+          "text": "Your reports"
+        },
+        {
+          "id": "1:220",
+          "text": "You’re using a different account."
+        },
+        {
+          "id": "1:222",
+          "text": "No reports yet"
+        },
+        {
+          "id": "1:223",
+          "text": "You have not submitted any reports with this account."
+        },
+        {
+          "id": "I1:224;1:22",
+          "text": "Back to member"
+        },
+        {
+          "id": "1:226",
+          "text": "Reports, drafts and late responses from another account are not shown."
+        },
+        {
+          "id": "1:228",
+          "text": "━━━━━━━━"
+        }
+      ],
+      "scrollFrames": [
+        {
+          "id": "1:217",
+          "overflow": "VERTICAL",
+          "width": 390,
+          "height": 712
+        }
+      ]
+    },
+    {
+      "key": "signedout",
+      "nodeId": "1:229",
+      "name": "signedout · Sign in to report",
+      "width": 390,
+      "height": 844,
+      "texts": [
+        {
+          "id": "3:44",
+          "text": "9:41"
+        },
+        {
+          "id": "4:54",
+          "text": "‹ Back"
+        },
+        {
+          "id": "1:231",
+          "text": "fancy"
+        },
+        {
+          "id": "1:232",
+          "text": ""
+        },
+        {
+          "id": "1:235",
+          "text": "Sign in to report"
+        },
+        {
+          "id": "1:236",
+          "text": "Return to this member after signing in."
+        },
+        {
+          "id": "1:238",
+          "text": "Keep your report private"
+        },
+        {
+          "id": "1:239",
+          "text": "Sign in before sending a report. Signing in won’t send it automatically."
+        },
+        {
+          "id": "I1:240;1:20",
+          "text": "Continue after sign-in"
+        },
+        {
+          "id": "I1:242;1:22",
+          "text": "Cancel"
+        },
+        {
+          "id": "1:244",
+          "text": "Your report stays private. Nothing is sent automatically."
+        },
+        {
+          "id": "1:246",
+          "text": "━━━━━━━━"
+        }
+      ],
+      "scrollFrames": [
+        {
+          "id": "1:233",
+          "overflow": "VERTICAL",
+          "width": 390,
+          "height": 712
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "source": "4:23",
+      "label": "Navigation / Back",
+      "destination": "1:109"
+    },
+    {
+      "source": "1:37",
+      "label": "Action / Report member",
+      "destination": "1:44"
+    },
+    {
+      "source": "1:39",
+      "label": "Action / Your reports",
+      "destination": "1:109"
+    },
+    {
+      "source": "4:26",
+      "label": "Navigation / Back",
+      "destination": "1:25"
+    },
+    {
+      "source": "1:61",
+      "label": "Action / Send private report",
+      "destination": "1:72"
+    },
+    {
+      "source": "1:63",
+      "label": "Action / Cancel",
+      "destination": "1:25"
+    },
+    {
+      "source": "4:29",
+      "label": "Navigation / Back",
+      "destination": "1:109"
+    },
+    {
+      "source": "1:84",
+      "label": "Action / Check original request",
+      "destination": "1:89"
+    },
+    {
+      "source": "4:32",
+      "label": "Navigation / Back",
+      "destination": "1:109"
+    },
+    {
+      "source": "1:102",
+      "label": "Action / Your reports",
+      "destination": "1:109"
+    },
+    {
+      "source": "1:104",
+      "label": "Action / Back to member",
+      "destination": "1:25"
+    },
+    {
+      "source": "4:35",
+      "label": "Navigation / Back",
+      "destination": "1:25"
+    },
+    {
+      "source": "1:120",
+      "label": "Action / View report",
+      "destination": "1:89"
+    },
+    {
+      "source": "1:125",
+      "label": "Action / Check for an update",
+      "destination": "1:132"
+    },
+    {
+      "source": "1:127",
+      "label": "Action / Back to member",
+      "destination": "1:25"
+    },
+    {
+      "source": "4:38",
+      "label": "Navigation / Back",
+      "destination": "1:109"
+    },
+    {
+      "source": "1:144",
+      "label": "Action / Check for an update",
+      "destination": "1:151"
+    },
+    {
+      "source": "1:146",
+      "label": "Action / Your reports",
+      "destination": "1:109"
+    },
+    {
+      "source": "4:41",
+      "label": "Navigation / Back",
+      "destination": "1:109"
+    },
+    {
+      "source": "1:163",
+      "label": "Action / Your reports",
+      "destination": "1:109"
+    },
+    {
+      "source": "1:165",
+      "label": "Action / Back to member",
+      "destination": "1:25"
+    },
+    {
+      "source": "4:44",
+      "label": "Navigation / Back",
+      "destination": "1:44"
+    },
+    {
+      "source": "1:187",
+      "label": "Action / Choose a reason",
+      "destination": "1:44"
+    },
+    {
+      "source": "1:189",
+      "label": "Action / Cancel",
+      "destination": "1:25"
+    },
+    {
+      "source": "4:47",
+      "label": "Navigation / Back",
+      "destination": "1:44"
+    },
+    {
+      "source": "1:206",
+      "label": "Action / Try sending again",
+      "destination": "1:89"
+    },
+    {
+      "source": "1:208",
+      "label": "Action / Back to report",
+      "destination": "1:44"
+    },
+    {
+      "source": "4:50",
+      "label": "Navigation / Back",
+      "destination": "1:25"
+    },
+    {
+      "source": "1:224",
+      "label": "Action / Back to member",
+      "destination": "1:25"
+    },
+    {
+      "source": "4:53",
+      "label": "Navigation / Back",
+      "destination": "1:25"
+    },
+    {
+      "source": "1:240",
+      "label": "Action / Continue after sign-in",
+      "destination": "1:44"
+    },
+    {
+      "source": "1:242",
+      "label": "Action / Cancel",
+      "destination": "1:25"
+    }
+  ],
+  "missingTargets": [],
+  "nodeTypes": {
+    "FRAME": 96,
+    "COMPONENT": 3,
+    "TEXT": 158,
+    "INSTANCE": 21
+  },
+  "imageNodes": [],
+  "fonts": [
+    "Arial"
+  ],
+  "flowStartingPoints": [
+    {
+      "nodeId": "1:25",
+      "name": "J07 · complete representative journey"
+    }
+  ]
+}

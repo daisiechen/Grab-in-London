@@ -1,0 +1,111 @@
+{
+  "journey": "J09",
+  "uxRevision": "UX-r01",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "prd": "docs/product/journeys/j09/requirements.zh-CN.md",
+  "pmCoverage": "docs/product/journeys/j09/coverage.json",
+  "scenarios": [
+    {
+      "scenarioId": "J09-S01",
+      "prdScenario": "有权support读本案→开始处理；analyst、MFA失效或无case权限时事实不展示且写入拒绝。",
+      "demo": "demo/journeys/j09/index.html",
+      "figmaNodes": [
+        "1:25",
+        "1:42",
+        "1:199"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    },
+    {
+      "scenarioId": "J09-S02",
+      "prdScenario": "结束后7天前1ms提交被拒；恰好满7天可追加present/absent修订，原self/host报告不变。",
+      "demo": "demo/journeys/j09/index.html",
+      "figmaNodes": [
+        "1:84",
+        "1:59"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    },
+    {
+      "scenarioId": "J09-S03",
+      "prdScenario": "409加载新版本/保留理由再确认；503确定失败保稿，无新增修订；取消不写。",
+      "demo": "demo/journeys/j09/index.html",
+      "figmaNodes": [
+        "1:168",
+        "1:185",
+        "1:42"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    },
+    {
+      "scenarioId": "J09-S04",
+      "prdScenario": "纠错absent→公评隐藏/体验排除/单场依赖联系暂停→新snapshot，旧snapshot不变；增加其他有效依据则联系保留；回复保存后有REPLIED与审计。",
+      "demo": "demo/journeys/j09/index.html",
+      "figmaNodes": [
+        "1:100",
+        "1:129",
+        "1:150"
+      ],
+      "coverageMode": "fixed-sample-prototype-and-state-contract",
+      "contract": "handoff.zh-CN.md#共享状态与交付契约",
+      "limits": "Figma固定状态和导航；任意输入、真实服务、身份/异步外部事件不在画布运行。"
+    }
+  ],
+  "sourceFamilies": [
+    {
+      "sourceRequirements": "J09 / M07-02/03 / D08-AC01 / 主PRD§0.5/0.6",
+      "prdSection": "完整路径；精确规则、字段及权限",
+      "pmDemoCoverageMode": "interactive-synthetic",
+      "designContract": "handoff.zh-CN.md#共享状态与交付契约",
+      "figmaNodes": [
+        "1:199",
+        "1:25",
+        "1:42",
+        "1:59",
+        "1:84"
+      ],
+      "coverageMode": "representative-design-plus-shared-contract"
+    },
+    {
+      "sourceRequirements": "D08-AC02 / QA-JOURNEY-011 / SupportCorrection合同",
+      "prdSection": "精确规则、字段及权限；异常、返回与取消",
+      "pmDemoCoverageMode": "interactive-synthetic; real evidence NOT_RUN",
+      "designContract": "handoff.zh-CN.md#共享状态与交付契约",
+      "figmaNodes": [
+        "1:168",
+        "1:185",
+        "1:42",
+        "1:59",
+        "1:84"
+      ],
+      "coverageMode": "representative-design-plus-shared-contract"
+    },
+    {
+      "sourceRequirements": "D08-AC03 / 反馈联系资格/新快照传播",
+      "prdSection": "传播与状态",
+      "pmDemoCoverageMode": "interactive-synthetic finite model",
+      "designContract": "handoff.zh-CN.md#共享状态与交付契约",
+      "figmaNodes": [
+        "1:100",
+        "1:129",
+        "1:150"
+      ],
+      "coverageMode": "representative-design-plus-shared-contract"
+    },
+    {
+      "sourceRequirements": "真实case/MFA授权、幂等结果未知查询、事务锁与跨服务可靠传播/保留策略",
+      "prdSection": "精确规则、字段及权限；异常、返回与取消；不做与验收边界",
+      "pmDemoCoverageMode": "documented-only",
+      "designContract": "handoff.zh-CN.md#共享状态与交付契约",
+      "figmaNodes": [],
+      "coverageMode": "documented-only-preserved"
+    }
+  ],
+  "boundary": "原PM文档要求仍有效；代表画板/连线不等同所有需求已可交互或生产验证。"
+}
