@@ -1,0 +1,192 @@
+{
+  "issues": [
+    "R11-I2-PROT-03",
+    "R11-I2-PROT-04"
+  ],
+  "scrollOrigin": 0,
+  "notices": [
+    {
+      "id": "1:827",
+      "height": 30.25,
+      "text": [
+        {
+          "id": "1:828",
+          "text": "Reservation reported by the host; not verified by the app. ",
+          "y": -0.75,
+          "height": 15
+        },
+        {
+          "id": "1:829",
+          "text": "Google Maps opens the neighbourhood.",
+          "y": 14.25,
+          "height": 15
+        }
+      ]
+    },
+    {
+      "id": "19:1087",
+      "height": 30.25,
+      "text": [
+        {
+          "id": "19:1088",
+          "text": "Reservation reported by the host; not verified by the app. ",
+          "y": -0.75,
+          "height": 15
+        },
+        {
+          "id": "19:1089",
+          "text": "Google Maps opens the neighbourhood.",
+          "y": 14.25,
+          "height": 15
+        }
+      ]
+    },
+    {
+      "id": "19:1242",
+      "height": 30.25,
+      "text": [
+        {
+          "id": "19:1243",
+          "text": "Reservation reported by the host; not verified by the app. ",
+          "y": -0.75,
+          "height": 15
+        },
+        {
+          "id": "19:1244",
+          "text": "Google Maps opens the neighbourhood.",
+          "y": 14.25,
+          "height": 15
+        }
+      ]
+    },
+    {
+      "id": "19:1414",
+      "height": 30.25,
+      "text": [
+        {
+          "id": "19:1415",
+          "text": "Reservation reported by the host; not verified by the app. ",
+          "y": -0.75,
+          "height": 15
+        },
+        {
+          "id": "19:1416",
+          "text": "Google Maps opens the neighbourhood.",
+          "y": 14.25,
+          "height": 15
+        }
+      ]
+    },
+    {
+      "id": "19:1608",
+      "height": 30.25,
+      "text": [
+        {
+          "id": "19:1609",
+          "text": "Reservation reported by the host; not verified by the app. ",
+          "y": -0.75,
+          "height": 15
+        },
+        {
+          "id": "19:1610",
+          "text": "Google Maps opens the neighbourhood.",
+          "y": 14.25,
+          "height": 15
+        }
+      ]
+    },
+    {
+      "id": "19:1782",
+      "height": 30.25,
+      "text": [
+        {
+          "id": "19:1783",
+          "text": "Reservation reported by the host; not verified by the app. ",
+          "y": -0.75,
+          "height": 15
+        },
+        {
+          "id": "19:1784",
+          "text": "Google Maps opens the neighbourhood.",
+          "y": 14.25,
+          "height": 15
+        }
+      ]
+    }
+  ],
+  "minimumText": [
+    {
+      "id": "3:2364",
+      "text": "Minimum 3 · Capacity 4 (including you)\nApplications close Fri 23 Oct · 18:00 London time\nCuisine / dietary: Not provided · Host-reported\nBooking statement: The Little Table, Fri 23 Oct · 19:00, 4 people · updated 23 Oct 13:00 BST"
+    },
+    {
+      "id": "1:804",
+      "text": "3"
+    },
+    {
+      "id": "3:2434",
+      "text": "Minimum 3 · Capacity 4 (including you)\nApplications close Fri 23 Oct · 18:00 London time\nCuisine / dietary: Not provided · Host-reported\nBooking statement: The Little Table, Fri 23 Oct · 19:00, 4 people · updated 23 Oct 13:00 BST"
+    },
+    {
+      "id": "3:3182",
+      "text": "Minimum 3 · Capacity 4 (including you)\nApplications close Fri 23 Oct · 18:00 London time\nCuisine / dietary: Not provided · Host-reported\nBooking statement: The Little Table, Fri 23 Oct · 19:00, 4 people · updated 23 Oct 13:00 BST"
+    },
+    {
+      "id": "3:3317",
+      "text": "Minimum 3 · Capacity 4 (including you)\nApplications close Fri 23 Oct · 18:00 London time\nCuisine / dietary: Not provided · Host-reported\nBooking statement: The Little Table, Fri 23 Oct · 19:00, 4 people · updated 23 Oct 13:00 BST"
+    },
+    {
+      "id": "3:3456",
+      "text": "Minimum 3 · Capacity 4 (including you)\nApplications close Fri 23 Oct · 18:00 London time\nCuisine / dietary: Not provided · Host-reported\nBooking statement: The Little Table, Fri 23 Oct · 19:00, 4 people · updated 23 Oct 13:00 BST"
+    },
+    {
+      "id": "19:1064",
+      "text": "3"
+    },
+    {
+      "id": "19:1219",
+      "text": "3"
+    },
+    {
+      "id": "19:1391",
+      "text": "3"
+    },
+    {
+      "id": "19:1585",
+      "text": "3"
+    },
+    {
+      "id": "19:1759",
+      "text": "3"
+    },
+    {
+      "id": "56:1059",
+      "text": "Minimum 3 · Capacity 4 (including you)\nApplications close Fri 23 Oct · 18:00 London time\nCuisine / dietary: Not provided · Host-reported\nBooking statement: The Little Table, Fri 23 Oct · 19:00, 4 people · updated 23 Oct 13:00 BST"
+    },
+    {
+      "id": "56:1180",
+      "text": "Minimum 3 · Capacity 4 (including you)\nApplications close Fri 23 Oct · 18:00 London time\nCuisine / dietary: Not provided · Host-reported\nBooking statement: The Little Table, Fri 23 Oct · 19:00, 4 people · updated 23 Oct 13:00 BST"
+    },
+    {
+      "id": "56:1616",
+      "text": "Minimum 3 · Capacity 4 (including you)\nApplications close Fri 23 Oct · 18:00 London time\nCuisine / dietary: Not provided · Host-reported\nBooking statement: The Little Table, Fri 23 Oct · 19:00, 4 people · updated 23 Oct 13:00 BST"
+    }
+  ],
+  "arrangeSample": {
+    "root": "1:24",
+    "minimumSelected": "1:149",
+    "minimumValue": 3,
+    "capacitySelected": "1:130",
+    "capacityValue": 4
+  },
+  "history": {
+    "oldNoteY": [
+      -0.75,
+      -0.75
+    ],
+    "oldPublishedMinimum": 2,
+    "originalScreenshot": "r11-published-edit-entry.png",
+    "businessMinimum2StillAllowed": true,
+    "confirmedSeatCountsUnchanged": true
+  }
+}

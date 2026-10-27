@@ -1,0 +1,292 @@
+{
+  "version": "IOS-0.1.0-dev.2",
+  "journey": "J02",
+  "date": "2026-10-27",
+  "reviewer": "PJ-IOS-DEV2",
+  "phase": "completed-bounded-prototype-click-retest",
+  "candidate": "0975177 (local HEAD supplied at handoff); Figma mutable public candidate",
+  "inputSHA256": {
+    "docs/reviews/r11/ios2-review.json": "202c41e194e8fc4dc652abb007e722468fcf460b3e2700a77c83cfa3d59829cd",
+    "docs/reviews/r11/prototype-supplement-2026-10-27.json": "704972da0d1dddd1d02b4dac0effc9630c6374302303ad70e101a842255ba1b6",
+    "docs/design/r10/ios-0.1.0-dev.2/artifact-manifest.json": "feb061dbbce045d26c28db9b7cfa52e5fcffb6d9fddbabebee3aca68885d84b5",
+    "docs/design/r10/ios-0.1.0-dev.2/evidence/r11-published-edit-readback.json": "58d3db7ebf2f1b1f6eac9550e483d14d7b4cd01868218f87cb12d4b474e16b75",
+    "docs/design/r10/ios-0.1.0-dev.2/evidence/r11-published-layout-min3-readback.json": "0dda7bb68cf93b61605924a2cba4680cadf16d5c138c866b019365b656dc3d91"
+  },
+  "cases": [
+    {
+      "id": "I2-P01-arrange-costs",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Arrange → Introduce → Costs",
+        "Inspect selected capacity/minimum, London time, budget/payment",
+        "Try Continue before reservation confirmation; select confirmation"
+      ],
+      "observed": "4 selected; minimum 3; Fri23Oct19:00 London, deadline18:00; pay at restaurant; £25–35/person. Reservation checkbox gates Continue.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=1-24&starting-point-node-id=1%3A24"
+    },
+    {
+      "id": "I2-P02-explicit-publish",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Continue to Review",
+        "Try Publish while arrangements unchecked",
+        "Check arrangements then Publish"
+      ],
+      "observed": "Publish disabled before explicit check; enabled afterwards and reached published table with confirmation toast.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=1-24&starting-point-node-id=1%3A24"
+    },
+    {
+      "id": "I2-P03-pending",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Open direct scenario start",
+        "Open cancellation → Keep",
+        "Reopen cancellation → confirm",
+        "Return via visible parent/Back"
+      ],
+      "observed": "1of4 confirmed, Emma Pending; Keep preserved request. Confirmed cancellation persisted in cancelled parent, no active meal restored.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=1-880&starting-point-node-id=1%3A880"
+    },
+    {
+      "id": "I2-P03-approved",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Open direct scenario start",
+        "Open cancellation → Keep",
+        "Reopen cancellation → confirm",
+        "Return via visible parent/Back"
+      ],
+      "observed": "2of4 confirmed, Emma Confirmed; Keep preserved count. Confirmed cancellation persisted in cancelled parent, no active meal restored.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=3-3809&starting-point-node-id=3%3A3809"
+    },
+    {
+      "id": "I2-P03-declined",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Open direct scenario start",
+        "Open cancellation → Keep",
+        "Reopen cancellation → confirm",
+        "Return via visible parent/Back"
+      ],
+      "observed": "Emma Declined; no reapply action; Keep preserved declined state. Confirmed cancellation persisted in cancelled parent, no active meal restored.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=6-185&starting-point-node-id=6%3A185"
+    },
+    {
+      "id": "I2-P03-updated",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Open direct scenario start",
+        "Open cancellation → Keep",
+        "Reopen cancellation → confirm",
+        "Return via visible parent/Back"
+      ],
+      "observed": "Scroll revealed host-reported booking for2 people, Not verified by Fancy; Keep preserved2of4. Confirmed cancellation persisted in cancelled parent, no active meal restored.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=3-4021&starting-point-node-id=3%3A4021"
+    },
+    {
+      "id": "I2-P04-insufficient",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Open minimum-not-met warning",
+        "Click View cancelled meal",
+        "Return to parent/card"
+      ],
+      "observed": "Warning says below minimum and cancelled even if worker runs late; persistent cancelled card labelled Minimum not met. No Keep is offered in already-cancelled state.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=3-4538&starting-point-node-id=3%3A4538"
+    },
+    {
+      "id": "I2-P05-ai-replace",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Open AI draft",
+        "Click Review",
+        "Click Replace"
+      ],
+      "observed": "Draft A friendly local supper; Review opened explicit Replace your introduction?; Replace applied draft. Focused continuation separately verified editable destination/no auto-publish or consent (I2-P08).",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=3-3526&starting-point-node-id=3%3A3526"
+    },
+    {
+      "id": "I2-P06-costs-scroll-helper",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Open Costs1:449 direct public start",
+        "At top observe£25–35; actual wheel-scroll to two positions",
+        "Click tucked Ask Fancy → compact card; click visible hide/back → tucked",
+        "Repeat on confirmedCosts4:164"
+      ],
+      "observed": "Both Costs screens: £25–35/person remained visible at top and actual scrolled positions; expanded/hidden helper did not cover budget. Browser reported desktop and phone widths.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=1-449&starting-point-node-id=1%3A449",
+      "additionalEntryUrls": [
+        "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=4-164&starting-point-node-id=4%3A164"
+      ]
+    },
+    {
+      "id": "I2-P07-edit-cancel",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Real wheel-scroll Published→Edit arrangements→56:290",
+        "Upper-left Cancel at56:290→Published",
+        "Repeat actual Cancel at56:584/56:725/56:857/56:990/56:1111"
+      ],
+      "observed": "Each reached Cancel returned original date Fri23Oct19:00London, The Little Table/Soho, budget£25–35, count1of4; no approval/duplicate publication. Older candidate showed2–4 range; this is explicitly not final03/04 range evidence. Alternate-map-marker selection was not confirmed; no arbitrary changed-draft rollback claimed.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=1-719&starting-point-node-id=1%3A719",
+      "firstRun": {
+        "status": "BLOCKED",
+        "steps": [
+          "Open Published1:719",
+          "Inspect Host to update reservation",
+          "Click Manage applications →1:880",
+          "Look for Edit arrangements/visible equivalent"
+        ],
+        "observed": "No Edit arrangements action exposed; reservation row informational and Manage applications enters applicants. No actual edit/cancel preservation test possible. Persistent Your meal is published. Your table starts here. toast obscured lower host-booking area."
+      }
+    },
+    {
+      "id": "I2-P08-ai-keep-manual",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "AI3:3526 → Review → Keep original",
+        "Inspect editable Introduction",
+        "Fresh scenario → Review → Replace with this draft",
+        "Inspect editable Introduction and absence of publish/consent transition"
+      ],
+      "observed": "Keep original retained A friendly local supper and An easy dinner with new neighbours and friendly conversation. Replace transferred draft to editable Introduction; no publishing or consent triggered.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=3-3526&starting-point-node-id=3%3A3526"
+    },
+    {
+      "id": "I2-P09-map-readable",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Explicit refresh Published1:719 latest candidate",
+        "Actual wheel-scroll map explanation"
+      ],
+      "observed": "Reservation reported by the host; not verified by the app. and Google Maps opens the neighbourhood. appeared on separated readable lines, no overlap.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=1-719&starting-point-node-id=1%3A719"
+    },
+    {
+      "id": "I2-P10-min-cap-consistency",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Refresh Published:3–4 people/1of4",
+        "Wheel→Edit arrangements:capacity4/minimum3 selected",
+        "Upper-left Cancel→Published inspect original facts",
+        "Reenter Edit→Introduce→Costs→explicit reservation→Review"
+      ],
+      "observed": "Published3–4 including host,1of4; Edit4people/minimum3; Cancel retains Fri23Oct19:00London/The Little Table/SohoLondon/£25–35/3–4/1of4. Review Minimum3 · Capacity4(including you); unchecked Save disabled; no final-run save performed.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=1-719&starting-point-node-id=1%3A719"
+    },
+    {
+      "id": "I2-P11-fixed-sample-save",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Try unchecked Continue",
+        "Explicit reservation check→56:857→Review56:990",
+        "Explicit review check→56:1111",
+        "Save changes→Published"
+      ],
+      "observed": "Unchecked gate stayed disabled; fixed existing values saved with Your changes are saved, count1of4 and original values. Does not demonstrate genuinely changed-field persistence or backend save. Direct56:1194 immediately redirects; stable saving screen not separately observed.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=56-725&starting-point-node-id=56%3A725"
+    },
+    {
+      "id": "I2-P12-first-approval-lock",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Open Approved3:3809",
+        "Click disabled Edit arrangements",
+        "Open Updated3:4021",
+        "Click disabled Edit arrangements"
+      ],
+      "observed": "Both grey Edit controls non-actionable, URL/state unchanged; visible permanent first-approval key-arrangement lock. No new editing authority after approval.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=3-3809&starting-point-node-id=3%3A3809"
+    },
+    {
+      "id": "I2-P13-toast-timeout",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Explicit refresh Published latest candidate",
+        "Wait about2.2s without clicking toast",
+        "Actual wheel to Host booking/Edit arrangements"
+      ],
+      "observed": "No success toast remained after about2.2s; lower Host booking and Edit arrangements unobscured. Tested actual timeout, not inferred native reaction. Manual-dismiss alternative not separately claimed.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=1-719&starting-point-node-id=1%3A719"
+    }
+  ],
+  "history": [
+    {
+      "id": "R11-I2-05",
+      "firstFailure": "Helper covered budget after long scroll in earlier public-proto task.",
+      "priorRepairVerification": "Independent screenshot/live geometry/native toggle closure; not Presentation scroll.",
+      "currentRetest": "PASS: actual wheel scrolling and helper expand/collapse on both Costs screens; budget remained visible."
+    },
+    {
+      "id": "R11-I2-PROT-01",
+      "status": "CLOSED_AFTER_BROWSER_RETEST",
+      "firstFailure": "Published1:719 exposes no Edit arrangements entry; edit cancel cannot be tested.",
+      "requirement": "J02 frozen PRD §6/§7: before first guest approval host may edit arrangements; cancel must preserve original.",
+      "owner": "UX-2 via root",
+      "relatedObservation": "Published success toast remained over lower host-booking area.",
+      "repairRetest": "Real wheel scroll reaches Edit; six actual Cancel checkpoints return original facts. Final layout/minimum refresh separate."
+    },
+    {
+      "id": "R11-I2-PROT-02",
+      "status": "CLOSED_AFTER_BROWSER_RETEST",
+      "firstFailure": "Published1:719 persistent success toast obscures lower host-booking area.",
+      "owner": "UX-2 via root",
+      "repairRetest": "Actual2.2s wait and wheel: no persistent overlay."
+    },
+    {
+      "id": "R11-I2-PROT-03",
+      "status": "CLOSED_AFTER_BROWSER_RETEST",
+      "firstFailure": "Published map explanatory texts1:828/1:829 share y and overlap; independently found by root screenshot, author confirmed live.",
+      "firstMethod": "native-inspection",
+      "repairRetest": "Refreshed actual wheel: two readable separated explanatory lines."
+    },
+    {
+      "id": "R11-I2-PROT-04",
+      "status": "CLOSED_AFTER_BROWSER_RETEST",
+      "firstFailure": "Selected minimum3/cap4 but Published2–4 and ReviewMinimum2; stale representative facts confirmed by original UX; legal business minimum2 is not being removed.",
+      "firstMethod": "native-inspection",
+      "repairRetest": "Refreshed Published3–4→Editmin3/cap4→Cancelretains3–4/1of4; ReviewMinimum3."
+    }
+  ],
+  "observations": [
+    "Updated booking Not verified by Fancy is intentional host-reported boundary.",
+    "Ask Fancy back arrow worked; drag handle/backdrop/Escape were not consistently discoverable; not classified business defect."
+  ],
+  "remainingUnverified": [
+    "Actual accounts/authentication, persistence, providers, AI/model calls, concurrency, backend lifecycle, notifications, native keyboard/device behavior and real QA remain untested.",
+    "29 engineering product scenarios remain NOT_RUN; prototype evidence is not production QA.",
+    "Alternate-map-marker selection/custom edit values were not confirmed; fixed-sample Save toast is not changed-field persistence or real server save.",
+    "Saving56:1194 redirected immediately; no stable saving-screen visual check."
+  ],
+  "noRealServicesCalled": true,
+  "noFigmaEdits": true,
+  "candidateBoundary": "First edit/cancel/save browser run started before layout/minimum delta and observed old2–4 representative range. Final same-session explicit-refresh run separately verified repaired3–4/minimum3, separated map lines and timed toast. Prior functionality evidence is not mislabeled as final text evidence.",
+  "historicalInputSHA256": {
+    "docs/reviews/r11/ios2-review.json": "202c41e194e8fc4dc652abb007e722468fcf460b3e2700a77c83cfa3d59829cd",
+    "docs/reviews/r11/prototype-supplement-2026-10-27.json": "704972da0d1dddd1d02b4dac0effc9630c6374302303ad70e101a842255ba1b6",
+    "docs/design/r10/ios-0.1.0-dev.2/artifact-manifest.json": "182ff1be7886a7c9f43e497d77bd3c5d9d8aa1d419503dca148a6e658571278f"
+  },
+  "summary": {
+    "PASS": 16,
+    "FAIL": 0,
+    "BLOCKED": 0,
+    "NOT_RUN": 0
+  }
+}

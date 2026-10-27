@@ -115,3 +115,5 @@
 说明：直达 Pending / Needs support / Completed 仅建立外部事件代表前置，不表示真实清理已发生；示例码不是已验证真实认证；回执文案不是服务端访问关闭证据。
 
 [结构化记录](ios4-prototype-retest-2026-10-27.json)。旧设计评审签署保留为历史快照，本次补充覆盖本次变更，不重写旧签署。
+
+修后候选绑定：`e53de6ea0be900830b23a7fc054b0aa38d64a629`；对应 manifest、原生读回、修后截图和回归测试的 SHA256 见结构化记录 `postRepairInputSHA256`。首次基线与修后候选分别保留。

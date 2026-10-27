@@ -69,7 +69,7 @@
     "docs/engineering/r11/ios-0.1.0-dev.2/plan.zh-CN.md": "48b141461fc30649a97146723466cb7bf5a6ed3934f6cc9bda961e6d34b6cb28",
     "docs/engineering/r11/ios-0.1.0-dev.2/work-packages.json": "f914c103ad27c76923451ae36ede327d65c2eec91b16a481154bb658452ad5e7",
     "docs/engineering/r11/ios-0.1.0-dev.2/test-matrix.json": "f84ebeb7ab9cc140cf9c018e47121d95054cb2b92f010642331b0aad5ead5724",
-    "docs/engineering/r11/ios-0.1.0-dev.2/input-manifest.json": "eef0a7aab5c53f0e3dc94cb5118b2ae89d041b3a5e8b61ddb1fa89028acbd043"
+    "docs/engineering/r11/ios-0.1.0-dev.2/input-manifest.json": "395edb4ac420e04ea4b3cf58e5a270b590c80cd84506cde70a58c1b9e15131ba"
   },
   "issuanceGates": [
     {
@@ -96,5 +96,32 @@
       "requirement": "Independent code review and required CI/PR main merge before exact tested SHA/build/migration/environment deployment; no business-state reversal on code rollback",
       "status": "not-issued"
     }
-  ]
+  ],
+  "prototypeRetest": {
+    "report": "docs/reviews/r11/ios2-prototype-retest-2026-10-27.json",
+    "date": "2026-10-27",
+    "status": "completed-bounded-prototype-click-retest",
+    "counts": {
+      "PASS": 16,
+      "FAIL": 0,
+      "BLOCKED": 0,
+      "NOT_RUN": 0
+    },
+    "boundary": "Historical design and independent engineering approvals preserved. Current prototype click supplement is not real implementation QA.",
+    "openFindingIds": [],
+    "reportSHA256": "fdfdc3e21df3a9d35925d7e8185adc786aceaa03a999588e49e79efde8b61d1b",
+    "closedAfterActualClickRetest": [
+      "R11-I2-PROT-01",
+      "R11-I2-PROT-02",
+      "R11-I2-PROT-03",
+      "R11-I2-PROT-04"
+    ],
+    "remainingUnverified": [
+      "Actual accounts/authentication, persistence, providers, AI/model calls, concurrency, backend lifecycle, notifications, native keyboard/device behavior and real QA remain untested.",
+      "29 engineering product scenarios remain NOT_RUN; prototype evidence is not production QA.",
+      "Alternate-map-marker selection/custom edit values were not confirmed; fixed-sample Save toast is not changed-field persistence or real server save.",
+      "Saving56:1194 redirected immediately; no stable saving-screen visual check."
+    ],
+    "currentDesignManifestSHA256": "feb061dbbce045d26c28db9b7cfa52e5fcffb6d9fddbabebee3aca68885d84b5"
+  }
 }

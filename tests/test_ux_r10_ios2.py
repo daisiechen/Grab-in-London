@@ -108,5 +108,46 @@ class HostJourneyDesignEvidence(unittest.TestCase):
                 self.assertEqual([a['type'] for a in actions],['SET_VARIABLE','SET_VARIABLE'])
                 self.assertEqual([a['variableValue']['value'] for a in actions],values)
 
+    def test_published_edit_candidate_preserves_cancel_and_lock(self):
+        proof=json.loads((D/'evidence/r11-published-edit-readback.json').read_text())
+        roots={r['id']:r for r in proof['roots']}
+        nodes={n['id']:n for r in roots.values() for n in r['actions']}
+        def actions(n):
+            return [a for rx in n.get('reactions',[]) for a in rx.get('actions',[])]
+        self.assertEqual(actions(nodes[proof['entry']])[0]['destinationId'],'56:290')
+        for rootid in proof['sourceMapping'].values():
+            root=roots[rootid]
+            self.assertTrue(any(t['text']=='Cancel' for t in root['text']))
+            cancel=next(n for n in root['actions'] if n['name']=='button / Go back')
+            self.assertEqual(actions(cancel)[0]['destinationId'],'1:719')
+        self.assertTrue(any(t['text']=='Save changes' for t in roots['56:1111']['text']))
+        save=actions(nodes[proof['save']])
+        self.assertEqual(save[-1]['destinationId'],'1:719')
+        self.assertEqual(save[0]['variableValue']['value'],'Your changes are saved.')
+        for root in proof['lockedSources']:
+            self.assertLess(root['opacity'],0.5)
+            self.assertEqual(root['reactions'],[])
+        timed=roots['1:719']['rootReactions'][0]
+        self.assertEqual(timed['trigger'],{'type':'AFTER_TIMEOUT','timeout':2})
+        self.assertFalse(timed['actions'][0]['variableValue']['value'])
+        self.assertFalse(actions(nodes['1:873'])[0]['variableValue']['value'])
+
+    def test_published_notice_lines_and_minimum_sample_are_consistent(self):
+        proof=json.loads((D/'evidence/r11-published-layout-min3-readback.json').read_text())
+        self.assertEqual(proof['scrollOrigin'],0)
+        self.assertEqual(proof['history']['oldNoteY'],[-0.75,-0.75])
+        self.assertEqual(proof['history']['oldPublishedMinimum'],2)
+        self.assertTrue(proof['history']['businessMinimum2StillAllowed'])
+        self.assertTrue(proof['history']['confirmedSeatCountsUnchanged'])
+        for n in proof['notices']:
+            first,second=n['text']
+            self.assertLessEqual(first['y']+first['height'],second['y'])
+            self.assertLessEqual(second['y']+second['height'],n['height'])
+        self.assertEqual(proof['arrangeSample']['minimumValue'],3)
+        self.assertEqual(proof['arrangeSample']['capacityValue'],4)
+        self.assertGreaterEqual(len(proof['minimumText']),14)
+        for row in proof['minimumText']:
+            self.assertTrue(row['text']=='3' or row['text'].startswith('Minimum 3 · Capacity 4'))
+
 if __name__ == '__main__':
     unittest.main()
