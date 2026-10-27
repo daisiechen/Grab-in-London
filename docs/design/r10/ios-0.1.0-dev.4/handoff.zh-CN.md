@@ -28,3 +28,5 @@
 交付验证为设计证据/映射校验，不是产品QA。Ready仍需Owner/PJ整包审阅、DS最终一致性确认及后续真实命名版本/冻结；RD实现与QA未启动。不以真实服务尚未开发冒充本轮已完成验证。
 
 验证命令：`python3 -m unittest discover -s tests -p test_ux_r10_ios34.py`，2项通过；检查冻结输入/包完整性、逐条映射、页面内连线、分离素材边界与关键权限状态。尚未执行Presentation真实端到端。
+
+r11定向修复（待PJ-IOS1独立复验）：R11-I34-02的实际Cancel为4:151（评审列4:152为失效ID）；填稿取消→15:72原成员草稿保留态，原举报入口可重入4:78，未经过Send。R11-I34-03为最小来源状态变体：NEEDS_SUPPORT→14:97→Back/Retry回5:275；COMPLETED新增沿原按钮的支持出口→14:138→Back/Retry回5:348；PENDING沿5:307→5:182。查询不代替worker推进。未自签通过。

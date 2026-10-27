@@ -75,16 +75,41 @@
     "evidence/figma-pending.png": "c035f93b968137b3a83df55dec4d31872c3cebe421645e740a724bcebc887aa6",
     "evidence/figma-report-form.png": "f3b68f630ebc821e1d5eff8cce8bc9e03af9c59b9c897d29824b0bdc017afa96",
     "evidence/figma-support.png": "f3a94fb5b2021e324483732d5f56851728dee999be0c08f7c45a0eae00ea3a1e",
+    "evidence/r11-report-ready.png": "ae506580e122af80fee703183fa82cb36865a4e8e69040a29fb8257fcd1d0a66",
+    "evidence/r11-support-needs.png": "f3a94fb5b2021e324483732d5f56851728dee999be0c08f7c45a0eae00ea3a1e",
     "evidence/readback-0-1.json": "4ded6e78bb40c6de72a937778a958935504b45a24ba2f38aa7e6e2008358a135",
     "evidence/readback-1-2.json": "da27e4e47adbb368d88e3f01b357362a29c76f5233eb052e935fa6e851ec968c",
     "evidence/source-member-dom.json": "2b9b7bcd1a8620f5719f96da12d3d8ebc6df8cfeaf3c853422a3516877201cd8",
     "evidence/source-report-sheet-v13.png": "1e1b84186e861b403c5b4d674e6d6ed4ef93f80b2998979218bc96bd4c7a7d5a",
     "evidence/source-settings-dom.json": "8ea056f7227b055e8d889eb7daa323e7ab792d2725edf239a953ef5ade2d56ec",
     "evidence/source-settings-v13.png": "7c7410f5c3bff5672823f0f50bc742f9a38211d5b1d2aadd765701a148d3a0e7",
-    "figma-readback.json": "739aaa8153c28a9371b40264f102d0b55a4ea1f9623aee111db502e900671515",
-    "handoff.zh-CN.md": "89edcaef61ee9775ad55fd1156dd3632a73c4f5eb249cf57b7cf78102f0aee86",
+    "figma-readback.json": "902f59a03b40a5bc0c0780ed1e7472d9331d20cbcd6334b67c68b7ced708d2a1",
+    "handoff.zh-CN.md": "5c592e76abb895d293374c117839f79c30e14272479f925e5c17a4a5b2a1eee0",
     "planning-input.json": "9641191753bac4a639ded7e90ced9736f1b3375d8912bab33a2b768b8e33abd3",
     "state-contracts.zh-CN.md": "895f23b56bb3545125873a056d34072249e82d4c8d5619633f01c1b3933e94af",
     "visual-comparison.html": "6041ed6c99677199e07f639ed4f081ec9b5508bc196acf4fa7565834db614743"
+  },
+  "r11Corrections": {
+    "R11-I34-02": {
+      "cancel": "4:151",
+      "draftMember": "15:72",
+      "reentry": "4:78",
+      "status": "awaiting-independent-review"
+    },
+    "R11-I34-03": {
+      "PENDING": {
+        "support": "5:307",
+        "return": "5:182"
+      },
+      "NEEDS_SUPPORT": {
+        "support": "14:97",
+        "return": "5:275"
+      },
+      "COMPLETED": {
+        "support": "14:138",
+        "return": "5:348"
+      },
+      "status": "awaiting-independent-review"
+    }
   }
 }

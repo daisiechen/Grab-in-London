@@ -1,0 +1,125 @@
+{
+  "iteration": "IOS-0.1.0-dev.4",
+  "status": "planned-not-executed",
+  "cases": [
+    {
+      "id": "I4-T01",
+      "requirements": "J07-S01",
+      "expected": "reason required; optional text empty allowed; Cancel retains object draft; zero createReport on cancel",
+      "level": "client/contract",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I4-T02",
+      "requirements": "J07-S01/S03",
+      "expected": "send accepted returns same reportId; duplicate/unknown query accepted once; failure retains draft",
+      "level": "API+DB",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I4-T03",
+      "requirements": "J07-S02/S04",
+      "expected": "own-only status/outcome; switch account invalidates old responses; support actor cannot disclose other data",
+      "level": "API/auth",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I4-T04",
+      "requirements": "J08-S01/S02",
+      "expected": "reauth expired/exact boundary and unchecked final consent reject; Cancel does not request deletion",
+      "level": "client+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I4-T05",
+      "requirements": "J08-S02/S05",
+      "expected": "barrier fault rollback; success atomically revokes session/public projection/future seats/contacts/group intervals/AI epoch/old export authorization before202",
+      "level": "DB+integration",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I4-T06",
+      "requirements": "J08-S03/S04",
+      "expected": "response lost: receipt stored first; recover original request once; token never URL/log/analytics; support accessible without login",
+      "level": "native+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I4-T07",
+      "requirements": "J08-S04/S06",
+      "expected": "PENDING/NEEDS_SUPPORT/COMPLETED→support→Back/Retry preserves current source state unless authority advanced; no business account return",
+      "level": "native+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I4-T08",
+      "requirements": "J08-S05/S06",
+      "expected": "durable per-step worker restart/retry; completed iff all required cleanup succeeded; no double side effects",
+      "level": "worker+DB",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I4-T09",
+      "requirements": "cross-version",
+      "expected": "I1 account isolation + I3 group/contact/read-only + support J09 + old admin export revocation; fixed cases with epoch/expectedVersion",
+      "level": "integration",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I4-T10",
+      "requirements": "visual/return regression",
+      "expected": "MVP forms/sheet/scroll/safe area, keyboard focus/44pt/VoiceOver, report Cancel and support source back regression",
+      "level": "native device",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I4-T11",
+      "requirements": "R11-E4-01 / J07-S01",
+      "expected": "Absent/empty/whitespace optional details accepted with valid reason; intentional contracts/API/generated SDK compatibility; reason still required",
+      "level": "contract+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I4-T12",
+      "requirements": "R11-E4-02 / J07-S03",
+      "expected": "Lost createReport response before reportId: same original POST actor/key/body replays once; IN_PROGRESS/CONFLICT/30-day expiry handled; authenticated server list shows same report, no client-fabricated history",
+      "level": "API+DB+SDK",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I4-T13",
+      "requirements": "R11-E4-03 / J08 recovery",
+      "expected": "Concurrent old failure does not replace newer COMPLETED; expired/lost receipt cannot query with public reference alone; wrong token denied; other account UI cannot auto-load old saved token. deletionStatus is bearer-receipt authorized without session; valid token holder is not rejected merely for signed-in account identity. Secure receipt serial expected-token guard.",
+      "level": "API+native",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I4-T14",
+      "requirements": "R11-E4-03 / J08 cleanup",
+      "expected": "Reuse Auth0DeletionStep selection when configured; Apple unavailable/missing provider config or retention policyApproved=false cannot become COMPLETED; retry only unfinished durable steps",
+      "level": "worker+DB+provider fixture",
+      "run": "NOT_RUN",
+      "evidence": null
+    }
+  ],
+  "appropriateCommands": [
+    "pnpm core:check",
+    "pnpm exec vitest run --project api <selected safety/deletion tests>",
+    "pnpm exec vitest run --project db <selected deletion/barrier/worker tests>",
+    "pnpm --filter @fancy/ios test -- <selected safety/settings tests>"
+  ],
+  "commandBoundary": "Select exact existing runner/test paths at lease issue; commands shown as templates, not executed checks or invented success."
+}

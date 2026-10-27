@@ -1,0 +1,78 @@
+{
+  "review": "IOS-0.1.0-dev.4 independent engineering plan review",
+  "baselineCommit": "9c669f55d12674f24eb1b6b6c8f36f8af8c130e3",
+  "reviewer": "independent RD architecture reviewer (not I4 author)",
+  "status": "plan-approved-with-issuance-gates",
+  "scope": "plan only; no code/runtime/QA approval",
+  "inputSHA256": {
+    "docs/engineering/r11/ios-0.1.0-dev.4/plan.zh-CN.md": "00dcdc68b87b60921efa7af3b95e86e7d19c585bd07e19b5918a95fc55929691",
+    "docs/engineering/r11/ios-0.1.0-dev.4/work-packages.json": "12c8994b2790171551bcbd28a34c8890b299e6e58904659d04c59e9dd80c49e9",
+    "docs/engineering/r11/ios-0.1.0-dev.4/test-matrix.json": "808bf94e9a6b1d5446afb5badcb062073cece392b373409dcbff23c55543d13e"
+  },
+  "issues": [
+    {
+      "id": "R11-E4-01",
+      "severity": "required",
+      "status": "closed-by-independent-plan-recheck",
+      "finding": "ReportScreen候选路径不存在；既有createReport details必填与本版可选说明冲突，必须由共享契约writer明确兼容增量并同步API/客户端。",
+      "evidence": [
+        "packages/contracts/src/operations/operations-admin.ts",
+        "apps/api/src/support/routes.ts",
+        "apps/ios/src/features/settings/ReportScreen.tsx"
+      ],
+      "resolution": "Author updated plan/work packages/test matrix; closure concerns planning only, not implementation correctness."
+    },
+    {
+      "id": "R11-E4-02",
+      "severity": "required",
+      "status": "closed-by-independent-plan-recheck",
+      "finding": "本人报告历史缺少服务端列表权威；Unknown尚无reportId不能用reportStatus读取。需固定同actor/key/body原POST恢复及列表契约增量。",
+      "evidence": [
+        "docs/product/journeys/j07/requirements.zh-CN.md",
+        "apps/api/src/common/idempotency.ts",
+        "apps/api/src/http/routes.ts"
+      ],
+      "resolution": "Author updated plan/work packages/test matrix; closure concerns planning only, not implementation correctness."
+    },
+    {
+      "id": "R11-E4-03",
+      "severity": "required",
+      "status": "closed-by-independent-plan-recheck",
+      "finding": "明确复用现有删除屏障/StepwiseProvider/安全receipt，不复制认证层；补provider缺配置、retention未批准、并发迟到失败不覆盖完成与receipt遗失过期测试。",
+      "evidence": [
+        "apps/api/src/deletion/routes.ts",
+        "apps/worker/src/deletion/provider.ts",
+        "apps/worker/src/handlers/deletion.ts",
+        "apps/worker/src/deletion/auth0.ts",
+        "apps/ios/src/features/settings/deletion-receipt-store.ts"
+      ],
+      "resolution": "Author updated plan/work packages/test matrix; closure concerns planning only, not implementation correctness."
+    }
+  ],
+  "implementationAuthorized": false,
+  "QAStarted": false,
+  "checks": {
+    "r11IndependentVersionGate": "confirmed; supersedes old r10 global gate",
+    "branchPRMainDeployment": "direction confirmed; exact SHA/build/migration/environment remain future gates",
+    "rollback": "accepted deletion cannot restore ACTIVE; preserve durable receipt/provider checkpoints",
+    "testExecution": "not executed; review only existing runners/source and planned behavioral matrix",
+    "sharedCI": "Legacy Web two exposure failures reproduced locally with Node24: 2 failed/5 passed. Minimal future date fixture changes plus expired-start/expired-close negative cases: 2 files,9 tests passed. Full required PR CI rerun still needed before merge/deploy."
+  },
+  "issuanceGates": [
+    "Actual RD owner and <=5 exact file leases with shared sole writers",
+    "RD-CONTRACTS fix optional details and define exact authenticated own-history operation/path/schema with API/generated-client compatibility before dependent code",
+    "Per-version design/DS revision and minimal environment checks",
+    "Applicable isolated tests, cross-version service integration, independent code review and required CI before PR merge",
+    "Exact merged SHA/build/migration/environment and compatible rollback before deployment"
+  ],
+  "boundedConclusion": "I4 plan may proceed to concrete work-package issuance without waiting I1/I2/I3 entire versions; current review does not authorize code or QA.",
+  "verification": {
+    "reviewJSON": "valid; unique issue IDs; evidence paths exist",
+    "command": "node node_modules/vitest/vitest.mjs run --project web src/api/qa-independent-exposure.unit.test.tsx src/api/telemetry.unit.test.tsx",
+    "runtime": "Node24.22.1 existing runtime",
+    "before": "2 failed,5 passed",
+    "after": "9 passed; 2 files",
+    "diffCheck": "passed",
+    "productionSourceChanged": false
+  }
+}
