@@ -381,3 +381,8 @@
 - [iOS dev.1 · ios1-engineering-review](reviews/r11/ios1-engineering-review.md)。
 
 - [iOS dev.1工作台 · README.zh-CN](delivery/versions/ios-0.1.0-dev.1/README.zh-CN.md)。
+- [admin-0.1.0-dev.1 · test-plan.zh-CN](delivery/versions/admin-0.1.0-dev.1/test-plan.zh-CN.md)。
+
+- [admin-0.1.0-dev.1 · plan.zh-CN](engineering/r11/admin-0.1.0-dev.1/plan.zh-CN.md)。
+
+- [admin-0.1.0-dev.1 · admin1-engineering-review](reviews/r11/admin1-engineering-review.md)。
