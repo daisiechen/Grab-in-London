@@ -6,31 +6,67 @@
     "J07",
     "J08"
   ],
-  "designReview": "awaiting-independent-retest",
+  "designReview": "independent-design-scope-passed",
   "independentReviewer": "PJ-IOS1 / UX-1",
-  "developmentPlan": "not-started-pending-this-version-design-review",
+  "developmentPlan": "independently-approved-with-issuance-gates",
   "issues": [
     {
       "id": "R11-I34-02",
-      "status": "author-fixed-awaiting-independent-retest"
+      "status": "closed-by-independent-design-review"
     },
     {
       "id": "R11-I34-03",
-      "status": "author-fixed-awaiting-independent-retest"
+      "status": "closed-by-independent-design-review"
     }
   ],
-  "actualBlockers": [
-    "This version has not yet passed independent design correction review."
-  ],
+  "actualBlockers": [],
   "integrationDependenciesOnly": [
     "Shared identity/DS/commands follow frozen contracts; another version does not block local planning once own design passed."
   ],
-  "nextStep": "independent-review",
+  "nextStep": "assign actual RD owners/exact per-package leases + shared contracts/list/detail changes + environment preflight; obtain code authorization before implementation",
   "evidence": [
     "docs/reviews/r11/ios34-review.json",
     "docs/design/r10/ios-0.1.0-dev.4/artifact-manifest.json"
   ],
   "implementationStarted": false,
   "QAStarted": false,
-  "branchPR": "No implementation branch/PR created; planning only; PJ owns review and root owns serial Git sync."
+  "branchPR": "No implementation branch/PR created; planning only; PJ owns review and root owns serial Git sync.",
+  "independentDesignEvidence": {
+    "reviewer": "PJ-IOS1 / UX-1",
+    "report": "docs/reviews/r11/ios34-review.json",
+    "closedIssues": [
+      "R11-I34-02",
+      "R11-I34-03"
+    ],
+    "scope": "Design/native reaction/screenshot recheck only; not product QA or real-service acceptance"
+  },
+  "implementationGate": {
+    "authorized": false,
+    "reason": "Current task authorizes reviewed development planning only. Assign actual RD owner/exact file lease/shared writer compatibility/environment and approval before code."
+  },
+  "buildRecord": {
+    "targetStoreVersion": "0.1.0",
+    "internalIteration": "dev.4",
+    "build": null,
+    "mergeSHA": null,
+    "submissionBatch": "first-0.1.0-combined",
+    "status": "not-built"
+  },
+  "engineeringReview": {
+    "reviewer": "independent RD architecture reviewer",
+    "status": "plan-approved-with-issuance-gates",
+    "evidence": "docs/reviews/r11/ios4-engineering-review.json",
+    "closedIssues": [
+      "R11-E4-01",
+      "R11-E4-02",
+      "R11-E4-03"
+    ],
+    "receiptClarification": "deletionStatus uses bearer receipt without session; other account UI never auto-loads prior saved token."
+  },
+  "verification": {
+    "command": "python3 -m unittest discover -s tests -p test_r11_ios4_plan.py",
+    "passed": 2,
+    "gitDiffCheck": "passed",
+    "meaning": "Independent I4 design/plan evidence checks, no product QA run"
+  }
 }
