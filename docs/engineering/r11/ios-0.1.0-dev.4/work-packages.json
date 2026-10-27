@@ -1,0 +1,258 @@
+{
+  "iteration": "IOS-0.1.0-dev.4",
+  "productVersion": "IOS-0.1.0",
+  "pj": "PJ-IOS2",
+  "status": "development-plan-candidate",
+  "journeys": [
+    "J07",
+    "J08"
+  ],
+  "designEvidence": "docs/reviews/r11/ios34-review.json",
+  "designReviewPassedBy": "PJ-IOS1",
+  "designManifest": "docs/design/r10/ios-0.1.0-dev.4/artifact-manifest.json",
+  "designManifestSHA256": "240379a60bc7ed71e704c77bc508312221711b6aa28a10a50533760819a7a2ef",
+  "businessBaseline": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "visualBaseline": "v13/361ab04ed6fc55c0f1e041bb5d6cc5d216d1a7b2",
+  "supersedesGate": "r10 all-seven-design-ready gate is superseded by r11 per-version workflow",
+  "waitsForAllVersions": false,
+  "workPackages": [
+    {
+      "id": "I4-01",
+      "scope": "J07 report→receipt→own history",
+      "ownerRole": "RD-SAFETY-J07",
+      "assignedPerson": null,
+      "status": "candidate-not-issued",
+      "candidatePaths": [
+        "apps/api/src/support/routes.ts",
+        "apps/ios/src/features/settings/ReportScreen.tsx"
+      ],
+      "exactWriteLease": [],
+      "maxFilesPerLease": 5,
+      "operations": [
+        "createReport",
+        "reportStatus"
+      ],
+      "acceptance": "Report object/reason required/details optional; cancellation retained draft and no write; original-intent Unknown query and own-only projection.",
+      "dependsOn": [],
+      "parallelAllowedWith": [
+        "I4-02",
+        "I4-03"
+      ],
+      "sharedWriters": [
+        "RD-CONTRACTS",
+        "RD-DATA",
+        "RD-IDENTITY",
+        "RD-PLATFORM",
+        "RD-SDK"
+      ],
+      "branchPattern": "codex/ios-0.1.0-dev4-i4-01",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "implementationStarted": false,
+      "contractDeltas": [
+        {
+          "owner": "RD-CONTRACTS",
+          "status": "intentional-compatible-change-required-not-implemented",
+          "change": "createReport currently requires Text(1,1000) details and API trims/rejects blank. Permit absent/empty optional details; API normalize no-details without new min length; regenerate OpenAPI/SDK and add empty/whitespace/omitted cases atomically."
+        },
+        {
+          "owner": "RD-CONTRACTS",
+          "status": "new-contract-required-not-implemented",
+          "change": "Add own authenticated report history/list operation with server-owned minimal projection/pagination; exact operationId/path/schema assigned by sole writer at lease issue, no client-fabricated cross-device history."
+        }
+      ],
+      "unknownRecovery": {
+        "existingMechanism": "Repeat original createReport POST with exact same actor/operation/idempotency-key/body; defineWrite + common/idempotency.ts replays original result. No reportId required before recovery.",
+        "outcomes": [
+          "30-day replay retention",
+          "INTENT_IN_PROGRESS: wait and same original POST retry",
+          "IDEMPOTENCY_CONFLICT: preserve original intent/body, do not overwrite or mint duplicate key",
+          "beyond retention: explicit recovery/support, no blind new write"
+        ],
+        "forbidden": "No invented GET /commands or commandStatus operation; reportStatus GET only after real reportId known."
+      }
+    },
+    {
+      "id": "I4-02",
+      "scope": "J08 effects→reauth→explicit confirmation→accepted receipt",
+      "ownerRole": "RD-SAFETY-J08",
+      "assignedPerson": null,
+      "status": "candidate-not-issued",
+      "candidatePaths": [
+        "apps/api/src/deletion/routes.ts",
+        "apps/ios/src/features/settings/DeleteAccountScreen.tsx",
+        "apps/ios/src/features/settings/deletion-receipt-store.ts"
+      ],
+      "exactWriteLease": [],
+      "maxFilesPerLease": 5,
+      "operations": [
+        "startReauth",
+        "requestDeletion"
+      ],
+      "acceptance": "Persist private 256-bit receipt before request; reauth≤5min, explicit user final confirmation, synchronous revocation barrier succeeds atomically before 202; no receipt/token URL.",
+      "dependsOn": [],
+      "parallelAllowedWith": [
+        "I4-01"
+      ],
+      "sharedWriters": [
+        "RD-CONTRACTS",
+        "RD-DATA",
+        "RD-IDENTITY",
+        "RD-PLATFORM",
+        "RD-SDK"
+      ],
+      "branchPattern": "codex/ios-0.1.0-dev4-i4-02",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "implementationStarted": false,
+      "reuse": [
+        "apps/api/src/deletion/routes.ts applyDeletion + defineWrite",
+        "Existing startReauth via identity adapter (do not build a new auth layer)",
+        "apps/ios/src/features/settings/deletion-receipt-store.ts Expo SecureStore serial writes and expected-token guard"
+      ]
+    },
+    {
+      "id": "I4-03",
+      "scope": "J08 status→unauthenticated support→same known status",
+      "ownerRole": "RD-IOS-SAFETY",
+      "assignedPerson": null,
+      "status": "candidate-not-issued",
+      "candidatePaths": [
+        "apps/ios/src/features/settings/DeletionStatusScreen.tsx"
+      ],
+      "exactWriteLease": [],
+      "maxFilesPerLease": 5,
+      "operations": [
+        "deletionStatus"
+      ],
+      "acceptance": "PENDING/PROCESSING/NEEDS_SUPPORT/COMPLETED reflect saved receipt authority, support Back/Retry does not regress or log into account. Full public email; mailto address only.",
+      "dependsOn": [
+        "I4-02"
+      ],
+      "parallelAllowedWith": [
+        "I4-01"
+      ],
+      "sharedWriters": [
+        "RD-CONTRACTS",
+        "RD-DATA",
+        "RD-IDENTITY",
+        "RD-PLATFORM",
+        "RD-SDK"
+      ],
+      "branchPattern": "codex/ios-0.1.0-dev4-i4-03",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "implementationStarted": false,
+      "recoveryCases": [
+        "unknown response with previously stored receipt",
+        "concurrent old failure must not overwrite newer COMPLETED",
+        "expired/lost receipt; public reference alone does not authorize status",
+        "support Back/Retry preserves current known state until authoritative advancement"
+      ]
+    },
+    {
+      "id": "I4-04",
+      "scope": "Deletion worker retries only unfinished steps",
+      "ownerRole": "RD-DELETION-WORKER",
+      "assignedPerson": null,
+      "status": "candidate-not-issued",
+      "candidatePaths": [
+        "apps/worker/src/handlers/deletion.ts"
+      ],
+      "exactWriteLease": [],
+      "maxFilesPerLease": 5,
+      "operations": [
+        "requestDeletion",
+        "deletionStatus"
+      ],
+      "acceptance": "Provider/physical cleanup after acceptance, durable idempotent per-step results; completed only all required steps; failed work leaves support progress not fake completion.",
+      "dependsOn": [
+        "I4-02"
+      ],
+      "parallelAllowedWith": [
+        "I4-01"
+      ],
+      "sharedWriters": [
+        "RD-DATA",
+        "RD-PLATFORM"
+      ],
+      "branchPattern": "codex/ios-0.1.0-dev4-i4-04",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "implementationStarted": false,
+      "reuse": [
+        "Existing StepwiseDeletionProvider",
+        "apps/worker/src/deletion/auth0.ts Auth0DeletionStep when real configuration selects it",
+        "Apple UnavailableDeletionStep remains unresolved until approved supported adapter",
+        "apps/worker/src/handlers/deletion.ts policyApproved retention gate"
+      ],
+      "completionGate": "COMPLETED only all selected provider steps successful AND retention policyApproved true; missing configuration, unavailable Apple adapter or unapproved retention → NEEDS_SUPPORT/unfinished, not fabricated completion."
+    },
+    {
+      "id": "I4-05",
+      "scope": "Cross-version safety/privacy propagation",
+      "ownerRole": "RD-INTEGRATION-I4",
+      "assignedPerson": null,
+      "status": "candidate-not-issued",
+      "candidatePaths": [],
+      "exactWriteLease": [],
+      "maxFilesPerLease": 5,
+      "operations": [
+        "reportStatus",
+        "deletionStatus"
+      ],
+      "acceptance": "Consume scoped support outcome and deletion epoch with J01/J03/J04/J05/analytics/export. Fixture checks may run now; real cross-version integration waits only its concrete services.",
+      "dependsOn": [
+        "I4-01",
+        "I4-02",
+        "I4-03",
+        "I4-04"
+      ],
+      "parallelAllowedWith": [
+        "I4-01"
+      ],
+      "sharedWriters": [
+        "RD-CONTRACTS",
+        "RD-DATA",
+        "RD-IDENTITY",
+        "RD-PLATFORM",
+        "RD-SDK"
+      ],
+      "branchPattern": "codex/ios-0.1.0-dev4-i4-05",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "implementationStarted": false
+    }
+  ],
+  "environment": {
+    "reuseExisting": true,
+    "minimumChecks": [
+      "node/pnpm engine and existing lockfile",
+      "dedicated test Postgres URL is fixture database, not production",
+      "contracts generated diff clean before API/client work",
+      "existing iOS build toolchain and secure receipt store capability",
+      "provider credentials presence only; do not print or enable mail/model calls"
+    ],
+    "failureBudget": {
+      "minutes": 15,
+      "sameFailureAttempts": 3,
+      "onExhaustion": "Stop this environment attempt, provide command/error summary to environment owner; continue unaffected contracts/UI tests."
+    }
+  },
+  "evidenceSeparation": [
+    "prototype",
+    "fixture/unit/contract",
+    "real API+DB",
+    "native device",
+    "cross-version integration",
+    "release build"
+  ],
+  "implementationAuthorized": false,
+  "codeCommit": null,
+  "runtimeBuild": null,
+  "engineeringReviewCorrections": {
+    "R11-E4-01": "Exact settings path and intentional optional-details contract delta; sole writer and API/SDK/tests atomic update",
+    "R11-E4-02": "Existing idempotent original POST replay, no nonexistent command query; server-owned list contract delta explicit",
+    "R11-E4-03": "Reuse current safety/auth/secure-store/provider pipeline; provider config and retention gate; recovery matrix extended"
+  }
+}
