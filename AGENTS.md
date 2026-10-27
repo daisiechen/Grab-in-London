@@ -31,5 +31,5 @@ GitHub 仓库：https://github.com/daisiechen/Grab-in-London
 ## 多 Agent 协作
 
 - 本文件是所有 Agent 共用的项目规则；Claude Code 通过 `CLAUDE.md` 引用。任务交接、评审及文件边界遵循 [Agent 协作说明](docs/agent-collaboration.md)。
-- PRD 与 Demo 的修改由原产出会话执行；协调会话与 Claude Code 负责评审、交接、复核和验收，不直接改写这些产物。变更先明确唯一文件负责人，完成后按协作说明串行提交与核对远程。
+- 自 2026-10-27 起，按用户决定由 Claude Code 接手并负责主开发（`apps/`、`packages/` 及相关测试与研发文档），Codex 不再并行修改代码。Demo（`demo/`）作为已认可的视觉与交互基准保持只读；业务规则以主 PRD r07 为准。变更先明确唯一文件负责人，完成后按协作说明串行提交与核对远程。接手方案见[Claude Code 接手开发计划](docs/delivery/claude-takeover-plan.zh-CN.md)。
 - 项目技能以 `.agents/skills/` 为权威源；`.claude/skills/` 仅保存相对链接，不复制正文。工具内置与个人全局配置不进入公开项目。

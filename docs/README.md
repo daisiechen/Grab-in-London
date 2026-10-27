@@ -2,6 +2,10 @@
 
 项目入口：[README](../README.md)。本目录保存项目知识；Agent 协作规则见 [AGENTS.md](../AGENTS.md)，正式方法在 `.agents/skills/`，待审核候选在 `.agents/candidates/`，不作为现行执行规则。
 
+## 当前开发负责人（2026-10-27起）
+
+- [Claude Code 接手开发计划](delivery/claude-takeover-plan.zh-CN.md)：Claude Code 主开发，视觉按 Demo、规则按 PRD r07，先以模拟数据跑通 iOS 首发旅程再接后端。
+
 ## 当前产品与管理输入（r07范围／r11版本PJ并行执行）
 
 - [七个版本的评审、方案、负责人和独立PR总览](delivery/version-progress-r11.zh-CN.md)。
