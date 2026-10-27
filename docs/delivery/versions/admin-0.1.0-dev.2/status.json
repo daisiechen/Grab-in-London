@@ -22,38 +22,55 @@
   },
   "independentReviewer": "总PJ",
   "developmentPlan": {
-    "status": "author-revised-awaiting-independent-RD-retest",
+    "status": "plan-approved-with-issuance-gates",
     "path": "docs/engineering/r11/admin-0.1.0-dev.2/",
     "implementationAuthorized": false,
     "documents": [
       "docs/engineering/r11/admin-0.1.0-dev.2/plan.zh-CN.md",
       "docs/engineering/r11/admin-0.1.0-dev.2/work-packages.json"
     ],
-    "independentReviewer": null,
-    "engineeringApproved": false
+    "independentReviewer": "Independent RD architecture reviewer; not plan author",
+    "engineeringApproved": true,
+    "reviewSource": "docs/reviews/r11/admin2-engineering-review.json",
+    "signoffEvidence": {
+      "path": "docs/reviews/r11/admin2-engineering-review.json",
+      "sha256": "a12770521c1e736320d0dec0afee64cb3c481c0e1f34badc5fdfe80363eba7f9",
+      "reviewer": "Independent RD architecture reviewer; not plan author",
+      "status": "plan-approved-with-issuance-gates",
+      "boundedConclusion": "A2 plan implementable as explicitly proposed incremental work, not existing runtime capability; no code/QA authorization and no whole-version A1 wait.",
+      "closedIssues": [
+        "R11-EA2-01",
+        "R11-EA2-02"
+      ],
+      "reviewedInputSHA256": {
+        "docs/engineering/r11/admin-0.1.0-dev.2/plan.zh-CN.md": "be59dcc04da0e62bc39abceb487d104eddc8a38cb9e675ace8a12a39dc945d14",
+        "docs/engineering/r11/admin-0.1.0-dev.2/work-packages.json": "b5bddc521048c26a9cc177914a5d4076adb2866159b8f38c3c5a231158e4c0c5",
+        "docs/delivery/versions/admin-0.1.0-dev.2/test-plan.zh-CN.md": "17acab3e6aeb846100b11469e809a25073c8475dc8c2748688941cf5036e6038"
+      },
+      "note": "Only signoff metadata updated after independently reviewed candidate; business scope/interfaces unchanged."
+    }
   },
   "testing": {
     "plan": "test-plan.zh-CN.md",
     "designEvidenceTests": "python3 -m unittest discover -s tests -p test_r11_admin2_plan.py",
-    "designEvidenceResult": "4 standalone checks passed; independent actual design click signoff separately recorded by total PJ",
+    "designEvidenceResult": "5 standalone plan/evidence checks passed; independent RD plan signoff recorded; runtime QA not run",
     "productQAStarted": false,
     "realServiceTested": false,
-    "siblingArtifactsRequired": false
+    "siblingArtifactsRequired": false,
+    "engineeringReviewEvidence": "docs/reviews/r11/admin2-engineering-review.json"
   },
   "issues": [
     {
       "id": "R11-EA2-01",
-      "status": "author-fixed-awaiting-independent-retest"
+      "status": "closed-by-independent-plan-retest"
     },
     {
       "id": "R11-EA2-02",
-      "status": "author-fixed-awaiting-independent-retest"
+      "status": "closed-by-independent-plan-retest"
     }
   ],
-  "trueBlockers": [
-    "开发方案候选待独立RD核真实生产路径、operation registry/schema、共享writer与迁移可实施性；不是设计或其它版本等待。"
-  ],
-  "nextAction": "独立RD复验真实PUT重放、subject输入证明/任务增量/旧读屏障与单writer拆包；未实施。",
+  "trueBlockers": [],
+  "nextAction": "由根PJ按本版独立分支/PR集成方案；后续逐包签发真实writer/精确租约、固定契约及最小环境，仍未授权代码或QA。",
   "evidence": [
     "docs/design/r10/admin-0.1.0-dev.2/evidence/r11-recovery-readback.json",
     "docs/design/r10/admin-0.1.0-dev.2/handoff.zh-CN.md"
@@ -63,7 +80,8 @@
     "singleVersionTest": "not-started",
     "integration": "not-started",
     "merge": "not-started",
-    "deploy": "not-started"
+    "deploy": "not-started",
+    "engineeringPlan": "independently-approved-with-issuance-gates"
   },
   "candidateBinding": {
     "sha": null,
@@ -71,5 +89,27 @@
     "apiContract": null,
     "migration": null,
     "environment": null
-  }
+  },
+  "issuanceGates": [
+    {
+      "gate": "RD-CONTRACTS fixes task handle linkage from accepted classify result and exact proposed status/retry DTO, auth/MFA/actor ownership, error and idempotency contracts before dependent leases",
+      "status": "not-issued"
+    },
+    {
+      "gate": "RD-DATA reserves migration and transactionally binds accepted revision/task enqueue; seals per-subject included/excluded input proof",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Exact owners/file leases serialize shared routes/snapshot/barrier changes; no broad all-path lease",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Tests distinguish UNKNOWN original write, pending/failed task, superseded same-subject intent and another-subject high revision; real integration separate",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Required code review/CI/PR main merge and exact tested SHA/build before deployment",
+      "status": "not-issued"
+    }
+  ]
 }
