@@ -1,8 +1,8 @@
 {
-  "revision": "PM-r01",
+  "revision": "PM-r02",
   "scopeRevision": "r07",
   "dispatchRevision": "r08",
-  "candidateCommit": "a2184bb965a62445e11799ecc25a5002a7fa3e8b",
+  "candidateCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
   "deploymentStatus": "succeeded",
   "audience": "owner-private",
   "userAuthorizedPrivatePreview": true,
@@ -14,26 +14,26 @@
     "RD",
     "QA"
   ],
-  "verificationBoundary": "181项仓库检查通过；jsdom状态/DOM/入口验证。真实浏览器视觉、原生iOS及真实服务未验证；发布工具仅证明静态预览部署成功。",
+  "verificationBoundary": "194项仓库检查通过（含真实Chromium检查）；PJ线上11旅程×1440/390共22次代表流程通过；真实iOS与生产服务未验证，UX/RD/QA未启动。",
   "prototypeHashes": {
-    "J01": "3248039a0dc1b470cb51d9e9ee3a12b986690fea7374cced3de0b36c25313f6f",
+    "J01": "91464863d9c58380592a7d8bea3279fa690479bc74e1a52caa7ed5ee0d5a09ce",
     "J02": "d876732ddbdc667816a473a91969464c6a49d574d3fc2fc745d207b8a68989bc",
     "J03": "12d823bf051ea6782a194576c5dba26895c51e3ea506ab31f4a9072a261a50af",
-    "J04": "0156de9d9420cdca35f1343cc887a56a3f6fb0661e53c657d0ad996f0f53d043",
-    "J05": "3555b563bc43c5e5455eba55527406edc47e6edf11bca0a070dea6693ab09b19",
-    "J06": "f3b9eb2071f1a520ddccae4f06251b4d6f650fb435feb23c1c5c91a8144eb942",
-    "J07": "903de8829a0cc6b68678faee022030e9a3921baddacb16f7acf2edf582cdf228",
-    "J08": "c73bce06dbb3e60fd3b6860362ce17aa27b389ea9badc67aac60170a16922768",
-    "J09": "12889d647c3c2e2bead17a9ef3b52b66543d9e0fdffbf80b48e0d2d513ae18fd",
-    "J10": "0de0fd418522942ce491e66bb305c5070fef218e785c2ff984f7f1226ab089ae",
-    "J11": "99e76d60fc40aee3463b3149c4dbb79266899c59591fb70fa850800c46c25f38"
+    "J04": "e93934a96472977cc9c28cc2c9e8d245ce0cf68ff815f38a01c8709e92a09dbe",
+    "J05": "5445e92756b85325e774d77f27743dcf0a342b27980215dc436214355501b99c",
+    "J06": "916abf341ab34cdefba446813eea9f447bf1e4cf143929fe8e654b9ddfe2eb3f",
+    "J07": "0985a543d5443b829bbb0d65295c667ea3e223da161f983cc648cfc5f99d61f0",
+    "J08": "8997140330db7de963856048ffd47ef2d63a6ff1d9c8776af2ed54015cb5eeff",
+    "J09": "801842c556eca92763fd1d0ff5cab45fb97e5035c3bb42d55e46648654ffe2ca",
+    "J10": "e098eb42a89f591c669793d8d923f2ea634699084c587489076e4fbb00e74fbd",
+    "J11": "eaec916ca907e571fa7be9f27a4928b4d75964e968b89c702420f12b4b578d33"
   },
   "requirementHashes": {
     "J01": "af6f88ac83dbf85dc3fe103fcc6bc1ae445ecafb630fb8fa68fe0be9eacb1568",
     "J02": "6a6211922d649a12899803721b709cb67f2e37e6bea428d804cee399d3df4299",
     "J03": "c1c04088090495498d995e73f1cf7c1a74e8af2c5bf3e09f4fb3cda142876ca6",
     "J04": "8172b103c759b19b6b70a2dea946bd50cc7286405a31dc73b4012cf169da72a7",
-    "J05": "f26790768fcafd143f17ba57a4914b3bc9af66635dd048dba0bb6d257f39f492",
+    "J05": "50a482a514dbb17b75b9e1baf7c174f24a6d7e155c3d2e48fa1e72bcd5d03e6b",
     "J06": "f61c525aa2cc344b274897146b602a1f42e28d49f20d2226be59e0bd1322c6f7",
     "J07": "5dd9c7a3dc993a621f288ad4f0ac977129ced8a9fd3db802c6f5e6b08fd8c2bd",
     "J08": "3f747817145b1c8574ba90ba886ebb5d72d3fd801911b99c9421ebef28193203",
@@ -43,13 +43,66 @@
   },
   "privateMetadataExcluded": true,
   "publicationEvidence": "Sites owner-private发布操作返回succeeded；私有URL及项目/部署标识仅存私有记录，不进入公开仓库。",
-  "previewShellRevision": "r02-inline-prd",
-  "previewShellCommit": "3ba9d047110872f292b1a6a28c6a7852c45b96cc",
+  "previewShellRevision": "r03-formatted-prd",
+  "previewShellCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
   "prdReaderVerification": {
-    "localDocumentOpenReadReturn": "11/11 passed",
-    "authorizedHomepageHTTP": 200,
-    "embeddedPRDs": 11,
-    "hashReaderPresent": true,
-    "realBrowserVisual": "not verified; browser stopped at sign-in"
+    "realBrowser": "Chromium 156.0.8078.4",
+    "viewports": [
+      1440,
+      390
+    ],
+    "fullTextMatchesSource": "22/22 passed",
+    "formattedReader": "22/22 passed",
+    "demoFlows": "22/22 passed",
+    "pageErrors": 0,
+    "requestFailures": 0,
+    "geometryViolations": 0,
+    "evidence": "docs/reviews/evidence/pm-journeys-2026-10-27/flows.json"
+  },
+  "componentRevisions": {
+    "J01": {
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02"
+    },
+    "J02": {
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r01"
+    },
+    "J03": {
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r01"
+    },
+    "J04": {
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02"
+    },
+    "J05": {
+      "requirementsRevision": "PM-r02",
+      "demoRevision": "PM-r02"
+    },
+    "J06": {
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02"
+    },
+    "J07": {
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02"
+    },
+    "J08": {
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02"
+    },
+    "J09": {
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02"
+    },
+    "J10": {
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02"
+    },
+    "J11": {
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r02"
+    }
   }
 }
