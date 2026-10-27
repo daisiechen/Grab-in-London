@@ -1,0 +1,53 @@
+[
+  {
+    "scene": "discover",
+    "source": "docs/design/r10/system/evidence/old-discover.png",
+    "figma": "docs/design/r10/ios-0.1.0-dev.1/evidence/pilot-discover-figma.png",
+    "comparison": "docs/design/r10/ios-0.1.0-dev.1/evidence/compare-discover.png",
+    "viewport": [
+      393,
+      852
+    ],
+    "exclude": [
+      "device shell/dynamic island",
+      "system clock/status rendering",
+      "pointer overlay"
+    ],
+    "fontEnvironment": "Liberation Sans metric-compatible capture; Figma Arial",
+    "purpose": "layout, content assets, proportions and component language; not a pixel-perfect certification"
+  },
+  {
+    "scene": "detail",
+    "source": "docs/design/r10/system/evidence/old-detail.png",
+    "figma": "docs/design/r10/ios-0.1.0-dev.1/evidence/pilot-detail-figma.png",
+    "comparison": "docs/design/r10/ios-0.1.0-dev.1/evidence/compare-detail.png",
+    "viewport": [
+      393,
+      852
+    ],
+    "exclude": [
+      "device shell/dynamic island",
+      "system clock/status rendering",
+      "pointer overlay"
+    ],
+    "fontEnvironment": "Liberation Sans metric-compatible capture; Figma Arial",
+    "purpose": "layout, content assets, proportions and component language; not a pixel-perfect certification"
+  },
+  {
+    "scene": "form",
+    "source": "docs/design/r10/system/evidence/old-form.png",
+    "figma": "docs/design/r10/ios-0.1.0-dev.1/evidence/pilot-form-figma.png",
+    "comparison": "docs/design/r10/ios-0.1.0-dev.1/evidence/compare-form.png",
+    "viewport": [
+      393,
+      852
+    ],
+    "exclude": [
+      "device shell/dynamic island",
+      "system clock/status rendering",
+      "pointer overlay"
+    ],
+    "fontEnvironment": "Liberation Sans metric-compatible capture; Figma Arial",
+    "purpose": "layout, content assets, proportions and component language; not a pixel-perfect certification"
+  }
+]

@@ -1,0 +1,166 @@
+{
+  "revision": "UX-r02",
+  "journeys": [
+    "J01",
+    "J05"
+  ],
+  "coverage": [
+    {
+      "id": "J01-AC01",
+      "requirements": "docs/product/journeys/j01/requirements.zh-CN.md §2",
+      "demo": "demo/journeys/j01/index.html",
+      "figmaNodes": [
+        "5:17",
+        "5:195",
+        "11:2590"
+      ],
+      "level": "interactive-representative+specified",
+      "spec": "states.zh-CN.md",
+      "note": "Representative prefilled transitions; validation, arbitrary input and service behavior specified, not claimed executed."
+    },
+    {
+      "id": "J01-AC02",
+      "requirements": "docs/product/journeys/j01/requirements.zh-CN.md §3",
+      "demo": "demo/journeys/j01/index.html",
+      "figmaNodes": [
+        "10:65",
+        "5:355",
+        "10:134",
+        "10:184",
+        "13:107",
+        "13:220"
+      ],
+      "level": "interactive-representative+specified",
+      "spec": "states.zh-CN.md",
+      "note": "Representative prefilled transitions; validation, arbitrary input and service behavior specified, not claimed executed."
+    },
+    {
+      "id": "J01-AC03",
+      "requirements": "docs/product/journeys/j01/requirements.zh-CN.md §3",
+      "demo": "demo/journeys/j01/index.html",
+      "figmaNodes": [
+        "10:236",
+        "10:375",
+        "11:753"
+      ],
+      "level": "interactive-representative",
+      "spec": "states.zh-CN.md",
+      "note": "Representative prefilled transitions; validation, arbitrary input and service behavior specified, not claimed executed."
+    },
+    {
+      "id": "J01-AC04",
+      "requirements": "docs/product/journeys/j01/requirements.zh-CN.md §4",
+      "demo": "demo/journeys/j01/index.html",
+      "figmaNodes": [
+        "12:474",
+        "11:978",
+        "11:2510",
+        "11:1191"
+      ],
+      "level": "interactive-representative+specified",
+      "spec": "states.zh-CN.md",
+      "note": "Representative prefilled transitions; validation, arbitrary input and service behavior specified, not claimed executed."
+    },
+    {
+      "id": "J01-AC05",
+      "requirements": "docs/product/journeys/j01/requirements.zh-CN.md §4",
+      "demo": "demo/journeys/j01/index.html",
+      "figmaNodes": [
+        "11:753",
+        "11:978"
+      ],
+      "level": "specified",
+      "spec": "states.zh-CN.md",
+      "note": "Representative prefilled transitions; validation, arbitrary input and service behavior specified, not claimed executed."
+    },
+    {
+      "id": "J01-AC06",
+      "requirements": "docs/product/journeys/j01/requirements.zh-CN.md §5.1/5.2/5.4",
+      "demo": "demo/journeys/j01/index.html",
+      "figmaNodes": [
+        "12:313",
+        "11:2260",
+        "12:97"
+      ],
+      "level": "interactive-representative+specified",
+      "spec": "states.zh-CN.md",
+      "note": "Representative prefilled transitions; validation, arbitrary input and service behavior specified, not claimed executed."
+    },
+    {
+      "id": "J01-AC07",
+      "requirements": "docs/product/journeys/j01/requirements.zh-CN.md §5.3",
+      "demo": "demo/journeys/j01/index.html",
+      "figmaNodes": [
+        "12:574",
+        "15:212",
+        "15:308"
+      ],
+      "level": "interactive-representative+specified",
+      "spec": "states.zh-CN.md",
+      "note": "Representative prefilled transitions; validation, arbitrary input and service behavior specified, not claimed executed."
+    },
+    {
+      "id": "J05-AC01",
+      "requirements": "docs/product/journeys/j05/requirements.zh-CN.md §2",
+      "demo": "demo/journeys/j05/index.html",
+      "figmaNodes": [
+        "11:1513",
+        "11:1611"
+      ],
+      "level": "interactive-representative+specified",
+      "spec": "states.zh-CN.md",
+      "note": "Representative prefilled transitions; validation, arbitrary input and service behavior specified, not claimed executed."
+    },
+    {
+      "id": "J05-AC02",
+      "requirements": "docs/product/journeys/j05/requirements.zh-CN.md §3",
+      "demo": "demo/journeys/j05/index.html",
+      "figmaNodes": [
+        "11:1753",
+        "12:882"
+      ],
+      "level": "interactive-representative+specified",
+      "spec": "states.zh-CN.md",
+      "note": "Representative prefilled transitions; validation, arbitrary input and service behavior specified, not claimed executed."
+    },
+    {
+      "id": "J05-AC03",
+      "requirements": "docs/product/journeys/j05/requirements.zh-CN.md §4",
+      "demo": "demo/journeys/j05/index.html",
+      "figmaNodes": [
+        "11:1854",
+        "11:1982",
+        "13:355"
+      ],
+      "level": "interactive-representative+specified",
+      "spec": "states.zh-CN.md",
+      "note": "Representative prefilled transitions; validation, arbitrary input and service behavior specified, not claimed executed."
+    },
+    {
+      "id": "J05-AC04",
+      "requirements": "docs/product/journeys/j05/requirements.zh-CN.md §5",
+      "demo": "demo/journeys/j05/index.html",
+      "figmaNodes": [
+        "11:2260",
+        "11:2113"
+      ],
+      "level": "interactive-representative+specified",
+      "spec": "states.zh-CN.md",
+      "note": "Representative prefilled transitions; validation, arbitrary input and service behavior specified, not claimed executed."
+    },
+    {
+      "id": "J05-AC05",
+      "requirements": "docs/product/journeys/j05/requirements.zh-CN.md §3",
+      "demo": "demo/journeys/j05/index.html",
+      "figmaNodes": [
+        "11:2408",
+        "15:410"
+      ],
+      "level": "interactive-representative+specified",
+      "spec": "states.zh-CN.md",
+      "note": "Representative prefilled transitions; validation, arbitrary input and service behavior specified, not claimed executed."
+    }
+  ],
+  "allCombinationsInteractive": false,
+  "prdAmended": false
+}

@@ -3,7 +3,7 @@
   "revision": "r10",
   "scopeRevision": "r07",
   "date": "2026-10-27",
-  "status": "design-and-architecture-preparation",
+  "status": "design-and-architecture-candidates-delivered",
   "pjOwner": "current-Fancy-PJ",
   "authorization": {
     "visualDirection": "Owner认可旧MVP Demo，不重设计；复用视觉和交互，补通用规范及版本路径/场景",
@@ -45,12 +45,13 @@
   "designSystem": {
     "id": "DS-0.1.0",
     "owner": "UX-1",
-    "status": "in-progress",
+    "status": "candidate-delivered",
     "directory": "docs/design/r10/system/",
     "fileKey": "yUMVg2xpLXQHKPr2ZWpkO3",
     "ready": false,
-    "previewURL": "https://www.figma.com/design/yUMVg2xpLXQHKPr2ZWpkO3",
-    "previewStatus": "work-in-progress-not-development-ready"
+    "previewURL": "https://www.figma.com/design/yUMVg2xpLXQHKPr2ZWpkO3?node-id=2-70",
+    "previewStatus": "candidate-not-development-ready",
+    "handoff": "docs/design/r10/system/handoff.zh-CN.md"
   },
   "iterations": [
     {
@@ -66,9 +67,9 @@
       "uxOwner": "UX-1",
       "uxRevision": "UX-r02",
       "uxDirectory": "docs/design/r10/ios-0.1.0-dev.1/",
-      "uxStatus": "in-progress",
+      "uxStatus": "candidate-delivered",
       "figmaFileKey": "CS9oRCq8h3Clg09up2aISj",
-      "figmaEntryNodeId": null,
+      "figmaEntryNodeId": "5:17",
       "inputs": {
         "J01": {
           "requirementsRevision": "PM-r01",
@@ -96,7 +97,7 @@
       "releaseApproved": false,
       "figmaPreviewNodeId": "5:17",
       "figmaPreviewURL": "https://www.figma.com/design/CS9oRCq8h3Clg09up2aISj?node-id=5-17",
-      "previewStatus": "work-in-progress-not-development-ready"
+      "previewStatus": "candidate-not-development-ready"
     },
     {
       "id": "IOS-0.1.0-dev.2",
@@ -432,7 +433,7 @@
       "iterations": [
         "IOS-0.1.0-dev.1"
       ],
-      "status": "running"
+      "status": "candidate-delivered"
     },
     "UX-2": {
       "iterations": [
@@ -496,5 +497,6 @@
     "handoff": "docs/design/r10/brand/handoff.zh-CN.md",
     "recommendedDirection": "A",
     "pjVisualReview": "reviewed-comparison-and-refined-A-not-selected"
-  }
+  },
+  "reviewIndex": "docs/delivery/r10-deliverables-review.zh-CN.md"
 }

@@ -26,11 +26,11 @@
     {
       "id": "J01",
       "priority": 1,
-      "status": "ux-revision-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -60,7 +60,7 @@
     {
       "id": "J02",
       "priority": 2,
-      "status": "ux-revision-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
@@ -95,7 +95,7 @@
     {
       "id": "J03",
       "priority": 3,
-      "status": "ux-revision-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
@@ -131,7 +131,7 @@
     {
       "id": "J04",
       "priority": 4,
-      "status": "ux-revision-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
@@ -167,11 +167,11 @@
     {
       "id": "J05",
       "priority": 5,
-      "status": "ux-revision-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -200,7 +200,7 @@
     {
       "id": "J06",
       "priority": 6,
-      "status": "ux-revision-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
@@ -231,7 +231,7 @@
     {
       "id": "J07",
       "priority": 7,
-      "status": "ux-revision-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
@@ -261,7 +261,7 @@
     {
       "id": "J08",
       "priority": 8,
-      "status": "ux-revision-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
@@ -299,7 +299,7 @@
     {
       "id": "J09",
       "priority": 9,
-      "status": "ux-revision-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
@@ -334,7 +334,7 @@
     {
       "id": "J10",
       "priority": 10,
-      "status": "ux-revision-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
@@ -369,7 +369,7 @@
     {
       "id": "J11",
       "priority": 11,
-      "status": "ux-revision-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
@@ -730,7 +730,7 @@
     "J11"
   ],
   "awaitingReviewJourneys": [],
-  "reviewStatus": "ux-r01-visual-rejected-revision-in-progress",
+  "reviewStatus": "ux-r02-candidates-delivered-design-ready-pending",
   "reviewRole": "PJ",
   "reviewDate": "2026-10-27",
   "uxDispatch": "docs/delivery/development-versions-r10.json",

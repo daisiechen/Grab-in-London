@@ -1,0 +1,326 @@
+{
+  "reviewer": "PJ",
+  "limitations": "Nodes and reactions checked, not Presentation end-to-end or real services.",
+  "fileKey": "CS9oRCq8h3Clg09up2aISj",
+  "page": "J01 · Find and apply",
+  "starts": [
+    {
+      "nodeId": "5:17",
+      "name": "J01 · Browse → register → apply → withdraw"
+    }
+  ],
+  "roots": [
+    {
+      "id": "5:17",
+      "name": "J01 / Fidelity checkpoint / discover"
+    },
+    {
+      "id": "5:195",
+      "name": "J01 / Fidelity checkpoint / detail"
+    },
+    {
+      "id": "5:355",
+      "name": "J01 / Fidelity checkpoint / form"
+    },
+    {
+      "id": "10:17",
+      "name": "J01 / Welcome"
+    },
+    {
+      "id": "10:65",
+      "name": "J01 / Register or log in"
+    },
+    {
+      "id": "10:134",
+      "name": "J01 / Email verification"
+    },
+    {
+      "id": "10:184",
+      "name": "J01 / Verification recovery"
+    },
+    {
+      "id": "10:236",
+      "name": "J01 / Complete public introduction"
+    },
+    {
+      "id": "10:375",
+      "name": "J01 / Public introduction ready"
+    },
+    {
+      "id": "11:47",
+      "name": "J01 / Request a seat"
+    },
+    {
+      "id": "11:141",
+      "name": "J01 / Application pending"
+    },
+    {
+      "id": "11:206",
+      "name": "J01 / Application withdrawn"
+    },
+    {
+      "id": "11:753",
+      "name": "J01 / Request a seat"
+    },
+    {
+      "id": "11:978",
+      "name": "J01 / Application pending"
+    },
+    {
+      "id": "11:1191",
+      "name": "J01 / Application withdrawn"
+    },
+    {
+      "id": "11:2510",
+      "name": "J01 / Withdraw confirmation"
+    },
+    {
+      "id": "11:2590",
+      "name": "J01 / Date filters"
+    },
+    {
+      "id": "12:97",
+      "name": "J01 / Review an AI application draft"
+    },
+    {
+      "id": "12:313",
+      "name": "J01 / Assistant data permission"
+    },
+    {
+      "id": "12:474",
+      "name": "J01 / Reviewed arrangements · ready to send"
+    },
+    {
+      "id": "12:574",
+      "name": "J01 / Keep or replace draft"
+    },
+    {
+      "id": "13:107",
+      "name": "J01 / Log in to return to this meal"
+    },
+    {
+      "id": "13:174",
+      "name": "J01 / Login email"
+    },
+    {
+      "id": "13:220",
+      "name": "J01 / Verify existing account"
+    },
+    {
+      "id": "15:212",
+      "name": "J01 / AI text transferred · draft"
+    },
+    {
+      "id": "15:308",
+      "name": "J01 / AI text transferred · ready"
+    }
+  ],
+  "links": [
+    {
+      "source": "5:41",
+      "label": "button / Filter by date",
+      "destination": "11:2590"
+    },
+    {
+      "source": "5:95",
+      "label": "button / meal-card-hit",
+      "destination": "5:195"
+    },
+    {
+      "source": "5:332",
+      "label": "button / primary ",
+      "destination": "10:65"
+    },
+    {
+      "source": "5:209",
+      "label": "button / Go back",
+      "destination": "5:17"
+    },
+    {
+      "source": "5:339",
+      "label": "button / helper-launch",
+      "destination": "12:313"
+    },
+    {
+      "source": "5:373",
+      "label": "button / Back in sign-in",
+      "destination": "10:65"
+    },
+    {
+      "source": "5:392",
+      "label": "button / primary ",
+      "destination": "10:134"
+    },
+    {
+      "source": "10:53",
+      "label": "button / primary ",
+      "destination": "10:65"
+    },
+    {
+      "source": "10:57",
+      "label": "button / brand-browse",
+      "destination": "5:17"
+    },
+    {
+      "source": "10:107",
+      "label": "label / choice-chip ",
+      "destination": "13:107"
+    },
+    {
+      "source": "10:111",
+      "label": "button / primary ",
+      "destination": "5:355"
+    },
+    {
+      "source": "10:127",
+      "label": "button / brand-browse",
+      "destination": "5:195"
+    },
+    {
+      "source": "10:171",
+      "label": "button / primary ",
+      "destination": "10:236"
+    },
+    {
+      "source": "10:177",
+      "label": "button / text-action",
+      "destination": "5:355"
+    },
+    {
+      "source": "10:225",
+      "label": "button / text-action",
+      "destination": "10:134"
+    },
+    {
+      "source": "10:227",
+      "label": "button / text-action",
+      "destination": "5:355"
+    },
+    {
+      "source": "10:272",
+      "label": "button / Choose leo portrait",
+      "destination": "10:375"
+    },
+    {
+      "source": "10:508",
+      "label": "button / primary ",
+      "destination": "11:753"
+    },
+    {
+      "source": "12:468",
+      "label": "Arrangements consent / unchecked",
+      "destination": "12:474"
+    },
+    {
+      "source": "11:767",
+      "label": "button / Go back",
+      "destination": "5:195"
+    },
+    {
+      "source": "11:1022",
+      "label": "button / text-action",
+      "destination": "11:2510"
+    },
+    {
+      "source": "11:1235",
+      "label": "button / primary ",
+      "destination": "11:753"
+    },
+    {
+      "source": "11:1205",
+      "label": "button / Go back",
+      "destination": "5:195"
+    },
+    {
+      "source": "11:2586",
+      "label": "button / primary secondary",
+      "destination": "11:978"
+    },
+    {
+      "source": "11:2588",
+      "label": "button / cancel-confirm",
+      "destination": "11:1191"
+    },
+    {
+      "source": "11:2781",
+      "label": "button / Close filters without applying",
+      "destination": "5:17"
+    },
+    {
+      "source": "11:2928",
+      "label": "button / primary ",
+      "destination": "5:17"
+    },
+    {
+      "source": "12:296",
+      "label": "button / helper-primary",
+      "destination": "12:574"
+    },
+    {
+      "source": "12:451",
+      "label": "button / helper-primary",
+      "destination": "12:97"
+    },
+    {
+      "source": "12:453",
+      "label": "button / helper-text-button",
+      "destination": "11:753"
+    },
+    {
+      "source": "12:529",
+      "label": "button / primary ",
+      "destination": "11:978"
+    },
+    {
+      "source": "12:801",
+      "label": "button / primary secondary",
+      "destination": "11:753"
+    },
+    {
+      "source": "12:803",
+      "label": "button / cancel-confirm",
+      "destination": "12:474"
+    },
+    {
+      "source": "13:133",
+      "label": "label / choice-chip chosen",
+      "destination": "10:65"
+    },
+    {
+      "source": "13:141",
+      "label": "button / primary ",
+      "destination": "13:174"
+    },
+    {
+      "source": "13:201",
+      "label": "button / primary ",
+      "destination": "13:220"
+    },
+    {
+      "source": "13:247",
+      "label": "button / primary ",
+      "destination": "11:753"
+    },
+    {
+      "source": "13:253",
+      "label": "button / text-action",
+      "destination": "13:174"
+    },
+    {
+      "source": "15:269",
+      "label": "Arrangements consent / unchecked",
+      "destination": "12:474"
+    },
+    {
+      "source": "15:276",
+      "label": "button / Go back",
+      "destination": "5:195"
+    },
+    {
+      "source": "15:361",
+      "label": "button / primary ",
+      "destination": "11:978"
+    }
+  ],
+  "missing": []
+}

@@ -6,7 +6,7 @@
 
 - [分版Figma、Logo与架构统一交付入口及PJ核对记录](delivery/r10-deliverables-review.zh-CN.md)。
 
-- [当前开发版本方案r10](delivery/development-versions-r10.zh-CN.md)、[版本/派工真源](delivery/development-versions-r10.json)：复用认可的MVP Demo设计，4个iOS、2个后台、1个支持内部迭代；UX规范/路径与RD技术方案并行，代码及QA未启动。
+- [当前开发版本方案r10](delivery/development-versions-r10.zh-CN.md)、[版本/派工真源](delivery/development-versions-r10.json)：复用认可的MVP Demo设计，4个iOS、2个后台、1个支持内部迭代；DS＋7份分版Figma、Logo及RD技术方案候选已交，代码及QA未启动。
 - 前一批UX-r01视觉被Owner否定，仅保留历史链接和证据，不作为开发依据。产品需求正文中的旧阶段描述是当时快照，当前执行状态只看r10登记。
 - RD准备：[技术选型](engineering/r10/technology-selection.zh-CN.md)、[整体架构](engineering/r10/architecture.zh-CN.md)、[模块工作包](engineering/r10/module-work-packages.json)、[精确输入](engineering/r10/input-manifest.json)、[研发准备交接](engineering/r10/handoff.zh-CN.md)。仅方案，业务实现未签发。
 
@@ -354,3 +354,9 @@
 - [ios-0.1.0-dev.2 · handoff.zh-CN](design/r10/ios-0.1.0-dev.2/handoff.zh-CN.md)。
 
 - [ios-0.1.0-dev.2 · state-contracts.zh-CN](design/r10/ios-0.1.0-dev.2/state-contracts.zh-CN.md)。
+
+- [ios-0.1.0-dev.1 · handoff.zh-CN](design/r10/ios-0.1.0-dev.1/handoff.zh-CN.md)。
+
+- [ios-0.1.0-dev.1 · states.zh-CN](design/r10/ios-0.1.0-dev.1/states.zh-CN.md)。
+
+- [system · handoff.zh-CN](design/r10/system/handoff.zh-CN.md)。

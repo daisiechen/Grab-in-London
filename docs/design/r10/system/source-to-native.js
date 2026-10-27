@@ -1,0 +1,49 @@
+// Transfer measured v13 DOM structures to editable native Figma nodes.
+// Input is a concrete source capture, never an abstract screen/title/button schema.
+// UI screenshots are not embedded. Only source content images and SVG vectors are used.
+await figma.loadFontAsync({family:'Arial',style:'Regular'});
+await figma.loadFontAsync({family:'Arial',style:'Bold'});
+const created=[],mutated=[],K=n=>(created.push(n.id),n),page=DATA.pageId?await figma.getNodeByIdAsync(DATA.pageId):figma.currentPage;if(DATA.pageId)await figma.setCurrentPageAsync(page);
+const colorCache={};function color(css){if(!css)return null;const a=css.match(/[\d.]+/g);if(!a||a.length<3)return null;return {type:'SOLID',color:{r:+a[0]/255,g:+a[1]/255,b:+a[2]/255},opacity:a.length>3?+a[3]:1};}
+const fill=css=>{const c=color(css);return c&&c.opacity>0?[c]:[]};
+const asset=DATA.assetHashes||{};for(const n of page.children)if(n.name.startsWith('Source asset / ')){const p=n.fills.find(p=>p.type==='IMAGE');if(p)asset['/images/'+n.name.slice(15)+'.png']=p.imageHash;}
+const textStyles={};const existingTextStyles=await figma.getLocalTextStylesAsync();
+function styleFor(s){const bold=+s.fontWeight>=600,size=parseFloat(s.fontSize)||14,line=parseFloat(s.lineHeight)||size*1.45,letter=parseFloat(s.letterSpacing)||0;const key=[size,bold,line,letter].join('/');if(!textStyles[key]){const name='v13 / '+(bold?'Strong ':'Text ')+size+' / '+line;const t=existingTextStyles.find(t=>t.name===name)||figma.createTextStyle();t.name=name;t.fontName={family:'Arial',style:bold?'Bold':'Regular'};t.fontSize=size;t.lineHeight={unit:'PIXELS',value:line};t.letterSpacing={unit:'PIXELS',value:letter};textStyles[key]=t;}return textStyles[key];}
+const all=[];
+for(let sceneIndex=0;sceneIndex<DATA.scenes.length;sceneIndex++){
+ const scene=DATA.scenes[sceneIndex],capture=scene.capture,rows=capture.elements,byId=new Map(rows.map(r=>[r.id,r])),map=new Map(),meta=[];
+ const root=K(scene.baseFrameId?(await figma.getNodeByIdAsync(scene.baseFrameId)).clone():scene.component?figma.createComponent():figma.createFrame());page.appendChild(root);if(scene.baseFrameId){for(const n of root.findAll(n=>n.name==='button / helper-launch'||n.name==='button / helper-hide'))n.remove();};root.name=scene.name;root.resize(capture.size.width,capture.size.height);root.x=(DATA.offsetX||200)+sceneIndex*500;root.y=DATA.offsetY||160;root.cornerRadius=scene.component?0:42;root.clipsContent=!scene.component;root.fills=scene.component?[]:fill('rgb(255,255,255)');if(scene.component)root.description='Source-derived v13 component. '+scene.name+'; DS-0.1.0 local source, not a published live library.';map.set(rows[0].id,root);
+ for(const e of rows.slice(1)){
+  const p=map.get(e.parent);if(!p)continue;const pr=byId.get(e.parent).rect,r=e.rect,s=e.style;
+  if((e.tag==='INPUT'&&(r.width<2||r.height<2))||e.cls.includes('mobile-cursor')||e.cls.includes('keyboard-asset')||e.cls.includes('keyboard-container'))continue;
+  let n;
+  if(e.svg){n=K(figma.createNodeFromSvg(e.svg.replaceAll('currentColor',s.color)));p.appendChild(n);n.resize(Math.max(.1,r.width),Math.max(.1,r.height));}
+  else if(e.tag==='IMG'&&e.src&&e.src.endsWith('.svg')){if(e.src.includes('status/ios-status-icons.svg')){n=K((DATA.statusComponentId?await figma.getNodeByIdAsync(DATA.statusComponentId):page.children.find(n=>n.type==='COMPONENT'&&n.name==='System asset / status-icons')).createInstance());p.appendChild(n);n.resize(r.width,r.height);}else continue;}
+  else if(e.tag==='IMG'){if(!asset[e.src])continue;n=K(figma.createRectangle());p.appendChild(n);n.resize(r.width,r.height);n.fills=[{type:'IMAGE',imageHash:asset[e.src],scaleMode:s.objectFit==='contain'?'FIT':'FILL'}];}
+  else{n=K(figma.createFrame());p.appendChild(n);n.resize(Math.max(.1,r.width),Math.max(.1,r.height));n.fills=fill(s.backgroundColor);n.clipsContent=['hidden','clip','auto','scroll'].includes(s.overflow);if(e.cls==='mobile-scroll'){n.overflowDirection='VERTICAL';n.clipsContent=true;}const stroke=color(s.borderTopColor),widths=['Top','Right','Bottom','Left'].map(k=>parseFloat(s['border'+k+'Width'])||0);if(widths.some(x=>x>0)&&stroke){n.strokes=[stroke];n.strokeAlign='INSIDE';[n.strokeTopWeight,n.strokeRightWeight,n.strokeBottomWeight,n.strokeLeftWeight]=widths;}else n.strokes=[];if(e.cls==='sheet-grip')n.fills=fill(s.backgroundColor);}
+  n.name=e.tag.toLowerCase()+' / '+(e.cls||e.ariaLabel||e.texts?.[0]?.text?.trim().slice(0,50)||'source');n.x=r.x-pr.x;n.y=r.y-pr.y;n.opacity=Number.isFinite(+s.opacity)?+s.opacity:1;
+  if('cornerRadius'in n){n.topLeftRadius=parseFloat(s.borderTopLeftRadius)||0;n.topRightRadius=parseFloat(s.borderTopRightRadius)||0;n.bottomLeftRadius=parseFloat(s.borderBottomLeftRadius)||0;n.bottomRightRadius=parseFloat(s.borderBottomRightRadius)||0;}
+  map.set(e.id,n);meta.push({sourceId:e.id,nodeId:n.id,tag:e.tag,cls:e.cls,label:e.ariaLabel||e.texts?.map(t=>t.text).join('').trim()||'',bounds:r});
+  if(e.cls.includes('helper-launcher'))n.effects=[{type:'DROP_SHADOW',color:{r:16/255,g:36/255,b:31/255,a:36/255},offset:{x:0,y:3},radius:5,spread:0,visible:true,blendMode:'NORMAL'}];if(e.cls==='create-circle')n.effects=[{type:'DROP_SHADOW',color:{r:18/255,g:63/255,b:53/255,a:32/255},offset:{x:0,y:2},radius:7,spread:0,visible:true,blendMode:'NORMAL'}];
+  if(e.svg){const m=s.transform?.match(/^matrix\(([^)]+)\)$/);if(m){const [a,b,c,d]=m[1].split(',').map(Number);if(Math.abs(b)>0.01||Math.abs(c)>0.01){const side=r.width/(Math.abs(a)+Math.abs(c));const cx=n.x+r.width/2,cy=n.y+r.height/2;n.resize(side,side);n.relativeTransform=[[a,c,cx-(a+c)*side/2],[b,d,cy-(b+d)*side/2]];}}continue;}
+  const fragments=e.texts||[];
+  for(const [i,f]of fragments.entries()){
+   if(!f.text.trim())continue;const t=K(figma.createText());n.appendChild(t);const st=styleFor(s);t.fontName=st.fontName;t.textStyleId=st.id;t.name='Text / '+f.text.trim().slice(0,55);t.characters=f.text;t.fills=fill(s.color);t.textAutoResize='HEIGHT';
+   const lh=parseFloat(s.lineHeight)||parseFloat(s.fontSize)*1.45;const lines=Math.max(1,Math.round(f.rect.height/lh)),glyphHeight=f.rect.height-(lines-1)*lh;
+   const pads=s.padding.split(' ').map(parseFloat),left=pads.length===4?pads[3]:pads.length===2?pads[1]:pads[0]||0,right=pads.length===4?pads[1]:pads.length===2?pads[1]:pads[0]||0;
+   const multi=lines>1;const width=multi?Math.max(1,r.width-left-right):(Math.max(1,f.rect.width)+2);
+   if(multi){t.resize(width,Math.max(lh,f.rect.height));t.textAutoResize='HEIGHT';}else t.textAutoResize='WIDTH_AND_HEIGHT';t.x=f.rect.x-r.x;t.y=f.rect.y-r.y-(lh-glyphHeight)/2;
+  }
+  if(['INPUT','TEXTAREA','SELECT'].includes(e.tag)&&e.rect.width>100){const t=K(figma.createText());n.appendChild(t);t.fontName={family:'Arial',style:+s.fontWeight>=600?'Bold':'Regular'};t.fontSize=13;t.lineHeight={unit:'PIXELS',value:parseFloat(s.lineHeight)||18.2};t.characters=e.value||e.placeholder||(e.tag==='SELECT'?'English':'');t.name='Text / input sample';t.fills=fill('rgb(108,116,111)');t.x=12;t.y=12;t.resize(Math.max(1,r.width-24),20);t.textAutoResize='HEIGHT';}
+  if(e.tag==='INPUT'&&r.width>=8&&r.width<=24){n.fills=fill(e.checked?'rgb(18,63,53)':'rgb(255,255,255)');n.strokes=fill(e.checked?'rgb(18,63,53)':'rgb(118,118,118)');n.strokeWeight=1;n.cornerRadius=3;if(e.checked){const tick=K(figma.createNodeFromSvg('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19 19"><path d="M4 9.5l3.3 3.4L15 5.8" fill="none" stroke="white" stroke-width="2.2"/></svg>'));n.appendChild(tick);tick.resize(r.width,r.height);tick.x=0;tick.y=0;}}
+ }
+ // Source flex rows remain editable auto-layout when their measured gaps/centres agree.
+ // Complex map positioning and overlapping sheets intentionally retain their measured geometry.
+ let autoRows=0;
+ for(const e of rows){const n=map.get(e.id);if(!n||n.type!=='FRAME'||!['flex','inline-flex'].includes(e.style.display)||e.style.flexDirection==='column')continue;const children=[...n.children];if(!children.length)continue;const originals=children.map(c=>({x:c.x,y:c.y,width:c.width,height:c.height}));if(originals.some(c=>c.x<-.5||c.y<-.5))continue;const gaps=originals.slice(1).map((c,i)=>c.x-originals[i].x-originals[i].width);if(gaps.some(g=>g<-.5)||gaps.length&&Math.max(...gaps)-Math.min(...gaps)>1)continue;const gap=gaps.length?gaps.reduce((a,b)=>a+b,0)/gaps.length:0;const centers=originals.map(c=>c.y+c.height/2);if(Math.max(...centers)-Math.min(...centers)>2)continue;
+  const first=originals[0],last=originals.at(-1);n.layoutMode='HORIZONTAL';n.primaryAxisSizingMode='FIXED';n.counterAxisSizingMode='FIXED';n.counterAxisAlignItems='CENTER';n.paddingLeft=Math.max(0,first.x);n.paddingRight=Math.max(0,n.width-last.x-last.width);n.paddingTop=0;n.paddingBottom=0;n.itemSpacing=Math.max(0,gap);for(let i=0;i<children.length;i++){children[i].layoutSizingHorizontal='FIXED';children[i].layoutSizingVertical='FIXED';}n.resize(e.rect.width,e.rect.height);autoRows++;
+ }
+ for(const e of rows){const n=map.get(e.id);if(!n||!('children'in n))continue;const order=rows.filter(c=>c.parent===e.id&&map.has(c.id)).sort((a,b)=>(parseInt(a.style.zIndex)||0)-(parseInt(b.style.zIndex)||0));for(const child of order)n.appendChild(map.get(child.id));}
+ all.push({name:scene.name,nodeId:root.id,sourceState:scene.id,sourceNodes:meta.filter(n=>['BUTTON','LABEL','SELECT','INPUT','TEXTAREA','H1','H2'].includes(n.tag)||['map-image','map-preview','meal-card','meal-copy','bottom-nav','host-line','brand-wordmark'].includes(n.cls)).map(({bounds,...n})=>n),editableTextNodes:root.findAllWithCriteria({types:['TEXT']}).length,imageNodes:root.findAll(n=>'fills'in n&&Array.isArray(n.fills)&&n.fills.some(p=>p.type==='IMAGE')).length,autoLayoutRows:autoRows});
+}
+return {createdNodeIds:created,mutatedNodeIds:mutated,pageId:page.id,scenes:all,source:'v13 actual browser DOM and project content assets',noUIScreenImageFills:true};

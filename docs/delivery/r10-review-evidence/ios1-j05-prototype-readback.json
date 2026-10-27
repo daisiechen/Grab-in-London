@@ -1,0 +1,198 @@
+{
+  "reviewer": "PJ",
+  "limitations": "Nodes and reactions checked, not Presentation end-to-end or real services.",
+  "fileKey": "CS9oRCq8h3Clg09up2aISj",
+  "page": "J05 · Profile privacy and AI preferences",
+  "starts": [
+    {
+      "nodeId": "11:1513",
+      "name": "J05 · Profile, privacy and remembered preferences"
+    }
+  ],
+  "roots": [
+    {
+      "id": "11:277",
+      "name": "J05 / Public profile"
+    },
+    {
+      "id": "11:376",
+      "name": "J05 / Edit profile"
+    },
+    {
+      "id": "11:518",
+      "name": "J05 / Privacy and settings"
+    },
+    {
+      "id": "11:621",
+      "name": "J05 / AI preferences"
+    },
+    {
+      "id": "11:847",
+      "name": "J05 / Saved six-field preferences"
+    },
+    {
+      "id": "11:1043",
+      "name": "J05 / Assistant home"
+    },
+    {
+      "id": "11:1262",
+      "name": "J05 / CLEAR and manual fallback"
+    },
+    {
+      "id": "11:1410",
+      "name": "J05 / Sign out confirmation"
+    },
+    {
+      "id": "11:1513",
+      "name": "J05 / Public profile"
+    },
+    {
+      "id": "11:1611",
+      "name": "J05 / Edit profile"
+    },
+    {
+      "id": "11:1753",
+      "name": "J05 / Privacy and settings"
+    },
+    {
+      "id": "11:1854",
+      "name": "J05 / AI preferences"
+    },
+    {
+      "id": "11:1982",
+      "name": "J05 / Saved six-field preferences"
+    },
+    {
+      "id": "11:2113",
+      "name": "J05 / Assistant home"
+    },
+    {
+      "id": "11:2260",
+      "name": "J05 / CLEAR and manual fallback"
+    },
+    {
+      "id": "11:2408",
+      "name": "J05 / Sign out confirmation"
+    },
+    {
+      "id": "12:882",
+      "name": "J05 / Privacy choice saved"
+    },
+    {
+      "id": "13:355",
+      "name": "J05 / Delete remembered preferences"
+    },
+    {
+      "id": "15:410",
+      "name": "J05 / Signed out · guest"
+    }
+  ],
+  "links": [
+    {
+      "source": "11:1532",
+      "label": "button / Settings",
+      "destination": "11:1753"
+    },
+    {
+      "source": "11:1543",
+      "label": "button / primary secondary",
+      "destination": "11:1611"
+    },
+    {
+      "source": "11:1730",
+      "label": "button / primary ",
+      "destination": "11:1513"
+    },
+    {
+      "source": "11:1625",
+      "label": "button / Go back",
+      "destination": "11:1513"
+    },
+    {
+      "source": "11:1820",
+      "label": "button / settings-link",
+      "destination": "12:882"
+    },
+    {
+      "source": "11:1827",
+      "label": "button / settings-link",
+      "destination": "11:1611"
+    },
+    {
+      "source": "11:1831",
+      "label": "button / settings-link danger",
+      "destination": "11:2408"
+    },
+    {
+      "source": "11:1767",
+      "label": "button / Go back",
+      "destination": "11:1513"
+    },
+    {
+      "source": "11:1838",
+      "label": "button / helper-launch",
+      "destination": "11:2113"
+    },
+    {
+      "source": "11:1963",
+      "label": "button / Back to assistant home",
+      "destination": "11:2113"
+    },
+    {
+      "source": "11:1976",
+      "label": "button / helper-primary",
+      "destination": "11:1982"
+    },
+    {
+      "source": "11:2091",
+      "label": "button / Back to assistant home",
+      "destination": "11:2113"
+    },
+    {
+      "source": "11:2107",
+      "label": "button / helper-text-button",
+      "destination": "13:355"
+    },
+    {
+      "source": "11:2222",
+      "label": "button / My preferences",
+      "destination": "11:1854"
+    },
+    {
+      "source": "11:2257",
+      "label": "button / helper-send",
+      "destination": "11:2260"
+    },
+    {
+      "source": "11:2369",
+      "label": "button / My preferences",
+      "destination": "11:1982"
+    },
+    {
+      "source": "11:2374",
+      "label": "button / New conversation",
+      "destination": "11:2113"
+    },
+    {
+      "source": "11:2506",
+      "label": "button / primary secondary",
+      "destination": "11:1753"
+    },
+    {
+      "source": "11:2508",
+      "label": "button / cancel-confirm",
+      "destination": "15:410"
+    },
+    {
+      "source": "13:497",
+      "label": "button / primary secondary",
+      "destination": "11:1982"
+    },
+    {
+      "source": "13:499",
+      "label": "button / cancel-confirm",
+      "destination": "11:1854"
+    }
+  ],
+  "missing": []
+}

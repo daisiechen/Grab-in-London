@@ -1,0 +1,87 @@
+{
+  "visualBaseline": {
+    "site": "https://grab-in-london-demo.daisie-chen-94.chatgpt.site",
+    "release": "v13",
+    "commit": "361ab04ed6fc55c0f1e041bb5d6cc5d216d1a7b2",
+    "sourceHashes": {
+      "demo/src/Prototype.tsx": "50945a3a1261108d855b483342e31b252b0c99c74977011e92426cf1887e58a8",
+      "demo/src/prototype.css": "8ec652ea30fc06b74846f1adcc5d910c05f4366bcf31d8e6b8b73ced530025bb",
+      "demo/DESIGN.md": "abd6031d7e2b24b2e4f19b2a99ef54b9e76a2f1807717e590ac71c9eb7bfb63a",
+      "demo/UX-CONTRACT.md": "c74557722202a3de27191a8eca885460d7b48c92b202f320b7a2c738436c78fc"
+    }
+  },
+  "businessBaseline": {
+    "commit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+    "sourceHashes": {
+      "docs/product/journeys/j01/requirements.zh-CN.md": "af6f88ac83dbf85dc3fe103fcc6bc1ae445ecafb630fb8fa68fe0be9eacb1568",
+      "docs/product/journeys/j01/artifact-manifest.json": "fc41ff650ad57cae8b88911a801129b59282a14e6da79115046049256d9e4533",
+      "demo/journeys/j01/index.html": "91464863d9c58380592a7d8bea3279fa690479bc74e1a52caa7ed5ee0d5a09ce",
+      "docs/product/journeys/j05/requirements.zh-CN.md": "50a482a514dbb17b75b9e1baf7c174f24a6d7e155c3d2e48fa1e72bcd5d03e6b",
+      "docs/product/journeys/j05/artifact-manifest.json": "47bdcd876b0bccab3cac0253ca1168fc123a10b4c94880c685f3dfe383eb4b3b",
+      "demo/journeys/j05/index.html": "5445e92756b85325e774d77f27743dcf0a342b27980215dc436214355501b99c"
+    }
+  },
+  "planningSnapshot": "3c81b2751b5313f0d3d7b9edc14c35ddf8ff9a79",
+  "sourceContentAssets": {
+    "demo/public/images/london-map.png": "6d14cf5ce79fbb2ca06b06f8202e13e270e76fea5481812c45e01e8370808d1b",
+    "demo/public/images/brand-table.png": "32e13502080344da8bd2d99cd7c519203028c181b9de2127d12d920e9db6b811",
+    "demo/public/images/emma.png": "a42409ed70b02b0e498d4b19410b83f02a72857b64852c9218841c82fd269b06",
+    "demo/public/images/maya.png": "184eb2a0733462915507faf8d4bad5bdcc0832ec445742d140b9d004105fc32e",
+    "demo/public/images/leo.png": "40d628765f58e2cfabd9a60d70767b5e7cf720c39a9ce8c46896e3ac81851a46",
+    "demo/public/images/restaurant.png": "b4a833be3dc7a8057ab98a90871f04557a0a88282d063d4217a44d81c8d8c7c4"
+  },
+  "status": "candidate-awaiting-owner-review",
+  "ownerApproved": false,
+  "nativeNamedVersionId": null,
+  "mutableFigmaFile": true,
+  "publishedLibrary": false,
+  "priorUXr01": "historical-rejected-not-development-baseline",
+  "stages": {
+    "UX": "candidate",
+    "RD": "not-started",
+    "QA": "not-started"
+  },
+  "revision": "DS-0.1.0",
+  "delivery": "DS-0.1.0",
+  "fileKey": "yUMVg2xpLXQHKPr2ZWpkO3",
+  "entryNodeIds": [
+    "2:70",
+    "7:4",
+    "7:43"
+  ],
+  "requirementsRevisions": {
+    "J01": "PM-r01",
+    "J05": "PM-r02"
+  },
+  "demoRevisions": {
+    "J01": "PM-r02",
+    "J05": "PM-r02"
+  },
+  "verification": {
+    "ran": [
+      "Actual original Demo normal clicks and source screenshots",
+      "Figma native screenshot visual inspection",
+      "Figma node and prototype readback",
+      "Source/hash/reference tests"
+    ],
+    "notRun": [
+      "Real backend/OAuth/email/model calls",
+      "iOS device and VoiceOver",
+      "Independent QA"
+    ],
+    "notRunClassification": "Later implementation/service/device verification; not claimed by this design candidate.",
+    "testCommand": "python3 -m unittest tests.test_ux_r10_system tests.test_ux_r10_ios12 -v",
+    "testResult": "6 tests passed"
+  },
+  "readyFor": "Owner design review; not final frozen development baseline",
+  "readyMissing": [
+    "Owner final design approval and actual freeze/version recording",
+    "Final provider disclosure facts before enabling real AI",
+    "Logo selection before replacing existing wordmark"
+  ],
+  "readbackSHA256": "ae5543bab62e9e6c614fb4782c596c532905bbe6980aa07228cf643213e93b7f",
+  "evidenceHashes": {
+    "evidence/final-ds-cards.png": "c3954e5a8152b49be0cd1fb553bd8031169d3a6c21ff33f1bc40c15601077eda",
+    "evidence/final-ds-controls.png": "ae110afc10f867f6f0ed40633e231fbc5c60a8e8d86940aa19772fc382039bc4"
+  }
+}

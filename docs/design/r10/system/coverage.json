@@ -1,0 +1,32 @@
+{
+  "revision": "DS-0.1.0",
+  "source": "demo/DESIGN.md + demo/UX-CONTRACT.md + v13 measured DOM",
+  "families": {
+    "tokens": [
+      "2:70"
+    ],
+    "controls": [
+      "6:12",
+      "6:20",
+      "4:128",
+      "4:136",
+      "5:2"
+    ],
+    "calendarSheet": [
+      "5:6",
+      "5:151"
+    ],
+    "content": [
+      "4:23",
+      "4:101",
+      "4:104"
+    ],
+    "navigationAssistant": [
+      "4:70",
+      "4:108",
+      "4:121"
+    ]
+  },
+  "rules": "handoff.zh-CN.md §2–4",
+  "prototypeRequirement": "Design system component library; behavioral prototypes belong to iteration file."
+}

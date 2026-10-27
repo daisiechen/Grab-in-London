@@ -8,8 +8,8 @@
 
 | 交付包 | 本次用户旅程 | Figma与状态 |
 | --- | --- | --- |
-| DS-0.1.0 | 复用原MVP的布局、色彩、字形、组件及交互规范 | [规范文件](https://www.figma.com/design/yUMVg2xpLXQHKPr2ZWpkO3)，收口中 |
-| IOS-0.1.0-dev.1 | 发现饭局→完整注册/登录及资料→申请、待审/撤回；个人资料、隐私与AI偏好 | [独立文件](https://www.figma.com/design/CS9oRCq8h3Clg09up2aISj)，收口中 |
+| DS-0.1.0 | 复用原MVP的布局、色彩、字形、组件及交互规范 | [规范文件](https://www.figma.com/design/yUMVg2xpLXQHKPr2ZWpkO3)，候选已交 |
+| IOS-0.1.0-dev.1 | 发现饭局→完整注册/登录及资料→申请、待审/撤回；个人资料、隐私与AI偏好 | [独立文件](https://www.figma.com/design/CS9oRCq8h3Clg09up2aISj)，候选已交 |
 | IOS-0.1.0-dev.2 | 四步发起→发布→审核申请→安排锁定与外订声明→截止/取消 | [独立文件](https://www.figma.com/design/c04Fi5iarZm7gTPw4u2f7f?node-id=1-24)，候选已交 |
 | IOS-0.1.0-dev.3 | 沟通与参与状态；饭后反馈、双向联系/私聊与解除；独立产品问卷 | [Figma入口](https://www.figma.com/design/mKXV0NvBavRb6fnmQ2g2xV?node-id=13-14)、[交接与限制](../design/r10/ios-0.1.0-dev.3/handoff.zh-CN.md)，候选已交 |
 | IOS-0.1.0-dev.4 | 私密举报及本人追踪；再认证、确认删除、回执与无登录支持 | [Figma入口](https://www.figma.com/design/TxashjRfQDvnc4jQieeaWu?node-id=2-4)、[交接与限制](../design/r10/ios-0.1.0-dev.4/handoff.zh-CN.md)，候选已交 |
@@ -30,8 +30,12 @@ Logo推荐A“空位邀请”（俯视餐桌与拉出的椅位），B“空椅�
 
 PJ已实际查看原Demo与Figma的发现/详情/账号表单、聊天/饭后反馈、后台概览/口径抽屉同视口对照。保留原地图、餐厅照片、信息密度、导航、侧栏、图表与抽屉层级；分离照片/地图素材允许使用，不接受整屏截图充当可编辑设计。源浏览器Arial度量回退已单独修正，未更换产品字体。
 
-PJ已独立读取iOS dev.3/4、Support、Admin原生节点及原型目标；读取证明入口/目标存在，不等于Presentation完整逐点点击。Admin核对发现历史返回图层名与恢复页跨旧快照连接，已交原作者定向修复，已再次实际读回确认修复，不能仅以目标存在称语义正确。
+PJ已独立读取4个iOS版本、Support、Admin原生节点及原型目标；读取证明入口/目标存在，不等于Presentation完整逐点点击。Admin核对发现历史返回图层名与恢复页跨旧快照连接，已交原作者定向修复，已再次实际读回确认修复，不能仅以目标存在称语义正确。
 
 各包保留输入哈希、需求映射、原生读回、视觉截图及未测记录。固定样例路径不等于任意输入、键盘/读屏、真机、真实认证、异步worker、邮件或CSV服务已测试；这些属于后续实现与相应QA证据。文件可变、未命名冻结时，必须标为候选。
 
 首次业务代码开工前，DS及本轮全部7个版本Figma必须共同完成Ready核对并固定可审阅候选；共享基础骨架同样受此门槛约束。Logo选择与采用单独登记，不以品牌候选未选择阻塞原界面复用。当前门槛未关闭，未启动业务实现、产品QA或发布。
+
+本轮DS、全部7份版本Figma与Logo候选均已交，架构准备已交；各作者已停止写入并关闭各自临时运行资源。候选尚未整体设计签收/固定开发基线，initialDesignSetReady仍为false，不自动进入业务实现。
+
+最终执行 `python3 -m unittest discover -s tests -v`，257项全部通过（30.046s、无跳过）；启用既有PM真实Chromium布局/交互检查，并包含新增版本、架构、设计覆盖/原型目标/权限及Logo资产校验。该结果是本轮文档、既有Demo与设计证据验证，不是新产品QA或真实服务验收。`git diff --check`通过；公开同步排除了无关研究与旧QA未提交内容。
