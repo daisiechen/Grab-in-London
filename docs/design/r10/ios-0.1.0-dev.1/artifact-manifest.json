@@ -112,5 +112,19 @@
     "authorSelfApproved": false,
     "additionalIssue": "R11-I1-07 and guest AI intent guard"
   },
-  "repairNotes": "r11-repair.zh-CN.md"
+  "repairNotes": "r11-repair.zh-CN.md",
+  "prototypeSupplement20261027": {
+    "revision": "UX-r03-click-repair-01",
+    "issue": "R11-I1-PROT-01",
+    "status": "author-repaired-browser-retested",
+    "readback": "evidence/r11-preferences-memory-readback.json",
+    "readbackSHA256": "2cb5805a414bc356220494dcf5018dbeb7e5b842f9bb03008ce8fbaee7cb0b97",
+    "historicalReadback": "evidence/final-readback.json",
+    "historicalSignOffPreserved": true,
+    "visualChange": false,
+    "independentlyApproved": false,
+    "report": "docs/reviews/r11/ios1-prototype-retest-2026-10-27.json",
+    "reportSHA256": "82f8f558182454ff5909d98db1d25d2d6a8502ab4525af538f624700f22c7f2e",
+    "validation": "9 native-evidence tests passed; actual 20 listed browser cases separately recorded; no independent self-signature"
+  }
 }
