@@ -67,6 +67,12 @@ class DevelopmentVersionsR10Test(unittest.TestCase):
                          ['version-planning', 'UX-design-specification', 'RD-technology-and-architecture-planning'])
         self.assertFalse(self.data['authorization']['implementationStarted'])
         self.assertFalse(self.data['authorization']['qaStarted'])
+        gate = self.data['initialImplementationGate']
+        self.assertEqual(gate['designSystem'], 'DS-0.1.0')
+        self.assertEqual(set(gate['requiredDesignIterations']), {v['id'] for v in self.data['iterations']})
+        self.assertTrue(gate['includesSharedFoundation'])
+        self.assertFalse(gate['initialDesignSetReady'])
+        self.assertFalse(gate['futureUnissuedJourneysRequired'])
         for item in self.data['iterations']:
             self.assertEqual(item['implementationStatus'], 'not-started')
             self.assertEqual(item['qaStatus'], 'not-started')

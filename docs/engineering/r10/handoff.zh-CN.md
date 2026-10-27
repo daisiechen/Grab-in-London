@@ -30,12 +30,12 @@ PJ唯一版本真源为[开发版本r10](../../delivery/development-versions-r10
 - 只读检查了现有package.json/lockfile、实际目录、主要HTTP/SDK/worker入口、安全存储/UI tokens、既有核心/AI合同及封存/补丁分支记录。保留Expo/RN、React/Vite、Fastify、Postgres/Drizzle、生成契约、持久job/outbox方向；没有创建packages/domain空壳，也没有整枝合并P1.1。
 - 明确SDK58/RN0.88/React19.3为仓库声明，不宣称已验证原生兼容；iOS与后台React声明差异不强行统一。保留DeepSeek＋CNY50/月闸，现有Auth0/Maps/Resend配置须逐能力实际核证，不要求重建已存在账户。
 - 2026-10-27访问官方Expo、React Native、Fastify、Postgres17、Auth0、Places、Resend及DeepSeek文档；只核接口原则，不外呼账户、发送消息/邮件、获取价格批准或启用真实模型。
-- `python3 -m unittest discover -s tests -p 'test_architecture_r10.py' -v`：4项通过；验证规划投影与原始输入、每旅程唯一迭代/不实施状态、共享writer和无环依赖、关键范围/AI约束。静态检查不是产品QA/构建/供应商测试。
+- `python3 -m unittest discover -s tests -p 'test_architecture_r10.py' -v`：5项通过；含首次全套设计门槛（共享骨架亦受控），验证规划投影与原始输入、每旅程唯一迭代/不实施状态、共享writer和无环依赖、关键范围/AI约束。静态检查不是产品QA/构建/供应商测试。
 - 本轮未安装依赖，未运行pnpm业务测试/构建、DB/API/worker、iOS工具链、供应商、部署、迁移或产品QA。所有runtimeBuild/codeCommit/deployment仍null。
 - 无新增需要Owner重复确认的产品范围问题；依赖兼容、设计Ready、实际owner/文件租约和环境预检为后续相应模块的执行前置，不交给Owner做技术排障。
 
 ## 后续接收与写入边界
 
-PJ先核本方案是否与最新范围/版本一致；UX补足相应迭代的MVP视觉保真规范/场景；RD按工作包核接口可实现性。只有该迭代全部必要Figma、公共DS、固定候选、实际模块owner与文件租约、隔离环境预检齐备后，PJ才按用户既有条件授权签发具体代码任务。后续发布仍独立；QA无本轮启动任务。
+PJ先核本方案是否与最新范围/版本一致；UX补足本轮全部迭代的MVP视觉保真规范/场景；RD按工作包核接口可实现性。首次任何业务代码（含WP-FOUNDATION共享骨架）须先满足`initialDesignSetReady`：DS-0.1.0＋4个iOS、1个Support、2个Admin版本Figma全部Ready；未来J12—J15不在此集合。全套设计门槛关闭后，仍需该迭代固定候选、实际模块owner与精确文件租约、接口兼容及隔离环境预检齐备，PJ才按用户既有条件授权逐版本逐模块签发，不边设计边实现。后续发布仍独立；QA无本轮启动任务。
 
 本包唯一写入负责人为RD架构准备作者；交接后停止写入。文件白名单：`docs/engineering/r10/`和`tests/test_architecture_r10.py`。Git索引与提交/推送归PJ，未改旧任务表、PRD/Demo/旧Figma、业务源码、环境或其他worker文件。

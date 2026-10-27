@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "r10-RD-prepare-1",
+  "revision": "r10-RD-prepare-2",
   "status": "architecture-candidate-not-implementation",
   "versionAuthority": "docs/delivery/development-versions-r10.json",
   "versionScopeProjection": [
@@ -190,6 +190,7 @@
       "deployment": null,
       "qaStatus": "not-started",
       "codeStartGate": {
+        "initialDesignSetReady": false,
         "iterationDesignReady": false,
         "moduleOwnerAssigned": false,
         "exactFileLeaseIssued": false,
@@ -302,6 +303,7 @@
       "iterationDependencies": [],
       "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
       "codeStartGate": {
+        "initialDesignSetReady": false,
         "iterationDesignReady": false,
         "moduleOwnerAssigned": false,
         "exactFileLeaseIssued": false,
@@ -397,6 +399,7 @@
       "iterationDependencies": [],
       "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
       "codeStartGate": {
+        "initialDesignSetReady": false,
         "iterationDesignReady": false,
         "moduleOwnerAssigned": false,
         "exactFileLeaseIssued": false,
@@ -497,6 +500,7 @@
       ],
       "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
       "codeStartGate": {
+        "initialDesignSetReady": false,
         "iterationDesignReady": false,
         "moduleOwnerAssigned": false,
         "exactFileLeaseIssued": false,
@@ -596,6 +600,7 @@
       ],
       "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
       "codeStartGate": {
+        "initialDesignSetReady": false,
         "iterationDesignReady": false,
         "moduleOwnerAssigned": false,
         "exactFileLeaseIssued": false,
@@ -704,6 +709,7 @@
       ],
       "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
       "codeStartGate": {
+        "initialDesignSetReady": false,
         "iterationDesignReady": false,
         "moduleOwnerAssigned": false,
         "exactFileLeaseIssued": false,
@@ -791,6 +797,7 @@
       ],
       "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
       "codeStartGate": {
+        "initialDesignSetReady": false,
         "iterationDesignReady": false,
         "moduleOwnerAssigned": false,
         "exactFileLeaseIssued": false,
@@ -880,6 +887,7 @@
       ],
       "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
       "codeStartGate": {
+        "initialDesignSetReady": false,
         "iterationDesignReady": false,
         "moduleOwnerAssigned": false,
         "exactFileLeaseIssued": false,
@@ -982,6 +990,7 @@
       ],
       "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
       "codeStartGate": {
+        "initialDesignSetReady": false,
         "iterationDesignReady": false,
         "moduleOwnerAssigned": false,
         "exactFileLeaseIssued": false,
@@ -1062,6 +1071,7 @@
       ],
       "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
       "codeStartGate": {
+        "initialDesignSetReady": false,
         "iterationDesignReady": false,
         "moduleOwnerAssigned": false,
         "exactFileLeaseIssued": false,
@@ -1170,6 +1180,7 @@
       ],
       "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
       "codeStartGate": {
+        "initialDesignSetReady": false,
         "iterationDesignReady": false,
         "moduleOwnerAssigned": false,
         "exactFileLeaseIssued": false,
@@ -1267,6 +1278,7 @@
       ],
       "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
       "codeStartGate": {
+        "initialDesignSetReady": false,
         "iterationDesignReady": false,
         "moduleOwnerAssigned": false,
         "exactFileLeaseIssued": false,
@@ -1277,6 +1289,7 @@
     }
   ],
   "designReadyRequirements": [
+    "initial-design-set-DS-and-all-seven-iterations-ready",
     "same-version-prd-hashes",
     "approved-mvp-visual-reference",
     "DS-0.1.0-ready",
@@ -1292,5 +1305,22 @@
     "sameFailureAttempts": 3,
     "onExhaustion": "停止同路径重试，将命令/错误摘要/已查证项/数据未改证明交PJ与环境owner；不让QA临场改环境。"
   },
-  "implementationNotIssuedReason": "Figma/DS与精确模块owner/环境仍未Ready，本轮只交架构准备；等待PJ按用户既有条件授权签发有界代码包，不自动部署。"
+  "implementationNotIssuedReason": "本轮DS与7个版本Figma尚未全部Ready，任何业务代码及共享骨架均未签发；全套Ready后仍需逐版本模块owner/精确租约/兼容接口/环境预检，不自动扩版或部署。",
+  "initialDesignSetGate": {
+    "requiredDesignSystem": "DS-0.1.0",
+    "requiredIterations": [
+      "IOS-0.1.0-dev.1",
+      "IOS-0.1.0-dev.2",
+      "IOS-0.1.0-dev.3",
+      "IOS-0.1.0-dev.4",
+      "SUPPORT-0.1.0-dev.1",
+      "ADMIN-0.1.0-dev.1",
+      "ADMIN-0.1.0-dev.2"
+    ],
+    "initialDesignSetReady": false,
+    "appliesToSharedFoundation": true,
+    "appliesBeforeAnyBusinessCode": true,
+    "futureJourneysRequired": [],
+    "meaning": "本轮首次任何业务代码或共享骨架开工前，DS及本轮7个版本Figma全部Ready；其后仍按固定迭代/模块/租约/环境门槛签发，不边设计边实现。"
+  }
 }

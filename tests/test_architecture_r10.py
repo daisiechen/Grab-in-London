@@ -93,6 +93,23 @@ class ArchitectureR10Test(unittest.TestCase):
         self.assertEqual(data['environmentFailureBudget']['sameFailureAttempts'], 3)
         self.assertEqual(data['environmentFailureBudget']['minutes'], 15)
 
+    def test_initial_full_design_set_blocks_every_package_including_foundation(self):
+        data = read('module-work-packages.json')
+        plan = json.loads((ROOT / data['versionAuthority']).read_text())
+        gate = data['initialDesignSetGate']
+        self.assertEqual(gate['requiredDesignSystem'], 'DS-0.1.0')
+        self.assertEqual(gate['requiredIterations'], [x['id'] for x in plan['iterations']])
+        self.assertEqual(len(gate['requiredIterations']), 7)
+        self.assertFalse(gate['initialDesignSetReady'])
+        self.assertTrue(gate['appliesToSharedFoundation'])
+        self.assertTrue(gate['appliesBeforeAnyBusinessCode'])
+        self.assertEqual(gate['futureJourneysRequired'], [])
+        for package in data['workPackages']:
+            self.assertFalse(package['codeStartGate']['initialDesignSetReady'])
+            self.assertFalse(package['codeStartGate']['allowed'])
+        for name in ('architecture.zh-CN.md', 'handoff.zh-CN.md'):
+            self.assertIn('initialDesignSetReady', (FOLDER / name).read_text())
+
     def test_selection_preserves_ai_and_current_platform_scope(self):
         text = (FOLDER / 'technology-selection.zh-CN.md').read_text()
         self.assertIn('50,000,000', text)
