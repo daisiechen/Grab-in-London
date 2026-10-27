@@ -72,6 +72,16 @@ From the repository root after `source infra/dev-env.sh`:
   `unit` project (`*.unit.test.ts`) never collects React Native tests
 - `pnpm --filter @fancy/ios start` — Metro for a development build (needs `expo run:ios` first)
 
+### Run on a simulator or iPhone with preview data (no server needed)
+
+On a Mac with Xcode, from `apps/ios` (copy `.env.example` to `.env` and fill the Google key first):
+
+- `pnpm ios:preview` — builds the development app and opens it in the iOS Simulator
+- `pnpm ios:preview:device` — same, on a USB-connected iPhone (Xcode signs with your Apple ID team)
+
+`EXPO_PUBLIC_FANCY_PREVIEW=1` swaps the API for the in-memory demo data in `src/preview/`
+(sign in with any email and code `000000`). Without the Google key, Discover shows the illustrated map.
+
 Native build (`expo prebuild` / `expo run:ios`), simulator and device runs are blocked by G-IOS
 (full Xcode, Apple Developer team, signing). `ios.bundleIdentifier` `com.example.fancy.dev` is a
 placeholder; no team id is committed. Generated `ios/` is not committed (Continuous Native Generation).

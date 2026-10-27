@@ -17,21 +17,31 @@ const LABELS: Record<string, string> = { 'st-jamess': 'St James’s', 'st-james'
 
 export const areaName = (code: string) => LABELS[code] ?? areaLabel(code);
 
-export interface AreaGroup { code: string; name: string; meals: Meal[]; x: number; y: number }
+export interface AreaGroup { code: string; name: string; meals: Meal[]; x: number; y: number; lat: number | null; lng: number | null }
 
-/** Groups discovery results by area in result order; the pin number is the meal count. */
-export function groupByArea(meals: readonly Meal[]): { groups: AreaGroup[]; unplaced: Meal[] } {
-  const groups = new Map<string, AreaGroup>();
+/**
+ * Groups discovery results by area in result order; the pin number is the meal count.
+ * `illustrated` pins only areas with a position on the drawn map; `geo` (native Google map) pins
+ * every area that has at least one restaurant coordinate, at the average of those coordinates.
+ */
+export function groupByArea(meals: readonly Meal[], mode: 'illustrated' | 'geo' = 'illustrated'): { groups: AreaGroup[]; unplaced: Meal[] } {
+  const groups = new Map<string, AreaGroup & { points: number }>();
   const unplaced: Meal[] = [];
   for (const meal of meals) {
     const at = POSITIONS[meal.areaCode];
-    if (!at) {
+    const loc = meal.venue.location;
+    if (mode === 'illustrated' ? !at : !loc) {
       unplaced.push(meal);
       continue;
     }
-    const group = groups.get(meal.areaCode) ?? { code: meal.areaCode, name: areaName(meal.areaCode), meals: [], ...at };
+    const group = groups.get(meal.areaCode) ?? { code: meal.areaCode, name: areaName(meal.areaCode), meals: [], x: at?.x ?? 0, y: at?.y ?? 0, lat: null, lng: null, points: 0 };
     group.meals.push(meal);
+    if (loc) {
+      group.lat = ((group.lat ?? 0) * group.points + loc.lat) / (group.points + 1);
+      group.lng = ((group.lng ?? 0) * group.points + loc.lng) / (group.points + 1);
+      group.points += 1;
+    }
     groups.set(meal.areaCode, group);
   }
-  return { groups: [...groups.values()], unplaced };
+  return { groups: [...groups.values()].map(({ points: _points, ...g }) => g), unplaced };
 }

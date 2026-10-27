@@ -2,7 +2,7 @@ import {useAssistantContext} from '../assistant/hooks.ts';
 import { useAnalyticsPresentations,useAnalyticsState } from '../../analytics/hooks.ts';
 import { useNativeImpressions,type DiscoveryProof } from '../../analytics/impressions.ts';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, Pressable, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ApiError } from '@fancy/client';
@@ -17,12 +17,12 @@ import { FormMessage } from '../../ui/FormMessage.tsx';
 import { MealCard } from '../../ui/MealCard.tsx';
 import { Sheet } from '../../ui/Sheet.tsx';
 import { Icon } from '../../ui/Icon.tsx';
-import { images } from '../../ui/images.ts';
 import { colors } from '../../ui/tokens.ts';
 import { BRAND_COPY } from '../../ui/brand.ts';
 import { languageOptions } from '../profile/model.ts';
 import type { Meal } from '../meals/format.ts';
 import { groupByArea } from './areas.ts';
+import { DiscoverMap, nativeMapAvailable } from './DiscoverMap';
 import { BUDGET_STEPS, activeFilterCount, emptyFilters, toQuery, toggle, type Filters, type TimeOfDay } from './filters.ts';
 import { createStyles } from '../../ui/styles.ts';
 
@@ -112,7 +112,7 @@ export function DiscoverScreen() {
   const dateLabel = applied.dates.length > 1 ? `${applied.dates.length} dates` : applied.dates[0] ? longDate(applied.dates[0]) : 'Any date';
   const sizeLabel = applied.tableSizes.length ? `${[...applied.tableSizes].sort().join(', ')} people` : 'Table size';
 
-  const { groups, unplaced } = groupByArea(meals);
+  const { groups, unplaced } = groupByArea(meals, nativeMapAvailable() ? 'geo' : 'illustrated');
   // Meals without a map position still get a preview (as “London”) so the map never reads as empty.
   const busiest = groups.reduce<(typeof groups)[number] | undefined>((best, g) => (!best || g.meals.length > best.meals.length ? g : best), undefined);
   const area = groups.find((g) => g.code === areaCode) ?? busiest ?? (unplaced.length ? { code: 'london', name: 'London', meals: unplaced } : null);
@@ -186,22 +186,7 @@ export function DiscoverScreen() {
             </View>
           ) : null}
           <View style={styles.map}>
-            <Image source={images.londonMap} style={styles.mapImage} resizeMode="cover" accessibilityLabel="Map of central London" />
-            {groups.map((g) => {
-              const active = g.code === area?.code;
-              return (
-                <Pressable
-                  key={g.code}
-                  accessibilityRole="button"
-                  accessibilityLabel={`${g.name}: ${g.meals.length} ${g.meals.length === 1 ? 'meal' : 'meals'}`}
-                  accessibilityState={{ selected: active }}
-                  onPress={() => selectArea(g.code)}
-                  style={[styles.pin, active && styles.pinActive, { left: `${g.x}%`, top: `${g.y}%` }]}
-                >
-                  <Text style={[styles.pinText, active && styles.pinTextActive]}>{g.meals.length}</Text>
-                </Pressable>
-              );
-            })}
+            <DiscoverMap groups={groups} activeCode={area?.code ?? null} onSelect={selectArea} />
             <View style={styles.mapKey} pointerEvents="none"><Text style={styles.mapKeyText}>Numbers = meals in each area</Text></View>
             <Pressable accessibilityRole="button" accessibilityLabel="Show central London" style={styles.locate} onPress={() => { if (groups[0]) selectArea(groups[0].code); notify('Showing central London. Location access is not needed.'); }}>
               <Icon name="PaperPlane" size={18} />
@@ -318,11 +303,6 @@ const styles = createStyles({
   notice: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', marginHorizontal: 16, marginBottom: 8, paddingHorizontal: 12, borderRadius: 9, backgroundColor: '#f2f5ee' },
   noticeText: { fontSize: 11, color: '#607160' },
   map: { flex: 1, minHeight: 160, backgroundColor: '#eeeee5', overflow: 'hidden' },
-  mapImage: { width: '100%', height: '100%' },
-  pin: { position: 'absolute', width: 34, height: 40, marginLeft: -17, marginTop: -20, borderTopLeftRadius: 17, borderTopRightRadius: 17, borderBottomRightRadius: 17, borderBottomLeftRadius: 8, backgroundColor: colors.forest, alignItems: 'center', justifyContent: 'center', shadowColor: colors.forest, shadowOpacity: 0.13, shadowRadius: 6, shadowOffset: { width: 0, height: 3 }, zIndex: 1 },
-  pinActive: { width: 39, height: 45, marginLeft: -19.5, marginTop: -22.5, borderTopLeftRadius: 19.5, borderTopRightRadius: 19.5, borderBottomRightRadius: 19.5, backgroundColor: colors.peach, zIndex: 2 },
-  pinText: { color: colors.white, fontSize: 15, fontWeight: '700' },
-  pinTextActive: { color: colors.ink },
   mapKey: { position: 'absolute', top: 10, left: 12, backgroundColor: '#fffffff0', borderWidth: 1, borderColor: colors.line, borderRadius: 16, paddingVertical: 5, paddingHorizontal: 9, zIndex: 3 },
   mapKeyText: { color: '#4f6457', fontSize: 9 },
   locate: { position: 'absolute', bottom: 22, right: 15, width: 35, height: 35, borderRadius: 18, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOpacity: 0.13, shadowRadius: 10, shadowOffset: { width: 0, height: 2 }, zIndex: 3 },

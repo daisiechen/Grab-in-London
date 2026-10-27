@@ -51,7 +51,7 @@ J09（支持）、J10/J11（后台）在 iOS 首发旅程完成后另行安排�
 
 ## 6. 已做的实现决定
 
-- 发现页沿用 Demo 的伦敦插画地图和片区数字标记，不再依赖 Google Maps 原生 SDK 与 API Key；没有地图坐标的片区仍在卡片区和列表中可见。
+- 发现页地图：配置了 `EXPO_PUBLIC_GOOGLE_MAPS_IOS_KEY` 的开发版使用 Google Maps 原生地图（配色贴近 Demo 插画，片区数字标记一致）；没有 Key、Expo Go 或网页预览时退回 Demo 的伦敦插画地图，不再出现“Map unavailable”。真机运行见 `apps/ios/README.md` 的 `pnpm ios:preview`。
 - 可选分析授权从全局顶部横幅改为登录后一次性底部弹窗，并可在设置页修改；未选择前不采集。
 - 预览模式：网页构建默认开启；真机通过 `EXPO_PUBLIC_FANCY_PREVIEW=1` 开启，不连服务器、不写钥匙串。
 
