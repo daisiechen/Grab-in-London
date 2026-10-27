@@ -1,0 +1,310 @@
+{
+  "issue": "R11-I2-05",
+  "roots": [
+    {
+      "id": "1:449",
+      "helpers": [
+        {
+          "id": "1:577",
+          "name": "div / helper-launcher  ",
+          "x": 315,
+          "y": 678,
+          "width": 64,
+          "height": 74,
+          "visible": false,
+          "boundVariables": {
+            "visible": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:36:291"
+            }
+          },
+          "reactions": []
+        },
+        {
+          "id": "1:589",
+          "name": "button / helper-hide",
+          "x": 44,
+          "y": -8,
+          "width": 28,
+          "height": 29.546875,
+          "visible": true,
+          "boundVariables": {},
+          "reactions": [
+            {
+              "action": {
+                "type": "SET_VARIABLE",
+                "variableId": "VariableID:36:291",
+                "variableValue": {
+                  "value": false,
+                  "type": "BOOLEAN",
+                  "resolvedType": "BOOLEAN"
+                }
+              },
+              "actions": [
+                {
+                  "type": "SET_VARIABLE",
+                  "variableId": "VariableID:36:291",
+                  "variableValue": {
+                    "value": false,
+                    "type": "BOOLEAN",
+                    "resolvedType": "BOOLEAN"
+                  }
+                },
+                {
+                  "type": "SET_VARIABLE",
+                  "variableId": "VariableID:36:292",
+                  "variableValue": {
+                    "value": true,
+                    "type": "BOOLEAN",
+                    "resolvedType": "BOOLEAN"
+                  }
+                }
+              ],
+              "trigger": {
+                "type": "ON_CLICK"
+              }
+            }
+          ]
+        },
+        {
+          "id": "36:293",
+          "name": "R11 source helper / tucked right / Show Fancy helper",
+          "x": 349,
+          "y": 678,
+          "width": 64,
+          "height": 64,
+          "visible": true,
+          "boundVariables": {
+            "visible": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:36:292"
+            }
+          },
+          "reactions": [
+            {
+              "action": {
+                "type": "SET_VARIABLE",
+                "variableId": "VariableID:36:292",
+                "variableValue": {
+                  "value": false,
+                  "type": "BOOLEAN",
+                  "resolvedType": "BOOLEAN"
+                }
+              },
+              "actions": [
+                {
+                  "type": "SET_VARIABLE",
+                  "variableId": "VariableID:36:292",
+                  "variableValue": {
+                    "value": false,
+                    "type": "BOOLEAN",
+                    "resolvedType": "BOOLEAN"
+                  }
+                },
+                {
+                  "type": "SET_VARIABLE",
+                  "variableId": "VariableID:36:291",
+                  "variableValue": {
+                    "value": true,
+                    "type": "BOOLEAN",
+                    "resolvedType": "BOOLEAN"
+                  }
+                }
+              ],
+              "trigger": {
+                "type": "ON_CLICK"
+              }
+            }
+          ]
+        }
+      ],
+      "amounts": [
+        {
+          "id": "1:519",
+          "text": "25",
+          "x": 33,
+          "y": 498.078125,
+          "width": 145.5,
+          "height": 19
+        },
+        {
+          "id": "1:524",
+          "text": "35",
+          "x": 214.5,
+          "y": 498.078125,
+          "width": 145.5,
+          "height": 19
+        },
+        {
+          "id": "1:535",
+          "text": "£25–35",
+          "x": 305,
+          "y": 627.5374755859375,
+          "width": 64,
+          "height": 28
+        }
+      ],
+      "scrollOrigin": 0
+    },
+    {
+      "id": "4:164",
+      "helpers": [
+        {
+          "id": "4:269",
+          "name": "div / helper-launcher  ",
+          "x": 315,
+          "y": 678,
+          "width": 64,
+          "height": 74,
+          "visible": false,
+          "boundVariables": {
+            "visible": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:36:306"
+            }
+          },
+          "reactions": []
+        },
+        {
+          "id": "4:281",
+          "name": "button / helper-hide",
+          "x": 44,
+          "y": -8,
+          "width": 28,
+          "height": 29.546875,
+          "visible": true,
+          "boundVariables": {},
+          "reactions": [
+            {
+              "action": {
+                "type": "SET_VARIABLE",
+                "variableId": "VariableID:36:306",
+                "variableValue": {
+                  "value": false,
+                  "type": "BOOLEAN",
+                  "resolvedType": "BOOLEAN"
+                }
+              },
+              "actions": [
+                {
+                  "type": "SET_VARIABLE",
+                  "variableId": "VariableID:36:306",
+                  "variableValue": {
+                    "value": false,
+                    "type": "BOOLEAN",
+                    "resolvedType": "BOOLEAN"
+                  }
+                },
+                {
+                  "type": "SET_VARIABLE",
+                  "variableId": "VariableID:36:307",
+                  "variableValue": {
+                    "value": true,
+                    "type": "BOOLEAN",
+                    "resolvedType": "BOOLEAN"
+                  }
+                }
+              ],
+              "trigger": {
+                "type": "ON_CLICK"
+              }
+            }
+          ]
+        },
+        {
+          "id": "36:308",
+          "name": "R11 source helper / tucked right / Show Fancy helper",
+          "x": 349,
+          "y": 678,
+          "width": 64,
+          "height": 64,
+          "visible": true,
+          "boundVariables": {
+            "visible": {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:36:307"
+            }
+          },
+          "reactions": [
+            {
+              "action": {
+                "type": "SET_VARIABLE",
+                "variableId": "VariableID:36:307",
+                "variableValue": {
+                  "value": false,
+                  "type": "BOOLEAN",
+                  "resolvedType": "BOOLEAN"
+                }
+              },
+              "actions": [
+                {
+                  "type": "SET_VARIABLE",
+                  "variableId": "VariableID:36:307",
+                  "variableValue": {
+                    "value": false,
+                    "type": "BOOLEAN",
+                    "resolvedType": "BOOLEAN"
+                  }
+                },
+                {
+                  "type": "SET_VARIABLE",
+                  "variableId": "VariableID:36:306",
+                  "variableValue": {
+                    "value": true,
+                    "type": "BOOLEAN",
+                    "resolvedType": "BOOLEAN"
+                  }
+                }
+              ],
+              "trigger": {
+                "type": "ON_CLICK"
+              }
+            }
+          ]
+        }
+      ],
+      "amounts": [
+        {
+          "id": "4:211",
+          "text": "25",
+          "x": 33,
+          "y": 498.078125,
+          "width": 145.5,
+          "height": 19
+        },
+        {
+          "id": "4:216",
+          "text": "35",
+          "x": 214.5,
+          "y": 498.078125,
+          "width": 145.5,
+          "height": 19
+        },
+        {
+          "id": "4:226",
+          "text": "£25–35",
+          "x": 305,
+          "y": 627.53759765625,
+          "width": 64,
+          "height": 28
+        }
+      ],
+      "scrollOrigin": 0
+    }
+  ],
+  "source": "v13 helperDockPosition: fraction1 => y678; tucked right x349; original sprite CSS64/48 and paws reused",
+  "screenshotScroll": "Temporary native content translation -420px only for screenshot; restored y0. Not a Presentation scrolling click.",
+  "browserLimitation": "Own Playwright source launch EPERM; existing original old-costs.png and fixed v13 source compared; no full dynamic runtime claim.",
+  "originalCounterexample": {
+    "scroll": 451.5625,
+    "oldHelperY": [
+      118,
+      206
+    ],
+    "budgetY": [
+      175.9749755859375,
+      203.9749755859375
+    ],
+    "overlap": true
+  }
+}

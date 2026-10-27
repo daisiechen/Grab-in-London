@@ -1,0 +1,794 @@
+{
+  "version": "IOS-0.1.0-dev.2",
+  "productVersion": "IOS-0.1.0",
+  "pj": "PJ-IOS-DEV2",
+  "journeys": [
+    "J02"
+  ],
+  "status": "candidate-awaiting-independent-RD-review",
+  "implementationAuthorized": false,
+  "QAStarted": false,
+  "waitsForAllVersions": false,
+  "sourceBaseCommit": "3070830322f525b334b2d657950d90dad49c4b38",
+  "businessBaseline": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "visualBaseline": "v13/361ab04ed6fc55c0f1e041bb5d6cc5d216d1a7b2",
+  "existingOperations": [
+    {
+      "id": "getSession",
+      "method": "GET",
+      "path": "/v1/auth/session",
+      "source": "packages/contracts/src/operations/auth.ts",
+      "sourceSHA256": "85eb4571b2265dc4ed7b4b74c18816d064a6b59cddab97f842c2afd3f8f1ef44",
+      "write": "read",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "getMe",
+      "method": "GET",
+      "path": "/v1/me",
+      "source": "packages/contracts/src/operations/people.ts",
+      "sourceSHA256": "6cc7420a68d11627bce6a09908fa23f7ad59bf82fb04b0358d2abaa40ef0e521",
+      "write": "read",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "updateMe",
+      "method": "PATCH",
+      "path": "/v1/me",
+      "source": "packages/contracts/src/operations/people.ts",
+      "sourceSHA256": "6cc7420a68d11627bce6a09908fa23f7ad59bf82fb04b0358d2abaa40ef0e521",
+      "write": "idempotencyKey",
+      "ifMatch": true,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "startEmail",
+      "method": "POST",
+      "path": "/v1/auth/email/start",
+      "source": "packages/contracts/src/operations/auth.ts",
+      "sourceSHA256": "85eb4571b2265dc4ed7b4b74c18816d064a6b59cddab97f842c2afd3f8f1ef44",
+      "write": "clientRequestId",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "verifyEmail",
+      "method": "POST",
+      "path": "/v1/auth/email/verify",
+      "source": "packages/contracts/src/operations/auth.ts",
+      "sourceSHA256": "85eb4571b2265dc4ed7b4b74c18816d064a6b59cddab97f842c2afd3f8f1ef44",
+      "write": "clientRequestId",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "startOAuth",
+      "method": "POST",
+      "path": "/v1/auth/oauth/start",
+      "source": "packages/contracts/src/operations/auth.ts",
+      "sourceSHA256": "85eb4571b2265dc4ed7b4b74c18816d064a6b59cddab97f842c2afd3f8f1ef44",
+      "write": "clientRequestId",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "oauthCallback",
+      "method": "GET",
+      "path": "/v1/auth/oauth/callback",
+      "source": "packages/contracts/src/operations/auth.ts",
+      "sourceSHA256": "85eb4571b2265dc4ed7b4b74c18816d064a6b59cddab97f842c2afd3f8f1ef44",
+      "write": "read",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "exchangeHandoff",
+      "method": "POST",
+      "path": "/v1/auth/handoff",
+      "source": "packages/contracts/src/operations/auth.ts",
+      "sourceSHA256": "85eb4571b2265dc4ed7b4b74c18816d064a6b59cddab97f842c2afd3f8f1ef44",
+      "write": "clientRequestId",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "refreshSession",
+      "method": "POST",
+      "path": "/v1/auth/refresh",
+      "source": "packages/contracts/src/operations/auth.ts",
+      "sourceSHA256": "85eb4571b2265dc4ed7b4b74c18816d064a6b59cddab97f842c2afd3f8f1ef44",
+      "write": "clientRequestId",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "logout",
+      "method": "POST",
+      "path": "/v1/auth/logout",
+      "source": "packages/contracts/src/operations/auth.ts",
+      "sourceSHA256": "85eb4571b2265dc4ed7b4b74c18816d064a6b59cddab97f842c2afd3f8f1ef44",
+      "write": "clientRequestId",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "getPublicProfile",
+      "method": "GET",
+      "path": "/v1/profiles/{userId}",
+      "source": "packages/contracts/src/operations/people.ts",
+      "sourceSHA256": "6cc7420a68d11627bce6a09908fa23f7ad59bf82fb04b0358d2abaa40ef0e521",
+      "write": "read",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "searchVenues",
+      "method": "GET",
+      "path": "/v1/venues",
+      "source": "packages/contracts/src/operations/people.ts",
+      "sourceSHA256": "6cc7420a68d11627bce6a09908fa23f7ad59bf82fb04b0358d2abaa40ef0e521",
+      "write": "read",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "confirmVenue",
+      "method": "POST",
+      "path": "/v1/venues/confirm",
+      "source": "packages/contracts/src/operations/people.ts",
+      "sourceSHA256": "6cc7420a68d11627bce6a09908fa23f7ad59bf82fb04b0358d2abaa40ef0e521",
+      "write": "idempotencyKey",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "getVenuePhoto",
+      "method": "GET",
+      "path": "/v1/venues/{venueRef}/photo",
+      "source": "packages/contracts/src/operations/people.ts",
+      "sourceSHA256": "6cc7420a68d11627bce6a09908fa23f7ad59bf82fb04b0358d2abaa40ef0e521",
+      "write": "read",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "createMeal",
+      "method": "POST",
+      "path": "/v1/meals",
+      "source": "packages/contracts/src/operations/meals.ts",
+      "sourceSHA256": "85cc4d40187cd64db22e39b350cf2a778fbcf259e3ab9e422a0f457a160df00e",
+      "write": "idempotencyKey",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "editMeal",
+      "method": "PATCH",
+      "path": "/v1/meals/{mealId}",
+      "source": "packages/contracts/src/operations/meals.ts",
+      "sourceSHA256": "85cc4d40187cd64db22e39b350cf2a778fbcf259e3ab9e422a0f457a160df00e",
+      "write": "idempotencyKey",
+      "ifMatch": true,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "getMeal",
+      "method": "GET",
+      "path": "/v1/meals/{mealId}",
+      "source": "packages/contracts/src/operations/meals.ts",
+      "sourceSHA256": "85cc4d40187cd64db22e39b350cf2a778fbcf259e3ab9e422a0f457a160df00e",
+      "write": "read",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "myMeals",
+      "method": "GET",
+      "path": "/v1/me/meals",
+      "source": "packages/contracts/src/operations/meals.ts",
+      "sourceSHA256": "85cc4d40187cd64db22e39b350cf2a778fbcf259e3ab9e422a0f457a160df00e",
+      "write": "read",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "listApplications",
+      "method": "GET",
+      "path": "/v1/meals/{mealId}/applications",
+      "source": "packages/contracts/src/operations/meals.ts",
+      "sourceSHA256": "85cc4d40187cd64db22e39b350cf2a778fbcf259e3ab9e422a0f457a160df00e",
+      "write": "read",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "decideApplication",
+      "method": "POST",
+      "path": "/v1/applications/{applicationId}/decision",
+      "source": "packages/contracts/src/operations/meals.ts",
+      "sourceSHA256": "85cc4d40187cd64db22e39b350cf2a778fbcf259e3ab9e422a0f457a160df00e",
+      "write": "idempotencyKey",
+      "ifMatch": true,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "declareBooking",
+      "method": "POST",
+      "path": "/v1/meals/{mealId}/booking-declarations",
+      "source": "packages/contracts/src/operations/meals.ts",
+      "sourceSHA256": "85cc4d40187cd64db22e39b350cf2a778fbcf259e3ab9e422a0f457a160df00e",
+      "write": "idempotencyKey",
+      "ifMatch": true,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "cancelMeal",
+      "method": "POST",
+      "path": "/v1/meals/{mealId}/cancel",
+      "source": "packages/contracts/src/operations/meals.ts",
+      "sourceSHA256": "85cc4d40187cd64db22e39b350cf2a778fbcf259e3ab9e422a0f457a160df00e",
+      "write": "idempotencyKey",
+      "ifMatch": true,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "bootstrapAI",
+      "method": "POST",
+      "path": "/v1/ai/sessions",
+      "source": "packages/contracts/src/operations/assistant.ts",
+      "sourceSHA256": "75200ebb02d2b593588121fa24b01360d8f794d5d1a68d7e6808bfb9d8ee014c",
+      "write": "resourceKey",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "requestAI",
+      "method": "POST",
+      "path": "/v1/ai/sessions/{sessionId}/requests",
+      "source": "packages/contracts/src/operations/assistant.ts",
+      "sourceSHA256": "75200ebb02d2b593588121fa24b01360d8f794d5d1a68d7e6808bfb9d8ee014c",
+      "write": "resourceKey",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "pollAI",
+      "method": "GET",
+      "path": "/v1/ai/requests/{requestId}",
+      "source": "packages/contracts/src/operations/assistant.ts",
+      "sourceSHA256": "75200ebb02d2b593588121fa24b01360d8f794d5d1a68d7e6808bfb9d8ee014c",
+      "write": "read",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "validateAIDraft",
+      "method": "POST",
+      "path": "/v1/ai/drafts/{draftId}/transfer",
+      "source": "packages/contracts/src/operations/assistant.ts",
+      "sourceSHA256": "75200ebb02d2b593588121fa24b01360d8f794d5d1a68d7e6808bfb9d8ee014c",
+      "write": "resourceKey",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "resetAI",
+      "method": "DELETE",
+      "path": "/v1/ai/sessions/{sessionId}",
+      "source": "packages/contracts/src/operations/assistant.ts",
+      "sourceSHA256": "75200ebb02d2b593588121fa24b01360d8f794d5d1a68d7e6808bfb9d8ee014c",
+      "write": "resourceKey",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "listNotifications",
+      "method": "GET",
+      "path": "/v1/me/notifications",
+      "source": "packages/contracts/src/operations/operations-admin.ts",
+      "sourceSHA256": "a6de7fbcef891d4de5aaa9cbdcdc967c58b54a6224415782ea900ef71635c89b",
+      "write": "read",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    },
+    {
+      "id": "markRead",
+      "method": "POST",
+      "path": "/v1/me/notifications/{notificationId}/read",
+      "source": "packages/contracts/src/operations/operations-admin.ts",
+      "sourceSHA256": "a6de7fbcef891d4de5aaa9cbdcdc967c58b54a6224415782ea900ef71635c89b",
+      "write": "idempotencyKey",
+      "ifMatch": false,
+      "status": "existing-contract-not-runtime-certified"
+    }
+  ],
+  "localGaps": [
+    {
+      "id": "I2-C01",
+      "kind": "existing-client-implementation-delta",
+      "evidence": [
+        "apps/ios/src/features/create/model.ts"
+      ],
+      "finding": "emptyDraft minimum=2 vs PRD default3; venue change leaves date/time; dependent confirmation reset needs the explicit PRD policy.",
+      "resolution": "P01 correct local defaults/invalidation and counterexamples; not a new API or product question.",
+      "blocksOnly": [
+        "I2-P01",
+        "I2-P07"
+      ]
+    },
+    {
+      "id": "I2-C02",
+      "kind": "existing-client-implementation-delta",
+      "evidence": [
+        "apps/ios/src/features/create/CreateStepScreen.tsx",
+        "apps/ios/src/features/meals/HostScreen.tsx"
+      ],
+      "finding": "Publish currently replaces meal detail directly; no existing arrangement edit screen despite EDIT contract.",
+      "resolution": "P02 introduce minimal Hosting parent navigation/edit adapter using existing editMeal contract; proposed files marked not-created.",
+      "blocksOnly": [
+        "I2-P02",
+        "I2-P07"
+      ]
+    },
+    {
+      "id": "I2-C03",
+      "kind": "existing-client-and-domain-implementation-delta",
+      "evidence": [
+        "apps/ios/src/features/meals/HostScreen.tsx",
+        "apps/api/src/meals/commands.ts"
+      ],
+      "finding": "HostScreen later booking count uses capacity; declareBooking validates meal version but does not require the current confirmed party count.",
+      "resolution": "P04 explicitly distinguish initial planned capacity and later confirmed party; lock/read/version-count revalidation, no false verification by platform.",
+      "blocksOnly": [
+        "I2-P04",
+        "I2-P07"
+      ]
+    }
+  ],
+  "unknownRecovery": {
+    "ordinaryWrite": {
+      "operations": [
+        "confirmVenue",
+        "createMeal",
+        "editMeal",
+        "decideApplication",
+        "declareBooking",
+        "cancelMeal"
+      ],
+      "frozen": [
+        "actor",
+        "operation",
+        "method",
+        "path",
+        "body",
+        "Idempotency-Key",
+        "original If-Match or null"
+      ],
+      "mechanism": "defineWrite: replay original method/path/body/key and original If-Match; actor authorization and privacy checks revalidated before sealed response replay. No invented GET /commands endpoint.",
+      "currentReadIsNotIntentProof": true,
+      "onDefinite409": "Retain draft, load authoritative current fact, explicit human confirmation forms new intent. Do not silently substitute a new If-Match.",
+      "versionSource": {
+        "decideApplication": "Application.version",
+        "editMeal/declareBooking/cancelMeal": "Meal.version",
+        "createMeal/confirmVenue": "no If-Match; createMeal attemptId stays same during same publication intent"
+      },
+      "publish": "Keep exact serialized body/key while response unknown; getMeal/myMeals/current matching title is not proof. A changed valid draft is a new explicit intent, not implicit retry."
+    },
+    "identity": "Reuse I1 contracts: OTP start clientRequestId is metadata only; verify/OAuth callback/handoff/rotating refresh are single-use credential protocols, never blind ordinary-write replay; logout/account-change clears private drafts/results.",
+    "assistant": "Use same requestId + sessionId/generation and pollAI; editor replacement validates draftId/editorVersion/replaceConfirmed; resourceKey/CAS protocol is not ordinary idempotency table replay. Late/account-changed/expired responses are discarded."
+  },
+  "sharedWriteLeases": [
+    {
+      "writer": "RD-MEALS",
+      "paths": [
+        "apps/api/src/meals/commands.ts",
+        "apps/api/src/meals/routes.ts"
+      ],
+      "packages": [
+        "I2-P02",
+        "I2-P03",
+        "I2-P04"
+      ],
+      "leaseRule": "same designated writer serial commits; P02/P03/P04 fixture/read-only preparation need not wait each other"
+    },
+    {
+      "writer": "RD-IOS-HOST",
+      "paths": [
+        "apps/ios/src/features/meals/HostScreen.tsx"
+      ],
+      "packages": [
+        "I2-P03",
+        "I2-P04"
+      ],
+      "leaseRule": "one exact file lease; ordered integration; no simultaneous modification"
+    },
+    {
+      "writer": "RD-IOS-CREATE",
+      "paths": [
+        "apps/ios/src/features/create/CreateStepScreen.tsx"
+      ],
+      "packages": [
+        "I2-P01",
+        "I2-P02"
+      ],
+      "leaseRule": "one exact file lease; API work may proceed separately"
+    },
+    {
+      "writer": "RD-ASSISTANT",
+      "paths": [
+        "apps/ios/src/features/assistant/manager.ts",
+        "apps/api/src/assistant/drafts.ts"
+      ],
+      "packages": [
+        "I2-P06",
+        "I3 assistant consumers"
+      ],
+      "leaseRule": "reuse same assistant writer; contract-first integrations per editor, no duplicate engine"
+    },
+    {
+      "writer": "RD-CONTRACTS/DATA/PLATFORM",
+      "paths": [
+        "packages/contracts/",
+        "packages/db/",
+        "packages/client/src/generated/",
+        "apps/ios/app/_layout.tsx"
+      ],
+      "packages": [],
+      "leaseRule": "each role has its own sole writer; root assigns exact delta/files, no blanket directory authorization"
+    },
+    {
+      "writer": "RD-IOS-MEALS",
+      "paths": [
+        "apps/ios/src/features/meals/MyMealsScreen.tsx"
+      ],
+      "packages": [
+        "I2-P02",
+        "I1/I3 own-meals consumers"
+      ],
+      "leaseRule": "One actual writer for Hosting parent selection; route registration remains RD-PLATFORM exclusive."
+    }
+  ],
+  "workPackages": [
+    {
+      "id": "I2-P01",
+      "name": "Arrange到Review的同一创建草稿",
+      "ownerRole": "RD-IOS-CREATE",
+      "assignedPerson": null,
+      "status": "not-issued",
+      "implementationStarted": false,
+      "candidatePaths": [
+        "apps/ios/src/features/create/model.ts",
+        "apps/ios/src/features/create/CreateStepScreen.tsx",
+        "apps/ios/src/lib/london.ts"
+      ],
+      "proposedPaths": [],
+      "exactWriteLease": [],
+      "operations": [
+        "searchVenues",
+        "confirmVenue",
+        "getVenuePhoto"
+      ],
+      "scope": "原MVP四步视觉复用；身份/资料门槛消费I1已核定合同；修默认minimum=3、换店清日期/时间及offset/声明/Review，保留无关输入；GBP便士与显式两确认。",
+      "acceptance": [
+        "Places搜索/预览不等确认；失败不清原选择，确认placeId分店独立",
+        "Europe/London 48半小时；BST/GMT歧义主动选、gap拒绝；截止仍在未来且<=T-30min",
+        "2<=minimum<=capacity<=6含host；原默认3/4；预算正数两位小数及null菜系/饮食字典",
+        "每组Edit/条款返回保草稿；本人声明与Review无默认勾选，44pt及键盘/长内容"
+      ],
+      "verification": [
+        "apps/ios/src/features/create/model.test.ts",
+        "apps/ios/src/features/create/create.test.tsx",
+        "apps/api/src/venues/venues.api.test.ts"
+      ],
+      "dependsOn": [],
+      "dependencyMeaning": "only concrete integration/file-lease dependency; own contract review and fixture work may proceed independently",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "branchPattern": "codex/ios-0.1.0-dev2-i2-p01",
+      "rollback": "Compatible code rollback only; do not erase published meals, attendance/group history, intents or notifications."
+    },
+    {
+      "id": "I2-P02",
+      "name": "发布一场与获准前编辑安排",
+      "ownerRole": "RD-MEALS",
+      "assignedPerson": null,
+      "status": "not-issued",
+      "implementationStarted": false,
+      "candidatePaths": [
+        "apps/api/src/meals/commands.ts",
+        "apps/api/src/meals/routes.ts",
+        "apps/ios/src/features/create/CreateStepScreen.tsx",
+        "apps/ios/src/features/meals/MyMealsScreen.tsx"
+      ],
+      "proposedPaths": [
+        {
+          "path": "apps/ios/src/features/create/EditMealScreen.tsx",
+          "status": "not-created"
+        },
+        {
+          "path": "apps/ios/app/meals/[mealId]/edit.tsx",
+          "status": "not-created"
+        }
+      ],
+      "exactWriteLease": [],
+      "operations": [
+        "createMeal",
+        "editMeal",
+        "getMeal"
+      ],
+      "scope": "复用publishMeal/editArrangement/defineWrite；发布一个meal+host一席+群及持久生命周期任务；补Hosting父级返回与获准前编辑完整入口。",
+      "acceptance": [
+        "actor/profile/venue服务端重验；attemptId与原意图幂等，不以未知响应另建meal",
+        "成功清本次草稿，返回Meals Hosting父级后详情；不得BACK复活完成表单",
+        "获准前编辑全量校验，首guest批准后永久锁定关键安排；并发409展示权威锁态且不丢本地稿"
+      ],
+      "verification": [
+        "apps/api/src/meals/meals.api.test.ts",
+        "apps/ios/src/features/create/create.test.tsx",
+        "apps/ios/src/features/meals/meals.test.tsx"
+      ],
+      "dependsOn": [],
+      "dependencyMeaning": "only concrete integration/file-lease dependency; own contract review and fixture work may proceed independently",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "branchPattern": "codex/ios-0.1.0-dev2-i2-p02",
+      "rollback": "Compatible code rollback only; do not erase published meals, attendance/group history, intents or notifications.",
+      "executionSlices": [
+        {
+          "id": "P02-A",
+          "writerRole": "RD-MEALS",
+          "files": [
+            "apps/api/src/meals/commands.ts",
+            "apps/api/src/meals/routes.ts",
+            "apps/api/src/meals/meals.api.test.ts"
+          ]
+        },
+        {
+          "id": "P02-B",
+          "writerRole": "RD-IOS-CREATE",
+          "files": [
+            "apps/ios/src/features/create/CreateStepScreen.tsx",
+            "apps/ios/src/features/create/EditMealScreen.tsx",
+            "apps/ios/src/features/create/create.test.tsx"
+          ]
+        },
+        {
+          "id": "P02-C",
+          "writerRole": "RD-IOS-MEALS",
+          "files": [
+            "apps/ios/src/features/meals/MyMealsScreen.tsx",
+            "apps/ios/src/features/meals/meals.test.tsx"
+          ]
+        },
+        {
+          "id": "P02-D",
+          "writerRole": "RD-PLATFORM",
+          "files": [
+            "apps/ios/app/meals/[mealId]/edit.tsx"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "I2-P03",
+      "name": "本场公开申请审核与原子席位",
+      "ownerRole": "RD-MEALS",
+      "assignedPerson": null,
+      "status": "not-issued",
+      "implementationStarted": false,
+      "candidatePaths": [
+        "apps/ios/src/features/meals/HostScreen.tsx",
+        "apps/api/src/meals/commands.ts",
+        "apps/api/src/meals/routes.ts"
+      ],
+      "proposedPaths": [],
+      "exactWriteLease": [],
+      "operations": [
+        "getMeal",
+        "listApplications",
+        "getPublicProfile",
+        "decideApplication"
+      ],
+      "scope": "只host看本场留言与公开资料；Pending不占位；每次Approve/Decline都保当前权威申请及场次版本。",
+      "acceptance": [
+        "decideApplication If-Match是application.version，不是meal.version；末位并发只能一个成功",
+        "批准直接Confirmed/建立群区间并锁安排，无付款/第二次确认；拒绝不可本场重申",
+        "查询分页/旧轮次和删除申请人投影按服务端权限；忙/失败/Unknown不将其他Pending擅改Confirmed"
+      ],
+      "verification": [
+        "apps/api/src/meals/meals.api.test.ts",
+        "apps/api/src/meals/deleted-applicant.api.test.ts",
+        "apps/ios/src/features/meals/meals.test.tsx"
+      ],
+      "dependsOn": [],
+      "dependencyMeaning": "only concrete integration/file-lease dependency; own contract review and fixture work may proceed independently",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "branchPattern": "codex/ios-0.1.0-dev2-i2-p03",
+      "rollback": "Compatible code rollback only; do not erase published meals, attendance/group history, intents or notifications."
+    },
+    {
+      "id": "I2-P04",
+      "name": "外订声明更新与整场取消",
+      "ownerRole": "RD-IOS-HOST",
+      "assignedPerson": null,
+      "status": "not-issued",
+      "implementationStarted": false,
+      "candidatePaths": [
+        "apps/ios/src/features/meals/HostScreen.tsx",
+        "apps/api/src/meals/commands.ts",
+        "apps/api/src/meals/read.ts"
+      ],
+      "proposedPaths": [],
+      "exactWriteLease": [],
+      "operations": [
+        "declareBooking",
+        "cancelMeal",
+        "getMeal"
+      ],
+      "scope": "修HostScreen容量作为后续声明人数的现状；区分最初按planned capacity声明与人数变动后本人按当前confirmed party重新声明，取消/返回保持来源状态。",
+      "acceptance": [
+        "同meal.version/If-Match读取已确认人数与seat watermark；原UI/服务当前未保证count等于最新party，签发时补锁内重验而非信客户端旧capacity",
+        "初次publish声明可按计划capacity；后续REPORTED_CONFIRMED明确当前confirmed count含host；声明失败/撤销不等meal取消",
+        "Keep回原host-only/Pending/Declined/updated来源，不带入别场或别审核状态",
+        "开饭前确认取消原因host/booking/other；系统不足insufficient不变host；终态不可BACK复活、群历史保留"
+      ],
+      "verification": [
+        "apps/ios/src/features/meals/meals.test.tsx",
+        "apps/api/src/meals/meals.api.test.ts",
+        "apps/api/src/meals/lifecycle.db.test.ts"
+      ],
+      "dependsOn": [],
+      "dependencyMeaning": "only concrete integration/file-lease dependency; own contract review and fixture work may proceed independently",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "branchPattern": "codex/ios-0.1.0-dev2-i2-p04",
+      "rollback": "Compatible code rollback only; do not erase published meals, attendance/group history, intents or notifications."
+    },
+    {
+      "id": "I2-P05",
+      "name": "截止到开始/结束与关键通知",
+      "ownerRole": "RD-LIFECYCLE",
+      "assignedPerson": null,
+      "status": "not-issued",
+      "implementationStarted": false,
+      "candidatePaths": [
+        "apps/api/src/meals/lifecycle.ts",
+        "apps/worker/src/handlers/lifecycle.ts",
+        "apps/worker/src/mail/delivery.ts"
+      ],
+      "proposedPaths": [],
+      "exactWriteLease": [],
+      "operations": [
+        "myMeals",
+        "listNotifications",
+        "markRead"
+      ],
+      "scope": "复用advanceLifecycle/rosterAt/持久jobs和outbox；按due时点补历史，不用worker到达时的人数猜过去。",
+      "acceptance": [
+        "截止不足取消；达标后开始前跌破最低立即取消；开始后不据人数重取消，结束+2h交J04",
+        "恰在startsAt退出无资格；取消Pending->Expired，站内/邮件对象及模板无私密申请或聊天正文",
+        "渠道失败不改业务结果；Unknown delivery按provider稳定ID查询，不把UI成功说成已送达；group不因cancel/end关闭"
+      ],
+      "verification": [
+        "apps/api/src/meals/lifecycle.unit.test.ts",
+        "apps/api/src/meals/lifecycle.db.test.ts",
+        "apps/worker/src/handlers/lifecycle.db.test.ts",
+        "apps/worker/src/mail/delivery.db.test.ts"
+      ],
+      "dependsOn": [],
+      "dependencyMeaning": "only concrete integration/file-lease dependency; own contract review and fixture work may proceed independently",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "branchPattern": "codex/ios-0.1.0-dev2-i2-p05",
+      "rollback": "Compatible code rollback only; do not erase published meals, attendance/group history, intents or notifications."
+    },
+    {
+      "id": "I2-P06",
+      "name": "Ask Fancy创建草稿到人工发布",
+      "ownerRole": "RD-ASSISTANT",
+      "assignedPerson": null,
+      "status": "not-issued",
+      "implementationStarted": false,
+      "candidatePaths": [
+        "apps/ios/src/features/assistant/manager.ts",
+        "apps/ios/src/features/assistant/AssistantWidget.tsx",
+        "apps/api/src/assistant/drafts.ts"
+      ],
+      "proposedPaths": [],
+      "exactWriteLease": [],
+      "operations": [
+        "bootstrapAI",
+        "requestAI",
+        "pollAI",
+        "validateAIDraft",
+        "resetAI"
+      ],
+      "scope": "复用CREATE editor注册/版本校验；模型只提议标题/描述/已知安排，转入完整文本且人再核对。",
+      "acceptance": [
+        "许可后用户主动请求；sourcePage=CREATE，最少公开/本人明确字段，无群聊/评分/举报读取",
+        "Keep不改稿，Replace重新校验editorVersion/CAS与session generation；不伪造placeId、不勾任何声明/条款、不Publish",
+        "hard/soft/CLEAR、30min TTL、旧响应隔离和人民币50/月准入账本继承现有合同；未验provider时手动可继续"
+      ],
+      "verification": [
+        "apps/ios/src/features/assistant/manager.test.ts",
+        "apps/ios/src/features/assistant/widget.test.tsx",
+        "apps/api/src/assistant/drafts.unit.test.ts"
+      ],
+      "dependsOn": [],
+      "dependencyMeaning": "only concrete integration/file-lease dependency; own contract review and fixture work may proceed independently",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "branchPattern": "codex/ios-0.1.0-dev2-i2-p06",
+      "rollback": "Compatible code rollback only; do not erase published meals, attendance/group history, intents or notifications."
+    },
+    {
+      "id": "I2-P07",
+      "name": "本版完整旅程与定向联调/发布候选",
+      "ownerRole": "RD-INTEGRATION",
+      "assignedPerson": null,
+      "status": "not-issued",
+      "implementationStarted": false,
+      "candidatePaths": [
+        "infra/tests/real-integration.release.test.ts",
+        "apps/ios/src/features/create/create.test.tsx",
+        "apps/ios/src/features/meals/meals.test.tsx"
+      ],
+      "proposedPaths": [],
+      "exactWriteLease": [],
+      "operations": [
+        "createMeal",
+        "listApplications",
+        "decideApplication",
+        "declareBooking",
+        "cancelMeal",
+        "myMeals"
+      ],
+      "scope": "本版各包独立验证后统一精确SHA/API/迁移/数据/时钟/设备构建，完成发布到招募结果的端到端证据。",
+      "acceptance": [
+        "I1真实用户申请→I2真实host审核→正确群交接I3，不用fixture冒充真实联调",
+        "所有10个J02 AC与风险回归有结果及证据；单版通过不等商店首发闭合",
+        "独立代码审查+必需CI通过后PR合main，按精确merged SHA/build部署；文档不触发业务部署"
+      ],
+      "verification": [
+        "infra/tests/real-integration.release.test.ts",
+        "apps/ios/src/features/create/create.test.tsx",
+        "apps/ios/src/features/meals/meals.test.tsx"
+      ],
+      "dependsOn": [
+        "I2-P01",
+        "I2-P02",
+        "I2-P03",
+        "I2-P04",
+        "I2-P05",
+        "I2-P06"
+      ],
+      "dependencyMeaning": "only concrete integration/file-lease dependency; own contract review and fixture work may proceed independently",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "branchPattern": "codex/ios-0.1.0-dev2-i2-p07",
+      "rollback": "Compatible code rollback only; do not erase published meals, attendance/group history, intents or notifications."
+    }
+  ],
+  "integrationDependencies": [
+    {
+      "version": "IOS-0.1.0-dev.1",
+      "point": "real identity/profile and create intent return; real applicant through J01 for publish→apply→approve",
+      "blocksWholeVersionPlanning": false
+    },
+    {
+      "version": "IOS-0.1.0-dev.3",
+      "point": "real group membership/read-history and postmeal handoff",
+      "blocksWholeVersionPlanning": false
+    },
+    {
+      "version": "ADMIN-0.1.0-dev.1",
+      "point": "real allowed analytics events/consent and matching business facts",
+      "blocksWholeVersionPlanning": false
+    }
+  ],
+  "externalRelease": "Internal dev.2 build contributes to combined0.1.0 first-store closure; not an independently complete App Store release.",
+  "issuanceRule": "Candidate and verification paths are inventories, not blanket leases. Each concrete execution slice gets one actual writer and <=5 exact production/test files. Shared-file writer overrides package lead role."
+}

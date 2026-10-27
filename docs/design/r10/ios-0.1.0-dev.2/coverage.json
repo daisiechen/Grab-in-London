@@ -343,5 +343,43 @@
     "native device keyboard/accessibility",
     "Figma Presentation end-to-end",
     "concurrent approval and background jobs"
-  ]
+  ],
+  "r11Repair": "r11-repair.zh-CN.md",
+  "sourceBoundStates": {
+    "bookingHost": [
+      "19:1152",
+      "19:1324",
+      "19:997"
+    ],
+    "bookingAlreadyUpdated": [
+      "19:1888",
+      "19:1995",
+      "3:4021"
+    ],
+    "cancelPending": "19:650",
+    "cancelDeclined": "19:765",
+    "cancelUpdated": "19:875"
+  },
+  "terminalStates": {
+    "approved": "3:4233",
+    "pending": "19:271",
+    "declined": "19:365",
+    "updated": "19:453",
+    "insufficient": "19:548"
+  },
+  "r11HelperDockCorrection": {
+    "id": "R11-I2-05",
+    "roots": [
+      "1:449",
+      "4:164"
+    ],
+    "nodes": [
+      "36:293",
+      "36:308",
+      "1:577",
+      "4:269"
+    ],
+    "evidence": "evidence/r11-costs-helper-readback.json",
+    "review": "awaiting-independent-recheck"
+  }
 }

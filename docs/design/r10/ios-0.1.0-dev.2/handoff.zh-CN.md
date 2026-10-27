@@ -30,3 +30,13 @@ UX-r02候选文件仍可变、未冻结，命名版本工具不可用，namedVer
 验证：`python3 -m unittest discover -s tests -p test_ux_r10_ios2.py`检查固定输入/包完整性、全部需求/AC映射、正常门槛连线、原素材及长滚动；2项通过。`git diff --check`通过。
 
 PJ最后独立读回发现费用数字由“£”和“0.00”分节点组成；已定向移除两个Costs状态中的完整旧金额节点，而非只改整句匹配。全页派生状态扫描剩余0项旧零额/不存在的平台退款文案；取消说明统一自然表达Let the host know if plans change.，最终增量证据为evidence/final-copy-cleanup.json。
+
+r11四类定向修复详见r11-repair.zh-CN.md；来源人数/审核/声明独立，终态无历史BACK复活，完整合成地址与确认长句回原字段内，不扩产品功能。当前42根包含最小必要来源/终态变体，不代表42个开发工作包；仍按一条完整J02交付。待PJ-ADMIN独立复验，未自签。
+
+## R11-I2-05 Costs 助手避让
+
+只改 Costs `1:449` 与本人已确认 `4:164`：复用v13原Tuck Fancy to edge样式（64px白色圆角外形、48px原SVG、原paw；右侧x349），默认边缘折叠。原helperDockPosition允许fraction=1，此处固定原底部停靠y678；点击折叠入口展开原助手，原hide再折叠（原生可编辑bool变量动作，非服务AI）。未删助手、未改品牌。两个状态独立变量，不改变本人确认门槛。
+
+读回金额底边最大655.54 < 助手顶部678；任何正向页面滚动s使金额y减s，因此折叠和展开均不遮预算。新入口36:293/36:308，原展开1:577/4:269，hide1:589/4:281。`evidence/r11-costs-helper-readback.json`记录真值/绑定/动作/bbox；前后原生截图及scroll420截图已保存。滚动截图是临时原生content平移−420截图后恢复y0，不冒称Presentation实点。原助手在底部可能覆盖右侧空白触区边缘，但Continue文字/主点击中心保持可见；自由拖动与真实助手服务未验证。
+
+原v13对照：既有old-costs.png + prototype.css helper-launch/is-tucked/paws与assistant.ts helperDockPosition。自有Playwright本轮启动EPERM立即退出，未新增环境；未伪称新源浏览器截图。独立复验待PJ-ADMIN，尚未自签05关闭。

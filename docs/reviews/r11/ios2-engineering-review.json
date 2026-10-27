@@ -1,0 +1,49 @@
+{
+  "iteration": "IOS-0.1.0-dev.2",
+  "reviewer": "Independent RD architecture reviewer, not PJ-IOS-DEV2 author",
+  "status": "plan-approved-with-issuance-gates",
+  "inputSHA256": {
+    "docs/engineering/r11/ios-0.1.0-dev.2/test-matrix.json": "f84ebeb7ab9cc140cf9c018e47121d95054cb2b92f010642331b0aad5ead5724",
+    "docs/engineering/r11/ios-0.1.0-dev.2/input-manifest.json": "aafd2b35442b19a0966b8f4321615000629298dc1fdb0d798b86a1dc12bcd9a5",
+    "docs/engineering/r11/ios-0.1.0-dev.2/plan.zh-CN.md": "70783e9aa0bcb43a1a71d26c162d618d01ee29ccec185cc24cf24c8eaf97b8df",
+    "docs/engineering/r11/ios-0.1.0-dev.2/work-packages.json": "f914c103ad27c76923451ae36ede327d65c2eec91b16a481154bb658452ad5e7"
+  },
+  "issues": [],
+  "implementationAuthorized": false,
+  "QAStarted": false,
+  "verified": {
+    "existingContracts": "29 actual operation/method/v1-path/write protocol/source hashes checked; no new server operation invented",
+    "localC01": "Actual model minimum2/venue-time retention acknowledged as implementation delta; planned3/4 and targeted invalidation with counterexamples; P01/P07 only",
+    "hostingAndEdit": "MyMealsScreen defaults UPCOMING; plan explicitly requires consuming HOSTING parent selection and minimal new EditMealScreen/route marked not-created",
+    "bookingAuthority": "Initial publish stores planned capacity while host-only confirmed1. Later declaration must use current confirmed party under lock, Meal CAS and seat-event watermark. commands.ts existing missing equality is explicitly scoped C03, not assumed correct",
+    "approval": "Application.version CAS, last-seat lock, direct CONFIRMED and same-transaction group interval; first approved guest permanently locks arrangement",
+    "unknown": "Original actor/op/method/path/body/key/IfMatch and create attemptId retained; GET current not proof; auth and AI resource protocols separate",
+    "sharedWriters": "commands/routes/HostScreen/CreateStepScreen/MyMeals/assistant and platform route registration scoped to unique writers; exact leases not issued",
+    "evidence": "All29 future product scenarios NOT_RUN; fixtures cannot close actual I1 applicant/I3 group integration",
+    "release": "r11 independent local slices; final P07 consumes complete own set, no other whole-version wait; exact CI/PR/main merged build deployment gate"
+  },
+  "sourceEvidence": {
+    "packages/contracts/src/operations/meals.ts": "85cc4d40187cd64db22e39b350cf2a778fbcf259e3ab9e422a0f457a160df00e",
+    "packages/contracts/src/operations/people.ts": "6cc7420a68d11627bce6a09908fa23f7ad59bf82fb04b0358d2abaa40ef0e521",
+    "packages/contracts/src/operations/auth.ts": "85eb4571b2265dc4ed7b4b74c18816d064a6b59cddab97f842c2afd3f8f1ef44",
+    "packages/contracts/src/operations/assistant.ts": "75200ebb02d2b593588121fa24b01360d8f794d5d1a68d7e6808bfb9d8ee014c",
+    "apps/ios/src/features/create/model.ts": "714f9aa0883036f2865e0e52ac60e25f5340503201d27bc304a4ea754ebaaf74",
+    "apps/ios/src/features/create/CreateStepScreen.tsx": "09b68012ba87ef814c3e43bd59a25cbc73974600a4f15d36e8dc8db39355c17f",
+    "apps/ios/src/features/meals/MyMealsScreen.tsx": "e8caddd84797bf2c577867fca6dec3937696f8105bb3de9937b3857e25e4f4e2",
+    "apps/ios/src/features/meals/HostScreen.tsx": "b73196d0b34d799aa596f8ea82650746bc153ad65717650d73e29cc6dea6da55",
+    "apps/api/src/meals/commands.ts": "cdf2d324b2962685fda793559550e14e561da4fb7a646d677df5868fd4479bb9",
+    "apps/api/src/meals/read.ts": "543b32cedee016384130461a08ac4eb177bd6222f4717b541c27c849bc7d44f4",
+    "apps/api/src/meals/lifecycle.ts": "02b663d89f89956fba97126949273be0d55b85b08767547178cd62b750d54a4a",
+    "apps/api/src/common/idempotency.ts": "f6311bfe26339e1b2c23b9d28f2b58c3eaa16dd6086900f872ece163ad0e97ba"
+  },
+  "issuanceGates": [
+    "Assign actual RD owner and <=5 exact production/test file lease; no broad candidate inventory authorization",
+    "Serialize shared commands.ts/routes.ts changes with I1 application and I3 membership transition writers, and assistant manager/Widget/drafts with I1/I3; root records actual same-file writer before issue",
+    "Register EditMealScreen/route solely through RD-PLATFORM; Hosting section must be actually consumed by parent, not unused URL parameter",
+    "Implement C01 defaults/reset and C03 lock-protected current-party/CAS/seat watermark checks with respective focused regression tests before claiming completion",
+    "Run actual DST/late lifecycle/native/provider and required real I1/I3 joint tests on same candidate; preflight toolchain/environment and15min/3fail budget",
+    "Independent code review and required CI/PR main merge before exact tested SHA/build/migration/environment deployment; no business-state reversal on code rollback"
+  ],
+  "testResult": "python3 -m unittest tests.test_r11_ios2_plan -v:7 passed; independent existing candidate/test file checks passed;29 scenarios not executed",
+  "boundedConclusion": "No blocking plan defect found. I2 can advance to scoped implementation issuance without waiting other complete versions; this review itself authorizes no business code, product QA or deployment."
+}

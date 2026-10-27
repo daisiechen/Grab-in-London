@@ -369,6 +369,12 @@
 
 - [ios-0.1.0-dev.2 · handoff.zh-CN](design/r10/ios-0.1.0-dev.2/handoff.zh-CN.md)。
 
+- [iOS dev.2 · r11-repair.zh-CN](design/r10/ios-0.1.0-dev.2/r11-repair.zh-CN.md)。
+
+- [iOS dev.2 · plan.zh-CN](engineering/r11/ios-0.1.0-dev.2/plan.zh-CN.md)。
+
+- [iOS dev.2 · ios2-engineering-review](reviews/r11/ios2-engineering-review.md)。
+
 - [ios-0.1.0-dev.2 · state-contracts.zh-CN](design/r10/ios-0.1.0-dev.2/state-contracts.zh-CN.md)。
 
 - [ios-0.1.0-dev.1 · handoff.zh-CN](design/r10/ios-0.1.0-dev.1/handoff.zh-CN.md)。
