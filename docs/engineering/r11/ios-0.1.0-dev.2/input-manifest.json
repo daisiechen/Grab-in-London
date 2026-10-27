@@ -50,11 +50,22 @@
     "visualRepairRebindRequired": false,
     "unclosedVisualIssue": null,
     "SHA256": {
+      "docs/design/r10/ios-0.1.0-dev.2/artifact-manifest.json": "feb061dbbce045d26c28db9b7cfa52e5fcffb6d9fddbabebee3aca68885d84b5",
+      "docs/design/r10/ios-0.1.0-dev.2/figma-readback.json": "cb2b2209088639619db594016d850d4a3360df4c6a6f063341c5c5da31a0419b",
+      "docs/design/r10/ios-0.1.0-dev.2/coverage.json": "c3342b36ba5f71e479825313434247b5e4c3c0aa20e4df77a32d9c1f8cb84c35"
+    },
+    "scope": "Current original-author candidate after R11-I2-PROT-01..04 actual public-prototype click closure. Historical signed design and RD snapshots preserved; no package/contract/business implementation change.",
+    "historicalSHA256": {
       "docs/design/r10/ios-0.1.0-dev.2/artifact-manifest.json": "182ff1be7886a7c9f43e497d77bd3c5d9d8aa1d419503dca148a6e658571278f",
       "docs/design/r10/ios-0.1.0-dev.2/figma-readback.json": "cb2b2209088639619db594016d850d4a3360df4c6a6f063341c5c5da31a0419b",
       "docs/design/r10/ios-0.1.0-dev.2/coverage.json": "c3342b36ba5f71e479825313434247b5e4c3c0aa20e4df77a32d9c1f8cb84c35"
     },
-    "scope": "Final original-author candidate after independent R11-I2-05 closure."
+    "prototypeSupplement": {
+      "report": "docs/reviews/r11/ios2-prototype-retest-2026-10-27.json",
+      "SHA256": "fdfdc3e21df3a9d35925d7e8185adc786aceaa03a999588e49e79efde8b61d1b",
+      "decision": "listed-fixed-sample-clicks-passed-not-product-QA",
+      "boundary": "First edit/cancel/save browser run started before layout/minimum delta and observed old2–4 representative range. Final same-session explicit-refresh run separately verified repaired3–4/minimum3, separated map lines and timed toast. Prior functionality evidence is not mislabeled as final text evidence."
+    }
   },
   "outputSHA256": {
     "docs/engineering/r11/ios-0.1.0-dev.2/plan.zh-CN.md": "48b141461fc30649a97146723466cb7bf5a6ed3934f6cc9bda961e6d34b6cb28",

@@ -138,6 +138,44 @@ class IndependentReviewCounterexamples(unittest.TestCase):
         self.assertEqual(run(reactions['27:254']), ['11:753'])
         self.assertEqual(run(reactions['32:284']), ['31:394'])
 
+    def test_preference_memory_survives_reentry_and_clears_only_after_delete(self):
+        supplement = json.loads((PACKAGE / 'artifact-manifest.json').read_text())['prototypeSupplement20261027']
+        path = PACKAGE / supplement['readback']
+        self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), supplement['readbackSHA256'])
+        data = json.loads(path.read_text())
+        variable = data['variable']['id']
+        state = False
+        controls = {n['id']: n['reactions'][0]['actions'] for n in data['nodes']}
+
+        def click(control):
+            nonlocal state
+            destinations = []
+            for action in controls[control]:
+                if action['type'] == 'SET_VARIABLE':
+                    self.assertEqual(action['variableId'], variable)
+                    state = action['variableValue']['value']
+                elif action['type'] == 'NODE':
+                    destinations.append(action['destinationId'])
+                elif action['type'] == 'CONDITIONAL':
+                    yes, no = action['conditionalBlocks']
+                    self.assertEqual(yes['condition']['value']['id'], variable)
+                    destinations.extend(a['destinationId'] for a in (yes if state else no)['actions'])
+            return destinations
+
+        self.assertEqual(click('11:2222'), ['11:1854'])
+        self.assertEqual(click('31:371'), ['11:1854'])
+        self.assertEqual(click('31:369'), ['11:1982'])
+        self.assertTrue(state)
+        self.assertEqual(click('11:2222'), ['11:1982'])
+        self.assertEqual(click('31:371'), ['11:1982'])
+        self.assertEqual(click('11:2223'), ['11:1982'])
+        self.assertEqual(click('13:497'), ['11:1982'])
+        self.assertEqual(click('11:2222'), ['11:1982'])
+        self.assertEqual(click('13:499'), ['11:1854'])
+        self.assertFalse(state)
+        self.assertEqual(click('11:2222'), ['11:1854'])
+        self.assertEqual(click('11:2223'), ['11:1854'])
+
 
 if __name__ == '__main__':
     unittest.main()

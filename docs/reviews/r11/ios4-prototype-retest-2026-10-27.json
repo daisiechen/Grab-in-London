@@ -1,0 +1,209 @@
+{
+  "version": "IOS-0.1.0-dev.4",
+  "date": "2026-10-27",
+  "baselineCommit": "0975177fd4c3a85b53966041d5bfc260df53cf01",
+  "coordinator": "overall PJ acting version PJ; original UX-2 owns Figma repairs",
+  "scope": "Actual public prototype mouse clicks on fixed synthetic examples; not product QA",
+  "cases": [
+    {
+      "id": "I4-REPORT-CANCEL",
+      "status": "PASS",
+      "method": "browser-click",
+      "entryUrl": "https://www.figma.com/proto/TxashjRfQDvnc4jQieeaWu?node-id=2-4&starting-point-node-id=2%3A4",
+      "steps": [
+        "Report or block this member",
+        "Cancel"
+      ],
+      "observed": "空表单Cancel实际回Maya2:4。"
+    },
+    {
+      "id": "I4-REPORT-DRAFT",
+      "status": "PASS",
+      "method": "browser-click",
+      "entryUrl": "https://www.figma.com/proto/TxashjRfQDvnc4jQieeaWu?node-id=2-4&starting-point-node-id=2%3A4",
+      "steps": [
+        "Report or block this member",
+        "Choose a reason",
+        "Cancel",
+        "Report or block this member"
+      ],
+      "observed": "Safety concern与预置I felt unsafe during this conversation.重进保留；仅固定样例，不含自由文本。"
+    },
+    {
+      "id": "I4-REPORT-FREETEXT",
+      "status": "BLOCKED",
+      "method": "browser-click",
+      "entryUrl": "https://www.figma.com/proto/TxashjRfQDvnc4jQieeaWu?node-id=2-4&starting-point-node-id=2%3A4",
+      "steps": [
+        "Report or block this member",
+        "Choose a reason",
+        "Click description",
+        "Attempt Synthetic only note 123"
+      ],
+      "observed": "文本未改变，原型只能使用固定示例，任意输入和自由文本草稿保留不可验证。"
+    },
+    {
+      "id": "I4-REPORT-RECEIPT",
+      "status": "PASS",
+      "method": "browser-click",
+      "entryUrl": "https://www.figma.com/proto/TxashjRfQDvnc4jQieeaWu?node-id=2-4&starting-point-node-id=2%3A4",
+      "steps": [
+        "Report or block this member",
+        "Choose a reason",
+        "Send private report",
+        "Your reports",
+        "View report"
+      ],
+      "observed": "R-104 / Maya；Received · awaiting review；本人记录可查看原原因及说明；回执不表示调查完成。"
+    },
+    {
+      "id": "I4-DELETE-CANCEL",
+      "status": "PASS",
+      "method": "browser-click",
+      "entryUrl": "https://www.figma.com/proto/TxashjRfQDvnc4jQieeaWu?node-id=5-16&starting-point-node-id=5%3A16",
+      "steps": [
+        "Delete account",
+        "Continue to verify identity",
+        "Cancel deletion"
+      ],
+      "observed": "从Verify identity取消实际返回Settings5:16。"
+    },
+    {
+      "id": "I4-DELETE-CONSENT",
+      "status": "PASS",
+      "method": "browser-click",
+      "entryUrl": "https://www.figma.com/proto/TxashjRfQDvnc4jQieeaWu?node-id=5-16&starting-point-node-id=5%3A16",
+      "steps": [
+        "Delete account",
+        "Continue to verify identity",
+        "Verify identity (fixed example 123456)",
+        "Request account deletion while unchecked"
+      ],
+      "observed": "Final confirmation未勾选时禁用、点击不跳转；未发送真实验证码。"
+    },
+    {
+      "id": "I4-DELETE-PENDING",
+      "status": "PASS",
+      "method": "browser-click",
+      "entryUrl": "https://www.figma.com/proto/TxashjRfQDvnc4jQieeaWu?node-id=5-16&starting-point-node-id=5%3A16",
+      "steps": [
+        "Delete account",
+        "Continue to verify identity",
+        "Verify identity (fixed example)",
+        "Explicitly check confirmation",
+        "Request account deletion",
+        "Contact support",
+        "Back to deletion status",
+        "Check deletion status"
+      ],
+      "observed": "D-204 / Request accepted / PENDING；支持无需登录；返回及查询保留原Pending；仅模拟访问关闭文案。"
+    },
+    {
+      "id": "I4-SUPPORT-PENDING",
+      "status": "PASS",
+      "method": "browser-click",
+      "entryUrl": "https://www.figma.com/proto/TxashjRfQDvnc4jQieeaWu?node-id=5-182&starting-point-node-id=5%3A182",
+      "steps": [
+        "Contact support",
+        "Back to deletion status"
+      ],
+      "observed": "回5:182/PENDING。直达只建立外部事件前置。"
+    },
+    {
+      "id": "I4-SUPPORT-NEEDS-SUPPORT",
+      "status": "PASS",
+      "method": "browser-click",
+      "entryUrl": "https://www.figma.com/proto/TxashjRfQDvnc4jQieeaWu?node-id=5-275&starting-point-node-id=5%3A275",
+      "steps": [
+        "Contact support",
+        "Back to deletion status"
+      ],
+      "observed": "回5:275/NEEDS_SUPPORT，无状态倒退。直达不等于worker真实推进。"
+    },
+    {
+      "id": "I4-SUPPORT-COMPLETED",
+      "status": "PASS",
+      "method": "browser-click",
+      "entryUrl": "https://www.figma.com/proto/TxashjRfQDvnc4jQieeaWu?node-id=5-348&starting-point-node-id=5%3A348",
+      "steps": [
+        "Refresh Completed5:348",
+        "Observe exactly one Contact support",
+        "Click unique Contact support",
+        "Back to deletion status",
+        "Contact support",
+        "Retry saved receipt"
+      ],
+      "observed": "修后唯一Contact support实际进入14:138；Back及Retry均回5:348，保持COMPLETED与D-204。",
+      "firstRun": {
+        "status": "FAIL",
+        "steps": [
+          "Check deletion status",
+          "Upper Contact support",
+          "Lower Contact support",
+          "Back to deletion status"
+        ],
+        "observed": "两个同名入口；上方无反馈，下方进入14:138并返回5:348/COMPLETED。确定原型死入口，已交原UX-2最小修复。"
+      }
+    },
+    {
+      "id": "I4-RETRY-NEEDS-SUPPORT",
+      "status": "PASS",
+      "method": "browser-click",
+      "entryUrl": "https://www.figma.com/proto/TxashjRfQDvnc4jQieeaWu?node-id=5-275&starting-point-node-id=5%3A275",
+      "steps": [
+        "Open representative state as precondition",
+        "Contact support",
+        "Retry saved receipt"
+      ],
+      "observed": "实际查询后保留NEEDS_SUPPORT / D-204；不模拟worker推进。"
+    },
+    {
+      "id": "I4-RETRY-PENDING",
+      "status": "PASS",
+      "method": "browser-click",
+      "entryUrl": "https://www.figma.com/proto/TxashjRfQDvnc4jQieeaWu?node-id=5-182&starting-point-node-id=5%3A182",
+      "steps": [
+        "Open representative state as precondition",
+        "Contact support",
+        "Retry saved receipt"
+      ],
+      "observed": "实际查询后保留PENDING / D-204；不模拟worker推进。"
+    }
+  ],
+  "findings": [
+    {
+      "id": "R11-I4-PROT-01",
+      "status": "CLOSED_AFTER_BROWSER_RETEST",
+      "owner": "original UX-2 / ux_host_social",
+      "case": "I4-SUPPORT-COMPLETED",
+      "expected": "One clear working Contact support entry preserves Completed on return",
+      "firstObserved": "Upper duplicate inert, lower duplicate navigates",
+      "retestRequired": false,
+      "repair": "原UX物理删除无反应5:377，保留唯一14:178→14:138；截图与原包同步。",
+      "retest": "唯一入口、Back和Retry实际通过；Pending/Needs support查询回归通过。"
+    }
+  ],
+  "remainingUnverified": [
+    "Arbitrary report free text and free-text draft persistence (fixed-sample prototype limitation)",
+    "Real authentication/code delivery, server-side access closure, token revocation and data deletion",
+    "Real cleanup worker, network retries/concurrency, receipt expiry and cross-device persistence",
+    "Native iOS device/keyboard/VoiceOver/dynamic type",
+    "Real support email/contact; no mail sent"
+  ],
+  "realServicesCalled": false,
+  "designInspectionCountsAsClickPass": false,
+  "currentSummary": {
+    "PASS": 11,
+    "BLOCKED": 1,
+    "FAIL": 0,
+    "NOT_RUN": 0,
+    "meaning": "Only listed fixed-sample prototype cases; not universal product acceptance"
+  },
+  "postRepairCommit": "e53de6ea0be900830b23a7fc054b0aa38d64a629",
+  "postRepairInputSHA256": {
+    "docs/design/r10/ios-0.1.0-dev.4/artifact-manifest.json": "a367ef57b142b2acbba428d081ada4c316fecea3c4a418034a95eb45b6aed222",
+    "docs/design/r10/ios-0.1.0-dev.4/figma-readback.json": "6c867bda135ad077d42885665f472c77083ededfca2c623e42b7f48fc27b2bca",
+    "docs/design/r10/ios-0.1.0-dev.4/evidence/r11-completed-single-support.png": "0e7f31322effd2f96d90404ad7a223e5f274fe68281e75867dd65dfd7554e0fe",
+    "tests/test_r11_ios4_plan.py": "1bb417bf493d21fa36336acbd60a42060263d90237022d14c8397aa08378fedd"
+  }
+}

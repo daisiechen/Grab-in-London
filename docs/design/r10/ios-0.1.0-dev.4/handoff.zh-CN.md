@@ -30,3 +30,7 @@
 验证命令：`python3 -m unittest discover -s tests -p test_ux_r10_ios34.py`，2项通过；检查冻结输入/包完整性、逐条映射、页面内连线、分离素材边界与关键权限状态。尚未执行Presentation真实端到端。
 
 r11定向修复（待PJ-IOS1独立复验）：R11-I34-02的实际Cancel为4:151（评审列4:152为失效ID）；填稿取消→15:72原成员草稿保留态，原举报入口可重入4:78，未经过Send。R11-I34-03为最小来源状态变体：NEEDS_SUPPORT→14:97→Back/Retry回5:275；COMPLETED新增沿原按钮的支持出口→14:138→Back/Retry回5:348；PENDING沿5:307→5:182。查询不代替worker推进。未自签通过。
+
+## R11-I4-PROT-01 真实点击补测修复
+
+首测在COMPLETED5:348发现两同名Contact support，上方5:377无动作、下方14:178可达支持。物理移除死入口5:377，保留唯一原有效14:178→14:138；原自动布局重排，不改视觉组件/支持状态。已实际读回+查看Completed单入口截图evidence/r11-completed-single-support.png。独立Browser修后复点由根PJ执行，本文不以节点检查冒称点击通过。

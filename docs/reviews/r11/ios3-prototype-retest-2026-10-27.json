@@ -1,0 +1,369 @@
+{
+  "iteration": "IOS-0.1.0-dev.3",
+  "date": "2026-10-27",
+  "phase": "completed-bounded-prototype-click-retest",
+  "scope": "Public native Figma fixed-sample Presentation only; not backend/device QA",
+  "inputSHA256": {
+    "docs/design/r10/ios-0.1.0-dev.3/artifact-manifest.json": "84ad31dd95f27bfe604cb9ba2b8ded5f43bdea2981433275ff9923a9454404d3",
+    "docs/design/r10/ios-0.1.0-dev.3/figma-readback.json": "3f88069758028eef6856960254656a71e07aac4d090471041faf94ea57377f00",
+    "docs/reviews/r11/ios34-review.json": "8c6fa2bf340ac6cdb4f64fb75fd749b2d4193b76e9f533a9624ada5d22c44f2c"
+  },
+  "cases": [
+    {
+      "id": "I3-P01",
+      "title": "退群取消保写态",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Inbox点击meal group",
+        "Chat→Group settings",
+        "Leave group→Keep things as they are",
+        "返回chat"
+      ],
+      "observed": "取消保成员与Say a little hello composer/Send",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV/Fancy?node-id=13-14&starting-point-node-id=13%3A14",
+      "history": [
+        {
+          "stage": "post-repair-browser-click",
+          "status": "PASS",
+          "observed": "取消保成员与Say a little hello composer/Send"
+        }
+      ],
+      "evidence": "Connector-hosted outputs/figma-prototype-retest.html: j03-left-readonly-settings/history, guest-seat-cancelled/view-meal, host-no-guest-withdrawal/dissolved/history/back-cycle screenshots"
+    },
+    {
+      "id": "I3-P02",
+      "title": "退群确认与连续返回不恢复写态",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "再次Leave group→确认Leave group",
+        "查看Left group只读settings",
+        "BackInbox→再开group→Read earlier authorised messages",
+        "historyBack→readonlysettingsBack→Inbox",
+        "重复group/history/Back循环"
+      ],
+      "observed": "Left group · Read-only；无当前名册/Send，历史只读，重复返回未恢复写态；seat参与本就与group分离",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV/Fancy?node-id=13-14&starting-point-node-id=13%3A14",
+      "history": [
+        {
+          "stage": "post-repair-browser-click",
+          "status": "PASS",
+          "observed": "Left group · Read-only；无当前名册/Send，历史只读，重复返回未恢复写态；seat参与本就与group分离"
+        }
+      ],
+      "evidence": "Connector-hosted outputs/figma-prototype-retest.html: j03-left-readonly-settings/history, guest-seat-cancelled/view-meal, host-no-guest-withdrawal/dissolved/history/back-cycle screenshots"
+    },
+    {
+      "id": "I3-P03",
+      "title": "本人退席取消/确认且群保留",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "直接30:83 guest已确认seat前提",
+        "Leave my seat→Keep my seat",
+        "再次Leave my seat→确认",
+        "Open meal group查看composer/Send",
+        "Group settings→View meal"
+      ],
+      "observed": "取消保原seat，确认后Your seat is cancelled且group未改，群仍可写，View meal仍取消",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV/Fancy?node-id=30-83&starting-point-node-id=30%3A83",
+      "history": [
+        {
+          "stage": "post-repair-browser-click",
+          "status": "PASS",
+          "observed": "取消保原seat，确认后Your seat is cancelled且group未改，群仍可写，View meal仍取消"
+        }
+      ],
+      "evidence": "Connector-hosted outputs/figma-prototype-retest.html: j03-left-readonly-settings/history, guest-seat-cancelled/view-meal, host-no-guest-withdrawal/dissolved/history/back-cycle screenshots"
+    },
+    {
+      "id": "I3-P04",
+      "title": "host无guest退席与解散取消/确认",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "直接30:199 host群设置前提",
+        "View meal核无guest退席→Back",
+        "Dissolve this group→Keep group",
+        "再次Dissolve this group→Dissolve for everyone",
+        "打开earlier authorised messages→连续Back→Inbox重开"
+      ],
+      "observed": "host只读Meal明确无guest withdrawal；取消不解散；确认dissolved后只读、无composer/Send，Back不复活",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV/Fancy?node-id=30-199&starting-point-node-id=30%3A199",
+      "history": [
+        {
+          "stage": "post-repair-browser-click",
+          "status": "PASS",
+          "observed": "host只读Meal明确无guest withdrawal；取消不解散；确认dissolved后只读、无composer/Send，Back不复活"
+        }
+      ],
+      "evidence": "Connector-hosted outputs/figma-prototype-retest.html: j03-left-readonly-settings/history, guest-seat-cancelled/view-meal, host-no-guest-withdrawal/dissolved/history/back-cycle screenshots"
+    },
+    {
+      "id": "I3-P05",
+      "title": "评分独立回执且无默认",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "点击I attended",
+        "确认评分无选中",
+        "点击4",
+        "点击Save meal experience",
+        "查看评分独立回执及下方分享区域"
+      ],
+      "observed": "Your private meal experience is saved；公评空、私密checkbox未选",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV/Fancy?node-id=2-62&starting-point-node-id=2%3A62",
+      "history": [
+        {
+          "stage": "post-repair-browser-click",
+          "status": "PASS",
+          "observed": "Your private meal experience is saved；公评空、私密checkbox未选"
+        }
+      ],
+      "evidence": "Connector-hosted outputs/j04-prototype-retest.html screenshots and click report; direct entry preconditions explicit"
+    },
+    {
+      "id": "I3-P06",
+      "title": "公评不代勾私密再约",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "评分保存后滚动至A public reference",
+        "点击输入字段并尝试输入中性文本",
+        "字段展示固定Thoughtful conversation and a welcoming table.",
+        "确认reconnect未选",
+        "点击Save feedback"
+      ],
+      "observed": "固定公评稿未代勾私密；Your reference is waiting to be published及No private choice has been selected",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV/Fancy?node-id=7-228&starting-point-node-id=7%3A228",
+      "history": [
+        {
+          "stage": "post-repair-browser-click",
+          "status": "PASS",
+          "observed": "固定公评稿未代勾私密；Your reference is waiting to be published及No private choice has been selected"
+        }
+      ],
+      "evidence": "Connector-hosted outputs/j04-prototype-retest.html screenshots and click report; direct entry preconditions explicit"
+    },
+    {
+      "id": "I3-P07",
+      "title": "私密选择独立不代填公评",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "直接进入32:576固定private-only前提（公评空、本人选择预选）",
+        "点击Save feedback"
+      ],
+      "observed": "No public reference has been submitted及Your wish to meet again is private until mutual；另32:682点击Choose to meet again才呈现checked",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV/Fancy?node-id=32-576&starting-point-node-id=32%3A576",
+      "history": [
+        {
+          "stage": "post-repair-browser-click",
+          "status": "PASS",
+          "observed": "No public reference has been submitted及Your wish to meet again is private until mutual；另32:682点击Choose to meet again才呈现checked"
+        }
+      ],
+      "evidence": "Connector-hosted outputs/j04-prototype-retest.html screenshots and click report; direct entry preconditions explicit"
+    },
+    {
+      "id": "I3-P08",
+      "title": "撤回联系连续返回不复活OPEN/同意",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "直接进入7:659双方互选OPEN前提",
+        "点击Say hello to Maya",
+        "点击Withdraw connection",
+        "点击确认Withdraw connection",
+        "只读页点击Back",
+        "closed summary点击Edit"
+      ],
+      "observed": "Previous private conversation与新mutual才可发消息；Back为withdrawn summary，Edit到No private choice has been selected，未复活OPEN或同意",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV/Fancy?node-id=7-659&starting-point-node-id=7%3A659",
+      "history": [
+        {
+          "stage": "post-repair-browser-click",
+          "status": "PASS",
+          "observed": "Previous private conversation与新mutual才可发消息；Back为withdrawn summary，Edit到No private choice has been selected，未复活OPEN或同意"
+        }
+      ],
+      "evidence": "Connector-hosted outputs/j04-prototype-retest.html screenshots and click report; direct entry preconditions explicit"
+    },
+    {
+      "id": "I3-P09",
+      "title": "初次问卷取消无已存Yes",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Settings→Product survey",
+        "点击Yes",
+        "点击可见Back/cancel返回Settings",
+        "重新打开survey"
+      ],
+      "observed": "未保留Yes，无首次取消伪已保存",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV/Fancy?node-id=8-14&starting-point-node-id=8%3A14",
+      "history": [
+        {
+          "stage": "post-repair-browser-click",
+          "status": "PASS",
+          "observed": "未保留Yes，无首次取消伪已保存"
+        }
+      ],
+      "evidence": "Connector-hosted prototype-qa-report.html: Company-only draft/saved/update/cancel; full candidate/replacement/composer-before-Send/final-bubble screenshots (not copied locally)"
+    },
+    {
+      "id": "I3-P10",
+      "title": "reason-only保存/编辑不代选Yes",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "选择Company，Yes/No均未选",
+        "点击Save",
+        "看到Your product survey is saved",
+        "点击Update answers",
+        "点击取消返回已确认状态"
+      ],
+      "observed": "Company-only保存；Update仍Company且Yes/No均未选；取消恢复已确认Company-only",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV/Fancy?node-id=8-14&starting-point-node-id=8%3A14",
+      "history": [
+        {
+          "stage": "post-repair-browser-click",
+          "status": "PASS",
+          "observed": "Company-only保存；Update仍Company且Yes/No均未选；取消恢复已确认Company-only"
+        }
+      ],
+      "evidence": "Connector-hosted prototype-qa-report.html: Company-only draft/saved/update/cancel; full candidate/replacement/composer-before-Send/final-bubble screenshots (not copied locally)"
+    },
+    {
+      "id": "I3-P11",
+      "title": "Yes/No/清空与取消恢复",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Update answers",
+        "点击Yes",
+        "点击No",
+        "点击Clear answer",
+        "点击取消返回已确认状态"
+      ],
+      "observed": "Yes/No可切换，Clear answer清空；取消仍原Company-only；点击已选chip自身不清空，清空由明确控件完成",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV/Fancy?node-id=8-14&starting-point-node-id=8%3A14",
+      "history": [
+        {
+          "stage": "post-repair-browser-click",
+          "status": "PASS",
+          "observed": "Yes/No可切换，Clear answer清空；取消仍原Company-only；点击已选chip自身不清空，清空由明确控件完成"
+        }
+      ],
+      "evidence": "Connector-hosted prototype-qa-report.html: Company-only draft/saved/update/cancel; full candidate/replacement/composer-before-Send/final-bubble screenshots (not copied locally)"
+    },
+    {
+      "id": "I3-P12",
+      "title": "Yes-only/No-only不自动填理由",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "直接进入33:243 Yes-only未存样例，Company off",
+        "点击Save，检查Yes-only saved",
+        "点击Update answers，检查Yes-only",
+        "点击取消返回Settings，再开问卷确认Yes-only",
+        "直接进入33:437 No-only未存样例，Company off",
+        "点击Save，检查No-only saved",
+        "点击Update answers，检查No-only",
+        "点击取消返回Settings，再开问卷确认No-only"
+      ],
+      "observed": "两条独立实际保存/更新/取消/重开均保持本人已确认Yes-only或No-only，Company均off，无默认理由。",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV/Fancy?node-id=33-243&starting-point-node-id=33%3A243",
+      "history": [
+        {
+          "stage": "initial-direct-sample-view",
+          "status": "NOT_RUN",
+          "observed": "仅查看样例，未点击保存，不算通过"
+        },
+        {
+          "stage": "narrow-same-session-save-update-cancel-reopen",
+          "status": "PASS",
+          "observed": "两条独立实际保存/更新/取消/重开均保持本人已确认Yes-only或No-only，Company均off，无默认理由。"
+        }
+      ],
+      "evidence": "Connector-hosted j06-yes-only-{saved,update,after-cancel}.png and j06-no-only-{saved,update,after-cancel}.png (not local repository screenshots)"
+    },
+    {
+      "id": "I3-P13",
+      "title": "完整AI转入Keep/Replace",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "从固定生成候选进入",
+        "点击Review in meal chat",
+        "看到Replace your unsent message?",
+        "点击Keep my text",
+        "重新进入替换确认",
+        "点击Replace with draft"
+      ],
+      "observed": "Keep保原文且不发送；Replace仅填入完整候选，包含最终Please let the host know if your plans change.",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV/Fancy?node-id=6-349&starting-point-node-id=6%3A349",
+      "history": [
+        {
+          "stage": "post-repair-browser-click",
+          "status": "PASS",
+          "observed": "Keep保原文且不发送；Replace仅填入完整候选，包含最终Please let the host know if your plans change."
+        }
+      ],
+      "evidence": "Connector-hosted prototype-qa-report.html: Company-only draft/saved/update/cancel; full candidate/replacement/composer-before-Send/final-bubble screenshots (not copied locally)"
+    },
+    {
+      "id": "I3-P14",
+      "title": "草稿不自动发送且本人Send保末句",
+      "status": "PASS",
+      "method": "browser-click",
+      "steps": [
+        "Replace with draft后查看composer及消息列表",
+        "点击可见Send",
+        "检查新消息bubble完整文本"
+      ],
+      "observed": "点击Send前无新bubble；点击后完整Hi everyone! Shall we meet at The Little Table at 19:00? Please let the host know if your plans change.展示；仅原型不真实外发",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV/Fancy?node-id=6-349&starting-point-node-id=6%3A349",
+      "history": [
+        {
+          "stage": "post-repair-browser-click",
+          "status": "PASS",
+          "observed": "点击Send前无新bubble；点击后完整Hi everyone! Shall we meet at The Little Table at 19:00? Please let the host know if your plans change.展示；仅原型不真实外发"
+        }
+      ],
+      "evidence": "Connector-hosted prototype-qa-report.html: Company-only draft/saved/update/cancel; full candidate/replacement/composer-before-Send/final-bubble screenshots (not copied locally)"
+    },
+    {
+      "id": "I3-P15",
+      "title": "公评任意自由文本输入",
+      "status": "BLOCKED",
+      "method": "browser-click",
+      "steps": [
+        "点击A public reference字段",
+        "尝试输入中性自定义文本"
+      ],
+      "observed": "Figma热点只切至固定公评样例，自定义文本未生成；不以样例行为冒称真实任意输入已通过",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV/Fancy?node-id=7-228&starting-point-node-id=7%3A228",
+      "history": []
+    }
+  ],
+  "remainingUnverified": [
+    "Real authentication/authorization/persistence/idempotent APIs/AI service not exercised",
+    "Arbitrary free-text/complete combinatorial states/native devices not tested",
+    "Public reference arbitrary input blocked by fixed sample hotspot, not a product capability decision",
+    "Host/guest and mutual peer cases use explicit source-node sample preconditions, not real account switching or peer action",
+    "Inbox sample row Seat confirmed wording is meal-seat context, not live server membership/persistence authority; reopening still readonly",
+    "Screenshots retained by connector HTML evidence; repository report contains actual returned click traces, no invented local images"
+  ],
+  "completedGroups": [
+    "J06-and-J03-AI",
+    "J04",
+    "J06-YesOnly-NoOnly-save-followup",
+    "J03-group-seat-host"
+  ],
+  "summary": {
+    "PASS": 14,
+    "BLOCKED": 1
+  }
+}

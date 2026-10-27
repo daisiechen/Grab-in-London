@@ -133,5 +133,21 @@
     "passed": 6,
     "classification": "Targeted planning and independent-RD counterexample contracts only; no business execution/QA",
     "scope": "Six planning checks including independent sign-off evidence/hash consistency, dependency propagation and operation-specific UNKNOWN; no runtime QA"
+  },
+  "prototypeRetest": {
+    "status": "completed-fixed-sample-click-retest",
+    "report": "docs/reviews/r11/ios1-prototype-retest-2026-10-27.json",
+    "reportSHA256": "82f8f558182454ff5909d98db1d25d2d6a8502ab4525af538f624700f22c7f2e",
+    "actualClickOnly": true,
+    "productQAStarted": false,
+    "designMutated": true,
+    "summary": {
+      "PASS": 20,
+      "meaning": "Only listed synthetic fixed-sample actual prototype actions; no real services or arbitrary input acceptance"
+    },
+    "repairReadbackSHA256": "2cb5805a414bc356220494dcf5018dbeb7e5b842f9bb03008ce8fbaee7cb0b97",
+    "candidateManifestSHA256": "37b91e7192268246b5cda4eab2d0fd91592d9d31ade354f2f220f2bee08bb89a",
+    "historicalIndependentSignaturePreserved": true,
+    "supplementIndependentlyApproved": false
   }
 }

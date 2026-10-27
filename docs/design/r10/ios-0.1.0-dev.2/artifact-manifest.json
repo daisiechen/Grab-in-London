@@ -113,11 +113,11 @@
     "J01 identity / Hosting parent / J03-J04 cross-file prototype integration if required"
   ],
   "filesSHA256": {
-    "r11-repair.zh-CN.md": "cd6cfcbad4f83ffbe14d77d79823afc4538935c9ea85915d4194d2f694f6e5b7",
+    "r11-repair.zh-CN.md": "1fabe854f923ec621065f07f0b35df042395066891e50c1d30d61957928f41d4",
     "figma-readback.json": "cb2b2209088639619db594016d850d4a3360df4c6a6f063341c5c5da31a0419b",
     "coverage.json": "c3342b36ba5f71e479825313434247b5e4c3c0aa20e4df77a32d9c1f8cb84c35",
     "state-contracts.zh-CN.md": "155310a885315f06ca226dc07bf955e0edac6ede4a362cebb9b91e45cd435aa0",
-    "handoff.zh-CN.md": "64cb12b369d057b00ad01c21e6190bb146573c4e72db38cb9ab5184b435a99ee",
+    "handoff.zh-CN.md": "b092c470444798570a4d8c331affd0d5255f9819b2a4a2e0025e756bb9579596",
     "visual-comparison.html": "990be3db9975dc3d04b9d67814ca47d5adc1dcc634e35cbc8edc2064219f84c9",
     "planning-input.json": "ec966e334ce88ceb5efe4d30328cdbcca62c01e82a8c6b1cb4379ef9be2ba593",
     "evidence/old-costs.png": "c44dbac41fb527f899a22142f8adc473f82cc18583fa40c46daa0ae0b308d98d",
@@ -125,14 +125,17 @@
     "evidence/native-source-published.json": "7a9d16a324f2099ffe02dffa6a735d19bc1b52b5fd2435edf7dd18e3106b25c1",
     "evidence/final-receipt-readback.json": "b079f2cfb4a31607dd30f5acf75f073d33077b52ff3420dab35f026ca997b2af",
     "evidence/old-applicants.png": "ff95f45123d6b534cf0ead720f876ae488ec2d95dac1f1e1df8c398a5c72c9b3",
+    "evidence/r11-edit-arrange.png": "c77d8c26767e06fcf5ff1682fa2feb702c23790c1dab4062f6628d0e2a24dbca",
     "evidence/old-published.png": "00801c6bc2582751d1e788851fd27b924a80116223fc3d8368574b74ab171c27",
     "evidence/figma-review.png": "ffd5486cfa8317dc0af5d4ebfda7e561a3201a3269fdd5a08ace79621dee86cd",
+    "evidence/r11-published-layout-min3.png": "17894244b5cbbe7a409ef2cf0e3a5cc0278a102c9d645d6c56da5d67954568c2",
     "evidence/r11-booking-host-only.png": "e75ab729c403d7b6f2a09aa8ecc6f8b8ffc08f39f2b7d29bb5fbdd30836d5dc6",
     "evidence/r11-costs-helper-scroll420.png": "745e407ed91dbea46b92484d7379d88929a9d46d7465a65b18879dd1c680322a",
     "evidence/figma-costs-confirmed.png": "ec6a30ed2b6674433762bcd374d35e1b8308b851c2bd373ab9ad5b61a53fac58",
     "evidence/r11-costs-helper-after.png": "bee34ce96e32a644d10a70aa91a04415a3ae100dd005715ff271d88f05cbd273",
     "evidence/old-review.png": "63a26a33575b174e1fdfb758fb27a9c72bd0dbf1361f22eb0123a2a571fbf9d3",
     "evidence/final-copy-cleanup.json": "acb3b46b70f88bc1759556e8b830fd83cb51e8086e0341a81a2e1f9fca7f4ec2",
+    "evidence/r11-published-layout-min3-readback.json": "0dda7bb68cf93b61605924a2cba4680cadf16d5c138c866b019365b656dc3d91",
     "evidence/native-source-approved.json": "078c352c16445afaed1c29f016fac4496d111eec1f06bb49cad4430aa2d25c14",
     "evidence/old-approved.png": "0c560f9c9373fe992f51280fd1a9e353d738229e1b66cd1b8fb2280eec2c2879",
     "evidence/README.zh-CN.md": "6d8409051468d6f62d83af4e47ecf0f31045045d0ba36fe25e6be7386951979e",
@@ -146,7 +149,9 @@
     "evidence/final-bound-readback.json": "2fc232236307f42e271e167b6c6b00cd03adb4afca70baac167349b3837f22da",
     "evidence/native-source-introduce-unfocused.json": "582b38d1ad1a98898bab329503e6f5bbbd3fd0b2862f2aa3daec315905d71970",
     "evidence/native-source-review.json": "577a4b66fb11d4d84b4457fdc29535c7827b784d4e71ad73105f1a2e498108e2",
+    "evidence/r11-published-edit-readback.json": "58d3db7ebf2f1b1f6eac9550e483d14d7b4cd01868218f87cb12d4b474e16b75",
     "evidence/old-cancel-confirm.png": "df05e3532e619728985d5976e915aad7fa090ccf41033d79df0fae6d1c82ddbb",
+    "evidence/r11-published-edit-entry.png": "26950b16814e2e0281158461c229b656e5a8f8ef8c15b5d85c48bb4fe3d3623b",
     "evidence/figma-arrange.png": "a80321f3e87e54c9992b03a4fdfc85593e625da7be37061b818abfb1e72d1a41",
     "evidence/r11-costs-helper-readback.json": "2f05f05830eaaa73ac0952b4fddc2c8f24969e2002443c73e4349a7016175e04",
     "evidence/figma-booking-confirmed.png": "11834960c54afc5d08213da43ad009044b2191b4e1b9ae20d95dec29a1ebcd5a",
@@ -205,5 +210,25 @@
     ],
     "evidence": "evidence/r11-costs-helper-readback.json",
     "review": "awaiting-independent-recheck"
+  },
+  "r11PublishedEditCorrection": {
+    "status": "author-candidate-awaiting-independent-browser-retest",
+    "evidence": "evidence/r11-published-edit-readback.json",
+    "issues": [
+      "R11-I2-PROT-01",
+      "R11-I2-PROT-02"
+    ],
+    "entryNode": "56:2028",
+    "editStart": "56:290",
+    "preservesHistoricalReview": true
+  },
+  "r11PublishedLayoutCorrection": {
+    "issues": [
+      "R11-I2-PROT-03",
+      "R11-I2-PROT-04"
+    ],
+    "evidence": "evidence/r11-published-layout-min3-readback.json",
+    "status": "author-candidate-awaiting-independent-browser-retest",
+    "historyPreserved": true
   }
 }

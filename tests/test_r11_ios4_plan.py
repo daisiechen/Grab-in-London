@@ -38,6 +38,10 @@ class IOS4VersionPlan(unittest.TestCase):
         def targets(node):
             return {a.get('destinationId') for r in node.get('reactions', []) for a in r.get('actions', []) if a.get('type') == 'NODE'}
         self.assertEqual(targets(nodes['4:151']), {'15:72'})
+        contacts=[n for n in roots['5:348']['nodes'] if n.get('text')=='Contact support']
+        self.assertEqual(len(contacts),1)
+        self.assertNotIn('5:377',nodes)
+        self.assertEqual(targets(nodes['14:178']),{'14:138'})
         self.assertEqual(targets(nodes['15:113']), {'4:78'})
         for support, expected in [('5:307', '5:182'), ('14:97', '5:275'), ('14:138', '5:348')]:
             all_targets = set().union(*(targets(n) for n in roots[support]['nodes']))

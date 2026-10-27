@@ -68,5 +68,29 @@
     "passed": 2,
     "gitDiffCheck": "passed",
     "meaning": "Independent I4 design/plan evidence checks, no product QA run"
+  },
+  "prototypeRetest": {
+    "date": "2026-10-27",
+    "status": "listed-fixed-sample-click-paths-passed-with-free-input-limit",
+    "report": "docs/reviews/r11/ios4-prototype-retest-2026-10-27.json",
+    "remainingUnverified": [
+      "Arbitrary report free text and free-text draft persistence (fixed-sample prototype limitation)",
+      "Real authentication/code delivery, server-side access closure, token revocation and data deletion",
+      "Real cleanup worker, network retries/concurrency, receipt expiry and cross-device persistence",
+      "Native iOS device/keyboard/VoiceOver/dynamic type",
+      "Real support email/contact; no mail sent"
+    ],
+    "openFindingIds": [],
+    "scope": "Actual public prototype mouse clicks on fixed synthetic examples; not product QA",
+    "counts": {
+      "PASS": 11,
+      "BLOCKED": 1,
+      "FAIL": 0,
+      "NOT_RUN": 0,
+      "meaning": "Only listed fixed-sample prototype cases; not universal product acceptance"
+    },
+    "closedAfterActualClickRetest": [
+      "R11-I4-PROT-01"
+    ]
   }
 }

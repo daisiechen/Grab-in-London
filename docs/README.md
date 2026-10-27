@@ -5,6 +5,8 @@
 ## 当前产品与管理输入（r07范围／r11版本PJ并行执行）
 
 - [七个版本的评审、方案、负责人和独立PR总览](delivery/version-progress-r11.zh-CN.md)。
+- iOS 真实原型点击补测（与设计检查、产品 QA 分开）：[dev.1](reviews/r11/ios1-prototype-retest-2026-10-27.md)、[dev.2](reviews/r11/ios2-prototype-retest-2026-10-27.md)、[dev.3](reviews/r11/ios3-prototype-retest-2026-10-27.md)、[dev.4](reviews/r11/ios4-prototype-retest-2026-10-27.md)。每项以报告中的实际点击、结果和剩余未验证范围为准。
+- [四版原型补测的独立集成复核](reviews/r11/ios-prototype-retest-integration-review-2026-10-27.md)：核对点击证据声明、修复候选、哈希及剩余边界，不替代浏览器执行或真实产品 QA。
 
 - [当前版本PJ并行工作流与商店/分支发布策略](delivery/parallel-version-workflow-r11.zh-CN.md)、[7个版本执行登记](delivery/execution-r11.json)：按版评审修复，通过本版门槛即可编制本版开发方案，不等全套设计。
 

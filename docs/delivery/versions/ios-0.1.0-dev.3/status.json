@@ -116,5 +116,24 @@
     "docs/engineering/r11/ios-0.1.0-dev.3/test-matrix.json": "e9c9892ac909e07acc0f922c4c3ff9dc4cf86cc861ca0d0b581a4b6941b0a940",
     "docs/engineering/r11/ios-0.1.0-dev.3/work-packages.json": "f20de1c0f318213a9abd20532b5c8cc4fb3b0c531e53b7210f55bcd5278bc7dd",
     "tests/test_r11_ios3_plan.py": "94e0f7ac87dd40044d9cc1ff95f5a60c1fb983c7bd6de73058ea6b2e27d02112"
+  },
+  "prototypeClickRetest": {
+    "status": "completed-bounded-scope",
+    "report": "docs/reviews/r11/ios3-prototype-retest-2026-10-27.json",
+    "reportSHA256": "d32627ac73aaf1766209cc09e50f3948b094accd3aec7a496c4ba37d45292b1f",
+    "summary": {
+      "PASS": 14,
+      "BLOCKED": 1
+    },
+    "remainingUnverified": [
+      "Real authentication/authorization/persistence/idempotent APIs/AI service not exercised",
+      "Arbitrary free-text/complete combinatorial states/native devices not tested",
+      "Public reference arbitrary input blocked by fixed sample hotspot, not a product capability decision",
+      "Host/guest and mutual peer cases use explicit source-node sample preconditions, not real account switching or peer action",
+      "Inbox sample row Seat confirmed wording is meal-seat context, not live server membership/persistence authority; reopening still readonly",
+      "Screenshots retained by connector HTML evidence; repository report contains actual returned click traces, no invented local images"
+    ],
+    "designChanged": false,
+    "realServiceQASigned": false
   }
 }
