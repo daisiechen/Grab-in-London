@@ -1,0 +1,20 @@
+{
+  "id": "IOS-0.1.0-dev.2",
+  "productVersion": "IOS-0.1.0",
+  "journeys": [
+    "J02"
+  ],
+  "dependsOn": [
+    "IOS-0.1.0-dev.1"
+  ],
+  "inputs": {
+    "J02": {
+      "requirementsRevision": "PM-r01",
+      "demoRevision": "PM-r01",
+      "sha256": {
+        "docs/product/journeys/j02/requirements.zh-CN.md": "6a6211922d649a12899803721b709cb67f2e37e6bea428d804cee399d3df4299",
+        "demo/journeys/j02/index.html": "d876732ddbdc667816a473a91969464c6a49d574d3fc2fc745d207b8a68989bc"
+      }
+    }
+  }
+}

@@ -112,9 +112,9 @@
       "uxOwner": "UX-2",
       "uxRevision": "UX-r02",
       "uxDirectory": "docs/design/r10/ios-0.1.0-dev.2/",
-      "uxStatus": "in-progress",
-      "figmaFileKey": null,
-      "figmaEntryNodeId": null,
+      "uxStatus": "candidate-delivered",
+      "figmaFileKey": "c04Fi5iarZm7gTPw4u2f7f",
+      "figmaEntryNodeId": "1:24",
       "inputs": {
         "J02": {
           "requirementsRevision": "PM-r01",
@@ -131,7 +131,10 @@
       "qaStatus": "not-started",
       "codeOwner": null,
       "runtimeBuild": null,
-      "releaseApproved": false
+      "releaseApproved": false,
+      "figmaPreviewNodeId": "1:24",
+      "figmaPreviewURL": "https://www.figma.com/design/c04Fi5iarZm7gTPw4u2f7f?node-id=1-24",
+      "previewStatus": "candidate-not-development-ready"
     },
     {
       "id": "IOS-0.1.0-dev.3",
@@ -437,7 +440,7 @@
         "IOS-0.1.0-dev.3",
         "IOS-0.1.0-dev.4"
       ],
-      "status": "running",
+      "status": "candidate-delivered",
       "handoff": "UX-1明确停止dev.2空目录写入后移交；dev.3/4已交候选不再改写"
     },
     "UX-3": {

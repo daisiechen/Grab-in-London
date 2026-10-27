@@ -64,7 +64,7 @@
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },

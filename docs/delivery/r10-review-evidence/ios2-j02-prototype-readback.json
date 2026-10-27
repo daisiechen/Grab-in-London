@@ -1,0 +1,451 @@
+{
+  "reviewer": "PJ",
+  "limitations": "Nodes and reaction destinations checked; not Presentation end-to-end or real services.",
+  "fileKey": "c04Fi5iarZm7gTPw4u2f7f",
+  "page": "J02 · Create and manage your table",
+  "roots": [
+    {
+      "id": "1:24",
+      "name": "J02 / Arrange"
+    },
+    {
+      "id": "1:340",
+      "name": "J02 / Introduce"
+    },
+    {
+      "id": "1:449",
+      "name": "J02 / Costs"
+    },
+    {
+      "id": "1:594",
+      "name": "J02 / Review"
+    },
+    {
+      "id": "1:719",
+      "name": "J02 / Published"
+    },
+    {
+      "id": "1:880",
+      "name": "J02 / Applicants"
+    },
+    {
+      "id": "3:2365",
+      "name": "J02 / ReviewReady"
+    },
+    {
+      "id": "3:2492",
+      "name": "J02 / RestaurantPicker"
+    },
+    {
+      "id": "3:2803",
+      "name": "J02 / ArrangeError"
+    },
+    {
+      "id": "3:3113",
+      "name": "J02 / Terms"
+    },
+    {
+      "id": "3:3248",
+      "name": "J02 / PublishFailed"
+    },
+    {
+      "id": "3:3387",
+      "name": "J02 / PublishUnknown"
+    },
+    {
+      "id": "3:3526",
+      "name": "J02 / AIDraft"
+    },
+    {
+      "id": "3:3669",
+      "name": "J02 / AIReplace"
+    },
+    {
+      "id": "3:3809",
+      "name": "J02 / Approved"
+    },
+    {
+      "id": "3:3907",
+      "name": "J02 / BookingStatement"
+    },
+    {
+      "id": "3:4021",
+      "name": "J02 / BookingUpdated"
+    },
+    {
+      "id": "3:4117",
+      "name": "J02 / CancelConfirm"
+    },
+    {
+      "id": "3:4233",
+      "name": "J02 / Cancelled"
+    },
+    {
+      "id": "3:4329",
+      "name": "J02 / Declined"
+    },
+    {
+      "id": "3:4432",
+      "name": "J02 / Conflict"
+    },
+    {
+      "id": "3:4538",
+      "name": "J02 / DeadlineInsufficient"
+    },
+    {
+      "id": "3:4644",
+      "name": "J02 · Reviewer state contracts (external actions, not user UI)"
+    },
+    {
+      "id": "4:164",
+      "name": "J02 / CostsConfirmed"
+    },
+    {
+      "id": "5:188",
+      "name": "J02 / BookingStatementConfirmed"
+    },
+    {
+      "id": "6:185",
+      "name": "J02 / DeclinedResult"
+    },
+    {
+      "id": "6:290",
+      "name": "J02 / ApplicantProfile"
+    }
+  ],
+  "links": [
+    {
+      "source": "1:79",
+      "label": "input / Search restaurants or areas",
+      "destination": "3:2492"
+    },
+    {
+      "source": "1:315",
+      "label": "button / primary ",
+      "destination": "1:340"
+    },
+    {
+      "source": "1:322",
+      "label": "button / helper-launch",
+      "destination": "3:3526"
+    },
+    {
+      "source": "1:438",
+      "label": "button / primary ",
+      "destination": "1:449"
+    },
+    {
+      "source": "1:442",
+      "label": "button / text-action",
+      "destination": "1:24"
+    },
+    {
+      "source": "5:170",
+      "label": "div / helper-launcher  ",
+      "destination": "3:3526"
+    },
+    {
+      "source": "5:171",
+      "label": "button / helper-launch",
+      "destination": "3:3526"
+    },
+    {
+      "source": "1:551",
+      "label": "label / create-consent",
+      "destination": "4:164"
+    },
+    {
+      "source": "1:573",
+      "label": "button / text-action",
+      "destination": "1:340"
+    },
+    {
+      "source": "1:656",
+      "label": "button / text-action",
+      "destination": "1:24"
+    },
+    {
+      "source": "1:666",
+      "label": "button / text-action",
+      "destination": "1:340"
+    },
+    {
+      "source": "1:676",
+      "label": "button / text-action",
+      "destination": "1:449"
+    },
+    {
+      "source": "1:687",
+      "label": "label / create-consent",
+      "destination": "3:2365"
+    },
+    {
+      "source": "1:692",
+      "label": "a / cancellation terms",
+      "destination": "3:3113"
+    },
+    {
+      "source": "1:698",
+      "label": "button / text-action",
+      "destination": "1:449"
+    },
+    {
+      "source": "1:703",
+      "label": "button / helper-launch",
+      "destination": "3:3526"
+    },
+    {
+      "source": "1:849",
+      "label": "button / primary ",
+      "destination": "1:880"
+    },
+    {
+      "source": "1:853",
+      "label": "button / primary secondary",
+      "destination": "3:3907"
+    },
+    {
+      "source": "1:921",
+      "label": "button / avatar",
+      "destination": "6:290"
+    },
+    {
+      "source": "1:931",
+      "label": "button / primary secondary",
+      "destination": "3:4329"
+    },
+    {
+      "source": "1:933",
+      "label": "button / primary ",
+      "destination": "3:3809"
+    },
+    {
+      "source": "1:946",
+      "label": "button / primary secondary",
+      "destination": "1:24"
+    },
+    {
+      "source": "1:948",
+      "label": "button / primary secondary",
+      "destination": "3:4117"
+    },
+    {
+      "source": "3:2408",
+      "label": "button / text-action",
+      "destination": "1:24"
+    },
+    {
+      "source": "3:2418",
+      "label": "button / text-action",
+      "destination": "1:340"
+    },
+    {
+      "source": "3:2428",
+      "label": "button / text-action",
+      "destination": "1:449"
+    },
+    {
+      "source": "3:2440",
+      "label": "label / create-consent",
+      "destination": "1:594"
+    },
+    {
+      "source": "3:2445",
+      "label": "a / cancellation terms",
+      "destination": "3:3113"
+    },
+    {
+      "source": "3:2447",
+      "label": "button / primary ",
+      "destination": "1:719"
+    },
+    {
+      "source": "3:2451",
+      "label": "button / text-action",
+      "destination": "1:449"
+    },
+    {
+      "source": "3:2799",
+      "label": "Action / Use this restaurant",
+      "destination": "1:24"
+    },
+    {
+      "source": "3:3111",
+      "label": "Action / Return to arrangements",
+      "destination": "1:24"
+    },
+    {
+      "source": "3:3383",
+      "label": "Action / Retry publishing",
+      "destination": "1:719"
+    },
+    {
+      "source": "3:3385",
+      "label": "Action / Back to review",
+      "destination": "3:2365"
+    },
+    {
+      "source": "3:3522",
+      "label": "Action / Check original publishing status",
+      "destination": "1:719"
+    },
+    {
+      "source": "3:3524",
+      "label": "Action / Keep draft and return",
+      "destination": "3:2365"
+    },
+    {
+      "source": "3:3665",
+      "label": "Action / Review in create meal",
+      "destination": "3:3669"
+    },
+    {
+      "source": "3:3805",
+      "label": "Action / Replace with this draft",
+      "destination": "1:340"
+    },
+    {
+      "source": "3:3860",
+      "label": "button / primary secondary",
+      "destination": "3:4117"
+    },
+    {
+      "source": "3:3905",
+      "label": "Action / Update host booking statement",
+      "destination": "3:3907"
+    },
+    {
+      "source": "5:185",
+      "label": "Explicit booking confirmation · unchecked",
+      "destination": "5:188"
+    },
+    {
+      "source": "3:4070",
+      "label": "button / primary secondary",
+      "destination": "3:4117"
+    },
+    {
+      "source": "3:4231",
+      "label": "Action / Cancel meal for everyone",
+      "destination": "3:4233"
+    },
+    {
+      "source": "3:4430",
+      "label": "Action / Back to applications",
+      "destination": "6:185"
+    },
+    {
+      "source": "3:4536",
+      "label": "Action / View current arrangements",
+      "destination": "3:3809"
+    },
+    {
+      "source": "3:4642",
+      "label": "Action / View cancelled meal",
+      "destination": "3:4233"
+    },
+    {
+      "source": "3:4655",
+      "label": "Action / PublishFailed",
+      "destination": "3:3248"
+    },
+    {
+      "source": "3:4657",
+      "label": "Action / PublishUnknown",
+      "destination": "3:3387"
+    },
+    {
+      "source": "3:4659",
+      "label": "Action / ArrangeError",
+      "destination": "3:2803"
+    },
+    {
+      "source": "3:4661",
+      "label": "Action / Conflict",
+      "destination": "3:4432"
+    },
+    {
+      "source": "3:4663",
+      "label": "Action / DeadlineInsufficient",
+      "destination": "3:4538"
+    },
+    {
+      "source": "4:238",
+      "label": "label / create-consent",
+      "destination": "1:449"
+    },
+    {
+      "source": "4:255",
+      "label": "button / primary ",
+      "destination": "1:594"
+    },
+    {
+      "source": "4:259",
+      "label": "button / text-action",
+      "destination": "1:340"
+    },
+    {
+      "source": "5:290",
+      "label": "Explicit booking confirmation · selected",
+      "destination": "3:3907"
+    },
+    {
+      "source": "5:293",
+      "label": "Action / Confirm my statement",
+      "destination": "3:4021"
+    },
+    {
+      "source": "6:234",
+      "label": "button / primary secondary",
+      "destination": "1:24"
+    },
+    {
+      "source": "6:236",
+      "label": "button / primary secondary",
+      "destination": "3:4117"
+    }
+  ],
+  "missing": [],
+  "costs": [
+    "Arrange",
+    "Introduce",
+    "Costs",
+    "3",
+    "Review",
+    "4",
+    "Keep things clear.",
+    "Let everyone know what they’ll pay and who’s booking.",
+    "How guests pay",
+    "Pay at the restaurant",
+    "Everyone pays their own share. Nothing collected in the app.",
+    "Budget from / person (£)",
+    "25",
+    "Budget to / person (£)",
+    "35",
+    "Pay individually at the restaurant",
+    "Budget per person",
+    "£25–35",
+    "Estimated spend is a guide, not a fixed charge.",
+    "Restaurant reservation",
+    "I’ve already booked",
+    "✓",
+    "I have a reservation at ",
+    "The Little Table",
+    " for ",
+    "4",
+    "people on ",
+    "Fri 23 Oct",
+    " at ",
+    "19:00",
+    ". This is my confirmation, not verification by the app.",
+    "Cancellation terms",
+    "Let the host know if plans change.",
+    "Continue",
+    "Previous step",
+    "Create a meal",
+    "Ask Fancy",
+    "›",
+    "6:30"
+  ],
+  "costCopyFixEvidence": "ios2-j02-cost-copy-fix.json"
+}
