@@ -12,7 +12,7 @@ it('QA-F48: real guest projection with no APPLY action retains a login entry and
  const app=createTestApp();await app.services.session.restore();
  app.mock.on('GET',`/v1/meals/${MEAL_ID}`,ok({meal:meal({allowedActions:[]}),myApplication:null,conversationId:null}));
  await renderApp(app,<MealDetailScreen/>);await screen.findByText('Sunday dinner');
- await fireEvent.press(screen.getByRole('button',{name:'Request to join'}));
+ await fireEvent.press(screen.getByRole('button',{name:'Apply to join'}));
  expect(mockRouter.push).toHaveBeenCalledWith('/sign-in');expect(peekReturnTo()).toBe(`/meals/${MEAL_ID}/apply`);
  expect(app.mock.callsTo('POST',/applications/)).toHaveLength(0);
 });

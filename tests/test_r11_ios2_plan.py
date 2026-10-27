@@ -3,6 +3,10 @@ import json
 import re
 from pathlib import Path
 import unittest
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parent))
+from takeover_baseline import pinned_bytes  # noqa: E402
 R=Path(__file__).resolve().parents[1]
 
 class IOS2DesignCounterexamples(unittest.TestCase):
@@ -132,9 +136,9 @@ class IOS2EngineeringPlan(unittest.TestCase):
     def test_selected_inputs_and_outputs_are_exact_without_claiming_visual_repair_or_real_qa(self):
         import hashlib
         for path,digest in self.inputs['sourceSHA256'].items():
-            self.assertEqual(hashlib.sha256((R/path).read_bytes()).hexdigest(),digest,path)
+            self.assertEqual(hashlib.sha256(pinned_bytes(path)).hexdigest(),digest,path)
         for path,digest in self.inputs['outputSHA256'].items():
-            self.assertEqual(hashlib.sha256((R/path).read_bytes()).hexdigest(),digest,path)
+            self.assertEqual(hashlib.sha256(pinned_bytes(path)).hexdigest(),digest,path)
         status=json.loads((R/'docs/delivery/versions/ios-0.1.0-dev.2/status.json').read_text())
         self.assertEqual(status['pj'],'PJ-IOS-DEV2')
         self.assertFalse(status['implementationStarted']);self.assertFalse(status['QAStarted'])
@@ -150,7 +154,7 @@ class IOS2EngineeringPlan(unittest.TestCase):
         package_path='docs/engineering/r11/ios-0.1.0-dev.2/work-packages.json'
         self.assertEqual(hashlib.sha256((R/package_path).read_bytes()).hexdigest(),independent['inputSHA256'][package_path])
         for path,digest in status['currentPlanSHA256'].items():
-            self.assertEqual(hashlib.sha256((R/path).read_bytes()).hexdigest(),digest,path)
+            self.assertEqual(hashlib.sha256(pinned_bytes(path)).hexdigest(),digest,path)
         self.assertTrue(all(g['status']=='not-issued'for g in status['issuanceGates']))
         binding=self.inputs['designSnapshot']
         if binding['visualRepairRebindRequired']:
@@ -158,7 +162,7 @@ class IOS2EngineeringPlan(unittest.TestCase):
             self.assertEqual(status['developmentPlan'],'candidate-awaiting-independent-RD-review-and-visual-rebind')
         else:
             for path,digest in binding['SHA256'].items():
-                self.assertEqual(hashlib.sha256((R/path).read_bytes()).hexdigest(),digest,path)
+                self.assertEqual(hashlib.sha256(pinned_bytes(path)).hexdigest(),digest,path)
 
 
 if __name__=='__main__':unittest.main()

@@ -1,6 +1,7 @@
 import {fireEvent,screen,waitFor,within} from '@testing-library/react-native';
 import {Text} from 'react-native';
 import {AppRoot} from './AppRoot.tsx';
+import {AnalyticsConsent} from './analytics/Consent.tsx';
 import {createTestApp,renderApp} from './test/render.tsx';
 import {ok} from './test/mock-fetch.ts';
 jest.mock('expo-router',()=>({useRouter:()=>({push:jest.fn()})}));
@@ -14,25 +15,25 @@ function notices() {
 }
 
 describe('application notices safe area',()=>{
-  test('initial analytics choice shares a top and horizontal safe area outside navigation',async()=>{
+  test('the analytics choice never pushes navigation content down from the top notices region',async()=>{
     const app=createTestApp();
     await renderApp(app,<AppRoot services={app.services}><Text testID="navigation-content">Navigation</Text></AppRoot>);
-    expect(notices().getByText('Help improve Fancy')).toBeTruthy();
+    expect(notices().queryByText('Help improve Fancy')).toBeNull();
     expect(screen.getByTestId('navigation-content')).toBeTruthy();
   });
-  test('declining keeps the collapsed preferences control in the same safe region',async()=>{
+  test('declining from settings collapses to the preferences control',async()=>{
     const app=createTestApp();app.mock.on('POST','/v1/analytics/events',ok({results:[]}));
-    await renderApp(app,<AppRoot services={app.services}><Text testID="navigation-content">Navigation</Text></AppRoot>);
+    await app.services.session.restore();
+    await renderApp(app,<AnalyticsConsent manager={app.services.analytics}/>);
     await fireEvent.press(screen.getByRole('button',{name:'Decline analytics'}));
     await waitFor(()=>expect(app.services.analytics.getState().choice).toBe('declined'));
-    expect(notices().getByRole('button',{name:'Analytics preferences'})).toBeTruthy();
+    expect(screen.getByRole('button',{name:'Analytics preferences'})).toBeTruthy();
     expect(app.services.analytics.getState().enabled).toBe(false);
   });
-  test('unavailable-session banner shares that region instead of adding another top inset',async()=>{
+  test('unavailable-session banner stays in the top notices region',async()=>{
     const app=createTestApp();jest.spyOn(app.store,'readRefresh').mockRejectedValue(new Error('synthetic storage unavailable'));
     await renderApp(app,<AppRoot services={app.services}><Text testID="navigation-content">Navigation</Text></AppRoot>);
     await screen.findByText(/You’re offline or Fancy can’t be reached/);
     expect(notices().getByRole('button',{name:'Try again'})).toBeTruthy();
-    expect(notices().getByText('Help improve Fancy')).toBeTruthy();
   });
 });

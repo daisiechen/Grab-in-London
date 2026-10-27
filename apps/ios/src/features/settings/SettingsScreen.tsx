@@ -5,10 +5,11 @@ import { Screen } from '../../ui/Screen.tsx';
 import { Sheet } from '../../ui/Sheet.tsx';
 import { Body, SectionTitle } from '../../ui/Text.tsx';
 import { useServices, useSessionState } from '../../services.tsx';
+import { AnalyticsConsent } from '../../analytics/Consent.tsx';
 
 /** Settings (own profile only). Privacy copy, sign-out, account deletion, deletion status and the product survey. */
 export function SettingsScreen() {
-  const { session } = useServices();
+  const { session, analytics } = useServices();
   const state = useSessionState();
   const router = useRouter();
   const [confirm, setConfirm] = useState(false);
@@ -36,6 +37,7 @@ export function SettingsScreen() {
       {state.status === 'signedIn' ? <TextAction destructive label="Delete account" onPress={() => router.push('/delete-account')} /> : null}
       <TextAction label="Check deletion status" onPress={() => router.push('/deletion-status')} />
       <SectionTitle>Help shape Fancy</SectionTitle>
+      {state.status === 'signedIn' ? <AnalyticsConsent manager={analytics} /> : null}
       {state.status === 'signedIn' ? <TextAction label="Product survey" onPress={() => router.push('/survey')} /> : null}
       <Sheet visible={confirm} title="Sign out?" onClose={() => setConfirm(false)}>
         <Body>You’ll return to the account screen.</Body>

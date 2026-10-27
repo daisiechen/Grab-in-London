@@ -26,13 +26,13 @@ describe('DiscoverScreen (QA-DISCOVERY-001..003)', () => {
     await renderApp(app, <DiscoverScreen />);
     await screen.findByText('Sunday dinner');
 
-    await fireEvent.press(screen.getByRole('button', { name: 'Any date' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Filter by date' }));
     await fireEvent.press(screen.getByRole('checkbox', { name: 'Sat 24 Oct' }));
     await fireEvent.press(screen.getByRole('button', { name: 'Close' }));
     expect(app.mock.callsTo('GET','/v1/meals')).toHaveLength(1);
     expect(app.mock.callsTo('GET',`/v1/venues/${meal().venue.venueRef}/photo`)).toHaveLength(1);
 
-    await fireEvent.press(screen.getByRole('button', { name: 'Any date' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Filter by date' }));
     await fireEvent.press(screen.getByRole('checkbox', { name: 'Sat 24 Oct' }));
     await fireEvent.press(screen.getByRole('checkbox', { name: 'Tue 27 Oct' }));
     await fireEvent.press(screen.getByRole('button', { name: 'Show meals' }));
@@ -48,7 +48,7 @@ describe('DiscoverScreen (QA-DISCOVERY-001..003)', () => {
     const app = createTestApp();
     app.mock.on('GET', '/v1/meals', page([]));
     await renderApp(app, <DiscoverScreen />);
-    await fireEvent.press(screen.getByRole('button', { name: 'Any date' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Filter by date' }));
     expect(screen.getByRole('checkbox', { name: 'Tue 20 Oct' })).toBeDisabled();
     expect(screen.getByRole('checkbox', { name: 'Wed 21 Oct' })).not.toBeDisabled();
   });

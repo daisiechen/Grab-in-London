@@ -6,7 +6,7 @@ import { Body } from './ui/Text.tsx';
 import {LogoutNotice} from './features/auth/LogoutNotice.tsx';
 import {AssistantWidget} from './features/assistant/AssistantWidget.tsx';
 import { colors } from './ui/tokens.ts';
-import { AnalyticsConsent } from './analytics/Consent.tsx';
+import { AnalyticsConsentSheet } from './analytics/Consent.tsx';
 import { ServicesProvider, useSessionState, type Services } from './services.tsx';
 
 /** Restores the session once and re-checks an `unavailable` session when the app returns to the foreground. */
@@ -26,10 +26,10 @@ export function AppRoot({ services, children }: { services: Services; children: 
       <SafeAreaView edges={['top', 'left', 'right']} testID="app-notices">
         <LogoutNotice session={services.session}/>
         <SessionBanner services={services} />
-        <AnalyticsConsent manager={services.analytics}/>
       </SafeAreaView>
       {children}
       <AssistantWidget />
+      <AnalyticsConsentSheet manager={services.analytics}/>
     </ServicesProvider>
   );
 }

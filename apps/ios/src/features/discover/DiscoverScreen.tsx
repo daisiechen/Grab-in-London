@@ -1,9 +1,8 @@
 import {useAssistantContext} from '../assistant/hooks.ts';
 import { useAnalyticsPresentations,useAnalyticsState } from '../../analytics/hooks.ts';
 import { useNativeImpressions,type DiscoveryProof } from '../../analytics/impressions.ts';
-import {NativeMap,type Bounds} from '../maps/NativeMap.tsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ApiError } from '@fancy/client';
@@ -14,18 +13,20 @@ import { londonToday, longDate } from '../../lib/london.ts';
 import { Primary, TextAction } from '../../ui/Button.tsx';
 import { ChoiceGroup, MultiChoice } from '../../ui/ChoiceGroup.tsx';
 import { DateChoices } from '../../ui/DateChoices.tsx';
-import { Field } from '../../ui/Field.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
 import { MealCard } from '../../ui/MealCard.tsx';
 import { Sheet } from '../../ui/Sheet.tsx';
-import { Body, Heading } from '../../ui/Text.tsx';
-import { colors, spacing } from '../../ui/tokens.ts';
+import { Icon } from '../../ui/Icon.tsx';
+import { images } from '../../ui/images.ts';
+import { colors } from '../../ui/tokens.ts';
 import { BRAND_COPY } from '../../ui/brand.ts';
 import { languageOptions } from '../profile/model.ts';
 import type { Meal } from '../meals/format.ts';
+import { groupByArea } from './areas.ts';
 import { BUDGET_STEPS, activeFilterCount, emptyFilters, toQuery, toggle, type Filters, type TimeOfDay } from './filters.ts';
+import { createStyles } from '../../ui/styles.ts';
 
-type SheetKind = '' | 'date' | 'size' | 'filters';
+type SheetKind = '' | 'date' | 'size' | 'filters' | 'area';
 const SIZE_OPTIONS = [2, 3, 4, 5, 6] as const;
 
 /**
@@ -40,8 +41,10 @@ export function DiscoverScreen() {
   const [presented,setPresented]=useState<DiscoveryProof|null>(null);
   const pendingFilterEvents=useRef<string[]>([]);
   const [filterEvents,setFilterEvents]=useState<string[]>([]);
-  const [mapReady,setMapReady]=useState(false);
-  const [mapMode,setMapMode]=useState(false);
+  const [mapMode,setMapMode]=useState(true);
+  const [areaCode,setAreaCode]=useState<string|null>(null);
+  const [selectedId,setSelectedId]=useState<string|null>(null);
+  const [toast,setToast]=useState<string|null>(null);
   const router = useRouter();
   const today = londonToday(now());
   const [applied, setApplied] = useState<Filters>(emptyFilters);
@@ -54,19 +57,17 @@ export function DiscoverScreen() {
     ...[...new Set(Object.values(proofs).filter(p=>p.generation===analyticsState.generation).map(p=>p.requestId))].map(discoveryRequestId=>({type:'discovery_results' as const,properties:{discoveryRequestId}})),
     ...(presented?.generation===analyticsState.generation?filterEvents.map(filter=>({type:'filter_applied' as const,properties:{filter},key:presented.requestId+filter})):[]),
     ...(presented?.generation===analyticsState.generation&&meals.length===0?[{type:'discovery_results' as const,properties:{discoveryRequestId:presented.requestId}}]:[]),
-    ...(mapMode&&mapReady?[{type:'map_opened' as const,properties:{}}]:[]),
+    ...(mapMode?[{type:'map_opened' as const,properties:{}}]:[]),
   ],true);
   const [cursor, setCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const requestId = useRef(0);
-  const [pendingBounds,setPendingBounds]=useState<Bounds|null>(null);
-  const [bounds,setBounds]=useState<Bounds|null>(null);
   useAssistantContext({sourcePage:'DISCOVER',appliedFilters:{
     ...(applied.dates.length?{dates:applied.dates}:{}),...(applied.tableSizes.length?{tableSizes:applied.tableSizes}:{}),
     ...(applied.budgetMaxPence!==null?{budgetMaxPence:applied.budgetMaxPence}:{}),...(applied.languages.length?{languages:applied.languages}:{}),
     ...(applied.moods.length?{moods:applied.moods}:{}),...(applied.cuisineCodes.length?{cuisineCodes:applied.cuisineCodes}:{}),...(applied.dietaryCodes.length?{dietaryCodes:applied.dietaryCodes}:{}),
-    ...(applied.timeOfDay!=='any'?{timeOfDay:applied.timeOfDay}:{}),...(applied.keyword.trim()?{keyword:applied.keyword.trim()}:{}),...(bounds?{bounds}:{}),
+    ...(applied.timeOfDay!=='any'?{timeOfDay:applied.timeOfDay}:{}),...(applied.keyword.trim()?{keyword:applied.keyword.trim()}:{}),
   }});
 
   const load = useCallback(
@@ -76,7 +77,7 @@ export function DiscoverScreen() {
       setLoading(true);
       setError(null);
       try {
-        const res = await api.call('discoverMeals', { query: {...toQuery(filters, after ?? undefined),...(bounds??{})} });
+        const res = await api.call('discoverMeals', { query: toQuery(filters, after ?? undefined) });
         if (id !== requestId.current) return;
         assistant.observeAreas(res.data.map(m=>m.areaCode));
         setMeals((prev) => (after ? [...prev, ...res.data] : res.data));
@@ -91,7 +92,7 @@ export function DiscoverScreen() {
         if (id === requestId.current) setLoading(false);
       }
     },
-    [api,bounds,assistant,analytics,analyticsEpoch],
+    [api,assistant,analytics,analyticsEpoch],
   );
 
   useEffect(() => {
@@ -109,54 +110,163 @@ export function DiscoverScreen() {
   };
   const count = activeFilterCount(applied);
   const dateLabel = applied.dates.length > 1 ? `${applied.dates.length} dates` : applied.dates[0] ? longDate(applied.dates[0]) : 'Any date';
-  const sizeLabel = applied.tableSizes.length ? `${[...applied.tableSizes].sort().join(', ')} people` : 'Any size';
+  const sizeLabel = applied.tableSizes.length ? `${[...applied.tableSizes].sort().join(', ')} people` : 'Table size';
+
+  const { groups, unplaced } = groupByArea(meals);
+  // Meals without a map position still get a preview (as “London”) so the map never reads as empty.
+  const busiest = groups.reduce<(typeof groups)[number] | undefined>((best, g) => (!best || g.meals.length > best.meals.length ? g : best), undefined);
+  const area = groups.find((g) => g.code === areaCode) ?? busiest ?? (unplaced.length ? { code: 'london', name: 'London', meals: unplaced } : null);
+  const areaMeals = area?.meals ?? [];
+  const featuredIndex = Math.max(0, areaMeals.findIndex((m) => m.id === selectedId));
+  const featured = areaMeals[featuredIndex] ?? null;
+  const openMeal = (m: Meal) => router.push(`/meals/${m.id}`);
+  const openPerson = (p: Meal['host']) => router.push(`/profiles/${p.id}`);
+  const selectArea = (code: string) => {
+    setAreaCode(code);
+    setSelectedId(groups.find((g) => g.code === code)?.meals[0]?.id ?? null);
+  };
+  const notify = (message: string) => setToast(message);
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 2600);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
+  const empty = (
+    <View style={styles.empty}>
+      <Icon name="MagnifyingGlass" size={33} color={colors.forest} />
+      <Text style={styles.emptyTitle}>No tables match just yet</Text>
+      <Text style={styles.emptyBody}>Try another date or a wider budget.</Text>
+      <Primary label="Clear filters" onPress={() => setApplied(emptyFilters())} />
+    </View>
+  );
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <FlatList
-        testID="discover-list"
-        onViewableItemsChanged={onViewable}
-        viewabilityConfig={viewabilityConfig}
-        data={meals}
-        keyExtractor={(m) => m.id}
-        contentContainerStyle={styles.content}
-        keyboardShouldPersistTaps="handled"
-        ListHeaderComponent={
-          <View style={{ gap: 12 }}>
-            <Heading>{BRAND_COPY.invitation}</Heading>
-            <Field label="Search meals" value={pending.keyword} onChangeText={(keyword) => setPending({ ...pending, keyword })} returnKeyType="search" onSubmitEditing={() => setApplied({ ...applied, keyword: pending.keyword })} placeholder="Restaurant, cuisine or idea" />
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
-              <Primary secondary label={dateLabel} onPress={() => open('date')} />
-              <Primary secondary label={sizeLabel} onPress={() => open('size')} />
-              <Primary secondary label={count ? `Filters · ${count}` : 'Filters'} onPress={() => open('filters')} />
-            </ScrollView>
-            <Primary secondary label={mapMode?'Show list':'Show map'} onPress={()=>{setMapReady(false);setMapMode(p=>!p);}}/>
-            {mapMode?<>
-              <NativeMap points={meals.flatMap(m=>m.venue.available&&m.venue.location?[{id:m.id,title:m.title,lat:m.venue.location.lat,lng:m.venue.location.lng,attributions:m.venue.attributions.map(a=>a.text)}]:[])} onSelect={id=>router.push(`/meals/${id}`)} onMove={setPendingBounds} onReady={()=>setMapReady(true)}/>
-              <Primary secondary label="Search this area" disabled={!pendingBounds} onPress={()=>{if(pendingBounds){pendingFilterEvents.current=analyticsState.enabled?['area']:[];setBounds(pendingBounds);}}}/>
-              {bounds?<TextAction label="Clear map area" onPress={()=>{pendingFilterEvents.current=analyticsState.enabled?['area']:[];setBounds(null);}}/>:null}
-            </>:null}
-            <FormMessage message={error} />
-            {error ? <Primary secondary label="Try again" onPress={() => void load(applied, null)} /> : null}
+      <View style={styles.header}>
+        <Pressable accessibilityRole="button" style={styles.city} onPress={() => notify('London is our first city. More tables will follow.')}>
+          <Text style={styles.cityText}>London</Text>
+          <Icon name="ChevronDown" size={13} color={colors.ink} />
+        </Pressable>
+        <Text accessibilityRole="header" style={styles.h1}>{BRAND_COPY.invitation}</Text>
+        <Text style={styles.tagline}>{BRAND_COPY.slogan}</Text>
+        <View style={styles.controls}>
+          <Pressable accessibilityRole="button" accessibilityLabel="Filter by date" style={styles.control} onPress={() => open('date')}>
+            <Icon name="Calendar" size={14} />
+            <Text style={styles.controlText} numberOfLines={1}>{dateLabel}</Text>
+            <Icon name="ChevronDown" size={10} />
+          </Pressable>
+          <Pressable accessibilityRole="button" accessibilityLabel="Filter by table size" style={styles.control} onPress={() => open('size')}>
+            <Icon name="Person" size={14} />
+            <Text style={styles.controlText} numberOfLines={1}>{sizeLabel}</Text>
+            <Icon name="ChevronDown" size={10} />
+          </Pressable>
+          <View style={styles.toggle}>
+            <Pressable accessibilityRole="button" accessibilityLabel="List view" accessibilityState={{ selected: !mapMode }} style={[styles.toggleButton, !mapMode && styles.toggleSelected]} onPress={() => setMapMode(false)}>
+              <Icon name="ListBullet" size={16} color={mapMode ? colors.ink : colors.white} />
+            </Pressable>
+            <Pressable accessibilityRole="button" accessibilityLabel="Map view" accessibilityState={{ selected: mapMode }} style={[styles.toggleButton, mapMode && styles.toggleSelected]} onPress={() => setMapMode(true)}>
+              <Icon name="Globe" size={16} color={mapMode ? colors.white : colors.ink} />
+            </Pressable>
           </View>
-        }
-        renderItem={({ item }) => <MealCard meal={item} onPress={() => router.push(`/meals/${item.id}`)} />}
-        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-        ListEmptyComponent={
-          loading || error ? undefined : (
-            <View style={{ gap: 8, paddingTop: 20 }}>
-              <Heading>No tables match just yet</Heading>
-              <Body muted>Try another date or a wider budget.</Body>
-              {count ? <Primary label="Clear filters" onPress={() => setApplied(emptyFilters())} /> : null}
+          <Pressable accessibilityRole="button" accessibilityLabel={count ? `More filters, ${count} active` : 'More filters'} style={[styles.control, styles.more]} onPress={() => open('filters')}>
+            <Icon name="MixerHorizontal" size={14} />
+            {count ? <View style={styles.count}><Text style={styles.countText}>{count}</Text></View> : null}
+          </Pressable>
+        </View>
+      </View>
+      <FormMessage message={error} />
+      {error ? <View style={styles.retry}><Primary secondary label="Try again" onPress={() => void load(applied, null)} /></View> : null}
+      {mapMode ? (
+        <View style={styles.flex}>
+          {unplaced.length ? (
+            <View style={styles.notice}>
+              <Text style={styles.noticeText}>Some restaurants have no map position yet. </Text>
+              <TextAction label="See all meals in list" onPress={() => setMapMode(false)} />
             </View>
-          )
-        }
-        ListFooterComponent={loading ? <ActivityIndicator accessibilityLabel="Loading meals" style={{ padding: 16 }} /> : undefined}
-        onEndReachedThreshold={0.4}
-        onEndReached={() => {
-          if (cursor && !loading) void load(applied, cursor);
-        }}
-      />
+          ) : null}
+          <View style={styles.map}>
+            <Image source={images.londonMap} style={styles.mapImage} resizeMode="cover" accessibilityLabel="Map of central London" />
+            {groups.map((g) => {
+              const active = g.code === area?.code;
+              return (
+                <Pressable
+                  key={g.code}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${g.name}: ${g.meals.length} ${g.meals.length === 1 ? 'meal' : 'meals'}`}
+                  accessibilityState={{ selected: active }}
+                  onPress={() => selectArea(g.code)}
+                  style={[styles.pin, active && styles.pinActive, { left: `${g.x}%`, top: `${g.y}%` }]}
+                >
+                  <Text style={[styles.pinText, active && styles.pinTextActive]}>{g.meals.length}</Text>
+                </Pressable>
+              );
+            })}
+            <View style={styles.mapKey} pointerEvents="none"><Text style={styles.mapKeyText}>Numbers = meals in each area</Text></View>
+            <Pressable accessibilityRole="button" accessibilityLabel="Show central London" style={styles.locate} onPress={() => { if (groups[0]) selectArea(groups[0].code); notify('Showing central London. Location access is not needed.'); }}>
+              <Icon name="PaperPlane" size={18} />
+            </Pressable>
+          </View>
+          <View style={styles.preview} accessibilityLabel="Selected area meals">
+            {featured && area ? (
+              <>
+                <Pressable accessibilityRole="button" accessibilityLabel={`View all ${areaMeals.length} ${areaMeals.length === 1 ? 'meal' : 'meals'} in ${area.name}`} onPress={() => setSheet('area')}>
+                  <View style={styles.grip} />
+                  <View style={styles.areaRow}>
+                    <Text style={styles.areaTitle}>{`${areaMeals.length} ${areaMeals.length === 1 ? 'meal' : 'meals'} in ${area.name}`}</Text>
+                    <View style={styles.viewAll}><Text style={styles.viewAllText}>View all</Text><Icon name="ChevronUp" size={13} color={colors.forest} /></View>
+                  </View>
+                </Pressable>
+                <MealCard meal={featured} onPress={() => openMeal(featured)} onPerson={openPerson} />
+                <View style={styles.pager}>
+                  <Text style={styles.pagerText}>{`Meal ${featuredIndex + 1} of ${areaMeals.length}`}</Text>
+                  <View style={styles.pagerButtons}>
+                    <Pressable accessibilityRole="button" accessibilityLabel="Previous meal in this area" disabled={featuredIndex <= 0} style={[styles.pagerButton, featuredIndex <= 0 && styles.pagerDisabled]} onPress={() => setSelectedId(areaMeals[featuredIndex - 1]?.id ?? null)}>
+                      <Icon name="ChevronLeft" size={15} />
+                    </Pressable>
+                    <Pressable accessibilityRole="button" accessibilityLabel="Next meal in this area" disabled={featuredIndex >= areaMeals.length - 1} style={[styles.pagerButton, featuredIndex >= areaMeals.length - 1 && styles.pagerDisabled]} onPress={() => setSelectedId(areaMeals[featuredIndex + 1]?.id ?? null)}>
+                      <Icon name="ChevronRight" size={15} />
+                    </Pressable>
+                  </View>
+                </View>
+              </>
+            ) : loading ? <ActivityIndicator accessibilityLabel="Loading meals" style={{ padding: 24 }} /> : error ? null : empty}
+          </View>
+        </View>
+      ) : (
+        <FlatList
+          testID="discover-list"
+          style={styles.flex}
+          onViewableItemsChanged={onViewable}
+          viewabilityConfig={viewabilityConfig}
+          data={meals}
+          keyExtractor={(m) => m.id}
+          contentContainerStyle={styles.listContent}
+          ListHeaderComponent={
+            <View style={styles.sectionHeading}>
+              <Text accessibilityRole="header" style={styles.sectionTitle}>A seat for you</Text>
+              <Text style={styles.sectionCount}>{`${meals.length} ${meals.length === 1 ? 'meal' : 'meals'}`}</Text>
+            </View>
+          }
+          renderItem={({ item, index }) => <View style={[styles.listMeal, index === 0 && styles.listMealFirst]}><MealCard compact meal={item} onPress={() => openMeal(item)} onPerson={openPerson} /></View>}
+          ListEmptyComponent={loading || error ? undefined : (
+            <View style={styles.empty}>
+              <Text style={styles.emptyTitle}>No meals found</Text>
+              <Text style={styles.emptyBody}>Change your filters to find another table.</Text>
+              <Primary label="Clear filters" onPress={() => setApplied(emptyFilters())} />
+            </View>
+          )}
+          ListFooterComponent={loading ? <ActivityIndicator accessibilityLabel="Loading meals" style={{ padding: 16 }} /> : undefined}
+          onEndReachedThreshold={0.4}
+          onEndReached={() => { if (cursor && !loading) void load(applied, cursor); }}
+        />
+      )}
+      {toast ? <View style={styles.toast} pointerEvents="none" accessibilityLiveRegion="polite"><Text style={styles.toastText}>{toast}</Text></View> : null}
+      <Sheet visible={sheet === 'area'} title={area ? `${areaMeals.length} ${areaMeals.length === 1 ? 'meal' : 'meals'} in ${area.name}` : 'Meals'} onClose={() => setSheet('')}>
+        <ScrollView style={{ maxHeight: 520 }}>
+          {areaMeals.map((m, i) => <View key={m.id} style={[styles.listMeal, i === 0 && styles.areaFirst]}><MealCard compact meal={m} onPress={() => { setSheet(''); openMeal(m); }} onPerson={(p) => { setSheet(''); openPerson(p); }} /></View>)}
+        </ScrollView>
+      </Sheet>
       <Sheet visible={sheet === 'date'} title="Date" onClose={() => setSheet('')}>
         <DateChoices label="Choose one or more dates" multiple today={today} selected={pending.dates} onToggle={(d) => setPending({ ...pending, dates: toggle(pending.dates, d) })} />
         <TextAction label="Any date" onPress={() => setPending({ ...pending, dates: [] })} />
@@ -187,7 +297,56 @@ export function DiscoverScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createStyles({
   safe: { flex: 1, backgroundColor: colors.white },
-  content: { padding: spacing.page, gap: 0 },
+  flex: { flex: 1 },
+  header: { paddingTop: 13, paddingHorizontal: 16, paddingBottom: 10, backgroundColor: colors.white, zIndex: 2 },
+  city: { flexDirection: 'row', alignItems: 'center', gap: 7, alignSelf: 'flex-start', marginBottom: 9 },
+  cityText: { fontSize: 16, fontWeight: '700', color: colors.ink },
+  h1: { fontSize: 27, lineHeight: 30, letterSpacing: -1.1, fontWeight: '700', color: colors.ink, marginBottom: 7 },
+  tagline: { fontSize: 10.5, lineHeight: 15, color: colors.muted, marginBottom: 12 },
+  controls: { flexDirection: 'row', gap: 5, alignItems: 'center' },
+  control: { borderWidth: 1, borderColor: colors.line, height: 35, borderRadius: 9, paddingHorizontal: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, flexShrink: 1 },
+  controlText: { fontSize: 11, color: colors.ink, flexShrink: 1 },
+  toggle: { flexDirection: 'row', borderWidth: 1, borderColor: colors.line, borderRadius: 9, overflow: 'hidden', marginLeft: 'auto' },
+  toggleButton: { height: 33, width: 34, alignItems: 'center', justifyContent: 'center' },
+  toggleSelected: { backgroundColor: colors.forest },
+  more: { width: 32, paddingHorizontal: 0, flexShrink: 0 },
+  count: { position: 'absolute', right: -2, top: -4, width: 12, height: 12, borderRadius: 6, backgroundColor: colors.peach, alignItems: 'center', justifyContent: 'center' },
+  countText: { fontSize: 8, color: colors.ink },
+  retry: { paddingHorizontal: 16, paddingBottom: 8 },
+  notice: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', marginHorizontal: 16, marginBottom: 8, paddingHorizontal: 12, borderRadius: 9, backgroundColor: '#f2f5ee' },
+  noticeText: { fontSize: 11, color: '#607160' },
+  map: { flex: 1, minHeight: 160, backgroundColor: '#eeeee5', overflow: 'hidden' },
+  mapImage: { width: '100%', height: '100%' },
+  pin: { position: 'absolute', width: 34, height: 40, marginLeft: -17, marginTop: -20, borderTopLeftRadius: 17, borderTopRightRadius: 17, borderBottomRightRadius: 17, borderBottomLeftRadius: 8, backgroundColor: colors.forest, alignItems: 'center', justifyContent: 'center', shadowColor: colors.forest, shadowOpacity: 0.13, shadowRadius: 6, shadowOffset: { width: 0, height: 3 }, zIndex: 1 },
+  pinActive: { width: 39, height: 45, marginLeft: -19.5, marginTop: -22.5, borderTopLeftRadius: 19.5, borderTopRightRadius: 19.5, borderBottomRightRadius: 19.5, backgroundColor: colors.peach, zIndex: 2 },
+  pinText: { color: colors.white, fontSize: 15, fontWeight: '700' },
+  pinTextActive: { color: colors.ink },
+  mapKey: { position: 'absolute', top: 10, left: 12, backgroundColor: '#fffffff0', borderWidth: 1, borderColor: colors.line, borderRadius: 16, paddingVertical: 5, paddingHorizontal: 9, zIndex: 3 },
+  mapKeyText: { color: '#4f6457', fontSize: 9 },
+  locate: { position: 'absolute', bottom: 22, right: 15, width: 35, height: 35, borderRadius: 18, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOpacity: 0.13, shadowRadius: 10, shadowOffset: { width: 0, height: 2 }, zIndex: 3 },
+  preview: { backgroundColor: colors.white, borderTopLeftRadius: 19, borderTopRightRadius: 19, paddingHorizontal: 16, paddingBottom: 12, marginTop: -10, zIndex: 4 },
+  grip: { height: 3, width: 28, backgroundColor: '#bfc4bd', borderRadius: 3, marginTop: 8, marginBottom: 9, alignSelf: 'center' },
+  areaRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 12 },
+  areaTitle: { fontSize: 11, fontWeight: '600', color: colors.forest },
+  viewAll: { flexDirection: 'row', alignItems: 'center', gap: 3 },
+  viewAllText: { fontSize: 10, color: colors.forest },
+  pager: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopWidth: 1, borderTopColor: colors.line, marginTop: 11, paddingTop: 7 },
+  pagerText: { fontSize: 10, color: colors.muted },
+  pagerButtons: { flexDirection: 'row', gap: 6 },
+  pagerButton: { width: 30, height: 28, borderWidth: 1, borderColor: colors.line, borderRadius: 7, alignItems: 'center', justifyContent: 'center' },
+  pagerDisabled: { opacity: 0.3 },
+  listContent: { paddingTop: 10, paddingHorizontal: 17, paddingBottom: 20 },
+  sectionHeading: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 14 },
+  sectionTitle: { fontSize: 18, fontWeight: '700', letterSpacing: -0.3, color: colors.ink },
+  sectionCount: { fontSize: 11, color: colors.muted },
+  listMeal: { borderBottomWidth: 1, borderBottomColor: colors.line, paddingVertical: 19 },
+  listMealFirst: { paddingTop: 0 },
+  areaFirst: { paddingTop: 10 },
+  empty: { alignItems: 'center', paddingVertical: 15, paddingHorizontal: 8, gap: 8 },
+  emptyTitle: { fontSize: 18, fontWeight: '700', color: colors.ink, textAlign: 'center' },
+  emptyBody: { fontSize: 13, color: colors.muted, textAlign: 'center', marginBottom: 12 },
+  toast: { position: 'absolute', left: 17, right: 17, bottom: 42, backgroundColor: colors.forest, paddingVertical: 13, paddingHorizontal: 16, borderRadius: 12, shadowColor: colors.forest, shadowOpacity: 0.19, shadowRadius: 20, shadowOffset: { width: 0, height: 5 }, zIndex: 150 },
+  toastText: { color: colors.white, fontSize: 12 },
 });

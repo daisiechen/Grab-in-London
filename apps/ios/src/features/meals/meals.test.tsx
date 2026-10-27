@@ -20,15 +20,17 @@ beforeEach(() => {
 });
 
 describe('MealDetailScreen (S06)', () => {
-  it('guest sees public detail with P-05 “Not provided”; Request to join goes to sign-in without applying (QA-AUTH-001)', async () => {
+  it('guest sees public detail with P-05 “Not provided”; Apply to join goes to sign-in without applying (QA-AUTH-001)', async () => {
     const app = createTestApp();
     app.mock.on('GET', MEAL_PATH, ok({ meal: meal(), myApplication: null, conversationId: null }));
     await renderApp(app, <MealDetailScreen />);
     expect(await screen.findByText('Sunday dinner')).toBeOnTheScreen();
-    expect(screen.getByText('Sun 25 Oct · 19:00 GMT')).toBeOnTheScreen();
-    expect(screen.getByText('Cuisine: Not provided · Dietary: Not provided')).toBeOnTheScreen();
-    expect(screen.getByText('£20–£35 per person · Pay at the restaurant')).toBeOnTheScreen();
-    await fireEvent.press(screen.getByRole('button', { name: 'Request to join' }));
+    expect(screen.getByText('Sun 25 Oct')).toBeOnTheScreen();
+    expect(screen.getByText('19:00 · London time')).toBeOnTheScreen();
+    expect(screen.getByText('Cuisine: Not provided · Dietary options: Not provided. Host-reported · not an allergy guarantee.')).toBeOnTheScreen();
+    expect(screen.getByText('£20–35')).toBeOnTheScreen();
+    expect(screen.getByText('No payment is due in the app. Everyone pays their own share at the restaurant.')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Apply to join' }));
     expect(mockRouter.push).toHaveBeenCalledWith('/sign-in');
     expect(peekReturnTo()).toBe(`/meals/${MEAL_ID}/apply`);
     expect(app.mock.callsTo('POST', /applications/)).toHaveLength(0);

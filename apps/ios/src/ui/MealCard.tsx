@@ -1,38 +1,89 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { areaLabel, budgetLabel, seatsLabel, venueName, whenLabel, type Meal } from '../features/meals/format.ts';
-import {RestaurantPhoto} from './RestaurantPhoto.tsx';
-import { colors, radius, type } from './tokens.ts';
+import { areaLabel, cardBudgetLabel, cardWhenLabel, languagesLabel, moodLabel, venueName, type Meal } from '../features/meals/format.ts';
+import { Avatar } from './Avatar.tsx';
+import { Icon, type IconName } from './Icon.tsx';
+import { RestaurantPhoto } from './RestaurantPhoto.tsx';
+import { colors } from './tokens.ts';
+import { createStyles } from './styles.ts';
 
-/** Whole-card action; no nested interactive content (UX contract). */
-export function MealCard({ meal, onPress, status }: { meal: Meal; onPress: () => void; status?: string }) {
+type Person = Meal['host'];
+
+/**
+ * Demo meal card: photo column + copy, whole-card action with independent avatar buttons.
+ * `compact` is the list/area-sheet variant (narrower photo, mood pill instead of caption).
+ */
+export function MealCard({ meal, onPress, onPerson, members, compact = false, status }: {
+  meal: Meal;
+  onPress: () => void;
+  onPerson?: (person: Person) => void;
+  /** People to show; the public Meal projection only carries the host. */
+  members?: Person[];
+  compact?: boolean;
+  status?: string;
+}) {
+  const people = (members?.length ? members : [meal.host]).slice(0, 3);
   return (
-    <RestaurantPhoto venueRef={meal.venue.venueRef} placeId={meal.venue.placeId} name={venueName(meal)}>{({image,attribution})=><View style={styles.card}>
-    <Pressable accessibilityRole="button" accessibilityLabel={`${meal.title}, ${whenLabel(meal.startsAt)}, ${seatsLabel(meal)}`} onPress={onPress} style={({ pressed }) => [styles.action, pressed && styles.pressed]}>
-      {image}
-      <Text style={styles.eyebrow}>{`${areaLabel(meal.areaCode).toUpperCase()} · ${meal.capacity === 2 ? 'A TABLE FOR TWO' : 'A SMALL TABLE'}`}</Text>
-      <Text style={styles.title}>{meal.title}</Text>
-      <Text style={styles.meta}>{whenLabel(meal.startsAt)}</Text>
-      <Text style={styles.meta}>{`${venueName(meal)} · ${budgetLabel(meal)} per person`}</Text>
-      <View style={styles.row}>
-        <Text style={styles.meta}>{seatsLabel(meal)}</Text>
-        <Text style={styles.meta}>{`Host · ${meal.host.displayName}`}</Text>
-      </View>
-      {status ? <Text style={styles.status}>{status}</Text> : null}
-      {meal.status === 'CANCELLED' ? <Text style={styles.cancelled}>Cancelled</Text> : null}
-    </Pressable>
-    {attribution}
-    </View>}</RestaurantPhoto>
+    <RestaurantPhoto venueRef={meal.venue.venueRef} placeId={meal.venue.placeId} name={venueName(meal)} fill>
+      {({ image, attribution }) => (
+        <View>
+          <View style={styles.card}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`Open ${meal.title}`}
+              onPress={onPress}
+              style={({ pressed }) => [StyleSheet.absoluteFill, styles.hit, pressed && styles.pressed]}
+            />
+            <View pointerEvents="none" style={[styles.photo, compact ? styles.photoCompact : null]}>{image}</View>
+            <View style={styles.copy} pointerEvents="box-none">
+              <Text style={styles.title}>{meal.title}</Text>
+              <Text style={styles.venue}>{venueName(meal)}</Text>
+              <Line icon="SewingPin">{`${areaLabel(meal.areaCode)}, London`}</Line>
+              <Line icon="Calendar">{cardWhenLabel(meal.startsAt)}</Line>
+              <Line>{`${cardBudgetLabel(meal)} per person`}</Line>
+              <Line icon="Person">{`Table for ${meal.capacity} · ${meal.confirmedCount} confirmed`}</Line>
+              <View style={styles.avatars} pointerEvents="box-none">
+                {people.map((p) => <Avatar key={p.id} person={p} size={compact ? 29 : 32} {...(onPerson ? { onPress: () => onPerson(p) } : {})} />)}
+              </View>
+            </View>
+          </View>
+          {attribution}
+          {status ? <Text style={styles.status}>{status}</Text> : null}
+          {meal.status === 'CANCELLED' ? <Text style={styles.cancelled}>Cancelled</Text> : null}
+          {compact ? (
+            <View style={styles.pill}><Text style={styles.pillText}>{moodLabel(meal)}</Text></View>
+          ) : (
+            <Text style={styles.caption}>{`${moodLabel(meal)} · ${languagesLabel(meal.languages)}`}</Text>
+          )}
+        </View>
+      )}
+    </RestaurantPhoto>
   );
 }
 
-const styles = StyleSheet.create({
-  card: { borderWidth: 1, borderColor: colors.line, borderRadius: radius.md, padding: 14, gap: 4, backgroundColor: colors.white },
-  action: {gap:4},
-  pressed: { backgroundColor: colors.surface },
-  eyebrow: { fontSize: type.caption, letterSpacing: 1, fontWeight: '700', color: colors.forest },
-  title: { fontSize: type.section, fontWeight: '700', color: colors.ink },
-  meta: { fontSize: type.meta, color: colors.muted },
-  row: { flexDirection: 'row', justifyContent: 'space-between' },
-  status: { fontSize: type.control, color: colors.forest, fontWeight: '700' },
-  cancelled: { fontSize: type.control, color: colors.danger, fontWeight: '700' },
+function Line({ icon, children }: { icon?: IconName; children: string }) {
+  return (
+    <View style={styles.line}>
+      {icon ? <Icon name={icon} size={12} color={colors.muted} /> : null}
+      <Text style={styles.meta}>{children}</Text>
+    </View>
+  );
+}
+
+const styles = createStyles({
+  card: { flexDirection: 'row', gap: 13 },
+  hit: { zIndex: 1, borderRadius: 10 },
+  pressed: { backgroundColor: '#123f3508' },
+  photo: { width: 116, minHeight: 143, maxHeight: 150, borderRadius: 9, overflow: 'hidden' },
+  photoCompact: { width: 101, minHeight: 130 },
+  copy: { flex: 1, minWidth: 0 },
+  title: { fontSize: 17, lineHeight: 19, fontWeight: '700', letterSpacing: -0.5, color: colors.ink, marginBottom: 5 },
+  venue: { fontSize: 11, lineHeight: 14, fontWeight: '600', color: '#46594d', marginBottom: 4 },
+  line: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 3 },
+  meta: { fontSize: 11, lineHeight: 15, color: colors.muted, flexShrink: 1 },
+  avatars: { flexDirection: 'row', gap: 5, marginTop: 8, alignItems: 'center', zIndex: 2 },
+  caption: { marginTop: 9, fontSize: 10, color: '#5e7364' },
+  pill: { alignSelf: 'flex-start', marginTop: 10, paddingVertical: 4, paddingHorizontal: 8, backgroundColor: '#f0f3ec', borderRadius: 7 },
+  pillText: { fontSize: 10, lineHeight: 14, color: '#536c5b' },
+  status: { marginTop: 8, fontSize: 13, color: colors.forest, fontWeight: '700' },
+  cancelled: { marginTop: 8, fontSize: 13, color: colors.danger, fontWeight: '700' },
 });

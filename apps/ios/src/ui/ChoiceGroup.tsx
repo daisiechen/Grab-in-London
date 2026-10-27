@@ -1,5 +1,6 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { colors, radius, type } from './tokens.ts';
+import { createStyles } from './styles.ts';
 
 type Option<V extends string> = readonly [value: V, label: string];
 
@@ -44,7 +45,7 @@ function Chip({ label, selected, role, onPress }: { label: string; selected: boo
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createStyles({
   group: { gap: 8 },
   legend: { fontSize: type.control, fontWeight: '700', color: colors.ink },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },

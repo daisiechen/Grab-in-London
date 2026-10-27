@@ -13,6 +13,12 @@ export const budgetLabel = (m: Pick<Meal, 'budgetMinPence' | 'budgetMaxPence'>) 
 /** “Sat 25 Oct · 19:00 BST” — London wall time with its explicit offset label. */
 export const whenLabel = (t: Meal['startsAt']) => `${longDate(t.localDate)} · ${t.localTime} ${offsetLabel(t.utcOffsetMinutes)}`;
 
+/** Card form used by demo meal cards: “Fri 23 Oct · 19:00”. */
+export const cardWhenLabel = (t: Meal['startsAt']) => `${longDate(t.localDate)} · ${t.localTime}`;
+/** Card budget: “£25–35”, as in the demo. */
+export const cardBudgetLabel = (m: Pick<Meal, 'budgetMinPence' | 'budgetMaxPence'>) =>
+  m.budgetMinPence === m.budgetMaxPence ? money(m.budgetMinPence) : `${money(m.budgetMinPence)}–${money(m.budgetMaxPence).slice(1)}`;
+
 /** P-05: host-declared only; absent = “Not provided”, never inferred. */
 export const cuisineLabel = (m: Pick<Meal, 'cuisineCode'>) => (m.cuisineCode ? CUISINES[m.cuisineCode] : 'Not provided');
 export const dietaryLabel = (m: Pick<Meal, 'dietaryCodes'>) => (m.dietaryCodes?.length ? m.dietaryCodes.map((c) => DIETARY[c]).join(' · ') : 'Not provided');
@@ -41,3 +47,15 @@ const APPLICATION_LABELS: Record<Application['state'], string> = {
   CANCELLED: 'Participation cancelled',
 };
 export const applicationLabel = (a: Application | null) => (a ? APPLICATION_LABELS[a.state] : 'Open table');
+
+/** “23 Oct, 18:00”: applications deadline as the demo shows it (London wall time). */
+export const closesLabel = (t: Meal['closesAt']) => {
+  const [, m, d] = t.localDate.split('-').map(Number) as [number, number, number];
+  return `${d} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][m - 1]}, ${t.localTime}`;
+};
+
+/**
+ * People shown on cards and “Who’s coming”: the host first, then confirmed guests when the
+ * projection carries them. CONTRACT GAP: the public Meal DTO only has the host today.
+ */
+export const mealPeople = (m: Meal): Meal['host'][] => [m.host];

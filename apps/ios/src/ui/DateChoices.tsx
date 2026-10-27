@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { addMonths, longDate, monthGrid, monthTitle } from '../lib/london.ts';
 import { colors, radius, type } from './tokens.ts';
+import { createStyles } from './styles.ts';
 
 /** Month/day chooser (prototype DateChoices) on London calendar dates; past dates are disabled. */
 export function DateChoices({ label, selected, onToggle, today, multiple = false }: { label: string; selected: readonly string[]; onToggle: (date: string) => void; today: string; multiple?: boolean }) {
@@ -44,7 +45,7 @@ export function DateChoices({ label, selected, onToggle, today, multiple = false
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createStyles({
   wrap: { gap: 8 },
   legend: { fontSize: type.control, fontWeight: '700', color: colors.ink },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },

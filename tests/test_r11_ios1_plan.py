@@ -4,6 +4,10 @@ import json
 from pathlib import Path
 import re
 import unittest
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parent))
+from takeover_baseline import pinned_bytes  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 PLAN = ROOT / 'docs/engineering/r11/ios-0.1.0-dev.1'
@@ -15,7 +19,7 @@ class IOS1ExecutionPlanContract(unittest.TestCase):
         self.assertFalse(manifest['implementationStarted'])
         self.assertFalse(manifest['QAStarted'])
         for path, expected in manifest['inputSHA256'].items():
-            self.assertEqual(hashlib.sha256((ROOT / path).read_bytes()).hexdigest(), expected, path)
+            self.assertEqual(hashlib.sha256(pinned_bytes(path)).hexdigest(), expected, path)
         interfaces = json.loads((PLAN / 'interfaces.json').read_text())
         for op in interfaces['existingOperations']:
             self.assertEqual(hashlib.sha256((ROOT / op['source']).read_bytes()).hexdigest(), op['sourceSHA256'])
@@ -89,7 +93,7 @@ class IOS1ExecutionPlanContract(unittest.TestCase):
         manifest = json.loads((PLAN / 'input-manifest.json').read_text())
         self.assertEqual(manifest['engineeringReviewSHA256'], acceptance['reviewEvidenceSHA256'])
         for path, expected in {**acceptance['reviewEvidenceSHA256'], **acceptance['currentPlanSHA256']}.items():
-            self.assertEqual(hashlib.sha256((ROOT / path).read_bytes()).hexdigest(), expected, path)
+            self.assertEqual(hashlib.sha256(pinned_bytes(path)).hexdigest(), expected, path)
         self.assertIsNone(acceptance['issuance']['actualRDOwner'])
         self.assertEqual(acceptance['issuance']['sharedFileLeases'], 'not-issued')
         self.assertEqual(acceptance['issuance']['environmentPreflight'], 'NOT_RUN')

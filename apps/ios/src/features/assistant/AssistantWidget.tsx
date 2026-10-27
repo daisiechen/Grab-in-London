@@ -1,5 +1,5 @@
 import {useEffect,useRef,useState} from 'react';
-import {AppState,Pressable,ScrollView,StyleSheet,Text,View} from 'react-native';
+import { AppState, ScrollView, StyleSheet, View } from 'react-native';
 import {useRouter} from 'expo-router';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useServices} from '../../services.tsx';
@@ -11,6 +11,7 @@ import {Sheet} from '../../ui/Sheet.tsx';
 import {Body,Heading} from '../../ui/Text.tsx';
 import {colors,radius} from '../../ui/tokens.ts';
 import {PreferencesView} from './PreferencesView.tsx';
+import {HelperLauncher} from './HelperLauncher.tsx';
 import {useAssistantState} from './hooks.ts';
 import {ASSISTANT_INPUT_MAX,OVERLONG_INPUT_MESSAGE,type AIDraft} from './manager.ts';
 
@@ -38,7 +39,7 @@ export function AssistantWidget(){
   void transfer(d,false);
  };
  return <>
-  <Pressable accessibilityRole="button" accessibilityLabel="Ask Fancy" style={[styles.launcher,{bottom:Math.max(insets.bottom,12)+64}]} onPress={()=>assistant.open()}><Text style={styles.launcherText}>✦ Ask Fancy</Text></Pressable>
+  {s.open?null:<HelperLauncher onOpen={()=>assistant.open()}/>}
   <Sheet avoidKeyboard keyboardInsets={insets} visible={s.open} title="Ask Fancy" onClose={()=>{if(editTimer.current){clearTimeout(editTimer.current);editTimer.current=null;void assistant.edited();}assistant.close();}}>
     <ScrollView style={{maxHeight:480,flexShrink:1}} contentContainerStyle={{gap:12}} keyboardShouldPersistTaps="handled">
      {s.view==='preferences'?<PreferencesView key={`${s.preferenceVersion}:${s.view}:${JSON.stringify(s.preferences)}`}/>:<>

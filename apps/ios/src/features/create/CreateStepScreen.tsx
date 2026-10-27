@@ -1,4 +1,4 @@
-import {NativeMap} from '../maps/NativeMap.tsx';
+import {NativeMap} from '../maps/NativeMap';
 import { useAnalyticsPresentation } from '../../analytics/hooks.ts';
 import { formErrorProperties,serverFormErrors } from '../../analytics/form-errors.ts';
 import {useAssistantContext,useAssistantEditor} from '../assistant/hooks.ts';
