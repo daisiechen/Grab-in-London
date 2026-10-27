@@ -1,0 +1,487 @@
+{
+  "revision": "I1-work-r11-2",
+  "version": "IOS-0.1.0-dev.1",
+  "businessJourneys": [
+    "J01",
+    "J05"
+  ],
+  "mode": "planning-only-no-business-implementation",
+  "designScopeGate": "only I1 + used DS components independently reviewed; other versions not a design prerequisite",
+  "packages": [
+    {
+      "id": "I1-P00",
+      "title": "本版最小契约与环境接缝",
+      "status": "planned-not-issued",
+      "versionPJ": "PJ-IOS1 / ux_participant_account",
+      "implementationOwner": null,
+      "dependsOn": [],
+      "candidateFiles": [
+        "packages/contracts/src/operations/people.ts",
+        "packages/client/src/generated/operations.ts",
+        "packages/db/src/schema/analytics-events.ts"
+      ],
+      "groups": [
+        {
+          "id": "I1-P00-G1",
+          "candidateProductionFiles": [
+            "packages/contracts/src/operations/people.ts",
+            "packages/client/src/generated/operations.ts",
+            "packages/db/src/schema/analytics-events.ts"
+          ],
+          "maxProductionFiles": 4,
+          "maxAssociatedTestFiles": 3,
+          "leaseStatus": "not-issued",
+          "actualImplementationOwner": null,
+          "noDirectoryWideLease": true
+        }
+      ],
+      "acceptance": [
+        "Existing I1 operation subset compatibility and owner leases; I1-C01 remains a P03-only interface gate, never a P01/P02 global prerequisite",
+        "Known candidate preflight with isolated fixture or diagnosed narrow blocker"
+      ],
+      "testCases": [
+        "I1-T15",
+        "I1-T22"
+      ],
+      "PM": "J01/J05 frozen requirements; substantive rule change returns original PM",
+      "UX": "UX-r03 targeted repair plus independent closure required; no module-wide re-expansion",
+      "RD": "plan only; code lease and implementation authorization not issued",
+      "QA": "test matrix only, execution not started",
+      "branch": "codex/ios-0.1.0-dev1-i1-p00",
+      "PRUnit": "One reviewable group; package completion requires the complete user outcome, not a partial page",
+      "backout": "compatible code revert by merged SHA; DB schema rollback is a separately reviewed expand/contract decision; never reset old/shared DB",
+      "partialDeliveryAllowed": "existing-operation contract/environment slice can complete independently of analytics-choice extension"
+    },
+    {
+      "id": "I1-P01",
+      "title": "访客找到饭局并保留筛选返回",
+      "status": "planned-not-issued",
+      "versionPJ": "PJ-IOS1 / ux_participant_account",
+      "implementationOwner": null,
+      "dependsOn": [
+        "I1-P00"
+      ],
+      "candidateFiles": [
+        "apps/ios/src/features/discover/DiscoverScreen.tsx",
+        "apps/ios/src/features/discover/filters.ts",
+        "apps/ios/src/features/meals/MealDetailScreen.tsx",
+        "apps/api/src/meals/read.ts"
+      ],
+      "groups": [
+        {
+          "id": "I1-P01-G1",
+          "candidateProductionFiles": [
+            "apps/ios/src/features/discover/DiscoverScreen.tsx",
+            "apps/ios/src/features/discover/filters.ts",
+            "apps/ios/src/features/meals/MealDetailScreen.tsx",
+            "apps/api/src/meals/read.ts"
+          ],
+          "maxProductionFiles": 4,
+          "maxAssociatedTestFiles": 3,
+          "leaseStatus": "not-issued",
+          "actualImplementationOwner": null,
+          "noDirectoryWideLease": true
+        }
+      ],
+      "acceptance": [
+        "Map/list/filter draft Apply/Clear/Cancel same dataset and context",
+        "Public detail/profile excludes private data; 0-results differs failure"
+      ],
+      "testCases": [
+        "I1-T01",
+        "I1-T02",
+        "I1-T03",
+        "I1-T04"
+      ],
+      "PM": "J01/J05 frozen requirements; substantive rule change returns original PM",
+      "UX": "UX-r03 targeted repair plus independent closure required; no module-wide re-expansion",
+      "RD": "plan only; code lease and implementation authorization not issued",
+      "QA": "test matrix only, execution not started",
+      "branch": "codex/ios-0.1.0-dev1-i1-p01",
+      "PRUnit": "One reviewable group; package completion requires the complete user outcome, not a partial page",
+      "backout": "compatible code revert by merged SHA; DB schema rollback is a separately reviewed expand/contract decision; never reset old/shared DB"
+    },
+    {
+      "id": "I1-P02",
+      "title": "原申请途中完整身份/资料→待审→撤回",
+      "status": "planned-not-issued",
+      "versionPJ": "PJ-IOS1 / ux_participant_account",
+      "implementationOwner": null,
+      "dependsOn": [
+        "I1-P00",
+        "I1-P01"
+      ],
+      "candidateFiles": [
+        "apps/ios/src/features/auth/intent.ts",
+        "apps/ios/src/features/auth/otp.ts",
+        "apps/ios/src/features/auth/screens/SignInScreen.tsx",
+        "apps/ios/src/features/auth/screens/EmailScreen.tsx",
+        "apps/ios/src/features/profile/screens/ProfileSetupScreen.tsx",
+        "apps/ios/src/features/meals/ApplyScreen.tsx",
+        "apps/ios/src/features/meals/application-drafts.ts",
+        "apps/api/src/identity/flows.ts",
+        "apps/api/src/meals/applications.ts"
+      ],
+      "groups": [
+        {
+          "id": "I1-P02-G1",
+          "candidateProductionFiles": [
+            "apps/ios/src/features/auth/intent.ts",
+            "apps/ios/src/features/auth/otp.ts",
+            "apps/ios/src/features/auth/screens/SignInScreen.tsx",
+            "apps/ios/src/features/auth/screens/EmailScreen.tsx"
+          ],
+          "maxProductionFiles": 4,
+          "maxAssociatedTestFiles": 3,
+          "leaseStatus": "not-issued",
+          "actualImplementationOwner": null,
+          "noDirectoryWideLease": true
+        },
+        {
+          "id": "I1-P02-G2",
+          "candidateProductionFiles": [
+            "apps/ios/src/features/profile/screens/ProfileSetupScreen.tsx",
+            "apps/ios/src/features/meals/ApplyScreen.tsx",
+            "apps/ios/src/features/meals/application-drafts.ts",
+            "apps/api/src/identity/flows.ts"
+          ],
+          "maxProductionFiles": 4,
+          "maxAssociatedTestFiles": 3,
+          "leaseStatus": "not-issued",
+          "actualImplementationOwner": null,
+          "noDirectoryWideLease": true
+        },
+        {
+          "id": "I1-P02-G3",
+          "candidateProductionFiles": [
+            "apps/api/src/meals/applications.ts"
+          ],
+          "maxProductionFiles": 4,
+          "maxAssociatedTestFiles": 3,
+          "leaseStatus": "not-issued",
+          "actualImplementationOwner": null,
+          "noDirectoryWideLease": true
+        }
+      ],
+      "acceptance": [
+        "Email/Google/Apple cancel/failure return same meal; new profile and explicit age/community agreement, old user no repeated setup",
+        "20–300 + explicit arrangement acknowledgement + manual Send unique Pending; unknown original intent query, no seat/chat grant",
+        "Withdraw confirm/cancel and eligible new round; Declined no new round; latest eligibility checked on actual command"
+      ],
+      "testCases": [
+        "I1-T05",
+        "I1-T06",
+        "I1-T07",
+        "I1-T08",
+        "I1-T09",
+        "I1-T10",
+        "I1-T11"
+      ],
+      "PM": "J01/J05 frozen requirements; substantive rule change returns original PM",
+      "UX": "UX-r03 targeted repair plus independent closure required; no module-wide re-expansion",
+      "RD": "plan only; code lease and implementation authorization not issued",
+      "QA": "test matrix only, execution not started",
+      "branch": "codex/ios-0.1.0-dev1-i1-p02",
+      "PRUnit": "One reviewable group; package completion requires the complete user outcome, not a partial page",
+      "backout": "compatible code revert by merged SHA; DB schema rollback is a separately reviewed expand/contract decision; never reset old/shared DB"
+    },
+    {
+      "id": "I1-P03",
+      "title": "本人资料及统计选择保存、取消与退出",
+      "status": "planned-not-issued",
+      "versionPJ": "PJ-IOS1 / ux_participant_account",
+      "implementationOwner": null,
+      "dependsOn": [
+        "I1-P00"
+      ],
+      "candidateFiles": [
+        "apps/ios/src/features/profile/model.ts",
+        "apps/ios/src/features/profile/save.ts",
+        "apps/ios/src/features/profile/screens/EditProfileScreen.tsx",
+        "apps/ios/src/features/settings/SettingsScreen.tsx",
+        "apps/api/src/profiles/routes.ts"
+      ],
+      "groups": [
+        {
+          "id": "I1-P03-G1",
+          "candidateProductionFiles": [
+            "apps/ios/src/features/profile/model.ts",
+            "apps/ios/src/features/profile/save.ts",
+            "apps/ios/src/features/profile/screens/EditProfileScreen.tsx",
+            "apps/ios/src/features/settings/SettingsScreen.tsx"
+          ],
+          "maxProductionFiles": 4,
+          "maxAssociatedTestFiles": 3,
+          "leaseStatus": "not-issued",
+          "actualImplementationOwner": null,
+          "noDirectoryWideLease": true
+        },
+        {
+          "id": "I1-P03-G2",
+          "candidateProductionFiles": [
+            "apps/api/src/profiles/routes.ts"
+          ],
+          "maxProductionFiles": 4,
+          "maxAssociatedTestFiles": 3,
+          "leaseStatus": "not-issued",
+          "actualImplementationOwner": null,
+          "noDirectoryWideLease": true
+        }
+      ],
+      "acceptance": [
+        "Profile dirty draft save/cancel/failure/409 authoritative projection and proposal preservation",
+        "Analytics own draft On/Off explicit Save, Cancel/reopen confirmed value; no model call",
+        "Logout cancels old requests and clears local private state, persistent account preferences remain"
+      ],
+      "testCases": [
+        "I1-T12",
+        "I1-T13",
+        "I1-T14",
+        "I1-T15",
+        "I1-T16"
+      ],
+      "PM": "J01/J05 frozen requirements; substantive rule change returns original PM",
+      "UX": "UX-r03 targeted repair plus independent closure required; no module-wide re-expansion",
+      "RD": "plan only; code lease and implementation authorization not issued",
+      "QA": "test matrix only, execution not started",
+      "branch": "codex/ios-0.1.0-dev1-i1-p03",
+      "PRUnit": "One reviewable group; package completion requires the complete user outcome, not a partial page",
+      "backout": "compatible code revert by merged SHA; DB schema rollback is a separately reviewed expand/contract decision; never reset old/shared DB",
+      "interfaceGates": [
+        "I1-C01"
+      ]
+    },
+    {
+      "id": "I1-P04",
+      "title": "六偏好明确保存、冲突复核与删除",
+      "status": "planned-not-issued",
+      "versionPJ": "PJ-IOS1 / ux_participant_account",
+      "implementationOwner": null,
+      "dependsOn": [
+        "I1-P00"
+      ],
+      "candidateFiles": [
+        "apps/ios/src/features/assistant/PreferencesView.tsx",
+        "apps/ios/src/features/assistant/manager.ts",
+        "apps/api/src/assistant/preferences.ts",
+        "apps/api/src/assistant/invalidate.ts"
+      ],
+      "groups": [
+        {
+          "id": "I1-P04-G1",
+          "candidateProductionFiles": [
+            "apps/ios/src/features/assistant/PreferencesView.tsx",
+            "apps/ios/src/features/assistant/manager.ts",
+            "apps/api/src/assistant/preferences.ts",
+            "apps/api/src/assistant/invalidate.ts"
+          ],
+          "maxProductionFiles": 4,
+          "maxAssociatedTestFiles": 3,
+          "leaseStatus": "not-issued",
+          "actualImplementationOwner": null,
+          "noDirectoryWideLease": true
+        }
+      ],
+      "acceptance": [
+        "Visible six-field proposal before Confirm, no placeholder/default/implicit profile-derived memory",
+        "CAS409 preserves proposal and reads canonical version; delete invalidates old contexts but keeps business editor",
+        "Preferences read/delete work while model disabled; login does not migrate guest memory"
+      ],
+      "testCases": [
+        "I1-T17",
+        "I1-T18",
+        "I1-T19"
+      ],
+      "PM": "J01/J05 frozen requirements; substantive rule change returns original PM",
+      "UX": "UX-r03 targeted repair plus independent closure required; no module-wide re-expansion",
+      "RD": "plan only; code lease and implementation authorization not issued",
+      "QA": "test matrix only, execution not started",
+      "branch": "codex/ios-0.1.0-dev1-i1-p04",
+      "PRUnit": "One reviewable group; package completion requires the complete user outcome, not a partial page",
+      "backout": "compatible code revert by merged SHA; DB schema rollback is a separately reviewed expand/contract decision; never reset old/shared DB",
+      "requiredExistingContracts": [
+        "getSession",
+        "getMe",
+        "readAIPreferences",
+        "replaceAIPreferences",
+        "deleteAIPreferences"
+      ],
+      "dependencyMeaning": "P00 verifies existing identity-owner/profile projection and preference protocol compatibility; reuse authenticated isolated fixtures. No dependency on P03 profile/settings UI completion or I1-C01 analytics extension.",
+      "liveIntegrationPoint": "P06 later uses P02 real native sign-in to exercise the same authenticated preference interface; this does not add a P03/C01 gate."
+    },
+    {
+      "id": "I1-P05",
+      "title": "可选AI查找/解释/申请稿→人工提交",
+      "status": "planned-not-issued",
+      "versionPJ": "PJ-IOS1 / ux_participant_account",
+      "implementationOwner": null,
+      "dependsOn": [
+        "I1-P01",
+        "I1-P02",
+        "I1-P04"
+      ],
+      "candidateFiles": [
+        "apps/ios/src/features/assistant/AssistantWidget.tsx",
+        "apps/ios/src/features/assistant/manager.ts",
+        "apps/ios/src/features/assistant/hooks.ts",
+        "apps/api/src/assistant/query.ts",
+        "apps/api/src/assistant/context.ts",
+        "apps/api/src/assistant/drafts.ts",
+        "apps/api/src/assistant/requests.ts"
+      ],
+      "groups": [
+        {
+          "id": "I1-P05-G1",
+          "candidateProductionFiles": [
+            "apps/ios/src/features/assistant/AssistantWidget.tsx",
+            "apps/ios/src/features/assistant/manager.ts",
+            "apps/ios/src/features/assistant/hooks.ts",
+            "apps/api/src/assistant/query.ts"
+          ],
+          "maxProductionFiles": 4,
+          "maxAssociatedTestFiles": 3,
+          "leaseStatus": "not-issued",
+          "actualImplementationOwner": null,
+          "noDirectoryWideLease": true
+        },
+        {
+          "id": "I1-P05-G2",
+          "candidateProductionFiles": [
+            "apps/api/src/assistant/context.ts",
+            "apps/api/src/assistant/drafts.ts",
+            "apps/api/src/assistant/requests.ts"
+          ],
+          "maxProductionFiles": 4,
+          "maxAssociatedTestFiles": 3,
+          "leaseStatus": "not-issued",
+          "actualImplementationOwner": null,
+          "noDirectoryWideLease": true
+        }
+      ],
+      "acceptance": [
+        "Disclosure/permission then explicit Send; deterministic hard/soft/CLEAR, clarification and grounded ≤3 cards, no auto Discover mutation",
+        "Exact reviewed draft transfer with Keep/Replace, target20–300 revalidation, unchecked arrangements and manual Send",
+        "One inflight, >3s processing,30s hard timeout/30m idle/NEW/epoch and CNY50 hard gate; model failure retains manual path"
+      ],
+      "testCases": [
+        "I1-T20",
+        "I1-T21",
+        "I1-T22",
+        "I1-T23",
+        "I1-T24",
+        "I1-T25"
+      ],
+      "PM": "J01/J05 frozen requirements; substantive rule change returns original PM",
+      "UX": "UX-r03 targeted repair plus independent closure required; no module-wide re-expansion",
+      "RD": "plan only; code lease and implementation authorization not issued",
+      "QA": "test matrix only, execution not started",
+      "branch": "codex/ios-0.1.0-dev1-i1-p05",
+      "PRUnit": "One reviewable group; package completion requires the complete user outcome, not a partial page",
+      "backout": "compatible code revert by merged SHA; DB schema rollback is a separately reviewed expand/contract decision; never reset old/shared DB"
+    },
+    {
+      "id": "I1-P06",
+      "title": "本版集成候选、原生视觉与定向回归",
+      "status": "planned-not-issued",
+      "versionPJ": "PJ-IOS1 / ux_participant_account",
+      "implementationOwner": null,
+      "dependsOn": [
+        "I1-P01",
+        "I1-P02",
+        "I1-P03",
+        "I1-P04",
+        "I1-P05"
+      ],
+      "candidateFiles": [],
+      "groups": [],
+      "acceptance": [
+        "Same candidate contract/schema/migration/config/fixture/build IDs with independent review and precise results",
+        "iOS393×852 source alignment + small screen/Dynamic Type/keyboard/Back/VoiceOver on native build",
+        "Only joint points await provider/other-version implementation; no full-design-set gate"
+      ],
+      "testCases": [
+        "I1-T26",
+        "I1-T27",
+        "I1-T28"
+      ],
+      "PM": "J01/J05 frozen requirements; substantive rule change returns original PM",
+      "UX": "UX-r03 targeted repair plus independent closure required; no module-wide re-expansion",
+      "RD": "plan only; code lease and implementation authorization not issued",
+      "QA": "test matrix only, execution not started",
+      "branch": "codex/ios-0.1.0-dev1-i1-p06",
+      "PRUnit": "One reviewable group; package completion requires the complete user outcome, not a partial page",
+      "backout": "compatible code revert by merged SHA; DB schema rollback is a separately reviewed expand/contract decision; never reset old/shared DB"
+    }
+  ],
+  "parallelAllowedAfterContracts": [
+    [
+      "I1-P01",
+      "I1-P03"
+    ]
+  ],
+  "parallelConstraints": [
+    "P02 and P03 share profile files: sequential exact file leases",
+    "P04 and P05 share assistant manager/API: sequential writer or nonoverlapping subgroup only",
+    "contracts/generated/db/lockfile/AppRoot/services/navigation use root-assigned exclusive writer; branch name does not remove conflicts"
+  ],
+  "sharedWriterRequests": [
+    {
+      "role": "RD-CONTRACTS",
+      "ownerAssignment": "root PJ",
+      "scope": [
+        "packages/contracts/src/operations/people.ts",
+        "packages/client/src/generated/operations.ts"
+      ],
+      "request": "I1-C01 + generated metadata/contract tests as one atomic change"
+    },
+    {
+      "role": "RD-DATA",
+      "ownerAssignment": "root PJ",
+      "scope": [
+        "packages/db/src/schema/analytics-events.ts",
+        "packages/db/migrations/ (specific next ID only after actual head read)"
+      ],
+      "request": "own analytics choice version/consent authority; reuse existing storage where valid"
+    },
+    {
+      "role": "RD-PLATFORM",
+      "ownerAssignment": "root PJ",
+      "scope": [
+        "apps/ios/src/services.tsx",
+        "apps/ios/src/AppRoot.tsx",
+        "apps/ios/src/ui/",
+        "apps/ios/app/_layout.tsx",
+        "apps/ios/app/(tabs)/_layout.tsx",
+        "pnpm-lock.yaml"
+      ],
+      "request": "only necessary DS/native navigation/service integration, no directory lease issued"
+    },
+    {
+      "role": "RD-SDK",
+      "ownerAssignment": "root PJ",
+      "scope": [
+        "packages/client/src/http.ts",
+        "packages/client/src/errors.ts"
+      ],
+      "request": "only typed error/unknown recovery differences identified by scoped consumers"
+    }
+  ],
+  "localBlockerPropagation": {
+    "I1-C01": {
+      "blockedPackages": [
+        "I1-P03"
+      ],
+      "blockedAggregate": [
+        "I1-P06"
+      ],
+      "unblockedPackages": [
+        "I1-P00",
+        "I1-P01",
+        "I1-P02",
+        "I1-P04",
+        "I1-P05"
+      ],
+      "meaning": "Full version aggregation waits its incomplete privacy feature; preference/AI preparation and their own module tests do not wait for analytics-choice API."
+    }
+  }
+}

@@ -101,3 +101,19 @@
 [公开J01原型](https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17&starting-point-node-id=5%3A17)实际走Discover→详情→Apply→账号→email；Google/Apple点击无目的。浏览器未输入个人资料，也未点合成Send code，故不能把后续未到达称真实认证失败。
 
 [J05原型](https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1513&starting-point-node-id=11%3A1513)实际走资料编辑→Save→主页，及Save privacy choice→saved-Off；统计开关不变，保存后Back/Sign out无目的，支持R11-I1-02。AI偏好/删除未从该浏览器实际到达，不因此新增“删除入口缺失”问题；其原生反例仍按03处理。前文报告时pending描述由本回执覆盖。
+
+## 原作者修复后独立复验（仍需04/07小修）
+
+01/02/03/05实际live节点/反应及27:132、31:257、28:672截图复验通过：本人同意单独触发；统计On草稿/保存/取消与重进分离；六字段保存前完整可见、空值Save无动作；AI完整162字符转入不丢末句。
+
+06重要纠正：原评审只遍历文本，未过滤祖先visible=false，不能据此称首次许可页面已可见显示结果，撤回原“已显示响应”指控。新稿物理移除隐藏历史且Allow→助手home→本人输入→Send→草稿，当前分离正确。原历史与本复验均保留，不冒称最初可见性缺陷成立。
+
+04还有Pending详情32:284→公共Discover5:17→游客详情→重新Apply的旧事实路径，建议最小返回当前Pending Inbox31:394。
+
+新增R11-I1-07 P1：游客详情5:195→AI首次许可12:313→Continue manually12:453，当前直接到已登录Alex申请11:753，绕过原身份门槛。唯一Owner UX-1；应回同游客详情/原账号意图，不因拒AI许可取得身份。证据live原生12:453 NAV→11:753；不是未实现后端的假缺陷。
+
+## 最终设计范围复验结论
+
+DS/I1本轮设计候选通过独立复验，可单独进入本版本开发方案，不等I2/I3/I4。04已读回32:284→31:394当前Pending Inbox；07已读回12:453→同Guest饭局5:195，AI转入以signedIn/AI-intent原生条件保完整身份门槛并认证后回Keep/Replace。01/02/03/05沿前述定向复验关闭；06保留“最初可见指控撤回”而不伪装为确实发现。当前manifest SHA绑定见JSON。
+
+此签署是独立原生反应、字段/状态、截图与原v13视觉/已确认合同的设计范围通过，不是生产权限/真实模型/真机/QA通过。追加Presentation合成复验仍在运行，不用等待工具时间来冒充已点击；完成回执后另记实际覆盖。

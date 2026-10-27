@@ -30,7 +30,7 @@
     "demo/public/images/leo.png": "40d628765f58e2cfabd9a60d70767b5e7cf720c39a9ce8c46896e3ac81851a46",
     "demo/public/images/restaurant.png": "b4a833be3dc7a8057ab98a90871f04557a0a88282d063d4217a44d81c8d8c7c4"
   },
-  "status": "candidate-awaiting-owner-review",
+  "status": "author-repaired-awaiting-independent-recheck",
   "ownerApproved": false,
   "nativeNamedVersionId": null,
   "mutableFigmaFile": true,
@@ -41,7 +41,7 @@
     "RD": "not-started",
     "QA": "not-started"
   },
-  "revision": "UX-r02",
+  "revision": "UX-r03",
   "delivery": "IOS-0.1.0-dev.1",
   "fileKey": "CS9oRCq8h3Clg09up2aISj",
   "entryNodeIds": [
@@ -70,21 +70,47 @@
     ],
     "notRunClassification": "Later implementation/service/device verification; not claimed by this design candidate.",
     "testCommand": "python3 -m unittest tests.test_ux_r10_system tests.test_ux_r10_ios12 -v",
-    "testResult": "6 tests passed"
+    "testResult": "10 tests passed (including 4 independent-review counterexample contracts)"
   },
-  "readyFor": "Owner design review; not final frozen development baseline",
+  "readyFor": "PJ-IOS2 independent targeted design recheck; then this iteration development planning without waiting other versions",
   "readyMissing": [
-    "Owner final design approval and actual freeze/version recording",
-    "Final provider disclosure facts before enabling real AI",
-    "Logo selection before replacing existing wordmark"
+    "Independent closure of R11-I1-01—06; Owner final release decisions remain separate from version planning"
   ],
-  "readbackSHA256": "1f9cdbfadf1b9f97d2277fe2b10b2eb13109fa9892ea62075b88b4bdc912c73f",
+  "readbackSHA256": "e33c2842f427158743304c35e2cc37d871b9faa461ebf87b84dfb3bae1d802ab",
   "evidenceHashes": {
     "evidence/final-apply.png": "1682ebfaae3d05f720e6b72c812e9c6b6b17daeaea29f40a35103058cabd1ae4",
     "evidence/final-preferences.png": "b624bb28760f8e56cdf7f94ea6458625fd81a898ab86f985effb677d16b2b85f",
     "evidence/final-transfer.png": "ace10a1d1db6216b1f20864ce20276b3b21560d0be4fc352c8662f6d8bd5dcb6",
     "evidence/final-delete.png": "0dc237c0c34885ffbbaaf6b177d1ca9b8c989f6b30bbd9258e1d4a2d57d7f87a",
     "evidence/final-withdraw.png": "1d4e7858d0f695706ee33932e52812ed4e341229be46500bbb6467340f4d829e",
-    "evidence/final-permission.png": "d297b832b5c8f28fd873c0a31d705a33f53df3d0f2eda1fbd1580b48593af38b"
-  }
+    "evidence/final-permission.png": "d297b832b5c8f28fd873c0a31d705a33f53df3d0f2eda1fbd1580b48593af38b",
+    "evidence/r11-inbox-pending.png": "1a3a0578b203f30a88f36bbe74451db77266f893095dde9ba739b9c393ee9e19",
+    "evidence/r11-permission.png": "86ef70cdea59244b8ba1236487760520aaf1dec03669e213edb76c04777b5ac0",
+    "evidence/r11-signup-checked.png": "4634fdc681adde1e1c5e8f43808e1ba0307a08a87d499e6569349c8a9b731632",
+    "evidence/r11-readback-0-1.json": "13de4522cb2adcb288d76f86ac8e36145488a7ac29168d6457866ca72965a0d4",
+    "evidence/r11-ai-allowed.png": "fe57c39684f25046b4d2d4f98c9c8d3b43c40ba782c782c8cc194b26247cfb18",
+    "evidence/r11-ai-typed.png": "c6d3b9e012d08b094a5c049c0d291becbb9ce15af7d2e50cdabf2b873be9f5aa",
+    "evidence/r11-repair03.json": "71e5678f27d37c3ff8b8d23fac35917a2cc0f5d6fc3294f195f34304fb6c8cd8",
+    "evidence/r11-repair0506.json": "c2056ba416993452ce1e822c5be6b8124b0dd6f29653f0cd6d2fae5b0a7265bb",
+    "evidence/r11-counterexample-readback.json": "6d88f0c3b6cf9aa3b095bb2d7a723ee847b33f30b1704a34029bdb57a1948d16",
+    "evidence/r11-preferences-proposal.png": "b40323d14d88de7695afe57e0f40313758693c80cd9189b324b442b0d6efbc8b",
+    "evidence/r11-readback-9-17.json": "1cdee542e783decdd4adc7a9e8b036599fca9d1a1f706c3afe2f35b1e9aa827d",
+    "evidence/r11-signup-unchecked.png": "df10ff549cb5a6eeacc064945242f0a8df5776d1825905b78198f63a1285ac4b",
+    "evidence/r11-ai-transferred.png": "d49e53dc107074f8c5d4d5e4dd8b40709396502cc293030b4404da5026d76c6d",
+    "evidence/r11-repairVisual.json": "18530cf689ae541f15b89dc7c63c7fd367561dad2d7b3107765bde6356968f8f",
+    "evidence/r11-repair02.json": "0af49411613dc770adb3bd661207769823b2124d571e8fff1ecf33b59983591d",
+    "evidence/r11-repair04.json": "ab1ce853ad7098f6eed98282d1df81a90fc0cec30aa57914ed377c4df8a8a0cd",
+    "evidence/r11-privacy-saved.png": "4303e896e75ffecb6991df7da6de90282e66e7e1888142a22eb0f4896990f805",
+    "evidence/r11-repair01.json": "aa967f4f09dec5002aa4c52ffecbb24b4844980345c8f5942d565ab8aee459df",
+    "evidence/r11-privacy-draft.png": "ff4878618562bdef2e502a07a069d7d588c4df3968fa16fc2704fde0e66dfcb5",
+    "evidence/r11-repair07.json": "54a2dab54998391a4a7d028e098c3b9a43a6403bc90aeca07d97d76f7e9d5ae2"
+  },
+  "independentReview": {
+    "report": "docs/reviews/r11/ios1-ds-review.json",
+    "reviewer": "PJ-IOS2 / ux_host_social",
+    "status": "requested",
+    "authorSelfApproved": false,
+    "additionalIssue": "R11-I1-07 and guest AI intent guard"
+  },
+  "repairNotes": "r11-repair.zh-CN.md"
 }
