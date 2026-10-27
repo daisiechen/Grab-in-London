@@ -1,0 +1,168 @@
+{
+  "id": "ADMIN-0.1.0-dev.1",
+  "status": "plan-approved-with-issuance-gates",
+  "implementationAuthorized": false,
+  "basis": "r10 architecture interfaces retained; r11 independent gates supersede all-seven gate",
+  "inputs": {
+    "docs/product/journeys/j10/requirements.zh-CN.md": "3a2436f5463073f4257733d8edcd83f509160bf7dd97f8d898e8229718d11afd"
+  },
+  "design": {
+    "manifest": "docs/design/r10/admin-0.1.0-dev.1/manifest.json",
+    "fileKey": "EwpDxDGeTJEF3PYMYLH8eP",
+    "independentReview": "passed-by-total-PJ-fixed-representative-paths",
+    "actualPresentationClicks": true,
+    "scope": "not real services QA"
+  },
+  "workPackages": [
+    {
+      "id": "A11",
+      "title": "固定快照查询与指标权威",
+      "proposedRole": "RD-ANALYTICS",
+      "assignedWriter": null,
+      "status": "not-issued",
+      "candidateProductionPath": "apps/api/src/admin/metrics.ts",
+      "exactWriteLease": [],
+      "interface": "adminPage GET /admin/{page}: snapshotId+AdminFilters; listSnapshots GET /admin/snapshots chooses server snapshot. Response snapshot.asOf/definitionVersion/filterHash are authoritative; reuse pages.ts/loadAdminSnapshot.",
+      "acceptance": "夹具含同周多场、host、缺报告、未成熟窗口；快照重放结果稳定。",
+      "maxProductionFilesPerIssue": 3,
+      "tests": "targeted module/contract/database and affected consumer regression, exact paths assigned with lease"
+    },
+    {
+      "id": "A12",
+      "title": "脱敏来源与对象返回",
+      "proposedRole": "RD-ANALYTICS",
+      "assignedWriter": null,
+      "status": "not-issued",
+      "candidateProductionPath": "apps/api/src/admin/drilldown.ts",
+      "exactWriteLease": [],
+      "interface": "adminDrilldown GET /admin/drilldowns/{metric}: snapshotId+response filterHash+same AdminFilters+DrilldownRowQuery+cursor. mealId/userId are DTO UUID, M-062/U-002 display only; no new detail endpoint.",
+      "acceptance": "M-062→U-002→M-062同查询；401/403/410清内容并拒旧快照。",
+      "maxProductionFilesPerIssue": 3,
+      "tests": "targeted module/contract/database and affected consumer regression, exact paths assigned with lease"
+    },
+    {
+      "id": "A13",
+      "title": "原视觉查询/抽屉客户端",
+      "proposedRole": "RD-ADMIN",
+      "assignedWriter": null,
+      "status": "not-issued",
+      "candidateProductionPath": "apps/admin/src/features/filters/FilterBar.tsx",
+      "exactWriteLease": [],
+      "interface": "FilterBar/filters state draft/applied separation; DetailDialog+DrilldownTable use existing adminPage/adminDrilldown, server snapshot metadata/filterHash and DTO UUID; preserve same query/cursor binding on return.",
+      "acceptance": "38:2745→42:3547→9:2→口径/来源；02恢复只读02，长表/焦点和必要宽度回归。",
+      "maxProductionFilesPerIssue": 3,
+      "tests": "targeted module/contract/database and affected consumer regression, exact paths assigned with lease"
+    }
+  ],
+  "realIntegrationDependencies": [
+    "IOS-0.1.0-dev.1业务事件/身份与同意合同",
+    "分类/支持纠错/删除的真实快照撤销传播在相应模块实现后联调"
+  ],
+  "globalDesignWait": false,
+  "engineeringReview": {
+    "status": "plan-approved-with-issuance-gates",
+    "reviewer": "Independent RD architecture reviewer; not plan author",
+    "authorSelfApproval": false,
+    "issues": [
+      {
+        "id": "R11-EA1-01",
+        "status": "closed-by-independent-plan-retest"
+      }
+    ],
+    "signoffEvidence": {
+      "path": "docs/reviews/r11/admin1-engineering-review.json",
+      "sha256": "ca1221e95b881f8375942cbb3e1297fc293a895d1f39dc5f5f2718c75c321e94",
+      "reviewer": "Independent RD architecture reviewer; not plan author",
+      "status": "plan-approved-with-issuance-gates",
+      "boundedConclusion": "A1 plan implementable within existing interfaces; no code or QA authorization, no wait for A2/Support entire versions.",
+      "closedIssues": [
+        "R11-EA1-01"
+      ],
+      "reviewedInputSHA256": {
+        "docs/engineering/r11/admin-0.1.0-dev.1/plan.zh-CN.md": "b11aa1dfba65ddd281c6103aa8280df8b1fc26cf26d7c4adf72118118d8c1167",
+        "docs/engineering/r11/admin-0.1.0-dev.1/work-packages.json": "a0faa6c05c0bc9cc3896c85ea712cf0a4409ace988a6926a66e70b17f4d7c37f",
+        "docs/delivery/versions/admin-0.1.0-dev.1/test-plan.zh-CN.md": "7da89bc8639a169a54ea053629a246a5b8544eb4f95989df434ce6010917af54"
+      },
+      "note": "Only signoff metadata updated after independently reviewed candidate; business scope/interfaces unchanged."
+    }
+  },
+  "operationMapping": [
+    {
+      "operationId": "listSnapshots",
+      "method": "GET",
+      "path": "/admin/snapshots",
+      "query": "cursor/limit",
+      "responseAuthority": "SnapshotInfo contains server snapshot metadata"
+    },
+    {
+      "operationId": "adminPage",
+      "method": "GET",
+      "path": "/admin/{page}",
+      "query": "snapshotId UUID + AdminFilters(from/to/areas/languages/budgetBands/sizes/sources/segments/budgetUpToPence)",
+      "responseAuthority": "AdminPageData.snapshot(asOf/definitionVersion) and filterHash from loadAdminSnapshot; never arbitrary client asOf/definitionVersion"
+    },
+    {
+      "operationId": "adminDrilldown",
+      "method": "GET",
+      "path": "/admin/drilldowns/{metric}",
+      "query": "snapshotId UUID + response filterHash + same AdminFilters + DrilldownRowQuery(mealId/userId UUID,cohortWeek,attendanceStatus,q,sort,order) + cursor/limit",
+      "responseAuthority": "loadAdminSnapshot validates canonical filters and snapshot; cursor is actor/query-bound"
+    }
+  ],
+  "identifierMapping": {
+    "displayOnly": [
+      "M-062",
+      "U-002"
+    ],
+    "wireParameters": "actual mealId/userId UUID from permitted DrilldownRow DTO; never send display labels as UUID",
+    "detailsStrategy": "existing adminDrilldown row filters; no new object detail endpoint"
+  },
+  "candidateDAG": [
+    {
+      "from": "A11",
+      "to": "A12",
+      "reason": "same RD-ANALYTICS writer; pages/loadAdminSnapshot shared authority; serialize shared changes"
+    },
+    {
+      "from": "A11",
+      "to": "A13",
+      "reason": "fixed contract/fixture permits separate client writer in parallel; live integration after API candidate"
+    },
+    {
+      "from": "A12",
+      "to": "A13",
+      "reason": "drilldown response identifiers and filterHash must be consumed by client integration"
+    }
+  ],
+  "sharedExistingPaths": [
+    "apps/api/src/admin/pages.ts",
+    "apps/admin/src/components/DetailDialog.tsx",
+    "apps/admin/src/features/drilldown/DrilldownTable.tsx"
+  ],
+  "targetedExistingTests": [
+    "apps/api/src/admin/admin.api.test.ts",
+    "apps/api/src/admin/drilldown.api.test.ts",
+    "apps/api/src/admin/analytics.api.test.ts",
+    "apps/api/src/admin/metrics.unit.test.ts",
+    "apps/admin/src/state/filters.unit.test.ts",
+    "packages/contracts/src/contracts.unit.test.ts"
+  ],
+  "issuanceGates": [
+    {
+      "gate": "Actual owner/exact file leases and shared writer serialization",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Bind independently signed design revision and contract candidate",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Minimum environment checks then isolated module tests; real upstream only gates concrete integration",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Independent code review and required CI/PR main merge before exact SHA/build deployment",
+      "status": "not-issued"
+    }
+  ]
+}

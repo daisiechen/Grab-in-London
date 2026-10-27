@@ -104,7 +104,14 @@ class AdminSupportR10UXTest(unittest.TestCase):
         self.assertNotIn('18.3%', scenes['revoked']['texts'])
         self.assertEqual({l['destination'] for l in scenes['revoked']['links']}, {scenes['recovered']['nodeId']})
         self.assertIn('SYN-ADMIN-R10-02', '\n'.join(scenes['recovered']['texts']))
-        self.assertEqual(scenes['recovered']['links'], [])
+        self.assertEqual({l['destination'] for l in scenes['recovered']['links']},
+                         {scenes['definition02']['nodeId']})
+        self.assertEqual({l['destination'] for l in scenes['definition02']['links']},
+                         {scenes['recovered']['nodeId']})
+        self.assertIn(scenes['querydraft']['nodeId'],
+                      [l['destination'] for l in scenes['overview']['links']])
+        self.assertIn(scenes['overview']['nodeId'],
+                      [l['destination'] for l in scenes['querydraft']['links']])
 
     def test_j11_unknown_and_failed_cannot_expose_old_statistics_or_export(self):
         scenes = {s['key']: s for s in read(folder('admin-0.1.0-dev.2') / 'figma-readback.json')['scenes']}
