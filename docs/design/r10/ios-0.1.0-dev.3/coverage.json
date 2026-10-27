@@ -91,7 +91,10 @@
         "6:129",
         "6:174",
         "6:252",
-        "6:282"
+        "6:282",
+        "30:83",
+        "30:116",
+        "30:161"
       ],
       "treatment": "representative-native-prototype-and-state-contract",
       "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
@@ -132,7 +135,11 @@
         "realServiceStatus": "not-verified"
       },
       "figmaNodes": [
-        "6:282"
+        "6:282",
+        "30:199",
+        "30:246",
+        "30:307",
+        "30:336"
       ],
       "treatment": "representative-native-prototype-and-state-contract",
       "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
@@ -287,7 +294,11 @@
       },
       "figmaNodes": [
         "7:440",
-        "7:553"
+        "7:553",
+        "32:470",
+        "32:576",
+        "32:682",
+        "32:784"
       ],
       "treatment": "representative-native-prototype-and-state-contract",
       "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
@@ -332,7 +343,8 @@
       },
       "figmaNodes": [
         "7:850",
-        "7:907"
+        "7:907",
+        "32:898"
       ],
       "treatment": "representative-native-prototype-and-state-contract",
       "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
@@ -374,7 +386,13 @@
       "pmRequirement": "J06-AC02",
       "figmaNodes": [
         "8:133",
-        "8:203"
+        "8:203",
+        "33:46",
+        "33:117",
+        "33:243",
+        "33:314",
+        "33:437",
+        "33:508"
       ],
       "treatment": "representative-native-prototype-and-state-contract",
       "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
@@ -384,7 +402,13 @@
       "pmRequirement": "J06-AC03",
       "figmaNodes": [
         "8:279",
-        "8:350"
+        "8:350",
+        "33:46",
+        "33:117",
+        "33:243",
+        "33:314",
+        "33:437",
+        "33:508"
       ],
       "treatment": "representative-native-prototype-and-state-contract",
       "limitations": "固定样例代表路径；任意输入、真实服务、跨设备/并发/通知与外部处理未测试。共同规则继承PM coverage全部sourceUnits，不将继承单元冒称逐条交互实现。"
@@ -443,7 +467,7 @@
       ],
       [
         "只读/失败",
-        "离群/饭局终态不发新消息、不展示实时名册；重入按服务授权重新判定",
+        "仅明确退群/解散/账号撤权关闭相应写区间；退席、饭局取消/结束、外订失败均不自动关闭仍获授权群。",
         "失败保留未发送文本，重试避免重复；读位只在实际可见消息推进",
         "通知开关影响通知展示，不抹去Inbox事实；真实推送/读位/跨设备仅状态合同"
       ]
@@ -470,5 +494,46 @@
         "返回保留规则按PRD；保存更新最新记录，失败保留草稿；清空某题不清空另一题"
       ]
     ]
+  },
+  "r11Corrections": {
+    "R11-I34-01": "state/coverage now match J03 PRD and live canvas",
+    "R11-I34-04": {
+      "groupLeftBack": "30:14",
+      "groupHistoryBack": "6:252",
+      "closedContactSummary": "32:898"
+    },
+    "R11-I34-05": {
+      "publicDraft": "7:334",
+      "bothDraft": "32:470",
+      "privateOnlyDraft": "32:576",
+      "publicOnlySaved": "32:682",
+      "privateOnlySaved": "32:784"
+    },
+    "R11-I34-06": {
+      "reasonOnlyUpdate": "8:133",
+      "explicitYes": "8:279",
+      "explicitNo": "33:46",
+      "initialYesOnly": "33:243",
+      "initialNoOnly": "33:437"
+    },
+    "R11-I34-07": {
+      "cancel": "native conditional to latest confirmed settings, none→8:14",
+      "variable": "latestConfirmedSample"
+    },
+    "R11-I34-08": {
+      "candidate": "6:423",
+      "transferred": "6:544",
+      "sent": "10:80",
+      "verbatim": true
+    },
+    "R11-I34-09": {
+      "guestMeal": "30:83",
+      "leaveSeatConfirm": "30:116",
+      "seatCancelled": "30:161",
+      "hostSettings": "30:199",
+      "dissolveConfirm": "30:246",
+      "dissolved": "30:307",
+      "history": "30:336"
+    }
   }
 }

@@ -1,0 +1,14 @@
+{
+  "iteration": "IOS-0.1.0-dev.3",
+  "businessCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "filesSHA256": {
+    "docs/design/r10/ios-0.1.0-dev.3/artifact-manifest.json": "84ad31dd95f27bfe604cb9ba2b8ded5f43bdea2981433275ff9923a9454404d3",
+    "docs/design/r10/ios-0.1.0-dev.3/figma-readback.json": "3f88069758028eef6856960254656a71e07aac4d090471041faf94ea57377f00",
+    "docs/reviews/r11/ios34-review.json": "8c6fa2bf340ac6cdb4f64fb75fd749b2d4193b76e9f533a9624ada5d22c44f2c",
+    "packages/contracts/src/operations/social.ts": "260aa1f8f5e1a9cfa9aab10456f77a388b3533993f16a74d9fa6f5467eb0b7c1",
+    "packages/contracts/src/operations/meals.ts": "85cc4d40187cd64db22e39b350cf2a778fbcf259e3ab9e422a0f457a160df00e",
+    "packages/contracts/src/operations/assistant.ts": "75200ebb02d2b593588121fa24b01360d8f794d5d1a68d7e6808bfb9d8ee014c",
+    "packages/contracts/src/dto.ts": "ef5f0f88cbf3adb317ffb73e313d97529ea0ceef74876b9c7d084035788b7388"
+  },
+  "rule": "Mutable coordination JSON is not a permanent full-file input; branch/build/schema/fixture/runtime binds issued candidate at implementation."
+}

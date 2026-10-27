@@ -77,7 +77,7 @@
     }
   },
   "filesSHA256": {
-    "coverage.json": "137e737dfdfefb5214990a8ffedb57fc8d49c94898c9aabcb7462ade3398085f",
+    "coverage.json": "36b22352a2b51d5670643dba94224cfd4c53773e0e94d5274cf8f0a41d7b1839",
     "evidence/README.zh-CN.md": "f06ccd16c3b1ed70d1953da7746306b765564846da472f5728818d23f16e4640",
     "evidence/figma-chat-checkpoint.png": "7989041b790f9a982262d6416dbd8d2b813ed8e1b297497aa96e47c2bb88f009",
     "evidence/figma-feedback-checkpoint.png": "86f7559fd2c0200e9f60e3cf991f65bf31a6d9ca5641bf39f6cad328fc67932a",
@@ -85,6 +85,12 @@
     "evidence/figma-private-readonly.png": "fb394206d8e9049cd8e2570212a5469105b76fe34f4bc48cb96db028d43129c8",
     "evidence/figma-survey.png": "93221faf0eaec0af1ea25e96fc5744434b836ce284e6543008b8c4df26ea42a0",
     "evidence/font-environment.json": "a4fcc3d9fb42119ee7db6cccfa1a13591eac59767194b6a39ebd5c35fb554c33",
+    "evidence/r11-ai-full-sent.png": "90a625c049f43e620b08d96fe60b730399652b6048091773617a4b8256affca7",
+    "evidence/r11-final-role-readback.json": "694ee13ad7a9c20377ec0a3a75916e4434035cf4218095670f2b1b51fd6ad616",
+    "evidence/r11-guest-seat.png": "070e374c7ee3e8a77be82bba1cb16b32eb9ccabdbed2075146b9c1b1fda2ed45",
+    "evidence/r11-host-dissolve.png": "339ae38c9411ed4ec5a83a7f03d8cd75d5bc2b9e8e8801eea6aee3d69410bafe",
+    "evidence/r11-survey-cancel-readback.json": "16c9ce57f4794f077a6c125ae8767dfc9f473f2a54187bbd92092e01e261e4eb",
+    "evidence/r11-survey-no-only.png": "12236858b089eb7b644f643a465165a8165f15046beda467e9458a77c58fd919",
     "evidence/readback-0-1.json": "80c9c8eaccb699fccd71e2ff1685d4cdfdde673cb4eecc3edef39363fb803f31",
     "evidence/readback-1-2.json": "5b8789510aae8e0fcdf2b6c0e35281acdce725825f7d733eeb1bbc4c63aeb171",
     "evidence/readback-1-3.json": "11864642df2362e94a4410d4632de3b781a3aba837c0a9654d81c649c70cd442",
@@ -99,10 +105,63 @@
     "evidence/source-platform-fonts.json": "514bbf64b471a151013b4a6ce0c5cc6cabbcf48d93611b10fc7a3cb1e9fbbcbd",
     "evidence/source-survey-dom.json": "f613150967b888b3bd11fc49fcc7d860dd3572c84e5e8faa922db1078ce730e3",
     "evidence/source-survey-v13.png": "3b5f346168c5e0e1f4cc84daeb480fa2a318b8cb8c875dbf85f0b45fb1c55889",
-    "figma-readback.json": "6e4da0b5c7b020736ec3f6a872d7c4e229493405b79ff5e4e6b645ce98a57d4c",
-    "handoff.zh-CN.md": "19ea5e30de5d1121be89efe1e57ba0a29a109bc5e49f73734e0439b7b59a4fe8",
+    "figma-readback.json": "3f88069758028eef6856960254656a71e07aac4d090471041faf94ea57377f00",
+    "handoff.zh-CN.md": "d45b012f68e34aa7e6e566bd10f9bacc839cd8d6f121f632c43e73dda20f8a41",
     "planning-input.json": "0c22b197bb8ffd8d97b3cc2639acbc301524149b99f3f9e01b7b13f87996485f",
-    "state-contracts.zh-CN.md": "88405bc35500979f91e9084add3eb91eae0670ba875c428c523a24e566573da3",
+    "state-contracts.zh-CN.md": "0ae64ab30b5224e62d8d368827fd0f650057e70c8a7c7b35abe39e1b53705fbf",
     "visual-comparison.html": "e470fbd93b6ec09b9b75406c65750f1f8b83bf41e4d894cfd54b9115a93b92bb"
+  },
+  "r11Corrections": {
+    "status": "awaiting-independent-review",
+    "ids": [
+      "R11-I34-01",
+      "R11-I34-04",
+      "R11-I34-05",
+      "R11-I34-06",
+      "R11-I34-07",
+      "R11-I34-08",
+      "R11-I34-09"
+    ],
+    "nodes": {
+      "R11-I34-01": "state/coverage now match J03 PRD and live canvas",
+      "R11-I34-04": {
+        "groupLeftBack": "30:14",
+        "groupHistoryBack": "6:252",
+        "closedContactSummary": "32:898"
+      },
+      "R11-I34-05": {
+        "publicDraft": "7:334",
+        "bothDraft": "32:470",
+        "privateOnlyDraft": "32:576",
+        "publicOnlySaved": "32:682",
+        "privateOnlySaved": "32:784"
+      },
+      "R11-I34-06": {
+        "reasonOnlyUpdate": "8:133",
+        "explicitYes": "8:279",
+        "explicitNo": "33:46",
+        "initialYesOnly": "33:243",
+        "initialNoOnly": "33:437"
+      },
+      "R11-I34-07": {
+        "cancel": "native conditional to latest confirmed settings, none→8:14",
+        "variable": "latestConfirmedSample"
+      },
+      "R11-I34-08": {
+        "candidate": "6:423",
+        "transferred": "6:544",
+        "sent": "10:80",
+        "verbatim": true
+      },
+      "R11-I34-09": {
+        "guestMeal": "30:83",
+        "leaveSeatConfirm": "30:116",
+        "seatCancelled": "30:161",
+        "hostSettings": "30:199",
+        "dissolveConfirm": "30:246",
+        "dissolved": "30:307",
+        "history": "30:336"
+      }
+    }
   }
 }
