@@ -1,0 +1,189 @@
+{
+  "iteration": "IOS-0.1.0-dev.3",
+  "status": "planned-not-executed",
+  "cases": [
+    {
+      "id": "I3-T01",
+      "requirements": "J03-AC01",
+      "expected": "Pending only own progress, no chat; Confirmed authorized group; Inbox→Chat→Back keeps correct meal/application round",
+      "level": "client+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T02",
+      "requirements": "J03-AC02",
+      "expected": "Trim1–2000 pure text; empty/over limit/429/503/offline preserve draft; explicit retry same clientMessageId once, different body conflict",
+      "level": "unit+API+DB",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T03",
+      "requirements": "J03-AC03",
+      "expected": "Only rendered visible sequence advances readSeq; older scroll keeps new unread; mark notification read and chat read independent",
+      "level": "native+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T04",
+      "requirements": "J03-AC04",
+      "expected": "Guest prestart leave seat keeps writable group; host cannot guest-leave; exactly startsAt rejected; independent leave-group leaves seat unchanged",
+      "level": "API+DB+native",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T05",
+      "requirements": "J03-AC05",
+      "expected": "Interval join<seq<leave strict endpoints; reapply Pending no new interval, approved reentry only new/old allowed intervals, gap sender/count never leaked",
+      "level": "DB+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T06",
+      "requirements": "J03-AC06",
+      "expected": "Only host current writer dissolves; all history read-only, seat unchanged, never reopened by later approval; cancellation/end/booking failure do NOT close authorized group",
+      "level": "API+DB",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T07",
+      "requirements": "J03-AC07",
+      "expected": "Full AI candidate equals transferred and sent only after explicit transfer/replace/manualSend; editor/actor/target/generation/rights changes reject old draft; manual chat works when AI unavailable",
+      "level": "client+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T08",
+      "requirements": "J03-AC08",
+      "expected": "Stable business event/recipient/channel dedupe; message-only in-app unread; no group push/mail; delivery unknown queried by provider rules, not UI received claim",
+      "level": "API+worker",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T09",
+      "requirements": "J04-AC01",
+      "expected": "Frozen start roster eligibility; scheduledEnd=+2h, window [end,end+7d) exact; self present/absent overrides host fallback, unknown distinct",
+      "level": "unit+DB",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T10",
+      "requirements": "J04-AC02/03",
+      "expected": "No default score; score-only/public-only/private-choice-only/both dirty distinct writes; public textarea never changes reconnect; existing public review blank rejected not deleted",
+      "level": "client+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T11",
+      "requirements": "J04-AC04",
+      "expected": "Mixed success per-object receipts; successful objects never retried/rolled back; failure only retries original unsaved intent; Unknown not duplicate",
+      "level": "API+client",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T12",
+      "requirements": "J04-AC05",
+      "expected": "OPEN revoke requires pre-save confirmation; Keep means zero writes; past-window no-public-dirty revoke works, dirty expired reference fails before pending revoke, independent Withdraw remains",
+      "level": "client+API",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T13",
+      "requirements": "J04-AC06/07",
+      "expected": "WAITING exposes no peer choice; true OPEN direct sends; revoke/block immediately refuse future sends and stop poll, authorized history remains; unblock cannot resurrect consent",
+      "level": "API+native",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T14",
+      "requirements": "J04-AC08",
+      "expected": "Lawful attendance correction removes invalid public projection/score effective stats; other valid common basis not harmed; explicit withdrawn/blocked consent never resurrected",
+      "level": "DB+cross-version support",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T15",
+      "requirements": "J06-AC01/05",
+      "expected": "Logged-in no attendance/no mealId/no 7day gate; no default Yes/No; reasons taxonomy exact seven; survey not derived from meal/reconnect",
+      "level": "contract+client",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T16",
+      "requirements": "J06-AC02",
+      "expected": "again null plus no reasons rejects; reason-only, Yes-only, No-only accepted; multi reasons dedup, Clear again keeps reasons; Update unchanged/null and Cancel restore latest confirmation",
+      "level": "API+native",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T17",
+      "requirements": "J06-AC03/04",
+      "expected": "Same-user latest version/time, explicit save and If-Match; failed/Unknown preserve proposal, no duplicate person; account switch drops old response, deletion removes effective data per policy",
+      "level": "API+DB",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T18",
+      "requirements": "r11 design counterexamples",
+      "expected": "Terminal Back cannot restore active group or OPEN direct; foreground seat confirm not hidden underlay mutates state; host View meal has no guest leave; 6 survey cancel outcomes; readable long content/keyboard safe areas",
+      "level": "native regression",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T19",
+      "requirements": "integration I1/I2",
+      "expected": "Real publish→apply→approve→group; leave seat after close may trigger minimum cancellation yet group remains writable; contracts/fixtures can run before upstream runtime, true integration separately gated",
+      "level": "cross-version",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T20",
+      "requirements": "integration SUPPORT/ADMIN/I4",
+      "expected": "Case correction and account deletion epochs revoke appropriate future rights/projections; survey latest-version submittedAt aggregates consumed by future J12 without importing meal filters",
+      "level": "cross-version",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T21",
+      "requirements": "R11-EI3-01 dependency propagation",
+      "expected": "I3-C01 remains OPEN and P00 existing consumed-schema audit/P01 messaging/P02 existing transitions/P03 AI/P04/P05 fixtures/P06 survey can progress; only P02 actual current roster integration blocked",
+      "level": "plan+contract dependency review",
+      "run": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "I3-T22",
+      "requirements": "R11-EI3-02 object versions/Unknown/409",
+      "expected": "Different server object versions incl no-record0: score succeeds, public reference response unknown, reconnect409. Retry public with exact original actor/method/path/body/key/IfMatch only; no current GET accepted inference, no re-write score, reconnect user reviews current authority. send same clientMessageId/body only while authorized; AI exact original requestId/poll retains budget responsibility.",
+      "level": "client+API+DB+AI fixture",
+      "run": "NOT_RUN",
+      "evidence": null
+    }
+  ],
+  "commands": [
+    "pnpm core:check",
+    "pnpm exec vitest run --project api <selected conversations/post-meal/surveys tests>",
+    "pnpm exec vitest run --project db <selected membership/participation tests>",
+    "pnpm --filter @fancy/ios test -- <selected inbox/post-meal/settings/assistant tests>"
+  ],
+  "commandBoundary": "Templates only; exact lease/test selectors issued after owner/environment check, not claimed executed."
+}

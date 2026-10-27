@@ -1,0 +1,57 @@
+{
+  "iteration": "IOS-0.1.0-dev.3",
+  "status": "plan-approved-with-issuance-gates",
+  "reviewer": "Independent RD architecture reviewer; not plan author",
+  "inputSHA256": {
+    "docs/engineering/r11/ios-0.1.0-dev.3/test-matrix.json": "e9c9892ac909e07acc0f922c4c3ff9dc4cf86cc861ca0d0b581a4b6941b0a940",
+    "docs/engineering/r11/ios-0.1.0-dev.3/input-manifest.json": "f801a6c5ee5abc99116cb80d7ffc20645e4ac8cdaba984698017d6a6571eaaed",
+    "docs/engineering/r11/ios-0.1.0-dev.3/plan.zh-CN.md": "c50ac7b9cfe87d90a195d94c0843cb0e033620976bfe6d323c15b985b3552e3e",
+    "docs/engineering/r11/ios-0.1.0-dev.3/work-packages.json": "f20de1c0f318213a9abd20532b5c8cc4fb3b0c531e53b7210f55bcd5278bc7dd"
+  },
+  "issues": [
+    {
+      "id": "R11-EI3-01",
+      "severity": "required",
+      "status": "closed-by-independent-plan-retest",
+      "finding": "P00同时承担既有契约核对与C01成员名单增量，而P01/P02/P03/P04/P05均等整个P00；需明确P00可独立完成existing-contract切片，C01仅卡P02名单接入，不传播阻塞消息/饭后/AI。应加入依赖传播反例。",
+      "evidence": [
+        "docs/engineering/r11/ios-0.1.0-dev.3/work-packages.json"
+      ],
+      "resolution": "P00 completion explicitly excludes C01 roster delta; each package checks consumed existing contracts independently. Actual dependsOn has no whole-P00 barrier; T21 states C01-open counterexample limiting only P02 roster integration."
+    },
+    {
+      "id": "R11-EI3-02",
+      "severity": "required",
+      "status": "closed-by-independent-plan-retest",
+      "finding": "三对象回执与survey等Unknown缺精确协议：普通幂等写需保原actor/op/method/path/body/key/原If-Match重放（不能当前GET版本换入原key）；sendMessage为clientMessageId去重且权限重验先于duplicate，失权后不能为恢复而重发；AI为resourceKey/requestId专用恢复。补独立对象版本/无记录0的服务端来源、混合成功只恢复未知/失败原意图及409本人新意图反例。",
+      "evidence": [
+        "packages/contracts/src/operations/social.ts",
+        "apps/api/src/http/routes.ts",
+        "apps/api/src/conversations/routes.ts",
+        "apps/api/src/post-meal/experience.ts",
+        "apps/api/src/post-meal/reviews.ts",
+        "apps/api/src/connections/service.ts"
+      ],
+      "resolution": "Ordinary writes freeze actor/operation/method/path/body/key/original If-Match; resource GET is not original intent evidence. Message clientMessageId replay only while authorized; AI exact requestId/poll retains liability. Per-object versions and server no-record0 sources separate; T22 mixed success/Unknown/409 preserves successful objects."
+    }
+  ],
+  "implementationAuthorized": false,
+  "QAStarted": false,
+  "verified": [
+    "28 registered operations/real paths confirmed by 3 existing planning tests",
+    "membership join<seq<leave and leave-seat/group/dissolve separation match authority",
+    "Conversation has no roster; explicit C01 gap does not substitute confirmed meal list",
+    "per-command post-meal receipts, independent survey and AI unsent draft scope correct",
+    "shared Chat/conversations/meals/assistant writers and r11 PR/main release direction retained"
+  ],
+  "testResult": "python3 -m unittest tests.test_r11_ios3_plan -v: 3 passed; independent JSON assertions verify no whole-P00 edges and explicit C01 exclusion; 22 scenarios remain NOT_RUN",
+  "retestScope": "Only author revisions for original EI3-01/02; no implementation review",
+  "issuanceGates": [
+    "Actual RD owners and <=5 exact file leases; serialize shared Chat/conversation/meals/assistant with I1/I2 and platform writers",
+    "Fix exact C01 authorized group-settings projection contract before P02 roster real integration, not before unrelated packages",
+    "Per-object versions normalized from server contracts/source, never shared Save/meal version or latest GET as original intent proof",
+    "Minimal environment checks then per-module tests, actual native/provider and cross-version service evidence separately",
+    "Independent code review, required CI, PR main merge and exact tested SHA/build/migration/environment before deployment"
+  ],
+  "boundedConclusion": "I3 plan implementable within scoped packages without waiting I2 entire version; current review does not authorize business code, QA or deployment."
+}
