@@ -1,0 +1,48 @@
+{
+  "iteration": "ADMIN-0.1.0-DEV.1",
+  "baselineCommit": "0dc558892402aa403bbee6306ef224953af7ea16",
+  "reviewer": "Independent RD architecture reviewer; not plan author",
+  "status": "plan-approved-with-issuance-gates",
+  "inputSHA256": {
+    "docs/engineering/r11/admin-0.1.0-dev.1/plan.zh-CN.md": "b11aa1dfba65ddd281c6103aa8280df8b1fc26cf26d7c4adf72118118d8c1167",
+    "docs/engineering/r11/admin-0.1.0-dev.1/work-packages.json": "a0faa6c05c0bc9cc3896c85ea712cf0a4409ace988a6926a66e70b17f4d7c37f",
+    "docs/delivery/versions/admin-0.1.0-dev.1/test-plan.zh-CN.md": "7da89bc8639a169a54ea053629a246a5b8544eb4f95989df434ce6010917af54"
+  },
+  "issues": [
+    {
+      "id": "R11-EA1-01",
+      "status": "closed-by-independent-plan-retest",
+      "severity": "required",
+      "finding": "补真实操作映射及服务端响应权威；M-062/U-002仅显示号，不可当UUID参数或另造详情endpoint。",
+      "evidence": [
+        "packages/contracts/src/operations/operations-admin.ts",
+        "apps/api/src/admin/pages.ts",
+        "apps/api/src/admin/drilldown.ts",
+        "apps/admin/src/components/DetailDialog.tsx"
+      ],
+      "resolution": "Verified actual registry operation/method/path, query and server response authority, UUID/display separation, existing files/tests and writer DAG. No new object endpoint invented."
+    }
+  ],
+  "implementationAuthorized": false,
+  "QAStarted": false,
+  "verification": "Read existing production files/contracts and per-version plan; no runtime/product QA executed",
+  "workflow": "r11 per-version gate; other versions only block concrete integration; exact leases and CI/main deployment remain required",
+  "retestBaseline": "9825193 policy plus author-revised shared candidate",
+  "issuanceGates": [
+    "Actual owner/exact file leases and shared writer serialization",
+    "Bind independently signed design revision and contract candidate",
+    "Minimum environment checks then isolated module tests; real upstream only gates concrete integration",
+    "Independent code review and required CI/PR main merge before exact SHA/build deployment"
+  ],
+  "boundedConclusion": "A1 plan implementable within existing interfaces; no code or QA authorization, no wait for A2/Support entire versions.",
+  "staticRecheck": {
+    "inputSHA256": "all matched revised candidate",
+    "existingPathsAndTests": "all exist",
+    "newPlannedPaths": "not-created confirmed, not claimed existing",
+    "issueClosure": "all independently closed",
+    "authorization": "implementation and QA false",
+    "registryMapping": "existing operations checked against production registry; new operations explicitly proposals",
+    "diffCheck": "passed",
+    "runtimeTests": "not run; plan review only"
+  }
+}
