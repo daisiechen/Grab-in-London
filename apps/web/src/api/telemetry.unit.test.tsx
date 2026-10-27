@@ -63,7 +63,9 @@ describe('optional analytics',()=>{
       readonly root=null;readonly rootMargin='';readonly thresholds=[0,0.5];
     }
     vi.stubGlobal('IntersectionObserver',Observer);
-    const stub=createFetchStub({getSession:()=>fail(401,'UNAUTHENTICATED'),discoverMeals:()=>({...page([meal()]),body:{...(page([meal()]).body as object),meta:{requestId:'99999999-9999-4999-8999-999999999999',serverNow:new Date().toISOString()}}}),ingestEvents:()=>ok({accepted:1,rejected:[],duplicate:0})});
+    // Visibility duration is independent of the calendar date of the shared fixture.
+    const base=meal();const future=meal({startsAt:{...base.startsAt,instant:new Date(Date.now()+172800000).toISOString()},closesAt:{...base.closesAt,instant:new Date(Date.now()+86400000).toISOString()}});
+    const stub=createFetchStub({getSession:()=>fail(401,'UNAUTHENTICATED'),discoverMeals:()=>({...page([future]),body:{...(page([future]).body as object),meta:{requestId:'99999999-9999-4999-8999-999999999999',serverNow:new Date().toISOString()}}}),ingestEvents:()=>ok({accepted:1,rejected:[],duplicate:0})});
     try {
       renderApp(stub.fetch);
       await screen.findByText('Friday dinner & new faces');
