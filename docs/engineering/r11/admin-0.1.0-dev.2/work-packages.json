@@ -1,0 +1,241 @@
+{
+  "id": "ADMIN-0.1.0-dev.2",
+  "status": "plan-approved-with-issuance-gates",
+  "implementationAuthorized": false,
+  "basis": "r10 architecture interfaces retained; r11 independent gates supersede all-seven gate",
+  "inputs": {
+    "docs/product/journeys/j11/requirements.zh-CN.md": "40921832dd47a5c0df9615b2ddbe483bfa54e51890b527083410d8c09f1451a3"
+  },
+  "design": {
+    "manifest": "docs/design/r10/admin-0.1.0-dev.2/manifest.json",
+    "fileKey": "gin01YJX9boaVymXsm1zJg",
+    "independentReview": "passed-by-total-PJ-fixed-representative-paths",
+    "actualPresentationClicks": true,
+    "scope": "not real services QA"
+  },
+  "workPackages": [
+    {
+      "id": "A21",
+      "title": "subject分类与原意图状态",
+      "proposedRole": "RD-ANALYTICS",
+      "assignedWriter": null,
+      "status": "not-issued",
+      "candidateProductionPath": "apps/api/src/admin/routes.ts",
+      "exactWriteLease": [],
+      "interface": "classifyUser PUT /admin/classifications/{userId UUID}, If-Match=current subject revision, Idempotency-Key, body classification regular/test/staff + reason5..500. getClassification GET same resource loads latest facts only; UNKNOWN repeats original PUT with identical actor/key/body/If-Match via defineWrite replay, never infer old intent from current classification.",
+      "acceptance": "409核当前staff2/保test和原因，本人新INTENT-2提交才revision3；UNKNOWN先查原次。",
+      "maxProductionFilesPerIssue": 3,
+      "tests": "targeted module/contract/database and affected consumer regression, exact paths assigned with lease"
+    },
+    {
+      "id": "A22",
+      "title": "统计更新与旧读取屏障",
+      "proposedRole": "RD-ANALYTICS",
+      "assignedWriter": null,
+      "status": "not-issued",
+      "candidateProductionPath": "apps/api/src/admin/snapshots.ts",
+      "exactWriteLease": [],
+      "interface": "NEW incremental persistent statistics task + per-subject incorporated revision proof; existing snapshots.ts only global classificationRevision, Classification.snapshotPending always true, worker/main periodic seal has no task status/retry. Pending/Failed old reads blocked; accepted classify never repeated for statistics retry.",
+      "acceptance": "不比较全局最大revision；分类不回滚，不重复保存；本次subject输入未覆盖不能Ready。",
+      "maxProductionFilesPerIssue": 3,
+      "tests": "targeted module/contract/database and affected consumer regression, exact paths assigned with lease"
+    },
+    {
+      "id": "A23",
+      "title": "同范围CSV与授权下载",
+      "proposedRole": "RD-EXPORT",
+      "assignedWriter": null,
+      "status": "not-issued",
+      "candidateProductionPath": "apps/api/src/admin/exports.ts",
+      "exactWriteLease": [],
+      "interface": "Existing adminExport POST /admin/exports (snapshotId/metric/filters), getExport GET /admin/exports/{exportId}, current auth/privacy recheck; extend old-read barrier to classification task pending/failed for relevant actor/query. Do not globally revoke unrelated snapshots merely because one actor has pending intent.",
+      "acceptance": "CSV与图表一致；撤销后旧票据拒读，生成票据不等下载成功，无法远程撤回磁盘。",
+      "maxProductionFilesPerIssue": 3,
+      "tests": "targeted module/contract/database and affected consumer regression, exact paths assigned with lease"
+    },
+    {
+      "id": "A24",
+      "title": "分类恢复/统计/导出客户端",
+      "proposedRole": "RD-ADMIN",
+      "assignedWriter": null,
+      "status": "not-issued",
+      "candidateProductionPath": "apps/admin/src/features/classification/ClassificationPanel.tsx",
+      "exactWriteLease": [],
+      "interface": "分类选择原因保稿，冲突本人确认新意图，统计只重试不改分类；SnapshotPicker/ExportButton消费同合同。",
+      "acceptance": "21:2329本人确认→21:2749统计未就绪；权限清理/CSV下载反馈与原视觉保持。",
+      "maxProductionFilesPerIssue": 3,
+      "tests": "targeted module/contract/database and affected consumer regression, exact paths assigned with lease"
+    }
+  ],
+  "realIntegrationDependencies": [
+    "ADMIN-0.1.0-dev.1同查询快照读取接口",
+    "删除与支持修订屏障真实联调只阻断相关传播用例"
+  ],
+  "globalDesignWait": false,
+  "engineeringReview": {
+    "status": "plan-approved-with-issuance-gates",
+    "reviewer": "Independent RD architecture reviewer; not plan author",
+    "authorSelfApproval": false,
+    "issues": [
+      {
+        "id": "R11-EA2-01",
+        "status": "closed-by-independent-plan-retest"
+      },
+      {
+        "id": "R11-EA2-02",
+        "status": "closed-by-independent-plan-retest"
+      }
+    ],
+    "signoffEvidence": {
+      "path": "docs/reviews/r11/admin2-engineering-review.json",
+      "sha256": "a12770521c1e736320d0dec0afee64cb3c481c0e1f34badc5fdfe80363eba7f9",
+      "reviewer": "Independent RD architecture reviewer; not plan author",
+      "status": "plan-approved-with-issuance-gates",
+      "boundedConclusion": "A2 plan implementable as explicitly proposed incremental work, not existing runtime capability; no code/QA authorization and no whole-version A1 wait.",
+      "closedIssues": [
+        "R11-EA2-01",
+        "R11-EA2-02"
+      ],
+      "reviewedInputSHA256": {
+        "docs/engineering/r11/admin-0.1.0-dev.2/plan.zh-CN.md": "be59dcc04da0e62bc39abceb487d104eddc8a38cb9e675ace8a12a39dc945d14",
+        "docs/engineering/r11/admin-0.1.0-dev.2/work-packages.json": "b5bddc521048c26a9cc177914a5d4076adb2866159b8f38c3c5a231158e4c0c5",
+        "docs/delivery/versions/admin-0.1.0-dev.2/test-plan.zh-CN.md": "17acab3e6aeb846100b11469e809a25073c8475dc8c2748688941cf5036e6038"
+      },
+      "note": "Only signoff metadata updated after independently reviewed candidate; business scope/interfaces unchanged."
+    }
+  },
+  "currentImplementationGaps": [
+    "Classification.snapshotPending boolean currently always true; not a persistent task state",
+    "SnapshotInfo.classificationRevision and sealSourceSnapshot global max do not prove this subject revision incorporated",
+    "worker/main.ts periodic seal lacks query/retry statistics job API",
+    "UNKNOWN original write replay exists; no existing queryIntent endpoint"
+  ],
+  "newPlannedPaths": [
+    {
+      "path": "apps/api/src/admin/classification-statistics.ts",
+      "status": "not-created",
+      "writer": "RD-ANALYTICS",
+      "purpose": "new task status/retry operations and actor/subject-intent old-read barrier"
+    },
+    {
+      "path": "apps/worker/src/classification-statistics.ts",
+      "status": "not-created",
+      "writer": "RD-ANALYTICS",
+      "purpose": "lease/retry persistent tasks and subject incorporation proof at sealed snapshot"
+    }
+  ],
+  "migrationRequest": {
+    "writer": "RD-DATA",
+    "status": "not-issued; next migration number must be reserved centrally",
+    "candidateDirectory": "packages/db/migrations/",
+    "logicalSchema": [
+      "statistics_task(actor,subject,acceptedRevision,intent,payloadHash,state,attempt,lastError,resultSnapshot,privacyEpoch)",
+      "snapshot_subject_classification_inputs(snapshotId,subjectId,incorporatedRevision,classification)"
+    ],
+    "invariant": "proof includes excluded test/staff subjects even if absent from statistical users; same subject later update must not be guessed from global max"
+  },
+  "contractIncrement": {
+    "writer": "RD-CONTRACTS",
+    "existingPaths": [
+      "packages/contracts/src/dto.ts",
+      "packages/contracts/src/operations/operations-admin.ts"
+    ],
+    "status": "new schema/operations proposed, not present",
+    "proposedOperations": [
+      {
+        "name": "classificationStatisticsStatus",
+        "method": "GET",
+        "path": "/admin/classification-statistics/{taskId}",
+        "status": "proposed-not-existing"
+      },
+      {
+        "name": "retryClassificationStatistics",
+        "method": "POST",
+        "path": "/admin/classification-statistics/{taskId}/retry",
+        "status": "proposed-not-existing"
+      }
+    ],
+    "dto": "taskId, subjectId, acceptedRevision, originalIntent, PENDING/FAILED/READY, snapshotId nullable, incorporatedRevision/proof; result metadata server authoritative",
+    "idempotency": "retry task attempt idempotent and scoped to existing accepted revision; never calls classifyUser; UNKNOWN original PUT remains unchanged actor/key/body/If-Match"
+  },
+  "subjectCoverageRule": "READY only when actual sealed subject input proof covers the accepted revision in that subject lineage and effective classification; if same subject advances again, mark original task superseded/conflict or expose exact proof and ask actor to reload; do not call old intent applied based on later value. Different subject higher revision is never evidence.",
+  "oldReadBarrier": {
+    "serverPaths": [
+      "apps/api/src/admin/pages.ts",
+      "apps/api/src/admin/drilldown.ts",
+      "apps/api/src/admin/exports.ts"
+    ],
+    "clientPaths": [
+      "apps/admin/src/features/classification/ClassificationPanel.tsx",
+      "apps/admin/src/features/snapshot/SnapshotPicker.tsx",
+      "apps/admin/src/features/exports/ExportButton.tsx"
+    ],
+    "rule": "UNKNOWN/accepted Pending/Failed remove old values/rows/export links from current intent context, server bound task/query check prevents reading old cached payload or export ticket; Ready binds new proof/snapshot/filters. Privacy revocation remains global authorisation rule."
+  },
+  "candidateDAG": [
+    {
+      "from": "contracts+RD-DATA reserved migration",
+      "to": "A21+A22",
+      "reason": "task/proof schema and operation compatibility first"
+    },
+    {
+      "from": "A21",
+      "to": "A22",
+      "reason": "same RD-ANALYTICS writer serializes routes/snapshots and task enqueue transaction"
+    },
+    {
+      "from": "A22",
+      "to": "A23",
+      "reason": "exports uses common old-read barrier; RD-EXPORT applies after fixed API contract"
+    },
+    {
+      "from": "fixed contract fixtures",
+      "to": "A24",
+      "reason": "RD-ADMIN can adapt UI in parallel; live integration waits relevant API task implementation only"
+    }
+  ],
+  "sharedExistingPaths": [
+    "apps/api/src/admin/routes.ts",
+    "apps/api/src/admin/pages.ts",
+    "apps/api/src/admin/drilldown.ts",
+    "apps/api/src/common/idempotency.ts",
+    "apps/worker/src/main.ts"
+  ],
+  "targetedExistingTests": [
+    "apps/api/src/admin/admin.api.test.ts",
+    "apps/api/src/admin/analytics.api.test.ts",
+    "apps/api/src/admin/drilldown.api.test.ts",
+    "apps/api/src/admin/exports.api.test.ts",
+    "packages/contracts/src/contracts.unit.test.ts"
+  ],
+  "requiredNewTestCases": [
+    "same subject another update while original task pending does not imply original intent result",
+    "other subject much higher global revision does not satisfy incorporation proof",
+    "UNKNOWN replay uses original actor/key/body/If-Match and never getClassification-as-proof",
+    "UNKNOWN/PENDING/FAILED API and client block old chart/rows/export reads",
+    "failed statistics retry never calls classifyUser or creates another classification revision",
+    "excluded test/staff subject still included in sealed input proof"
+  ],
+  "issuanceGates": [
+    {
+      "gate": "RD-CONTRACTS fixes task handle linkage from accepted classify result and exact proposed status/retry DTO, auth/MFA/actor ownership, error and idempotency contracts before dependent leases",
+      "status": "not-issued"
+    },
+    {
+      "gate": "RD-DATA reserves migration and transactionally binds accepted revision/task enqueue; seals per-subject included/excluded input proof",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Exact owners/file leases serialize shared routes/snapshot/barrier changes; no broad all-path lease",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Tests distinguish UNKNOWN original write, pending/failed task, superseded same-subject intent and another-subject high revision; real integration separate",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Required code review/CI/PR main merge and exact tested SHA/build before deployment",
+      "status": "not-issued"
+    }
+  ]
+}

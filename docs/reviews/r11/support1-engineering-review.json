@@ -1,0 +1,61 @@
+{
+  "iteration": "SUPPORT-0.1.0-DEV.1",
+  "baselineCommit": "0dc558892402aa403bbee6306ef224953af7ea16",
+  "reviewer": "Independent RD architecture reviewer; not plan author",
+  "status": "plan-approved-with-issuance-gates",
+  "inputSHA256": {
+    "docs/engineering/r11/support-0.1.0-dev.1/plan.zh-CN.md": "d97ca06a5858d5f5d451f031ada48c7021e33dcbdda202a356472f3879fcffe3",
+    "docs/engineering/r11/support-0.1.0-dev.1/work-packages.json": "2e5ec2ba26d7436dc01021c96353116679825514f4293bda487206724d477e93",
+    "docs/delivery/versions/support-0.1.0-dev.1/test-plan.zh-CN.md": "77dbe05d11ea19e55940e8f267641739882fda12a27ab5d80548588f5064b144"
+  },
+  "issues": [
+    {
+      "id": "R11-ES1-01",
+      "status": "closed-by-independent-plan-retest",
+      "severity": "required",
+      "finding": "SupportCase缺纠错所需最小事实；明确case授权保护的DTO增量、correctAttendance正文expectedVersion与resolveCase case If-Match分开。",
+      "evidence": [
+        "packages/contracts/src/dto.ts",
+        "packages/contracts/src/operations/operations-admin.ts",
+        "apps/api/src/support/routes.ts",
+        "apps/api/src/post-meal/attendance.ts"
+      ],
+      "resolution": "Verified basic SupportCase gap explicitly acknowledged; proposed case-grant/MFA/minimal facts API and separate attendanceVersion vs caseVersion are scoped correctly, original POST replay preserved."
+    },
+    {
+      "id": "R11-ES1-02",
+      "status": "closed-by-independent-plan-retest",
+      "severity": "required",
+      "finding": "回复写入真实落点routes.ts非privacy.ts；无现成Support UI，明确受限CLI/API交付载体及新增候选路径和共享writer，不把API包冒充Figma完整交互。",
+      "evidence": [
+        "apps/api/src/support/routes.ts",
+        "apps/api/src/support/privacy.ts",
+        "docs/product/journeys/j09/requirements.zh-CN.md"
+      ],
+      "resolution": "Verified resolveCase routes.ts reply authority, explicit restricted CLI S4/not-created paths, original report preservation and canonical attendance/pair/snapshot propagation; same routes shared-writer serialization."
+    }
+  ],
+  "implementationAuthorized": false,
+  "QAStarted": false,
+  "verification": "Read existing production files/contracts and per-version plan; no runtime/product QA executed",
+  "workflow": "r11 per-version gate; other versions only block concrete integration; exact leases and CI/main deployment remain required",
+  "retestBaseline": "9825193 policy plus author-revised shared candidate",
+  "issuanceGates": [
+    "RD-CONTRACTS fixes exact new facts DTO/query/auth/schema; recheck case target/meal/subject grant and redaction each read/write",
+    "Actual owner and exact leases; routes changes serialized with I4/J07",
+    "Restricted CLI must use authenticated APIs and retain same original intent across transport uncertainty; permitted terminal facts differ from persisted logs, no token/unrelated private text in logs",
+    "Run separate facts auth, two-version, original replay, exact UTC boundary, CLI confirm/cancel/reply-only and propagation tests; real API/native/integration evidence separate",
+    "Independent code review/required CI/PR main merge before tested SHA/build deployment"
+  ],
+  "boundedConclusion": "Support plan implementable as restricted API plus new CLI; not new Web product, not implemented UI or QA; no whole-version waiting.",
+  "staticRecheck": {
+    "inputSHA256": "all matched revised candidate",
+    "existingPathsAndTests": "all exist",
+    "newPlannedPaths": "not-created confirmed, not claimed existing",
+    "issueClosure": "all independently closed",
+    "authorization": "implementation and QA false",
+    "registryMapping": "existing operations checked against production registry; new operations explicitly proposals",
+    "diffCheck": "passed",
+    "runtimeTests": "not run; plan review only"
+  }
+}

@@ -68,11 +68,20 @@
   ],
   "verificationBoundary": "Source UI real browser + Figma native read-back and screenshots; fixed samples, no full Presentation runtime/production service/QA claim",
   "files": {
+    "docs/design/r10/support-0.1.0-dev.1/figma-readback.json": "aeb894a80ae94849daeb6285740f10fb2af4e93375172b842398546c97313c8b",
     "docs/design/r10/support-0.1.0-dev.1/coverage.json": "e21d214d3bddee7c277f3d050ae5b8056462159147145360467316c718533641",
+    "docs/design/r10/support-0.1.0-dev.1/handoff.zh-CN.md": "1e675650eabd979941d81c4167d09df3d44f98a222ffa11cb43a12a7cf2042da",
+    "docs/design/r10/support-0.1.0-dev.1/planning-input-projection.json": "91304847d77e055edc9078be084704498f2d0199794e399187a2fe946ec75a61",
     "docs/design/r10/support-0.1.0-dev.1/evidence/case.png": "33eb11283b6db5991fec6617496809b47d77cecf8a458a847bbb6bac870a55db",
     "docs/design/r10/support-0.1.0-dev.1/evidence/correction.png": "12208c6b15eeed1f49ebaeeb25e3ba1a48b9e5e5063743a535f6ed8727bbbe31",
-    "docs/design/r10/support-0.1.0-dev.1/figma-readback.json": "f1d65851607e97f52492aa311a0dca53f366695f1fa756f6d9f60a16617f2bb2",
-    "docs/design/r10/support-0.1.0-dev.1/handoff.zh-CN.md": "64ad2cb1441a5616ddd5f72659a01a63372253d6dce39d56cea73346d9be0307",
-    "docs/design/r10/support-0.1.0-dev.1/planning-input-projection.json": "91304847d77e055edc9078be084704498f2d0199794e399187a2fe946ec75a61"
+    "docs/design/r10/support-0.1.0-dev.1/evidence/r11-recovery-readback.json": "204af531da4c8fb35dc5b0038f84fb26db20870d728766f2468fe9df95713b61"
+  },
+  "r11Repair": {
+    "issue": "R11-S01",
+    "status": "candidate-awaiting-independent-retest",
+    "evidence": "evidence/r11-recovery-readback.json",
+    "nativeReadback": true,
+    "actualScreenshotViewed": true,
+    "authorPresentationClaim": false
   }
 }

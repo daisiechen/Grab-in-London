@@ -435,9 +435,9 @@
         "Noto Sans SC"
       ],
       "counts": {
-        "INSTANCE": 5,
+        "INSTANCE": 7,
         "FRAME": 11,
-        "TEXT": 15,
+        "TEXT": 17,
         "VECTOR": 3
       },
       "texts": [
@@ -455,9 +455,26 @@
         "absent",
         "原因（保留）",
         "核对本案材料后确认未出席",
-        "本次没有覆盖新版本，原因和选择保留。"
+        "本次没有覆盖新版本，原因和选择保留。",
+        "核对当前事实并继续",
+        "取消本次追加"
       ],
-      "links": [],
+      "links": [
+        {
+          "source": "14:465",
+          "label": "Action / 核对当前事实并继续",
+          "destination": "14:360",
+          "visible": true,
+          "opacity": 1
+        },
+        {
+          "source": "14:468",
+          "label": "Action / 取消本次追加",
+          "destination": "14:395",
+          "visible": true,
+          "opacity": 1
+        }
+      ],
       "imageNodes": [],
       "disabledExports": []
     },
@@ -491,6 +508,143 @@
       "links": [],
       "imageNodes": [],
       "disabledExports": []
+    },
+    {
+      "key": "conflictreconfirm",
+      "nodeId": "14:360",
+      "name": "SUPPORT dev.1 / conflict-reconfirm",
+      "width": 1440,
+      "height": 1000,
+      "fonts": [
+        "Arial",
+        "Noto Sans SC"
+      ],
+      "counts": {
+        "INSTANCE": 6,
+        "FRAME": 12,
+        "TEXT": 17,
+        "VECTOR": 3
+      },
+      "texts": [
+        "Fancy",
+        "/",
+        "支持个案",
+        "EN",
+        "确认本次新支持修订",
+        "CASE-SYN-09 · M-SYN-09 · U-203 · expectedVersion 2 · 新意图 CORR-2",
+        "核对后形成新意图",
+        "本人核对当前事实后再确认，不能静默覆盖或借其他对象版本猜本次成功。",
+        "当前revision",
+        "2",
+        "本地选择",
+        "absent",
+        "原因（保留）",
+        "核对本案材料后确认未出席",
+        "self absent / host present原报告保留；当前revision 2/有效absent。满7天、未取消、名单、本案权限在提交时再验证；本人确认才提交CORR-2。",
+        "本人确认并追加新修订",
+        "取消，保留revision 2"
+      ],
+      "links": [
+        {
+          "source": "14:471",
+          "label": "Action / 本人确认并追加新修订",
+          "destination": "14:430",
+          "visible": true,
+          "opacity": 1
+        },
+        {
+          "source": "14:474",
+          "label": "Action / 取消，保留revision 2",
+          "destination": "14:395",
+          "visible": true,
+          "opacity": 1
+        }
+      ],
+      "imageNodes": [],
+      "disabledExports": []
+    },
+    {
+      "key": "conflictcancelled",
+      "nodeId": "14:395",
+      "name": "SUPPORT dev.1 / conflict-cancelled-current",
+      "width": 1440,
+      "height": 1000,
+      "fonts": [
+        "Arial",
+        "Noto Sans SC"
+      ],
+      "counts": {
+        "INSTANCE": 5,
+        "FRAME": 12,
+        "TEXT": 16,
+        "VECTOR": 3
+      },
+      "texts": [
+        "Fancy",
+        "/",
+        "支持个案",
+        "EN",
+        "已取消本次追加",
+        "409 · 当前合法版本已加载 · 本案权限仍需重验",
+        "核对后形成新意图",
+        "本人核对当前事实后再确认，不能静默覆盖或借其他对象版本猜本次成功。",
+        "当前revision",
+        "2",
+        "本地选择",
+        "absent",
+        "原因（保留）",
+        "核对本案材料后确认未出席",
+        "已取消，revision 2/有效absent不变；保留self absent、host present及本地选择和原因，未追加修订。",
+        "继续核对保留的选择与原因"
+      ],
+      "links": [
+        {
+          "source": "14:477",
+          "label": "Action / 继续核对保留的选择与原因",
+          "destination": "3:1150",
+          "visible": true,
+          "opacity": 1
+        }
+      ],
+      "imageNodes": [],
+      "disabledExports": []
+    },
+    {
+      "key": "conflictappended",
+      "nodeId": "14:430",
+      "name": "SUPPORT dev.1 / conflict-appended-new-intent",
+      "width": 1440,
+      "height": 1000,
+      "fonts": [
+        "Arial",
+        "Noto Sans SC"
+      ],
+      "counts": {
+        "INSTANCE": 4,
+        "FRAME": 12,
+        "TEXT": 15,
+        "VECTOR": 3
+      },
+      "texts": [
+        "Fancy",
+        "/",
+        "支持个案",
+        "EN",
+        "新的支持修订已追加",
+        "CASE-SYN-09 · U-203 · revision 3 · CORR-2",
+        "核对后形成新意图",
+        "本人核对当前事实后再确认，不能静默覆盖或借其他对象版本猜本次成功。",
+        "当前revision",
+        "3",
+        "本地选择",
+        "absent",
+        "原因（保留）",
+        "核对本案材料后确认未出席",
+        "CORR-2以expectedVersion 2追加为revision 3；self absent / host present原报告保留，有效仍absent。继续不适用，不是新增失效；回复尚未保存。"
+      ],
+      "links": [],
+      "imageNodes": [],
+      "disabledExports": []
     }
   ],
   "missingTargets": [],
@@ -501,5 +655,6 @@
       "name": "SUPPORT-0.1.0-dev.1 · 完整代表路径"
     }
   ],
-  "componentCounts": 22
+  "componentCounts": 22,
+  "r11RepairIssue": "R11-S01"
 }
