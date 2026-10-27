@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "journey": "J08",
+  "revision": "UX-r01",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "pmCoverage": "docs/product/journeys/j08/coverage.json",
+  "sourceProjection": "按固定PM coverage的prdSection/sourceUnitHandling引用全部原始单元；不复制或改变原归属/演示效力。",
+  "requirementsRevision": "PM-r01",
+  "demoRevision": "PM-r02",
+  "requirementTrace": [
+    {
+      "prdSection": "用户目标、入口与完成结果",
+      "demoReference": "demo/journeys/j08/index.html",
+      "figmaScenes": [
+        {
+          "scene": "settings",
+          "nodeId": "1:30"
+        },
+        {
+          "scene": "review",
+          "nodeId": "1:43"
+        },
+        {
+          "scene": "completed",
+          "nodeId": "1:201"
+        },
+        {
+          "scene": "support",
+          "nodeId": "1:229"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "正常路径与取消",
+      "demoReference": "demo/journeys/j08/index.html",
+      "figmaScenes": [
+        {
+          "scene": "review",
+          "nodeId": "1:43"
+        },
+        {
+          "scene": "reauth",
+          "nodeId": "1:58"
+        },
+        {
+          "scene": "reauth-error",
+          "nodeId": "1:77"
+        },
+        {
+          "scene": "confirm-unchecked",
+          "nodeId": "5:71"
+        },
+        {
+          "scene": "confirm",
+          "nodeId": "1:95"
+        },
+        {
+          "scene": "pending",
+          "nodeId": "1:143"
+        },
+        {
+          "scene": "processing",
+          "nodeId": "1:156"
+        },
+        {
+          "scene": "completed",
+          "nodeId": "1:201"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "同步受理屏障：不允许延期执行的内容",
+      "demoReference": "demo/journeys/j08/index.html",
+      "figmaScenes": [
+        {
+          "scene": "barrier-failed",
+          "nodeId": "1:113"
+        },
+        {
+          "scene": "pending",
+          "nodeId": "1:143"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "最小回执、失败与恢复",
+      "demoReference": "demo/journeys/j08/index.html",
+      "figmaScenes": [
+        {
+          "scene": "unknown",
+          "nodeId": "1:128"
+        },
+        {
+          "scene": "query-failed",
+          "nodeId": "1:171"
+        },
+        {
+          "scene": "needs-support",
+          "nodeId": "1:186"
+        },
+        {
+          "scene": "receipt-unavailable",
+          "nodeId": "1:276"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "公开支持出口与返回",
+      "demoReference": "demo/journeys/j08/index.html",
+      "figmaScenes": [
+        {
+          "scene": "support",
+          "nodeId": "1:229"
+        },
+        {
+          "scene": "support-copied",
+          "nodeId": "1:246"
+        },
+        {
+          "scene": "support-return",
+          "nodeId": "1:261"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "权限、平台与不做",
+      "demoReference": "demo/journeys/j08/index.html",
+      "figmaScenes": [
+        {
+          "scene": "pending",
+          "nodeId": "1:143"
+        },
+        {
+          "scene": "completed",
+          "nodeId": "1:201"
+        },
+        {
+          "scene": "support",
+          "nodeId": "1:229"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    }
+  ],
+  "productAcceptanceRetained": [
+    "J08-S01",
+    "J08-S02",
+    "J08-S03",
+    "J08-S04",
+    "J08-S05",
+    "J08-S06"
+  ],
+  "representativePath": [
+    {
+      "scene": "settings",
+      "nodeId": "1:30"
+    },
+    {
+      "scene": "review",
+      "nodeId": "1:43"
+    },
+    {
+      "scene": "reauth",
+      "nodeId": "1:58"
+    },
+    {
+      "scene": "confirm-unchecked",
+      "nodeId": "5:71"
+    },
+    {
+      "scene": "confirm",
+      "nodeId": "1:95"
+    },
+    {
+      "scene": "pending",
+      "nodeId": "1:143"
+    },
+    {
+      "scene": "processing",
+      "nodeId": "1:156"
+    },
+    {
+      "scene": "completed",
+      "nodeId": "1:201"
+    }
+  ],
+  "notClaimed": [
+    "任意输入/所有多选组合",
+    "原生真机/键盘/读屏执行",
+    "真实认证/模型/业务服务",
+    "独立QA或Owner批准"
+  ],
+  "excluded": "不执行真实删除、发信、供应方、DB/清库，不新增匿名支持写API、客服后台、账号恢复或移动Web。"
+}

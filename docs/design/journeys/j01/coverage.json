@@ -1,0 +1,269 @@
+{
+  "schemaVersion": 1,
+  "journey": "J01",
+  "revision": "UX-r01",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "pmCoverage": "docs/product/journeys/j01/coverage.json",
+  "sourceProjection": "按固定PM coverage的prdSection/sourceUnitHandling引用全部原始单元；不复制或改变原归属/演示效力。",
+  "requirementsRevision": "PM-r01",
+  "demoRevision": "PM-r02",
+  "requirementTrace": [
+    {
+      "prdSection": "goal",
+      "demoReference": "demo/journeys/j01/index.html",
+      "figmaScenes": [
+        {
+          "scene": "discover",
+          "nodeId": "2:715"
+        },
+        {
+          "scene": "pending",
+          "nodeId": "2:1045"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "discovery",
+      "demoReference": "demo/journeys/j01/index.html",
+      "figmaScenes": [
+        {
+          "scene": "discover",
+          "nodeId": "2:715"
+        },
+        {
+          "scene": "filters",
+          "nodeId": "2:741"
+        },
+        {
+          "scene": "filters-clear",
+          "nodeId": "2:785"
+        },
+        {
+          "scene": "results",
+          "nodeId": "2:809"
+        },
+        {
+          "scene": "detail",
+          "nodeId": "2:826"
+        },
+        {
+          "scene": "host",
+          "nodeId": "2:845"
+        },
+        {
+          "scene": "unavailable",
+          "nodeId": "2:1092"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "identity",
+      "demoReference": "demo/journeys/j01/index.html",
+      "figmaScenes": [
+        {
+          "scene": "account",
+          "nodeId": "2:858"
+        },
+        {
+          "scene": "email",
+          "nodeId": "2:877"
+        },
+        {
+          "scene": "code",
+          "nodeId": "2:895"
+        },
+        {
+          "scene": "code-error",
+          "nodeId": "2:916"
+        },
+        {
+          "scene": "oauth",
+          "nodeId": "2:938"
+        },
+        {
+          "scene": "profile",
+          "nodeId": "2:955"
+        },
+        {
+          "scene": "profile-error",
+          "nodeId": "2:991"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "application",
+      "demoReference": "demo/journeys/j01/index.html",
+      "figmaScenes": [
+        {
+          "scene": "apply-unchecked",
+          "nodeId": "6:197"
+        },
+        {
+          "scene": "apply",
+          "nodeId": "2:1009"
+        },
+        {
+          "scene": "unknown",
+          "nodeId": "2:1032"
+        },
+        {
+          "scene": "pending",
+          "nodeId": "2:1045"
+        },
+        {
+          "scene": "withdraw",
+          "nodeId": "2:1061"
+        },
+        {
+          "scene": "withdrawn",
+          "nodeId": "2:1076"
+        },
+        {
+          "scene": "unavailable",
+          "nodeId": "2:1092"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "ai",
+      "demoReference": "demo/journeys/j01/index.html",
+      "figmaScenes": [
+        {
+          "scene": "ai-permission",
+          "nodeId": "2:1107"
+        },
+        {
+          "scene": "ai-clarify",
+          "nodeId": "2:1122"
+        },
+        {
+          "scene": "ai-results",
+          "nodeId": "2:1142"
+        },
+        {
+          "scene": "ai-explain",
+          "nodeId": "2:1161"
+        },
+        {
+          "scene": "ai-draft",
+          "nodeId": "2:1178"
+        },
+        {
+          "scene": "ai-transfer",
+          "nodeId": "2:1193"
+        },
+        {
+          "scene": "ai-unavailable",
+          "nodeId": "2:1210"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "demo",
+      "demoReference": "demo/journeys/j01/index.html",
+      "figmaScenes": [
+        {
+          "scene": "discover",
+          "nodeId": "2:715"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "acceptance",
+      "demoReference": "demo/journeys/j01/index.html",
+      "figmaScenes": [
+        {
+          "scene": "discover",
+          "nodeId": "2:715"
+        },
+        {
+          "scene": "pending",
+          "nodeId": "2:1045"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "shared-contracts",
+      "demoReference": "demo/journeys/j01/index.html",
+      "figmaScenes": [],
+      "treatment": "documented-only-contract",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    }
+  ],
+  "productAcceptanceRetained": [
+    "J01-AC01",
+    "J01-AC02",
+    "J01-AC03",
+    "J01-AC04",
+    "J01-AC05",
+    "J01-AC06",
+    "J01-AC07"
+  ],
+  "representativePath": [
+    {
+      "scene": "discover",
+      "nodeId": "2:715"
+    },
+    {
+      "scene": "detail",
+      "nodeId": "2:826"
+    },
+    {
+      "scene": "account",
+      "nodeId": "2:858"
+    },
+    {
+      "scene": "email",
+      "nodeId": "2:877"
+    },
+    {
+      "scene": "code",
+      "nodeId": "2:895"
+    },
+    {
+      "scene": "profile",
+      "nodeId": "2:955"
+    },
+    {
+      "scene": "apply-unchecked",
+      "nodeId": "6:197"
+    },
+    {
+      "scene": "apply",
+      "nodeId": "2:1009"
+    },
+    {
+      "scene": "pending",
+      "nodeId": "2:1045"
+    },
+    {
+      "scene": "withdraw",
+      "nodeId": "2:1061"
+    },
+    {
+      "scene": "withdrawn",
+      "nodeId": "2:1076"
+    }
+  ],
+  "notClaimed": [
+    "任意输入/所有多选组合",
+    "原生真机/键盘/读屏执行",
+    "真实认证/模型/业务服务",
+    "独立QA或Owner批准"
+  ],
+  "excluded": "不设计发起审批、付款/订位、群私聊、分享J13、系统提醒J14/J15、移动Web或真实服务后台。"
+}

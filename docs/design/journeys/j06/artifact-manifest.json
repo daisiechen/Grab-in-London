@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "journey": "J06",
+  "revision": "UX-r01",
+  "owner": "UX-1",
+  "status": "ux-candidate-for-owner-review",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "requirementsRevision": "PM-r01",
+  "demoRevision": "PM-r02",
+  "inputHashes": {
+    "docs/product/journeys/j06/requirements.zh-CN.md": "f61c525aa2cc344b274897146b602a1f42e28d49f20d2226be59e0bd1322c6f7",
+    "demo/journeys/j06/index.html": "916abf341ab34cdefba446813eea9f447bf1e4cf143929fe8e654b9ddfe2eb3f",
+    "docs/product/journeys/j06/coverage.json": "a2b02c6d9ccb3c292fa9b8ab5ddc94cc505007225033735f805ac6f9e55bdac1",
+    "docs/product/journeys/j06/artifact-manifest.json": "8bd68014cbfeff6b6dcbc9278844b636d35dbab119f5deb94923a416601db725"
+  },
+  "figma": {
+    "fileKey": "QtSQYeOiYwVn22lndw8uMz",
+    "url": "https://www.figma.com/design/QtSQYeOiYwVn22lndw8uMz?node-id=1-30",
+    "prototypeUrl": "https://www.figma.com/proto/QtSQYeOiYwVn22lndw8uMz?node-id=1-30&starting-point-node-id=1-30",
+    "entryNodeId": "1:30",
+    "pageId": "0:1",
+    "nativeNamedVersion": null,
+    "mutableFile": true,
+    "ownerApproved": false,
+    "nodeIds": [
+      "1:30",
+      "1:43",
+      "1:69",
+      "1:93",
+      "1:116",
+      "1:140",
+      "1:156",
+      "1:172",
+      "1:188",
+      "1:203",
+      "1:218",
+      "1:236",
+      "3:88",
+      "3:107",
+      "4:79",
+      "4:116"
+    ]
+  },
+  "stagesStarted": {
+    "PM": true,
+    "UX": true,
+    "RD": false,
+    "QA": false
+  },
+  "verification": {
+    "fileReadback": true,
+    "prototypeTargets": "all-exist",
+    "representativePath": "graph-verified",
+    "horizontalTextOverflow": [],
+    "visualScreenshots": "native-get_screenshot-reviewed",
+    "browserPrototypeReplay": "NOT_RUN",
+    "realIOS": "NOT_RUN",
+    "realServices": "NOT_RUN",
+    "independentQA": "NOT_STARTED"
+  },
+  "files": {
+    "docs/design/journeys/j06/coverage.json": "97319d661c196f923540c73538307a0fb1e20700a69265a6df3f75177371ecb1",
+    "docs/design/journeys/j06/figma-readback.json": "0770841fa95e65b6c36a3adbce6ada8b543329d01c53721dd525ccdffc6e8bec",
+    "docs/design/journeys/j06/handoff.zh-CN.md": "3a993c37260036101e394e149d15cbba57ca202bbfbfb72acbf6ca674b936d93",
+    "docs/design/journeys/j06/survey.png": "f0a121378ad9acf874f5742babb966442a04cf9e7e3836c7371590411001cf1a",
+    "tests/test_ux_j06.py": "ca50136060f43c182f19bc8ce1d7ffa8094be7984e9cf06666b0af76d6f3d595"
+  }
+}

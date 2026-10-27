@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "journey": "J05",
+  "revision": "UX-r01",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "pmCoverage": "docs/product/journeys/j05/coverage.json",
+  "sourceProjection": "按固定PM coverage的prdSection/sourceUnitHandling引用全部原始单元；不复制或改变原归属/演示效力。",
+  "requirementsRevision": "PM-r02",
+  "demoRevision": "PM-r02",
+  "requirementTrace": [
+    {
+      "prdSection": "goal",
+      "demoReference": "demo/journeys/j05/index.html",
+      "figmaScenes": [
+        {
+          "scene": "profile",
+          "nodeId": "1:30"
+        },
+        {
+          "scene": "profile-saved",
+          "nodeId": "1:78"
+        },
+        {
+          "scene": "settings",
+          "nodeId": "1:115"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "profile",
+      "demoReference": "demo/journeys/j05/index.html",
+      "figmaScenes": [
+        {
+          "scene": "profile",
+          "nodeId": "1:30"
+        },
+        {
+          "scene": "edit",
+          "nodeId": "1:45"
+        },
+        {
+          "scene": "profile-saved",
+          "nodeId": "1:78"
+        },
+        {
+          "scene": "profile-conflict",
+          "nodeId": "1:94"
+        },
+        {
+          "scene": "save-failed",
+          "nodeId": "1:285"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "privacy",
+      "demoReference": "demo/journeys/j05/index.html",
+      "figmaScenes": [
+        {
+          "scene": "settings",
+          "nodeId": "1:115"
+        },
+        {
+          "scene": "analytics-saved",
+          "nodeId": "1:137"
+        },
+        {
+          "scene": "signout",
+          "nodeId": "1:302"
+        },
+        {
+          "scene": "signedout",
+          "nodeId": "1:317"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "preferences",
+      "demoReference": "demo/journeys/j05/index.html",
+      "figmaScenes": [
+        {
+          "scene": "preferences",
+          "nodeId": "1:151"
+        },
+        {
+          "scene": "preferences-saved",
+          "nodeId": "1:189"
+        },
+        {
+          "scene": "preferences-conflict",
+          "nodeId": "1:205"
+        },
+        {
+          "scene": "delete-preferences",
+          "nodeId": "1:226"
+        },
+        {
+          "scene": "preferences-deleted",
+          "nodeId": "1:241"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "clear",
+      "demoReference": "demo/journeys/j05/index.html",
+      "figmaScenes": [
+        {
+          "scene": "clear",
+          "nodeId": "1:257"
+        },
+        {
+          "scene": "clear-next",
+          "nodeId": "1:272"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "demo",
+      "demoReference": "demo/journeys/j05/index.html",
+      "figmaScenes": [
+        {
+          "scene": "profile",
+          "nodeId": "1:30"
+        },
+        {
+          "scene": "settings",
+          "nodeId": "1:115"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "shared-contracts",
+      "demoReference": "demo/journeys/j05/index.html",
+      "figmaScenes": [],
+      "treatment": "documented-only-contract",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    }
+  ],
+  "productAcceptanceRetained": [
+    "J05-AC01",
+    "J05-AC02",
+    "J05-AC03",
+    "J05-AC04",
+    "J05-AC05"
+  ],
+  "representativePath": [
+    {
+      "scene": "profile",
+      "nodeId": "1:30"
+    },
+    {
+      "scene": "settings",
+      "nodeId": "1:115"
+    },
+    {
+      "scene": "preferences",
+      "nodeId": "1:151"
+    },
+    {
+      "scene": "preferences-saved",
+      "nodeId": "1:189"
+    },
+    {
+      "scene": "settings",
+      "nodeId": "1:115"
+    },
+    {
+      "scene": "signout",
+      "nodeId": "1:302"
+    },
+    {
+      "scene": "signedout",
+      "nodeId": "1:317"
+    }
+  ],
+  "notClaimed": [
+    "任意输入/所有多选组合",
+    "原生真机/键盘/读屏执行",
+    "真实认证/模型/业务服务",
+    "独立QA或Owner批准"
+  ],
+  "excluded": "不复制注册旅程，不新增头像上传、隐藏画像、账号删除、问卷内容、隐私管理平台或移动Web。"
+}

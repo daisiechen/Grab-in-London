@@ -1,0 +1,390 @@
+{
+  "fileKey": "PGPxBMvSWo7B2feTEapLow",
+  "flows": [
+    {
+      "nodeId": "1:30",
+      "name": "J05 · normal journey"
+    },
+    {
+      "nodeId": "1:26",
+      "name": "J05 · scenario index"
+    }
+  ],
+  "frames": [
+    {
+      "id": "1:30",
+      "name": "J05 / profile / Alex.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nAlex.\nYour public introduction\n\nNew in London and happy to meet people over a meal.\nEnglish · Books · Food\n\nOptional background appears only when you add it. Email and AI preferences are private.\nEdit introduction\nPrivacy and settings\nDiscover\nMeals\nCreate meal\nInbox\nProfile",
+      "actions": [
+        {
+          "name": "Action / Edit introduction",
+          "target": "1:45"
+        },
+        {
+          "name": "Action / Privacy and settings",
+          "target": "1:115"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 628,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:45",
+      "name": "J05 / edit / In your own words.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nIn your own words.\nThese fields are public. Changes remain a draft until saved.\nName · 2–40 characters\nAlex\nIntroduction · 20–1000 characters\nNew in London and happy to meet people over a meal.\nIn London\nLiving here\nConversation languages\nEnglish\nInterests\nBooks · Food\nOccupation / school / hometown\nOptional\nSave introduction\nCancel edits",
+      "actions": [
+        {
+          "name": "Action / Save introduction",
+          "target": "1:78"
+        },
+        {
+          "name": "Action / Cancel edits",
+          "target": "1:30"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:78",
+      "name": "J05 / profile-saved / Your introduction is saved.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nYour introduction is saved.\nAlex\nNew in London and happy to meet people over a meal.\n\nYour public introduction now shows the confirmed version.\nBack to profile\nPrivacy and settings\nDiscover\nMeals\nCreate meal\nInbox\nProfile",
+      "actions": [
+        {
+          "name": "Action / Back to profile",
+          "target": "1:30"
+        },
+        {
+          "name": "Action / Privacy and settings",
+          "target": "1:115"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 628,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:94",
+      "name": "J05 / profile-conflict / Changed elsewhere.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nChanged elsewhere.\nYour profile was updated elsewhere. Nothing was overwritten. Your proposed text is kept.\nLatest introduction\nI enjoy meeting people through food and conversation.\nYour proposed introduction\nNew in London and happy to meet people over a meal.\nReview latest and my edits\nCancel edits",
+      "actions": [
+        {
+          "name": "Action / Review latest and my edits",
+          "target": "1:45"
+        },
+        {
+          "name": "Action / Cancel edits",
+          "target": "1:30"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:115",
+      "name": "J05 / settings / Your choices.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour choices.\nYour public introduction is visible to others. Email, private feedback and AI preferences are not public.\nOptional product analytics\nOff · changes need to be saved\nSave analytics choice\nMy preferences\nSign out\nBack to profile\nDiscover\nMeals\nCreate meal\nInbox\nProfile",
+      "actions": [
+        {
+          "name": "Action / Save analytics choice",
+          "target": "1:137"
+        },
+        {
+          "name": "Action / My preferences",
+          "target": "1:151"
+        },
+        {
+          "name": "Action / Sign out",
+          "target": "1:302"
+        },
+        {
+          "name": "Action / Back to profile",
+          "target": "1:30"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 628,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:137",
+      "name": "J05 / analytics-saved / Your choice is saved.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nYour choice is saved.\nOptional product analytics: Off\n\nThe confirmed choice will be read when you open Settings again.\nBack to settings\nDiscover\nMeals\nCreate meal\nInbox\nProfile",
+      "actions": [
+        {
+          "name": "Action / Back to settings",
+          "target": "1:115"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 628,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:151",
+      "name": "J05 / preferences / My preferences.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nMy preferences.\nSaved only when you confirm. These help order results; they do not silently filter out meals.\nArea\nSoho\nBudget preference\nUp to £35\nTable size · including host\n4 people\nHost-reported dietary options\nVegetarian options\nConversation language\nEnglish\nAtmosphere\nEasy conversation\nDates, exact times and cuisine are for the current query, not long-term preferences.\nConfirm and save preferences\nDelete saved preferences\nUse any budget this conversation\nCancel",
+      "actions": [
+        {
+          "name": "Action / Confirm and save preferences",
+          "target": "1:189"
+        },
+        {
+          "name": "Action / Delete saved preferences",
+          "target": "1:226"
+        },
+        {
+          "name": "Action / Use any budget this conversation",
+          "target": "1:257"
+        },
+        {
+          "name": "Action / Cancel",
+          "target": "1:115"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:189",
+      "name": "J05 / preferences-saved / Preferences saved.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nPreferences saved.\nArea: Soho · Budget: up to £35\nTable size: 4 · Vegetarian options\nEnglish · Easy conversation\n\nConfirmed preferences belong to your account. Device conversations do not sync between devices.\nReview preferences\nBack to settings",
+      "actions": [
+        {
+          "name": "Action / Review preferences",
+          "target": "1:151"
+        },
+        {
+          "name": "Action / Back to settings",
+          "target": "1:115"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:205",
+      "name": "J05 / preferences-conflict / Review your preferences.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nReview your preferences.\nAnother session changed your preferences. Nothing was overwritten.\nLatest saved budget\nUp to £45\nYour proposed budget\nUp to £35\nReview and confirm\nCancel",
+      "actions": [
+        {
+          "name": "Action / Review and confirm",
+          "target": "1:151"
+        },
+        {
+          "name": "Action / Cancel",
+          "target": "1:115"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:226",
+      "name": "J05 / delete-preferences / Remove saved preferences?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nRemove saved preferences?\nFuture searches and active assistant context will stop using the old values. Your meal introductions and submitted applications stay unchanged.\nDelete preferences\nKeep preferences",
+      "actions": [
+        {
+          "name": "Action / Delete preferences",
+          "target": "1:241"
+        },
+        {
+          "name": "Action / Keep preferences",
+          "target": "1:151"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:241",
+      "name": "J05 / preferences-deleted / Saved preferences removed.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nSaved preferences removed.\nOld values will no longer be used to order results. Active assistant candidates based on them are invalid. Your unsent meal introduction is kept.\nBack to settings\nSet preferences again",
+      "actions": [
+        {
+          "name": "Action / Back to settings",
+          "target": "1:115"
+        },
+        {
+          "name": "Action / Set preferences again",
+          "target": "1:151"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:257",
+      "name": "J05 / clear / Any budget, this conversation.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nAny budget, this conversation.\nYour explicit “any budget” condition clears the budget for this conversation. The saved £35 preference does not return on the next turn.\n\nDiscover filters and your original meal-editor draft stay unchanged.\nAsk again with these conditions\nBack to preferences",
+      "actions": [
+        {
+          "name": "Action / Ask again with these conditions",
+          "target": "1:272"
+        },
+        {
+          "name": "Action / Back to preferences",
+          "target": "1:151"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:272",
+      "name": "J05 / clear-next / Still any budget.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nStill any budget.\nThis turn has no budget filter and does not reapply the old budget preference. Other confirmed conditions remain.\n\nA new conversation clears temporary conditions; it keeps confirmed account preferences and your original meal-editor draft.\nBack to preferences",
+      "actions": [
+        {
+          "name": "Action / Back to preferences",
+          "target": "1:151"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:285",
+      "name": "J05 / save-failed / Your changes are kept.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour changes are kept.\nWe couldn’t save yet. No server update has been confirmed. Your proposed values are kept so you can review and retry.\nReview profile edits\nReview preference changes\nBack to settings",
+      "actions": [
+        {
+          "name": "Action / Review profile edits",
+          "target": "1:45"
+        },
+        {
+          "name": "Action / Review preference changes",
+          "target": "1:151"
+        },
+        {
+          "name": "Action / Back to settings",
+          "target": "1:115"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:302",
+      "name": "J05 / signout / Sign out?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nSign out?\nThis device will stop showing your private account content. Saved account preferences are not deleted. Unsent account memory and temporary assistant context on this device will be cleared.\nSign out\nStay signed in",
+      "actions": [
+        {
+          "name": "Action / Sign out",
+          "target": "1:317"
+        },
+        {
+          "name": "Action / Stay signed in",
+          "target": "1:115"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:317",
+      "name": "J05 / signedout / Fancy a bite?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nFancy a bite?\nYou’re browsing as a visitor. Private account content is no longer shown. Signing out did not delete your account or confirmed account preferences.",
+      "actions": [],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    }
+  ],
+  "fonts": [
+    "Arial"
+  ],
+  "textHorizontalOverflow": []
+}

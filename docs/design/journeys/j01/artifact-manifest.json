@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "journey": "J01",
+  "revision": "UX-r01",
+  "owner": "UX-1",
+  "status": "ux-candidate-for-owner-review",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "requirementsRevision": "PM-r01",
+  "demoRevision": "PM-r02",
+  "inputHashes": {
+    "docs/product/journeys/j01/requirements.zh-CN.md": "af6f88ac83dbf85dc3fe103fcc6bc1ae445ecafb630fb8fa68fe0be9eacb1568",
+    "demo/journeys/j01/index.html": "91464863d9c58380592a7d8bea3279fa690479bc74e1a52caa7ed5ee0d5a09ce",
+    "docs/product/journeys/j01/coverage.json": "d694e66eb87e67bae8fe8bbfd280ad9ad48fccb907f4a62391d545864b534ff8",
+    "docs/product/journeys/j01/artifact-manifest.json": "fc41ff650ad57cae8b88911a801129b59282a14e6da79115046049256d9e4533"
+  },
+  "figma": {
+    "fileKey": "2JKGRfwDoZnM9Ne0b6H4Np",
+    "url": "https://www.figma.com/design/2JKGRfwDoZnM9Ne0b6H4Np?node-id=2-715",
+    "prototypeUrl": "https://www.figma.com/proto/2JKGRfwDoZnM9Ne0b6H4Np?node-id=2-715&starting-point-node-id=2-715",
+    "entryNodeId": "2:715",
+    "pageId": "0:1",
+    "nativeNamedVersion": null,
+    "mutableFile": true,
+    "ownerApproved": false,
+    "nodeIds": [
+      "2:715",
+      "2:741",
+      "2:785",
+      "2:809",
+      "2:826",
+      "2:845",
+      "2:858",
+      "2:877",
+      "2:895",
+      "2:916",
+      "2:938",
+      "2:955",
+      "2:991",
+      "2:1009",
+      "2:1032",
+      "2:1045",
+      "2:1061",
+      "2:1076",
+      "2:1092",
+      "2:1107",
+      "2:1122",
+      "2:1142",
+      "2:1161",
+      "2:1178",
+      "2:1193",
+      "2:1210",
+      "6:197"
+    ]
+  },
+  "stagesStarted": {
+    "PM": true,
+    "UX": true,
+    "RD": false,
+    "QA": false
+  },
+  "verification": {
+    "fileReadback": true,
+    "prototypeTargets": "all-exist",
+    "representativePath": "graph-verified",
+    "horizontalTextOverflow": [],
+    "visualScreenshots": "native-get_screenshot-reviewed",
+    "browserPrototypeReplay": "NOT_RUN",
+    "realIOS": "NOT_RUN",
+    "realServices": "NOT_RUN",
+    "independentQA": "NOT_STARTED"
+  },
+  "files": {
+    "docs/design/journeys/j01/coverage.json": "b884b5f261a24bc97cf3cba7cbe12e10a7f93e7f18ea8eb031afb2dc49fa89a3",
+    "docs/design/journeys/j01/entry.png": "03219acd3900da927be87bebc61750be34226725eeb83dcf1b3bf3b056ef5828",
+    "docs/design/journeys/j01/figma-readback.json": "8ac226d8d1763ed313b02466d8e15e8226e2aaf146228e5d4d4556dff1014e24",
+    "docs/design/journeys/j01/handoff.zh-CN.md": "55b81acbe023c6a3126092c7743ff866f44b8ff6e60cd96e5aa304c5c2bd0c24",
+    "tests/test_ux_j01.py": "dcb6170c2cc6468dc9021e0e475d6107783d2cda84d75b4f1e4fd2da9b0662fb"
+  }
+}

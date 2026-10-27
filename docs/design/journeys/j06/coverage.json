@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "journey": "J06",
+  "revision": "UX-r01",
+  "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "pmCoverage": "docs/product/journeys/j06/coverage.json",
+  "sourceProjection": "按固定PM coverage的prdSection/sourceUnitHandling引用全部原始单元；不复制或改变原归属/演示效力。",
+  "requirementsRevision": "PM-r01",
+  "demoRevision": "PM-r02",
+  "requirementTrace": [
+    {
+      "prdSection": "goal",
+      "demoReference": "demo/journeys/j06/index.html",
+      "figmaScenes": [
+        {
+          "scene": "settings",
+          "nodeId": "1:30"
+        },
+        {
+          "scene": "survey",
+          "nodeId": "1:43"
+        },
+        {
+          "scene": "saved",
+          "nodeId": "1:156"
+        },
+        {
+          "scene": "settings-saved",
+          "nodeId": "1:188"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "survey",
+      "demoReference": "demo/journeys/j06/index.html",
+      "figmaScenes": [
+        {
+          "scene": "survey",
+          "nodeId": "1:43"
+        },
+        {
+          "scene": "selected",
+          "nodeId": "1:69"
+        },
+        {
+          "scene": "yes-selected",
+          "nodeId": "1:93"
+        },
+        {
+          "scene": "no-selected",
+          "nodeId": "1:116"
+        },
+        {
+          "scene": "yes-only",
+          "nodeId": "3:88"
+        },
+        {
+          "scene": "no-reason",
+          "nodeId": "4:79"
+        },
+        {
+          "scene": "saved",
+          "nodeId": "1:156"
+        },
+        {
+          "scene": "saved-yes",
+          "nodeId": "1:172"
+        },
+        {
+          "scene": "saved-no",
+          "nodeId": "1:140"
+        },
+        {
+          "scene": "saved-yes-only",
+          "nodeId": "3:107"
+        },
+        {
+          "scene": "saved-no-reason",
+          "nodeId": "4:116"
+        },
+        {
+          "scene": "empty-error",
+          "nodeId": "1:203"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "recovery",
+      "demoReference": "demo/journeys/j06/index.html",
+      "figmaScenes": [
+        {
+          "scene": "save-failed",
+          "nodeId": "1:218"
+        },
+        {
+          "scene": "unknown",
+          "nodeId": "1:236"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "privacy",
+      "demoReference": "demo/journeys/j06/index.html",
+      "figmaScenes": [
+        {
+          "scene": "saved",
+          "nodeId": "1:156"
+        },
+        {
+          "scene": "settings-saved",
+          "nodeId": "1:188"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "demo",
+      "demoReference": "demo/journeys/j06/index.html",
+      "figmaScenes": [
+        {
+          "scene": "settings",
+          "nodeId": "1:30"
+        },
+        {
+          "scene": "survey",
+          "nodeId": "1:43"
+        },
+        {
+          "scene": "saved",
+          "nodeId": "1:156"
+        }
+      ],
+      "treatment": "design-and-representative-prototype",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    },
+    {
+      "prdSection": "shared-contracts",
+      "demoReference": "demo/journeys/j06/index.html",
+      "figmaScenes": [],
+      "treatment": "documented-only-contract",
+      "boundary": "原PM coverage中documented-only/历史/交付上下文保持原效力；节点只证明所列代表状态，不关闭真实服务与全部矩阵。"
+    }
+  ],
+  "productAcceptanceRetained": [
+    "J06-AC01",
+    "J06-AC02",
+    "J06-AC03",
+    "J06-AC04",
+    "J06-AC05"
+  ],
+  "representativePath": [
+    {
+      "scene": "settings",
+      "nodeId": "1:30"
+    },
+    {
+      "scene": "survey",
+      "nodeId": "1:43"
+    },
+    {
+      "scene": "selected",
+      "nodeId": "1:69"
+    },
+    {
+      "scene": "saved",
+      "nodeId": "1:156"
+    },
+    {
+      "scene": "settings-saved",
+      "nodeId": "1:188"
+    },
+    {
+      "scene": "saved",
+      "nodeId": "1:156"
+    }
+  ],
+  "notClaimed": [
+    "任意输入/所有多选组合",
+    "原生真机/键盘/读屏执行",
+    "真实认证/模型/业务服务",
+    "独立QA或Owner批准"
+  ],
+  "excluded": "不新增问题、长自由文本、公开结果、饭局评分或J12分析页面；不做移动Web。"
+}

@@ -1,0 +1,451 @@
+{
+  "fileKey": "QtSQYeOiYwVn22lndw8uMz",
+  "flows": [
+    {
+      "nodeId": "1:30",
+      "name": "J06 · normal journey"
+    },
+    {
+      "nodeId": "1:26",
+      "name": "J06 · scenario index"
+    }
+  ],
+  "frames": [
+    {
+      "id": "1:30",
+      "name": "J06 / settings / Your choices.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour choices.\nSharing your thoughts about Fancy is optional. You can answer even if you haven’t attended a meal.\n\nProduct survey\nTell us about Fancy as a whole, whenever you like.\nShare my thoughts\nDiscover\nMeals\nCreate meal\nInbox\nProfile",
+      "actions": [
+        {
+          "name": "Action / Share my thoughts",
+          "target": "1:43"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 628,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:43",
+      "name": "J06 / survey / How does Fancy feel?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nHow does Fancy feel?\nOptional · private\nThis is about the product overall, not a rating of one meal or another person.\nWould you join Fancy again?\nYes\nNo\nNot answered\nWhat affects your choice?\n☐ Company\n☐ Conversation\n☐ Coordination\n☐ Expectations\n☐ Venue\n☐ Cost\n☐ Other\nChoose any that apply. You can leave reasons blank. Answer at least one part to save.\nSave my feedback\nCancel",
+      "actions": [
+        {
+          "name": "Choice / Yes",
+          "target": "3:88"
+        },
+        {
+          "name": "Choice / No",
+          "target": "1:116"
+        },
+        {
+          "name": "Checkbox / Conversation",
+          "target": "1:69"
+        },
+        {
+          "name": "Action / Save my feedback",
+          "target": "1:203"
+        },
+        {
+          "name": "Action / Cancel",
+          "target": "1:30"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:69",
+      "name": "J06 / selected / How does Fancy feel?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nHow does Fancy feel?\nYour changes have not been saved.\nWould you join Fancy again?\nYes\nNo\nNot answered\nWhat affects your choice?\n☐ Company\n☑ Conversation\n☐ Coordination\n☐ Expectations\n☐ Venue\n☐ Cost\n☐ Other\nYou can save a reason without answering Yes or No.\nSave my feedback\nCancel",
+      "actions": [
+        {
+          "name": "Choice / Yes",
+          "target": "1:93"
+        },
+        {
+          "name": "Choice / No",
+          "target": "4:79"
+        },
+        {
+          "name": "Checkbox / Conversation",
+          "target": "1:43"
+        },
+        {
+          "name": "Action / Save my feedback",
+          "target": "1:156"
+        },
+        {
+          "name": "Action / Cancel",
+          "target": "1:30"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:93",
+      "name": "J06 / yes-selected / How does Fancy feel?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nHow does Fancy feel?\nYour changes have not been saved.\nWould you join Fancy again?\nYes\nNo\nNot answered\nWhat affects your choice?\n☐ Company\n☑ Conversation\n☐ Coordination\n☐ Expectations\n☐ Venue\n☐ Cost\n☐ Other\nSave my feedback\nCancel",
+      "actions": [
+        {
+          "name": "Choice / No",
+          "target": "4:79"
+        },
+        {
+          "name": "Choice / Not answered",
+          "target": "1:69"
+        },
+        {
+          "name": "Checkbox / Conversation",
+          "target": "3:88"
+        },
+        {
+          "name": "Action / Save my feedback",
+          "target": "1:172"
+        },
+        {
+          "name": "Action / Cancel",
+          "target": "1:30"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:116",
+      "name": "J06 / no-selected / How does Fancy feel?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nHow does Fancy feel?\nYour changes have not been saved.\nWould you join Fancy again?\nYes\nNo\nNot answered\nWhat affects your choice?\n☐ Company\n☐ Conversation\n☐ Coordination\n☐ Expectations\n☐ Venue\n☐ Cost\n☐ Other\nA Yes or No answer can be saved without a reason.\nSave my feedback\nCancel",
+      "actions": [
+        {
+          "name": "Choice / Yes",
+          "target": "3:88"
+        },
+        {
+          "name": "Choice / Not answered",
+          "target": "1:43"
+        },
+        {
+          "name": "Checkbox / Conversation",
+          "target": "4:79"
+        },
+        {
+          "name": "Action / Save my feedback",
+          "target": "1:140"
+        },
+        {
+          "name": "Action / Cancel",
+          "target": "1:30"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:140",
+      "name": "J06 / saved-no / Thanks for sharing.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nThanks for sharing.\nYour latest feedback\nJoin again: No\nReasons: None selected\n\nYour latest confirmed version is saved. Not answered is a separate value.\nUpdate my feedback\nBack to settings",
+      "actions": [
+        {
+          "name": "Action / Update my feedback",
+          "target": "1:116"
+        },
+        {
+          "name": "Action / Back to settings",
+          "target": "1:188"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:156",
+      "name": "J06 / saved / Thanks for sharing.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nThanks for sharing.\nYour latest feedback\nJoin again: Not answered\nReasons: Conversation\n\nYour feedback is saved. It is private and is not added to a meal review.\nUpdate my feedback\nBack to settings",
+      "actions": [
+        {
+          "name": "Action / Update my feedback",
+          "target": "1:69"
+        },
+        {
+          "name": "Action / Back to settings",
+          "target": "1:188"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:172",
+      "name": "J06 / saved-yes / Thanks for sharing.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nThanks for sharing.\nYour latest feedback\nJoin again: Yes\nReasons: Conversation\n\nYour latest version replaces your previous answer for analysis. You are not counted twice.\nUpdate my feedback\nBack to settings",
+      "actions": [
+        {
+          "name": "Action / Update my feedback",
+          "target": "1:93"
+        },
+        {
+          "name": "Action / Back to settings",
+          "target": "1:188"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:188",
+      "name": "J06 / settings-saved / Your choices.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour choices.\nProduct survey\nYou have saved feedback. You can view or update it.\nView my feedback\nUpdate my feedback\nDiscover\nMeals\nCreate meal\nInbox\nProfile",
+      "actions": [
+        {
+          "name": "Action / View my feedback",
+          "target": "1:156"
+        },
+        {
+          "name": "Action / Update my feedback",
+          "target": "1:69"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 628,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:203",
+      "name": "J06 / empty-error / Answer at least one part.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nAnswer at least one part.\nChoose Yes or No, or select a reason. Not answered is not recorded as No. Your current choices are kept.\nBack to my answers\nCancel",
+      "actions": [
+        {
+          "name": "Action / Back to my answers",
+          "target": "1:43"
+        },
+        {
+          "name": "Action / Cancel",
+          "target": "1:30"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:218",
+      "name": "J06 / save-failed / Your answers are kept.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour answers are kept.\nWe couldn’t save your feedback. Nothing new has been confirmed. Retry with the same choices or return to the last saved version.\nYour proposed answer\nJoin again: Not answered\nReasons: Conversation\nRetry saving\nReturn to last saved feedback",
+      "actions": [
+        {
+          "name": "Action / Retry saving",
+          "target": "1:156"
+        },
+        {
+          "name": "Action / Return to last saved feedback",
+          "target": "1:188"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:236",
+      "name": "J06 / unknown / Let’s check your feedback.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nLet’s check your feedback.\nWe couldn’t confirm the response. We’ll check the original save before making another request. Your choices are kept.\nCheck original save",
+      "actions": [
+        {
+          "name": "Action / Check original save",
+          "target": "1:156"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "3:88",
+      "name": "J06 / yes-only / How does Fancy feel?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nHow does Fancy feel?\nYour changes have not been saved.\nWould you join Fancy again?\nYes\nNo\nNot answered\nWhat affects your choice?\n☐ Company\n☐ Conversation\n☐ Coordination\n☐ Expectations\n☐ Venue\n☐ Cost\n☐ Other\nA Yes or No answer can be saved without a reason.\nSave my feedback\nCancel",
+      "actions": [
+        {
+          "name": "Choice / No",
+          "target": "1:116"
+        },
+        {
+          "name": "Choice / Not answered",
+          "target": "1:43"
+        },
+        {
+          "name": "Checkbox / Conversation",
+          "target": "1:93"
+        },
+        {
+          "name": "Action / Save my feedback",
+          "target": "3:107"
+        },
+        {
+          "name": "Action / Cancel",
+          "target": "1:30"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "3:107",
+      "name": "J06 / saved-yes-only / Thanks for sharing.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nThanks for sharing.\nYour latest feedback\nJoin again: Yes\nReasons: None selected\n\nYour latest confirmed version is saved. Not answered is a separate value.\nUpdate my feedback\nBack to settings",
+      "actions": [
+        {
+          "name": "Action / Update my feedback",
+          "target": "3:88"
+        },
+        {
+          "name": "Action / Back to settings",
+          "target": "1:188"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "4:79",
+      "name": "J06 / no-reason / How does Fancy feel?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nHow does Fancy feel?\nYour changes have not been saved.\nWould you join Fancy again?\nYes\nNo\nNot answered\nWhat affects your choice?\n☐ Company\n☑ Conversation\n☐ Coordination\n☐ Expectations\n☐ Venue\n☐ Cost\n☐ Other\nSave my feedback\nCancel",
+      "actions": [
+        {
+          "name": "Choice / Yes",
+          "target": "1:93"
+        },
+        {
+          "name": "Choice / Not answered",
+          "target": "1:69"
+        },
+        {
+          "name": "Checkbox / Conversation",
+          "target": "1:116"
+        },
+        {
+          "name": "Action / Save my feedback",
+          "target": "4:116"
+        },
+        {
+          "name": "Action / Cancel",
+          "target": "1:30"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "4:116",
+      "name": "J06 / saved-no-reason / Thanks for sharing.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nThanks for sharing.\nYour latest feedback\nJoin again: No\nReasons: Conversation\n\nYour latest confirmed version is saved. Not answered is a separate value.\nUpdate my feedback\nBack to settings",
+      "actions": [
+        {
+          "name": "Action / Update my feedback",
+          "target": "4:79"
+        },
+        {
+          "name": "Action / Back to settings",
+          "target": "1:188"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    }
+  ],
+  "fonts": [
+    "Arial"
+  ],
+  "textHorizontalOverflow": []
+}

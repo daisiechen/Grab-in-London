@@ -1,0 +1,708 @@
+{
+  "fileKey": "2JKGRfwDoZnM9Ne0b6H4Np",
+  "flows": [
+    {
+      "nodeId": "2:715",
+      "name": "J01 · normal journey"
+    },
+    {
+      "nodeId": "2:711",
+      "name": "J01 · scenario index"
+    }
+  ],
+  "frames": [
+    {
+      "id": "2:715",
+      "name": "J01 / discover / Fancy a bite?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nFancy a bite?\nFind a table that fits your day.\nLondon · Fri 30 Oct\nSoho · 1\nFriday supper · Soho\nFri 30 Oct · 19:00\nUp to £35 · 2 places left · English\nFilters\nView meal\nAsk Fancy\nDiscover\nMeals\nCreate meal\nInbox\nProfile",
+      "actions": [
+        {
+          "name": "Action / Filters",
+          "target": "2:741"
+        },
+        {
+          "name": "Action / View meal",
+          "target": "2:826"
+        },
+        {
+          "name": "Action / Ask Fancy",
+          "target": "2:1107"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 628,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:741",
+      "name": "J01 / filters / Your kind of table.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour kind of table.\nChanges apply only when you choose Show meals.\nDates\nFri 30 Oct · Sat 31 Oct\nArea\nSoho\nMaximum budget\nUp to £35\nTable size\n4 including host\nConversation language\nEnglish\nCuisine\nAny\nHost-reported dietary option\nAny\nAtmosphere\nEasy conversation\nMeal or restaurant\nAny keyword\nShow meals\nClear draft\nCancel changes",
+      "actions": [
+        {
+          "name": "Action / Show meals",
+          "target": "2:809"
+        },
+        {
+          "name": "Action / Clear draft",
+          "target": "2:785"
+        },
+        {
+          "name": "Action / Cancel changes",
+          "target": "2:715"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:785",
+      "name": "J01 / filters-clear / Choose your filters.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nChoose your filters.\nOnly this draft has been cleared. Your current results remain until you apply.\nDates\nAny future date\nArea / budget / table size\nAny\nLanguage / cuisine / dietary / atmosphere\nAny\nShow meals\nCancel changes",
+      "actions": [
+        {
+          "name": "Action / Show meals",
+          "target": "2:715"
+        },
+        {
+          "name": "Action / Cancel changes",
+          "target": "2:715"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:809",
+      "name": "J01 / results / A table in Soho.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nA table in Soho.\n1 meal · London local time\nFriday supper · 30 Oct, 19:00\nUp to £35 per person · Table for 4\n2 confirmed including host · 2 places left\nView meal\nChange filters\nBack to map\nDiscover\nMeals\nCreate meal\nInbox\nProfile",
+      "actions": [
+        {
+          "name": "Action / View meal",
+          "target": "2:826"
+        },
+        {
+          "name": "Action / Change filters",
+          "target": "2:741"
+        },
+        {
+          "name": "Action / Back to map",
+          "target": "2:715"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 628,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:826",
+      "name": "J01 / detail / Friday supper.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nFriday supper.\nJuniper Table · Soho, London\nFri 30 Oct · 19:00\nTable for 4 including host · 2 confirmed\nEstimated up to £35 per person\n\nA relaxed table for good food and an easy conversation.\n\nHost books externally; pay at the restaurant.\nHost-reported dietary options are not an allergy guarantee.\nApplications close 60 minutes before the meal.\nMeet Rowan\nApply to join\nAsk Fancy\nBack to meals",
+      "actions": [
+        {
+          "name": "Action / Meet Rowan",
+          "target": "2:845"
+        },
+        {
+          "name": "Action / Apply to join",
+          "target": "2:858"
+        },
+        {
+          "name": "Action / Ask Fancy",
+          "target": "2:1107"
+        },
+        {
+          "name": "Action / Back to meals",
+          "target": "2:809"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:845",
+      "name": "J01 / host / Meet Rowan.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nMeet Rowan.\nLiving in London · English · Books · Travel\n\nI enjoy food discoveries and getting to know the neighbourhood.\n\nOnly public introduction and published feedback appear here. No public star ranking.\nBack to meal",
+      "actions": [
+        {
+          "name": "Action / Back to meal",
+          "target": "2:826"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:858",
+      "name": "J01 / account / Your table is waiting.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour table is waiting.\nSign in or create your account to apply. You’ll return to this same meal. No application is sent by signing in.\nContinue with email\nContinue with Google\nContinue with Apple\nBack to meal",
+      "actions": [
+        {
+          "name": "Action / Continue with email",
+          "target": "2:877"
+        },
+        {
+          "name": "Action / Continue with Google",
+          "target": "2:938"
+        },
+        {
+          "name": "Action / Continue with Apple",
+          "target": "2:938"
+        },
+        {
+          "name": "Action / Back to meal",
+          "target": "2:826"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:877",
+      "name": "J01 / email / Your email. Your way in.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour email. Your way in.\nA code lets you sign in or create an account. We use the same public response for both.\nEmail address\nalex@example.test\nSend code\nCancel sign-in",
+      "actions": [
+        {
+          "name": "Action / Send code",
+          "target": "2:895"
+        },
+        {
+          "name": "Action / Cancel sign-in",
+          "target": "2:826"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:895",
+      "name": "J01 / code / Check your inbox.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nCheck your inbox.\nEnter the 6-digit code for alex@example.test.\nYour code is valid for 5 minutes.\nCode\n123456\nResend code available after 30 seconds. The newest code replaces the old one.\nVerify email\nUse another email\nCancel sign-in",
+      "actions": [
+        {
+          "name": "Action / Verify email",
+          "target": "2:955"
+        },
+        {
+          "name": "Action / Use another email",
+          "target": "2:877"
+        },
+        {
+          "name": "Action / Cancel sign-in",
+          "target": "2:826"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:916",
+      "name": "J01 / code-error / Check your code.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nCheck your code.\nThat code is incorrect or has expired. Your email is kept. No account state or application has been confirmed.\nCode\nEnter the latest code\nVerify latest code\nResend code\nUse another email\nCancel sign-in",
+      "actions": [
+        {
+          "name": "Action / Verify latest code",
+          "target": "2:955"
+        },
+        {
+          "name": "Action / Resend code",
+          "target": "2:895"
+        },
+        {
+          "name": "Action / Use another email",
+          "target": "2:877"
+        },
+        {
+          "name": "Action / Cancel sign-in",
+          "target": "2:826"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:938",
+      "name": "J01 / oauth / Continue securely.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nContinue securely.\nContinue with your selected linked identity provider, then return to Fancy. Fancy checks whether your introduction is complete.\n\nProvider access, cancellation and failure use the real provider flow in the app.\nReturn with a new account\nReturn with an existing complete account\nCancel",
+      "actions": [
+        {
+          "name": "Action / Return with a new account",
+          "target": "2:955"
+        },
+        {
+          "name": "Action / Return with an existing complete account",
+          "target": "6:197"
+        },
+        {
+          "name": "Action / Cancel",
+          "target": "2:826"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:955",
+      "name": "J01 / profile / A little about you.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nA little about you.\nThis introduction is public. Share only what you want others to know.\nName · 2–40 characters\nAlex\nIntroduction · 20–1000 characters\nNew in London and happy to meet people over a meal.\nIn London\nLiving here\nConversation languages\nEnglish\nInterests\nBooks · Food\nOccupation / school / hometown\nOptional\nConfirmations\n☑ I’m 18 or older.\n☑ I agree to the community rules.\nSave introduction and continue\nBack to meal",
+      "actions": [
+        {
+          "name": "Action / Save introduction and continue",
+          "target": "6:197"
+        },
+        {
+          "name": "Action / Back to meal",
+          "target": "2:826"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:991",
+      "name": "J01 / profile-error / Your introduction is kept.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour introduction is kept.\nWe couldn’t save it yet. Check required fields or try again. You have not applied to the meal.\nYour introduction\nNew in London and happy to meet people over a meal.\nReview and retry\nBack to meal",
+      "actions": [
+        {
+          "name": "Action / Review and retry",
+          "target": "2:955"
+        },
+        {
+          "name": "Action / Back to meal",
+          "target": "2:826"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:1009",
+      "name": "J01 / apply / Say a little hello.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nSay a little hello.\nFriday supper · Juniper Table\nWe’ve checked the latest availability. Pending applications do not reserve a seat.\nYour introduction · 20–300 characters\nHi Rowan! I’m new to the neighbourhood and would enjoy joining your table.\nArrangements\n☑ I’ve read the arrangements and understand the host reviews applications.\nSend application\nHelp with my introduction\nBack to meal",
+      "actions": [
+        {
+          "name": "Field / Arrangements",
+          "target": "6:197"
+        },
+        {
+          "name": "Action / Send application",
+          "target": "2:1045"
+        },
+        {
+          "name": "Action / Help with my introduction",
+          "target": "2:1178"
+        },
+        {
+          "name": "Action / Back to meal",
+          "target": "2:826"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:1032",
+      "name": "J01 / unknown / Let’s check that.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nLet’s check that.\nWe couldn’t confirm the response. Your introduction is kept. Check the original request before trying again.\nCheck application status",
+      "actions": [
+        {
+          "name": "Action / Check application status",
+          "target": "2:1045"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:1045",
+      "name": "J01 / pending / Your hello is sent.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nYour hello is sent.\nFriday supper\nWaiting for the host\n\nYou do not have a confirmed seat or access to the group yet.\nReference: SYN-APP-01\nWithdraw application\nBack to meal\nDiscover\nMeals\nCreate meal\nInbox\nProfile",
+      "actions": [
+        {
+          "name": "Action / Withdraw application",
+          "target": "2:1061"
+        },
+        {
+          "name": "Action / Back to meal",
+          "target": "2:826"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 628,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:1061",
+      "name": "J01 / withdraw / Withdraw your hello?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nWithdraw your hello?\nThe host will no longer review this application. If the table is still open, you may apply again.\nWithdraw application\nKeep application",
+      "actions": [
+        {
+          "name": "Action / Withdraw application",
+          "target": "2:1076"
+        },
+        {
+          "name": "Action / Keep application",
+          "target": "2:1045"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:1076",
+      "name": "J01 / withdrawn / Application withdrawn.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nApplication withdrawn.\nNo seat was reserved. If this table is still open and you remain eligible, you can send a new application. Your previous request remains in history.\nApply again\nBack to meals\nDiscover\nMeals\nCreate meal\nInbox\nProfile",
+      "actions": [
+        {
+          "name": "Action / Apply again",
+          "target": "6:197"
+        },
+        {
+          "name": "Action / Back to meals",
+          "target": "2:809"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 628,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:1092",
+      "name": "J01 / unavailable / This table is unavailable.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nThis table is unavailable.\nThe meal is full, closed, cancelled or no longer open to a new application. Your introduction is kept. A declined application cannot be resubmitted for this meal.\nBack to meals\nRead meal details",
+      "actions": [
+        {
+          "name": "Action / Back to meals",
+          "target": "2:809"
+        },
+        {
+          "name": "Action / Read meal details",
+          "target": "2:826"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:1107",
+      "name": "J01 / ai-permission / A little help from Fancy.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nA little help from Fancy.\nFind meals, understand your status or draft your introduction. You choose what to send.\n\nBefore real use, review DeepSeek’s processing region, training and retention terms. Only your request and the necessary permitted context are shared. Private messages and feedback are not included.\nAgree and continue\nKeep browsing without AI",
+      "actions": [
+        {
+          "name": "Action / Agree and continue",
+          "target": "2:1122"
+        },
+        {
+          "name": "Action / Keep browsing without AI",
+          "target": "2:715"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:1122",
+      "name": "J01 / ai-clarify / What do you mean by Spanish?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nWhat do you mean by Spanish?\nI can help with Spanish food or a Spanish-language conversation. Your existing filters have not changed.\nYour question\nSpanish in Soho on Friday, please.\nSpanish food\nSpanish conversation\nClose assistant",
+      "actions": [
+        {
+          "name": "Action / Spanish food",
+          "target": "2:1142"
+        },
+        {
+          "name": "Action / Spanish conversation",
+          "target": "2:1142"
+        },
+        {
+          "name": "Action / Close assistant",
+          "target": "2:715"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:1142",
+      "name": "J01 / ai-results / A table that fits.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nA table that fits.\nFriday supper · Soho · 19:00\nUp to £35 per person · 2 places left\n\nThese facts come from the permitted meal record. Availability is checked again before you apply.\n\nSaved preferences help order results. Your explicit conditions filter them; “any budget” stays cleared.\nView meal\nCompare and explain\nDraft an introduction\nClose assistant",
+      "actions": [
+        {
+          "name": "Action / View meal",
+          "target": "2:826"
+        },
+        {
+          "name": "Action / Compare and explain",
+          "target": "2:1161"
+        },
+        {
+          "name": "Action / Draft an introduction",
+          "target": "2:1178"
+        },
+        {
+          "name": "Action / Close assistant",
+          "target": "2:715"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:1161",
+      "name": "J01 / ai-explain / Why this table?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nWhy this table?\nIt matches your confirmed Friday and Soho conditions. Saved preferences only affect ordering. Pending means the host has not confirmed a place.\n\nNo meals matching your conditions is different from a data or model failure.\nBack to results\nUse any budget this conversation\nClose assistant",
+      "actions": [
+        {
+          "name": "Action / Back to results",
+          "target": "2:1142"
+        },
+        {
+          "name": "Action / Use any budget this conversation",
+          "target": "2:1142"
+        },
+        {
+          "name": "Action / Close assistant",
+          "target": "2:715"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:1178",
+      "name": "J01 / ai-draft / Your introduction, your choice.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour introduction, your choice.\nSuggested text\n\nHi Rowan! I’m interested in a relaxed supper and meeting people in the neighbourhood. I’d enjoy joining your table.\n\nA draft does not send an application or reserve a place.\nTransfer to introduction\nKeep writing myself",
+      "actions": [
+        {
+          "name": "Action / Transfer to introduction",
+          "target": "2:1193"
+        },
+        {
+          "name": "Action / Keep writing myself",
+          "target": "6:197"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:1193",
+      "name": "J01 / ai-transfer / Keep your words?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nKeep your words?\nYour introduction already has text. Transferring this suggestion will replace that text only if you choose Replace.\n\nThe meal, account, eligibility and 20–300 character limit are checked again. Nothing is sent yet.\nKeep my text\nReplace with draft\nCancel transfer",
+      "actions": [
+        {
+          "name": "Action / Keep my text",
+          "target": "6:197"
+        },
+        {
+          "name": "Action / Replace with draft",
+          "target": "6:197"
+        },
+        {
+          "name": "Action / Cancel transfer",
+          "target": "2:1178"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "2:1210",
+      "name": "J01 / ai-unavailable / You can keep going.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYou can keep going.\nFancy’s assistant is unavailable or the allowance is reached. Your unsent text is kept. No extra charge, automatic retry or application is made.\nWrite my introduction\nBack to meals",
+      "actions": [
+        {
+          "name": "Action / Write my introduction",
+          "target": "6:197"
+        },
+        {
+          "name": "Action / Back to meals",
+          "target": "2:715"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "6:197",
+      "name": "J01 / apply-unchecked / Say a little hello.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nSay a little hello.\nFriday supper · Juniper Table\nWe’ve checked the latest availability. Pending applications do not reserve a seat.\nYour introduction · 20–300 characters\nHi Rowan! I’m new to the neighbourhood and would enjoy joining your table.\nArrangements\n☐ I’ve read the arrangements and understand the host reviews applications.\nSend application\nHelp with my introduction\nBack to meal",
+      "actions": [
+        {
+          "name": "Field / Arrangements",
+          "target": "2:1009"
+        },
+        {
+          "name": "Action / Help with my introduction",
+          "target": "2:1178"
+        },
+        {
+          "name": "Action / Back to meal",
+          "target": "2:826"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    }
+  ],
+  "fonts": [
+    "Arial"
+  ],
+  "textHorizontalOverflow": []
+}

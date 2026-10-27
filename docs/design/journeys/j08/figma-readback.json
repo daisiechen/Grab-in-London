@@ -1,0 +1,421 @@
+{
+  "fileKey": "uHfMTb0zQWyLHw73eyyUbD",
+  "flows": [
+    {
+      "nodeId": "1:30",
+      "name": "J08 · normal journey"
+    },
+    {
+      "nodeId": "1:26",
+      "name": "J08 · scenario index"
+    }
+  ],
+  "frames": [
+    {
+      "id": "1:30",
+      "name": "J08 / settings / Your choices.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour choices.\nYour account\nYou can review what happens before deciding whether to leave Fancy.\nDelete account\nDiscover\nMeals\nCreate meal\nInbox\nProfile",
+      "actions": [
+        {
+          "name": "Action / Delete account",
+          "target": "1:43"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 628,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:43",
+      "name": "J08 / review / Before you leave.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nBefore you leave.\nDeleting your account will sign you out and hide your public profile and content.\n\nUpcoming meals you host will be cancelled. You’ll leave upcoming meals and pending applications. Your contact consent, group access, AI preferences and active context will be removed.\n\nOther members’ participation in meals already started is preserved. Remaining provider and content removal continues afterward under the approved policy.\nContinue to verify identity\nKeep my account",
+      "actions": [
+        {
+          "name": "Action / Continue to verify identity",
+          "target": "1:58"
+        },
+        {
+          "name": "Action / Keep my account",
+          "target": "1:30"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:58",
+      "name": "J08 / reauth / Verify it’s you.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nVerify it’s you.\nVerify using your existing linked identity. You’ll return to this deletion request; verification does not submit it.\nEmail verification code\n123456\nYour identity check must be within 5 minutes when you submit. Linked Google/Apple use their existing identity flow.\nVerify identity\nKeep my account",
+      "actions": [
+        {
+          "name": "Action / Verify identity",
+          "target": "5:71"
+        },
+        {
+          "name": "Action / Keep my account",
+          "target": "1:30"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:77",
+      "name": "J08 / reauth-error / Verify your identity again.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nVerify your identity again.\nThe code is incorrect or your identity check expired. Your account has not been changed. Verify again, then explicitly confirm deletion.\nVerification code\nEnter the latest code\nVerify identity\nKeep my account",
+      "actions": [
+        {
+          "name": "Action / Verify identity",
+          "target": "5:71"
+        },
+        {
+          "name": "Action / Keep my account",
+          "target": "1:30"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:95",
+      "name": "J08 / confirm / Delete your account?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nDelete your account?\nYou’ll be signed out once the request is accepted. Remaining removal steps may still be processing. You cannot use a receipt or public reference to restore your account.\nConfirmation\n☑ I understand the account-deletion consequences.\nRequest account deletion\nKeep my account",
+      "actions": [
+        {
+          "name": "Field / Confirmation",
+          "target": "5:71"
+        },
+        {
+          "name": "Action / Request account deletion",
+          "target": "1:143"
+        },
+        {
+          "name": "Action / Keep my account",
+          "target": "1:30"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:113",
+      "name": "J08 / barrier-failed / Your request was not accepted.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour request was not accepted.\nWe couldn’t accept your request. Your account has not been changed. No part of the synchronous account restriction was accepted.\nReview and retry\nKeep my account",
+      "actions": [
+        {
+          "name": "Action / Review and retry",
+          "target": "1:95"
+        },
+        {
+          "name": "Action / Keep my account",
+          "target": "1:30"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:128",
+      "name": "J08 / unknown / Let’s find your request.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nLet’s find your request.\nThe response was lost. Check your saved receipt to find the original request. Do not submit another deletion or create another account to check progress.\nCheck original request\nContact support",
+      "actions": [
+        {
+          "name": "Action / Check original request",
+          "target": "1:143"
+        },
+        {
+          "name": "Action / Contact support",
+          "target": "1:229"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:143",
+      "name": "J08 / pending / Your request is accepted.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour request is accepted.\nPending\n\nAccount access is closed. Public content is hidden and new participation or contact has stopped. Remaining removal steps are pending. This does not mean removal is complete.\n\nPublic reference: SYN-DEL-01\nCheck progress",
+      "actions": [
+        {
+          "name": "Action / Check progress",
+          "target": "1:156"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:156",
+      "name": "J08 / processing / Removal is processing.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nRemoval is processing.\nProcessing\n\nCompleted steps are retained. Remaining provider, content and data-removal steps continue. This page uses your saved private receipt; you do not need to sign in.\n\nPublic reference: SYN-DEL-01\nCheck progress\nContact support",
+      "actions": [
+        {
+          "name": "Action / Check progress",
+          "target": "1:201"
+        },
+        {
+          "name": "Action / Contact support",
+          "target": "1:229"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:171",
+      "name": "J08 / query-failed / Status is temporarily unavailable.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nStatus is temporarily unavailable.\nYour saved receipt is kept. Retry checking the original request or contact support. Account access stays closed; no new deletion is created.\nCheck progress again\nContact support",
+      "actions": [
+        {
+          "name": "Action / Check progress again",
+          "target": "1:156"
+        },
+        {
+          "name": "Action / Contact support",
+          "target": "1:229"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:186",
+      "name": "J08 / needs-support / A removal step needs attention.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nA removal step needs attention.\nNeeds support\n\nCompleted steps remain complete. Your account has not been restored. Support can help with remaining steps.\n\nPublic reference: SYN-DEL-01\nContact support\nCheck progress",
+      "actions": [
+        {
+          "name": "Action / Contact support",
+          "target": "1:229"
+        },
+        {
+          "name": "Action / Check progress",
+          "target": "1:156"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:201",
+      "name": "J08 / completed / Account removal completed.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nAccount removal completed.\nCompleted\n\nAll required removal steps have completed under the approved policy. This does not restore your account or any business session.\n\nPublic reference: SYN-DEL-01\nCheck latest result",
+      "actions": [
+        {
+          "name": "Action / Check latest result",
+          "target": "1:215"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:215",
+      "name": "J08 / completed-return / Your removal remains complete.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nYour removal remains complete.\nCompleted\nThe saved receipt confirms the same original request. No new request or account has been created.\nContact support",
+      "actions": [
+        {
+          "name": "Action / Contact support",
+          "target": "1:229"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:229",
+      "name": "J08 / support / Contact support.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nContact support.\nYou can contact support without signing in.\n\nxcheniepaut26@gmail.com\n\nSelect and copy the full address if a mail app is unavailable. You may include your public reference SYN-DEL-01. Never include your private receipt or verification code.\n\nOpening a mail composer does not send a message or mark the request resolved.\nCopy email address\nOpen mail composer\nBack to deletion status",
+      "actions": [
+        {
+          "name": "Action / Copy email address",
+          "target": "1:246"
+        },
+        {
+          "name": "Action / Open mail composer",
+          "target": "1:261"
+        },
+        {
+          "name": "Action / Back to deletion status",
+          "target": "1:186"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:246",
+      "name": "J08 / support-copied / Email address copied.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nEmail address copied.\nxcheniepaut26@gmail.com\n\nIf automatic copying is unavailable, select the full address and copy it manually. Your deletion request has not changed.\nBack to support\nBack to deletion status",
+      "actions": [
+        {
+          "name": "Action / Back to support",
+          "target": "1:229"
+        },
+        {
+          "name": "Action / Back to deletion status",
+          "target": "1:186"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:261",
+      "name": "J08 / support-return / Continue in your mail app.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nContinue in your mail app.\nOpening a composer is not sending a message. No message is marked as sent or resolved here. Your saved receipt remains available for checking the request.\nBack to deletion status\nBack to support",
+      "actions": [
+        {
+          "name": "Action / Back to deletion status",
+          "target": "1:186"
+        },
+        {
+          "name": "Action / Back to support",
+          "target": "1:229"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "1:276",
+      "name": "J08 / receipt-unavailable / Your receipt is unavailable.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour receipt is unavailable.\nYou can contact support without signing in or registering again. A public reference helps locate the request but does not authorize private access or restore your account.\nContact support",
+      "actions": [
+        {
+          "name": "Action / Contact support",
+          "target": "1:229"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    },
+    {
+      "id": "5:71",
+      "name": "J08 / confirm-unchecked / Delete your account?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nDelete your account?\nYou’ll be signed out once the request is accepted. Remaining removal steps may still be processing. You cannot use a receipt or public reference to restore your account.\nConfirmation\n☐ I understand the account-deletion consequences.\nRequest account deletion\nKeep my account",
+      "actions": [
+        {
+          "name": "Field / Confirmation",
+          "target": "1:95"
+        },
+        {
+          "name": "Action / Keep my account",
+          "target": "1:30"
+        }
+      ],
+      "scroll": [
+        {
+          "height": 710,
+          "overflow": "VERTICAL"
+        }
+      ]
+    }
+  ],
+  "fonts": [
+    "Arial"
+  ],
+  "textHorizontalOverflow": []
+}
