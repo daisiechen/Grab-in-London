@@ -47,8 +47,10 @@
     "owner": "UX-1",
     "status": "in-progress",
     "directory": "docs/design/r10/system/",
-    "fileKey": null,
-    "ready": false
+    "fileKey": "yUMVg2xpLXQHKPr2ZWpkO3",
+    "ready": false,
+    "previewURL": "https://www.figma.com/design/yUMVg2xpLXQHKPr2ZWpkO3",
+    "previewStatus": "work-in-progress-not-development-ready"
   },
   "iterations": [
     {
@@ -65,7 +67,7 @@
       "uxRevision": "UX-r02",
       "uxDirectory": "docs/design/r10/ios-0.1.0-dev.1/",
       "uxStatus": "in-progress",
-      "figmaFileKey": null,
+      "figmaFileKey": "CS9oRCq8h3Clg09up2aISj",
       "figmaEntryNodeId": null,
       "inputs": {
         "J01": {
@@ -91,7 +93,10 @@
       "qaStatus": "not-started",
       "codeOwner": null,
       "runtimeBuild": null,
-      "releaseApproved": false
+      "releaseApproved": false,
+      "figmaPreviewNodeId": "5:17",
+      "figmaPreviewURL": "https://www.figma.com/design/CS9oRCq8h3Clg09up2aISj?node-id=5-17",
+      "previewStatus": "work-in-progress-not-development-ready"
     },
     {
       "id": "IOS-0.1.0-dev.2",
@@ -145,7 +150,7 @@
       "uxRevision": "UX-r02",
       "uxDirectory": "docs/design/r10/ios-0.1.0-dev.3/",
       "uxStatus": "in-progress",
-      "figmaFileKey": null,
+      "figmaFileKey": "mKXV0NvBavRb6fnmQ2g2xV",
       "figmaEntryNodeId": null,
       "inputs": {
         "J03": {
@@ -179,7 +184,10 @@
       "qaStatus": "not-started",
       "codeOwner": null,
       "runtimeBuild": null,
-      "releaseApproved": false
+      "releaseApproved": false,
+      "figmaPreviewNodeId": "2:2",
+      "figmaPreviewURL": "https://www.figma.com/design/mKXV0NvBavRb6fnmQ2g2xV?node-id=2-2",
+      "previewStatus": "work-in-progress-not-development-ready"
     },
     {
       "id": "IOS-0.1.0-dev.4",
@@ -197,7 +205,7 @@
       "uxRevision": "UX-r02",
       "uxDirectory": "docs/design/r10/ios-0.1.0-dev.4/",
       "uxStatus": "in-progress",
-      "figmaFileKey": null,
+      "figmaFileKey": "TxashjRfQDvnc4jQieeaWu",
       "figmaEntryNodeId": null,
       "inputs": {
         "J07": {
@@ -223,7 +231,10 @@
       "qaStatus": "not-started",
       "codeOwner": null,
       "runtimeBuild": null,
-      "releaseApproved": false
+      "releaseApproved": false,
+      "figmaPreviewNodeId": null,
+      "figmaPreviewURL": "https://www.figma.com/design/TxashjRfQDvnc4jQieeaWu",
+      "previewStatus": "work-in-progress-not-development-ready"
     },
     {
       "id": "SUPPORT-0.1.0-dev.1",
@@ -275,7 +286,7 @@
       "uxRevision": "UX-r02",
       "uxDirectory": "docs/design/r10/admin-0.1.0-dev.1/",
       "uxStatus": "in-progress",
-      "figmaFileKey": null,
+      "figmaFileKey": "EwpDxDGeTJEF3PYMYLH8eP",
       "figmaEntryNodeId": null,
       "inputs": {
         "J10": {
@@ -293,7 +304,10 @@
       "qaStatus": "not-started",
       "codeOwner": null,
       "runtimeBuild": null,
-      "releaseApproved": false
+      "releaseApproved": false,
+      "figmaPreviewNodeId": "9:2",
+      "figmaPreviewURL": "https://www.figma.com/design/EwpDxDGeTJEF3PYMYLH8eP?node-id=9-2",
+      "previewStatus": "work-in-progress-not-development-ready"
     },
     {
       "id": "ADMIN-0.1.0-dev.2",
