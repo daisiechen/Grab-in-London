@@ -141,6 +141,21 @@ class AdminSupportR10UXTest(unittest.TestCase):
         self.assertNotIn('U-203', denied)
         self.assertNotIn('self absent', denied)
 
+    def test_r11_conflicts_require_new_explicit_confirmation_and_preserve_cancelled_facts(self):
+        for slug, final, intent in [('admin-0.1.0-dev.2', 'conflictaccepted', 'INTENT-2'),
+                                     ('support-0.1.0-dev.1', 'conflictappended', 'CORR-2')]:
+            scenes = {s['key']: s for s in read(folder(slug) / 'figma-readback.json')['scenes']}
+            self.assertEqual({l['destination'] for l in scenes['conflict']['links']},
+                             {scenes['conflictreconfirm']['nodeId'], scenes['conflictcancelled']['nodeId']})
+            self.assertNotIn(scenes[final]['nodeId'],
+                             {l['destination'] for l in scenes['conflict']['links']})
+            self.assertIn(scenes[final]['nodeId'],
+                          {l['destination'] for l in scenes['conflictreconfirm']['links']})
+            self.assertIn(intent, '\n'.join(scenes[final]['texts']))
+            self.assertIn('revision 3', '\n'.join(scenes[final]['texts']))
+            self.assertIn('revision 2', '\n'.join(scenes['conflictcancelled']['texts']))
+            self.assertEqual(scenes[final]['links'], [])
+
     def test_source_browser_check_is_bounded_to_original_demo(self):
         evidence = read(folder('admin-0.1.0-dev.1') / 'source-interaction-check.json')
         self.assertTrue(evidence['sourceOnly'])
