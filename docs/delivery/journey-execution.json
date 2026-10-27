@@ -1,9 +1,21 @@
 {
   "schemaVersion": 1,
-  "revision": "r09",
-  "status": "ux-candidates-awaiting-review",
+  "revision": "r10",
+  "status": "replanned-to-approved-mvp-visual",
   "pmStartAllowed": true,
-  "activeJourneys": [],
+  "activeJourneys": [
+    "J01",
+    "J02",
+    "J03",
+    "J04",
+    "J05",
+    "J06",
+    "J07",
+    "J08",
+    "J09",
+    "J10",
+    "J11"
+  ],
   "stages": [
     "PM",
     "UX",
@@ -14,11 +26,11 @@
     {
       "id": "J01",
       "priority": 1,
-      "status": "ux-candidate-delivered",
+      "status": "ux-revision-in-progress",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "candidate-delivered",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -42,16 +54,17 @@
       "demoRevision": "PM-r02",
       "uxOwner": "UX-1",
       "pmAcceptedForUX": true,
-      "uxCandidateRevision": "UX-r01"
+      "uxCandidateRevision": "UX-r02",
+      "developmentIteration": "IOS-0.1.0-dev.1"
     },
     {
       "id": "J02",
       "priority": 2,
-      "status": "ux-candidate-delivered",
+      "status": "ux-revision-in-progress",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "candidate-delivered",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -74,18 +87,19 @@
       "acceptedForNextStage": false,
       "requirementsRevision": "PM-r01",
       "demoRevision": "PM-r01",
-      "uxOwner": "UX-2",
+      "uxOwner": "UX-1",
       "pmAcceptedForUX": true,
-      "uxCandidateRevision": "UX-r01"
+      "uxCandidateRevision": "UX-r02",
+      "developmentIteration": "IOS-0.1.0-dev.2"
     },
     {
       "id": "J03",
       "priority": 3,
-      "status": "ux-candidate-delivered",
+      "status": "ux-revision-in-progress",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "candidate-delivered",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -111,16 +125,17 @@
       "demoRevision": "PM-r01",
       "uxOwner": "UX-2",
       "pmAcceptedForUX": true,
-      "uxCandidateRevision": "UX-r01"
+      "uxCandidateRevision": "UX-r02",
+      "developmentIteration": "IOS-0.1.0-dev.3"
     },
     {
       "id": "J04",
       "priority": 4,
-      "status": "ux-candidate-delivered",
+      "status": "ux-revision-in-progress",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "candidate-delivered",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -146,16 +161,17 @@
       "demoRevision": "PM-r02",
       "uxOwner": "UX-2",
       "pmAcceptedForUX": true,
-      "uxCandidateRevision": "UX-r01"
+      "uxCandidateRevision": "UX-r02",
+      "developmentIteration": "IOS-0.1.0-dev.3"
     },
     {
       "id": "J05",
       "priority": 5,
-      "status": "ux-candidate-delivered",
+      "status": "ux-revision-in-progress",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "candidate-delivered",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -178,16 +194,17 @@
       "demoRevision": "PM-r02",
       "uxOwner": "UX-1",
       "pmAcceptedForUX": true,
-      "uxCandidateRevision": "UX-r01"
+      "uxCandidateRevision": "UX-r02",
+      "developmentIteration": "IOS-0.1.0-dev.1"
     },
     {
       "id": "J06",
       "priority": 6,
-      "status": "ux-candidate-delivered",
+      "status": "ux-revision-in-progress",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "candidate-delivered",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -206,18 +223,19 @@
       "acceptedForNextStage": false,
       "requirementsRevision": "PM-r01",
       "demoRevision": "PM-r02",
-      "uxOwner": "UX-1",
+      "uxOwner": "UX-2",
       "pmAcceptedForUX": true,
-      "uxCandidateRevision": "UX-r01"
+      "uxCandidateRevision": "UX-r02",
+      "developmentIteration": "IOS-0.1.0-dev.3"
     },
     {
       "id": "J07",
       "priority": 7,
-      "status": "ux-candidate-delivered",
+      "status": "ux-revision-in-progress",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "candidate-delivered",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -235,18 +253,19 @@
       "acceptedForNextStage": false,
       "requirementsRevision": "PM-r01",
       "demoRevision": "PM-r02",
-      "uxOwner": "UX-3",
+      "uxOwner": "UX-2",
       "pmAcceptedForUX": true,
-      "uxCandidateRevision": "UX-r01"
+      "uxCandidateRevision": "UX-r02",
+      "developmentIteration": "IOS-0.1.0-dev.4"
     },
     {
       "id": "J08",
       "priority": 8,
-      "status": "ux-candidate-delivered",
+      "status": "ux-revision-in-progress",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "candidate-delivered",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -272,18 +291,19 @@
       "acceptedForNextStage": false,
       "requirementsRevision": "PM-r01",
       "demoRevision": "PM-r02",
-      "uxOwner": "UX-1",
+      "uxOwner": "UX-2",
       "pmAcceptedForUX": true,
-      "uxCandidateRevision": "UX-r01"
+      "uxCandidateRevision": "UX-r02",
+      "developmentIteration": "IOS-0.1.0-dev.4"
     },
     {
       "id": "J09",
       "priority": 9,
-      "status": "ux-candidate-delivered",
+      "status": "ux-revision-in-progress",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "candidate-delivered",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -308,16 +328,17 @@
       "demoRevision": "PM-r02",
       "uxOwner": "UX-3",
       "pmAcceptedForUX": true,
-      "uxCandidateRevision": "UX-r01"
+      "uxCandidateRevision": "UX-r02",
+      "developmentIteration": "SUPPORT-0.1.0-dev.1"
     },
     {
       "id": "J10",
       "priority": 10,
-      "status": "ux-candidate-delivered",
+      "status": "ux-revision-in-progress",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "candidate-delivered",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -342,16 +363,17 @@
       "demoRevision": "PM-r02",
       "uxOwner": "UX-3",
       "pmAcceptedForUX": true,
-      "uxCandidateRevision": "UX-r01"
+      "uxCandidateRevision": "UX-r02",
+      "developmentIteration": "ADMIN-0.1.0-dev.1"
     },
     {
       "id": "J11",
       "priority": 11,
-      "status": "ux-candidate-delivered",
+      "status": "ux-revision-in-progress",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "candidate-delivered",
+        "UX": "in-progress",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -372,7 +394,8 @@
       "demoRevision": "PM-r02",
       "uxOwner": "UX-3",
       "pmAcceptedForUX": true,
-      "uxCandidateRevision": "UX-r01"
+      "uxCandidateRevision": "UX-r02",
+      "developmentIteration": "ADMIN-0.1.0-dev.2"
     },
     {
       "id": "J12",
@@ -706,25 +729,16 @@
     "J10",
     "J11"
   ],
-  "awaitingReviewJourneys": [
-    "J01",
-    "J02",
-    "J03",
-    "J04",
-    "J05",
-    "J06",
-    "J07",
-    "J08",
-    "J09",
-    "J10",
-    "J11"
-  ],
-  "reviewStatus": "ux-candidates-awaiting-owner",
+  "awaitingReviewJourneys": [],
+  "reviewStatus": "ux-r01-visual-rejected-revision-in-progress",
   "reviewRole": "PJ",
   "reviewDate": "2026-10-27",
-  "uxDispatch": "docs/delivery/ux-parallel-dispatch.json",
+  "uxDispatch": "docs/delivery/development-versions-r10.json",
   "uxStartAllowed": true,
   "rdStartAllowed": false,
   "qaStartAllowed": false,
-  "uxDeliveryRegister": "docs/delivery/ux-first-release-review.json"
+  "currentExecution": "docs/delivery/development-versions-r10.json",
+  "rdPreparationAllowed": true,
+  "historicalUXDispatch": "docs/delivery/ux-parallel-dispatch.json",
+  "historicalUXDeliveryRegister": "docs/delivery/ux-first-release-review.json"
 }

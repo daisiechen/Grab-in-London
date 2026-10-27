@@ -2,7 +2,11 @@
 
 项目入口：[README](../README.md)。本目录保存项目知识；Agent 协作规则见 [AGENTS.md](../AGENTS.md)，正式方法在 `.agents/skills/`，待审核候选在 `.agents/candidates/`，不作为现行执行规则。
 
-## 当前产品与管理输入（r07范围／r09并行UX）
+## 当前产品与管理输入（r07范围／r10分版设计与架构）
+
+- [当前开发版本方案r10](delivery/development-versions-r10.zh-CN.md)、[版本/派工真源](delivery/development-versions-r10.json)：复用认可的MVP Demo设计，4个iOS、2个后台、1个支持内部迭代；UX规范/路径与RD技术方案并行，代码及QA未启动。
+- 前一批UX-r01视觉被Owner否定，仅保留历史链接和证据，不作为开发依据。产品需求正文中的旧阶段描述是当时快照，当前执行状态只看r10登记。
+- RD准备：[技术选型](engineering/r10/technology-selection.zh-CN.md)、[整体架构](engineering/r10/architecture.zh-CN.md)、[模块工作包](engineering/r10/module-work-packages.json)、[精确输入](engineering/r10/input-manifest.json)、[研发准备交接](engineering/r10/handoff.zh-CN.md)。仅方案，业务实现未签发。
 
 - [MVP项目需求](product/fancy-requirements-baseline.zh-CN.md)：产品使用者、完整用户目标、首发/增量及业务边界。
 - [15个用户旅程模块](product/journey-modules.zh-CN.md)、[结构化范围](product/journey-modules.json)：触发→完整路径→结果与异常；首个交付应为J01找到并申请饭局，注册登录/资料不单独切片。

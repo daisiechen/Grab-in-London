@@ -1,7 +1,7 @@
 # Fancy用户旅程的执行与联调方案
 
-> 当前执行更新（r09）：用户已确认首发J01—J11的PRD/Demo作为UX输入，授权3个UX并行、每旅程独立Figma；见[UX派工与交付边界](ux-parallel-dispatch.zh-CN.md)。RD、QA和J12—J15未签发。
-执行修订：r09｜范围仍为r07；首发11份独立UX候选已交回待审，activeJourneys=[]；不自动进入RD或QA。
+> 当前执行更新（r10）：按[开发版本方案](development-versions-r10.zh-CN.md)复用已认可MVP Demo视觉，UX补通用规范/版本路径，RD仅并行做技术方案；上一批UX-r01仅历史，业务实现和QA未启动。
+执行修订：r10｜业务范围仍r07，正式产品编号不变，内部dev.N及逐版本Ready以[版本登记](development-versions-r10.json)为准。
 
 ## 1. 当前产品模块与优先级
 
@@ -60,7 +60,7 @@
 
 PM工作包需包含一名用户的一次完整目标、触发/终点、正常路径与必要分支、前置数据/角色、做与不做、业务规则、Demo及验收。若必须读同一旅程的几份页面文档才能拼成结果，PM负责将其整合为一份完整说明。
 
-并行须有固定输入与兼容候选，无文件/状态/环境/时钟/配额冲突。原通用版本/迁移/单writer规则见[项目管理方案](project-management-plan.zh-CN.md)。执行数据见[journey-execution.json](journey-execution.json)，首发PM输入已确认、activeJourneys为空、11份UX候选待审，当前阶段仅UX；RD/QA仍not-started，设计候选交付不自动派发下一专业阶段。
+并行须有固定输入与兼容候选，无文件/状态/环境/时钟/配额冲突。原通用版本/迁移/单writer规则见[项目管理方案](project-management-plan.zh-CN.md)。执行数据见[journey-execution.json](journey-execution.json)，首发PM业务输入固定，上一批UX-r01视觉被否定，当前按r10版本登记重新交UX规范/设计；RD只并行做架构准备，业务实现和QA未启动。
 
 ## 5. 旧产物迁移
 

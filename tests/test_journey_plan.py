@@ -61,7 +61,9 @@ class JourneyPlanTest(unittest.TestCase):
 
     def test_only_authorized_first_release_pm_and_ux_stages_are_issued(self):
         self.assertTrue(self.execution['pmStartAllowed'])
-        self.assertEqual(self.execution['activeJourneys'], [])
+        versions = json.loads((ROOT / self.execution['currentExecution']).read_text())
+        active = {j for v in versions['iterations'] if v['uxStatus'] == 'in-progress' for j in v['journeys']}
+        self.assertEqual(set(self.execution['activeJourneys']), active)
         self.assertEqual(set(self.execution['issuedJourneys']), {f'J{i:02d}' for i in range(1, 12)})
         self.assertEqual(self.execution['oldPMCandidate']['status'], 'historical-incomplete-candidate')
         self.assertFalse(self.execution['oldPMCandidate']['acceptedAsJourney'])
@@ -70,7 +72,9 @@ class JourneyPlanTest(unittest.TestCase):
                 self.assertEqual(j['stages'][stage], 'not-started')
             if j['id'] in self.execution['issuedJourneys']:
                 self.assertEqual(j['currentStage'], 'UX')
-                self.assertEqual(j['stages']['UX'], 'candidate-delivered')
+                self.assertEqual(j['uxCandidateRevision'], 'UX-r02')
+                iteration = next(v for v in versions['iterations'] if j['id'] in v['journeys'])
+                self.assertEqual(j['stages']['UX'], iteration['uxStatus'])
                 self.assertIn(j['pmOwner'], ('PM-1', 'PM-2', 'PM-3'))
             else:
                 self.assertEqual(j['status'], 'not-issued')

@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "sourceBaseCommit": "f344c8d5a682f66ffe18c867977619ea91b7456f",
+  "scopeRevision": "r07",
+  "executionRevision": "r10",
+  "versionAuthority": "docs/delivery/development-versions-r10.json",
+  "versionScopeProjection": [
+    {
+      "id": "IOS-0.1.0-dev.1",
+      "productVersion": "IOS-0.1.0",
+      "journeys": [
+        "J01",
+        "J05"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "IOS-0.1.0-dev.2",
+      "productVersion": "IOS-0.1.0",
+      "journeys": [
+        "J02"
+      ],
+      "dependsOn": [
+        "IOS-0.1.0-dev.1"
+      ]
+    },
+    {
+      "id": "IOS-0.1.0-dev.3",
+      "productVersion": "IOS-0.1.0",
+      "journeys": [
+        "J03",
+        "J04",
+        "J06"
+      ],
+      "dependsOn": [
+        "IOS-0.1.0-dev.2"
+      ]
+    },
+    {
+      "id": "IOS-0.1.0-dev.4",
+      "productVersion": "IOS-0.1.0",
+      "journeys": [
+        "J07",
+        "J08"
+      ],
+      "dependsOn": [
+        "IOS-0.1.0-dev.3"
+      ]
+    },
+    {
+      "id": "SUPPORT-0.1.0-dev.1",
+      "productVersion": "SUPPORT-0.1.0",
+      "journeys": [
+        "J09"
+      ],
+      "dependsOn": [
+        "IOS-0.1.0-dev.1"
+      ]
+    },
+    {
+      "id": "ADMIN-0.1.0-dev.1",
+      "productVersion": "ADMIN-0.1.0",
+      "journeys": [
+        "J10"
+      ],
+      "dependsOn": [
+        "IOS-0.1.0-dev.1"
+      ]
+    },
+    {
+      "id": "ADMIN-0.1.0-dev.2",
+      "productVersion": "ADMIN-0.1.0",
+      "journeys": [
+        "J11"
+      ],
+      "dependsOn": [
+        "ADMIN-0.1.0-dev.1"
+      ]
+    }
+  ],
+  "mutableStatusFieldsNotPinned": true,
+  "visualCommit": "361ab04ed6fc55c0f1e041bb5d6cc5d216d1a7b2",
+  "inputHashes": {
+    "package.json": "f4037d476dc1229b4c54478564f4c1e360cce28b5192dde50b2799e255e25916",
+    "pnpm-lock.yaml": "e150da3841c17d14df0b4de00d01c6900ac6c754c3d90b1e275421109bcc9111",
+    "apps/ios/package.json": "d6467cee4192eb005ec023f9ea91c910056e32184c2a7b43c3c1d46f0324628c",
+    "apps/ios/app.json": "2410c690d3f1805357faa96a8c09264cf7653768ec1bd795c17753a4950cba20",
+    "apps/admin/package.json": "d1be7246ac18d1ac9ba76341b341b2852ae8a9e5465d8fed38e1ae5637964dca",
+    "apps/api/package.json": "1d02963f20f8cc7688b7ccea92722572e0329dff06d35893beb5c5da3e070fc5",
+    "apps/worker/package.json": "9c2964da5f1b70997ec81d864a26e8adf3fd71248304993b9dfac8615fb16a2e",
+    "packages/db/package.json": "8fb771ea05d4bd623db31684243299c4c38b20c11c395b38dbed82749ab953d1",
+    "packages/contracts/package.json": "621f578ba53c46bced72bdab771a33e0525c187a772a00214ed47616f21137e5",
+    "packages/client/package.json": "a68701e8ef055e00dcc99ff8ce2e0ba19287c62bada85217e537b5ebf9088e02",
+    "packages/assistant/package.json": "46b095529c017992c328c38f410a5dfeebe0ff597bf67d8efd9132b18544e84a",
+    "infra/compose.yml": "b34ab9e0490265eee9980f21336ce8b0ef599e6ed72684cfc3f4faa9d771e4b6",
+    "docs/engineering/core-development-plan.zh-CN.md": "e9c1576852dbd05b53d165e57281dfb5b78961acbf59faafe327d441857a4ef2",
+    "docs/engineering/data-and-command-contract.zh-CN.md": "a903277abf63c77d1dcf9b1d9ab033a3fdd62b6a05e574980a6945f1447473ef",
+    "docs/engineering/api-and-client-contract.zh-CN.md": "1da659e8dd2e89578b0af9161bdcd4a9b4fbd543ecd008a2c3c61cebcaf5d5ea",
+    "docs/engineering/ai-development-plan.zh-CN.md": "dd1be848cf4f4b737d0c6d9ca435febb57873c2c5cd84891894a7abafd2a7915",
+    "docs/engineering/decisions/ai-cny-budget.md": "f07852964a5719ec8ccc8eaf4d132d15970661f64c1ea6cc388b1003552e760c",
+    "docs/engineering/decisions/deepseek-readiness.md": "19570f58b58da8599f0dbf25c1087351a1f91a76f6fe6c900dc7da61ae20a5c1",
+    "demo/qa/picker-refinement-2026-10-21/release.json": "b876c55c3f8ddd494c5d74238d0ccb35cbed7a366bac25c1fee504cd8cbb2eba",
+    "docs/product/journeys/j01/requirements.zh-CN.md": "af6f88ac83dbf85dc3fe103fcc6bc1ae445ecafb630fb8fa68fe0be9eacb1568",
+    "docs/product/journeys/j02/requirements.zh-CN.md": "6a6211922d649a12899803721b709cb67f2e37e6bea428d804cee399d3df4299",
+    "docs/product/journeys/j03/requirements.zh-CN.md": "c1c04088090495498d995e73f1cf7c1a74e8af2c5bf3e09f4fb3cda142876ca6",
+    "docs/product/journeys/j04/requirements.zh-CN.md": "8172b103c759b19b6b70a2dea946bd50cc7286405a31dc73b4012cf169da72a7",
+    "docs/product/journeys/j05/requirements.zh-CN.md": "50a482a514dbb17b75b9e1baf7c174f24a6d7e155c3d2e48fa1e72bcd5d03e6b",
+    "docs/product/journeys/j06/requirements.zh-CN.md": "f61c525aa2cc344b274897146b602a1f42e28d49f20d2226be59e0bd1322c6f7",
+    "docs/product/journeys/j07/requirements.zh-CN.md": "5dd9c7a3dc993a621f288ad4f0ac977129ced8a9fd3db802c6f5e6b08fd8c2bd",
+    "docs/product/journeys/j08/requirements.zh-CN.md": "3f747817145b1c8574ba90ba886ebb5d72d3fd801911b99c9421ebef28193203",
+    "docs/product/journeys/j09/requirements.zh-CN.md": "a168fbe0061d462db602a1240da95e1e3182cea1946acc7458412deb7960261c",
+    "docs/product/journeys/j10/requirements.zh-CN.md": "3a2436f5463073f4257733d8edcd83f509160bf7dd97f8d898e8229718d11afd",
+    "docs/product/journeys/j11/requirements.zh-CN.md": "40921832dd47a5c0df9615b2ddbe483bfa54e51890b527083410d8c09f1451a3"
+  },
+  "readOnlyBranches": {
+    "codex/mvp-patch-p1": "89a8c10132cfa0b993cc067724995ee48d0bc947",
+    "codex/admin-patch-p11": "4da139596fc688305f5cbac840e50f76e76711cf",
+    "mvp-freeze-2026-10-23^{}": "2e33ca2bbdc838c85a36d2e3bbd9b5fe216478ae"
+  },
+  "verificationBoundary": "文件/manifest/只读Git差异与官方文档核对；未安装、构建、启动环境、访问凭据、调用供应商或执行产品QA。",
+  "planningProjection": {
+    "scopeRevision": "r07",
+    "iterations": [
+      {
+        "id": "IOS-0.1.0-dev.1",
+        "productVersion": "IOS-0.1.0",
+        "journeys": [
+          "J01",
+          "J05"
+        ],
+        "dependsOn": []
+      },
+      {
+        "id": "IOS-0.1.0-dev.2",
+        "productVersion": "IOS-0.1.0",
+        "journeys": [
+          "J02"
+        ],
+        "dependsOn": [
+          "IOS-0.1.0-dev.1"
+        ]
+      },
+      {
+        "id": "IOS-0.1.0-dev.3",
+        "productVersion": "IOS-0.1.0",
+        "journeys": [
+          "J03",
+          "J04",
+          "J06"
+        ],
+        "dependsOn": [
+          "IOS-0.1.0-dev.2"
+        ]
+      },
+      {
+        "id": "IOS-0.1.0-dev.4",
+        "productVersion": "IOS-0.1.0",
+        "journeys": [
+          "J07",
+          "J08"
+        ],
+        "dependsOn": [
+          "IOS-0.1.0-dev.3"
+        ]
+      },
+      {
+        "id": "SUPPORT-0.1.0-dev.1",
+        "productVersion": "SUPPORT-0.1.0",
+        "journeys": [
+          "J09"
+        ],
+        "dependsOn": [
+          "IOS-0.1.0-dev.1"
+        ]
+      },
+      {
+        "id": "ADMIN-0.1.0-dev.1",
+        "productVersion": "ADMIN-0.1.0",
+        "journeys": [
+          "J10"
+        ],
+        "dependsOn": [
+          "IOS-0.1.0-dev.1"
+        ]
+      },
+      {
+        "id": "ADMIN-0.1.0-dev.2",
+        "productVersion": "ADMIN-0.1.0",
+        "journeys": [
+          "J11"
+        ],
+        "dependsOn": [
+          "ADMIN-0.1.0-dev.1"
+        ]
+      }
+    ],
+    "visualBaseline": {
+      "githubCommit": "361ab04ed6fc55c0f1e041bb5d6cc5d216d1a7b2",
+      "pathsSHA256": {
+        "demo/src/Prototype.tsx": "50945a3a1261108d855b483342e31b252b0c99c74977011e92426cf1887e58a8",
+        "demo/src/prototype.css": "8ec652ea30fc06b74846f1adcc5d910c05f4366bcf31d8e6b8b73ced530025bb",
+        "demo/DESIGN.md": "abd6031d7e2b24b2e4f19b2a99ef54b9e76a2f1807717e590ac71c9eb7bfb63a",
+        "demo/UX-CONTRACT.md": "c74557722202a3de27191a8eca885460d7b48c92b202f320b7a2c738436c78fc"
+      }
+    },
+    "businessBaseline": {
+      "commit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+      "scopeLedger": "docs/product/requirements-traceability.json",
+      "rule": "PM逐旅程PRD/coverage决定规则，PM简化Demo不是视觉规格"
+    }
+  },
+  "planningProjectionSHA256": "9a15dec53274c9e575d05fc7bbec8d8a7fd4c2789f868d802430c31fa0bb3100"
+}

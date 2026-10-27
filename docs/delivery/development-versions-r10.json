@@ -1,0 +1,437 @@
+{
+  "schemaVersion": 1,
+  "revision": "r10",
+  "scopeRevision": "r07",
+  "date": "2026-10-27",
+  "status": "design-and-architecture-preparation",
+  "pjOwner": "current-Fancy-PJ",
+  "authorization": {
+    "visualDirection": "Owner认可旧MVP Demo，不重设计；复用视觉和交互，补通用规范及版本路径/场景",
+    "businessScope": "Owner确认沿用iOS+管理后台、host外订到店各付；移动Web及平台交易/订位后置",
+    "allowedNow": [
+      "version-planning",
+      "UX-design-specification",
+      "RD-technology-and-architecture-planning"
+    ],
+    "implementationStarted": false,
+    "qaStarted": false,
+    "implementationCondition": "对应迭代全部必要Figma及通用规范、需求/接口/模块职责/环境清单通过ready核对，按固定候选和有界工作包逐模块开始；本轮未签发代码任务",
+    "externalReleaseApproved": false
+  },
+  "visualBaseline": {
+    "siteVersion": 13,
+    "githubCommit": "361ab04ed6fc55c0f1e041bb5d6cc5d216d1a7b2",
+    "releaseEvidence": "demo/qa/picker-refinement-2026-10-21/release.json",
+    "pathsSHA256": {
+      "demo/src/Prototype.tsx": "50945a3a1261108d855b483342e31b252b0c99c74977011e92426cf1887e58a8",
+      "demo/src/prototype.css": "8ec652ea30fc06b74846f1adcc5d910c05f4366bcf31d8e6b8b73ced530025bb",
+      "demo/DESIGN.md": "abd6031d7e2b24b2e4f19b2a99ef54b9e76a2f1807717e590ac71c9eb7bfb63a",
+      "demo/UX-CONTRACT.md": "c74557722202a3de27191a8eca885460d7b48c92b202f320b7a2c738436c78fc"
+    },
+    "rule": "原Demo的布局/视觉/交互为基准；有效业务规则优先，历史模拟支付/平台订位不恢复"
+  },
+  "businessBaseline": {
+    "commit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+    "scopeLedger": "docs/product/requirements-traceability.json",
+    "rule": "PM逐旅程PRD/coverage决定规则，PM简化Demo不是视觉规格"
+  },
+  "historicalDesign": {
+    "register": "docs/delivery/ux-first-release-review.json",
+    "revision": "UX-r01",
+    "status": "owner-rejected-visual-direction",
+    "usableForDevelopment": false,
+    "preserveFiles": true
+  },
+  "designSystem": {
+    "id": "DS-0.1.0",
+    "owner": "UX-1",
+    "status": "in-progress",
+    "directory": "docs/design/r10/system/",
+    "fileKey": null,
+    "ready": false
+  },
+  "iterations": [
+    {
+      "id": "IOS-0.1.0-dev.1",
+      "productVersion": "IOS-0.1.0",
+      "name": "找到饭局并完成参与申请",
+      "journeys": [
+        "J01",
+        "J05"
+      ],
+      "dependsOn": [],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "uxOwner": "UX-1",
+      "uxRevision": "UX-r02",
+      "uxDirectory": "docs/design/r10/ios-0.1.0-dev.1/",
+      "uxStatus": "in-progress",
+      "figmaFileKey": null,
+      "figmaEntryNodeId": null,
+      "inputs": {
+        "J01": {
+          "requirementsRevision": "PM-r01",
+          "demoRevision": "PM-r02",
+          "sha256": {
+            "docs/product/journeys/j01/requirements.zh-CN.md": "af6f88ac83dbf85dc3fe103fcc6bc1ae445ecafb630fb8fa68fe0be9eacb1568",
+            "demo/journeys/j01/index.html": "91464863d9c58380592a7d8bea3279fa690479bc74e1a52caa7ed5ee0d5a09ce"
+          }
+        },
+        "J05": {
+          "requirementsRevision": "PM-r02",
+          "demoRevision": "PM-r02",
+          "sha256": {
+            "docs/product/journeys/j05/requirements.zh-CN.md": "50a482a514dbb17b75b9e1baf7c174f24a6d7e155c3d2e48fa1e72bcd5d03e6b",
+            "demo/journeys/j05/index.html": "5445e92756b85325e774d77f27743dcf0a342b27980215dc436214355501b99c"
+          }
+        }
+      },
+      "designReady": false,
+      "rdPreparation": "architecture-candidate-delivered",
+      "implementationStatus": "not-started",
+      "qaStatus": "not-started",
+      "codeOwner": null,
+      "runtimeBuild": null,
+      "releaseApproved": false
+    },
+    {
+      "id": "IOS-0.1.0-dev.2",
+      "productVersion": "IOS-0.1.0",
+      "name": "发起饭局并完成招募",
+      "journeys": [
+        "J02"
+      ],
+      "dependsOn": [
+        "IOS-0.1.0-dev.1"
+      ],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "uxOwner": "UX-1",
+      "uxRevision": "UX-r02",
+      "uxDirectory": "docs/design/r10/ios-0.1.0-dev.2/",
+      "uxStatus": "in-progress",
+      "figmaFileKey": null,
+      "figmaEntryNodeId": null,
+      "inputs": {
+        "J02": {
+          "requirementsRevision": "PM-r01",
+          "demoRevision": "PM-r01",
+          "sha256": {
+            "docs/product/journeys/j02/requirements.zh-CN.md": "6a6211922d649a12899803721b709cb67f2e37e6bea428d804cee399d3df4299",
+            "demo/journeys/j02/index.html": "d876732ddbdc667816a473a91969464c6a49d574d3fc2fc745d207b8a68989bc"
+          }
+        }
+      },
+      "designReady": false,
+      "rdPreparation": "architecture-candidate-delivered",
+      "implementationStatus": "not-started",
+      "qaStatus": "not-started",
+      "codeOwner": null,
+      "runtimeBuild": null,
+      "releaseApproved": false
+    },
+    {
+      "id": "IOS-0.1.0-dev.3",
+      "productVersion": "IOS-0.1.0",
+      "name": "赴约沟通、饭后反馈与持续联系",
+      "journeys": [
+        "J03",
+        "J04",
+        "J06"
+      ],
+      "dependsOn": [
+        "IOS-0.1.0-dev.2"
+      ],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "uxOwner": "UX-2",
+      "uxRevision": "UX-r02",
+      "uxDirectory": "docs/design/r10/ios-0.1.0-dev.3/",
+      "uxStatus": "in-progress",
+      "figmaFileKey": null,
+      "figmaEntryNodeId": null,
+      "inputs": {
+        "J03": {
+          "requirementsRevision": "PM-r01",
+          "demoRevision": "PM-r01",
+          "sha256": {
+            "docs/product/journeys/j03/requirements.zh-CN.md": "c1c04088090495498d995e73f1cf7c1a74e8af2c5bf3e09f4fb3cda142876ca6",
+            "demo/journeys/j03/index.html": "12d823bf051ea6782a194576c5dba26895c51e3ea506ab31f4a9072a261a50af"
+          }
+        },
+        "J04": {
+          "requirementsRevision": "PM-r01",
+          "demoRevision": "PM-r02",
+          "sha256": {
+            "docs/product/journeys/j04/requirements.zh-CN.md": "8172b103c759b19b6b70a2dea946bd50cc7286405a31dc73b4012cf169da72a7",
+            "demo/journeys/j04/index.html": "e93934a96472977cc9c28cc2c9e8d245ce0cf68ff815f38a01c8709e92a09dbe"
+          }
+        },
+        "J06": {
+          "requirementsRevision": "PM-r01",
+          "demoRevision": "PM-r02",
+          "sha256": {
+            "docs/product/journeys/j06/requirements.zh-CN.md": "f61c525aa2cc344b274897146b602a1f42e28d49f20d2226be59e0bd1322c6f7",
+            "demo/journeys/j06/index.html": "916abf341ab34cdefba446813eea9f447bf1e4cf143929fe8e654b9ddfe2eb3f"
+          }
+        }
+      },
+      "designReady": false,
+      "rdPreparation": "architecture-candidate-delivered",
+      "implementationStatus": "not-started",
+      "qaStatus": "not-started",
+      "codeOwner": null,
+      "runtimeBuild": null,
+      "releaseApproved": false
+    },
+    {
+      "id": "IOS-0.1.0-dev.4",
+      "productVersion": "IOS-0.1.0",
+      "name": "安全求助与离开账号",
+      "journeys": [
+        "J07",
+        "J08"
+      ],
+      "dependsOn": [
+        "IOS-0.1.0-dev.3"
+      ],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "uxOwner": "UX-2",
+      "uxRevision": "UX-r02",
+      "uxDirectory": "docs/design/r10/ios-0.1.0-dev.4/",
+      "uxStatus": "in-progress",
+      "figmaFileKey": null,
+      "figmaEntryNodeId": null,
+      "inputs": {
+        "J07": {
+          "requirementsRevision": "PM-r01",
+          "demoRevision": "PM-r02",
+          "sha256": {
+            "docs/product/journeys/j07/requirements.zh-CN.md": "5dd9c7a3dc993a621f288ad4f0ac977129ced8a9fd3db802c6f5e6b08fd8c2bd",
+            "demo/journeys/j07/index.html": "0985a543d5443b829bbb0d65295c667ea3e223da161f983cc648cfc5f99d61f0"
+          }
+        },
+        "J08": {
+          "requirementsRevision": "PM-r01",
+          "demoRevision": "PM-r02",
+          "sha256": {
+            "docs/product/journeys/j08/requirements.zh-CN.md": "3f747817145b1c8574ba90ba886ebb5d72d3fd801911b99c9421ebef28193203",
+            "demo/journeys/j08/index.html": "8997140330db7de963856048ffd47ef2d63a6ff1d9c8776af2ed54015cb5eeff"
+          }
+        }
+      },
+      "designReady": false,
+      "rdPreparation": "architecture-candidate-delivered",
+      "implementationStatus": "not-started",
+      "qaStatus": "not-started",
+      "codeOwner": null,
+      "runtimeBuild": null,
+      "releaseApproved": false
+    },
+    {
+      "id": "SUPPORT-0.1.0-dev.1",
+      "productVersion": "SUPPORT-0.1.0",
+      "name": "处理本人授权个案及出席纠错",
+      "journeys": [
+        "J09"
+      ],
+      "dependsOn": [
+        "IOS-0.1.0-dev.1"
+      ],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "uxOwner": "UX-3",
+      "uxRevision": "UX-r02",
+      "uxDirectory": "docs/design/r10/support-0.1.0-dev.1/",
+      "uxStatus": "in-progress",
+      "figmaFileKey": null,
+      "figmaEntryNodeId": null,
+      "inputs": {
+        "J09": {
+          "requirementsRevision": "PM-r01",
+          "demoRevision": "PM-r02",
+          "sha256": {
+            "docs/product/journeys/j09/requirements.zh-CN.md": "a168fbe0061d462db602a1240da95e1e3182cea1946acc7458412deb7960261c",
+            "demo/journeys/j09/index.html": "801842c556eca92763fd1d0ff5cab45fb97e5035c3bb42d55e46648654ffe2ca"
+          }
+        }
+      },
+      "designReady": false,
+      "rdPreparation": "architecture-candidate-delivered",
+      "implementationStatus": "not-started",
+      "qaStatus": "not-started",
+      "codeOwner": null,
+      "runtimeBuild": null,
+      "releaseApproved": false
+    },
+    {
+      "id": "ADMIN-0.1.0-dev.1",
+      "productVersion": "ADMIN-0.1.0",
+      "name": "查看转化供需并追溯证据",
+      "journeys": [
+        "J10"
+      ],
+      "dependsOn": [
+        "IOS-0.1.0-dev.1"
+      ],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "uxOwner": "UX-3",
+      "uxRevision": "UX-r02",
+      "uxDirectory": "docs/design/r10/admin-0.1.0-dev.1/",
+      "uxStatus": "in-progress",
+      "figmaFileKey": null,
+      "figmaEntryNodeId": null,
+      "inputs": {
+        "J10": {
+          "requirementsRevision": "PM-r01",
+          "demoRevision": "PM-r02",
+          "sha256": {
+            "docs/product/journeys/j10/requirements.zh-CN.md": "3a2436f5463073f4257733d8edcd83f509160bf7dd97f8d898e8229718d11afd",
+            "demo/journeys/j10/index.html": "e098eb42a89f591c669793d8d923f2ea634699084c587489076e4fbb00e74fbd"
+          }
+        }
+      },
+      "designReady": false,
+      "rdPreparation": "architecture-candidate-delivered",
+      "implementationStatus": "not-started",
+      "qaStatus": "not-started",
+      "codeOwner": null,
+      "runtimeBuild": null,
+      "releaseApproved": false
+    },
+    {
+      "id": "ADMIN-0.1.0-dev.2",
+      "productVersion": "ADMIN-0.1.0",
+      "name": "修订分类并取得可信聚合导出",
+      "journeys": [
+        "J11"
+      ],
+      "dependsOn": [
+        "ADMIN-0.1.0-dev.1"
+      ],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "uxOwner": "UX-3",
+      "uxRevision": "UX-r02",
+      "uxDirectory": "docs/design/r10/admin-0.1.0-dev.2/",
+      "uxStatus": "in-progress",
+      "figmaFileKey": null,
+      "figmaEntryNodeId": null,
+      "inputs": {
+        "J11": {
+          "requirementsRevision": "PM-r01",
+          "demoRevision": "PM-r02",
+          "sha256": {
+            "docs/product/journeys/j11/requirements.zh-CN.md": "40921832dd47a5c0df9615b2ddbe483bfa54e51890b527083410d8c09f1451a3",
+            "demo/journeys/j11/index.html": "eaec916ca907e571fa7be9f27a4928b4d75964e968b89c702420f12b4b578d33"
+          }
+        }
+      },
+      "designReady": false,
+      "rdPreparation": "architecture-candidate-delivered",
+      "implementationStatus": "not-started",
+      "qaStatus": "not-started",
+      "codeOwner": null,
+      "runtimeBuild": null,
+      "releaseApproved": false
+    }
+  ],
+  "plannedLater": [
+    {
+      "productVersion": "ADMIN-0.2.0",
+      "journeys": [
+        "J12"
+      ],
+      "issued": false
+    },
+    {
+      "productVersion": "IOS-0.2.0",
+      "journeys": [
+        "J13"
+      ],
+      "issued": false
+    },
+    {
+      "productVersion": "IOS-0.3.0",
+      "journeys": [
+        "J14",
+        "J15"
+      ],
+      "issued": false
+    }
+  ],
+  "firstExternalRelease": {
+    "IOS-0.1.0": {
+      "requires": [
+        "IOS-0.1.0-dev.1",
+        "IOS-0.1.0-dev.2",
+        "IOS-0.1.0-dev.3",
+        "IOS-0.1.0-dev.4",
+        "SUPPORT-0.1.0-dev.1"
+      ],
+      "jointGroups": [
+        "T-MEET",
+        "T-AFTER",
+        "T-SAFETY"
+      ],
+      "approved": false
+    },
+    "ADMIN-0.1.0": {
+      "requires": [
+        "ADMIN-0.1.0-dev.1",
+        "ADMIN-0.1.0-dev.2",
+        "SUPPORT-0.1.0-dev.1"
+      ],
+      "jointDependencies": [
+        "IOS-0.1.0-dev.3",
+        "IOS-0.1.0-dev.4"
+      ],
+      "approved": false
+    }
+  },
+  "workflow": {
+    "meaning": "dev.N是同一正式版本的内部累积构建里程碑，不是新产品发布或每页一版本",
+    "professionalOrder": [
+      "PM",
+      "UX",
+      "RD",
+      "QA"
+    ],
+    "parallelPreparation": [
+      "UX",
+      "RD-architecture"
+    ],
+    "sharedWriter": "PJ仅管理/索引/Git；DS由UX-1唯一写；工程共享文件实施时逐包指定单writer",
+    "gitBranchPattern": "codex/<product>-<version>-dev<N>-<module>",
+    "gitTagPolicy": "本轮只登记计划，不建tag；验收后对精确构建创建候选tag，正式发布批准另记",
+    "jointTestPolicy": "联调固定双方候选/契约/迁移/环境/数据/时钟；不得用不同提交拼证据",
+    "noDatabaseResetForRoutineTests": true,
+    "moduleTaskRegistry": "docs/engineering/r10/module-work-packages.json",
+    "stops": "设计候选与技术方案分别取证；无ready不派实现，当前QA不启动"
+  },
+  "dispatch": {
+    "UX-1": {
+      "iterations": [
+        "IOS-0.1.0-dev.1",
+        "IOS-0.1.0-dev.2"
+      ],
+      "status": "running"
+    },
+    "UX-2": {
+      "iterations": [
+        "IOS-0.1.0-dev.3",
+        "IOS-0.1.0-dev.4"
+      ],
+      "status": "running"
+    },
+    "UX-3": {
+      "iterations": [
+        "SUPPORT-0.1.0-dev.1",
+        "ADMIN-0.1.0-dev.1",
+        "ADMIN-0.1.0-dev.2"
+      ],
+      "status": "running"
+    },
+    "RD-ARCH": {
+      "directory": "docs/engineering/r10/",
+      "status": "candidate-delivered",
+      "mode": "preparation-only",
+      "handoff": "docs/engineering/r10/handoff.zh-CN.md"
+    }
+  }
+}

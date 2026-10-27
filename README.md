@@ -5,7 +5,7 @@
 
 ## 当前产品与交付（r07范围／r08 PM候选）
 
-以[完整用户旅程](docs/product/journey-modules.zh-CN.md)划分模块，[MVP需求](docs/product/fancy-requirements-baseline.zh-CN.md)定义产品行为，[项目管理方案](docs/delivery/project-management-plan.zh-CN.md)定义团队流程。登录/注册/补资料嵌入申请或发起旅程，不单独交半条体验；旧60功能切片停止作为PM派单单位。用户已授权3个PM并行完成首发J01—J11，每旅程各自交付需求与Demo，见[成对评审入口](docs/delivery/pm-first-release-review.zh-CN.md)。当前停在PM候选待审阅，UX/RD/QA未启动。
+当前执行以[开发版本方案r10](docs/delivery/development-versions-r10.zh-CN.md)及[版本/派工数据](docs/delivery/development-versions-r10.json)为准：沿用用户认可的原MVP Demo视觉与交互，保留iOS＋管理后台、host外订到店各付，按内部dev迭代交付Figma规范与路径；研发本轮仅做技术选型、架构和模块拆分，业务实现与QA未启动。上一批UX-r01视觉未获接受，保留历史，不作为开发依据。
 
 ## 历史交付与业务来源
 

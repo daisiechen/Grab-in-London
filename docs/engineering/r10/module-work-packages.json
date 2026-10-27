@@ -1,0 +1,1296 @@
+{
+  "schemaVersion": 1,
+  "revision": "r10-RD-prepare-1",
+  "status": "architecture-candidate-not-implementation",
+  "versionAuthority": "docs/delivery/development-versions-r10.json",
+  "versionScopeProjection": [
+    {
+      "id": "IOS-0.1.0-dev.1",
+      "productVersion": "IOS-0.1.0",
+      "journeys": [
+        "J01",
+        "J05"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "IOS-0.1.0-dev.2",
+      "productVersion": "IOS-0.1.0",
+      "journeys": [
+        "J02"
+      ],
+      "dependsOn": [
+        "IOS-0.1.0-dev.1"
+      ]
+    },
+    {
+      "id": "IOS-0.1.0-dev.3",
+      "productVersion": "IOS-0.1.0",
+      "journeys": [
+        "J03",
+        "J04",
+        "J06"
+      ],
+      "dependsOn": [
+        "IOS-0.1.0-dev.2"
+      ]
+    },
+    {
+      "id": "IOS-0.1.0-dev.4",
+      "productVersion": "IOS-0.1.0",
+      "journeys": [
+        "J07",
+        "J08"
+      ],
+      "dependsOn": [
+        "IOS-0.1.0-dev.3"
+      ]
+    },
+    {
+      "id": "SUPPORT-0.1.0-dev.1",
+      "productVersion": "SUPPORT-0.1.0",
+      "journeys": [
+        "J09"
+      ],
+      "dependsOn": [
+        "IOS-0.1.0-dev.1"
+      ]
+    },
+    {
+      "id": "ADMIN-0.1.0-dev.1",
+      "productVersion": "ADMIN-0.1.0",
+      "journeys": [
+        "J10"
+      ],
+      "dependsOn": [
+        "IOS-0.1.0-dev.1"
+      ]
+    },
+    {
+      "id": "ADMIN-0.1.0-dev.2",
+      "productVersion": "ADMIN-0.1.0",
+      "journeys": [
+        "J11"
+      ],
+      "dependsOn": [
+        "ADMIN-0.1.0-dev.1"
+      ]
+    }
+  ],
+  "inputManifest": "docs/engineering/r10/input-manifest.json",
+  "mode": "planning-only",
+  "sourceArtifactsReadOnly": true,
+  "runtimeBuild": null,
+  "deployment": null,
+  "qaStarted": false,
+  "sharedWriterLeases": [
+    {
+      "role": "RD-CONTRACTS",
+      "assignedOwner": null,
+      "paths": [
+        "packages/contracts/",
+        "packages/client/src/generated/"
+      ],
+      "reason": "schema与生成OpenAPI/操作元数据原子更新；禁止消费者各自生成"
+    },
+    {
+      "role": "RD-DATA",
+      "assignedOwner": null,
+      "paths": [
+        "packages/db/"
+      ],
+      "reason": "迁移序号/schema/index全局单writer，领域事务差异先申请"
+    },
+    {
+      "role": "RD-SDK",
+      "assignedOwner": null,
+      "paths": [
+        "packages/client/src/"
+      ],
+      "excludes": [
+        "packages/client/src/generated/"
+      ],
+      "reason": "公共HTTP/错误/重试语义单writer"
+    },
+    {
+      "role": "RD-PLATFORM",
+      "assignedOwner": null,
+      "paths": [
+        "package.json",
+        "pnpm-lock.yaml",
+        "infra/",
+        "apps/api/src/http/",
+        "apps/worker/src/main.ts",
+        "apps/ios/src/AppRoot.tsx",
+        "apps/ios/src/services.tsx",
+        "apps/ios/src/ui/",
+        "apps/ios/app/_layout.tsx",
+        "apps/ios/app/(tabs)/_layout.tsx",
+        "apps/admin/src/App.tsx",
+        "apps/admin/src/styles.css"
+      ],
+      "reason": "平台入口、公共导航/样式与运行配置串行集成；不会以页面任务取得全局写权"
+    }
+  ],
+  "domainWriterRules": "同一服务文件跨旅程复用时沿capability指定同一实现owner/串行租约（如meals/applications、support/routes、assistant）；未登记精确租约的重叠组不并行。",
+  "parallelCandidates": [
+    [
+      "WP-J01",
+      "WP-J05"
+    ],
+    [
+      "WP-J03",
+      "WP-J06"
+    ],
+    [
+      "WP-J07",
+      "WP-J09"
+    ],
+    [
+      "WP-J10",
+      "WP-J01"
+    ]
+  ],
+  "parallelCondition": "仅独占client文件/不交叉domain文件的子组；共享writer完成固定接口交付后才可集成。J07/J09同时写support/routes禁止，J01/J05的profile/assistant请求串行。不是整包无条件并行授权。",
+  "workPackages": [
+    {
+      "id": "WP-FOUNDATION",
+      "journeys": [],
+      "iteration": "shared-contract-prerequisite",
+      "status": "not-issued",
+      "implementationOwner": null,
+      "implementationStarted": false,
+      "designReady": false,
+      "dependsOn": [],
+      "existingPaths": [
+        "packages/contracts/src",
+        "packages/client/src",
+        "packages/db/src",
+        "packages/config/src",
+        "apps/api/src/http",
+        "apps/ios/src/ui",
+        "apps/ios/src/services.tsx",
+        "apps/worker/src/main.ts"
+      ],
+      "plannedPaths": [],
+      "commitGroups": [],
+      "sharedWriterRequests": [
+        "RD-CONTRACTS",
+        "RD-DATA",
+        "RD-SDK",
+        "RD-PLATFORM"
+      ],
+      "acceptance": [
+        "固定最小公共合同/配置/通用设计语义与实际源码差异，消费者使用同一生成物，不先展开全部业务库表。",
+        "单候选可重复预检启动/停止，明确空fixture和故障注入责任，不碰旧环境；已有依赖组合校验失败先定向报告。",
+        "DS与版本Ready记录、精确文件租约/owner/合成数据入口全部填实后才签发业务包。"
+      ],
+      "runtimeBuild": null,
+      "codeCommit": null,
+      "deployment": null,
+      "qaStatus": "not-started",
+      "codeStartGate": {
+        "iterationDesignReady": false,
+        "moduleOwnerAssigned": false,
+        "exactFileLeaseIssued": false,
+        "sharedContractCompatible": false,
+        "environmentPreflightPassed": false,
+        "allowed": false
+      }
+    },
+    {
+      "id": "WP-J01",
+      "journeys": [
+        "J01"
+      ],
+      "iteration": "IOS-0.1.0-dev.1",
+      "capabilities": [
+        "Identity",
+        "Discovery",
+        "Participation",
+        "Assistant"
+      ],
+      "status": "not-issued",
+      "implementationOwner": null,
+      "implementationStarted": false,
+      "designReady": false,
+      "dependsOn": [
+        "WP-FOUNDATION"
+      ],
+      "integrationPreconditions": "按PJ迭代dependsOn闭合真实跨角色前置；独立模块可用明确合成fixture验证本端，不冒称跨版本真实通过。",
+      "sourceInputs": [
+        "docs/product/journeys/j01/requirements.zh-CN.md",
+        "docs/product/journeys/j01/coverage.json"
+      ],
+      "existingPaths": [
+        "apps/ios/src/features/discover/DiscoverScreen.tsx",
+        "apps/ios/src/features/discover/filters.ts",
+        "apps/ios/src/features/meals/ApplyScreen.tsx",
+        "apps/ios/src/features/meals/application-drafts.ts",
+        "apps/api/src/identity",
+        "apps/api/src/meals/read.ts",
+        "apps/api/src/meals/applications.ts"
+      ],
+      "plannedPaths": [],
+      "commitGroups": [
+        {
+          "id": "J01-client-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/ios/src/features/discover/DiscoverScreen.tsx",
+            "apps/ios/src/features/discover/filters.ts",
+            "apps/ios/src/features/meals/ApplyScreen.tsx"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        },
+        {
+          "id": "J01-client-2",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/ios/src/features/meals/application-drafts.ts"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        },
+        {
+          "id": "J01-server-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/api/src/identity",
+            "apps/api/src/meals/read.ts",
+            "apps/api/src/meals/applications.ts"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        }
+      ],
+      "sharedWriterRequests": [
+        "RD-ASSISTANT",
+        "RD-CONTRACTS",
+        "RD-DATA",
+        "RD-IDENTITY",
+        "RD-NOTIFICATIONS",
+        "RD-PARTICIPATION",
+        "RD-PLATFORM",
+        "RD-SDK"
+      ],
+      "acceptance": [
+        "游客浏览/筛选/公开详情→原申请意图注册及完整资料→主动申请产生唯一Pending，取消返回不写。",
+        "未知结果查原次、撤回/重申与截止/名额/角色变化符合J01；无真实host前置时明确用隔离合成场。",
+        "Ask Fancy查询/解释/申请稿、硬软/CLEAR与Keep/Replace及人工提交，对应同版Figma，模型门槛不被模拟替代。"
+      ],
+      "verification": {
+        "unitAndContract": "沿相关模块现有tests做必要定向回归，不复制实现写自证测试。",
+        "apiAndDatabase": "在本候选专属Postgres fixture中验证命令、鉴权、事务与重复/未知结果。",
+        "client": "同版本Figma/状态/数据逐路径检查；iOS真机构建与后台代表宽度分别取证。",
+        "joint": "发布/申请/审批→消息→饭后/支持/删除→新快照/导出按实际关联旅程闭合，不整项目盲跑。"
+      },
+      "runtimeBuild": null,
+      "codeCommit": null,
+      "deployment": null,
+      "qaStatus": "not-started",
+      "iterationDependencies": [],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "codeStartGate": {
+        "iterationDesignReady": false,
+        "moduleOwnerAssigned": false,
+        "exactFileLeaseIssued": false,
+        "sharedContractCompatible": false,
+        "environmentPreflightPassed": false,
+        "allowed": false
+      }
+    },
+    {
+      "id": "WP-J05",
+      "journeys": [
+        "J05"
+      ],
+      "iteration": "IOS-0.1.0-dev.1",
+      "capabilities": [
+        "Profile",
+        "Assistant",
+        "Identity"
+      ],
+      "status": "not-issued",
+      "implementationOwner": null,
+      "implementationStarted": false,
+      "designReady": false,
+      "dependsOn": [
+        "WP-FOUNDATION"
+      ],
+      "integrationPreconditions": "按PJ迭代dependsOn闭合真实跨角色前置；独立模块可用明确合成fixture验证本端，不冒称跨版本真实通过。",
+      "sourceInputs": [
+        "docs/product/journeys/j05/requirements.zh-CN.md",
+        "docs/product/journeys/j05/coverage.json"
+      ],
+      "existingPaths": [
+        "apps/ios/src/features/profile/model.ts",
+        "apps/ios/src/features/profile/save.ts",
+        "apps/ios/src/features/settings/SettingsScreen.tsx",
+        "apps/api/src/profiles/routes.ts",
+        "apps/api/src/assistant/preferences.ts"
+      ],
+      "plannedPaths": [],
+      "commitGroups": [
+        {
+          "id": "J05-client-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/ios/src/features/profile/model.ts",
+            "apps/ios/src/features/profile/save.ts",
+            "apps/ios/src/features/settings/SettingsScreen.tsx"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        },
+        {
+          "id": "J05-server-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/api/src/profiles/routes.ts",
+            "apps/api/src/assistant/preferences.ts"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        }
+      ],
+      "sharedWriterRequests": [
+        "RD-ASSISTANT",
+        "RD-CONTRACTS",
+        "RD-DATA",
+        "RD-IDENTITY",
+        "RD-PLATFORM",
+        "RD-PROFILE",
+        "RD-SDK"
+      ],
+      "acceptance": [
+        "资料保存/取消/版本冲突与公开投影一致，统计选择按确认状态显示。",
+        "六字段AI偏好明确确认、409核对、删除与CLEAR生命周期准确，不产生隐性画像。",
+        "退出清本机私密会话及草稿，不删除已确认账号偏好；旧响应不串账号。"
+      ],
+      "verification": {
+        "unitAndContract": "沿相关模块现有tests做必要定向回归，不复制实现写自证测试。",
+        "apiAndDatabase": "在本候选专属Postgres fixture中验证命令、鉴权、事务与重复/未知结果。",
+        "client": "同版本Figma/状态/数据逐路径检查；iOS真机构建与后台代表宽度分别取证。",
+        "joint": "发布/申请/审批→消息→饭后/支持/删除→新快照/导出按实际关联旅程闭合，不整项目盲跑。"
+      },
+      "runtimeBuild": null,
+      "codeCommit": null,
+      "deployment": null,
+      "qaStatus": "not-started",
+      "iterationDependencies": [],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "codeStartGate": {
+        "iterationDesignReady": false,
+        "moduleOwnerAssigned": false,
+        "exactFileLeaseIssued": false,
+        "sharedContractCompatible": false,
+        "environmentPreflightPassed": false,
+        "allowed": false
+      }
+    },
+    {
+      "id": "WP-J02",
+      "journeys": [
+        "J02"
+      ],
+      "iteration": "IOS-0.1.0-dev.2",
+      "capabilities": [
+        "Hosting",
+        "Participation",
+        "Assistant",
+        "Notifications"
+      ],
+      "status": "not-issued",
+      "implementationOwner": null,
+      "implementationStarted": false,
+      "designReady": false,
+      "dependsOn": [
+        "WP-FOUNDATION"
+      ],
+      "integrationPreconditions": "按PJ迭代dependsOn闭合真实跨角色前置；独立模块可用明确合成fixture验证本端，不冒称跨版本真实通过。",
+      "sourceInputs": [
+        "docs/product/journeys/j02/requirements.zh-CN.md",
+        "docs/product/journeys/j02/coverage.json"
+      ],
+      "existingPaths": [
+        "apps/ios/src/features/create/CreateStepScreen.tsx",
+        "apps/ios/src/features/create/model.ts",
+        "apps/ios/src/features/meals/HostScreen.tsx",
+        "apps/api/src/meals/commands.ts",
+        "apps/api/src/meals/lifecycle.ts",
+        "apps/api/src/meals/time.ts"
+      ],
+      "plannedPaths": [],
+      "commitGroups": [
+        {
+          "id": "J02-client-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/ios/src/features/create/CreateStepScreen.tsx",
+            "apps/ios/src/features/create/model.ts",
+            "apps/ios/src/features/meals/HostScreen.tsx"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        },
+        {
+          "id": "J02-server-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/api/src/meals/commands.ts",
+            "apps/api/src/meals/lifecycle.ts",
+            "apps/api/src/meals/time.ts"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        }
+      ],
+      "sharedWriterRequests": [
+        "RD-ASSISTANT",
+        "RD-CONTRACTS",
+        "RD-DATA",
+        "RD-NOTIFICATIONS",
+        "RD-PARTICIPATION",
+        "RD-PLATFORM",
+        "RD-SDK"
+      ],
+      "acceptance": [
+        "四步创建/选择真实餐厅语义/时区/人数/外订声明/Review保稿，发布唯一饭局；AI只生成草稿。",
+        "同版dev.1申请实际进入host审核，批准直接Confirmed且末位不超售；首批准后关键安排锁。",
+        "人数与声明更新、截止最低人数与取消终态、关键站内/邮件结果分开，失败不伪称送达。"
+      ],
+      "verification": {
+        "unitAndContract": "沿相关模块现有tests做必要定向回归，不复制实现写自证测试。",
+        "apiAndDatabase": "在本候选专属Postgres fixture中验证命令、鉴权、事务与重复/未知结果。",
+        "client": "同版本Figma/状态/数据逐路径检查；iOS真机构建与后台代表宽度分别取证。",
+        "joint": "发布/申请/审批→消息→饭后/支持/删除→新快照/导出按实际关联旅程闭合，不整项目盲跑。"
+      },
+      "runtimeBuild": null,
+      "codeCommit": null,
+      "deployment": null,
+      "qaStatus": "not-started",
+      "iterationDependencies": [
+        "IOS-0.1.0-dev.1"
+      ],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "codeStartGate": {
+        "iterationDesignReady": false,
+        "moduleOwnerAssigned": false,
+        "exactFileLeaseIssued": false,
+        "sharedContractCompatible": false,
+        "environmentPreflightPassed": false,
+        "allowed": false
+      }
+    },
+    {
+      "id": "WP-J03",
+      "journeys": [
+        "J03"
+      ],
+      "iteration": "IOS-0.1.0-dev.3",
+      "capabilities": [
+        "Messaging",
+        "Participation",
+        "Assistant",
+        "Notifications"
+      ],
+      "status": "not-issued",
+      "implementationOwner": null,
+      "implementationStarted": false,
+      "designReady": false,
+      "dependsOn": [
+        "WP-FOUNDATION"
+      ],
+      "integrationPreconditions": "按PJ迭代dependsOn闭合真实跨角色前置；独立模块可用明确合成fixture验证本端，不冒称跨版本真实通过。",
+      "sourceInputs": [
+        "docs/product/journeys/j03/requirements.zh-CN.md",
+        "docs/product/journeys/j03/coverage.json"
+      ],
+      "existingPaths": [
+        "apps/ios/src/features/inbox/InboxScreen.tsx",
+        "apps/ios/src/features/inbox/ChatScreen.tsx",
+        "apps/ios/src/features/inbox/read-ack.ts",
+        "apps/api/src/conversations/routes.ts",
+        "apps/api/src/membership/intervals.ts"
+      ],
+      "plannedPaths": [],
+      "commitGroups": [
+        {
+          "id": "J03-client-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/ios/src/features/inbox/InboxScreen.tsx",
+            "apps/ios/src/features/inbox/ChatScreen.tsx",
+            "apps/ios/src/features/inbox/read-ack.ts"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        },
+        {
+          "id": "J03-server-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/api/src/conversations/routes.ts",
+            "apps/api/src/membership/intervals.ts"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        }
+      ],
+      "sharedWriterRequests": [
+        "RD-ASSISTANT",
+        "RD-CONTRACTS",
+        "RD-DATA",
+        "RD-MESSAGING",
+        "RD-NOTIFICATIONS",
+        "RD-PARTICIPATION",
+        "RD-PLATFORM",
+        "RD-SDK"
+      ],
+      "acceptance": [
+        "真实审批后从Inbox进入授权群收发；通知显式已读与可见聊天读位独立，断网失败保稿人工重试。",
+        "退席不退群、退群只读无名册、解散终态与授权区间空档准确；重入不是前端开关。",
+        "AI群稿经Keep/Replace转入再本人发送，失权/账号切换丢弃旧稿，无群push或邮件扩展。"
+      ],
+      "verification": {
+        "unitAndContract": "沿相关模块现有tests做必要定向回归，不复制实现写自证测试。",
+        "apiAndDatabase": "在本候选专属Postgres fixture中验证命令、鉴权、事务与重复/未知结果。",
+        "client": "同版本Figma/状态/数据逐路径检查；iOS真机构建与后台代表宽度分别取证。",
+        "joint": "发布/申请/审批→消息→饭后/支持/删除→新快照/导出按实际关联旅程闭合，不整项目盲跑。"
+      },
+      "runtimeBuild": null,
+      "codeCommit": null,
+      "deployment": null,
+      "qaStatus": "not-started",
+      "iterationDependencies": [
+        "IOS-0.1.0-dev.2"
+      ],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "codeStartGate": {
+        "iterationDesignReady": false,
+        "moduleOwnerAssigned": false,
+        "exactFileLeaseIssued": false,
+        "sharedContractCompatible": false,
+        "environmentPreflightPassed": false,
+        "allowed": false
+      }
+    },
+    {
+      "id": "WP-J04",
+      "journeys": [
+        "J04"
+      ],
+      "iteration": "IOS-0.1.0-dev.3",
+      "capabilities": [
+        "PostMeal",
+        "Messaging"
+      ],
+      "status": "not-issued",
+      "implementationOwner": null,
+      "implementationStarted": false,
+      "designReady": false,
+      "dependsOn": [
+        "WP-FOUNDATION"
+      ],
+      "integrationPreconditions": "按PJ迭代dependsOn闭合真实跨角色前置；独立模块可用明确合成fixture验证本端，不冒称跨版本真实通过。",
+      "sourceInputs": [
+        "docs/product/journeys/j04/requirements.zh-CN.md",
+        "docs/product/journeys/j04/coverage.json"
+      ],
+      "existingPaths": [
+        "apps/ios/src/features/post-meal/PostMealScreen.tsx",
+        "apps/ios/src/features/connections/MemberSafety.tsx",
+        "apps/api/src/post-meal/attendance.ts",
+        "apps/api/src/post-meal/experience.ts",
+        "apps/api/src/post-meal/reviews.ts",
+        "apps/api/src/connections/service.ts"
+      ],
+      "plannedPaths": [],
+      "commitGroups": [
+        {
+          "id": "J04-client-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/ios/src/features/post-meal/PostMealScreen.tsx",
+            "apps/ios/src/features/connections/MemberSafety.tsx"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        },
+        {
+          "id": "J04-server-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/api/src/post-meal/attendance.ts",
+            "apps/api/src/post-meal/experience.ts",
+            "apps/api/src/post-meal/reviews.ts"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        },
+        {
+          "id": "J04-server-2",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/api/src/connections/service.ts"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        }
+      ],
+      "sharedWriterRequests": [
+        "RD-CONTRACTS",
+        "RD-DATA",
+        "RD-MESSAGING",
+        "RD-PLATFORM",
+        "RD-POSTMEAL",
+        "RD-SDK"
+      ],
+      "acceptance": [
+        "本人/host补报、七天边界、私评分/公评/再约分对象，unknown不当absent，不擅自公开单方意愿。",
+        "组合保存串行分项、部分成功仅重试未存；OPEN取消先确认，超窗仍可独立撤回。",
+        "双方有效同意才私聊实际发送；撤回/拉黑后历史只读，另一有效共同依据和支持修订不误伤。"
+      ],
+      "verification": {
+        "unitAndContract": "沿相关模块现有tests做必要定向回归，不复制实现写自证测试。",
+        "apiAndDatabase": "在本候选专属Postgres fixture中验证命令、鉴权、事务与重复/未知结果。",
+        "client": "同版本Figma/状态/数据逐路径检查；iOS真机构建与后台代表宽度分别取证。",
+        "joint": "发布/申请/审批→消息→饭后/支持/删除→新快照/导出按实际关联旅程闭合，不整项目盲跑。"
+      },
+      "runtimeBuild": null,
+      "codeCommit": null,
+      "deployment": null,
+      "qaStatus": "not-started",
+      "iterationDependencies": [
+        "IOS-0.1.0-dev.2"
+      ],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "codeStartGate": {
+        "iterationDesignReady": false,
+        "moduleOwnerAssigned": false,
+        "exactFileLeaseIssued": false,
+        "sharedContractCompatible": false,
+        "environmentPreflightPassed": false,
+        "allowed": false
+      }
+    },
+    {
+      "id": "WP-J06",
+      "journeys": [
+        "J06"
+      ],
+      "iteration": "IOS-0.1.0-dev.3",
+      "capabilities": [
+        "Profile"
+      ],
+      "status": "not-issued",
+      "implementationOwner": null,
+      "implementationStarted": false,
+      "designReady": false,
+      "dependsOn": [
+        "WP-FOUNDATION"
+      ],
+      "integrationPreconditions": "按PJ迭代dependsOn闭合真实跨角色前置；独立模块可用明确合成fixture验证本端，不冒称跨版本真实通过。",
+      "sourceInputs": [
+        "docs/product/journeys/j06/requirements.zh-CN.md",
+        "docs/product/journeys/j06/coverage.json"
+      ],
+      "existingPaths": [
+        "apps/ios/src/features/settings/SurveyScreen.tsx",
+        "apps/api/src/surveys/routes.ts"
+      ],
+      "plannedPaths": [],
+      "commitGroups": [
+        {
+          "id": "J06-client-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/ios/src/features/settings/SurveyScreen.tsx"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        },
+        {
+          "id": "J06-server-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/api/src/surveys/routes.ts"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        }
+      ],
+      "sharedWriterRequests": [
+        "RD-CONTRACTS",
+        "RD-DATA",
+        "RD-PLATFORM",
+        "RD-PROFILE",
+        "RD-SDK"
+      ],
+      "acceptance": [
+        "设置进入可选产品问卷，无出席/mealId/七天门槛，again三态及七原因按本人保存。",
+        "返回找回最新、更新同一人版本；空白阻止、失败保留、结果未知先查原次。",
+        "问卷与单场评分/公评/再约、后台日期与筛选消费严格分开。"
+      ],
+      "verification": {
+        "unitAndContract": "沿相关模块现有tests做必要定向回归，不复制实现写自证测试。",
+        "apiAndDatabase": "在本候选专属Postgres fixture中验证命令、鉴权、事务与重复/未知结果。",
+        "client": "同版本Figma/状态/数据逐路径检查；iOS真机构建与后台代表宽度分别取证。",
+        "joint": "发布/申请/审批→消息→饭后/支持/删除→新快照/导出按实际关联旅程闭合，不整项目盲跑。"
+      },
+      "runtimeBuild": null,
+      "codeCommit": null,
+      "deployment": null,
+      "qaStatus": "not-started",
+      "iterationDependencies": [
+        "IOS-0.1.0-dev.2"
+      ],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "codeStartGate": {
+        "iterationDesignReady": false,
+        "moduleOwnerAssigned": false,
+        "exactFileLeaseIssued": false,
+        "sharedContractCompatible": false,
+        "environmentPreflightPassed": false,
+        "allowed": false
+      }
+    },
+    {
+      "id": "WP-J07",
+      "journeys": [
+        "J07"
+      ],
+      "iteration": "IOS-0.1.0-dev.4",
+      "capabilities": [
+        "Safety",
+        "Identity"
+      ],
+      "status": "not-issued",
+      "implementationOwner": null,
+      "implementationStarted": false,
+      "designReady": false,
+      "dependsOn": [
+        "WP-FOUNDATION"
+      ],
+      "integrationPreconditions": "按PJ迭代dependsOn闭合真实跨角色前置；独立模块可用明确合成fixture验证本端，不冒称跨版本真实通过。",
+      "sourceInputs": [
+        "docs/product/journeys/j07/requirements.zh-CN.md",
+        "docs/product/journeys/j07/coverage.json"
+      ],
+      "existingPaths": [
+        "apps/ios/src/features/settings/ReportScreen.tsx",
+        "apps/api/src/support/routes.ts"
+      ],
+      "plannedPaths": [],
+      "commitGroups": [
+        {
+          "id": "J07-client-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/ios/src/features/settings/ReportScreen.tsx"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        },
+        {
+          "id": "J07-server-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/api/src/support/routes.ts"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        }
+      ],
+      "sharedWriterRequests": [
+        "RD-CONTRACTS",
+        "RD-DATA",
+        "RD-IDENTITY",
+        "RD-PLATFORM",
+        "RD-SDK",
+        "RD-SUPPORT"
+      ],
+      "acceptance": [
+        "对象举报→取消/校验→本人主动私密提交→最小回执→本人列表跟踪回复，受理不等解决。",
+        "失败保稿、Unknown查原次不重复；换账号/失权不泄原账号草稿或事项。",
+        "支持回复是授权外部事实，不在用户App提供代支持动作。"
+      ],
+      "verification": {
+        "unitAndContract": "沿相关模块现有tests做必要定向回归，不复制实现写自证测试。",
+        "apiAndDatabase": "在本候选专属Postgres fixture中验证命令、鉴权、事务与重复/未知结果。",
+        "client": "同版本Figma/状态/数据逐路径检查；iOS真机构建与后台代表宽度分别取证。",
+        "joint": "发布/申请/审批→消息→饭后/支持/删除→新快照/导出按实际关联旅程闭合，不整项目盲跑。"
+      },
+      "runtimeBuild": null,
+      "codeCommit": null,
+      "deployment": null,
+      "qaStatus": "not-started",
+      "iterationDependencies": [
+        "IOS-0.1.0-dev.3"
+      ],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "codeStartGate": {
+        "iterationDesignReady": false,
+        "moduleOwnerAssigned": false,
+        "exactFileLeaseIssued": false,
+        "sharedContractCompatible": false,
+        "environmentPreflightPassed": false,
+        "allowed": false
+      }
+    },
+    {
+      "id": "WP-J08",
+      "journeys": [
+        "J08"
+      ],
+      "iteration": "IOS-0.1.0-dev.4",
+      "capabilities": [
+        "Safety",
+        "Identity",
+        "Assistant",
+        "Analytics",
+        "ClassificationExport"
+      ],
+      "status": "not-issued",
+      "implementationOwner": null,
+      "implementationStarted": false,
+      "designReady": false,
+      "dependsOn": [
+        "WP-FOUNDATION"
+      ],
+      "integrationPreconditions": "按PJ迭代dependsOn闭合真实跨角色前置；独立模块可用明确合成fixture验证本端，不冒称跨版本真实通过。",
+      "sourceInputs": [
+        "docs/product/journeys/j08/requirements.zh-CN.md",
+        "docs/product/journeys/j08/coverage.json"
+      ],
+      "existingPaths": [
+        "apps/ios/src/features/settings/DeleteAccountScreen.tsx",
+        "apps/ios/src/features/settings/DeletionStatusScreen.tsx",
+        "apps/ios/src/features/settings/deletion-receipt-store.ts",
+        "apps/api/src/deletion/routes.ts",
+        "apps/worker/src/handlers/deletion.ts"
+      ],
+      "plannedPaths": [],
+      "commitGroups": [
+        {
+          "id": "J08-client-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/ios/src/features/settings/DeleteAccountScreen.tsx",
+            "apps/ios/src/features/settings/DeletionStatusScreen.tsx",
+            "apps/ios/src/features/settings/deletion-receipt-store.ts"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        },
+        {
+          "id": "J08-server-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/api/src/deletion/routes.ts",
+            "apps/worker/src/handlers/deletion.ts"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        }
+      ],
+      "sharedWriterRequests": [
+        "RD-ANALYTICS",
+        "RD-ASSISTANT",
+        "RD-CONTRACTS",
+        "RD-DATA",
+        "RD-EXPORT",
+        "RD-IDENTITY",
+        "RD-NOTIFICATIONS",
+        "RD-PLATFORM",
+        "RD-POSTMEAL",
+        "RD-SDK"
+      ],
+      "acceptance": [
+        "影响说明/取消→再认证→本人确认；同步删除屏障成功才202，失败全部回滚。",
+        "预存私密receipt恢复丢响应；受理/处理中/需支持/全部完成分开，公开支持出口不恢复业务登录。",
+        "旧session/公开投影/未来参与/联系/群区间/AI epoch/旧快照导出即时撤权，保留已开始他人资格；只重试未完物理步骤。"
+      ],
+      "verification": {
+        "unitAndContract": "沿相关模块现有tests做必要定向回归，不复制实现写自证测试。",
+        "apiAndDatabase": "在本候选专属Postgres fixture中验证命令、鉴权、事务与重复/未知结果。",
+        "client": "同版本Figma/状态/数据逐路径检查；iOS真机构建与后台代表宽度分别取证。",
+        "joint": "发布/申请/审批→消息→饭后/支持/删除→新快照/导出按实际关联旅程闭合，不整项目盲跑。"
+      },
+      "runtimeBuild": null,
+      "codeCommit": null,
+      "deployment": null,
+      "qaStatus": "not-started",
+      "iterationDependencies": [
+        "IOS-0.1.0-dev.3"
+      ],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "codeStartGate": {
+        "iterationDesignReady": false,
+        "moduleOwnerAssigned": false,
+        "exactFileLeaseIssued": false,
+        "sharedContractCompatible": false,
+        "environmentPreflightPassed": false,
+        "allowed": false
+      }
+    },
+    {
+      "id": "WP-J09",
+      "journeys": [
+        "J09"
+      ],
+      "iteration": "SUPPORT-0.1.0-dev.1",
+      "capabilities": [
+        "Support",
+        "PostMeal",
+        "Analytics"
+      ],
+      "status": "not-issued",
+      "implementationOwner": null,
+      "implementationStarted": false,
+      "designReady": false,
+      "dependsOn": [
+        "WP-FOUNDATION"
+      ],
+      "integrationPreconditions": "按PJ迭代dependsOn闭合真实跨角色前置；独立模块可用明确合成fixture验证本端，不冒称跨版本真实通过。",
+      "sourceInputs": [
+        "docs/product/journeys/j09/requirements.zh-CN.md",
+        "docs/product/journeys/j09/coverage.json"
+      ],
+      "existingPaths": [
+        "apps/api/src/support/routes.ts",
+        "apps/api/src/support/privacy.ts"
+      ],
+      "plannedPaths": [],
+      "commitGroups": [
+        {
+          "id": "J09-server-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/api/src/support/routes.ts",
+            "apps/api/src/support/privacy.ts"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        }
+      ],
+      "sharedWriterRequests": [
+        "RD-ANALYTICS",
+        "RD-CONTRACTS",
+        "RD-DATA",
+        "RD-PLATFORM",
+        "RD-POSTMEAL",
+        "RD-SDK",
+        "RD-SUPPORT"
+      ],
+      "acceptance": [
+        "内部MFA+case范围读最小事实，普通举报可只回复，不建设完整客服平台或全量核实队列。",
+        "满连续七天后授权追加present/absent修订与原因/expectedVersion；原报告历史保留，未知查询原次。",
+        "实际资格/新统计/公开投影与联系依据传播、最小publicOutcome和审计闭合；无关材料拒读。"
+      ],
+      "verification": {
+        "unitAndContract": "沿相关模块现有tests做必要定向回归，不复制实现写自证测试。",
+        "apiAndDatabase": "在本候选专属Postgres fixture中验证命令、鉴权、事务与重复/未知结果。",
+        "client": "同版本Figma/状态/数据逐路径检查；iOS真机构建与后台代表宽度分别取证。",
+        "joint": "发布/申请/审批→消息→饭后/支持/删除→新快照/导出按实际关联旅程闭合，不整项目盲跑。"
+      },
+      "runtimeBuild": null,
+      "codeCommit": null,
+      "deployment": null,
+      "qaStatus": "not-started",
+      "iterationDependencies": [
+        "IOS-0.1.0-dev.1"
+      ],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "codeStartGate": {
+        "iterationDesignReady": false,
+        "moduleOwnerAssigned": false,
+        "exactFileLeaseIssued": false,
+        "sharedContractCompatible": false,
+        "environmentPreflightPassed": false,
+        "allowed": false
+      }
+    },
+    {
+      "id": "WP-J10",
+      "journeys": [
+        "J10"
+      ],
+      "iteration": "ADMIN-0.1.0-dev.1",
+      "capabilities": [
+        "Analytics"
+      ],
+      "status": "not-issued",
+      "implementationOwner": null,
+      "implementationStarted": false,
+      "designReady": false,
+      "dependsOn": [
+        "WP-FOUNDATION"
+      ],
+      "integrationPreconditions": "按PJ迭代dependsOn闭合真实跨角色前置；独立模块可用明确合成fixture验证本端，不冒称跨版本真实通过。",
+      "sourceInputs": [
+        "docs/product/journeys/j10/requirements.zh-CN.md",
+        "docs/product/journeys/j10/coverage.json"
+      ],
+      "existingPaths": [
+        "apps/admin/src/features/filters/FilterBar.tsx",
+        "apps/admin/src/features/dictionary/MetricDictionary.tsx",
+        "apps/admin/src/components/DetailDialog.tsx",
+        "apps/admin/src/state/filters.ts",
+        "apps/api/src/admin/pages.ts",
+        "apps/api/src/admin/drilldown.ts",
+        "apps/api/src/admin/metrics.ts"
+      ],
+      "plannedPaths": [],
+      "commitGroups": [
+        {
+          "id": "J10-client-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/admin/src/features/filters/FilterBar.tsx",
+            "apps/admin/src/features/dictionary/MetricDictionary.tsx",
+            "apps/admin/src/components/DetailDialog.tsx"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        },
+        {
+          "id": "J10-client-2",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/admin/src/state/filters.ts"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        },
+        {
+          "id": "J10-server-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/api/src/admin/pages.ts",
+            "apps/api/src/admin/drilldown.ts",
+            "apps/api/src/admin/metrics.ts"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        }
+      ],
+      "sharedWriterRequests": [
+        "RD-ANALYTICS",
+        "RD-CONTRACTS",
+        "RD-DATA",
+        "RD-PLATFORM",
+        "RD-SDK"
+      ],
+      "acceptance": [
+        "按固定snapshot日期/业务筛选从概览与供需进入口径→伪名来源→饭局→历史，再逐层返回原查询。",
+        "weekly去重用户含host、14天激活/30天再赴约/unknown与覆盖及零分母观察期符合采集v4，不造因果漏斗。",
+        "401/403/410/429/503恢复及locale/URL/长表/焦点正确；不读私密正文，不提前增加J12专门页。"
+      ],
+      "verification": {
+        "unitAndContract": "沿相关模块现有tests做必要定向回归，不复制实现写自证测试。",
+        "apiAndDatabase": "在本候选专属Postgres fixture中验证命令、鉴权、事务与重复/未知结果。",
+        "client": "同版本Figma/状态/数据逐路径检查；iOS真机构建与后台代表宽度分别取证。",
+        "joint": "发布/申请/审批→消息→饭后/支持/删除→新快照/导出按实际关联旅程闭合，不整项目盲跑。"
+      },
+      "runtimeBuild": null,
+      "codeCommit": null,
+      "deployment": null,
+      "qaStatus": "not-started",
+      "iterationDependencies": [
+        "IOS-0.1.0-dev.1"
+      ],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "codeStartGate": {
+        "iterationDesignReady": false,
+        "moduleOwnerAssigned": false,
+        "exactFileLeaseIssued": false,
+        "sharedContractCompatible": false,
+        "environmentPreflightPassed": false,
+        "allowed": false
+      }
+    },
+    {
+      "id": "WP-J11",
+      "journeys": [
+        "J11"
+      ],
+      "iteration": "ADMIN-0.1.0-dev.2",
+      "capabilities": [
+        "ClassificationExport",
+        "Analytics",
+        "Safety"
+      ],
+      "status": "not-issued",
+      "implementationOwner": null,
+      "implementationStarted": false,
+      "designReady": false,
+      "dependsOn": [
+        "WP-FOUNDATION"
+      ],
+      "integrationPreconditions": "按PJ迭代dependsOn闭合真实跨角色前置；独立模块可用明确合成fixture验证本端，不冒称跨版本真实通过。",
+      "sourceInputs": [
+        "docs/product/journeys/j11/requirements.zh-CN.md",
+        "docs/product/journeys/j11/coverage.json"
+      ],
+      "existingPaths": [
+        "apps/admin/src/features/classification/ClassificationPanel.tsx",
+        "apps/admin/src/features/exports/ExportButton.tsx",
+        "apps/admin/src/features/snapshot/SnapshotPicker.tsx",
+        "apps/api/src/admin/exports.ts",
+        "apps/api/src/admin/snapshots.ts"
+      ],
+      "plannedPaths": [],
+      "commitGroups": [
+        {
+          "id": "J11-client-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/admin/src/features/classification/ClassificationPanel.tsx",
+            "apps/admin/src/features/exports/ExportButton.tsx",
+            "apps/admin/src/features/snapshot/SnapshotPicker.tsx"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        },
+        {
+          "id": "J11-server-1",
+          "kind": "candidate-commit-scope",
+          "candidatePaths": [
+            "apps/api/src/admin/exports.ts",
+            "apps/api/src/admin/snapshots.ts"
+          ],
+          "maxFilesAtIssue": 5,
+          "exactWriteAllowlist": [],
+          "implementationOwner": null,
+          "status": "not-issued",
+          "note": "候选路径只作盘点；签发时从本组选择精确生产/对应测试文件，不扩到整目录或先横向做完全系统。"
+        }
+      ],
+      "sharedWriterRequests": [
+        "RD-ANALYTICS",
+        "RD-CONTRACTS",
+        "RD-DATA",
+        "RD-EXPORT",
+        "RD-PLATFORM",
+        "RD-SDK",
+        "RD-SUPPORT"
+      ],
+      "acceptance": [
+        "管理员按主体和expectedVersion保存分类，Unknown查原意图；分析者无写权。",
+        "Accepted/Pending/Failed期间旧统计/下钻/导出不可用，只重试统计；Ready必须覆盖该主体接受revision，不比较全局最大值。",
+        "生成并真实授权下载同snapshot/filter的聚合CSV；删除后旧票据持续拒读，普通新快照不改旧asOf。"
+      ],
+      "verification": {
+        "unitAndContract": "沿相关模块现有tests做必要定向回归，不复制实现写自证测试。",
+        "apiAndDatabase": "在本候选专属Postgres fixture中验证命令、鉴权、事务与重复/未知结果。",
+        "client": "同版本Figma/状态/数据逐路径检查；iOS真机构建与后台代表宽度分别取证。",
+        "joint": "发布/申请/审批→消息→饭后/支持/删除→新快照/导出按实际关联旅程闭合，不整项目盲跑。"
+      },
+      "runtimeBuild": null,
+      "codeCommit": null,
+      "deployment": null,
+      "qaStatus": "not-started",
+      "iterationDependencies": [
+        "ADMIN-0.1.0-dev.1"
+      ],
+      "dependencyMeaning": "完整路径集成顺序；设计和固定合同可并行，不以整个关联模块互等",
+      "codeStartGate": {
+        "iterationDesignReady": false,
+        "moduleOwnerAssigned": false,
+        "exactFileLeaseIssued": false,
+        "sharedContractCompatible": false,
+        "environmentPreflightPassed": false,
+        "allowed": false
+      }
+    }
+  ],
+  "designReadyRequirements": [
+    "same-version-prd-hashes",
+    "approved-mvp-visual-reference",
+    "DS-0.1.0-ready",
+    "all-iteration-journey-figma-ready",
+    "normal-and-required-recovery-mapping",
+    "fixed-design-candidate-reference",
+    "rd-feasibility-and-interface-delta-closed",
+    "assigned-owner-and-exact-file-lease",
+    "isolated-environment-preflight"
+  ],
+  "environmentFailureBudget": {
+    "minutes": 15,
+    "sameFailureAttempts": 3,
+    "onExhaustion": "停止同路径重试，将命令/错误摘要/已查证项/数据未改证明交PJ与环境owner；不让QA临场改环境。"
+  },
+  "implementationNotIssuedReason": "Figma/DS与精确模块owner/环境仍未Ready，本轮只交架构准备；等待PJ按用户既有条件授权签发有界代码包，不自动部署。"
+}

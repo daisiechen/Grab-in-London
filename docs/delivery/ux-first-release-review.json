@@ -2,7 +2,7 @@
   "revision": "UX-r01",
   "scopeRevision": "r07",
   "executionRevision": "r09",
-  "status": "candidates-awaiting-owner-review",
+  "status": "historical-owner-rejected-visual-direction",
   "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
   "professionalStagesStarted": [
     "PM",
@@ -246,5 +246,7 @@
     "skipped": 0,
     "includesExistingChromiumRegression": true,
     "professionalQA": false
-  }
+  },
+  "usableForDevelopment": false,
+  "supersededBy": "docs/delivery/development-versions-r10.json"
 }

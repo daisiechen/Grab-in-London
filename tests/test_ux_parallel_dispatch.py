@@ -21,6 +21,7 @@ class UXParallelDispatchTest(unittest.TestCase):
         paths = [p for lane in data['lanes'] for p in lane['writeAllowlist']]
         self.assertEqual(len(paths), len(set(paths)))
         execution = json.loads((ROOT / 'docs/delivery/journey-execution.json').read_text())
+        historical = json.loads((ROOT / 'docs/delivery/ux-first-release-review.json').read_text())
         for journey, record in data['inputs'].items():
             for path, sha in record['sha256'].items():
                 self.assertEqual(hashlib.sha256((ROOT / path).read_bytes()).hexdigest(), sha, path)
@@ -28,7 +29,8 @@ class UXParallelDispatchTest(unittest.TestCase):
             self.assertEqual(record['owner'], lane['id'])
             self.assertEqual(record['figmaFilePolicy'], 'one-independent-editable-design-file-per-journey')
             current = next(j for j in execution['journeys'] if j['id'] == journey)
-            self.assertEqual(current['uxOwner'], lane['id'])
+            old = next(j for j in historical['journeys'] if j['id'] == journey)
+            self.assertEqual(old['owner'], lane['id'])
             self.assertTrue(current['pmAcceptedForUX'])
             self.assertFalse(current['acceptedForNextStage'])
             for stage in ('RD', 'QA'):
