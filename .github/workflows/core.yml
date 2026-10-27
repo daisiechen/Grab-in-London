@@ -66,7 +66,15 @@ jobs:
       - name: Web, admin and iOS component regression
         run: pnpm core:test:clients
       - name: Documentation and immutable design checks
-        run: python3 -m unittest discover -s tests
+        run: |
+          # Older PM checks share the project's sibling Node runtime layout.
+          # CI already installed Node24; expose it at that compatibility path.
+          mkdir -p ../runtime/node/bin
+          if ! test -x ../runtime/node/bin/node; then
+            ln -s "$(command -v node)" ../runtime/node/bin/node
+          fi
+          ../runtime/node/bin/node --version
+          python3 -m unittest discover -s tests
       - name: Web and admin production builds
         run: |
           pnpm --filter @fancy/web build

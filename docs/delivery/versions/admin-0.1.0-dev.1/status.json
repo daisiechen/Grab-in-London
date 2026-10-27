@@ -5,38 +5,51 @@
     "J10"
   ],
   "designReview": {
-    "status": "repair-candidate-awaiting-independent-retest",
+    "status": "passed",
     "independentReviewer": "总PJ",
     "authorSelfApproval": false,
     "issues": [
       {
         "id": "R11-A01",
-        "status": "repair-candidate",
+        "status": "closed-by-independent-design-retest",
         "owner": "PJ-ADMIN / original UX author"
       }
     ],
-    "figmaUrl": "https://www.figma.com/design/EwpDxDGeTJEF3PYMYLH8eP?node-id=9-2"
+    "figmaUrl": "https://www.figma.com/design/EwpDxDGeTJEF3PYMYLH8eP?node-id=9-2",
+    "scope": "固定代表路径/状态、源视觉与适用组件；非真实服务QA",
+    "actualPresentationClicks": true,
+    "independentRetestSummary": "A1公开/proto实点：38:2745选28天→42:3547→9:2；取消留原查询；02→38:3328→X仍02；指标→M-062→U-002返回。"
   },
   "independentReviewer": "总PJ",
   "developmentPlan": {
-    "status": "preparation-not-approved",
+    "status": "author-revised-awaiting-independent-RD-retest",
     "path": "docs/engineering/r11/admin-0.1.0-dev.1/",
-    "implementationAuthorized": false
+    "implementationAuthorized": false,
+    "documents": [
+      "docs/engineering/r11/admin-0.1.0-dev.1/plan.zh-CN.md",
+      "docs/engineering/r11/admin-0.1.0-dev.1/work-packages.json"
+    ],
+    "independentReviewer": null,
+    "engineeringApproved": false
   },
   "testing": {
     "plan": "test-plan.zh-CN.md",
-    "designEvidenceTests": "python3 -m unittest discover -s tests -p test_ux_r10_admin_support.py",
-    "designEvidenceResult": "9 passed",
+    "designEvidenceTests": "python3 -m unittest discover -s tests -p test_r11_admin1_plan.py",
+    "designEvidenceResult": "4 standalone checks passed; independent actual design click signoff separately recorded by total PJ",
     "productQAStarted": false,
-    "realServiceTested": false
+    "realServiceTested": false,
+    "siblingArtifactsRequired": false
   },
   "issues": [
-    "R11-A01"
+    {
+      "id": "R11-EA1-01",
+      "status": "author-fixed-awaiting-independent-retest"
+    }
   ],
   "trueBlockers": [
-    "本版定向恢复设计等待总PJ独立复验；不等待其他版本或全7份设计。"
+    "开发方案候选待独立RD核真实生产路径、operation registry/schema、共享writer与迁移可实施性；不是设计或其它版本等待。"
   ],
-  "nextAction": "总PJ独立实点复验本版；通过即激活本版开发方案。",
+  "nextAction": "独立RD只复验R11-EA1-01真实operation/query/UUID映射、测试与同writer DAG。",
   "evidence": [
     "docs/design/r10/admin-0.1.0-dev.1/evidence/r11-recovery-readback.json",
     "docs/design/r10/admin-0.1.0-dev.1/handoff.zh-CN.md"

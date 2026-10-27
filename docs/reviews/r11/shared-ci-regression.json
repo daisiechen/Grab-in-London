@@ -12,10 +12,30 @@
   ],
   "repair": "Positive cases use future instants relative to their clock; cancelled, expired-start and expired-close negative cases remain rejected. No production source changed.",
   "independentReview": "Root inspected the two-file diff and reran the targeted suite with the existing Node24 runtime.",
-  "before": {"failed": 2, "passed": 5},
-  "after": {"failed": 0, "passed": 9},
-  "preservedAssertions": ["49 percent", "999 milliseconds", "continuous foreground second", "background interruption", "once only", "response request ID"],
+  "before": {
+    "failed": 2,
+    "passed": 5
+  },
+  "after": {
+    "failed": 0,
+    "passed": 9
+  },
+  "preservedAssertions": [
+    "49 percent",
+    "999 milliseconds",
+    "continuous foreground second",
+    "background interruption",
+    "once only",
+    "response request ID"
+  ],
   "fullPRCI": "rerun required before merge or deployment",
   "blocksVersionDesignOrPlanning": false,
-  "blocksMergeAndDeploymentUntilRequiredChecksPass": true
+  "blocksMergeAndDeploymentUntilRequiredChecksPass": true,
+  "runtimeCompatibility": {
+    "failedWorkflowRun": 40498824800,
+    "cause": "Legacy PM tests expect a sibling runtime/node/bin/node path absent on a clean hosted runner.",
+    "repair": "CI exposes the already-installed Node24 at the expected compatibility path before running all Python tests.",
+    "regression": "Isolated clean-runner test executes the exact workflow preflight twice; no tests skipped by the fix.",
+    "status": "local preflight passed; remote full CI rerun pending"
+  }
 }
