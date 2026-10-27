@@ -29,3 +29,7 @@
 交付验证为设计证据/映射校验，不是产品QA。Ready仍需Owner/PJ整包审阅、DS最终一致性确认及后续真实命名版本/冻结；RD实现与QA未启动。不以真实服务尚未开发冒充本轮已完成验证。
 
 验证命令：`python3 -m unittest discover -s tests -p test_ux_r10_ios34.py`，2项通过；检查冻结输入/包完整性、逐条映射、页面内连线、分离素材边界与关键权限状态。尚未执行Presentation真实端到端。
+
+r11原作者修复完成待PJ-IOS1独立复验：01/04/05/06/07/08/09定位见coverage.r11Corrections与状态表。首次调查已纠正文档把取消/结束误关群；退席/退群/host解散入口/确认/取消/终态分别给最小原样式变体；终态Back不恢复旧写权。公评输入不再代选私密再约；问卷Update不代答Yes，首次Yes/No-only不自动带原因，Cancel回最近确认值。AI候选完整原文转入与实际Send一致。原作者不自签，真实Presentation由独立评审决定。
+
+独立复验二次反例修正：实际退席Confirm30:158现SET状态，原被遮underlay30:144已清动作；host View meal→38:34只读角色页无guest退席。closed choice Edit→32:682未选态。Figma仅支持二分条件块，问卷Cancel现为6个顶层互斥二分actions，真实读回保留全部none/reason/yesReason/noReason/yesOnly/noOnly分支，不用被工具截断的else-if写法。末次证据见r11-survey-cancel-readback/r11-final-role-readback。
