@@ -22,34 +22,50 @@
   },
   "independentReviewer": "总PJ",
   "developmentPlan": {
-    "status": "author-revised-awaiting-independent-RD-retest",
+    "status": "plan-approved-with-issuance-gates",
     "path": "docs/engineering/r11/admin-0.1.0-dev.1/",
     "implementationAuthorized": false,
     "documents": [
       "docs/engineering/r11/admin-0.1.0-dev.1/plan.zh-CN.md",
       "docs/engineering/r11/admin-0.1.0-dev.1/work-packages.json"
     ],
-    "independentReviewer": null,
-    "engineeringApproved": false
+    "independentReviewer": "Independent RD architecture reviewer; not plan author",
+    "engineeringApproved": true,
+    "reviewSource": "docs/reviews/r11/admin1-engineering-review.json",
+    "signoffEvidence": {
+      "path": "docs/reviews/r11/admin1-engineering-review.json",
+      "sha256": "ca1221e95b881f8375942cbb3e1297fc293a895d1f39dc5f5f2718c75c321e94",
+      "reviewer": "Independent RD architecture reviewer; not plan author",
+      "status": "plan-approved-with-issuance-gates",
+      "boundedConclusion": "A1 plan implementable within existing interfaces; no code or QA authorization, no wait for A2/Support entire versions.",
+      "closedIssues": [
+        "R11-EA1-01"
+      ],
+      "reviewedInputSHA256": {
+        "docs/engineering/r11/admin-0.1.0-dev.1/plan.zh-CN.md": "b11aa1dfba65ddd281c6103aa8280df8b1fc26cf26d7c4adf72118118d8c1167",
+        "docs/engineering/r11/admin-0.1.0-dev.1/work-packages.json": "a0faa6c05c0bc9cc3896c85ea712cf0a4409ace988a6926a66e70b17f4d7c37f",
+        "docs/delivery/versions/admin-0.1.0-dev.1/test-plan.zh-CN.md": "7da89bc8639a169a54ea053629a246a5b8544eb4f95989df434ce6010917af54"
+      },
+      "note": "Only signoff metadata updated after independently reviewed candidate; business scope/interfaces unchanged."
+    }
   },
   "testing": {
     "plan": "test-plan.zh-CN.md",
     "designEvidenceTests": "python3 -m unittest discover -s tests -p test_r11_admin1_plan.py",
-    "designEvidenceResult": "4 standalone checks passed; independent actual design click signoff separately recorded by total PJ",
+    "designEvidenceResult": "5 standalone plan/evidence checks passed; independent RD plan signoff recorded; runtime QA not run",
     "productQAStarted": false,
     "realServiceTested": false,
-    "siblingArtifactsRequired": false
+    "siblingArtifactsRequired": false,
+    "engineeringReviewEvidence": "docs/reviews/r11/admin1-engineering-review.json"
   },
   "issues": [
     {
       "id": "R11-EA1-01",
-      "status": "author-fixed-awaiting-independent-retest"
+      "status": "closed-by-independent-plan-retest"
     }
   ],
-  "trueBlockers": [
-    "开发方案候选待独立RD核真实生产路径、operation registry/schema、共享writer与迁移可实施性；不是设计或其它版本等待。"
-  ],
-  "nextAction": "独立RD只复验R11-EA1-01真实operation/query/UUID映射、测试与同writer DAG。",
+  "trueBlockers": [],
+  "nextAction": "由根PJ按本版独立分支/PR集成方案；后续逐包签发真实writer/精确租约、固定契约及最小环境，仍未授权代码或QA。",
   "evidence": [
     "docs/design/r10/admin-0.1.0-dev.1/evidence/r11-recovery-readback.json",
     "docs/design/r10/admin-0.1.0-dev.1/handoff.zh-CN.md"
@@ -59,7 +75,8 @@
     "singleVersionTest": "not-started",
     "integration": "not-started",
     "merge": "not-started",
-    "deploy": "not-started"
+    "deploy": "not-started",
+    "engineeringPlan": "independently-approved-with-issuance-gates"
   },
   "candidateBinding": {
     "sha": null,
@@ -67,5 +84,23 @@
     "apiContract": null,
     "migration": null,
     "environment": null
-  }
+  },
+  "issuanceGates": [
+    {
+      "gate": "Actual owner/exact file leases and shared writer serialization",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Bind independently signed design revision and contract candidate",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Minimum environment checks then isolated module tests; real upstream only gates concrete integration",
+      "status": "not-issued"
+    },
+    {
+      "gate": "Independent code review and required CI/PR main merge before exact SHA/build deployment",
+      "status": "not-issued"
+    }
+  ]
 }
