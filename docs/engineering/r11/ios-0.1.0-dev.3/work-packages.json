@@ -1,0 +1,456 @@
+{
+  "iteration": "IOS-0.1.0-dev.3",
+  "productVersion": "IOS-0.1.0",
+  "pj": "PJ-IOS2",
+  "status": "development-plan-candidate-awaiting-independent-engineering-review",
+  "journeys": [
+    "J03",
+    "J04",
+    "J06"
+  ],
+  "designReviewPassedBy": "PJ-IOS1 / UX-1",
+  "designReviewEvidence": "docs/reviews/r11/ios34-review.json",
+  "designManifestSHA256": "84ad31dd95f27bfe604cb9ba2b8ded5f43bdea2981433275ff9923a9454404d3",
+  "businessBaseline": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "visualBaseline": "v13/361ab04ed6fc55c0f1e041bb5d6cc5d216d1a7b2",
+  "waitsForAllVersions": false,
+  "registeredOperations": [
+    "inbox",
+    "getMeal",
+    "myMeals",
+    "readMessages",
+    "sendMessage",
+    "markConversationRead",
+    "listNotifications",
+    "markRead",
+    "leaveMeal",
+    "leaveGroup",
+    "dissolveGroup",
+    "postMealState",
+    "reportAttendance",
+    "rateExperience",
+    "reviewPerson",
+    "selectReconnect",
+    "revokeConnection",
+    "getBlock",
+    "block",
+    "unblock",
+    "getDirect",
+    "getSurvey",
+    "putSurvey",
+    "bootstrapAI",
+    "requestAI",
+    "pollAI",
+    "validateAIDraft",
+    "resetAI"
+  ],
+  "workPackages": [
+    {
+      "id": "I3-P00",
+      "journey": "shared-I3-contract",
+      "ownerRole": "RD-CONTRACTS",
+      "candidatePaths": [
+        "packages/contracts/src/operations/social.ts",
+        "packages/contracts/src/dto.ts"
+      ],
+      "operations": [
+        "inbox",
+        "getMeal",
+        "myMeals",
+        "readMessages",
+        "sendMessage",
+        "markConversationRead",
+        "listNotifications",
+        "markRead",
+        "leaveMeal",
+        "leaveGroup",
+        "dissolveGroup",
+        "postMealState",
+        "reportAttendance",
+        "rateExperience",
+        "reviewPerson",
+        "selectReconnect",
+        "revokeConnection",
+        "getBlock",
+        "block",
+        "unblock",
+        "getDirect",
+        "getSurvey",
+        "putSurvey",
+        "bootstrapAI",
+        "requestAI",
+        "pollAI",
+        "validateAIDraft",
+        "resetAI"
+      ],
+      "scope": "Existing-operation/schema/client snapshot audit only, independently finishable. I3-C01 new roster projection is explicitly excluded from P00 completion and delegated solely as P02 roster integration delta.",
+      "dependsOn": [],
+      "parallelWith": [
+        "I3-P06"
+      ],
+      "sharedFiles": [
+        "OpenAPI/generated SDK and migrations via sole writers, not each domain worker"
+      ],
+      "status": "candidate-not-issued",
+      "assignedPerson": null,
+      "exactWriteLease": [],
+      "maxFilesPerLease": 5,
+      "branch": "codex/ios-0.1.0-dev3-i3-p00",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "implementationStarted": false,
+      "completionBoundary": {
+        "existingSlice": "only consumed registered contract/schema/client snapshot audit",
+        "excludes": [
+          "I3-C01 group roster delta",
+          "other versions designs/runtime"
+        ],
+        "newRosterContractRequiredForCompletion": false
+      }
+    },
+    {
+      "id": "I3-P01",
+      "journey": "J03",
+      "ownerRole": "RD-MESSAGING-J03",
+      "candidatePaths": [
+        "apps/ios/src/features/inbox/InboxScreen.tsx",
+        "apps/ios/src/features/inbox/ChatScreen.tsx",
+        "apps/ios/src/features/inbox/read-ack.ts",
+        "apps/api/src/conversations/routes.ts"
+      ],
+      "operations": [
+        "inbox",
+        "readMessages",
+        "sendMessage",
+        "markConversationRead",
+        "listNotifications",
+        "markRead"
+      ],
+      "scope": "Inbox progress→authorized group messages→explicit retry same clientMessageId→visible-only chat read position; notification read is distinct.",
+      "dependsOn": [],
+      "parallelWith": [
+        "I3-P04",
+        "I3-P06"
+      ],
+      "sharedFiles": [
+        "conversations/routes.ts and ChatScreen.tsx sequential leases with P02/P03/P05, same sole domain writer"
+      ],
+      "status": "candidate-not-issued",
+      "assignedPerson": null,
+      "exactWriteLease": [],
+      "maxFilesPerLease": 5,
+      "branch": "codex/ios-0.1.0-dev3-i3-p01",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "implementationStarted": false,
+      "contractPreconditions": [
+        "Verify only this package consumed existing operation/schema/client snapshot before lease issue; no waiting for entire P00 or new roster contract."
+      ]
+    },
+    {
+      "id": "I3-P02",
+      "journey": "J03",
+      "ownerRole": "RD-MESSAGING-J03",
+      "candidatePaths": [
+        "apps/api/src/membership/intervals.ts",
+        "apps/api/src/meals/routes.ts"
+      ],
+      "operations": [
+        "leaveMeal",
+        "leaveGroup",
+        "dissolveGroup",
+        "getMeal",
+        "myMeals"
+      ],
+      "scope": "Guest prestart seat release keeps group; leave group keeps seat and authorized history; host-only dissolve closes all open intervals without changing meal/seats. Reentry adds interval without gap history.",
+      "dependsOn": [],
+      "parallelWith": [
+        "I3-P04",
+        "I3-P06"
+      ],
+      "sharedFiles": [
+        "meals/routes.ts owned by Hosting/Participation sole writer; request exact delegated patch/lease with I2, not concurrent ownership",
+        "Group settings UI and conversation routes integrate serially through P01 owner"
+      ],
+      "status": "candidate-not-issued",
+      "assignedPerson": null,
+      "exactWriteLease": [],
+      "maxFilesPerLease": 5,
+      "branch": "codex/ios-0.1.0-dev3-i3-p02",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "implementationStarted": false,
+      "contractPreconditions": [
+        "Verify only this package consumed existing operation/schema/client snapshot before lease issue; no waiting for entire P00 or new roster contract."
+      ],
+      "blockedIntegrationPoints": [
+        "Only current group-settings roster I3-C01 until sole writer signs exact compatible operation/DTO. Registered leaveMeal/leaveGroup/dissolveGroup and interval fixture work remain independent."
+      ]
+    },
+    {
+      "id": "I3-P03",
+      "journey": "J03",
+      "ownerRole": "RD-ASSISTANT",
+      "candidatePaths": [
+        "apps/ios/src/features/assistant/AssistantWidget.tsx",
+        "apps/ios/src/features/assistant/manager.ts"
+      ],
+      "operations": [
+        "bootstrapAI",
+        "requestAI",
+        "pollAI",
+        "validateAIDraft",
+        "resetAI",
+        "sendMessage"
+      ],
+      "scope": "Explicit permitted group coordination candidate→Keep/Replace→verbatim unsent editor→manual Send; reject stale target/editor/session/permission, unavailable AI still manual chat.",
+      "dependsOn": [],
+      "parallelWith": [
+        "I3-P06"
+      ],
+      "sharedFiles": [
+        "assistant API/provider/budget code sole RD-ASSISTANT writer with I1/I2, ChatScreen binding delegated P01 owner"
+      ],
+      "status": "candidate-not-issued",
+      "assignedPerson": null,
+      "exactWriteLease": [],
+      "maxFilesPerLease": 5,
+      "branch": "codex/ios-0.1.0-dev3-i3-p03",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "implementationStarted": false,
+      "contractPreconditions": [
+        "Verify only this package consumed existing operation/schema/client snapshot before lease issue; no waiting for entire P00 or new roster contract."
+      ]
+    },
+    {
+      "id": "I3-P04",
+      "journey": "J04",
+      "ownerRole": "RD-POSTMEAL",
+      "candidatePaths": [
+        "apps/ios/src/features/post-meal/PostMealScreen.tsx",
+        "apps/api/src/post-meal/attendance.ts",
+        "apps/api/src/post-meal/experience.ts",
+        "apps/api/src/post-meal/reviews.ts"
+      ],
+      "operations": [
+        "postMealState",
+        "reportAttendance",
+        "rateExperience",
+        "reviewPerson",
+        "selectReconnect"
+      ],
+      "scope": "Eligible frozen roster and exact [end,end+7d) window; self attendance overrides host fallback; score/reference/private choice separate dirty requests and per-item receipts, retry only failed. No public review blank-delete/new delete API.",
+      "dependsOn": [],
+      "parallelWith": [
+        "I3-P01",
+        "I3-P06"
+      ],
+      "sharedFiles": [
+        "post-meal/routes.ts, lock.ts and any shared generated DTO only by sole owner"
+      ],
+      "status": "candidate-not-issued",
+      "assignedPerson": null,
+      "exactWriteLease": [],
+      "maxFilesPerLease": 5,
+      "branch": "codex/ios-0.1.0-dev3-i3-p04",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "implementationStarted": false,
+      "contractPreconditions": [
+        "Verify only this package consumed existing operation/schema/client snapshot before lease issue; no waiting for entire P00 or new roster contract."
+      ]
+    },
+    {
+      "id": "I3-P05",
+      "journey": "J04",
+      "ownerRole": "RD-CONNECTIONS",
+      "candidatePaths": [
+        "apps/ios/src/features/connections/MemberSafety.tsx",
+        "apps/api/src/connections/service.ts"
+      ],
+      "operations": [
+        "selectReconnect",
+        "revokeConnection",
+        "getBlock",
+        "block",
+        "unblock",
+        "getDirect",
+        "readMessages",
+        "sendMessage"
+      ],
+      "scope": "WAITING private; only true OPEN sends direct messages; explicit revoke/blocked read-only history, unblock does not restore consents; correction with other valid common basis handled by authority.",
+      "dependsOn": [],
+      "parallelWith": [
+        "I3-P06"
+      ],
+      "sharedFiles": [
+        "ChatScreen.tsx change delegated P01 sole writer; connection routes/lock and post-meal authorization lease coordinated with P04"
+      ],
+      "status": "candidate-not-issued",
+      "assignedPerson": null,
+      "exactWriteLease": [],
+      "maxFilesPerLease": 5,
+      "branch": "codex/ios-0.1.0-dev3-i3-p05",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "implementationStarted": false,
+      "contractPreconditions": [
+        "Verify only this package consumed existing operation/schema/client snapshot before lease issue; no waiting for entire P00 or new roster contract."
+      ]
+    },
+    {
+      "id": "I3-P06",
+      "journey": "J06",
+      "ownerRole": "RD-PROFILE-SURVEY",
+      "candidatePaths": [
+        "apps/ios/src/features/settings/SurveyScreen.tsx",
+        "apps/api/src/surveys/routes.ts"
+      ],
+      "operations": [
+        "getSurvey",
+        "putSurvey"
+      ],
+      "scope": "Independent settings survey, again Yes/No/null and 7 approved multi-reasons; optional no meal/attendance/7-day gate; explicit save latest same user version, cancel old confirmation, Unknown/failed recovery.",
+      "dependsOn": [],
+      "parallelWith": [
+        "I3-P00",
+        "I3-P01",
+        "I3-P02",
+        "I3-P04"
+      ],
+      "sharedFiles": [
+        "Settings entry/global navigation delegated RD-PLATFORM; survey update does not write meal feedback or AI preference"
+      ],
+      "status": "candidate-not-issued",
+      "assignedPerson": null,
+      "exactWriteLease": [],
+      "maxFilesPerLease": 5,
+      "branch": "codex/ios-0.1.0-dev3-i3-p06",
+      "PRRequired": true,
+      "independentCodeReviewRequired": true,
+      "implementationStarted": false,
+      "contractPreconditions": [
+        "Verify only this package consumed existing operation/schema/client snapshot before lease issue; no waiting for entire P00 or new roster contract."
+      ]
+    }
+  ],
+  "interfaceDeltas": [
+    {
+      "id": "I3-C01",
+      "status": "shared-writer-contract-delta-required",
+      "owner": "RD-CONTRACTS",
+      "finding": "Conversation DTO/inbox has canSend/dissolved/head but no authoritative current group roster. Meal confirmed roster is not group membership; leave-seat stays in group and leave-group may keep seat.",
+      "proposedCapability": "Authenticated own group-settings projection bound to conversation/membership authority; exact operationId/path/schema approved by sole writer before generation. No imaginary registered getGroupSettings.",
+      "privacy": "Current roster/host actions only current authorized writers; after leave/dissolve no current names/count/search/@ metadata. Authorized message history remains interval-filtered.",
+      "blocksOnly": [
+        "P02 current group-settings real roster integration"
+      ],
+      "doesNotBlock": [
+        "P01 current registered readMessages/send/read receipt fixtures",
+        "P04 post-meal fixed roster tests",
+        "P06 survey"
+      ]
+    },
+    {
+      "id": "I3-C02",
+      "status": "compatibility-audit-not-new-feature",
+      "owner": "RD-POSTMEAL + RD-CONTRACTS",
+      "finding": "Composite Save is client orchestration over existing independent commands, not an invented atomic batch endpoint; revoke past window distinct from dirty reference rejection.",
+      "change": "Keep exact per-command expectedVersion/idempotency semantics, explicit OPEN-revoke confirmation before any writes; no silent empty review deletion or automatic reconnect selection."
+    }
+  ],
+  "sharedSoleWriters": [
+    "RD-CONTRACTS: schemas/generated API/client",
+    "RD-DATA: migrations/schema/index",
+    "RD-PLATFORM: AppRoot/navigation/global UI/worker-main/root config",
+    "RD-MESSAGING-J03: ChatScreen and conversations routes",
+    "RD-ASSISTANT: existing shared assistant lifecycle/provider/budget",
+    "Hosting/Participation owner: meals/routes.ts with I2"
+  ],
+  "environment": {
+    "reuseExisting": true,
+    "minimumChecks": [
+      "Existing Node24/pnpm declared toolchain and lockfile",
+      "Target package typecheck and generated-client consistency",
+      "Isolated test Postgres fixture, migration/seed ids and fixed clock",
+      "Existing iOS simulator/device path plus secure store and keyboard capability",
+      "No model/mail enablement or credentials printout"
+    ],
+    "failureBudgetMinutes": 15,
+    "sameFailureAttempts": 3,
+    "onExhaustion": "Escalate exact command/error to environment owner; continue independent contract/unit/UI fixture work."
+  },
+  "implementationAuthorized": false,
+  "QAStarted": false,
+  "codeCommit": null,
+  "runtimeBuild": null,
+  "release": {
+    "targetStoreVersion": "0.1.0",
+    "internalIteration": "dev.3",
+    "build": null,
+    "mergeSHA": null,
+    "submissionBatch": "combined-first-0.1.0",
+    "status": "not-built"
+  },
+  "dependencyPropagation": {
+    "openDelta": "I3-C01",
+    "blocks": [
+      "P02 real current-group roster projection integration"
+    ],
+    "doesNotBlock": [
+      "P00 existing-operation audit",
+      "P01 registered messages/read acknowledgements",
+      "P02 existing seat/group transition contracts and fixtures",
+      "P03 existing assistant transfer validation",
+      "P04 post-meal command fixtures",
+      "P05 direct connection fixtures",
+      "P06 independent survey"
+    ],
+    "counterexample": "Set I3-C01=OPEN: no whole package/status dependency on that new operation outside the roster integration point; P06/P01/P04 can complete their independent contract/test slices."
+  },
+  "unknownAndVersionAuthority": {
+    "ordinaryWrites": {
+      "operations": [
+        "leaveMeal",
+        "leaveGroup",
+        "dissolveGroup",
+        "reportAttendance",
+        "rateExperience",
+        "reviewPerson",
+        "selectReconnect",
+        "revokeConnection",
+        "block",
+        "unblock",
+        "putSurvey"
+      ],
+      "retry": "Preserve original actor + operation + HTTP method/path + exact body + original key + original If-Match and replay same write via defineWrite/idempotency; current GET/latest version is not proof the old intent was accepted. Reauth/revalidate current access before replay, never mint a new intent to guess outcome.",
+      "conflict": "Known 409 is not Unknown; keep proposed draft/per-item receipts, load current authority for user review before a genuinely new versioned command. Do not overwrite successful objects or replay them using another object version."
+    },
+    "messages": {
+      "operation": "sendMessage",
+      "resourceKey": "Same conversation + actor + clientMessageId + unchanged body; exact conflict on changed body. Permission withdrawn/403 stops retries; never resend old draft to restore rights."
+    },
+    "assistant": {
+      "operations": [
+        "requestAI",
+        "pollAI",
+        "validateAIDraft"
+      ],
+      "recovery": "Keep exact original requestId and device session/generation; pollAI is dedicated status recovery, not business command-status endpoint; Unknown retains budget reservation, no automatic duplicate model request."
+    },
+    "objectVersions": {
+      "authority": [
+        "apps/api/src/post-meal/experience.ts",
+        "apps/api/src/post-meal/reviews.ts",
+        "apps/api/src/connections/service.ts",
+        "apps/api/src/surveys/routes.ts"
+      ],
+      "rule": "MealExperience, PublicReference, ReconnectSelection and ProductSurvey each consume own server-projected version (including no-record version 0); not meal version or one shared Save version, not inferred on client. Save receives per-object authority/result; current GET after Unknown does not identify original intent."
+    }
+  },
+  "engineeringCorrections": {
+    "R11-EI3-01": "Existing audit no global P00 block; C01 propagation limited to P02 roster; independent slice counterexample included",
+    "R11-EI3-02": "Ordinary write exact original replay vs message resourceKey vs AI requestId, independent object versions including server no-record0, mixed success/unknown/409 cases"
+  }
+}

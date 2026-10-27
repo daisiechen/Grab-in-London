@@ -7,51 +7,114 @@
     "J04",
     "J06"
   ],
-  "designReview": "author-corrections-in-progress",
+  "designReview": "independent-design-scope-passed",
   "independentReviewer": "PJ-IOS1 / UX-1",
-  "developmentPlan": "not-started-pending-this-version-design-review",
+  "developmentPlan": "plan-approved-with-issuance-gates",
   "issues": [
     {
       "id": "R11-I34-01",
-      "status": "open"
+      "status": "closed-by-independent-design-review"
     },
     {
       "id": "R11-I34-04",
-      "status": "open"
+      "status": "closed-by-independent-design-review"
     },
     {
       "id": "R11-I34-05",
-      "status": "open"
+      "status": "closed-by-independent-design-review"
     },
     {
       "id": "R11-I34-06",
-      "status": "open"
+      "status": "closed-by-independent-design-review"
     },
     {
       "id": "R11-I34-07",
-      "status": "open"
+      "status": "closed-by-independent-design-review"
     },
     {
       "id": "R11-I34-08",
-      "status": "open"
+      "status": "closed-by-independent-design-review"
     },
     {
       "id": "R11-I34-09",
-      "status": "open"
+      "status": "closed-by-independent-design-review"
     }
   ],
-  "actualBlockers": [
-    "This version has not yet passed independent design correction review."
-  ],
+  "actualBlockers": [],
   "integrationDependenciesOnly": [
     "Shared identity/DS/commands follow frozen contracts; another version does not block local planning once own design passed."
   ],
-  "nextStep": "complete-source-bound-states-and-recovery-corrections",
+  "nextStep": "Issue only scoped work packages after actual owners/exact leases and applicable contract/environment gates; no implementation or QA authorization in this signature.",
   "evidence": [
     "docs/reviews/r11/ios34-review.json",
     "docs/design/r10/ios-0.1.0-dev.3/artifact-manifest.json"
   ],
   "implementationStarted": false,
   "QAStarted": false,
-  "branchPR": "No implementation branch/PR created; planning only; PJ owns review and root owns serial Git sync."
+  "branchPR": "No implementation branch/PR created; planning only; PJ owns review and root owns serial Git sync.",
+  "independentDesignEvidence": {
+    "reviewer": "PJ-IOS1 / UX-1",
+    "report": "docs/reviews/r11/ios34-review.json",
+    "scope": "All seven I3 issues independently closed by live reaction/condition evaluation and screenshot recheck; not product QA."
+  },
+  "implementationGate": {
+    "authorized": false,
+    "reason": "Planning scope only; actual RD owners/exact leases/contracts/isolated environment before code."
+  },
+  "buildRecord": {
+    "targetStoreVersion": "0.1.0",
+    "internalIteration": "dev.3",
+    "build": null,
+    "mergeSHA": null,
+    "submissionBatch": "combined-first-0.1.0",
+    "status": "not-built"
+  },
+  "planEvidence": [
+    "docs/engineering/r11/ios-0.1.0-dev.3/plan.zh-CN.md",
+    "docs/engineering/r11/ios-0.1.0-dev.3/work-packages.json",
+    "docs/engineering/r11/ios-0.1.0-dev.3/test-matrix.json"
+  ],
+  "engineeringReview": {
+    "status": "plan-approved-with-issuance-gates",
+    "reviewer": "Independent RD architecture reviewer; not plan author",
+    "issues": [
+      {
+        "id": "R11-EI3-01",
+        "status": "closed-by-independent-plan-retest"
+      },
+      {
+        "id": "R11-EI3-02",
+        "status": "closed-by-independent-plan-retest"
+      }
+    ],
+    "evidence": "docs/reviews/r11/ios3-engineering-review.json",
+    "reviewSHA256": "6867a06eb366313295eca0a316fa2f1753c94f2f5e2997f74b6deeee04c5de56",
+    "reviewedInputSHA256": {
+      "docs/engineering/r11/ios-0.1.0-dev.3/test-matrix.json": "e9c9892ac909e07acc0f922c4c3ff9dc4cf86cc861ca0d0b581a4b6941b0a940",
+      "docs/engineering/r11/ios-0.1.0-dev.3/input-manifest.json": "f801a6c5ee5abc99116cb80d7ffc20645e4ac8cdaba984698017d6a6571eaaed",
+      "docs/engineering/r11/ios-0.1.0-dev.3/plan.zh-CN.md": "c50ac7b9cfe87d90a195d94c0843cb0e033620976bfe6d323c15b985b3552e3e",
+      "docs/engineering/r11/ios-0.1.0-dev.3/work-packages.json": "f20de1c0f318213a9abd20532b5c8cc4fb3b0c531e53b7210f55bcd5278bc7dd"
+    },
+    "metadataOnlyAfterReview": true,
+    "issuanceGates": [
+      "Actual RD owners and <=5 exact file leases; serialize shared Chat/conversation/meals/assistant with I1/I2 and platform writers",
+      "Fix exact C01 authorized group-settings projection contract before P02 roster real integration, not before unrelated packages",
+      "Per-object versions normalized from server contracts/source, never shared Save/meal version or latest GET as original intent proof",
+      "Minimal environment checks then per-module tests, actual native/provider and cross-version service evidence separately",
+      "Independent code review, required CI, PR main merge and exact tested SHA/build/migration/environment before deployment"
+    ]
+  },
+  "verification": {
+    "command": "python3 -m unittest discover -s tests -p test_r11_ios3_plan.py",
+    "passed": 3,
+    "meaning": "I3-only design counterexamples and plan/source contract invariants, not product QA",
+    "gitDiffCheck": "passed"
+  },
+  "candidateFilesSHA256": {
+    "docs/engineering/r11/ios-0.1.0-dev.3/input-manifest.json": "f801a6c5ee5abc99116cb80d7ffc20645e4ac8cdaba984698017d6a6571eaaed",
+    "docs/engineering/r11/ios-0.1.0-dev.3/plan.zh-CN.md": "9057fecbdeb3504345b681c278fb912cc54949e9ac9555a3db9f2b82001016e1",
+    "docs/engineering/r11/ios-0.1.0-dev.3/test-matrix.json": "e9c9892ac909e07acc0f922c4c3ff9dc4cf86cc861ca0d0b581a4b6941b0a940",
+    "docs/engineering/r11/ios-0.1.0-dev.3/work-packages.json": "f20de1c0f318213a9abd20532b5c8cc4fb3b0c531e53b7210f55bcd5278bc7dd",
+    "tests/test_r11_ios3_plan.py": "94e0f7ac87dd40044d9cc1ff95f5a60c1fb983c7bd6de73058ea6b2e27d02112"
+  }
 }
