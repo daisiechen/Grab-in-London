@@ -61,7 +61,7 @@ class JourneyPlanTest(unittest.TestCase):
 
     def test_only_authorized_first_release_pm_and_ux_stages_are_issued(self):
         self.assertTrue(self.execution['pmStartAllowed'])
-        self.assertEqual(set(self.execution['activeJourneys']), {f'J{i:02d}' for i in range(1, 12)})
+        self.assertEqual(self.execution['activeJourneys'], [])
         self.assertEqual(set(self.execution['issuedJourneys']), {f'J{i:02d}' for i in range(1, 12)})
         self.assertEqual(self.execution['oldPMCandidate']['status'], 'historical-incomplete-candidate')
         self.assertFalse(self.execution['oldPMCandidate']['acceptedAsJourney'])
@@ -70,7 +70,7 @@ class JourneyPlanTest(unittest.TestCase):
                 self.assertEqual(j['stages'][stage], 'not-started')
             if j['id'] in self.execution['issuedJourneys']:
                 self.assertEqual(j['currentStage'], 'UX')
-                self.assertEqual(j['stages']['UX'], 'in-progress')
+                self.assertEqual(j['stages']['UX'], 'candidate-delivered')
                 self.assertIn(j['pmOwner'], ('PM-1', 'PM-2', 'PM-3'))
             else:
                 self.assertEqual(j['status'], 'not-issued')

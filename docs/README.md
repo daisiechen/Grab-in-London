@@ -7,13 +7,20 @@
 - [MVP项目需求](product/fancy-requirements-baseline.zh-CN.md)：产品使用者、完整用户目标、首发/增量及业务边界。
 - [15个用户旅程模块](product/journey-modules.zh-CN.md)、[结构化范围](product/journey-modules.json)：触发→完整路径→结果与异常；首个交付应为J01找到并申请饭局，注册登录/资料不单独切片。
 - [产品版本与旧补丁映射](product/module-version-plan-2026-10-26.zh-CN.md)：iOS J01—J08＋支持J09、后台J10/J11首发；J12—J15后续，移动Web后置。
-- [项目管理方案](delivery/project-management-plan.zh-CN.md)、[旅程执行与联调](delivery/journey-execution.zh-CN.md)、[当前执行数据](delivery/journey-execution.json)：团队独立四阶段、共用合同、条件并行与版本取证；首发11旅程以固定PM输入进入UX并行，RD/QA未启动。
+- [项目管理方案](delivery/project-management-plan.zh-CN.md)、[旅程执行与联调](delivery/journey-execution.zh-CN.md)、[当前执行数据](delivery/journey-execution.json)：团队独立四阶段、共用合同、条件并行与版本取证；首发11份独立UX候选已交回待审，以固定PM输入制作；RD/QA未启动。
 
 - [完整需求核对报告](product/requirements-audit.zh-CN.md)、[逐条旅程/版本映射](product/requirements-traceability.zh-CN.md)、[结构化台账](product/requirements-traceability.json)：25份原文、64个旧切片、57个验收编号，保留有效/历史/后置/未决区别。
 
 - [首发PM并行派工](delivery/pm-parallel-dispatch.zh-CN.md)、[派工数据](delivery/pm-parallel-dispatch.json)：3个PM独立目录交付J01—J11需求与Demo，仅PM阶段。
 
 - [首发UX并行派工](delivery/ux-parallel-dispatch.zh-CN.md)、[固定输入与负责人](delivery/ux-parallel-dispatch.json)：3个UX、11份独立Figma，逐旅程候选审阅，RD/QA不启动。
+
+- [11份独立Figma评审入口](delivery/ux-first-release-review.zh-CN.md)：UX-r01候选及各旅程交付、检查边界。
+
+逐旅程设计交接：
+- UX-1：[J01交接](design/journeys/j01/handoff.zh-CN.md)、[J05交接](design/journeys/j05/handoff.zh-CN.md)、[J06交接](design/journeys/j06/handoff.zh-CN.md)、[J08交接](design/journeys/j08/handoff.zh-CN.md)。
+- UX-2：[J02交接](design/journeys/j02/handoff.zh-CN.md)、[J03交接](design/journeys/j03/handoff.zh-CN.md)、[J04交接](design/journeys/j04/handoff.zh-CN.md)。
+- UX-3：[J07交接](design/journeys/j07/handoff.zh-CN.md)、[J09交接](design/journeys/j09/handoff.zh-CN.md)、[J10交接](design/journeys/j10/handoff.zh-CN.md)、[J11交接](design/journeys/j11/handoff.zh-CN.md)。
 
 ## 首发旅程PM独立候选（r08历史／r09 UX输入）
 

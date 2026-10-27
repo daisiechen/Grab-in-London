@@ -1,21 +1,9 @@
 {
   "schemaVersion": 1,
   "revision": "r09",
-  "status": "ux-in-progress",
+  "status": "ux-candidates-awaiting-review",
   "pmStartAllowed": true,
-  "activeJourneys": [
-    "J01",
-    "J02",
-    "J03",
-    "J04",
-    "J05",
-    "J06",
-    "J07",
-    "J08",
-    "J09",
-    "J10",
-    "J11"
-  ],
+  "activeJourneys": [],
   "stages": [
     "PM",
     "UX",
@@ -26,11 +14,11 @@
     {
       "id": "J01",
       "priority": 1,
-      "status": "ux-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -59,11 +47,11 @@
     {
       "id": "J02",
       "priority": 2,
-      "status": "ux-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -93,11 +81,11 @@
     {
       "id": "J03",
       "priority": 3,
-      "status": "ux-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -128,11 +116,11 @@
     {
       "id": "J04",
       "priority": 4,
-      "status": "ux-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -163,11 +151,11 @@
     {
       "id": "J05",
       "priority": 5,
-      "status": "ux-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -195,11 +183,11 @@
     {
       "id": "J06",
       "priority": 6,
-      "status": "ux-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -225,11 +213,11 @@
     {
       "id": "J07",
       "priority": 7,
-      "status": "ux-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -254,11 +242,11 @@
     {
       "id": "J08",
       "priority": 8,
-      "status": "ux-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -291,11 +279,11 @@
     {
       "id": "J09",
       "priority": 9,
-      "status": "ux-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -325,11 +313,11 @@
     {
       "id": "J10",
       "priority": 10,
-      "status": "ux-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -359,11 +347,11 @@
     {
       "id": "J11",
       "priority": 11,
-      "status": "ux-in-progress",
+      "status": "ux-candidate-delivered",
       "currentStage": "UX",
       "stages": {
         "PM": "candidate-delivered",
-        "UX": "in-progress",
+        "UX": "candidate-delivered",
         "RD": "not-started",
         "QA": "not-started"
       },
@@ -718,12 +706,25 @@
     "J10",
     "J11"
   ],
-  "awaitingReviewJourneys": [],
-  "reviewStatus": "owner-authorized-ux-only",
+  "awaitingReviewJourneys": [
+    "J01",
+    "J02",
+    "J03",
+    "J04",
+    "J05",
+    "J06",
+    "J07",
+    "J08",
+    "J09",
+    "J10",
+    "J11"
+  ],
+  "reviewStatus": "ux-candidates-awaiting-owner",
   "reviewRole": "PJ",
   "reviewDate": "2026-10-27",
   "uxDispatch": "docs/delivery/ux-parallel-dispatch.json",
   "uxStartAllowed": true,
   "rdStartAllowed": false,
-  "qaStartAllowed": false
+  "qaStartAllowed": false,
+  "uxDeliveryRegister": "docs/delivery/ux-first-release-review.json"
 }

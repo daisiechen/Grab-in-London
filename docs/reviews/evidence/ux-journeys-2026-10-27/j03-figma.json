@@ -1,0 +1,914 @@
+{
+  "reviewRole": "PJ",
+  "reviewMethod": "native-file-readback-and-screenshot",
+  "professionalQA": false,
+  "fileKey": "WeH78bY3LzZM9eSvGKI4u2",
+  "pageId": "0:1",
+  "pageName": "J03 · iOS · UX-r01",
+  "starts": [
+    {
+      "nodeId": "1:35",
+      "name": "J03 · Main journey"
+    },
+    {
+      "nodeId": "1:166",
+      "name": "J03 · Necessary recovery"
+    }
+  ],
+  "types": {
+    "SECTION": 1,
+    "FRAME": 220,
+    "TEXT": 285,
+    "INSTANCE": 60,
+    "VECTOR": 36,
+    "RECTANGLE": 25,
+    "COMPONENT": 5
+  },
+  "screens": [
+    {
+      "id": "1:35",
+      "name": "J03 / inbox / Inbox",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nInbox\nYour plans, in one place.\nConfirmed · Friday at Olive Table\nFriday 30 October · 19:00 London\nYour seat is confirmed.\n1 unread notification\nYour application was approved. Your seat is confirmed.\nOpen group · 1 unread\nView meal\nMark notification read\nDiscover\nMeals\n+\nCreate meal\nInbox\nProfile"
+    },
+    {
+      "id": "1:61",
+      "name": "J03 / noticeread / Inbox",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nInbox\nYour plans, in one place.\nConfirmed · Friday at Olive Table\nFriday 30 October · 19:00 London\nNotifications · Read\nYour application was approved. Your seat is confirmed.\nGroup unread is independent of notification read status.\nOpen group · 1 unread\nView meal\nDiscover\nMeals\n+\nCreate meal\nInbox\nProfile"
+    },
+    {
+      "id": "1:84",
+      "name": "J03 / meal / Friday at Olive Table",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nFriday at Olive Table\nOlive Table · Soho · 30 October · 19:00 GMT\nYour seat · Confirmed\nMeal · Open\nYour seat and your group membership are separate.\nLeave your seat before the meal starts. Leaving your seat does not leave the group.\nOpen group chat\nLeave meal seat\nBack to Inbox"
+    },
+    {
+      "id": "1:107",
+      "name": "J03 / chat / Friday at Olive Table",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nFriday at Olive Table\nGroup chat · You are a current member\nAlex · 18:04\nLooking forward to Friday. Shall we meet by the entrance?\nYou · 18:05\nSounds good! I’ll be there a few minutes early.\nMessage · 1–2000 characters\nI’ll meet you by the entrance.\nSend message\nAsk Fancy for a group draft\nGroup settings\nBack to Inbox"
+    },
+    {
+      "id": "1:137",
+      "name": "J03 / sent / Friday at Olive Table",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nFriday at Olive Table\nGroup chat · Message sent\nAlex · 18:04\nLooking forward to Friday. Shall we meet by the entrance?\nYou · Just now\nI’ll meet you by the entrance.\nSent to this conversation. This does not mean the other person has read it.\nMessage\n\nGroup settings\nView meal\nBack to Inbox"
+    },
+    {
+      "id": "1:166",
+      "name": "J03 / failed / Message not sent.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nMessage not sent.\nYour text is safe. Try again when connected.\nFriday at Olive Table\nYour group membership is unchanged.\nUnsent message\nI’ll meet you by the entrance.\nNothing will be sent automatically when you reconnect.\nTry sending again\nReturn to chat"
+    },
+    {
+      "id": "1:190",
+      "name": "J03 / ai / Help with your message.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nHelp with your message.\nAsk Fancy · Group draft\nSuggested draft\nHi everyone! Shall we meet at the restaurant entrance a few minutes before 19:00?\nUses the meal’s public time and place and your request. Your conversation is not read to generate this draft.\nUse this draft\nKeep writing myself"
+    },
+    {
+      "id": "1:211",
+      "name": "J03 / replace / Replace your unsent message?",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nReplace your unsent message?\nA draft is not sent automatically.\nYour current text\nI’ll meet you by the entrance.\nNew draft\nHi everyone! Shall we meet at the restaurant entrance a few minutes before 19:00?\nReplace with draft\nKeep as it is"
+    },
+    {
+      "id": "1:235",
+      "name": "J03 / inserted / Friday at Olive Table",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nFriday at Olive Table\nGroup chat · Draft added\nAlex · 18:04\nLooking forward to Friday. Shall we meet by the entrance?\nMessage · edit before sending\nHi everyone! Shall we meet at the restaurant entrance a few minutes before 19:00?\nYour draft has not been sent.\nSend message\nGroup settings"
+    },
+    {
+      "id": "1:259",
+      "name": "J03 / aisent / Friday at Olive Table",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nFriday at Olive Table\nGroup chat · Message sent\nYou · Just now\nHi everyone! Shall we meet at the restaurant entrance a few minutes before 19:00?\nOnly you chose to send this message. It has not been marked read by anyone else.\nGroup settings\nBack to Inbox"
+    },
+    {
+      "id": "1:280",
+      "name": "J03 / settings / Group settings",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nGroup settings\nFriday at Olive Table\nCurrent members · 2\nAlex · Host\nMia · You\nGroup membership and meal participation are separate. Leaving this group does not release your seat.\nRead chat\nView meal participation\nLeave group"
+    },
+    {
+      "id": "1:303",
+      "name": "J03 / seatconfirm / Leave your meal seat?",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nLeave your meal seat?\nYour group membership will stay active.\nYour seat will be released. You remain a group member and can still coordinate with the group.\nKeep my seat\nConfirm leaving seat"
+    },
+    {
+      "id": "1:321",
+      "name": "J03 / seatleft / You left your meal seat.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nYou left your meal seat.\nMeal participation · Cancelled\nFriday at Olive Table\nYour seat has been released. You are still a group member.\nYour host receives an in-app update. If the table falls below its minimum after the deadline, the meal may be cancelled.\nContinue group chat\nBack to Inbox"
+    },
+    {
+      "id": "1:342",
+      "name": "J03 / groupconfirm / Leave this group?",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nLeave this group?\nYour meal seat will stay as it is.\nYou can read your authorised history, but will not receive new group messages.\n\nLeaving the group does not release your confirmed meal seat.\nKeep as it is\nConfirm leaving group"
+    },
+    {
+      "id": "1:360",
+      "name": "J03 / leftsettings / Group settings",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nGroup settings\nLeft group · Read-only\nFriday at Olive Table\nYour meal participation has not changed.\nYou can read only your authorised chat history. Current members are not shown.\nRead authorised chat history\nView meal participation"
+    },
+    {
+      "id": "1:382",
+      "name": "J03 / history / Friday at Olive Table",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nFriday at Olive Table\nRead-only history · You left the group\nAlex · Before you left\nLooking forward to Friday. Shall we meet by the entrance?\nYou · Before you left\nI’ll meet you by the entrance.\nYour unsent text · copy or delete\nI’ll be a few minutes early.\nNew messages are unavailable. Messages sent while you were away are not shown.\nBack to group settings\nView meal participation"
+    },
+    {
+      "id": "1:409",
+      "name": "J03 / pending / Inbox",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nInbox\nApplication · Awaiting approval\nFriday at Olive Table\nYour current application is pending. It does not give you a group seat or new chat access.\nView meal progress\nRead earlier authorised history\nDiscover\nMeals\n+\nCreate meal\nInbox\nProfile"
+    },
+    {
+      "id": "1:429",
+      "name": "J03 / mealprogress / Your application is pending.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nYour application is pending.\nFriday at Olive Table\nGroup access opens only after the host approves your application. A previous read-only interval does not grant new messages.\nBack to Inbox"
+    },
+    {
+      "id": "1:445",
+      "name": "J03 / reentered / Friday at Olive Table",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nFriday at Olive Table\nYou were approved again · Group chat\nEarlier authorised history\nYour messages from your previous membership are still available.\nAlex · After your return\nWelcome back. See you at the restaurant.\nMessages sent while you were away are not shown. New messages use your new membership interval.\nMessage\nLooking forward to it.\nSend message\nGroup settings"
+    },
+    {
+      "id": "1:472",
+      "name": "J03 / hostsettings / Group settings",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nGroup settings\nFriday at Olive Table · Host\nCurrent members · 2\nAlex · You · Host\nMia · Guest\nDissolving this group does not cancel the meal or change any seat.\nRead chat\nDissolve group for everyone"
+    },
+    {
+      "id": "1:493",
+      "name": "J03 / dissolve / Dissolve this group for everyone?",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nDissolve this group for everyone?\nThis is permanent.\nNo one will be able to send new messages. Authorised history remains read-only. Meal seats are unchanged.\nKeep as it is\nConfirm dissolution"
+    },
+    {
+      "id": "1:511",
+      "name": "J03 / dissolved / Friday at Olive Table",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nFriday at Olive Table\nGroup dissolved · Read-only history\nAlex · Authorised history\nLooking forward to Friday. Shall we meet by the entrance?\nNo one can send new messages. Meal seats and attendance are unchanged. A later approval does not reopen this group.\nBack to Inbox"
+    },
+    {
+      "id": "1:531",
+      "name": "J03 / older / Earlier messages",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nEarlier messages\nFriday at Olive Table\nAuthorised history\nThe entrance is on the side street.\n2 new messages\nReading older messages does not clear unseen messages or the notification list.\nGo to latest messages\nBack to Inbox"
+    },
+    {
+      "id": "1:552",
+      "name": "J03 / aifailed / Ask Fancy is unavailable.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Meal chat\nAsk Fancy is unavailable.\nYour unsent message stays here.\nYou can write and send your own message. Leaving or losing access to the group prevents draft generation, transfer and sending.\nWrite myself"
+    }
+  ],
+  "links": [
+    {
+      "source": "1:60",
+      "sourceScreen": null,
+      "label": "inbox → Inbox",
+      "to": "1:35",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:83",
+      "sourceScreen": null,
+      "label": "noticeread → Inbox",
+      "to": "1:61",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:106",
+      "sourceScreen": null,
+      "label": "meal → Friday at Olive Table",
+      "to": "1:84",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:136",
+      "sourceScreen": null,
+      "label": "chat → Friday at Olive Table",
+      "to": "1:107",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:165",
+      "sourceScreen": null,
+      "label": "sent → Friday at Olive Table",
+      "to": "1:137",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:189",
+      "sourceScreen": null,
+      "label": "failed → Message not sent.",
+      "to": "1:166",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:210",
+      "sourceScreen": null,
+      "label": "ai → Help with your message.",
+      "to": "1:190",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:234",
+      "sourceScreen": null,
+      "label": "replace → Replace your unsent message?",
+      "to": "1:211",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:258",
+      "sourceScreen": null,
+      "label": "inserted → Friday at Olive Table",
+      "to": "1:235",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:279",
+      "sourceScreen": null,
+      "label": "aisent → Friday at Olive Table",
+      "to": "1:259",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:302",
+      "sourceScreen": null,
+      "label": "settings → Group settings",
+      "to": "1:280",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:320",
+      "sourceScreen": null,
+      "label": "seatconfirm → Leave your meal seat?",
+      "to": "1:303",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:341",
+      "sourceScreen": null,
+      "label": "seatleft → You left your meal seat.",
+      "to": "1:321",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:359",
+      "sourceScreen": null,
+      "label": "groupconfirm → Leave this group?",
+      "to": "1:342",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:381",
+      "sourceScreen": null,
+      "label": "leftsettings → Group settings",
+      "to": "1:360",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:408",
+      "sourceScreen": null,
+      "label": "history → Friday at Olive Table",
+      "to": "1:382",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:428",
+      "sourceScreen": null,
+      "label": "pending → Inbox",
+      "to": "1:409",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:444",
+      "sourceScreen": null,
+      "label": "mealprogress → Your application is pending.",
+      "to": "1:429",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:471",
+      "sourceScreen": null,
+      "label": "reentered → Friday at Olive Table",
+      "to": "1:445",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:492",
+      "sourceScreen": null,
+      "label": "hostsettings → Group settings",
+      "to": "1:472",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:510",
+      "sourceScreen": null,
+      "label": "dissolve → Dissolve this group for everyone?",
+      "to": "1:493",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:530",
+      "sourceScreen": null,
+      "label": "dissolved → Friday at Olive Table",
+      "to": "1:511",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:551",
+      "sourceScreen": null,
+      "label": "older → Earlier messages",
+      "to": "1:531",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:567",
+      "sourceScreen": null,
+      "label": "aifailed → Ask Fancy is unavailable.",
+      "to": "1:552",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:50",
+      "sourceScreen": "1:35",
+      "label": "Action / Open group · 1 unread",
+      "to": "1:107",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:52",
+      "sourceScreen": "1:35",
+      "label": "Action / View meal",
+      "to": "1:84",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:54",
+      "sourceScreen": "1:35",
+      "label": "Action / Mark notification read",
+      "to": "1:61",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:76",
+      "sourceScreen": "1:61",
+      "label": "Action / Open group · 1 unread",
+      "to": "1:107",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:78",
+      "sourceScreen": "1:61",
+      "label": "Action / View meal",
+      "to": "1:84",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:97",
+      "sourceScreen": "1:84",
+      "label": "Action / Open group chat",
+      "to": "1:107",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:99",
+      "sourceScreen": "1:84",
+      "label": "Action / Leave meal seat",
+      "to": "1:303",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:101",
+      "sourceScreen": "1:84",
+      "label": "Action / Back to Inbox",
+      "to": "1:35",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:125",
+      "sourceScreen": "1:107",
+      "label": "Action / Send message",
+      "to": "1:137",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:127",
+      "sourceScreen": "1:107",
+      "label": "Action / Ask Fancy for a group draft",
+      "to": "1:190",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:129",
+      "sourceScreen": "1:107",
+      "label": "Action / Group settings",
+      "to": "1:280",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:131",
+      "sourceScreen": "1:107",
+      "label": "Action / Back to Inbox",
+      "to": "1:35",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:156",
+      "sourceScreen": "1:137",
+      "label": "Action / Group settings",
+      "to": "1:280",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:158",
+      "sourceScreen": "1:137",
+      "label": "Action / View meal",
+      "to": "1:84",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:160",
+      "sourceScreen": "1:137",
+      "label": "Action / Back to Inbox",
+      "to": "1:35",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:182",
+      "sourceScreen": "1:166",
+      "label": "Action / Try sending again",
+      "to": "1:137",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:184",
+      "sourceScreen": "1:166",
+      "label": "Action / Return to chat",
+      "to": "1:107",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:203",
+      "sourceScreen": "1:190",
+      "label": "Action / Use this draft",
+      "to": "1:211",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:205",
+      "sourceScreen": "1:190",
+      "label": "Action / Keep writing myself",
+      "to": "1:107",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:226",
+      "sourceScreen": "1:211",
+      "label": "Action / Replace with draft",
+      "to": "1:235",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:251",
+      "sourceScreen": "1:235",
+      "label": "Action / Send message",
+      "to": "1:259",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:253",
+      "sourceScreen": "1:235",
+      "label": "Action / Group settings",
+      "to": "1:280",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:272",
+      "sourceScreen": "1:259",
+      "label": "Action / Group settings",
+      "to": "1:280",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:274",
+      "sourceScreen": "1:259",
+      "label": "Action / Back to Inbox",
+      "to": "1:35",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:293",
+      "sourceScreen": "1:280",
+      "label": "Action / Read chat",
+      "to": "1:137",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:295",
+      "sourceScreen": "1:280",
+      "label": "Action / View meal participation",
+      "to": "1:84",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:297",
+      "sourceScreen": "1:280",
+      "label": "Action / Leave group",
+      "to": "1:342",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:315",
+      "sourceScreen": "1:303",
+      "label": "Action / Confirm leaving seat",
+      "to": "1:321",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:334",
+      "sourceScreen": "1:321",
+      "label": "Action / Continue group chat",
+      "to": "1:107",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:336",
+      "sourceScreen": "1:321",
+      "label": "Action / Back to Inbox",
+      "to": "1:35",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:354",
+      "sourceScreen": "1:342",
+      "label": "Action / Confirm leaving group",
+      "to": "1:360",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:373",
+      "sourceScreen": "1:360",
+      "label": "Action / Read authorised chat history",
+      "to": "1:382",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:375",
+      "sourceScreen": "1:360",
+      "label": "Action / View meal participation",
+      "to": "1:84",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:401",
+      "sourceScreen": "1:382",
+      "label": "Action / Back to group settings",
+      "to": "1:360",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:403",
+      "sourceScreen": "1:382",
+      "label": "Action / View meal participation",
+      "to": "1:84",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:421",
+      "sourceScreen": "1:409",
+      "label": "Action / View meal progress",
+      "to": "1:429",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:423",
+      "sourceScreen": "1:409",
+      "label": "Action / Read earlier authorised history",
+      "to": "1:382",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:439",
+      "sourceScreen": "1:429",
+      "label": "Action / Back to Inbox",
+      "to": "1:409",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:464",
+      "sourceScreen": "1:445",
+      "label": "Action / Send message",
+      "to": "1:137",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:466",
+      "sourceScreen": "1:445",
+      "label": "Action / Group settings",
+      "to": "1:280",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:485",
+      "sourceScreen": "1:472",
+      "label": "Action / Read chat",
+      "to": "1:107",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:487",
+      "sourceScreen": "1:472",
+      "label": "Action / Dissolve group for everyone",
+      "to": "1:493",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:505",
+      "sourceScreen": "1:493",
+      "label": "Action / Confirm dissolution",
+      "to": "1:511",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:524",
+      "sourceScreen": "1:511",
+      "label": "Action / Back to Inbox",
+      "to": "1:35",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:544",
+      "sourceScreen": "1:531",
+      "label": "Action / Go to latest messages",
+      "to": "1:137",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:546",
+      "sourceScreen": "1:531",
+      "label": "Action / Back to Inbox",
+      "to": "1:35",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:562",
+      "sourceScreen": "1:552",
+      "label": "Action / Write myself",
+      "to": "1:107",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    }
+  ],
+  "missingTargets": [],
+  "images": [],
+  "fonts": [
+    "Arial"
+  ]
+}

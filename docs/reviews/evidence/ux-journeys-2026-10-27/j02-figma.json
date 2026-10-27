@@ -1,0 +1,1059 @@
+{
+  "reviewRole": "PJ",
+  "reviewMethod": "native-file-readback-and-screenshot",
+  "professionalQA": false,
+  "fileKey": "oxJEKNBSpEbwsmMKLHd7Hv",
+  "pageId": "0:1",
+  "pageName": "J02 · iOS · UX-r01",
+  "starts": [
+    {
+      "nodeId": "3:715",
+      "name": "J02 · Main journey"
+    },
+    {
+      "nodeId": "3:1165",
+      "name": "J02 · Necessary recovery"
+    }
+  ],
+  "types": {
+    "SECTION": 1,
+    "FRAME": 220,
+    "TEXT": 321,
+    "INSTANCE": 78,
+    "VECTOR": 18,
+    "RECTANGLE": 30,
+    "COMPONENT": 5
+  },
+  "screens": [
+    {
+      "id": "3:715",
+      "name": "J02 / welcome / A good meal starts with you.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nA good meal starts with you.\nPick a restaurant, share your plan, and welcome a few new people.\n2–6 people · Friendship first\nYou arrange the restaurant booking. Everyone pays at the restaurant.\nCreate a meal\nDiscover\nMeals\n+\nCreate meal\nInbox\nProfile"
+    },
+    {
+      "id": "3:734",
+      "name": "J02 / auth / Let’s make it yours.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nLet’s make it yours.\nSign in or create your account to host this meal.\nEmail\nalex@example.com\nContinue with email\nContinue with Google\nContinue with Apple\nBack"
+    },
+    {
+      "id": "3:758",
+      "name": "J02 / verify / Check your inbox.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nCheck your inbox.\nEnter the six-digit code sent to alex@example.com.\nVerification code\n123456\nWrong or expired code? Your meal draft stays here.\nVerify and continue\nUse another email"
+    },
+    {
+      "id": "3:779",
+      "name": "J02 / profile / A little about you.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nA little about you.\nHelp people feel comfortable joining your table.\nName · 2–40 characters\nAlex\nIntroduction · 20–1000\nI enjoy relaxed conversations and discovering new food.\nLanguage · Life status · Interest\nEnglish · Working · Food\n✓ I am 18 or older\n✓ I agree to the community guidelines\nSave and continue"
+    },
+    {
+      "id": "3:804",
+      "name": "J02 / arrange / Choose your table.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nChoose your table.\nArrange · Introduce · Costs · Review\nFind a restaurant\nOlive Table, Soho\nOlive Table\nSoho, London\nRestaurant information is a provider result, not a reservation.\nUse this restaurant"
+    },
+    {
+      "id": "3:825",
+      "name": "J02 / arranged / Choose your table.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nChoose your table.\nArrange · Introduce · Costs · Review\nSelected · Olive Table\nSoho, London\nDate · Time · London\n30 October 2026 · 19:00 GMT\nMinimum · Capacity · includes you\n3 minimum · 4 total\nApplications close\n1 hour before · 18:00 GMT\nChanging the restaurant clears time and booking confirmation.\nContinue\nChange restaurant"
+    },
+    {
+      "id": "3:855",
+      "name": "J02 / introduce / Set the mood.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nSet the mood.\nArrange · Introduce · Costs · Review\nMeal title · 5–80 characters\nA relaxed Friday supper\nIntroduction · 20–1000 characters\nMeet new people over a friendly dinner and a good conversation.\nLanguage · Atmosphere\nEnglish · Easy conversation\nCuisine · Dietary options\nNot provided · Not provided\nHost-reported options are not an allergy guarantee.\nContinue\nAsk Fancy for an introduction\nPrevious"
+    },
+    {
+      "id": "3:887",
+      "name": "J02 / ai / A starting point, in your words.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nA starting point, in your words.\nAsk Fancy · Creation draft\nIntroduction draft\nA relaxed supper for people who enjoy thoughtful conversation and discovering new food in London.\nReview and edit before publishing. No restaurant or agreement is selected for you.\nUse this draft\nKeep writing myself"
+    },
+    {
+      "id": "3:909",
+      "name": "J02 / replace / Replace your introduction?",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nReplace your introduction?\nYour existing text stays unless you choose Replace.\nCurrent introduction\nMeet new people over a friendly dinner and a good conversation.\nNew draft\nA relaxed supper for people who enjoy thoughtful conversation and discovering new food in London.\nReplace with draft\nKeep my text"
+    },
+    {
+      "id": "3:932",
+      "name": "J02 / introduced / Set the mood.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nSet the mood.\nArrange · Introduce · Costs · Review\nMeal title\nA relaxed Friday supper\nIntroduction\nA relaxed supper for people who enjoy thoughtful conversation and discovering new food in London.\nLanguage · Atmosphere\nEnglish · Easy conversation\nCuisine · Dietary options\nNot provided · Not provided\nDraft added. You still choose whether to publish.\nContinue\nPrevious"
+    },
+    {
+      "id": "3:962",
+      "name": "J02 / costs / Keep costs clear.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nKeep costs clear.\nArrange · Introduce · Costs · Review\nPay at the restaurant\nEveryone pays their own bill. This budget is an estimate, not a charge.\nBudget per person · GBP\n£20.00 – £35.00\n✓ I will contact the restaurant and arrange a table for this place, time and total number of people.\n\nThis is your report. Fancy has not confirmed a reservation.\nContinue\nPrevious"
+    },
+    {
+      "id": "3:986",
+      "name": "J02 / review / Ready to welcome people?",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nReady to welcome people?\nArrange · Introduce · Costs · Review\nA relaxed Friday supper\nOlive Table · Soho, London\n30 October · 19:00 GMT\n3 minimum / 4 total · closes 18:00\n£20–£35 each · pay at restaurant\nEnglish · Easy conversation\nMeet new people over a friendly dinner and a good conversation.\nCuisine / dietary: Not provided.\nBooking: host-reported for this arrangement.\n□ I reviewed the arrangements and agree to the cancellation terms.\n□ I reviewed the plan and agree\nRead cancellation terms\nEdit arrangements\nEdit introduction\nEdit costs"
+    },
+    {
+      "id": "3:1014",
+      "name": "J02 / terms / Cancellation terms",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nCancellation terms\nRead without changing your agreement.\nBefore the meal, the host may cancel. The meal is cancelled if recruitment closes below its minimum, or later falls below it before the start.\n\nEveryone pays at the restaurant. Fancy takes no deposit and issues no refund. The host contacts the restaurant.\n\nCancelling the meal does not close its existing group chat.\nBack to review"
+    },
+    {
+      "id": "3:1030",
+      "name": "J02 / ready / Your plan is ready.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nYour plan is ready.\nReview · your confirmation is selected\nA relaxed Friday supper\nOlive Table · 30 October · 19:00 GMT\n3–4 people including you\nCloses 18:00 · £20–£35 per person\nEnglish · Easy conversation\nMeet new people over a friendly dinner and a good conversation.\n✓ I reviewed the arrangements and agree to the cancellation terms.\nHost-reported booking; no platform reservation.\nPublish meal\nBack to review"
+    },
+    {
+      "id": "3:1051",
+      "name": "J02 / published / Your meal is published.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nYour meal is published.\nHosting · A relaxed Friday supper\n1 / 4 confirmed · Minimum 3\nOlive Table · 30 October · 19:00 GMT\nBooking: host-reported for 1 person\nArrangements can be edited before the first approval.\nApplications\nNo applications yet. Your meal is available to discover.\nView applications\nEdit arrangements\nCancel this meal"
+    },
+    {
+      "id": "3:1077",
+      "name": "J02 / applicant / Meet Mia.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nMeet Mia.\nHosting · Application pending\nMia\nNew to London, enjoys relaxed conversations and trying new food.\nFor this meal\nA relaxed Friday supper\n1 / 4 confirmed · Minimum 3\nPending applications do not take a seat.\nApprove Mia\nDecline Mia\nBack to hosting"
+    },
+    {
+      "id": "3:1102",
+      "name": "J02 / approved / Mia’s seat is confirmed.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nMia’s seat is confirmed.\nHosting · 2 / 4 confirmed · Minimum 3\nKey arrangements locked\nThe first guest is approved. To change key arrangements, cancel and create a new meal.\nBooking · Needs update\nYour previous declaration was for 1 person. Contact the restaurant and update it for the current 2 people.\nMia has group access. Approval is not a restaurant booking confirmation.\nUpdate booking declaration\nCancel this meal"
+    },
+    {
+      "id": "3:1128",
+      "name": "J02 / declared / Booking declaration updated.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nBooking declaration updated.\nHosting · 2 / 4 confirmed\nHost-reported · 2 people\nOlive Table · 30 October · 19:00 GMT\nUpdated by you for the current confirmed count. This is not restaurant verification.\nKey arrangements stay locked. Members receive an in-app update.\nBack to hosting\nCancel this meal"
+    },
+    {
+      "id": "3:1149",
+      "name": "J02 / declined / Application declined.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nApplication declined.\nHosting · Mia\nMia’s application is declined. No seat was added. This application cannot be approved or submitted again for this meal.\nBack to hosting"
+    },
+    {
+      "id": "3:1165",
+      "name": "J02 / applicantfull / This seat is no longer available.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nThis seat is no longer available.\nHosting · Latest meal status\nThe last seat has been filled, or recruitment has closed. This application was not approved. Refresh to see the latest result.\nReturn to hosting"
+    },
+    {
+      "id": "3:1181",
+      "name": "J02 / cancel / Cancel this meal for everyone?",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nCancel this meal for everyone?\nThis action affects the whole table.\nPending applications will close. The host and current applicants and confirmed guests will be notified.\n\nExisting group chat stays available. Contact the restaurant yourself.\nReason\nMy plans changed\nKeep meal\nConfirm cancellation"
+    },
+    {
+      "id": "3:1202",
+      "name": "J02 / cancelled / This meal is cancelled.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nThis meal is cancelled.\nHosting · Cancelled\nA relaxed Friday supper\nNo new applications or approvals. Pending applications are expired. This meal cannot reopen.\nThe existing group chat remains available. Contact the restaurant to cancel your booking. Members must actively apply to any new meal.\nBack to Meals"
+    },
+    {
+      "id": "3:1222",
+      "name": "J02 / unknown / Publication status unknown.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nPublication status unknown.\nYour arrangements are safe.\nCheck this publication before trying again. Do not create a second meal while the result is unknown.\nCheck publication status\nReview saved arrangements"
+    },
+    {
+      "id": "3:1240",
+      "name": "J02 / publisherror / Couldn’t publish your meal.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nCouldn’t publish your meal.\nYour arrangements are still here.\nTry again when connected. Your original publication request is retained.\nTry publishing again\nReturn to review"
+    },
+    {
+      "id": "3:1258",
+      "name": "J02 / searcherror / Restaurant search is unavailable.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nRestaurant search is unavailable.\nYour confirmed restaurant is unchanged.\nTry another search when connected. A restaurant preview or typed name does not select a restaurant.\nTry again\nReturn to arrangements"
+    },
+    {
+      "id": "3:1276",
+      "name": "J02 / dst / This London time happens twice.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nThis London time happens twice.\nArrange · 25 October · 01:30\nChoose one time\n01:30 BST (UTC+1) / 01:30 GMT (UTC+0)\nChoose the intended offset. A nonexistent spring-forward time is rejected; no time is silently changed.\nChoose 01:30 GMT\nBack without choosing"
+    },
+    {
+      "id": "3:1297",
+      "name": "J02 / aierror / Ask Fancy is unavailable.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nAsk Fancy is unavailable.\nYour introduction has not changed.\nYou can keep writing yourself. Retrying never appends the same draft automatically.\nWrite myself\nTry generating again"
+    },
+    {
+      "id": "3:1315",
+      "name": "J02 / closed / Recruitment closed below minimum.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nRecruitment closed below minimum.\nHosting · Cancelled\nThere were fewer than 3 confirmed people at the deadline. Pending applications are expired. The meal is cancelled and cannot reopen.\n\nThe group is retained; contact the restaurant.\nBack to Meals"
+    },
+    {
+      "id": "3:1331",
+      "name": "J02 / started / This meal has already started.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   Hosting\nThis meal has already started.\nHosting · In progress\nYou can no longer cancel this meal. Contact support about problems. Past participation cannot be erased by cancellation.\nBack to meal"
+    }
+  ],
+  "links": [
+    {
+      "source": "3:733",
+      "sourceScreen": null,
+      "label": "welcome → A good meal starts with you.",
+      "to": "3:715",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:757",
+      "sourceScreen": null,
+      "label": "auth → Let’s make it yours.",
+      "to": "3:734",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:778",
+      "sourceScreen": null,
+      "label": "verify → Check your inbox.",
+      "to": "3:758",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:803",
+      "sourceScreen": null,
+      "label": "profile → A little about you.",
+      "to": "3:779",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:824",
+      "sourceScreen": null,
+      "label": "arrange → Choose your table.",
+      "to": "3:804",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:854",
+      "sourceScreen": null,
+      "label": "arranged → Choose your table.",
+      "to": "3:825",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:886",
+      "sourceScreen": null,
+      "label": "introduce → Set the mood.",
+      "to": "3:855",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:908",
+      "sourceScreen": null,
+      "label": "ai → A starting point, in your words.",
+      "to": "3:887",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:931",
+      "sourceScreen": null,
+      "label": "replace → Replace your introduction?",
+      "to": "3:909",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:961",
+      "sourceScreen": null,
+      "label": "introduced → Set the mood.",
+      "to": "3:932",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:985",
+      "sourceScreen": null,
+      "label": "costs → Keep costs clear.",
+      "to": "3:962",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1013",
+      "sourceScreen": null,
+      "label": "review → Ready to welcome people?",
+      "to": "3:986",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1029",
+      "sourceScreen": null,
+      "label": "terms → Cancellation terms",
+      "to": "3:1014",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1050",
+      "sourceScreen": null,
+      "label": "ready → Your plan is ready.",
+      "to": "3:1030",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1076",
+      "sourceScreen": null,
+      "label": "published → Your meal is published.",
+      "to": "3:1051",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1101",
+      "sourceScreen": null,
+      "label": "applicant → Meet Mia.",
+      "to": "3:1077",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1127",
+      "sourceScreen": null,
+      "label": "approved → Mia’s seat is confirmed.",
+      "to": "3:1102",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1148",
+      "sourceScreen": null,
+      "label": "declared → Booking declaration updated.",
+      "to": "3:1128",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1164",
+      "sourceScreen": null,
+      "label": "declined → Application declined.",
+      "to": "3:1149",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1180",
+      "sourceScreen": null,
+      "label": "applicantfull → This seat is no longer available.",
+      "to": "3:1165",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1201",
+      "sourceScreen": null,
+      "label": "cancel → Cancel this meal for everyone?",
+      "to": "3:1181",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1221",
+      "sourceScreen": null,
+      "label": "cancelled → This meal is cancelled.",
+      "to": "3:1202",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1239",
+      "sourceScreen": null,
+      "label": "unknown → Publication status unknown.",
+      "to": "3:1222",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1257",
+      "sourceScreen": null,
+      "label": "publisherror → Couldn’t publish your meal.",
+      "to": "3:1240",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1275",
+      "sourceScreen": null,
+      "label": "searcherror → Restaurant search is unavailable.",
+      "to": "3:1258",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1296",
+      "sourceScreen": null,
+      "label": "dst → This London time happens twice.",
+      "to": "3:1276",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1314",
+      "sourceScreen": null,
+      "label": "aierror → Ask Fancy is unavailable.",
+      "to": "3:1297",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1330",
+      "sourceScreen": null,
+      "label": "closed → Recruitment closed below minimum.",
+      "to": "3:1315",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1347",
+      "sourceScreen": null,
+      "label": "started → This meal has already started.",
+      "to": "3:1331",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:727",
+      "sourceScreen": "3:715",
+      "label": "Action / Create a meal",
+      "to": "3:734",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:746",
+      "sourceScreen": "3:734",
+      "label": "Action / Continue with email",
+      "to": "3:758",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:748",
+      "sourceScreen": "3:734",
+      "label": "Action / Continue with Google",
+      "to": "3:779",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:750",
+      "sourceScreen": "3:734",
+      "label": "Action / Continue with Apple",
+      "to": "3:779",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:752",
+      "sourceScreen": "3:734",
+      "label": "Action / Back",
+      "to": "3:715",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:771",
+      "sourceScreen": "3:758",
+      "label": "Action / Verify and continue",
+      "to": "3:779",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:773",
+      "sourceScreen": "3:758",
+      "label": "Action / Use another email",
+      "to": "3:734",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:798",
+      "sourceScreen": "3:779",
+      "label": "Action / Save and continue",
+      "to": "3:804",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:819",
+      "sourceScreen": "3:804",
+      "label": "Action / Use this restaurant",
+      "to": "3:825",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:847",
+      "sourceScreen": "3:825",
+      "label": "Action / Continue",
+      "to": "3:855",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:849",
+      "sourceScreen": "3:825",
+      "label": "Action / Change restaurant",
+      "to": "3:804",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:877",
+      "sourceScreen": "3:855",
+      "label": "Action / Continue",
+      "to": "3:962",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:879",
+      "sourceScreen": "3:855",
+      "label": "Action / Ask Fancy for an introduction",
+      "to": "3:887",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:881",
+      "sourceScreen": "3:855",
+      "label": "Action / Previous",
+      "to": "3:825",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:900",
+      "sourceScreen": "3:887",
+      "label": "Action / Use this draft",
+      "to": "3:909",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:902",
+      "sourceScreen": "3:887",
+      "label": "Action / Keep writing myself",
+      "to": "3:855",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:924",
+      "sourceScreen": "3:909",
+      "label": "Action / Replace with draft",
+      "to": "3:932",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:954",
+      "sourceScreen": "3:932",
+      "label": "Action / Continue",
+      "to": "3:962",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:956",
+      "sourceScreen": "3:932",
+      "label": "Action / Previous",
+      "to": "3:825",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:978",
+      "sourceScreen": "3:962",
+      "label": "Action / Continue",
+      "to": "3:986",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:980",
+      "sourceScreen": "3:962",
+      "label": "Action / Previous",
+      "to": "3:855",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1000",
+      "sourceScreen": "3:986",
+      "label": "Action / □ I reviewed the plan and agree",
+      "to": "3:1030",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1002",
+      "sourceScreen": "3:986",
+      "label": "Action / Read cancellation terms",
+      "to": "3:1014",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1004",
+      "sourceScreen": "3:986",
+      "label": "Action / Edit arrangements",
+      "to": "3:825",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1006",
+      "sourceScreen": "3:986",
+      "label": "Action / Edit introduction",
+      "to": "3:855",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1008",
+      "sourceScreen": "3:986",
+      "label": "Action / Edit costs",
+      "to": "3:962",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1043",
+      "sourceScreen": "3:1030",
+      "label": "Action / Publish meal",
+      "to": "3:1051",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1066",
+      "sourceScreen": "3:1051",
+      "label": "Action / View applications",
+      "to": "3:1077",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1068",
+      "sourceScreen": "3:1051",
+      "label": "Action / Edit arrangements",
+      "to": "3:825",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1070",
+      "sourceScreen": "3:1051",
+      "label": "Action / Cancel this meal",
+      "to": "3:1181",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1092",
+      "sourceScreen": "3:1077",
+      "label": "Action / Approve Mia",
+      "to": "3:1102",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1094",
+      "sourceScreen": "3:1077",
+      "label": "Action / Decline Mia",
+      "to": "3:1149",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1096",
+      "sourceScreen": "3:1077",
+      "label": "Action / Back to hosting",
+      "to": "3:1051",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1118",
+      "sourceScreen": "3:1102",
+      "label": "Action / Update booking declaration",
+      "to": "3:1128",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1122",
+      "sourceScreen": "3:1102",
+      "label": "Action / Cancel this meal",
+      "to": "3:1181",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1141",
+      "sourceScreen": "3:1128",
+      "label": "Action / Back to hosting",
+      "to": "3:1102",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1143",
+      "sourceScreen": "3:1128",
+      "label": "Action / Cancel this meal",
+      "to": "3:1181",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1159",
+      "sourceScreen": "3:1149",
+      "label": "Action / Back to hosting",
+      "to": "3:1051",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1175",
+      "sourceScreen": "3:1165",
+      "label": "Action / Return to hosting",
+      "to": "3:1102",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1196",
+      "sourceScreen": "3:1181",
+      "label": "Action / Confirm cancellation",
+      "to": "3:1202",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1215",
+      "sourceScreen": "3:1202",
+      "label": "Action / Back to Meals",
+      "to": "3:715",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1232",
+      "sourceScreen": "3:1222",
+      "label": "Action / Check publication status",
+      "to": "3:1051",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1234",
+      "sourceScreen": "3:1222",
+      "label": "Action / Review saved arrangements",
+      "to": "3:1030",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1250",
+      "sourceScreen": "3:1240",
+      "label": "Action / Try publishing again",
+      "to": "3:1051",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1252",
+      "sourceScreen": "3:1240",
+      "label": "Action / Return to review",
+      "to": "3:1030",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1268",
+      "sourceScreen": "3:1258",
+      "label": "Action / Try again",
+      "to": "3:804",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1270",
+      "sourceScreen": "3:1258",
+      "label": "Action / Return to arrangements",
+      "to": "3:825",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1289",
+      "sourceScreen": "3:1276",
+      "label": "Action / Choose 01:30 GMT",
+      "to": "3:825",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1291",
+      "sourceScreen": "3:1276",
+      "label": "Action / Back without choosing",
+      "to": "3:825",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1307",
+      "sourceScreen": "3:1297",
+      "label": "Action / Write myself",
+      "to": "3:855",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1309",
+      "sourceScreen": "3:1297",
+      "label": "Action / Try generating again",
+      "to": "3:887",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1325",
+      "sourceScreen": "3:1315",
+      "label": "Action / Back to Meals",
+      "to": "3:715",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:1341",
+      "sourceScreen": "3:1331",
+      "label": "Action / Back to meal",
+      "to": "3:1102",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    }
+  ],
+  "missingTargets": [],
+  "images": [],
+  "fonts": [
+    "Arial"
+  ]
+}

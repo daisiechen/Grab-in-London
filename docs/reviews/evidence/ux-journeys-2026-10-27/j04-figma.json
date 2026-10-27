@@ -1,0 +1,1112 @@
+{
+  "reviewRole": "PJ",
+  "reviewMethod": "native-file-readback-and-screenshot",
+  "professionalQA": false,
+  "fileKey": "UvgjBArZae7tQuSAXu8cWA",
+  "pageId": "0:1",
+  "pageName": "J04 · iOS · UX-r01",
+  "starts": [
+    {
+      "nodeId": "1:35",
+      "name": "J04 · Main journey"
+    },
+    {
+      "nodeId": "1:170",
+      "name": "J04 · Necessary recovery"
+    }
+  ],
+  "types": {
+    "SECTION": 1,
+    "FRAME": 263,
+    "TEXT": 328,
+    "INSTANCE": 74,
+    "VECTOR": 54,
+    "RECTANGLE": 29,
+    "COMPONENT": 5
+  },
+  "screens": [
+    {
+      "id": "1:35",
+      "name": "J04 / past / How was your evening?",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nHow was your evening?\nMeals · Past\nFriday at Olive Table\nFriday 30 October · 19:00 London\nUpdate attendance and feedback until 6 November, 21:00 London.\nYour attendance · Not reported\nYour own report takes priority over a host report. Not reported is not absence.\nI attended\nI did not attend\nDiscover\nMeals\n+\nCreate meal\nInbox\nProfile"
+    },
+    {
+      "id": "1:59",
+      "name": "J04 / present / Your attendance is saved.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nYour attendance is saved.\nFriday at Olive Table · Attended\nRate this meal privately\nOnly your overall experience of this meal. Your table cannot see your score.\nMeal score · optional\nChoose 1–5\nYour table · Alex\nA friendly conversation over dinner.\nSave private meal score\nLeave a reference or reconnect\nDiscover\nMeals\n+\nCreate meal\nInbox\nProfile"
+    },
+    {
+      "id": "1:85",
+      "name": "J04 / absent / Attendance saved.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nAttendance saved.\nFriday at Olive Table · Did not attend\nYou cannot leave a meal score, public reference or reconnect choice without valid attendance. If this is incorrect, update your own attendance while the reporting window is open.\nUpdate: I attended\nBack to Past meals\nDiscover\nMeals\n+\nCreate meal\nInbox\nProfile"
+    },
+    {
+      "id": "1:103",
+      "name": "J04 / scored / Your meal score is saved.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nYour meal score is saved.\nFriday at Olive Table · Private meal score\nOnly your meal experience\nThis score is not shared with your table. It does not create a public reference or reconnect choice.\nAlex\nYou both have valid attendance for this meal.\nLeave a reference or reconnect\nBack to meal\nChoose 1–5\nDiscover\nMeals\n+\nCreate meal\nInbox\nProfile"
+    },
+    {
+      "id": "1:126",
+      "name": "J04 / feedback / Keep the good part going.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nKeep the good part going.\nAbout Alex · Friday at Olive Table\nA public reference and your private reconnect choice are separate.\nPublic reference · optional · 1–500\n\nPublished when both people submit, or after the 7-day window, while attendance stays valid.\n□ I would like to meet Alex again\nYour choice stays private until you both choose to reconnect.\nSave feedback\nBack to meal"
+    },
+    {
+      "id": "1:149",
+      "name": "J04 / draft / Keep the good part going.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nKeep the good part going.\nAbout Alex · Friday at Olive Table\nPublic reference · optional · 1–500\nA thoughtful and friendly dinner companion.\n✓ I would like to meet Alex again\nA reference does not automatically agree to reconnect. Your choice is private.\nSave feedback\nBack to meal"
+    },
+    {
+      "id": "1:170",
+      "name": "J04 / nochanges / No changes to save.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nNo changes to save.\nAbout Alex\nNothing was saved. You can leave either a public reference or a private reconnect choice; neither is required.\nBack to feedback"
+    },
+    {
+      "id": "1:186",
+      "name": "J04 / partial / Some feedback is saved.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nSome feedback is saved.\nAbout Alex · Save results\nPublic reference · Saved\nYour reference is saved, not public yet.\nReconnect choice · Not saved\nYour choice could not be saved. Your input is preserved.\nOnly the unsaved item will be retried. Your saved reference will not be sent again.\nRetry unsaved items\nBack to feedback"
+    },
+    {
+      "id": "1:211",
+      "name": "J04 / waiting / Your feedback is saved.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nYour feedback is saved.\nAbout Alex · Save results\nPublic reference · Saved\nNot public yet. Publication waits for both references or the end of the window.\nReconnect choice · Saved privately\nYour choice is saved. No information about another person’s one-sided choice is shown.\nBack to meal\nEdit my reconnect choice\nBlock person"
+    },
+    {
+      "id": "1:236",
+      "name": "J04 / mutual / You both chose to reconnect.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nYou both chose to reconnect.\nAbout Alex\nPrivate chat is ready when you are.\nYou both chose to reconnect and have valid attendance. Opening the chat does not send a message.\nYour reference and your private reconnect choice remain separate.\nOpen private chat\nWithdraw connection\nBlock person"
+    },
+    {
+      "id": "1:259",
+      "name": "J04 / dm / Alex",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nAlex\nPrivate chat · Mutual connection\nOnly authorised participants can read this conversation.\nMessage · 1–2000 characters\nIt was lovely meeting you. Fancy another meal soon?\nSend message\nBack to feedback\nWithdraw connection"
+    },
+    {
+      "id": "1:282",
+      "name": "J04 / dmsent / Alex",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nAlex\nPrivate chat · Message sent\nYou · Just now\nIt was lovely meeting you. Fancy another meal soon?\nThis message was sent only because you chose Send. It is not automatically marked read.\nBack to feedback\nWithdraw connection"
+    },
+    {
+      "id": "1:303",
+      "name": "J04 / withdraw / Withdraw this connection?",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nWithdraw this connection?\nYou can do this at any time.\nBoth reconnect choices will be cleared. Previous private chat stays read-only. New choices are needed from both people to reconnect.\n\nIf this confirmation came from Save feedback, cancelling saves no part of that feedback and keeps your draft.\nKeep connection\nWithdraw"
+    },
+    {
+      "id": "1:321",
+      "name": "J04 / readonly / Alex",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nAlex\nRead-only private history\nYou · Previous message\nIt was lovely meeting you. Fancy another meal soon?\nNew messages are unavailable. Your previous chat remains read-only. Reconnecting requires new choices from both people.\nUnsent text · copy or delete\nI hope your week is going well.\nBack to feedback"
+    },
+    {
+      "id": "1:343",
+      "name": "J04 / block / Block this person?",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nBlock this person?\nShared meal groups are unchanged.\nBoth reconnect choices will be cleared and future private messages blocked. Your shared meal group membership is not changed.\nKeep connection\nConfirm block"
+    },
+    {
+      "id": "1:362",
+      "name": "J04 / blocked / Alex is blocked.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nAlex is blocked.\nPrivate contact is unavailable.\nPrevious private chat remains read-only. Shared meal groups are unchanged. You can report a safety concern separately.\nUnblock person\nRead previous private chat"
+    },
+    {
+      "id": "1:380",
+      "name": "J04 / unblocked / Alex is unblocked.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nAlex is unblocked.\nPrevious reconnect choices were not restored.\nUnblocking only removes this block. You both need new valid choices to reconnect. Previous history stays read-only.\nRead previous private chat\nBack to meal"
+    },
+    {
+      "id": "1:398",
+      "name": "J04 / unknown / Saved status is unknown.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nSaved status is unknown.\nAbout Alex · Save results\nPublic reference · Status unknown\nCheck the original save before trying again.\nReconnect choice · Not saved yet\nThis item has not been attempted. It waits until the public reference result is known.\nCheck saved status\nBack to feedback"
+    },
+    {
+      "id": "1:421",
+      "name": "J04 / conflict / A newer version is available.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nA newer version is available.\nAbout Alex · Your draft is preserved.\nLatest saved reference\nThank you for a welcoming dinner.\nYour local draft\nA thoughtful and friendly dinner companion.\nReconnect choice is not saved yet. Check the latest version before confirming your changes.\nConfirm against latest version\nKeep editing"
+    },
+    {
+      "id": "1:445",
+      "name": "J04 / expired / The feedback window is closed.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nThe feedback window is closed.\nFriday at Olive Table · 7-day window ended\nYou can no longer edit attendance, meal score, public references or new reconnect choices for this meal. Contact support about a correction.\nExisting mutual connection\nIndependent Withdraw remains available at any time, even after the feedback window.\nWithdraw connection\nRead previous private chat"
+    },
+    {
+      "id": "1:466",
+      "name": "J04 / hostgap / Guest attendance",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nGuest attendance\nFriday at Olive Table · Host\nMia · Not reported\nFill gaps only. A guest’s own report takes priority over your report.\nDo not default all guests to attended. You can only report eligible people on this meal’s start list during the window.\nReport Mia attended\nBack to meal"
+    },
+    {
+      "id": "1:487",
+      "name": "J04 / hostreported / Host report saved.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nHost report saved.\nMia · Host-reported attended\nMia can still make her own report while the window is open. Her own report takes priority. Your report is kept in history.\nBack to guest attendance"
+    },
+    {
+      "id": "1:504",
+      "name": "J04 / corrected / Attendance was corrected.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nAttendance was corrected.\nFriday at Olive Table\nYour valid attendance for this meal is unavailable. Related references are no longer public and this meal cannot support new private messages. Existing history remains read-only.\n\nA connection supported by another valid shared meal remains eligible; a past withdrawal or block is never undone.\nRead previous private history\nBack to Past meals"
+    },
+    {
+      "id": "3:161",
+      "name": "J04 / choiceeditor / Edit your reconnect choice",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nEdit your reconnect choice\nAbout Alex · Friday at Olive Table\nPublic reference · optional · 1–500\nA thoughtful and friendly dinner companion.\n✓ I would like to meet Alex again\nYour saved public reference is unchanged. This only updates your own private choice.\nSave feedback\nBack to meal"
+    },
+    {
+      "id": "3:180",
+      "name": "J04 / choiceremoved / Your reconnect choice is cleared.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nYour reconnect choice is cleared.\nAbout Alex · Save results\nPublic reference · Saved\nNot public yet. Publication waits for both references or the end of the window.\nReconnect choice · Not selected\nYou have not chosen to reconnect. Your saved public reference is unchanged.\nBack to meal\nEdit my reconnect choice\nBlock person"
+    },
+    {
+      "id": "3:211",
+      "name": "J04 / scorepicker / Choose a private meal score",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nChoose a private meal score\nYour table cannot see this score. You may skip it.\n1 / 5\n2 / 5\n3 / 5\n4 / 5\n5 / 5\nSkip score"
+    },
+    {
+      "id": "3:264",
+      "name": "J04 / scoreselected / Your attendance is saved.",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nYour attendance is saved.\nFriday at Olive Table · Attended\nRate this meal privately\nOnly your overall experience of this meal. Your table cannot see your score.\nMeal score · optional\nChoose 1–5\nYour table · Alex\nA friendly conversation over dinner.\nSave private meal score\nLeave a reference or reconnect\nDiscover\nMeals\n+\nCreate meal\nInbox\nProfile"
+    },
+    {
+      "id": "4:230",
+      "name": "J04 / choiceunchecked / Edit your reconnect choice · unchecked",
+      "width": 393,
+      "height": 852,
+      "text": "9:41                                                     ▰\n‹   After your meal\nEdit your reconnect choice\nAbout Alex · Friday at Olive Table\nPublic reference · optional · 1–500\nA thoughtful and friendly dinner companion.\n□ I would like to meet Alex again\nYour saved public reference is unchanged. This only updates your own private choice.\nSave feedback\nBack to meal"
+    }
+  ],
+  "links": [
+    {
+      "source": "1:58",
+      "sourceScreen": null,
+      "label": "past → How was your evening?",
+      "to": "1:35",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:84",
+      "sourceScreen": null,
+      "label": "present → Your attendance is saved.",
+      "to": "1:59",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:102",
+      "sourceScreen": null,
+      "label": "absent → Attendance saved.",
+      "to": "1:85",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:125",
+      "sourceScreen": null,
+      "label": "scored → Your meal score is saved.",
+      "to": "1:103",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:148",
+      "sourceScreen": null,
+      "label": "feedback → Keep the good part going.",
+      "to": "1:126",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:169",
+      "sourceScreen": null,
+      "label": "draft → Keep the good part going.",
+      "to": "1:149",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:185",
+      "sourceScreen": null,
+      "label": "nochanges → No changes to save.",
+      "to": "1:170",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:210",
+      "sourceScreen": null,
+      "label": "partial → Some feedback is saved.",
+      "to": "1:186",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:235",
+      "sourceScreen": null,
+      "label": "waiting → Your feedback is saved.",
+      "to": "1:211",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:258",
+      "sourceScreen": null,
+      "label": "mutual → You both chose to reconnect.",
+      "to": "1:236",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:281",
+      "sourceScreen": null,
+      "label": "dm → Alex",
+      "to": "1:259",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:302",
+      "sourceScreen": null,
+      "label": "dmsent → Alex",
+      "to": "1:282",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:320",
+      "sourceScreen": null,
+      "label": "withdraw → Withdraw this connection?",
+      "to": "1:303",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:342",
+      "sourceScreen": null,
+      "label": "readonly → Alex",
+      "to": "1:321",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:361",
+      "sourceScreen": null,
+      "label": "block → Block this person?",
+      "to": "1:343",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:379",
+      "sourceScreen": null,
+      "label": "blocked → Alex is blocked.",
+      "to": "1:362",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:397",
+      "sourceScreen": null,
+      "label": "unblocked → Alex is unblocked.",
+      "to": "1:380",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:420",
+      "sourceScreen": null,
+      "label": "unknown → Saved status is unknown.",
+      "to": "1:398",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:444",
+      "sourceScreen": null,
+      "label": "conflict → A newer version is available.",
+      "to": "1:421",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:465",
+      "sourceScreen": null,
+      "label": "expired → The feedback window is closed.",
+      "to": "1:445",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:486",
+      "sourceScreen": null,
+      "label": "hostgap → Guest attendance",
+      "to": "1:466",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:503",
+      "sourceScreen": null,
+      "label": "hostreported → Host report saved.",
+      "to": "1:487",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:521",
+      "sourceScreen": null,
+      "label": "corrected → Attendance was corrected.",
+      "to": "1:504",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:338",
+      "sourceScreen": null,
+      "label": "Review state: choiceeditor",
+      "to": "3:161",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:340",
+      "sourceScreen": null,
+      "label": "Review state: choiceremoved",
+      "to": "3:180",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:342",
+      "sourceScreen": null,
+      "label": "Review state: scorepicker",
+      "to": "3:211",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:344",
+      "sourceScreen": null,
+      "label": "Review state: scoreselected",
+      "to": "3:264",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:50",
+      "sourceScreen": "1:35",
+      "label": "Action / I attended",
+      "to": "1:59",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:52",
+      "sourceScreen": "1:35",
+      "label": "Action / I did not attend",
+      "to": "1:85",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:72",
+      "sourceScreen": "1:59",
+      "label": "Field / Meal score · optional",
+      "to": "3:211",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:79",
+      "sourceScreen": "1:59",
+      "label": "Action / Leave a reference or reconnect",
+      "to": "1:126",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:95",
+      "sourceScreen": "1:85",
+      "label": "Action / Update: I attended",
+      "to": "1:59",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:97",
+      "sourceScreen": "1:85",
+      "label": "Action / Back to Past meals",
+      "to": "1:35",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:118",
+      "sourceScreen": "1:103",
+      "label": "Action / Leave a reference or reconnect",
+      "to": "1:126",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:120",
+      "sourceScreen": "1:103",
+      "label": "Action / Back to meal",
+      "to": "1:59",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:137",
+      "sourceScreen": "1:126",
+      "label": "Field / Public reference · optional · 1–500",
+      "to": "1:149",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:141",
+      "sourceScreen": "1:126",
+      "label": "Action / Save feedback",
+      "to": "1:170",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:143",
+      "sourceScreen": "1:126",
+      "label": "Action / Back to meal",
+      "to": "1:103",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:162",
+      "sourceScreen": "1:149",
+      "label": "Action / Save feedback",
+      "to": "1:211",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:164",
+      "sourceScreen": "1:149",
+      "label": "Action / Back to meal",
+      "to": "1:103",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:180",
+      "sourceScreen": "1:170",
+      "label": "Action / Back to feedback",
+      "to": "1:126",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:202",
+      "sourceScreen": "1:186",
+      "label": "Action / Retry unsaved items",
+      "to": "1:211",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:204",
+      "sourceScreen": "1:186",
+      "label": "Action / Back to feedback",
+      "to": "1:149",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:226",
+      "sourceScreen": "1:211",
+      "label": "Action / Back to meal",
+      "to": "1:103",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:228",
+      "sourceScreen": "1:211",
+      "label": "Action / Edit my reconnect choice",
+      "to": "3:161",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:230",
+      "sourceScreen": "1:211",
+      "label": "Action / Block person",
+      "to": "1:343",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:249",
+      "sourceScreen": "1:236",
+      "label": "Action / Open private chat",
+      "to": "1:259",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:251",
+      "sourceScreen": "1:236",
+      "label": "Action / Withdraw connection",
+      "to": "1:303",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:253",
+      "sourceScreen": "1:236",
+      "label": "Action / Block person",
+      "to": "1:343",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:272",
+      "sourceScreen": "1:259",
+      "label": "Action / Send message",
+      "to": "1:282",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:274",
+      "sourceScreen": "1:259",
+      "label": "Action / Back to feedback",
+      "to": "1:236",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:276",
+      "sourceScreen": "1:259",
+      "label": "Action / Withdraw connection",
+      "to": "1:303",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:295",
+      "sourceScreen": "1:282",
+      "label": "Action / Back to feedback",
+      "to": "1:236",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:297",
+      "sourceScreen": "1:282",
+      "label": "Action / Withdraw connection",
+      "to": "1:303",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:315",
+      "sourceScreen": "1:303",
+      "label": "Action / Withdraw",
+      "to": "1:321",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:337",
+      "sourceScreen": "1:321",
+      "label": "Action / Back to feedback",
+      "to": "3:180",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:355",
+      "sourceScreen": "1:343",
+      "label": "Action / Confirm block",
+      "to": "1:362",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:372",
+      "sourceScreen": "1:362",
+      "label": "Action / Unblock person",
+      "to": "1:380",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:374",
+      "sourceScreen": "1:362",
+      "label": "Action / Read previous private chat",
+      "to": "1:321",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:390",
+      "sourceScreen": "1:380",
+      "label": "Action / Read previous private chat",
+      "to": "1:321",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:392",
+      "sourceScreen": "1:380",
+      "label": "Action / Back to meal",
+      "to": "1:103",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:413",
+      "sourceScreen": "1:398",
+      "label": "Action / Check saved status",
+      "to": "1:211",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:415",
+      "sourceScreen": "1:398",
+      "label": "Action / Back to feedback",
+      "to": "1:149",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:437",
+      "sourceScreen": "1:421",
+      "label": "Action / Confirm against latest version",
+      "to": "1:211",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:439",
+      "sourceScreen": "1:421",
+      "label": "Action / Keep editing",
+      "to": "1:149",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:458",
+      "sourceScreen": "1:445",
+      "label": "Action / Withdraw connection",
+      "to": "1:303",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:460",
+      "sourceScreen": "1:445",
+      "label": "Action / Read previous private chat",
+      "to": "1:259",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:479",
+      "sourceScreen": "1:466",
+      "label": "Action / Report Mia attended",
+      "to": "1:487",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:481",
+      "sourceScreen": "1:466",
+      "label": "Action / Back to meal",
+      "to": "1:59",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:497",
+      "sourceScreen": "1:487",
+      "label": "Action / Back to guest attendance",
+      "to": "1:466",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:514",
+      "sourceScreen": "1:504",
+      "label": "Action / Read previous private history",
+      "to": "1:321",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:516",
+      "sourceScreen": "1:504",
+      "label": "Action / Back to Past meals",
+      "to": "1:35",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:172",
+      "sourceScreen": "3:161",
+      "label": "✓ I would like to meet Alex again Your saved public reference is unchanged. This only updates your own private choice.",
+      "to": "4:230",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:173",
+      "sourceScreen": "3:161",
+      "label": "Action / Save feedback",
+      "to": "1:211",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:195",
+      "sourceScreen": "3:180",
+      "label": "Action / Back to meal",
+      "to": "1:103",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:196",
+      "sourceScreen": "3:180",
+      "label": "Action / Edit my reconnect choice",
+      "to": "3:161",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:197",
+      "sourceScreen": "3:180",
+      "label": "Action / Block person",
+      "to": "1:343",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:318",
+      "sourceScreen": "3:211",
+      "label": "Action / 1 / 5",
+      "to": "3:264",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:321",
+      "sourceScreen": "3:211",
+      "label": "Action / 2 / 5",
+      "to": "3:264",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:324",
+      "sourceScreen": "3:211",
+      "label": "Action / 3 / 5",
+      "to": "3:264",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:327",
+      "sourceScreen": "3:211",
+      "label": "Action / 4 / 5",
+      "to": "3:264",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:330",
+      "sourceScreen": "3:211",
+      "label": "Action / 5 / 5",
+      "to": "3:264",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:333",
+      "sourceScreen": "3:211",
+      "label": "Action / Skip score",
+      "to": "1:59",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:277",
+      "sourceScreen": "3:264",
+      "label": "Field / Meal score · optional",
+      "to": "3:211",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:281",
+      "sourceScreen": "3:264",
+      "label": "Action / Save private meal score",
+      "to": "1:103",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "3:282",
+      "sourceScreen": "3:264",
+      "label": "Action / Leave a reference or reconnect",
+      "to": "1:126",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "4:241",
+      "sourceScreen": "4:230",
+      "label": "□ I would like to meet Alex again Your saved public reference is unchanged. This only updates your own private choice.",
+      "to": "3:161",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "4:242",
+      "sourceScreen": "4:230",
+      "label": "Action / Save feedback",
+      "to": "3:180",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    }
+  ],
+  "missingTargets": [],
+  "images": [],
+  "fonts": [
+    "Arial"
+  ]
+}

@@ -1,0 +1,426 @@
+{
+  "reviewRole": "PJ",
+  "reviewMethod": "native-file-readback-and-screenshot",
+  "professionalQA": false,
+  "fileKey": "tnrVOL7tRST2d67ZFFSOid",
+  "pageId": "0:1",
+  "pageName": "J07 · UX-r01 · candidate",
+  "starts": [
+    {
+      "nodeId": "1:25",
+      "name": "J07 · complete representative journey"
+    }
+  ],
+  "types": {
+    "FRAME": 96,
+    "COMPONENT": 3,
+    "TEXT": 158,
+    "INSTANCE": 21
+  },
+  "screens": [
+    {
+      "id": "1:25",
+      "name": "member · Alex",
+      "width": 390,
+      "height": 844,
+      "text": "9:41\n‹ Back\nfancy\n\nAlex\nMember · U-TARGET · Camden meal\nMember details\nA seat at the same table.\nYou can report a concern privately.\nReport member\nYour reports\nIf you are in immediate danger, use local emergency services. Fancy is not an emergency response service.\n━━━━━━━━"
+    },
+    {
+      "id": "1:44",
+      "name": "form · Tell us what happened",
+      "width": 390,
+      "height": 844,
+      "text": "9:41\n‹ Back\nfancy\n\nTell us what happened\nPrivate report · Reporting Alex · U-TARGET\nYour report\nReason\nHarassment or unwanted contact\nHarassment or unwanted contact / Safety concern / Something else\nWhat would you like us to know? (optional)\nI received unwanted contact after our meal.\nSend private report\nCancel\nWho can review this?\nOnly support people authorised for this report can review the necessary information.\nSubmitting does not mean it has been investigated.\nYour draft stays with this account and this member. Nothing is sent until you choose Send private report.\n━━━━━━━━"
+    },
+    {
+      "id": "1:72",
+      "name": "unknown · Check your report",
+      "width": 390,
+      "height": 844,
+      "text": "9:41\n‹ Back\nfancy\n\nCheck your report\nWe haven’t received a definite result yet.\nYour words are kept\nPlease check the original request before submitting again.\nYour report has not been sent again.\nCheck original request\nA report reference helps support locate your report; it does not grant access to anyone else’s report.\n━━━━━━━━"
+    },
+    {
+      "id": "1:89",
+      "name": "received · Received",
+      "width": 390,
+      "height": 844,
+      "text": "9:41\n‹ Back\nfancy\n\nReceived\nYour private report · Reference R-SYN-1\nWe have received your report\nWe will review it. This is a receipt, not a completed investigation.\nReason: Harassment or unwanted contact\nYour description: I received unwanted contact after our meal.\nYour reports\nBack to member\nOnly your own reports appear in your account.\n━━━━━━━━"
+    },
+    {
+      "id": "1:109",
+      "name": "list · Your reports",
+      "width": 390,
+      "height": 844,
+      "text": "9:41\n‹ Back\nfancy\n\nYour reports\nYour support\nR-SYN-1 · Alex\nReceived\nView report\nStatus updates\nWhen support starts reviewing or replies, the status will update here.\nCheck for an update\nBack to member\nChecking for an update never submits a second report.\n━━━━━━━━"
+    },
+    {
+      "id": "1:132",
+      "name": "progress · In progress",
+      "width": 390,
+      "height": 844,
+      "text": "9:41\n‹ Back\nfancy\n\nIn progress\nYour private report · Reference R-SYN-1\nYour report is being reviewed\nA reply will appear here when available.\nYour report remains private.\nCheck for an update\nYour reports\nYour report stays private. Nothing is sent automatically.\n━━━━━━━━"
+    },
+    {
+      "id": "1:151",
+      "name": "reply · Reply available",
+      "width": 390,
+      "height": 844,
+      "text": "9:41\n‹ Back\nfancy\n\nReply available\nYour private report · Reference R-SYN-1\nSupport reply\nWe have reviewed the information you shared. Please avoid further contact and let us know if you need more help.\nThis reply contains only the information support can share with you.\nYour reports\nBack to member\nYour report stays private. Nothing is sent automatically.\n━━━━━━━━"
+    },
+    {
+      "id": "1:170",
+      "name": "validation · Choose a reason",
+      "width": 390,
+      "height": 844,
+      "text": "9:41\n‹ Back\nfancy\n\nChoose a reason\nYour report has not been sent.\nYour draft is kept\nReason\nChoose a reason\nSelect a reason to continue.\nYour description (optional)\nI received unwanted contact after our meal.\nChoose a reason\nCancel\nYour report stays private. Nothing is sent automatically.\n━━━━━━━━"
+    },
+    {
+      "id": "1:194",
+      "name": "failure · Your report wasn’t sent",
+      "width": 390,
+      "height": 844,
+      "text": "9:41\n‹ Back\nfancy\n\nYour report wasn’t sent\nPlease try again when you’re ready.\nYour draft is kept\nReason: Harassment or unwanted contact\nI received unwanted contact after our meal.\nTry sending again\nBack to report\nA definite failure can be retried. An unknown result must be checked first.\n━━━━━━━━"
+    },
+    {
+      "id": "1:213",
+      "name": "otheraccount · Your reports",
+      "width": 390,
+      "height": 844,
+      "text": "9:41\n‹ Back\nfancy\n\nYour reports\nYou’re using a different account.\nNo reports yet\nYou have not submitted any reports with this account.\nBack to member\nReports, drafts and late responses from another account are not shown.\n━━━━━━━━"
+    },
+    {
+      "id": "1:229",
+      "name": "signedout · Sign in to report",
+      "width": 390,
+      "height": 844,
+      "text": "9:41\n‹ Back\nfancy\n\nSign in to report\nReturn to this member after signing in.\nKeep your report private\nSign in before sending a report. Signing in won’t send it automatically.\nContinue after sign-in\nCancel\nYour report stays private. Nothing is sent automatically.\n━━━━━━━━"
+    }
+  ],
+  "links": [
+    {
+      "source": "4:23",
+      "sourceScreen": "1:25",
+      "label": "Navigation / Back",
+      "to": "1:109",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:37",
+      "sourceScreen": "1:25",
+      "label": "Action / Report member",
+      "to": "1:44",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:39",
+      "sourceScreen": "1:25",
+      "label": "Action / Your reports",
+      "to": "1:109",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "4:26",
+      "sourceScreen": "1:44",
+      "label": "Navigation / Back",
+      "to": "1:25",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:61",
+      "sourceScreen": "1:44",
+      "label": "Action / Send private report",
+      "to": "1:72",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:63",
+      "sourceScreen": "1:44",
+      "label": "Action / Cancel",
+      "to": "1:25",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "4:29",
+      "sourceScreen": "1:72",
+      "label": "Navigation / Back",
+      "to": "1:109",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:84",
+      "sourceScreen": "1:72",
+      "label": "Action / Check original request",
+      "to": "1:89",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "4:32",
+      "sourceScreen": "1:89",
+      "label": "Navigation / Back",
+      "to": "1:109",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:102",
+      "sourceScreen": "1:89",
+      "label": "Action / Your reports",
+      "to": "1:109",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:104",
+      "sourceScreen": "1:89",
+      "label": "Action / Back to member",
+      "to": "1:25",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "4:35",
+      "sourceScreen": "1:109",
+      "label": "Navigation / Back",
+      "to": "1:25",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:120",
+      "sourceScreen": "1:109",
+      "label": "Action / View report",
+      "to": "1:89",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:125",
+      "sourceScreen": "1:109",
+      "label": "Action / Check for an update",
+      "to": "1:132",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:127",
+      "sourceScreen": "1:109",
+      "label": "Action / Back to member",
+      "to": "1:25",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "4:38",
+      "sourceScreen": "1:132",
+      "label": "Navigation / Back",
+      "to": "1:109",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:144",
+      "sourceScreen": "1:132",
+      "label": "Action / Check for an update",
+      "to": "1:151",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:146",
+      "sourceScreen": "1:132",
+      "label": "Action / Your reports",
+      "to": "1:109",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "4:41",
+      "sourceScreen": "1:151",
+      "label": "Navigation / Back",
+      "to": "1:109",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:163",
+      "sourceScreen": "1:151",
+      "label": "Action / Your reports",
+      "to": "1:109",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:165",
+      "sourceScreen": "1:151",
+      "label": "Action / Back to member",
+      "to": "1:25",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "4:44",
+      "sourceScreen": "1:170",
+      "label": "Navigation / Back",
+      "to": "1:44",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:187",
+      "sourceScreen": "1:170",
+      "label": "Action / Choose a reason",
+      "to": "1:44",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:189",
+      "sourceScreen": "1:170",
+      "label": "Action / Cancel",
+      "to": "1:25",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "4:47",
+      "sourceScreen": "1:194",
+      "label": "Navigation / Back",
+      "to": "1:44",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:206",
+      "sourceScreen": "1:194",
+      "label": "Action / Try sending again",
+      "to": "1:89",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:208",
+      "sourceScreen": "1:194",
+      "label": "Action / Back to report",
+      "to": "1:44",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "4:50",
+      "sourceScreen": "1:213",
+      "label": "Navigation / Back",
+      "to": "1:25",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:224",
+      "sourceScreen": "1:213",
+      "label": "Action / Back to member",
+      "to": "1:25",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "4:53",
+      "sourceScreen": "1:229",
+      "label": "Navigation / Back",
+      "to": "1:25",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:240",
+      "sourceScreen": "1:229",
+      "label": "Action / Continue after sign-in",
+      "to": "1:44",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:242",
+      "sourceScreen": "1:229",
+      "label": "Action / Cancel",
+      "to": "1:25",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    }
+  ],
+  "missingTargets": [],
+  "images": [],
+  "fonts": [
+    "Arial"
+  ]
+}

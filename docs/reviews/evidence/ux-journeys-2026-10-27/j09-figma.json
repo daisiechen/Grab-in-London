@@ -1,0 +1,230 @@
+{
+  "reviewRole": "PJ",
+  "reviewMethod": "native-file-readback-and-screenshot",
+  "professionalQA": false,
+  "fileKey": "m6kRIdrsctVT63PIN42kwD",
+  "pageId": "0:1",
+  "pageName": "J09 · UX-r01 · candidate",
+  "starts": [
+    {
+      "nodeId": "1:25",
+      "name": "J09 · complete representative journey"
+    }
+  ],
+  "types": {
+    "FRAME": 62,
+    "COMPONENT": 3,
+    "TEXT": 121,
+    "INSTANCE": 13
+  },
+  "screens": [
+    {
+      "id": "1:25",
+      "name": "case · 查看事实，留下处理依据",
+      "width": 1440,
+      "height": 505,
+      "text": "fancy\nSupport · authorised case\n查看事实，留下处理依据\n单一个案 · CASE-SYN-09 · 本案已授权\n出席记录更正请求 · Received\n提交者请求复核本人出席记录。仅显示本案必要事实。\nM-SYN-09 · U-203 · scheduledEndAt 2026-10-10 21:00 BST\n本人原报告absent；host原报告present；当前有效absent。\n当前修订1；开始资格名单内、饭局未取消。\n开始处理此案\n仅显示此案授权范围内的必要事实。"
+    },
+    {
+      "id": "1:42",
+      "name": "active · 处理此案",
+      "width": 1440,
+      "height": 501,
+      "text": "fancy\nSupport · authorised case\n处理此案\nCASE-SYN-09 · In progress · revision 1\n已核对最小事实\n本人原报告absent；host原报告present；当前有效absent。\n仅满连续7天后可追加逾期支持纠错；窗口内仍走自助报告。\n追加逾期纠错\n只回复本案\n仅显示此案授权范围内的必要事实。"
+    },
+    {
+      "id": "1:59",
+      "name": "correction · 追加支持修订",
+      "width": 1440,
+      "height": 744,
+      "text": "fancy\nSupport · authorised case\n追加支持修订\nM-SYN-09 · U-203 · expectedVersion 1\n纠错依据\n明确出席结果\nabsent · 未出席\n原因（必填）\n核对本案提供材料后确认未出席。\n追加修订并核对影响\n取消本次修改\n适用条件\nscheduledEndAt + 7天 = 2026-10-17T20:00:00Z\n必须在开始资格名单且未取消；原始本人/host报告保留。\n仅显示此案授权范围内的必要事实。"
+    },
+    {
+      "id": "1:84",
+      "name": "window · 仍在7天自助窗口内",
+      "width": 1440,
+      "height": 475,
+      "text": "fancy\nSupport · authorised case\n仍在7天自助窗口内\n409 CORRECTION_WINDOW_OPEN · 尚未追加修订\n本次不能执行逾期纠错\n当前时间：2026-10-17T19:59:59.999Z\n自助窗口结束：2026-10-17T20:00:00.000Z\n原因与选择保留。满7天后仍需重新核对授权和记录。\n返回个案\n仅显示此案授权范围内的必要事实。"
+    },
+    {
+      "id": "1:100",
+      "name": "impact · 修订已追加，请核对影响",
+      "width": 1440,
+      "height": 649,
+      "text": "fancy\nSupport · authorised case\n修订已追加，请核对影响\nCASE-SYN-09 · U-203 · absent · revision 2\n公开个人评价\n不公开\n单场体验统计\n已排除\n持续联系\n暂停新发送\n资格与统计\n本例复核仍为absent；依赖本场的公评/体验/联系继续不适用，并非本次从可用变失效。已授权历史保留。\n若另有有效共同场次及双方有效同意，联系仍开放；不因本场absent全局关闭。\n旧快照SYN-BEFORE保留原asOf；新快照SYN-AFTER-2依据本次修订生成。\n不恢复已撤回或拉黑的同意，不重复计数。\n返回个案\n回复并记录结果\n仅显示此案授权范围内的必要事实。"
+    },
+    {
+      "id": "1:129",
+      "name": "reply · 回复并记录处理结果",
+      "width": 1440,
+      "height": 633,
+      "text": "fancy\nSupport · authorised case\n回复并记录处理结果\nCASE-SYN-09 · In progress\n提交者可见结论\n回复（必填，纯文本）\n我们已核对本案相关记录，并按适用规则记录处理结果。\n保存处理结果与回复\n返回本案\n仅分享本案可公开信息\n回复不包含他人的举报、聊天、私密意愿或内部调查材料。\n仅显示此案授权范围内的必要事实。"
+    },
+    {
+      "id": "1:150",
+      "name": "replied · 处理结果与回复已保存",
+      "width": 1440,
+      "height": 560,
+      "text": "fancy\nSupport · authorised case\n处理结果与回复已保存\nCASE-SYN-09 · Replied\n提交者可见回复\n我们已核对本案相关记录，并按适用规则记录处理结果。\n修订与审计\n适用的支持修订另列在本案修订历史；只回复时不创建出席修订。\n原始self=absent / host=present保留。\nREPLY · SUPPORT-01 · CASE-SYN-09\n受理、开始处理、修订与实际回复分别记录。\n仅显示此案授权范围内的必要事实。"
+    },
+    {
+      "id": "1:168",
+      "name": "conflict · 记录已发生变化",
+      "width": 1440,
+      "height": 501,
+      "text": "fancy\nSupport · authorised case\n记录已发生变化\n409 · 已加载当前合法revision与事实\n核对后再确认\n原因与选择已保留。不要覆盖他人的新修订。\n核对对象、报告及当前版本后，由本人明确创建新意图。\n返回核对当前事实\n取消本次修改\n仅显示此案授权范围内的必要事实。"
+    },
+    {
+      "id": "1:185",
+      "name": "failed · 修订未执行",
+      "width": 1440,
+      "height": 415,
+      "text": "fancy\nSupport · authorised case\n修订未执行\n503 · 原因和选择已保留\n本次没有新增修订\n确定未执行时可按原意图重试。若结果未知，应先查询原操作，不能重复追加。\n返回本次编辑\n仅显示此案授权范围内的必要事实。"
+    },
+    {
+      "id": "1:199",
+      "name": "denied · 无权查看此个案",
+      "width": 1440,
+      "height": 389,
+      "text": "fancy\nSupport · authorised case\n无权查看此个案\n403 · 事项内容与写入口已清除\n重新验证本案权限\n请通过内部身份验证MFA并取得此个案授权。\n分析者的统计读取权限不能用于支持操作。已知caseId也不代表有权读取。\n仅显示此案授权范围内的必要事实。"
+    }
+  ],
+  "links": [
+    {
+      "source": "1:39",
+      "sourceScreen": "1:25",
+      "label": "Action / 开始处理此案",
+      "to": "1:42",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:54",
+      "sourceScreen": "1:42",
+      "label": "Action / 追加逾期纠错",
+      "to": "1:59",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:56",
+      "sourceScreen": "1:42",
+      "label": "Action / 只回复本案",
+      "to": "1:129",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:75",
+      "sourceScreen": "1:59",
+      "label": "Action / 追加修订并核对影响",
+      "to": "1:100",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:77",
+      "sourceScreen": "1:59",
+      "label": "Action / 取消本次修改",
+      "to": "1:42",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:97",
+      "sourceScreen": "1:84",
+      "label": "Action / 返回个案",
+      "to": "1:42",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:124",
+      "sourceScreen": "1:100",
+      "label": "Action / 返回个案",
+      "to": "1:42",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:126",
+      "sourceScreen": "1:100",
+      "label": "Action / 回复并记录结果",
+      "to": "1:129",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:142",
+      "sourceScreen": "1:129",
+      "label": "Action / 保存处理结果与回复",
+      "to": "1:150",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:144",
+      "sourceScreen": "1:129",
+      "label": "Action / 返回本案",
+      "to": "1:42",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:180",
+      "sourceScreen": "1:168",
+      "label": "Action / 返回核对当前事实",
+      "to": "1:59",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:182",
+      "sourceScreen": "1:168",
+      "label": "Action / 取消本次修改",
+      "to": "1:42",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:196",
+      "sourceScreen": "1:185",
+      "label": "Action / 返回本次编辑",
+      "to": "1:59",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    }
+  ],
+  "missingTargets": [],
+  "images": [],
+  "fonts": [
+    "Noto Sans SC",
+    "Georgia"
+  ]
+}

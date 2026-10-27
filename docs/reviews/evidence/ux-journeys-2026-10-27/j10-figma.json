@@ -1,0 +1,744 @@
+{
+  "reviewRole": "PJ",
+  "reviewMethod": "native-file-readback-and-screenshot",
+  "professionalQA": false,
+  "fileKey": "skVbc47a4P4ygb4fxBUanJ",
+  "pageId": "0:1",
+  "pageName": "J10 · UX-r01 · candidate",
+  "starts": [
+    {
+      "nodeId": "2:544",
+      "name": "J10 · complete representative journey"
+    }
+  ],
+  "types": {
+    "FRAME": 130,
+    "COMPONENT": 3,
+    "TEXT": 312,
+    "INSTANCE": 63
+  },
+  "screens": [
+    {
+      "id": "2:544",
+      "name": "overview · 从约饭到真实见面",
+      "width": 1440,
+      "height": 1211,
+      "text": "fancy\nProduct Insights\n产品洞察\n产品概览\n用户旅程\n饭局与供需\n数据与定义\n从约饭到真实见面\n伦敦当地日期 · GBP · SYN-S26 · asOf 2026-10-26 · definitionVersion 4\n已应用范围\n日期（草稿与应用分离）\n2026-09-29 → 2026-10-26 · 最近28天\n区域 / 交流语言 / 人数 / 人均预算\n全部区域 · 全部语言 · 全部人数 · 全部预算\n每项可多选，未选择时包含全部。\n编辑筛选\n每周确认出席用户数\n2026-09-28当周：2人 · 2026-10-12当周：2人 · 2026-10-19当周：5人\n该周有有效present的去重用户，含host；同周多场只计一次。按饭局开始时间归伦敦当地周，周一开周。\n出席记录覆盖\n11 / 14\n本人优先、host补缺；unknown不计分子\n14天激活\n0 / 1\n首次申请后14天内有效出席；另2人观察中\n30天再赴约\n—\n0 / 0 · 另3人观察中，不算流失\n明确出席人次\n9\n人次，含host\n整场取消\n1 / 6\n个人退出不作取消\n发现无结果\n7 / 42\n有效成功请求；失败不进分母\n当前数据检查\n3 / 14 出席结果待补。先补证据，再解释转化。\n查看供需与记录\n查看申请推进\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "2:611",
+      "name": "filters · 筛选与日期",
+      "width": 1440,
+      "height": 729,
+      "text": "fancy\nProduct Insights\n产品洞察\n产品概览\n用户旅程\n饭局与供需\n数据与定义\n筛选与日期\n当前有效查询保持；只有应用日期后才替换日期范围。\n日期草稿\n快捷范围\n7天 / 28天 / 90天\n从 / 至\n2026-09-29 / 2026-10-26\n必填；起始≤结束≤asOf。\n业务多选\n区域 · 来源 · 新老分群 · 交流语言 · 总人数上限 · 人均预算上限\n同一项中任一选择可匹配；不同筛选条件同时适用。人数和预算分档沿用既有口径。\n应用日期\n取消日期草稿\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "2:650",
+      "name": "metric · 出席记录覆盖 · 口径",
+      "width": 1440,
+      "height": 552,
+      "text": "fancy\nProduct Insights\n产品洞察\n产品概览\n用户旅程\n饭局与供需\n数据与定义\n出席记录覆盖 · 口径\nSYN-S26 · 2026-09-29—2026-10-26 · v4\n11 / 14 · 79%\n分子：明确 present + absent 人次。\n分母：已结束、未取消场次的应确认人次。\n本人报告优先；host仅补缺。来源不一致仍可有明确结果；unknown不计分子。\n零分母显示—，不是0分表现。适用日期与当前已应用范围一致。\n查看来源记录\n关闭并回原查询\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "2:679",
+      "name": "sources · 脱敏来源记录",
+      "width": 1440,
+      "height": 622,
+      "text": "fancy\nProduct Insights\n产品洞察\n产品概览\n用户旅程\n饭局与供需\n数据与定义\n脱敏来源记录\nSYN-S26 · 同一已应用范围 · 仅必要伪名业务记录\n来源\n饭局\n伦敦日期\n区域\n覆盖\nM-107\n2026-10-24\nCamden\n2 / 3\nM-106\n2026-10-23\nSoho\n2 / 3\nM-102\n2026-10-02\nSoho\n3 / 3\nM-102 · 查看出席依据\n返回口径\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "2:726",
+      "name": "meal · M-102 · 出席依据",
+      "width": 1440,
+      "height": 747,
+      "text": "fancy\nProduct Insights\n产品洞察\n产品概览\n用户旅程\n饭局与供需\n数据与定义\nM-102 · 出席依据\n2026-10-02 · Soho · GBP 20 · SYN-S26\n原始报告与有效值\n用户\n本人\nhost\n有效值\nU-101\npresent\nunknown\npresent\nU-104\nabsent\nunknown\nabsent\nU-105\nunknown\npresent\npresent\n来源优先级\n本人优先、host补缺；保留原来源，不把unknown当absent。\n此分析角色只读，不提供出席纠错。\nU-101 · 业务历史\n返回来源\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "2:777",
+      "name": "history · U-101 · 相关业务历史",
+      "width": 1440,
+      "height": 620,
+      "text": "fancy\nProduct Insights\n产品洞察\n产品概览\n用户旅程\n饭局与供需\n数据与定义\nU-101 · 相关业务历史\n仅展示与当前分析相关的伪名记录 · SYN-S26\n关联饭局\n日期\n饭局\n关系\n2026-10-02\nM-102\n参与\n2026-09-03\nM-101\n参与\n隐私边界\n无姓名、邮箱、完整行程、消息/申请留言、公评正文或单方再约。\n返回M-102\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "2:817",
+      "name": "journey · 申请推进",
+      "width": 1440,
+      "height": 585,
+      "text": "fancy\nProduct Insights\n产品洞察\n产品概览\n用户旅程\n饭局与供需\n数据与定义\n申请推进\n同一applicationId跟踪到当前快照；单位为申请轮次。\n提交成功\n17\n获准 / 确认\n11\n有效出席申请\n9\n观察窗口与解释\n申请→出席仅在计划结束满24小时后成熟；取消、拒绝、撤回仍留分母。\n审核P50 4h / P90 16h为固定评审样本；待审2轮另列。\n浏览加载、曝光、详情不是严格嵌套，不能当严格漏斗相除。\n查看申请来源\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "2:853",
+      "name": "supply · 饭局与供需",
+      "width": 1440,
+      "height": 981,
+      "text": "fancy\nProduct Insights\n产品洞察\n产品概览\n用户旅程\n饭局与供需\n数据与定义\n饭局与供需\nSYN-S26 · 2026-09-29—2026-10-26 · 列表筛选不改上方聚合分母\n供给与招募\n5 / 6 开始前曾达最低人数。历史peak≥minimum称招募达标，不代表实际举行。\n取消仍留场次分母；取消原因与个人退席分开。\n饭局记录 · 最新在前\n饭局\n当地日期\n区域\n出席覆盖\n结果\nM-107\n2026-10-24\nCamden\n2/3\n已结束\nM-106\n2026-10-23\nSoho\n2/3\n已结束\nM-105\n2026-10-20\nCamden\n2/2\n已结束\nM-104\n2026-10-18\nSoho\n2/3\n已结束\nM-103\n2026-10-09\nCamden\n—\n取消·人数不足\nM-102\n2026-10-02\nSoho\n3/3\n已结束\n列表操作\n搜索饭局编号或区域；真实日期排序；每页6条。切搜索/排序/筛选回第一页，边界禁用。\n查看M-102依据\n只看出席待补记录\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "2:929",
+      "name": "definitions · 数据与定义",
+      "width": 1440,
+      "height": 466,
+      "text": "fancy\nProduct Insights\n产品洞察\n产品概览\n用户旅程\n饭局与供需\n数据与定义\n数据与定义\nasOf 2026-10-26 · definitionVersion 4 · 非实时业务\n来源状态\n合成评审数据；并非真实用户或已连接采集。小时快照是目标，不是实时更新承诺。\n无源时显示未就绪，不用fixture补真实缺口。\n不读取聊天、公评正文、举报或单方再约。\n查看出席覆盖口径\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "2:957",
+      "name": "error · 统计快照已失效",
+      "width": 1440,
+      "height": 406,
+      "text": "fancy\nProduct Insights\n产品洞察\n产品概览\n用户旅程\n饭局与供需\n数据与定义\n统计快照已失效\n410 · 查询已保留；旧图表、明细与导出票据已清除。\n选择新的有效快照\n重新验证角色和隐私状态后恢复，不能重显已撤销缓存。\n重新验证并恢复原查询\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "2:981",
+      "name": "empty · 没有符合条件的记录",
+      "width": 1440,
+      "height": 406,
+      "text": "fancy\nProduct Insights\n产品洞察\n产品概览\n用户旅程\n饭局与供需\n数据与定义\n没有符合条件的记录\n原已应用查询保留 · 无记录不代表0分表现\n换个范围再看看\n零分母显示—；缺失或未知不推断为absent。\n清除列表筛选\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "2:1005",
+      "name": "narrow · 饭局与供需",
+      "width": 390,
+      "height": 757,
+      "text": "fancy\nProduct Insights\n饭局与供需\n后台窄屏适配 · SYN-S26 · GBP\n当前查询\n2026-09-29 → 2026-10-26\n中英切换保留路由、日期、筛选、搜索和排序。\n饭局记录 · 容器内横滚\n饭局\n当地日期\n区域\n覆盖\nM-107\n2026-10-24\nCamden\n2/3\nM-102\n2026-10-02\nSoho\n3/3\n记录与恢复\n关闭详情后返回原记录。长表可在表格内左右滚动。\n返回产品概览\n合成评审数据 · 当前快照与已应用查询保持一致"
+    }
+  ],
+  "links": [
+    {
+      "source": "2:553",
+      "sourceScreen": "2:544",
+      "label": "Action / 用户旅程",
+      "to": "2:817",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:555",
+      "sourceScreen": "2:544",
+      "label": "Action / 饭局与供需",
+      "to": "2:853",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:557",
+      "sourceScreen": "2:544",
+      "label": "Action / 数据与定义",
+      "to": "2:929",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:571",
+      "sourceScreen": "2:544",
+      "label": "Action / 编辑筛选",
+      "to": "2:611",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:578",
+      "sourceScreen": "2:544",
+      "label": "出席记录覆盖",
+      "to": "2:650",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:606",
+      "sourceScreen": "2:544",
+      "label": "Action / 查看供需与记录",
+      "to": "2:853",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:608",
+      "sourceScreen": "2:544",
+      "label": "Action / 查看申请推进",
+      "to": "2:817",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:618",
+      "sourceScreen": "2:611",
+      "label": "Action / 产品概览",
+      "to": "2:544",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:620",
+      "sourceScreen": "2:611",
+      "label": "Action / 用户旅程",
+      "to": "2:817",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:622",
+      "sourceScreen": "2:611",
+      "label": "Action / 饭局与供需",
+      "to": "2:853",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:624",
+      "sourceScreen": "2:611",
+      "label": "Action / 数据与定义",
+      "to": "2:929",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:642",
+      "sourceScreen": "2:611",
+      "label": "Action / 应用日期",
+      "to": "2:544",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:644",
+      "sourceScreen": "2:611",
+      "label": "Action / 取消日期草稿",
+      "to": "2:544",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:657",
+      "sourceScreen": "2:650",
+      "label": "Action / 产品概览",
+      "to": "2:544",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:659",
+      "sourceScreen": "2:650",
+      "label": "Action / 用户旅程",
+      "to": "2:817",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:661",
+      "sourceScreen": "2:650",
+      "label": "Action / 饭局与供需",
+      "to": "2:853",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:663",
+      "sourceScreen": "2:650",
+      "label": "Action / 数据与定义",
+      "to": "2:929",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:674",
+      "sourceScreen": "2:650",
+      "label": "Action / 查看来源记录",
+      "to": "2:679",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:676",
+      "sourceScreen": "2:650",
+      "label": "Action / 关闭并回原查询",
+      "to": "2:544",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:686",
+      "sourceScreen": "2:679",
+      "label": "Action / 产品概览",
+      "to": "2:544",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:688",
+      "sourceScreen": "2:679",
+      "label": "Action / 用户旅程",
+      "to": "2:817",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:690",
+      "sourceScreen": "2:679",
+      "label": "Action / 饭局与供需",
+      "to": "2:853",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:692",
+      "sourceScreen": "2:679",
+      "label": "Action / 数据与定义",
+      "to": "2:929",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:721",
+      "sourceScreen": "2:679",
+      "label": "Action / M-102 · 查看出席依据",
+      "to": "2:726",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:723",
+      "sourceScreen": "2:679",
+      "label": "Action / 返回口径",
+      "to": "2:650",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:733",
+      "sourceScreen": "2:726",
+      "label": "Action / 产品概览",
+      "to": "2:544",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:735",
+      "sourceScreen": "2:726",
+      "label": "Action / 用户旅程",
+      "to": "2:817",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:737",
+      "sourceScreen": "2:726",
+      "label": "Action / 饭局与供需",
+      "to": "2:853",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:739",
+      "sourceScreen": "2:726",
+      "label": "Action / 数据与定义",
+      "to": "2:929",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:772",
+      "sourceScreen": "2:726",
+      "label": "Action / U-101 · 业务历史",
+      "to": "2:777",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:774",
+      "sourceScreen": "2:726",
+      "label": "Action / 返回来源",
+      "to": "2:679",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:784",
+      "sourceScreen": "2:777",
+      "label": "Action / 产品概览",
+      "to": "2:544",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:786",
+      "sourceScreen": "2:777",
+      "label": "Action / 用户旅程",
+      "to": "2:817",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:788",
+      "sourceScreen": "2:777",
+      "label": "Action / 饭局与供需",
+      "to": "2:853",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:790",
+      "sourceScreen": "2:777",
+      "label": "Action / 数据与定义",
+      "to": "2:929",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:814",
+      "sourceScreen": "2:777",
+      "label": "Action / 返回M-102",
+      "to": "2:726",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:824",
+      "sourceScreen": "2:817",
+      "label": "Action / 产品概览",
+      "to": "2:544",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:828",
+      "sourceScreen": "2:817",
+      "label": "Action / 饭局与供需",
+      "to": "2:853",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:830",
+      "sourceScreen": "2:817",
+      "label": "Action / 数据与定义",
+      "to": "2:929",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:836",
+      "sourceScreen": "2:817",
+      "label": "提交成功",
+      "to": "2:679",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:839",
+      "sourceScreen": "2:817",
+      "label": "获准 / 确认",
+      "to": "2:679",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:842",
+      "sourceScreen": "2:817",
+      "label": "有效出席申请",
+      "to": "2:679",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:850",
+      "sourceScreen": "2:817",
+      "label": "Action / 查看申请来源",
+      "to": "2:679",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:860",
+      "sourceScreen": "2:853",
+      "label": "Action / 产品概览",
+      "to": "2:544",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:862",
+      "sourceScreen": "2:853",
+      "label": "Action / 用户旅程",
+      "to": "2:817",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:866",
+      "sourceScreen": "2:853",
+      "label": "Action / 数据与定义",
+      "to": "2:929",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:924",
+      "sourceScreen": "2:853",
+      "label": "Action / 查看M-102依据",
+      "to": "2:726",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:926",
+      "sourceScreen": "2:853",
+      "label": "Action / 只看出席待补记录",
+      "to": "2:981",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:936",
+      "sourceScreen": "2:929",
+      "label": "Action / 产品概览",
+      "to": "2:544",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:938",
+      "sourceScreen": "2:929",
+      "label": "Action / 用户旅程",
+      "to": "2:817",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:940",
+      "sourceScreen": "2:929",
+      "label": "Action / 饭局与供需",
+      "to": "2:853",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:952",
+      "sourceScreen": "2:929",
+      "label": "Action / 查看出席覆盖口径",
+      "to": "2:650",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:964",
+      "sourceScreen": "2:957",
+      "label": "Action / 产品概览",
+      "to": "2:544",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:966",
+      "sourceScreen": "2:957",
+      "label": "Action / 用户旅程",
+      "to": "2:817",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:968",
+      "sourceScreen": "2:957",
+      "label": "Action / 饭局与供需",
+      "to": "2:853",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:970",
+      "sourceScreen": "2:957",
+      "label": "Action / 数据与定义",
+      "to": "2:929",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:978",
+      "sourceScreen": "2:957",
+      "label": "Action / 重新验证并恢复原查询",
+      "to": "2:544",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:988",
+      "sourceScreen": "2:981",
+      "label": "Action / 产品概览",
+      "to": "2:544",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:990",
+      "sourceScreen": "2:981",
+      "label": "Action / 用户旅程",
+      "to": "2:817",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:992",
+      "sourceScreen": "2:981",
+      "label": "Action / 饭局与供需",
+      "to": "2:853",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:994",
+      "sourceScreen": "2:981",
+      "label": "Action / 数据与定义",
+      "to": "2:929",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1002",
+      "sourceScreen": "2:981",
+      "label": "Action / 清除列表筛选",
+      "to": "2:853",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1039",
+      "sourceScreen": "2:1005",
+      "label": "Action / 返回产品概览",
+      "to": "2:544",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    }
+  ],
+  "missingTargets": [],
+  "images": [],
+  "fonts": [
+    "Noto Sans SC",
+    "Georgia"
+  ]
+}

@@ -1,7 +1,7 @@
 # Fancy用户旅程的执行与联调方案
 
 > 当前执行更新（r09）：用户已确认首发J01—J11的PRD/Demo作为UX输入，授权3个UX并行、每旅程独立Figma；见[UX派工与交付边界](ux-parallel-dispatch.zh-CN.md)。RD、QA和J12—J15未签发。
-执行修订：r09｜范围仍为r07；首发11旅程进入UX，逐旅程候选交回审阅，不自动进入RD或QA。
+执行修订：r09｜范围仍为r07；首发11份独立UX候选已交回待审，activeJourneys=[]；不自动进入RD或QA。
 
 ## 1. 当前产品模块与优先级
 
@@ -60,11 +60,11 @@
 
 PM工作包需包含一名用户的一次完整目标、触发/终点、正常路径与必要分支、前置数据/角色、做与不做、业务规则、Demo及验收。若必须读同一旅程的几份页面文档才能拼成结果，PM负责将其整合为一份完整说明。
 
-并行须有固定输入与兼容候选，无文件/状态/环境/时钟/配额冲突。原通用版本/迁移/单writer规则见[项目管理方案](project-management-plan.zh-CN.md)。执行数据见[journey-execution.json](journey-execution.json)，首发PM候选已交回、activeJourneys为空，UX/RD/QA仍not-started；候选交付不自动派发下一专业阶段。
+并行须有固定输入与兼容候选，无文件/状态/环境/时钟/配额冲突。原通用版本/迁移/单writer规则见[项目管理方案](project-management-plan.zh-CN.md)。执行数据见[journey-execution.json](journey-execution.json)，首发PM输入已确认、activeJourneys为空、11份UX候选待审，当前阶段仅UX；RD/QA仍not-started，设计候选交付不自动派发下一专业阶段。
 
 ## 5. 旧产物迁移
 
-旧领域说明仅供原业务规则与代码路径参考，旧60切片已全部映射。原主PRD/旧Demo的唯一作者保持不变；新旅程PM作者尚未指定。历史只登录候选PM-r01保留但不获批准，不继续以它作为新需求的设计/开发输入。无需恢复旧模拟环境或为了重拆重跑封存业务测试。
+旧领域说明仅供原业务规则与代码路径参考，旧60切片已全部映射。原主PRD/旧Demo的唯一作者保持不变；新旅程PM作者与本轮UX作者分别以各自派工登记为准。历史只登录候选PM-r01保留但不获批准，不继续以它作为新需求的设计/开发输入。无需恢复旧模拟环境或为了重拆重跑封存业务测试。
 
 
 逐条范围和规划版本以[审计台账](../product/requirements-audit.zh-CN.md)为工作包输入，不能仅按本页旅程摘要展开PM。共享C-AI需覆盖J05偏好与J08清理，C-NOTIFY首发业务通知/邮件与后续群push分版实现。

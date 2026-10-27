@@ -1,7 +1,7 @@
 {
   "revision": "r09",
   "date": "2026-10-27",
-  "status": "issued",
+  "status": "candidates-delivered-awaiting-owner",
   "inputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
   "pjReviewCommit": "906bc9b40307060031b360313cca80e92f6fbe9b",
   "authorization": "用户明确要求多个UX按首发11旅程并行设计，每旅程单独交付Figma，严格对应确认PRD/Demo，沿用规范，不扩必要范围；RD/QA不启动。",
@@ -87,7 +87,7 @@
       "deliverableDirectory": "docs/design/journeys/j01/",
       "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
       "uxRevision": "UX-r01",
-      "status": "in-progress"
+      "status": "candidate-delivered"
     },
     "J02": {
       "owner": "UX-2",
@@ -100,7 +100,7 @@
       "deliverableDirectory": "docs/design/journeys/j02/",
       "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
       "uxRevision": "UX-r01",
-      "status": "in-progress"
+      "status": "candidate-delivered"
     },
     "J03": {
       "owner": "UX-2",
@@ -113,7 +113,7 @@
       "deliverableDirectory": "docs/design/journeys/j03/",
       "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
       "uxRevision": "UX-r01",
-      "status": "in-progress"
+      "status": "candidate-delivered"
     },
     "J04": {
       "owner": "UX-2",
@@ -126,7 +126,7 @@
       "deliverableDirectory": "docs/design/journeys/j04/",
       "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
       "uxRevision": "UX-r01",
-      "status": "in-progress"
+      "status": "candidate-delivered"
     },
     "J05": {
       "owner": "UX-1",
@@ -139,7 +139,7 @@
       "deliverableDirectory": "docs/design/journeys/j05/",
       "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
       "uxRevision": "UX-r01",
-      "status": "in-progress"
+      "status": "candidate-delivered"
     },
     "J06": {
       "owner": "UX-1",
@@ -152,7 +152,7 @@
       "deliverableDirectory": "docs/design/journeys/j06/",
       "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
       "uxRevision": "UX-r01",
-      "status": "in-progress"
+      "status": "candidate-delivered"
     },
     "J07": {
       "owner": "UX-3",
@@ -165,7 +165,7 @@
       "deliverableDirectory": "docs/design/journeys/j07/",
       "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
       "uxRevision": "UX-r01",
-      "status": "in-progress"
+      "status": "candidate-delivered"
     },
     "J08": {
       "owner": "UX-1",
@@ -178,7 +178,7 @@
       "deliverableDirectory": "docs/design/journeys/j08/",
       "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
       "uxRevision": "UX-r01",
-      "status": "in-progress"
+      "status": "candidate-delivered"
     },
     "J09": {
       "owner": "UX-3",
@@ -191,7 +191,7 @@
       "deliverableDirectory": "docs/design/journeys/j09/",
       "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
       "uxRevision": "UX-r01",
-      "status": "in-progress"
+      "status": "candidate-delivered"
     },
     "J10": {
       "owner": "UX-3",
@@ -204,7 +204,7 @@
       "deliverableDirectory": "docs/design/journeys/j10/",
       "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
       "uxRevision": "UX-r01",
-      "status": "in-progress"
+      "status": "candidate-delivered"
     },
     "J11": {
       "owner": "UX-3",
@@ -217,11 +217,12 @@
       "deliverableDirectory": "docs/design/journeys/j11/",
       "figmaFilePolicy": "one-independent-editable-design-file-per-journey",
       "uxRevision": "UX-r01",
-      "status": "in-progress"
+      "status": "candidate-delivered"
     }
   },
   "sharedFilesWriter": "PJ",
   "sourceArtifactsReadOnly": true,
   "oldFigmaReadOnly": true,
-  "ownerAcceptanceRequiredBeforeRD": true
+  "ownerAcceptanceRequiredBeforeRD": true,
+  "deliveryRegister": "docs/delivery/ux-first-release-review.json"
 }

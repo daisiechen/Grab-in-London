@@ -1,0 +1,1201 @@
+{
+  "reviewRole": "PJ",
+  "reviewMethod": "native-file-readback-and-screenshot",
+  "professionalQA": false,
+  "fileKey": "2JKGRfwDoZnM9Ne0b6H4Np",
+  "pageId": "0:1",
+  "pageName": "J01 · UX-r01",
+  "starts": [
+    {
+      "nodeId": "2:715",
+      "name": "J01 · normal journey"
+    },
+    {
+      "nodeId": "2:711",
+      "name": "J01 · scenario index"
+    }
+  ],
+  "types": {
+    "FRAME": 267,
+    "COMPONENT": 5,
+    "TEXT": 323,
+    "VECTOR": 35,
+    "INSTANCE": 128,
+    "RECTANGLE": 32
+  },
+  "screens": [
+    {
+      "id": "2:711",
+      "name": "J01 · Delivery index",
+      "width": 1100,
+      "height": 2486,
+      "text": "J01 · Find and apply for a meal\nUX-r01 · Candidate for Owner review · PM-r01 PRD / PM-r02 Demo\nInput commit 14db53257a2b4bb7610a3afad5e1ecfd735db605\nNative iOS only. Existing Fancy visual language. Normal journey and necessary recovery states; synthetic examples. RD and QA have not started.\ndiscover · Fancy a bite?\nOpen Fancy a bite?\nfilters · Your kind of table.\nOpen Your kind of table.\nfilters-clear · Choose your filters.\nOpen Choose your filters.\nresults · A table in Soho.\nOpen A table in Soho.\ndetail · Friday supper.\nOpen Friday supper.\nhost · Meet Rowan.\nOpen Meet Rowan.\naccount · Your table is waiting.\nOpen Your table is waiting.\nemail · Your email. Your way in.\nOpen Your email. Your way in.\ncode · Check your inbox.\nOpen Check your inbox.\ncode-error · Check your code.\nOpen Check your code.\noauth · Continue securely.\nOpen Continue securely.\nprofile · A little about you.\nOpen A little about you.\nprofile-error · Your introduction is kept.\nOpen Your introduction is kept.\napply · Say a little hello.\nOpen Say a little hello.\nunknown · Let’s check that.\nOpen Let’s check that.\npending · Your hello is sent.\nOpen Your hello is sent.\nwithdraw · Withdraw your hello?\nOpen Withdraw your hello?\nwithdrawn · Application withdrawn.\nOpen Application withdrawn.\nunavailable · This table is unavailable.\nOpen This table is unavailable.\nai-permission · A little help from Fancy.\nOpen A little help from Fancy.\nai-clarify · What do you mean by Spanish?\nOpen What do you mean by Spanish?\nai-results · A table that fits.\nOpen A table that fits.\nai-explain · Why this table?\nOpen Why this table?\nai-draft · Your introduction, your choice.\nOpen Your introduction, your choice.\nai-transfer · Keep your words?\nOpen Keep your words?\nai-unavailable · You can keep going.\nOpen You can keep going."
+    },
+    {
+      "id": "2:715",
+      "name": "J01 / discover / Fancy a bite?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nFancy a bite?\nFind a table that fits your day.\nLondon · Fri 30 Oct\nSoho · 1\nFriday supper · Soho\nFri 30 Oct · 19:00\nUp to £35 · 2 places left · English\nFilters\nView meal\nAsk Fancy\nDiscover\nMeals\nCreate meal\nInbox\nProfile"
+    },
+    {
+      "id": "2:741",
+      "name": "J01 / filters / Your kind of table.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour kind of table.\nChanges apply only when you choose Show meals.\nDates\nFri 30 Oct · Sat 31 Oct\nArea\nSoho\nMaximum budget\nUp to £35\nTable size\n4 including host\nConversation language\nEnglish\nCuisine\nAny\nHost-reported dietary option\nAny\nAtmosphere\nEasy conversation\nMeal or restaurant\nAny keyword\nShow meals\nClear draft\nCancel changes"
+    },
+    {
+      "id": "2:785",
+      "name": "J01 / filters-clear / Choose your filters.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nChoose your filters.\nOnly this draft has been cleared. Your current results remain until you apply.\nDates\nAny future date\nArea / budget / table size\nAny\nLanguage / cuisine / dietary / atmosphere\nAny\nShow meals\nCancel changes"
+    },
+    {
+      "id": "2:809",
+      "name": "J01 / results / A table in Soho.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nA table in Soho.\n1 meal · London local time\nFriday supper · 30 Oct, 19:00\nUp to £35 per person · Table for 4\n2 confirmed including host · 2 places left\nView meal\nChange filters\nBack to map\nDiscover\nMeals\nCreate meal\nInbox\nProfile"
+    },
+    {
+      "id": "2:826",
+      "name": "J01 / detail / Friday supper.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nFriday supper.\nJuniper Table · Soho, London\nFri 30 Oct · 19:00\nTable for 4 including host · 2 confirmed\nEstimated up to £35 per person\n\nA relaxed table for good food and an easy conversation.\n\nHost books externally; pay at the restaurant.\nHost-reported dietary options are not an allergy guarantee.\nApplications close 60 minutes before the meal.\nMeet Rowan\nApply to join\nAsk Fancy\nBack to meals"
+    },
+    {
+      "id": "2:845",
+      "name": "J01 / host / Meet Rowan.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nMeet Rowan.\nLiving in London · English · Books · Travel\n\nI enjoy food discoveries and getting to know the neighbourhood.\n\nOnly public introduction and published feedback appear here. No public star ranking.\nBack to meal"
+    },
+    {
+      "id": "2:858",
+      "name": "J01 / account / Your table is waiting.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour table is waiting.\nSign in or create your account to apply. You’ll return to this same meal. No application is sent by signing in.\nContinue with email\nContinue with Google\nContinue with Apple\nBack to meal"
+    },
+    {
+      "id": "2:877",
+      "name": "J01 / email / Your email. Your way in.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour email. Your way in.\nA code lets you sign in or create an account. We use the same public response for both.\nEmail address\nalex@example.test\nSend code\nCancel sign-in"
+    },
+    {
+      "id": "2:895",
+      "name": "J01 / code / Check your inbox.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nCheck your inbox.\nEnter the 6-digit code for alex@example.test.\nYour code is valid for 5 minutes.\nCode\n123456\nResend code available after 30 seconds. The newest code replaces the old one.\nVerify email\nUse another email\nCancel sign-in"
+    },
+    {
+      "id": "2:916",
+      "name": "J01 / code-error / Check your code.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nCheck your code.\nThat code is incorrect or has expired. Your email is kept. No account state or application has been confirmed.\nCode\nEnter the latest code\nVerify latest code\nResend code\nUse another email\nCancel sign-in"
+    },
+    {
+      "id": "2:938",
+      "name": "J01 / oauth / Continue securely.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nContinue securely.\nContinue with your selected linked identity provider, then return to Fancy. Fancy checks whether your introduction is complete.\n\nProvider access, cancellation and failure use the real provider flow in the app.\nReturn with a new account\nReturn with an existing complete account\nCancel"
+    },
+    {
+      "id": "2:955",
+      "name": "J01 / profile / A little about you.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nA little about you.\nThis introduction is public. Share only what you want others to know.\nName · 2–40 characters\nAlex\nIntroduction · 20–1000 characters\nNew in London and happy to meet people over a meal.\nIn London\nLiving here\nConversation languages\nEnglish\nInterests\nBooks · Food\nOccupation / school / hometown\nOptional\nConfirmations\n☑ I’m 18 or older.\n☑ I agree to the community rules.\nSave introduction and continue\nBack to meal"
+    },
+    {
+      "id": "2:991",
+      "name": "J01 / profile-error / Your introduction is kept.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour introduction is kept.\nWe couldn’t save it yet. Check required fields or try again. You have not applied to the meal.\nYour introduction\nNew in London and happy to meet people over a meal.\nReview and retry\nBack to meal"
+    },
+    {
+      "id": "2:1009",
+      "name": "J01 / apply / Say a little hello.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nSay a little hello.\nFriday supper · Juniper Table\nWe’ve checked the latest availability. Pending applications do not reserve a seat.\nYour introduction · 20–300 characters\nHi Rowan! I’m new to the neighbourhood and would enjoy joining your table.\nArrangements\n☑ I’ve read the arrangements and understand the host reviews applications.\nSend application\nHelp with my introduction\nBack to meal"
+    },
+    {
+      "id": "2:1032",
+      "name": "J01 / unknown / Let’s check that.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nLet’s check that.\nWe couldn’t confirm the response. Your introduction is kept. Check the original request before trying again.\nCheck application status"
+    },
+    {
+      "id": "2:1045",
+      "name": "J01 / pending / Your hello is sent.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nYour hello is sent.\nFriday supper\nWaiting for the host\n\nYou do not have a confirmed seat or access to the group yet.\nReference: SYN-APP-01\nWithdraw application\nBack to meal\nDiscover\nMeals\nCreate meal\nInbox\nProfile"
+    },
+    {
+      "id": "2:1061",
+      "name": "J01 / withdraw / Withdraw your hello?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nWithdraw your hello?\nThe host will no longer review this application. If the table is still open, you may apply again.\nWithdraw application\nKeep application"
+    },
+    {
+      "id": "2:1076",
+      "name": "J01 / withdrawn / Application withdrawn.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nApplication withdrawn.\nNo seat was reserved. If this table is still open and you remain eligible, you can send a new application. Your previous request remains in history.\nApply again\nBack to meals\nDiscover\nMeals\nCreate meal\nInbox\nProfile"
+    },
+    {
+      "id": "2:1092",
+      "name": "J01 / unavailable / This table is unavailable.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nThis table is unavailable.\nThe meal is full, closed, cancelled or no longer open to a new application. Your introduction is kept. A declined application cannot be resubmitted for this meal.\nBack to meals\nRead meal details"
+    },
+    {
+      "id": "2:1107",
+      "name": "J01 / ai-permission / A little help from Fancy.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nA little help from Fancy.\nFind meals, understand your status or draft your introduction. You choose what to send.\n\nBefore real use, review DeepSeek’s processing region, training and retention terms. Only your request and the necessary permitted context are shared. Private messages and feedback are not included.\nAgree and continue\nKeep browsing without AI"
+    },
+    {
+      "id": "2:1122",
+      "name": "J01 / ai-clarify / What do you mean by Spanish?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nWhat do you mean by Spanish?\nI can help with Spanish food or a Spanish-language conversation. Your existing filters have not changed.\nYour question\nSpanish in Soho on Friday, please.\nSpanish food\nSpanish conversation\nClose assistant"
+    },
+    {
+      "id": "2:1142",
+      "name": "J01 / ai-results / A table that fits.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nA table that fits.\nFriday supper · Soho · 19:00\nUp to £35 per person · 2 places left\n\nThese facts come from the permitted meal record. Availability is checked again before you apply.\n\nSaved preferences help order results. Your explicit conditions filter them; “any budget” stays cleared.\nView meal\nCompare and explain\nDraft an introduction\nClose assistant"
+    },
+    {
+      "id": "2:1161",
+      "name": "J01 / ai-explain / Why this table?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nWhy this table?\nIt matches your confirmed Friday and Soho conditions. Saved preferences only affect ordering. Pending means the host has not confirmed a place.\n\nNo meals matching your conditions is different from a data or model failure.\nBack to results\nUse any budget this conversation\nClose assistant"
+    },
+    {
+      "id": "2:1178",
+      "name": "J01 / ai-draft / Your introduction, your choice.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour introduction, your choice.\nSuggested text\n\nHi Rowan! I’m interested in a relaxed supper and meeting people in the neighbourhood. I’d enjoy joining your table.\n\nA draft does not send an application or reserve a place.\nTransfer to introduction\nKeep writing myself"
+    },
+    {
+      "id": "2:1193",
+      "name": "J01 / ai-transfer / Keep your words?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nKeep your words?\nYour introduction already has text. Transferring this suggestion will replace that text only if you choose Replace.\n\nThe meal, account, eligibility and 20–300 character limit are checked again. Nothing is sent yet.\nKeep my text\nReplace with draft\nCancel transfer"
+    },
+    {
+      "id": "2:1210",
+      "name": "J01 / ai-unavailable / You can keep going.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYou can keep going.\nFancy’s assistant is unavailable or the allowance is reached. Your unsent text is kept. No extra charge, automatic retry or application is made.\nWrite my introduction\nBack to meals"
+    },
+    {
+      "id": "6:197",
+      "name": "J01 / apply-unchecked / Say a little hello.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nSay a little hello.\nFriday supper · Juniper Table\nWe’ve checked the latest availability. Pending applications do not reserve a seat.\nYour introduction · 20–300 characters\nHi Rowan! I’m new to the neighbourhood and would enjoy joining your table.\nArrangements\n☐ I’ve read the arrangements and understand the host reviews applications.\nSend application\nHelp with my introduction\nBack to meal"
+    }
+  ],
+  "links": [
+    {
+      "source": "2:1227",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Fancy a bite?",
+      "to": "2:715",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1231",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Your kind of table.",
+      "to": "2:741",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1235",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Choose your filters.",
+      "to": "2:785",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1239",
+      "sourceScreen": "2:711",
+      "label": "Action / Open A table in Soho.",
+      "to": "2:809",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1243",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Friday supper.",
+      "to": "2:826",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1247",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Meet Rowan.",
+      "to": "2:845",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1251",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Your table is waiting.",
+      "to": "2:858",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1255",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Your email. Your way in.",
+      "to": "2:877",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1259",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Check your inbox.",
+      "to": "2:895",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1263",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Check your code.",
+      "to": "2:916",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1267",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Continue securely.",
+      "to": "2:938",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1271",
+      "sourceScreen": "2:711",
+      "label": "Action / Open A little about you.",
+      "to": "2:955",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1275",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Your introduction is kept.",
+      "to": "2:991",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1279",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Say a little hello.",
+      "to": "2:1009",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1283",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Let’s check that.",
+      "to": "2:1032",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1287",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Your hello is sent.",
+      "to": "2:1045",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1291",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Withdraw your hello?",
+      "to": "2:1061",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1295",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Application withdrawn.",
+      "to": "2:1076",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1299",
+      "sourceScreen": "2:711",
+      "label": "Action / Open This table is unavailable.",
+      "to": "2:1092",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1303",
+      "sourceScreen": "2:711",
+      "label": "Action / Open A little help from Fancy.",
+      "to": "2:1107",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1307",
+      "sourceScreen": "2:711",
+      "label": "Action / Open What do you mean by Spanish?",
+      "to": "2:1122",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1311",
+      "sourceScreen": "2:711",
+      "label": "Action / Open A table that fits.",
+      "to": "2:1142",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1315",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Why this table?",
+      "to": "2:1161",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1319",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Your introduction, your choice.",
+      "to": "2:1178",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1323",
+      "sourceScreen": "2:711",
+      "label": "Action / Open Keep your words?",
+      "to": "2:1193",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1327",
+      "sourceScreen": "2:711",
+      "label": "Action / Open You can keep going.",
+      "to": "2:1210",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:733",
+      "sourceScreen": "2:715",
+      "label": "Action / Filters",
+      "to": "2:741",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:735",
+      "sourceScreen": "2:715",
+      "label": "Action / View meal",
+      "to": "2:826",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:737",
+      "sourceScreen": "2:715",
+      "label": "Action / Ask Fancy",
+      "to": "2:1107",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:777",
+      "sourceScreen": "2:741",
+      "label": "Action / Show meals",
+      "to": "2:809",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:779",
+      "sourceScreen": "2:741",
+      "label": "Action / Clear draft",
+      "to": "2:785",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:781",
+      "sourceScreen": "2:741",
+      "label": "Action / Cancel changes",
+      "to": "2:715",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:803",
+      "sourceScreen": "2:785",
+      "label": "Action / Show meals",
+      "to": "2:715",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:805",
+      "sourceScreen": "2:785",
+      "label": "Action / Cancel changes",
+      "to": "2:715",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:818",
+      "sourceScreen": "2:809",
+      "label": "Action / View meal",
+      "to": "2:826",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:820",
+      "sourceScreen": "2:809",
+      "label": "Action / Change filters",
+      "to": "2:741",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:822",
+      "sourceScreen": "2:809",
+      "label": "Action / Back to map",
+      "to": "2:715",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:835",
+      "sourceScreen": "2:826",
+      "label": "Action / Meet Rowan",
+      "to": "2:845",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:837",
+      "sourceScreen": "2:826",
+      "label": "Action / Apply to join",
+      "to": "2:858",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:839",
+      "sourceScreen": "2:826",
+      "label": "Action / Ask Fancy",
+      "to": "2:1107",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:841",
+      "sourceScreen": "2:826",
+      "label": "Action / Back to meals",
+      "to": "2:809",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:854",
+      "sourceScreen": "2:845",
+      "label": "Action / Back to meal",
+      "to": "2:826",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:867",
+      "sourceScreen": "2:858",
+      "label": "Action / Continue with email",
+      "to": "2:877",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:869",
+      "sourceScreen": "2:858",
+      "label": "Action / Continue with Google",
+      "to": "2:938",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:871",
+      "sourceScreen": "2:858",
+      "label": "Action / Continue with Apple",
+      "to": "2:938",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:873",
+      "sourceScreen": "2:858",
+      "label": "Action / Back to meal",
+      "to": "2:826",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:889",
+      "sourceScreen": "2:877",
+      "label": "Action / Send code",
+      "to": "2:895",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:891",
+      "sourceScreen": "2:877",
+      "label": "Action / Cancel sign-in",
+      "to": "2:826",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:908",
+      "sourceScreen": "2:895",
+      "label": "Action / Verify email",
+      "to": "2:955",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:910",
+      "sourceScreen": "2:895",
+      "label": "Action / Use another email",
+      "to": "2:877",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:912",
+      "sourceScreen": "2:895",
+      "label": "Action / Cancel sign-in",
+      "to": "2:826",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:928",
+      "sourceScreen": "2:916",
+      "label": "Action / Verify latest code",
+      "to": "2:955",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:930",
+      "sourceScreen": "2:916",
+      "label": "Action / Resend code",
+      "to": "2:895",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:932",
+      "sourceScreen": "2:916",
+      "label": "Action / Use another email",
+      "to": "2:877",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:934",
+      "sourceScreen": "2:916",
+      "label": "Action / Cancel sign-in",
+      "to": "2:826",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:947",
+      "sourceScreen": "2:938",
+      "label": "Action / Return with a new account",
+      "to": "2:955",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:949",
+      "sourceScreen": "2:938",
+      "label": "Action / Return with an existing complete account",
+      "to": "6:197",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:951",
+      "sourceScreen": "2:938",
+      "label": "Action / Cancel",
+      "to": "2:826",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:985",
+      "sourceScreen": "2:955",
+      "label": "Action / Save introduction and continue",
+      "to": "6:197",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:987",
+      "sourceScreen": "2:955",
+      "label": "Action / Back to meal",
+      "to": "2:826",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1003",
+      "sourceScreen": "2:991",
+      "label": "Action / Review and retry",
+      "to": "2:955",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1005",
+      "sourceScreen": "2:991",
+      "label": "Action / Back to meal",
+      "to": "2:826",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1022",
+      "sourceScreen": "2:1009",
+      "label": "Field / Arrangements",
+      "to": "6:197",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1024",
+      "sourceScreen": "2:1009",
+      "label": "Action / Send application",
+      "to": "2:1045",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1026",
+      "sourceScreen": "2:1009",
+      "label": "Action / Help with my introduction",
+      "to": "2:1178",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1028",
+      "sourceScreen": "2:1009",
+      "label": "Action / Back to meal",
+      "to": "2:826",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1041",
+      "sourceScreen": "2:1032",
+      "label": "Action / Check application status",
+      "to": "2:1045",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1055",
+      "sourceScreen": "2:1045",
+      "label": "Action / Withdraw application",
+      "to": "2:1061",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1057",
+      "sourceScreen": "2:1045",
+      "label": "Action / Back to meal",
+      "to": "2:826",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1070",
+      "sourceScreen": "2:1061",
+      "label": "Action / Withdraw application",
+      "to": "2:1076",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1072",
+      "sourceScreen": "2:1061",
+      "label": "Action / Keep application",
+      "to": "2:1045",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1086",
+      "sourceScreen": "2:1076",
+      "label": "Action / Apply again",
+      "to": "6:197",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1088",
+      "sourceScreen": "2:1076",
+      "label": "Action / Back to meals",
+      "to": "2:809",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1101",
+      "sourceScreen": "2:1092",
+      "label": "Action / Back to meals",
+      "to": "2:809",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1103",
+      "sourceScreen": "2:1092",
+      "label": "Action / Read meal details",
+      "to": "2:826",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1116",
+      "sourceScreen": "2:1107",
+      "label": "Action / Agree and continue",
+      "to": "2:1122",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1118",
+      "sourceScreen": "2:1107",
+      "label": "Action / Keep browsing without AI",
+      "to": "2:715",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1134",
+      "sourceScreen": "2:1122",
+      "label": "Action / Spanish food",
+      "to": "2:1142",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1136",
+      "sourceScreen": "2:1122",
+      "label": "Action / Spanish conversation",
+      "to": "2:1142",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1138",
+      "sourceScreen": "2:1122",
+      "label": "Action / Close assistant",
+      "to": "2:715",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1151",
+      "sourceScreen": "2:1142",
+      "label": "Action / View meal",
+      "to": "2:826",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1153",
+      "sourceScreen": "2:1142",
+      "label": "Action / Compare and explain",
+      "to": "2:1161",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1155",
+      "sourceScreen": "2:1142",
+      "label": "Action / Draft an introduction",
+      "to": "2:1178",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1157",
+      "sourceScreen": "2:1142",
+      "label": "Action / Close assistant",
+      "to": "2:715",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1170",
+      "sourceScreen": "2:1161",
+      "label": "Action / Back to results",
+      "to": "2:1142",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1172",
+      "sourceScreen": "2:1161",
+      "label": "Action / Use any budget this conversation",
+      "to": "2:1142",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1174",
+      "sourceScreen": "2:1161",
+      "label": "Action / Close assistant",
+      "to": "2:715",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1187",
+      "sourceScreen": "2:1178",
+      "label": "Action / Transfer to introduction",
+      "to": "2:1193",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1189",
+      "sourceScreen": "2:1178",
+      "label": "Action / Keep writing myself",
+      "to": "6:197",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1202",
+      "sourceScreen": "2:1193",
+      "label": "Action / Keep my text",
+      "to": "6:197",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1204",
+      "sourceScreen": "2:1193",
+      "label": "Action / Replace with draft",
+      "to": "6:197",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1206",
+      "sourceScreen": "2:1193",
+      "label": "Action / Cancel transfer",
+      "to": "2:1178",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1219",
+      "sourceScreen": "2:1210",
+      "label": "Action / Write my introduction",
+      "to": "6:197",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "2:1221",
+      "sourceScreen": "2:1210",
+      "label": "Action / Back to meals",
+      "to": "2:715",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "6:209",
+      "sourceScreen": "6:197",
+      "label": "Field / Arrangements",
+      "to": "2:1009",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "6:211",
+      "sourceScreen": "6:197",
+      "label": "Action / Help with my introduction",
+      "to": "2:1178",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "6:212",
+      "sourceScreen": "6:197",
+      "label": "Action / Back to meal",
+      "to": "2:826",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    }
+  ],
+  "missingTargets": [],
+  "images": [],
+  "fonts": [
+    "Arial"
+  ]
+}

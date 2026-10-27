@@ -1,0 +1,318 @@
+{
+  "reviewRole": "PJ",
+  "reviewMethod": "native-file-readback-and-screenshot",
+  "professionalQA": false,
+  "fileKey": "IHhXcDFmp4x5eOPrVW88m9",
+  "pageId": "0:1",
+  "pageName": "J11 · UX-r01 · candidate",
+  "starts": [
+    {
+      "nodeId": "1:25",
+      "name": "J11 · complete representative journey"
+    }
+  ],
+  "types": {
+    "FRAME": 98,
+    "COMPONENT": 3,
+    "TEXT": 198,
+    "INSTANCE": 45
+  },
+  "screens": [
+    {
+      "id": "1:25",
+      "name": "edit · 让统计回到正确的人群",
+      "width": 1440,
+      "height": 827,
+      "text": "fancy\nProduct Insights\n产品洞察\n统计账号分类\n当前统计与导出\n让统计回到正确的人群\n分类只影响统计，不改变账号登录或业务权限。\nU-203 · 当前regular · revision 1\n新分类\n测试 · test\n可选：regular / test / staff\n修改原因（必填）\n试点演练账号，排除测试参与。\n保存分类\n取消修改\n当前统计\nSYN-C1 · asOf 2026-10-26 · definitionVersion 4\n8 / 10 明确出席人次 · 已应用2026-09-29—2026-10-26 · 全部区域\n生成当前聚合导出\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "1:59",
+      "name": "unknown · 保存结果尚不确定",
+      "width": 1440,
+      "height": 445,
+      "text": "fancy\nProduct Insights\n产品洞察\n统计账号分类\n当前统计与导出\n保存结果尚不确定\nU-203 · 本次修改仍可追踪 · 原因已保留\n先查询这次修改\n我们暂时未收到确定结果，没有再次保存分类。\n当前统计、下钻和导出暂不可用；不展示旧结果。\n查询原次结果\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "1:80",
+      "name": "pending · 分类已接受，统计更新中",
+      "width": 1440,
+      "height": 445,
+      "text": "fancy\nProduct Insights\n产品洞察\n统计账号分类\n当前统计与导出\n分类已接受，统计更新中\nU-203 · test · revision 2\n等待新统计\n已找回原次分类结果，未重复保存。\n当前统计尚未就绪，暂不能查看旧图表、下钻或导出。\n查看统计更新结果\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "1:101",
+      "name": "failed · 分类已接受，统计暂不可用",
+      "width": 1440,
+      "height": 445,
+      "text": "fancy\nProduct Insights\n产品洞察\n统计账号分类\n当前统计与导出\n分类已接受，统计暂不可用\nU-203 · test · revision 2 · 统计快照不可用\n仅重试统计更新\n分类修改已保存，不需要再次提交分类。\n本次统计更新失败，旧图表、分母、明细和导出保持不可用。\n仅重试统计\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "1:122",
+      "name": "ready · 新统计已就绪",
+      "width": 1440,
+      "height": 804,
+      "text": "fancy\nProduct Insights\n产品洞察\n统计账号分类\n当前统计与导出\n新统计已就绪\nSYN-C2 · asOf 2026-10-26 · definitionVersion 4 · U-203 revision 2\n已应用范围\n日期 / 区域\n2026-09-29 → 2026-10-26 · 全部区域\n应用当前范围\n同口径统计与导出\n6 / 8 明确出席人次\n页面、明细和导出使用相同快照、范围与口径；不含个人原始记录。\n生成当前聚合导出\n分类审计\nU-203 · regular → test · revision 2\n原因：试点演练账号，排除测试参与。操作者DATA-01；原意图INTENT-1保留。\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "1:154",
+      "name": "export · 聚合导出已生成",
+      "width": 1440,
+      "height": 531,
+      "text": "fancy\nProduct Insights\n产品洞察\n统计账号分类\n当前统计与导出\n聚合导出已生成\nEXP-2 · SYN-C2 · definitionVersion 4\n下载前核对范围\n日期：2026-09-29—2026-10-26 · 区域：全部\n仅聚合指标、分子/分母、单位和快照/筛选元数据。\n生成记录不等于已下载。下载前再次验证当前权限和有效快照。\n读取 / 下载CSV\n返回同口径统计\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "1:178",
+      "name": "downloaded · CSV可供下载",
+      "width": 1440,
+      "height": 618,
+      "text": "fancy\nProduct Insights\n产品洞察\n统计账号分类\n当前统计与导出\nCSV可供下载\nEXP-2 · SYN-C2 · 同一已应用范围\n合成聚合预览\nsnapshot\n口径\n指标\n分子\n分母\nSYN-C2\nv4\npresent-participations\n6\n8\n下载说明\nCSV已准备好，包含当前范围的聚合指标和口径信息。\n已下载到个人磁盘的字节无法远程撤回。\n返回统计\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "1:215",
+      "name": "oldexport · 导出记录",
+      "width": 1440,
+      "height": 471,
+      "text": "fancy\nProduct Insights\n产品洞察\n统计账号分类\n当前统计与导出\n导出记录\nEXP-1 · SYN-C1 · 原查询范围\n旧导出\n此记录保留供追踪；每次读取仍会验证权限与快照。\n返回分类修改\n读取 / 下载\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "1:237",
+      "name": "revoked · 此导出已失效",
+      "width": 1440,
+      "height": 445,
+      "text": "fancy\nProduct Insights\n产品洞察\n统计账号分类\n当前统计与导出\n此导出已失效\n410 · 旧快照和下载不可读取\n重新获取有效统计\n旧图表、明细与票据已清除。即使切入新快照，旧下载也不会恢复。\n已下载到磁盘的文件无法由平台远程撤回。\n选择新的有效快照\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "1:258",
+      "name": "privacyready · 已切换有效快照",
+      "width": 1440,
+      "height": 415,
+      "text": "fancy\nProduct Insights\n产品洞察\n统计账号分类\n当前统计与导出\n已切换有效快照\nSYN-C2-privacy · asOf 2026-10-26 · v4\n当前结果可读\n同一查询已恢复。旧EXP-1仍失效，请为当前快照重新生成导出。\n检查旧票据仍失效\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "1:280",
+      "name": "conflict · 分类已由其他管理员修改",
+      "width": 1440,
+      "height": 603,
+      "text": "fancy\nProduct Insights\n产品洞察\n统计账号分类\n当前统计与导出\n分类已由其他管理员修改\n409 · U-203 · 当前staff · revision 2\n核对最新值后再确认\n修改原因（保留）\n试点演练账号，排除测试参与。\n新的明确选择\ntest\n确认新的修改意图\n取消，不保存\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "1:307",
+      "name": "unchanged · 没有保存新的分类",
+      "width": 1440,
+      "height": 415,
+      "text": "fancy\nProduct Insights\n产品洞察\n统计账号分类\n当前统计与导出\n没有保存新的分类\nU-203 · regular · revision 1\n仍使用确认值\n取消恢复当前已确认分类，未产生修订。分类未改变时也不新增记录。\n返回编辑\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "1:327",
+      "name": "denied · 你没有修改分类的权限",
+      "width": 1440,
+      "height": 415,
+      "text": "fancy\nProduct Insights\n产品洞察\n当前统计与导出\n你没有修改分类的权限\n403 · 当前角色为分析者\n只读统计\n分析者不能保存分类；失权后受限内容和旧下载不可继续读取。\n返回允许的统计视图\n合成评审数据 · 当前快照与已应用查询保持一致"
+    },
+    {
+      "id": "1:347",
+      "name": "narrow · 分类已接受，统计暂不可用",
+      "width": 390,
+      "height": 399,
+      "text": "fancy\nProduct Insights\n分类已接受，统计暂不可用\nU-203 · test · revision 2\n仅重试统计更新\n分类已保存，统计更新失败。旧结果和导出保持不可用。\n仅重试统计\n合成评审数据 · 当前快照与已应用查询保持一致"
+    }
+  ],
+  "links": [
+    {
+      "source": "1:48",
+      "sourceScreen": "1:25",
+      "label": "Action / 保存分类",
+      "to": "1:59",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:50",
+      "sourceScreen": "1:25",
+      "label": "Action / 取消修改",
+      "to": "1:307",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:56",
+      "sourceScreen": "1:25",
+      "label": "Action / 生成当前聚合导出",
+      "to": "1:215",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:77",
+      "sourceScreen": "1:59",
+      "label": "Action / 查询原次结果",
+      "to": "1:80",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:98",
+      "sourceScreen": "1:80",
+      "label": "Action / 查看统计更新结果",
+      "to": "1:101",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:119",
+      "sourceScreen": "1:101",
+      "label": "Action / 仅重试统计",
+      "to": "1:122",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:147",
+      "sourceScreen": "1:122",
+      "label": "Action / 生成当前聚合导出",
+      "to": "1:154",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:173",
+      "sourceScreen": "1:154",
+      "label": "Action / 读取 / 下载CSV",
+      "to": "1:178",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:175",
+      "sourceScreen": "1:154",
+      "label": "Action / 返回同口径统计",
+      "to": "1:122",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:212",
+      "sourceScreen": "1:178",
+      "label": "Action / 返回统计",
+      "to": "1:122",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:232",
+      "sourceScreen": "1:215",
+      "label": "Action / 返回分类修改",
+      "to": "1:25",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:234",
+      "sourceScreen": "1:215",
+      "label": "Action / 读取已失效票据示例",
+      "to": "1:237",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:255",
+      "sourceScreen": "1:237",
+      "label": "Action / 选择新的有效快照",
+      "to": "1:258",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:275",
+      "sourceScreen": "1:258",
+      "label": "Action / 检查旧票据仍失效",
+      "to": "1:237",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:302",
+      "sourceScreen": "1:280",
+      "label": "Action / 确认新的修改意图",
+      "to": "1:59",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:304",
+      "sourceScreen": "1:280",
+      "label": "Action / 取消，不保存",
+      "to": "1:307",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:324",
+      "sourceScreen": "1:307",
+      "label": "Action / 返回编辑",
+      "to": "1:25",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:344",
+      "sourceScreen": "1:327",
+      "label": "Action / 返回允许的统计视图",
+      "to": "1:122",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:358",
+      "sourceScreen": "1:347",
+      "label": "Action / 仅重试统计",
+      "to": "1:122",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    }
+  ],
+  "missingTargets": [],
+  "images": [],
+  "fonts": [
+    "Noto Sans SC",
+    "Georgia"
+  ]
+}

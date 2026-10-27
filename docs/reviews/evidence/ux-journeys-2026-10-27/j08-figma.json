@@ -1,0 +1,668 @@
+{
+  "reviewRole": "PJ",
+  "reviewMethod": "native-file-readback-and-screenshot",
+  "professionalQA": false,
+  "fileKey": "uHfMTb0zQWyLHw73eyyUbD",
+  "pageId": "0:1",
+  "pageName": "J08 · UX-r01",
+  "starts": [
+    {
+      "nodeId": "1:30",
+      "name": "J08 · normal journey"
+    },
+    {
+      "nodeId": "1:26",
+      "name": "J08 · scenario index"
+    }
+  ],
+  "types": {
+    "FRAME": 157,
+    "COMPONENT": 5,
+    "TEXT": 166,
+    "VECTOR": 12,
+    "INSTANCE": 54,
+    "RECTANGLE": 18
+  },
+  "screens": [
+    {
+      "id": "1:26",
+      "name": "J08 · Delivery index",
+      "width": 1100,
+      "height": 1694,
+      "text": "J08 · Account deletion\nUX-r01 · Candidate for Owner review · PM-r01 PRD / PM-r02 Demo\nInput commit 14db53257a2b4bb7610a3afad5e1ecfd735db605\nNative iOS only. Existing Fancy visual language. Normal journey and necessary recovery states; synthetic examples. RD and QA have not started.\nsettings · Your choices.\nOpen Your choices.\nreview · Before you leave.\nOpen Before you leave.\nreauth · Verify it’s you.\nOpen Verify it’s you.\nreauth-error · Verify your identity again.\nOpen Verify your identity again.\nconfirm · Delete your account?\nOpen Delete your account?\nbarrier-failed · Your request was not accepted.\nOpen Your request was not accepted.\nunknown · Let’s find your request.\nOpen Let’s find your request.\npending · Your request is accepted.\nOpen Your request is accepted.\nprocessing · Removal is processing.\nOpen Removal is processing.\nquery-failed · Status is temporarily unavailable.\nOpen Status is temporarily unavailable.\nneeds-support · A removal step needs attention.\nOpen A removal step needs attention.\ncompleted · Account removal completed.\nOpen Account removal completed.\ncompleted-return · Your removal remains complete.\nOpen Your removal remains complete.\nsupport · Contact support.\nOpen Contact support.\nsupport-copied · Email address copied.\nOpen Email address copied.\nsupport-return · Continue in your mail app.\nOpen Continue in your mail app.\nreceipt-unavailable · Your receipt is unavailable.\nOpen Your receipt is unavailable."
+    },
+    {
+      "id": "1:30",
+      "name": "J08 / settings / Your choices.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour choices.\nYour account\nYou can review what happens before deciding whether to leave Fancy.\nDelete account\nDiscover\nMeals\nCreate meal\nInbox\nProfile"
+    },
+    {
+      "id": "1:43",
+      "name": "J08 / review / Before you leave.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nBefore you leave.\nDeleting your account will sign you out and hide your public profile and content.\n\nUpcoming meals you host will be cancelled. You’ll leave upcoming meals and pending applications. Your contact consent, group access, AI preferences and active context will be removed.\n\nOther members’ participation in meals already started is preserved. Remaining provider and content removal continues afterward under the approved policy.\nContinue to verify identity\nKeep my account"
+    },
+    {
+      "id": "1:58",
+      "name": "J08 / reauth / Verify it’s you.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nVerify it’s you.\nVerify using your existing linked identity. You’ll return to this deletion request; verification does not submit it.\nEmail verification code\n123456\nYour identity check must be within 5 minutes when you submit. Linked Google/Apple use their existing identity flow.\nVerify identity\nKeep my account"
+    },
+    {
+      "id": "1:77",
+      "name": "J08 / reauth-error / Verify your identity again.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nVerify your identity again.\nThe code is incorrect or your identity check expired. Your account has not been changed. Verify again, then explicitly confirm deletion.\nVerification code\nEnter the latest code\nVerify identity\nKeep my account"
+    },
+    {
+      "id": "1:95",
+      "name": "J08 / confirm / Delete your account?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nDelete your account?\nYou’ll be signed out once the request is accepted. Remaining removal steps may still be processing. You cannot use a receipt or public reference to restore your account.\nConfirmation\n☑ I understand the account-deletion consequences.\nRequest account deletion\nKeep my account"
+    },
+    {
+      "id": "1:113",
+      "name": "J08 / barrier-failed / Your request was not accepted.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour request was not accepted.\nWe couldn’t accept your request. Your account has not been changed. No part of the synchronous account restriction was accepted.\nReview and retry\nKeep my account"
+    },
+    {
+      "id": "1:128",
+      "name": "J08 / unknown / Let’s find your request.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nLet’s find your request.\nThe response was lost. Check your saved receipt to find the original request. Do not submit another deletion or create another account to check progress.\nCheck original request\nContact support"
+    },
+    {
+      "id": "1:143",
+      "name": "J08 / pending / Your request is accepted.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour request is accepted.\nPending\n\nAccount access is closed. Public content is hidden and new participation or contact has stopped. Remaining removal steps are pending. This does not mean removal is complete.\n\nPublic reference: SYN-DEL-01\nCheck progress"
+    },
+    {
+      "id": "1:156",
+      "name": "J08 / processing / Removal is processing.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nRemoval is processing.\nProcessing\n\nCompleted steps are retained. Remaining provider, content and data-removal steps continue. This page uses your saved private receipt; you do not need to sign in.\n\nPublic reference: SYN-DEL-01\nCheck progress\nContact support"
+    },
+    {
+      "id": "1:171",
+      "name": "J08 / query-failed / Status is temporarily unavailable.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nStatus is temporarily unavailable.\nYour saved receipt is kept. Retry checking the original request or contact support. Account access stays closed; no new deletion is created.\nCheck progress again\nContact support"
+    },
+    {
+      "id": "1:186",
+      "name": "J08 / needs-support / A removal step needs attention.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nA removal step needs attention.\nNeeds support\n\nCompleted steps remain complete. Your account has not been restored. Support can help with remaining steps.\n\nPublic reference: SYN-DEL-01\nContact support\nCheck progress"
+    },
+    {
+      "id": "1:201",
+      "name": "J08 / completed / Account removal completed.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nAccount removal completed.\nCompleted\n\nAll required removal steps have completed under the approved policy. This does not restore your account or any business session.\n\nPublic reference: SYN-DEL-01\nCheck latest result"
+    },
+    {
+      "id": "1:215",
+      "name": "J08 / completed-return / Your removal remains complete.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\n✓\nYour removal remains complete.\nCompleted\nThe saved receipt confirms the same original request. No new request or account has been created.\nContact support"
+    },
+    {
+      "id": "1:229",
+      "name": "J08 / support / Contact support.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nContact support.\nYou can contact support without signing in.\n\nxcheniepaut26@gmail.com\n\nSelect and copy the full address if a mail app is unavailable. You may include your public reference SYN-DEL-01. Never include your private receipt or verification code.\n\nOpening a mail composer does not send a message or mark the request resolved.\nCopy email address\nOpen mail composer\nBack to deletion status"
+    },
+    {
+      "id": "1:246",
+      "name": "J08 / support-copied / Email address copied.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nEmail address copied.\nxcheniepaut26@gmail.com\n\nIf automatic copying is unavailable, select the full address and copy it manually. Your deletion request has not changed.\nBack to support\nBack to deletion status"
+    },
+    {
+      "id": "1:261",
+      "name": "J08 / support-return / Continue in your mail app.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nContinue in your mail app.\nOpening a composer is not sending a message. No message is marked as sent or resolved here. Your saved receipt remains available for checking the request.\nBack to deletion status\nBack to support"
+    },
+    {
+      "id": "1:276",
+      "name": "J08 / receipt-unavailable / Your receipt is unavailable.",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nYour receipt is unavailable.\nYou can contact support without signing in or registering again. A public reference helps locate the request but does not authorize private access or restore your account.\nContact support"
+    },
+    {
+      "id": "5:71",
+      "name": "J08 / confirm-unchecked / Delete your account?",
+      "width": 390,
+      "height": 844,
+      "text": "9:41                                      ▰  ▮▮  ▰\nfancy\nDelete your account?\nYou’ll be signed out once the request is accepted. Remaining removal steps may still be processing. You cannot use a receipt or public reference to restore your account.\nConfirmation\n☐ I understand the account-deletion consequences.\nRequest account deletion\nKeep my account"
+    }
+  ],
+  "links": [
+    {
+      "source": "1:291",
+      "sourceScreen": "1:26",
+      "label": "Action / Open Your choices.",
+      "to": "1:30",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:295",
+      "sourceScreen": "1:26",
+      "label": "Action / Open Before you leave.",
+      "to": "1:43",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:299",
+      "sourceScreen": "1:26",
+      "label": "Action / Open Verify it’s you.",
+      "to": "1:58",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:303",
+      "sourceScreen": "1:26",
+      "label": "Action / Open Verify your identity again.",
+      "to": "1:77",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:307",
+      "sourceScreen": "1:26",
+      "label": "Action / Open Delete your account?",
+      "to": "1:95",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:311",
+      "sourceScreen": "1:26",
+      "label": "Action / Open Your request was not accepted.",
+      "to": "1:113",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:315",
+      "sourceScreen": "1:26",
+      "label": "Action / Open Let’s find your request.",
+      "to": "1:128",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:319",
+      "sourceScreen": "1:26",
+      "label": "Action / Open Your request is accepted.",
+      "to": "1:143",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:323",
+      "sourceScreen": "1:26",
+      "label": "Action / Open Removal is processing.",
+      "to": "1:156",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:327",
+      "sourceScreen": "1:26",
+      "label": "Action / Open Status is temporarily unavailable.",
+      "to": "1:171",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:331",
+      "sourceScreen": "1:26",
+      "label": "Action / Open A removal step needs attention.",
+      "to": "1:186",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:335",
+      "sourceScreen": "1:26",
+      "label": "Action / Open Account removal completed.",
+      "to": "1:201",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:339",
+      "sourceScreen": "1:26",
+      "label": "Action / Open Your removal remains complete.",
+      "to": "1:215",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:343",
+      "sourceScreen": "1:26",
+      "label": "Action / Open Contact support.",
+      "to": "1:229",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:347",
+      "sourceScreen": "1:26",
+      "label": "Action / Open Email address copied.",
+      "to": "1:246",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:351",
+      "sourceScreen": "1:26",
+      "label": "Action / Open Continue in your mail app.",
+      "to": "1:261",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:355",
+      "sourceScreen": "1:26",
+      "label": "Action / Open Your receipt is unavailable.",
+      "to": "1:276",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:39",
+      "sourceScreen": "1:30",
+      "label": "Action / Delete account",
+      "to": "1:43",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:52",
+      "sourceScreen": "1:43",
+      "label": "Action / Continue to verify identity",
+      "to": "1:58",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:54",
+      "sourceScreen": "1:43",
+      "label": "Action / Keep my account",
+      "to": "1:30",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:71",
+      "sourceScreen": "1:58",
+      "label": "Action / Verify identity",
+      "to": "5:71",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:73",
+      "sourceScreen": "1:58",
+      "label": "Action / Keep my account",
+      "to": "1:30",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:89",
+      "sourceScreen": "1:77",
+      "label": "Action / Verify identity",
+      "to": "5:71",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:91",
+      "sourceScreen": "1:77",
+      "label": "Action / Keep my account",
+      "to": "1:30",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:105",
+      "sourceScreen": "1:95",
+      "label": "Field / Confirmation",
+      "to": "5:71",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:107",
+      "sourceScreen": "1:95",
+      "label": "Action / Request account deletion",
+      "to": "1:143",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:109",
+      "sourceScreen": "1:95",
+      "label": "Action / Keep my account",
+      "to": "1:30",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:122",
+      "sourceScreen": "1:113",
+      "label": "Action / Review and retry",
+      "to": "1:95",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:124",
+      "sourceScreen": "1:113",
+      "label": "Action / Keep my account",
+      "to": "1:30",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:137",
+      "sourceScreen": "1:128",
+      "label": "Action / Check original request",
+      "to": "1:143",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:139",
+      "sourceScreen": "1:128",
+      "label": "Action / Contact support",
+      "to": "1:229",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:152",
+      "sourceScreen": "1:143",
+      "label": "Action / Check progress",
+      "to": "1:156",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:165",
+      "sourceScreen": "1:156",
+      "label": "Action / Check progress",
+      "to": "1:201",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:167",
+      "sourceScreen": "1:156",
+      "label": "Action / Contact support",
+      "to": "1:229",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:180",
+      "sourceScreen": "1:171",
+      "label": "Action / Check progress again",
+      "to": "1:156",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:182",
+      "sourceScreen": "1:171",
+      "label": "Action / Contact support",
+      "to": "1:229",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:195",
+      "sourceScreen": "1:186",
+      "label": "Action / Contact support",
+      "to": "1:229",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:197",
+      "sourceScreen": "1:186",
+      "label": "Action / Check progress",
+      "to": "1:156",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:211",
+      "sourceScreen": "1:201",
+      "label": "Action / Check latest result",
+      "to": "1:215",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:225",
+      "sourceScreen": "1:215",
+      "label": "Action / Contact support",
+      "to": "1:229",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:238",
+      "sourceScreen": "1:229",
+      "label": "Action / Copy email address",
+      "to": "1:246",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:240",
+      "sourceScreen": "1:229",
+      "label": "Action / Open mail composer",
+      "to": "1:261",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:242",
+      "sourceScreen": "1:229",
+      "label": "Action / Back to deletion status",
+      "to": "1:186",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:255",
+      "sourceScreen": "1:246",
+      "label": "Action / Back to support",
+      "to": "1:229",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:257",
+      "sourceScreen": "1:246",
+      "label": "Action / Back to deletion status",
+      "to": "1:186",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:270",
+      "sourceScreen": "1:261",
+      "label": "Action / Back to deletion status",
+      "to": "1:186",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:272",
+      "sourceScreen": "1:261",
+      "label": "Action / Back to support",
+      "to": "1:229",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "1:285",
+      "sourceScreen": "1:276",
+      "label": "Action / Contact support",
+      "to": "1:229",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "5:81",
+      "sourceScreen": "5:71",
+      "label": "Field / Confirmation",
+      "to": "1:95",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    },
+    {
+      "source": "5:83",
+      "sourceScreen": "5:71",
+      "label": "Action / Keep my account",
+      "to": "1:30",
+      "navigation": "NAVIGATE",
+      "trigger": {
+        "type": "ON_CLICK"
+      }
+    }
+  ],
+  "missingTargets": [],
+  "images": [],
+  "fonts": [
+    "Arial"
+  ]
+}
