@@ -1,0 +1,95 @@
+{
+  "id": "IOS-0.1.0-dev.1",
+  "pj": "PJ-IOS1 / ux_participant_account",
+  "journeys": [
+    "J01",
+    "J05"
+  ],
+  "designReview": {
+    "status": "design-scope-recheck-passed",
+    "independentReviewer": "PJ-IOS2 / ux_host_social",
+    "independentlyApproved": true,
+    "report": "docs/reviews/r11/ios1-ds-review.json",
+    "candidateReadbackSHA256": "e33c2842f427158743304c35e2cc37d871b9faa461ebf87b84dfb3bae1d802ab",
+    "boundary": "Independent native graph + rendered visual/counterexample review; full arbitrary-input/native provider and production QA not claimed."
+  },
+  "developmentPlan": {
+    "status": "candidate-independent-engineering-review-requested",
+    "directory": "docs/engineering/r11/ios-0.1.0-dev.1/",
+    "implementationStarted": false,
+    "packageCount": 7,
+    "plannedTestCaseCount": 28,
+    "artifactChecks": "4 passed",
+    "independentReviewer": "PJ-IOS2 / ux_host_social (requested, not self-approved)"
+  },
+  "currentIssues": [
+    "I1-C01 optional analytics choice own read/save contract extension"
+  ],
+  "realBlockers": [],
+  "nextStep": "Independent engineering review of this version plan; then issue only authorized exact code leases. No business implementation is currently issued.",
+  "evidence": [
+    "docs/reviews/r11/ios1-ds-review.json",
+    "docs/design/r10/ios-0.1.0-dev.1/artifact-manifest.json",
+    "docs/design/r10/ios-0.1.0-dev.1/r11-repair.zh-CN.md",
+    "docs/design/r10/ios-0.1.0-dev.1/evidence/r11-counterexample-readback.json",
+    "docs/engineering/r11/ios-0.1.0-dev.1/plan.zh-CN.md",
+    "docs/engineering/r11/ios-0.1.0-dev.1/work-packages.json",
+    "docs/engineering/r11/ios-0.1.0-dev.1/interfaces.json",
+    "docs/engineering/r11/ios-0.1.0-dev.1/test-matrix.json",
+    "tests/test_r11_ios1_plan.py"
+  ],
+  "closedDesignIssues": [
+    "R11-I1-01",
+    "R11-I1-02",
+    "R11-I1-03",
+    "R11-I1-04",
+    "R11-I1-05",
+    "R11-I1-07"
+  ],
+  "withdrawnUnsupportedHistoricalFinding": {
+    "id": "R11-I1-06",
+    "reason": "Original ancestor visible=false was ignored in initial textual review; allegation of visible preconsent response withdrawn by independent reviewer. Physical cleanup and explicit Send gate now independently checked."
+  },
+  "scopedIntegrationPending": [
+    {
+      "id": "I1-C01",
+      "blocksOnly": [
+        "I1-P03 statistics real save and its integration test"
+      ],
+      "owner": "root-assigned exclusive RD-CONTRACTS/DATA writer",
+      "doesNotBlockOtherPackagePreparation": true
+    }
+  ],
+  "code": {
+    "status": "not-issued",
+    "candidateSHA": null
+  },
+  "singleVersionTests": {
+    "status": "NOT_RUN",
+    "build": null
+  },
+  "jointTests": {
+    "status": "NOT_RUN",
+    "points": [
+      "I1-X01",
+      "I1-X02",
+      "I1-X03",
+      "I1-X04"
+    ]
+  },
+  "merge": {
+    "status": "not-submitted",
+    "pullRequest": null
+  },
+  "deployment": {
+    "status": "not-deployed",
+    "candidateSHA": null
+  },
+  "appStore": {
+    "productVersion": "0.1.0",
+    "internalIteration": "dev.1",
+    "build": null,
+    "status": "not-submitted",
+    "firstReleaseCollection": "I1+I2+I3+I4+minimum support, independent implementation does not wait full design set"
+  }
+}

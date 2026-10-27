@@ -2,7 +2,9 @@
 
 项目入口：[README](../README.md)。本目录保存项目知识；Agent 协作规则见 [AGENTS.md](../AGENTS.md)，正式方法在 `.agents/skills/`，待审核候选在 `.agents/candidates/`，不作为现行执行规则。
 
-## 当前产品与管理输入（r07范围／r10分版设计与架构）
+## 当前产品与管理输入（r07范围／r11版本PJ并行执行）
+
+- [当前版本PJ并行工作流与商店/分支发布策略](delivery/parallel-version-workflow-r11.zh-CN.md)、[7个版本执行登记](delivery/execution-r11.json)：按版评审修复，通过本版门槛即可编制本版开发方案，不等全套设计。
 
 - [分版Figma、Logo与架构统一交付入口及PJ核对记录](delivery/r10-deliverables-review.zh-CN.md)。
 
@@ -360,3 +362,11 @@
 - [ios-0.1.0-dev.1 · states.zh-CN](design/r10/ios-0.1.0-dev.1/states.zh-CN.md)。
 
 - [system · handoff.zh-CN](design/r10/system/handoff.zh-CN.md)。
+
+- [r11独立评审 · ios1-ds-review](reviews/r11/ios1-ds-review.md)。
+
+- [r11独立评审 · ios2-review](reviews/r11/ios2-review.md)。
+
+- [r11独立评审 · ios34-review](reviews/r11/ios34-review.md)。
+
+- [后台及支持三个版本的独立设计复验](reviews/r11/admin-support-review.md)。

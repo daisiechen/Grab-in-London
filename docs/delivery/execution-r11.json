@@ -1,0 +1,288 @@
+{
+  "revision": "r11",
+  "baselineCommit": "6675dc527ab0a0aa586e13e2cc13c2b235ec06bf",
+  "status": "parallel-version-pj-execution",
+  "scopeSource": "docs/delivery/development-versions-r10.json",
+  "latestOwnerDecision": "Each version advances independently under its PJ; root coordinates shared interfaces, conflicts, integration and release.",
+  "designGate": {
+    "mode": "per-version",
+    "allSevenRequiredBeforeAnyProgress": false,
+    "requires": [
+      "own design review passed",
+      "applicable DS components fixed",
+      "independent repair verification",
+      "version input and design snapshot recorded"
+    ],
+    "realServiceQARequiredForDesignPass": false,
+    "prototypeWalkthroughEvidenceRequired": true
+  },
+  "rootResponsibilities": [
+    "shared contract ownership",
+    "dependency conflicts",
+    "cross-version integration groups",
+    "release aggregation",
+    "Git integration and remote verification"
+  ],
+  "pjAssignments": {
+    "PJ-IOS1": {
+      "agent": "ux_participant_account",
+      "versions": [
+        "IOS-0.1.0-dev.1"
+      ],
+      "sharedDesign": "DS-0.1.0"
+    },
+    "PJ-IOS2": {
+      "agent": "ux_host_social",
+      "versions": [
+        "IOS-0.1.0-dev.2",
+        "IOS-0.1.0-dev.3",
+        "IOS-0.1.0-dev.4"
+      ]
+    },
+    "PJ-ADMIN": {
+      "agent": "ux_support_analytics",
+      "versions": [
+        "SUPPORT-0.1.0-dev.1",
+        "ADMIN-0.1.0-dev.1",
+        "ADMIN-0.1.0-dev.2"
+      ]
+    }
+  },
+  "versions": [
+    {
+      "id": "IOS-0.1.0-dev.1",
+      "journeys": [
+        "J01",
+        "J05"
+      ],
+      "pj": "PJ-IOS1",
+      "independentReviewer": "PJ-IOS2",
+      "status": "design-review-and-repair",
+      "designPassed": false,
+      "developmentPlanStatus": "not-started-pending-own-design-review",
+      "implementationStatus": "not-started",
+      "testStatus": "not-started",
+      "dependsOn": [],
+      "dependencyScope": "integration-only; fixed contracts permit independent design and planning",
+      "directory": "docs/delivery/versions/ios-0.1.0-dev.1/",
+      "engineeringDirectory": "docs/engineering/r11/ios-0.1.0-dev.1/",
+      "codeCommit": null,
+      "testEvidence": null,
+      "mergedMainCommit": null,
+      "deployment": null,
+      "statusFile": "docs/delivery/versions/ios-0.1.0-dev.1/status.json",
+      "coordinatorSnapshotOnly": true
+    },
+    {
+      "id": "IOS-0.1.0-dev.2",
+      "journeys": [
+        "J02"
+      ],
+      "pj": "PJ-IOS2",
+      "independentReviewer": "PJ-ADMIN",
+      "status": "design-review-and-repair",
+      "designPassed": false,
+      "developmentPlanStatus": "not-started-pending-own-design-review",
+      "implementationStatus": "not-started",
+      "testStatus": "not-started",
+      "dependsOn": [
+        "IOS-0.1.0-dev.1"
+      ],
+      "dependencyScope": "integration-only; fixed contracts permit independent design and planning",
+      "directory": "docs/delivery/versions/ios-0.1.0-dev.2/",
+      "engineeringDirectory": "docs/engineering/r11/ios-0.1.0-dev.2/",
+      "codeCommit": null,
+      "testEvidence": null,
+      "mergedMainCommit": null,
+      "deployment": null,
+      "statusFile": "docs/delivery/versions/ios-0.1.0-dev.2/status.json",
+      "coordinatorSnapshotOnly": true
+    },
+    {
+      "id": "IOS-0.1.0-dev.3",
+      "journeys": [
+        "J03",
+        "J04",
+        "J06"
+      ],
+      "pj": "PJ-IOS2",
+      "independentReviewer": "PJ-IOS1",
+      "status": "design-review-and-repair",
+      "designPassed": false,
+      "developmentPlanStatus": "not-started-pending-own-design-review",
+      "implementationStatus": "not-started",
+      "testStatus": "not-started",
+      "dependsOn": [
+        "IOS-0.1.0-dev.2"
+      ],
+      "dependencyScope": "integration-only; fixed contracts permit independent design and planning",
+      "directory": "docs/delivery/versions/ios-0.1.0-dev.3/",
+      "engineeringDirectory": "docs/engineering/r11/ios-0.1.0-dev.3/",
+      "codeCommit": null,
+      "testEvidence": null,
+      "mergedMainCommit": null,
+      "deployment": null,
+      "statusFile": "docs/delivery/versions/ios-0.1.0-dev.3/status.json",
+      "coordinatorSnapshotOnly": true
+    },
+    {
+      "id": "IOS-0.1.0-dev.4",
+      "journeys": [
+        "J07",
+        "J08"
+      ],
+      "pj": "PJ-IOS2",
+      "independentReviewer": "PJ-IOS1",
+      "status": "design-review-and-repair",
+      "designPassed": false,
+      "developmentPlanStatus": "not-started-pending-own-design-review",
+      "implementationStatus": "not-started",
+      "testStatus": "not-started",
+      "dependsOn": [
+        "IOS-0.1.0-dev.3"
+      ],
+      "dependencyScope": "integration-only; fixed contracts permit independent design and planning",
+      "directory": "docs/delivery/versions/ios-0.1.0-dev.4/",
+      "engineeringDirectory": "docs/engineering/r11/ios-0.1.0-dev.4/",
+      "codeCommit": null,
+      "testEvidence": null,
+      "mergedMainCommit": null,
+      "deployment": null,
+      "statusFile": "docs/delivery/versions/ios-0.1.0-dev.4/status.json",
+      "coordinatorSnapshotOnly": true
+    },
+    {
+      "id": "SUPPORT-0.1.0-dev.1",
+      "journeys": [
+        "J09"
+      ],
+      "pj": "PJ-ADMIN",
+      "independentReviewer": "PJ-ROOT",
+      "status": "design-review-and-repair",
+      "designPassed": false,
+      "developmentPlanStatus": "not-started-pending-own-design-review",
+      "implementationStatus": "not-started",
+      "testStatus": "not-started",
+      "dependsOn": [
+        "IOS-0.1.0-dev.1"
+      ],
+      "dependencyScope": "integration-only; fixed contracts permit independent design and planning",
+      "directory": "docs/delivery/versions/support-0.1.0-dev.1/",
+      "engineeringDirectory": "docs/engineering/r11/support-0.1.0-dev.1/",
+      "codeCommit": null,
+      "testEvidence": null,
+      "mergedMainCommit": null,
+      "deployment": null,
+      "statusFile": "docs/delivery/versions/support-0.1.0-dev.1/status.json",
+      "coordinatorSnapshotOnly": true
+    },
+    {
+      "id": "ADMIN-0.1.0-dev.1",
+      "journeys": [
+        "J10"
+      ],
+      "pj": "PJ-ADMIN",
+      "independentReviewer": "PJ-ROOT",
+      "status": "design-review-and-repair",
+      "designPassed": false,
+      "developmentPlanStatus": "not-started-pending-own-design-review",
+      "implementationStatus": "not-started",
+      "testStatus": "not-started",
+      "dependsOn": [
+        "IOS-0.1.0-dev.1"
+      ],
+      "dependencyScope": "integration-only; fixed contracts permit independent design and planning",
+      "directory": "docs/delivery/versions/admin-0.1.0-dev.1/",
+      "engineeringDirectory": "docs/engineering/r11/admin-0.1.0-dev.1/",
+      "codeCommit": null,
+      "testEvidence": null,
+      "mergedMainCommit": null,
+      "deployment": null,
+      "statusFile": "docs/delivery/versions/admin-0.1.0-dev.1/status.json",
+      "coordinatorSnapshotOnly": true
+    },
+    {
+      "id": "ADMIN-0.1.0-dev.2",
+      "journeys": [
+        "J11"
+      ],
+      "pj": "PJ-ADMIN",
+      "independentReviewer": "PJ-ROOT",
+      "status": "design-review-and-repair",
+      "designPassed": false,
+      "developmentPlanStatus": "not-started-pending-own-design-review",
+      "implementationStatus": "not-started",
+      "testStatus": "not-started",
+      "dependsOn": [
+        "ADMIN-0.1.0-dev.1"
+      ],
+      "dependencyScope": "integration-only; fixed contracts permit independent design and planning",
+      "directory": "docs/delivery/versions/admin-0.1.0-dev.2/",
+      "engineeringDirectory": "docs/engineering/r11/admin-0.1.0-dev.2/",
+      "codeCommit": null,
+      "testEvidence": null,
+      "mergedMainCommit": null,
+      "deployment": null,
+      "statusFile": "docs/delivery/versions/admin-0.1.0-dev.2/status.json",
+      "coordinatorSnapshotOnly": true
+    }
+  ],
+  "workflow": {
+    "order": [
+      "design review",
+      "original author repair",
+      "independent recheck",
+      "version development design",
+      "version implementation",
+      "version tests",
+      "PR review and required checks",
+      "merge main",
+      "deploy exact merged candidate"
+    ],
+    "currentAuthorization": [
+      "design-review",
+      "design-repair",
+      "per-version-development-design-after-own-pass"
+    ],
+    "businessImplementationIssued": false,
+    "businessQAStarted": false,
+    "branchPattern": "codex/<product>-<version>-dev<N>-<module>",
+    "directMainDevelopmentAllowed": false,
+    "mergeRequires": [
+      "version applicable tests passed",
+      "independent code review",
+      "required CI passed",
+      "exact candidate and dependencies fixed"
+    ],
+    "deploySource": "main only, exact merged SHA and tested build; documentation-only merge does not deploy runtime"
+  },
+  "storeRelease": {
+    "firstMarketingVersion": "0.1.0",
+    "firstIncludes": [
+      "IOS-0.1.0-dev.1",
+      "IOS-0.1.0-dev.2",
+      "IOS-0.1.0-dev.3",
+      "IOS-0.1.0-dev.4",
+      "SUPPORT-0.1.0-dev.1"
+    ],
+    "laterProductVersions": [
+      "IOS-0.2.0",
+      "IOS-0.3.0"
+    ],
+    "internalIterationsMayCombine": true,
+    "everyCompletedIOSIterationMustBeAccountedFor": true,
+    "fixedAppleMinimumIntervalDays": null,
+    "phasedReleaseDays": 7,
+    "phasedReleaseIsSubmissionFrequencyLimit": false,
+    "submissionStatus": "not-started",
+    "build": null,
+    "policyVerifiedDate": "2026-10-27",
+    "sources": [
+      "https://developer.apple.com/help/app-store-connect/update-your-app/create-a-new-version",
+      "https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/overview-of-submitting-for-review",
+      "https://developer.apple.com/help/app-store-connect/update-your-app/release-a-version-update-in-phases",
+      "https://developer.apple.com/app-store/review/guidelines/"
+    ]
+  },
+  "liveStatusAuthority": "Each version directory/status.json; coordinator fields are initial snapshots, not gates."
+}

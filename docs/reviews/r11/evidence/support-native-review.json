@@ -1,0 +1,1445 @@
+{
+  "fileKey": "mCBDxN4qzTbCGCx9UIPbwW",
+  "page": "SUPPORT-0.1.0-dev.1 · UX-r02",
+  "starts": [
+    {
+      "nodeId": "3:430",
+      "name": "SUPPORT-0.1.0-dev.1 · 完整代表路径"
+    }
+  ],
+  "roots": [
+    {
+      "id": "2:430",
+      "name": "Components · original admin roles",
+      "width": 1240,
+      "height": 131,
+      "text": [
+        {
+          "id": "2:161",
+          "text": "保存分类"
+        },
+        {
+          "id": "2:6",
+          "text": "Fancy"
+        },
+        {
+          "id": "2:8",
+          "text": "/"
+        },
+        {
+          "id": "2:10",
+          "text": "数据与定义"
+        },
+        {
+          "id": "2:16",
+          "text": "EN"
+        }
+      ],
+      "actions": []
+    },
+    {
+      "id": "3:429",
+      "name": "SUPPORT-0.1.0-dev.1 · source-derived components",
+      "width": 1200,
+      "height": 3494,
+      "text": [
+        {
+          "id": "3:469",
+          "text": "本案必要事实"
+        },
+        {
+          "id": "3:470",
+          "text": "仅展示此案处理所需信息"
+        },
+        {
+          "id": "3:471",
+          "text": "scheduledEndAt：2026-10-10T20:00:00Z（London 21:00 BST）"
+        },
+        {
+          "id": "3:472",
+          "text": "开始资格名单内；饭局未取消。"
+        },
+        {
+          "id": "3:475",
+          "text": "mealId"
+        },
+        {
+          "id": "3:477",
+          "text": "subjectId"
+        },
+        {
+          "id": "3:479",
+          "text": "revision"
+        },
+        {
+          "id": "3:482",
+          "text": "M-SYN-09"
+        },
+        {
+          "id": "3:484",
+          "text": "U-203"
+        },
+        {
+          "id": "3:486",
+          "text": "1"
+        },
+        {
+          "id": "3:489",
+          "text": "本人原报告：absent"
+        },
+        {
+          "id": "3:491",
+          "text": "host原报告：present"
+        },
+        {
+          "id": "3:493",
+          "text": "当前有效：absent"
+        },
+        {
+          "id": "I3:495;2:161",
+          "text": "开始处理此案"
+        },
+        {
+          "id": "3:565",
+          "text": "核对最小事实"
+        },
+        {
+          "id": "3:566",
+          "text": "计划结束满连续7天后才可追加支持逾期修订；窗口内仍走自助报告。"
+        },
+        {
+          "id": "3:567",
+          "text": "举报处理可只回复；删除实际执行归J08。"
+        },
+        {
+          "id": "3:570",
+          "text": "M-SYN-09"
+        },
+        {
+          "id": "3:572",
+          "text": "U-203"
+        },
+        {
+          "id": "3:574",
+          "text": "expectedVersion 1"
+        },
+        {
+          "id": "3:577",
+          "text": "self absent"
+        },
+        {
+          "id": "3:579",
+          "text": "host present"
+        },
+        {
+          "id": "3:581",
+          "text": "有效absent"
+        },
+        {
+          "id": "I3:583;2:161",
+          "text": "追加逾期纠错"
+        },
+        {
+          "id": "I3:585;2:161",
+          "text": "仅回复本案"
+        },
+        {
+          "id": "3:649",
+          "text": "本次修订"
+        },
+        {
+          "id": "3:650",
+          "text": "窗口结束：2026-10-17T20:00:00.000Z；当前恰好满7天。"
+        },
+        {
+          "id": "3:651",
+          "text": "保留本人及发起人的原始报告，支持修订另行记录。"
+        },
+        {
+          "id": "I3:658;4:776",
+          "text": "明确出席结果"
+        },
+        {
+          "id": "I3:658;4:780",
+          "text": "未出席"
+        },
+        {
+          "id": "I3:667;3:663",
+          "text": "纠错原因（必填）"
+        },
+        {
+          "id": "I3:667;3:665",
+          "text": "核对本案材料后确认未出席"
+        },
+        {
+          "id": "I3:676;3:672",
+          "text": "期望版本"
+        },
+        {
+          "id": "I3:676;3:674",
+          "text": "1"
+        },
+        {
+          "id": "I3:681;2:161",
+          "text": "追加修订并核对影响"
+        },
+        {
+          "id": "I3:683;2:161",
+          "text": "取消本次修改"
+        },
+        {
+          "id": "4:776",
+          "text": "明确出席结果"
+        },
+        {
+          "id": "4:780",
+          "text": "未出席"
+        },
+        {
+          "id": "3:663",
+          "text": "纠错原因（必填）"
+        },
+        {
+          "id": "3:665",
+          "text": "核对本案材料后确认未出席"
+        },
+        {
+          "id": "3:672",
+          "text": "期望版本"
+        },
+        {
+          "id": "3:674",
+          "text": "1"
+        },
+        {
+          "id": "3:746",
+          "text": "本次不能执行逾期纠错"
+        },
+        {
+          "id": "3:747",
+          "text": "原因和选择保留。达到边界后仍需重新验证窗口、名单、取消事实与版本。"
+        },
+        {
+          "id": "3:750",
+          "text": "当前UTC"
+        },
+        {
+          "id": "3:752",
+          "text": "窗口结束UTC"
+        },
+        {
+          "id": "3:755",
+          "text": "2026-10-17T19:59:59.999Z"
+        },
+        {
+          "id": "3:757",
+          "text": "2026-10-17T20:00:00.000Z"
+        },
+        {
+          "id": "3:759",
+          "text": "当前为结束后7天前1毫秒，未追加修订。"
+        },
+        {
+          "id": "I3:761;2:161",
+          "text": "返回个案"
+        },
+        {
+          "id": "3:820",
+          "text": "资格与新统计"
+        },
+        {
+          "id": "3:821",
+          "text": "本例原self absent/host present，支持核对仍absent；状态继续不适用，并非本次从可用变失效。"
+        },
+        {
+          "id": "3:822",
+          "text": "另一有效共同场次及双方有效同意的联系保持，不误伤其他依据；不复活已撤回/拉黑同意。"
+        },
+        {
+          "id": "3:823",
+          "text": "旧snapshot SYN-BEFORE保留原asOf；新snapshot SYN-AFTER-2依据本次修订生成。"
+        },
+        {
+          "id": "3:826",
+          "text": "公开个人评价"
+        },
+        {
+          "id": "3:828",
+          "text": "单场体验统计"
+        },
+        {
+          "id": "3:830",
+          "text": "仅依赖本场的联系"
+        },
+        {
+          "id": "3:833",
+          "text": "不公开"
+        },
+        {
+          "id": "3:835",
+          "text": "排除"
+        },
+        {
+          "id": "3:837",
+          "text": "暂停新发送，历史保留"
+        },
+        {
+          "id": "I3:839;2:161",
+          "text": "回复并记录处理结果"
+        },
+        {
+          "id": "I3:841;2:161",
+          "text": "返回本案"
+        },
+        {
+          "id": "3:906",
+          "text": "提交者可见结论"
+        },
+        {
+          "id": "3:907",
+          "text": "仅本案可公开结论或下一步；不包含他人举报、聊天、私密意愿或内部调查材料。"
+        },
+        {
+          "id": "I3:914;3:910",
+          "text": "提交者可见回复（必填）"
+        },
+        {
+          "id": "I3:914;3:912",
+          "text": "已核对本案记录并记录适用处理结果"
+        },
+        {
+          "id": "I3:919;2:161",
+          "text": "保存处理结果与回复"
+        },
+        {
+          "id": "I3:921;2:161",
+          "text": "取消回复编辑"
+        },
+        {
+          "id": "3:910",
+          "text": "提交者可见回复（必填）"
+        },
+        {
+          "id": "3:912",
+          "text": "已核对本案记录并记录适用处理结果"
+        },
+        {
+          "id": "3:975",
+          "text": "提交者可见回复"
+        },
+        {
+          "id": "3:976",
+          "text": "已核对本案记录并记录适用处理结果。"
+        },
+        {
+          "id": "3:1002",
+          "text": "修订与审计"
+        },
+        {
+          "id": "3:1003",
+          "text": "原始self absent / host present保留；case/actor/reason/time/version及原意图可追踪。"
+        },
+        {
+          "id": "3:1004",
+          "text": "受理、开始、支持修订与实际回复分别记录。"
+        },
+        {
+          "id": "3:1007",
+          "text": "CORR-1"
+        },
+        {
+          "id": "3:1009",
+          "text": "SUPPORT-01"
+        },
+        {
+          "id": "3:1011",
+          "text": "absent / revision 2"
+        },
+        {
+          "id": "3:1014",
+          "text": "REPLY"
+        },
+        {
+          "id": "3:1016",
+          "text": "SUPPORT-01"
+        },
+        {
+          "id": "3:1018",
+          "text": "CASE-SYN-09"
+        },
+        {
+          "id": "3:1076",
+          "text": "提交者可见结论"
+        },
+        {
+          "id": "I3:1083;3:1079",
+          "text": "提交者可见回复（必填）"
+        },
+        {
+          "id": "I3:1083;3:1081",
+          "text": "已收到并核对此案，后续指引见本回复"
+        },
+        {
+          "id": "I3:1088;2:161",
+          "text": "保存回复"
+        },
+        {
+          "id": "I3:1090;2:161",
+          "text": "取消回复编辑"
+        },
+        {
+          "id": "3:1079",
+          "text": "提交者可见回复（必填）"
+        },
+        {
+          "id": "3:1081",
+          "text": "已收到并核对此案，后续指引见本回复"
+        },
+        {
+          "id": "3:1143",
+          "text": "回复与审计"
+        },
+        {
+          "id": "3:1144",
+          "text": "已收到并核对此案，后续指引见本回复。"
+        },
+        {
+          "id": "3:1145",
+          "text": "REPLY · SUPPORT-01 · CASE-SYN-09。没有CORR写入，不制造出席纠错。"
+        },
+        {
+          "id": "3:1189",
+          "text": "核对后形成新意图"
+        },
+        {
+          "id": "3:1190",
+          "text": "本人核对当前事实后再确认，不能静默覆盖或借其他对象版本猜本次成功。"
+        },
+        {
+          "id": "I3:1197;3:1193",
+          "text": "当前revision"
+        },
+        {
+          "id": "I3:1197;3:1195",
+          "text": "2"
+        },
+        {
+          "id": "I3:1206;3:1202",
+          "text": "本地选择"
+        },
+        {
+          "id": "I3:1206;3:1204",
+          "text": "absent"
+        },
+        {
+          "id": "I3:1215;3:1211",
+          "text": "原因（保留）"
+        },
+        {
+          "id": "I3:1215;3:1213",
+          "text": "核对本案材料后确认未出席"
+        },
+        {
+          "id": "3:1220",
+          "text": "本次没有覆盖新版本，原因和选择保留。"
+        },
+        {
+          "id": "3:1193",
+          "text": "当前revision"
+        },
+        {
+          "id": "3:1195",
+          "text": "2"
+        },
+        {
+          "id": "3:1202",
+          "text": "本地选择"
+        },
+        {
+          "id": "3:1204",
+          "text": "absent"
+        },
+        {
+          "id": "3:1211",
+          "text": "原因（保留）"
+        },
+        {
+          "id": "3:1213",
+          "text": "核对本案材料后确认未出席"
+        },
+        {
+          "id": "3:1278",
+          "text": "重新验证本案权限"
+        },
+        {
+          "id": "3:1279",
+          "text": "事项事实和写入口已清除。"
+        },
+        {
+          "id": "3:1280",
+          "text": "分析者统计权限不包含支持操作；已知caseId也不代表可读取本案。"
+        }
+      ],
+      "actions": [
+        {
+          "source": "3:495",
+          "label": "Action / 开始处理此案",
+          "type": "NODE",
+          "destinationId": "3:526",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        },
+        {
+          "source": "3:583",
+          "label": "Action / 追加逾期纠错",
+          "type": "NODE",
+          "destinationId": "3:610",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        },
+        {
+          "source": "3:585",
+          "label": "Action / 仅回复本案",
+          "type": "NODE",
+          "destinationId": "3:1037",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        },
+        {
+          "source": "3:681",
+          "label": "Action / 追加修订并核对影响",
+          "type": "NODE",
+          "destinationId": "3:781",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        },
+        {
+          "source": "3:683",
+          "label": "Action / 取消本次修改",
+          "type": "NODE",
+          "destinationId": "3:526",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        },
+        {
+          "source": "3:761",
+          "label": "Action / 返回个案",
+          "type": "NODE",
+          "destinationId": "3:526",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        },
+        {
+          "source": "3:839",
+          "label": "Action / 回复并记录处理结果",
+          "type": "NODE",
+          "destinationId": "3:867",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        },
+        {
+          "source": "3:841",
+          "label": "Action / 返回本案",
+          "type": "NODE",
+          "destinationId": "3:526",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        },
+        {
+          "source": "3:919",
+          "label": "Action / 保存处理结果与回复",
+          "type": "NODE",
+          "destinationId": "3:936",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        },
+        {
+          "source": "3:921",
+          "label": "Action / 取消回复编辑",
+          "type": "NODE",
+          "destinationId": "3:526",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        },
+        {
+          "source": "3:1088",
+          "label": "Action / 保存回复",
+          "type": "NODE",
+          "destinationId": "3:1104",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        },
+        {
+          "source": "3:1090",
+          "label": "Action / 取消回复编辑",
+          "type": "NODE",
+          "destinationId": "3:526",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        }
+      ]
+    },
+    {
+      "id": "3:430",
+      "name": "SUPPORT-0.1.0-dev.1 / case",
+      "width": 1440,
+      "height": 1000,
+      "text": [
+        {
+          "id": "I3:431;2:6",
+          "text": "Fancy"
+        },
+        {
+          "id": "I3:431;2:8",
+          "text": "/"
+        },
+        {
+          "id": "I3:431;2:10",
+          "text": "支持个案"
+        },
+        {
+          "id": "I3:431;2:16",
+          "text": "EN"
+        },
+        {
+          "id": "3:445",
+          "text": "查看事实，留下处理依据"
+        },
+        {
+          "id": "3:446",
+          "text": "CASE-SYN-09 · Support · 本案授权/MFA有效 · Received"
+        },
+        {
+          "id": "I3:497;3:469",
+          "text": "本案必要事实"
+        },
+        {
+          "id": "I3:497;3:470",
+          "text": "仅展示此案处理所需信息"
+        },
+        {
+          "id": "I3:497;3:471",
+          "text": "scheduledEndAt：2026-10-10T20:00:00Z（London 21:00 BST）"
+        },
+        {
+          "id": "I3:497;3:472",
+          "text": "开始资格名单内；饭局未取消。"
+        },
+        {
+          "id": "I3:497;3:475",
+          "text": "mealId"
+        },
+        {
+          "id": "I3:497;3:477",
+          "text": "subjectId"
+        },
+        {
+          "id": "I3:497;3:479",
+          "text": "revision"
+        },
+        {
+          "id": "I3:497;3:482",
+          "text": "M-SYN-09"
+        },
+        {
+          "id": "I3:497;3:484",
+          "text": "U-203"
+        },
+        {
+          "id": "I3:497;3:486",
+          "text": "1"
+        },
+        {
+          "id": "I3:497;3:489",
+          "text": "本人原报告：absent"
+        },
+        {
+          "id": "I3:497;3:491",
+          "text": "host原报告：present"
+        },
+        {
+          "id": "I3:497;3:493",
+          "text": "当前有效：absent"
+        },
+        {
+          "id": "I3:497;3:495;2:161",
+          "text": "开始处理此案"
+        }
+      ],
+      "actions": [
+        {
+          "source": "I3:497;3:495",
+          "label": "Action / 开始处理此案",
+          "type": "NODE",
+          "destinationId": "3:526",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        }
+      ]
+    },
+    {
+      "id": "3:526",
+      "name": "SUPPORT-0.1.0-dev.1 / active",
+      "width": 1440,
+      "height": 1000,
+      "text": [
+        {
+          "id": "I3:527;2:6",
+          "text": "Fancy"
+        },
+        {
+          "id": "I3:527;2:8",
+          "text": "/"
+        },
+        {
+          "id": "I3:527;2:10",
+          "text": "支持个案"
+        },
+        {
+          "id": "I3:527;2:16",
+          "text": "EN"
+        },
+        {
+          "id": "3:541",
+          "text": "处理此案"
+        },
+        {
+          "id": "3:542",
+          "text": "CASE-SYN-09 · In progress · 仍为本案授权"
+        },
+        {
+          "id": "I3:587;3:565",
+          "text": "核对最小事实"
+        },
+        {
+          "id": "I3:587;3:566",
+          "text": "计划结束满连续7天后才可追加支持逾期修订；窗口内仍走自助报告。"
+        },
+        {
+          "id": "I3:587;3:567",
+          "text": "举报处理可只回复；删除实际执行归J08。"
+        },
+        {
+          "id": "I3:587;3:570",
+          "text": "M-SYN-09"
+        },
+        {
+          "id": "I3:587;3:572",
+          "text": "U-203"
+        },
+        {
+          "id": "I3:587;3:574",
+          "text": "expectedVersion 1"
+        },
+        {
+          "id": "I3:587;3:577",
+          "text": "self absent"
+        },
+        {
+          "id": "I3:587;3:579",
+          "text": "host present"
+        },
+        {
+          "id": "I3:587;3:581",
+          "text": "有效absent"
+        },
+        {
+          "id": "I3:587;3:583;2:161",
+          "text": "追加逾期纠错"
+        },
+        {
+          "id": "I3:587;3:585;2:161",
+          "text": "仅回复本案"
+        }
+      ],
+      "actions": [
+        {
+          "source": "I3:587;3:583",
+          "label": "Action / 追加逾期纠错",
+          "type": "NODE",
+          "destinationId": "3:610",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        },
+        {
+          "source": "I3:587;3:585",
+          "label": "Action / 仅回复本案",
+          "type": "NODE",
+          "destinationId": "3:1037",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        }
+      ]
+    },
+    {
+      "id": "3:610",
+      "name": "SUPPORT-0.1.0-dev.1 / correction",
+      "width": 1440,
+      "height": 1000,
+      "text": [
+        {
+          "id": "I3:611;2:6",
+          "text": "Fancy"
+        },
+        {
+          "id": "I3:611;2:8",
+          "text": "/"
+        },
+        {
+          "id": "I3:611;2:10",
+          "text": "支持个案"
+        },
+        {
+          "id": "I3:611;2:16",
+          "text": "EN"
+        },
+        {
+          "id": "3:625",
+          "text": "追加支持修订"
+        },
+        {
+          "id": "3:626",
+          "text": "CASE-SYN-09 · M-SYN-09 · U-203 · expectedVersion 1"
+        },
+        {
+          "id": "I3:685;3:649",
+          "text": "本次修订"
+        },
+        {
+          "id": "I3:685;3:650",
+          "text": "窗口结束：2026-10-17T20:00:00.000Z；当前恰好满7天。"
+        },
+        {
+          "id": "I3:685;3:651",
+          "text": "保留本人及发起人的原始报告，支持修订另行记录。"
+        },
+        {
+          "id": "I3:685;3:658;4:776",
+          "text": "明确出席结果"
+        },
+        {
+          "id": "I3:685;3:658;4:780",
+          "text": "未出席"
+        },
+        {
+          "id": "I3:685;3:667;3:663",
+          "text": "纠错原因（必填）"
+        },
+        {
+          "id": "I3:685;3:667;3:665",
+          "text": "核对本案材料后确认未出席"
+        },
+        {
+          "id": "I3:685;3:676;3:672",
+          "text": "期望版本"
+        },
+        {
+          "id": "I3:685;3:676;3:674",
+          "text": "1"
+        },
+        {
+          "id": "I3:685;3:681;2:161",
+          "text": "追加修订并核对影响"
+        },
+        {
+          "id": "I3:685;3:683;2:161",
+          "text": "取消本次修改"
+        }
+      ],
+      "actions": [
+        {
+          "source": "I3:685;3:681",
+          "label": "Action / 追加修订并核对影响",
+          "type": "NODE",
+          "destinationId": "3:781",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        },
+        {
+          "source": "I3:685;3:683",
+          "label": "Action / 取消本次修改",
+          "type": "NODE",
+          "destinationId": "3:526",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        }
+      ]
+    },
+    {
+      "id": "3:707",
+      "name": "SUPPORT-0.1.0-dev.1 / window",
+      "width": 1440,
+      "height": 1000,
+      "text": [
+        {
+          "id": "I3:708;2:6",
+          "text": "Fancy"
+        },
+        {
+          "id": "I3:708;2:8",
+          "text": "/"
+        },
+        {
+          "id": "I3:708;2:10",
+          "text": "支持个案"
+        },
+        {
+          "id": "I3:708;2:16",
+          "text": "EN"
+        },
+        {
+          "id": "3:722",
+          "text": "仍在自助窗口内"
+        },
+        {
+          "id": "3:723",
+          "text": "409 CORRECTION_WINDOW_OPEN · 本案仍有授权"
+        },
+        {
+          "id": "I3:763;3:746",
+          "text": "本次不能执行逾期纠错"
+        },
+        {
+          "id": "I3:763;3:747",
+          "text": "原因和选择保留。达到边界后仍需重新验证窗口、名单、取消事实与版本。"
+        },
+        {
+          "id": "I3:763;3:750",
+          "text": "当前UTC"
+        },
+        {
+          "id": "I3:763;3:752",
+          "text": "窗口结束UTC"
+        },
+        {
+          "id": "I3:763;3:755",
+          "text": "2026-10-17T19:59:59.999Z"
+        },
+        {
+          "id": "I3:763;3:757",
+          "text": "2026-10-17T20:00:00.000Z"
+        },
+        {
+          "id": "I3:763;3:759",
+          "text": "当前为结束后7天前1毫秒，未追加修订。"
+        },
+        {
+          "id": "I3:763;3:761;2:161",
+          "text": "返回个案"
+        }
+      ],
+      "actions": [
+        {
+          "source": "I3:763;3:761",
+          "label": "Action / 返回个案",
+          "type": "NODE",
+          "destinationId": "3:526",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        }
+      ]
+    },
+    {
+      "id": "3:781",
+      "name": "SUPPORT-0.1.0-dev.1 / impact",
+      "width": 1440,
+      "height": 1000,
+      "text": [
+        {
+          "id": "I3:782;2:6",
+          "text": "Fancy"
+        },
+        {
+          "id": "I3:782;2:8",
+          "text": "/"
+        },
+        {
+          "id": "I3:782;2:10",
+          "text": "支持个案"
+        },
+        {
+          "id": "I3:782;2:16",
+          "text": "EN"
+        },
+        {
+          "id": "3:796",
+          "text": "修订已追加，核对业务影响"
+        },
+        {
+          "id": "3:797",
+          "text": "CASE-SYN-09 · SUPPORT · revision 2 · CORR-1"
+        },
+        {
+          "id": "I3:843;3:820",
+          "text": "资格与新统计"
+        },
+        {
+          "id": "I3:843;3:821",
+          "text": "本例原self absent/host present，支持核对仍absent；状态继续不适用，并非本次从可用变失效。"
+        },
+        {
+          "id": "I3:843;3:822",
+          "text": "另一有效共同场次及双方有效同意的联系保持，不误伤其他依据；不复活已撤回/拉黑同意。"
+        },
+        {
+          "id": "I3:843;3:823",
+          "text": "旧snapshot SYN-BEFORE保留原asOf；新snapshot SYN-AFTER-2依据本次修订生成。"
+        },
+        {
+          "id": "I3:843;3:826",
+          "text": "公开个人评价"
+        },
+        {
+          "id": "I3:843;3:828",
+          "text": "单场体验统计"
+        },
+        {
+          "id": "I3:843;3:830",
+          "text": "仅依赖本场的联系"
+        },
+        {
+          "id": "I3:843;3:833",
+          "text": "不公开"
+        },
+        {
+          "id": "I3:843;3:835",
+          "text": "排除"
+        },
+        {
+          "id": "I3:843;3:837",
+          "text": "暂停新发送，历史保留"
+        },
+        {
+          "id": "I3:843;3:839;2:161",
+          "text": "回复并记录处理结果"
+        },
+        {
+          "id": "I3:843;3:841;2:161",
+          "text": "返回本案"
+        }
+      ],
+      "actions": [
+        {
+          "source": "I3:843;3:839",
+          "label": "Action / 回复并记录处理结果",
+          "type": "NODE",
+          "destinationId": "3:867",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        },
+        {
+          "source": "I3:843;3:841",
+          "label": "Action / 返回本案",
+          "type": "NODE",
+          "destinationId": "3:526",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        }
+      ]
+    },
+    {
+      "id": "3:867",
+      "name": "SUPPORT-0.1.0-dev.1 / reply",
+      "width": 1440,
+      "height": 1000,
+      "text": [
+        {
+          "id": "I3:868;2:6",
+          "text": "Fancy"
+        },
+        {
+          "id": "I3:868;2:8",
+          "text": "/"
+        },
+        {
+          "id": "I3:868;2:10",
+          "text": "支持个案"
+        },
+        {
+          "id": "I3:868;2:16",
+          "text": "EN"
+        },
+        {
+          "id": "3:882",
+          "text": "回复并记录处理结果"
+        },
+        {
+          "id": "3:883",
+          "text": "CASE-SYN-09 · In progress · 已有CORR-1"
+        },
+        {
+          "id": "I3:923;3:906",
+          "text": "提交者可见结论"
+        },
+        {
+          "id": "I3:923;3:907",
+          "text": "仅本案可公开结论或下一步；不包含他人举报、聊天、私密意愿或内部调查材料。"
+        },
+        {
+          "id": "I3:923;3:914;3:910",
+          "text": "提交者可见回复（必填）"
+        },
+        {
+          "id": "I3:923;3:914;3:912",
+          "text": "已核对本案记录并记录适用处理结果"
+        },
+        {
+          "id": "I3:923;3:919;2:161",
+          "text": "保存处理结果与回复"
+        },
+        {
+          "id": "I3:923;3:921;2:161",
+          "text": "取消回复编辑"
+        }
+      ],
+      "actions": [
+        {
+          "source": "I3:923;3:919",
+          "label": "Action / 保存处理结果与回复",
+          "type": "NODE",
+          "destinationId": "3:936",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        },
+        {
+          "source": "I3:923;3:921",
+          "label": "Action / 取消回复编辑",
+          "type": "NODE",
+          "destinationId": "3:526",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        }
+      ]
+    },
+    {
+      "id": "3:936",
+      "name": "SUPPORT-0.1.0-dev.1 / replied",
+      "width": 1440,
+      "height": 1000,
+      "text": [
+        {
+          "id": "I3:937;2:6",
+          "text": "Fancy"
+        },
+        {
+          "id": "I3:937;2:8",
+          "text": "/"
+        },
+        {
+          "id": "I3:937;2:10",
+          "text": "支持个案"
+        },
+        {
+          "id": "I3:937;2:16",
+          "text": "EN"
+        },
+        {
+          "id": "3:951",
+          "text": "处理结果与回复已保存"
+        },
+        {
+          "id": "3:952",
+          "text": "CASE-SYN-09 · Replied"
+        },
+        {
+          "id": "I3:977;3:975",
+          "text": "提交者可见回复"
+        },
+        {
+          "id": "I3:977;3:976",
+          "text": "已核对本案记录并记录适用处理结果。"
+        },
+        {
+          "id": "I3:1019;3:1002",
+          "text": "修订与审计"
+        },
+        {
+          "id": "I3:1019;3:1003",
+          "text": "原始self absent / host present保留；case/actor/reason/time/version及原意图可追踪。"
+        },
+        {
+          "id": "I3:1019;3:1004",
+          "text": "受理、开始、支持修订与实际回复分别记录。"
+        },
+        {
+          "id": "I3:1019;3:1007",
+          "text": "CORR-1"
+        },
+        {
+          "id": "I3:1019;3:1009",
+          "text": "SUPPORT-01"
+        },
+        {
+          "id": "I3:1019;3:1011",
+          "text": "absent / revision 2"
+        },
+        {
+          "id": "I3:1019;3:1014",
+          "text": "REPLY"
+        },
+        {
+          "id": "I3:1019;3:1016",
+          "text": "SUPPORT-01"
+        },
+        {
+          "id": "I3:1019;3:1018",
+          "text": "CASE-SYN-09"
+        }
+      ],
+      "actions": []
+    },
+    {
+      "id": "3:1037",
+      "name": "SUPPORT-0.1.0-dev.1 / replyonly",
+      "width": 1440,
+      "height": 1000,
+      "text": [
+        {
+          "id": "I3:1038;2:6",
+          "text": "Fancy"
+        },
+        {
+          "id": "I3:1038;2:8",
+          "text": "/"
+        },
+        {
+          "id": "I3:1038;2:10",
+          "text": "支持个案"
+        },
+        {
+          "id": "I3:1038;2:16",
+          "text": "EN"
+        },
+        {
+          "id": "3:1052",
+          "text": "仅回复本案"
+        },
+        {
+          "id": "3:1053",
+          "text": "CASE-SYN-09 · In progress · 不追加出席修订"
+        },
+        {
+          "id": "I3:1092;3:1076",
+          "text": "提交者可见结论"
+        },
+        {
+          "id": "I3:1092;3:1083;3:1079",
+          "text": "提交者可见回复（必填）"
+        },
+        {
+          "id": "I3:1092;3:1083;3:1081",
+          "text": "已收到并核对此案，后续指引见本回复"
+        },
+        {
+          "id": "I3:1092;3:1088;2:161",
+          "text": "保存回复"
+        },
+        {
+          "id": "I3:1092;3:1090;2:161",
+          "text": "取消回复编辑"
+        }
+      ],
+      "actions": [
+        {
+          "source": "I3:1092;3:1088",
+          "label": "Action / 保存回复",
+          "type": "NODE",
+          "destinationId": "3:1104",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        },
+        {
+          "source": "I3:1092;3:1090",
+          "label": "Action / 取消回复编辑",
+          "type": "NODE",
+          "destinationId": "3:526",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false
+        }
+      ]
+    },
+    {
+      "id": "3:1104",
+      "name": "SUPPORT-0.1.0-dev.1 / replyonlydone",
+      "width": 1440,
+      "height": 1000,
+      "text": [
+        {
+          "id": "I3:1105;2:6",
+          "text": "Fancy"
+        },
+        {
+          "id": "I3:1105;2:8",
+          "text": "/"
+        },
+        {
+          "id": "I3:1105;2:10",
+          "text": "支持个案"
+        },
+        {
+          "id": "I3:1105;2:16",
+          "text": "EN"
+        },
+        {
+          "id": "3:1119",
+          "text": "回复已保存"
+        },
+        {
+          "id": "3:1120",
+          "text": "CASE-SYN-09 · Replied · 无出席修订"
+        },
+        {
+          "id": "I3:1146;3:1143",
+          "text": "回复与审计"
+        },
+        {
+          "id": "I3:1146;3:1144",
+          "text": "已收到并核对此案，后续指引见本回复。"
+        },
+        {
+          "id": "I3:1146;3:1145",
+          "text": "REPLY · SUPPORT-01 · CASE-SYN-09。没有CORR写入，不制造出席纠错。"
+        }
+      ],
+      "actions": []
+    },
+    {
+      "id": "3:1150",
+      "name": "SUPPORT-0.1.0-dev.1 / conflict",
+      "width": 1440,
+      "height": 1000,
+      "text": [
+        {
+          "id": "I3:1151;2:6",
+          "text": "Fancy"
+        },
+        {
+          "id": "I3:1151;2:8",
+          "text": "/"
+        },
+        {
+          "id": "I3:1151;2:10",
+          "text": "支持个案"
+        },
+        {
+          "id": "I3:1151;2:16",
+          "text": "EN"
+        },
+        {
+          "id": "3:1165",
+          "text": "记录已发生变化"
+        },
+        {
+          "id": "3:1166",
+          "text": "409 · 当前合法版本已加载 · 本案权限仍需重验"
+        },
+        {
+          "id": "I3:1221;3:1189",
+          "text": "核对后形成新意图"
+        },
+        {
+          "id": "I3:1221;3:1190",
+          "text": "本人核对当前事实后再确认，不能静默覆盖或借其他对象版本猜本次成功。"
+        },
+        {
+          "id": "I3:1221;3:1197;3:1193",
+          "text": "当前revision"
+        },
+        {
+          "id": "I3:1221;3:1197;3:1195",
+          "text": "2"
+        },
+        {
+          "id": "I3:1221;3:1206;3:1202",
+          "text": "本地选择"
+        },
+        {
+          "id": "I3:1221;3:1206;3:1204",
+          "text": "absent"
+        },
+        {
+          "id": "I3:1221;3:1215;3:1211",
+          "text": "原因（保留）"
+        },
+        {
+          "id": "I3:1221;3:1215;3:1213",
+          "text": "核对本案材料后确认未出席"
+        },
+        {
+          "id": "I3:1221;3:1220",
+          "text": "本次没有覆盖新版本，原因和选择保留。"
+        }
+      ],
+      "actions": []
+    },
+    {
+      "id": "3:1239",
+      "name": "SUPPORT-0.1.0-dev.1 / denied",
+      "width": 1440,
+      "height": 1000,
+      "text": [
+        {
+          "id": "I3:1240;2:6",
+          "text": "Fancy"
+        },
+        {
+          "id": "I3:1240;2:8",
+          "text": "/"
+        },
+        {
+          "id": "I3:1240;2:10",
+          "text": "支持个案"
+        },
+        {
+          "id": "I3:1240;2:16",
+          "text": "EN"
+        },
+        {
+          "id": "3:1254",
+          "text": "无权查看此个案"
+        },
+        {
+          "id": "3:1255",
+          "text": "403 · 身份/MFA或本案授权无效"
+        },
+        {
+          "id": "I3:1281;3:1278",
+          "text": "重新验证本案权限"
+        },
+        {
+          "id": "I3:1281;3:1279",
+          "text": "事项事实和写入口已清除。"
+        },
+        {
+          "id": "I3:1281;3:1280",
+          "text": "分析者统计权限不包含支持操作；已知caseId也不代表可读取本案。"
+        }
+      ],
+      "actions": []
+    }
+  ]
+}

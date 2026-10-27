@@ -1,0 +1,66 @@
+{
+  "revision": "r11",
+  "date": "2026-10-27",
+  "baseline": "9c669f5 plus exact author repair manifests listed below",
+  "status": "three-independent-design-scope-rechecks-passed",
+  "versions": [
+    {
+      "id": "ADMIN-0.1.0-dev.1",
+      "reviewer": "PJ-ROOT independent of UX-3 author",
+      "designDecision": "passed-for-version-development-design",
+      "closedFinding": "R11-A01",
+      "inputManifestSHA256": "3d0d1a36bfe6788e1892d9411ef537ad5b7efeedc0f9b27b8003b516f22dea42",
+      "figmaFileKey": "EwpDxDGeTJEF3PYMYLH8eP",
+      "method": "Actual public Figma prototype browser clicks, native state inspection and source-derived visual comparison",
+      "actualClickEvidence": [
+        "Public prototype metric to definition to M-062 to U-002 and return clicked",
+        "Query draft select 28 days to selected 42:3547 to apply 9:2; cancel retains query",
+        "Recovered snapshot02 definition 38:3328 closes to22:2620, not snapshot01"
+      ],
+      "implementationAuthorized": false,
+      "serviceQA": "NOT_RUN",
+      "arbitraryInputMatrix": "NOT_RUN",
+      "engineeringReview": "required; design pass is not an engineering-plan signature"
+    },
+    {
+      "id": "ADMIN-0.1.0-dev.2",
+      "reviewer": "PJ-ROOT independent of UX-3 author",
+      "designDecision": "passed-for-version-development-design",
+      "closedFinding": "R11-A02",
+      "inputManifestSHA256": "3e28d4621116c86bb9da6d733449c43e7ac9f92e6ce4129cd3f05a511dc2dac0",
+      "figmaFileKey": "gin01YJX9boaVymXsm1zJg",
+      "method": "Actual public Figma prototype browser clicks, native state inspection and source-derived visual comparison",
+      "actualClickEvidence": [
+        "Conflict original revision2 to explicit INTENT-2/expected2 to revision3; statistics not yet ready",
+        "Cancel preserves staff revision2",
+        "Normal save to original-result lookup to statistics-only retry to SYN-C2 to same-definition/range CSV specimen"
+      ],
+      "implementationAuthorized": false,
+      "serviceQA": "NOT_RUN",
+      "arbitraryInputMatrix": "NOT_RUN",
+      "engineeringReview": "required; design pass is not an engineering-plan signature"
+    },
+    {
+      "id": "SUPPORT-0.1.0-dev.1",
+      "reviewer": "PJ-ROOT independent of UX-3 author",
+      "designDecision": "passed-for-version-development-design",
+      "closedFinding": "R11-S01",
+      "inputManifestSHA256": "327124eb54b6adafba167eebf2ab66ba3383614945fc714b501ac1ed210ef239",
+      "figmaFileKey": "mCBDxN4qzTbCGCx9UIPbwW",
+      "method": "Actual public Figma prototype browser clicks, native state inspection and source-derived visual comparison",
+      "actualClickEvidence": [
+        "Conflict to explicit CORR-2/expected2 to revision3 while original self absent/host present remain",
+        "Cancel preserves revision2 and effective absent",
+        "Correction impact reply saved with CORR-1 and REPLY; reply-only final explicitly has no CORR"
+      ],
+      "implementationAuthorized": false,
+      "serviceQA": "NOT_RUN",
+      "arbitraryInputMatrix": "NOT_RUN",
+      "engineeringReview": "required; design pass is not an engineering-plan signature"
+    }
+  ],
+  "initialBrowserAttempt": "Present buttons required signup; direct public /proto entry worked without registration or credentials",
+  "unchangedQueryObservation": "Initial Apply disabled before selecting draft was observed; selecting28days then applying passed. Not misclassified as a product defect.",
+  "sourceVisualRule": "MVP visual structure retained; required state/recovery additions use existing controls and panels; no new visual direction.",
+  "requirementBoundary": "Frozen PRD/coverage remain business authority; representative paths plus explicit contracts cover service-only combinations. Real identity, workers, CSV service and production data are not certified by Figma."
+}

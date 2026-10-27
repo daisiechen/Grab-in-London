@@ -1,0 +1,328 @@
+{
+  "review": "r11-independent-ios34-design-review",
+  "baselineCommit": "6675dc5",
+  "branch": "codex/r11-design-review-release-plan",
+  "reviewer": "UX-1 (not I3/I4 author)",
+  "scope": [
+    "IOS-0.1.0-dev.3 / J03/J04/J06",
+    "IOS-0.1.0-dev.4 / J07/J08"
+  ],
+  "inputSHA256": {
+    "docs/product/journeys/j03/requirements.zh-CN.md": "c1c04088090495498d995e73f1cf7c1a74e8af2c5bf3e09f4fb3cda142876ca6",
+    "docs/product/journeys/j04/requirements.zh-CN.md": "8172b103c759b19b6b70a2dea946bd50cc7286405a31dc73b4012cf169da72a7",
+    "docs/product/journeys/j06/requirements.zh-CN.md": "f61c525aa2cc344b274897146b602a1f42e28d49f20d2226be59e0bd1322c6f7",
+    "docs/product/journeys/j07/requirements.zh-CN.md": "5dd9c7a3dc993a621f288ad4f0ac977129ced8a9fd3db802c6f5e6b08fd8c2bd",
+    "docs/product/journeys/j08/requirements.zh-CN.md": "3f747817145b1c8574ba90ba886ebb5d72d3fd801911b99c9421ebef28193203",
+    "docs/design/r10/ios-0.1.0-dev.3/coverage.json": "137e737dfdfefb5214990a8ffedb57fc8d49c94898c9aabcb7462ade3398085f",
+    "docs/design/r10/ios-0.1.0-dev.3/state-contracts.zh-CN.md": "88405bc35500979f91e9084add3eb91eae0670ba875c428c523a24e566573da3",
+    "docs/design/r10/ios-0.1.0-dev.3/figma-readback.json": "6e4da0b5c7b020736ec3f6a872d7c4e229493405b79ff5e4e6b645ce98a57d4c",
+    "docs/design/r10/ios-0.1.0-dev.3/artifact-manifest.json": "935ea61db89e664381d1711c2ca9e03cf0b2ad9ecf19d8d4e034a780971b9b24",
+    "docs/design/r10/ios-0.1.0-dev.4/coverage.json": "5ed15e1f3ecfa0d9afe562a0e788818bb77d3f4ce3d6af53aa7eacf4841703f8",
+    "docs/design/r10/ios-0.1.0-dev.4/state-contracts.zh-CN.md": "895f23b56bb3545125873a056d34072249e82d4c8d5619633f01c1b3933e94af",
+    "docs/design/r10/ios-0.1.0-dev.4/figma-readback.json": "739aaa8153c28a9371b40264f102d0b55a4ea1f9623aee111db502e900671515",
+    "docs/design/r10/ios-0.1.0-dev.4/artifact-manifest.json": "d8f7181afc6c12330677e8783c0451aea6933040fa299c3c95a3e45789752ad8"
+  },
+  "files": {
+    "I3": "mKXV0NvBavRb6fnmQ2g2xV",
+    "I4": "TxashjRfQDvnc4jQieeaWu"
+  },
+  "methods": {
+    "requirements": "All five PRDs and coverage mapping rows read; PM inherited source-unit counts do not by themselves prove UI completeness.",
+    "liveFigma": "All 5 pages read live, frame text and reactions checked; targeted screenshots of normal/read-only/form/consent states actually viewed.",
+    "visual": "Compared stored actual v13 source chat, feedback and independent survey screenshots with new live Figma at393×852; original card/sheet/typography direction retained. Excluded shell, dynamic clock, pointer and platform emoji. J08 is a necessary new business flow absent source MVP, assessed within original patterns.",
+    "presentation": "Actual Browser Use Presentation completed without login: Inbox→group settings→leave cancel/confirm→archive; top Back reopened old leave sheet. Attendance→score4/save→public feedback→Save receipt; external mutual flow→private chat→withdraw→read-only (no Send clicked). Survey Company→Save→Settings→reopen worked; actual Yes/No clicks did not register and blank save validated. I4 recheck is live graph/screenshots, no actual Presentation click claim.",
+    "serviceBoundary": "Real backend, device and QA were not run; absence of undeveloped service is not a design finding."
+  },
+  "result": "changes-required",
+  "findings": [
+    {
+      "id": "R11-I34-01",
+      "priority": "P1",
+      "status": "open",
+      "title": "群聊终态文档把饭局取消/结束误作群撤写",
+      "journey": "J03",
+      "requirements": "J03 §3/4/7; AC04/AC06",
+      "figmaNodes": [
+        "6:562"
+      ],
+      "reproductionSteps": [
+        "对照J03 PRD §3/4和I3 state-contracts只读/失败行",
+        "再读I3 coverage.stateContracts.J03[1]及画布合同6:562"
+      ],
+      "actual": "仓库两处均称“离群/饭局终态不发新消息、不展示实时名册”；画布却正确写cancellation/end does not close the group。",
+      "impact": "RD可能依交接错误地在取消或结束后关闭仍获授权群，与原需求直接冲突。",
+      "fixOwner": "UX-2 / ux_host_social",
+      "requestedFix": "统一文档、coverage和画布：只退群/解散/撤权关闭写区间；取消/结束不自动关群。",
+      "retestConditions": "检查取消和结束两种仍在群成员；仍可发送/查看当前授权名单；离群和解散仍只读。",
+      "evidenceMethod": "Live read-only Figma node/reaction inspection; relevant visible-state screenshots inspected. No claim of completed Presentation clicks or real service behavior."
+    },
+    {
+      "id": "R11-I34-02",
+      "priority": "P1",
+      "status": "closed-independent-design-recheck",
+      "title": "举报填稿后Cancel没有原型动作",
+      "journey": "J07",
+      "requirements": "J07 正常与取消路径2/3; J07-S02",
+      "figmaNodes": [
+        "4:78",
+        "4:152"
+      ],
+      "reproductionSteps": [
+        "成员2:4→举报4:2",
+        "选择Reason进入已填稿4:78",
+        "点击可见Cancel"
+      ],
+      "actual": "4:78截图清晰显示Cancel；该帧仅Send4:150有reaction，Cancel没有reaction。初始4:2的Cancel4:76反而有BACK。",
+      "impact": "必需取消路径在填稿后断开，无法核对保稿回原对象且零提交。",
+      "fixOwner": "UX-2 / ux_host_social",
+      "requestedFix": "给已填稿Cancel显式回原对象并保适用草稿；不以提交完成替代取消。",
+      "retestConditions": "从初始和填稿两状态分别Cancel；回Maya，报告数不变，重入仍有适用草稿。",
+      "evidenceMethod": "Live read-only Figma node/reaction inspection; relevant visible-state screenshots inspected. No claim of completed Presentation clicks or real service behavior.",
+      "recheck": {
+        "reviewer": "UX-1 / PJ-IOS1",
+        "method": "Independent live node/reaction readback + actual rendered screenshots",
+        "result": "pass",
+        "details": "Filled Cancel4:151→Maya15:72→Report15:113→draft4:78. NEEDS_SUPPORT5:304→14:97, Back14:131/Retry14:130→5:275; COMPLETEDContact14:178→14:138 Back14:172/Retry14:171→5:348. Pending remains5:307→5:182. Source UI visual preserved; exact email/mailto retained. No service claims."
+      }
+    },
+    {
+      "id": "R11-I34-03",
+      "priority": "P1",
+      "status": "closed-independent-design-recheck",
+      "title": "删除支持返回把已知NEEDS_SUPPORT倒退为PENDING",
+      "journey": "J08",
+      "requirements": "J08 最小回执/公开支持出口与返回; S04/S06",
+      "figmaNodes": [
+        "5:275",
+        "5:304",
+        "5:307",
+        "5:343",
+        "5:345",
+        "5:182"
+      ],
+      "reproductionSteps": [
+        "以外部worker前置打开NEEDS_SUPPORT5:275",
+        "Contact support5:304→未登录支持5:307",
+        "选择Back to deletion status5:345，或Retry saved receipt5:343"
+      ],
+      "actual": "两操作均固定NAVIGATE到PENDING5:182，不保持原NEEDS_SUPPORT。支持页为所有来源共用，没有来源状态条件。",
+      "impact": "进入/退出支持改变了已知业务状态；掩盖仍需支持的结果，违背只查原receipt、不改变worker事实。",
+      "fixOwner": "UX-2 / ux_host_social",
+      "requestedFix": "保存来源状态/查询状态，Back回原NEEDS_SUPPORT，Retry反映权威状态而非无条件Pending；COMPLETED来源同理。",
+      "retestConditions": "从PENDING/NEEDS_SUPPORT/COMPLETED各自进入并返回，状态不倒退；仅外部worker前置才能改变进度。",
+      "evidenceMethod": "Live read-only Figma node/reaction inspection; relevant visible-state screenshots inspected. No claim of completed Presentation clicks or real service behavior.",
+      "recheck": {
+        "reviewer": "UX-1 / PJ-IOS1",
+        "method": "Independent live node/reaction readback + actual rendered screenshots",
+        "result": "pass",
+        "details": "Filled Cancel4:151→Maya15:72→Report15:113→draft4:78. NEEDS_SUPPORT5:304→14:97, Back14:131/Retry14:130→5:275; COMPLETEDContact14:178→14:138 Back14:172/Retry14:171→5:348. Pending remains5:307→5:182. Source UI visual preserved; exact email/mailto retained. No service claims."
+      }
+    },
+    {
+      "id": "R11-I34-04",
+      "priority": "P1",
+      "status": "open",
+      "title": "离群/撤联系终态的通用BACK可回到旧写态",
+      "journey": "J03/J04",
+      "requirements": "J03 §4/7; J04 §5/7; AC04/AC07",
+      "figmaNodes": [
+        "6:252",
+        "6:264",
+        "6:174",
+        "6:248",
+        "6:129",
+        "7:907",
+        "7:919",
+        "7:850",
+        "7:903",
+        "7:766"
+      ],
+      "reproductionSteps": [
+        "正常进入群设置→确认离群→Left group6:252",
+        "顶部Back6:264使用BACK，回离群确认6:174；再Keep6:248用BACK可回旧当前群设置6:129",
+        "J04互选私聊→Withdraw→只读7:907；Back7:919回旧确认，Keep7:903可回旧OPEN私聊"
+      ],
+      "actual": "终态所有返回为无条件BACK，旧页面仍具有正常名册/发送原型动作；未发现membership/connection状态条件防止历史栈恢复写态。",
+      "impact": "代表原型把后退做成恢复已撤权限，不能作为只读终态/撤销交互的可审证据。此结论仅指设计原型，不断言未开发服务越权。",
+      "fixOwner": "UX-2 / ux_host_social",
+      "requestedFix": "终态Back显式去终态所属入口或用状态guard；历史返回始终只读。取消只适用于尚未确认的操作。",
+      "retestConditions": "真正点击确认后连续Back/Keep/设置，不可重新出现活跃发送/名册；J04不能靠Back恢复OPEN。",
+      "evidenceMethod": "Live read-only Figma node/reaction inspection; relevant visible-state screenshots inspected. No claim of completed Presentation clicks or real service behavior. Actual Presentation group top Back reopened old leave sheet, corroborating stale history navigation; no actual private Send clicked."
+    },
+    {
+      "id": "R11-I34-05",
+      "priority": "P1",
+      "status": "open",
+      "title": "填写公评同时隐式选择再约",
+      "journey": "J04",
+      "requirements": "J04 §3/4; AC02/AC03/AC06",
+      "figmaNodes": [
+        "7:228",
+        "7:304",
+        "7:310",
+        "7:311",
+        "7:334",
+        "7:417",
+        "7:418",
+        "7:425",
+        "7:440"
+      ],
+      "reproductionSteps": [
+        "已保存私评分7:228，reconnect checkbox7:311为白底未选",
+        "只点公评字段7:304→公评draft7:334",
+        "检查再约checkbox7:418及其reaction，再Save feedback"
+      ],
+      "actual": "公评字段跳转后checkbox由白底变forest选中；原checkbox/行均无reaction供用户主动选择或取消。Save进入private choice waiting7:440。",
+      "impact": "公评编辑代替本人私密再约同意，三对象独立要求被代表路径绕过。固定示例也不应以输入公评自动给独立同意。",
+      "fixOwner": "UX-2 / ux_host_social",
+      "requestedFix": "将公评draft与再约选择独立；只点checkbox才能选再约；公评only可保存且不创建选择，保持原布局。",
+      "retestConditions": "公评only、再约only、两项dirty三条代表反例；未点再约时checkbox始终未选、保存不称已选择。",
+      "evidenceMethod": "Live read-only Figma node/reaction inspection; relevant visible-state screenshots inspected. No claim of completed Presentation clicks or real service behavior."
+    },
+    {
+      "id": "R11-I34-06",
+      "priority": "P1",
+      "status": "open",
+      "title": "进入问卷更新自动选Yes，未保留原again=null",
+      "journey": "J06",
+      "requirements": "J06 §2/3; AC02/AC03",
+      "figmaNodes": [
+        "8:203",
+        "8:277",
+        "8:279",
+        "8:306",
+        "8:335",
+        "8:350"
+      ],
+      "reproductionSteps": [
+        "reason-only已存8:203，again为null",
+        "点Update answers8:277→8:279",
+        "未点Yes，检查8:306选中色及Save路径"
+      ],
+      "actual": "Update直接到Yes+Company选中样例；Yes/No控件本身无reaction，Save即去Yes已存8:350。",
+      "impact": "导航进入编辑成为自动代答；未主动选择Yes就能改原null答案。",
+      "fixOwner": "UX-2 / ux_host_social",
+      "requestedFix": "Update先带原确认值；Yes/No/null由实际选择控件触发，保留reason-only更新，不用进入编辑自动填Yes。",
+      "retestConditions": "reason-only→Update→无选择→取消/Save不把null改Yes；主动Yes、Clear再保存均按本人动作。",
+      "evidenceMethod": "Live read-only Figma node/reaction inspection; relevant visible-state screenshots inspected. No claim of completed Presentation clicks or real service behavior. Actual Presentation Yes/No controls did not register; Company reason saved and reopened."
+    },
+    {
+      "id": "R11-I34-07",
+      "priority": "P1",
+      "status": "open",
+      "title": "独立问卷未保存状态没有取消/返回出口",
+      "journey": "J06",
+      "requirements": "J06 §1/2; AC01/AC02",
+      "figmaNodes": [
+        "8:63",
+        "8:133",
+        "8:279"
+      ],
+      "reproductionSteps": [
+        "Settings8:14打开未答8:63",
+        "选择Company到8:133，或从已存进入8:279更新",
+        "寻找取消/返回Settings以保留最近确认答案"
+      ],
+      "actual": "三帧均无Cancel/Back控件reaction；截图顶部没有返回箭头，只有保存后帧有Back to Settings。",
+      "impact": "可选问卷变成保存前无法退出的死端，无法审查取消恢复确认值/首次取消零写入。",
+      "fixOwner": "UX-2 / ux_host_social",
+      "requestedFix": "沿原返回模式补可点击取消/返回；首次空白回Settings，编辑取消恢复已存值。",
+      "retestConditions": "未答、reason草稿、已有答案改稿三状态Cancel均可回Settings；重入读取原确认值，草稿未误保存。",
+      "evidenceMethod": "Live read-only Figma node/reaction inspection; relevant visible-state screenshots inspected. No claim of completed Presentation clicks or real service behavior."
+    },
+    {
+      "id": "R11-I34-08",
+      "priority": "P2",
+      "status": "open",
+      "title": "群AI草稿转入时静默丢失末句",
+      "journey": "J03",
+      "requirements": "J03 §5; AC07",
+      "figmaNodes": [
+        "6:349",
+        "6:423",
+        "6:498",
+        "6:500",
+        "6:544"
+      ],
+      "reproductionSteps": [
+        "原助手草稿6:423包含Please let the host know if your plans change.",
+        "Review→Replace with draft6:498→原消息框6:500",
+        "比较完整候选与转入文字"
+      ],
+      "actual": "候选为“Hi everyone! Shall we meet at The Little Table at 19:00? Please let the host know if your plans change.”；转入6:544仅保留第一问句，远低于2000限制。",
+      "impact": "用户批准的草稿被无提示截短，无法核对转入等于已审内容；代表Send继续发送缩短版。",
+      "fixOwner": "UX-2 / ux_host_social",
+      "requestedFix": "完整转入候选；如要展示人工修改，必须增加明确本人编辑动作，不能把转入本身当修改。",
+      "retestConditions": "逐字符比较候选→Replace→未发框；不自动发送；本人手动Send后内容一致。",
+      "evidenceMethod": "Live read-only Figma node/reaction inspection; relevant visible-state screenshots inspected. No claim of completed Presentation clicks or real service behavior."
+    },
+    {
+      "id": "R11-I34-09",
+      "priority": "P1",
+      "status": "open",
+      "title": "J03退席与host解散缺少可执行设计位置和结果表达",
+      "journey": "J03",
+      "requirements": "J03 §2/4/7; AC04/AC05/AC06",
+      "figmaNodes": [
+        "6:129",
+        "6:560",
+        "6:562"
+      ],
+      "reproductionSteps": [
+        "逐读J03-R04/R05/R06映射",
+        "检查整个J03原生帧与交接/state-contracts",
+        "定位guest开饭前退席和host当前群解散的真实用户动作/确认/返回"
+      ],
+      "actual": "只有独立Leave group整段路径。退席/解散/重入仅在大段合同提及；Group settings无host解散变体，View meal也无连线/目标设计说明；未给退席后仍在群、解散后全员只读的明确界面落点。coverage却把这些规则归入representative-native-prototype-and-state-contract。",
+      "impact": "后续worker无法据此区分三种操作的入口/确认/取消/结果，有回到把退席、退群、取消混为一谈的风险。",
+      "fixOwner": "UX-2 / ux_host_social",
+      "requestedFix": "不需做全矩阵；用原meal action/Group settings的最小角色变体及清楚交互规格补退席和host解散，或精确指向同版本已有目标节点；修正coverage深度。",
+      "retestConditions": "guest只能退席且开始前；确认后Seat Cancelled但群仍可写。host只能显式解散，确认后全员只读、席位不变；取消两者均无写入。",
+      "evidenceMethod": "Live read-only Figma node/reaction inspection; relevant visible-state screenshots inspected. No claim of completed Presentation clicks or real service behavior."
+    }
+  ],
+  "positiveChecks": [
+    "Left-group screen hides current members and explains unchanged meal participation.",
+    "Read-only private history contains no composer.",
+    "Three feedback objects visually separated; private score has no default and is independently saved.",
+    "Single-sided WAITING has no Open private chat promise.",
+    "Survey is independent Settings entry, no mealId/attendance/window gate and initial again has no default.",
+    "Deletion final confirmation starts unchecked; Pending says accepted not completed; support email exact and mailto contains only address.",
+    "Report Received explicitly distinguishes receipt from completed investigation."
+  ],
+  "limitations": [
+    "No assertion of real authorization/backend correctness.",
+    "Figma files mutable; evidence records baseline document hashes and live node IDs.",
+    "Actual Presentation scoped paths above; arbitrary input, I4 Presentation and real-service execution not claimed."
+  ],
+  "stages": {
+    "RD": "not-started",
+    "QA": "not-started"
+  },
+  "fixAuthority": "Original UX-2 only; PJ coordinates review and freeze. Reviewer did not mutate original artifacts.",
+  "presentation": {
+    "status": "completed",
+    "sources": [
+      "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV?node-id=13-14&starting-point-node-id=13%3A14",
+      "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV?node-id=2-62&starting-point-node-id=2%3A62",
+      "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV?node-id=8-14&starting-point-node-id=8%3A14"
+    ],
+    "noMessagesSent": true,
+    "surveyYesNoClickObserved": "no selected state; blank Save shows at least one item validation"
+  },
+  "versionRecheck": {
+    "IOS-0.1.0-dev.4": {
+      "independentReviewer": "UX-1 / PJ-IOS1",
+      "status": "design-scope-recheck-passed",
+      "closedFindings": [
+        "R11-I34-02",
+        "R11-I34-03"
+      ],
+      "boundary": "Reviewed I4 defects and source visual/state contracts; not final Owner approval, service QA or full arbitrary-input test. May proceed to this version development plan without waiting I3."
+    },
+    "IOS-0.1.0-dev.3": {
+      "status": "changes-required",
+      "independentRecheck": "pending-author-repair"
+    }
+  }
+}

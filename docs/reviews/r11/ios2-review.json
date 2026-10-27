@@ -1,0 +1,188 @@
+{
+  "review": "r11-independent-I2",
+  "baseline": "6675dc527ab0a0aa586e13e2cc13c2b235ec06bf",
+  "journey": "J02",
+  "iteration": "IOS-0.1.0-dev.2",
+  "decision": "CHANGES_REQUIRED",
+  "figma": {
+    "fileKey": "c04Fi5iarZm7gTPw4u2f7f",
+    "entry": "1:24",
+    "mutable": true
+  },
+  "issues": [
+    {
+      "id": "R11-I2-01",
+      "priority": "P1",
+      "owner": "UX-2",
+      "title": "共享外订/取消弹层改变来源审核、人数与声明事实",
+      "nodes": [
+        "1:719",
+        "1:853",
+        "1:880",
+        "1:948",
+        "3:3907",
+        "3:4117",
+        "3:4021",
+        "6:185",
+        "6:236"
+      ],
+      "steps": [
+        "Published显示1/4，仅host；点Host booking declaration（1:853）。",
+        "进入3:3907，底图却已2/4，Emma Confirmed且关键安排锁定。",
+        "从未批准的Applicants点Cancel（1:948）或DeclinedResult点Cancel（6:236），都进同一个已批准2人底图。",
+        "从已更新声明3:4021点Cancel，也退回旧Needs update声明底图。"
+      ],
+      "expected": "弹层与取消返回均保留来源人数、申请状态、永久锁定与最新声明；只有显式Approve改变成员事实。",
+      "evidenceType": "live-native-node-text-and-reactions",
+      "retest": "从未批准、已批准、已拒绝、声明已更新四种来源进入/Keep/返回；事实不变，只有本人批准才新增成员。"
+    },
+    {
+      "id": "R11-I2-02",
+      "priority": "P2",
+      "owner": "UX-2",
+      "title": "Review缺少用于核对分店的地址",
+      "nodes": [
+        "1:594",
+        "3:2365"
+      ],
+      "steps": [
+        "沿四步进入Review。",
+        "Place & time仅The Little Table · Soho与时间；所有原生文本读回均无街道地址。"
+      ],
+      "expected": "依PRD§5显式呈现许可地址，不能用区域Soho替代分店地址。",
+      "evidenceType": "live-native-text-and-screenshot-1:594",
+      "retest": "Review/ReviewReady及其恢复态显示与已选placeId对应的完整合成地址；不伪装真实provider已验证。"
+    },
+    {
+      "id": "R11-I2-03",
+      "priority": "P1",
+      "owner": "UX-2",
+      "title": "取消/拒绝终态的历史BACK可复活旧操作页",
+      "nodes": [
+        "3:4233",
+        "3:4295",
+        "3:4329",
+        "3:4389",
+        "6:185",
+        "6:245"
+      ],
+      "steps": [
+        "Applicants→CancelConfirm→Cancelled；Cancelled的Go back 3:4295为BACK，目的历史是仍可执行取消的确认页。",
+        "Applicants→Declined→Back to applications→DeclinedResult；6:245为BACK回Declined，3:4389再BACK回原可Approve/Decline的Pending页。"
+      ],
+      "expected": "发生业务终态后返回应指向保留最新事实的详情/列表；不能由历史导航恢复旧业务动作。",
+      "evidenceType": "live-native-BACK-reaction-and-history-sequence-not-Presentation-click",
+      "retest": "取消后返回/拒绝后多次返回始终保留终态，不能重新批准、重新取消或重开已完成草稿。"
+    },
+    {
+      "id": "R11-I2-04",
+      "priority": "P1",
+      "owner": "UX-2",
+      "title": "本人声明与最终条款确认长句重叠，影响知情确认",
+      "nodes": [
+        "1:551",
+        "1:563",
+        "1:560",
+        "1:687",
+        "1:690",
+        "1:693",
+        "4:164",
+        "3:2365"
+      ],
+      "steps": [
+        "实际Presentation滚动Costs与Review至复选框。",
+        "Costs尾句1:563与日期1:560均x1257/y1066附近，同一行覆盖。",
+        "Review cancellation terms 1:693与前句1:690均x1757/y1415附近，同一行覆盖。"
+      ],
+      "expected": "确认说明正常换行可读，链接文字不覆盖声明；unchecked Publish用既有禁用反馈。",
+      "evidenceType": "actual-Presentation-observation-and-live-native-bounding-box",
+      "retest": "Costs/CostsConfirmed、Review/ReviewReady在393宽完整阅读且不重叠；条款可独立打开，打开不自动勾选，未勾选不可发布。"
+    }
+  ],
+  "requirementReview": [
+    {
+      "id": "J02-R01",
+      "result": "身份复用J01，跨文件未联通；不是本包实际点击通过"
+    },
+    {
+      "id": "J02-R02",
+      "result": "选店固定样例+搜索恢复合同，许可provider未验证"
+    },
+    {
+      "id": "J02-R03",
+      "result": "伦敦48半小时/DST/人数/截止合同存在；DST选择原型未连动作，任意输入未验证"
+    },
+    {
+      "id": "J02-R04",
+      "result": "Introduce标题/描述及可选字段存在，AI保原/替换单独主动"
+    },
+    {
+      "id": "J02-R05",
+      "result": "Costs默认无Continue动作；显式勾选后可进Review；Review默认无Publish动作。地址缺项见02"
+    },
+    {
+      "id": "J02-R06",
+      "result": "Failed保稿同意图重试；Unknown先查原意图路径存在；真实幂等未验证"
+    },
+    {
+      "id": "J02-R07",
+      "result": "公开资料/批准/拒绝/首批准锁定代表态存在；来源与返回缺陷见01/03"
+    },
+    {
+      "id": "J02-R08",
+      "result": "截止不足取消和开始冻结/迟到合同存在；insufficient示例转通用Host reason终态，原因需保持系统insufficient"
+    },
+    {
+      "id": "J02-R09",
+      "result": "取消Keep用BACK保返回；成功终态历史返回见03；真实通知不验证"
+    },
+    {
+      "id": "J02-R10",
+      "result": "AI主动入口/转入/替换/保原/人工Review发布存在；真实模型成本TTL共享合同未运行"
+    }
+  ],
+  "validation": {
+    "liveNativeReadback": true,
+    "liveScreenshotViewed": [
+      "1:594"
+    ],
+    "sourceAndAuthorScreenshotsViewed": [
+      "old-review.png",
+      "old-arrange.png",
+      "figma-arrange.png"
+    ],
+    "visual": "旧MVP四步层级、字体、留白、地图和助手位置同态；硬件岛/平台glyph差异不判为重设计",
+    "presentation": "ACTUAL_REPRESENTATIVE_PATH_PASSED_WITH_OPEN_DEFECTS",
+    "actualFigmaClicksPassed": true,
+    "realServices": false,
+    "QAStarted": false,
+    "RDStarted": false,
+    "actualClickPath": [
+      "Arrange",
+      "Introduce",
+      "Costs unchecked blocked",
+      "Costs checked Continue",
+      "Review unchecked Publish blocked",
+      "Review checked Publish",
+      "Manage applications",
+      "Approve Emma",
+      "Update booking check and confirm 2 people",
+      "Cancel confirmation",
+      "Cancelled"
+    ],
+    "presentationObservedIssues": [
+      "Review Publish按钮未勾选时仍深绿色，但点击无效。",
+      "Costs与Review复选框长句重叠已由原生边界证实，见R11-I2-04。"
+    ]
+  },
+  "limits": [
+    "独立核对全部10条J02-R及10条AC消费映射；942条继承sourceUnits只核有映射/哈希，不声称逐条独立生产验收。",
+    "静态可编辑原型不运行任意日期、键盘、并发、事务、通知、provider或模型；documented-only与可点击代表态分开。"
+  ],
+  "inputSHA256": {
+    "docs/product/journeys/j02/requirements.zh-CN.md": "6a6211922d649a12899803721b709cb67f2e37e6bea428d804cee399d3df4299",
+    "docs/product/journeys/j02/coverage.json": "0224c28064d9da6382b8f5de0a037f4c542417c16234e57980f1e47203cce84f",
+    "demo/journeys/j02/index.html": "d876732ddbdc667816a473a91969464c6a49d574d3fc2fc745d207b8a68989bc",
+    "docs/design/r10/ios-0.1.0-dev.2/artifact-manifest.json": "531dea7a444125191a4aca4bd2b4fee16589f55039a09f51326d1c2336c71425"
+  }
+}
