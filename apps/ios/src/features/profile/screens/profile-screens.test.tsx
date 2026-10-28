@@ -1,4 +1,4 @@
-import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ProfileSetupScreen } from './ProfileSetupScreen.tsx';
 import { MyProfileScreen } from './MyProfileScreen.tsx';
 import { EditProfileScreen } from './EditProfileScreen.tsx';
