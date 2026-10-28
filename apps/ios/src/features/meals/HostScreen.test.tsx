@@ -5,6 +5,7 @@ import { mockRouter, resetRouter, routeParams } from '../../test/router.ts';
 import { ok, page } from '../../test/mock-fetch.ts';
 import { APP_ID, CONVERSATION_ID, MEAL_ID, application, meal, me, publicProfile } from '../../test/fixtures.ts';
 import { layout, mockContentGeometry } from '../create/reveal-test-utils.ts';
+import { editDraftKey } from '../create/CreateStepScreen.tsx';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
 jest.mock('expo-router', () => require('../../test/router.ts').expoRouterMock);
@@ -102,6 +103,25 @@ describe('HostScreen · Your guest list (J02-R07)', () => {
   it('a locked arrangement says to cancel and create a new meal', async () => {
     await setup({ arrangementLocked: true });
     expect(await screen.findByText(/locked after the first approval\. To change them, cancel and create a new meal\./)).toBeOnTheScreen();
+    expect(screen.queryByRole('button', { name: 'Edit meal' })).toBeNull();
+  });
+
+  it('offers “Edit meal” before the first approval and starts the edit from the current meal', async () => {
+    const app = await setup({ arrangementLocked: false, allowedActions: [...HOST_ACTIONS, 'EDIT'] });
+    await fireEvent.press(await screen.findByRole('button', { name: 'Edit meal' }));
+    expect(mockRouter.push).toHaveBeenCalledWith(`/meals/${MEAL_ID}/edit`);
+    expect(app.services.drafts.get<{ title: string; capacity: number }>(editDraftKey(MEAL_ID))).toMatchObject({ title: 'Sunday dinner', capacity: 4 });
+    expect(app.services.drafts.get('create')).toBeUndefined();
+  });
+
+  it.each([
+    ['locked', { arrangementLocked: true }],
+    ['cancelled', { status: 'CANCELLED' as const }],
+    ['past the deadline', { closesAt: { instant: '2026-10-21T09:00:00Z', localDate: '2026-10-21', localTime: '10:00', timeZone: 'Europe/London' as const, utcOffsetMinutes: 60 } }],
+  ])('hides “Edit meal” when the meal is %s', async (_label, overrides) => {
+    await setup({ allowedActions: [...HOST_ACTIONS, 'EDIT'], ...overrides });
+    expect(await screen.findByText('Meal arrangements')).toBeOnTheScreen();
+    expect(screen.queryByRole('button', { name: 'Edit meal' })).toBeNull();
   });
 
   it('pins the group chat as the primary action', async () => {

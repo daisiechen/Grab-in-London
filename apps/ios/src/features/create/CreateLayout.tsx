@@ -5,7 +5,7 @@ import { HALF_HOUR_SLOTS } from '../../lib/london.ts';
 import { Icon, type IconName } from '../../ui/Icon.tsx';
 import { createStyles } from '../../ui/styles.ts';
 import { colors } from '../../ui/tokens.ts';
-import { STEPS, type Step } from './model.ts';
+import { STEPS, type FlowKind, type Step } from './model.ts';
 import { Reveal, RevealScope, useRevealScroll } from './reveal.tsx';
 
 const HEADINGS = ['A place at your table.', 'Good company starts here.', 'Keep things clear.', 'Ready to bring people together?'] as const;
@@ -15,13 +15,20 @@ const INTROS = [
   'Let everyone know what they’ll spend and who’s booking.',
   'Check the details your guests will see before you publish.',
 ] as const;
+const EDIT_HEADINGS = ['Change the place and time.', 'Update your introduction.', 'Update the costs.', 'Ready to save your changes?'] as const;
+const EDIT_INTROS = [
+  'You can change these until you approve your first guest.',
+  'Refresh what new faces read about your meal.',
+  'Adjust what guests should expect to spend.',
+  'Check the details guests will see. Only what you changed is saved.',
+] as const;
 
 /**
  * Create page frame: the native header stays (form page), content starts right under it, and the
  * step action is pinned at the bottom. iOS keeps the focused field above the keyboard
  * (automaticallyAdjustKeyboardInsets) without needing the header height.
  */
-export function CreateLayout({ step, onStep, footer, children, testID }: { step: Step; onStep: (s: Step) => void; footer: ReactNode; children: ReactNode; testID?: string }) {
+export function CreateLayout({ step, onStep, footer, children, testID, kind = 'create' }: { step: Step; onStep: (s: Step) => void; footer: ReactNode; children: ReactNode; testID?: string; kind?: FlowKind }) {
   const insets = useSafeAreaInsets();
   // In-place pickers and the venue confirm button scroll themselves above the pinned footer.
   const { scrollProps, reveal } = useRevealScroll();
@@ -40,8 +47,8 @@ export function CreateLayout({ step, onStep, footer, children, testID }: { step:
       >
         <RevealScope value={reveal}>
           <StepIndicator step={step} onStep={onStep} />
-          <Text accessibilityRole="header" style={styles.h1}>{HEADINGS[step]}</Text>
-          <Text style={styles.intro}>{INTROS[step]}</Text>
+          <Text accessibilityRole="header" style={styles.h1}>{(kind === 'edit' ? EDIT_HEADINGS : HEADINGS)[step]}</Text>
+          <Text style={styles.intro}>{(kind === 'edit' ? EDIT_INTROS : INTROS)[step]}</Text>
           {children}
         </RevealScope>
       </ScrollView>

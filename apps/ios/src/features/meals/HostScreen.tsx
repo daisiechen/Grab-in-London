@@ -22,6 +22,8 @@ import { longDate } from '../../lib/london.ts';
 import { mealKey } from './MealDetailScreen.tsx';
 import { bookingLabel, cardWhenLabel, closesLabel, venueName, type Application, type Meal } from './format.ts';
 import { Reveal, RevealScope, useRevealScroll } from '../create/reveal.tsx';
+import { startMealEdit } from '../create/CreateStepScreen.tsx';
+import { editBlockedReason } from '../create/model.ts';
 import { mealActionMessage } from './messages.ts';
 
 type Detail = ResponseOf<'getMeal'>['data'];
@@ -52,7 +54,7 @@ export function HostScreen() {
 function HostScreenContent() {
   const { mealId } = useLocalSearchParams<{ mealId: string }>();
   const id = String(mealId);
-  const { api, newId, cache, now } = useServices();
+  const { api, newId, cache, drafts, now } = useServices();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const detail = useQuery<Detail>(mealKey(id), async () => (await api.call('getMeal', { params: { mealId: id } })).data);
@@ -119,6 +121,9 @@ function HostScreenContent() {
   const members = meal.members.length ? meal.members : [meal.host];
   const declaration = meal.bookingDeclaration;
   const openProfile = (userId: string) => router.push(`/profiles/${userId}`);
+  // r07: editable only while OPEN, before the deadline and before the first approval.
+  const editable = editBlockedReason(meal, t) === null;
+  const editMeal = () => { startMealEdit(drafts, meal); router.push(`/meals/${id}/edit`); };
 
   const decide = (a: Application, decision: 'APPROVE' | 'DECLINE') =>
     run(`${decision}:${a.id}:${a.version}`, () => api.call('decideApplication', { params: { applicationId: a.id }, body: { decision }, idempotencyKey: keyFor(`${decision}:${a.id}:${a.version}`), ifMatch: a.version }), decision === 'APPROVE' ? `${a.applicant?.displayName ?? 'Guest'} has a seat.` : 'Request declined.');
@@ -228,6 +233,13 @@ function HostScreenContent() {
               : 'Nobody is approved yet. Once you approve the first guest, the restaurant, time, budget and group size are locked.'}
           </Text>
           <Text style={styles.small}>{`Applications close ${closesLabel(meal.closesAt)} London time. Minimum ${meal.minimum} people, including you.`}</Text>
+          {editable ? (
+            <Pressable accessibilityRole="button" accessibilityLabel="Edit meal" onPress={editMeal} style={styles.expander}>
+              <Icon name="Pencil1" size={14} color={colors.forest} />
+              <Text style={styles.expanderText}>Edit meal</Text>
+              <Icon name="ChevronRight" size={11} color={colors.ink} />
+            </Pressable>
+          ) : null}
           {meal.allowedActions.includes('CANCEL') ? <View style={styles.cancel}><TextAction destructive label="Cancel meal for everyone" onPress={() => setCancelOpen(true)} /></View> : null}
         </RevealScope>
       </ScrollView>

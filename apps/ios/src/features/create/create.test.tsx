@@ -11,6 +11,8 @@ import { layout, mockContentGeometry } from './reveal-test-utils.ts';
 jest.mock('expo-router', () => require('../../test/router.ts').expoRouterMock);
 
 beforeEach(resetRouter);
+
+async function createSignedIn() { const app = createTestApp(); await signIn(app, me()); return app; }
 afterEach(() => jest.restoreAllMocks());
 
 const VENUE_REF = '2c1b0a9f-8e7d-4c6b-9a5f-4e3d2c1b0a9f';
@@ -212,6 +214,16 @@ describe('Create layout and steps (demo create-flow, r07 costs)', () => {
     expect(screen.getByText('£20–35')).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
     expect(mockRouter.push).toHaveBeenCalledWith('/create/review');
+  });
+
+  it('Review links to the cancellation terms from “If plans change”', async () => {
+    const app = await createSignedIn();
+    app.services.drafts.set(CREATE_DRAFT_KEY, readyDraft());
+    app.mock.on('GET', `/v1/venues/${VENUE_REF}/photo`, ok({ placeId: 'place-1', photo: null }));
+    await renderApp(app, <CreateStepScreen step={3} />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Cancellation terms' }));
+    expect(mockRouter.push).toHaveBeenCalledWith('/cancellation-terms');
+    expect(app.mock.callsTo('POST', '/v1/meals')).toHaveLength(0);
   });
 
   it('Introduce shows live character counters', async () => {

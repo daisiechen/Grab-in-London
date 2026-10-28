@@ -47,6 +47,10 @@ export default function RootLayout() {
           <Stack.Screen name="meals/[mealId]/index" options={{ title: 'The table', headerShown: false }} />
           <Stack.Screen name="meals/[mealId]/apply" options={{ title: 'Request a seat' }} />
           <Stack.Screen name="meals/[mealId]/host" options={{ title: 'Your guest list' }} />
+          <Stack.Screen name="meals/[mealId]/edit/index" options={{ title: 'Edit meal' }} />
+          <Stack.Screen name="meals/[mealId]/edit/introduce" options={{ title: 'Edit meal' }} />
+          <Stack.Screen name="meals/[mealId]/edit/costs" options={{ title: 'Edit meal' }} />
+          <Stack.Screen name="meals/[mealId]/edit/review" options={{ title: 'Edit meal' }} />
           <Stack.Screen name="create/index" options={{ title: 'Create a meal' }} />
           <Stack.Screen name="create/introduce" options={{ title: 'Create a meal' }} />
           <Stack.Screen name="create/costs" options={{ title: 'Create a meal' }} />
@@ -55,6 +59,7 @@ export default function RootLayout() {
           <Stack.Screen name="post-meal/[mealId]" options={{ title: 'After the meal' }} />
           <Stack.Screen name="survey" options={{ title: 'Product survey' }} />
           <Stack.Screen name="cancellation-terms" options={{ title: 'Cancellation terms' }} />
+          <Stack.Screen name="blocked-members" options={{ title: 'Blocked members' }} />
           {/* A pushed form page, like Apply: inside an iOS sheet the keyboard avoidance is off by the sheet inset. */}
           <Stack.Screen name="report" options={{ title: 'Report' }} />
           <Stack.Screen name="delete-account" options={{ title: 'Delete account' }} />

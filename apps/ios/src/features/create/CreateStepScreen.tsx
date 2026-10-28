@@ -2,11 +2,15 @@ import { useAnalyticsPresentation } from '../../analytics/hooks.ts';
 import { formErrorProperties, serverFormErrors } from '../../analytics/form-errors.ts';
 import { useAssistantContext, useAssistantEditor } from '../assistant/hooks.ts';
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
-import { Keyboard, Text, View } from 'react-native';
-import { useRouter } from 'expo-router';
-import { ApiError, type TimeChoice } from '@fancy/client';
+import { ActivityIndicator, Keyboard, Text, View } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { ApiError, type ResponseOf, type TimeChoice } from '@fancy/client';
 import { CUISINES, DIETARY, MOODS, type CuisineCode, type DietaryCode, type LanguageCode, type MoodCode } from '@fancy/contracts';
 import { useServices, useSessionState } from '../../services.tsx';
+import type { QueryCache } from '../../api/cache.ts';
+import { loadErrorMessage, useQuery } from '../../api/useQuery.ts';
+import { SessionScope } from '../auth/SessionScope.tsx';
+import { mealKey } from '../meals/MealDetailScreen.tsx';
 import { POLICY_VERSION } from '../../config.ts';
 import { londonToday, longDate } from '../../lib/london.ts';
 import { Primary, TextAction } from '../../ui/Button.tsx';
@@ -28,22 +32,48 @@ import { mealActionMessage } from '../meals/messages.ts';
 import { rememberReturnTo } from '../auth/intent.ts';
 import { CreateLayout, DropPanel, DropTrigger, Hint, InlineLink, NumberChoice, Section, TimeGrid, shared } from './CreateLayout.tsx';
 import { VenuePicker } from './VenuePicker.tsx';
-import { budgetIssues, deadlineTooLate, emptyDraft, timeResolution, toCreateBody, updateDraft, validateStep, type CreateDraft, type Step, type TimeResolution } from './model.ts';
+import { budgetIssues, deadlineTooLate, draftFromMeal, editBlockedReason, emptyDraft, timeResolution, toCreateBody, toEditBody, updateDraft, validateStep, type CreateDraft, type EditableMeal, type Step, type TimeResolution } from './model.ts';
+
+type Detail = ResponseOf<'getMeal'>['data'];
 
 export const CREATE_DRAFT_KEY = 'create';
-const STEP_ROUTES = ['/create', '/create/introduce', '/create/costs', '/create/review'] as const;
+/** Edit drafts live under their own per-meal keys, so editing never touches an unpublished new meal. */
+export const editDraftKey = (mealId: string) => `edit:${mealId}`;
+/** The meal version the edit started from: the diff base and the If-Match version. */
+export const editBaseKey = (mealId: string) => `edit:${mealId}:base`;
+
+export type FlowMode = { kind: 'create' } | { kind: 'edit'; mealId: string };
+const CREATE_MODE: FlowMode = { kind: 'create' };
+const CREATE_ROUTES = ['/create', '/create/introduce', '/create/costs', '/create/review'] as const;
+const stepRoutes = (mode: FlowMode): readonly string[] =>
+  mode.kind === 'create' ? CREATE_ROUTES : ['', '/introduce', '/costs', '/review'].map((s) => `/meals/${mode.mealId}/edit${s}`);
+const draftKeyOf = (mode: FlowMode) => (mode.kind === 'create' ? CREATE_DRAFT_KEY : editDraftKey(mode.mealId));
+const hostRoute = (mealId: string) => `/meals/${mealId}/host`;
 const SIZES = [2, 3, 4, 5, 6] as const;
 
-function useCreateDraft(): [CreateDraft, (patch: Partial<CreateDraft>) => void] {
+/**
+ * Starts editing a meal: resumes an unsaved edit of the same meal version, otherwise prefills a fresh
+ * draft from the meal (a newer version — e.g. after a save — always starts again from the server copy).
+ */
+export function startMealEdit(drafts: QueryCache, meal: EditableMeal) {
+  const base = drafts.get<EditableMeal>(editBaseKey(meal.id));
+  if (base?.version === meal.version && drafts.get(editDraftKey(meal.id))) return;
+  drafts.set(editBaseKey(meal.id), meal);
+  drafts.set(editDraftKey(meal.id), draftFromMeal(meal));
+}
+
+function useFlowDraft(mode: FlowMode): [CreateDraft, (patch: Partial<CreateDraft>) => void] {
   const { drafts, newId } = useServices();
-  const [fallback] = useState(() => emptyDraft(newId()));
-  const draft = useSyncExternalStore((cb) => drafts.subscribe(cb), () => drafts.get<CreateDraft>(CREATE_DRAFT_KEY) ?? fallback);
-  useEffect(() => { if (!drafts.get(CREATE_DRAFT_KEY)) drafts.set(CREATE_DRAFT_KEY, fallback); }, [drafts, fallback]);
+  const key = draftKeyOf(mode);
+  const versionKey = `${key}:editor-version`;
+  const [fallback] = useState(() => drafts.get<CreateDraft>(key) ?? emptyDraft(newId()));
+  const draft = useSyncExternalStore((cb) => drafts.subscribe(cb), () => drafts.get<CreateDraft>(key) ?? fallback);
+  useEffect(() => { if (!drafts.get(key)) drafts.set(key, fallback); }, [drafts, fallback, key]);
   const update = (patch: Partial<CreateDraft>) => {
-    drafts.set('create:editor-version', (drafts.get<number>('create:editor-version') ?? 0) + 1);
-    drafts.set(CREATE_DRAFT_KEY, updateDraft(drafts.get<CreateDraft>(CREATE_DRAFT_KEY) ?? fallback, patch));
+    drafts.set(versionKey, (drafts.get<number>(versionKey) ?? 0) + 1);
+    drafts.set(key, updateDraft(drafts.get<CreateDraft>(key) ?? fallback, patch));
   };
-  useAssistantEditor({ key: 'create', kind: 'CREATE', targetId: null, current: () => ({ text: [draft.title, draft.description].filter(Boolean).join('\n'), version: String(drafts.get<number>('create:editor-version') ?? 0) }), apply: (d) => { if (d.fields) update({ title: d.fields.title, description: d.fields.description }); } });
+  useAssistantEditor({ key, kind: 'CREATE', targetId: null, current: () => ({ text: [draft.title, draft.description].filter(Boolean).join('\n'), version: String(drafts.get<number>(versionKey) ?? 0) }), apply: (d) => { if (d.fields) update({ title: d.fields.title, description: d.fields.description }); } });
   return [draft, update];
 }
 
@@ -60,40 +90,84 @@ export function CreateStepScreen({ step }: { step: Step }) {
       </Screen>
     );
   }
-  return <CreateStep step={step} />;
+  return <CreateStep step={step} mode={CREATE_MODE} />;
 }
 
-function CreateStep({ step }: { step: Step }) {
+/**
+ * Host “Edit meal”: the same four steps prefilled from the meal, saved with editMeal. Only allowed
+ * while OPEN, before the deadline and before the first approval (r07); otherwise explains why.
+ */
+export function EditStepScreen({ step }: { step: Step }) {
+  return <SessionScope><EditStep step={step} /></SessionScope>;
+}
+
+function EditStep({ step }: { step: Step }) {
+  const { mealId } = useLocalSearchParams<{ mealId: string }>();
+  const id = String(mealId);
+  const { api, drafts, now } = useServices();
+  const router = useRouter();
+  const detail = useQuery<Detail>(mealKey(id), async () => (await api.call('getMeal', { params: { mealId: id } })).data);
+  const ready = useSyncExternalStore((cb) => drafts.subscribe(cb), () => drafts.get(editDraftKey(id)) !== undefined && drafts.get(editBaseKey(id)) !== undefined);
+  const meal = detail.data?.meal;
+  const blocked = meal ? editBlockedReason(meal, now()) : null;
+  // Opened directly (not from the guest list): prefill once the meal has loaded.
+  useEffect(() => { if (meal && !blocked && !ready) startMealEdit(drafts, meal); }, [meal, blocked, ready, drafts]);
+
+  if (meal && !blocked && ready) return <CreateStep step={step} mode={{ kind: 'edit', mealId: id }} />;
+  return (
+    <View style={styles.state} testID="edit-state">
+      {blocked ? (
+        <>
+          <FormMessage message={blocked} />
+          <Primary secondary label="Back to your guest list" onPress={() => router.dismissTo(hostRoute(id))} />
+        </>
+      ) : detail.error ? (
+        <>
+          <FormMessage message={loadErrorMessage(detail.error)} />
+          <Primary secondary label="Try again" onPress={() => void detail.reload()} />
+        </>
+      ) : <ActivityIndicator accessibilityLabel="Loading your meal" />}
+    </View>
+  );
+}
+
+function CreateStep({ step, mode }: { step: Step; mode: FlowMode }) {
   const services = useServices();
   const router = useRouter();
-  const [draft, update] = useCreateDraft();
-  useAnalyticsPresentation('create_started', { attemptId: draft.attemptId }, true);
+  const [draft, update] = useFlowDraft(mode);
+  const creating = mode.kind === 'create';
+  useAnalyticsPresentation('create_started', { attemptId: draft.attemptId }, creating);
   useAssistantContext({ sourcePage: 'CREATE' });
   const [error, setError] = useState<string | null>(null);
   const today = londonToday(services.now());
-  const goTo = (s: Step) => { Keyboard.dismiss(); router.navigate(STEP_ROUTES[s]); };
+  const routes = stepRoutes(mode);
+  const goTo = (s: Step) => { Keyboard.dismiss(); router.navigate(routes[s]!); };
 
-  if (step === 3) return <Review draft={draft} update={update} today={today} goTo={goTo} />;
+  if (step === 3) return <Review draft={draft} update={update} today={today} goTo={goTo} mode={mode} />;
 
   const next = () => {
     Keyboard.dismiss();
-    const issue = validateStep(draft, step, today);
-    if (issue) { const properties = formErrorProperties(draft.attemptId, issue); if (properties) services.analytics.emit('form_error', properties); return setError(issue); }
-    if (step === 0) services.analytics.emit('create_arranged', { attemptId: draft.attemptId });
+    const issue = validateStep(draft, step, today, mode.kind);
+    if (issue) {
+      if (creating) { const properties = formErrorProperties(draft.attemptId, issue); if (properties) services.analytics.emit('form_error', properties); }
+      return setError(issue);
+    }
+    if (step === 0 && creating) services.analytics.emit('create_arranged', { attemptId: draft.attemptId });
     setError(null);
-    router.push(STEP_ROUTES[(step + 1) as 1 | 2 | 3]);
+    router.push(routes[step + 1]!);
   };
 
   return (
     <CreateLayout
       testID={`create-step-${step}`}
+      kind={mode.kind}
       step={step}
       onStep={goTo}
       footer={<><FormMessage message={error} /><Primary label="Continue" icon="ArrowRight" onPress={next} /></>}
     >
       {step === 0 ? <Arrange draft={draft} update={update} today={today} /> : null}
       {step === 1 ? <Introduce draft={draft} update={update} /> : null}
-      {step === 2 ? <Costs draft={draft} update={update} /> : null}
+      {step === 2 ? <Costs draft={draft} update={update} editing={!creating} /> : null}
     </CreateLayout>
   );
 }
@@ -173,7 +247,7 @@ const budgetText = (d: CreateDraft) => {
 };
 
 /** r07: no platform payment, deposit or refund — expected spend per person, paid at the restaurant. */
-function Costs({ draft, update }: Part) {
+function Costs({ draft, update, editing }: Part & { editing: boolean }) {
   const budget = budgetIssues(draft);
   return (
     <>
@@ -199,10 +273,13 @@ function Costs({ draft, update }: Part) {
           <Text style={styles.spendValue}>{budgetText(draft)}</Text>
         </View>
       </Section>
-      <Section title="Restaurant reservation" right={<Text style={styles.required} accessibilityLabel="Required to continue">Required</Text>}>
-        <Hint>You book the table with the restaurant yourself. Fancy doesn’t reserve tables. Tick to confirm before you continue.</Hint>
-        <CheckRow label={reservationDeclaration(draft)} checked={draft.bookingDeclarationConfirmed} onChange={(v) => update({ bookingDeclarationConfirmed: v })} />
-      </Section>
+      {/* Edit keeps the booking already reported on the meal; Review reminds the host to update it. */}
+      {editing ? null : (
+        <Section title="Restaurant reservation" right={<Text style={styles.required} accessibilityLabel="Required to continue">Required</Text>}>
+          <Hint>You book the table with the restaurant yourself. Fancy doesn’t reserve tables. Tick to confirm before you continue.</Hint>
+          <CheckRow label={reservationDeclaration(draft)} checked={draft.bookingDeclarationConfirmed} onChange={(v) => update({ bookingDeclarationConfirmed: v })} />
+        </Section>
+      )}
       <Section title="If plans change">
         <Hint>Nothing is paid in the app, so there’s nothing to refund. If you cancel, let the restaurant know yourself; your group chat stays open.</Hint>
       </Section>
@@ -210,14 +287,79 @@ function Costs({ draft, update }: Part) {
   );
 }
 
-function Review({ draft, update, today, goTo }: Part & { today: string; goTo: (s: Step) => void }) {
+/** Save errors after which this edit can’t continue; the way out is back to the guest list. */
+const EDIT_FINAL: Record<string, string> = {
+  ARRANGEMENT_LOCKED: 'A guest has been approved, so the restaurant, time, budget and group size are locked. Your changes weren’t saved.',
+  DEADLINE_PASSED: 'Applications have closed, so this meal can’t be edited any more. Your changes weren’t saved.',
+  MEAL_CANCELLED: 'This meal was cancelled, so it can’t be edited. Your changes weren’t saved.',
+  VERSION_CONFLICT: 'This meal changed since you started editing. Go back to your guest list and start again.',
+  STATE_CONFLICT: 'This meal changed since you started editing. Go back to your guest list and start again.',
+  FORBIDDEN: 'Only the host can edit this meal.',
+};
+
+function Review({ draft, update, today, goTo, mode }: Part & { today: string; goTo: (s: Step) => void; mode: FlowMode }) {
   const services = useServices();
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [final, setFinal] = useState(false);
   const [time, setTime] = useState<TimeResolution | null>(null);
   const [picked, setPicked] = useState<number | null>(null);
   const intent = useRef<{ key: string; body: string } | null>(null);
+  const editing = mode.kind === 'edit';
+
+  /** Same key for retries of the same request; a different body or base version is a new intent. */
+  const keyFor = (serialized: string) => {
+    if (!intent.current || intent.current.body !== serialized) intent.current = { key: services.newId(), body: serialized };
+    return intent.current.key;
+  };
+
+  const handleTimeError = (e: ApiError, d: CreateDraft) => {
+    const resolution = timeResolution(e);
+    if (!resolution) return false;
+    if (!editing) services.analytics.emit('form_error', { attemptId: d.attemptId, step: 'arrange', field: resolution.target === 'start' ? 'time' : 'closeTime', errorCode: e.code === 'TIME_AMBIGUOUS' ? 'time_ambiguous' : e.code === 'TIME_NONEXISTENT' ? 'time_nonexistent' : 'invalid' });
+    setPicked(null);
+    setTime(resolution);
+    return true;
+  };
+
+  const save = async (d: CreateDraft, mealId: string) => {
+    Keyboard.dismiss();
+    const issue = validateStep(d, 3, today, 'edit');
+    if (issue) return setError(issue);
+    const base = services.drafts.get<EditableMeal>(editBaseKey(mealId));
+    if (!base) return setError('Something went wrong. Please try again.');
+    const body = toEditBody(d, base);
+    if (!body) return setError('You haven’t changed anything yet.');
+    const idempotencyKey = keyFor(JSON.stringify([base.version, body]));
+    setBusy(true);
+    setError(null);
+    try {
+      const updated = (await services.api.call('editMeal', { params: { mealId }, body, idempotencyKey, ifMatch: base.version })).data;
+      intent.current = null;
+      const cached = services.cache.get<Detail>(mealKey(mealId));
+      if (cached) services.cache.set(mealKey(mealId), { ...cached, meal: updated });
+      services.cache.invalidate('myMeals:');
+      router.dismissTo(hostRoute(mealId));
+    } catch (e) {
+      if (!(e instanceof ApiError)) return setError('Something went wrong. Please try again.');
+      // Business rejections are final for this request; only network/retryable failures reuse the key.
+      if (e.kind !== 'network' && !e.retryable) intent.current = null;
+      if (handleTimeError(e, d)) return;
+      const finalMessage = EDIT_FINAL[e.code];
+      if (finalMessage) {
+        setFinal(true);
+        setError(finalMessage);
+        // Refresh the meal so the guest list shows the lock/cancellation when the host goes back.
+        void services.api.call('getMeal', { params: { mealId } }).then((r) => services.cache.set(mealKey(mealId), r.data), () => undefined);
+        return;
+      }
+      if (e.code === 'NOT_FOUND') return setError(body.venueRef ? 'This restaurant can’t be verified right now. Go back and choose it again.' : 'This meal isn’t available any more.');
+      setError(e.kind === 'validation' ? 'Some details need another look. Check each step and try again.' : mealActionMessage(e));
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const publish = async (d: CreateDraft) => {
     Keyboard.dismiss();
@@ -225,26 +367,19 @@ function Review({ draft, update, today, goTo }: Part & { today: string; goTo: (s
     if (issue) { const properties = formErrorProperties(d.attemptId, issue); if (properties) services.analytics.emit('form_error', properties); return setError(issue); }
     services.analytics.emit('create_arranged', { attemptId: d.attemptId });
     const body = toCreateBody(d, POLICY_VERSION);
-    const serialized = JSON.stringify(body);
-    if (!intent.current || intent.current.body !== serialized) intent.current = { key: services.newId(), body: serialized };
+    const idempotencyKey = keyFor(JSON.stringify(body));
     setBusy(true);
     setError(null);
     try {
-      const meal = (await services.api.call('createMeal', { body, idempotencyKey: intent.current.key })).data;
+      const meal = (await services.api.call('createMeal', { body, idempotencyKey })).data;
       intent.current = null;
       services.drafts.delete(CREATE_DRAFT_KEY);
       services.cache.invalidate('myMeals:');
       router.replace(`/meals/${meal.id}`);
     } catch (e) {
       if (!(e instanceof ApiError)) return setError('Something went wrong. Please try again.');
-      const resolution = timeResolution(e);
-      if (resolution) services.analytics.emit('form_error', { attemptId: d.attemptId, step: 'arrange', field: resolution.target === 'start' ? 'time' : 'closeTime', errorCode: e.code === 'TIME_AMBIGUOUS' ? 'time_ambiguous' : e.code === 'TIME_NONEXISTENT' ? 'time_nonexistent' : 'invalid' });
-      else for (const properties of serverFormErrors(d.attemptId, e.fieldErrors)) services.analytics.emit('form_error', properties);
-      if (resolution) {
-        setPicked(null);
-        setTime(resolution);
-        return;
-      }
+      if (handleTimeError(e, d)) return;
+      for (const properties of serverFormErrors(d.attemptId, e.fieldErrors)) services.analytics.emit('form_error', properties);
       if (e.code === 'PROFILE_INCOMPLETE') {
         rememberReturnTo('/create/review');
         router.push('/profile-setup');
@@ -257,13 +392,15 @@ function Review({ draft, update, today, goTo }: Part & { today: string; goTo: (s
     }
   };
 
+  const submit = (d: CreateDraft) => (mode.kind === 'edit' ? save(d, mode.mealId) : publish(d));
+
   const applyOffset = () => {
     if (!time || time.kind !== 'choose' || picked === null) return;
     const patch: Partial<CreateDraft> = time.target === 'start' ? { startOffset: picked, reviewConfirmed: true } : { closeOffset: picked, reviewConfirmed: true };
     const nextDraft = updateDraft(draft, patch);
     update(patch);
     setTime(null);
-    void publish(nextDraft);
+    void submit(nextDraft);
   };
 
   const when = draft.date && draft.time ? `${longDate(draft.date)} · ${draft.time} London time${draft.startOffset !== null ? ` (${draft.startOffset === 60 ? 'BST' : 'GMT'})` : ''}` : 'No time chosen';
@@ -272,15 +409,18 @@ function Review({ draft, update, today, goTo }: Part & { today: string; goTo: (s
     <>
       <FormMessage message={error ?? (time && time.kind !== 'choose' ? time.message : null)} />
       {time && time.kind !== 'choose' ? <TextAction label={time.target === 'start' ? 'Change the meal time' : 'Change the deadline'} onPress={() => { setTime(null); goTo(0); }} /> : null}
+      {final && mode.kind === 'edit' ? <TextAction label="Back to your guest list" onPress={() => router.dismissTo(hostRoute(mode.mealId))} /> : null}
       {/* Required confirmation sits with Publish so it is always visible before publishing. */}
-      <CheckRow label="I’ve reviewed the details guests will see." checked={draft.reviewConfirmed} onChange={(v) => update({ reviewConfirmed: v })} />
-      <Primary label="Publish meal" icon="ArrowRight" busy={busy} onPress={() => void publish(draft)} />
+      {editing
+        ? <Hint>If you change the restaurant, time or group size, update your booking with the restaurant yourself.</Hint>
+        : <CheckRow label="I’ve reviewed the details guests will see." checked={draft.reviewConfirmed} onChange={(v) => update({ reviewConfirmed: v })} />}
+      <Primary label={editing ? 'Save changes' : 'Publish meal'} icon={editing ? 'Check' : 'ArrowRight'} busy={busy} disabled={final} onPress={() => void submit(draft)} />
     </>
   );
   return (
-    <CreateLayout testID="create-step-3" step={3} onStep={goTo} footer={footer}>
+    <CreateLayout testID="create-step-3" kind={mode.kind} step={3} onStep={goTo} footer={footer}>
       <View style={styles.review}>
-        <Text style={styles.eyebrow}>YOUR NEW TABLE</Text>
+        <Text style={styles.eyebrow}>{editing ? 'YOUR TABLE' : 'YOUR NEW TABLE'}</Text>
         <Text style={styles.reviewTitle}>{draft.title || 'Untitled meal'}</Text>
         {draft.description ? <Text style={shared.body} numberOfLines={4}>{draft.description}</Text> : null}
         {/* P-05 (owner decision): undeclared cuisine/dietary shows as “Not provided”, exactly as guests will see it. */}
@@ -312,15 +452,16 @@ function Review({ draft, update, today, goTo }: Part & { today: string; goTo: (s
           <Text style={shared.muted}>{draft.languages.length ? languagesLabel(draft.languages) : 'No language chosen'}</Text>
         </ReviewGroup>
 
-        <ReviewGroup title="Costs & reservation" onEdit={() => goTo(2)} editLabel="Edit costs and reservation">
+        <ReviewGroup title={editing ? 'Costs' : 'Costs & reservation'} onEdit={() => goTo(2)} editLabel={editing ? 'Edit costs' : 'Edit costs and reservation'}>
           <Text style={shared.body}>{`${budgetText(draft)} estimated per person`}</Text>
           <Text style={shared.muted}>Everyone pays their own share at the restaurant</Text>
-          <Text style={shared.tiny}>{draft.bookingDeclarationConfirmed ? reservationDeclaration(draft) : 'Reservation not confirmed yet.'}</Text>
+          {editing ? null : <Text style={shared.tiny}>{draft.bookingDeclarationConfirmed ? reservationDeclaration(draft) : 'Reservation not confirmed yet.'}</Text>}
         </ReviewGroup>
       </View>
       <View style={[shared.soft, styles.terms]}>
         <Text style={shared.strong}>If plans change</Text>
         <Text style={shared.muted}>No in-app payment, so nothing to refund. Before the meal you can cancel for everyone from Your guest list; let the restaurant know yourself.</Text>
+        <View style={styles.termsLink}><TextAction label="Cancellation terms" onPress={() => router.push('/cancellation-terms')} /></View>
       </View>
       <Sheet visible={time?.kind === 'choose'} title="Which time do you mean?" onClose={() => setTime(null)}>
         <Body>{`Clocks go back in London on this date, so ${time?.target === 'close' ? draft.closeTime : draft.time} happens twice. Choose one.`}</Body>
@@ -332,7 +473,7 @@ function Review({ draft, update, today, goTo }: Part & { today: string; goTo: (s
             onChange={(v) => setPicked(Number(v))}
           />
         ) : null}
-        <Primary label="Publish with this time" disabled={picked === null} onPress={applyOffset} />
+        <Primary label={editing ? 'Save with this time' : 'Publish with this time'} disabled={picked === null} onPress={applyOffset} />
       </Sheet>
     </CreateLayout>
   );
@@ -365,5 +506,7 @@ const styles = createStyles({
   placeRow: { flexDirection: 'row', gap: 10, alignItems: 'center' },
   thumb: { width: 48, height: 48, borderRadius: 8, overflow: 'hidden', backgroundColor: colors.surface },
   terms: { marginTop: 12 },
+  termsLink: { alignItems: 'flex-start' },
+  state: { flex: 1, padding: 18, gap: 12, backgroundColor: colors.white },
   required: { fontSize: 11, fontWeight: '700', color: colors.forest },
 });
