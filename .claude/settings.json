@@ -1,0 +1,48 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ \"$CLAUDE_CODE_REMOTE\" = true ] || exit 0; t=\"${ETHAN_HOOK_TOKEN:-$ETHAN_CLOUD_TOKEN}\"; [ -n \"$t\" ] || exit 0; curl -s -m 5 -A ethan-hook -H \"Authorization: Bearer $t\" -H \"Content-Type: application/json\" --data-binary @- \"https://ethan.daisie.me/cloud/agent/hook?where=cloud\" >/dev/null 2>&1 || true",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ \"$CLAUDE_CODE_REMOTE\" = true ] || exit 0; t=\"${ETHAN_HOOK_TOKEN:-$ETHAN_CLOUD_TOKEN}\"; [ -n \"$t\" ] || exit 0; curl -s -m 5 -A ethan-hook -H \"Authorization: Bearer $t\" -H \"Content-Type: application/json\" --data-binary @- \"https://ethan.daisie.me/cloud/agent/hook?where=cloud\" >/dev/null 2>&1 || true",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ \"$CLAUDE_CODE_REMOTE\" = true ] || exit 0; t=\"${ETHAN_HOOK_TOKEN:-$ETHAN_CLOUD_TOKEN}\"; [ -n \"$t\" ] || exit 0; curl -s -m 5 -A ethan-hook -H \"Authorization: Bearer $t\" -H \"Content-Type: application/json\" --data-binary @- \"https://ethan.daisie.me/cloud/agent/hook?where=cloud\" >/dev/null 2>&1 || true",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ \"$CLAUDE_CODE_REMOTE\" = true ] || exit 0; t=\"${ETHAN_HOOK_TOKEN:-$ETHAN_CLOUD_TOKEN}\"; [ -n \"$t\" ] || exit 0; curl -s -m 5 -A ethan-hook -H \"Authorization: Bearer $t\" -H \"Content-Type: application/json\" --data-binary @- \"https://ethan.daisie.me/cloud/agent/hook?where=cloud\" >/dev/null 2>&1 || true",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}
