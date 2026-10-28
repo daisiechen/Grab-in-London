@@ -24,12 +24,19 @@ export function EmailScreen() {
   const [issue, setIssue] = useState<{ text: string; tone: 'error' | 'info' } | null>(null);
   const [busy, setBusy] = useState(false);
   const [now, setNow] = useState(services.now());
+  // Set when the server rate-limits sending a code: the message counts down to it and Send stays off.
+  const [blockedUntil, setBlockedUntil] = useState<number | null>(null);
+  const blockedFor = blockedUntil ? Math.max(0, Math.ceil((blockedUntil - now) / 1000)) : 0;
 
   useEffect(() => {
-    if (!challenge) return;
+    if (!challenge && !blockedUntil) return;
     const id = setInterval(() => setNow(services.now()), 1000);
     return () => clearInterval(id);
-  }, [challenge, services]);
+  }, [challenge, blockedUntil, services]);
+
+  useEffect(() => {
+    if (blockedUntil && blockedFor === 0) { setBlockedUntil(null); setIssue(null); }
+  }, [blockedUntil, blockedFor]);
 
   const cooldown = challenge ? Math.max(0, Math.ceil((challenge.resendAfter - now) / 1000)) : 0;
   const remaining = challenge ? Math.max(0, Math.ceil((challenge.expiresAt - now) / 1000)) : 0;
@@ -39,7 +46,11 @@ export function EmailScreen() {
     setBusy(true);
     const res = await startEmailChallenge(services.api, email, services.newId);
     setBusy(false);
-    if (!res.ok) return setIssue({ text: res.message, tone: 'error' });
+    if (!res.ok) {
+      if (res.retryAfterSeconds) { setNow(services.now()); setBlockedUntil(services.now() + res.retryAfterSeconds * 1000); }
+      return setIssue({ text: res.message, tone: 'error' });
+    }
+    setBlockedUntil(null);
     setChallenge(res.challenge);
     setEmail(res.challenge.email);
     setCode('');
@@ -70,7 +81,7 @@ export function EmailScreen() {
 
   const footer = challenge
     ? <Primary label="Verify & continue" icon="ArrowRight" busy={busy} onPress={() => void verify()} />
-    : <Primary label="Send code" icon="ArrowRight" busy={busy} onPress={() => void send()} />;
+    : <Primary label={blockedFor ? `Send code in ${blockedFor}s` : 'Send code'} icon="ArrowRight" busy={busy} disabled={blockedFor > 0} onPress={() => void send()} />;
 
   return (
     <ActionPage testID="email-sign-in" paper footer={footer}>
@@ -111,7 +122,7 @@ export function EmailScreen() {
           </View>
         </View>
       )}
-      <View style={styles.message}><FormMessage message={issue?.text ?? null} tone={issue?.tone ?? 'error'} /></View>
+      <View style={styles.message}><FormMessage message={blockedFor ? `Too many attempts. Try again in ${blockedFor}s.` : issue?.text ?? null} tone={issue?.tone ?? 'error'} /></View>
       {getPendingLink(services.now())?<TextAction label="Cancel account link" disabled={busy} onPress={()=>{clearPendingLink();router.replace('/sign-in');}}/>:null}
     </ActionPage>
   );

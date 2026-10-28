@@ -82,6 +82,27 @@ describe('SignInScreen (S03)', () => {
 });
 
 describe('EmailScreen (S04, QA-AUTH-002/003)', () => {
+  it('a rate-limited send counts down live and keeps Send off until the wait is over', async () => {
+    jest.useFakeTimers();
+    try {
+      let clock = NOW;
+      const app = createTestApp({ now: () => clock });
+      app.mock.on('POST', '/v1/auth/email/start', fail(429, 'RATE_LIMITED', { retryAfterSeconds: 3 }));
+      await renderApp(app, <EmailScreen />);
+      await fireEvent.changeText(screen.getByLabelText('Email address'), 'other@example.com');
+      await fireEvent.press(screen.getByRole('button', { name: 'Send code' }));
+      expect(await screen.findByText('Too many attempts. Try again in 3s.')).toBeOnTheScreen();
+      expect(screen.getByRole('button', { name: 'Send code in 3s' })).toBeDisabled();
+      await act(async () => { clock += 1000; jest.advanceTimersByTime(1000); });
+      expect(screen.getByText('Too many attempts. Try again in 2s.')).toBeOnTheScreen();
+      await act(async () => { clock += 2000; jest.advanceTimersByTime(2000); });
+      expect(screen.queryByText(/Too many attempts/)).toBeNull();
+      expect(screen.getByRole('button', { name: 'Send code' })).toBeEnabled();
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
   it('validates the email, sends a code, enforces the resend cooldown and handles a wrong then right code', async () => {
     const app = createTestApp();
     app.mock.on('POST', '/v1/auth/email/start', ok({ challengeId: CHALLENGE_ID, expiresAt: new Date(NOW + 300_000).toISOString(), resendAfter: new Date(NOW + 30_000).toISOString() }, 201));

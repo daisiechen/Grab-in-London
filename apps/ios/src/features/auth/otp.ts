@@ -22,7 +22,7 @@ export function validateCode(code: string): string | null {
   return /^[0-9]{6}$/.test(code) ? null : 'Enter the six-digit code.';
 }
 
-export async function startEmailChallenge(api: ApiClient, email: string, newId: () => string): Promise<{ ok: true; challenge: Challenge } | { ok: false; message: string }> {
+export async function startEmailChallenge(api: ApiClient, email: string, newId: () => string): Promise<{ ok: true; challenge: Challenge } | { ok: false; message: string; retryAfterSeconds?: number }> {
   const invalid = validateEmail(email);
   if (invalid) return { ok: false, message: invalid };
   try {
@@ -30,6 +30,8 @@ export async function startEmailChallenge(api: ApiClient, email: string, newId: 
     return { ok: true, challenge: { challengeId: res.data.challengeId, email: email.trim(), expiresAt: Date.parse(res.data.expiresAt), resendAfter: Date.parse(res.data.resendAfter) } };
   } catch (error) {
     if (error instanceof ApiError && error.kind === 'validation') return { ok: false, message: 'Enter a valid email address.' };
+    // A rate limit carries its wait so the screen can count it down live.
+    if (error instanceof ApiError && error.kind === 'rate_limit' && error.retryAfterSeconds) return { ok: false, message: authErrorMessage(error), retryAfterSeconds: error.retryAfterSeconds };
     return { ok: false, message: authErrorMessage(error) };
   }
 }
