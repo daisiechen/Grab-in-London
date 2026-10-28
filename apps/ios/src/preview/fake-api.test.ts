@@ -163,7 +163,7 @@ describe('preview fake API', () => {
     expect(detail.data.myApplication?.state).toBe('CONFIRMED');
     expect(detail.data.meal).toMatchObject({ confirmedCount: 4, allowedActions: ['OPEN_GROUP', 'LEAVE'] });
     const messages = await ctx.api.call('readMessages', { params: { conversationId: detail.data.conversationId! }, query: { mode: 'HISTORY' } });
-    expect(messages.data.map((m) => `${m.sender.displayName}: ${m.body}`)).toEqual(['Emma: Sounds lovely! This is my first meal here. 😊', 'Maya: Hi everyone! Looking forward to meeting you. Shall we meet outside five minutes before?']);
+    expect(messages.data.map((m) => `${m.sender.displayName}: ${m.body}`)).toEqual(['Emma: Hi Alex, see you there! 😊', 'Maya: Welcome to “An easy Friday supper”, Alex! Shall we meet outside five minutes before?']);
     expect((await ctx.api.call('listNotifications', { query: {} })).data[0]).toMatchObject({ template: 'application_approved', mealId: M.supper });
     expect((await ctx.api.call('myMeals', { query: { section: 'UPCOMING' } })).data.map((i) => [i.meal.id, i.role])).toEqual([[M.supper, 'GUEST']]);
     // Full table: nobody else can apply.

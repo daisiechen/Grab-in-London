@@ -7,8 +7,8 @@ import { createStyles } from './styles.ts';
 /** Monday-first, matching monthGrid's leading blanks. */
 const WEEKDAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
-/** Month/day chooser (prototype DateChoices) on London calendar dates; past dates are disabled. */
-export function DateChoices({ label, selected, onToggle, today, multiple = false }: { label: string; selected: readonly string[]; onToggle: (date: string) => void; today: string; multiple?: boolean }) {
+/** Month/day chooser (prototype DateChoices) on London calendar dates; past dates (and any after `latest`) are disabled. */
+export function DateChoices({ label, selected, onToggle, today, latest, multiple = false }: { label: string; selected: readonly string[]; onToggle: (date: string) => void; today: string; /** Last choosable date (e.g. a deadline cannot fall after the meal). */ latest?: string | undefined; multiple?: boolean }) {
   const [month, setMonth] = useState((selected[0] ?? today).slice(0, 7));
   const { leading, dates } = monthGrid(month);
   const canGoBack = month > today.slice(0, 7);
@@ -30,7 +30,7 @@ export function DateChoices({ label, selected, onToggle, today, multiple = false
       <View style={styles.grid}>
         {Array.from({ length: leading }, (_, i) => <View key={`b${i}`} style={styles.cell} />)}
         {dates.map((d) => {
-          const past = d < today;
+          const past = d < today || (latest !== undefined && d > latest);
           const on = selected.includes(d);
           return (
             <View key={d} style={styles.cell}>

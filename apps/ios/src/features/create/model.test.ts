@@ -1,4 +1,4 @@
-import { budgetIssues, emptyDraft, timeResolution, toCreateBody, updateDraft, validateStep, type CreateDraft } from './model.ts';
+import { budgetIssues, deadlineTooLate, emptyDraft, timeResolution, toCreateBody, updateDraft, validateStep, type CreateDraft } from './model.ts';
 import { minusMinutes } from '../../lib/london.ts';
 
 const VENUE = { venueRef: '2c1b0a9f-8e7d-4c6b-9a5f-4e3d2c1b0a9f', placeId: 'place-1', name: 'Dishoom', address: '7 Boundary St', attribution: 'Google' };
@@ -117,5 +117,17 @@ describe('budgetIssues (inline Costs validation while typing)', () => {
   it('agrees with Continue: inline-valid non-empty amounts pass step 2', () => {
     expect(validateStep({ ...complete(), budgetMin: '20.50', budgetMax: '35' }, 2, TODAY)).toBeNull();
     expect(validateStep({ ...complete(), budgetMin: '40', budgetMax: '30' }, 2, TODAY)).not.toBeNull();
+  });
+});
+
+describe('deadlineTooLate (deadline time grid)', () => {
+  const d = { date: '2026-10-30', time: '19:00', closeDate: '2026-10-30' };
+  it.each([
+    ['18:30', false], ['18:00', false], ['19:00', true], ['23:30', true],
+  ])('same day as a 19:00 meal: %s disabled=%s', (slot, expected) => expect(deadlineTooLate(d, slot)).toBe(expected));
+  it('any time the day before is fine; a later date never is; incomplete drafts disable nothing', () => {
+    expect(deadlineTooLate({ ...d, closeDate: '2026-10-29' }, '23:30')).toBe(false);
+    expect(deadlineTooLate({ ...d, closeDate: '2026-10-31' }, '08:00')).toBe(true);
+    expect(deadlineTooLate({ ...d, time: null }, '23:30')).toBe(false);
   });
 });

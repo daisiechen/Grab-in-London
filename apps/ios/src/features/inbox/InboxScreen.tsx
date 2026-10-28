@@ -87,6 +87,7 @@ function SignedInInbox() {
   const q = useQuery<InboxItem[]>('inbox', () => loadInbox(services));
   const [focusError, setFocusError] = useState('');
   const [validating, setValidating] = useState(false);
+  const [pulling, setPulling] = useState(false);
   const firstFocus = useRef(true), refreshJob = useRef<Promise<void> | null>(null);
   const refresh = useCallback(() => {
     if (refreshJob.current) return refreshJob.current;
@@ -131,8 +132,9 @@ function SignedInInbox() {
         contentContainerStyle={styles.pad}
         data={rows}
         keyExtractor={(r) => r.key}
-        refreshing={q.loading || validating}
-        onRefresh={() => void refresh()}
+        // Only a pull shows the spinner (a focus refetch toggling it can leave the list offset on iOS).
+        refreshing={pulling}
+        onRefresh={() => { setPulling(true); void refresh().finally(() => setPulling(false)); }}
         ListHeaderComponent={
           <View>
             <Header waiting={waiting.length > 0} onBell={() => router.push('/notifications')} />

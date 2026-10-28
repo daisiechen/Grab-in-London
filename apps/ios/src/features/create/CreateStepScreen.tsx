@@ -28,7 +28,7 @@ import { mealActionMessage } from '../meals/messages.ts';
 import { rememberReturnTo } from '../auth/intent.ts';
 import { CreateLayout, DropPanel, DropTrigger, Hint, InlineLink, NumberChoice, Section, TimeGrid, shared } from './CreateLayout.tsx';
 import { VenuePicker } from './VenuePicker.tsx';
-import { budgetIssues, emptyDraft, timeResolution, toCreateBody, updateDraft, validateStep, type CreateDraft, type Step, type TimeResolution } from './model.ts';
+import { budgetIssues, deadlineTooLate, emptyDraft, timeResolution, toCreateBody, updateDraft, validateStep, type CreateDraft, type Step, type TimeResolution } from './model.ts';
 
 export const CREATE_DRAFT_KEY = 'create';
 const STEP_ROUTES = ['/create', '/create/introduce', '/create/costs', '/create/review'] as const;
@@ -134,8 +134,8 @@ function Arrange({ draft, update, today }: Part & { today: string }) {
           <DropTrigger label="Deadline date" icon="Calendar" value={draft.closeDate ? longDate(draft.closeDate) : null} placeholder="Choose a date" open={open === 'closeDate'} onPress={() => toggleOpen('closeDate')} />
           <DropTrigger label="Deadline time" icon="Clock" value={draft.closeTime} placeholder="Choose a time" open={open === 'closeTime'} onPress={() => toggleOpen('closeTime')} />
         </View>
-        {open === 'closeDate' ? <DropPanel testID="picker-closeDate"><DateChoices label="Deadline date" today={today} selected={draft.closeDate ? [draft.closeDate] : []} onToggle={(closeDate) => { update({ closeDate, closeEdited: true }); setOpen(''); }} /></DropPanel> : null}
-        {open === 'closeTime' ? <DropPanel testID="picker-closeTime"><TimeGrid label="Deadline time" value={draft.closeTime} onChange={(closeTime) => { update({ closeTime, closeEdited: true }); setOpen(''); }} /></DropPanel> : null}
+        {open === 'closeDate' ? <DropPanel testID="picker-closeDate"><DateChoices label="Deadline date" today={today} latest={draft.date ?? undefined} selected={draft.closeDate ? [draft.closeDate] : []} onToggle={(closeDate) => { update({ closeDate, closeEdited: true }); setOpen(''); }} /></DropPanel> : null}
+        {open === 'closeTime' ? <DropPanel testID="picker-closeTime"><TimeGrid label="Deadline time" value={draft.closeTime} isDisabled={(t) => deadlineTooLate(draft, t)} onChange={(closeTime) => { update({ closeTime, closeEdited: true }); setOpen(''); }} /></DropPanel> : null}
         <Hint>Defaults to an hour before the meal; it must be at least 30 minutes before. At the deadline, applications and approvals stop.</Hint>
       </Section>
     </>
@@ -166,7 +166,9 @@ export function reservationDeclaration(draft: CreateDraft): string {
 
 const budgetText = (d: CreateDraft) => {
   const [min, max] = [d.budgetMin.trim(), d.budgetMax.trim()];
-  if (!min && !max) return '—';
+  // Never echo an invalid range (e.g. “£500–20”) as the estimate; the field errors explain it.
+  const issues = budgetIssues(d);
+  if ((!min && !max) || issues.min || issues.max) return '—';
   return min && min === max ? `£${min}` : `£${min || '–'}–${max || '–'}`;
 };
 
@@ -265,11 +267,6 @@ function Review({ draft, update, today, goTo }: Part & { today: string; goTo: (s
   };
 
   const when = draft.date && draft.time ? `${longDate(draft.date)} · ${draft.time} London time${draft.startOffset !== null ? ` (${draft.startOffset === 60 ? 'BST' : 'GMT'})` : ''}` : 'No time chosen';
-  // Optional host declarations appear only when provided (“Not provided” rows add nothing here).
-  const declared = [
-    draft.cuisineCode ? `Cuisine: ${CUISINES[draft.cuisineCode]}` : null,
-    draft.dietaryCodes.length ? `Dietary options: ${draft.dietaryCodes.map((c) => DIETARY[c]).join(' · ')}` : null,
-  ].filter((part): part is string => part !== null);
   const closes = draft.closeDate && draft.closeTime ? `Applications close ${longDate(draft.closeDate)}, ${draft.closeTime}` : 'No deadline chosen';
   const footer = (
     <>
@@ -286,7 +283,8 @@ function Review({ draft, update, today, goTo }: Part & { today: string; goTo: (s
         <Text style={styles.eyebrow}>YOUR NEW TABLE</Text>
         <Text style={styles.reviewTitle}>{draft.title || 'Untitled meal'}</Text>
         {draft.description ? <Text style={shared.body} numberOfLines={4}>{draft.description}</Text> : null}
-        {declared.length ? <Text style={shared.tiny}>{`${declared.join(' · ')}. Host-reported · not an allergy guarantee.`}</Text> : null}
+        {/* P-05 (owner decision): undeclared cuisine/dietary shows as “Not provided”, exactly as guests will see it. */}
+        <Text style={shared.tiny}>{`Cuisine: ${draft.cuisineCode ? CUISINES[draft.cuisineCode] : 'Not provided'} · Dietary options: ${draft.dietaryCodes.length ? draft.dietaryCodes.map((c) => DIETARY[c]).join(' · ') : 'Not provided'}. Host-reported · not an allergy guarantee.`}</Text>
 
         <ReviewGroup title="Place & time" onEdit={() => goTo(0)} editLabel="Edit place and time">
           {draft.venue ? (

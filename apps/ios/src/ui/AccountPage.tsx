@@ -22,7 +22,7 @@ export function AccountPage({ children, footer, testID, top = 'header' }: { chil
         <ScrollView contentInsetAdjustmentBehavior={top === 'header' ? 'automatic' : 'never'} style={styles.flex} contentContainerStyle={[styles.scroll, { paddingTop }]} keyboardShouldPersistTaps="handled" keyboardDismissMode="interactive">
           {children}
         </ScrollView>
-        {footer ? <View style={[styles.footer, { paddingBottom: keyboard ? 10 : Math.max(insets.bottom, 12) }]}>{footer}</View> : null}
+        {footer ? <View testID="account-footer" style={[styles.footer, { paddingBottom: keyboard ? 10 : Math.max(insets.bottom, 12) }]}>{footer}</View> : null}
       </KeyboardAvoidingView>
     </View>
   );

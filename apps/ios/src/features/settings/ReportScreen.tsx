@@ -122,7 +122,15 @@ function ReportScreenContent() {
   };
 
   return (
-    <AccountPage testID="report">
+    // A text field page: the action is pinned so it rides above the keyboard (an inline button ended up behind it).
+    <AccountPage
+      testID="report"
+      footer={<>
+        <FormMessage message={error} />
+        <Primary label="Submit report" busy={busy} onPress={() => void send()} />
+        {cancel}
+      </>}
+    >
       <Text accessibilityRole="header" style={accountText.h1}>Share a private concern</Text>
       <TargetRow targetType={targetType} target={target} />
       <Text style={[accountText.prose, { marginBottom: 14 }]}>{`Reports about ${TARGET_LABELS[targetType]} are private and separate from public references. You’ll get a reference number.`}</Text>
@@ -130,11 +138,6 @@ function ReportScreenContent() {
         <Text style={styles.label}>What would you like us to know?</Text>
         <TextInput accessibilityLabel="What would you like us to know?" value={details} onChangeText={setDetails} maxLength={1000} multiline placeholderTextColor={colors.muted} style={styles.input} />
         <Text style={styles.hint}>Up to 1,000 characters.</Text>
-      </View>
-      <View style={styles.actions}>
-        <FormMessage message={error} />
-        <Primary label="Submit report" busy={busy} onPress={() => void send()} />
-        {cancel}
       </View>
     </AccountPage>
   );

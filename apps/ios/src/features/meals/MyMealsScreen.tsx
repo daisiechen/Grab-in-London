@@ -70,6 +70,7 @@ function SignedInMeals({ section, onSection }: { section: Section; onSection: (s
   const hosting = section === 'HOSTING';
   // The tab stays mounted: coming back from applying, chatting or managing must show the current state.
   const firstFocus = useRef(true);
+  const [pulling, setPulling] = useState(false);
   const tabsRef = useRef<ComponentRef<typeof ScrollView>>(null);
   const tabX = useRef<Partial<Record<Section, number>>>({});
   // Stable callback: switching sections already loads through useQuery and must not count as a refocus.
@@ -142,8 +143,10 @@ function SignedInMeals({ section, onSection }: { section: Section; onSection: (s
             </View>
           ) : undefined
         }
-        refreshing={q.loading}
-        onRefresh={() => void q.reload()}
+        // Only a pull shows the spinner: a background refetch on focus toggling it left the list
+        // stuck ~60pt down on iOS.
+        refreshing={pulling}
+        onRefresh={() => { setPulling(true); void q.reload().finally(() => setPulling(false)); }}
       />
     </SafeAreaView>
   );

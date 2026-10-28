@@ -9,4 +9,10 @@ describe('DateChoices', () => {
     expect(screen.queryByText('M')).toBeNull();
     expect(screen.getByRole('radio', { name: /^\w+ 20 / })).toBeSelected();
   });
+
+  it('disables dates after `latest`', async () => {
+    await render(<DateChoices label="Deadline date" selected={[]} onToggle={() => {}} today="2026-10-20" latest="2026-10-22" />);
+    expect(screen.getByRole('radio', { name: /^\w+ 22 / })).toBeEnabled();
+    expect(screen.getByRole('radio', { name: /^\w+ 23 / })).toBeDisabled();
+  });
 });

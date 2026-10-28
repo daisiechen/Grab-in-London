@@ -19,6 +19,8 @@ describe('MyMealsScreen refresh', () => {
     await renderApp(app, <MyMealsScreen />);
     expect(await screen.findByText('A good meal is waiting.')).toBeOnTheScreen();
     await act(async () => { mockFocus?.(); });
+    // A background refetch never drives the pull-to-refresh spinner (it left the list offset on iOS).
+    expect(screen.getByTestId('my-meals').props.refreshing).toBe(false);
     expect(await screen.findByText('Just confirmed')).toBeOnTheScreen();
     expect(sectionCalls(app)).toEqual(['UPCOMING', 'UPCOMING']);
     await fireEvent.press(screen.getByRole('tab', { name: 'Past' }));

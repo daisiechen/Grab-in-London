@@ -118,19 +118,20 @@ export const DropPanel = ({ children, testID }: { children: ReactNode; testID?: 
 
 const ROW = 40;
 /** All 48 half-hour London times in a compact grid that opens scrolled to the current choice. */
-export function TimeGrid({ label, value, onChange }: { label: string; value: string | null; onChange: (time: string) => void }) {
+export function TimeGrid({ label, value, onChange, isDisabled }: { label: string; value: string | null; onChange: (time: string) => void; /** Slots that would fail validation (e.g. a deadline after T−30) are shown but not selectable. */ isDisabled?: (time: string) => boolean }) {
   const anchor = Math.max(0, HALF_HOUR_SLOTS.indexOf(value ?? '18:00'));
   const [offset] = useState(() => Math.max(0, Math.floor(anchor / 6) - 1) * ROW);
   const scroller = useRef<ComponentRef<typeof ScrollView>>(null);
   return (
-    <ScrollView ref={scroller} style={styles.timeScroll} contentOffset={{ x: 0, y: offset }} onContentSizeChange={() => scroller.current?.scrollTo({ y: offset, animated: false })} nestedScrollEnabled accessibilityRole="radiogroup" accessibilityLabel={label}>
+    <ScrollView ref={scroller} contentInsetAdjustmentBehavior="never" style={styles.timeScroll} contentOffset={{ x: 0, y: offset }} onContentSizeChange={() => scroller.current?.scrollTo({ y: offset, animated: false })} nestedScrollEnabled accessibilityRole="radiogroup" accessibilityLabel={label}>
       <View style={styles.timeGrid}>
         {HALF_HOUR_SLOTS.map((t) => {
           const on = t === value;
+          const off = !on && !!isDisabled?.(t);
           return (
             <View key={t} style={styles.timeCell}>
-              <Pressable accessibilityRole="radio" accessibilityLabel={t} accessibilityState={{ selected: on }} onPress={() => onChange(t)} style={[styles.timeChip, on && styles.timeChipOn]}>
-                <Text style={[styles.timeText, on && styles.timeTextOn]}>{t}</Text>
+              <Pressable accessibilityRole="radio" accessibilityLabel={t} accessibilityState={{ selected: on, disabled: off }} disabled={off} onPress={() => onChange(t)} style={[styles.timeChip, on && styles.timeChipOn, off && styles.timeChipOff]}>
+                <Text style={[styles.timeText, on && styles.timeTextOn, off && styles.timeTextOff]}>{t}</Text>
               </Pressable>
             </View>
           );
@@ -205,9 +206,12 @@ const styles = createStyles({
   triggerText: { flex: 1, fontSize: 13, color: colors.ink },
   placeholder: { color: colors.muted },
   panel: { borderWidth: 1, borderColor: colors.line, borderRadius: 11, padding: 10, backgroundColor: colors.white },
-  timeScroll: { maxHeight: ROW * 4 + 4 },
+  // Exactly four whole rows, so no sliver of a neighbouring row shows at either edge.
+  timeScroll: { maxHeight: ROW * 4 },
   timeGrid: { flexDirection: 'row', flexWrap: 'wrap' },
   timeCell: { width: `${100 / 6}%`, height: ROW, padding: 3 },
+  timeChipOff: { backgroundColor: '#f4f5f1', borderColor: '#eceee8' },
+  timeTextOff: { color: '#b9bfb6' },
   timeChip: { flex: 1, borderRadius: 7, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center' },
   timeChipOn: { backgroundColor: colors.forest, borderColor: colors.forest },
   timeText: { fontSize: 12, color: colors.ink },

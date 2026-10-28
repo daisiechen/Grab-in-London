@@ -507,9 +507,11 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
     if (conv && conv.dissolvedAt === null) {
       joinConversation(conv, a.userId, at);
       // demo group chat: the host greets the newcomer; Emma (when at the table) replies.
-      if (meal.hostId !== ALEX) postMessage(conv, meal.hostId, HOST_GREETING, at + 1_000, null, w);
+      // Greets this newcomer for this table, so a fresh group never reads like a copy of another chat.
+      const newcomer = w.users.get(a.userId)?.displayName ?? 'there';
+      if (meal.hostId !== ALEX) postMessage(conv, meal.hostId, `Welcome to “${meal.title}”, ${newcomer}! Shall we meet outside five minutes before?`, at + 1_000, null, w);
       const emma = userId('emma');
-      if (isMember(conv, emma) && meal.hostId !== emma && openInterval(conv, emma)) postMessage(conv, emma, EMMA_REPLY, at + 2_000, null, w);
+      if (isMember(conv, emma) && meal.hostId !== emma && openInterval(conv, emma)) postMessage(conv, emma, `Hi ${newcomer}, see you there! 😊`, at + 2_000, null, w);
     }
     notify(a.userId, 'application_approved', { mealId: meal.id, applicationId: a.id, ...(conv ? { conversationId: conv.id } : {}) }, at);
   }

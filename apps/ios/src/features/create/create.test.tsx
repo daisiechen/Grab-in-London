@@ -343,6 +343,9 @@ describe('Create simulator walkthrough fixes (iOS 27)', () => {
     expect(screen.queryByText(/Must be at least/)).toBeNull();
     await fireEvent.changeText(screen.getByLabelText('Budget to per person in pounds'), '30');
     expect(screen.getByText('Must be at least £40, the “From” amount.')).toBeOnTheScreen();
+    // The estimate never echoes an invalid range such as “£40–30”.
+    expect(screen.queryByText('£40–30')).toBeNull();
+    expect(screen.getByText('—')).toBeOnTheScreen();
     expect(screen.queryByRole('alert')).toBeNull();
     await fireEvent.changeText(screen.getByLabelText('Budget to per person in pounds'), '45');
     expect(screen.queryByText(/Must be at least/)).toBeNull();
@@ -372,17 +375,15 @@ describe('Create simulator walkthrough fixes (iOS 27)', () => {
     expect(within(screen.getByTestId('create-scroll')).queryByRole('button', { name: 'Publish meal' })).toBeNull();
   });
 
-  it('Review: optional cuisine and dietary rows appear only when provided', async () => {
+  it('Review: undeclared cuisine and dietary read “Not provided” as guests see them (P-05)', async () => {
     const app = createTestApp(); await signIn(app, me());
     app.services.drafts.set(CREATE_DRAFT_KEY, readyDraft());
     app.mock.on('GET', `/v1/venues/${VENUE_REF}/photo`, ok({ placeId: 'place-1', photo: null }));
     const view = await renderApp(app, <CreateStepScreen step={3} />);
-    expect(screen.queryByText(/Not provided/)).toBeNull();
-    expect(screen.queryByText(/Cuisine:/)).toBeNull();
+    expect(screen.getByText('Cuisine: Not provided · Dietary options: Not provided. Host-reported · not an allergy guarantee.')).toBeOnTheScreen();
     await view.unmount();
     app.services.drafts.set(CREATE_DRAFT_KEY, { ...readyDraft(), cuisineCode: 'SPANISH', dietaryCodes: [] });
     await renderApp(app, <CreateStepScreen step={3} />);
-    expect(screen.getByText('Cuisine: Spanish. Host-reported · not an allergy guarantee.')).toBeOnTheScreen();
-    expect(screen.queryByText(/Dietary options/)).toBeNull();
+    expect(screen.getByText('Cuisine: Spanish · Dietary options: Not provided. Host-reported · not an allergy guarantee.')).toBeOnTheScreen();
   });
 });

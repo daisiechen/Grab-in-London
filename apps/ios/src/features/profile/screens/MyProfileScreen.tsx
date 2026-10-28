@@ -35,8 +35,11 @@ export function MyProfileScreen() {
       <ScrollView style={styles.page} contentContainerStyle={[styles.body, styles.guestPage, { paddingTop: insets.top + 4 }]} testID="profile-guest">
         <Text accessibilityRole="header" style={styles.h1}>Your profile</Text>
         <View style={styles.guestBody}>
-          <Text style={styles.prose}>Sign in to set up the profile your tables will see.</Text>
-          <View style={styles.actions}>
+          {/* Same empty-state pattern as the signed-out Meals and Inbox tabs. */}
+          <Icon name="Person" size={30} color={colors.forest} />
+          <Text style={styles.emptyTitle}>Let your table get to know you.</Text>
+          <Text style={[styles.prose, styles.centred]}>Sign in to set up the profile your tables will see.</Text>
+          <View style={[styles.actions, styles.guestActions]}>
             <Primary
               label="Sign in or create an account"
               onPress={() => {
@@ -82,7 +85,9 @@ const monthName = (instant: string) => MONTHS[new Date(instant).getUTCMonth()] ?
 const styles = createStyles({
   // Guest view: the title stays at the top like the other tabs; only the prompt is centred in the free space.
   guestPage: { flexGrow: 1 },
-  guestBody: { flex: 1, justifyContent: 'center', paddingBottom: 60 },
+  guestBody: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8, paddingBottom: 60 },
+  emptyTitle: { fontSize: 18, fontWeight: '700', color: colors.ink, textAlign: 'center', marginTop: 4 },
+  centred: { textAlign: 'center' },
   page: { flex: 1, backgroundColor: colors.white },
   body: { paddingHorizontal: 18, paddingBottom: 24 },
   gear: { position: 'absolute', right: 12, zIndex: 10, width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffffee', borderWidth: 1, borderColor: colors.line },
@@ -91,6 +96,7 @@ const styles = createStyles({
   prose: { color: '#55625a', fontSize: 14, lineHeight: 21 },
   muted: { fontSize: 12, color: colors.muted, lineHeight: 18 },
   actions: { gap: 8, marginTop: 12 },
+  guestActions: { alignSelf: 'stretch', marginTop: 10 },
   quote: { padding: 14, backgroundColor: '#f5f6f0', borderRadius: 12, marginBottom: 8 },
   quoteText: { fontSize: 14, lineHeight: 21, color: colors.ink },
   quoteBy: { marginTop: 8, fontSize: 11, color: colors.muted },

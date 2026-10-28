@@ -141,7 +141,7 @@ describe('ReportScreen', () => {
     expect(app.mock.callsTo('POST', '/v1/reports')).toHaveLength(0);
   });
 
-  it('names the reported meal with its date; the text box is roomy and the button follows it inline', async () => {
+  it('names the reported meal with its date; the text box is roomy and Submit is pinned above the keyboard', async () => {
     const app = createTestApp();
     await signIn(app, me());
     routeParams.current = { targetType: 'MEAL', targetId: MEAL_ID };
@@ -150,7 +150,9 @@ describe('ReportScreen', () => {
     expect(await screen.findByLabelText('Reporting Sunday dinner')).toBeOnTheScreen();
     const input = screen.getByLabelText('What would you like us to know?');
     expect(StyleSheet.flatten(input.props.style).minHeight).toBeGreaterThanOrEqual(140);
-    expect(screen.getByTestId('report')).toContainElement(screen.getByRole('button', { name: 'Submit report' }));
+    // Pinned footer: an inline button ended up behind the keyboard on device.
+    expect(screen.getByTestId('account-footer')).toContainElement(screen.getByRole('button', { name: 'Submit report' }));
+    expect(screen.getByTestId('account-footer')).toContainElement(screen.getByRole('button', { name: 'Cancel' }));
   });
 
   it('keeps a generic target line when the lookup fails', async () => {

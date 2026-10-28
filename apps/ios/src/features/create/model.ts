@@ -116,6 +116,14 @@ export function budgetIssues(draft: Pick<CreateDraft, 'budgetMin' | 'budgetMax'>
   return { min: null, max: lo !== null && hi !== null && lo > hi ? `Must be at least £${draft.budgetMin.trim()}, the “From” amount.` : null };
 }
 
+const minutesOf = (hhmm: string) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3, 5));
+/** A deadline slot later than 30 minutes before the meal (same London date); the server re-validates. */
+export function deadlineTooLate(d: Pick<CreateDraft, 'date' | 'time' | 'closeDate'>, slot: string): boolean {
+  if (!d.date || !d.time || !d.closeDate) return false;
+  if (d.closeDate > d.date) return true;
+  return d.closeDate === d.date && minutesOf(slot) > minutesOf(d.time) - 30;
+}
+
 /** Client checks mirror the API (lengths, 2–6, min ≤ capacity, deadline ≤ T−30); the server re-validates. */
 export function validateStep(draft: CreateDraft, step: Step, todayLondon: string): string | null {
   if (step === 0) {
