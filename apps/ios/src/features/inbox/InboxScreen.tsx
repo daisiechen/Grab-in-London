@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useRouter } from 'expo-router';
@@ -7,6 +7,7 @@ import { allPages } from '../../api/pages.ts';
 import { useServices, useSessionState, type Services } from '../../services.tsx';
 import { loadErrorMessage, useQuery } from '../../api/useQuery.ts';
 import { Avatar } from '../../ui/Avatar.tsx';
+import { clearInboxFocus, peekInboxFocus } from './focus.ts';
 import { PageHeader } from '../../ui/PageHeader.tsx';
 import { Primary } from '../../ui/Button.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
@@ -105,11 +106,22 @@ function SignedInInbox() {
     })();
     refreshJob.current = job; void job.finally(() => { if (refreshJob.current === job) refreshJob.current = null; }); return job;
   }, [session, q.reload]);
+  // Bumped on every focus so a pending “land on this meal” request is re-checked (see below).
+  const [focused, setFocused] = useState(0);
   useFocusEffect(useCallback(() => {
+    setFocused((n) => n + 1);
     // The initial useQuery effect already loads once. A mounted screen returning from chat must revalidate.
     if (firstFocus.current) { firstFocus.current = false; return; }
     void refresh();
   }, [refresh]));
+  // Land on the meal the member just applied to: its chat once seated, else the Applications tab.
+  useEffect(() => {
+    const mealId = peekInboxFocus();
+    if (!mealId || !q.data) return;
+    const chat = q.data.find((i) => i.conversation?.mealId === mealId && i.conversation.kind === 'GROUP');
+    if (chat?.conversation) { clearInboxFocus(); router.push(`/chat/${chat.conversation.id}`); return; }
+    if (q.data.some((i) => i.application?.mealId === mealId && !i.conversation)) { clearInboxFocus(); setTab('applications'); }
+  }, [q.data, focused, router]);
   const chats = (q.data ?? []).filter((i) => i.conversation);
   const groups = chats.filter((i) => i.conversation?.kind === 'GROUP');
   const direct = chats.filter((i) => i.conversation?.kind === 'DIRECT');

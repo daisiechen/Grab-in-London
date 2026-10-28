@@ -5,6 +5,7 @@ import { mockRouter, resetRouter } from '../../test/router.ts';
 import { page } from '../../test/mock-fetch.ts';
 import { CONVERSATION_ID, MEAL_ID, application, me } from '../../test/fixtures.ts';
 import { clearReturnTo, peekReturnTo } from '../auth/intent.ts';
+import { clearInboxFocus, focusInboxOn } from './focus.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
 jest.mock('expo-router', () => require('../../test/router.ts').expoRouterMock);
@@ -16,6 +17,28 @@ const applicationMeal = { title: 'Pending dinner table', startsAt: { instant: '2
 beforeEach(() => { resetRouter(); clearReturnTo(); });
 
 describe('InboxScreen (demo inbox)', () => {
+  afterEach(() => clearInboxFocus());
+  it('after applying, Inbox opens on the Applications tab while the request is pending', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    focusInboxOn(MEAL_ID);
+    app.mock.on('GET', '/v1/inbox', page([{ lastMessage: null, unreadCount: 0, application: application(), applicationMeal }]));
+    await renderApp(app, <InboxScreen />);
+    expect(await screen.findByRole('tab', { name: 'Applications · 1' })).toBeSelected();
+    expect(mockRouter.push).not.toHaveBeenCalled();
+  });
+
+  it('once seated, Inbox opens that meal’s group chat (once)', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    focusInboxOn(MEAL_ID);
+    app.mock.on('GET', '/v1/inbox', page([{ conversation: conversation(), lastMessage: null, unreadCount: 0 }]));
+    await renderApp(app, <InboxScreen />);
+    await screen.findByRole('tab', { name: 'Chats · 1' });
+    expect(mockRouter.push).toHaveBeenCalledWith(`/chat/${CONVERSATION_ID}`);
+    expect(mockRouter.push).toHaveBeenCalledTimes(1);
+  });
+
   it('chat rows show the host (group) or the other member (direct) as an avatar, falling back to an icon', async () => {
     const app = createTestApp();
     await signIn(app, me());

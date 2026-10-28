@@ -13,6 +13,7 @@ import { Sheet } from '../../ui/Sheet.tsx';
 import { Body } from '../../ui/Text.tsx';
 import { createStyles } from '../../ui/styles.ts';
 import { colors } from '../../ui/tokens.ts';
+import { focusInboxOn } from '../inbox/focus.ts';
 import { mealKey } from './MealDetailScreen.tsx';
 import { applicationLabel, bookingLabel, cardBudgetLabel, cardWhenLabel, venueName, type Application, type Meal } from './format.ts';
 import { mealActionMessage } from './messages.ts';
@@ -119,7 +120,7 @@ export function ApplicationStatusScreen() {
 
   const primary = () => {
     if (app.state === 'CONFIRMED' && conversationId) return <Primary label="Open group chat" icon="ArrowRight" onPress={() => router.push(`/chat/${conversationId}`)} />;
-    if (app.state === 'PENDING') return <Primary secondary label="Track in Inbox" icon="ChatBubble" onPress={() => router.navigate('/inbox')} />;
+    if (app.state === 'PENDING') return <Primary secondary label="Track in Inbox" icon="ChatBubble" onPress={() => { focusInboxOn(meal.id); router.navigate('/inbox'); }} />;
     if (can('APPLY')) return <Primary label="Apply again" icon="ArrowRight" onPress={() => router.replace(`/meals/${meal.id}/apply`)} />;
     if (app.state === 'CONFIRMED') return <Primary secondary label="View the table" onPress={openMeal} />;
     return <Primary label="Find another table" icon="ArrowRight" onPress={() => router.navigate('/')} />;

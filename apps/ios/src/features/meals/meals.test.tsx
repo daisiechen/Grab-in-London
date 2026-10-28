@@ -1,4 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { peekInboxFocus } from '../inbox/focus.ts';
 import { MealDetailScreen } from './MealDetailScreen.tsx';
 import { ApplyScreen } from './ApplyScreen.tsx';
 import { HostScreen } from './HostScreen.tsx';
@@ -109,6 +110,8 @@ describe('ApplyScreen (S07, QA-INPUT-017..020)', () => {
     await fireEvent.changeText(await screen.findByLabelText('Your introduction'), 'I recently moved here and love trying new food.');
     await fireEvent.press(screen.getByRole('button', { name: 'Send request' }));
     await waitFor(() => expect(mockRouter.replace).toHaveBeenCalledWith(`/meals/${MEAL_ID}/status`));
+    // Inbox will open on this meal next (Applications tab while pending, its chat once seated).
+    expect(peekInboxFocus()).toBe(MEAL_ID);
     expect(app.mock.callsTo('POST', /applications/)[0]?.body).toEqual({ message: 'I recently moved here and love trying new food.' });
     expect(app.services.drafts.get(`apply:${MEAL_ID}`)).toBeUndefined();
   });

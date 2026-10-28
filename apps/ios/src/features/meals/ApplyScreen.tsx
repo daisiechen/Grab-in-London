@@ -18,6 +18,7 @@ import { RestaurantPhoto } from '../../ui/RestaurantPhoto.tsx';
 import { createStyles } from '../../ui/styles.ts';
 import { colors, radius } from '../../ui/tokens.ts';
 import { rememberReturnTo } from '../auth/intent.ts';
+import { focusInboxOn } from '../inbox/focus.ts';
 import { mealKey } from './MealDetailScreen.tsx';
 import { cardBudgetLabel, cardWhenLabel, seatsLabel, venueName, type Meal } from './format.ts';
 import { mealActionMessage } from './messages.ts';
@@ -99,6 +100,7 @@ function ApplyScreenContent() {
       if(!current())return;
       applicationDrafts.delete(id,userId,generation);
       cache.delete(mealKey(id));
+      focusInboxOn(id);
       router.replace(`/meals/${id}/status`);
     } catch (e) {
       if(!current())return;
