@@ -323,7 +323,7 @@ function Note({ children }: { children: string }) {
 function Chip({ label, selected, disabled, onPress }: { label: string; selected: boolean; disabled: boolean; onPress: () => void }) {
   return (
     <Pressable accessibilityRole="radio" accessibilityLabel={label} accessibilityState={{ selected, disabled }} disabled={disabled} onPress={onPress} style={[styles.chip, selected && styles.chipOn, disabled && styles.dim]}>
-      <Text style={[styles.chipText, selected && styles.chipTextOn]}>{selected ? `✓ ${label}` : label}</Text>
+      <Text style={[styles.chipText, selected && styles.chipTextOn]}>{label}</Text>
     </Pressable>
   );
 }
@@ -370,8 +370,9 @@ const styles = createStyles({
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   chip: { minHeight: 34, paddingHorizontal: 12, paddingVertical: 7, borderRadius: radius.sm, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.white, justifyContent: 'center' },
   chipOn: { backgroundColor: colors.selectedSurface, borderColor: colors.forest },
-  chipText: { fontSize: 12, color: colors.ink },
-  chipTextOn: { color: colors.forest, fontWeight: '700' },
+  // Same weight in both states so a chip never widens when chosen (matches ChoiceGroup).
+  chipText: { fontSize: 12, fontWeight: '600', color: colors.ink },
+  chipTextOn: { color: colors.forest },
   dim: { opacity: 0.5 },
   memberRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 7 },
   pressed: { opacity: 0.6 },

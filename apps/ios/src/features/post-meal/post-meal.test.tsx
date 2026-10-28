@@ -83,6 +83,9 @@ describe('PostMealScreen (S19/S21)', () => {
     expect(await screen.findByText('How was the meal? Tap a score to save it.')).toBeOnTheScreen();
     expect(within(screen.getByTestId('att-status')).getByText('Saved')).toBeOnTheScreen();
     expect(screen.getByRole('radio', { name: 'I attended' }).props.accessibilityState.selected).toBe(true);
+    // Selection changes colour only: no check prefix that would widen the chip.
+    expect(screen.getByText('I attended')).toBeOnTheScreen();
+    expect(screen.queryByText(/✓/)).toBeNull();
     const [put] = app.mock.callsTo('PUT', /attendance/);
     expect(put).toMatchObject({ body: { value: 'present' }, headers: { 'if-match': '"1"' } });
     expect(put?.headers['idempotency-key']).toBeDefined();
