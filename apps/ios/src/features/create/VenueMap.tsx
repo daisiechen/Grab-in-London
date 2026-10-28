@@ -28,8 +28,8 @@ function NativeVenueMap({ points, activeId, onSelect, onBoundsChange }: Props) {
   return (
     <StyledMap initialRegion={PICKER_REGION} accessibilityLabel="Map of restaurants in central London" onRegionChangeComplete={(r) => onBoundsChange(regionBounds(r))}>
       {points.map((p) => (
-        // Re-keyed on selection: tracksViewChanges={false} only redraws a marker when it remounts.
-        <MapMarker key={`${p.id}:${p.id === activeId}`} testID={`venue-pin-${p.id}`} identifier={p.id} coordinate={{ latitude: p.lat, longitude: p.lng }} onPress={() => onSelect(p.id)} tracksViewChanges={false} anchor={{ x: 0.5, y: 1 }}>
+        // tracksViewChanges={false} only redraws a marker when it remounts: key it by number and selection.
+        <MapMarker key={`${p.id}:${p.n}:${p.id === activeId}`} testID={`venue-pin-${p.id}`} identifier={p.id} coordinate={{ latitude: p.lat, longitude: p.lng }} onPress={() => onSelect(p.id)} tracksViewChanges={false} anchor={{ x: 0.5, y: 1 }}>
           <VenuePin point={p} active={p.id === activeId} />
         </MapMarker>
       ))}

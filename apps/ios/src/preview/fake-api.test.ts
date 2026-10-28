@@ -194,6 +194,8 @@ describe('preview fake API', () => {
     });
     expect(created.data).toMatchObject({ confirmedCount: 1, startsAt: { utcOffsetMinutes: 0, instant: '2026-10-30T19:00:00.000Z' }, dietaryCodes: ['VEGETARIAN_OPTIONS', 'VEGAN'], areaCode: 'soho', bookingDeclaration: { status: 'REPORTED_CONFIRMED', declaredCount: 4, stale: false } });
     expect(created.data.allowedActions).toEqual(['OPEN_GROUP', 'CANCEL', 'DECLARE_BOOKING', 'REVIEW_APPLICATIONS', 'EDIT']);
+    // The host's own group appears in Inbox straight away (host is its first member, like apps/api).
+    expect((await ctx.api.call('inbox', { query: {} })).data.map((i) => i.conversation?.title)).toContain('Supper for new Londoners');
 
     const requests = await ctx.api.call('listApplications', { params: { mealId: created.data.id }, query: {} });
     expect(requests.data).toHaveLength(1);

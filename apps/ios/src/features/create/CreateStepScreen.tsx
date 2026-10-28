@@ -10,6 +10,7 @@ import { useServices, useSessionState } from '../../services.tsx';
 import type { QueryCache } from '../../api/cache.ts';
 import { loadErrorMessage, useQuery } from '../../api/useQuery.ts';
 import { SessionScope } from '../auth/SessionScope.tsx';
+import { setFlash } from '../meals/flash.ts';
 import { mealKey } from '../meals/MealDetailScreen.tsx';
 import { POLICY_VERSION } from '../../config.ts';
 import { londonToday, longDate } from '../../lib/london.ts';
@@ -348,6 +349,7 @@ function Review({ draft, update, today, goTo, mode }: Part & { today: string; go
       const cached = services.cache.get<Detail>(mealKey(mealId));
       if (cached) services.cache.set(mealKey(mealId), { ...cached, meal: updated });
       services.cache.invalidate('myMeals:');
+      setFlash(`host:${mealId}`, 'Changes saved. Guests see the updated details.');
       router.dismissTo(hostRoute(mealId));
     } catch (e) {
       if (!(e instanceof ApiError)) return setError('Something went wrong. Please try again.');
@@ -383,7 +385,12 @@ function Review({ draft, update, today, goTo, mode }: Part & { today: string; go
       intent.current = null;
       services.drafts.delete(CREATE_DRAFT_KEY);
       services.cache.invalidate('myMeals:');
-      router.replace(`/meals/${meal.id}`);
+      // The new meal's group chat exists now; Inbox reloads it on its next focus.
+      services.cache.delete('inbox');
+      // Close the whole wizard first: Back from the new meal must return to the tabs, not into
+      // emptied Create steps.
+      if (router.canDismiss()) router.dismissAll();
+      router.push(`/meals/${meal.id}`);
     } catch (e) {
       if (!(e instanceof ApiError)) return setError('Something went wrong. Please try again.');
       if (handleTimeError(e, d)) return;

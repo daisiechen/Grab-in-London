@@ -76,7 +76,7 @@ describe('HostScreen · Your guest list (J02-R07)', () => {
 
   it('updates the external reservation in place with the status and current guest count (If-Match)', async () => {
     const app = await setup({ confirmedCount: 3, version: '7', bookingDeclaration: { id: '44444444-5555-4666-8777-888888888888', revision: '1', status: 'REPORTED_CONFIRMED', declaredCount: 4, reportedAt: '2026-10-21T09:00:00Z', stale: true } });
-    expect(await screen.findByText('3 people are confirmed now. Check with the restaurant and update your reservation.')).toBeOnTheScreen();
+    expect(await screen.findByText(/^Your table changed since you reported this booking: \d+ seats, 3 confirmed including you\. Check with the restaurant/)).toBeOnTheScreen();
     app.mock.on('POST', `${MEAL_PATH}/booking-declarations`, ok(meal(), 201));
     await fireEvent.press(screen.getByRole('button', { name: 'Update reservation' }));
     const save = screen.getByRole('button', { name: 'Save reservation status' });
@@ -92,7 +92,7 @@ describe('HostScreen · Your guest list (J02-R07)', () => {
     await setup({ confirmedCount: 1, bookingDeclaration: { id: '44444444-5555-4666-8777-888888888888', revision: '1', status: 'REPORTED_CONFIRMED', declaredCount: 4, reportedAt: '2026-10-21T09:00:00Z', stale: false } });
     expect(await screen.findByText('Restaurant booked')).toBeOnTheScreen();
     expect(screen.getByText('For 4 people · reported Wed 21 Oct')).toBeOnTheScreen();
-    expect(screen.queryByText(/confirmed now\. Check with the restaurant/)).toBeNull();
+    expect(screen.queryByText(/Your table changed since you reported this booking/)).toBeNull();
   });
 
   it('explains the arrangement lock before and after the first approval', async () => {

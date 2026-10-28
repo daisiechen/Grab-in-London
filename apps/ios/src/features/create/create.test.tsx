@@ -138,7 +138,8 @@ describe('Create Review publish (S10, QA-TIME-004..007, QA-CREATE-002)', () => {
     await fireEvent.press(screen.getByRole('radio', { name: 'GMT · after the clocks go back' }));
     await fireEvent.press(screen.getByRole('button', { name: 'Publish with this time' }));
 
-    await waitFor(() => expect(mockRouter.replace).toHaveBeenCalledWith(`/meals/${MEAL_ID}`));
+    await waitFor(() => expect(mockRouter.push).toHaveBeenCalledWith(`/meals/${MEAL_ID}`));
+    expect(mockRouter.dismissAll).toHaveBeenCalled();
     const [first, second] = app.mock.callsTo('POST', '/v1/meals');
     expect(first?.body).toMatchObject({ start: { localDate: '2026-10-25', localTime: '01:30', timeZone: 'Europe/London' }, bookingMode: 'EXTERNAL_PAY_AT_VENUE', bookingDeclarationConfirmed: true, reviewConfirmed: true });
     expect((first?.body as { start: object }).start).not.toHaveProperty('utcOffsetMinutes');
@@ -171,7 +172,8 @@ describe('Create Review publish (S10, QA-TIME-004..007, QA-CREATE-002)', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Publish meal' }));
     expect(await screen.findByRole('alert')).toHaveTextContent(/couldn’t confirm this with Fancy/);
     await fireEvent.press(screen.getByRole('button', { name: 'Publish meal' }));
-    await waitFor(() => expect(mockRouter.replace).toHaveBeenCalledWith(`/meals/${MEAL_ID}`));
+    await waitFor(() => expect(mockRouter.push).toHaveBeenCalledWith(`/meals/${MEAL_ID}`));
+    expect(mockRouter.dismissAll).toHaveBeenCalled();
     const keys = app.mock.callsTo('POST', '/v1/meals').map((c) => c.headers['idempotency-key']);
     expect(keys[0]).toBe(keys[1]);
   });

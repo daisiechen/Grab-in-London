@@ -1,7 +1,7 @@
 import { SessionScope } from '../auth/SessionScope.tsx';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ApiError, type ResponseOf } from '@fancy/client';
 import { HOST_CANCEL_REASONS } from '@fancy/contracts';
@@ -25,6 +25,7 @@ import { Reveal, RevealScope, useRevealScroll } from '../create/reveal.tsx';
 import { startMealEdit } from '../create/CreateStepScreen.tsx';
 import { editBlockedReason } from '../create/model.ts';
 import { mealActionMessage } from './messages.ts';
+import { takeFlash } from './flash.ts';
 
 type Detail = ResponseOf<'getMeal'>['data'];
 type Person = Meal['members'][number];
@@ -60,6 +61,11 @@ function HostScreenContent() {
   const detail = useQuery<Detail>(mealKey(id), async () => (await api.call('getMeal', { params: { mealId: id } })).data);
   const apps = useQuery<Application[]>(`applications:${id}`, () => allPages((cursor) => api.call('listApplications', { params: { mealId: id }, query: { limit: 100, ...(cursor ? { cursor } : {}) } })));
   const [message, setMessage] = useState<{ text: string; tone: 'error' | 'info' } | null>(null);
+  // Confirmation handed over by Edit meal after a successful save.
+  useFocusEffect(useCallback(() => {
+    const saved = takeFlash(`host:${id}`);
+    if (saved) setMessage({ text: saved, tone: 'info' });
+  }, [id]));
   const [busy, setBusy] = useState<string | null>(null);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [bookingOpen, setBookingOpen] = useState(false);
@@ -206,7 +212,7 @@ function HostScreenContent() {
             {declaration ? <Text style={styles.small}>{`For ${declaration.declaredCount} ${declaration.declaredCount === 1 ? 'person' : 'people'} · reported ${longDate(declaration.reportedAt.slice(0, 10))}`}</Text> : null}
           </View>
           {declaration?.stale && !cancelled ? (
-            <Text style={styles.small}>{`${meal.confirmedCount} ${meal.confirmedCount === 1 ? 'person is' : 'people are'} confirmed now. Check with the restaurant and update your reservation.`}</Text>
+            <Text style={styles.small}>{`Your table changed since you reported this booking: ${meal.capacity} seats, ${meal.confirmedCount} confirmed including you. Check with the restaurant and update your reservation.`}</Text>
           ) : null}
           <Text style={styles.small}>You book with the restaurant yourself; guests see this as reported by you. Everyone pays their own share at the restaurant.</Text>
           {meal.allowedActions.includes('DECLARE_BOOKING') ? (

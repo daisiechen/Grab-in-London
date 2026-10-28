@@ -5,6 +5,7 @@ import { createTestApp, renderApp, signIn, type TestApp } from '../../test/rende
 import { mockRouter, resetRouter, routeParams } from '../../test/router.ts';
 import { fail, ok, page } from '../../test/mock-fetch.ts';
 import { CONVERSATION_ID, MEAL_ID, meal, me } from '../../test/fixtures.ts';
+import { takeFlash } from '../meals/flash.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
 jest.mock('expo-router', () => { const m = require('../../test/router.ts'); m.mockRouter.dismissTo = jest.fn(); return m.expoRouterMock; });
@@ -118,6 +119,8 @@ describe('Edit meal flow', () => {
     expect(screen.queryByRole('button', { name: 'Publish meal' })).toBeNull();
     await fireEvent.press(screen.getByRole('button', { name: 'Save changes' }));
     await waitFor(() => expect(dismissTo).toHaveBeenCalledWith(HOST_PATH));
+    // The guest list shows a one-time “saved” confirmation.
+    expect(takeFlash(`host:${MEAL_ID}`)).toBe('Changes saved. Guests see the updated details.');
     const [call] = app.mock.callsTo('PATCH', MEAL_PATH);
     expect(call?.body).toEqual({ title: 'Sunday supper', capacity: 5 });
     expect(call?.headers['if-match']).toBe('"7"');

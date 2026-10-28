@@ -8,8 +8,8 @@ import { AccountPage, accountText } from '../../ui/AccountPage.tsx';
 export function CancellationTermsScreen() {
   return (
     <AccountPage testID="cancellation-terms">
-      <Text accessibilityRole="header" style={accountText.h1}>Cancellation terms</Text>
-      <Text accessibilityRole="header" style={accountText.h2}>Your place</Text>
+      {/* The navigation bar already says “Cancellation terms”; the page starts with its first section. */}
+      <Text accessibilityRole="header" style={[accountText.h2, { marginTop: 4 }]}>Your place</Text>
       <Text style={accountText.prose}>You can withdraw an application or cancel your place before the meal starts. Let your host know as early as possible.</Text>
       <Text style={[accountText.prose, { marginTop: 8 }]}>If the group falls below its minimum after applications close, the meal is cancelled. Before the deadline, the host can keep recruiting.</Text>
       <Text accessibilityRole="header" style={accountText.h2}>Hosting a meal</Text>
