@@ -1,6 +1,7 @@
 import type { Pool, PoolClient } from 'pg';
 import type { AuthContext } from '../http/context.ts';
 import { csrfTokenFor } from '../http/security.ts';
+import { avatarUrl } from '../profiles/avatar.ts';
 
 /** Private projection, shared by sign-in and profile endpoints. */
 export async function loadMe(db: Pool | PoolClient, userId: string) {
@@ -21,7 +22,7 @@ export async function loadMe(db: Pool | PoolClient, userId: string) {
   return {
     id: r.id as string, version: r.version as string,
     displayName: (r.display_name as string | null) ?? null,
-    avatarRef: (r.avatar_ref as string | null) ?? null,
+    avatarUrl: avatarUrl(r.avatar_image_id as string | null),
     bio: (r.bio as string | null) ?? null,
     languages: (r.languages as string[]) ?? [], lifeStatus: (r.life_status as string | null) ?? null,
     interests: (r.interests as string[]) ?? [], background: (r.background as Record<string, string>) ?? {},

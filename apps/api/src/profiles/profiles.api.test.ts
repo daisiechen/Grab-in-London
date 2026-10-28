@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, inject, it } from 'vitest';
-import { Browser, WEB_ORIGIN, createHarness, json, type Harness } from '../test/harness.ts';
+import { Browser, createHarness, json, type Harness } from '../test/harness.ts';
 let h: Harness;
 beforeAll(async () => { h = await createHarness(inject('pgServerUrl')); });
 afterAll(async () => { await h.close(); });
@@ -21,13 +21,10 @@ describe('S05 profile privacy, gates and optimistic writes', () => {
     expect(pub.body).not.toMatch(/email|lifeStatus|ConfirmedVersion|AcceptedVersion|roles|privacyEpoch/);
     expect(json(pub).data.profile.avatarUrl).toBeNull();
   });
-  it('publishes the chosen sample portrait as a static web URL; unknown refs stay null', async () => {
-    const { b, id } = await signedIn();
-    expect((await patch(b, { ...complete, avatarRef: 'avatar:maya' })).statusCode).toBe(200);
-    const pub = json(await new Browser(h).request('GET', `/v1/profiles/${id}`)).data.profile;
-    expect(pub.avatarUrl).toBe(`${WEB_ORIGIN}/avatars/maya.png`);
-    expect((await patch(b, { avatarRef: 'avatar:unknown' }, '2')).statusCode).toBe(200);
-    expect(json(await new Browser(h).request('GET', `/v1/profiles/${id}`)).data.profile.avatarUrl).toBeNull();
+  it('no longer accepts the retired sample-portrait reference (photos are uploaded instead)', async () => {
+    const { b } = await signedIn();
+    expect((await patch(b, { ...complete, avatarRef: 'avatar:maya' })).statusCode).toBe(422);
+    expect(json(await b.request('GET', '/v1/me')).data).toMatchObject({ version: '1', avatarUrl: null });
   });
   it('rejects private fields and forged consent versions without changing status or version', async () => {
     const { b } = await signedIn();

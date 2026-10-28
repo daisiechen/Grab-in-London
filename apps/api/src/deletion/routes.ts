@@ -17,6 +17,7 @@ import { addSeat, currentSeats } from '../meals/commands.ts';
 import { leaveConversation } from '../membership/intervals.ts';
 import { revokePairsForDeletion } from '../connections/service.ts';
 import { purgeSnapshotExports } from '../admin/exports.ts';
+import { deleteAvatar } from '../profiles/avatar.ts';
 import { retainPreAccountSnapshots } from '../admin/retain-unrelated.ts';
 registerLockTable('user_pairs','pair');
 const statusDto=(r:Record<string,unknown>)=>({status:r.status,requestedAt:(r.requested_at as Date).toISOString(),completedAt:(r.completed_at as Date|null)?.toISOString()??null});
@@ -96,6 +97,8 @@ export async function applyDeletion(tx:Tx,deps:AppDeps,input:({kind:'USER';authT
   if(input.kind==='RESTORE')for(const meal of meals)await advanceLifecycle(tx,meal,actualNow);
   await tx.client.query(`UPDATE users SET status='DELETING',version=version+1,privacy_epoch=privacy_epoch+1,updated_at=$2 WHERE id=$1`,[input.userId,now]);
   await revokeAllForUser(tx.client,input.userId,'ACCOUNT_DELETION');
+  // Profile photos are personal data that is never retained: remove at acceptance, not at purge.
+  await deleteAvatar(tx.client,input.userId);
   await tx.client.query(`UPDATE privacy_control SET epoch=epoch+1 WHERE id=1`);
   await retainPreAccountSnapshots(tx.client,input.userId,previousPrivacyEpoch);
   const {rows:revoked}=await tx.client.query<{id:string}>(`UPDATE analytics_snapshots SET revoked_at=COALESCE(revoked_at,$2) WHERE id IN(SELECT snapshot_id FROM analytics_snapshot_subjects WHERE user_id=$1) RETURNING id`,[input.userId,now]);

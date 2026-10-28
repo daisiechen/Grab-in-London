@@ -4,7 +4,7 @@
  * and the auth mode, CSRF, If-Match and Idempotency-Key rules are enforced before the handler.
  */
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { Meta, operationsById, PageInfo, T, type OperationDef, type OperationId } from '@fancy/contracts';
+import { AVATAR_MAX_BASE64_LENGTH, Meta, operationsById, PageInfo, T, type OperationDef, type OperationId } from '@fancy/contracts';
 import { DomainError } from '../common/errors.ts';
 import { claimIntent, completeIntent, releaseIntent, replayIfAuthorized } from '../common/idempotency.ts';
 import { requestHash } from '../common/canonical.ts';
@@ -93,6 +93,9 @@ function restoreRetryAfter(reply:FastifyReply,body:unknown){
 }
 
 const routePath = (def: OperationDef) => '/v1' + def.path.replace(/\{([A-Za-z]+)\}/g, ':$1');
+/** Request body limits above the server-wide 64 KiB, per operation (base64 photo upload). */
+const BODY_LIMITS: Partial<Record<OperationId, number>> = { uploadAvatar: AVATAR_MAX_BASE64_LENGTH + 64 * 1024 };
+const bodyLimitFor = (id: OperationId) => (BODY_LIMITS[id] ? { bodyLimit: BODY_LIMITS[id] } : {});
 
 function schemaFor(def: OperationDef) {
   const response = envelopeSchema(def);
@@ -145,6 +148,7 @@ export function defineWrite<P=undefined>(app: FastifyInstance, deps: AppDeps, id
     method: def.method,
     url: routePath(def),
     schema: schemaFor(def),
+    ...bodyLimitFor(id),
     handler: async (request, reply) => {
       const { auth, ifMatch } = await preflight(def, request, deps);
       const key = request.headers['idempotency-key'];

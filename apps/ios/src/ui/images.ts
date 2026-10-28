@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- Metro bundles static image assets only through require(). */
 import type { ImageSourcePropType } from 'react-native';
+import { apiBaseUrl } from '../config.ts';
+import { localPhotos } from './local-photos.ts';
+
+export { localPhotos };
 
 /** Bundled artwork copied from demo/public/images (fictional, generated for this project). */
 export const images = {
@@ -14,20 +18,22 @@ const PEOPLE: Record<string, ImageSourcePropType> = {
   emma: require('../../assets/images/emma.png') as ImageSourcePropType,
 };
 
+const UPLOADED = /^https?:\/\/[^/?#]+(\/v1\/avatars\/[0-9a-f-]{36})$/i;
+
 /**
- * Preview and seed profiles point at `…/maya.png`-style URLs; those resolve to the bundled demo
- * portraits. Any other https URL is loaded remotely; anything else has no photo.
+ * Seed/preview profiles point at `preview://images/maya.png`-style URLs; those resolve to the bundled
+ * demo portraits. Uploaded photos (`<origin>/v1/avatars/<id>`) are loaded from the API this app talks
+ * to — the server's public origin can be another host in development, and a local dev API is plain
+ * http. Preview uploads resolve through `localPhotos`. Any other https URL is loaded remotely; anything
+ * else has no photo.
  */
 export function avatarSource(url: string | null | undefined): ImageSourcePropType | null {
   if (!url) return null;
-  // Seed/preview profiles use `preview://images/maya.png`; demo portraits are bundled.
   const key = /\/([a-z]+)\.png$/.exec(url)?.[1];
   if (key && PEOPLE[key]) return PEOPLE[key];
+  const local = localPhotos.get(url);
+  if (local) return { uri: local };
+  const uploaded = UPLOADED.exec(url)?.[1];
+  if (uploaded) return { uri: apiBaseUrl().replace(/\/$/, '') + uploaded };
   return url.startsWith('https://') ? { uri: url } : null;
 }
-
-/** Sample-portrait reference (`avatar:maya`) → a URL avatarSource resolves to the bundled portrait. */
-export const presetAvatarUrl = (ref: string | null | undefined): string | null => {
-  const key = ref?.startsWith('avatar:') ? ref.slice('avatar:'.length) : null;
-  return key && PEOPLE[key] ? `preview://images/${key}.png` : null;
-};

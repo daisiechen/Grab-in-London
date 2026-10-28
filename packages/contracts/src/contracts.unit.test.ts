@@ -48,8 +48,23 @@ describe('registry matches the reviewed API contract', () => {
 
   it('keeps additional reviewed operations explicitly enumerated', () => {
     const extra = all.map((d) => d.operationId).filter((id) => !documented.some((d) => d.id === id));
-    expect(extra.sort()).toEqual(['getVenuePhoto','getBlock','listBlocks', 'markConversationRead', 'getClassification', 'getExport', 'createGuestSession', 'readAIPreferences', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'readAI', 'activityAI', 'resetAI', 'requestAI', 'pollAI', 'validateAIDraft'].sort());
+    expect(extra.sort()).toEqual(['uploadAvatar','removeAvatar','getAvatar','getVenuePhoto','getBlock','listBlocks', 'markConversationRead', 'getClassification', 'getExport', 'createGuestSession', 'readAIPreferences', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'readAI', 'activityAI', 'resetAI', 'requestAI', 'pollAI', 'validateAIDraft'].sort());
     expect(doc).toContain('GET /admin/exports/:id');
+  });
+
+  it('defines profile photo upload/remove as versioned own-profile writes and the read as public image/jpeg', () => {
+    expect(byId('uploadAvatar')).toMatchObject({ method: 'PUT', path: '/me/avatar', auth: 'session', write: 'idempotencyKey', ifMatch: true });
+    expect(byId('removeAvatar')).toMatchObject({ method: 'DELETE', path: '/me/avatar', auth: 'session', write: 'idempotencyKey', ifMatch: true });
+    expect(byId('getAvatar')).toMatchObject({ method: 'GET', path: '/avatars/{avatarId}', auth: 'public', write: 'read', success: { status: 200, media: 'image/jpeg' } });
+    const body = validator(byId('uploadAvatar')!.body!);
+    expect(body({ imageBase64: '/9j/4AAQSkZJRg==' })).toBe(true);
+    expect(body({ imageBase64: 'not base64!' })).toBe(false);
+    expect(body({ imageBase64: 'A'.repeat(Math.ceil(2 * 1024 * 1024 / 3) * 4 + 4) })).toBe(false);
+    expect(body({ imageBase64: '/9j/4AAQSkZJRg==', url: 'https://x' })).toBe(false);
+    expect(Object.keys((byId('getMe')!.success.data as unknown as { properties: object }).properties)).toContain('avatarUrl');
+    expect(Object.keys((byId('updateMe')!.body as unknown as { properties: object }).properties)).not.toContain('avatarRef');
+    const spec = buildOpenApi() as { paths: Record<string, Record<string, { responses: Record<string, { content?: Record<string, unknown> }> }>> };
+    expect(Object.keys(spec.paths['/v1/avatars/{avatarId}']!.get!.responses['200']!.content!)).toEqual(['image/jpeg']);
   });
 
   it('defines photo reads as public ref-only and exposes no client media URL/resource-name input',()=>{
@@ -79,7 +94,7 @@ describe('write protocol', () => {
       'block', 'cancelMeal', 'classifyUser', 'declareBooking', 'decideApplication', 'dissolveGroup', 'editMeal', 'leaveGroup',
       'leaveMeal', 'putSurvey', 'rateExperience', 'reportAttendance', 'requestDeletion', 'resolveCase', 'reviewPerson',
       'revokeConnection', 'selectReconnect', 'unblock', 'updateMe', 'withdrawApplication',
-      'replaceAIPreferences', 'deleteAIPreferences',
+      'replaceAIPreferences', 'deleteAIPreferences', 'uploadAvatar', 'removeAvatar',
     ].sort());
     for (const id of ['createMeal', 'applyMeal', 'sendMessage', 'createReport']) expect(byId(id)!.ifMatch, id).toBe(false);
   });

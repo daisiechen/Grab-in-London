@@ -148,25 +148,6 @@ describe('MyProfileScreen and sign-out (QA-AUTH-006 / QA-AUTH-014)', () => {
 });
 
 
-describe('EditProfileScreen photo', () => {
-  it('chooses one of three sample portraits (no upload) and saves it as avatarRef', async () => {
-    const app = createTestApp();
-    const user = me({ avatarRef: 'avatar:emma' });
-    await signIn(app, user);
-    app.mock.on('PATCH', '/v1/me', ok({ ...user, avatarRef: 'avatar:leo', version: String(Number(user.version) + 1) }));
-    await renderApp(app, <EditProfileScreen />);
-    expect(screen.getByRole('radio', { name: 'Choose emma portrait' })).toBeSelected();
-    expect(screen.getAllByRole('radio', { name: /^Choose (leo|maya|emma) portrait$/ })).toHaveLength(3);
-    expect(screen.queryByRole('button', { name: /upload/i })).toBeNull();
-    await fireEvent.press(screen.getByRole('radio', { name: 'Choose leo portrait' }));
-    expect(screen.getByRole('radio', { name: 'Choose leo portrait' })).toBeSelected();
-    await fireEvent.press(screen.getByRole('button', { name: 'Save profile' }));
-    await waitFor(() => expect(app.mock.callsTo('PATCH', '/v1/me')).toHaveLength(1));
-    expect(app.mock.callsTo('PATCH', '/v1/me')[0]?.body).toMatchObject({ avatarRef: 'avatar:leo' });
-  });
-});
-
-
 describe('account-scoped profile draft', () => {
   it('does not reuse the previous account name after expiry and a different login', async () => {
     const app = createTestApp();

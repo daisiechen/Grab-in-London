@@ -9,3 +9,4 @@ export { buildOpenApi } from './openapi.ts';
 export * from './return-target.ts';
 export * from './declarations.ts';
 export * as assistantDto from './assistant-dto.ts';
+export { AVATAR_MAX_BYTES, AVATAR_MAX_BASE64_LENGTH } from './operations/people.ts';

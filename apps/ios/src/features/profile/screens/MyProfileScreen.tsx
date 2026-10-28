@@ -5,7 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { ResponseOf } from '@fancy/client';
 import { Primary } from '../../../ui/Button.tsx';
 import { PageHeader } from '../../../ui/PageHeader.tsx';
-import { presetAvatarUrl } from '../../../ui/images.ts';
 import { Icon } from '../../../ui/Icon.tsx';
 import { colors } from '../../../ui/tokens.ts';
 import { createStyles } from '../../../ui/styles.ts';
@@ -28,8 +27,8 @@ export function MyProfileScreen() {
   const insets = useSafeAreaInsets();
   const { api } = useServices();
   const me = state.status === 'signedIn' ? state.session.user : null;
-  // CONTRACT GAP: Me has no avatarUrl or references; the own public projection supplies both. Keyed by
-  // version so a saved edit refreshes it.
+  // CONTRACT GAP: Me has no references; the own public projection supplies them. Keyed by version so a
+  // saved edit refreshes it. The photo comes from Me.avatarUrl directly.
   const pub = useQuery<PublicData>(me?.displayName ? `ownProfile:${me.id}:${me.version}` : null, async () => (await api.call('getPublicProfile', { params: { userId: me!.id } })).data);
 
   if (!me) {
@@ -65,7 +64,7 @@ export function MyProfileScreen() {
   return (
     <View style={styles.page} testID="profile-own">
       <ScrollView style={styles.page} contentContainerStyle={[styles.body, { paddingTop: insets.top + 4 }]}>
-        <ProfileView displayName={me.displayName} avatarUrl={presetAvatarUrl(me.avatarRef) ?? data?.profile.avatarUrl ?? null} bio={me.bio} lifeStatus={me.lifeStatus} languages={me.languages} interests={me.interests} background={me.background} afterHeading={editButton} />
+        <ProfileView displayName={me.displayName} avatarUrl={me.avatarUrl} bio={me.bio} lifeStatus={me.lifeStatus} languages={me.languages} interests={me.interests} background={me.background} afterHeading={editButton} />
         <Text accessibilityRole="header" style={styles.h2}>Your shared meals</Text>
         {data && data.reviews.length > 0 ? data.reviews.map((r) => (
           <View key={r.id} style={styles.quote}>

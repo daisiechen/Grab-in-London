@@ -56,6 +56,6 @@ export function registerConnectionRoutes(app:FastifyInstance,deps:AppDeps) {
   const {rows:[conversation]}=await deps.pool.query(`SELECT c.* FROM conversations c WHERE pair_id=$1 AND EXISTS(SELECT 1 FROM membership_intervals i WHERE i.conversation_id=c.id AND i.user_id=$2)`,[pair.id,auth!.userId]);if(!conversation)throw new DomainError('NOT_FOUND','Conversation not found.');
   const peer=await publicProfile(deps.pool,subjectId);
   let canSend=true;try{await assertDirectAuthorized(deps.pool,pair.id,auth!.userId);}catch(error){if(!(error instanceof DomainError))throw error;canSend=false;}
-  return {data:{id:conversation.id,version:String(conversation.version),kind:'DIRECT',mealId:null,title:peer.displayName,canSend,dissolved:false,head:String(conversation.head),avatar:peer.displayName==='Deleted member'?null:{displayName:peer.displayName,avatarUrl:null}},version:String(conversation.version)};
+  return {data:{id:conversation.id,version:String(conversation.version),kind:'DIRECT',mealId:null,title:peer.displayName,canSend,dissolved:false,head:String(conversation.head),avatar:peer.displayName==='Deleted member'?null:{displayName:peer.displayName,avatarUrl:peer.avatarUrl}},version:String(conversation.version)};
  });
 }

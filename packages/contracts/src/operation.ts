@@ -30,7 +30,8 @@ export interface OperationDef {
   params?: TObject;
   query?: TObject;
   body?: TSchema;
-  success: { status: 200 | 201 | 202 | 204; data?: TSchema; list?: boolean };
+  /** `media`: raw (non-JSON) success body type for data-less reads; defaults to text/csv. */
+  success: { status: 200 | 201 | 202 | 204; data?: TSchema; list?: boolean; media?: 'text/csv' | 'image/jpeg' };
   /** Operation-specific codes; transport codes are added from auth/write/ifMatch (see errorsFor). */
   errors: readonly ErrorCode[];
 }

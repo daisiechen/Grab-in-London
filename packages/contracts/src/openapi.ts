@@ -59,7 +59,9 @@ export function buildOpenApi(): Json {
     responses[String(def.success.status)] = def.success.status === 204
       ? { description: 'No content' }
       : body ? { description: 'Success', content: { 'application/json': { schema: body } } }
-      : { description: 'Success', content: { 'text/csv': { schema: { type: 'string' } } } };
+      : def.success.media === 'image/jpeg'
+        ? { description: 'Success', headers: { ETag: { schema: { type: 'string' } }, 'Cache-Control': { schema: { type: 'string' } } }, content: { 'image/jpeg': { schema: { type: 'string', contentMediaType: 'image/jpeg' } } } }
+        : { description: 'Success', content: { 'text/csv': { schema: { type: 'string' } } } };
     if(def.operationId==='oauthCallback')responses['303']={
       description:'SUPPORT_CLI only: registered IPv4 loopback callback with a 60-second PKCE-bound handoff code and start transaction state; no access or refresh token.',
       headers:{Location:{required:true,schema:{type:'string',format:'uri'}},'Cache-Control':{schema:{type:'string',const:'no-store'}},'Referrer-Policy':{schema:{type:'string',const:'no-referrer'}}},

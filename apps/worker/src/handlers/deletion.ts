@@ -27,6 +27,7 @@ export function deletionHandler(pool:Pool,provider:DeletionProvider|DeletionStep
    if(!receipt||receipt.status==='COMPLETED'||(receipt.provider_steps.local==='COMPLETED'&&receipt.provider_steps.supportText==='KNOWN_LINKS_REDACTED'))return;
    await tx.client.query(`SET LOCAL fancy.privacy_purge='on'`);
    await purgeKnownSupportText(tx.client,hint.user_id);
+   await tx.client.query(`DELETE FROM avatar_images WHERE user_id=$1`,[hint.user_id]);
    await tx.client.query(`DELETE FROM profiles WHERE user_id=$1`,[hint.user_id]);
    await tx.client.query(`DELETE FROM product_surveys WHERE user_id=$1`,[hint.user_id]);
    await tx.client.query(`DELETE FROM private_contact WHERE user_id=$1`,[hint.user_id]);

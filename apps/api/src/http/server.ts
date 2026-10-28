@@ -49,7 +49,8 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   app.decorateRequest('auth', null);
   app.addHook('onSend', async (request, reply) => {
     reply.header('x-request-id', request.id);
-    if (request.url.startsWith('/v1/')) reply.header('cache-control', 'private, no-store');
+    // API responses are never cached unless the route chose an explicit policy (public avatars).
+    if (request.url.startsWith('/v1/') && !reply.hasHeader('cache-control')) reply.header('cache-control', 'private, no-store');
   });
 
   app.addHook('onRequest',async(request,reply)=>{
@@ -69,7 +70,7 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
     }
   });
 
-  configureAvatarOrigin(deps.config.webOrigin);
+  configureAvatarOrigin(deps.publicOrigin);
   registerIdentityRoutes(app, deps);
   registerProfileRoutes(app, deps);
   registerSurveyRoutes(app, deps);

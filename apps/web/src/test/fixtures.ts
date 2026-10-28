@@ -9,7 +9,7 @@ export const APPLICATION_ID = '55555555-5555-4555-8555-555555555555';
 
 export function me(overrides: Record<string, unknown> = {}) {
   return {
-    id: USER_ID, version: '3', displayName: 'Sam Rivera', avatarRef: null,
+    id: USER_ID, version: '3', displayName: 'Sam Rivera', avatarUrl: null,
     bio: 'I moved to London last spring and love trying new food.', languages: ['en'], lifeStatus: 'NEW_TO_LONDON',
     interests: ['FOOD'], background: {}, email: 'sam@example.test', ageConfirmedVersion: '2026-10', communityAcceptedVersion: '2026-10',
     profileGate: { ageConfirmed: true, communityAccepted: true, profileComplete: true, missing: [] }, roles: [],

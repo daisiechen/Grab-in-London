@@ -22,6 +22,7 @@ import {
   SEED_REFERENCES, SEED_VENUES, previewImageUrl, seedId, type PersonKey, type SeedVenue,
 } from './seed.ts';
 import { coerceStrings, validate } from './validate.ts';
+import { localPhotos } from '../ui/local-photos.ts';
 
 export { PREVIEW_IDS, PREVIEW_NOW, previewImageKey, previewImageUrl } from './seed.ts';
 
@@ -64,7 +65,8 @@ interface UserRec {
   id: string;
   version: number;
   displayName: string | null;
-  avatarRef: string | null;
+  /** Seed people keep their bundled portraits (`preview://images/<key>.png`); uploads are data URIs. */
+  avatarUrl: string | null;
   bio: string | null;
   languages: MeDto['languages'];
   lifeStatus: MeDto['lifeStatus'];
@@ -173,7 +175,7 @@ function seedWorld(now: number): World {
   };
   for (const p of SEED_PEOPLE) {
     w.users.set(userId(p.key), {
-      id: userId(p.key), version: 3, displayName: p.displayName, avatarRef: `avatar:${p.image}`, bio: p.bio, languages: [...p.languages],
+      id: userId(p.key), version: 3, displayName: p.displayName, avatarUrl: previewImageUrl(p.image), bio: p.bio, languages: [...p.languages],
       lifeStatus: p.lifeStatus, interests: [...p.interests], background: { work: p.work }, email: p.key === 'alex' ? 'alex@example.com' : null,
       ageConfirmedVersion: PREVIEW_CONSENT_VERSION, communityAcceptedVersion: PREVIEW_CONSENT_VERSION,
     });
@@ -345,7 +347,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
     if (u.background.school) background.school = u.background.school;
     if (u.background.hometown) background.hometown = u.background.hometown;
     return {
-      id, displayName: u.displayName ?? 'Fancy member', avatarUrl: u.avatarRef ? previewImageUrl(u.avatarRef.slice('avatar:'.length)) : null,
+      id, displayName: u.displayName ?? 'Fancy member', avatarUrl: u.avatarUrl,
       bio: u.bio, interests: [...u.interests], languages: [...u.languages], background,
     };
   }
@@ -361,7 +363,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
       ...(!communityAccepted ? (['community'] as const) : []),
     ];
     return {
-      id, version: String(u.version), displayName: u.displayName, avatarRef: u.avatarRef, bio: u.bio, languages: [...u.languages],
+      id, version: String(u.version), displayName: u.displayName, avatarUrl: u.avatarUrl, bio: u.bio, languages: [...u.languages],
       lifeStatus: u.lifeStatus, interests: [...u.interests], background: { ...u.background }, email: u.email,
       ageConfirmedVersion: u.ageConfirmedVersion, communityAcceptedVersion: u.communityAcceptedVersion,
       profileGate: { ageConfirmed, communityAccepted, profileComplete: missing.length === 0, missing }, roles: [],
@@ -754,7 +756,6 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
       if (name !== undefined && (name.length < 2 || name.length > 40)) fail('VALIDATION_FAILED', 'Please check your profile.', { fieldErrors: { 'body.displayName': 'Use 2–40 characters' } });
       if (bio !== undefined && (bio.length < 20 || bio.length > 1000)) fail('VALIDATION_FAILED', 'Please check your profile.', { fieldErrors: { 'body.bio': 'Use 20–1000 characters' } });
       if (name !== undefined) u.displayName = name;
-      if (body.avatarRef !== undefined) u.avatarRef = body.avatarRef;
       if (bio !== undefined) u.bio = bio;
       if (body.languages) u.languages = [...body.languages];
       if (body.lifeStatus) u.lifeStatus = body.lifeStatus;
@@ -770,6 +771,26 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
       if (body.ageConfirmedVersion) u.ageConfirmedVersion = body.ageConfirmedVersion;
       if (body.communityAcceptedVersion) u.communityAcceptedVersion = body.communityAcceptedVersion;
       u.version += 1;
+      const data = meDto(uid);
+      return { data, version: data.version };
+    },
+    // Profile photo: kept on the device as a data URI behind a short preview URL (no server re-encode); same version rules as the API.
+    uploadAvatar: ({ uid, body, ifMatch }) => {
+      const u = user(uid);
+      checkVersion(u.version, ifMatch, 'Your profile changed. Reload it before saving.');
+      const type = body.imageBase64.startsWith('/9j/') ? 'image/jpeg' : body.imageBase64.startsWith('iVBORw0KGgo') ? 'image/png' : null;
+      if (!type) fail('VALIDATION_FAILED', 'Please choose a JPEG or PNG photo.', { fieldErrors: { 'body.imageBase64': 'Unsupported image type' } });
+      const url = `preview://uploads/${newId(w, 'misc')}.${type === 'image/png' ? 'png' : 'jpg'}`;
+      localPhotos.set(url, `data:${type};base64,${body.imageBase64}`);
+      u.avatarUrl = url;
+      u.version += 1;
+      const data = meDto(uid);
+      return { data, version: data.version };
+    },
+    removeAvatar: ({ uid, ifMatch }) => {
+      const u = user(uid);
+      checkVersion(u.version, ifMatch, 'Your profile changed. Reload it before saving.');
+      if (u.avatarUrl) { u.avatarUrl = null; u.version += 1; }
       const data = meDto(uid);
       return { data, version: data.version };
     },

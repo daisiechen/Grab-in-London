@@ -45,6 +45,7 @@ export function errorHandler(error: FastifyError & { validation?: AjvIssue[]; va
   if (error.statusCode === 400 || error.code === 'FST_ERR_CTP_INVALID_MEDIA_TYPE' || error.code === 'FST_ERR_CTP_EMPTY_JSON_BODY') {
     return reply.status(400).send(errorBody(request, 'INVALID_REQUEST', 'The request could not be read.'));
   }
+  if (error.code === 'FST_ERR_CTP_BODY_TOO_LARGE') return reply.status(400).send(errorBody(request, 'INVALID_REQUEST', 'The request is too large.'));
   if (error.statusCode === 404) return reply.status(404).send(errorBody(request, 'NOT_FOUND', 'Not found.'));
   request.log.error({ err: { name: error.name, code: error.code } }, 'unexpected error');
   return reply.status(500).send(errorBody(request, 'INTERNAL_ERROR', 'Something went wrong. Please try again.'));

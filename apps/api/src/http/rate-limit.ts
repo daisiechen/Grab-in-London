@@ -10,6 +10,8 @@ async function take(db:Pool,actor:string,bucket:string,seconds:number,limit:numb
 }
 export async function enforceRateLimit(db:Pool,actor:string,def:OperationDef,resource:string){
  if(def.operationId==='adminExport')await take(db,actor,'export',3600,5);
+ // Photo uploads are CPU-heavy (server re-encode): 20 per member per hour on top of the write limits.
+ if(def.operationId==='uploadAvatar')await take(db,actor,'avatar-upload',3600,20);
  if(def.method!=='GET'&&def.write!=='read'){
   await take(db,actor,def.operationId==='sendMessage'?'messages':'writes',60,def.operationId==='sendMessage'?30:60);
   await take(db,actor,'write-burst',1,10);

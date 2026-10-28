@@ -84,6 +84,8 @@ install current CocoaPods dependencies; either install Ruby 3+ (e.g. rbenv) and 
 install cocoapods 1.16.2 with `--user-install` pinning ffi 1.16.3, activesupport 6.1.7.10, zeitwerk 2.6.13,
 i18n 1.14.7, minitest 5.15.0 and concurrent-ruby 1.3.4 (verified on Xcode 27.1). Changing the Google key
 requires `rm -rf ios` before the next run, because the key is written into the native project at prebuild.
+The profile photo picker (`expo-image-picker`, `expo-image-manipulator`, added 2026-10-28) is native too:
+an older development build must be rebuilt (`rm -rf ios && pnpm ios:preview`) before Upload photo works.
 Discover is open to guests, so preview starts there; sign-in appears when you apply or create a meal.
 
 `EXPO_PUBLIC_FANCY_PREVIEW=1` swaps the API for the in-memory demo data in `src/preview/`

@@ -25,7 +25,7 @@ export function me(overrides: Partial<Me> = {}): Me {
     id: USER_ID,
     version: '3',
     displayName: 'Alex',
-    avatarRef: null,
+    avatarUrl: null,
     bio: 'New to London and keen to share a table with new people.',
     languages: ['en'],
     lifeStatus: 'NEW_TO_LONDON',

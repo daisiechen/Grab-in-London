@@ -18,8 +18,11 @@ export const LifeStatusCode = Enum(keys(LIFE_STATUSES));
 export const InterestCode = Enum(keys(INTERESTS));
 /** Versioned London area dictionary code (G-PLACES); `unknown` when no polygon matched. */
 export const AreaCode = T.String({ pattern: '^[a-z0-9]+(-[a-z0-9]+)*$', maxLength: 64 });
-/** Approved avatar asset reference (no upload flow in MVP). */
-export const AvatarRef = T.String({ pattern: '^avatar:[a-z0-9-]{1,40}$' });
+/**
+ * Public URL of a member-uploaded profile photo (owner decision 2026-10-28, replacing the r07
+ * sample portraits): `<API public origin>/v1/avatars/<imageId>`; null shows initials.
+ */
+export const AvatarUrl = T.Union([T.String({ format: 'uri', maxLength: 500 }), T.Null()]);
 
 export const Background = Obj({
   work: T.Optional(Text(1, 150)),
@@ -30,7 +33,7 @@ export const Background = Obj({
 export const PublicProfile = Obj({
   id: Uuid,
   displayName: Text(2, 40),
-  avatarUrl: T.Union([T.String({ format: 'uri', maxLength: 500 }), T.Null()]),
+  avatarUrl: AvatarUrl,
   bio: T.Union([Text(20, 1000), T.Null()]),
   interests: UniqueArray(InterestCode, 0, 11),
   languages: UniqueArray(LanguageCode, 0, 5),
@@ -48,7 +51,7 @@ export const Me = Obj({
   id: Uuid,
   version: DecimalString,
   displayName: T.Union([Text(2, 40), T.Null()]),
-  avatarRef: T.Union([AvatarRef, T.Null()]),
+  avatarUrl: AvatarUrl,
   bio: T.Union([Text(20, 1000), T.Null()]),
   languages: UniqueArray(LanguageCode, 0, 5),
   lifeStatus: T.Union([LifeStatusCode, T.Null()]),
@@ -180,7 +183,7 @@ export const Message = Obj({
 /** Who a conversation row shows: the other member (DIRECT) or the host (GROUP); null when unavailable. */
 export const ConversationAvatar = Obj({
   displayName: T.String({ minLength: 1, maxLength: 40 }),
-  avatarUrl: T.Union([T.String({ format: 'uri', maxLength: 500 }), T.Null()]),
+  avatarUrl: AvatarUrl,
 });
 
 export const Conversation = Obj({

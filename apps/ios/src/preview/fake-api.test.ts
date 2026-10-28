@@ -4,6 +4,7 @@ import { ajv } from '../../../../packages/contracts/src/test-ajv.ts';
 import { SessionManager, sessionClient } from '../features/auth/session.ts';
 import { startEmailChallenge, verifyEmailCode } from '../features/auth/otp.ts';
 import type { CredentialStore, StoredRefresh } from '../features/auth/credential-store.ts';
+import { localPhotos } from '../ui/local-photos.ts';
 import { createPreviewBackend, previewImageKey, PREVIEW_IDS, PREVIEW_NOW, type PreviewOptions } from './fake-api.ts';
 
 const BASE = 'http://preview.local';
@@ -86,7 +87,7 @@ describe('preview fake API', () => {
   it('signs in with email OTP through the real session manager, refreshes and logs out', async () => {
     const ctx = setup();
     const result = await signIn(ctx);
-    expect(result.session.user).toMatchObject({ id: U.alex, displayName: 'Alex', email: 'alex@example.com', avatarRef: 'avatar:leo', profileGate: { profileComplete: true, missing: [] } });
+    expect(result.session.user).toMatchObject({ id: U.alex, displayName: 'Alex', email: 'alex@example.com', avatarUrl: 'preview://images/leo.png', profileGate: { profileComplete: true, missing: [] } });
     expect(ctx.session.getState().status).toBe('signedIn');
     expect(ctx.session.accessToken()).toMatch(/^pv_access_/);
 
@@ -103,6 +104,24 @@ describe('preview fake API', () => {
     expect(await ctx.session.logout()).toEqual({ serverRevoked: true });
     ctx.setToken(token);
     await expectApiError(ctx.raw.call('getMe', {}), 401, 'AUTH_REQUIRED');
+    expect(ctx.problems).toEqual([]);
+  });
+
+  it('uploads and removes a profile photo with If-Match; the photo resolves on this device and shows on the public profile', async () => {
+    const ctx = setup();
+    await signIn(ctx);
+    const me = (await ctx.api.call('getMe', {})).data;
+    const up = await ctx.api.call('uploadAvatar', { body: { imageBase64: '/9j/4AAQSkZJRgABAQ' + 'A'.repeat(2000) }, idempotencyKey: newId(), ifMatch: me.version });
+    expect(up.data.version).toBe(String(Number(me.version) + 1));
+    expect(up.data.avatarUrl).toMatch(/^preview:\/\/uploads\/[0-9a-f-]{36}\.jpg$/);
+    expect(localPhotos.get(up.data.avatarUrl!)).toMatch(/^data:image\/jpeg;base64,\/9j\//);
+    expect((await ctx.api.call('getPublicProfile', { params: { userId: U.alex } })).data.profile.avatarUrl).toBe(up.data.avatarUrl);
+    await expect(ctx.api.call('uploadAvatar', { body: { imageBase64: 'R0lGODlhAQABAAAAACw=' }, idempotencyKey: newId(), ifMatch: up.data.version })).rejects.toMatchObject({ code: 'VALIDATION_FAILED' });
+    await expect(ctx.api.call('removeAvatar', { idempotencyKey: newId(), ifMatch: me.version })).rejects.toMatchObject({ code: 'VERSION_CONFLICT' });
+    const removed = await ctx.api.call('removeAvatar', { idempotencyKey: newId(), ifMatch: up.data.version });
+    expect(removed.data.avatarUrl).toBeNull();
+    // Seeded people keep their bundled portraits.
+    expect(previewImageKey((await ctx.api.call('getPublicProfile', { params: { userId: U.maya } })).data.profile.avatarUrl)).toBe('maya');
     expect(ctx.problems).toEqual([]);
   });
 

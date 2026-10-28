@@ -1,13 +1,12 @@
 import { Obj, T, Text, UniqueArray, Uuid } from '../schema.ts';
 import { Cursor, Limit } from '../common.ts';
-import { AvatarRef, Background, InterestCode, LanguageCode, LifeStatusCode, Me, PublicProfile, PublicReview, Venue, VenueCandidate, VenuePhoto } from '../dto.ts';
+import { Background, InterestCode, LanguageCode, LifeStatusCode, Me, PublicProfile, PublicReview, Venue, VenueCandidate, VenuePhoto } from '../dto.ts';
 import { op } from '../operation.ts';
 
 /** PATCH /me allow-list; `lifeStatus` is profile data and can never touch users.status. */
 const MePatch = Obj(
   {
     displayName: T.Optional(Text(2, 40)),
-    avatarRef: T.Optional(T.Union([AvatarRef, T.Null()])),
     bio: T.Optional(Text(20, 1000)),
     languages: T.Optional(UniqueArray(LanguageCode, 1, 5)),
     lifeStatus: T.Optional(LifeStatusCode),
@@ -18,6 +17,13 @@ const MePatch = Obj(
   },
   { minProperties: 1 },
 );
+
+/** Profile photo uploads: at most 2 MiB of JPEG/PNG bytes (the iOS app sends a ~512px JPEG). */
+export const AVATAR_MAX_BYTES = 2 * 1024 * 1024;
+export const AVATAR_MAX_BASE64_LENGTH = Math.ceil(AVATAR_MAX_BYTES / 3) * 4;
+const AvatarUpload = Obj({
+  imageBase64: T.String({ minLength: 8, maxLength: AVATAR_MAX_BASE64_LENGTH, pattern: '^[A-Za-z0-9+/]+={0,2}$' }),
+});
 
 const Bounds = {
   north: T.Optional(T.Number({ minimum: -90, maximum: 90 })),
@@ -35,6 +41,23 @@ export const peopleOperations = [
     operationId: 'updateMe', method: 'PATCH', path: '/me', summary: 'Edit own profile (allow-listed fields)',
     auth: 'session', write: 'idempotencyKey', ifMatch: true, body: MePatch,
     success: { status: 200, data: Me }, errors: [],
+  }),
+  op({
+    operationId: 'uploadAvatar', method: 'PUT', path: '/me/avatar',
+    summary: 'Upload or replace own profile photo (base64 JPEG/PNG; re-encoded server-side as metadata-free JPEG)',
+    auth: 'session', write: 'idempotencyKey', ifMatch: true, body: AvatarUpload,
+    success: { status: 200, data: Me }, errors: [],
+  }),
+  op({
+    operationId: 'removeAvatar', method: 'DELETE', path: '/me/avatar', summary: 'Remove own profile photo (initials are shown instead)',
+    auth: 'session', write: 'idempotencyKey', ifMatch: true,
+    success: { status: 200, data: Me }, errors: [],
+  }),
+  op({
+    operationId: 'getAvatar', method: 'GET', path: '/avatars/{avatarId}',
+    summary: 'Current profile photo bytes (image/jpeg, ETag, public cache); 404 once replaced, removed or the account is deleted',
+    auth: 'public', write: 'read', ifMatch: false, params: Obj({ avatarId: Uuid }),
+    success: { status: 200, media: 'image/jpeg' }, errors: ['NOT_FOUND'],
   }),
   op({
     operationId: 'getPublicProfile', method: 'GET', path: '/profiles/{userId}', summary: 'Public profile and published reviews',
