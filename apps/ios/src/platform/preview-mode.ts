@@ -4,10 +4,21 @@ import type { CredentialStore, StoredRefresh } from '../features/auth/credential
 /**
  * Preview mode runs the app on the in-memory fake API (src/preview) with no server, Keychain or
  * sandbox file. On by default for the web build (used for side-by-side checks against demo/) and
- * opt-in on device with EXPO_PUBLIC_FANCY_PREVIEW=1.
+ * opt-in on device with EXPO_PUBLIC_FANCY_PREVIEW=1. EXPO_PUBLIC_FANCY_PREVIEW=0 turns it off on
+ * web too, so the browser build talks to the real API (end-to-end runs, see apps/ios/e2e).
  */
-export function isPreviewMode(): boolean {
-  return process.env.EXPO_PUBLIC_FANCY_PREVIEW === '1' || Platform.OS === 'web';
+export function isPreviewMode(flag: string | undefined = process.env.EXPO_PUBLIC_FANCY_PREVIEW, os: string = Platform.OS): boolean {
+  if (flag === '1') return true;
+  if (flag === '0') return false;
+  return os === 'web';
+}
+
+/**
+ * The web build has no Keychain (expo-secure-store) or sandbox install marker, so it always keeps
+ * credentials in memory, also when it talks to the real API.
+ */
+export function usesMemoryStores(preview: boolean = isPreviewMode(), os: string = Platform.OS): boolean {
+  return preview || os === 'web';
 }
 
 /** Preview stand-in for the Keychain: the session lives only as long as the process. */

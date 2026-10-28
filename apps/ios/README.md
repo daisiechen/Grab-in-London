@@ -89,6 +89,29 @@ Discover is open to guests, so preview starts there; sign-in appears when you ap
 `EXPO_PUBLIC_FANCY_PREVIEW=1` swaps the API for the in-memory demo data in `src/preview/`
 (sign in with any email and code `000000`). Without the Google key, Discover shows the illustrated map.
 
+### End-to-end run against the real API (`e2e/`)
+
+The web build normally runs on the preview fake; `EXPO_PUBLIC_FANCY_PREVIEW=0` switches it to the
+real API (`EXPO_PUBLIC_API_BASE_URL`). The web build keeps the session in memory (no Keychain), so a
+full page reload signs out. With Node 24, a local PostgreSQL 17 and Chromium + Playwright installed:
+
+```sh
+FANCY_E2E_ADMIN_URL=postgres://fancy@127.0.0.1:55432/postgres pnpm --filter @fancy/ios e2e:real-api
+```
+
+`e2e/stack.ts` drops and migrates a fresh `fancy_e2e` database, starts `apps/api/src/main.ts` in
+`development` with test-only adapters (test identity with `DEV_FIXED_OTP=000000`, fixture places,
+outbox mail, mock AI) and throwaway secrets, exports the web build with preview off (`expo export
+--clear`; set `FANCY_E2E_REBUILD=0` to reuse the last export) and serves it with `/v1` proxied to the
+API on the same origin, so the app uses its native bearer credentials. `e2e/real-api.e2e.ts` then
+drives two browser profiles (guest and host) through discovery, detail, email sign-in, profile
+setup, apply, host approval and booking report, Upcoming, Inbox chat, the four Create steps with the
+map restaurant picker, edit before approval, block/report/unblock, survey and notifications; the
+other side of each step is checked through the API with the same `@fancy/client`. A failure prints
+the step, the visible text and a screenshot path. Other tools: `pnpm --filter @fancy/ios e2e:serve`
+keeps the stack up for manual checks (API :3310, app :8090); `e2e:parity` replays one scenario
+against the preview fake and the real API and prints every status/shape difference.
+
 Native build (`expo prebuild` / `expo run:ios`), simulator and device runs are blocked by G-IOS
 (full Xcode, Apple Developer team, signing). `ios.bundleIdentifier` `com.example.fancy.dev` is a
 placeholder; no team id is committed. Generated `ios/` is not committed (Continuous Native Generation).

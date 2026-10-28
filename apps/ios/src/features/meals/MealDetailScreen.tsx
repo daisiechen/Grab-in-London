@@ -16,7 +16,7 @@ import { useAuthGate } from '../auth/useAuthGate.ts';
 import {
   applicationLabel, bookingLabel, cardBudgetLabel, closesLabel, cuisineLabel, dietaryLabel, languagesLabel, mealPeople, moodLabel, seatsLabel, venueName,
 } from './format.ts';
-import { areaName } from '../discover/areas.ts';
+import { areaName, areaPlace } from '../discover/areas.ts';
 import { longDate } from '../../lib/london.ts';
 import { Avatar } from '../../ui/Avatar.tsx';
 import { Icon, type IconName } from '../../ui/Icon.tsx';
@@ -166,7 +166,7 @@ export function MealDetailScreen() {
           </View>
           <View style={styles.flex}>
             <Text style={styles.venueName}>{venueName(meal)}</Text>
-            <Text style={styles.venueAddress} numberOfLines={2}>{meal.venue.available && meal.venue.address ? meal.venue.address : `${areaName(meal.areaCode)}, London`}</Text>
+            <Text style={styles.venueAddress} numberOfLines={2}>{meal.venue.available && meal.venue.address ? meal.venue.address : areaPlace(meal.areaCode)}</Text>
             <View style={[styles.statusTag, booking === 'Restaurant booked' && styles.statusGood]}><Text style={styles.statusText}>{booking}</Text></View>
           </View>
         </View>

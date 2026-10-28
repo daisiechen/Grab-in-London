@@ -9,7 +9,7 @@ import { apiBaseUrl } from '../src/config.ts';
 import { sandboxInstallMarker } from '../src/platform/install-marker.ts';
 import { secureCredentialStore } from '../src/features/auth/credential-store.ts';
 import { createServices } from '../src/services.tsx';
-import { isPreviewMode, memoryCredentialStore, memoryStore } from '../src/platform/preview-mode.ts';
+import { isPreviewMode, memoryCredentialStore, memoryStore, usesMemoryStores } from '../src/platform/preview-mode.ts';
 import { createPreviewBackend } from '../src/preview/fake-api.ts';
 import { colors } from '../src/ui/tokens.ts';
 import { FONT_FAMILY } from '../src/ui/styles.ts';
@@ -18,12 +18,14 @@ export default function RootLayout() {
   const [services] = useState(() => {
     const preview = isPreviewMode();
     const backend = preview ? createPreviewBackend() : null;
+    // Preview and the web build never touch the Keychain: expo-secure-store has no web implementation.
+    const memory = usesMemoryStores(preview);
     return createServices({
-      // Preview never touches the Keychain: expo-secure-store has no web implementation.
-      ...(backend ? { fetch: backend.fetch, now: backend.now, deletionReceiptStore: memoryStore(), guestStore: memoryStore(), aiConversationStore: memoryStore() } : {}),
+      ...(backend ? { fetch: backend.fetch, now: backend.now } : {}),
+      ...(memory ? { deletionReceiptStore: memoryStore(), guestStore: memoryStore(), aiConversationStore: memoryStore() } : {}),
       baseUrl: apiBaseUrl(),
-      store: preview ? memoryCredentialStore() : secureCredentialStore(),
-      installMarker: preview ? null : sandboxInstallMarker(),
+      store: memory ? memoryCredentialStore() : secureCredentialStore(),
+      installMarker: memory ? null : sandboxInstallMarker(),
       openAuthSession: (url, redirectUrl) => WebBrowser.openAuthSessionAsync(url, redirectUrl, { preferEphemeralSession: true }),
       onClearError: () => console.warn('LOCAL_SIGN_OUT_CLEANUP_FAILED'),
     });

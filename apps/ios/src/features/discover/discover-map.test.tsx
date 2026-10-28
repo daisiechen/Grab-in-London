@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react-native';
 import { UIManager } from 'react-native';
 import { DiscoverMap, nativeMapAvailable } from './DiscoverMap.tsx';
-import { groupByArea } from './areas.ts';
+import { areaPlace, groupByArea } from './areas.ts';
 import { meal } from '../../test/fixtures.ts';
 
 const soho = (id: string, lat: number) => meal({ id, areaCode: 'soho', venue: { ...meal().venue, areaCode: 'soho', location: { lat, lng: -0.13 } } });
@@ -15,6 +15,12 @@ describe('discovery map', () => {
     expect(groups[0]?.lat).toBeCloseTo(51.515);
     expect(unplaced).toHaveLength(0);
     expect(groupByArea([meal()], 'illustrated').unplaced).toHaveLength(1);
+  });
+
+  it('names a meal’s place without repeating London for an unmapped area', () => {
+    expect(areaPlace('soho')).toBe('Soho, London');
+    // The real API answers `unknown` until a verified area dataset is configured.
+    expect(areaPlace('unknown')).toBe('London');
   });
 
   it('falls back to the demo illustration without a key', async () => {

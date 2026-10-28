@@ -1,7 +1,8 @@
 /**
  * Deterministic identity provider for automated tests only. It refuses to exist outside the
- * development/test environments, codes are random per challenge (no fixed OTP), and OAuth codes
- * are only minted through `consent`, which checks the real PKCE/nonce plumbing end to end.
+ * development/test environments, codes are random per challenge unless a local development run
+ * opts into `DEV_FIXED_OTP` (config refuses it in staging/production), and OAuth codes are only
+ * minted through `consent`, which checks the real PKCE/nonce plumbing end to end.
  */
 import { createHash } from 'node:crypto';
 import type { Environment } from '@fancy/config';
@@ -18,14 +19,17 @@ export class TestIdentityProvider implements IdentityProvider {
   private readonly grants = new Map<string, { identity: VerifiedIdentity; challenge: string; nonce: string; redirectUri: string }>();
   unavailable = false;
 
-  constructor(environment: Environment) {
+  private readonly fixedOtp: string | null;
+
+  constructor(environment: Environment, options: { fixedOtp?: string | null } = {}) {
     if (environment !== 'test' && environment !== 'development') throw new Error('TestIdentityProvider is test-only');
+    this.fixedOtp = options.fixedOtp ?? null;
   }
 
   async startEmailOtp(email: string) {
     if (this.unavailable) throw new ProviderUnavailableError('test provider marked unavailable');
     const ref = randomToken(12);
-    const code = randomOtp();
+    const code = this.fixedOtp ?? randomOtp();
     this.codes.set(ref, { code, email });
     this.inbox.set(email, [...(this.inbox.get(email) ?? []), code]);
     return { ref };

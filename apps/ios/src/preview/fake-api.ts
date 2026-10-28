@@ -142,6 +142,11 @@ const ALEX = PREVIEW_IDS.users.alex;
 const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
+/** Email code rules of apps/api identity/routes.ts: 5-minute codes, one per 30 s, 5 attempts. */
+const OTP_TTL_MS = 5 * MINUTE;
+const OTP_RESEND_MS = 30_000;
+const OTP_MAX_ATTEMPTS = 5;
+export const PREVIEW_OTP = '000000';
 const POST_MEAL_WINDOW_MS = 7 * DAY;
 const userId = (key: PersonKey) => PREVIEW_IDS.users[key];
 
@@ -303,7 +308,9 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
   let requestCounter = 0;
   let tokenCounter = 0;
   // Auth state survives reset() so an open app keeps its session.
-  const challenges = new Map<string, { email: string; used: boolean; client: string }>();
+  const challenges = new Map<string, { email: string; used: boolean; client: string; attempts: number; expiresAt: number; reauth: boolean }>();
+  /** Last code sent per email: one code every 30 s, like apps/api identity/routes.ts (OTP_RESEND_MS). */
+  const lastCodeSent = new Map<string, number>();
   const handoffs = new Map<string, { used: boolean }>();
   const oauthStates = new Map<string, { used: boolean }>();
   const revoked = new Set<string>();
@@ -361,8 +368,10 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
     };
   }
 
-  function venueDto(ref: string): MealDto['venue'] {
+  /** display=false mirrors the real API's write responses: no provider data inside the transaction. */
+  function venueDto(ref: string, display = true): MealDto['venue'] {
     const v = w.venues.get(ref);
+    if (v && !display) return { venueRef: v.venueRef, placeId: v.placeId, available: false, name: null, address: null, location: null, areaCode: v.areaCode, attributions: [], displayExpiresAt: null };
     if (!v) return { venueRef: ref, placeId: 'unavailable', available: false, name: null, address: null, location: null, areaCode: 'unknown', attributions: [], displayExpiresAt: null };
     return { venueRef: v.venueRef, placeId: v.placeId, available: true, name: v.name, address: v.address, location: { lat: v.lat, lng: v.lng }, areaCode: v.areaCode, attributions: [], displayExpiresAt: null };
   }
@@ -371,7 +380,8 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
     return [...w.applications.values()].filter((a) => a.mealId === mealId && a.userId === uid).sort((a, b) => b.round - a.round);
   }
 
-  function mealDto(meal: MealRec, viewer: string | null): MealDto {
+  /** `display: false` for write responses (createMeal/editMeal/declareBooking/cancelMeal/leaveMeal), as apps/api meals/routes.ts. */
+  function mealDto(meal: MealRec, viewer: string | null, display = true): MealDto {
     const t = now();
     const seated = currentSeats(meal, t);
     const count = seated.length;
@@ -394,7 +404,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
     if (viewer && meal.status === 'COMPLETED' && meal.startRoster?.includes(viewer)) actions.push('POST_MEAL');
     const d = meal.declarations.at(-1);
     return {
-      id: meal.id, version: String(meal.version), host: publicProfile(meal.hostId), venue: venueDto(meal.venueRef), title: meal.title, description: meal.description,
+      id: meal.id, version: String(meal.version), host: publicProfile(meal.hostId), venue: venueDto(meal.venueRef, display), title: meal.title, description: meal.description,
       startsAt: londonTime(meal.startMs), closesAt: londonTime(meal.closeMs), scheduledEndAt: iso(meal.endMs), minimum: meal.minimum, capacity: meal.capacity,
       confirmedCount: count, members: memberIds.slice(0, 6).map((id) => publicProfile(id)), budgetMinPence: meal.budgetMinPence, budgetMaxPence: meal.budgetMaxPence, currency: 'GBP', languages: [...meal.languages],
       mood: meal.mood, areaCode: meal.areaCode, cuisineCode: meal.cuisineCode, dietaryCodes: meal.dietaryCodes ? [...meal.dietaryCodes] : null,
@@ -520,7 +530,8 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
       const emma = userId('emma');
       if (isMember(conv, emma) && meal.hostId !== emma && openInterval(conv, emma)) postMessage(conv, emma, `Hi ${newcomer}, see you there! 😊`, at + 2_000, null, w);
     }
-    notify(a.userId, 'application_approved', { mealId: meal.id, applicationId: a.id, ...(conv ? { conversationId: conv.id } : {}) }, at);
+    // The server's approval notice references the meal only (apps/api meals/commands.ts decideApplication).
+    notify(a.userId, 'application_approved', { mealId: meal.id }, at);
   }
 
   /** Lazily materialises time-driven transitions (simulated host decisions, close/start/end), like apps/api advanceLifecycle. */
@@ -627,9 +638,15 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
   type Out<I extends OperationId> = { status?: number; data: DataOf<I>; page?: { nextCursor: string | null; hasMore: boolean; scannedThroughSeq?: string }; version?: string; headers?: Record<string, string> };
   type Handlers = { [I in OperationId]?: (ctx: Ctx<I>) => Out<I> };
 
-  const newChallenge = (email: string, client: string) => {
+  const throttleCode = (address: string) => {
+    const email = address.trim().toLowerCase();
+    const last = lastCodeSent.get(email);
+    if (last !== undefined && now() - last < OTP_RESEND_MS) fail('RATE_LIMITED', 'Please wait before requesting another code.', { retryAfterSeconds: Math.ceil((OTP_RESEND_MS - (now() - last)) / 1000) });
+    lastCodeSent.set(email, now());
+  };
+  const newChallenge = (email: string, client: string, reauth = false) => {
     const id = newId(w, 'misc');
-    challenges.set(id, { email, used: false, client });
+    challenges.set(id, { email, used: false, client, attempts: 0, expiresAt: now() + OTP_TTL_MS, reauth });
     return id;
   };
   const authenticated = (client: string) => {
@@ -655,16 +672,27 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
   const handlers: Handlers = {
     // ── auth ──
     startEmail: ({ body }) => {
+      throttleCode(body.email);
       const challengeId = newChallenge(body.email, body.client);
       // Challenge times are compared with the app's business clock (services.now), unlike token expiries.
-      return { data: { challengeId, expiresAt: iso(now() + 10 * MINUTE), resendAfter: iso(now() + 30_000) } };
+      return { data: { challengeId, expiresAt: iso(now() + OTP_TTL_MS), resendAfter: iso(now() + OTP_RESEND_MS) } };
     },
     verifyEmail: ({ body }) => {
-      const challenge = challenges.get(body.challengeId) ?? fail('NOT_FOUND', 'This code has expired. Request a new code.');
-      if (challenge.used) fail('STATE_CONFLICT', 'This code can no longer be used.');
-      challenge.used = true;
-      signIn(challenge.email);
-      return { data: authenticated(challenge.client) };
+      // As the server: an unknown, expired, used or exhausted challenge is one 409; a wrong code is a 422
+      // that leaves the challenge usable until the attempts run out. The preview code is always 000000.
+      const challenge = challenges.get(body.challengeId);
+      if (!challenge || challenge.used || now() >= challenge.expiresAt || challenge.attempts >= OTP_MAX_ATTEMPTS) fail('STATE_CONFLICT', 'This code has expired or too many attempts were made. Request a new code.');
+      challenge!.attempts += 1;
+      if (challenge!.client !== 'WEB' && !challenge!.reauth && !body.appChallenge) fail('VALIDATION_FAILED', 'appChallenge is required for native sign-in.', { fieldErrors: { 'body.appChallenge': 'Required' } });
+      if (body.code !== PREVIEW_OTP) {
+        const left = OTP_MAX_ATTEMPTS - challenge!.attempts;
+        if (left <= 0) challenge!.used = true;
+        fail('VALIDATION_FAILED', left > 0 ? 'That code is not right. Check it and try again.' : 'Too many attempts. Request a new code.', { fieldErrors: { 'body.code': left > 0 ? `Incorrect code (${left} attempts left)` : 'No attempts left' } });
+      }
+      const challengeRec = challenge!;
+      challengeRec.used = true;
+      signIn(challengeRec.email);
+      return { data: authenticated(challengeRec.client) };
     },
     startOAuth: ({ body }) => {
       if (oauthMode === 'unavailable') fail('PROVIDER_UNAVAILABLE', 'Google and Apple sign-in are not available in preview. Continue with email.');
@@ -698,7 +726,11 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
       return { status: 204, data: undefined };
     },
     startReauth: ({ body }) => {
-      if (body.method === 'EMAIL') return { data: { challengeId: newChallenge(user(ALEX).email ?? 'alex@example.com', 'IOS'), expiresAt: iso(now() + 10 * MINUTE) } };
+      if (body.method === 'EMAIL') {
+        const email = user(ALEX).email ?? 'alex@example.com';
+        throttleCode(email);
+        return { data: { challengeId: newChallenge(email, 'IOS', true), expiresAt: iso(now() + OTP_TTL_MS) } };
+      }
       if (oauthMode === 'unavailable') fail('PROVIDER_UNAVAILABLE', 'Google and Apple sign-in are not available in preview. Continue with email.');
       const state = newId(w, 'misc');
       oauthStates.set(state, { used: false });
@@ -709,7 +741,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
     // ── people ──
     getMe: ({ uid }) => {
       const data = meDto(uid);
-      return { data, version: data.version };
+      return { data };
     },
     updateMe: ({ uid, body, ifMatch }) => {
       const u = user(uid);
@@ -767,7 +799,8 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
     },
     confirmVenue: ({ body }) => {
       const v = SEED_VENUES.find((x) => x.placeId === body.placeId) ?? fail('NOT_FOUND', 'This restaurant can no longer be verified. Choose another restaurant.');
-      return { data: venueDto(v.venueRef) };
+      // The server confirms the place without provider display data (apps/api venues/service.ts confirmVerified).
+      return { data: { ...venueDto(v.venueRef), name: null, address: null, location: null } };
     },
 
     // ── meals ──
@@ -839,7 +872,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
         w.applications.set(app.id, app);
         notify(uid, 'application_submitted', { mealId: meal.id, applicationId: app.id }, t);
       }
-      return { data: mealDto(meal, uid), version: String(meal.version) };
+      return { data: mealDto(meal, uid, false), version: String(meal.version) };
     },
     editMeal: ({ uid, params, body, ifMatch }) => {
       const meal = mealOr404(params.mealId);
@@ -867,7 +900,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
         dietaryCodes: body.dietaryCodes !== undefined ? normalizeDietary(body.dietaryCodes) : meal.dietaryCodes,
       });
       meal.version += 1;
-      return { data: mealDto(meal, uid), version: String(meal.version) };
+      return { data: mealDto(meal, uid, false), version: String(meal.version) };
     },
     declareBooking: ({ uid, params, body, ifMatch }) => {
       const meal = mealOr404(params.mealId);
@@ -876,7 +909,9 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
       checkVersion(meal.version, ifMatch);
       meal.declarations.push({ id: newId(w, 'misc'), revision: (meal.declarations.at(-1)?.revision ?? 0) + 1, status: body.status, count: body.count, reportedAt: now(), key: arrangementKey(meal, body.count, meal.seatSeq) });
       meal.version += 1;
-      return { status: 201, data: mealDto(meal, uid), version: String(meal.version) };
+      // Seat holders other than the host hear about the update (apps/api meals/commands.ts declareBooking).
+      for (const seat of currentSeats(meal, now())) if (seat !== uid) notify(seat, 'booking_updated', { mealId: meal.id }, now());
+      return { status: 201, data: mealDto(meal, uid, false), version: String(meal.version) };
     },
     cancelMeal: ({ uid, params, body, ifMatch }) => {
       const meal = mealOr404(params.mealId);
@@ -885,7 +920,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
       checkVersion(meal.version, ifMatch);
       if (now() >= meal.startMs) fail('DEADLINE_PASSED', 'This meal has already started.');
       cancelState(meal, body.reason, now());
-      return { data: mealDto(meal, uid), version: String(meal.version) };
+      return { data: mealDto(meal, uid, false), version: String(meal.version) };
     },
     applyMeal: ({ uid, params, body }) => {
       const message = body.message.trim();
@@ -955,7 +990,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
       addSeat(meal, uid, 'LEFT', t);
       meal.version += 1;
       if (t >= meal.closeMs && currentSeats(meal, t).length < meal.minimum) cancelState(meal, 'insufficient', t);
-      return { data: { application: applicationDto(app), meal: mealDto(meal, uid) }, version: String(meal.version) };
+      return { data: { application: applicationDto(app), meal: mealDto(meal, uid, false) }, version: String(meal.version) };
     },
     myMeals: ({ uid, query }) => {
       const t = now();
@@ -1197,7 +1232,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
       const data: ConversationDto = { id: conv.id, version: String(conv.version), kind: 'DIRECT', mealId: null, title: publicProfile(params.subjectId).displayName, canSend: directAuthorized(pair), dissolved: false, head: String(conv.head), avatar: convAvatar(conv, uid) };
       return { data, version: data.version };
     },
-    getSurvey: () => ({ data: surveyDto(), version: String(w.survey.version) }),
+    getSurvey: () => ({ data: surveyDto() }),
     putSurvey: ({ body, ifMatch }) => {
       checkVersion(w.survey.version, ifMatch, 'Your answers changed.');
       w.survey = { version: w.survey.version + 1, again: body.again, reasons: [...body.reasons], submittedAt: now() };
@@ -1222,7 +1257,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
       if (!exists) fail('NOT_FOUND', 'We could not find what you are reporting.');
       const report: ReportRec = { id: newId(w, 'misc'), userId: uid, receipt: `FCY-${String(w.counter).padStart(6, '0')}`, targetType: body.targetType, createdAt: now() };
       w.reports.set(report.id, report);
-      return { data: reportDto(report), version: '1' };
+      return { data: reportDto(report) };
     },
     reportStatus: ({ uid, params }) => {
       const report = w.reports.get(params.reportId);

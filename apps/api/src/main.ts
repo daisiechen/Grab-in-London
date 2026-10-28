@@ -9,7 +9,7 @@ import type { IdentityProvider } from './identity/provider.ts';
 import { GooglePlacesProvider } from './venues/google-provider.ts';
 
 export function identityProviderFor(config: CoreConfig): IdentityProvider {
-  if (config.adapters.AUTH_ADAPTER === 'test') return new TestIdentityProvider(config.environment);
+  if (config.adapters.AUTH_ADAPTER === 'test') return new TestIdentityProvider(config.environment, { fixedOtp: config.devFixedOtp });
   return new Auth0IdentityProvider(config.auth0!);
 }
 

@@ -12,6 +12,7 @@ import { loadErrorMessage, useQuery } from '../../api/useQuery.ts';
 import { SessionScope } from '../auth/SessionScope.tsx';
 import { setFlash } from '../meals/flash.ts';
 import { mealKey } from '../meals/MealDetailScreen.tsx';
+import { keepVenueDisplay } from '../meals/venue-display.ts';
 import { POLICY_VERSION } from '../../config.ts';
 import { londonToday, longDate } from '../../lib/london.ts';
 import { Primary, TextAction } from '../../ui/Button.tsx';
@@ -348,7 +349,9 @@ function Review({ draft, update, today, goTo, mode }: Part & { today: string; go
       const updated = (await services.api.call('editMeal', { params: { mealId }, body, idempotencyKey, ifMatch: base.version })).data;
       intent.current = null;
       const cached = services.cache.get<Detail>(mealKey(mealId));
-      if (cached) services.cache.set(mealKey(mealId), { ...cached, meal: updated });
+      if (cached) services.cache.set(mealKey(mealId), { ...cached, meal: keepVenueDisplay(updated, cached.meal.venue) });
+      // The edit response has no restaurant display data (and a changed restaurant has none cached): re-read it.
+      void services.api.call('getMeal', { params: { mealId } }).then((r) => services.cache.set(mealKey(mealId), r.data), () => undefined);
       services.cache.invalidate('myMeals:');
       setFlash(`host:${mealId}`, 'Changes saved. Guests see the updated details.');
       router.dismissTo(hostRoute(mealId));

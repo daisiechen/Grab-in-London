@@ -114,10 +114,17 @@ describe('Edit meal flow', () => {
   });
 
   it('saves only the changed fields with If-Match, refreshes the meal and returns to the guest list', async () => {
-    const app = await setup();
-    seedEdit(app, { title: 'Sunday supper', capacity: 5 });
+    const app = createTestApp();
+    await signIn(app, me());
     const saved = editableMeal({ title: 'Sunday supper', capacity: 5, version: '8' });
-    app.mock.on('PATCH', MEAL_PATH, ok(saved));
+    // First read: the meal being edited; the re-read after saving returns the saved meal.
+    app.mock.on('GET', MEAL_PATH, ok({ meal: editableMeal(), myApplication: null, conversationId: CONVERSATION_ID }), 1);
+    app.mock.on('GET', MEAL_PATH, ok({ meal: saved, myApplication: null, conversationId: CONVERSATION_ID }));
+    app.mock.on('GET', `/v1/venues/${VENUE_REF}/photo`, ok({ placeId: 'place-1', photo: null }));
+    seedEdit(app, { title: 'Sunday supper', capacity: 5 });
+    app.services.cache.set(`meal:${MEAL_ID}`, { meal: editableMeal(), myApplication: null, conversationId: CONVERSATION_ID });
+    // Like the real API, the PATCH response has no restaurant display data.
+    app.mock.on('PATCH', MEAL_PATH, ok({ ...saved, venue: { ...saved.venue, available: false, name: null, address: null, location: null, attributions: [] } }));
     await renderApp(app, <EditStepScreen step={3} />);
     expect(await screen.findByText('If you change the restaurant, time or group size, update your booking with the restaurant yourself.')).toBeOnTheScreen();
     expect(screen.queryByRole('checkbox', { name: 'I’ve reviewed the details guests will see.' })).toBeNull();
@@ -130,7 +137,11 @@ describe('Edit meal flow', () => {
     expect(call?.body).toEqual({ title: 'Sunday supper', capacity: 5 });
     expect(call?.headers['if-match']).toBe('"7"');
     expect(call?.headers['idempotency-key']).toBeTruthy();
-    expect(app.services.cache.get<{ meal: { version: string } }>(`meal:${MEAL_ID}`)?.meal.version).toBe('8');
+    type Cached = { meal: { version: string; venue: { available: boolean; name: string | null } } };
+    // The guest list keeps the restaurant name straight away, then the re-read replaces the meal.
+    expect(app.services.cache.get<Cached>(`meal:${MEAL_ID}`)?.meal).toMatchObject({ version: '8', venue: { available: true, name: 'Dishoom' } });
+    await waitFor(() => expect(app.mock.callsTo('GET', MEAL_PATH).length).toBeGreaterThanOrEqual(2));
+    await waitFor(() => expect(app.services.cache.get<Cached>(`meal:${MEAL_ID}`)?.meal).toMatchObject({ version: '8', venue: { available: true, name: 'Dishoom' } }));
   });
 
   it('does not send an empty edit', async () => {

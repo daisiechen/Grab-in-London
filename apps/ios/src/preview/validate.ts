@@ -82,8 +82,13 @@ export function validate(schema: Schema, value: unknown, path: string, errors: R
     }
   }
   if (Array.isArray(schema.anyOf)) {
-    const ok = (schema.anyOf as Schema[]).some((s) => Object.keys(validate(s, value, path, {})).length === 0);
-    if (!ok) fail('must match a schema in anyOf');
+    const branches = (schema.anyOf as Schema[]).map((s) => validate(s, value, path, {}));
+    // Like Ajv (allErrors), a failed anyOf reports every branch's field errors, so the
+    // 422 fieldErrors name the same fields as the server's.
+    if (!branches.some((b) => Object.keys(b).length === 0)) {
+      for (const branch of branches) for (const [at, message] of Object.entries(branch)) fail(message, at);
+      fail('must match a schema in anyOf');
+    }
   }
   return errors;
 }

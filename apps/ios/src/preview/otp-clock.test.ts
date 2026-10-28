@@ -6,5 +6,6 @@ it('times the email code on the same business clock the sign-in screen counts do
   const api = createApiClient({ baseUrl: 'http://localhost:3000', credentials: { kind: 'bearer', accessToken: () => null }, fetch: backend.fetch });
   const res = await api.call('startEmail', { body: { clientRequestId: '11111111-1111-4111-8111-111111111111', email: 'a@example.com', client: 'IOS' } });
   expect(Date.parse(res.data.resendAfter) - backend.now()).toBe(30_000);
-  expect(Date.parse(res.data.expiresAt) - backend.now()).toBe(10 * 60_000);
+  // Same 5-minute code lifetime as the server (apps/api identity/routes.ts OTP_TTL_MS).
+  expect(Date.parse(res.data.expiresAt) - backend.now()).toBe(5 * 60_000);
 });

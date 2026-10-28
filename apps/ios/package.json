@@ -8,8 +8,11 @@
     "ios": "expo run:ios",
     "ios:preview": "EXPO_PUBLIC_FANCY_PREVIEW=1 expo run:ios",
     "ios:preview:device": "EXPO_PUBLIC_FANCY_PREVIEW=1 expo run:ios --device",
-    "typecheck": "tsc -p tsconfig.json",
-    "test": "jest --ci"
+    "typecheck": "tsc -p tsconfig.json && tsc -p e2e/tsconfig.json",
+    "test": "jest --ci",
+    "e2e:real-api": "node e2e/real-api.e2e.ts",
+    "e2e:serve": "node e2e/serve.ts",
+    "e2e:parity": "node e2e/parity.ts"
   },
   "dependencies": {
     "@expo/log-box": "58.0.12",

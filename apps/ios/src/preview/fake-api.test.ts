@@ -91,7 +91,9 @@ describe('preview fake API', () => {
     expect(ctx.session.accessToken()).toMatch(/^pv_access_/);
 
     const me = await ctx.api.call('getMe', {});
-    expect(me.meta.version).toBe(me.data.version);
+    // Like the server, getMe carries the version in the body only (no meta.version).
+    expect(me.meta.version).toBeUndefined();
+    expect(me.data.version).toMatch(/^\d+$/);
     const before = ctx.session.accessToken();
     await ctx.session.refresh();
     expect(ctx.session.accessToken()).not.toBe(before);
@@ -104,13 +106,25 @@ describe('preview fake API', () => {
     expect(ctx.problems).toEqual([]);
   });
 
-  it('rejects used and unknown OTP challenges and offers no provider sign-in by default', async () => {
+  it('applies the server’s email-code rules and offers no provider sign-in by default', async () => {
     const ctx = setup();
+    const appChallenge = 'c'.repeat(43);
     const start = await ctx.raw.call('startEmail', { body: { clientRequestId: newId(), email: 'someone@example.com', client: 'IOS' } });
-    await ctx.raw.call('verifyEmail', { body: { clientRequestId: newId(), challengeId: start.data.challengeId, code: '123456' } });
-    await expectApiError(ctx.raw.call('verifyEmail', { body: { clientRequestId: newId(), challengeId: start.data.challengeId, code: '000000' } }), 409, 'STATE_CONFLICT');
-    await expectApiError(ctx.raw.call('verifyEmail', { body: { clientRequestId: newId(), challengeId: newId(), code: '000000' } }), 404, 'NOT_FOUND');
+    // One code per email every 30 s (429 with retryAfterSeconds), as apps/api identity/routes.ts.
+    await expectApiError(ctx.raw.call('startEmail', { body: { clientRequestId: newId(), email: 'Someone@example.com', client: 'IOS' } }), 429, 'RATE_LIMITED');
+    // Native sign-in must bind an app challenge; a wrong code is a 422 that keeps the challenge usable.
+    await expectApiError(ctx.raw.call('verifyEmail', { body: { clientRequestId: newId(), challengeId: start.data.challengeId, code: '000000' } }), 422, 'VALIDATION_FAILED');
+    await expectApiError(ctx.raw.call('verifyEmail', { body: { clientRequestId: newId(), challengeId: start.data.challengeId, code: '123456', appChallenge } }), 422, 'VALIDATION_FAILED');
+    await ctx.raw.call('verifyEmail', { body: { clientRequestId: newId(), challengeId: start.data.challengeId, code: '000000', appChallenge } });
+    // Used and unknown challenges are the same 409 on the server.
+    await expectApiError(ctx.raw.call('verifyEmail', { body: { clientRequestId: newId(), challengeId: start.data.challengeId, code: '000000', appChallenge } }), 409, 'STATE_CONFLICT');
+    await expectApiError(ctx.raw.call('verifyEmail', { body: { clientRequestId: newId(), challengeId: newId(), code: '000000', appChallenge } }), 409, 'STATE_CONFLICT');
     await expectApiError(ctx.raw.call('verifyEmail', { body: { clientRequestId: newId(), challengeId: start.data.challengeId, code: '12ab56' } }), 422, 'VALIDATION_FAILED');
+    // Five wrong codes exhaust a challenge.
+    ctx.clock.t += 31_000;
+    const second = await ctx.raw.call('startEmail', { body: { clientRequestId: newId(), email: 'someone@example.com', client: 'IOS' } });
+    for (let i = 0; i < 5; i++) await expectApiError(ctx.raw.call('verifyEmail', { body: { clientRequestId: newId(), challengeId: second.data.challengeId, code: '111111', appChallenge } }), 422, 'VALIDATION_FAILED');
+    await expectApiError(ctx.raw.call('verifyEmail', { body: { clientRequestId: newId(), challengeId: second.data.challengeId, code: '000000', appChallenge } }), 409, 'STATE_CONFLICT');
     await expectApiError(ctx.raw.call('startOAuth', { body: { clientRequestId: newId(), provider: 'GOOGLE', client: 'IOS' } }), 503, 'PROVIDER_UNAVAILABLE');
     expect(ctx.problems).toEqual([]);
   });
@@ -164,7 +178,8 @@ describe('preview fake API', () => {
     expect(detail.data.meal).toMatchObject({ confirmedCount: 4, allowedActions: ['OPEN_GROUP', 'LEAVE'] });
     const messages = await ctx.api.call('readMessages', { params: { conversationId: detail.data.conversationId! }, query: { mode: 'HISTORY' } });
     expect(messages.data.map((m) => `${m.sender.displayName}: ${m.body}`)).toEqual(['Emma: Hi Alex, see you there! 😊', 'Maya: Welcome to “An easy Friday supper”, Alex! Shall we meet outside five minutes before?']);
-    expect((await ctx.api.call('listNotifications', { query: {} })).data[0]).toMatchObject({ template: 'application_approved', mealId: M.supper });
+    // The server's approval notice references the meal only.
+    expect((await ctx.api.call('listNotifications', { query: {} })).data[0]).toMatchObject({ template: 'application_approved', mealId: M.supper, applicationId: null, conversationId: null });
     // Newly joined group sorts first (latest visible activity), like apps/api.
     expect((await ctx.api.call('inbox', { query: {} })).data[0]?.conversation?.id).toBe(detail.data.conversationId);
     // Group rows carry the host as their avatar.
@@ -184,6 +199,8 @@ describe('preview fake API', () => {
     const candidates = await ctx.api.call('searchVenues', { query: { q: 'little' } });
     expect(candidates.data.map((v) => v.name)).toEqual(['The Little Table']);
     const venue = await ctx.api.call('confirmVenue', { body: { placeId: candidates.data[0]!.placeId }, idempotencyKey: newId() });
+    // Like the server, confirmation carries no provider display data (the app keeps the candidate's).
+    expect(venue.data).toMatchObject({ available: true, name: null, address: null, location: null, areaCode: 'soho' });
     const time = (localDate: string, localTime: string) => ({ localDate, localTime, timeZone: 'Europe/London' as const });
     const created = await ctx.api.call('createMeal', {
       body: {
@@ -196,6 +213,9 @@ describe('preview fake API', () => {
     });
     expect(created.data).toMatchObject({ confirmedCount: 1, startsAt: { utcOffsetMinutes: 0, instant: '2026-10-30T19:00:00.000Z' }, dietaryCodes: ['VEGETARIAN_OPTIONS', 'VEGAN'], areaCode: 'soho', bookingDeclaration: { status: 'REPORTED_CONFIRMED', declaredCount: 4, stale: false } });
     expect(created.data.allowedActions).toEqual(['OPEN_GROUP', 'CANCEL', 'DECLARE_BOOKING', 'REVIEW_APPLICATIONS', 'EDIT']);
+    // Write responses have no provider display (apps/api never calls Places inside the transaction); reads do.
+    expect(created.data.venue).toMatchObject({ venueRef: venue.data.venueRef, available: false, name: null, address: null, location: null });
+    expect((await ctx.api.call('getMeal', { params: { mealId: created.data.id } })).data.meal.venue).toMatchObject({ available: true, name: 'The Little Table' });
     // The host's own group appears in Inbox straight away (host is its first member, like apps/api).
     expect((await ctx.api.call('inbox', { query: {} })).data.map((i) => i.conversation?.title)).toContain('Supper for new Londoners');
 
@@ -214,6 +234,7 @@ describe('preview fake API', () => {
     await expectApiError(ctx.api.call('editMeal', { params: { mealId: meal.id }, body: { title: 'A new title here' }, ifMatch: meal.version, idempotencyKey: newId() }), 409, 'ARRANGEMENT_LOCKED');
     const declared = await ctx.api.call('declareBooking', { params: { mealId: meal.id }, body: { status: 'REPORTED_CONFIRMED', count: 2 }, ifMatch: meal.version, idempotencyKey: newId() });
     expect(declared.data.bookingDeclaration).toMatchObject({ revision: '2', declaredCount: 2, stale: false });
+    expect(declared.data.venue.available).toBe(false);
     expect((await ctx.api.call('myMeals', { query: { section: 'HOSTING' } })).data.map((i) => i.role)).toEqual(['HOST']);
     const cancelled = await ctx.api.call('cancelMeal', { params: { mealId: meal.id }, body: { reason: 'host' }, ifMatch: declared.data.version, idempotencyKey: newId() });
     expect(cancelled.data).toMatchObject({ status: 'CANCELLED', cancelReason: 'host' });

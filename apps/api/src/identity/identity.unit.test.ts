@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { exportJWK, generateKeyPair, SignJWT, createLocalJWKSet } from 'jose';
 import { assertFreshAuth } from './reauth.ts';
 import { TestIdentityProvider } from './test-provider.ts';
+import { loadConfig } from '@fancy/config';
+import { identityProviderFor } from '../main.ts';
 import { Auth0IdentityProvider } from './auth0-provider.ts';
 import { pkceChallenge, verifyPkce } from './tokens.ts';
 
@@ -34,6 +36,15 @@ describe('test identity provider', () => {
     for (let i = 0; i < 20; i++) { await idp.startEmailOtp('a@example.invalid'); }
     for (const c of idp.inbox.get('a@example.invalid')!) codes.add(c);
     expect(codes.size).toBeGreaterThan(1);
+  });
+
+  it('uses DEV_FIXED_OTP for every challenge when a local development run opts in', async () => {
+    const config = loadConfig({ ENVIRONMENT: 'development', DATABASE_URL: 'postgres://fancy@127.0.0.1:5432/fancy_dev', AUTH_ADAPTER: 'test', PLACES_ADAPTER: 'fixture', MAIL_ADAPTER: 'outbox_test', AI_PROVIDER: 'mock', DEV_FIXED_OTP: '000000', WEB_ORIGIN: 'http://localhost:8081', SESSION_SECRET: 'x'.repeat(32) });
+    const idp = identityProviderFor(config) as TestIdentityProvider;
+    const first = await idp.startEmailOtp('a@example.invalid');
+    await idp.startEmailOtp('a@example.invalid');
+    expect(idp.inbox.get('a@example.invalid')).toEqual(['000000', '000000']);
+    await expect(idp.verifyEmailOtp({ email: 'a@example.invalid', code: '000000', providerState: first })).resolves.toMatchObject({ email: 'a@example.invalid' });
   });
 });
 

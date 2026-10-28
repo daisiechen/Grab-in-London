@@ -62,6 +62,21 @@ describe('MVP production meal commands and privacy',()=>{
   const host=await actor();const meal=await publish(host.b,{capacity});
   expect(meal.confirmedCount).toBe(1);expect(meal.bookingDeclaration).toMatchObject({declaredCount:capacity,revision:'1',stale:false});
  });
+ it('keeps a booking declared for more people than are confirmed fresh, and notifies seated guests but not the host',async()=>{
+  const host=await actor(),guest=await actor();const meal=await publish(host.b,{capacity:4});
+  const application=json(await apply(guest.b,meal.id)).data;
+  expect((await decide(host.b,application.id)).statusCode).toBe(200);
+  let latest=(await detail(host.b,meal.id)).meal;
+  expect(latest.confirmedCount).toBe(2);
+  const declared=await host.b.request('POST',`/v1/meals/${meal.id}/booking-declarations`,{body:{status:'REPORTED_CONFIRMED',count:4},headers:{'idempotency-key':randomUUID(),'if-match':`"${latest.version}"`}});
+  expect(declared.statusCode,declared.body).toBe(201);
+  expect(json(declared).data.bookingDeclaration).toMatchObject({declaredCount:4,revision:'2',stale:false});
+  latest=(await detail(guest.b,meal.id)).meal;
+  expect(latest.bookingDeclaration).toMatchObject({declaredCount:4,revision:'2',stale:false});
+  const templates=async(b:Browser)=>(json(await b.request('GET','/v1/me/notifications')).data as Array<{template:string;mealId:string|null}>).filter(n=>n.mealId===meal.id).map(n=>n.template);
+  expect(await templates(guest.b)).toContain('booking_updated');
+  expect(await templates(host.b)).not.toContain('booking_updated');
+ });
  it('keeps pending fresh, marks an approved full table stale, and refreshes only after host declaration',async()=>{
   const host=await actor(),guest=await actor();const meal=await publish(host.b,{capacity:2});
   const application=json(await apply(guest.b,meal.id)).data;

@@ -333,7 +333,7 @@ const styles = createStyles({
   count: { position: 'absolute', right: -2, top: -4, width: 12, height: 12, borderRadius: 6, backgroundColor: colors.peach, alignItems: 'center', justifyContent: 'center' },
   countText: { fontSize: 8, color: colors.ink },
   retry: { paddingHorizontal: 16, paddingBottom: 8 },
-  notice: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', marginHorizontal: 16, marginBottom: 8, paddingHorizontal: 12, borderRadius: 9, backgroundColor: '#f2f5ee' },
+  notice: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', marginHorizontal: 16, marginBottom: 8, paddingHorizontal: 12, paddingTop: 8, borderRadius: 9, backgroundColor: '#f2f5ee' },
   noticeText: { fontSize: 11, color: '#607160' },
   map: { backgroundColor: '#eeeee5', overflow: 'hidden' },
   mapKey: { position: 'absolute', top: 10, left: 12, backgroundColor: '#fffffff0', borderWidth: 1, borderColor: colors.line, borderRadius: 16, paddingVertical: 5, paddingHorizontal: 9, zIndex: 3 },

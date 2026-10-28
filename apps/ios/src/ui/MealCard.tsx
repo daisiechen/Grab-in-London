@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from 'react-native';
 import { mealPeople, cardBudgetLabel, cardWhenLabel, languagesLabel, moodLabel, venueName, type Meal } from '../features/meals/format.ts';
 import { Avatar } from './Avatar.tsx';
-import { areaName } from '../features/discover/areas.ts';
+import { areaName, areaPlace } from '../features/discover/areas.ts';
 import { Icon, type IconName } from './Icon.tsx';
 import { RestaurantPhoto } from './RestaurantPhoto.tsx';
 import { colors } from './tokens.ts';
@@ -52,7 +52,7 @@ export function MealCard({ meal, onPress, onPerson, members, compact = false, de
               <View style={styles.copy}>
                 <Text style={styles.title} numberOfLines={2}>{meal.title}</Text>
                 <Text style={styles.venue} numberOfLines={1}>{venueName(meal)}</Text>
-                <Line icon="SewingPin">{`${areaName(meal.areaCode)}, London`}</Line>
+                <Line icon="SewingPin">{areaPlace(meal.areaCode)}</Line>
                 <Line icon="Calendar">{cardWhenLabel(meal.startsAt)}</Line>
                 <Line glyph="£">{`${cardBudgetLabel(meal).replace(/^£/, '')} per person`}</Line>
                 <Line icon="Person">{`Table for ${meal.capacity} · ${meal.confirmedCount} confirmed`}</Line>
