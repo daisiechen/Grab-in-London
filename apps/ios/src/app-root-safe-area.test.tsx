@@ -15,10 +15,11 @@ function notices() {
 }
 
 describe('application notices safe area',()=>{
-  test('the analytics choice never pushes navigation content down from the top notices region',async()=>{
+  test('with no notice there is no notices region, so screens start at their own safe-area top',async()=>{
     const app=createTestApp();
     await renderApp(app,<AppRoot services={app.services}><Text testID="navigation-content">Navigation</Text></AppRoot>);
-    expect(notices().queryByText('Help improve Fancy')).toBeNull();
+    expect(screen.queryByTestId('app-notices')).toBeNull();
+    expect(screen.queryByText('Help improve Fancy')).toBeNull();
     expect(screen.getByTestId('navigation-content')).toBeTruthy();
   });
   test('declining from settings collapses to the preferences control',async()=>{

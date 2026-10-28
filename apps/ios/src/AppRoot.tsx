@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { AppState, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Primary } from './ui/Button.tsx';
@@ -24,14 +24,28 @@ export function AppRoot({ services, children }: { services: Services; children: 
   }, [services, started]);
   return (
     <ServicesProvider services={services}>
-      <SafeAreaView edges={['top', 'left', 'right']} testID="app-notices">
-        <LogoutNotice session={services.session}/>
-        <SessionBanner services={services} />
-      </SafeAreaView>
       {children}
+      <AppNotices services={services} />
       {ASSISTANT_ENABLED ? <AssistantWidget /> : null}
       <AnalyticsConsentSheet manager={services.analytics}/>
     </ServicesProvider>
+  );
+}
+
+/**
+ * App-wide notices (sign-out not confirmed, session unavailable). Rendered only while one is
+ * showing, as an overlay on top of the page: an always-mounted SafeAreaView here used to add a
+ * full status-bar-height band above every screen, on top of each screen's own safe-area inset.
+ */
+function AppNotices({ services }: { services: Services }) {
+  const state = useSessionState();
+  const logoutNotice = useSyncExternalStore(services.session.subscribeLogoutNotice, services.session.getLogoutNotice, services.session.getLogoutNotice);
+  if (!logoutNotice && state.status !== 'unavailable') return null;
+  return (
+    <SafeAreaView edges={['top', 'left', 'right']} testID="app-notices" style={styles.notices}>
+      <LogoutNotice session={services.session}/>
+      <SessionBanner services={services} />
+    </SafeAreaView>
   );
 }
 
@@ -47,5 +61,6 @@ function SessionBanner({ services }: { services: Services }) {
 }
 
 const styles = StyleSheet.create({
+  notices: { position: 'absolute', top: 0, left: 0, right: 0, zIndex: 50, backgroundColor: colors.white, shadowColor: colors.ink, shadowOpacity: 0.1, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } },
   banner: { padding: 12, gap: 8, backgroundColor: colors.surface, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.line },
 });
