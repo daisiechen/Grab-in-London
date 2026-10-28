@@ -149,21 +149,23 @@ describe('MyProfileScreen and sign-out (QA-AUTH-006 / QA-AUTH-014)', () => {
 
 
 describe('EditProfileScreen photo', () => {
-  it('shows the current photo with a note that it can’t be changed, and offers no upload control', async () => {
+  it('chooses one of three sample portraits (no upload) and saves it as avatarRef', async () => {
     const app = createTestApp();
-    const user = me();
+    const user = me({ avatarRef: 'avatar:emma' });
     await signIn(app, user);
-    app.mock.on('GET', `/v1/profiles/${user.id}`, ok({ profile: { ...publicProfile(user.id, user.displayName ?? 'Alex'), avatarUrl: 'preview://images/emma.png' }, reviews: [], nextReviewCursor: null }));
+    app.mock.on('PATCH', '/v1/me', ok({ ...user, avatarRef: 'avatar:leo', version: String(Number(user.version) + 1) }));
     await renderApp(app, <EditProfileScreen />);
-    await waitFor(() => expect(app.mock.callsTo('GET', `/v1/profiles/${user.id}`)).toHaveLength(1));
-    const photo = screen.getByTestId('profile-photo');
-    // The initial placeholder gives way to the photo from the own public profile.
-    await waitFor(() => expect(within(photo).queryByText('A')).toBeNull());
-    expect(within(photo).getByLabelText(user.displayName ?? 'Alex')).toBeOnTheScreen();
-    expect(screen.getByText('Photo changes aren’t available in this version.')).toBeOnTheScreen();
-    expect(screen.queryByRole('button', { name: /photo|avatar|upload/i })).toBeNull();
+    expect(screen.getByRole('radio', { name: 'Choose emma portrait' })).toBeSelected();
+    expect(screen.getAllByRole('radio', { name: /^Choose (leo|maya|emma) portrait$/ })).toHaveLength(3);
+    expect(screen.queryByRole('button', { name: /upload/i })).toBeNull();
+    await fireEvent.press(screen.getByRole('radio', { name: 'Choose leo portrait' }));
+    expect(screen.getByRole('radio', { name: 'Choose leo portrait' })).toBeSelected();
+    await fireEvent.press(screen.getByRole('button', { name: 'Save profile' }));
+    await waitFor(() => expect(app.mock.callsTo('PATCH', '/v1/me')).toHaveLength(1));
+    expect(app.mock.callsTo('PATCH', '/v1/me')[0]?.body).toMatchObject({ avatarRef: 'avatar:leo' });
   });
 });
+
 
 describe('account-scoped profile draft', () => {
   it('does not reuse the previous account name after expiry and a different login', async () => {

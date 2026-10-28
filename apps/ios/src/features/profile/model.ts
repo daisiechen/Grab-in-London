@@ -22,7 +22,12 @@ export const lifeStatusOptions = (Object.entries(LIFE_STATUSES) as Array<[LifeSt
 export const interestOptions = (Object.entries(INTERESTS) as Array<[InterestCode, string]>);
 export const languageOptions = (Object.entries(LANGUAGES) as Array<[LanguageCode, string]>).map(([code, label]) => [code, code === 'zh' ? 'Mandarin' : label] as const);
 
+/** PRD r07: a sample portrait is chosen from three; no real photos are collected. */
+export const AVATAR_CHOICES = ['leo', 'maya', 'emma'] as const;
+export const avatarRefFor = (key: (typeof AVATAR_CHOICES)[number]) => `avatar:${key}`;
+
 export interface ProfileForm {
+  avatarRef: string | null;
   displayName: string;
   bio: string;
   lifeStatus: LifeStatusCode | null;
@@ -37,6 +42,7 @@ export type ProfileField = 'displayName' | 'bio' | 'lifeStatus' | 'languages' | 
 
 export function formFromMe(me: Me): ProfileForm {
   return {
+    avatarRef: me.avatarRef,
     displayName: me.displayName ?? '',
     bio: me.bio ?? '',
     lifeStatus: me.lifeStatus,
@@ -72,6 +78,7 @@ export function buildPatch(form: ProfileForm, opts: { policyVersion: string | nu
     if (v) background[key] = v;
   }
   const patch: MePatch = {
+    ...(form.avatarRef ? { avatarRef: form.avatarRef } : {}),
     displayName: form.displayName.trim(),
     bio: form.bio.trim(),
     languages: [...form.languages],
