@@ -5,7 +5,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FloatingBack } from '../../../ui/FloatingBack.tsx';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { ApiError, type ResponseOf } from '@fancy/client';
-import { Primary, TextAction } from '../../../ui/Button.tsx';
+import { Primary } from '../../../ui/Button.tsx';
+import { LinkRow } from '../../../ui/LinkRow.tsx';
 import { FormMessage } from '../../../ui/FormMessage.tsx';
 import { colors } from '../../../ui/tokens.ts';
 import { createStyles } from '../../../ui/styles.ts';
@@ -67,7 +68,7 @@ export function PublicProfileScreen() {
       ))}
       <View style={styles.safety}>
         <MemberSafety subjectId={p.id} name={p.displayName}/>
-        <TextAction label="Report this profile" onPress={() => router.push(`/report?targetType=USER&targetId=${p.id}`)} />
+        <LinkRow first icon="ExclamationTriangle" label="Report this profile" onPress={() => router.push(`/report?targetType=USER&targetId=${p.id}`)} />
       </View>
     </ScrollView>
     </View>

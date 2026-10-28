@@ -9,6 +9,7 @@ import { useServices, useSessionState } from '../../services.tsx';
 import { loadErrorMessage, useQuery } from '../../api/useQuery.ts';
 import { Primary, TextAction } from '../../ui/Button.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
+import { LinkRow } from '../../ui/LinkRow.tsx';
 import { Sheet } from '../../ui/Sheet.tsx';
 import { Body } from '../../ui/Text.tsx';
 import { colors } from '../../ui/tokens.ts';
@@ -180,7 +181,6 @@ export function MealDetailScreen() {
         {meal.venue.attributions.map((a, i) => <Text key={i} style={styles.mapNote}>{a.text}</Text>)}
 
         <Notice icon>No payment is due in the app. Everyone pays their own share at the restaurant.</Notice>
-        <View style={styles.termsLink}><TextAction label="Cancellation terms" onPress={() => router.push('/cancellation-terms')} /></View>
 
         <FormMessage message={message} />
         <View style={styles.actions}>
@@ -188,7 +188,10 @@ export function MealDetailScreen() {
           {can('POST_MEAL') ? <Primary secondary label="After the meal" onPress={() => router.push(`/post-meal/${meal.id}`)} /> : null}
           {can('WITHDRAW') && myApplication ? <TextAction destructive label="Withdraw request" onPress={() => setConfirm('withdraw')} /> : null}
           {can('LEAVE') ? <TextAction destructive label="Cancel my place" onPress={() => setConfirm('leave')} /> : null}
-          <TextAction label="Report this meal" onPress={() => router.push(`/report?targetType=MEAL&targetId=${meal.id}`)} />
+        </View>
+        <View style={styles.links}>
+          <LinkRow first icon="FileText" label="Cancellation terms" onPress={() => router.push('/cancellation-terms')} />
+          <LinkRow icon="ExclamationTriangle" label="Report this meal" onPress={() => router.push(`/report?targetType=MEAL&targetId=${meal.id}`)} />
         </View>
       </ScrollView>
       {action ? <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 12) }]}>{action}</View> : null}
@@ -219,7 +222,7 @@ function Fact({ icon, glyph, strong, small }: { icon?: IconName; glyph?: string;
 }
 
 const styles = createStyles({
-  termsLink: { alignItems: 'flex-start', marginTop: -6 },
+  links: { marginTop: 12 },
   page: { flex: 1, backgroundColor: colors.white },
   state: { paddingHorizontal: 18, gap: 12 },
   scroll: { paddingHorizontal: 18, paddingBottom: 24 },
