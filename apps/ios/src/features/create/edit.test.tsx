@@ -3,7 +3,7 @@ import { CREATE_DRAFT_KEY, EditStepScreen, editBaseKey, editDraftKey, startMealE
 import { draftFromMeal, emptyDraft, toEditBody, updateDraft, type CreateDraft } from './model.ts';
 import { createTestApp, renderApp, signIn, type TestApp } from '../../test/render.tsx';
 import { mockRouter, resetRouter, routeParams } from '../../test/router.ts';
-import { fail, ok } from '../../test/mock-fetch.ts';
+import { fail, ok, page } from '../../test/mock-fetch.ts';
 import { CONVERSATION_ID, MEAL_ID, meal, me } from '../../test/fixtures.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
@@ -75,6 +75,27 @@ describe('Edit meal flow', () => {
     expect(app.services.drafts.get<CreateDraft>(editDraftKey(MEAL_ID))).toMatchObject({ capacity: 6, title: 'Sunday dinner' });
     expect(app.services.drafts.get<{ version: string }>(editBaseKey(MEAL_ID))?.version).toBe('7');
     expect(app.services.drafts.get(CREATE_DRAFT_KEY)).toBe(createDraft);
+  });
+
+  it('the restaurant can be changed from the map dropdown while editing', async () => {
+    const app = await setup();
+    seedEdit(app);
+    const NEW_REF = '9c1b0a9f-8e7d-4c6b-9a5f-4e3d2c1b0a9f';
+    app.mock.on('GET', '/v1/venues', page([{ placeId: 'place-2', name: 'Noodle House', address: 'Fitzrovia, London', location: { lat: 51.5195, lng: -0.1376 }, photoRefs: [], attributions: [] }]));
+    app.mock.on('POST', '/v1/venues/confirm', ok({ venueRef: NEW_REF, placeId: 'place-2', available: true, name: 'Noodle House', address: 'Fitzrovia, London', location: null, areaCode: 'fitzrovia', attributions: [], displayExpiresAt: null }));
+    app.mock.on('GET', `/v1/venues/${NEW_REF}/photo`, ok({ placeId: 'place-2', photo: null }));
+    await renderApp(app, <EditStepScreen step={0} />);
+    await fireEvent.press(await screen.findByRole('button', { name: 'Change restaurant' }));
+    // The current choice stays visible (and kept) while the host browses.
+    expect(screen.getByLabelText('Selected restaurant Dishoom')).toBeOnTheScreen();
+    await fireEvent.press(await screen.findByRole('button', { name: 'Noodle House, Fitzrovia, London' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Use this restaurant' }));
+    expect(await screen.findByLabelText('Selected restaurant Noodle House')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
+    expect(mockRouter.push).toHaveBeenCalledWith(`/meals/${MEAL_ID}/edit/introduce`);
+    const draft = app.services.drafts.get<CreateDraft>(editDraftKey(MEAL_ID))!;
+    expect(draft.venue?.venueRef).toBe(NEW_REF);
+    expect(toEditBody(draft, editableMeal())).toEqual({ venueRef: NEW_REF });
   });
 
   it('Costs needs no new reservation tick when editing', async () => {

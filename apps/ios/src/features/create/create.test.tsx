@@ -74,15 +74,14 @@ describe('Create Arrange (S10, QA-CREATE-001)', () => {
     app.mock.on('GET','/v1/venues',page([{placeId:'place-1',name:'Dishoom',address:'7 Boundary St',location:null,photoRefs:[],attributions:[{provider:'google',text:'Google'}]}]));
     app.mock.on('POST','/v1/venues/confirm',ok({...venueResponse,name:null,address:null,location:null,attributions:[]}));
     await renderApp(app,<CreateStepScreen step={0}/>);
-    await fireEvent.changeText(screen.getByLabelText('Search restaurants'),'dishoom');
-    await fireEvent.press(screen.getByRole('button',{name:'Search'}));
+    await fireEvent.press(screen.getByRole('button',{name:'Choose a restaurant on the map'}));
     await fireEvent.press(await screen.findByRole('button',{name:'Dishoom, 7 Boundary St'}));
     await fireEvent.press(screen.getByRole('button',{name:'Use this restaurant'}));
     expect(await screen.findByLabelText('Selected restaurant Dishoom')).toBeOnTheScreen();
     expect(app.services.drafts.get<CreateDraft>(CREATE_DRAFT_KEY)?.venue).toMatchObject({venueRef:VENUE_REF,name:'Dishoom',address:'7 Boundary St'});
     expect(app.mock.callsTo('POST','/v1/venues/confirm')[0]?.body).toEqual({placeId:'place-1'});
   });
-  it('searches venues, confirms one server-side and blocks Continue until the step is valid', async () => {
+  it('lists venues for the map area without typing, confirms one server-side and blocks Continue until the step is valid', async () => {
     const app = createTestApp();
     await signIn(app, me());
     app.mock.on('GET', '/v1/venues', page([{ placeId: 'place-1', name: 'Dishoom', address: '7 Boundary St', photoRefs: [], attributions: [{ provider: 'google', text: 'Google' }] }]));
@@ -91,10 +90,10 @@ describe('Create Arrange (S10, QA-CREATE-001)', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
     expect(screen.getByRole('alert')).toHaveTextContent('Choose a restaurant.');
 
-    await fireEvent.changeText(screen.getByLabelText('Search restaurants'), 'dishoom');
-    await fireEvent.press(screen.getByRole('button', { name: 'Search' }));
-    // A search result is only a preview: nothing is confirmed until “Use this restaurant”.
+    await fireEvent.press(screen.getByRole('button', { name: 'Choose a restaurant on the map' }));
+    // A listed restaurant is only a preview: nothing is confirmed until “Use this restaurant”.
     await fireEvent.press(await screen.findByRole('button', { name: 'Dishoom, 7 Boundary St' }));
+    expect([...app.mock.callsTo('GET', '/v1/venues')[0]!.query.keys()].sort()).toEqual(['east', 'north', 'south', 'west']);
     expect(app.mock.callsTo('POST', '/v1/venues/confirm')).toHaveLength(0);
     await fireEvent.press(screen.getByRole('button', { name: 'Use this restaurant' }));
     expect(await screen.findByLabelText('Selected restaurant Dishoom')).toBeOnTheScreen();
@@ -253,28 +252,27 @@ describe('Create layout and steps (demo create-flow, r07 costs)', () => {
     expect(app.mock.callsTo('POST', '/v1/meals')).toHaveLength(0);
   });
 
-  it('changing the restaurant keeps the current one when a search finds nothing or is abandoned', async () => {
+  it('changing the restaurant keeps the current one when the map area has nothing or the change is abandoned', async () => {
     const app = createTestApp(); await signIn(app, me());
     app.services.drafts.set(CREATE_DRAFT_KEY, readyDraft());
     app.mock.on('GET', `/v1/venues/${VENUE_REF}/photo`, ok({ placeId: 'place-1', photo: null }));
     app.mock.on('GET', '/v1/venues', page([]));
     await renderApp(app, <CreateStepScreen step={0} />);
-    expect(screen.queryByLabelText('Search restaurants')).toBeNull();
+    expect(screen.queryByLabelText('Filter restaurants by name')).toBeNull();
     await fireEvent.press(screen.getByRole('button', { name: 'Change restaurant' }));
-    await fireEvent.changeText(screen.getByLabelText('Search restaurants'), 'nowhere');
-    await fireEvent.press(screen.getByRole('button', { name: 'Search' }));
-    expect(await screen.findByText('No restaurants found. Try another name. Your current choice is kept.')).toBeOnTheScreen();
+    expect(await screen.findByText('No restaurants in this map area. Move or zoom out the map.')).toBeOnTheScreen();
+    expect(screen.getByLabelText('Selected restaurant Dishoom')).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole('button', { name: 'Keep current restaurant' }));
+    expect(screen.queryByLabelText('Filter restaurants by name')).toBeNull();
     expect(screen.getByLabelText('Selected restaurant Dishoom')).toBeOnTheScreen();
     expect(app.services.drafts.get<CreateDraft>(CREATE_DRAFT_KEY)?.venue?.venueRef).toBe(VENUE_REF);
   });
 
-  it('a previewed search result can be dismissed without confirming it', async () => {
+  it('a previewed restaurant can be dismissed without confirming it', async () => {
     const app = createTestApp(); await signIn(app, me());
     app.mock.on('GET', '/v1/venues', page([{ placeId: 'place-1', name: 'Dishoom', address: '7 Boundary St', location: null, photoRefs: [], attributions: [] }]));
     await renderApp(app, <CreateStepScreen step={0} />);
-    await fireEvent.changeText(screen.getByLabelText('Search restaurants'), 'dishoom');
-    await fireEvent.press(screen.getByRole('button', { name: 'Search' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Choose a restaurant on the map' }));
     await fireEvent.press(await screen.findByRole('button', { name: 'Dishoom, 7 Boundary St' }));
     await fireEvent.press(screen.getByRole('button', { name: 'Cancel selection' }));
     expect(screen.queryByRole('button', { name: 'Use this restaurant' })).toBeNull();
@@ -322,17 +320,28 @@ describe('Create simulator walkthrough fixes (iOS 27)', () => {
     expect(scrollTo).toHaveBeenCalledWith({ y: expectedY, animated: true });
   });
 
-  it('tapping a restaurant result scrolls “Use this restaurant” into view; confirming is still explicit (J02)', async () => {
+  it('opening the restaurant dropdown scrolls its map into view', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.mock.on('GET', '/v1/venues', page([]));
+    const { scrollTo } = mockContentGeometry({ y: 300, height: 250 });
+    await renderApp(app, <CreateStepScreen step={0} />);
+    await fireEvent(screen.getByTestId('create-scroll'), 'layout', layout(520));
+    await fireEvent.press(screen.getByRole('button', { name: 'Choose a restaurant on the map' }));
+    await fireEvent(screen.getByTestId('venue-dropdown'), 'layout', layout(250));
+    expect(scrollTo).toHaveBeenCalledWith({ y: 300 + 250 + 12 - 520, animated: true });
+    await screen.findByText('No restaurants in this map area. Move or zoom out the map.');
+  });
+
+  it('tapping a restaurant scrolls “Use this restaurant” into view; confirming is still explicit (J02)', async () => {
     const app = createTestApp(); await signIn(app, me());
     app.mock.on('GET', '/v1/venues', page([{ placeId: 'place-1', name: 'Dishoom', address: '7 Boundary St', location: null, photoRefs: [], attributions: [] }]));
     const { scrollTo } = mockContentGeometry({ y: 560, height: 90 });
     await renderApp(app, <CreateStepScreen step={0} />);
     await fireEvent(screen.getByTestId('create-scroll'), 'layout', layout(520));
-    await fireEvent.changeText(screen.getByLabelText('Search restaurants'), 'dishoom');
-    await fireEvent.press(screen.getByRole('button', { name: 'Search' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Choose a restaurant on the map' }));
     await fireEvent.press(await screen.findByRole('button', { name: 'Dishoom, 7 Boundary St' }));
     await fireEvent(screen.getByTestId('venue-confirm'), 'layout', layout(90));
-    expect(scrollTo).toHaveBeenCalledWith({ y: 560 + 90 + 12 - 520, animated: true });
+    expect(scrollTo).toHaveBeenLastCalledWith({ y: 560 + 90 + 12 - 520, animated: true });
     expect(screen.getByRole('button', { name: 'Use this restaurant' })).toBeOnTheScreen();
     expect(app.mock.callsTo('POST', '/v1/venues/confirm')).toHaveLength(0);
   });

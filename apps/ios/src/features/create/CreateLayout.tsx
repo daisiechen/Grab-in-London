@@ -5,6 +5,7 @@ import { HALF_HOUR_SLOTS } from '../../lib/london.ts';
 import { Icon, type IconName } from '../../ui/Icon.tsx';
 import { createStyles } from '../../ui/styles.ts';
 import { colors } from '../../ui/tokens.ts';
+import { PageHeader } from '../../ui/PageHeader.tsx';
 import { STEPS, type FlowKind, type Step } from './model.ts';
 import { Reveal, RevealScope, useRevealScroll } from './reveal.tsx';
 
@@ -47,8 +48,7 @@ export function CreateLayout({ step, onStep, footer, children, testID, kind = 'c
       >
         <RevealScope value={reveal}>
           <StepIndicator step={step} onStep={onStep} />
-          <Text accessibilityRole="header" style={styles.h1}>{(kind === 'edit' ? EDIT_HEADINGS : HEADINGS)[step]}</Text>
-          <Text style={styles.intro}>{(kind === 'edit' ? EDIT_INTROS : INTROS)[step]}</Text>
+          <PageHeader size="page" title={(kind === 'edit' ? EDIT_HEADINGS : HEADINGS)[step]} subtitle={(kind === 'edit' ? EDIT_INTROS : INTROS)[step]} />
           {children}
         </RevealScope>
       </ScrollView>
@@ -100,6 +100,11 @@ export function Section({ title, children, right }: { title: string; children: R
 
 export const Hint = ({ children }: { children: ReactNode }) => <Text style={styles.hint}>{children}</Text>;
 
+/**
+ * Type scale of the Create steps (owner review 2026-10-28: the form read flat):
+ * page title 24/700 (PageHeader) → section title 16/700 ink → chosen value 14/600 ink →
+ * field label 12/500 muted → hint 11 muted. Sections sit 18 apart, content 8 under the title.
+ */
 /** Inline dropdown trigger (Discover control style); its panel opens right below the row. */
 export function DropTrigger({ label, value, placeholder, icon, open, onPress }: { label: string; value: string | null; placeholder: string; icon: IconName; open: boolean; onPress: () => void }) {
   return (
@@ -113,7 +118,7 @@ export function DropTrigger({ label, value, placeholder, icon, open, onPress }: 
         style={[styles.trigger, open && styles.triggerOpen]}
       >
         <Icon name={icon} size={14} color={colors.forest} />
-        <Text style={[styles.triggerText, !value && styles.placeholder]} numberOfLines={1}>{value ?? placeholder}</Text>
+        <Text style={value ? styles.triggerText : styles.placeholder} numberOfLines={1}>{value ?? placeholder}</Text>
         <Icon name={open ? 'ChevronUp' : 'ChevronDown'} size={11} color={colors.ink} />
       </Pressable>
     </View>
@@ -181,17 +186,19 @@ export const shared = createStyles({
   half: { flex: 1, minWidth: 0 },
   box: { borderWidth: 1, borderColor: colors.line, borderRadius: 11, padding: 12, gap: 4, backgroundColor: colors.white },
   soft: { borderRadius: 11, padding: 12, gap: 4, backgroundColor: '#f2f5ee' },
-  strong: { fontSize: 14, fontWeight: '700', color: colors.ink },
-  body: { fontSize: 13, lineHeight: 19, color: colors.ink },
+  /** A chosen value or the name of a thing: the most prominent text inside a section. */
+  value: { fontSize: 14, lineHeight: 19, fontWeight: '600', color: colors.ink },
+  strong: { fontSize: 14, lineHeight: 19, fontWeight: '700', color: colors.ink },
+  body: { fontSize: 14, lineHeight: 20, color: colors.ink },
   muted: { fontSize: 12, lineHeight: 17, color: colors.muted },
-  tiny: { fontSize: 10, lineHeight: 14, color: colors.muted },
+  tiny: { fontSize: 11, lineHeight: 15, color: colors.muted },
 });
 
 const styles = createStyles({
   page: { flex: 1, backgroundColor: colors.white },
   flex: { flex: 1 },
   scroll: { paddingHorizontal: 16, paddingTop: 10, paddingBottom: 20 },
-  steps: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 },
+  steps: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 14 },
   stepItem: { flex: 1, alignItems: 'center', gap: 4 },
   stepDot: { width: 24, height: 24, borderRadius: 12, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.white },
   stepDotOn: { borderColor: colors.forest },
@@ -200,18 +207,16 @@ const styles = createStyles({
   stepNumCurrent: { color: colors.white },
   stepLabel: { fontSize: 10.5, color: colors.muted },
   stepLabelCurrent: { color: colors.forest, fontWeight: '700' },
-  h1: { fontSize: 24, lineHeight: 28, letterSpacing: -0.8, fontWeight: '700', color: colors.ink },
-  intro: { fontSize: 13, lineHeight: 18, color: colors.muted, marginTop: 4, marginBottom: 4 },
-  section: { marginTop: 16, gap: 8 },
-  sectionHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
-  h2: { fontSize: 16, letterSpacing: -0.3, fontWeight: '700', color: colors.ink },
-  hint: { fontSize: 11, lineHeight: 15, color: colors.muted },
-  legend: { fontSize: 12, fontWeight: '700', color: colors.ink },
-  dropWrap: { flex: 1, minWidth: 0, gap: 6 },
+  section: { marginTop: 18, gap: 10 },
+  sectionHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: -2 },
+  h2: { fontSize: 16, lineHeight: 20, letterSpacing: -0.3, fontWeight: '700', color: colors.ink },
+  hint: { fontSize: 11, lineHeight: 16, color: colors.muted },
+  legend: { fontSize: 12, lineHeight: 16, fontWeight: '500', color: colors.muted },
+  dropWrap: { flex: 1, minWidth: 0, gap: 5 },
   trigger: { height: 40, borderWidth: 1, borderColor: colors.line, borderRadius: 9, paddingHorizontal: 10, flexDirection: 'row', alignItems: 'center', gap: 8 },
   triggerOpen: { borderColor: colors.forest, backgroundColor: colors.selectedSurface },
-  triggerText: { flex: 1, fontSize: 13, color: colors.ink },
-  placeholder: { color: colors.muted },
+  triggerText: { flex: 1, fontSize: 14, fontWeight: '600', color: colors.ink },
+  placeholder: { flex: 1, fontSize: 13, color: colors.muted },
   panel: { borderWidth: 1, borderColor: colors.line, borderRadius: 11, padding: 10, backgroundColor: colors.white },
   // Exactly four whole rows, so no sliver of a neighbouring row shows at either edge.
   timeScroll: { maxHeight: ROW * 4 },
@@ -227,7 +232,7 @@ const styles = createStyles({
   segCell: { flex: 1, height: 36, alignItems: 'center', justifyContent: 'center', borderLeftWidth: 1, borderLeftColor: colors.line },
   segFirst: { borderLeftWidth: 0 },
   segOn: { backgroundColor: colors.forest },
-  segText: { fontSize: 13, color: colors.ink },
+  segText: { fontSize: 14, color: colors.ink },
   segTextOn: { color: colors.white, fontWeight: '700' },
   link: { color: colors.forest, fontSize: 12, textDecorationLine: 'underline' },
   footer: { paddingTop: 10, paddingHorizontal: 16, borderTopWidth: 1, borderTopColor: colors.line, backgroundColor: colors.white, gap: 8 },

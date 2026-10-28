@@ -309,7 +309,8 @@ const styles = createStyles({
   city: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingVertical: 6, paddingHorizontal: 9, borderRadius: 16, backgroundColor: colors.surface },
   cityText: { fontSize: 12, fontWeight: '700', color: colors.ink },
   h1: { flexShrink: 1, fontSize: 27, lineHeight: 31, letterSpacing: -1.1, fontWeight: '700', color: colors.ink },
-  tagline: { fontSize: 10.5, lineHeight: 14, color: colors.muted, marginTop: 2, marginBottom: 9 },
+  // Same subtitle as PageHeader (12/17 muted) on every tab.
+  tagline: { fontSize: 12, lineHeight: 17, color: colors.muted, marginTop: 3, marginBottom: 9 },
   controls: { flexDirection: 'row', gap: 5, alignItems: 'center' },
   control: { borderWidth: 1, borderColor: colors.line, height: 35, borderRadius: 9, paddingHorizontal: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, flexShrink: 1 },
   controlText: { fontSize: 11, color: colors.ink, flexShrink: 1 },

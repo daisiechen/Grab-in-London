@@ -47,7 +47,7 @@ function Chip({ label, selected, role, onPress }: { label: string; selected: boo
 
 const styles = createStyles({
   group: { gap: 6 },
-  legend: { fontSize: 12, fontWeight: '700', color: colors.ink },
+  legend: { fontSize: 12, fontWeight: '500', color: colors.muted },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   chip: { minHeight: 32, paddingHorizontal: 11, paddingVertical: 6, borderRadius: radius.sm, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.white, justifyContent: 'center' },
   selected: { backgroundColor: colors.selectedSurface, borderColor: colors.forest },
