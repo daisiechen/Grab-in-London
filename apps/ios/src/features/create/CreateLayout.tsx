@@ -25,6 +25,8 @@ export function CreateLayout({ step, onStep, footer, children, testID }: { step:
   return (
     <View style={styles.page} testID={testID}>
       <ScrollView
+        // iOS 27 headers are translucent: let UIKit inset content below the header.
+        contentInsetAdjustmentBehavior="automatic"
         style={styles.flex}
         contentContainerStyle={styles.scroll}
         keyboardShouldPersistTaps="handled"

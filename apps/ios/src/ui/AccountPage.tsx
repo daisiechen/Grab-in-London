@@ -19,7 +19,7 @@ export function AccountPage({ children, footer, testID, top = 'header' }: { chil
   return (
     <View style={styles.page} testID={testID}>
       <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={top === 'header' ? insets.top + IOS_HEADER : 0}>
-        <ScrollView style={styles.flex} contentContainerStyle={[styles.scroll, { paddingTop }]} keyboardShouldPersistTaps="handled" keyboardDismissMode="interactive">
+        <ScrollView contentInsetAdjustmentBehavior={top === 'header' ? 'automatic' : 'never'} style={styles.flex} contentContainerStyle={[styles.scroll, { paddingTop }]} keyboardShouldPersistTaps="handled" keyboardDismissMode="interactive">
           {children}
         </ScrollView>
         {footer ? <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 12) }]}>{footer}</View> : null}

@@ -47,9 +47,9 @@ export function MyMealsScreen() {
   if (state.status !== 'signedIn') {
     return (
       <SafeAreaView style={styles.safe} edges={['top']}>
-        <View style={styles.pad}>
+        <View style={[styles.pad, styles.fill]}>
           <Header />
-          <View style={styles.empty}>
+          <View style={[styles.empty, styles.centred]}>
             <Icon name="Calendar" size={30} color={colors.forest} />
             <Text style={styles.emptyTitle}>A good meal is waiting.</Text>
             <Text style={styles.emptyBody}>Sign in to see the tables you’re hosting and joining.</Text>
@@ -124,6 +124,9 @@ function SignedInMeals({ section, onSection }: { section: Section; onSection: (s
 }
 
 const styles = createStyles({
+  // Signed-out empty state sits in the middle of the free space instead of leaving a blank lower half.
+  fill: { flex: 1 },
+  centred: { flex: 1, justifyContent: 'center', paddingBottom: 60 },
   safe: { flex: 1, backgroundColor: colors.white },
   pad: { paddingHorizontal: 16, paddingTop: 2, paddingBottom: 24 },
   headerBlock: { marginBottom: 14 },

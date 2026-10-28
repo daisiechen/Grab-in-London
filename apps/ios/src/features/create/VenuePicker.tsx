@@ -141,7 +141,7 @@ const styles = createStyles({
   thumb: { width: 56, height: 56, borderRadius: 9, overflow: 'hidden', backgroundColor: colors.surface },
   searchRow: { flexDirection: 'row', gap: 8 },
   inputWrap: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8, height: 40, borderWidth: 1, borderColor: colors.line, borderRadius: 9, paddingHorizontal: 10 },
-  input: { flex: 1, fontSize: 13, color: colors.ink, paddingVertical: 0 },
+  input: { flex: 1, fontSize: 13, letterSpacing: 0, color: colors.ink, paddingVertical: 0 },
   searchButton: { height: 40, paddingHorizontal: 14, borderRadius: 9, backgroundColor: colors.forest, alignItems: 'center', justifyContent: 'center' },
   searchText: { color: colors.white, fontSize: 13, fontWeight: '600' },
   result: { borderWidth: 1, borderColor: colors.line, borderRadius: 11, paddingVertical: 10, paddingHorizontal: 12, gap: 2 },

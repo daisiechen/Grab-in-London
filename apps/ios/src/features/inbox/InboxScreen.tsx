@@ -51,9 +51,11 @@ export function InboxScreen() {
   if (state.status !== 'signedIn') {
     return (
       <SafeAreaView style={styles.safe} edges={['top']}>
-        <View style={styles.pad}>
+        <View style={[styles.pad, styles.fill]}>
           <Header />
-          <Empty icon="ChatBubble" title="Your next hello starts here." body="Sign in to see your group chats and requests." action="Sign in" primary onPress={() => { rememberReturnTo('/inbox'); router.push('/sign-in'); }} />
+          <View style={styles.centred}>
+            <Empty icon="ChatBubble" title="Your next hello starts here." body="Sign in to see your group chats and requests." action="Sign in" primary onPress={() => { rememberReturnTo('/inbox'); router.push('/sign-in'); }} />
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -272,6 +274,9 @@ function Empty({ icon, title, body, action, onPress, primary = false }: { icon: 
 }
 
 const styles = createStyles({
+  // Signed-out empty state sits in the middle of the free space instead of leaving a blank lower half.
+  fill: { flex: 1 },
+  centred: { flex: 1, justifyContent: 'center', paddingBottom: 60 },
   safe: { flex: 1, backgroundColor: colors.white },
   pad: { paddingHorizontal: 16, paddingTop: 2, paddingBottom: 24 },
   header: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },

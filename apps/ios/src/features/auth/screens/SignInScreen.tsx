@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { ActivityIndicator, Image, Pressable, Text, View } from 'react-native';
 import { BRAND_COPY } from '../../../ui/brand.ts';
 import { ActionPage } from '../../../ui/ActionPage.tsx';
@@ -59,7 +59,6 @@ export function SignInScreen() {
         <Body>Your name, photo and introduction are public to other members; your email is private.</Body>
       </Sheet>
     )}>
-      <Stack.Screen options={{ headerShown: false }} />
       <View style={styles.header}>
         <BrandWordmark />
         <Pressable accessibilityRole="button" accessibilityLabel="Close" hitSlop={8} onPress={browse} style={styles.close}>

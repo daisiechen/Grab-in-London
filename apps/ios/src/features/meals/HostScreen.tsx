@@ -129,7 +129,7 @@ function HostScreenContent() {
 
   return (
     <View style={styles.page} testID="host">
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={styles.scroll}>
         <Text accessibilityRole="header" style={styles.h1}>{meal.title}</Text>
         <Text style={styles.meta}>{`${whenLabel(meal.startsAt)} · ${venueName(meal)}`}</Text>
         <Seats meal={meal} />

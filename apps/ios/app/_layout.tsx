@@ -34,7 +34,8 @@ export default function RootLayout() {
       <AppRoot services={services}>
         <Stack screenOptions={{ headerTintColor: colors.ink, headerTitleAlign: 'center', headerTitleStyle: { fontFamily: FONT_FAMILY, fontSize: 13, fontWeight: '700', color: colors.ink }, headerBackButtonDisplayMode: 'minimal', headerShadowVisible: true, contentStyle: { backgroundColor: colors.white } }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="sign-in" options={{ title: 'Fancy', presentation: 'modal' }} />
+          {/* A pushed card, not a modal: closing a native modal stack and navigating in the same tick left an invisible layer that swallowed every touch (iOS 27). */}
+          <Stack.Screen name="sign-in" options={{ title: 'Fancy', headerShown: false }} />
           <Stack.Screen name="email" options={{ title: 'Sign in' }} />
           <Stack.Screen name="link-required" options={{ title: 'Sign in' }} />
           <Stack.Screen name="auth/callback" options={{ title: 'Sign in' }} />
