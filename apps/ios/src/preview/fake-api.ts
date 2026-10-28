@@ -130,7 +130,7 @@ interface World {
   experiences: Map<string, { score: number; revision: number }>;
   reviews: ReviewRec[];
   pairs: Map<string, PairRec>;
-  blocks: Map<string, { active: boolean; version: number }>;
+  blocks: Map<string, { active: boolean; version: number; at: number }>;
   survey: { version: number; again: boolean | null; reasons: DataOf<'getSurvey'>['reasons']; submittedAt: number | null };
   notifications: NotificationRec[];
   reports: Map<string, ReportRec>;
@@ -432,7 +432,14 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
     return true;
   }
   function convDto(conv: ConvRec, viewer: string, send = canSend(conv, viewer)): ConversationDto {
-    return { id: conv.id, version: String(conv.version), kind: conv.kind, mealId: conv.mealId, title: convTitle(conv, viewer).slice(0, 120), canSend: send, dissolved: conv.dissolvedAt !== null, head: String(conv.head) };
+    return { id: conv.id, version: String(conv.version), kind: conv.kind, mealId: conv.mealId, title: convTitle(conv, viewer).slice(0, 120), canSend: send, dissolved: conv.dissolvedAt !== null, head: String(conv.head), avatar: convAvatar(conv, viewer) };
+  }
+  /** Row avatar like apps/api: the other member (DIRECT) or the host (GROUP). */
+  function convAvatar(conv: ConvRec, viewer: string): ConversationDto['avatar'] {
+    const who = conv.kind === 'GROUP' ? w.meals.get(conv.mealId ?? '')?.hostId : conv.pair?.find((id) => id !== viewer);
+    if (!who || !w.users.has(who)) return null;
+    const p = publicProfile(who);
+    return { displayName: p.displayName.slice(0, 40), avatarUrl: p.avatarUrl };
   }
   function messageDto(m: MsgRec): MessageDto {
     return { id: m.id, seq: String(m.seq), sender: publicProfile(m.senderId), body: m.body, createdAt: iso(m.createdAt), redacted: false };
@@ -1164,6 +1171,14 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
       const data = connectionState(pair, uid, params.subjectId);
       return { data, version: data.version };
     },
+    listBlocks: ({ uid, query }) => {
+      const rows = [...w.blocks.entries()]
+        .filter(([key, b]) => b.active && key.startsWith(`${uid}:`) && w.users.has(key.slice(uid.length + 1)))
+        .sort(([ka, a], [kb, b]) => b.at - a.at || kb.localeCompare(ka))
+        .map(([key, b]) => ({ profile: publicProfile(key.slice(uid.length + 1)), version: String(b.version), blockedAt: iso(b.at) }));
+      const page = paginate(rows, query.cursor, query.limit);
+      return { data: page.data, page: page.page };
+    },
     getBlock: ({ uid, params }) => {
       if (params.subjectId === uid) fail('FORBIDDEN', 'Choose another member.');
       if (!w.users.has(params.subjectId)) fail('NOT_FOUND', 'This member is unavailable.');
@@ -1177,7 +1192,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
       const pair = w.pairs.get(pairKey(uid, params.subjectId));
       const conv = pair ? [...w.conversations.values()].find((c) => c.kind === 'DIRECT' && c.pair && pairKey(c.pair[0], c.pair[1]) === pairKey(uid, params.subjectId) && isMember(c, uid)) : undefined;
       if (!pair || !conv) return fail('NOT_FOUND', 'Conversation not found.');
-      const data: ConversationDto = { id: conv.id, version: String(conv.version), kind: 'DIRECT', mealId: null, title: publicProfile(params.subjectId).displayName, canSend: directAuthorized(pair), dissolved: false, head: String(conv.head) };
+      const data: ConversationDto = { id: conv.id, version: String(conv.version), kind: 'DIRECT', mealId: null, title: publicProfile(params.subjectId).displayName, canSend: directAuthorized(pair), dissolved: false, head: String(conv.head), avatar: convAvatar(conv, uid) };
       return { data, version: data.version };
     },
     getSurvey: () => ({ data: surveyDto(), version: String(w.survey.version) }),
@@ -1244,7 +1259,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
     const version = w.blocks.get(key)?.version ?? 0;
     checkVersion(version, ifMatch, 'Your block setting changed.');
     if (blocked) clearConsents(pair);
-    w.blocks.set(key, { active: blocked, version: version + 1 });
+    w.blocks.set(key, { active: blocked, version: version + 1, at: now() });
     const data = { subjectId, blocked, version: String(version + 1) };
     return { data, version: data.version };
   }

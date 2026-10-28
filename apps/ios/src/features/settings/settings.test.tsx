@@ -57,7 +57,7 @@ describe('SettingsScreen groups', () => {
     for (const title of ['Notifications & previews', 'Privacy & safety', 'Help shape Fancy', 'Account']) expect(screen.getByRole('header', { name: title })).toBeOnTheScreen();
     expect(screen.getByLabelText('App language: English')).toBeOnTheScreen();
     expect(screen.getByRole('button', { name: 'Allow analytics' })).toBeOnTheScreen();
-    for (const [label, route] of [['Notifications', '/notifications'], ['Product survey', '/survey'], ['Edit public profile', '/profile-edit'], ['Check deletion status', '/deletion-status'], ['Delete account', '/delete-account']] as const) {
+    for (const [label, route] of [['Notifications', '/notifications'], ['Blocked members', '/blocked-members'], ['Product survey', '/survey'], ['Edit public profile', '/profile-edit'], ['Check deletion status', '/deletion-status'], ['Delete account', '/delete-account']] as const) {
       await fireEvent.press(screen.getByRole('button', { name: label }));
       expect(mockRouter.push).toHaveBeenLastCalledWith(route);
     }
@@ -68,10 +68,11 @@ describe('SettingsScreen groups', () => {
     await signIn(app, me());
     await renderApp(app, <SettingsScreen />);
     const info = screen.getAllByTestId('settings-info');
-    expect(info.map((row) => row.props.accessibilityLabel)).toEqual(['Blocked members: Manage on their profile', 'App language: English']);
+    expect(info.map((row) => row.props.accessibilityLabel)).toEqual(['App language: English']);
     for (const row of info) expect(row.props.accessibilityRole).toBe('text');
-    for (const label of ['Blocked members', 'App language', 'Manage on their profile', 'English']) expect(screen.queryByRole('button', { name: label })).toBeNull();
-    const value = StyleSheet.flatten(within(info[1]!).getByText('English').props.style);
+    for (const label of ['App language', 'English']) expect(screen.queryByRole('button', { name: label })).toBeNull();
+    expect(screen.getByRole('button', { name: 'Blocked members' })).toBeOnTheScreen();
+    const value = StyleSheet.flatten(within(info[0]!).getByText('English').props.style);
     expect(value.fontWeight).toBeUndefined();
   });
 

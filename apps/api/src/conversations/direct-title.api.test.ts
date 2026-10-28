@@ -37,7 +37,7 @@ it('DIRECT inbox title names the current actor peer and matches detail in both d
  const f=await connected();
  for(const [self,peer,name] of [[f.host,f.guest,'Guest Public Name'],[f.guest,f.host,'Host Public Name']] as const){
   const detail=await self.b.request('GET',`/v1/connections/${peer.id}/conversation`);expect(json(detail).data.title).toBe(name);
-  expect(await inboxTitle(self.b,f.directId)).toMatchObject({kind:'DIRECT',title:name,canSend:true});
+  expect(await inboxTitle(self.b,f.directId)).toMatchObject({kind:'DIRECT',title:name,canSend:true,avatar:{displayName:name,avatarUrl:null}});expect(json(detail).data.avatar).toEqual({displayName:name,avatarUrl:null});
   const message=await self.b.request('POST',`/v1/conversations/${f.directId}/messages`,{body:{body:'A synthetic direct hello.',clientMessageId:randomUUID()}});expect(message.statusCode,message.body).toBe(201);
   expect((await inboxTitle(self.b,f.directId)).title).toBe(name);
  }
@@ -59,12 +59,12 @@ it('accepted peer deletion masks a still-present profile immediately and preserv
  for(const status of ['DELETING','DELETED']){
   if(status==='DELETED')await h.db.pool.query(`UPDATE users SET status='DELETED' WHERE id=$1`,[f.guest.id]);
   const inbox=await inboxTitle(f.host.b,f.directId),detail=await f.host.b.request('GET',`/v1/connections/${f.guest.id}/conversation`);
-  expect(inbox).toMatchObject({title:'Deleted member',canSend:false});expect(json(detail).data).toMatchObject({title:'Deleted member',canSend:false});expect(JSON.stringify(inbox)).not.toContain('Guest Public Name');
+  expect(inbox).toMatchObject({title:'Deleted member',canSend:false,avatar:null});expect(json(detail).data).toMatchObject({title:'Deleted member',canSend:false,avatar:null});expect(JSON.stringify(inbox)).not.toContain('Guest Public Name');
  }
 });
 it('GROUP continues to use its meal title and DIRECT title never contains private contact fields',async()=>{
  const f=await connected();const group=await withTransaction(h.db.pool,tx=>createGroupConversation(tx,{mealId:f.mealId,hostId:f.host.id,effectiveAt:new Date()}));
- expect(await inboxTitle(f.host.b,group.conversationId)).toMatchObject({kind:'GROUP',title:'A finished fixture'});
+ expect(await inboxTitle(f.host.b,group.conversationId)).toMatchObject({kind:'GROUP',title:'A finished fixture',avatar:{displayName:'Host Public Name',avatarUrl:null}});
  const {rows:[contact]}=await h.db.pool.query(`SELECT email FROM private_contact WHERE user_id=$1`,[f.guest.id]);
  const inbox=await f.host.b.request('GET','/v1/inbox');expect(inbox.body).not.toContain(contact.email);
 });

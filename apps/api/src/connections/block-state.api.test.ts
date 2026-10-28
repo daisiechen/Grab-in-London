@@ -19,3 +19,16 @@ it('requires session, rejects self and masks missing/deleting/deleted subjects u
  const missing=await a.b.request('GET',path(randomUUID()));expect(missing.statusCode).toBe(404);
  for(const status of ['DELETING','DELETED']){await h.db.pool.query(`UPDATE users SET status=$2 WHERE id=$1`,[b.id,status]);const r=await a.b.request('GET',path(b.id));expect(r.statusCode).toBe(404);expect(json(r).error.code).toBe(json(missing).error.code);expect(json(r).error.message).toBe(json(missing).error.message);}
 });
+it('lists only own currently blocked ACTIVE members, newest first, with each block revision',async()=>{
+ const a=await actor(),b=await actor(),c=await actor(),d=await actor();const change=(who:Browser,other:string,method:string,version:string)=>who.request(method,`/v1/blocks/${other}`,{headers:{'idempotency-key':randomUUID(),'if-match':`"${version}"`}});
+ expect(json(await a.b.request('GET','/v1/blocks')).data).toEqual([]);
+ for(const id of [b.id,c.id,d.id])expect((await change(a.b,id,'PUT','0')).statusCode).toBe(200);
+ expect((await change(a.b,c.id,'DELETE','1')).statusCode).toBe(200);
+ expect((await change(b.b,a.id,'PUT','0')).statusCode).toBe(200);
+ await h.db.pool.query(`UPDATE users SET status='DELETED' WHERE id=$1`,[d.id]);
+ const r=await a.b.request('GET','/v1/blocks');expect(r.statusCode,r.body).toBe(200);
+ expect(json(r).data.map((m:{profile:{id:string};version:string})=>[m.profile.id,m.version])).toEqual([[b.id,'1']]);
+ expect(json(await b.b.request('GET','/v1/blocks')).data.map((m:{profile:{id:string}})=>m.profile.id)).toEqual([a.id]);
+ const paged=await a.b.request('GET','/v1/blocks?limit=1');expect(json(paged).page).toEqual({hasMore:false,nextCursor:null});
+ expect((await new Browser(h).request('GET','/v1/blocks')).statusCode).toBe(401);
+});

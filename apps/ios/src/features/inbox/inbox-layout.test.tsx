@@ -16,6 +16,18 @@ const applicationMeal = { title: 'Pending dinner table', startsAt: { instant: '2
 beforeEach(() => { resetRouter(); clearReturnTo(); });
 
 describe('InboxScreen (demo inbox)', () => {
+  it('chat rows show the host (group) or the other member (direct) as an avatar, falling back to an icon', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    app.mock.on('GET', '/v1/inbox', page([
+      { conversation: conversation({ avatar: { displayName: 'Maya', avatarUrl: null } }), lastMessage: null, unreadCount: 0 },
+      { conversation: conversation({ id: '99999999-9999-4999-8999-999999999999', kind: 'DIRECT', mealId: null, title: 'Deleted member', avatar: null }), lastMessage: null, unreadCount: 0 },
+    ]));
+    await renderApp(app, <InboxScreen />);
+    expect(await screen.findByText('M')).toBeOnTheScreen();
+    expect(screen.getByRole('button', { name: 'Deleted member' })).toBeOnTheScreen();
+  });
+
   it('signed out: demo heading and sign-in that returns to Inbox', async () => {
     const app = createTestApp();
     await renderApp(app, <InboxScreen />);

@@ -43,7 +43,7 @@ export function SettingsScreen() {
       <Text accessibilityRole="header" style={[accountText.h2, !signedIn && { marginTop: 4 }]}>Privacy & safety</Text>
       <Text style={accountText.body}>Your name, photo and introduction help your table get to know you. Your email is private.</Text>
       <Text style={accountText.body}>Meal groups require a confirmed seat. Private conversations require mutual choice after a shared meal.</Text>
-      {signedIn ? <InfoLine label="Blocked members" value="Manage on their profile" /> : null}
+      {signedIn ? <SettingsLink label="Blocked members" onPress={() => router.push('/blocked-members')} /> : null}
       <InfoLine label="App language" value="English" />
       <Text style={[accountText.muted, { marginTop: 6 }]}>Conversation languages can be changed in your profile.</Text>
 

@@ -165,6 +165,8 @@ describe('preview fake API', () => {
     const messages = await ctx.api.call('readMessages', { params: { conversationId: detail.data.conversationId! }, query: { mode: 'HISTORY' } });
     expect(messages.data.map((m) => `${m.sender.displayName}: ${m.body}`)).toEqual(['Emma: Hi Alex, see you there! 😊', 'Maya: Welcome to “An easy Friday supper”, Alex! Shall we meet outside five minutes before?']);
     expect((await ctx.api.call('listNotifications', { query: {} })).data[0]).toMatchObject({ template: 'application_approved', mealId: M.supper });
+    // Group rows carry the host as their avatar.
+    expect((await ctx.api.call('inbox', { query: {} })).data.find((i) => i.conversation?.id === detail.data.conversationId)?.conversation?.avatar).toMatchObject({ displayName: 'Maya' });
     expect((await ctx.api.call('myMeals', { query: { section: 'UPCOMING' } })).data.map((i) => [i.meal.id, i.role])).toEqual([[M.supper, 'GUEST']]);
     // Full table: nobody else can apply.
     expect((await ctx.api.call('getMeal', { params: { mealId: M.supper } })).data.meal.confirmedCount).toBe(4);
@@ -284,8 +286,10 @@ describe('preview fake API', () => {
     const blockState = await ctx.api.call('getBlock', { params: { subjectId: U.maya } });
     const blocked = await ctx.api.call('block', { params: { subjectId: U.maya }, ifMatch: blockState.data.version, idempotencyKey: newId() });
     expect(blocked.data).toEqual({ subjectId: U.maya, blocked: true, version: '1' });
-    expect((await ctx.api.call('getDirect', { params: { subjectId: U.maya } })).data.canSend).toBe(false);
+    expect((await ctx.api.call('getDirect', { params: { subjectId: U.maya } })).data).toMatchObject({ canSend: false, avatar: { displayName: 'Maya' } });
+    expect((await ctx.api.call('listBlocks', { query: {} })).data.map((b) => [b.profile.id, b.version])).toEqual([[U.maya, '1']]);
     await ctx.api.call('unblock', { params: { subjectId: U.maya }, ifMatch: '1', idempotencyKey: newId() });
+    expect((await ctx.api.call('listBlocks', { query: {} })).data).toEqual([]);
 
     const survey = await ctx.api.call('getSurvey', {});
     expect(survey.data).toEqual({ version: '0', again: null, reasons: [], submittedAt: null });

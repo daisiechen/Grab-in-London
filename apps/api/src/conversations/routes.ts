@@ -11,12 +11,15 @@ import { assertDirectAuthorized, directLockPlan } from '../connections/service.t
 import { londonTime } from '../meals/time.ts';
 import { applicationDto } from '../meals/read.ts';
 
-interface ConversationRow { id: string; kind: 'GROUP' | 'DIRECT'; meal_id: string | null; pair_id: string | null; version: string; head: string; dissolved_at: Date | null; title: string | null; host_id: string | null }
+interface ConversationRow { id: string; kind: 'GROUP' | 'DIRECT'; meal_id: string | null; pair_id: string | null; version: string; head: string; dissolved_at: Date | null; title: string | null; host_id: string | null; avatar_name: string | null }
 async function conversation(db: Pool | PoolClient, id: string, userId: string, live = false): Promise<ConversationRow> {
   const { rows: [row] } = await db.query<ConversationRow>(`SELECT c.*,CASE WHEN c.kind='DIRECT' THEN
       CASE WHEN peer.status='ACTIVE' THEN COALESCE(profile.display_name,'Fancy member') ELSE 'Deleted member' END
-      ELSE m.title END AS title,m.host_id
+      ELSE m.title END AS title,m.host_id,
+      CASE WHEN c.kind='DIRECT' THEN CASE WHEN peer.status='ACTIVE' THEN COALESCE(profile.display_name,'Fancy member') END
+      WHEN host.status='ACTIVE' THEN COALESCE(host_profile.display_name,'Fancy member') END AS avatar_name
     FROM conversations c LEFT JOIN meals m ON m.id=c.meal_id
+    LEFT JOIN users host ON host.id=m.host_id LEFT JOIN profiles host_profile ON host_profile.user_id=host.id
     LEFT JOIN user_pairs pair ON c.kind='DIRECT' AND pair.id=c.pair_id AND $2 IN(pair.low_user,pair.high_user)
     LEFT JOIN users peer ON peer.id=CASE WHEN pair.low_user=$2 THEN pair.high_user WHEN pair.high_user=$2 THEN pair.low_user END
     LEFT JOIN profiles profile ON profile.user_id=peer.id AND peer.status='ACTIVE'
@@ -29,7 +32,9 @@ async function conversation(db: Pool | PoolClient, id: string, userId: string, l
   }
   return row;
 }
-const dto = (c: ConversationRow, canSend: boolean) => ({ id: c.id, version: c.version, kind: c.kind, mealId: c.meal_id, title: c.title ?? 'Conversation', canSend, dissolved: !!c.dissolved_at, head: c.head });
+const dto = (c: ConversationRow, canSend: boolean) => ({ id: c.id, version: c.version, kind: c.kind, mealId: c.meal_id, title: c.title ?? 'Conversation', canSend, dissolved: !!c.dissolved_at, head: c.head,
+  // Avatar images are not stored yet (avatarUrl null everywhere); the name drives the initials.
+  avatar: c.avatar_name ? { displayName: c.avatar_name.slice(0, 40), avatarUrl: null } : null });
 const visible = `EXISTS (SELECT 1 FROM membership_intervals i WHERE i.conversation_id = msg.conversation_id AND i.user_id = $2 AND i.join_seq < msg.seq AND (i.leave_seq IS NULL OR msg.seq < i.leave_seq))`;
 async function messageDto(db: Pool | PoolClient, id: string) {
   const { rows: [r] } = await db.query(`SELECT msg.*, u.status, p.display_name, p.bio, p.languages, p.interests FROM messages msg JOIN users u ON u.id = msg.sender_id LEFT JOIN profiles p ON p.user_id = u.id WHERE msg.id = $1`, [id]);

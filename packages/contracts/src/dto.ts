@@ -177,6 +177,12 @@ export const Message = Obj({
   redacted: T.Boolean(),
 });
 
+/** Who a conversation row shows: the other member (DIRECT) or the host (GROUP); null when unavailable. */
+export const ConversationAvatar = Obj({
+  displayName: T.String({ minLength: 1, maxLength: 40 }),
+  avatarUrl: T.Union([T.String({ format: 'uri', maxLength: 500 }), T.Null()]),
+});
+
 export const Conversation = Obj({
   id: Uuid,
   version: DecimalString,
@@ -186,6 +192,7 @@ export const Conversation = Obj({
   canSend: T.Boolean(),
   dissolved: T.Boolean(),
   head: DecimalString,
+  avatar: T.Union([ConversationAvatar, T.Null()]),
 });
 
 export const InboxItem = Obj({
@@ -234,6 +241,8 @@ export const ReconnectState = Obj({
 });
 
 export const BlockState = Obj({ subjectId: Uuid, blocked: T.Boolean(), version: DecimalString });
+/** A member the caller currently blocks (own list only; never reveals the other member's choices). */
+export const BlockedMember = Obj({ profile: PublicProfile, version: DecimalString, blockedAt: Instant });
 
 export const ProductSurvey = Obj({
   version: DecimalString,

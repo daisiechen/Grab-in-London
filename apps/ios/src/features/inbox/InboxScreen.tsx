@@ -199,7 +199,13 @@ function ChatRow({ item, onPress }: { item: InboxItem; onPress: () => void }) {
   const unread = item.unreadCount > 0;
   return (
     <Pressable accessibilityRole="button" accessibilityLabel={`${c.title}${unread ? `, ${item.unreadCount} unread` : ''}`} style={({ pressed }) => [styles.row, pressed && styles.pressed]} onPress={onPress}>
-      <View style={styles.convIcon}><Icon name={c.kind === 'DIRECT' ? 'Heart' : 'ChatBubble'} size={19} color={colors.forest} /></View>
+      {c.avatar ? (
+        // The other member (direct) or the host (group); a small bubble marks a meal group.
+        <View>
+          <Avatar person={c.avatar} size={46} />
+          {c.kind === 'GROUP' ? <View style={styles.groupMark}><Icon name="ChatBubble" size={11} color={colors.white} /></View> : null}
+        </View>
+      ) : <View style={styles.convIcon}><Icon name={c.kind === 'DIRECT' ? 'Heart' : 'ChatBubble'} size={19} color={colors.forest} /></View>}
       <View style={styles.rowCopy}>
         <Text style={[styles.rowTitle, unread && styles.rowTitleUnread]} numberOfLines={1}>{c.title}</Text>
         <Text style={[styles.preview, unread && styles.previewUnread]} numberOfLines={2}>{item.lastMessage ? item.lastMessage.preview : 'No messages yet'}</Text>
@@ -300,6 +306,7 @@ const styles = createStyles({
   lead: { fontSize: 12, lineHeight: 18, color: colors.muted, marginTop: 4 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 11, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: colors.line },
   pressed: { backgroundColor: '#123f3508' },
+  groupMark: { position: 'absolute', right: -2, bottom: -2, width: 20, height: 20, borderRadius: 10, backgroundColor: colors.forest, borderWidth: 2, borderColor: colors.white, alignItems: 'center', justifyContent: 'center' },
   convIcon: { width: 46, height: 46, borderRadius: 23, backgroundColor: '#ecefe7', alignItems: 'center', justifyContent: 'center' },
   rowCopy: { flex: 1, minWidth: 0 },
   rowTitle: { fontSize: 13, fontWeight: '600', color: colors.ink },

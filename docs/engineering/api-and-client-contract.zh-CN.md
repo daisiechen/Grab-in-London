@@ -65,6 +65,7 @@ Google Places字段许可表在G-PLACES冻结：长期存placeId和自有声明�
 | selectReconnect / PUT /meals/:id/reconnect/:subject | selected bool,If-Match →本人选择状态+connection OPEN/WAITING/CLOSED；WAITING不得指示另一方是否选择 |
 | revokeConnection / POST /connections/:subject/revoke | If-Match →双方清空同意、旧聊天只读；不把对方私密状态返回 |
 | block / PUT /blocks/:subject；unblock / DELETE /blocks/:subject | If-Match →当前本人block；清双方consent，不关group；解除不恢复 |
+| listBlocks / GET /blocks | 本人当前屏蔽的 ACTIVE 成员（公开资料 + 屏蔽 revision + 时间），新到旧分页；不暴露对方选择，供设置页查看与解除 |
 | getDirect / GET /connections/:subject/conversation | 当前双方允许则conversationId；历史曾有会话仍可只读；无参与授权404 |
 | getSurvey / GET /me/product-survey；putSurvey / PUT /me/product-survey | again bool/null,reasons company/conversation/coordination/expectations/venue/cost/other（去重、可空，两者不能全空）,If-Match →本人最新版本；不接受mealId |
 
