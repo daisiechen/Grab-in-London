@@ -9,7 +9,6 @@ import { useServices, useSessionState } from '../../services.tsx';
 import { loadErrorMessage, useQuery } from '../../api/useQuery.ts';
 import { Primary, TextAction } from '../../ui/Button.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
-import { Screen } from '../../ui/Screen.tsx';
 import { Sheet } from '../../ui/Sheet.tsx';
 import { Body } from '../../ui/Text.tsx';
 import { colors } from '../../ui/tokens.ts';
@@ -22,6 +21,7 @@ import { longDate } from '../../lib/london.ts';
 import { Avatar } from '../../ui/Avatar.tsx';
 import { Icon, type IconName } from '../../ui/Icon.tsx';
 import { Notice, Tag } from '../../ui/Bits.tsx';
+import { FloatingBack, FLOATING_BACK_SIZE } from '../../ui/FloatingBack.tsx';
 import { createStyles } from '../../ui/styles.ts';
 import {RestaurantPhoto} from '../../ui/RestaurantPhoto.tsx';
 import { mealActionMessage } from './messages.ts';
@@ -51,16 +51,19 @@ export function MealDetailScreen() {
 
   if (!q.data) {
     return (
-      <Screen>
-        {q.error ? (
-          <>
-            <FormMessage message={loadErrorMessage(q.error)} />
-            <Primary secondary label="Try again" onPress={() => void q.reload()} />
-          </>
-        ) : (
-          <ActivityIndicator accessibilityLabel="Loading meal" />
-        )}
-      </Screen>
+      <View style={styles.page}>
+        <FloatingBack />
+        <View style={[styles.state, { paddingTop: insets.top + FLOATING_BACK_SIZE + 16 }]}>
+          {q.error ? (
+            <>
+              <FormMessage message={loadErrorMessage(q.error)} />
+              <Primary secondary label="Try again" onPress={() => void q.reload()} />
+            </>
+          ) : (
+            <ActivityIndicator accessibilityLabel="Loading meal" />
+          )}
+        </View>
+      </View>
     );
   }
   const { meal, myApplication, conversationId } = q.data;
@@ -115,7 +118,8 @@ export function MealDetailScreen() {
   const action = statusAction();
   return (
     <View style={styles.page} testID="meal-detail">
-      <ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={styles.scroll}>
+      <FloatingBack />
+      <ScrollView contentContainerStyle={[styles.scroll, { paddingTop: insets.top + 4 }]}>
         <Text style={styles.eyebrow}>{`${areaName(meal.areaCode).toUpperCase()} · ${meal.capacity === 2 ? 'A TABLE FOR TWO' : 'A SMALL TABLE'}`}</Text>
         <Text accessibilityRole="header" style={styles.h1}>{meal.title}</Text>
         {myApplication && !isHost ? <Text style={styles.progress}>{applicationLabel(myApplication)}</Text> : null}
@@ -213,9 +217,11 @@ function Fact({ icon, glyph, strong, small }: { icon?: IconName; glyph?: string;
 
 const styles = createStyles({
   page: { flex: 1, backgroundColor: colors.white },
-  scroll: { paddingTop: 12, paddingHorizontal: 18, paddingBottom: 24 },
+  state: { paddingHorizontal: 18, gap: 12 },
+  scroll: { paddingHorizontal: 18, paddingBottom: 24 },
   flex: { flex: 1, minWidth: 0 },
-  eyebrow: { fontSize: 9, letterSpacing: 1.3, color: '#647a6b', fontWeight: '700', marginBottom: 6 },
+  // Shares the first row with the floating back control.
+  eyebrow: { fontSize: 9, letterSpacing: 1.3, color: '#647a6b', fontWeight: '700', marginLeft: FLOATING_BACK_SIZE + 10, lineHeight: FLOATING_BACK_SIZE, marginBottom: 4 },
   h1: { fontSize: 24, lineHeight: 28, letterSpacing: -0.8, fontWeight: '700', color: colors.ink, marginBottom: 8 },
   progress: { fontSize: 13, fontWeight: '700', color: colors.forest, marginBottom: 6 },
   facts: { flexDirection: 'row', flexWrap: 'wrap', rowGap: 12, paddingVertical: 12, borderTopWidth: 1, borderBottomWidth: 1, borderColor: colors.line },

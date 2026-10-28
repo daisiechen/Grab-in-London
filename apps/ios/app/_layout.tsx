@@ -41,8 +41,8 @@ export default function RootLayout() {
           <Stack.Screen name="profile-edit" options={{ title: 'Edit profile' }} />
           <Stack.Screen name="notifications" options={{ title: 'Notifications' }} />
           <Stack.Screen name="settings" options={{ title: 'Settings' }} />
-          <Stack.Screen name="profiles/[userId]" options={{ title: 'Meet your table' }} />
-          <Stack.Screen name="meals/[mealId]/index" options={{ title: 'The table' }} />
+          <Stack.Screen name="profiles/[userId]" options={{ title: 'Meet your table', headerShown: false }} />
+          <Stack.Screen name="meals/[mealId]/index" options={{ title: 'The table', headerShown: false }} />
           <Stack.Screen name="meals/[mealId]/apply" options={{ title: 'Request a seat' }} />
           <Stack.Screen name="meals/[mealId]/host" options={{ title: 'Your guest list' }} />
           <Stack.Screen name="create/index" options={{ title: 'Create a meal' }} />

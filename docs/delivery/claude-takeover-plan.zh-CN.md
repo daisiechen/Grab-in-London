@@ -53,6 +53,8 @@ J09（支持）、J10/J11（后台）在 iOS 首发旅程完成后另行安排�
 
 - 发现页地图：配置了 `EXPO_PUBLIC_GOOGLE_MAPS_IOS_KEY` 的开发版使用 Google Maps 原生地图（配色贴近 Demo 插画，片区数字标记一致）；没有 Key、Expo Go 或网页预览时退回 Demo 的伦敦插画地图，不再出现“Map unavailable”。真机运行见 `apps/ios/README.md` 的 `pnpm ios:preview`。
 - 可选分析授权从全局顶部横幅改为登录后一次性底部弹窗，并可在设置页修改；未选择前不采集。
+- Ask Fancy（AI 助手）：用户 2026-10-28 决定本版不上线，入口不显示（`apps/ios/src/config.ts` 的 `ASSISTANT_ENABLED=false`），代码和测试保留供后续版本启用。
+- 版面密度（用户第 1、2 轮真机评审）：详情页和成员主页不用系统导航栏，内容从安全区顶端开始，左上角为悬浮返回按钮；详情页去掉大图、关键信息压成 2×2 信息格、主操作固定在底部；发现页筛选改为就地下拉。
 - 预览模式：网页构建默认开启；真机通过 `EXPO_PUBLIC_FANCY_PREVIEW=1` 开启，不连服务器、不写钥匙串。
 
 ## 7. 待补的接口缺口

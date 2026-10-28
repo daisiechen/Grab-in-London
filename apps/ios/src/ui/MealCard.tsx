@@ -74,8 +74,9 @@ const styles = createStyles({
   press: { borderRadius: 10 },
   card: { flexDirection: 'row', gap: 12 },
   pressed: { backgroundColor: '#123f3508' },
-  photo: { width: 104, alignSelf: 'stretch', minHeight: 128, borderRadius: 9, overflow: 'hidden' },
-  photoCompact: { width: 92, minHeight: 118 },
+  // Fixed frame: the photo fills it absolutely, so a tall source image can never stretch the card.
+  photo: { width: 100, height: 124, borderRadius: 9, overflow: 'hidden', backgroundColor: colors.surface },
+  photoCompact: { width: 88, height: 110 },
   copy: { flex: 1, minWidth: 0 },
   title: { fontSize: 16, lineHeight: 19, fontWeight: '700', letterSpacing: -0.4, color: colors.ink, marginBottom: 2 },
   venue: { fontSize: 11, lineHeight: 14, fontWeight: '600', color: '#46594d', marginBottom: 3 },

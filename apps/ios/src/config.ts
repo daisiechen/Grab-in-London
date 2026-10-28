@@ -17,3 +17,9 @@ export const AUTH_REDIRECT_URL = 'fancy://auth/callback';
  * must be replaced by the server-provided value before release.
  */
 export const POLICY_VERSION = '2026-10-21';
+
+/**
+ * Ask Fancy (AI helper). Off for this release by owner decision (2026-10-28): no floating entry is
+ * shown. The assistant code and its tests stay in place for a later version.
+ */
+export const ASSISTANT_ENABLED = false;

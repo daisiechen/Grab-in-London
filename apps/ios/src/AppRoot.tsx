@@ -7,6 +7,7 @@ import {LogoutNotice} from './features/auth/LogoutNotice.tsx';
 import {AssistantWidget} from './features/assistant/AssistantWidget.tsx';
 import { colors } from './ui/tokens.ts';
 import { AnalyticsConsentSheet } from './analytics/Consent.tsx';
+import { ASSISTANT_ENABLED } from './config.ts';
 import { ServicesProvider, useSessionState, type Services } from './services.tsx';
 
 /** Restores the session once and re-checks an `unavailable` session when the app returns to the foreground. */
@@ -28,7 +29,7 @@ export function AppRoot({ services, children }: { services: Services; children: 
         <SessionBanner services={services} />
       </SafeAreaView>
       {children}
-      <AssistantWidget />
+      {ASSISTANT_ENABLED ? <AssistantWidget /> : null}
       <AnalyticsConsentSheet manager={services.analytics}/>
     </ServicesProvider>
   );
