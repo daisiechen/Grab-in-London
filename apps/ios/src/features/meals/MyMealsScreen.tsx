@@ -14,7 +14,6 @@ import { MealCard } from '../../ui/MealCard.tsx';
 import { createStyles } from '../../ui/styles.ts';
 import { colors } from '../../ui/tokens.ts';
 import { rememberReturnTo } from '../auth/intent.ts';
-import { loadInbox, type InboxItem } from '../inbox/InboxScreen.tsx';
 import { applicationLabel, bookingLabel } from './format.ts';
 
 type Section = (typeof MY_MEAL_SECTIONS)[number];
@@ -68,9 +67,6 @@ function SignedInMeals({ section, onSection }: { section: Section; onSection: (s
   const { api } = services;
   const router = useRouter();
   const q = useQuery<Item[]>(`myMeals:${section}`, () => allPages((cursor) => api.call('myMeals', { query: { section, limit: 50, ...(cursor ? { cursor } : {}) } })));
-  // Group chats are located through the Inbox list (CONTRACT GAP: myMeals carries no conversationId).
-  const inbox = useQuery<InboxItem[]>(section === 'APPLICATIONS' ? null : 'inbox', () => loadInbox(services));
-  const chatFor = (mealId: string) => inbox.data?.find((i) => i.conversation?.kind === 'GROUP' && i.conversation.mealId === mealId)?.conversation ?? null;
   const hosting = section === 'HOSTING';
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -93,7 +89,6 @@ function SignedInMeals({ section, onSection }: { section: Section; onSection: (s
           </View>
         }
         renderItem={({ item, index }) => {
-          const chat = chatFor(item.meal.id);
           const past = section === 'PAST';
           const canManage = item.role === 'HOST' && item.meal.status === 'OPEN' && !past;
           const feedback = past && item.meal.allowedActions.includes('POST_MEAL');
@@ -105,8 +100,8 @@ function SignedInMeals({ section, onSection }: { section: Section; onSection: (s
                 {canManage ? <TextAction label="Manage" onPress={() => router.push(`/meals/${item.meal.id}/host`)} /> : null}
               </View>
               {feedback ? <View style={styles.action}><Primary secondary label="Leave feedback" onPress={() => router.push(`/post-meal/${item.meal.id}`)} /></View> : null}
-              {chat && section !== 'APPLICATIONS' ? (
-                <View style={styles.chatLink}><TextAction label={chat.dissolved || !chat.canSend ? 'Open group chat · read-only history' : 'Open group chat'} onPress={() => router.push(`/chat/${chat.id}`)} /></View>
+              {item.conversationId && section !== 'APPLICATIONS' ? (
+                <View style={styles.chatLink}><TextAction label="Open group chat" onPress={() => router.push(`/chat/${item.conversationId}`)} /></View>
               ) : null}
             </View>
           );
@@ -122,7 +117,7 @@ function SignedInMeals({ section, onSection }: { section: Section; onSection: (s
           ) : undefined
         }
         refreshing={q.loading}
-        onRefresh={() => { void q.reload(); if (section !== 'APPLICATIONS') void inbox.reload(); }}
+        onRefresh={() => void q.reload()}
       />
     </SafeAreaView>
   );

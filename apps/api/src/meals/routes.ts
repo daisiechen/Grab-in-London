@@ -118,10 +118,11 @@ export function registerMealRoutes(app:FastifyInstance,deps:AppDeps,venues:Venue
    const roster=now>=meal.starts_at?rosterAt(await loadSeatEvents({client:deps.pool as unknown as import('pg').PoolClient},meal.id),meal.starts_at):[];
    const visible=q.section==='HOSTING'?host:q.section==='UPCOMING'?dto.status==='OPEN'&&now<meal.scheduled_end_at&&(host||mine?.state==='CONFIRMED'):q.section==='PAST'?dto.status!=='CANCELLED'&&now>=meal.scheduled_end_at&&roster.includes(auth!.userId):q.section==='CANCELLED'?dto.status==='CANCELLED'||mine?.state==='CANCELLED':apps.length>0;
    if(!visible)continue;
+   const {rows:[conversation]}=await deps.pool.query(`SELECT c.id FROM conversations c WHERE c.meal_id=$1 AND EXISTS(SELECT 1 FROM membership_intervals i WHERE i.conversation_id=c.id AND i.user_id=$2)`,[meal.id,auth!.userId]);
    for(const row of q.section==='APPLICATIONS'?apps:[mine??null]) {
     const application=row?await applicationDto(deps.pool,{...row,...(row.state==='PENDING'&&now>=meal.closes_at?{state:'EXPIRED'}:{})},true):null;
     const key=q.section==='APPLICATIONS'?{startsAt:row!.created_at.toISOString(),id:row!.id}:{startsAt:meal.starts_at.toISOString(),id:meal.id};
-    items.push({key,data:{meal:dto,application,role:host?'HOST':row?.state==='CONFIRMED'?'GUEST':'APPLICANT'}});
+    items.push({key,data:{meal:dto,application,role:host?'HOST':row?.state==='CONFIRMED'?'GUEST':'APPLICANT',conversationId:conversation?.id??null}});
    }
   }
   const descending=q.section==='APPLICATIONS';

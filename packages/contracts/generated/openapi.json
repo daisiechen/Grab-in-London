@@ -17597,7 +17597,8 @@
         "required": [
           "meal",
           "application",
-          "role"
+          "role",
+          "conversationId"
         ],
         "properties": {
           "meal": {
@@ -17619,6 +17620,17 @@
               "HOST",
               "GUEST",
               "APPLICANT"
+            ]
+          },
+          "conversationId": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
             ]
           }
         }

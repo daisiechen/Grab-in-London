@@ -184,7 +184,9 @@ describe('MVP production meal commands and privacy',()=>{
  it('uses signed actor/filter-bound cursors and paginates every application round without skipping',async()=>{
   const host=await actor(),guest=await actor();const meal=await publish(host.b);
   const first=json(await apply(guest.b,meal.id)).data;await guest.b.request('POST',`/v1/applications/${first.id}/withdraw`,{headers:{'idempotency-key':randomUUID(),'if-match':'"1"'}});await apply(guest.b,meal.id);
-  const page1=await guest.b.request('GET','/v1/me/meals?section=APPLICATIONS&limit=1');expect(json(page1).data).toHaveLength(1);const cursor=json(page1).page.nextCursor;expect(cursor).toContain('.');
+  const page1=await guest.b.request('GET','/v1/me/meals?section=APPLICATIONS&limit=1');expect(json(page1).data).toHaveLength(1);
+  // A pending applicant has no readable group yet, so the item carries no chat (same rule as getMeal).
+  expect(json(page1).data[0].conversationId).toBeNull();const cursor=json(page1).page.nextCursor;expect(cursor).toContain('.');
   const page2=await guest.b.request('GET',`/v1/me/meals?section=APPLICATIONS&limit=1&cursor=${encodeURIComponent(cursor)}`);expect(page2.statusCode,page2.body).toBe(200);expect(json(page2).data[0].application.id).not.toBe(json(page1).data[0].application.id);
   expect((await host.b.request('GET',`/v1/me/meals?section=APPLICATIONS&limit=1&cursor=${encodeURIComponent(cursor)}`)).statusCode).toBe(422);
   expect((await guest.b.request('GET',`/v1/me/meals?section=HOSTING&limit=1&cursor=${encodeURIComponent(cursor)}`)).statusCode).toBe(422);

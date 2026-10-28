@@ -964,11 +964,13 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
               : query.section === 'CANCELLED' ? dto.status === 'CANCELLED' || mine?.state === 'CANCELLED'
                 : apps.length > 0;
         if (!visible) continue;
+        const conv = meal.conversationId ? w.conversations.get(meal.conversationId) : undefined;
+        const conversationId = conv && isMember(conv, uid) ? conv.id : null;
         const rows: Array<AppRec | null> = query.section === 'APPLICATIONS' ? apps : [mine ?? null];
         for (const row of rows) {
           items.push({
             key: query.section === 'APPLICATIONS' ? [row!.createdAt, row!.id] : [meal.startMs, meal.id],
-            data: { meal: dto, application: row ? applicationDto(row) : null, role: host ? 'HOST' : row?.state === 'CONFIRMED' ? 'GUEST' : 'APPLICANT' },
+            data: { meal: dto, application: row ? applicationDto(row) : null, role: host ? 'HOST' : row?.state === 'CONFIRMED' ? 'GUEST' : 'APPLICANT', conversationId },
           });
         }
       }

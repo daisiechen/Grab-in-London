@@ -164,6 +164,8 @@ export const MyMealItem = Obj({
   meal: Meal,
   application: T.Union([Application, T.Null()]),
   role: Enum(['HOST', 'GUEST', 'APPLICANT'] as const),
+  /** Group chat the viewer can read for this meal (same rule as getMeal), else null. */
+  conversationId: T.Union([Uuid, T.Null()]),
 });
 
 export const Message = Obj({

@@ -147,7 +147,7 @@ describe('MyMealsScreen', () => {
   it('loads each section from the server', async () => {
     const app = createTestApp();
     await signIn(app, me());
-    app.mock.on('GET', '/v1/me/meals', (c) => page(c.query.get('section') === 'HOSTING' ? [{ meal: meal({ title: 'Hosted lunch' }), application: null, role: 'HOST' }] : []));
+    app.mock.on('GET', '/v1/me/meals', (c) => page(c.query.get('section') === 'HOSTING' ? [{ meal: meal({ title: 'Hosted lunch' }), application: null, role: 'HOST', conversationId: null }] : []));
     await renderApp(app, <MyMealsScreen />);
     expect(await screen.findByText('A good meal is waiting.')).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole('tab', { name: 'Hosting' }));
