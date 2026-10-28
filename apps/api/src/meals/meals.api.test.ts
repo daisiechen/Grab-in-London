@@ -49,6 +49,8 @@ describe('MVP production meal commands and privacy',()=>{
  it('publishes host seat, GROUP JOIN, three jobs and self-reported booking atomically; retries do not duplicate',async()=>{
   const {b}=await actor();const {result,body,key}=await create(b);expect(result.statusCode,result.body).toBe(201);const meal=json(result).data;
   expect(meal.confirmedCount).toBe(1);expect(meal.bookingDeclaration).toMatchObject({declaredCount:3,stale:false,status:'REPORTED_CONFIRMED'});
+  // Who's coming: seat holders' public profiles, host first, matching confirmedCount.
+  expect(meal.members.map((m:{id:string})=>m.id)).toEqual([meal.host.id]);
   const replay=await b.request('POST','/v1/meals',{body,headers:{'idempotency-key':key}});expect(replay.headers['idempotent-replay']).toBe('true');expect(json(replay).data.id).toBe(meal.id);
   expect((await h.db.pool.query(`SELECT * FROM conversations WHERE meal_id=$1`,[meal.id])).rowCount).toBe(1);
   expect((await h.db.pool.query(`SELECT * FROM seat_events WHERE meal_id=$1`,[meal.id])).rowCount).toBe(1);

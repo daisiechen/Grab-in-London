@@ -105,6 +105,7 @@ export function meal(overrides: Partial<MealFixture> = {}): MealFixture {
     minimum: 2,
     capacity: 4,
     confirmedCount: 1,
+    members: [publicProfile()],
     budgetMinPence: 2000,
     budgetMaxPence: 3500,
     currency: 'GBP',

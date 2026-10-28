@@ -129,6 +129,8 @@ export const Meal = Obj({
   minimum: T.Integer({ minimum: 2, maximum: 6 }),
   capacity: T.Integer({ minimum: 2, maximum: 6 }),
   confirmedCount: T.Integer({ minimum: 0, maximum: 6 }),
+  /** Public projection of everyone holding a seat now (host first, then guests by name); shown as “Who’s coming”. */
+  members: T.Array(PublicProfile, { maxItems: 6 }),
   budgetMinPence: Pence,
   budgetMaxPence: Pence,
   currency: T.Literal('GBP'),

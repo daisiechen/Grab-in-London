@@ -17303,6 +17303,7 @@
           "minimum",
           "capacity",
           "confirmedCount",
+          "members",
           "budgetMinPence",
           "budgetMaxPence",
           "currency",
@@ -17370,6 +17371,13 @@
             "minimum": 0,
             "maximum": 6,
             "type": "integer"
+          },
+          "members": {
+            "maxItems": 6,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicProfile"
+            }
           },
           "budgetMinPence": {
             "minimum": 1,

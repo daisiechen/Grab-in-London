@@ -373,7 +373,10 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
 
   function mealDto(meal: MealRec, viewer: string | null): MealDto {
     const t = now();
-    const count = currentSeats(meal, t).length;
+    const seated = currentSeats(meal, t);
+    const count = seated.length;
+    // Host first, then the other seat holders (apps/api read.ts).
+    const memberIds = [meal.hostId, ...seated.filter((id) => id !== meal.hostId)];
     const conv = meal.conversationId ? w.conversations.get(meal.conversationId) : undefined;
     const mine = viewer ? applicationsOf(meal.id, viewer) : [];
     const actions: MealDto['allowedActions'] = [];
@@ -393,7 +396,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
     return {
       id: meal.id, version: String(meal.version), host: publicProfile(meal.hostId), venue: venueDto(meal.venueRef), title: meal.title, description: meal.description,
       startsAt: londonTime(meal.startMs), closesAt: londonTime(meal.closeMs), scheduledEndAt: iso(meal.endMs), minimum: meal.minimum, capacity: meal.capacity,
-      confirmedCount: count, budgetMinPence: meal.budgetMinPence, budgetMaxPence: meal.budgetMaxPence, currency: 'GBP', languages: [...meal.languages],
+      confirmedCount: count, members: memberIds.slice(0, 6).map((id) => publicProfile(id)), budgetMinPence: meal.budgetMinPence, budgetMaxPence: meal.budgetMaxPence, currency: 'GBP', languages: [...meal.languages],
       mood: meal.mood, areaCode: meal.areaCode, cuisineCode: meal.cuisineCode, dietaryCodes: meal.dietaryCodes ? [...meal.dietaryCodes] : null,
       declarationSource: 'host_reported', bookingMode: 'EXTERNAL_PAY_AT_VENUE', status: meal.status, cancelReason: meal.cancelReason,
       arrangementLocked: meal.lockedAt !== null,

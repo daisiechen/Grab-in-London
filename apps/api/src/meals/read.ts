@@ -25,7 +25,11 @@ export async function mealDto(db:Db,meal:MealRow,now:Date,venues:VenueService,us
  const events=await loadSeatEvents({client:db as PoolClient},meal.id);
  const projected=projectLifecycle(meal,events,now);
  // Current seats use now+1ms to include the command's own confirmation at its effectiveNow.
- const count=rosterAt(events,new Date(now.getTime()+1)).length;
+ const roster=rosterAt(events,new Date(now.getTime()+1));
+ const count=roster.length;
+ // Seat holders' public profiles, host first; same projection as the host field.
+ const memberIds=[...new Set([meal.host_id,...roster])].filter(id=>roster.includes(id)||id===meal.host_id);
+ const members=await Promise.all(memberIds.map(id=>publicProfile(db,id)));
  const {rows:[v]}=await db.query<{place_id:string;area_code:string}>(`SELECT place_id,area_code FROM venues WHERE id=$1`,[meal.venue_ref]);
  let place=null;
  if(v && withProviderDisplay) {try{place=await venues.details(v.place_id);}catch(error){if(!(error instanceof DomainError))throw error;}}
@@ -42,7 +46,7 @@ export async function mealDto(db:Db,meal:MealRow,now:Date,venues:VenueService,us
  if(userId && projected.status==='COMPLETED') {
  const {rowCount}=await db.query(`SELECT 1 FROM start_roster WHERE meal_id=$1 AND user_id=$2`,[meal.id,userId]);if(rowCount)allowedActions.push('POST_MEAL');
  }
- return {id:meal.id,version:String(meal.version),host:await publicProfile(db,meal.host_id),venue:{venueRef:meal.venue_ref,placeId:v?.place_id??'unavailable',available:place!==null,name:place?.name??null,address:place?.address??null,location:place?.location??null,areaCode:v?.area_code??'unknown',attributions:place?.attributions??[],displayExpiresAt:null},title:hostStatus?.status==='ACTIVE'?meal.title:'Meal unavailable',description:hostStatus?.status==='ACTIVE'?meal.description:'This meal description is no longer available.',startsAt:londonTime(meal.starts_at),closesAt:londonTime(meal.closes_at),scheduledEndAt:meal.scheduled_end_at.toISOString(),minimum:meal.minimum,capacity:meal.capacity,confirmedCount:count,budgetMinPence:meal.budget_min_pence,budgetMaxPence:meal.budget_max_pence,currency:'GBP',languages:meal.languages,mood:meal.mood,areaCode:meal.area_code,cuisineCode:meal.cuisine_code,dietaryCodes:meal.dietary_codes,declarationSource:'host_reported',bookingMode:meal.booking_mode,status:projected.status,cancelReason:projected.cancelReason,arrangementLocked:meal.arrangement_locked_at!==null,bookingDeclaration:booking?{id:booking.id,revision:String(booking.revision),status:booking.status,declaredCount:booking.declared_count,reportedAt:booking.reported_at.toISOString(),stale:booking.arrangement_hash!==arrangementHash(meal,count,events.at(-1)?.seq??0n)}:null,allowedActions};
+ return {id:meal.id,version:String(meal.version),host:await publicProfile(db,meal.host_id),venue:{venueRef:meal.venue_ref,placeId:v?.place_id??'unavailable',available:place!==null,name:place?.name??null,address:place?.address??null,location:place?.location??null,areaCode:v?.area_code??'unknown',attributions:place?.attributions??[],displayExpiresAt:null},title:hostStatus?.status==='ACTIVE'?meal.title:'Meal unavailable',description:hostStatus?.status==='ACTIVE'?meal.description:'This meal description is no longer available.',startsAt:londonTime(meal.starts_at),closesAt:londonTime(meal.closes_at),scheduledEndAt:meal.scheduled_end_at.toISOString(),minimum:meal.minimum,capacity:meal.capacity,confirmedCount:count,members:members.slice(0,6),budgetMinPence:meal.budget_min_pence,budgetMaxPence:meal.budget_max_pence,currency:'GBP',languages:meal.languages,mood:meal.mood,areaCode:meal.area_code,cuisineCode:meal.cuisine_code,dietaryCodes:meal.dietary_codes,declarationSource:'host_reported',bookingMode:meal.booking_mode,status:projected.status,cancelReason:projected.cancelReason,arrangementLocked:meal.arrangement_locked_at!==null,bookingDeclaration:booking?{id:booking.id,revision:String(booking.revision),status:booking.status,declaredCount:booking.declared_count,reportedAt:booking.reported_at.toISOString(),stale:booking.arrangement_hash!==arrangementHash(meal,count,events.at(-1)?.seq??0n)}:null,allowedActions};
 }
 export function parseCursor(cursor:string|undefined):{startsAt:string;id:string}|null {
  if(!cursor)return null;

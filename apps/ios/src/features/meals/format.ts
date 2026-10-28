@@ -54,8 +54,5 @@ export const closesLabel = (t: Meal['closesAt']) => {
   return `${d} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][m - 1]}, ${t.localTime}`;
 };
 
-/**
- * People shown on cards and “Who’s coming”: the host first, then confirmed guests when the
- * projection carries them. CONTRACT GAP: the public Meal DTO only has the host today.
- */
-export const mealPeople = (m: Meal): Meal['host'][] => [m.host];
+/** People shown on cards and “Who’s coming”: seat holders, host first (falls back to the host alone). */
+export const mealPeople = (m: Meal): Meal['host'][] => (m.members.length ? m.members : [m.host]);

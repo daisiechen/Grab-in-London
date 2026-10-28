@@ -1,5 +1,5 @@
 import { Pressable, Text, View } from 'react-native';
-import { cardBudgetLabel, cardWhenLabel, languagesLabel, moodLabel, venueName, type Meal } from '../features/meals/format.ts';
+import { mealPeople, cardBudgetLabel, cardWhenLabel, languagesLabel, moodLabel, venueName, type Meal } from '../features/meals/format.ts';
 import { Avatar } from './Avatar.tsx';
 import { areaName } from '../features/discover/areas.ts';
 import { Icon, type IconName } from './Icon.tsx';
@@ -17,14 +17,14 @@ export function MealCard({ meal, onPress, onPerson, members, compact = false, de
   meal: Meal;
   onPress: () => void;
   onPerson?: (person: Person) => void;
-  /** People to show; the public Meal projection only carries the host. */
+  /** Overrides the meal's own seat holders (meal.members). */
   members?: Person[];
   compact?: boolean;
   /** Two-up map preview: five short rows, smaller photo, no avatars. */
   dense?: boolean;
   status?: string;
 }) {
-  const people = (members?.length ? members : [meal.host]).slice(0, 3);
+  const people = (members?.length ? members : mealPeople(meal)).slice(0, 3);
   return (
     <RestaurantPhoto venueRef={meal.venue.venueRef} placeId={meal.venue.placeId} name={venueName(meal)} fill>
       {({ image, attribution }) => (
