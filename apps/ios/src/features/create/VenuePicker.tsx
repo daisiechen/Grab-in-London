@@ -112,7 +112,7 @@ export function VenuePicker({ draft, update }: { draft: CreateDraft; update: (pa
         : `${list.length}${more ? '+' : ''} restaurant${list.length === 1 ? '' : 's'} in this map area · tap a pin or a name to preview`;
 
   return (
-    <Section title="Restaurant" icon="SewingPinFilled" right={venue && !open ? <InlineLink label="Change" accessibilityLabel="Change restaurant" onPress={() => setOpen(true)} /> : null}>
+    <Section required title="Restaurant" icon="SewingPinFilled" right={venue && !open ? <InlineLink label="Change" accessibilityLabel="Change restaurant" onPress={() => setOpen(true)} /> : null}>
       {venue ? (
         <View style={styles.selected} accessibilityLabel={`Selected restaurant ${venue.name}`}>
           <View style={styles.thumb}>

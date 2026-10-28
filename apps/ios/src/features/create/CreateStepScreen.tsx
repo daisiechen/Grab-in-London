@@ -32,7 +32,7 @@ import { toggle } from '../discover/filters.ts';
 import { languagesLabel } from '../meals/format.ts';
 import { mealActionMessage } from '../meals/messages.ts';
 import { rememberReturnTo } from '../auth/intent.ts';
-import { CreateLayout, Divider, DropPanel, DropTrigger, Hint, InlineLink, Section, SectionMarker, Stepper, TimeGrid, shared, type SectionIcon } from './CreateLayout.tsx';
+import { CreateLayout, Divider, DropPanel, DropTrigger, Hint, InlineLink, Section, Stepper, TimeGrid, shared, type SectionIcon } from './CreateLayout.tsx';
 import { VenuePicker } from './VenuePicker.tsx';
 import { budgetIssues, deadlineTooLate, draftFromMeal, editBlockedReason, emptyDraft, timeResolution, toCreateBody, toEditBody, updateDraft, validateStep, type CreateDraft, type EditableMeal, type Step, type TimeResolution } from './model.ts';
 
@@ -189,7 +189,7 @@ function Arrange({ draft, update, today }: Part & { today: string }) {
     <>
       <VenuePicker draft={draft} update={update} />
 
-      <Section title="Your table" icon="Person">
+      <Section required title="Your table" icon="Person">
         {/* The minimum can't pass the table size; lowering the table size pulls the minimum down with it (updateDraft). */}
         <View style={[shared.box, styles.steppers]}>
           <Stepper testID="stepper-minimum" label="Minimum" hint="people, including you" name="minimum" value={draft.minimum} min={MIN_PEOPLE} max={draft.capacity} onChange={(minimum) => update({ minimum })} />
@@ -199,7 +199,7 @@ function Arrange({ draft, update, today }: Part & { today: string }) {
         <Hint>{`Friendship-first, at every table size. If fewer than ${draft.minimum} people are confirmed when applications close, the meal is cancelled.`}</Hint>
       </Section>
 
-      <Section title="When" icon="Calendar">
+      <Section required title="When" icon="Calendar">
         <View style={shared.row}>
           <DropTrigger label="Date" icon="Calendar" value={draft.date ? longDate(draft.date) : null} placeholder="Choose a date" open={open === 'date'} onPress={() => toggleOpen('date')} />
           <DropTrigger label="Time" icon="Clock" value={draft.time} placeholder="Choose a time" open={open === 'time'} onPress={() => toggleOpen('time')} />
@@ -209,7 +209,7 @@ function Arrange({ draft, update, today }: Part & { today: string }) {
         <Hint>London time. This is your planned meeting time; confirm opening hours and book with the restaurant separately.</Hint>
       </Section>
 
-      <Section title="Applications close" icon="Timer">
+      <Section required title="Applications close" icon="Timer">
         <View style={shared.row}>
           <DropTrigger label="Deadline date" icon="Calendar" value={draft.closeDate ? longDate(draft.closeDate) : null} placeholder="Choose a date" open={open === 'closeDate'} onPress={() => toggleOpen('closeDate')} />
           <DropTrigger label="Deadline time" icon="Clock" value={draft.closeTime} placeholder="Choose a time" open={open === 'closeTime'} onPress={() => toggleOpen('closeTime')} />
@@ -225,19 +225,19 @@ function Arrange({ draft, update, today }: Part & { today: string }) {
 function Introduce({ draft, update }: Part) {
   return (
     <>
-      <Section title="Name and description" icon="Pencil2">
+      <Section required title="Name and description" icon="Pencil2">
         <View style={styles.fields}>
           <Field label="Give your meal a name" hint={`5–80 characters · ${draft.title.length}/80`} value={draft.title} onChangeText={(title) => update({ title })} maxLength={80} placeholder="e.g. Friday dinner & new faces" />
           <Field label="What should people expect?" hint={`20–1,000 characters · ${draft.description.length}/1,000`} value={draft.description} onChangeText={(description) => update({ description })} maxLength={1000} multiline placeholder="A relaxed dinner, a shared interest, or simply good company…" />
         </View>
       </Section>
-      <Section title="The company" icon="ChatBubble">
+      <Section required title="The company" icon="ChatBubble">
         <View style={styles.fields}>
           <ChoiceGroup<MoodCode> label="Atmosphere" options={Object.entries(MOODS) as Array<[MoodCode, string]>} value={draft.mood} onChange={(mood) => update({ mood })} />
           <MultiChoice<LanguageCode> label="Conversation language" options={languageOptions} values={draft.languages} onToggle={(v) => update({ languages: toggle(draft.languages, v) })} />
         </View>
       </Section>
-      <Section title="Food" icon="Cookie" right={<SectionMarker label="Optional" />}>
+      <Section title="Food (optional)" icon="Cookie">
         <View style={styles.fields}>
           <ChoiceGroup<'NONE' | CuisineCode> label="Cuisine" options={[['NONE', 'Not provided'], ...(Object.entries(CUISINES) as Array<[CuisineCode, string]>)]} value={draft.cuisineCode ?? 'NONE'} onChange={(v) => update({ cuisineCode: v === 'NONE' ? null : v })} />
           <MultiChoice<DietaryCode> label="Dietary options" options={Object.entries(DIETARY) as Array<[DietaryCode, string]>} values={draft.dietaryCodes} onToggle={(v) => update({ dietaryCodes: toggle(draft.dietaryCodes, v) })} />
@@ -271,7 +271,7 @@ function Costs({ draft, update, editing }: Part & { editing: boolean }) {
           <Text style={shared.muted}>Everyone pays their own share at the restaurant. Nothing is collected in the app.</Text>
         </View>
       </Section>
-      <Section title="Expected spend" icon="Tokens">
+      <Section required title="Expected spend" icon="Tokens">
         <View style={shared.row}>
           <View style={shared.half}><Field label="From / person (£)" accessibilityLabel="Budget from per person in pounds" value={draft.budgetMin} onChangeText={(budgetMin) => update({ budgetMin })} keyboardType="decimal-pad" placeholder="e.g. 20" error={budget.min} /></View>
           <View style={shared.half}><Field label="To / person (£)" accessibilityLabel="Budget to per person in pounds" value={draft.budgetMax} onChangeText={(budgetMax) => update({ budgetMax })} keyboardType="decimal-pad" placeholder="e.g. 35" error={budget.max} /></View>
@@ -286,7 +286,7 @@ function Costs({ draft, update, editing }: Part & { editing: boolean }) {
       </Section>
       {/* Edit keeps the booking already reported on the meal; Review reminds the host to update it. */}
       {editing ? null : (
-        <Section title="Restaurant reservation" icon="CheckCircled" right={<SectionMarker label="Required" tone="peach" accessibilityLabel="Required to continue" />}>
+        <Section required title="Restaurant reservation" icon="CheckCircled">
           <Hint>You book the table with the restaurant yourself. Fancy doesn’t reserve tables. Tick to confirm before you continue.</Hint>
           <CheckRow label={reservationDeclaration(draft)} checked={draft.bookingDeclarationConfirmed} onChange={(v) => update({ bookingDeclarationConfirmed: v })} />
         </Section>

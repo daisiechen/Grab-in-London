@@ -390,7 +390,9 @@ describe('Create simulator walkthrough fixes (iOS 27)', () => {
     const app = createTestApp(); await signIn(app, me());
     app.services.drafts.set(CREATE_DRAFT_KEY, { ...readyDraft(), bookingDeclarationConfirmed: false });
     await renderApp(app, <CreateStepScreen step={2} />);
-    expect(screen.getByLabelText('Required to continue')).toHaveTextContent('Required');
+    // A light “*” marks required sections (no heavy pill).
+    expect(screen.getByRole('header', { name: 'Restaurant reservation, required' })).toHaveTextContent('Restaurant reservation *');
+    expect(screen.queryByText('Required')).toBeNull();
     expect(screen.getByText(/Tick to confirm before you continue\./)).toBeOnTheScreen();
     expect(screen.queryByRole('alert')).toBeNull();
   });
@@ -446,9 +448,9 @@ describe('Create visual pass 2: section cards, compact progress and people stepp
     for (const h of ['Place & time', 'The company', 'Costs & reservation', 'If plans change']) expect(screen.getByRole('header', { name: h })).toBeOnTheScreen();
   });
 
-  it('section cards carry headers and the Optional / Required markers', async () => {
+  it('section cards carry headers; required ones are marked with a light *', async () => {
     await arrange();
-    for (const h of ['Restaurant', 'Your table', 'When', 'Applications close']) expect(screen.getByRole('header', { name: h })).toBeOnTheScreen();
+    for (const h of ['Restaurant', 'Your table', 'When', 'Applications close']) expect(screen.getByRole('header', { name: `${h}, required` })).toHaveTextContent(`${h} *`);
     expect(screen.queryByRole('radio', { name: '6 people' })).toBeNull();
   });
 

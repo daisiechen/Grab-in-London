@@ -98,30 +98,23 @@ export type SectionIcon = IconName | '£';
 
 /**
  * One soft card per section (owner review 2026-10-28: the form read flat). Surface background on the
- * white page, 15pt bold ink title with a small forest icon, optional marker or link on the right.
+ * white page, 15pt bold ink title with a small forest icon, a light red * when required, an optional link on the right.
  */
-export function Section({ title, icon, children, right, testID }: { title?: string; icon?: SectionIcon; children: ReactNode; right?: ReactNode; testID?: string }) {
+export function Section({ title, icon, children, right, testID, required = false }: { title?: string; icon?: SectionIcon; children: ReactNode; right?: ReactNode; testID?: string; /** Light “*” after the title (owner review: mark required fields, no heavy pill). */ required?: boolean }) {
   return (
     <View style={styles.card} testID={testID}>
       {title ? (
         <View style={styles.sectionHead}>
           <View style={styles.titleRow}>
             {icon === '£' ? <Text style={styles.glyph}>£</Text> : icon ? <Icon name={icon} size={15} color={colors.forest} /> : null}
-            <Text accessibilityRole="header" style={styles.h2} numberOfLines={1}>{title}</Text>
+            <Text accessibilityRole="header" accessibilityLabel={required ? `${title}, required` : title} style={styles.h2} numberOfLines={1}>
+              {title}{required ? <Text style={styles.required}> *</Text> : null}
+            </Text>
           </View>
           {right}
         </View>
       ) : null}
       {children}
-    </View>
-  );
-}
-
-/** Small right-side marker on a section title: muted “Optional”, peach “Required”. */
-export function SectionMarker({ label, tone = 'muted', accessibilityLabel }: { label: string; tone?: 'muted' | 'peach'; accessibilityLabel?: string }) {
-  return (
-    <View style={[styles.marker, tone === 'peach' && styles.markerPeach]} accessible accessibilityLabel={accessibilityLabel ?? label}>
-      <Text style={[styles.markerText, tone === 'peach' && styles.markerTextPeach]}>{label}</Text>
     </View>
   );
 }
@@ -269,11 +262,8 @@ const styles = createStyles({
   sectionHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, minHeight: 20 },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: 7, flexShrink: 1 },
   glyph: { width: 15, textAlign: 'center', fontSize: 15, lineHeight: 18, fontWeight: '700', color: colors.forest },
+  required: { color: colors.danger, fontWeight: '700' },
   h2: { flexShrink: 1, fontSize: 15, lineHeight: 20, letterSpacing: -0.2, fontWeight: '700', color: colors.ink },
-  marker: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
-  markerPeach: { backgroundColor: colors.peach, borderColor: colors.peach },
-  markerText: { fontSize: 11, lineHeight: 14, fontWeight: '600', color: colors.muted },
-  markerTextPeach: { color: colors.ink, fontWeight: '700' },
   hint: { fontSize: 11, lineHeight: 16, color: colors.muted },
   legend: { fontSize: 12, lineHeight: 16, fontWeight: '500', color: colors.muted },
   dropWrap: { flex: 1, minWidth: 0, gap: 5 },
