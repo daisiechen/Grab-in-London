@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Text, View } from 'react-native';
 import { INTERESTS, LANGUAGES, LIFE_STATUSES, type InterestCode, type LanguageCode, type LifeStatusCode } from '@fancy/contracts';
 import { colors } from '../../../ui/tokens.ts';
@@ -8,10 +9,13 @@ import { Pill, Tag } from '../../../ui/Bits.tsx';
 
 const languageLabel = (c: LanguageCode) => (c === 'zh' ? 'Mandarin' : LANGUAGES[c]);
 
-/** Public projection (demo member page): portrait, name, background, introduction, interests, languages. */
-export function ProfileView({ displayName, avatarUrl = null, bio, lifeStatus, languages, interests, background }: {
+/**
+ * Public projection (demo member page): portrait, name, background, introduction, interests, languages.
+ * `afterHeading` slots an action between the heading and the introduction (own profile: Edit profile).
+ */
+export function ProfileView({ displayName, avatarUrl = null, bio, lifeStatus, languages, interests, background, afterHeading }: {
   displayName: string | null; avatarUrl?: string | null; bio: string | null; lifeStatus?: LifeStatusCode | null; languages: readonly LanguageCode[]; interests: readonly InterestCode[];
-  background?: { work?: string; school?: string; hometown?: string } | undefined;
+  background?: { work?: string; school?: string; hometown?: string } | undefined; afterHeading?: ReactNode;
 }) {
   const facts = [background?.work, background?.school, background?.hometown].filter(Boolean).join(' · ');
   const name = displayName ?? 'New member';
@@ -21,8 +25,9 @@ export function ProfileView({ displayName, avatarUrl = null, bio, lifeStatus, la
         <View accessibilityLabel={`${name} portrait`}><Avatar person={{ displayName: name, avatarUrl }} size={76} /></View>
         <Text accessibilityRole="header" style={styles.h1}>{name}</Text>
         {facts ? <Text style={styles.facts}>{facts}</Text> : null}
-        {lifeStatus ? <Pill>{LIFE_STATUSES[lifeStatus]}</Pill> : null}
+        {lifeStatus ? <View style={styles.centre}><Pill>{LIFE_STATUSES[lifeStatus]}</Pill></View> : null}
       </View>
+      {afterHeading}
       <Text accessibilityRole="header" style={styles.h2}>A little about me</Text>
       <Text style={styles.prose}>{bio ?? 'Not provided'}</Text>
       <Text accessibilityRole="header" style={styles.h2}>We could talk about</Text>
@@ -38,6 +43,7 @@ export function ProfileView({ displayName, avatarUrl = null, bio, lifeStatus, la
 
 const styles = createStyles({
   heading: { alignItems: 'center', marginBottom: 4 },
+  centre: { alignSelf: 'center' },
   h1: { fontSize: 24, lineHeight: 28, letterSpacing: -0.8, fontWeight: '700', color: colors.ink, marginTop: 8, marginBottom: 2, textAlign: 'center' },
   facts: { fontSize: 12, color: colors.muted, marginBottom: 6, textAlign: 'center' },
   h2: { fontSize: 16, letterSpacing: -0.3, fontWeight: '700', color: colors.ink, marginTop: 18, marginBottom: 8 },

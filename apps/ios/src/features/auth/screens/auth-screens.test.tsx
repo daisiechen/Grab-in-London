@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { WebBrowserResultType } from 'expo-web-browser';
 import { SignInScreen } from './SignInScreen.tsx';
 import { EmailScreen } from './EmailScreen.tsx';
@@ -53,6 +53,26 @@ describe('SignInScreen (S03)', () => {
     expect(app.mock.callsTo('POST', /\/applications$/)).toHaveLength(0);
   });
 
+  it('opens on the brand welcome with every account choice on the first screen', async () => {
+    await renderApp(createTestApp(), <SignInScreen />);
+    expect(screen.getByLabelText('Fancy')).toBeOnTheScreen();
+    expect(screen.getByLabelText('A sculptural green table with colourful chairs, laid for new friends')).toBeOnTheScreen();
+    expect(screen.getByText('THERE’S A SEAT FOR YOU HERE.')).toBeOnTheScreen();
+    expect(screen.getByText('Fancy a bite?')).toBeOnTheScreen();
+    for (const name of ['Continue with email', 'Continue with Google', 'Continue with Apple']) expect(screen.getByRole('button', { name })).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Continue with email' }));
+    expect(mockRouter.push).toHaveBeenCalledWith('/email');
+  });
+
+  it('Close and “Keep exploring” leave without an account', async () => {
+    await renderApp(createTestApp(), <SignInScreen />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Close' }));
+    expect(mockRouter.back).toHaveBeenCalledTimes(1);
+    mockRouter.canGoBack.mockImplementation(() => false);
+    await fireEvent.press(screen.getByRole('button', { name: 'Keep exploring without an account' }));
+    expect(mockRouter.replace).toHaveBeenCalledWith('/');
+  });
+
   it('shows the community principles in a native sheet', async () => {
     await renderApp(createTestApp(), <SignInScreen />);
     await fireEvent.press(screen.getByRole('button', { name: 'Privacy & community principles' }));
@@ -86,8 +106,36 @@ describe('EmailScreen (S04, QA-AUTH-002/003)', () => {
     expect(await screen.findByText('That code doesn’t match. Check the six digits and try again.')).toBeOnTheScreen();
     expect(mockRouter.replace).not.toHaveBeenCalled();
 
+    expect(screen.getByText('Code expires in 5:00')).toBeOnTheScreen();
     await fireEvent.changeText(screen.getByLabelText('6-digit code'), '123456');
     await fireEvent.press(screen.getByRole('button', { name: 'Verify & continue' }));
     await waitFor(() => expect(mockRouter.replace).toHaveBeenCalledWith('/'));
+  });
+});
+
+describe('EmailScreen code stage', () => {
+  it('counts down on services.now, shows expiry and lets the member change the email', async () => {
+    let clock = NOW;
+    const app = createTestApp({ now: () => clock });
+    app.mock.on('POST', '/v1/auth/email/start', ok({ challengeId: CHALLENGE_ID, expiresAt: new Date(NOW + 300_000).toISOString(), resendAfter: new Date(NOW + 30_000).toISOString() }, 201));
+    jest.useFakeTimers();
+    try {
+      await renderApp(app, <EmailScreen />);
+      await fireEvent.changeText(screen.getByLabelText('Email address'), 'qa@example.com');
+      await fireEvent.press(screen.getByRole('button', { name: 'Send code' }));
+      expect(await screen.findByText('Code expires in 5:00')).toBeOnTheScreen();
+      clock = NOW + 31_000;
+      await act(async () => { jest.advanceTimersByTime(1000); });
+      expect(screen.getByText('Code expires in 4:29')).toBeOnTheScreen();
+      expect(screen.getByRole('button', { name: 'Resend code' })).toBeEnabled();
+      clock = NOW + 300_000;
+      await act(async () => { jest.advanceTimersByTime(1000); });
+      expect(screen.getByText('This code has expired. Request a new code.')).toBeOnTheScreen();
+      await fireEvent.press(screen.getByRole('button', { name: 'Change email' }));
+      expect(screen.getByText('Let’s keep in touch.')).toBeOnTheScreen();
+      expect(screen.getByLabelText('Email address')).toHaveDisplayValue('qa@example.com');
+    } finally {
+      jest.useRealTimers();
+    }
   });
 });

@@ -9,7 +9,7 @@ import { apiBaseUrl } from '../src/config.ts';
 import { sandboxInstallMarker } from '../src/platform/install-marker.ts';
 import { secureCredentialStore } from '../src/features/auth/credential-store.ts';
 import { createServices } from '../src/services.tsx';
-import { isPreviewMode, memoryCredentialStore } from '../src/platform/preview-mode.ts';
+import { isPreviewMode, memoryCredentialStore, memoryStore } from '../src/platform/preview-mode.ts';
 import { createPreviewBackend } from '../src/preview/fake-api.ts';
 import { colors } from '../src/ui/tokens.ts';
 import { FONT_FAMILY } from '../src/ui/styles.ts';
@@ -19,7 +19,8 @@ export default function RootLayout() {
     const preview = isPreviewMode();
     const backend = preview ? createPreviewBackend() : null;
     return createServices({
-      ...(backend ? { fetch: backend.fetch, now: backend.now } : {}),
+      // Preview never touches the Keychain: expo-secure-store has no web implementation.
+      ...(backend ? { fetch: backend.fetch, now: backend.now, deletionReceiptStore: memoryStore(), guestStore: memoryStore(), aiConversationStore: memoryStore() } : {}),
       baseUrl: apiBaseUrl(),
       store: preview ? memoryCredentialStore() : secureCredentialStore(),
       installMarker: preview ? null : sandboxInstallMarker(),
@@ -49,7 +50,7 @@ export default function RootLayout() {
           <Stack.Screen name="create/introduce" options={{ title: 'Create a meal' }} />
           <Stack.Screen name="create/costs" options={{ title: 'Create a meal' }} />
           <Stack.Screen name="create/review" options={{ title: 'Create a meal' }} />
-          <Stack.Screen name="chat/[conversationId]" options={{ title: 'Chat' }} />
+          <Stack.Screen name="chat/[conversationId]" options={{ title: 'Chat', headerShown: false }} />
           <Stack.Screen name="post-meal/[mealId]" options={{ title: 'After the meal' }} />
           <Stack.Screen name="survey" options={{ title: 'Product survey' }} />
           <Stack.Screen name="report" options={{ title: 'Report', presentation: 'modal' }} />

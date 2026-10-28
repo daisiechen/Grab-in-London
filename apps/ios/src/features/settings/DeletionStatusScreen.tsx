@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { ApiError, type ResponseOf } from '@fancy/client';
 import { useServices, useSessionState } from '../../services.tsx';
-import { Primary } from '../../ui/Button.tsx';
+import { Text, View } from 'react-native';
+import { Primary, TextAction } from '../../ui/Button.tsx';
 import { Field } from '../../ui/Field.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
-import { Screen } from '../../ui/Screen.tsx';
-import { Body, Heading } from '../../ui/Text.tsx';
+import { AccountPage, SummaryBox, accountText } from '../../ui/AccountPage.tsx';
 
 type Status = ResponseOf<'deletionStatus'>['data'];
 const LABELS: Record<Status['status'], string> = { PENDING: 'Requested', PROCESSING: 'In progress', COMPLETED: 'Completed', NEEDS_SUPPORT: 'Our support team is completing this' };
@@ -55,14 +55,20 @@ export function DeletionStatusScreen() {
     }
   };
 
+  const forget = () => {const expected=savedToken.token;requestVersion.current+=1;setBusy(false);void deletionReceipts.clear(expected).then(()=>{if(currentScope.current===scope){setToken('');setSavedToken({scope,token:''});setStatus(null);setError('Saved reference removed from this device. This does not cancel account deletion.');}},()=>{if(currentScope.current===scope)setError('We couldn’t forget the saved reference. Please try again.');});};
   return (
-    <Screen testID="deletion-status">
-      <Heading>Check deletion status</Heading>
-      <Field label="Deletion reference" value={token} onChangeText={setToken} autoCapitalize="none" autoCorrect={false} />
-      <Primary label="Check status" busy={busy} onPress={() => void check()} />
-      {savedToken.scope===scope&&savedToken.token?<Primary secondary label="Forget saved reference" onPress={()=>{const expected=savedToken.token;requestVersion.current+=1;setBusy(false);void deletionReceipts.clear(expected).then(()=>{if(currentScope.current===scope){setToken('');setSavedToken({scope,token:''});setStatus(null);setError('Saved reference removed from this device. This does not cancel account deletion.');}},()=>{if(currentScope.current===scope)setError('We couldn’t forget the saved reference. Please try again.');});}}/>:null}
-      <FormMessage message={error} />
-      {status ? <Body>{`Status: ${LABELS[status.status]}`}</Body> : null}
-    </Screen>
+    <AccountPage testID="deletion-status" footer={<Primary label="Check status" busy={busy} onPress={() => void check()} />}>
+      <Text accessibilityRole="header" style={accountText.h1}>Check deletion status</Text>
+      <Text style={[accountText.prose, { marginBottom: 14 }]}>Use the reference you received when you deleted your account. It works without signing in and is sent privately.</Text>
+      <Field label="Deletion reference" value={token} onChangeText={setToken} autoCapitalize="none" autoCorrect={false} hint="The 43-character reference you saved or shared." />
+      {status ? (
+        <SummaryBox>
+          <Text style={accountText.strong}>{`Status: ${LABELS[status.status]}`}</Text>
+          {status.completedAt ? <Text style={accountText.muted}>Your account and its data have been removed.</Text> : null}
+        </SummaryBox>
+      ) : null}
+      <View style={{ marginTop: 8 }}><FormMessage message={error} /></View>
+      {savedToken.scope===scope&&savedToken.token?<View style={{ alignItems: 'flex-start' }}><TextAction label="Forget saved reference" onPress={forget}/></View>:null}
+    </AccountPage>
   );
 }

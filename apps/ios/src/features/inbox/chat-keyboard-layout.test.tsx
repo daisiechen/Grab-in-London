@@ -6,7 +6,6 @@ jest.mock('react-native',()=>{
 });
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- isolated navigation double
 jest.mock('expo-router',()=>require('../../test/router.ts').expoRouterMock);
-jest.mock('expo-router/react-navigation',()=>({useHeaderHeight:()=>0}));
 import {act,fireEvent,screen} from '@testing-library/react-native';
 import {Keyboard,StyleSheet} from 'react-native';
 import {createTestApp,renderApp,signIn} from '../../test/render.tsx';

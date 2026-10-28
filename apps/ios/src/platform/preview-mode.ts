@@ -19,3 +19,13 @@ export function memoryCredentialStore(): CredentialStore {
     async clear() { value = null; },
   };
 }
+
+/** Generic in-memory stand-in for the other Keychain-backed stores (deletion receipt, AI session/guest). */
+export function memoryStore<T>(): { read(): Promise<T | null>; write(value: T): Promise<void>; clear(): Promise<void> } {
+  let value: T | null = null;
+  return {
+    async read() { return value; },
+    async write(next) { value = next; },
+    async clear() { value = null; },
+  };
+}

@@ -1,19 +1,24 @@
 import { useState } from 'react';
+import { Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Primary, TextAction } from '../../ui/Button.tsx';
-import { Screen } from '../../ui/Screen.tsx';
+import { AccountPage, InfoRow, SettingsLink, accountText } from '../../ui/AccountPage.tsx';
 import { Sheet } from '../../ui/Sheet.tsx';
-import { Body, SectionTitle } from '../../ui/Text.tsx';
+import { Body } from '../../ui/Text.tsx';
 import { useServices, useSessionState } from '../../services.tsx';
 import { AnalyticsConsent } from '../../analytics/Consent.tsx';
 
-/** Settings (own profile only). Privacy copy, sign-out, account deletion, deletion status and the product survey. */
+/**
+ * Settings (own account only), grouped as in the demo: notifications & previews, privacy & safety,
+ * help shape Fancy, account. Sign-out is confirmed in a sheet.
+ */
 export function SettingsScreen() {
   const { session, analytics } = useServices();
   const state = useSessionState();
   const router = useRouter();
   const [confirm, setConfirm] = useState(false);
   const [busy, setBusy] = useState(false);
+  const signedIn = state.status === 'signedIn';
 
   const signOut = async () => {
     setBusy(true);
@@ -24,26 +29,41 @@ export function SettingsScreen() {
   };
 
   return (
-    <Screen testID="settings">
-      <SectionTitle>Privacy & safety</SectionTitle>
-      <Body>Your name, photo and introduction help your table get to know you. Your email is private.</Body>
-      <Body>Meal groups require a confirmed seat. Private conversations require mutual choice after a shared meal.</Body>
-      <SectionTitle>App language</SectionTitle>
-      <Body>English</Body>
-      <Body muted>Conversation languages can be changed in your profile.</Body>
-      <SectionTitle>Account</SectionTitle>
-      {state.status === 'signedIn' ? <TextAction label="Edit public profile" onPress={() => router.push('/profile-edit')} /> : null}
-      {state.status === 'signedIn' ? <TextAction destructive label="Sign out" onPress={() => setConfirm(true)} /> : null}
-      {state.status === 'signedIn' ? <TextAction destructive label="Delete account" onPress={() => router.push('/delete-account')} /> : null}
-      <TextAction label="Check deletion status" onPress={() => router.push('/deletion-status')} />
-      <SectionTitle>Help shape Fancy</SectionTitle>
-      {state.status === 'signedIn' ? <AnalyticsConsent manager={analytics} /> : null}
-      {state.status === 'signedIn' ? <TextAction label="Product survey" onPress={() => router.push('/survey')} /> : null}
+    <AccountPage testID="settings">
+      {signedIn ? (
+        <>
+          <Text accessibilityRole="header" style={[accountText.h2, { marginTop: 4 }]}>Notifications & previews</Text>
+          <SettingsLink label="Notifications" onPress={() => router.push('/notifications')} />
+          <Text style={[accountText.muted, { marginTop: 6 }]}>Meal updates and messages always stay in Inbox. Device banners aren’t part of this version.</Text>
+        </>
+      ) : null}
+
+      <Text accessibilityRole="header" style={[accountText.h2, !signedIn && { marginTop: 4 }]}>Privacy & safety</Text>
+      <Text style={accountText.body}>Your name, photo and introduction help your table get to know you. Your email is private.</Text>
+      <Text style={accountText.body}>Meal groups require a confirmed seat. Private conversations require mutual choice after a shared meal.</Text>
+      {signedIn ? <InfoRow label="Blocked members" value="Manage on their profile" /> : null}
+      <InfoRow label="App language" value="English" />
+      <Text style={[accountText.muted, { marginTop: 6 }]}>Conversation languages can be changed in your profile.</Text>
+
+      {signedIn ? (
+        <>
+          <Text accessibilityRole="header" style={accountText.h2}>Help shape Fancy</Text>
+          <SettingsLink label="Product survey" onPress={() => router.push('/survey')} />
+          <AnalyticsConsent manager={analytics} />
+        </>
+      ) : null}
+
+      <Text accessibilityRole="header" style={accountText.h2}>Account</Text>
+      {signedIn ? <SettingsLink label="Edit public profile" onPress={() => router.push('/profile-edit')} /> : null}
+      <SettingsLink label="Check deletion status" onPress={() => router.push('/deletion-status')} />
+      {signedIn ? <SettingsLink danger label="Delete account" onPress={() => router.push('/delete-account')} /> : null}
+      {signedIn ? <SettingsLink danger label="Sign out" onPress={() => setConfirm(true)} /> : null}
+
       <Sheet visible={confirm} title="Sign out?" onClose={() => setConfirm(false)}>
         <Body>You’ll return to the account screen.</Body>
         <Primary secondary label="Stay signed in" onPress={() => setConfirm(false)} />
         <TextAction destructive label="Sign out" disabled={busy} onPress={() => void signOut()} />
       </Sheet>
-    </Screen>
+    </AccountPage>
   );
 }

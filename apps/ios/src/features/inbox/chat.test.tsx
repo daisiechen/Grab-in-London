@@ -1,4 +1,3 @@
-jest.mock('expo-router/react-navigation',()=>({useHeaderHeight:()=>0}));
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { AppState, type AppStateStatus } from 'react-native';
 import { ChatScreen, mergeMessages } from './ChatScreen.tsx';
@@ -6,7 +5,7 @@ import { InboxScreen, conversationKey } from './InboxScreen.tsx';
 import { createTestApp, renderApp, signIn } from '../../test/render.tsx';
 import { mockRouter, resetRouter, routeParams } from '../../test/router.ts';
 import { fail, ok, page } from '../../test/mock-fetch.ts';
-import { CONVERSATION_ID, MEAL_ID, application, me, publicProfile } from '../../test/fixtures.ts';
+import { CONVERSATION_ID, MEAL_ID, USER_ID, application, meal, me, publicProfile } from '../../test/fixtures.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
 jest.mock('expo-router', () => require('../../test/router.ts').expoRouterMock);
@@ -41,10 +40,16 @@ describe('InboxScreen', () => {
     ]));
     await renderApp(app, <InboxScreen />);
     expect(await screen.findByRole('button', { name: 'Sunday dinner, 2 unread' })).toBeOnTheScreen();
-    await fireEvent.press(screen.getByRole('radio', { name: 'Applications & next steps · 1' }));
+    expect(screen.getByText('Seat confirmed · Meal group')).toBeOnTheScreen();
+    expect(screen.getByText('2')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('tab', { name: 'Applications · 1' }));
+    expect(screen.getByRole('tab', { name: 'Applications · 1' })).toBeSelected();
     expect(screen.getByText('Pending dinner table')).toBeOnTheScreen();
     expect(screen.getByText(/18:00 BST.*London/)).toBeOnTheScreen();
-    expect(screen.getByText('Hosted by Maya Chen')).toBeOnTheScreen();
+    expect(screen.getByText('Waiting for host approval')).toBeOnTheScreen();
+    expect(screen.getByText(/^Maya Chen will review your introduction\. A pending request doesn’t hold a seat/)).toBeOnTheScreen();
+    expect(screen.getByLabelText('Applied; awaiting host approval; then group chat')).toBeOnTheScreen();
+    expect(screen.queryByText(/payment|Pay £|deposit/i)).toBeNull();
     await fireEvent.press(screen.getByRole('button', { name: /Pending dinner table,.*hosted by Maya Chen, Application pending/ }));
     expect(mockRouter.push).toHaveBeenCalledWith(`/meals/${MEAL_ID}`);
     expect(app.services.cache.get(conversationKey(CONVERSATION_ID))).toMatchObject({ title: 'Sunday dinner' });
@@ -105,7 +110,7 @@ describe('ChatScreen (S14)', () => {
     app.mock.on('POST', MSG_PATH, (c) => ok({ ...message('20', (c.body as { body: string }).body) }, 201));
     await renderApp(app, <ChatScreen />);
     await fireEvent.changeText(await screen.findByLabelText('Message'), '  See you at 7!  ');
-    await fireEvent.press(screen.getByRole('button', { name: 'Send' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Send message' }));
     expect(await screen.findByText('Not sent')).toBeOnTheScreen();
     expect(app.mock.callsTo('POST', MSG_PATH)).toHaveLength(1);
     await new Promise((r) => setTimeout(r, 50));
@@ -158,6 +163,7 @@ describe('ChatScreen (S14)', () => {
     app.mock.on('GET', MSG_PATH, page([]));
     app.mock.on('POST', `/v1/conversations/${CONVERSATION_ID}/leave`, ok(conversation({ canSend: false, version: '5' })));
     await renderApp(app, <ChatScreen />);
+    await fireEvent.press(await screen.findByRole('button', { name: 'Open group settings' }));
     await fireEvent.press(await screen.findByRole('button', { name: 'Leave group' }));
     await fireEvent.press(screen.getByRole('button', { name: 'Stay in group' }));
     expect(app.mock.callsTo('POST', /leave/)).toHaveLength(0);
@@ -167,6 +173,9 @@ describe('ChatScreen (S14)', () => {
     await waitFor(() => expect(app.mock.callsTo('POST', /leave/)).toHaveLength(1));
     expect(app.mock.callsTo('POST', /leave/)[0]).toMatchObject({ body: { confirm: true }, headers: { 'if-match': '"4"' } });
     expect(await screen.findByText(/You left the group/)).toBeOnTheScreen();
+    // Back on the chat view: the composer is replaced by the read-only bar.
+    expect(screen.getByText('History is read-only.')).toBeOnTheScreen();
+    expect(screen.queryByLabelText('Message')).toBeNull();
   });
 
   it('renders message bodies as plain text', () => {
@@ -187,4 +196,71 @@ it('acknowledges only rendered foreground progress and stops acknowledgements in
  await act(async()=>{appStateListener?.('background');});
  await fireEvent(screen.getByTestId('chat-messages'),'viewableItemsChanged',{viewableItems:[{isViewable:true,item:message('12')}]});
  expect(app.mock.calls.filter(c=>c.path.endsWith('/read'))).toHaveLength(1);
+});
+
+describe('ChatScreen demo layout', () => {
+  it('shows own vs others bubbles with sender, London time and day separators, plus the pinned meal context', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    app.services.cache.set(conversationKey(CONVERSATION_ID), conversation());
+    app.mock.on('GET', `/v1/meals/${MEAL_ID}`, ok({ meal: meal({ bookingDeclaration: { id: '11111111-1111-4111-8111-111111111111', revision: '1', status: 'REPORTED_CONFIRMED', declaredCount: 4, reportedAt: '2026-10-20T10:00:00Z', stale: false } }), myApplication: null, conversationId: CONVERSATION_ID }));
+    app.mock.on('GET', MSG_PATH, page([
+      { ...message('1', 'Shall we meet outside?'), createdAt: '2026-10-20T18:05:00Z' },
+      { ...message('2', 'Sounds lovely'), sender: publicProfile(USER_ID, 'Alex'), createdAt: '2026-10-21T09:30:00Z' },
+    ]));
+    await renderApp(app, <ChatScreen />);
+    expect(await screen.findByText('Shall we meet outside?')).toBeOnTheScreen();
+    expect(screen.getByRole('header', { name: 'Sunday dinner' })).toBeOnTheScreen();
+    expect(screen.getByText('Maya')).toBeOnTheScreen();
+    expect(screen.getByLabelText('Maya: Shall we meet outside?, 19:05')).toBeOnTheScreen();
+    expect(screen.getByLabelText('You: Sounds lovely, 10:30')).toBeOnTheScreen();
+    expect(screen.queryByText('Alex')).toBeNull();
+    expect(screen.getByText('TUE 20 OCT')).toBeOnTheScreen();
+    expect(screen.getByText('TODAY')).toBeOnTheScreen();
+    expect(await screen.findByText('Sun 25 Oct · 19:00')).toBeOnTheScreen();
+    expect(screen.getByText('Dishoom · Restaurant booked · Pay at the restaurant')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: /^View meal: Sun 25 Oct at 19:00/ }));
+    expect(mockRouter.push).toHaveBeenCalledWith(`/meals/${MEAL_ID}`);
+    await fireEvent.press(screen.getByRole('button', { name: 'View Maya’s profile' }));
+    expect(mockRouter.push).toHaveBeenCalledWith(`/profiles/${publicProfile().id}`);
+  });
+
+  it('group settings lists the table, opens the meal and returns to the chat without leaving', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    app.services.cache.set(conversationKey(CONVERSATION_ID), conversation());
+    app.mock.on('GET', `/v1/meals/${MEAL_ID}`, ok({ meal: meal({ members: [publicProfile(), publicProfile(USER_ID, 'Alex')] }), myApplication: null, conversationId: CONVERSATION_ID }));
+    app.mock.on('GET', MSG_PATH, page([]));
+    await renderApp(app, <ChatScreen />);
+    await fireEvent.changeText(await screen.findByLabelText('Message'), 'Draft kept');
+    await waitFor(() => expect(app.mock.callsTo('GET', `/v1/meals/${MEAL_ID}`)).toHaveLength(1));
+    await fireEvent.press(screen.getByRole('button', { name: 'Open group settings' }));
+    expect(screen.getByRole('header', { name: 'Group settings' })).toBeOnTheScreen();
+    expect(await screen.findByText('Host')).toBeOnTheScreen();
+    expect(screen.getByText('Guest · You')).toBeOnTheScreen();
+    expect(screen.getByRole('header', { name: 'Your membership' })).toBeOnTheScreen();
+    expect(screen.getByText('Group membership is separate from your meal participation.')).toBeOnTheScreen();
+    expect(screen.queryByLabelText('Message')).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: 'View meal' }));
+    expect(mockRouter.push).toHaveBeenCalledWith(`/meals/${MEAL_ID}`);
+    await fireEvent.press(screen.getByRole('button', { name: 'Back to chat' }));
+    expect(screen.getByLabelText('Message')).toHaveDisplayValue('Draft kept');
+    expect(app.mock.callsTo('POST', /leave/)).toHaveLength(0);
+    await fireEvent.press(screen.getByRole('button', { name: 'Back' }));
+    expect(mockRouter.back).toHaveBeenCalledTimes(1);
+  });
+
+  it('read-only history shows the lock bar and an archive separator', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    app.services.cache.set(conversationKey(CONVERSATION_ID), conversation({ canSend: false }));
+    app.mock.on('GET', MSG_PATH, page([{ ...message('3'), createdAt: '2026-10-15T20:00:00Z' }]));
+    await renderApp(app, <ChatScreen />);
+    expect(await screen.findByText('hello 3')).toBeOnTheScreen();
+    expect(screen.getByText('ARCHIVE · THU 15 OCT')).toBeOnTheScreen();
+    expect(screen.getByText('History is read-only.')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Open group settings' }));
+    expect(screen.getByText('This group is read-only. Your earlier messages remain available.')).toBeOnTheScreen();
+    expect(screen.queryByRole('button', { name: 'Leave group' })).toBeNull();
+  });
 });

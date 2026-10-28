@@ -14,7 +14,7 @@ export function ProfileFormView({ form, onChange, error, mode }: { form: Profile
   const set = (patch: Partial<ProfileForm>) => onChange({ ...form, ...patch });
   const fieldError = (f: ProfileField) => (error?.field === f ? error.message : null);
   return (
-    <View style={{ gap: 16 }}>
+    <View style={{ gap: 14 }}>
       <Field label="First name" value={form.displayName} onChangeText={(displayName) => set({ displayName })} maxLength={40} placeholder="Alex" textContentType="givenName" autoComplete="given-name" error={fieldError('displayName')} />
       <Field
         label="A little about you"

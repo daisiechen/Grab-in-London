@@ -6,9 +6,9 @@ import { useServices } from '../../services.tsx';
 import { useQuery, loadErrorMessage } from '../../api/useQuery.ts';
 import { Primary, TextAction } from '../../ui/Button.tsx';
 import { ChoiceGroup, MultiChoice } from '../../ui/ChoiceGroup.tsx';
+import { Text, View } from 'react-native';
 import { FormMessage } from '../../ui/FormMessage.tsx';
-import { Screen } from '../../ui/Screen.tsx';
-import { Body, Heading } from '../../ui/Text.tsx';
+import { AccountPage, accountText } from '../../ui/AccountPage.tsx';
 
 type Survey = ResponseOf<'getSurvey'>['data'];
 type Reason = (typeof SURVEY_REASONS)[number];
@@ -36,7 +36,7 @@ function SurveyScreenContent() {
     }
   }, [q.data]);
 
-  if (!q.data) return <Screen>{q.error ? <FormMessage message={loadErrorMessage(q.error)} /> : <Body muted>Loading…</Body>}</Screen>;
+  if (!q.data) return <AccountPage>{q.error ? <View style={{ gap: 8 }}><FormMessage message={loadErrorMessage(q.error)} /><Primary secondary label="Try again" onPress={() => void q.reload()} /></View> : <Text style={accountText.muted}>Loading…</Text>}</AccountPage>;
   const survey = q.data;
 
   const save = async () => {
@@ -62,14 +62,18 @@ function SurveyScreenContent() {
   };
 
   return (
-    <Screen testID="survey">
-      <Heading>Help shape Fancy.</Heading>
-      <Body>An optional survey about Fancy. You can update your answers whenever you like.</Body>
-      <ChoiceGroup<'yes' | 'no'> label="Would you join another Fancy meal?" options={[['yes', 'Yes'], ['no', 'No']]} value={again === null ? null : again ? 'yes' : 'no'} onChange={(v) => setAgain(v === 'yes')} />
-      {again !== null ? <TextAction label="Clear answer" onPress={() => setAgain(null)} /> : null}
-      <MultiChoice<Reason> label="What shapes your experience of Fancy? · optional" options={ORDER.map((r) => [r, REASON_LABELS[r]] as const)} values={reasons} onToggle={(r) => setReasons((cur) => (cur.includes(r) ? cur.filter((x) => x !== r) : [...cur, r]))} />
-      <FormMessage message={message?.text ?? null} tone={message?.tone ?? 'error'} />
-      <Primary label={survey.submittedAt ? 'Update survey' : 'Save survey'} busy={busy} onPress={() => void save()} />
-    </Screen>
+    <AccountPage testID="survey" footer={<><FormMessage message={message?.text ?? null} tone={message?.tone ?? 'error'} /><Primary label={survey.submittedAt ? 'Update survey' : 'Save survey'} busy={busy} onPress={() => void save()} /></>}>
+      <Text accessibilityRole="header" style={accountText.h1}>Help shape Fancy.</Text>
+      <Text style={accountText.prose}>An optional survey about Fancy. You can update your answers whenever you like.</Text>
+      <Text accessibilityRole="header" style={accountText.h2}>Your experience of Fancy</Text>
+      <Text style={[accountText.muted, { marginBottom: 12 }]}>This survey is about Fancy overall. It is separate from your private meal rating and your choice to reconnect with a person. Only authorised staff can see your answers.</Text>
+      <View style={{ gap: 14 }}>
+        <View style={{ alignItems: 'flex-start' }}>
+          <ChoiceGroup<'yes' | 'no'> label="Would you join another Fancy meal?" options={[['yes', 'Yes'], ['no', 'No']]} value={again === null ? null : again ? 'yes' : 'no'} onChange={(v) => setAgain(v === 'yes')} />
+          {again !== null ? <TextAction label="Clear answer" onPress={() => setAgain(null)} /> : null}
+        </View>
+        <MultiChoice<Reason> label="What shapes your experience of Fancy? · optional" options={ORDER.map((r) => [r, REASON_LABELS[r]] as const)} values={reasons} onToggle={(r) => setReasons((cur) => (cur.includes(r) ? cur.filter((x) => x !== r) : [...cur, r]))} />
+      </View>
+    </AccountPage>
   );
 }

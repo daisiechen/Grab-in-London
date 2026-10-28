@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import type { ResponseOf } from '@fancy/client';
@@ -7,18 +7,38 @@ import { MY_MEAL_SECTIONS } from '@fancy/contracts';
 import { allPages } from '../../api/pages.ts';
 import { useServices, useSessionState } from '../../services.tsx';
 import { loadErrorMessage, useQuery } from '../../api/useQuery.ts';
-import { Primary } from '../../ui/Button.tsx';
-import { ChoiceGroup } from '../../ui/ChoiceGroup.tsx';
+import { Primary, TextAction } from '../../ui/Button.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
+import { Icon } from '../../ui/Icon.tsx';
 import { MealCard } from '../../ui/MealCard.tsx';
-import { Body, Heading } from '../../ui/Text.tsx';
-import { colors, spacing } from '../../ui/tokens.ts';
+import { createStyles } from '../../ui/styles.ts';
+import { colors } from '../../ui/tokens.ts';
 import { rememberReturnTo } from '../auth/intent.ts';
-import { applicationLabel } from './format.ts';
+import { loadInbox, type InboxItem } from '../inbox/InboxScreen.tsx';
+import { applicationLabel, bookingLabel } from './format.ts';
 
 type Section = (typeof MY_MEAL_SECTIONS)[number];
 type Item = ResponseOf<'myMeals'>['data'][number];
 const LABELS: Record<Section, string> = { UPCOMING: 'Upcoming', APPLICATIONS: 'Applications', HOSTING: 'Hosting', PAST: 'Past', CANCELLED: 'Cancelled' };
+
+/** Per-row status line: application progress for applicants, host-reported booking for seat holders (r07). */
+export function rowStatus(item: Item, section: Section): string {
+  if (item.meal.status === 'CANCELLED') return 'Meal cancelled';
+  if (item.application?.state === 'CANCELLED') return applicationLabel(item.application);
+  if (section === 'PAST') return item.role === 'HOST' ? 'Completed · You hosted' : 'Completed';
+  if (item.role === 'HOST') return `You’re hosting · ${bookingLabel(item.meal)}`;
+  if (item.role === 'GUEST') return `Seat confirmed · ${bookingLabel(item.meal)}`;
+  return applicationLabel(item.application);
+}
+
+function Header() {
+  return (
+    <View>
+      <Text style={styles.eyebrow}>GOOD PLANS, ALL IN ONE PLACE</Text>
+      <Text accessibilityRole="header" style={styles.h1}>Your next good meal.</Text>
+    </View>
+  );
+}
 
 /** Five own sections (API §6); sections may intentionally overlap. */
 export function MyMealsScreen() {
@@ -27,11 +47,15 @@ export function MyMealsScreen() {
   const [section, setSection] = useState<Section>('UPCOMING');
   if (state.status !== 'signedIn') {
     return (
-      <SafeAreaView style={styles.safe}>
+      <SafeAreaView style={styles.safe} edges={['top']}>
         <View style={styles.pad}>
-          <Heading>Your meals</Heading>
-          <Body>Sign in to see the tables you’re hosting and joining.</Body>
-          <Primary label="Sign in" onPress={() => { rememberReturnTo('/meals'); router.push('/sign-in'); }} />
+          <Header />
+          <View style={styles.empty}>
+            <Icon name="Calendar" size={30} color={colors.forest} />
+            <Text style={styles.emptyTitle}>A good meal is waiting.</Text>
+            <Text style={styles.emptyBody}>Sign in to see the tables you’re hosting and joining.</Text>
+            <View style={styles.emptyAction}><Primary label="Sign in" onPress={() => { rememberReturnTo('/meals'); router.push('/sign-in'); }} /></View>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -40,9 +64,14 @@ export function MyMealsScreen() {
 }
 
 function SignedInMeals({ section, onSection }: { section: Section; onSection: (s: Section) => void }) {
-  const { api } = useServices();
+  const services = useServices();
+  const { api } = services;
   const router = useRouter();
   const q = useQuery<Item[]>(`myMeals:${section}`, () => allPages((cursor) => api.call('myMeals', { query: { section, limit: 50, ...(cursor ? { cursor } : {}) } })));
+  // Group chats are located through the Inbox list (CONTRACT GAP: myMeals carries no conversationId).
+  const inbox = useQuery<InboxItem[]>(section === 'APPLICATIONS' ? null : 'inbox', () => loadInbox(services));
+  const chatFor = (mealId: string) => inbox.data?.find((i) => i.conversation?.kind === 'GROUP' && i.conversation.mealId === mealId)?.conversation ?? null;
+  const hosting = section === 'HOSTING';
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <FlatList
@@ -51,35 +80,76 @@ function SignedInMeals({ section, onSection }: { section: Section; onSection: (s
         data={q.data ?? []}
         keyExtractor={(i) => `${i.meal.id}:${i.application?.id ?? i.role}`}
         ListHeaderComponent={
-          <View style={{ gap: 12, marginBottom: 12 }}>
-            <Heading>Meals</Heading>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <ChoiceGroup<Section> label="Sections" options={MY_MEAL_SECTIONS.map((s) => [s, LABELS[s]] as const)} value={section} onChange={onSection} />
+          <View style={styles.headerBlock}>
+            <Header />
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tabsScroll} contentContainerStyle={styles.tabs} accessibilityRole="tablist" accessibilityLabel="Meal categories">
+              {MY_MEAL_SECTIONS.map((s) => (
+                <Pressable key={s} accessibilityRole="tab" accessibilityLabel={LABELS[s]} accessibilityState={{ selected: section === s }} style={[styles.tab, section === s && styles.tabSelected]} onPress={() => onSection(s)}>
+                  <Text style={[styles.tabText, section === s && styles.tabTextSelected]}>{LABELS[s]}</Text>
+                </Pressable>
+              ))}
             </ScrollView>
-            {q.error ? <FormMessage message={loadErrorMessage(q.error)} /> : null}
-            {q.error ? <Primary secondary label="Try again" onPress={() => void q.reload()} /> : null}
+            {q.error ? <View style={styles.error}><FormMessage message={loadErrorMessage(q.error)} /><Primary secondary label="Try again" onPress={() => void q.reload()} /></View> : null}
           </View>
         }
-        renderItem={({ item }) => (
-          <MealCard meal={item.meal} status={item.role === 'HOST' ? 'You’re hosting' : applicationLabel(item.application)} onPress={() => router.push(`/meals/${item.meal.id}`)} />
-        )}
-        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        renderItem={({ item, index }) => {
+          const chat = chatFor(item.meal.id);
+          const past = section === 'PAST';
+          const canManage = item.role === 'HOST' && item.meal.status === 'OPEN' && !past;
+          const feedback = past && item.meal.allowedActions.includes('POST_MEAL');
+          return (
+            <View style={[styles.listMeal, index === 0 && styles.listMealFirst]}>
+              <MealCard compact meal={item.meal} onPress={() => router.push(`/meals/${item.meal.id}`)} onPerson={(p) => router.push(`/profiles/${p.id}`)} />
+              <View style={styles.foot}>
+                <View style={styles.tag}><Text style={styles.tagText} numberOfLines={1}>{rowStatus(item, section)}</Text></View>
+                {canManage ? <TextAction label="Manage" onPress={() => router.push(`/meals/${item.meal.id}/host`)} /> : null}
+              </View>
+              {feedback ? <View style={styles.action}><Primary secondary label="Leave feedback" onPress={() => router.push(`/post-meal/${item.meal.id}`)} /></View> : null}
+              {chat && section !== 'APPLICATIONS' ? (
+                <View style={styles.chatLink}><TextAction label={chat.dissolved || !chat.canSend ? 'Open group chat · read-only history' : 'Open group chat'} onPress={() => router.push(`/chat/${chat.id}`)} /></View>
+              ) : null}
+            </View>
+          );
+        }}
         ListEmptyComponent={
           q.data ? (
-            <View style={{ gap: 10 }}>
-              <Body muted>{section === 'HOSTING' ? 'You’re not hosting any meals yet.' : section === 'APPLICATIONS' ? 'No requests yet.' : 'Nothing here yet.'}</Body>
-              <Primary label={section === 'HOSTING' ? 'Create a meal' : 'Explore meals'} onPress={() => router.push(section === 'HOSTING' ? '/create' : '/')} />
+            <View style={styles.empty}>
+              <Icon name="Calendar" size={30} color={colors.forest} />
+              <Text style={styles.emptyTitle}>{hosting ? 'Your table starts with you.' : 'A good meal is waiting.'}</Text>
+              <Text style={styles.emptyBody}>{section === 'APPLICATIONS' ? 'Your requests will appear here.' : section === 'PAST' ? 'Meals you’ve shared will appear here.' : section === 'CANCELLED' ? 'Cancelled meals will appear here.' : 'Find a table that fits your evening.'}</Text>
+              <View style={styles.emptyAction}><Primary label={hosting ? 'Create a meal' : 'Explore meals'} icon="ArrowRight" onPress={() => (hosting ? router.push('/create') : router.navigate('/'))} /></View>
             </View>
           ) : undefined
         }
         refreshing={q.loading}
-        onRefresh={() => void q.reload()}
+        onRefresh={() => { void q.reload(); if (section !== 'APPLICATIONS') void inbox.reload(); }}
       />
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createStyles({
   safe: { flex: 1, backgroundColor: colors.white },
-  pad: { padding: spacing.page, gap: 12 },
+  pad: { paddingHorizontal: 16, paddingTop: 2, paddingBottom: 24 },
+  headerBlock: { marginBottom: 14 },
+  eyebrow: { fontSize: 9, letterSpacing: 1.3, fontWeight: '700', color: '#647a6b', marginBottom: 6 },
+  h1: { fontSize: 27, lineHeight: 31, letterSpacing: -1.1, fontWeight: '700', color: colors.ink },
+  tabsScroll: { marginTop: 14, marginHorizontal: -16 },
+  tabs: { gap: 7, paddingHorizontal: 16 },
+  tab: { borderWidth: 1, borderColor: colors.line, paddingVertical: 8, paddingHorizontal: 12, borderRadius: 8 },
+  tabSelected: { backgroundColor: colors.forest, borderColor: colors.forest },
+  tabText: { fontSize: 12, color: colors.ink },
+  tabTextSelected: { color: colors.white, fontWeight: '600' },
+  error: { gap: 10, marginTop: 12 },
+  listMeal: { borderBottomWidth: 1, borderBottomColor: colors.line, paddingVertical: 16 },
+  listMealFirst: { paddingTop: 0 },
+  foot: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 10, minHeight: 28 },
+  tag: { flexShrink: 1, paddingVertical: 4, paddingHorizontal: 8, backgroundColor: '#f0f3ec', borderRadius: 7 },
+  tagText: { fontSize: 11, lineHeight: 15, color: '#536c5b', fontWeight: '600' },
+  action: { marginTop: 10 },
+  chatLink: { alignItems: 'flex-start' },
+  empty: { alignItems: 'center', paddingVertical: 28, paddingHorizontal: 10, gap: 8 },
+  emptyTitle: { fontSize: 18, fontWeight: '700', color: colors.ink, textAlign: 'center', marginTop: 4 },
+  emptyBody: { fontSize: 13, lineHeight: 19, color: colors.muted, textAlign: 'center' },
+  emptyAction: { alignSelf: 'stretch', marginTop: 10 },
 });

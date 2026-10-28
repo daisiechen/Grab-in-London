@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Share } from 'react-native';
+import { Share, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ApiError } from '@fancy/client';
 import { useServices, useSessionState } from '../../services.tsx';
@@ -8,8 +8,8 @@ import { base64UrlEncode } from '../../platform/base64url.ts';
 import { Primary, TextAction } from '../../ui/Button.tsx';
 import { Field } from '../../ui/Field.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
-import { Screen } from '../../ui/Screen.tsx';
-import { Body, Heading } from '../../ui/Text.tsx';
+import { AccountPage, SummaryBox, accountText } from '../../ui/AccountPage.tsx';
+import { Notice } from '../../ui/Bits.tsx';
 import { parseAuthRedirect,providerState } from '../auth/oauth.ts';
 import { otpErrorMessage } from '../auth/otp.ts';
 import { StaleSessionError } from '../auth/session.ts';
@@ -43,17 +43,21 @@ export function DeleteAccountScreen() {
 
   if (stage.kind === 'done' && (state.status==='signedOut'||state.status==='signedIn'&&state.session.user.id===stage.ownerId)) {
     return (
-      <Screen testID="deletion-receipt">
-        <Heading>Your account is being deleted</Heading>
-        <Body>{`Status: ${stage.status.toLowerCase()}. You’ve been signed out on this iPhone and its saved data has been removed.`}</Body>
-        <Body>Your reference is saved securely on this device. Save or share a copy to check status elsewhere. You can forget the saved reference on the deletion status screen.</Body>
-        <Body>{stage.receipt}</Body>
-        <Primary secondary label="Save or share reference" onPress={() => void Share.share({ message: `Fancy account deletion reference: ${stage.receipt}` })} />
-        <Primary label="Done" onPress={() => router.replace('/')} />
-      </Screen>
+      <AccountPage testID="deletion-receipt" footer={<Primary label="Done" onPress={() => router.replace('/')} />}>
+        <Text accessibilityRole="header" style={accountText.h1}>Your account is being deleted</Text>
+        <Text style={accountText.prose}>{`Status: ${stage.status.toLowerCase()}. You’ve been signed out on this iPhone and its saved data has been removed.`}</Text>
+        <SummaryBox>
+          <Text style={accountText.muted}>Deletion reference</Text>
+          <Text selectable style={accountText.code}>{stage.receipt}</Text>
+        </SummaryBox>
+        <Text style={accountText.muted}>Your reference is saved securely on this device. Save or share a copy to check status elsewhere. You can forget the saved reference on the deletion status screen.</Text>
+        <View style={{ marginTop: 12 }}>
+          <Primary secondary label="Save or share reference" onPress={() => void Share.share({ message: `Fancy account deletion reference: ${stage.receipt}` })} />
+        </View>
+      </AccountPage>
     );
   }
-  if (state.status !== 'signedIn') return <Screen><Body>Please sign in to delete your account.</Body></Screen>;
+  if (state.status !== 'signedIn') return <AccountPage><Text style={accountText.prose}>Please sign in to delete your account.</Text></AccountPage>;
   const me = state.session.user;
   const amr = state.session.amr;
 
@@ -120,20 +124,23 @@ export function DeleteAccountScreen() {
     finally {if(mounted.current)setBusy(false);}
   };
 
-  return (
-    <Screen testID="delete-account">
-      <Heading>Delete your account?</Heading>
-      <Body>Your profile is removed, you leave your groups, and upcoming places and hosted meals are cancelled. This can’t be undone.</Body>
-      {stage.kind === 'reauthEmail' ? (
-        <>
-          <Field label="6-digit code" value={code} onChangeText={(v) => setCode(v.replace(/\D/g, '').slice(0, 6))} keyboardType="number-pad" textContentType="oneTimeCode" maxLength={6} />
-          <Primary label="Confirm and delete" busy={busy} onPress={() => void verifyCode()} />
-        </>
-      ) : (
-        <Primary label="Delete my account" busy={busy} onPress={() => void requestDeletion()} />
-      )}
+  const footer = (
+    <>
       <FormMessage message={error} />
+      {stage.kind === 'reauthEmail'
+        ? <Primary label="Confirm and delete" busy={busy} onPress={() => void verifyCode()} />
+        : <Primary label="Delete my account" busy={busy} onPress={() => void requestDeletion()} />}
       <TextAction label="Keep my account" onPress={() => router.back()} />
-    </Screen>
+    </>
+  );
+  return (
+    <AccountPage testID="delete-account" footer={footer}>
+      <Text accessibilityRole="header" style={accountText.h1}>Delete your account?</Text>
+      <Text style={accountText.prose}>Your profile is removed, you leave your groups, and upcoming places and hosted meals are cancelled. This can’t be undone.</Text>
+      <Notice icon>For your security we’ll ask you to confirm it’s you. You’ll get a deletion reference to check the status later, even when signed out.</Notice>
+      {stage.kind === 'reauthEmail' ? (
+        <Field label="6-digit code" value={code} onChangeText={(v) => setCode(v.replace(/\D/g, '').slice(0, 6))} keyboardType="number-pad" textContentType="oneTimeCode" maxLength={6} />
+      ) : null}
+    </AccountPage>
   );
 }

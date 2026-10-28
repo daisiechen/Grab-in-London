@@ -1,12 +1,14 @@
 import { SessionScope } from '../../auth/SessionScope.tsx';
 import { useMemo, useState } from 'react';
-import { useRouter } from 'expo-router';
-import { Keyboard } from 'react-native';
+import { Stack, useRouter } from 'expo-router';
+import { Keyboard, Text, View } from 'react-native';
+import { ActionPage, BRAND_PAPER } from '../../../ui/ActionPage.tsx';
 import { Primary } from '../../../ui/Button.tsx';
 import { CheckRow } from '../../../ui/CheckRow.tsx';
 import { FormMessage } from '../../../ui/FormMessage.tsx';
-import { Screen } from '../../../ui/Screen.tsx';
-import { Body, Eyebrow, Heading } from '../../../ui/Text.tsx';
+import { createStyles } from '../../../ui/styles.ts';
+import { colors } from '../../../ui/tokens.ts';
+import { authText } from '../../auth/screens/auth-text.ts';
 import { useServices, useSessionState } from '../../../services.tsx';
 import { POLICY_VERSION } from '../../../config.ts';
 import { takeReturnTo } from '../../auth/intent.ts';
@@ -34,10 +36,9 @@ function ProfileSetupScreenContent() {
 
   if (!me || !form) {
     return (
-      <Screen>
-        <Body>Please sign in to continue.</Body>
-        <Primary label="Sign in" onPress={() => router.replace('/sign-in')} />
-      </Screen>
+      <ActionPage paper footer={<Primary label="Sign in" onPress={() => router.replace('/sign-in')} />}>
+        <Text style={authText.prose}>Please sign in to continue.</Text>
+      </ActionPage>
     );
   }
   const requireConsent = needsConsent(me);
@@ -58,15 +59,21 @@ function ProfileSetupScreenContent() {
   };
 
   return (
-    <Screen testID="profile-setup">
-      <Eyebrow>ONE LAST INTRODUCTION</Eyebrow>
-      <Heading>A face. A little story. You.</Heading>
-      <Body>Give your future table a little context. Your email stays private.</Body>
+    <ActionPage testID="profile-setup" paper footer={<Primary label="Take your seat" icon="ArrowRight" busy={busy} onPress={() => void submit()} />}>
+      <Stack.Screen options={{ headerStyle: { backgroundColor: BRAND_PAPER }, headerShadowVisible: false }} />
+      <Text style={authText.eyebrow}>ONE LAST INTRODUCTION</Text>
+      <Text accessibilityRole="header" style={authText.h1}>A face. A little story. You.</Text>
+      <Text style={authText.prose}>Give your future table a little context. Your email stays private.</Text>
       <ProfileFormView form={form} onChange={setForm} error={error} mode="setup" />
-      <Body muted>Add work, school, hometown and more interests in Edit profile whenever you like.</Body>
-      {requireConsent ? <CheckRow label="I’m 18 or older and I’ll keep this community welcoming, respectful and friendship-first." checked={consent} onChange={setConsent} /> : null}
-      <FormMessage message={error?.message ?? null} />
-      <Primary label="Take your seat" busy={busy} onPress={() => void submit()} />
-    </Screen>
+      <Text style={styles.note}>Add work, school, hometown and more interests in Edit profile whenever you like.</Text>
+      {requireConsent ? <View style={styles.consent}><CheckRow label="I’m 18 or older and I’ll keep this community welcoming, respectful and friendship-first." checked={consent} onChange={setConsent} /></View> : null}
+      <View style={styles.message}><FormMessage message={error?.message ?? null} /></View>
+    </ActionPage>
   );
 }
+
+const styles = createStyles({
+  note: { fontSize: 11, lineHeight: 16, color: colors.muted, marginTop: 14 },
+  consent: { marginTop: 10 },
+  message: { marginTop: 6 },
+});

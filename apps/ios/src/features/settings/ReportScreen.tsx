@@ -1,18 +1,20 @@
 import { SessionScope } from '../auth/SessionScope.tsx';
 import { useRef, useState } from 'react';
+import { Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ApiError, type ResponseOf } from '@fancy/client';
 import { REPORT_TARGET_TYPES } from '@fancy/contracts';
 import { useServices, useSessionState } from '../../services.tsx';
-import { Primary } from '../../ui/Button.tsx';
+import { Primary, TextAction } from '../../ui/Button.tsx';
 import { Field } from '../../ui/Field.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
-import { Screen } from '../../ui/Screen.tsx';
-import { Body, Heading } from '../../ui/Text.tsx';
+import { AccountPage, SummaryBox, accountText } from '../../ui/AccountPage.tsx';
 import { rememberReturnTo } from '../auth/intent.ts';
 
 type Receipt = ResponseOf<'createReport'>['data'];
 type Target = (typeof REPORT_TARGET_TYPES)[number];
+const STATUS_LABELS: Record<Receipt['status'], string> = { RECEIVED: 'Received', IN_REVIEW: 'In review', RESPONDED: 'Responded' };
+const TARGET_LABELS: Record<Target, string> = { USER: 'a member', MEAL: 'a meal', MESSAGE: 'a message' };
 
 /** Private report → receipt (not a resolution). Route: /report?targetType=USER|MEAL|MESSAGE&targetId=… */
 export function ReportScreen() {
@@ -31,24 +33,47 @@ function ReportScreenContent() {
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [busy, setBusy] = useState(false);
   const intent = useRef<{ key: string; body: string } | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [statusError, setStatusError] = useState<string | null>(null);
 
-  if (!targetType || !targetId) return <Screen><FormMessage message="This report link isn’t valid." /></Screen>;
+  if (!targetType || !targetId) return <AccountPage><FormMessage message="This report link isn’t valid." /></AccountPage>;
   if (state.status !== 'signedIn') {
     return (
-      <Screen>
-        <Body>Sign in to send a private report.</Body>
-        <Primary label="Sign in" onPress={() => { rememberReturnTo('/settings'); router.push('/sign-in'); }} />
-      </Screen>
+      <AccountPage footer={<Primary label="Sign in" onPress={() => { rememberReturnTo('/settings'); router.push('/sign-in'); }} />}>
+        <Text accessibilityRole="header" style={accountText.h1}>Share a private concern</Text>
+        <Text style={accountText.prose}>Sign in to send a private report.</Text>
+      </AccountPage>
     );
   }
   if (receipt) {
+    const refresh = async () => {
+      setChecking(true);
+      setStatusError(null);
+      try {
+        const fresh = (await api.call('reportStatus', { params: { reportId: receipt.id } })).data;
+        if (fresh.id === receipt.id) setReceipt(fresh);
+      } catch (e) {
+        setStatusError(e instanceof ApiError && e.kind === 'network' ? 'We couldn’t check the status. Check your connection and try again.' : 'We couldn’t check the status. Please try again.');
+      } finally {
+        setChecking(false);
+      }
+    };
     return (
-      <Screen testID="report-receipt">
-        <Heading>Report received</Heading>
-        <Body>{`Reference ${receipt.receipt}. Our team reviews reports privately; the other person isn’t told who reported.`}</Body>
-        <Body muted>You can check the status of your report later in Settings.</Body>
-        <Primary label="Done" onPress={() => router.back()} />
-      </Screen>
+      <AccountPage testID="report-receipt" footer={<Primary label="Done" onPress={() => router.back()} />}>
+        <Text accessibilityRole="header" style={accountText.h1}>Report received</Text>
+        <Text style={accountText.prose}>Our team reviews reports privately. The other person isn’t told who reported.</Text>
+        <SummaryBox>
+          <Text style={accountText.muted}>Reference number</Text>
+          <Text selectable style={accountText.strong}>{receipt.receipt}</Text>
+          <Text style={[accountText.body, { marginTop: 6, marginBottom: 0 }]}>{`Status: ${STATUS_LABELS[receipt.status]}`}</Text>
+          {receipt.publicOutcome ? <Text style={accountText.body}>{receipt.publicOutcome}</Text> : null}
+        </SummaryBox>
+        <Text style={accountText.muted}>Keep this reference if you contact support. A receipt is not a decision about the report.</Text>
+        <View style={{ alignItems: 'flex-start' }}>
+          <TextAction label="Check report status" disabled={checking} onPress={() => void refresh()} />
+        </View>
+        <FormMessage message={statusError} />
+      </AccountPage>
     );
   }
 
@@ -70,12 +95,10 @@ function ReportScreenContent() {
   };
 
   return (
-    <Screen testID="report">
-      <Heading>Report a concern</Heading>
-      <Body>Reports are private. Tell us what happened; you’ll get a reference number.</Body>
-      <Field label="What happened?" value={details} onChangeText={setDetails} maxLength={1000} multiline />
-      <FormMessage message={error} />
-      <Primary label="Send report" busy={busy} onPress={() => void send()} />
-    </Screen>
+    <AccountPage testID="report" footer={<><FormMessage message={error} /><Primary label="Submit report" busy={busy} onPress={() => void send()} /></>}>
+      <Text accessibilityRole="header" style={accountText.h1}>Share a private concern</Text>
+      <Text style={[accountText.prose, { marginBottom: 14 }]}>{`Reports about ${TARGET_LABELS[targetType]} are private and separate from public references. You’ll get a reference number.`}</Text>
+      <Field label="What would you like us to know?" value={details} onChangeText={setDetails} maxLength={1000} multiline hint="Up to 1,000 characters." />
+    </AccountPage>
   );
 }

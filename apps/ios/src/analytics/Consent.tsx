@@ -1,7 +1,8 @@
 import { useState,useSyncExternalStore } from 'react';
 import { View } from 'react-native';
 import { Body,SectionTitle } from '../ui/Text.tsx';
-import { Primary,TextAction } from '../ui/Button.tsx';
+import { Primary } from '../ui/Button.tsx';
+import { SettingsLink } from '../ui/AccountPage.tsx';
 import { FormMessage } from '../ui/FormMessage.tsx';
 import { Sheet } from '../ui/Sheet.tsx';
 import { useSessionState } from '../services.tsx';
@@ -22,7 +23,7 @@ function Choices({manager,onChosen}:{manager:AnalyticsManager;onChosen?:()=>void
 /** Settings row: collapsed once a choice exists, expandable to change it. */
 export function AnalyticsConsent({manager}:{manager:AnalyticsManager}) {
   const state=useSyncExternalStore(manager.subscribe,manager.getState),[expanded,setExpanded]=useState(false);
-  if(state.choice!=='unknown'&&!expanded&&!state.error)return <TextAction label="Analytics preferences" onPress={()=>setExpanded(true)}/>;
+  if(state.choice!=='unknown'&&!expanded&&!state.error)return <SettingsLink label="Analytics preferences" onPress={()=>setExpanded(true)}/>;
   return <View style={{gap:8}}><SectionTitle>Help improve Fancy</SectionTitle><Choices manager={manager} onChosen={()=>setExpanded(false)}/></View>;
 }
 

@@ -6,7 +6,7 @@ import { SettingsScreen } from '../../settings/SettingsScreen.tsx';
 import { createTestApp, renderApp, signIn } from '../../../test/render.tsx';
 import { mockRouter, resetRouter } from '../../../test/router.ts';
 import { fail, noContent, ok } from '../../../test/mock-fetch.ts';
-import { incompleteMe, me } from '../../../test/fixtures.ts';
+import { incompleteMe, me, publicProfile } from '../../../test/fixtures.ts';
 import { clearReturnTo, peekReturnTo, rememberReturnTo } from '../../auth/intent.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
@@ -99,6 +99,31 @@ describe('MyProfileScreen and sign-out (QA-AUTH-006 / QA-AUTH-014)', () => {
     expect(peekReturnTo()).toBe('/profile');
   });
 
+  it('own profile starts with the portrait row: gear to Settings, Edit profile, and published references', async () => {
+    const app = createTestApp();
+    const user = me();
+    await signIn(app, user);
+    app.mock.on('GET', `/v1/profiles/${user.id}`, ok({ profile: { ...publicProfile(user.id, user.displayName ?? 'Alex') }, reviews: [{ id: '5a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d', mealId: '6a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d', author: publicProfile('00000000-0000-4000-8000-0000000000e1', 'Emma'), body: 'Warm and curious company.', publishedAt: '2026-09-20T10:00:00Z' }], nextReviewCursor: null }));
+    await renderApp(app, <MyProfileScreen />);
+    expect(await screen.findByText('“Warm and curious company.”')).toBeOnTheScreen();
+    expect(screen.getByText('Emma · Shared a meal in September')).toBeOnTheScreen();
+    expect(screen.queryByText(/No published references yet/)).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: 'Settings' }));
+    expect(mockRouter.push).toHaveBeenLastCalledWith('/settings');
+    await fireEvent.press(screen.getByRole('button', { name: 'Edit profile' }));
+    expect(mockRouter.push).toHaveBeenLastCalledWith('/profile-edit');
+  });
+
+  it('own profile without references shows the empty line, even if the public read fails', async () => {
+    const app = createTestApp();
+    const user = me();
+    await signIn(app, user);
+    app.mock.on('GET', `/v1/profiles/${user.id}`, fail(503, 'PROVIDER_UNAVAILABLE'));
+    await renderApp(app, <MyProfileScreen />);
+    expect(await screen.findByText('No published references yet. Your first table is a good place to start.')).toBeOnTheScreen();
+    expect(screen.getByTestId('profile-own')).toBeOnTheScreen();
+  });
+
   it('cancelling sign-out keeps the session; confirming revokes, clears Keychain and cache', async () => {
     const app = createTestApp();
     await signIn(app, me());
@@ -132,5 +157,16 @@ describe('account-scoped profile draft', () => {
     await act(async () => { await app.services.session.expire(); });
     await act(async () => { await signIn(app, me({ id: '00000000-0000-4000-8000-000000000099', displayName: 'Jamie' })); });
     expect(screen.getByLabelText('First name')).toHaveDisplayValue('Jamie');
+  });
+});
+
+describe('ProfileSetupScreen layout', () => {
+  it('keeps “Take your seat” as the single pinned action and hides consent once accepted', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    await renderApp(app, <ProfileSetupScreen />);
+    expect(screen.getByText('A face. A little story. You.')).toBeOnTheScreen();
+    expect(screen.getAllByRole('button', { name: 'Take your seat' })).toHaveLength(1);
+    expect(screen.queryByRole('checkbox', { name: /I’m 18 or older/ })).toBeNull();
   });
 });

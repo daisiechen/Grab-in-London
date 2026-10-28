@@ -7,8 +7,9 @@ import { SurveyScreen } from './SurveyScreen.tsx';
 import { ReportScreen } from './ReportScreen.tsx';
 import { DeleteAccountScreen } from './DeleteAccountScreen.tsx';
 import { DeletionStatusScreen } from './DeletionStatusScreen.tsx';
+import { SettingsScreen } from './SettingsScreen.tsx';
 import { createTestApp, renderApp, signIn } from '../../test/render.tsx';
-import { resetRouter, routeParams } from '../../test/router.ts';
+import { mockRouter, resetRouter, routeParams } from '../../test/router.ts';
 import { fail, ok } from '../../test/mock-fetch.ts';
 import { HOST_ID, credentials, me, sessionInfo } from '../../test/fixtures.ts';
 import { base64UrlEncode } from '../../platform/base64url.ts';
@@ -30,9 +31,31 @@ describe('SurveyScreen (S24)', () => {
     expect(screen.getByRole('alert')).toHaveTextContent('Answer at least one question to save.');
     await fireEvent.press(screen.getByRole('radio', { name: 'Yes' }));
     await fireEvent.press(screen.getByRole('checkbox', { name: 'Company' }));
+    expect(screen.getByText(/separate from your private meal rating/)).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole('button', { name: 'Save survey' }));
     expect(await screen.findByText('Thank you. Your product survey is saved.')).toBeOnTheScreen();
     expect(app.mock.callsTo('PUT', '/v1/me/product-survey')[0]).toMatchObject({ body: { again: true, reasons: ['company'] }, headers: { 'if-match': '"1"' } });
+  });
+});
+
+describe('SettingsScreen groups', () => {
+  it('shows the demo groups for a signed-in member and routes each row', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    await renderApp(app, <SettingsScreen />);
+    for (const title of ['Notifications & previews', 'Privacy & safety', 'Help shape Fancy', 'Account']) expect(screen.getByRole('header', { name: title })).toBeOnTheScreen();
+    expect(screen.getByLabelText('App language: English')).toBeOnTheScreen();
+    expect(screen.getByRole('button', { name: 'Allow analytics' })).toBeOnTheScreen();
+    for (const [label, route] of [['Notifications', '/notifications'], ['Product survey', '/survey'], ['Edit public profile', '/profile-edit'], ['Check deletion status', '/deletion-status'], ['Delete account', '/delete-account']] as const) {
+      await fireEvent.press(screen.getByRole('button', { name: label }));
+      expect(mockRouter.push).toHaveBeenLastCalledWith(route);
+    }
+  });
+
+  it('guests only see public privacy copy and deletion status', async () => {
+    await renderApp(createTestApp(), <SettingsScreen />);
+    expect(screen.getByRole('button', { name: 'Check deletion status' })).toBeOnTheScreen();
+    for (const label of ['Sign out', 'Delete account', 'Product survey', 'Notifications', 'Edit public profile']) expect(screen.queryByRole('button', { name: label })).toBeNull();
   });
 });
 
@@ -43,10 +66,35 @@ describe('ReportScreen', () => {
     routeParams.current = { targetType: 'USER', targetId: HOST_ID };
     app.mock.on('POST', '/v1/reports', ok({ id: '1b2c3d4e-5f60-4a7b-8c9d-0e1f2a3b4c5d', receipt: 'FNC-7Q2K9', status: 'RECEIVED', targetType: 'USER', publicOutcome: null, createdAt: '2026-10-21T10:00:00Z' }, 201));
     await renderApp(app, <ReportScreen />);
-    await fireEvent.changeText(screen.getByLabelText('What happened?'), 'Unwelcome messages after the meal.');
-    await fireEvent.press(screen.getByRole('button', { name: 'Send report' }));
-    expect(await screen.findByText(/Reference FNC-7Q2K9/)).toBeOnTheScreen();
+    await fireEvent.changeText(screen.getByLabelText('What would you like us to know?'), 'Unwelcome messages after the meal.');
+    await fireEvent.press(screen.getByRole('button', { name: 'Submit report' }));
+    expect(await screen.findByText('FNC-7Q2K9')).toBeOnTheScreen();
+    expect(screen.getByText('Status: Received')).toBeOnTheScreen();
+    expect(screen.queryByText(/resolved|action taken/i)).toBeNull();
     expect(app.mock.callsTo('POST', '/v1/reports')[0]?.body).toEqual({ targetType: 'USER', targetId: HOST_ID, reason: 'private_concern', details: 'Unwelcome messages after the meal.' });
+  });
+
+  it('looks up the status of the report by its id and shows any public outcome', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    routeParams.current = { targetType: 'MEAL', targetId: HOST_ID };
+    const ID = '1b2c3d4e-5f60-4a7b-8c9d-0e1f2a3b4c5d';
+    const receipt = { id: ID, receipt: 'FNC-7Q2K9', status: 'RECEIVED', targetType: 'MEAL', publicOutcome: null, createdAt: '2026-10-21T10:00:00Z' };
+    app.mock.on('POST', '/v1/reports', ok(receipt, 201));
+    app.mock.on('GET', `/v1/me/reports/${ID}`, fail(503, 'PROVIDER_UNAVAILABLE'), 1);
+    app.mock.on('GET', `/v1/me/reports/${ID}`, ok({ ...receipt, status: 'RESPONDED', publicOutcome: 'We spoke with the host.' }));
+    await renderApp(app, <ReportScreen />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Submit report' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('Tell us what happened in up to 1,000 characters.');
+    expect(app.mock.callsTo('POST', '/v1/reports')).toHaveLength(0);
+    await fireEvent.changeText(screen.getByLabelText('What would you like us to know?'), 'The venue was not as described.');
+    await fireEvent.press(screen.getByRole('button', { name: 'Submit report' }));
+    await fireEvent.press(await screen.findByRole('button', { name: 'Check report status' }));
+    expect(await screen.findByText('We couldn’t check the status. Please try again.')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Check report status' }));
+    expect(await screen.findByText('Status: Responded')).toBeOnTheScreen();
+    expect(screen.getByText('We spoke with the host.')).toBeOnTheScreen();
+    expect(app.mock.callsTo('POST', '/v1/reports')).toHaveLength(1);
   });
 
   it('rejects an invalid target', async () => {

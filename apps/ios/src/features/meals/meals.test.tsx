@@ -95,7 +95,7 @@ describe('ApplyScreen (S07, QA-INPUT-017..020)', () => {
     expect(app.mock.callsTo('POST', /applications/)).toHaveLength(0);
   });
 
-  it('a successful request clears the draft and returns to the meal', async () => {
+  it('a successful request clears the draft and opens the application status for the meal', async () => {
     const app = createTestApp();
     await signIn(app, me());
     app.mock.on('GET', MEAL_PATH, ok({ meal: meal(), myApplication: null, conversationId: null }));
@@ -103,7 +103,7 @@ describe('ApplyScreen (S07, QA-INPUT-017..020)', () => {
     await renderApp(app, <ApplyScreen />);
     await fireEvent.changeText(await screen.findByLabelText('Your introduction'), 'I recently moved here and love trying new food.');
     await fireEvent.press(screen.getByRole('button', { name: 'Send request' }));
-    await waitFor(() => expect(mockRouter.replace).toHaveBeenCalledWith(`/meals/${MEAL_ID}`));
+    await waitFor(() => expect(mockRouter.replace).toHaveBeenCalledWith(`/meals/${MEAL_ID}/status`));
     expect(app.mock.callsTo('POST', /applications/)[0]?.body).toEqual({ message: 'I recently moved here and love trying new food.' });
     expect(app.services.drafts.get(`apply:${MEAL_ID}`)).toBeUndefined();
   });
@@ -149,8 +149,8 @@ describe('MyMealsScreen', () => {
     await signIn(app, me());
     app.mock.on('GET', '/v1/me/meals', (c) => page(c.query.get('section') === 'HOSTING' ? [{ meal: meal({ title: 'Hosted lunch' }), application: null, role: 'HOST' }] : []));
     await renderApp(app, <MyMealsScreen />);
-    expect(await screen.findByText('Nothing here yet.')).toBeOnTheScreen();
-    await fireEvent.press(screen.getByRole('radio', { name: 'Hosting' }));
+    expect(await screen.findByText('A good meal is waiting.')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('tab', { name: 'Hosting' }));
     expect(await screen.findByText('Hosted lunch')).toBeOnTheScreen();
     expect(app.mock.calls.filter((c) => c.path === '/v1/me/meals').map((c) => c.query.get('section'))).toEqual(['UPCOMING', 'HOSTING']);
   });

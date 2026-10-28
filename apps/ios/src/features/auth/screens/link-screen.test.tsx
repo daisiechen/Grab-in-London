@@ -61,3 +61,17 @@ it('unmounted confirmation cannot navigate a later link flow',async()=>{
  await waitFor(()=>expect(getPendingLink(NOW)?.linkTicket).toBe('n'.repeat(40)));
  expect(mockRouter.replace).not.toHaveBeenCalled();
 });
+it('an ended link offers only the way back to sign-in; a signed-out pending link asks for the original method',async()=>{
+ const app=createTestApp();
+ const view=await renderApp(app,<LinkRequiredScreen/>);
+ expect(screen.getByText('This link has expired or ended. Start sign-in again.')).toBeOnTheScreen();
+ expect(screen.queryByRole('button',{name:'Confirm account link'})).toBeNull();
+ await fireEvent.press(screen.getByRole('button',{name:'Back to sign-in'}));
+ expect(mockRouter.replace).toHaveBeenCalledWith('/sign-in');
+ await view.unmount();resetRouter();
+ setPendingLink(ticket,NOW,'intent');await renderApp(app,<LinkRequiredScreen/>);
+ expect(screen.getByText('Use the sign-in method already linked to your original account.')).toBeOnTheScreen();
+ await fireEvent.press(screen.getByRole('button',{name:'Sign in with original account'}));
+ expect(mockRouter.replace).toHaveBeenCalledWith('/sign-in');
+ expect(getPendingLink(NOW)).not.toBeNull();
+});

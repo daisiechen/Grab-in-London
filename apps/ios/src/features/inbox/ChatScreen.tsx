@@ -1,11 +1,10 @@
-import {useHeaderHeight} from 'expo-router/react-navigation';
 import {useAssistantContext,useAssistantEditor} from '../assistant/hooks.ts';
 import {ReadAcknowledger} from './read-ack.ts';
 import { useAnalyticsPresentation } from '../../analytics/hooks.ts';
 import { useCallback, useEffect, useMemo, useRef, useState, type ComponentRef } from 'react';
-import { AppState, Keyboard, FlatList, Platform, StyleSheet, Text, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { AppState, Keyboard, FlatList, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Stack, useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { ApiError, type ResponseOf } from '@fancy/client';
 import { allPages } from '../../api/pages.ts';
 import { useServices, useSessionState } from '../../services.tsx';
@@ -13,7 +12,12 @@ import { Primary, TextAction } from '../../ui/Button.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
 import { Sheet } from '../../ui/Sheet.tsx';
 import { Body } from '../../ui/Text.tsx';
-import { colors, radius, sizes, spacing, type } from '../../ui/tokens.ts';
+import { Avatar } from '../../ui/Avatar.tsx';
+import { Icon } from '../../ui/Icon.tsx';
+import { createStyles } from '../../ui/styles.ts';
+import { colors } from '../../ui/tokens.ts';
+import { longDate } from '../../lib/london.ts';
+import { bookingLabel, mealPeople, venueName, type Meal } from '../meals/format.ts';
 import { rememberReturnTo } from '../auth/intent.ts';
 import { compareSeq, MessagePoller } from './poller.ts';
 import { conversationKey, type Conversation, type InboxItem } from './InboxScreen.tsx';
@@ -40,7 +44,7 @@ export function ChatScreen() {
   if (state.status !== 'signedIn') {
     return (
       <SafeAreaView style={styles.safe}>
-        <View style={styles.pad}>
+        <View style={styles.signedOut}>
           <Body>Please sign in again to see this conversation.</Body>
           <Primary label="Sign in" onPress={() => { rememberReturnTo('/inbox'); router.push('/sign-in'); }} />
         </View>
@@ -64,8 +68,15 @@ export function createKeyboardViewportTracker(measure:(done:(x:number,y:number,w
  return {refresh,keyboard(frame:KeyboardRect|null){keyboard=frame;refresh();},start(){alive=true;revision++;},stop(){alive=false;keyboard=null;revision++;}};
 }
 
+/** London wall-clock day and time of an instant (message timestamps and day separators). */
+export function londonStamp(instant:string|number):{day:string;time:string}{
+ const parts=Object.fromEntries(new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(instant)).map(p=>[p.type,p.value]));
+ return {day:`${parts.year}-${parts.month}-${parts.day}`,time:`${parts.hour}:${parts.minute}`};
+}
+
 function AuthenticatedChatScreen() {
-  const headerHeight=useHeaderHeight();
+  const insets=useSafeAreaInsets();
+  const router=useRouter();
   const viewport=useRef<ComponentRef<typeof View>>(null);
   const [keyboardPadding,setKeyboardPadding]=useState(0);
   const keyboardTracker=useMemo(()=>createKeyboardViewportTracker(done=>viewport.current?.measureInWindow(done),setKeyboardPadding),[]);
@@ -79,7 +90,7 @@ function AuthenticatedChatScreen() {
   const { conversationId } = useLocalSearchParams<{ conversationId: string }>();
   const id = String(conversationId);
   const services = useServices();
-  const { api, cache, newId, session } = services;
+  const { api, cache, newId, now, session } = services;
   const state = useSessionState();
   const [conversation, setConversation] = useState<Conversation | null>(() => cache.get<Conversation>(conversationKey(id)) ?? null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -93,7 +104,8 @@ function AuthenticatedChatScreen() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [sheet, setSheet] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [host,setHost]=useState<{mealId:string;id:string}|null>(null);
+  const [meal,setMeal]=useState<Meal|null>(null);
+  const [view,setView]=useState<'chat'|'settings'>('chat');
   const metadataRevision=useRef(0);
   const refreshingMetadata=useRef(false);
   const [metadataLoading,setMetadataLoading]=useState(false);
@@ -102,7 +114,9 @@ function AuthenticatedChatScreen() {
   const [dissolveBlocked,setDissolveBlocked]=useState(false);
   const dissolveKey=useRef<{version:string;key:string}|null>(null);
   const dissolving=useRef(false);
-  const isHost=state.status==='signedIn'&&host?.mealId===conversation?.mealId&&host?.id===state.session.user.id;
+  const myId=state.status==='signedIn'?state.session.user.id:null;
+  const tableMeal=meal&&meal.id===conversation?.mealId?meal:null;
+  const isHost=!!myId&&tableMeal?.host.id===myId;
   const signedIn = state.status === 'signedIn';
   const live = !!conversation && conversation.canSend && !conversation.dissolved && !readOnly;
   const leaveKey = useRef(newId());
@@ -133,9 +147,10 @@ function AuthenticatedChatScreen() {
   }, [api, cache, conversation, id, signedIn]);
 
   useEffect(()=>{
-    let active=true;setHost(null);
+    let active=true;setMeal(null);
     if(conversation?.kind==='GROUP'&&conversation.mealId){
-      void api.call('getMeal',{params:{mealId:conversation.mealId}}).then(res=>{if(active)setHost({mealId:res.data.meal.id,id:res.data.meal.host.id});}).catch(()=>{if(active)setHost(null);});
+      // Authoritative host check and the pinned meal context (date, venue, host-reported booking).
+      void api.call('getMeal',{params:{mealId:conversation.mealId}}).then(res=>{if(active)setMeal(res.data.meal);}).catch(()=>{if(active)setMeal(null);});
     }
     return()=>{active=false;};
   },[api,conversation?.kind,conversation?.mealId]);
@@ -229,7 +244,7 @@ function AuthenticatedChatScreen() {
       setConversation(updated);
       setReadOnly(true);
       poller.stop();
-      setSheet(false);
+      setSheet(false);setView('chat');
       setNotice('You left the group. Earlier messages stay read-only; your seat is unchanged.');
     } catch (e) {
       setNotice(e instanceof ApiError && e.kind === 'conflict' ? 'This group changed a moment ago. Please try again.' : 'We couldn’t leave the group. Please try again.');
@@ -263,7 +278,7 @@ function AuthenticatedChatScreen() {
     if(dissolveKey.current?.version!==conversation.version)dissolveKey.current={version:conversation.version,key:newId()};
     try{
       const updated=(await api.call('dissolveGroup',{params:{conversationId:id},body:{confirm:true},ifMatch:conversation.version,idempotencyKey:dissolveKey.current.key})).data;
-      session.assertGeneration(generation);cache.set(conversationKey(id),updated);cache.delete('inbox');setConversation(updated);setReadOnly(true);poller.stop();setDissolveSheet(false);setNotice('Group dissolved. Everyone’s earlier messages remain read-only.');
+      session.assertGeneration(generation);cache.set(conversationKey(id),updated);cache.delete('inbox');setConversation(updated);setReadOnly(true);poller.stop();setDissolveSheet(false);setView('chat');setNotice('Group dissolved. Everyone’s earlier messages remain read-only.');
     }catch(error){
       if(session.generation!==generation)return;
       if(error instanceof ApiError&&error.kind==='conflict'){setDissolveBlocked(true);setDissolveSheet(false);dissolveKey.current=null;await refreshGroup();}
@@ -272,58 +287,152 @@ function AuthenticatedChatScreen() {
   };
 
 
+  const group=conversation?.kind==='GROUP';
+  const today=londonStamp(now()).day;
+  const dayLabel=(day:string)=>day===today?'TODAY':longDate(day).toUpperCase();
+  const goBack=()=>{if(view==='settings'){setView('chat');return;}if(router.canGoBack())router.back();else router.navigate('/inbox');};
+  const openMeal=()=>{if(conversation?.mealId)router.push(`/meals/${conversation.mealId}`);};
+  const notices=(
+    <>
+      <FormMessage message={loadError} />
+      <FormMessage message={notice} tone="info" />
+      {dissolveBlocked?<TextAction label="Reload group details" disabled={metadataLoading} onPress={()=>void refreshGroup()}/>:null}
+    </>
+  );
+  const people=tableMeal?mealPeople(tableMeal):[];
+
   return (
-    <SafeAreaView style={[styles.safe,{paddingTop:Platform.OS==='ios'?headerHeight:0}]} edges={['bottom']} testID="chat">
+    <SafeAreaView style={[styles.safe,{paddingTop:insets.top}]} edges={['bottom']} testID="chat">
+      {/* The page draws the demo .page-header itself so content starts right under the safe area. */}
+      <Stack.Screen options={{headerShown:false}} />
+      <View style={styles.header}>
+        <Pressable accessibilityRole="button" accessibilityLabel={view==='settings'?'Back to chat':'Back'} hitSlop={8} style={styles.headerButton} onPress={goBack}>
+          <Icon name="ArrowLeft" size={18} color={colors.ink} />
+        </Pressable>
+        <Text style={styles.headerTitle} accessibilityRole="header" numberOfLines={1}>{view==='settings'?'Group settings':conversation?.title ?? 'Conversation'}</Text>
+        {group&&view==='chat'?(
+          <Pressable accessibilityRole="button" accessibilityLabel="Open group settings" hitSlop={8} style={styles.headerButton} onPress={()=>setView('settings')}>
+            <Icon name="Gear" size={18} color={colors.ink} />
+          </Pressable>
+        ):<View style={styles.headerButton} />}
+      </View>
       <View testID="chat-keyboard-viewport" ref={viewport} collapsable={false} style={{flex:1,paddingBottom:Platform.OS==='ios'?keyboardPadding:0}} onLayout={keyboardTracker.refresh}>
       <View testID="chat-keyboard" style={{flex:1}}>
-        <View style={styles.header}>
-          <Text style={styles.title} accessibilityRole="header">{conversation?.title ?? 'Conversation'}</Text>
-          {conversation?.kind === 'GROUP' && live ? (isHost ? (!dissolveBlocked ? <TextAction label="Dissolve group" onPress={()=>{setDissolveError(null);setDissolveSheet(true);}}/> : null) : <TextAction label="Leave group" onPress={() => setSheet(true)} />) : null}
-        </View>
-        <FormMessage message={loadError} />
-        <FormMessage message={notice} tone="info" />
-        {dissolveBlocked?<TextAction label="Reload group details" disabled={metadataLoading} onPress={()=>void refreshGroup()}/>:null}
+        {view==='settings'&&conversation?(
+          <ScrollView testID="group-settings" contentContainerStyle={styles.settings}>
+            <Text style={styles.settingsTitle}>{conversation.title}</Text>
+            {conversation.mealId?<Primary secondary label="View meal" icon="ArrowRight" onPress={openMeal}/>:null}
+            {notices}
+            {people.length?(
+              <>
+                <View style={styles.sectionRow}><Text accessibilityRole="header" style={styles.h2}>At this table</Text><View style={styles.pill}><Text style={styles.pillText}>{String(people.length)}</Text></View></View>
+                {people.map(p=>(
+                  <Pressable key={p.id} accessibilityRole="button" accessibilityLabel={`View ${p.displayName}’s profile`} style={styles.member} onPress={()=>router.push(`/profiles/${p.id}`)}>
+                    <Avatar person={p} size={40}/>
+                    <View style={styles.flex}>
+                      <Text style={styles.memberName}>{p.displayName}</Text>
+                      <Text style={styles.memberRole}>{`${p.id===tableMeal?.host.id?'Host':'Guest'}${p.id===myId?' · You':''}`}</Text>
+                    </View>
+                  </Pressable>
+                ))}
+              </>
+            ):null}
+            {live?(
+              <View style={styles.settingsSection}>
+                <Text accessibilityRole="header" style={styles.h2}>Your membership</Text>
+                <Text style={styles.muted}>Group membership is separate from your meal participation.</Text>
+                {isHost&&conversation.mealId?<Primary secondary label="Manage meal & applications" onPress={()=>router.push(`/meals/${conversation.mealId}/host`)}/>:null}
+                {isHost?(!dissolveBlocked?<Primary secondary label="Dissolve group" onPress={()=>{setDissolveError(null);setDissolveSheet(true);}}/>:null):<Primary secondary label="Leave group" onPress={()=>setSheet(true)}/>}
+              </View>
+            ):(
+              <View style={styles.readOnlyNotice}><Icon name="LockClosed" size={14} color="#607160"/><Text style={styles.readOnlyText}>This group is read-only. Your earlier messages remain available.</Text></View>
+            )}
+          </ScrollView>
+        ):null}
+        <View style={[styles.flex,view==='settings'&&conversation?styles.hidden:null]}>
         <FlatList
           testID="chat-messages"
           onViewableItemsChanged={onViewable}
           viewabilityConfig={{itemVisiblePercentThreshold:80}}
           data={messages}
           keyExtractor={(m) => m.id}
-          contentContainerStyle={styles.pad}
+          contentContainerStyle={styles.list}
           keyboardShouldPersistTaps="handled"
-          renderItem={({ item }) => (
-            <View style={styles.bubble} accessibilityLabel={`${item.sender.displayName}: ${item.redacted ? 'Message removed' : item.body}`}>
-              <Text style={styles.sender}>{item.sender.displayName}</Text>
-              {/* Plain text only: bodies are never interpreted as markup. */}
-              <Text style={styles.body}>{item.redacted ? 'Message removed' : item.body}</Text>
+          ListHeaderComponent={
+            <View style={styles.listHeader}>
+              {group&&conversation?.mealId?(
+                <Pressable accessibilityRole="button" accessibilityLabel={tableMeal?`View meal: ${longDate(tableMeal.startsAt.localDate)} at ${tableMeal.startsAt.localTime}, ${venueName(tableMeal)}, ${bookingLabel(tableMeal)}`:'View meal'} style={styles.pinned} onPress={openMeal}>
+                  <Icon name="Calendar" size={15} color={colors.forest}/>
+                  <View style={styles.flex}>
+                    <Text style={styles.pinnedTitle}>{tableMeal?`${longDate(tableMeal.startsAt.localDate)} · ${tableMeal.startsAt.localTime}`:'Your meal'}</Text>
+                    <Text style={styles.pinnedMeta} numberOfLines={2}>{tableMeal?`${venueName(tableMeal)} · ${bookingLabel(tableMeal)} · Pay at the restaurant`:'View the meal for time and place'}</Text>
+                  </View>
+                  <Icon name="ChevronRight" size={14} color={colors.muted}/>
+                </Pressable>
+              ):conversation?.kind==='DIRECT'?(
+                <View style={styles.pinned}>
+                  <Icon name="Heart" size={15} color={colors.forest}/>
+                  <View style={styles.flex}><Text style={styles.pinnedTitle}>You both want to meet again</Text><Text style={styles.pinnedMeta}>Start a conversation or find another table together.</Text></View>
+                </View>
+              ):null}
+              {notices}
             </View>
-          )}
+          }
+          renderItem={({ item, index }) => {
+            const stamp=londonStamp(item.createdAt);
+            const previous=messages[index-1];
+            const newDay=!previous||londonStamp(previous.createdAt).day!==stamp.day;
+            const mine=item.sender.id===myId;
+            const body=item.redacted ? 'Message removed' : item.body;
+            return (
+              <View>
+                {newDay?<Text style={styles.day}>{live||index>0?dayLabel(stamp.day):`ARCHIVE · ${dayLabel(stamp.day)}`}</Text>:null}
+                <View style={[styles.message,mine&&styles.messageMine]} accessibilityLabel={`${mine?'You':item.sender.displayName}: ${body}, ${stamp.time}`}>
+                  {!mine?<Avatar person={item.sender} size={30} onPress={()=>router.push(`/profiles/${item.sender.id}`)}/>:null}
+                  <View style={styles.messageCopy}>
+                    {!mine&&group?<Pressable accessibilityRole="link" accessibilityLabel={`${item.sender.displayName}, view profile`} hitSlop={6} style={styles.senderPress} onPress={()=>router.push(`/profiles/${item.sender.id}`)}><Text style={styles.sender}>{item.sender.displayName}</Text></Pressable>:null}
+                    {/* Plain text only: bodies are never interpreted as markup. */}
+                    <Text style={[styles.bubble,mine?styles.bubbleMine:null,item.redacted&&styles.redacted]}>{body}</Text>
+                    <Text style={[styles.time,mine&&styles.timeMine]}>{stamp.time}</Text>
+                  </View>
+                </View>
+              </View>
+            );
+          }}
           ListFooterComponent={
-            <View style={{ gap: 6 }}>
+            <View>
               {outgoing.map((o) => (
-                <View key={o.clientMessageId} style={[styles.bubble, styles.mine]}>
-                  <Text style={styles.body}>{o.body}</Text>
-                  {o.status === 'sending' ? <Text style={styles.meta}>Sending…</Text> : (
-                    <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
-                      <Text style={[styles.meta, { color: colors.danger }]}>Not sent</Text>
-                      <TextAction label="Retry" onPress={() => void send(o)} />
-                      <TextAction label="Delete" onPress={() => setOutgoing((cur) => cur.filter((x) => x.clientMessageId !== o.clientMessageId))} />
-                    </View>
-                  )}
+                <View key={o.clientMessageId} style={[styles.message,styles.messageMine]}>
+                  <View style={styles.messageCopy}>
+                    <Text style={[styles.bubble,styles.bubbleMine,o.status==='failed'&&styles.bubbleFailed]}>{o.body}</Text>
+                    {o.status === 'sending' ? <Text style={[styles.time,styles.timeMine]}>Sending…</Text> : (
+                      <View style={styles.failedRow}>
+                        <Text style={[styles.time, { color: colors.danger }]}>Not sent</Text>
+                        <TextAction label="Retry" onPress={() => void send(o)} />
+                        <TextAction label="Delete" onPress={() => setOutgoing((cur) => cur.filter((x) => x.clientMessageId !== o.clientMessageId))} />
+                      </View>
+                    )}
+                  </View>
                 </View>
               ))}
             </View>
           }
-          ListEmptyComponent={<Body muted>No messages yet. Say hello!</Body>}
+          ListEmptyComponent={conversation&&!loadError?<Text style={styles.empty}>{live?'No messages yet. Say a little hello!':'No earlier messages.'}</Text>:undefined}
         />
         {live ? (
           <View style={styles.composer}>
-            <TextInput accessibilityLabel="Message" value={text} onChangeText={value=>{editorVersion.current++;setText(value);}} placeholder="Message" placeholderTextColor={colors.muted} multiline maxLength={2000} style={styles.input} />
-            <Primary label="Send" disabled={!text.trim()} onPress={submit} />
+            <TextInput accessibilityLabel="Message" value={text} onChangeText={value=>{editorVersion.current++;setText(value);}} placeholder="Say a little hello…" placeholderTextColor={colors.muted} multiline maxLength={2000} style={styles.input} />
+            <Pressable accessibilityRole="button" accessibilityLabel="Send message" accessibilityState={{disabled:!text.trim()}} disabled={!text.trim()} onPress={submit} style={[styles.send,!text.trim()&&styles.sendDisabled]}>
+              <Icon name="PaperPlane" size={17} color={colors.white}/>
+            </Pressable>
           </View>
         ) : conversation ? (
-          <View><Text style={[styles.meta, styles.pad]}>History is read-only.</Text>{text?<View style={styles.pad}><Body>{`Unsent text: ${text}`}</Body><TextAction label="Discard unsent text" onPress={()=>{editorVersion.current++;setText('');}}/></View>:null}</View>
+          <View style={styles.readOnlyBar}>
+            <View style={styles.readOnlyRow}><Icon name="LockClosed" size={13} color={colors.muted}/><Text style={styles.readOnlyBarText}>History is read-only.</Text></View>
+            {text?<View><Body>{`Unsent text: ${text}`}</Body><TextAction label="Discard unsent text" onPress={()=>{editorVersion.current++;setText('');}}/></View>:null}
+          </View>
         ) : null}
+        </View>
       </View>
       </View>
       <Sheet visible={dissolveSheet} title="Dissolve this group?" onClose={()=>setDissolveSheet(false)}>
@@ -341,16 +450,51 @@ function AuthenticatedChatScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createStyles({
   safe: { flex: 1, backgroundColor: colors.white },
-  pad: { padding: spacing.page, gap: 8 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: spacing.page, paddingTop: 8 },
-  title: { fontSize: type.section, fontWeight: '700', color: colors.ink, flex: 1 },
-  bubble: { padding: 10, borderRadius: radius.md, backgroundColor: colors.surface, gap: 2 },
-  mine: { backgroundColor: colors.selectedSurface, alignSelf: 'flex-end' },
-  sender: { fontSize: type.meta, fontWeight: '700', color: colors.forest },
-  body: { fontSize: type.body, color: colors.ink },
-  meta: { fontSize: type.meta, color: colors.muted },
-  composer: { flexDirection: 'row', gap: 8, alignItems: 'flex-end', padding: 12, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.line },
-  input: { flex: 1, minHeight: sizes.field, maxHeight: 120, borderWidth: 1, borderColor: colors.line, borderRadius: radius.md, paddingHorizontal: 12, paddingVertical: 10, fontSize: type.body, color: colors.ink },
+  flex: { flex: 1, minWidth: 0 },
+  hidden: { display: 'none' },
+  signedOut: { padding: 16, gap: 12 },
+  header: { height: 48, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, borderBottomWidth: 1, borderBottomColor: colors.line, backgroundColor: colors.white },
+  headerButton: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
+  headerTitle: { flex: 1, textAlign: 'center', fontSize: 13, fontWeight: '700', color: colors.ink, paddingHorizontal: 6 },
+  list: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 16 },
+  listHeader: { gap: 8 },
+  pinned: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12, backgroundColor: '#f0f4eb', borderRadius: 10 },
+  pinnedTitle: { fontSize: 12, fontWeight: '700', color: colors.ink },
+  pinnedMeta: { fontSize: 10, lineHeight: 14, color: colors.muted, marginTop: 3 },
+  day: { textAlign: 'center', marginTop: 16, marginBottom: 4, fontSize: 9, letterSpacing: 0.7, color: '#9aa197' },
+  message: { flexDirection: 'row', gap: 7, marginTop: 12, maxWidth: '88%' },
+  messageMine: { alignSelf: 'flex-end', justifyContent: 'flex-end' },
+  messageCopy: { flexShrink: 1, minWidth: 0 },
+  senderPress: { alignSelf: 'flex-start' },
+  sender: { fontSize: 10, color: colors.ink, marginBottom: 4 },
+  bubble: { paddingVertical: 10, paddingHorizontal: 13, backgroundColor: '#f1f3ed', borderTopLeftRadius: 2, borderTopRightRadius: 13, borderBottomLeftRadius: 13, borderBottomRightRadius: 13, overflow: 'hidden', fontSize: 13, lineHeight: 20, color: colors.ink },
+  bubbleMine: { backgroundColor: colors.forest, color: colors.white, borderTopLeftRadius: 13, borderTopRightRadius: 2 },
+  bubbleFailed: { opacity: 0.6 },
+  redacted: { fontStyle: 'italic', color: colors.muted },
+  time: { fontSize: 9, color: colors.muted, marginTop: 4 },
+  timeMine: { textAlign: 'right' },
+  failedRow: { flexDirection: 'row', gap: 12, alignItems: 'center', justifyContent: 'flex-end' },
+  empty: { textAlign: 'center', fontSize: 12, color: colors.muted, marginTop: 24 },
+  composer: { flexDirection: 'row', gap: 9, alignItems: 'flex-end', paddingHorizontal: 16, paddingVertical: 10, borderTopWidth: 1, borderTopColor: colors.line, backgroundColor: colors.white },
+  input: { flex: 1, minHeight: 40, maxHeight: 120, backgroundColor: '#f4f5ef', borderWidth: 1, borderColor: colors.line, borderRadius: 20, paddingHorizontal: 14, paddingTop: 11, paddingBottom: 11, fontSize: 13, color: colors.ink },
+  send: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.forest, alignItems: 'center', justifyContent: 'center' },
+  sendDisabled: { opacity: 0.45 },
+  readOnlyBar: { paddingHorizontal: 16, paddingVertical: 12, borderTopWidth: 1, borderTopColor: colors.line, gap: 6 },
+  readOnlyRow: { flexDirection: 'row', alignItems: 'center', gap: 7 },
+  readOnlyBarText: { fontSize: 12, color: colors.muted },
+  settings: { paddingHorizontal: 16, paddingTop: 14, paddingBottom: 24, gap: 10 },
+  settingsTitle: { fontSize: 24, lineHeight: 29, letterSpacing: -0.8, fontWeight: '700', color: colors.ink, marginBottom: 4 },
+  sectionRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12 },
+  h2: { fontSize: 16, fontWeight: '700', color: colors.ink },
+  pill: { paddingVertical: 2, paddingHorizontal: 6, backgroundColor: '#f0f3ec', borderRadius: 7 },
+  pillText: { fontSize: 10, lineHeight: 13, color: '#536c5b' },
+  member: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: colors.line },
+  memberName: { fontSize: 13, fontWeight: '700', color: colors.ink },
+  memberRole: { fontSize: 11, color: colors.muted, marginTop: 3 },
+  settingsSection: { gap: 10, marginTop: 14 },
+  muted: { fontSize: 12, lineHeight: 18, color: colors.muted },
+  readOnlyNotice: { flexDirection: 'row', alignItems: 'flex-start', gap: 9, padding: 12, borderRadius: 9, backgroundColor: '#f2f5ee', marginTop: 14 },
+  readOnlyText: { flex: 1, fontSize: 11, lineHeight: 17, color: '#607160' },
 });
