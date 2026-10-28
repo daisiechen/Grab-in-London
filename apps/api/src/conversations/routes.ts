@@ -66,8 +66,13 @@ export function registerConversationRoutes(app: FastifyInstance, deps: AppDeps) 
       } catch { throw new DomainError('VALIDATION_FAILED', 'Invalid inbox page.'); }
     }
     const limit = q.limit ?? 20;
+    // Conversations sort by the latest event this member can see (their join, a message, a leave),
+    // applications by creation: a newly joined or busy chat rises to the top.
     const { rows } = await deps.pool.query<{id:string;kind:string;cursor_created_at:string}>(`WITH items AS (
-      SELECT c.id,'conversation'::text AS kind,c.created_at FROM conversations c WHERE EXISTS(SELECT 1 FROM membership_intervals i WHERE i.conversation_id=c.id AND i.user_id=$1)
+      SELECT c.id,'conversation'::text AS kind,activity.at AS created_at FROM conversations c
+        CROSS JOIN LATERAL (SELECT max(e.effective_at) AS at FROM conversation_events e JOIN membership_intervals i ON i.conversation_id=e.conversation_id AND i.user_id=$1
+          WHERE e.conversation_id=c.id AND e.seq>=i.join_seq AND (i.leave_seq IS NULL OR e.seq<=i.leave_seq)) activity
+        WHERE activity.at IS NOT NULL
       UNION ALL SELECT a.id,'application'::text,a.created_at FROM applications a WHERE a.user_id=$1 AND NOT EXISTS(SELECT 1 FROM conversations c JOIN membership_intervals i ON i.conversation_id=c.id AND i.user_id=$1 WHERE c.meal_id=a.meal_id)
       ) SELECT id,kind,created_at::text AS cursor_created_at FROM items
       WHERE ($2::timestamptz IS NULL OR (created_at,id,kind)<($2::timestamptz,$3::uuid,$4::text)) ORDER BY created_at DESC,id DESC,kind DESC LIMIT $5`, [auth!.userId, boundary?.[0] ?? null, boundary?.[1] ?? null, boundary?.[2] ?? null, limit + 1]);

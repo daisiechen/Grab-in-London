@@ -107,7 +107,7 @@ interface MealRec {
   startRoster: string[] | null;
 }
 interface AppRec { id: string; mealId: string; userId: string; round: number; state: ApplicationDto['state']; version: number; createdAt: number; decidedAt: number | null; message: string }
-interface Interval { userId: string; join: number; leave: number | null }
+interface Interval { userId: string; join: number; leave: number | null; joinedAt: number }
 interface MsgRec { id: string; seq: number; senderId: string; body: string; createdAt: number; clientMessageId: string | null }
 interface ConvRec {
   id: string; kind: 'GROUP' | 'DIRECT'; mealId: string | null; pair: [string, string] | null; version: number; head: number;
@@ -264,10 +264,10 @@ const openInterval = (conv: ConvRec, user: string) => conv.intervals.find((i) =>
 const isMember = (conv: ConvRec, user: string) => conv.intervals.some((i) => i.userId === user);
 const visibleTo = (conv: ConvRec, user: string, seq: number) => conv.intervals.some((i) => i.userId === user && i.join < seq && (i.leave === null || seq < i.leave));
 
-function joinConversation(conv: ConvRec, user: string, _at: number) {
+function joinConversation(conv: ConvRec, user: string, at: number) {
   if (conv.dissolvedAt !== null) fail('STATE_CONFLICT', 'This group has been dissolved.');
   if (openInterval(conv, user)) return;
-  conv.intervals.push({ userId: user, join: allocate(conv, 'JOIN'), leave: null });
+  conv.intervals.push({ userId: user, join: allocate(conv, 'JOIN'), leave: null, joinedAt: at });
 }
 function postMessage(conv: ConvRec, sender: string, body: string, at: number, clientMessageId: string | null, w: World): MsgRec {
   const msg: MsgRec = { id: newId(w, 'message'), seq: allocate(conv, 'MESSAGE'), senderId: sender, body, createdAt: at, clientMessageId };
@@ -1004,8 +1004,10 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
         const visible = conv.messages.filter((m) => visibleTo(conv, uid, m.seq));
         const last = visible.at(-1);
         const read = conv.reads.get(uid) ?? 0;
+        // Ordered by the latest activity this member can see (their own join or a visible message), like apps/api.
+        const joined = Math.max(...conv.intervals.filter((i) => i.userId === uid).map((i) => i.joinedAt));
         entries.push({
-          at: conv.createdAt, id: conv.id,
+          at: Math.max(joined, last?.createdAt ?? 0), id: conv.id,
           data: {
             conversation: convDto(conv, uid), lastMessage: last ? { seq: String(last.seq), preview: last.body.slice(0, 200), createdAt: iso(last.createdAt) } : null,
             unreadCount: visible.filter((m) => m.senderId !== uid && m.seq > read).length,
