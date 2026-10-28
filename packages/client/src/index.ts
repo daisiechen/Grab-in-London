@@ -2,3 +2,4 @@ export { createApiClient, newIntentKey, withRetry, type ApiClient, type ClientOp
 export { ApiError, type ErrorKind, type TimeChoice } from './errors.ts';
 export type { RequestOf, ResponseOf, ResponseMeta, Page } from './types.ts';
 export { OPERATIONS, CONTRACT_VERSION } from './generated/operations.ts';
+export { LONDON_AREA_NAMES } from './london-area-names.ts';

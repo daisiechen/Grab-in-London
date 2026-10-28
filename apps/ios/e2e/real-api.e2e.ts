@@ -30,7 +30,7 @@ interface Locator {
   first(): Locator;
   last(): Locator;
 }
-interface Response { url(): string; status(): number; text(): Promise<string>; json(): Promise<unknown>; request(): { method(): string } }
+interface Response { url(): string; status(): number; text(): Promise<string>; json(): Promise<unknown>; request(): { method(): string; postDataJSON(): unknown } }
 interface Page {
   goto(url: string): Promise<unknown>;
   goBack(): Promise<unknown>;
@@ -40,6 +40,7 @@ interface Page {
   getByText(text: string | RegExp): Locator;
   getByLabel(text: string, options?: { exact?: boolean }): Locator;
   waitForResponse(match: (response: Response) => boolean): Promise<Response>;
+  waitForEvent(event: 'filechooser'): Promise<{ setFiles(files: string): Promise<void> }>;
   on(event: 'response', listener: (response: Response) => void): void;
   on(event: 'console', listener: (message: { type(): string; text(): string }) => void): void;
   on(event: 'pageerror', listener: (error: Error) => void): void;
@@ -58,6 +59,8 @@ const OTP = '000000';
 const run = randomUUID().slice(0, 8);
 const GUEST_EMAIL = `guest.${run}@example.invalid`;
 const HOST_EMAIL = `host.${run}@example.invalid`;
+/** A real PNG portrait from the app's bundled artwork, uploaded through the web file chooser. */
+const PHOTO = join(import.meta.dirname, '../assets/images/maya.png');
 const INTRO = 'I moved to London last month and would love to meet people over a relaxed dinner.';
 
 interface Problem { page: string; status: number; method: string; path: string; body: string }
@@ -139,6 +142,10 @@ async function main() {
       await completeProfile(host, 'Hana');
       const supper = await publishMeal(host, { placeId: 'fixture_fancy_north', title: `Sunday supper ${run}`, days: 5 });
       const tapas = await publishMeal(host, { placeId: 'fixture_fancy_south', title: `Tapas night ${run}`, days: 6 });
+      // The API maps the fixture restaurants' coordinates with the shipped verified London area dataset.
+      if (supper.areaCode !== 'holborn-bloomsbury-south' || tapas.areaCode !== 'newington-kennington-east-walworth-west') {
+        throw new Error(`unexpected meal areas ${supper.areaCode} / ${tapas.areaCode}`);
+      }
       return { host, supper, tapas, signedInAt: Date.now() };
     });
 
@@ -173,6 +180,19 @@ async function main() {
       await radio(g, 'English').click();
       await checkbox(g, 'Food').click();
       await checkbox(g, /18 or older/).click();
+      // Profile photo: the web picker's file chooser → client resize to a JPEG → PUT /v1/me/avatar.
+      const chooser = g.waitForEvent('filechooser');
+      const uploaded = g.waitForResponse((r) => r.url().endsWith('/v1/me/avatar') && r.request().method() === 'PUT');
+      await tap(g, 'Upload photo');
+      await (await chooser).setFiles(PHOTO);
+      const upload = await uploaded;
+      if (upload.status() !== 200) throw new Error(`photo upload failed: ${upload.status()} ${await upload.text()}`);
+      const sent = (upload.request().postDataJSON() as { imageBase64: string }).imageBase64;
+      if (!sent.startsWith('/9j/')) throw new Error('the app did not send a JPEG');
+      const avatarUrl = ((await upload.json()) as { data: { avatarUrl: string } }).data.avatarUrl;
+      const photo = await fetch(new URL(new URL(avatarUrl).pathname, stack.webUrl));
+      if (photo.status !== 200 || photo.headers.get('content-type') !== 'image/jpeg') throw new Error(`photo is not served: ${photo.status} ${photo.headers.get('content-type')}`);
+      await button(g, 'Change photo').waitFor({ timeout: 10_000 });
       const saved = g.waitForResponse((r) => r.url().endsWith('/v1/me') && r.request().method() === 'PATCH');
       await tap(g, 'Take your seat');
       guestId = ((await (await saved).json()) as { data: { id: string } }).data.id;
@@ -227,14 +247,18 @@ async function main() {
       await openTab(g, 'Meals');
       await openTab(g, 'Upcoming');
       await see(g, seedHost.supper.title);
-      // Areas are `unknown` without a verified area dataset: the card says “London”, not “London, London”.
-      if ((await g.innerText('body')).includes('London, London')) throw new Error('meal card repeats “London, London”');
+      // The card names the meal's area from the verified dataset, and never repeats “London, London”.
+      const body = await g.innerText('body');
+      if (!body.includes('Holborn & Bloomsbury South')) throw new Error('meal card does not name the meal’s area');
+      if (body.includes('London, London')) throw new Error('meal card repeats “London, London”');
     });
 
     const message = `Hello table! Looking forward to it (${run}).`;
     await step('group chat appears in Inbox and guest sends a message', async () => {
       await openTab(g, 'Inbox');
-      await tap(g, new RegExp(seedHost.supper.title));
+      // Inbox opens the group chat of the meal just applied to (once); otherwise tap its row.
+      const composer = visible(g.getByLabel('Message', { exact: true }));
+      if (!(await composer.waitFor({ state: 'visible', timeout: 5_000 }).then(() => true, () => false))) await tap(g, new RegExp(seedHost.supper.title));
       await fill(g, 'Message', message);
       await tap(g, 'Send message');
       await see(g, message);

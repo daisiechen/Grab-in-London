@@ -19,8 +19,13 @@ describe('discovery map', () => {
 
   it('names a meal’s place without repeating London for an unmapped area', () => {
     expect(areaPlace('soho')).toBe('Soho, London');
-    // The real API answers `unknown` until a verified area dataset is configured.
+    // The real API answers `unknown` for a restaurant outside its verified area dataset's launch zone.
     expect(areaPlace('unknown')).toBe('London');
+    // Names from the API's verified London area dataset keep their punctuation.
+    expect(areaPlace('holborn-bloomsbury-south')).toBe('Holborn & Bloomsbury South, London');
+    expect(areaPlace('kings-cross-bloomsbury-north')).toBe('King’s Cross & Bloomsbury North, London');
+    expect(areaPlace('st-jamess')).toBe('St James’s, London');
+    expect(areaPlace('constructor')).toBe('Constructor, London');
   });
 
   it('falls back to the demo illustration without a key', async () => {

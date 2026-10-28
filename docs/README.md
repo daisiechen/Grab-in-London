@@ -6,6 +6,7 @@
 
 - [iOS 界面实现规范](engineering/ios-ui-conventions.zh-CN.md)：版面密度、组件、预览数据与验证方式（含用户真机评审结论）。
 - [Claude Code 接手开发计划](delivery/claude-takeover-plan.zh-CN.md)：Claude Code 主开发，视觉按 Demo、规则按 PRD r07，先以模拟数据跑通 iOS 首发旅程再接后端。
+- [伦敦片区边界数据](engineering/london-areas.zh-CN.md)：真实 API 用来把餐厅坐标归到片区的数据，说明来源与授权（ONS OGL v3.0、下议院图书馆 Open Parliament Licence）、必须标注的来源说明、首发 9 区范围、West End 细分、已知近似和重新生成方法。
 
 ## 当前产品与管理输入（r07范围／r11版本PJ并行执行）
 

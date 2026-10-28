@@ -1,3 +1,4 @@
+import { LONDON_AREA_NAMES } from '@fancy/client';
 import { areaLabel, type Meal } from '../meals/format.ts';
 
 /**
@@ -15,8 +16,10 @@ const POSITIONS: Record<string, { x: number; y: number }> = {
 
 const LABELS: Record<string, string> = { 'st-jamess': 'St James’s', 'st-james': 'St James’s', 'st-james-s': 'St James’s' };
 
-export const areaName = (code: string) => LABELS[code] ?? areaLabel(code);
-/** “Soho, London”; an unmapped area (`unknown`, the real API's default without a verified area dataset) is just “London”. */
+/** Display name: the API's verified London area dataset names (e.g. “King’s Cross & Bloomsbury North”), else the title-cased code. */
+const own = (names: Readonly<Record<string, string>>, code: string) => (Object.hasOwn(names, code) ? names[code] : undefined);
+export const areaName = (code: string) => own(LABELS, code) ?? own(LONDON_AREA_NAMES, code) ?? areaLabel(code);
+/** “Soho, London”; an unmapped area (`unknown`: the real API's answer outside its verified area dataset's launch zone) is just “London”. */
 export const areaPlace = (code: string) => (code === 'unknown' ? 'London' : `${areaName(code)}, London`);
 
 export interface AreaGroup { code: string; name: string; meals: Meal[]; x: number; y: number; lat: number | null; lng: number | null }

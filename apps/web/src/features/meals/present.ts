@@ -1,9 +1,11 @@
+import { LONDON_AREA_NAMES } from '@fancy/client';
 import { CUISINES, DIETARY, LANGUAGES, MOODS } from '@fancy/contracts';
 import type { Application, Meal } from '../../api/types.ts';
 
-/** Area codes come from the versioned London area dictionary (G-PLACES); display is title-cased. */
+/** Area codes come from the API's verified London area dataset; its names display as published, other codes title-cased. */
 export function areaName(code: string): string {
   if (!code || code === 'unknown') return 'London';
+  if (Object.hasOwn(LONDON_AREA_NAMES, code)) return LONDON_AREA_NAMES[code]!;
   return code.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 

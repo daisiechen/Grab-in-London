@@ -6,6 +6,7 @@ import {buildServer} from '../http/server.ts';
 import {Browser,createHarness,json,WEB_ORIGIN,type Harness} from '../test/harness.ts';
 import {londonTime} from '../meals/time.ts';
 import type {AreaPolygons,Polygon} from './areas.ts';
+import {loadLondonAreas} from './london-areas.ts';
 let h:Harness;const apps:Awaited<ReturnType<typeof buildServer>>[]=[];
 beforeAll(async()=>{h=await createHarness(inject('pgServerUrl'));await h.app.close();});afterAll(async()=>{for(const app of apps)await app.close();await h.close();});
 const square:Polygon=[[[0,0],[2,0],[2,2],[0,2],[0,0]]];
@@ -48,4 +49,12 @@ it('unknown coverage and absent dataset do not guess a London area; bad or unava
  for(const lookup of [async()=>({lng:NaN,lat:1}),async()=>{throw new DomainError('PROVIDER_UNAVAILABLE','Controlled provider outage');}]){
   await server(dataset(1),lookup);const placeId=`synthetic_${randomUUID()}`;expect((await confirm(b,placeId)).statusCode).toBe(503);expect((await h.db.pool.query(`SELECT id FROM venues WHERE place_id=$1`,[placeId])).rowCount).toBe(0);
  }
+});
+it('the shipped verified London dataset maps a confirmed restaurant to its neighbourhood and records the dataset version',async()=>{
+ const london=loadLondonAreas();
+ await server(london,async placeId=>placeId.startsWith('soho_')?{lat:51.5155,lng:-0.1320}:{lat:51.5074,lng:-0.1350});const b=await actor();
+ const soho=await confirm(b,`soho_${randomUUID()}`);expect(soho.statusCode,soho.body).toBe(200);expect(json(soho).data.areaCode).toBe('soho');
+ const stJames=await confirm(b,`stjames_${randomUUID()}`);expect(json(stJames).data.areaCode).toBe('st-jamess');
+ expect((await h.db.pool.query(`SELECT area_code,area_version,area_revision FROM venues WHERE id=$1`,[json(soho).data.venueRef])).rows[0]).toEqual({area_code:'soho',area_version:london.version,area_revision:'1'});
+ expect((await publish(b,json(soho).data.venueRef)).areaCode).toBe('soho');
 });
