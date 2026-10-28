@@ -42,7 +42,8 @@ const styles = createStyles({
   label: { color: colors.white, fontSize: 13, lineHeight: 16, fontWeight: '600' },
   secondaryLabel: { color: colors.forest },
   text: { minHeight: 44, justifyContent: 'center', alignItems: 'center' },
-  textLabel: { color: colors.forest, fontSize: 12, textDecorationLine: 'underline' },
+  // One link style app-wide (owner review): 13pt semibold forest, no underline.
+  textLabel: { color: colors.forest, fontSize: 13, fontWeight: '600' },
   destructive: { color: colors.danger },
   disabledText: { color: colors.muted },
 });

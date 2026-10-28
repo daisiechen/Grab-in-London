@@ -31,7 +31,7 @@ import { toggle } from '../discover/filters.ts';
 import { languagesLabel } from '../meals/format.ts';
 import { mealActionMessage } from '../meals/messages.ts';
 import { rememberReturnTo } from '../auth/intent.ts';
-import { CreateLayout, DropPanel, DropTrigger, Hint, InlineLink, NumberChoice, Section, TimeGrid, shared } from './CreateLayout.tsx';
+import { CreateLayout, Divider, DropPanel, DropTrigger, Hint, InlineLink, Section, SectionMarker, Stepper, TimeGrid, shared, type SectionIcon } from './CreateLayout.tsx';
 import { VenuePicker } from './VenuePicker.tsx';
 import { budgetIssues, deadlineTooLate, draftFromMeal, editBlockedReason, emptyDraft, timeResolution, toCreateBody, toEditBody, updateDraft, validateStep, type CreateDraft, type EditableMeal, type Step, type TimeResolution } from './model.ts';
 
@@ -50,7 +50,9 @@ const stepRoutes = (mode: FlowMode): readonly string[] =>
   mode.kind === 'create' ? CREATE_ROUTES : ['', '/introduce', '/costs', '/review'].map((s) => `/meals/${mode.mealId}/edit${s}`);
 const draftKeyOf = (mode: FlowMode) => (mode.kind === 'create' ? CREATE_DRAFT_KEY : editDraftKey(mode.mealId));
 const hostRoute = (mealId: string) => `/meals/${mealId}/host`;
-const SIZES = [2, 3, 4, 5, 6] as const;
+/** r07 table size, including the host. */
+const MIN_PEOPLE = 2;
+const MAX_PEOPLE = 6;
 
 /**
  * Starts editing a meal: resumes an unsaved edit of the same meal version, otherwise prefills a fresh
@@ -184,17 +186,17 @@ function Arrange({ draft, update, today }: Part & { today: string }) {
     <>
       <VenuePicker draft={draft} update={update} />
 
-      <Section title="Your table">
-        <View style={shared.row}>
-          <NumberChoice label="People, including you" options={SIZES} value={draft.capacity} onChange={(capacity) => update({ capacity })} />
+      <Section title="Your table" icon="Person">
+        {/* The minimum can't pass the table size; lowering the table size pulls the minimum down with it (updateDraft). */}
+        <View style={[shared.box, styles.steppers]}>
+          <Stepper testID="stepper-minimum" label="Minimum" hint="people, including you" name="minimum" value={draft.minimum} min={MIN_PEOPLE} max={draft.capacity} onChange={(minimum) => update({ minimum })} />
+          <Divider />
+          <Stepper testID="stepper-capacity" label="Up to" hint={`${guests} guest${guests === 1 ? '' : 's'} + you`} name="maximum" value={draft.capacity} min={MIN_PEOPLE} max={MAX_PEOPLE} onChange={(capacity) => update({ capacity })} />
         </View>
-        <View style={shared.row}>
-          <NumberChoice label="Minimum people, including you" options={SIZES.filter((n) => n <= draft.capacity)} value={draft.minimum} onChange={(minimum) => update({ minimum })} />
-        </View>
-        <Hint>{`${guests} guest${guests === 1 ? '' : 's'} + you · friendship-first, at every table size. If fewer than ${draft.minimum} people are confirmed when applications close, the meal is cancelled.`}</Hint>
+        <Hint>{`Friendship-first, at every table size. If fewer than ${draft.minimum} people are confirmed when applications close, the meal is cancelled.`}</Hint>
       </Section>
 
-      <Section title="When">
+      <Section title="When" icon="Calendar">
         <View style={shared.row}>
           <DropTrigger label="Date" icon="Calendar" value={draft.date ? longDate(draft.date) : null} placeholder="Choose a date" open={open === 'date'} onPress={() => toggleOpen('date')} />
           <DropTrigger label="Time" icon="Clock" value={draft.time} placeholder="Choose a time" open={open === 'time'} onPress={() => toggleOpen('time')} />
@@ -204,7 +206,7 @@ function Arrange({ draft, update, today }: Part & { today: string }) {
         <Hint>London time. This is your planned meeting time; confirm opening hours and book with the restaurant separately.</Hint>
       </Section>
 
-      <Section title="Applications close">
+      <Section title="Applications close" icon="Timer">
         <View style={shared.row}>
           <DropTrigger label="Deadline date" icon="Calendar" value={draft.closeDate ? longDate(draft.closeDate) : null} placeholder="Choose a date" open={open === 'closeDate'} onPress={() => toggleOpen('closeDate')} />
           <DropTrigger label="Deadline time" icon="Clock" value={draft.closeTime} placeholder="Choose a time" open={open === 'closeTime'} onPress={() => toggleOpen('closeTime')} />
@@ -220,19 +222,19 @@ function Arrange({ draft, update, today }: Part & { today: string }) {
 function Introduce({ draft, update }: Part) {
   return (
     <>
-      <Section title="Name and description">
+      <Section title="Name and description" icon="Pencil2">
         <View style={styles.fields}>
           <Field label="Give your meal a name" hint={`5–80 characters · ${draft.title.length}/80`} value={draft.title} onChangeText={(title) => update({ title })} maxLength={80} placeholder="e.g. Friday dinner & new faces" />
           <Field label="What should people expect?" hint={`20–1,000 characters · ${draft.description.length}/1,000`} value={draft.description} onChangeText={(description) => update({ description })} maxLength={1000} multiline placeholder="A relaxed dinner, a shared interest, or simply good company…" />
         </View>
       </Section>
-      <Section title="The company">
+      <Section title="The company" icon="ChatBubble">
         <View style={styles.fields}>
           <ChoiceGroup<MoodCode> label="Atmosphere" options={Object.entries(MOODS) as Array<[MoodCode, string]>} value={draft.mood} onChange={(mood) => update({ mood })} />
           <MultiChoice<LanguageCode> label="Conversation language" options={languageOptions} values={draft.languages} onToggle={(v) => update({ languages: toggle(draft.languages, v) })} />
         </View>
       </Section>
-      <Section title="Food" right={<Text style={styles.optional}>Optional</Text>}>
+      <Section title="Food" icon="Cookie" right={<SectionMarker label="Optional" />}>
         <View style={styles.fields}>
           <ChoiceGroup<'NONE' | CuisineCode> label="Cuisine" options={[['NONE', 'Not provided'], ...(Object.entries(CUISINES) as Array<[CuisineCode, string]>)]} value={draft.cuisineCode ?? 'NONE'} onChange={(v) => update({ cuisineCode: v === 'NONE' ? null : v })} />
           <MultiChoice<DietaryCode> label="Dietary options" options={Object.entries(DIETARY) as Array<[DietaryCode, string]>} values={draft.dietaryCodes} onToggle={(v) => update({ dietaryCodes: toggle(draft.dietaryCodes, v) })} />
@@ -260,21 +262,18 @@ function Costs({ draft, update, editing }: Part & { editing: boolean }) {
   const budget = budgetIssues(draft);
   return (
     <>
-      <Section title="How guests pay">
-        <View style={styles.payRow} accessible accessibilityLabel="Pay at the restaurant. Everyone pays their own share at the restaurant. Nothing is collected in the app.">
-          <Text style={styles.payGlyph}>£</Text>
-          <View style={shared.half}>
-            <Text style={shared.value}>Pay at the restaurant</Text>
-            <Text style={shared.muted}>Everyone pays their own share at the restaurant. Nothing is collected in the app.</Text>
-          </View>
+      <Section title="How guests pay" icon="£">
+        <View accessible accessibilityLabel="Pay at the restaurant. Everyone pays their own share at the restaurant. Nothing is collected in the app.">
+          <Text style={shared.value}>Pay at the restaurant</Text>
+          <Text style={shared.muted}>Everyone pays their own share at the restaurant. Nothing is collected in the app.</Text>
         </View>
       </Section>
-      <Section title="Expected spend">
+      <Section title="Expected spend" icon="Tokens">
         <View style={shared.row}>
           <View style={shared.half}><Field label="From / person (£)" accessibilityLabel="Budget from per person in pounds" value={draft.budgetMin} onChangeText={(budgetMin) => update({ budgetMin })} keyboardType="decimal-pad" placeholder="e.g. 20" error={budget.min} /></View>
           <View style={shared.half}><Field label="To / person (£)" accessibilityLabel="Budget to per person in pounds" value={draft.budgetMax} onChangeText={(budgetMax) => update({ budgetMax })} keyboardType="decimal-pad" placeholder="e.g. 35" error={budget.max} /></View>
         </View>
-        <View style={[shared.soft, styles.spendRow]}>
+        <View style={[shared.box, styles.spendRow]}>
           <View style={shared.half}>
             <Text style={shared.value}>Estimated per person</Text>
             <Text style={shared.tiny}>A guide for guests, not a fixed charge.</Text>
@@ -284,12 +283,12 @@ function Costs({ draft, update, editing }: Part & { editing: boolean }) {
       </Section>
       {/* Edit keeps the booking already reported on the meal; Review reminds the host to update it. */}
       {editing ? null : (
-        <Section title="Restaurant reservation" right={<Text style={styles.required} accessibilityLabel="Required to continue">Required</Text>}>
+        <Section title="Restaurant reservation" icon="CheckCircled" right={<SectionMarker label="Required" tone="peach" accessibilityLabel="Required to continue" />}>
           <Hint>You book the table with the restaurant yourself. Fancy doesn’t reserve tables. Tick to confirm before you continue.</Hint>
           <CheckRow label={reservationDeclaration(draft)} checked={draft.bookingDeclarationConfirmed} onChange={(v) => update({ bookingDeclarationConfirmed: v })} />
         </Section>
       )}
-      <Section title="If plans change">
+      <Section title="If plans change" icon="InfoCircled">
         <Hint>Nothing is paid in the app, so there’s nothing to refund. If you cancel, let the restaurant know yourself; your group chat stays open.</Hint>
       </Section>
     </>
@@ -434,49 +433,48 @@ function Review({ draft, update, today, goTo, mode }: Part & { today: string; go
   );
   return (
     <CreateLayout testID="create-step-3" kind={mode.kind} step={3} onStep={goTo} footer={footer}>
-      <View style={styles.review}>
+      <Section testID="review-summary">
         <Text style={styles.reviewTitle}>{draft.title || 'Untitled meal'}</Text>
         {draft.description ? <Text style={shared.body} numberOfLines={4}>{draft.description}</Text> : null}
         {/* P-05 (owner decision): undeclared cuisine/dietary shows as “Not provided”, exactly as guests will see it. */}
         <Text style={shared.tiny}>{`Cuisine: ${draft.cuisineCode ? CUISINES[draft.cuisineCode] : 'Not provided'} · Dietary options: ${draft.dietaryCodes.length ? draft.dietaryCodes.map((c) => DIETARY[c]).join(' · ') : 'Not provided'}. Host-reported · not an allergy guarantee.`}</Text>
+      </Section>
 
-        <ReviewGroup title="Place & time" onEdit={() => goTo(0)} editLabel="Edit place and time">
-          {draft.venue ? (
-            <RestaurantPhoto venueRef={draft.venue.venueRef} placeId={draft.venue.placeId} name={draft.venue.name} fill>
-              {({ image, attribution }) => (
-                <>
-                  <View style={styles.placeRow}>
-                    <View style={styles.thumb}>{image}</View>
-                    <View style={shared.half}>
-                      <Text style={shared.value} numberOfLines={1}>{draft.venue!.name}</Text>
-                      <Text style={shared.muted} numberOfLines={2}>{draft.venue!.address}</Text>
-                    </View>
+      <ReviewGroup title="Place & time" icon="SewingPinFilled" onEdit={() => goTo(0)} editLabel="Edit place and time">
+        {draft.venue ? (
+          <RestaurantPhoto venueRef={draft.venue.venueRef} placeId={draft.venue.placeId} name={draft.venue.name} fill>
+            {({ image, attribution }) => (
+              <>
+                <View style={styles.placeRow}>
+                  <View style={styles.thumb}>{image}</View>
+                  <View style={shared.half}>
+                    <Text style={shared.value} numberOfLines={1}>{draft.venue!.name}</Text>
+                    <Text style={shared.muted} numberOfLines={2}>{draft.venue!.address}</Text>
                   </View>
-                  {attribution}
-                </>
-              )}
-            </RestaurantPhoto>
-          ) : <Text style={shared.body}>No restaurant chosen</Text>}
-          <Text style={shared.value}>{when}</Text>
-          <Text style={shared.muted}>{`${draft.minimum}–${draft.capacity} people including you · ${closes}`}</Text>
-        </ReviewGroup>
+                </View>
+                {attribution}
+              </>
+            )}
+          </RestaurantPhoto>
+        ) : <Text style={shared.unset}>No restaurant chosen</Text>}
+        <Text style={draft.date && draft.time ? shared.value : shared.unset}>{when}</Text>
+        <Text style={shared.muted}>{`${draft.minimum}–${draft.capacity} people including you · ${closes}`}</Text>
+      </ReviewGroup>
 
-        <ReviewGroup title="The company" onEdit={() => goTo(1)} editLabel="Edit introduction">
-          <Text style={shared.value}>{draft.mood ? MOODS[draft.mood] : 'No atmosphere chosen'}</Text>
-          <Text style={shared.muted}>{draft.languages.length ? languagesLabel(draft.languages) : 'No language chosen'}</Text>
-        </ReviewGroup>
+      <ReviewGroup title="The company" icon="ChatBubble" onEdit={() => goTo(1)} editLabel="Edit introduction">
+        <Text style={draft.mood ? shared.value : shared.unset}>{draft.mood ? MOODS[draft.mood] : 'No atmosphere chosen'}</Text>
+        <Text style={shared.muted}>{draft.languages.length ? languagesLabel(draft.languages) : 'No language chosen'}</Text>
+      </ReviewGroup>
 
-        <ReviewGroup title={editing ? 'Costs' : 'Costs & reservation'} onEdit={() => goTo(2)} editLabel={editing ? 'Edit costs' : 'Edit costs and reservation'}>
-          <Text style={shared.value}>{`${budgetText(draft)} estimated per person`}</Text>
-          <Text style={shared.muted}>Everyone pays their own share at the restaurant</Text>
-          {editing ? null : <Text style={shared.tiny}>{draft.bookingDeclarationConfirmed ? reservationDeclaration(draft) : 'Reservation not confirmed yet.'}</Text>}
-        </ReviewGroup>
-      </View>
-      <View style={[shared.soft, styles.terms]}>
-        <Text style={shared.value}>If plans change</Text>
+      <ReviewGroup title={editing ? 'Costs' : 'Costs & reservation'} icon="£" onEdit={() => goTo(2)} editLabel={editing ? 'Edit costs' : 'Edit costs and reservation'}>
+        <Text style={shared.value}>{`${budgetText(draft)} estimated per person`}</Text>
+        <Text style={shared.muted}>Everyone pays their own share at the restaurant</Text>
+        {editing ? null : <Text style={shared.tiny}>{draft.bookingDeclarationConfirmed ? reservationDeclaration(draft) : 'Reservation not confirmed yet.'}</Text>}
+      </ReviewGroup>
+
+      <Section title="If plans change" icon="InfoCircled" right={<InlineLink label="Cancellation terms" accessibilityLabel="Cancellation terms" onPress={() => router.push('/cancellation-terms')} />}>
         <Text style={shared.muted}>No in-app payment, so nothing to refund. Before the meal you can cancel for everyone from Your guest list; let the restaurant know yourself.</Text>
-        <View style={styles.termsLink}><TextAction label="Cancellation terms" onPress={() => router.push('/cancellation-terms')} /></View>
-      </View>
+      </Section>
       <Sheet visible={time?.kind === 'choose'} title="Which time do you mean?" onClose={() => setTime(null)}>
         <Body>{`Clocks go back in London on this date, so ${time?.target === 'close' ? draft.closeTime : draft.time} happens twice. Choose one.`}</Body>
         {time?.kind === 'choose' ? (
@@ -493,34 +491,23 @@ function Review({ draft, update, today, goTo, mode }: Part & { today: string; go
   );
 }
 
-function ReviewGroup({ title, onEdit, editLabel, children }: { title: string; onEdit: () => void; editLabel: string; children: ReactNode }) {
+/** A Review card: the same soft section card as the steps, with an “Edit” link back to its step. */
+function ReviewGroup({ title, icon, onEdit, editLabel, children }: { title: string; icon: SectionIcon; onEdit: () => void; editLabel: string; children: ReactNode }) {
   return (
-    <View style={styles.group}>
-      <View style={styles.groupHead}>
-        <Text accessibilityRole="header" style={styles.groupTitle}>{title}</Text>
-        <InlineLink label="Edit" accessibilityLabel={editLabel} onPress={onEdit} />
-      </View>
-      {children}
-    </View>
+    <Section title={title} icon={icon} right={<InlineLink label="Edit" accessibilityLabel={editLabel} onPress={onEdit} />}>
+      <View style={styles.group}>{children}</View>
+    </Section>
   );
 }
 
 const styles = createStyles({
   fields: { gap: 14 },
-  optional: { fontSize: 11, color: colors.muted },
-  payRow: { flexDirection: 'row', gap: 10, alignItems: 'flex-start' },
-  payGlyph: { width: 16, textAlign: 'center', fontSize: 15, lineHeight: 18, fontWeight: '700', color: colors.forest },
+  steppers: { paddingVertical: 0, gap: 0 },
   spendRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   spendValue: { fontSize: 16, fontWeight: '700', color: colors.forest },
-  review: { marginTop: 16, borderWidth: 1, borderColor: colors.line, borderRadius: 13, paddingHorizontal: 14, paddingVertical: 12, gap: 4 },
   reviewTitle: { fontSize: 18, lineHeight: 23, letterSpacing: -0.3, fontWeight: '700', color: colors.ink },
-  group: { borderTopWidth: 1, borderTopColor: colors.line, marginTop: 10, paddingTop: 10, gap: 4 },
-  groupHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 },
-  groupTitle: { fontSize: 12, lineHeight: 16, fontWeight: '500', color: colors.muted },
-  placeRow: { flexDirection: 'row', gap: 10, alignItems: 'center' },
-  thumb: { width: 48, height: 48, borderRadius: 8, overflow: 'hidden', backgroundColor: colors.surface },
-  terms: { marginTop: 12 },
-  termsLink: { alignItems: 'flex-start' },
+  group: { gap: 4 },
+  placeRow: { flexDirection: 'row', gap: 10, alignItems: 'center', marginBottom: 4 },
+  thumb: { width: 48, height: 48, borderRadius: 8, overflow: 'hidden', backgroundColor: colors.white },
   state: { flex: 1, padding: 18, gap: 12, backgroundColor: colors.white },
-  required: { fontSize: 11, fontWeight: '700', color: colors.forest },
 });

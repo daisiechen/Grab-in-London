@@ -194,6 +194,11 @@ describe('Create layout and steps (demo create-flow, r07 costs)', () => {
     app.services.drafts.set(CREATE_DRAFT_KEY, readyDraft());
     await renderApp(app, <CreateStepScreen step={2} />);
     expect(screen.getByLabelText('Step 3 of 4')).toBeOnTheScreen();
+    // Compact progress: done steps ticked and revisitable, current selected, later disabled.
+    expect(screen.getByRole('button', { name: 'Costs, current step' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Costs, current step' }).props.accessibilityState).toMatchObject({ selected: true });
+    expect(screen.getByRole('button', { name: 'Arrange, completed' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Arrange, completed' }).props.accessibilityState).toMatchObject({ selected: false, disabled: false });
     expect(screen.getByRole('button', { name: 'Review' })).toBeDisabled();
     await fireEvent.press(screen.getByRole('button', { name: 'Arrange, completed' }));
     expect(mockRouter.navigate).toHaveBeenCalledWith('/create');
@@ -408,5 +413,92 @@ describe('Create simulator walkthrough fixes (iOS 27)', () => {
     app.services.drafts.set(CREATE_DRAFT_KEY, { ...readyDraft(), cuisineCode: 'SPANISH', dietaryCodes: [] });
     await renderApp(app, <CreateStepScreen step={3} />);
     expect(screen.getByText('Cuisine: Spanish · Dietary options: Not provided. Host-reported · not an allergy guarantee.')).toBeOnTheScreen();
+  });
+});
+
+describe('Create visual pass 2: section cards, compact progress and people steppers (owner review 2026-10-28)', () => {
+  async function arrange(patch: Partial<CreateDraft> = {}) {
+    const app = await createSignedIn();
+    app.services.drafts.set(CREATE_DRAFT_KEY, updateDraft(emptyDraft('7f0e1d2c-3b4a-4596-8877-665544332211'), patch));
+    await renderApp(app, <CreateStepScreen step={0} />);
+    return app;
+  }
+  const draftOf = (app: Awaited<ReturnType<typeof arrange>>) => app.services.drafts.get<CreateDraft>(CREATE_DRAFT_KEY)!;
+  const valueOf = (id: string) => screen.getByTestId(id).props.accessibilityValue as { min: number; max: number; now: number; text: string };
+
+  it('the first step shows only the current step selected and every later step disabled', async () => {
+    await arrange();
+    expect(screen.getByLabelText('Step 1 of 4')).toBeOnTheScreen();
+    expect(screen.getByRole('button', { name: 'Arrange, current step' }).props.accessibilityState).toMatchObject({ selected: true });
+    for (const later of ['Introduce', 'Costs', 'Review']) expect(screen.getByRole('button', { name: later })).toBeDisabled();
+    expect(screen.queryByRole('button', { name: /completed/ })).toBeNull();
+  });
+
+  it('Review marks the first three steps completed', async () => {
+    const app = await createSignedIn();
+    app.services.drafts.set(CREATE_DRAFT_KEY, readyDraft());
+    await renderApp(app, <CreateStepScreen step={3} />);
+    for (const done of ['Arrange', 'Introduce', 'Costs']) expect(screen.getByRole('button', { name: `${done}, completed` })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Review, current step' })).toBeDisabled();
+    // Each review card has its own header and Edit link.
+    for (const h of ['Place & time', 'The company', 'Costs & reservation', 'If plans change']) expect(screen.getByRole('header', { name: h })).toBeOnTheScreen();
+  });
+
+  it('section cards carry headers and the Optional / Required markers', async () => {
+    await arrange();
+    for (const h of ['Restaurant', 'Your table', 'When', 'Applications close']) expect(screen.getByRole('header', { name: h })).toBeOnTheScreen();
+    expect(screen.queryByRole('radio', { name: '6 people' })).toBeNull();
+  });
+
+  it('people steppers: one adjustable row each, labelled buttons and announced values', async () => {
+    await arrange();
+    const min = screen.getByTestId('stepper-minimum');
+    const cap = screen.getByTestId('stepper-capacity');
+    expect(min.props.accessibilityRole).toBe('adjustable');
+    expect(min.props.accessibilityLabel).toBe('Minimum, people, including you');
+    expect(cap.props.accessibilityLabel).toBe('Up to, 3 guests + you');
+    expect(valueOf('stepper-minimum')).toEqual({ min: 2, max: 4, now: 2, text: '2 people' });
+    expect(valueOf('stepper-capacity')).toEqual({ min: 2, max: 6, now: 4, text: '4 people' });
+    for (const name of ['Decrease minimum', 'Increase minimum', 'Decrease maximum', 'Increase maximum']) expect(screen.getByRole('button', { name })).toBeOnTheScreen();
+  });
+
+  it('increment and decrement change the draft; buttons disable at 2 and 6', async () => {
+    const app = await arrange();
+    expect(screen.getByRole('button', { name: 'Decrease minimum' })).toBeDisabled();
+    await fireEvent.press(screen.getByRole('button', { name: 'Increase maximum' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Increase maximum' }));
+    expect(draftOf(app).capacity).toBe(6);
+    expect(screen.getByRole('button', { name: 'Increase maximum' })).toBeDisabled();
+    expect(screen.getByText('5 guests + you')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Increase minimum' }));
+    expect(draftOf(app).minimum).toBe(3);
+    expect(screen.getByText(/If fewer than 3 people are confirmed/)).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Decrease minimum' }));
+    expect(draftOf(app).minimum).toBe(2);
+    for (let i = 0; i < 4; i += 1) await fireEvent.press(screen.getByRole('button', { name: 'Decrease maximum' }));
+    expect(draftOf(app).capacity).toBe(2);
+    expect(screen.getByRole('button', { name: 'Decrease maximum' })).toBeDisabled();
+    expect(screen.getByText('1 guest + you')).toBeOnTheScreen();
+  });
+
+  it('keeps minimum ≤ table size: the minimum stops at the table size, and a smaller table pulls it down', async () => {
+    const app = await arrange({ capacity: 3, minimum: 3 });
+    expect(screen.getByRole('button', { name: 'Increase minimum' })).toBeDisabled();
+    expect(valueOf('stepper-minimum').max).toBe(3);
+    await fireEvent.press(screen.getByRole('button', { name: 'Decrease maximum' }));
+    expect(draftOf(app)).toMatchObject({ capacity: 2, minimum: 2 });
+    expect(valueOf('stepper-minimum')).toMatchObject({ now: 2, max: 2 });
+    await fireEvent.press(screen.getByRole('button', { name: 'Increase maximum' }));
+    expect(screen.getByRole('button', { name: 'Increase minimum' })).toBeEnabled();
+  });
+
+  it('VoiceOver increment / decrement actions adjust the value within bounds', async () => {
+    const app = await arrange();
+    await fireEvent(screen.getByTestId('stepper-capacity'), 'accessibilityAction', { nativeEvent: { actionName: 'increment' } });
+    expect(draftOf(app).capacity).toBe(5);
+    await fireEvent(screen.getByTestId('stepper-minimum'), 'accessibilityAction', { nativeEvent: { actionName: 'decrement' } });
+    expect(draftOf(app).minimum).toBe(2);
+    await fireEvent(screen.getByTestId('stepper-minimum'), 'accessibilityAction', { nativeEvent: { actionName: 'increment' } });
+    expect(draftOf(app).minimum).toBe(3);
   });
 });

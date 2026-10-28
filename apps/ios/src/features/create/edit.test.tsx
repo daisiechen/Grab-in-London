@@ -70,7 +70,12 @@ describe('Edit meal flow', () => {
     expect(screen.getByText('Change the place and time.')).toBeOnTheScreen();
     expect(screen.getByRole('button', { name: 'Date: Sun 25 Oct' })).toBeOnTheScreen();
     expect(screen.getByRole('button', { name: 'Time: 19:00' })).toBeOnTheScreen();
-    await fireEvent.press(screen.getByRole('radio', { name: '6 people' }));
+    // Edit uses the same compact people steppers as Create, prefilled from the meal (2–4).
+    expect(screen.getByTestId('stepper-capacity').props.accessibilityValue).toMatchObject({ now: 4, text: '4 people' });
+    expect(screen.getByTestId('stepper-minimum').props.accessibilityValue).toMatchObject({ now: 2, max: 4 });
+    await fireEvent.press(screen.getByRole('button', { name: 'Increase maximum' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Increase maximum' }));
+    expect(screen.getByRole('button', { name: 'Increase maximum' })).toBeDisabled();
     await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
     expect(mockRouter.push).toHaveBeenCalledWith(`/meals/${MEAL_ID}/edit/introduce`);
     expect(app.services.drafts.get<CreateDraft>(editDraftKey(MEAL_ID))).toMatchObject({ capacity: 6, title: 'Sunday dinner' });

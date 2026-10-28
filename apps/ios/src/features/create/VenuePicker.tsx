@@ -112,7 +112,7 @@ export function VenuePicker({ draft, update }: { draft: CreateDraft; update: (pa
         : `${list.length}${more ? '+' : ''} restaurant${list.length === 1 ? '' : 's'} in this map area · tap a pin or a name to preview`;
 
   return (
-    <Section title="Restaurant" right={venue && !open ? <InlineLink label="Change" accessibilityLabel="Change restaurant" onPress={() => setOpen(true)} /> : null}>
+    <Section title="Restaurant" icon="SewingPinFilled" right={venue && !open ? <InlineLink label="Change" accessibilityLabel="Change restaurant" onPress={() => setOpen(true)} /> : null}>
       {venue ? (
         <View style={styles.selected} accessibilityLabel={`Selected restaurant ${venue.name}`}>
           <View style={styles.thumb}>
@@ -132,12 +132,12 @@ export function VenuePicker({ draft, update }: { draft: CreateDraft; update: (pa
           onPress={() => (open ? close() : setOpen(true))}
           style={[styles.trigger, open && styles.triggerOpen]}
         >
-          <Icon name="SewingPinFilled" size={16} color={colors.forest} />
+          <View style={styles.pinCircle}><Icon name="SewingPin" size={15} color={colors.forest} /></View>
           <View style={shared.half}>
             <Text style={styles.triggerTitle}>Choose a restaurant</Text>
             <Text style={shared.muted}>Pick from the map of nearby places</Text>
           </View>
-          <Icon name={open ? 'ChevronUp' : 'ChevronDown'} size={12} color={colors.ink} />
+          <Icon name={open ? 'ChevronUp' : 'ChevronDown'} size={12} color={open ? colors.forest : colors.muted} />
         </Pressable>
       )}
 
@@ -208,19 +208,21 @@ export function VenuePicker({ draft, update }: { draft: CreateDraft; update: (pa
   );
 }
 
+// White hairline boxes so the picker stands out on the section's surface card.
 const styles = createStyles({
-  selected: { flexDirection: 'row', gap: 12, alignItems: 'center', borderWidth: 1, borderColor: colors.line, borderRadius: 11, padding: 10 },
+  selected: { flexDirection: 'row', gap: 12, alignItems: 'center', borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 10, backgroundColor: colors.white },
   thumb: { width: 56, height: 56, borderRadius: 9, overflow: 'hidden', backgroundColor: colors.surface },
-  trigger: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 52, borderWidth: 1, borderColor: colors.line, borderRadius: 11, paddingHorizontal: 12, paddingVertical: 9 },
+  trigger: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 52, borderWidth: 1, borderColor: colors.line, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 9, backgroundColor: colors.white },
   triggerOpen: { borderColor: colors.forest, backgroundColor: colors.selectedSurface },
-  triggerTitle: { fontSize: 14, fontWeight: '600', color: colors.ink },
+  pinCircle: { width: 30, height: 30, borderRadius: 15, backgroundColor: colors.selectedSurface, alignItems: 'center', justifyContent: 'center' },
+  triggerTitle: { fontSize: 15, fontWeight: '600', color: colors.forest },
   dropdown: { gap: 8 },
   top: { gap: 8 },
-  inputWrap: { flexDirection: 'row', alignItems: 'center', gap: 8, height: 40, borderWidth: 1, borderColor: colors.line, borderRadius: 9, paddingHorizontal: 10 },
+  inputWrap: { flexDirection: 'row', alignItems: 'center', gap: 8, height: 40, borderWidth: 1, borderColor: colors.line, borderRadius: 9, paddingHorizontal: 10, backgroundColor: colors.white },
   input: { flex: 1, fontSize: 14, letterSpacing: 0, color: colors.ink, paddingVertical: 0 },
-  map: { height: 200, borderRadius: 11, overflow: 'hidden', borderWidth: 1, borderColor: colors.line, backgroundColor: '#eeeee5' },
+  map: { height: 200, borderRadius: 10, overflow: 'hidden', borderWidth: 1, borderColor: colors.line, backgroundColor: '#eeeee5' },
   status: { fontSize: 11, lineHeight: 15, color: colors.muted },
-  row: { borderWidth: 1, borderColor: colors.line, borderRadius: 11, paddingVertical: 9, paddingHorizontal: 10 },
+  row: { borderWidth: 1, borderColor: colors.line, borderRadius: 10, paddingVertical: 9, paddingHorizontal: 10, backgroundColor: colors.white },
   rowOpen: { borderColor: colors.forest, backgroundColor: colors.selectedSurface },
   rowHead: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   badge: { width: 22, height: 22, borderRadius: 11, backgroundColor: colors.forest, alignItems: 'center', justifyContent: 'center' },

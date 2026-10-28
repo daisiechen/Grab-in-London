@@ -1,4 +1,4 @@
-import { useRef, useState, type ComponentRef, type ReactNode } from 'react';
+import { Fragment, useRef, useState, type ComponentRef, type ReactNode } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { HALF_HOUR_SLOTS } from '../../lib/london.ts';
@@ -57,43 +57,71 @@ export function CreateLayout({ step, onStep, footer, children, testID, kind = 'c
   );
 }
 
-/** Demo `.create-progress`: done steps show a tick and can be revisited; later steps are disabled. */
-function StepIndicator({ step, onStep }: { step: Step; onStep: (s: Step) => void }) {
+/**
+ * Demo `.create-progress`, compact (owner review 2026-10-28): one 18pt row that never competes with
+ * the page title. Current step: filled forest dot + bold forest label; done: pale-green dot with a
+ * forest tick, can be revisited; later: hairline dot, muted, disabled. Connectors turn forest once passed.
+ */
+export function StepIndicator({ step, onStep }: { step: Step; onStep: (s: Step) => void }) {
   return (
     <View style={styles.steps} accessibilityLabel={`Step ${step + 1} of 4`}>
       {STEPS.map((label, i) => {
         const done = i < step;
         const current = i === step;
         return (
-          <Pressable
-            key={label}
-            accessibilityRole="button"
-            accessibilityLabel={done ? `${label}, completed` : label}
-            accessibilityState={{ disabled: i > step, selected: current }}
-            disabled={i >= step}
-            onPress={() => onStep(i as Step)}
-            style={styles.stepItem}
-            hitSlop={4}
-          >
-            <View style={[styles.stepDot, (done || current) && styles.stepDotOn, current && styles.stepDotCurrent]}>
-              {done ? <Icon name="Check" size={12} color={colors.forest} /> : <Text style={[styles.stepNum, current && styles.stepNumCurrent]}>{i + 1}</Text>}
-            </View>
-            <Text style={[styles.stepLabel, current && styles.stepLabelCurrent]}>{label}</Text>
-          </Pressable>
+          <Fragment key={label}>
+            {i > 0 ? <View style={[styles.stepLine, i <= step && styles.stepLineOn]} /> : null}
+            <Pressable
+              testID={`step-${i}`}
+              accessibilityRole="button"
+              accessibilityLabel={done ? `${label}, completed` : current ? `${label}, current step` : label}
+              accessibilityState={{ disabled: i >= step, selected: current }}
+              disabled={i >= step}
+              onPress={() => onStep(i as Step)}
+              style={styles.stepItem}
+              hitSlop={8}
+            >
+              <View style={[styles.stepDot, done && styles.stepDotDone, current && styles.stepDotCurrent]}>
+                {done ? <Icon name="Check" size={11} color={colors.forest} /> : <Text style={[styles.stepNum, current && styles.stepNumCurrent]}>{i + 1}</Text>}
+              </View>
+              <Text style={[styles.stepLabel, done && styles.stepLabelDone, current && styles.stepLabelCurrent]}>{label}</Text>
+            </Pressable>
+          </Fragment>
         );
       })}
     </View>
   );
 }
 
-export function Section({ title, children, right }: { title: string; children: ReactNode; right?: ReactNode }) {
+/** Section icon: a Radix icon, or the `£` glyph used for money rows across the app. */
+export type SectionIcon = IconName | '£';
+
+/**
+ * One soft card per section (owner review 2026-10-28: the form read flat). Surface background on the
+ * white page, 15pt bold ink title with a small forest icon, optional marker or link on the right.
+ */
+export function Section({ title, icon, children, right, testID }: { title?: string; icon?: SectionIcon; children: ReactNode; right?: ReactNode; testID?: string }) {
   return (
-    <View style={styles.section}>
-      <View style={styles.sectionHead}>
-        <Text accessibilityRole="header" style={styles.h2}>{title}</Text>
-        {right}
-      </View>
+    <View style={styles.card} testID={testID}>
+      {title ? (
+        <View style={styles.sectionHead}>
+          <View style={styles.titleRow}>
+            {icon === '£' ? <Text style={styles.glyph}>£</Text> : icon ? <Icon name={icon} size={15} color={colors.forest} /> : null}
+            <Text accessibilityRole="header" style={styles.h2} numberOfLines={1}>{title}</Text>
+          </View>
+          {right}
+        </View>
+      ) : null}
       {children}
+    </View>
+  );
+}
+
+/** Small right-side marker on a section title: muted “Optional”, peach “Required”. */
+export function SectionMarker({ label, tone = 'muted', accessibilityLabel }: { label: string; tone?: 'muted' | 'peach'; accessibilityLabel?: string }) {
+  return (
+    <View style={[styles.marker, tone === 'peach' && styles.markerPeach]} accessible accessibilityLabel={accessibilityLabel ?? label}>
+      <Text style={[styles.markerText, tone === 'peach' && styles.markerTextPeach]}>{label}</Text>
     </View>
   );
 }
@@ -101,9 +129,10 @@ export function Section({ title, children, right }: { title: string; children: R
 export const Hint = ({ children }: { children: ReactNode }) => <Text style={styles.hint}>{children}</Text>;
 
 /**
- * Type scale of the Create steps (owner review 2026-10-28: the form read flat):
- * page title 24/700 (PageHeader) → section title 16/700 ink → chosen value 14/600 ink →
- * field label 12/500 muted → hint 11 muted. Sections sit 18 apart, content 8 under the title.
+ * Type and colour roles of the Create steps (owner review 2026-10-28, second pass):
+ * page title 24/700 ink (PageHeader) → card title 15/700 ink + forest icon → chosen value 15/600 ink →
+ * field label 12/500 muted → placeholder / unset 14/400 muted → hint 11 muted → links 13/600 forest →
+ * errors danger. Inputs and triggers are white hairline boxes so they stand out on the surface card.
  */
 /** Inline dropdown trigger (Discover control style); its panel opens right below the row. */
 export function DropTrigger({ label, value, placeholder, icon, open, onPress }: { label: string; value: string | null; placeholder: string; icon: IconName; open: boolean; onPress: () => void }) {
@@ -117,9 +146,9 @@ export function DropTrigger({ label, value, placeholder, icon, open, onPress }: 
         onPress={onPress}
         style={[styles.trigger, open && styles.triggerOpen]}
       >
-        <Icon name={icon} size={14} color={colors.forest} />
+        <Icon name={icon} size={14} color={value ? colors.forest : colors.muted} />
         <Text style={value ? styles.triggerText : styles.placeholder} numberOfLines={1}>{value ?? placeholder}</Text>
-        <Icon name={open ? 'ChevronUp' : 'ChevronDown'} size={11} color={colors.ink} />
+        <Icon name={open ? 'ChevronUp' : 'ChevronDown'} size={11} color={open ? colors.forest : colors.muted} />
       </Pressable>
     </View>
   );
@@ -153,26 +182,49 @@ export function TimeGrid({ label, value, onChange, isDisabled }: { label: string
   );
 }
 
-/** One-row segmented number choice (2–6 people) so both people rows fit the first screen. */
-export function NumberChoice({ label, options, value, onChange }: { label: string; options: readonly number[]; value: number; onChange: (n: number) => void }) {
+/**
+ * Compact people stepper (owner review 2026-10-28: the segmented 2–6 control was too big): one 44pt
+ * row, label and a tiny hint on the left, − value + on the right with 32pt round buttons that disable
+ * at the bounds. VoiceOver reads the row as one adjustable control (swipe up/down) with its value;
+ * the buttons carry their own labels (“Increase minimum”) for Voice Control and tests.
+ */
+export function Stepper({ label, hint, name, value, min, max, onChange, testID }: { label: string; hint?: string; /** Short noun for the button labels, e.g. “minimum”. */ name: string; value: number; min: number; max: number; onChange: (n: number) => void; testID?: string }) {
+  const canDown = value > min;
+  const canUp = value < max;
+  const step = (delta: number) => { const next = Math.min(max, Math.max(min, value + delta)); if (next !== value) onChange(next); };
+  const valueText = `${value} ${value === 1 ? 'person' : 'people'}`;
   return (
-    <View style={styles.dropWrap} accessibilityRole="radiogroup" accessibilityLabel={label}>
-      <Text style={styles.legend}>{label}</Text>
-      <View style={styles.segment}>
-        {options.map((n, i) => {
-          const on = n === value;
-          return (
-            <Pressable key={n} accessibilityRole="radio" accessibilityLabel={`${n} people`} accessibilityState={{ selected: on }} onPress={() => onChange(n)} style={[styles.segCell, i === 0 && styles.segFirst, on && styles.segOn]}>
-              <Text style={[styles.segText, on && styles.segTextOn]}>{n}</Text>
-            </Pressable>
-          );
-        })}
+    <View
+      testID={testID}
+      style={styles.stepper}
+      accessible
+      accessibilityRole="adjustable"
+      accessibilityLabel={hint ? `${label}, ${hint}` : label}
+      accessibilityValue={{ min, max, now: value, text: valueText }}
+      accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
+      onAccessibilityAction={(e) => step(e.nativeEvent.actionName === 'increment' ? 1 : e.nativeEvent.actionName === 'decrement' ? -1 : 0)}
+    >
+      <View style={styles.stepperText}>
+        <Text style={styles.stepperLabel} numberOfLines={1}>{label}</Text>
+        {hint ? <Text style={styles.stepperHint} numberOfLines={1}>{hint}</Text> : null}
+      </View>
+      <View style={styles.stepperControls}>
+        <Pressable accessibilityRole="button" accessibilityLabel={`Decrease ${name}`} accessibilityState={{ disabled: !canDown }} disabled={!canDown} onPress={() => step(-1)} hitSlop={6} style={[styles.round, !canDown && styles.roundOff]}>
+          <Icon name="Minus" size={14} color={canDown ? colors.forest : colors.line} />
+        </Pressable>
+        <Text style={styles.stepperValue}>{value}</Text>
+        <Pressable accessibilityRole="button" accessibilityLabel={`Increase ${name}`} accessibilityState={{ disabled: !canUp }} disabled={!canUp} onPress={() => step(1)} hitSlop={6} style={[styles.round, !canUp && styles.roundOff]}>
+          <Icon name="Plus" size={14} color={canUp ? colors.forest : colors.line} />
+        </Pressable>
       </View>
     </View>
   );
 }
 
-/** Small underlined in-row link (“Edit”, “Change”) with a descriptive accessibility label. */
+/** Hairline between rows that share one card (e.g. the two people steppers). */
+export const Divider = () => <View style={styles.divider} />;
+
+/** Small forest semibold link (“Edit”, “Change”, “Cancellation terms”) with a descriptive accessibility label. */
 export function InlineLink({ label, accessibilityLabel, onPress }: { label: string; accessibilityLabel: string; onPress: () => void }) {
   return (
     <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel} onPress={onPress} hitSlop={10}>
@@ -184,40 +236,52 @@ export function InlineLink({ label, accessibilityLabel, onPress }: { label: stri
 export const shared = createStyles({
   row: { flexDirection: 'row', gap: 10 },
   half: { flex: 1, minWidth: 0 },
-  box: { borderWidth: 1, borderColor: colors.line, borderRadius: 11, padding: 12, gap: 4, backgroundColor: colors.white },
-  soft: { borderRadius: 11, padding: 12, gap: 4, backgroundColor: '#f2f5ee' },
-  /** A chosen value or the name of a thing: the most prominent text inside a section. */
-  value: { fontSize: 14, lineHeight: 19, fontWeight: '600', color: colors.ink },
-  strong: { fontSize: 14, lineHeight: 19, fontWeight: '700', color: colors.ink },
+  /** White hairline box: stands out on the surface card. */
+  box: { borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 12, gap: 4, backgroundColor: colors.white },
+  /** A chosen value or the name of a thing: the most prominent text inside a card. */
+  value: { fontSize: 15, lineHeight: 20, fontWeight: '600', color: colors.ink },
+  strong: { fontSize: 15, lineHeight: 20, fontWeight: '700', color: colors.ink },
   body: { fontSize: 14, lineHeight: 20, color: colors.ink },
   muted: { fontSize: 12, lineHeight: 17, color: colors.muted },
+  /** Unset value (“No time chosen”): muted, regular weight. */
+  unset: { fontSize: 14, lineHeight: 20, color: colors.muted },
   tiny: { fontSize: 11, lineHeight: 15, color: colors.muted },
 });
 
 const styles = createStyles({
   page: { flex: 1, backgroundColor: colors.white },
   flex: { flex: 1 },
-  scroll: { paddingHorizontal: 16, paddingTop: 10, paddingBottom: 20 },
-  steps: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 14 },
-  stepItem: { flex: 1, alignItems: 'center', gap: 4 },
-  stepDot: { width: 24, height: 24, borderRadius: 12, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.white },
-  stepDotOn: { borderColor: colors.forest },
-  stepDotCurrent: { backgroundColor: colors.forest },
-  stepNum: { fontSize: 11, fontWeight: '700', color: colors.muted },
+  scroll: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 20 },
+  steps: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
+  stepItem: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  stepLine: { flex: 1, height: 1.5, minWidth: 6, marginHorizontal: 6, borderRadius: 1, backgroundColor: colors.line },
+  stepLineOn: { backgroundColor: colors.forest },
+  stepDot: { width: 18, height: 18, borderRadius: 9, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.white },
+  stepDotDone: { borderColor: colors.forest, backgroundColor: colors.selectedSurface },
+  stepDotCurrent: { borderColor: colors.forest, backgroundColor: colors.forest },
+  // lineHeight equals the inner height and the glyph is centred, so the number sits in the middle of the dot.
+  stepNum: { fontSize: 10, lineHeight: 16, height: 16, textAlign: 'center', textAlignVertical: 'center', includeFontPadding: false, fontWeight: '700', color: colors.muted },
   stepNumCurrent: { color: colors.white },
-  stepLabel: { fontSize: 10.5, color: colors.muted },
+  stepLabel: { fontSize: 12, lineHeight: 15, color: colors.muted },
+  stepLabelDone: { color: colors.forest, fontWeight: '500' },
   stepLabelCurrent: { color: colors.forest, fontWeight: '700' },
-  section: { marginTop: 18, gap: 10 },
-  sectionHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: -2 },
-  h2: { fontSize: 16, lineHeight: 20, letterSpacing: -0.3, fontWeight: '700', color: colors.ink },
+  card: { marginTop: 12, backgroundColor: colors.surface, borderRadius: 12, padding: 14, gap: 10 },
+  sectionHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, minHeight: 20 },
+  titleRow: { flexDirection: 'row', alignItems: 'center', gap: 7, flexShrink: 1 },
+  glyph: { width: 15, textAlign: 'center', fontSize: 15, lineHeight: 18, fontWeight: '700', color: colors.forest },
+  h2: { flexShrink: 1, fontSize: 15, lineHeight: 20, letterSpacing: -0.2, fontWeight: '700', color: colors.ink },
+  marker: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
+  markerPeach: { backgroundColor: colors.peach, borderColor: colors.peach },
+  markerText: { fontSize: 11, lineHeight: 14, fontWeight: '600', color: colors.muted },
+  markerTextPeach: { color: colors.ink, fontWeight: '700' },
   hint: { fontSize: 11, lineHeight: 16, color: colors.muted },
   legend: { fontSize: 12, lineHeight: 16, fontWeight: '500', color: colors.muted },
   dropWrap: { flex: 1, minWidth: 0, gap: 5 },
-  trigger: { height: 40, borderWidth: 1, borderColor: colors.line, borderRadius: 9, paddingHorizontal: 10, flexDirection: 'row', alignItems: 'center', gap: 8 },
+  trigger: { height: 42, borderWidth: 1, borderColor: colors.line, borderRadius: 10, paddingHorizontal: 10, flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: colors.white },
   triggerOpen: { borderColor: colors.forest, backgroundColor: colors.selectedSurface },
-  triggerText: { flex: 1, fontSize: 14, fontWeight: '600', color: colors.ink },
-  placeholder: { flex: 1, fontSize: 13, color: colors.muted },
-  panel: { borderWidth: 1, borderColor: colors.line, borderRadius: 11, padding: 10, backgroundColor: colors.white },
+  triggerText: { flex: 1, fontSize: 15, fontWeight: '600', color: colors.ink },
+  placeholder: { flex: 1, fontSize: 14, color: colors.muted },
+  panel: { borderWidth: 1, borderColor: colors.line, borderRadius: 10, padding: 10, backgroundColor: colors.white },
   // Exactly four whole rows, so no sliver of a neighbouring row shows at either edge.
   timeScroll: { maxHeight: ROW * 4 },
   timeGrid: { flexDirection: 'row', flexWrap: 'wrap' },
@@ -228,12 +292,15 @@ const styles = createStyles({
   timeChipOn: { backgroundColor: colors.forest, borderColor: colors.forest },
   timeText: { fontSize: 12, color: colors.ink },
   timeTextOn: { color: colors.white, fontWeight: '700' },
-  segment: { flexDirection: 'row', borderWidth: 1, borderColor: colors.line, borderRadius: 9, overflow: 'hidden' },
-  segCell: { flex: 1, height: 36, alignItems: 'center', justifyContent: 'center', borderLeftWidth: 1, borderLeftColor: colors.line },
-  segFirst: { borderLeftWidth: 0 },
-  segOn: { backgroundColor: colors.forest },
-  segText: { fontSize: 14, color: colors.ink },
-  segTextOn: { color: colors.white, fontWeight: '700' },
-  link: { color: colors.forest, fontSize: 12, textDecorationLine: 'underline' },
+  stepper: { height: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
+  stepperText: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'baseline', gap: 6 },
+  stepperLabel: { fontSize: 14, fontWeight: '600', color: colors.ink },
+  stepperHint: { flexShrink: 1, fontSize: 11, color: colors.muted },
+  stepperControls: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  round: { width: 32, height: 32, borderRadius: 16, borderWidth: 1, borderColor: colors.secondaryBorder, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
+  roundOff: { borderColor: colors.line },
+  stepperValue: { minWidth: 20, textAlign: 'center', fontSize: 16, fontWeight: '600', color: colors.ink },
+  divider: { height: 1, backgroundColor: colors.line },
+  link: { color: colors.forest, fontSize: 13, lineHeight: 18, fontWeight: '600' },
   footer: { paddingTop: 10, paddingHorizontal: 16, borderTopWidth: 1, borderTopColor: colors.line, backgroundColor: colors.white, gap: 8 },
 });
