@@ -12,12 +12,13 @@ import {Body,Heading} from '../../ui/Text.tsx';
 import {colors,radius} from '../../ui/tokens.ts';
 import {PreferencesView} from './PreferencesView.tsx';
 import {HelperLauncher} from './HelperLauncher.tsx';
+import {useHelperLauncherHidden} from './launcher-visibility.ts';
 import {useAssistantState} from './hooks.ts';
 import {ASSISTANT_INPUT_MAX,OVERLONG_INPUT_MESSAGE,type AIDraft} from './manager.ts';
 
 /** Native floating entry + modal; shares the approved green/peach tokens and existing Sheet. */
 export function AssistantWidget(){
- const {assistant}=useServices();const s=useAssistantState();const insets=useSafeAreaInsets();const router=useRouter();
+ const {assistant}=useServices();const s=useAssistantState();const launcherHidden=useHelperLauncherHidden();const insets=useSafeAreaInsets();const router=useRouter();
  const [active,setActive]=useState(AppState.currentState==='active');
  const [includeEditor,setIncludeEditor]=useState(false);const [replace,setReplace]=useState<AIDraft|null>(null);const [busy,setBusy]=useState(false);
  const editTimer=useRef<ReturnType<typeof setTimeout>|null>(null);
@@ -39,7 +40,7 @@ export function AssistantWidget(){
   void transfer(d,false);
  };
  return <>
-  {s.open?null:<HelperLauncher onOpen={()=>assistant.open()}/>}
+  {s.open||launcherHidden?null:<HelperLauncher onOpen={()=>assistant.open()}/>}
   <Sheet avoidKeyboard keyboardInsets={insets} visible={s.open} title="Ask Fancy" onClose={()=>{if(editTimer.current){clearTimeout(editTimer.current);editTimer.current=null;void assistant.edited();}assistant.close();}}>
     <ScrollView style={{maxHeight:480,flexShrink:1}} contentContainerStyle={{gap:12}} keyboardShouldPersistTaps="handled">
      {s.view==='preferences'?<PreferencesView key={`${s.preferenceVersion}:${s.view}:${JSON.stringify(s.preferences)}`}/>:<>

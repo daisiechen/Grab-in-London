@@ -1,5 +1,5 @@
 import { Pressable, Text, View } from 'react-native';
-import { colors, radius, type } from './tokens.ts';
+import { colors, radius } from './tokens.ts';
 import { createStyles } from './styles.ts';
 
 type Option<V extends string> = readonly [value: V, label: string];
@@ -46,11 +46,11 @@ function Chip({ label, selected, role, onPress }: { label: string; selected: boo
 }
 
 const styles = createStyles({
-  group: { gap: 8 },
-  legend: { fontSize: type.control, fontWeight: '700', color: colors.ink },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { minHeight: 36, paddingHorizontal: 12, paddingVertical: 8, borderRadius: radius.sm, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.white, justifyContent: 'center' },
+  group: { gap: 6 },
+  legend: { fontSize: 12, fontWeight: '700', color: colors.ink },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+  chip: { minHeight: 32, paddingHorizontal: 11, paddingVertical: 6, borderRadius: radius.sm, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.white, justifyContent: 'center' },
   selected: { backgroundColor: colors.selectedSurface, borderColor: colors.forest },
-  chipLabel: { fontSize: type.control, color: colors.ink },
+  chipLabel: { fontSize: 12, color: colors.ink },
   selectedLabel: { color: colors.forest, fontWeight: '700' },
 });

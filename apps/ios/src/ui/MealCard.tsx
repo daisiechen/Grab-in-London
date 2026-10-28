@@ -31,58 +31,59 @@ export function MealCard({ meal, onPress, onPerson, members, compact = false, st
             accessibilityRole="button"
             accessibilityLabel={`Open ${meal.title}`}
             onPress={onPress}
-            style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+            style={({ pressed }) => [styles.press, pressed && styles.pressed]}
           >
-            <View style={[styles.photo, compact ? styles.photoCompact : null]}>{image}</View>
-            <View style={styles.copy}>
-              <Text style={styles.title}>{meal.title}</Text>
-              <Text style={styles.venue}>{venueName(meal)}</Text>
-              <Line icon="SewingPin">{`${areaName(meal.areaCode)}, London`}</Line>
-              <Line icon="Calendar">{cardWhenLabel(meal.startsAt)}</Line>
-              <Line>{`${cardBudgetLabel(meal)} per person`}</Line>
-              <Line icon="Person">{`Table for ${meal.capacity} · ${meal.confirmedCount} confirmed`}</Line>
-              <View style={styles.avatars}>
-                {people.map((p) => <Avatar key={p.id} person={p} size={compact ? 29 : 32} {...(onPerson ? { onPress: () => onPerson(p) } : {})} />)}
+            <View style={styles.card}>
+              <View style={[styles.photo, compact ? styles.photoCompact : null]}>{image}</View>
+              <View style={styles.copy}>
+                <Text style={styles.title} numberOfLines={2}>{meal.title}</Text>
+                <Text style={styles.venue} numberOfLines={1}>{venueName(meal)}</Text>
+                <Line icon="SewingPin">{`${areaName(meal.areaCode)}, London`}</Line>
+                <Line icon="Calendar">{cardWhenLabel(meal.startsAt)}</Line>
+                <Line glyph="£">{`${cardBudgetLabel(meal).replace(/^£/, '')} per person`}</Line>
+                <Line icon="Person">{`Table for ${meal.capacity} · ${meal.confirmedCount} confirmed`}</Line>
+                <Line icon="ChatBubble">{`${moodLabel(meal)} · ${languagesLabel(meal.languages)}`}</Line>
+                <View style={styles.avatars}>
+                  {people.map((p) => <Avatar key={p.id} person={p} size={compact ? 26 : 28} {...(onPerson ? { onPress: () => onPerson(p) } : {})} />)}
+                </View>
               </View>
             </View>
+            {status ? <Text style={styles.status}>{status}</Text> : null}
+            {meal.status === 'CANCELLED' ? <Text style={styles.cancelled}>Cancelled</Text> : null}
           </Pressable>
           {attribution}
-          {status ? <Text style={styles.status}>{status}</Text> : null}
-          {meal.status === 'CANCELLED' ? <Text style={styles.cancelled}>Cancelled</Text> : null}
-          {compact ? (
-            <View style={styles.pill}><Text style={styles.pillText}>{moodLabel(meal)}</Text></View>
-          ) : (
-            <Text style={styles.caption}>{`${moodLabel(meal)} · ${languagesLabel(meal.languages)}`}</Text>
-          )}
         </View>
       )}
     </RestaurantPhoto>
   );
 }
 
-function Line({ icon, children }: { icon?: IconName; children: string }) {
+/** Meta row: every line starts with the same 12pt icon column so the text aligns (price uses a £ glyph). */
+function Line({ icon, glyph, children }: { icon?: IconName; glyph?: string; children: string }) {
   return (
     <View style={styles.line}>
-      {icon ? <Icon name={icon} size={12} color={colors.muted} /> : null}
-      <Text style={styles.meta}>{children}</Text>
+      <View style={styles.lineIcon}>
+        {icon ? <Icon name={icon} size={12} color={colors.muted} /> : glyph ? <Text style={styles.glyph}>{glyph}</Text> : null}
+      </View>
+      <Text style={styles.meta} numberOfLines={1}>{children}</Text>
     </View>
   );
 }
 
 const styles = createStyles({
-  card: { flexDirection: 'row', gap: 13, borderRadius: 10 },
+  press: { borderRadius: 10 },
+  card: { flexDirection: 'row', gap: 12 },
   pressed: { backgroundColor: '#123f3508' },
-  photo: { width: 116, minHeight: 143, maxHeight: 150, borderRadius: 9, overflow: 'hidden' },
-  photoCompact: { width: 101, minHeight: 130 },
+  photo: { width: 104, alignSelf: 'stretch', minHeight: 128, borderRadius: 9, overflow: 'hidden' },
+  photoCompact: { width: 92, minHeight: 118 },
   copy: { flex: 1, minWidth: 0 },
-  title: { fontSize: 17, lineHeight: 19, fontWeight: '700', letterSpacing: -0.5, color: colors.ink, marginBottom: 5 },
-  venue: { fontSize: 11, lineHeight: 14, fontWeight: '600', color: '#46594d', marginBottom: 4 },
-  line: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 3 },
+  title: { fontSize: 16, lineHeight: 19, fontWeight: '700', letterSpacing: -0.4, color: colors.ink, marginBottom: 2 },
+  venue: { fontSize: 11, lineHeight: 14, fontWeight: '600', color: '#46594d', marginBottom: 3 },
+  line: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 2 },
+  lineIcon: { width: 12, alignItems: 'center' },
+  glyph: { fontSize: 11, lineHeight: 13, fontWeight: '700', color: colors.muted },
   meta: { fontSize: 11, lineHeight: 15, color: colors.muted, flexShrink: 1 },
-  avatars: { flexDirection: 'row', gap: 5, marginTop: 8, alignItems: 'center' },
-  caption: { marginTop: 9, fontSize: 10, color: '#5e7364' },
-  pill: { alignSelf: 'flex-start', marginTop: 10, paddingVertical: 4, paddingHorizontal: 8, backgroundColor: '#f0f3ec', borderRadius: 7 },
-  pillText: { fontSize: 10, lineHeight: 14, color: '#536c5b' },
+  avatars: { flexDirection: 'row', gap: 5, marginTop: 5, alignItems: 'center' },
   status: { marginTop: 8, fontSize: 13, color: colors.forest, fontWeight: '700' },
   cancelled: { marginTop: 8, fontSize: 13, color: colors.danger, fontWeight: '700' },
 });

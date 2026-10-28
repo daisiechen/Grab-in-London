@@ -644,7 +644,8 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
     // ── auth ──
     startEmail: ({ body }) => {
       const challengeId = newChallenge(body.email, body.client);
-      return { data: { challengeId, expiresAt: iso(issueBase() + 10 * MINUTE), resendAfter: iso(issueBase() + 30_000) } };
+      // Challenge times are compared with the app's business clock (services.now), unlike token expiries.
+      return { data: { challengeId, expiresAt: iso(now() + 10 * MINUTE), resendAfter: iso(now() + 30_000) } };
     },
     verifyEmail: ({ body }) => {
       const challenge = challenges.get(body.challengeId) ?? fail('NOT_FOUND', 'This code has expired. Request a new code.');
@@ -685,7 +686,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
       return { status: 204, data: undefined };
     },
     startReauth: ({ body }) => {
-      if (body.method === 'EMAIL') return { data: { challengeId: newChallenge(user(ALEX).email ?? 'alex@example.com', 'IOS'), expiresAt: iso(issueBase() + 10 * MINUTE) } };
+      if (body.method === 'EMAIL') return { data: { challengeId: newChallenge(user(ALEX).email ?? 'alex@example.com', 'IOS'), expiresAt: iso(now() + 10 * MINUTE) } };
       if (oauthMode === 'unavailable') fail('PROVIDER_UNAVAILABLE', 'Google and Apple sign-in are not available in preview. Continue with email.');
       const state = newId(w, 'misc');
       oauthStates.set(state, { used: false });

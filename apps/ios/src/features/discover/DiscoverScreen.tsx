@@ -22,6 +22,7 @@ import { BRAND_COPY } from '../../ui/brand.ts';
 import { languageOptions } from '../profile/model.ts';
 import type { Meal } from '../meals/format.ts';
 import { groupByArea } from './areas.ts';
+import { useHideHelperLauncher } from '../assistant/launcher-visibility.ts';
 import { DiscoverMap, nativeMapAvailable } from './DiscoverMap';
 import { BUDGET_STEPS, activeFilterCount, emptyFilters, toQuery, toggle, type Filters, type TimeOfDay } from './filters.ts';
 import { createStyles } from '../../ui/styles.ts';
@@ -100,6 +101,7 @@ export function DiscoverScreen() {
   }, [applied, load]);
 
   const open = (kind: SheetKind) => {
+    if (sheet === kind) { setSheet(''); return; }
     setPending(applied);
     setSheet(kind);
   };
@@ -126,6 +128,7 @@ export function DiscoverScreen() {
     setSelectedId(groups.find((g) => g.code === code)?.meals[0]?.id ?? null);
   };
   const notify = (message: string) => setToast(message);
+  useHideHelperLauncher(sheet === 'date' || sheet === 'size' || sheet === 'filters');
   useEffect(() => {
     if (!toast) return;
     const timer = setTimeout(() => setToast(null), 2600);
@@ -144,22 +147,25 @@ export function DiscoverScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.header}>
-        <Pressable accessibilityRole="button" style={styles.city} onPress={() => notify('London is our first city. More tables will follow.')}>
-          <Text style={styles.cityText}>London</Text>
-          <Icon name="ChevronDown" size={13} color={colors.ink} />
-        </Pressable>
-        <Text accessibilityRole="header" style={styles.h1}>{BRAND_COPY.invitation}</Text>
+        <View style={styles.titleRow}>
+          <Text accessibilityRole="header" style={styles.h1}>{BRAND_COPY.invitation}</Text>
+          <Pressable accessibilityRole="button" accessibilityLabel="City: London" hitSlop={8} style={styles.city} onPress={() => notify('London is our first city. More tables will follow.')}>
+            <Icon name="SewingPin" size={13} color={colors.forest} />
+            <Text style={styles.cityText}>London</Text>
+            <Icon name="ChevronDown" size={11} color={colors.ink} />
+          </Pressable>
+        </View>
         <Text style={styles.tagline}>{BRAND_COPY.slogan}</Text>
         <View style={styles.controls}>
-          <Pressable accessibilityRole="button" accessibilityLabel="Filter by date" style={styles.control} onPress={() => open('date')}>
+          <Pressable accessibilityRole="button" accessibilityLabel="Filter by date" accessibilityState={{ expanded: sheet === 'date' }} style={[styles.control, sheet === 'date' && styles.controlOpen]} onPress={() => open('date')}>
             <Icon name="Calendar" size={14} />
             <Text style={styles.controlText} numberOfLines={1}>{dateLabel}</Text>
-            <Icon name="ChevronDown" size={10} />
+            <Icon name={sheet === 'date' ? 'ChevronUp' : 'ChevronDown'} size={10} />
           </Pressable>
-          <Pressable accessibilityRole="button" accessibilityLabel="Filter by table size" style={styles.control} onPress={() => open('size')}>
+          <Pressable accessibilityRole="button" accessibilityLabel="Filter by table size" accessibilityState={{ expanded: sheet === 'size' }} style={[styles.control, sheet === 'size' && styles.controlOpen]} onPress={() => open('size')}>
             <Icon name="Person" size={14} />
             <Text style={styles.controlText} numberOfLines={1}>{sizeLabel}</Text>
-            <Icon name="ChevronDown" size={10} />
+            <Icon name={sheet === 'size' ? 'ChevronUp' : 'ChevronDown'} size={10} />
           </Pressable>
           <View style={styles.toggle}>
             <Pressable accessibilityRole="button" accessibilityLabel="List view" accessibilityState={{ selected: !mapMode }} style={[styles.toggleButton, !mapMode && styles.toggleSelected]} onPress={() => setMapMode(false)}>
@@ -169,12 +175,13 @@ export function DiscoverScreen() {
               <Icon name="Globe" size={16} color={mapMode ? colors.white : colors.ink} />
             </Pressable>
           </View>
-          <Pressable accessibilityRole="button" accessibilityLabel={count ? `More filters, ${count} active` : 'More filters'} style={[styles.control, styles.more]} onPress={() => open('filters')}>
+          <Pressable accessibilityRole="button" accessibilityLabel={count ? `More filters, ${count} active` : 'More filters'} accessibilityState={{ expanded: sheet === 'filters' }} style={[styles.control, styles.more, sheet === 'filters' && styles.controlOpen]} onPress={() => open('filters')}>
             <Icon name="MixerHorizontal" size={14} />
             {count ? <View style={styles.count}><Text style={styles.countText}>{count}</Text></View> : null}
           </Pressable>
         </View>
       </View>
+      <View style={styles.flex}>
       <FormMessage message={error} />
       {error ? <View style={styles.retry}><Primary secondary label="Try again" onPress={() => void load(applied, null)} /></View> : null}
       {mapMode ? (
@@ -252,32 +259,44 @@ export function DiscoverScreen() {
           {areaMeals.map((m, i) => <View key={m.id} style={[styles.listMeal, i === 0 && styles.areaFirst]}><MealCard compact meal={m} onPress={() => { setSheet(''); openMeal(m); }} onPerson={(p) => { setSheet(''); openPerson(p); }} /></View>)}
         </ScrollView>
       </Sheet>
-      <Sheet visible={sheet === 'date'} title="Date" onClose={() => setSheet('')}>
-        <DateChoices label="Choose one or more dates" multiple today={today} selected={pending.dates} onToggle={(d) => setPending({ ...pending, dates: toggle(pending.dates, d) })} />
-        <TextAction label="Any date" onPress={() => setPending({ ...pending, dates: [] })} />
-        <Primary label="Show meals" onPress={apply} />
-      </Sheet>
-      <Sheet visible={sheet === 'size'} title="Table size" onClose={() => setSheet('')}>
-        <MultiChoice<string> label="Including the host" options={SIZE_OPTIONS.map((n) => [String(n), `${n} people`] as const)} values={pending.tableSizes.map(String)} onToggle={(v) => setPending({ ...pending, tableSizes: toggle(pending.tableSizes, Number(v)) })} />
-        <Primary label="Show meals" onPress={apply} />
-      </Sheet>
-      <Sheet visible={sheet === 'filters'} title="Filters" onClose={() => setSheet('')}>
-        <ScrollView style={{ maxHeight: 460 }} contentContainerStyle={{ gap: 14 }}>
-          <ChoiceGroup<TimeOfDay> label="Time of day" options={[['any', 'Any time'], ['lunch', 'Lunch'], ['dinner', 'Dinner']]} value={pending.timeOfDay} onChange={(timeOfDay) => setPending({ ...pending, timeOfDay })} />
-          <ChoiceGroup<string>
-            label="Budget per person"
-            options={[['any', 'Any budget'], ...BUDGET_STEPS.map((p) => [String(p), `Up to £${p / 100}`] as const)]}
-            value={pending.budgetMaxPence === null ? 'any' : String(pending.budgetMaxPence)}
-            onChange={(v) => setPending({ ...pending, budgetMaxPence: v === 'any' ? null : Number(v) })}
-          />
-          <MultiChoice<LanguageCode> label="Conversation language" options={languageOptions} values={pending.languages} onToggle={(v) => setPending({ ...pending, languages: toggle(pending.languages, v) })} />
-          <MultiChoice<MoodCode> label="Atmosphere" options={Object.entries(MOODS) as Array<[MoodCode, string]>} values={pending.moods} onToggle={(v) => setPending({ ...pending, moods: toggle(pending.moods, v) })} />
-          <MultiChoice<CuisineCode> label="Cuisine (host-declared)" options={Object.entries(CUISINES) as Array<[CuisineCode, string]>} values={pending.cuisineCodes} onToggle={(v) => setPending({ ...pending, cuisineCodes: toggle(pending.cuisineCodes, v) })} />
-          <MultiChoice<DietaryCode> label="Dietary (host-declared)" options={Object.entries(DIETARY) as Array<[DietaryCode, string]>} values={pending.dietaryCodes} onToggle={(v) => setPending({ ...pending, dietaryCodes: toggle(pending.dietaryCodes, v) })} />
-        </ScrollView>
-        <TextAction label="Clear filters" onPress={() => setPending({ ...emptyFilters(), keyword: pending.keyword })} />
-        <Primary label="Show meals" onPress={apply} />
-      </Sheet>
+      {sheet === 'date' || sheet === 'size' || sheet === 'filters' ? (
+        <View style={styles.dropLayer}>
+          <Pressable accessibilityRole="button" accessibilityLabel="Close" style={styles.dropBackdrop} onPress={() => setSheet('')} />
+          <View style={styles.dropPanel}>
+            <ScrollView style={styles.dropScroll} contentContainerStyle={styles.dropContent} keyboardShouldPersistTaps="handled">
+              {sheet === 'date' ? (
+                <DateChoices label="Choose one or more dates" multiple today={today} selected={pending.dates} onToggle={(d) => setPending({ ...pending, dates: toggle(pending.dates, d) })} />
+              ) : sheet === 'size' ? (
+                <MultiChoice<string> label="Table size, including the host" options={SIZE_OPTIONS.map((n) => [String(n), `${n} people`] as const)} values={pending.tableSizes.map(String)} onToggle={(v) => setPending({ ...pending, tableSizes: toggle(pending.tableSizes, Number(v)) })} />
+              ) : (
+                <>
+                  <ChoiceGroup<TimeOfDay> label="Time of day" options={[['any', 'Any time'], ['lunch', 'Lunch'], ['dinner', 'Dinner']]} value={pending.timeOfDay} onChange={(timeOfDay) => setPending({ ...pending, timeOfDay })} />
+                  <ChoiceGroup<string>
+                    label="Budget per person"
+                    options={[['any', 'Any budget'], ...BUDGET_STEPS.map((p) => [String(p), `Up to £${p / 100}`] as const)]}
+                    value={pending.budgetMaxPence === null ? 'any' : String(pending.budgetMaxPence)}
+                    onChange={(v) => setPending({ ...pending, budgetMaxPence: v === 'any' ? null : Number(v) })}
+                  />
+                  <MultiChoice<LanguageCode> label="Conversation language" options={languageOptions} values={pending.languages} onToggle={(v) => setPending({ ...pending, languages: toggle(pending.languages, v) })} />
+                  <MultiChoice<MoodCode> label="Atmosphere" options={Object.entries(MOODS) as Array<[MoodCode, string]>} values={pending.moods} onToggle={(v) => setPending({ ...pending, moods: toggle(pending.moods, v) })} />
+                  <MultiChoice<CuisineCode> label="Cuisine (host-declared)" options={Object.entries(CUISINES) as Array<[CuisineCode, string]>} values={pending.cuisineCodes} onToggle={(v) => setPending({ ...pending, cuisineCodes: toggle(pending.cuisineCodes, v) })} />
+                  <MultiChoice<DietaryCode> label="Dietary (host-declared)" options={Object.entries(DIETARY) as Array<[DietaryCode, string]>} values={pending.dietaryCodes} onToggle={(v) => setPending({ ...pending, dietaryCodes: toggle(pending.dietaryCodes, v) })} />
+                </>
+              )}
+            </ScrollView>
+            <View style={styles.dropFooter}>
+              <View style={styles.dropClear}>
+                <TextAction
+                  label={sheet === 'date' ? 'Any date' : sheet === 'size' ? 'Any size' : 'Clear filters'}
+                  onPress={() => setPending(sheet === 'date' ? { ...pending, dates: [] } : sheet === 'size' ? { ...pending, tableSizes: [] } : { ...emptyFilters(), keyword: pending.keyword })}
+                />
+              </View>
+              <View style={styles.dropApply}><Primary label="Show meals" onPress={apply} /></View>
+            </View>
+          </View>
+        </View>
+      ) : null}
+      </View>
     </SafeAreaView>
   );
 }
@@ -285,14 +304,16 @@ export function DiscoverScreen() {
 const styles = createStyles({
   safe: { flex: 1, backgroundColor: colors.white },
   flex: { flex: 1 },
-  header: { paddingTop: 13, paddingHorizontal: 16, paddingBottom: 10, backgroundColor: colors.white, zIndex: 2 },
-  city: { flexDirection: 'row', alignItems: 'center', gap: 7, alignSelf: 'flex-start', marginBottom: 9 },
-  cityText: { fontSize: 16, fontWeight: '700', color: colors.ink },
-  h1: { fontSize: 27, lineHeight: 30, letterSpacing: -1.1, fontWeight: '700', color: colors.ink, marginBottom: 7 },
-  tagline: { fontSize: 10.5, lineHeight: 15, color: colors.muted, marginBottom: 12 },
+  header: { paddingTop: 2, paddingHorizontal: 16, paddingBottom: 8, backgroundColor: colors.white, zIndex: 2 },
+  titleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
+  city: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingVertical: 6, paddingHorizontal: 9, borderRadius: 16, backgroundColor: colors.surface },
+  cityText: { fontSize: 12, fontWeight: '700', color: colors.ink },
+  h1: { flexShrink: 1, fontSize: 27, lineHeight: 31, letterSpacing: -1.1, fontWeight: '700', color: colors.ink },
+  tagline: { fontSize: 10.5, lineHeight: 14, color: colors.muted, marginTop: 2, marginBottom: 9 },
   controls: { flexDirection: 'row', gap: 5, alignItems: 'center' },
   control: { borderWidth: 1, borderColor: colors.line, height: 35, borderRadius: 9, paddingHorizontal: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, flexShrink: 1 },
   controlText: { fontSize: 11, color: colors.ink, flexShrink: 1 },
+  controlOpen: { borderColor: colors.forest, backgroundColor: colors.selectedSurface },
   toggle: { flexDirection: 'row', borderWidth: 1, borderColor: colors.line, borderRadius: 9, overflow: 'hidden', marginLeft: 'auto' },
   toggleButton: { height: 33, width: 34, alignItems: 'center', justifyContent: 'center' },
   toggleSelected: { backgroundColor: colors.forest },
@@ -327,6 +348,14 @@ const styles = createStyles({
   empty: { alignItems: 'center', paddingVertical: 15, paddingHorizontal: 8, gap: 8 },
   emptyTitle: { fontSize: 18, fontWeight: '700', color: colors.ink, textAlign: 'center' },
   emptyBody: { fontSize: 13, color: colors.muted, textAlign: 'center', marginBottom: 12 },
+  dropLayer: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, zIndex: 20 },
+  dropBackdrop: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, backgroundColor: 'rgba(16,36,31,0.18)' },
+  dropPanel: { backgroundColor: colors.white, borderBottomLeftRadius: 19, borderBottomRightRadius: 19, borderTopWidth: 1, borderTopColor: colors.line, maxHeight: '78%', shadowColor: colors.ink, shadowOpacity: 0.12, shadowRadius: 12, shadowOffset: { width: 0, height: 6 } },
+  dropScroll: { flexGrow: 0 },
+  dropContent: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 4, gap: 14 },
+  dropFooter: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, paddingTop: 8, paddingBottom: 12 },
+  dropClear: { flexShrink: 0 },
+  dropApply: { flex: 1 },
   toast: { position: 'absolute', left: 17, right: 17, bottom: 42, backgroundColor: colors.forest, paddingVertical: 13, paddingHorizontal: 16, borderRadius: 12, shadowColor: colors.forest, shadowOpacity: 0.19, shadowRadius: 20, shadowOffset: { width: 0, height: 5 }, zIndex: 150 },
   toastText: { color: colors.white, fontSize: 12 },
 });

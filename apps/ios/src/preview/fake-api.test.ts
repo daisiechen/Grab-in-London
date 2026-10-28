@@ -66,7 +66,7 @@ async function signIn(ctx: ReturnType<typeof setup>) {
   const deps = { api: ctx.transport, session: ctx.session, createChallenge: challenge, newId };
   const started = await startEmailChallenge(deps.api, 'alex@example.com', newId);
   if (!started.ok) throw new Error(started.message);
-  const result = await verifyEmailCode(deps, started.challenge, '000000', Date.now());
+  const result = await verifyEmailCode(deps, started.challenge, '000000', ctx.backend.now()); // the app passes services.now()
   if (result.kind !== 'signedIn') throw new Error(`sign-in failed: ${JSON.stringify(result)}`);
   return result;
 }

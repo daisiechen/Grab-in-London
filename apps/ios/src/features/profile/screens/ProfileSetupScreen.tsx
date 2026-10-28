@@ -10,6 +10,7 @@ import { Body, Eyebrow, Heading } from '../../../ui/Text.tsx';
 import { useServices, useSessionState } from '../../../services.tsx';
 import { POLICY_VERSION } from '../../../config.ts';
 import { takeReturnTo } from '../../auth/intent.ts';
+import { useLeaveAuth } from '../../auth/useAuthGate.ts';
 import { buildPatch, formFromMe, needsConsent, validateProfile, type ProfileField, type ProfileForm } from '../model.ts';
 import { ProfileSaver } from '../save.ts';
 import { ProfileFormView } from './ProfileFormView.tsx';
@@ -23,6 +24,7 @@ function ProfileSetupScreenContent() {
   const services = useServices();
   const state = useSessionState();
   const router = useRouter();
+  const leave = useLeaveAuth();
   const me = state.status === 'signedIn' ? state.session.user : null;
   const [form, setForm] = useState<ProfileForm | null>(me ? formFromMe(me) : null);
   const [consent, setConsent] = useState(false);
@@ -49,7 +51,7 @@ function ProfileSetupScreenContent() {
     setBusy(false);
     if (res.kind === 'saved') {
       setError(null);
-      if (res.me.profileGate.profileComplete) router.replace(takeReturnTo('/') as never);
+      if (res.me.profileGate.profileComplete) leave(takeReturnTo('/'));
       else setError({ field: null, message: 'A few details are still missing.' });
     } else if (res.kind === 'conflict') setError({ field: null, message: res.message });
     else setError({ field: res.kind === 'invalid' ? res.field : null, message: res.message });

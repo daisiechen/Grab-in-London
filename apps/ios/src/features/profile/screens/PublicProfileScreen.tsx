@@ -71,11 +71,11 @@ const monthName = (instant: string) => MONTHS[new Date(instant).getUTCMonth()] ?
 
 const styles = createStyles({
   page: { flex: 1, backgroundColor: colors.white },
-  body: { paddingTop: 25, paddingHorizontal: 21, paddingBottom: 40 },
-  h2: { fontSize: 17, letterSpacing: -0.3, fontWeight: '700', color: colors.ink, marginTop: 27, marginBottom: 13 },
+  body: { paddingTop: 14, paddingHorizontal: 18, paddingBottom: 32 },
+  h2: { fontSize: 16, letterSpacing: -0.3, fontWeight: '700', color: colors.ink, marginTop: 18, marginBottom: 8 },
   muted: { fontSize: 12, color: colors.muted, lineHeight: 18 },
-  quote: { padding: 18, backgroundColor: '#f5f6f0', borderRadius: 12, marginBottom: 10 },
-  quoteText: { fontSize: 14, lineHeight: 22, color: colors.ink },
-  quoteBy: { marginTop: 11, fontSize: 11, color: colors.muted },
-  safety: { marginTop: 18, gap: 4, alignItems: 'center' },
+  quote: { padding: 14, backgroundColor: '#f5f6f0', borderRadius: 12, marginBottom: 8 },
+  quoteText: { fontSize: 14, lineHeight: 21, color: colors.ink },
+  quoteBy: { marginTop: 8, fontSize: 11, color: colors.muted },
+  safety: { marginTop: 12, gap: 2, alignItems: 'center' },
 });

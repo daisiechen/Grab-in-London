@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { addMonths, longDate, monthGrid, monthTitle } from '../lib/london.ts';
-import { colors, radius, type } from './tokens.ts';
+import { colors, type } from './tokens.ts';
 import { createStyles } from './styles.ts';
 
 /** Month/day chooser (prototype DateChoices) on London calendar dates; past dates are disabled. */
@@ -27,17 +27,18 @@ export function DateChoices({ label, selected, onToggle, today, multiple = false
           const past = d < today;
           const on = selected.includes(d);
           return (
-            <Pressable
-              key={d}
-              accessibilityRole={multiple ? 'checkbox' : 'radio'}
-              accessibilityLabel={longDate(d)}
-              accessibilityState={multiple ? { checked: on, disabled: past } : { selected: on, disabled: past }}
-              disabled={past}
-              onPress={() => onToggle(d)}
-              style={[styles.cell, styles.day, on && styles.on]}
-            >
-              <Text style={[styles.dayText, past && styles.disabled, on && styles.onText]}>{Number(d.slice(8))}</Text>
-            </Pressable>
+            <View key={d} style={styles.cell}>
+              <Pressable
+                accessibilityRole={multiple ? 'checkbox' : 'radio'}
+                accessibilityLabel={longDate(d)}
+                accessibilityState={multiple ? { checked: on, disabled: past } : { selected: on, disabled: past }}
+                disabled={past}
+                onPress={() => onToggle(d)}
+                style={[styles.day, on && styles.on]}
+              >
+                <Text style={[styles.dayText, past && styles.disabled, on && styles.onText]}>{Number(d.slice(8))}</Text>
+              </Pressable>
+            </View>
           );
         })}
       </View>
@@ -52,10 +53,11 @@ const styles = createStyles({
   nav: { fontSize: 24, color: colors.forest, paddingHorizontal: 8 },
   month: { fontSize: type.body, fontWeight: '700', color: colors.ink },
   grid: { flexDirection: 'row', flexWrap: 'wrap' },
-  cell: { width: `${100 / 7}%`, aspectRatio: 1, padding: 2 },
-  day: { alignItems: 'center', justifyContent: 'center', borderRadius: radius.sm },
+  // Each cell centres a fixed 36pt circle, so the selected background always sits around the number.
+  cell: { width: `${100 / 7}%`, height: 40, alignItems: 'center', justifyContent: 'center' },
+  day: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   on: { backgroundColor: colors.forest },
-  dayText: { fontSize: type.body, color: colors.ink },
+  dayText: { fontSize: type.body, lineHeight: 18, color: colors.ink, textAlign: 'center' },
   onText: { color: colors.white, fontWeight: '700' },
   disabled: { color: colors.line },
 });
