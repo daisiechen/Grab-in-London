@@ -1,4 +1,5 @@
 import { useState,useSyncExternalStore } from 'react';
+import {colors} from '../ui/tokens.ts';
 import { View } from 'react-native';
 import { Body,SectionTitle } from '../ui/Text.tsx';
 import { Primary } from '../ui/Button.tsx';
@@ -24,7 +25,8 @@ function Choices({manager,onChosen}:{manager:AnalyticsManager;onChosen?:()=>void
 export function AnalyticsConsent({manager}:{manager:AnalyticsManager}) {
   const state=useSyncExternalStore(manager.subscribe,manager.getState),[expanded,setExpanded]=useState(false);
   if(state.choice!=='unknown'&&!expanded&&!state.error)return <SettingsLink label="Analytics preferences" onPress={()=>setExpanded(true)}/>;
-  return <View style={{gap:8}}><SectionTitle>Help improve Fancy</SectionTitle><Choices manager={manager} onChosen={()=>setExpanded(false)}/></View>;
+  // Expanded in place as its own soft card, separated from the surrounding rows.
+  return <View style={{gap:8,marginTop:12,padding:14,borderRadius:12,backgroundColor:colors.surface}}><SectionTitle>Help improve Fancy</SectionTitle><Choices manager={manager} onChosen={()=>setExpanded(false)}/></View>;
 }
 
 /**

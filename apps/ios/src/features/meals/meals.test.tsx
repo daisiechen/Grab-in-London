@@ -78,6 +78,8 @@ describe('ApplyScreen (S07, QA-INPUT-017..020)', () => {
     expect(app.mock.callsTo('POST', /applications/)).toHaveLength(0);
 
     await fireEvent.changeText(screen.getByLabelText('Your introduction'), 'I recently moved here and love trying new food.');
+    // The length error clears as soon as the text is valid.
+    expect(screen.queryByText('Write a short introduction of 20–300 characters.')).toBeNull();
     await first.unmount();
     await renderApp(app, <ApplyScreen />);
     expect(await screen.findByLabelText('Your introduction')).toHaveDisplayValue('I recently moved here and love trying new food.');

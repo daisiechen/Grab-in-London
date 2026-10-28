@@ -50,6 +50,7 @@ export function DiscoverScreen() {
   const [applied, setApplied] = useState<Filters>(emptyFilters);
   const [pending, setPending] = useState<Filters>(emptyFilters);
   const [sheet, setSheet] = useState<SheetKind>('');
+  const [cityOpen, setCityOpen] = useState(false);
   const [meals, setMeals] = useState<Meal[]>([]);
   const onViewable=useNativeImpressions(meals,proofs);
   const viewabilityConfig=useRef({itemVisiblePercentThreshold:50}).current;
@@ -153,12 +154,22 @@ export function DiscoverScreen() {
       <View style={styles.header}>
         <View style={styles.titleRow}>
           <Text accessibilityRole="header" style={styles.h1}>{BRAND_COPY.invitation}</Text>
-          <Pressable accessibilityRole="button" accessibilityLabel="City: London" hitSlop={8} style={styles.city} onPress={() => notify('London is our first city. More tables will follow.')}>
+          <Pressable accessibilityRole="button" accessibilityLabel="City: London" accessibilityState={{ expanded: cityOpen }} hitSlop={8} style={[styles.city, cityOpen && styles.controlOpen]} onPress={() => setCityOpen(!cityOpen)}>
             <Icon name="SewingPin" size={13} color={colors.forest} />
             <Text style={styles.cityText}>London</Text>
-            <Icon name="ChevronDown" size={11} color={colors.ink} />
+            <Icon name={cityOpen ? 'ChevronUp' : 'ChevronDown'} size={11} color={colors.ink} />
           </Pressable>
         </View>
+        {/* City choice opens in place under the chip; London is the only city so far. */}
+        {cityOpen ? (
+          <View style={styles.cityMenu} testID="city-menu">
+            <Pressable accessibilityRole="radio" accessibilityLabel="London" accessibilityState={{ selected: true }} style={styles.cityOption} onPress={() => setCityOpen(false)}>
+              <Text style={styles.cityOptionText}>London</Text>
+              <Icon name="Check" size={14} color={colors.forest} />
+            </Pressable>
+            <Text style={styles.cityMore}>More cities are on the way.</Text>
+          </View>
+        ) : null}
         <Text style={styles.tagline}>{BRAND_COPY.slogan}</Text>
         <View style={styles.controls}>
           <Pressable accessibilityRole="button" accessibilityLabel="Filter by date" accessibilityState={{ expanded: sheet === 'date' }} style={[styles.control, sheet === 'date' && styles.controlOpen]} onPress={() => open('date')}>
@@ -355,6 +366,10 @@ const styles = createStyles({
   dropFooter: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, paddingTop: 8, paddingBottom: 12 },
   dropClear: { flexShrink: 0 },
   dropApply: { flex: 1 },
+  cityMenu: { position: 'absolute', right: 16, top: 44, zIndex: 30, width: 200, backgroundColor: colors.white, borderRadius: 11, borderWidth: 1, borderColor: colors.line, paddingVertical: 6, shadowColor: colors.ink, shadowOpacity: 0.12, shadowRadius: 12, shadowOffset: { width: 0, height: 4 } },
+  cityOption: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 40, paddingHorizontal: 12 },
+  cityOptionText: { fontSize: 14, fontWeight: '600', color: colors.ink },
+  cityMore: { fontSize: 11, color: colors.muted, paddingHorizontal: 12, paddingBottom: 6 },
   toast: { position: 'absolute', left: 17, right: 17, bottom: 42, backgroundColor: colors.forest, paddingVertical: 13, paddingHorizontal: 16, borderRadius: 12, shadowColor: colors.forest, shadowOpacity: 0.19, shadowRadius: 20, shadowOffset: { width: 0, height: 5 }, zIndex: 150 },
   toastText: { color: colors.white, fontSize: 12 },
 });

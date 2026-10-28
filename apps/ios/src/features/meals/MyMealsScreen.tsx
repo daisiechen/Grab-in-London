@@ -135,9 +135,9 @@ function SignedInMeals({ section, onSection }: { section: Section; onSection: (s
           q.data ? (
             <View style={styles.empty}>
               <Icon name="Calendar" size={30} color={colors.forest} />
-              <Text style={styles.emptyTitle}>{hosting ? 'Your table starts with you.' : 'A good meal is waiting.'}</Text>
+              <Text style={styles.emptyTitle}>{hosting ? 'Your table starts with you.' : section === 'CANCELLED' ? 'Nothing cancelled.' : 'A good meal is waiting.'}</Text>
               <Text style={styles.emptyBody}>{section === 'APPLICATIONS' ? 'Your requests will appear here.' : section === 'PAST' ? 'Meals you’ve shared will appear here.' : section === 'CANCELLED' ? 'Cancelled meals will appear here.' : hosting ? 'Host a meal and choose who joins your table.' : 'Find a table that fits your evening.'}</Text>
-              <View style={styles.emptyAction}><Primary label={hosting ? 'Create a meal' : 'Explore meals'} icon="ArrowRight" onPress={() => (hosting ? router.push('/create') : router.navigate('/'))} /></View>
+              {section === 'CANCELLED' ? null : <View style={styles.emptyAction}><Primary label={hosting ? 'Create a meal' : 'Explore meals'} icon="ArrowRight" onPress={() => (hosting ? router.push('/create') : router.navigate('/'))} /></View>}
             </View>
           ) : undefined
         }

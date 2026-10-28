@@ -314,7 +314,7 @@ function AuthenticatedChatScreen() {
           <Pressable accessibilityRole="button" accessibilityLabel="Open group settings" hitSlop={8} style={styles.headerButton} onPress={()=>setView('settings')}>
             <Icon name="Gear" size={18} color={colors.ink} />
           </Pressable>
-        ):<View style={styles.headerButton} />}
+        ):<View style={styles.headerSpacer} />}
       </View>
       <View testID="chat-keyboard-viewport" ref={viewport} collapsable={false} style={{flex:1,paddingBottom:Platform.OS==='ios'?keyboardPadding:0}} onLayout={keyboardTracker.refresh}>
       <View testID="chat-keyboard" style={{flex:1}}>
@@ -458,7 +458,9 @@ const styles = createStyles({
   hidden: { display: 'none' },
   signedOut: { padding: 16, gap: 12 },
   header: { height: 48, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, borderBottomWidth: 1, borderBottomColor: colors.line, backgroundColor: colors.white },
-  headerButton: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
+  // Same round control as FloatingBack on other header-less pages.
+  headerButton: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
+  headerSpacer: { width: 36, height: 36 },
   headerTitle: { flex: 1, textAlign: 'center', fontSize: 13, fontWeight: '700', color: colors.ink, paddingHorizontal: 6 },
   list: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 16 },
   listHeader: { gap: 8 },
@@ -486,7 +488,7 @@ const styles = createStyles({
   readOnlyBar: { paddingHorizontal: 16, paddingVertical: 12, borderTopWidth: 1, borderTopColor: colors.line, gap: 6 },
   readOnlyRow: { flexDirection: 'row', alignItems: 'center', gap: 7 },
   readOnlyBarText: { fontSize: 12, color: colors.muted },
-  settings: { paddingHorizontal: 16, paddingTop: 14, paddingBottom: 24, gap: 10 },
+  settings: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 24, gap: 10 },
   settingsTitle: { fontSize: 24, lineHeight: 29, letterSpacing: -0.8, fontWeight: '700', color: colors.ink, marginBottom: 4 },
   sectionRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12 },
   h2: { fontSize: 16, fontWeight: '700', color: colors.ink },

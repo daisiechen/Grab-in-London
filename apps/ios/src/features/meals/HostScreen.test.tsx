@@ -63,6 +63,10 @@ describe('HostScreen · Your guest list (J02-R07)', () => {
     expect(approve?.headers['if-match']).toBe('"2"');
     expect(approve?.body).toEqual({ decision: 'APPROVE' });
     await fireEvent.press(screen.getByRole('button', { name: 'Decline Leo' }));
+    // Declining is final, so it asks first; nothing is sent until confirmed.
+    expect(screen.getByText(/can’t request this meal again/)).toBeOnTheScreen();
+    expect(app.mock.callsTo('POST', /decision/)).toHaveLength(1);
+    await fireEvent.press(screen.getByRole('button', { name: 'Decline request' }));
     await waitFor(() => expect(app.mock.callsTo('POST', /decision/)).toHaveLength(2));
     expect(app.mock.callsTo('POST', /decision/)[1]?.body).toEqual({ decision: 'DECLINE' });
   });

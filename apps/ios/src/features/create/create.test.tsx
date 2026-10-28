@@ -98,6 +98,8 @@ describe('Create Arrange (S10, QA-CREATE-001)', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Use this restaurant' }));
     expect(await screen.findByLabelText('Selected restaurant Dishoom')).toBeOnTheScreen();
     expect(app.mock.callsTo('POST', '/v1/venues/confirm')[0]?.body).toEqual({ placeId: 'place-1' });
+    // The footer message follows the draft: the restaurant issue is gone, the next one shows.
+    expect(screen.queryByText('Choose a restaurant.')).toBeNull();
 
     // Date and time pickers open inline under their triggers; choosing a date opens the time grid.
     expect(screen.queryByRole('radio', { name: 'Sun 25 Oct' })).toBeNull();

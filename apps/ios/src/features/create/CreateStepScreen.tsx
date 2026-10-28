@@ -148,6 +148,8 @@ function CreateStep({ step, mode }: { step: Step; mode: FlowMode }) {
 
   if (step === 3) return <Review draft={draft} update={update} today={today} goTo={goTo} mode={mode} />;
 
+  // After a failed Continue the footer message follows the draft live: it moves to the next issue or
+  // disappears once the step is complete, instead of lingering until the next tap.
   const next = () => {
     Keyboard.dismiss();
     const issue = validateStep(draft, step, today, mode.kind);
@@ -166,7 +168,7 @@ function CreateStep({ step, mode }: { step: Step; mode: FlowMode }) {
       kind={mode.kind}
       step={step}
       onStep={goTo}
-      footer={<><FormMessage message={error} /><Primary label="Continue" icon="ArrowRight" onPress={next} /></>}
+      footer={<><FormMessage message={error ? validateStep(draft, step, today, mode.kind) : null} /><Primary label="Continue" icon="ArrowRight" onPress={next} /></>}
     >
       {step === 0 ? <Arrange draft={draft} update={update} today={today} /> : null}
       {step === 1 ? <Introduce draft={draft} update={update} /> : null}

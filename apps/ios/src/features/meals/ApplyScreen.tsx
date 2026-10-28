@@ -129,7 +129,9 @@ function ApplyScreenContent() {
           accessibilityLabel="Your introduction"
           accessibilityHint="20 to 300 characters"
           value={draft.message}
-          onChangeText={(message) => {editorVersion.current++;setDraft({ ...draft, message });}}
+          onChangeText={(message) => {editorVersion.current++;setDraft({ ...draft, message });
+            // A length error clears as soon as the text becomes valid, not only on the next Send.
+            const n = message.trim().length;if (error && n >= INTRO_MIN && n <= INTRO_MAX) setError(null);}}
           maxLength={INTRO_MAX}
           multiline
           placeholder="I’m new to London and would love to meet people over a relaxed meal."

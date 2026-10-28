@@ -11,6 +11,17 @@ jest.mock('expo-router', () => require('../../test/router.ts').expoRouterMock);
 beforeEach(resetRouter);
 
 describe('DiscoverScreen (QA-DISCOVERY-001..003)', () => {
+  it('the city chip opens an in-place menu with London selected', async () => {
+    const app = createTestApp();
+    app.mock.on('GET', '/v1/meals', page([meal()]));
+    await renderApp(app, <DiscoverScreen />);
+    await fireEvent.press(await screen.findByRole('button', { name: 'City: London' }));
+    expect(screen.getByTestId('city-menu')).toBeOnTheScreen();
+    expect(screen.getByRole('radio', { name: 'London' })).toBeSelected();
+    await fireEvent.press(screen.getByRole('radio', { name: 'London' }));
+    expect(screen.queryByTestId('city-menu')).toBeNull();
+  });
+
   it('lists public meals for guests and opens detail', async () => {
     const app = createTestApp();
     app.mock.on('GET', '/v1/meals', page([meal()]));

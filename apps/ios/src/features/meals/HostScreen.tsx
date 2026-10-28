@@ -68,6 +68,8 @@ function HostScreenContent() {
   }, [id]));
   const [busy, setBusy] = useState<string | null>(null);
   const [cancelOpen, setCancelOpen] = useState(false);
+  // Declining is final for that request, so it is confirmed first (approving is not).
+  const [declineTarget, setDeclining] = useState<Application | null>(null);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [reason, setReason] = useState<CancelReason | null>(null);
   const [booking, setBooking] = useState<BookingStatus | null>(null);
@@ -182,7 +184,7 @@ function HostScreenContent() {
                 </View>
                 {a.message ? <Text style={styles.quote}>{`“${a.message}”`}</Text> : null}
                 <View style={styles.twoActions}>
-                  <CardButton label="Decline" accessibilityLabel={`Decline ${name}`} busy={declining} disabled={busy !== null || !recruiting} onPress={() => void decide(a, 'DECLINE')} />
+                  <CardButton label="Decline" accessibilityLabel={`Decline ${name}`} busy={declining} disabled={busy !== null || !recruiting} onPress={() => setDeclining(a)} />
                   <CardButton primary label="Approve" accessibilityLabel={`Approve ${name}`} busy={approving} disabled={busy !== null || !recruiting || full} onPress={() => void decide(a, 'APPROVE')} />
                 </View>
               </Pressable>
@@ -255,6 +257,11 @@ function HostScreenContent() {
         </View>
       ) : null}
 
+      <Sheet visible={declineTarget !== null} title={`Decline ${declineTarget?.applicant?.displayName ?? 'this request'}?`} onClose={() => setDeclining(null)}>
+        <Body>They’ll be told their request wasn’t accepted this time. This can’t be undone, and they can’t request this meal again.</Body>
+        <Primary secondary label="Keep the request" onPress={() => setDeclining(null)} />
+        <TextAction destructive label="Decline request" disabled={busy !== null} onPress={() => { const a = declineTarget; if (a) void decide(a, 'DECLINE').then(() => setDeclining(null)); }} />
+      </Sheet>
       <Sheet visible={cancelOpen} title="Cancel this meal?" onClose={() => setCancelOpen(false)}>
         <Body>{`Cancel ${meal.title} for everyone. Pending requests close and members are notified. Your group chat stays open. You must cancel the restaurant reservation yourself.`}</Body>
         <ChoiceGroup<CancelReason> label="Reason for cancelling" options={HOST_CANCEL_REASONS.map((r) => [r, CANCEL_LABELS[r]] as const)} value={reason} onChange={setReason} />
