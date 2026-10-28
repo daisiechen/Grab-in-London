@@ -177,6 +177,7 @@ export function MealDetailScreen() {
         {meal.venue.attributions.map((a, i) => <Text key={i} style={styles.mapNote}>{a.text}</Text>)}
 
         <Notice icon>No payment is due in the app. Everyone pays their own share at the restaurant.</Notice>
+        <View style={styles.termsLink}><TextAction label="Cancellation terms" onPress={() => router.push('/cancellation-terms')} /></View>
 
         <FormMessage message={message} />
         <View style={styles.actions}>
@@ -215,6 +216,7 @@ function Fact({ icon, glyph, strong, small }: { icon?: IconName; glyph?: string;
 }
 
 const styles = createStyles({
+  termsLink: { alignItems: 'flex-start', marginTop: -6 },
   page: { flex: 1, backgroundColor: colors.white },
   state: { paddingHorizontal: 18, gap: 12 },
   scroll: { paddingHorizontal: 18, paddingBottom: 24 },

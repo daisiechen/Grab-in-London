@@ -30,6 +30,9 @@ describe('MealDetailScreen (S06)', () => {
     expect(screen.getByText('Cuisine: Not provided · Dietary options: Not provided. Host-reported · not an allergy guarantee.')).toBeOnTheScreen();
     expect(screen.getByText('£20–35')).toBeOnTheScreen();
     expect(screen.getByText('No payment is due in the app. Everyone pays their own share at the restaurant.')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Cancellation terms' }));
+    expect(mockRouter.push).toHaveBeenCalledWith('/cancellation-terms');
+    mockRouter.push.mockClear();
     await fireEvent.press(screen.getByRole('button', { name: 'Apply to join' }));
     expect(mockRouter.push).toHaveBeenCalledWith('/sign-in');
     expect(peekReturnTo()).toBe(`/meals/${MEAL_ID}/apply`);

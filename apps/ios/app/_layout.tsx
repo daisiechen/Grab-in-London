@@ -54,7 +54,9 @@ export default function RootLayout() {
           <Stack.Screen name="chat/[conversationId]" options={{ title: 'Chat', headerShown: false }} />
           <Stack.Screen name="post-meal/[mealId]" options={{ title: 'After the meal' }} />
           <Stack.Screen name="survey" options={{ title: 'Product survey' }} />
-          <Stack.Screen name="report" options={{ title: 'Report', presentation: 'modal' }} />
+          <Stack.Screen name="cancellation-terms" options={{ title: 'Cancellation terms' }} />
+          {/* A pushed form page, like Apply: inside an iOS sheet the keyboard avoidance is off by the sheet inset. */}
+          <Stack.Screen name="report" options={{ title: 'Report' }} />
           <Stack.Screen name="delete-account" options={{ title: 'Delete account' }} />
           <Stack.Screen name="deletion-status" options={{ title: 'Deletion status' }} />
         </Stack>
