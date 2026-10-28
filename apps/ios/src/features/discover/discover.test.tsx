@@ -66,6 +66,20 @@ describe('DiscoverScreen (QA-DISCOVERY-001..003)', () => {
     expect(screen.getByTestId('map-preview-list')).toBeOnTheScreen();
   });
 
+  it('View all switches to the list, focused on the selected area, with a way back to every area', async () => {
+    const app = createTestApp();
+    const at = (id: string, title: string, areaCode: string) => meal({ id, title, areaCode, venue: { ...meal().venue, areaCode } });
+    app.mock.on('GET', '/v1/meals', page([at('11111111-1111-4111-8111-000000000001', 'Soho supper', 'soho'), at('11111111-1111-4111-8111-000000000002', 'Fitzrovia ramen', 'fitzrovia')]));
+    await renderApp(app, <DiscoverScreen />);
+    await fireEvent.press(await screen.findByRole('button', { name: /View all 1 meal in Soho as a list/ }));
+    expect(screen.getByTestId('discover-list')).toBeOnTheScreen();
+    expect(screen.getByRole('header', { name: 'Meals in Soho' })).toBeOnTheScreen();
+    expect(screen.getByText('Soho supper')).toBeOnTheScreen();
+    expect(screen.queryByText('Fitzrovia ramen')).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: 'Show all areas' }));
+    expect(screen.getByText('Fitzrovia ramen')).toBeOnTheScreen();
+  });
+
   it('past London dates are not selectable', async () => {
     const app = createTestApp();
     app.mock.on('GET', '/v1/meals', page([]));

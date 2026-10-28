@@ -15,19 +15,18 @@ import { ChoiceGroup, MultiChoice } from '../../ui/ChoiceGroup.tsx';
 import { DateChoices } from '../../ui/DateChoices.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
 import { MealCard } from '../../ui/MealCard.tsx';
-import { Sheet } from '../../ui/Sheet.tsx';
 import { Icon } from '../../ui/Icon.tsx';
 import { colors } from '../../ui/tokens.ts';
 import { BRAND_COPY } from '../../ui/brand.ts';
 import { languageOptions } from '../profile/model.ts';
 import type { Meal } from '../meals/format.ts';
-import { groupByArea } from './areas.ts';
+import { areaName, groupByArea } from './areas.ts';
 import { useHideHelperLauncher } from '../assistant/launcher-visibility.ts';
 import { DiscoverMap, nativeMapAvailable } from './DiscoverMap';
 import { BUDGET_STEPS, activeFilterCount, emptyFilters, toQuery, toggle, type Filters, type TimeOfDay } from './filters.ts';
 import { createStyles } from '../../ui/styles.ts';
 
-type SheetKind = '' | 'date' | 'size' | 'filters' | 'area';
+type SheetKind = '' | 'date' | 'size' | 'filters';
 const SIZE_OPTIONS = [2, 3, 4, 5, 6] as const;
 
 /**
@@ -43,6 +42,8 @@ export function DiscoverScreen() {
   const pendingFilterEvents=useRef<string[]>([]);
   const [filterEvents,setFilterEvents]=useState<string[]>([]);
   const [mapMode,setMapMode]=useState(true);
+  // “View all” on the map opens the list focused on that area; the list toggle shows every area.
+  const [listArea,setListArea]=useState<string|null>(null);
   const [areaCode,setAreaCode]=useState<string|null>(null);
   const [toast,setToast]=useState<string|null>(null);
   const router = useRouter();
@@ -183,7 +184,7 @@ export function DiscoverScreen() {
             <Icon name={sheet === 'size' ? 'ChevronUp' : 'ChevronDown'} size={10} />
           </Pressable>
           <View style={styles.toggle}>
-            <Pressable accessibilityRole="button" accessibilityLabel="List view" accessibilityState={{ selected: !mapMode }} style={[styles.toggleButton, !mapMode && styles.toggleSelected]} onPress={() => setMapMode(false)}>
+            <Pressable accessibilityRole="button" accessibilityLabel="List view" accessibilityState={{ selected: !mapMode }} style={[styles.toggleButton, !mapMode && styles.toggleSelected]} onPress={() => { setListArea(null); setMapMode(false); }}>
               <Icon name="ListBullet" size={16} color={mapMode ? colors.ink : colors.white} />
             </Pressable>
             <Pressable accessibilityRole="button" accessibilityLabel="Map view" accessibilityState={{ selected: mapMode }} style={[styles.toggleButton, mapMode && styles.toggleSelected]} onPress={() => setMapMode(true)}>
@@ -204,7 +205,7 @@ export function DiscoverScreen() {
           {unplaced.length ? (
             <View style={styles.notice}>
               <Text style={styles.noticeText}>Some restaurants have no map position yet. </Text>
-              <TextAction label="See all meals in list" onPress={() => setMapMode(false)} />
+              <TextAction label="See all meals in list" onPress={() => { setListArea(null); setMapMode(false); }} />
             </View>
           ) : null}
           <View style={[styles.map, { height: mapHeight }]}>
@@ -217,11 +218,11 @@ export function DiscoverScreen() {
           <View style={[styles.preview, styles.flex]} accessibilityLabel="Selected area meals">
             {featured && area ? (
               <>
-                <Pressable accessibilityRole="button" accessibilityLabel={`View all ${areaMeals.length} ${areaMeals.length === 1 ? 'meal' : 'meals'} in ${area.name}`} onPress={() => setSheet('area')}>
+                <Pressable accessibilityRole="button" accessibilityLabel={`View all ${areaMeals.length} ${areaMeals.length === 1 ? 'meal' : 'meals'} in ${area.name} as a list`} onPress={() => { setListArea(area.code); setMapMode(false); }}>
                   <View style={styles.grip} />
                   <View style={styles.areaRow}>
                     <Text style={styles.areaTitle}>{`${areaMeals.length} ${areaMeals.length === 1 ? 'meal' : 'meals'} in ${area.name}`}</Text>
-                    <View style={styles.viewAll}><Text style={styles.viewAllText}>View all</Text><Icon name="ChevronUp" size={13} color={colors.forest} /></View>
+                    <View style={styles.viewAll}><Icon name="ListBullet" size={13} color={colors.forest} /><Text style={styles.viewAllText}>View all in list</Text></View>
                   </View>
                 </Pressable>
                 <ScrollView ref={previewScroll} style={styles.flex} contentContainerStyle={styles.previewList} testID="map-preview-list">
@@ -242,14 +243,21 @@ export function DiscoverScreen() {
           style={styles.flex}
           onViewableItemsChanged={onViewable}
           viewabilityConfig={viewabilityConfig}
-          data={meals}
+          data={listArea ? meals.filter((m) => m.areaCode === listArea) : meals}
           keyExtractor={(m) => m.id}
           contentContainerStyle={styles.listContent}
           ListHeaderComponent={
-            <View style={styles.sectionHeading}>
-              <Text accessibilityRole="header" style={styles.sectionTitle}>A seat for you</Text>
-              <Text style={styles.sectionCount}>{`${meals.length} ${meals.length === 1 ? 'meal' : 'meals'}`}</Text>
-            </View>
+            listArea ? (
+              <View style={styles.sectionHeading}>
+                <Text accessibilityRole="header" style={styles.sectionTitle}>{`Meals in ${areaName(listArea)}`}</Text>
+                <TextAction label="Show all areas" onPress={() => setListArea(null)} />
+              </View>
+            ) : (
+              <View style={styles.sectionHeading}>
+                <Text accessibilityRole="header" style={styles.sectionTitle}>A seat for you</Text>
+                <Text style={styles.sectionCount}>{`${meals.length} ${meals.length === 1 ? 'meal' : 'meals'}`}</Text>
+              </View>
+            )
           }
           renderItem={({ item, index }) => <View style={[styles.listMeal, index === 0 && styles.listMealFirst]}><MealCard compact meal={item} onPress={() => openMeal(item)} onPerson={openPerson} /></View>}
           ListEmptyComponent={loading || error ? undefined : (
@@ -265,11 +273,6 @@ export function DiscoverScreen() {
         />
       )}
       {toast ? <View style={styles.toast} pointerEvents="none" accessibilityLiveRegion="polite"><Text style={styles.toastText}>{toast}</Text></View> : null}
-      <Sheet visible={sheet === 'area'} title={area ? `${areaMeals.length} ${areaMeals.length === 1 ? 'meal' : 'meals'} in ${area.name}` : 'Meals'} onClose={() => setSheet('')}>
-        <ScrollView style={{ maxHeight: 520 }}>
-          {areaMeals.map((m, i) => <View key={m.id} style={[styles.listMeal, i === 0 && styles.areaFirst]}><MealCard compact meal={m} onPress={() => { setSheet(''); openMeal(m); }} onPerson={(p) => { setSheet(''); openPerson(p); }} /></View>)}
-        </ScrollView>
-      </Sheet>
       {sheet === 'date' || sheet === 'size' || sheet === 'filters' ? (
         <View style={styles.dropLayer}>
           <Pressable accessibilityRole="button" accessibilityLabel="Close" style={styles.dropBackdrop} onPress={() => setSheet('')} />
@@ -344,7 +347,7 @@ const styles = createStyles({
   areaRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 8 },
   areaTitle: { fontSize: 11, fontWeight: '600', color: colors.forest },
   viewAll: { flexDirection: 'row', alignItems: 'center', gap: 3 },
-  viewAllText: { fontSize: 10, color: colors.forest },
+  viewAllText: { fontSize: 12, fontWeight: '600', color: colors.forest },
   cardGap: { height: 10 },
   previewList: { paddingBottom: 12 },
   moreNearby: { fontSize: 9, fontWeight: '700', letterSpacing: 1.2, color: colors.muted, marginTop: 12, marginBottom: 8 },
@@ -354,7 +357,6 @@ const styles = createStyles({
   sectionCount: { fontSize: 11, color: colors.muted },
   listMeal: { borderBottomWidth: 1, borderBottomColor: colors.line, paddingVertical: 19 },
   listMealFirst: { paddingTop: 0 },
-  areaFirst: { paddingTop: 10 },
   empty: { alignItems: 'center', paddingVertical: 15, paddingHorizontal: 8, gap: 8 },
   emptyTitle: { fontSize: 18, fontWeight: '700', color: colors.ink, textAlign: 'center' },
   emptyBody: { fontSize: 13, color: colors.muted, textAlign: 'center', marginBottom: 12 },
