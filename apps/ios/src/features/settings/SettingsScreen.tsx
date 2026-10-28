@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Primary, TextAction } from '../../ui/Button.tsx';
-import { AccountPage, InfoRow, SettingsLink, accountText } from '../../ui/AccountPage.tsx';
+import { AccountPage, SettingsLink, accountText } from '../../ui/AccountPage.tsx';
+import { colors } from '../../ui/tokens.ts';
+import { createStyles } from '../../ui/styles.ts';
 import { Sheet } from '../../ui/Sheet.tsx';
 import { Body } from '../../ui/Text.tsx';
 import { useServices, useSessionState } from '../../services.tsx';
@@ -41,8 +43,8 @@ export function SettingsScreen() {
       <Text accessibilityRole="header" style={[accountText.h2, !signedIn && { marginTop: 4 }]}>Privacy & safety</Text>
       <Text style={accountText.body}>Your name, photo and introduction help your table get to know you. Your email is private.</Text>
       <Text style={accountText.body}>Meal groups require a confirmed seat. Private conversations require mutual choice after a shared meal.</Text>
-      {signedIn ? <InfoRow label="Blocked members" value="Manage on their profile" /> : null}
-      <InfoRow label="App language" value="English" />
+      {signedIn ? <InfoLine label="Blocked members" value="Manage on their profile" /> : null}
+      <InfoLine label="App language" value="English" />
       <Text style={[accountText.muted, { marginTop: 6 }]}>Conversation languages can be changed in your profile.</Text>
 
       {signedIn ? (
@@ -67,3 +69,22 @@ export function SettingsScreen() {
     </AccountPage>
   );
 }
+
+/**
+ * Information only (not a button): plain text, muted value, no divider and no chevron, so it can't
+ * be mistaken for the tappable SettingsLink rows that carry a chevron.
+ */
+function InfoLine({ label, value }: { label: string; value: string }) {
+  return (
+    <View style={styles.info} accessible accessibilityRole="text" accessibilityLabel={`${label}: ${value}`} testID="settings-info">
+      <Text style={styles.infoLabel}>{label}</Text>
+      <Text style={styles.infoValue}>{value}</Text>
+    </View>
+  );
+}
+
+const styles = createStyles({
+  info: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, paddingVertical: 5 },
+  infoLabel: { fontSize: 13, color: '#55625a' },
+  infoValue: { fontSize: 13, color: colors.muted, flexShrink: 1, textAlign: 'right' },
+});

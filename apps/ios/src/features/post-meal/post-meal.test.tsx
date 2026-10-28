@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { PostMealScreen, attendanceText } from './PostMealScreen.tsx';
 import { createTestApp, renderApp, signIn } from '../../test/render.tsx';
 import { mockRouter, resetRouter, routeParams } from '../../test/router.ts';
@@ -75,12 +75,13 @@ describe('PostMealScreen (S19/S21)', () => {
     await renderApp(app, <PostMealScreen />);
     expect(await screen.findByText('You · Not reported yet')).toBeOnTheScreen();
     expect(screen.getByText('Maya · Didn’t come · host reported')).toBeOnTheScreen();
-    expect(screen.queryByText('How was the meal?')).toBeNull();
+    expect(screen.queryByText('How was the meal? Tap a score to save it.')).toBeNull();
     expect(screen.getByText('Confirm that you attended within the reporting window to share your meal experience.')).toBeOnTheScreen();
     expect(screen.queryByLabelText('Reference for Maya')).toBeNull();
 
     await fireEvent.press(screen.getByRole('radio', { name: 'I attended' }));
-    expect(await screen.findByText('How was the meal?')).toBeOnTheScreen();
+    expect(await screen.findByText('How was the meal? Tap a score to save it.')).toBeOnTheScreen();
+    expect(within(screen.getByTestId('att-status')).getByText('Saved')).toBeOnTheScreen();
     expect(screen.getByRole('radio', { name: 'I attended' }).props.accessibilityState.selected).toBe(true);
     const [put] = app.mock.callsTo('PUT', /attendance/);
     expect(put).toMatchObject({ body: { value: 'present' }, headers: { 'if-match': '"1"' } });
@@ -179,14 +180,65 @@ describe('PostMealScreen (S19/S21)', () => {
     expect(screen.getByLabelText('Reference for Maya')).toHaveDisplayValue('Lovely company');
   });
 
-  it('saves the private whole-meal score with If-Match', async () => {
+  it('saves the private whole-meal score on tap with If-Match and confirms it inline', async () => {
     const app = createTestApp(); await signIn(app, me());
-    app.mock.on('GET', PATH, ok(present()));
+    app.mock.on('GET', PATH, ok(present()), 1);
+    app.mock.on('GET', PATH, ok(present({ experience: { score: 4, version: '1' } })));
     app.mock.on('PUT', `/v1/meals/${MEAL_ID}/experience`, ok({ version: '1', updatedAt: '2026-10-26T10:00:00Z' }));
     await renderApp(app, <PostMealScreen />);
     await fireEvent.press(await screen.findByRole('radio', { name: '4' }));
-    await fireEvent.press(screen.getByRole('button', { name: 'Save meal experience' }));
-    expect(await screen.findByText('Thank you. Your private meal experience is saved.')).toBeOnTheScreen();
+    expect(await within(screen.getByTestId('exp-status')).findByText('Saved')).toBeOnTheScreen();
+    expect(screen.queryByRole('button', { name: /meal experience/ })).toBeNull();
+    expect(screen.getByRole('radio', { name: '4' }).props.accessibilityState.selected).toBe(true);
     expect(app.mock.callsTo('PUT', /experience/)[0]).toMatchObject({ body: { score: 4 }, headers: { 'if-match': '"0"' } });
+  });
+
+  it('a failed score save is reported next to the scores and falls back to the saved score', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.mock.on('GET', PATH, ok(present({ experience: { score: 3, version: '2' } })));
+    app.mock.on('PUT', `/v1/meals/${MEAL_ID}/experience`, fail(503, 'PROVIDER_UNAVAILABLE'));
+    await renderApp(app, <PostMealScreen />);
+    await fireEvent.press(await screen.findByRole('radio', { name: '5' }));
+    expect(await within(screen.getByTestId('exp-status')).findByRole('alert')).toHaveTextContent('Something went wrong. Please try again.');
+    expect(screen.getByRole('radio', { name: '5' }).props.accessibilityState.selected).toBe(false);
+    expect(screen.getByRole('radio', { name: '3' }).props.accessibilityState.selected).toBe(true);
+    expect(app.mock.callsTo('PUT', /experience/)[0]?.headers['if-match']).toBe('"2"');
+  });
+
+  it('the reference has one explicit Save button with its own inline saved state; editing clears it', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.mock.on('GET', PATH, ok(present()));
+    app.mock.on('PUT', `/v1/meals/${MEAL_ID}/reviews/${HOST_ID}`, ok({ subjectId: HOST_ID, version: '1', publishAt: null, visibility: 'PENDING' }));
+    await renderApp(app, <PostMealScreen />);
+    const save = await screen.findByRole('button', { name: 'Save reference for Maya' });
+    expect(save).toBeDisabled();
+    await fireEvent.changeText(screen.getByLabelText('Reference for Maya'), 'Warm and curious company');
+    await fireEvent.press(screen.getByRole('button', { name: 'Save reference for Maya' }));
+    expect(await within(screen.getByTestId('rev-status')).findByText('Reference saved')).toBeOnTheScreen();
+    expect(app.mock.callsTo('PUT', /reviews/)[0]).toMatchObject({ body: { body: 'Warm and curious company' }, headers: { 'if-match': '"0"' } });
+    expect(screen.queryByTestId('exp-status')).toBeNull();
+    await fireEvent.changeText(screen.getByLabelText('Reference for Maya'), 'Warm and curious company!');
+    expect(screen.queryByTestId('rev-status')).toBeNull();
+  });
+
+  it('the share-a-table-again choice saves on tap and confirms privately right under it', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.mock.on('GET', PATH, ok(present()));
+    app.mock.on('PUT', `/v1/meals/${MEAL_ID}/reconnect/${HOST_ID}`, ok(reconnectRow({ selected: true, version: '2', connection: 'WAITING' })));
+    await renderApp(app, <PostMealScreen />);
+    await fireEvent.press(await screen.findByRole('checkbox', { name: 'I’d like to share a table again with Maya' }));
+    expect(await within(screen.getByTestId('rc-status')).findByText('Saved privately')).toBeOnTheScreen();
+    expect(screen.queryByTestId('att-status')).toBeNull();
+  });
+
+  it('keeps the two closing links together as compact links', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.mock.on('GET', PATH, ok(present()));
+    await renderApp(app, <PostMealScreen />);
+    const report = await screen.findByRole('button', { name: 'Share private feedback or report a concern' });
+    const survey = screen.getByRole('button', { name: 'Help shape Fancy: product survey' });
+    expect(report.parent?.parent).toBe(survey.parent?.parent);
+    await fireEvent.press(survey);
+    expect(mockRouter.push).toHaveBeenCalledWith('/survey');
   });
 });

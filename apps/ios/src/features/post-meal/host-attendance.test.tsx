@@ -22,7 +22,9 @@ test('ordinary failure is visible inside confirmation and retains chosen fact',a
 test('saving a host fact does not discard private experience or reference drafts',async()=>{
  const attendance=[{...state().attendance[0],value:'present',source:'SELF',selfValue:'present'},state().attendance[1]];
  const app=await setup(true,false,{attendance});
- await fireEvent.press(screen.getByRole('radio',{name:'4'}));
+ app.mock.on('PUT',`/v1/meals/${MEAL_ID}/experience`,ok({version:'1',updatedAt:'2026-10-26T10:00:00Z'}));
+ app.mock.on('GET',PATH,ok(state({attendance,experience:{score:4,version:'1'}})),1);
+ await fireEvent.press(screen.getByRole('radio',{name:'4'}));await within(screen.getByTestId('exp-status')).findByText('Saved');
  await fireEvent.changeText(screen.getByLabelText('Reference for Maya'),'A retained reference draft');
  app.mock.on('PUT',WRITE,ok({...state().attendance[1],version:'4',hostValue:'absent'}));
  app.mock.on('GET',PATH,ok(state({attendance:[attendance[0],{...attendance[1],version:'4',hostValue:'absent'}]})));

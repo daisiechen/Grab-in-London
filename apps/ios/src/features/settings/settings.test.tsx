@@ -2,7 +2,8 @@ import * as SecureStore from 'expo-secure-store';
 import {memoryDeletionReceiptStore,secureDeletionReceiptStore} from './deletion-receipt-store.ts';
 import {deferred} from '../../test/deferred.ts';
 import type {MockReply} from '../../test/mock-fetch.ts';
-import { act,fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { act,fireEvent, screen, waitFor, within } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { SurveyScreen } from './SurveyScreen.tsx';
 import { ReportScreen } from './ReportScreen.tsx';
 import { DeleteAccountScreen } from './DeleteAccountScreen.tsx';
@@ -11,7 +12,7 @@ import { SettingsScreen } from './SettingsScreen.tsx';
 import { createTestApp, renderApp, signIn } from '../../test/render.tsx';
 import { mockRouter, resetRouter, routeParams } from '../../test/router.ts';
 import { fail, ok } from '../../test/mock-fetch.ts';
-import { HOST_ID, credentials, me, sessionInfo } from '../../test/fixtures.ts';
+import { HOST_ID, MEAL_ID, credentials, meal, me, publicProfile, sessionInfo } from '../../test/fixtures.ts';
 import { base64UrlEncode } from '../../platform/base64url.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
@@ -36,6 +37,16 @@ describe('SurveyScreen (S24)', () => {
     expect(await screen.findByText('Thank you. Your product survey is saved.')).toBeOnTheScreen();
     expect(app.mock.callsTo('PUT', '/v1/me/product-survey')[0]).toMatchObject({ body: { again: true, reasons: ['company'] }, headers: { 'if-match': '"1"' } });
   });
+
+  it('places the save button inline right after the questions, not in a pinned bar', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    app.mock.on('GET', '/v1/me/product-survey', ok({ version: '1', again: null, reasons: [], submittedAt: null }));
+    await renderApp(app, <SurveyScreen />);
+    const actions = await screen.findByTestId('survey-actions');
+    expect(within(actions).getByRole('button', { name: 'Save survey' })).toBeOnTheScreen();
+    expect(screen.getAllByRole('button', { name: 'Save survey' })).toHaveLength(1);
+  });
 });
 
 describe('SettingsScreen groups', () => {
@@ -50,6 +61,18 @@ describe('SettingsScreen groups', () => {
       await fireEvent.press(screen.getByRole('button', { name: label }));
       expect(mockRouter.push).toHaveBeenLastCalledWith(route);
     }
+  });
+
+  it('renders information rows as plain, non-interactive text and keeps chevron rows as buttons', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    await renderApp(app, <SettingsScreen />);
+    const info = screen.getAllByTestId('settings-info');
+    expect(info.map((row) => row.props.accessibilityLabel)).toEqual(['Blocked members: Manage on their profile', 'App language: English']);
+    for (const row of info) expect(row.props.accessibilityRole).toBe('text');
+    for (const label of ['Blocked members', 'App language', 'Manage on their profile', 'English']) expect(screen.queryByRole('button', { name: label })).toBeNull();
+    const value = StyleSheet.flatten(within(info[1]!).getByText('English').props.style);
+    expect(value.fontWeight).toBeUndefined();
   });
 
   it('guests only see public privacy copy and deletion status', async () => {
@@ -97,10 +120,48 @@ describe('ReportScreen', () => {
     expect(app.mock.callsTo('POST', '/v1/reports')).toHaveLength(1);
   });
 
-  it('rejects an invalid target', async () => {
+  it('rejects an invalid target, with a way out', async () => {
     routeParams.current = { targetType: 'NOPE', targetId: HOST_ID };
     await renderApp(createTestApp(), <ReportScreen />);
     expect(screen.getByRole('alert')).toHaveTextContent('This report link isn’t valid.');
+    await fireEvent.press(screen.getByRole('button', { name: 'Cancel' }));
+    expect(mockRouter.back).toHaveBeenCalledTimes(1);
+  });
+
+  it('names the reported member with their avatar, and Cancel dismisses without sending', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    routeParams.current = { targetType: 'USER', targetId: HOST_ID };
+    app.mock.on('GET', `/v1/profiles/${HOST_ID}`, ok({ profile: publicProfile(HOST_ID, 'Maya'), reviews: [], nextReviewCursor: null }));
+    await renderApp(app, <ReportScreen />);
+    expect(await screen.findByLabelText('Reporting Maya')).toBeOnTheScreen();
+    expect(within(screen.getByTestId('report-target')).getByText('Maya')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Cancel' }));
+    expect(mockRouter.back).toHaveBeenCalledTimes(1);
+    expect(app.mock.callsTo('POST', '/v1/reports')).toHaveLength(0);
+  });
+
+  it('names the reported meal with its date; the text box is roomy and the button follows it inline', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    routeParams.current = { targetType: 'MEAL', targetId: MEAL_ID };
+    app.mock.on('GET', `/v1/meals/${MEAL_ID}`, ok({ meal: meal(), myApplication: null, conversationId: null }));
+    await renderApp(app, <ReportScreen />);
+    expect(await screen.findByLabelText('Reporting Sunday dinner')).toBeOnTheScreen();
+    const input = screen.getByLabelText('What would you like us to know?');
+    expect(StyleSheet.flatten(input.props.style).minHeight).toBeGreaterThanOrEqual(140);
+    expect(screen.getByTestId('report')).toContainElement(screen.getByRole('button', { name: 'Submit report' }));
+  });
+
+  it('keeps a generic target line when the lookup fails', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    routeParams.current = { targetType: 'USER', targetId: HOST_ID };
+    app.mock.on('GET', `/v1/profiles/${HOST_ID}`, fail(503, 'PROVIDER_UNAVAILABLE'));
+    await renderApp(app, <ReportScreen />);
+    await waitFor(() => expect(app.mock.callsTo('GET', `/v1/profiles/${HOST_ID}`)).toHaveLength(1));
+    expect(screen.getByLabelText('Reporting A member')).toBeOnTheScreen();
+    expect(screen.getByRole('button', { name: 'Submit report' })).toBeEnabled();
   });
 });
 
@@ -134,6 +195,20 @@ describe('DeleteAccountScreen (QA deletion receipt)', () => {
     expect(app.store.value).toBeNull();
     expect(app.services.cache.size).toBe(0);
     expect(app.services.drafts.size).toBe(0);
+  });
+});
+
+describe('DeleteAccountScreen layout', () => {
+  it('uses a red destructive button for deletion, inline after the explanation', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    await renderApp(app, <DeleteAccountScreen />);
+    const actions = screen.getByTestId('delete-actions');
+    const button = within(actions).getByRole('button', { name: 'Delete my account' });
+    expect(StyleSheet.flatten(screen.getByTestId('destructive-button').props.style).backgroundColor).toBe('#a93b32');
+    expect(button).toBeOnTheScreen();
+    await fireEvent.press(within(actions).getByRole('button', { name: 'Keep my account' }));
+    expect(mockRouter.back).toHaveBeenCalledTimes(1);
   });
 });
 

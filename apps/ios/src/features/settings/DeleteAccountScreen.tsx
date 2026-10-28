@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Share, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, Share, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ApiError } from '@fancy/client';
 import { useServices, useSessionState } from '../../services.tsx';
@@ -10,6 +10,8 @@ import { Field } from '../../ui/Field.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
 import { AccountPage, SummaryBox, accountText } from '../../ui/AccountPage.tsx';
 import { Notice } from '../../ui/Bits.tsx';
+import { colors, radius, sizes } from '../../ui/tokens.ts';
+import { createStyles } from '../../ui/styles.ts';
 import { parseAuthRedirect,providerState } from '../auth/oauth.ts';
 import { otpErrorMessage } from '../auth/otp.ts';
 import { StaleSessionError } from '../auth/session.ts';
@@ -124,23 +126,43 @@ export function DeleteAccountScreen() {
     finally {if(mounted.current)setBusy(false);}
   };
 
-  const footer = (
-    <>
-      <FormMessage message={error} />
-      {stage.kind === 'reauthEmail'
-        ? <Primary label="Confirm and delete" busy={busy} onPress={() => void verifyCode()} />
-        : <Primary label="Delete my account" busy={busy} onPress={() => void requestDeletion()} />}
-      <TextAction label="Keep my account" onPress={() => router.back()} />
-    </>
-  );
   return (
-    <AccountPage testID="delete-account" footer={footer}>
+    <AccountPage testID="delete-account">
       <Text accessibilityRole="header" style={accountText.h1}>Delete your account?</Text>
       <Text style={accountText.prose}>Your profile is removed, you leave your groups, and upcoming places and hosted meals are cancelled. This can’t be undone.</Text>
       <Notice icon>For your security we’ll ask you to confirm it’s you. You’ll get a deletion reference to check the status later, even when signed out.</Notice>
       {stage.kind === 'reauthEmail' ? (
         <Field label="6-digit code" value={code} onChangeText={(v) => setCode(v.replace(/\D/g, '').slice(0, 6))} keyboardType="number-pad" textContentType="oneTimeCode" maxLength={6} />
       ) : null}
+      {/* Short page: the actions follow the explanation instead of a pinned bar with a blank band above it. */}
+      <View style={styles.actions} testID="delete-actions">
+        <FormMessage message={error} />
+        {stage.kind === 'reauthEmail'
+          ? <DestructiveButton label="Confirm and delete" busy={busy} onPress={() => void verifyCode()} />
+          : <DestructiveButton label="Delete my account" busy={busy} onPress={() => void requestDeletion()} />}
+        <TextAction label="Keep my account" onPress={() => router.back()} />
+      </View>
     </AccountPage>
   );
 }
+
+/**
+ * Irreversible action: same size as the primary button but filled with the danger red, matching the
+ * red “Delete account” / “Sign out” labels elsewhere so it never reads as an ordinary “continue”.
+ */
+export function DestructiveButton({ label, onPress, busy = false }: { label: string; onPress: () => void; busy?: boolean }) {
+  return (
+    <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ disabled: busy, busy }} disabled={busy} onPress={onPress} testID="destructive-button" style={({ pressed }) => [styles.danger, pressed && styles.pressed, busy && styles.inactive]}>
+      {busy ? <ActivityIndicator color={colors.white} /> : null}
+      <Text style={styles.dangerLabel}>{label}</Text>
+    </Pressable>
+  );
+}
+
+const styles = createStyles({
+  actions: { marginTop: 18, gap: 4 },
+  danger: { minHeight: sizes.button, borderRadius: radius.md, paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 9, borderWidth: 1, borderColor: colors.danger, backgroundColor: colors.danger },
+  pressed: { opacity: 0.85 },
+  inactive: { opacity: 0.5 },
+  dangerLabel: { color: colors.white, fontSize: 13, lineHeight: 16, fontWeight: '600' },
+});

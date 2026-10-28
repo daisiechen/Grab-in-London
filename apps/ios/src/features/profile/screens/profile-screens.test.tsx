@@ -1,4 +1,4 @@
-import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { ProfileSetupScreen } from './ProfileSetupScreen.tsx';
 import { MyProfileScreen } from './MyProfileScreen.tsx';
 import { EditProfileScreen } from './EditProfileScreen.tsx';
@@ -147,6 +147,23 @@ describe('MyProfileScreen and sign-out (QA-AUTH-006 / QA-AUTH-014)', () => {
   });
 });
 
+
+describe('EditProfileScreen photo', () => {
+  it('shows the current photo with a note that it can’t be changed, and offers no upload control', async () => {
+    const app = createTestApp();
+    const user = me();
+    await signIn(app, user);
+    app.mock.on('GET', `/v1/profiles/${user.id}`, ok({ profile: { ...publicProfile(user.id, user.displayName ?? 'Alex'), avatarUrl: 'preview://images/emma.png' }, reviews: [], nextReviewCursor: null }));
+    await renderApp(app, <EditProfileScreen />);
+    await waitFor(() => expect(app.mock.callsTo('GET', `/v1/profiles/${user.id}`)).toHaveLength(1));
+    const photo = screen.getByTestId('profile-photo');
+    // The initial placeholder gives way to the photo from the own public profile.
+    await waitFor(() => expect(within(photo).queryByText('A')).toBeNull());
+    expect(within(photo).getByLabelText(user.displayName ?? 'Alex')).toBeOnTheScreen();
+    expect(screen.getByText('Photo changes aren’t available in this version.')).toBeOnTheScreen();
+    expect(screen.queryByRole('button', { name: /photo|avatar|upload/i })).toBeNull();
+  });
+});
 
 describe('account-scoped profile draft', () => {
   it('does not reuse the previous account name after expiry and a different login', async () => {

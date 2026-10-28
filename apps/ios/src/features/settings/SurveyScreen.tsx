@@ -62,7 +62,7 @@ function SurveyScreenContent() {
   };
 
   return (
-    <AccountPage testID="survey" footer={<><FormMessage message={message?.text ?? null} tone={message?.tone ?? 'error'} /><Primary label={survey.submittedAt ? 'Update survey' : 'Save survey'} busy={busy} onPress={() => void save()} /></>}>
+    <AccountPage testID="survey">
       <Text accessibilityRole="header" style={accountText.h1}>Help shape Fancy.</Text>
       <Text style={accountText.prose}>An optional survey about Fancy. You can update your answers whenever you like.</Text>
       <Text accessibilityRole="header" style={accountText.h2}>Your experience of Fancy</Text>
@@ -73,6 +73,11 @@ function SurveyScreenContent() {
           {again !== null ? <TextAction label="Clear answer" onPress={() => setAgain(null)} /> : null}
         </View>
         <MultiChoice<Reason> label="What shapes your experience of Fancy? · optional" options={ORDER.map((r) => [r, REASON_LABELS[r]] as const)} values={reasons} onToggle={(r) => setReasons((cur) => (cur.includes(r) ? cur.filter((x) => x !== r) : [...cur, r]))} />
+      </View>
+      {/* Short form: the action follows the questions instead of a pinned bar with a blank band above it. */}
+      <View testID="survey-actions" style={{ marginTop: 18, gap: 4 }}>
+        <FormMessage message={message?.text ?? null} tone={message?.tone ?? 'error'} />
+        <Primary label={survey.submittedAt ? 'Update survey' : 'Save survey'} busy={busy} onPress={() => void save()} />
       </View>
     </AccountPage>
   );
