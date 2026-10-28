@@ -61,6 +61,10 @@ export function SettingsScreen() {
       {signedIn ? <SettingsLink danger label="Delete account" onPress={() => router.push('/delete-account')} /> : null}
       {signedIn ? <SettingsLink danger label="Sign out" onPress={() => setConfirm(true)} /> : null}
 
+      {/* Credits the area boundary and name sources as their licences require (docs/engineering/london-areas.zh-CN.md). */}
+      <Text accessibilityRole="header" style={accountText.h2}>Data sources</Text>
+      <Text style={accountText.muted}>London areas: Office for National Statistics, licensed under the Open Government Licence v3.0. Contains OS data © Crown copyright and database right 2021. Area names: House of Commons Library MSOA Names 2.3, licensed under the Open Parliament Licence v3.0.</Text>
+
       <Sheet visible={confirm} title="Sign out?" onClose={() => setConfirm(false)}>
         <Body>You’ll return to the account screen.</Body>
         <Primary secondary label="Stay signed in" onPress={() => setConfirm(false)} />

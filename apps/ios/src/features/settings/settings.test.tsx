@@ -76,6 +76,13 @@ describe('SettingsScreen groups', () => {
     expect(value.fontWeight).toBeUndefined();
   });
 
+  it('credits the London area data sources as their licences require', async () => {
+    const app = createTestApp();
+    await renderApp(app, <SettingsScreen />);
+    expect(screen.getByRole('header', { name: 'Data sources' })).toBeOnTheScreen();
+    expect(screen.getByText(/Open Government Licence v3\.0.*Open Parliament Licence v3\.0/)).toBeOnTheScreen();
+  });
+
   it('guests only see public privacy copy and deletion status', async () => {
     await renderApp(createTestApp(), <SettingsScreen />);
     expect(screen.getByRole('button', { name: 'Check deletion status' })).toBeOnTheScreen();
