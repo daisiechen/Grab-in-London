@@ -1,8 +1,8 @@
 import {useAssistantContext} from '../assistant/hooks.ts';
 import { useAnalyticsPresentations,useAnalyticsState } from '../../analytics/hooks.ts';
 import { useNativeImpressions,type DiscoveryProof } from '../../analytics/impressions.ts';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, ScrollView, Text, View } from 'react-native';
+import { useCallback, useEffect, useRef, useState, type ComponentRef } from 'react';
+import { ActivityIndicator, FlatList, Pressable, ScrollView, Text, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ApiError } from '@fancy/client';
@@ -44,7 +44,6 @@ export function DiscoverScreen() {
   const [filterEvents,setFilterEvents]=useState<string[]>([]);
   const [mapMode,setMapMode]=useState(true);
   const [areaCode,setAreaCode]=useState<string|null>(null);
-  const [pageStart,setPageStart]=useState(0);
   const [toast,setToast]=useState<string|null>(null);
   const router = useRouter();
   const today = londonToday(now());
@@ -121,16 +120,18 @@ export function DiscoverScreen() {
   const areaMeals = area?.meals ?? [];
   // The map preview shows two cards: the selected area's meals first, then other meals to fill.
   const previewList = [...areaMeals, ...meals.filter((m) => !areaMeals.includes(m))];
-  const start = Math.min(pageStart, Math.max(0, previewList.length - 1));
-  const shown = previewList.slice(start, start + 2);
-  const featured = shown[0] ?? null;
+  const featured = previewList[0] ?? null;
   const openMeal = (m: Meal) => router.push(`/meals/${m.id}`);
   const openPerson = (p: Meal['host']) => router.push(`/profiles/${p.id}`);
   const selectArea = (code: string) => {
     setAreaCode(code);
-    setPageStart(0);
+    previewScroll.current?.scrollTo({ y: 0, animated: false });
   };
   const notify = (message: string) => setToast(message);
+  const previewScroll = useRef<ComponentRef<typeof ScrollView>>(null);
+  const { height: windowHeight } = useWindowDimensions();
+  // The map keeps about a third of the screen; the scrollable meal list below gets the rest.
+  const mapHeight = Math.max(200, Math.round(windowHeight * 0.32));
   useHideHelperLauncher(sheet === 'date' || sheet === 'size' || sheet === 'filters');
   useEffect(() => {
     if (!toast) return;
@@ -195,14 +196,14 @@ export function DiscoverScreen() {
               <TextAction label="See all meals in list" onPress={() => setMapMode(false)} />
             </View>
           ) : null}
-          <View style={styles.map}>
+          <View style={[styles.map, { height: mapHeight }]}>
             <DiscoverMap groups={groups} activeCode={area?.code ?? null} onSelect={selectArea} />
             <View style={styles.mapKey} pointerEvents="none"><Text style={styles.mapKeyText}>Numbers = meals in each area</Text></View>
             <Pressable accessibilityRole="button" accessibilityLabel="Show central London" style={styles.locate} onPress={() => { if (groups[0]) selectArea(groups[0].code); notify('Showing central London. Location access is not needed.'); }}>
               <Icon name="PaperPlane" size={18} />
             </Pressable>
           </View>
-          <View style={styles.preview} accessibilityLabel="Selected area meals">
+          <View style={[styles.preview, styles.flex]} accessibilityLabel="Selected area meals">
             {featured && area ? (
               <>
                 <Pressable accessibilityRole="button" accessibilityLabel={`View all ${areaMeals.length} ${areaMeals.length === 1 ? 'meal' : 'meals'} in ${area.name}`} onPress={() => setSheet('area')}>
@@ -212,23 +213,14 @@ export function DiscoverScreen() {
                     <View style={styles.viewAll}><Text style={styles.viewAllText}>View all</Text><Icon name="ChevronUp" size={13} color={colors.forest} /></View>
                   </View>
                 </Pressable>
-                {shown.map((m, i) => (
-                  <View key={m.id}>
-                    {i > 0 && start + i === areaMeals.length ? <Text style={styles.moreNearby}>More nearby</Text> : i > 0 ? <View style={styles.cardGap} /> : null}
-                    <MealCard dense meal={m} onPress={() => openMeal(m)} />
-                  </View>
-                ))}
-                <View style={styles.pager}>
-                  <Text style={styles.pagerText}>{previewList.length > 1 ? `Meals ${start + 1}–${start + shown.length} of ${previewList.length}` : 'Meal 1 of 1'}</Text>
-                  <View style={styles.pagerButtons}>
-                    <Pressable accessibilityRole="button" accessibilityLabel="Previous meals" disabled={start <= 0} style={[styles.pagerButton, start <= 0 && styles.pagerDisabled]} onPress={() => setPageStart(Math.max(0, start - 2))}>
-                      <Icon name="ChevronLeft" size={15} />
-                    </Pressable>
-                    <Pressable accessibilityRole="button" accessibilityLabel="Next meals" disabled={start + 2 >= previewList.length} style={[styles.pagerButton, start + 2 >= previewList.length && styles.pagerDisabled]} onPress={() => setPageStart(start + 2)}>
-                      <Icon name="ChevronRight" size={15} />
-                    </Pressable>
-                  </View>
-                </View>
+                <ScrollView ref={previewScroll} style={styles.flex} contentContainerStyle={styles.previewList} testID="map-preview-list">
+                  {previewList.map((m, i) => (
+                    <View key={m.id}>
+                      {i > 0 && i === areaMeals.length ? <Text style={styles.moreNearby}>MORE NEARBY</Text> : i > 0 ? <View style={styles.cardGap} /> : null}
+                      <MealCard dense meal={m} onPress={() => openMeal(m)} />
+                    </View>
+                  ))}
+                </ScrollView>
               </>
             ) : loading ? <ActivityIndicator accessibilityLabel="Loading meals" style={{ padding: 24 }} /> : error ? null : empty}
           </View>
@@ -331,7 +323,7 @@ const styles = createStyles({
   retry: { paddingHorizontal: 16, paddingBottom: 8 },
   notice: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', marginHorizontal: 16, marginBottom: 8, paddingHorizontal: 12, borderRadius: 9, backgroundColor: '#f2f5ee' },
   noticeText: { fontSize: 11, color: '#607160' },
-  map: { flex: 1, minHeight: 160, backgroundColor: '#eeeee5', overflow: 'hidden' },
+  map: { backgroundColor: '#eeeee5', overflow: 'hidden' },
   mapKey: { position: 'absolute', top: 10, left: 12, backgroundColor: '#fffffff0', borderWidth: 1, borderColor: colors.line, borderRadius: 16, paddingVertical: 5, paddingHorizontal: 9, zIndex: 3 },
   mapKeyText: { color: '#4f6457', fontSize: 9 },
   locate: { position: 'absolute', bottom: 22, right: 15, width: 35, height: 35, borderRadius: 18, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOpacity: 0.13, shadowRadius: 10, shadowOffset: { width: 0, height: 2 }, zIndex: 3 },
@@ -342,12 +334,8 @@ const styles = createStyles({
   viewAll: { flexDirection: 'row', alignItems: 'center', gap: 3 },
   viewAllText: { fontSize: 10, color: colors.forest },
   cardGap: { height: 10 },
-  moreNearby: { fontSize: 10, fontWeight: '700', letterSpacing: 0.6, color: colors.muted, marginTop: 8, marginBottom: 6 },
-  pager: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopWidth: 1, borderTopColor: colors.line, marginTop: 8, paddingTop: 6 },
-  pagerText: { fontSize: 10, color: colors.muted },
-  pagerButtons: { flexDirection: 'row', gap: 6 },
-  pagerButton: { width: 30, height: 28, borderWidth: 1, borderColor: colors.line, borderRadius: 7, alignItems: 'center', justifyContent: 'center' },
-  pagerDisabled: { opacity: 0.3 },
+  previewList: { paddingBottom: 12 },
+  moreNearby: { fontSize: 9, fontWeight: '700', letterSpacing: 1.2, color: colors.muted, marginTop: 12, marginBottom: 8 },
   listContent: { paddingTop: 10, paddingHorizontal: 17, paddingBottom: 20 },
   sectionHeading: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 14 },
   sectionTitle: { fontSize: 18, fontWeight: '700', letterSpacing: -0.3, color: colors.ink },

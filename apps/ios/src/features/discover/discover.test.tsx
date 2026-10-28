@@ -44,15 +44,15 @@ describe('DiscoverScreen (QA-DISCOVERY-001..003)', () => {
     expect(app.mock.callsTo('GET','/v1/meals')[2]?.query.get('dates')).toBeNull();
   });
 
-  it('the map preview shows two cards, filling from other areas under More nearby', async () => {
+  it('the map preview lists the selected area first, then other areas under More nearby', async () => {
     const app = createTestApp();
     const at = (id: string, title: string, areaCode: string) => meal({ id, title, areaCode, venue: { ...meal().venue, areaCode } });
     app.mock.on('GET', '/v1/meals', page([at('11111111-1111-4111-8111-000000000001', 'Soho supper', 'soho'), at('11111111-1111-4111-8111-000000000002', 'Fitzrovia ramen', 'fitzrovia')]));
     await renderApp(app, <DiscoverScreen />);
     expect(await screen.findByText('Soho supper')).toBeOnTheScreen();
     expect(screen.getByText('Fitzrovia ramen')).toBeOnTheScreen();
-    expect(screen.getByText('More nearby')).toBeOnTheScreen();
-    expect(screen.getByText('Meals 1–2 of 2')).toBeOnTheScreen();
+    expect(screen.getByText('MORE NEARBY')).toBeOnTheScreen();
+    expect(screen.getByTestId('map-preview-list')).toBeOnTheScreen();
   });
 
   it('past London dates are not selectable', async () => {
