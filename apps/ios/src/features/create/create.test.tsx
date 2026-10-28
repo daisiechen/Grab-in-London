@@ -72,7 +72,8 @@ describe('Create Arrange (S10, QA-CREATE-001)', () => {
     await renderApp(app,<CreateStepScreen step={0}/>);
     await fireEvent.changeText(screen.getByLabelText('Search restaurants'),'dishoom');
     await fireEvent.press(screen.getByRole('button',{name:'Search'}));
-    await fireEvent.press(await screen.findByRole('button',{name:'Choose Dishoom'}));
+    await fireEvent.press(await screen.findByRole('button',{name:'Dishoom, 7 Boundary St'}));
+    await fireEvent.press(screen.getByRole('button',{name:'Use this restaurant'}));
     expect(await screen.findByLabelText('Selected restaurant Dishoom')).toBeOnTheScreen();
     expect(app.services.drafts.get<CreateDraft>(CREATE_DRAFT_KEY)?.venue).toMatchObject({venueRef:VENUE_REF,name:'Dishoom',address:'7 Boundary St'});
     expect(app.mock.callsTo('POST','/v1/venues/confirm')[0]?.body).toEqual({placeId:'place-1'});
@@ -88,12 +89,21 @@ describe('Create Arrange (S10, QA-CREATE-001)', () => {
 
     await fireEvent.changeText(screen.getByLabelText('Search restaurants'), 'dishoom');
     await fireEvent.press(screen.getByRole('button', { name: 'Search' }));
-    await fireEvent.press(await screen.findByRole('button', { name: 'Choose Dishoom' }));
+    // A search result is only a preview: nothing is confirmed until “Use this restaurant”.
+    await fireEvent.press(await screen.findByRole('button', { name: 'Dishoom, 7 Boundary St' }));
+    expect(app.mock.callsTo('POST', '/v1/venues/confirm')).toHaveLength(0);
+    await fireEvent.press(screen.getByRole('button', { name: 'Use this restaurant' }));
     expect(await screen.findByLabelText('Selected restaurant Dishoom')).toBeOnTheScreen();
     expect(app.mock.callsTo('POST', '/v1/venues/confirm')[0]?.body).toEqual({ placeId: 'place-1' });
 
-    await fireEvent.press(screen.getAllByRole('radio', { name: 'Sun 25 Oct' })[0]!);
-    await fireEvent.press(screen.getAllByRole('radio', { name: '19:00' })[0]!);
+    // Date and time pickers open inline under their triggers; choosing a date opens the time grid.
+    expect(screen.queryByRole('radio', { name: 'Sun 25 Oct' })).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: 'Date: Choose a date' }));
+    await fireEvent.press(screen.getByRole('radio', { name: 'Sun 25 Oct' }));
+    await fireEvent.press(screen.getByRole('radio', { name: '19:00' }));
+    expect(screen.getByRole('button', { name: 'Date: Sun 25 Oct' })).toBeOnTheScreen();
+    expect(screen.getByRole('button', { name: 'Time: 19:00' })).toBeOnTheScreen();
+    expect(screen.getByRole('button', { name: 'Deadline time: 18:00' })).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
     expect(mockRouter.push).toHaveBeenCalledWith('/create/introduce');
     const saved = app.services.drafts.get<CreateDraft>(CREATE_DRAFT_KEY);
@@ -170,5 +180,97 @@ describe('Create Review publish (S10, QA-TIME-004..007, QA-CREATE-002)', () => {
     app.mock.on('POST', '/v1/auth/logout', { status: 204 });
     await app.services.session.logout();
     expect(app.services.drafts.get(CREATE_DRAFT_KEY)).toBeUndefined();
+  });
+});
+
+describe('Create layout and steps (demo create-flow, r07 costs)', () => {
+  it('the step indicator revisits completed steps only', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.services.drafts.set(CREATE_DRAFT_KEY, readyDraft());
+    await renderApp(app, <CreateStepScreen step={2} />);
+    expect(screen.getByLabelText('Step 3 of 4')).toBeOnTheScreen();
+    expect(screen.getByRole('button', { name: 'Review' })).toBeDisabled();
+    await fireEvent.press(screen.getByRole('button', { name: 'Arrange, completed' }));
+    expect(mockRouter.navigate).toHaveBeenCalledWith('/create');
+    await fireEvent.press(screen.getByRole('button', { name: 'Introduce, completed' }));
+    expect(mockRouter.navigate).toHaveBeenCalledWith('/create/introduce');
+  });
+
+  it('Costs offers only pay-at-the-restaurant with an expected spend; no deposit, menu payment or refund', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.services.drafts.set(CREATE_DRAFT_KEY, { ...readyDraft(), budgetMin: '', budgetMax: '' });
+    await renderApp(app, <CreateStepScreen step={2} />);
+    expect(screen.getByText('Everyone pays their own share at the restaurant. Nothing is collected in the app.')).toBeOnTheScreen();
+    expect(screen.queryByText(/Deposit/i)).toBeNull();
+    expect(screen.queryByText(/Fixed menu/i)).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('Enter a valid budget, with the maximum at least the minimum.');
+    await fireEvent.changeText(screen.getByLabelText('Budget from per person in pounds'), '20');
+    await fireEvent.changeText(screen.getByLabelText('Budget to per person in pounds'), '35');
+    expect(screen.getByText('£20–35')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
+    expect(mockRouter.push).toHaveBeenCalledWith('/create/review');
+  });
+
+  it('Introduce shows live character counters', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    await renderApp(app, <CreateStepScreen step={1} />);
+    expect(screen.getByText('5–80 characters · 0/80')).toBeOnTheScreen();
+    await fireEvent.changeText(screen.getByLabelText('Give your meal a name'), 'Late supper');
+    expect(screen.getByText('5–80 characters · 11/80')).toBeOnTheScreen();
+    expect(screen.getByText('20–1,000 characters · 0/1,000')).toBeOnTheScreen();
+  });
+
+  it('Review groups the details and each Edit returns to its step without publishing', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.services.drafts.set(CREATE_DRAFT_KEY, readyDraft());
+    app.mock.on('GET', `/v1/venues/${VENUE_REF}/photo`, ok({ placeId: 'place-1', photo: null }));
+    await renderApp(app, <CreateStepScreen step={3} />);
+    expect(screen.getByText('Late supper')).toBeOnTheScreen();
+    expect(screen.getByText('£20–30 estimated per person')).toBeOnTheScreen();
+    expect(screen.getByText('Everyone pays their own share at the restaurant')).toBeOnTheScreen();
+    expect(screen.getByText('2–4 people including you · Applications close Sat 24 Oct, 22:00')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Edit place and time' }));
+    expect(mockRouter.navigate).toHaveBeenCalledWith('/create');
+    await fireEvent.press(screen.getByRole('button', { name: 'Edit introduction' }));
+    expect(mockRouter.navigate).toHaveBeenCalledWith('/create/introduce');
+    await fireEvent.press(screen.getByRole('button', { name: 'Edit costs and reservation' }));
+    expect(mockRouter.navigate).toHaveBeenCalledWith('/create/costs');
+    expect(app.mock.callsTo('POST', '/v1/meals')).toHaveLength(0);
+  });
+
+  it('changing the restaurant keeps the current one when a search finds nothing or is abandoned', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.services.drafts.set(CREATE_DRAFT_KEY, readyDraft());
+    app.mock.on('GET', `/v1/venues/${VENUE_REF}/photo`, ok({ placeId: 'place-1', photo: null }));
+    app.mock.on('GET', '/v1/venues', page([]));
+    await renderApp(app, <CreateStepScreen step={0} />);
+    expect(screen.queryByLabelText('Search restaurants')).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: 'Change restaurant' }));
+    await fireEvent.changeText(screen.getByLabelText('Search restaurants'), 'nowhere');
+    await fireEvent.press(screen.getByRole('button', { name: 'Search' }));
+    expect(await screen.findByText('No restaurants found. Try another name. Your current choice is kept.')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Keep current restaurant' }));
+    expect(screen.getByLabelText('Selected restaurant Dishoom')).toBeOnTheScreen();
+    expect(app.services.drafts.get<CreateDraft>(CREATE_DRAFT_KEY)?.venue?.venueRef).toBe(VENUE_REF);
+  });
+
+  it('a previewed search result can be dismissed without confirming it', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.mock.on('GET', '/v1/venues', page([{ placeId: 'place-1', name: 'Dishoom', address: '7 Boundary St', location: null, photoRefs: [], attributions: [] }]));
+    await renderApp(app, <CreateStepScreen step={0} />);
+    await fireEvent.changeText(screen.getByLabelText('Search restaurants'), 'dishoom');
+    await fireEvent.press(screen.getByRole('button', { name: 'Search' }));
+    await fireEvent.press(await screen.findByRole('button', { name: 'Dishoom, 7 Boundary St' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Cancel selection' }));
+    expect(screen.queryByRole('button', { name: 'Use this restaurant' })).toBeNull();
+    expect(app.mock.callsTo('POST', '/v1/venues/confirm')).toHaveLength(0);
+  });
+
+  it('signed-out hosts are sent to sign in and come back to Create', async () => {
+    const app = createTestApp(); await app.services.session.restore();
+    await renderApp(app, <CreateStepScreen step={0} />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
+    expect(mockRouter.push).toHaveBeenCalledWith('/sign-in');
   });
 });
