@@ -13,13 +13,15 @@ type Person = Meal['host'];
  * Demo meal card: photo column + copy, whole-card action with independent avatar buttons.
  * `compact` is the list/area-sheet variant (narrower photo, mood pill instead of caption).
  */
-export function MealCard({ meal, onPress, onPerson, members, compact = false, status }: {
+export function MealCard({ meal, onPress, onPerson, members, compact = false, dense = false, status }: {
   meal: Meal;
   onPress: () => void;
   onPerson?: (person: Person) => void;
   /** People to show; the public Meal projection only carries the host. */
   members?: Person[];
   compact?: boolean;
+  /** Two-up map preview: five short rows, smaller photo, no avatars. */
+  dense?: boolean;
   status?: string;
 }) {
   const people = (members?.length ? members : [meal.host]).slice(0, 3);
@@ -33,6 +35,18 @@ export function MealCard({ meal, onPress, onPerson, members, compact = false, st
             onPress={onPress}
             style={({ pressed }) => [styles.press, pressed && styles.pressed]}
           >
+            {dense ? (
+              <View style={styles.card}>
+                <View style={[styles.photo, styles.photoDense]}>{image}</View>
+                <View style={styles.copy}>
+                  <Text style={styles.titleDense} numberOfLines={1}>{meal.title}</Text>
+                  <Text style={styles.venue} numberOfLines={1}>{`${venueName(meal)} · ${areaName(meal.areaCode)}`}</Text>
+                  <Line icon="Calendar">{cardWhenLabel(meal.startsAt)}</Line>
+                  <Line glyph="£">{`${cardBudgetLabel(meal).replace(/^£/, '')} per person`}</Line>
+                  <Line icon="Person">{`Table for ${meal.capacity} · ${meal.confirmedCount} confirmed`}</Line>
+                </View>
+              </View>
+            ) : (
             <View style={styles.card}>
               <View style={[styles.photo, compact ? styles.photoCompact : null]}>{image}</View>
               <View style={styles.copy}>
@@ -48,6 +62,7 @@ export function MealCard({ meal, onPress, onPerson, members, compact = false, st
                 </View>
               </View>
             </View>
+            )}
             {status ? <Text style={styles.status}>{status}</Text> : null}
             {meal.status === 'CANCELLED' ? <Text style={styles.cancelled}>Cancelled</Text> : null}
           </Pressable>
@@ -77,6 +92,8 @@ const styles = createStyles({
   // Fixed frame: the photo fills it absolutely, so a tall source image can never stretch the card.
   photo: { width: 100, height: 124, borderRadius: 9, overflow: 'hidden', backgroundColor: colors.surface },
   photoCompact: { width: 88, height: 110 },
+  photoDense: { width: 76, height: 86 },
+  titleDense: { fontSize: 15, lineHeight: 18, fontWeight: '700', letterSpacing: -0.3, color: colors.ink, marginBottom: 1 },
   copy: { flex: 1, minWidth: 0 },
   title: { fontSize: 16, lineHeight: 19, fontWeight: '700', letterSpacing: -0.4, color: colors.ink, marginBottom: 2 },
   venue: { fontSize: 11, lineHeight: 14, fontWeight: '600', color: '#46594d', marginBottom: 3 },

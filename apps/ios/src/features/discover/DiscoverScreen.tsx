@@ -44,7 +44,7 @@ export function DiscoverScreen() {
   const [filterEvents,setFilterEvents]=useState<string[]>([]);
   const [mapMode,setMapMode]=useState(true);
   const [areaCode,setAreaCode]=useState<string|null>(null);
-  const [selectedId,setSelectedId]=useState<string|null>(null);
+  const [pageStart,setPageStart]=useState(0);
   const [toast,setToast]=useState<string|null>(null);
   const router = useRouter();
   const today = londonToday(now());
@@ -119,13 +119,16 @@ export function DiscoverScreen() {
   const busiest = groups.reduce<(typeof groups)[number] | undefined>((best, g) => (!best || g.meals.length > best.meals.length ? g : best), undefined);
   const area = groups.find((g) => g.code === areaCode) ?? busiest ?? (unplaced.length ? { code: 'london', name: 'London', meals: unplaced } : null);
   const areaMeals = area?.meals ?? [];
-  const featuredIndex = Math.max(0, areaMeals.findIndex((m) => m.id === selectedId));
-  const featured = areaMeals[featuredIndex] ?? null;
+  // The map preview shows two cards: the selected area's meals first, then other meals to fill.
+  const previewList = [...areaMeals, ...meals.filter((m) => !areaMeals.includes(m))];
+  const start = Math.min(pageStart, Math.max(0, previewList.length - 1));
+  const shown = previewList.slice(start, start + 2);
+  const featured = shown[0] ?? null;
   const openMeal = (m: Meal) => router.push(`/meals/${m.id}`);
   const openPerson = (p: Meal['host']) => router.push(`/profiles/${p.id}`);
   const selectArea = (code: string) => {
     setAreaCode(code);
-    setSelectedId(groups.find((g) => g.code === code)?.meals[0]?.id ?? null);
+    setPageStart(0);
   };
   const notify = (message: string) => setToast(message);
   useHideHelperLauncher(sheet === 'date' || sheet === 'size' || sheet === 'filters');
@@ -209,14 +212,19 @@ export function DiscoverScreen() {
                     <View style={styles.viewAll}><Text style={styles.viewAllText}>View all</Text><Icon name="ChevronUp" size={13} color={colors.forest} /></View>
                   </View>
                 </Pressable>
-                <MealCard meal={featured} onPress={() => openMeal(featured)} onPerson={openPerson} />
+                {shown.map((m, i) => (
+                  <View key={m.id}>
+                    {i > 0 && start + i === areaMeals.length ? <Text style={styles.moreNearby}>More nearby</Text> : i > 0 ? <View style={styles.cardGap} /> : null}
+                    <MealCard dense meal={m} onPress={() => openMeal(m)} />
+                  </View>
+                ))}
                 <View style={styles.pager}>
-                  <Text style={styles.pagerText}>{`Meal ${featuredIndex + 1} of ${areaMeals.length}`}</Text>
+                  <Text style={styles.pagerText}>{previewList.length > 1 ? `Meals ${start + 1}–${start + shown.length} of ${previewList.length}` : 'Meal 1 of 1'}</Text>
                   <View style={styles.pagerButtons}>
-                    <Pressable accessibilityRole="button" accessibilityLabel="Previous meal in this area" disabled={featuredIndex <= 0} style={[styles.pagerButton, featuredIndex <= 0 && styles.pagerDisabled]} onPress={() => setSelectedId(areaMeals[featuredIndex - 1]?.id ?? null)}>
+                    <Pressable accessibilityRole="button" accessibilityLabel="Previous meals" disabled={start <= 0} style={[styles.pagerButton, start <= 0 && styles.pagerDisabled]} onPress={() => setPageStart(Math.max(0, start - 2))}>
                       <Icon name="ChevronLeft" size={15} />
                     </Pressable>
-                    <Pressable accessibilityRole="button" accessibilityLabel="Next meal in this area" disabled={featuredIndex >= areaMeals.length - 1} style={[styles.pagerButton, featuredIndex >= areaMeals.length - 1 && styles.pagerDisabled]} onPress={() => setSelectedId(areaMeals[featuredIndex + 1]?.id ?? null)}>
+                    <Pressable accessibilityRole="button" accessibilityLabel="Next meals" disabled={start + 2 >= previewList.length} style={[styles.pagerButton, start + 2 >= previewList.length && styles.pagerDisabled]} onPress={() => setPageStart(start + 2)}>
                       <Icon name="ChevronRight" size={15} />
                     </Pressable>
                   </View>
@@ -327,13 +335,15 @@ const styles = createStyles({
   mapKey: { position: 'absolute', top: 10, left: 12, backgroundColor: '#fffffff0', borderWidth: 1, borderColor: colors.line, borderRadius: 16, paddingVertical: 5, paddingHorizontal: 9, zIndex: 3 },
   mapKeyText: { color: '#4f6457', fontSize: 9 },
   locate: { position: 'absolute', bottom: 22, right: 15, width: 35, height: 35, borderRadius: 18, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOpacity: 0.13, shadowRadius: 10, shadowOffset: { width: 0, height: 2 }, zIndex: 3 },
-  preview: { backgroundColor: colors.white, borderTopLeftRadius: 19, borderTopRightRadius: 19, paddingHorizontal: 16, paddingBottom: 12, marginTop: -10, zIndex: 4 },
-  grip: { height: 3, width: 28, backgroundColor: '#bfc4bd', borderRadius: 3, marginTop: 8, marginBottom: 9, alignSelf: 'center' },
-  areaRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 12 },
+  preview: { backgroundColor: colors.white, borderTopLeftRadius: 19, borderTopRightRadius: 19, paddingHorizontal: 16, paddingBottom: 8, marginTop: -10, zIndex: 4 },
+  grip: { height: 3, width: 28, backgroundColor: '#bfc4bd', borderRadius: 3, marginTop: 6, marginBottom: 6, alignSelf: 'center' },
+  areaRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 8 },
   areaTitle: { fontSize: 11, fontWeight: '600', color: colors.forest },
   viewAll: { flexDirection: 'row', alignItems: 'center', gap: 3 },
   viewAllText: { fontSize: 10, color: colors.forest },
-  pager: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopWidth: 1, borderTopColor: colors.line, marginTop: 11, paddingTop: 7 },
+  cardGap: { height: 10 },
+  moreNearby: { fontSize: 10, fontWeight: '700', letterSpacing: 0.6, color: colors.muted, marginTop: 8, marginBottom: 6 },
+  pager: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopWidth: 1, borderTopColor: colors.line, marginTop: 8, paddingTop: 6 },
   pagerText: { fontSize: 10, color: colors.muted },
   pagerButtons: { flexDirection: 'row', gap: 6 },
   pagerButton: { width: 30, height: 28, borderWidth: 1, borderColor: colors.line, borderRadius: 7, alignItems: 'center', justifyContent: 'center' },
