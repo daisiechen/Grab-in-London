@@ -32,18 +32,20 @@ export function MyProfileScreen() {
 
   if (!me) {
     return (
-      <ScrollView style={styles.page} contentContainerStyle={[styles.body, styles.guest, { paddingTop: insets.top + 4 }]} testID="profile-guest">
+      <ScrollView style={styles.page} contentContainerStyle={[styles.body, styles.guestPage, { paddingTop: insets.top + 4 }]} testID="profile-guest">
         <Text accessibilityRole="header" style={styles.h1}>Your profile</Text>
-        <Text style={styles.prose}>Sign in to set up the profile your tables will see.</Text>
-        <View style={styles.actions}>
-          <Primary
-            label="Sign in or create an account"
-            onPress={() => {
-              rememberReturnTo('/profile');
-              router.push('/sign-in');
-            }}
-          />
-          <Primary secondary label="Check deletion status" onPress={() => router.push('/deletion-status')} />
+        <View style={styles.guestBody}>
+          <Text style={styles.prose}>Sign in to set up the profile your tables will see.</Text>
+          <View style={styles.actions}>
+            <Primary
+              label="Sign in or create an account"
+              onPress={() => {
+                rememberReturnTo('/profile');
+                router.push('/sign-in');
+              }}
+            />
+            <Primary secondary label="Check deletion status" onPress={() => router.push('/deletion-status')} />
+          </View>
         </View>
       </ScrollView>
     );
@@ -78,8 +80,9 @@ const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
 const monthName = (instant: string) => MONTHS[new Date(instant).getUTCMonth()] ?? '';
 
 const styles = createStyles({
-  // Guest view: same top gap as the other tabs, prompt centred in the free space.
-  guest: { flexGrow: 1, justifyContent: 'center', paddingBottom: 80 },
+  // Guest view: the title stays at the top like the other tabs; only the prompt is centred in the free space.
+  guestPage: { flexGrow: 1 },
+  guestBody: { flex: 1, justifyContent: 'center', paddingBottom: 60 },
   page: { flex: 1, backgroundColor: colors.white },
   body: { paddingHorizontal: 18, paddingBottom: 24 },
   gear: { position: 'absolute', right: 12, zIndex: 10, width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffffee', borderWidth: 1, borderColor: colors.line },

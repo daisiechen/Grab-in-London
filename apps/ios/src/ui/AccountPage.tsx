@@ -2,11 +2,9 @@ import type { ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icon } from './Icon.tsx';
+import { useKeyboardOffset, useKeyboardShown } from './keyboard.ts';
 import { colors } from './tokens.ts';
 import { createStyles } from './styles.ts';
-
-/** Native stack header content height on iPhone (the status bar inset sits above it). */
-const IOS_HEADER = 44;
 
 /**
  * Page shell for the account area (post-meal, settings, survey, report, deletion): content starts right
@@ -15,14 +13,16 @@ const IOS_HEADER = 44;
  */
 export function AccountPage({ children, footer, testID, top = 'header' }: { children: ReactNode; footer?: ReactNode; testID?: string; top?: 'header' | 'safe' }) {
   const insets = useSafeAreaInsets();
+  const kb = useKeyboardOffset();
+  const keyboard = useKeyboardShown();
   const paddingTop = top === 'header' ? 12 : insets.top + 4;
   return (
-    <View style={styles.page} testID={testID}>
-      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={top === 'header' ? insets.top + IOS_HEADER : 0}>
+    <View ref={kb.ref} onLayout={kb.onLayout} style={styles.page} testID={testID}>
+      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={kb.offset}>
         <ScrollView contentInsetAdjustmentBehavior={top === 'header' ? 'automatic' : 'never'} style={styles.flex} contentContainerStyle={[styles.scroll, { paddingTop }]} keyboardShouldPersistTaps="handled" keyboardDismissMode="interactive">
           {children}
         </ScrollView>
-        {footer ? <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 12) }]}>{footer}</View> : null}
+        {footer ? <View style={[styles.footer, { paddingBottom: keyboard ? 10 : Math.max(insets.bottom, 12) }]}>{footer}</View> : null}
       </KeyboardAvoidingView>
     </View>
   );

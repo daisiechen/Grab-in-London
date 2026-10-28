@@ -1,5 +1,5 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { ApplicationStatusScreen, applicationSteps } from './ApplicationStatusScreen.tsx';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { ApplicationStatusScreen, STATUS_POLL_MS, applicationSteps } from './ApplicationStatusScreen.tsx';
 import { ApplyScreen } from './ApplyScreen.tsx';
 import { createTestApp, renderApp, signIn } from '../../test/render.tsx';
 import { mockRouter, resetRouter, routeParams } from '../../test/router.ts';
@@ -142,5 +142,23 @@ describe('ApplyScreen (Request a seat) layout', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'View application' }));
     expect(mockRouter.replace).toHaveBeenCalledWith(`/meals/${MEAL_ID}/status`);
     await waitFor(() => expect(app.mock.callsTo('POST', /applications/)).toHaveLength(0));
+  });
+});
+
+describe('ApplicationStatusScreen polling', () => {
+  afterEach(() => jest.useRealTimers());
+  it('checks back while the host is reviewing and shows the decision', async () => {
+    jest.useFakeTimers();
+    const app = createTestApp();
+    await signIn(app, me());
+    app.mock.on('GET', MEAL_PATH, ok({ meal: meal(), myApplication: application(), conversationId: null }), 1);
+    app.mock.on('GET', MEAL_PATH, ok({ meal: meal(), myApplication: application({ state: 'CONFIRMED' }), conversationId: CONVERSATION_ID }));
+    await renderApp(app, <ApplicationStatusScreen />);
+    expect(await screen.findByText('Your hello is on its way.')).toBeOnTheScreen();
+    await act(async () => { jest.advanceTimersByTime(STATUS_POLL_MS); });
+    await waitFor(() => expect(screen.queryByText('Your hello is on its way.')).toBeNull());
+    const calls = app.mock.callsTo('GET', MEAL_PATH).length;
+    await act(async () => { jest.advanceTimersByTime(STATUS_POLL_MS * 2); });
+    expect(app.mock.callsTo('GET', MEAL_PATH)).toHaveLength(calls);
   });
 });

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ApiError, type ResponseOf } from '@fancy/client';
@@ -49,6 +49,8 @@ const COPY: Record<State, { title: string; next: (host: string) => string }> = {
   CANCELLED: { title: 'Your participation is cancelled.', next: () => 'Your seat was released. You can discover another meal.' },
 };
 
+export const STATUS_POLL_MS = 15_000;
+
 /** “Your application” (demo status page): progress, what happens next, withdraw with confirmation. */
 export function ApplicationStatusScreen() {
   const { mealId } = useLocalSearchParams<{ mealId: string }>();
@@ -61,6 +63,14 @@ export function ApplicationStatusScreen() {
   const [message, setMessage] = useState<string | null>(null);
   // One key per withdraw intent: reused when the confirmation is retried, renewed after success.
   const [withdrawKey, setWithdrawKey] = useState(() => newId());
+  // While the host is reviewing, check back periodically so a decision shows up without leaving the page.
+  const pending = q.data?.myApplication?.state === 'PENDING';
+  const { reload } = q;
+  useEffect(() => {
+    if (!pending) return undefined;
+    const timer = setInterval(() => void reload(), STATUS_POLL_MS);
+    return () => clearInterval(timer);
+  }, [pending, reload]);
 
   if (!q.data) {
     return (

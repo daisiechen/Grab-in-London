@@ -2,14 +2,12 @@ import type { ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FloatingBack } from './FloatingBack.tsx';
+import { useKeyboardOffset, useKeyboardShown } from './keyboard.ts';
 import { colors } from './tokens.ts';
 import { createStyles } from './styles.ts';
 
 /** Warm paper of the demo's brand entrance (.brand-entrance). */
 export const BRAND_PAPER = '#f5f2e8';
-
-/** Native stack header content height on iPhone (the status bar inset sits above it). */
-const IOS_HEADER = 44;
 
 type Top =
   /** Under the system navigation bar (form pages keep the native back button). */
@@ -25,16 +23,18 @@ type Top =
  */
 export function ActionPage({ children, footer, overlay, testID, top = 'header', paper = false }: { children: ReactNode; footer?: ReactNode; /** Sheets/modals, rendered after the footer. */ overlay?: ReactNode; testID?: string; top?: Top; paper?: boolean }) {
   const insets = useSafeAreaInsets();
+  const kb = useKeyboardOffset();
+  const keyboard = useKeyboardShown();
   const background = paper ? BRAND_PAPER : colors.white;
   const paddingTop = top === 'header' ? 12 : top === 'floating' ? insets.top + 4 : insets.top + 8;
   return (
-    <View style={[styles.page, { backgroundColor: background }]} testID={testID}>
+    <View ref={kb.ref} onLayout={kb.onLayout} style={[styles.page, { backgroundColor: background }]} testID={testID}>
       {top === 'floating' ? <FloatingBack /> : null}
-      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={top === 'header' ? insets.top + IOS_HEADER : 0}>
+      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={kb.offset}>
         <ScrollView contentInsetAdjustmentBehavior={top === 'header' ? 'automatic' : 'never'} style={styles.flex} contentContainerStyle={[styles.scroll, { paddingTop }]} keyboardShouldPersistTaps="handled" keyboardDismissMode="interactive">
           {children}
         </ScrollView>
-        {footer ? <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 12), backgroundColor: background }]}>{footer}</View> : null}
+        {footer ? <View style={[styles.footer, { paddingBottom: keyboard ? 10 : Math.max(insets.bottom, 12), backgroundColor: background }]}>{footer}</View> : null}
       </KeyboardAvoidingView>
       {overlay}
     </View>

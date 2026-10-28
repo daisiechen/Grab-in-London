@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useCallback, useRef, useState, type ComponentRef } from 'react';
 import { FlatList, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import type { ResponseOf } from '@fancy/client';
 import { MY_MEAL_SECTIONS } from '@fancy/contracts';
 import { allPages } from '../../api/pages.ts';
@@ -68,19 +68,45 @@ function SignedInMeals({ section, onSection }: { section: Section; onSection: (s
   const router = useRouter();
   const q = useQuery<Item[]>(`myMeals:${section}`, () => allPages((cursor) => api.call('myMeals', { query: { section, limit: 50, ...(cursor ? { cursor } : {}) } })));
   const hosting = section === 'HOSTING';
+  // The tab stays mounted: coming back from applying, chatting or managing must show the current state.
+  const firstFocus = useRef(true);
+  const tabsRef = useRef<ComponentRef<typeof ScrollView>>(null);
+  const tabX = useRef<Partial<Record<Section, number>>>({});
+  // Stable callback: switching sections already loads through useQuery and must not count as a refocus.
+  const reload = useRef(q.reload);
+  reload.current = q.reload;
+  useFocusEffect(useCallback(() => {
+    if (firstFocus.current) { firstFocus.current = false; return; }
+    void reload.current();
+  }, []));
+  // A confirmed seat lives in Upcoming; Applications lists only requests still in progress or closed
+  // without a seat, matching the Inbox Applications tab.
+  const rows = section === 'APPLICATIONS' ? (q.data ?? []).filter((i) => i.application?.state !== 'CONFIRMED') : (q.data ?? []);
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <FlatList
         testID="my-meals"
         contentContainerStyle={styles.pad}
-        data={q.data ?? []}
+        data={rows}
         keyExtractor={(i) => `${i.meal.id}:${i.application?.id ?? i.role}`}
         ListHeaderComponent={
           <View style={styles.headerBlock}>
             <Header />
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tabsScroll} contentContainerStyle={styles.tabs} accessibilityRole="tablist" accessibilityLabel="Meal categories">
+            <ScrollView ref={tabsRef} horizontal showsHorizontalScrollIndicator={false} style={styles.tabsScroll} contentContainerStyle={styles.tabs} accessibilityRole="tablist" accessibilityLabel="Meal categories">
               {MY_MEAL_SECTIONS.map((s) => (
-                <Pressable key={s} accessibilityRole="tab" accessibilityLabel={LABELS[s]} accessibilityState={{ selected: section === s }} style={[styles.tab, section === s && styles.tabSelected]} onPress={() => onSection(s)}>
+                <Pressable
+                  key={s}
+                  accessibilityRole="tab"
+                  accessibilityLabel={LABELS[s]}
+                  accessibilityState={{ selected: section === s }}
+                  style={[styles.tab, section === s && styles.tabSelected]}
+                  onLayout={(e) => { tabX.current[s] = e.nativeEvent.layout.x; }}
+                  onPress={() => {
+                    onSection(s);
+                    // Keep the chosen tab fully visible (the last ones sit past the screen edge).
+                    tabsRef.current?.scrollTo({ x: Math.max(0, (tabX.current[s] ?? 0) - 48), animated: true });
+                  }}
+                >
                   <Text style={[styles.tabText, section === s && styles.tabTextSelected]}>{LABELS[s]}</Text>
                 </Pressable>
               ))}
@@ -111,7 +137,7 @@ function SignedInMeals({ section, onSection }: { section: Section; onSection: (s
             <View style={styles.empty}>
               <Icon name="Calendar" size={30} color={colors.forest} />
               <Text style={styles.emptyTitle}>{hosting ? 'Your table starts with you.' : 'A good meal is waiting.'}</Text>
-              <Text style={styles.emptyBody}>{section === 'APPLICATIONS' ? 'Your requests will appear here.' : section === 'PAST' ? 'Meals you’ve shared will appear here.' : section === 'CANCELLED' ? 'Cancelled meals will appear here.' : 'Find a table that fits your evening.'}</Text>
+              <Text style={styles.emptyBody}>{section === 'APPLICATIONS' ? 'Your requests will appear here.' : section === 'PAST' ? 'Meals you’ve shared will appear here.' : section === 'CANCELLED' ? 'Cancelled meals will appear here.' : hosting ? 'Host a meal and choose who joins your table.' : 'Find a table that fits your evening.'}</Text>
               <View style={styles.emptyAction}><Primary label={hosting ? 'Create a meal' : 'Explore meals'} icon="ArrowRight" onPress={() => (hosting ? router.push('/create') : router.navigate('/'))} /></View>
             </View>
           ) : undefined

@@ -4,6 +4,9 @@ import { addMonths, longDate, monthGrid, monthTitle } from '../lib/london.ts';
 import { colors, type } from './tokens.ts';
 import { createStyles } from './styles.ts';
 
+/** Monday-first, matching monthGrid's leading blanks. */
+const WEEKDAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+
 /** Month/day chooser (prototype DateChoices) on London calendar dates; past dates are disabled. */
 export function DateChoices({ label, selected, onToggle, today, multiple = false }: { label: string; selected: readonly string[]; onToggle: (date: string) => void; today: string; multiple?: boolean }) {
   const [month, setMonth] = useState((selected[0] ?? today).slice(0, 7));
@@ -20,6 +23,9 @@ export function DateChoices({ label, selected, onToggle, today, multiple = false
         <Pressable accessibilityRole="button" accessibilityLabel="Next month" onPress={() => setMonth(addMonths(month, 1))} hitSlop={8}>
           <Text style={styles.nav}>›</Text>
         </Pressable>
+      </View>
+      <View style={styles.weekdays} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
+        {WEEKDAYS.map((w, i) => <Text key={i} style={styles.weekday}>{w}</Text>)}
       </View>
       <View style={styles.grid}>
         {Array.from({ length: leading }, (_, i) => <View key={`b${i}`} style={styles.cell} />)}
@@ -52,6 +58,8 @@ const styles = createStyles({
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   nav: { fontSize: 24, color: colors.forest, paddingHorizontal: 8 },
   month: { fontSize: type.body, fontWeight: '700', color: colors.ink },
+  weekdays: { flexDirection: 'row', marginBottom: -4 },
+  weekday: { width: `${100 / 7}%`, textAlign: 'center', fontSize: 11, fontWeight: '600', color: colors.muted },
   grid: { flexDirection: 'row', flexWrap: 'wrap' },
   // Each cell centres a fixed 36pt circle, so the selected background always sits around the number.
   cell: { width: `${100 / 7}%`, height: 40, alignItems: 'center', justifyContent: 'center' },

@@ -40,7 +40,7 @@ function Chip({ label, selected, role, onPress }: { label: string; selected: boo
       onPress={onPress}
       style={[styles.chip, selected && styles.selected]}
     >
-      <Text style={[styles.chipLabel, selected && styles.selectedLabel]}>{selected ? `✓ ${label}` : label}</Text>
+      <Text style={[styles.chipLabel, selected && styles.selectedLabel]}>{label}</Text>
     </Pressable>
   );
 }
@@ -51,6 +51,7 @@ const styles = createStyles({
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   chip: { minHeight: 32, paddingHorizontal: 11, paddingVertical: 6, borderRadius: radius.sm, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.white, justifyContent: 'center' },
   selected: { backgroundColor: colors.selectedSurface, borderColor: colors.forest },
-  chipLabel: { fontSize: 12, color: colors.ink },
-  selectedLabel: { color: colors.forest, fontWeight: '700' },
+  // Same weight in both states: selecting a chip must not widen it or re-wrap the row.
+  chipLabel: { fontSize: 12, fontWeight: '600', color: colors.ink },
+  selectedLabel: { color: colors.forest },
 });

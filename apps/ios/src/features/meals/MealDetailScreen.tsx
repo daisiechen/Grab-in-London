@@ -153,7 +153,6 @@ export function MealDetailScreen() {
         <View style={styles.tags}>
           <Tag>{moodLabel(meal)}</Tag>
           <Tag>{languagesLabel(meal.languages)}</Tag>
-          <Tag>Friendship first</Tag>
         </View>
         <Text style={styles.muted}>{`Cuisine: ${cuisineLabel(meal)} · Dietary options: ${dietaryLabel(meal)}. Host-reported · not an allergy guarantee.`}</Text>
 
