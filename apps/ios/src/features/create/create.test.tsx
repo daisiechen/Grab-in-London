@@ -1,15 +1,17 @@
-import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { CREATE_DRAFT_KEY, CreateStepScreen } from './CreateStepScreen.tsx';
 import { emptyDraft, updateDraft, type CreateDraft } from './model.ts';
 import { createTestApp, renderApp, signIn } from '../../test/render.tsx';
 import { mockRouter, resetRouter } from '../../test/router.ts';
 import { fail, ok, page } from '../../test/mock-fetch.ts';
 import { MEAL_ID, meal, me } from '../../test/fixtures.ts';
+import { layout, mockContentGeometry } from './reveal-test-utils.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
 jest.mock('expo-router', () => require('../../test/router.ts').expoRouterMock);
 
 beforeEach(resetRouter);
+afterEach(() => jest.restoreAllMocks());
 
 const VENUE_REF = '2c1b0a9f-8e7d-4c6b-9a5f-4e3d2c1b0a9f';
 const venueResponse = { venueRef: VENUE_REF, placeId: 'place-1', available: true, name: 'Dishoom', address: '7 Boundary St', location: null, areaCode: 'shoreditch', attributions: [{ provider: 'google', text: 'Google' }], displayExpiresAt: null };
@@ -128,7 +130,7 @@ describe('Create Review publish (S10, QA-TIME-004..007, QA-CREATE-002)', () => {
     expect(screen.getByRole('alert')).toHaveTextContent('Confirm you’ve reviewed the details before publishing.');
     expect(app.mock.callsTo('POST', '/v1/meals')).toHaveLength(0);
 
-    await fireEvent.press(screen.getByRole('checkbox', { name: /I’ve reviewed these details/ }));
+    await fireEvent.press(screen.getByRole('checkbox', { name: 'I’ve reviewed the details guests will see.' }));
     await fireEvent.press(screen.getByRole('button', { name: 'Publish meal' }));
     expect(await screen.findByText(/01:30 happens twice/)).toBeOnTheScreen();
     expect(screen.getByRole('button', { name: 'Publish with this time' })).toBeDisabled();
@@ -272,5 +274,115 @@ describe('Create layout and steps (demo create-flow, r07 costs)', () => {
     await renderApp(app, <CreateStepScreen step={0} />);
     await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
     expect(mockRouter.push).toHaveBeenCalledWith('/sign-in');
+  });
+});
+
+describe('Create simulator walkthrough fixes (iOS 27)', () => {
+  const PICKER_Y = 640;
+  const PICKER_H = 300;
+  const expectedY = PICKER_Y + PICKER_H + 12 - 520;
+
+  it.each([
+    ['Date: Choose a date', 'picker-date'],
+    ['Time: Choose a time', 'picker-time'],
+    ['Deadline date: Choose a date', 'picker-closeDate'],
+    ['Deadline time: Choose a time', 'picker-closeTime'],
+  ])('“%s” scrolls its in-place picker fully above the pinned footer once it opens', async (trigger, panel) => {
+    const app = createTestApp(); await signIn(app, me());
+    const { scrollTo } = mockContentGeometry({ y: PICKER_Y, height: PICKER_H });
+    await renderApp(app, <CreateStepScreen step={0} />);
+    // The scroll view's frame ends at the footer's top edge (the footer is a sibling).
+    await fireEvent(screen.getByTestId('create-scroll'), 'layout', layout(520));
+    await fireEvent.press(screen.getByRole('button', { name: trigger }));
+    expect(scrollTo).not.toHaveBeenCalled();
+    await fireEvent(screen.getByTestId(panel), 'layout', layout(PICKER_H));
+    expect(scrollTo).toHaveBeenCalledWith({ y: expectedY, animated: true });
+  });
+
+  it('choosing a date opens the time grid and scrolls that into view too', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    const { scrollTo } = mockContentGeometry({ y: PICKER_Y, height: PICKER_H });
+    await renderApp(app, <CreateStepScreen step={0} />);
+    await fireEvent(screen.getByTestId('create-scroll'), 'layout', layout(520));
+    await fireEvent.press(screen.getByRole('button', { name: 'Date: Choose a date' }));
+    await fireEvent.press(screen.getByRole('radio', { name: 'Sun 25 Oct' }));
+    await fireEvent(screen.getByTestId('picker-time'), 'layout', layout(PICKER_H));
+    expect(scrollTo).toHaveBeenCalledWith({ y: expectedY, animated: true });
+  });
+
+  it('tapping a restaurant result scrolls “Use this restaurant” into view; confirming is still explicit (J02)', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.mock.on('GET', '/v1/venues', page([{ placeId: 'place-1', name: 'Dishoom', address: '7 Boundary St', location: null, photoRefs: [], attributions: [] }]));
+    const { scrollTo } = mockContentGeometry({ y: 560, height: 90 });
+    await renderApp(app, <CreateStepScreen step={0} />);
+    await fireEvent(screen.getByTestId('create-scroll'), 'layout', layout(520));
+    await fireEvent.changeText(screen.getByLabelText('Search restaurants'), 'dishoom');
+    await fireEvent.press(screen.getByRole('button', { name: 'Search' }));
+    await fireEvent.press(await screen.findByRole('button', { name: 'Dishoom, 7 Boundary St' }));
+    await fireEvent(screen.getByTestId('venue-confirm'), 'layout', layout(90));
+    expect(scrollTo).toHaveBeenCalledWith({ y: 560 + 90 + 12 - 520, animated: true });
+    expect(screen.getByRole('button', { name: 'Use this restaurant' })).toBeOnTheScreen();
+    expect(app.mock.callsTo('POST', '/v1/venues/confirm')).toHaveLength(0);
+  });
+
+  it('Costs: empty budget fields use “e.g.” placeholders, not values that look filled', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.services.drafts.set(CREATE_DRAFT_KEY, { ...readyDraft(), budgetMin: '', budgetMax: '' });
+    await renderApp(app, <CreateStepScreen step={2} />);
+    expect(screen.getByLabelText('Budget from per person in pounds')).toHaveProp('placeholder', 'e.g. 20');
+    expect(screen.getByLabelText('Budget to per person in pounds')).toHaveProp('placeholder', 'e.g. 35');
+    expect(screen.getByLabelText('Budget from per person in pounds')).toHaveProp('value', '');
+    expect(screen.getByText('—')).toBeOnTheScreen();
+  });
+
+  it('Costs: budget errors appear under the field as the host types, before Continue', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.services.drafts.set(CREATE_DRAFT_KEY, { ...readyDraft(), budgetMin: '', budgetMax: '' });
+    await renderApp(app, <CreateStepScreen step={2} />);
+    await fireEvent.changeText(screen.getByLabelText('Budget from per person in pounds'), '40');
+    expect(screen.queryByText(/Must be at least/)).toBeNull();
+    await fireEvent.changeText(screen.getByLabelText('Budget to per person in pounds'), '30');
+    expect(screen.getByText('Must be at least £40, the “From” amount.')).toBeOnTheScreen();
+    expect(screen.queryByRole('alert')).toBeNull();
+    await fireEvent.changeText(screen.getByLabelText('Budget to per person in pounds'), '45');
+    expect(screen.queryByText(/Must be at least/)).toBeNull();
+    await fireEvent.changeText(screen.getByLabelText('Budget from per person in pounds'), '0');
+    expect(screen.getByText('Enter an amount above £0.')).toBeOnTheScreen();
+    await fireEvent.changeText(screen.getByLabelText('Budget from per person in pounds'), '20.555');
+    expect(screen.getByText('Use pounds only, like 20 or 22.50.')).toBeOnTheScreen();
+    expect(mockRouter.push).not.toHaveBeenCalled();
+  });
+
+  it('Costs: the booking declaration is marked as required before any Continue', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.services.drafts.set(CREATE_DRAFT_KEY, { ...readyDraft(), bookingDeclarationConfirmed: false });
+    await renderApp(app, <CreateStepScreen step={2} />);
+    expect(screen.getByLabelText('Required to continue')).toHaveTextContent('Required');
+    expect(screen.getByText(/Tick to confirm before you continue\./)).toBeOnTheScreen();
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('Review: the required “reviewed” checkbox is pinned with Publish, outside the scrolling details', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.services.drafts.set(CREATE_DRAFT_KEY, readyDraft());
+    app.mock.on('GET', `/v1/venues/${VENUE_REF}/photo`, ok({ placeId: 'place-1', photo: null }));
+    await renderApp(app, <CreateStepScreen step={3} />);
+    expect(screen.getByRole('checkbox', { name: 'I’ve reviewed the details guests will see.' })).toBeOnTheScreen();
+    expect(within(screen.getByTestId('create-scroll')).queryByRole('checkbox')).toBeNull();
+    expect(within(screen.getByTestId('create-scroll')).queryByRole('button', { name: 'Publish meal' })).toBeNull();
+  });
+
+  it('Review: optional cuisine and dietary rows appear only when provided', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.services.drafts.set(CREATE_DRAFT_KEY, readyDraft());
+    app.mock.on('GET', `/v1/venues/${VENUE_REF}/photo`, ok({ placeId: 'place-1', photo: null }));
+    const view = await renderApp(app, <CreateStepScreen step={3} />);
+    expect(screen.queryByText(/Not provided/)).toBeNull();
+    expect(screen.queryByText(/Cuisine:/)).toBeNull();
+    await view.unmount();
+    app.services.drafts.set(CREATE_DRAFT_KEY, { ...readyDraft(), cuisineCode: 'SPANISH', dietaryCodes: [] });
+    await renderApp(app, <CreateStepScreen step={3} />);
+    expect(screen.getByText('Cuisine: Spanish. Host-reported · not an allergy guarantee.')).toBeOnTheScreen();
+    expect(screen.queryByText(/Dietary options/)).toBeNull();
   });
 });

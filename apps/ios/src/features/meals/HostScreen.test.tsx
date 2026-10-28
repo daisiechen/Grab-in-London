@@ -4,6 +4,7 @@ import { createTestApp, renderApp, signIn } from '../../test/render.tsx';
 import { mockRouter, resetRouter, routeParams } from '../../test/router.ts';
 import { ok, page } from '../../test/mock-fetch.ts';
 import { APP_ID, CONVERSATION_ID, MEAL_ID, application, meal, me, publicProfile } from '../../test/fixtures.ts';
+import { layout, mockContentGeometry } from '../create/reveal-test-utils.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
 jest.mock('expo-router', () => require('../../test/router.ts').expoRouterMock);
@@ -17,6 +18,7 @@ beforeEach(() => {
   resetRouter();
   routeParams.current = { mealId: MEAL_ID };
 });
+afterEach(() => jest.restoreAllMocks());
 
 type MealOverrides = Parameters<typeof meal>[0];
 async function setup(overrides: MealOverrides = {}, apps: unknown[] = [], conversationId: string | null = CONVERSATION_ID) {
@@ -106,6 +108,24 @@ describe('HostScreen · Your guest list (J02-R07)', () => {
     await setup();
     await fireEvent.press(await screen.findByRole('button', { name: 'Open group chat' }));
     expect(mockRouter.push).toHaveBeenCalledWith(`/chat/${CONVERSATION_ID}`);
+  });
+
+  it('the header uses the app’s “London time” wording instead of a raw offset label', async () => {
+    await setup();
+    const header = await screen.findByText(/London time · /);
+    expect(header).toHaveTextContent(/^\w{3} \d{1,2} \w{3} · \d{2}:\d{2} · London time · /);
+    expect(header).not.toHaveTextContent(/GMT|BST/);
+  });
+
+  it('expanding “Update reservation” scrolls the form fully above the pinned chat button', async () => {
+    const { scrollTo } = mockContentGeometry({ y: 900, height: 260 });
+    await setup();
+    await fireEvent(await screen.findByTestId('host-scroll'), 'layout', layout(560));
+    await fireEvent.press(screen.getByRole('button', { name: 'Update reservation' }));
+    expect(scrollTo).not.toHaveBeenCalled();
+    await fireEvent(screen.getByTestId('reservation-form'), 'layout', layout(260));
+    expect(scrollTo).toHaveBeenCalledWith({ y: 900 + 260 + 12 - 560, animated: true });
+    expect(screen.getByRole('button', { name: 'Save reservation status' })).toBeOnTheScreen();
   });
 
   it('a cancelled meal says so, keeps the chat and offers no cancel or decisions', async () => {

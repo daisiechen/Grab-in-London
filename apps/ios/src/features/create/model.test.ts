@@ -1,4 +1,4 @@
-import { emptyDraft, timeResolution, toCreateBody, updateDraft, validateStep, type CreateDraft } from './model.ts';
+import { budgetIssues, emptyDraft, timeResolution, toCreateBody, updateDraft, validateStep, type CreateDraft } from './model.ts';
 import { minusMinutes } from '../../lib/london.ts';
 
 const VENUE = { venueRef: '2c1b0a9f-8e7d-4c6b-9a5f-4e3d2c1b0a9f', placeId: 'place-1', name: 'Dishoom', address: '7 Boundary St', attribution: 'Google' };
@@ -97,5 +97,25 @@ describe('DST resolution (QA-TIME-004..007)', () => {
   });
   it('wall-clock deadline arithmetic crosses midnight', () => {
     expect(minusMinutes('2026-03-29', '00:30', 60)).toEqual({ date: '2026-03-28', time: '23:30' });
+  });
+});
+
+describe('budgetIssues (inline Costs validation while typing)', () => {
+  it.each([
+    [{ budgetMin: '', budgetMax: '' }, { min: null, max: null }],
+    [{ budgetMin: '20', budgetMax: '' }, { min: null, max: null }],
+    [{ budgetMin: '20', budgetMax: '20' }, { min: null, max: null }],
+    [{ budgetMin: '20.50', budgetMax: '35' }, { min: null, max: null }],
+    [{ budgetMin: '40', budgetMax: '30' }, { min: null, max: 'Must be at least £40, the “From” amount.' }],
+    [{ budgetMin: '0', budgetMax: '30' }, { min: 'Enter an amount above £0.', max: null }],
+    [{ budgetMin: '20', budgetMax: 'abc' }, { min: null, max: 'Use pounds only, like 20 or 22.50.' }],
+    [{ budgetMin: '123456', budgetMax: '20.555' }, { min: 'Use pounds only, like 20 or 22.50.', max: 'Use pounds only, like 20 or 22.50.' }],
+  ])('%j → %j', (draft, expected) => {
+    expect(budgetIssues(draft)).toEqual(expected);
+  });
+
+  it('agrees with Continue: inline-valid non-empty amounts pass step 2', () => {
+    expect(validateStep({ ...complete(), budgetMin: '20.50', budgetMax: '35' }, 2, TODAY)).toBeNull();
+    expect(validateStep({ ...complete(), budgetMin: '40', budgetMax: '30' }, 2, TODAY)).not.toBeNull();
   });
 });

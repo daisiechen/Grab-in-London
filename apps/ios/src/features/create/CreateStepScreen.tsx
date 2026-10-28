@@ -28,7 +28,7 @@ import { mealActionMessage } from '../meals/messages.ts';
 import { rememberReturnTo } from '../auth/intent.ts';
 import { CreateLayout, DropPanel, DropTrigger, Hint, InlineLink, NumberChoice, Section, TimeGrid, shared } from './CreateLayout.tsx';
 import { VenuePicker } from './VenuePicker.tsx';
-import { emptyDraft, timeResolution, toCreateBody, updateDraft, validateStep, type CreateDraft, type Step, type TimeResolution } from './model.ts';
+import { budgetIssues, emptyDraft, timeResolution, toCreateBody, updateDraft, validateStep, type CreateDraft, type Step, type TimeResolution } from './model.ts';
 
 export const CREATE_DRAFT_KEY = 'create';
 const STEP_ROUTES = ['/create', '/create/introduce', '/create/costs', '/create/review'] as const;
@@ -124,8 +124,8 @@ function Arrange({ draft, update, today }: Part & { today: string }) {
           <DropTrigger label="Date" icon="Calendar" value={draft.date ? longDate(draft.date) : null} placeholder="Choose a date" open={open === 'date'} onPress={() => toggleOpen('date')} />
           <DropTrigger label="Time" icon="Clock" value={draft.time} placeholder="Choose a time" open={open === 'time'} onPress={() => toggleOpen('time')} />
         </View>
-        {open === 'date' ? <DropPanel><DateChoices label="Meal date" today={today} selected={draft.date ? [draft.date] : []} onToggle={(date) => { update({ date }); setOpen(draft.time ? '' : 'time'); }} /></DropPanel> : null}
-        {open === 'time' ? <DropPanel><TimeGrid label="Meal time" value={draft.time} onChange={(time) => { update({ time }); setOpen(''); }} /></DropPanel> : null}
+        {open === 'date' ? <DropPanel testID="picker-date"><DateChoices label="Meal date" today={today} selected={draft.date ? [draft.date] : []} onToggle={(date) => { update({ date }); setOpen(draft.time ? '' : 'time'); }} /></DropPanel> : null}
+        {open === 'time' ? <DropPanel testID="picker-time"><TimeGrid label="Meal time" value={draft.time} onChange={(time) => { update({ time }); setOpen(''); }} /></DropPanel> : null}
         <Hint>London time. This is your planned meeting time; confirm opening hours and book with the restaurant separately.</Hint>
       </Section>
 
@@ -134,8 +134,8 @@ function Arrange({ draft, update, today }: Part & { today: string }) {
           <DropTrigger label="Deadline date" icon="Calendar" value={draft.closeDate ? longDate(draft.closeDate) : null} placeholder="Choose a date" open={open === 'closeDate'} onPress={() => toggleOpen('closeDate')} />
           <DropTrigger label="Deadline time" icon="Clock" value={draft.closeTime} placeholder="Choose a time" open={open === 'closeTime'} onPress={() => toggleOpen('closeTime')} />
         </View>
-        {open === 'closeDate' ? <DropPanel><DateChoices label="Deadline date" today={today} selected={draft.closeDate ? [draft.closeDate] : []} onToggle={(closeDate) => { update({ closeDate, closeEdited: true }); setOpen(''); }} /></DropPanel> : null}
-        {open === 'closeTime' ? <DropPanel><TimeGrid label="Deadline time" value={draft.closeTime} onChange={(closeTime) => { update({ closeTime, closeEdited: true }); setOpen(''); }} /></DropPanel> : null}
+        {open === 'closeDate' ? <DropPanel testID="picker-closeDate"><DateChoices label="Deadline date" today={today} selected={draft.closeDate ? [draft.closeDate] : []} onToggle={(closeDate) => { update({ closeDate, closeEdited: true }); setOpen(''); }} /></DropPanel> : null}
+        {open === 'closeTime' ? <DropPanel testID="picker-closeTime"><TimeGrid label="Deadline time" value={draft.closeTime} onChange={(closeTime) => { update({ closeTime, closeEdited: true }); setOpen(''); }} /></DropPanel> : null}
         <Hint>Defaults to an hour before the meal; it must be at least 30 minutes before. At the deadline, applications and approvals stop.</Hint>
       </Section>
     </>
@@ -164,10 +164,15 @@ export function reservationDeclaration(draft: CreateDraft): string {
   return `I have already booked a table at ${draft.venue?.name ?? 'the restaurant'} for ${draft.capacity} people${draft.date ? ` on ${longDate(draft.date)}` : ''}${draft.time ? ` at ${draft.time} (Europe/London)` : ''}. This is my confirmation, not verification by Fancy.`;
 }
 
-const budgetText = (d: CreateDraft) => (d.budgetMin.trim() && d.budgetMin.trim() === d.budgetMax.trim() ? `£${d.budgetMin.trim()}` : `£${d.budgetMin.trim() || '–'}–${d.budgetMax.trim() || '–'}`);
+const budgetText = (d: CreateDraft) => {
+  const [min, max] = [d.budgetMin.trim(), d.budgetMax.trim()];
+  if (!min && !max) return '—';
+  return min && min === max ? `£${min}` : `£${min || '–'}–${max || '–'}`;
+};
 
 /** r07: no platform payment, deposit or refund — expected spend per person, paid at the restaurant. */
 function Costs({ draft, update }: Part) {
+  const budget = budgetIssues(draft);
   return (
     <>
       <Section title="How guests pay">
@@ -181,8 +186,8 @@ function Costs({ draft, update }: Part) {
       </Section>
       <Section title="Expected spend">
         <View style={shared.row}>
-          <View style={shared.half}><Field label="From / person (£)" accessibilityLabel="Budget from per person in pounds" value={draft.budgetMin} onChangeText={(budgetMin) => update({ budgetMin })} keyboardType="decimal-pad" placeholder="20" /></View>
-          <View style={shared.half}><Field label="To / person (£)" accessibilityLabel="Budget to per person in pounds" value={draft.budgetMax} onChangeText={(budgetMax) => update({ budgetMax })} keyboardType="decimal-pad" placeholder="35" /></View>
+          <View style={shared.half}><Field label="From / person (£)" accessibilityLabel="Budget from per person in pounds" value={draft.budgetMin} onChangeText={(budgetMin) => update({ budgetMin })} keyboardType="decimal-pad" placeholder="e.g. 20" error={budget.min} /></View>
+          <View style={shared.half}><Field label="To / person (£)" accessibilityLabel="Budget to per person in pounds" value={draft.budgetMax} onChangeText={(budgetMax) => update({ budgetMax })} keyboardType="decimal-pad" placeholder="e.g. 35" error={budget.max} /></View>
         </View>
         <View style={[shared.soft, styles.spendRow]}>
           <View style={shared.half}>
@@ -192,8 +197,8 @@ function Costs({ draft, update }: Part) {
           <Text style={styles.spendValue}>{budgetText(draft)}</Text>
         </View>
       </Section>
-      <Section title="Restaurant reservation">
-        <Hint>You book the table with the restaurant yourself. Fancy doesn’t reserve tables.</Hint>
+      <Section title="Restaurant reservation" right={<Text style={styles.required} accessibilityLabel="Required to continue">Required</Text>}>
+        <Hint>You book the table with the restaurant yourself. Fancy doesn’t reserve tables. Tick to confirm before you continue.</Hint>
         <CheckRow label={reservationDeclaration(draft)} checked={draft.bookingDeclarationConfirmed} onChange={(v) => update({ bookingDeclarationConfirmed: v })} />
       </Section>
       <Section title="If plans change">
@@ -260,11 +265,18 @@ function Review({ draft, update, today, goTo }: Part & { today: string; goTo: (s
   };
 
   const when = draft.date && draft.time ? `${longDate(draft.date)} · ${draft.time} London time${draft.startOffset !== null ? ` (${draft.startOffset === 60 ? 'BST' : 'GMT'})` : ''}` : 'No time chosen';
+  // Optional host declarations appear only when provided (“Not provided” rows add nothing here).
+  const declared = [
+    draft.cuisineCode ? `Cuisine: ${CUISINES[draft.cuisineCode]}` : null,
+    draft.dietaryCodes.length ? `Dietary options: ${draft.dietaryCodes.map((c) => DIETARY[c]).join(' · ')}` : null,
+  ].filter((part): part is string => part !== null);
   const closes = draft.closeDate && draft.closeTime ? `Applications close ${longDate(draft.closeDate)}, ${draft.closeTime}` : 'No deadline chosen';
   const footer = (
     <>
       <FormMessage message={error ?? (time && time.kind !== 'choose' ? time.message : null)} />
       {time && time.kind !== 'choose' ? <TextAction label={time.target === 'start' ? 'Change the meal time' : 'Change the deadline'} onPress={() => { setTime(null); goTo(0); }} /> : null}
+      {/* Required confirmation sits with Publish so it is always visible before publishing. */}
+      <CheckRow label="I’ve reviewed the details guests will see." checked={draft.reviewConfirmed} onChange={(v) => update({ reviewConfirmed: v })} />
       <Primary label="Publish meal" icon="ArrowRight" busy={busy} onPress={() => void publish(draft)} />
     </>
   );
@@ -274,7 +286,7 @@ function Review({ draft, update, today, goTo }: Part & { today: string; goTo: (s
         <Text style={styles.eyebrow}>YOUR NEW TABLE</Text>
         <Text style={styles.reviewTitle}>{draft.title || 'Untitled meal'}</Text>
         {draft.description ? <Text style={shared.body} numberOfLines={4}>{draft.description}</Text> : null}
-        <Text style={shared.tiny}>{`Cuisine: ${draft.cuisineCode ? CUISINES[draft.cuisineCode] : 'Not provided'} · Dietary options: ${draft.dietaryCodes.length ? draft.dietaryCodes.map((c) => DIETARY[c]).join(' · ') : 'Not provided'}. Host-reported · not an allergy guarantee.`}</Text>
+        {declared.length ? <Text style={shared.tiny}>{`${declared.join(' · ')}. Host-reported · not an allergy guarantee.`}</Text> : null}
 
         <ReviewGroup title="Place & time" onEdit={() => goTo(0)} editLabel="Edit place and time">
           {draft.venue ? (
@@ -312,7 +324,6 @@ function Review({ draft, update, today, goTo }: Part & { today: string; goTo: (s
         <Text style={shared.strong}>If plans change</Text>
         <Text style={shared.muted}>No in-app payment, so nothing to refund. Before the meal you can cancel for everyone from Your guest list; let the restaurant know yourself.</Text>
       </View>
-      <CheckRow label="I’ve reviewed these details. Guests see them when they apply." checked={draft.reviewConfirmed} onChange={(v) => update({ reviewConfirmed: v })} />
       <Sheet visible={time?.kind === 'choose'} title="Which time do you mean?" onClose={() => setTime(null)}>
         <Body>{`Clocks go back in London on this date, so ${time?.target === 'close' ? draft.closeTime : draft.time} happens twice. Choose one.`}</Body>
         {time?.kind === 'choose' ? (
@@ -355,5 +366,6 @@ const styles = createStyles({
   groupTitle: { fontSize: 13, fontWeight: '700', color: colors.ink },
   placeRow: { flexDirection: 'row', gap: 10, alignItems: 'center' },
   thumb: { width: 48, height: 48, borderRadius: 8, overflow: 'hidden', backgroundColor: colors.surface },
-  terms: { marginTop: 12, marginBottom: 6 },
+  terms: { marginTop: 12 },
+  required: { fontSize: 11, fontWeight: '700', color: colors.forest },
 });

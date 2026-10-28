@@ -10,6 +10,7 @@ import { createStyles } from '../../ui/styles.ts';
 import { colors } from '../../ui/tokens.ts';
 import { Hint, InlineLink, Section, shared } from './CreateLayout.tsx';
 import type { CreateDraft, VenueChoice } from './model.ts';
+import { Reveal } from './reveal.tsx';
 
 type Candidate = ResponseOf<'searchVenues'>['data'][number];
 
@@ -121,10 +122,11 @@ export function VenuePicker({ draft, update }: { draft: CreateDraft; update: (pa
                 <Text style={shared.muted} numberOfLines={2}>{c.address}</Text>
                 {c.attributions.length ? <Text style={shared.tiny}>{c.attributions.map((a) => a.text).join(' · ')}</Text> : null}
                 {open ? (
-                  <View style={styles.resultActions}>
+                  // Scrolls into view as soon as a result is tapped, so confirming is one fluid action.
+                  <Reveal style={styles.resultActions} testID="venue-confirm">
                     <Primary label="Use this restaurant" busy={busy} onPress={() => void choose(c)} />
                     <TextAction label="Cancel selection" onPress={() => setCandidate(null)} />
-                  </View>
+                  </Reveal>
                 ) : null}
               </Pressable>
             );

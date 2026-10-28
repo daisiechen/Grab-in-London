@@ -6,6 +6,7 @@ import { Icon, type IconName } from '../../ui/Icon.tsx';
 import { createStyles } from '../../ui/styles.ts';
 import { colors } from '../../ui/tokens.ts';
 import { STEPS, type Step } from './model.ts';
+import { Reveal, RevealScope, useRevealScroll } from './reveal.tsx';
 
 const HEADINGS = ['A place at your table.', 'Good company starts here.', 'Keep things clear.', 'Ready to bring people together?'] as const;
 const INTROS = [
@@ -22,9 +23,13 @@ const INTROS = [
  */
 export function CreateLayout({ step, onStep, footer, children, testID }: { step: Step; onStep: (s: Step) => void; footer: ReactNode; children: ReactNode; testID?: string }) {
   const insets = useSafeAreaInsets();
+  // In-place pickers and the venue confirm button scroll themselves above the pinned footer.
+  const { scrollProps, reveal } = useRevealScroll();
   return (
     <View style={styles.page} testID={testID}>
       <ScrollView
+        {...scrollProps}
+        testID="create-scroll"
         // iOS 27 headers are translucent: let UIKit inset content below the header.
         contentInsetAdjustmentBehavior="automatic"
         style={styles.flex}
@@ -33,10 +38,12 @@ export function CreateLayout({ step, onStep, footer, children, testID }: { step:
         keyboardDismissMode="interactive"
         automaticallyAdjustKeyboardInsets
       >
-        <StepIndicator step={step} onStep={onStep} />
-        <Text accessibilityRole="header" style={styles.h1}>{HEADINGS[step]}</Text>
-        <Text style={styles.intro}>{INTROS[step]}</Text>
-        {children}
+        <RevealScope value={reveal}>
+          <StepIndicator step={step} onStep={onStep} />
+          <Text accessibilityRole="header" style={styles.h1}>{HEADINGS[step]}</Text>
+          <Text style={styles.intro}>{INTROS[step]}</Text>
+          {children}
+        </RevealScope>
       </ScrollView>
       <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 12) }]}>{footer}</View>
     </View>
@@ -106,7 +113,8 @@ export function DropTrigger({ label, value, placeholder, icon, open, onPress }: 
   );
 }
 
-export const DropPanel = ({ children }: { children: ReactNode }) => <View style={styles.panel}>{children}</View>;
+/** In-place picker panel; scrolls itself fully into view above the pinned footer when it opens. */
+export const DropPanel = ({ children, testID }: { children: ReactNode; testID?: string }) => <Reveal style={styles.panel} testID={testID}>{children}</Reveal>;
 
 const ROW = 40;
 /** All 48 half-hour London times in a compact grid that opens scrolled to the current choice. */

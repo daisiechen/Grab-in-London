@@ -88,12 +88,33 @@ export function updateDraft(draft: CreateDraft, patch: Partial<CreateDraft>): Cr
 export type Step = 0 | 1 | 2 | 3;
 export const STEPS = ['Arrange', 'Introduce', 'Costs', 'Review'] as const;
 
+const BUDGET_FORMAT = /^\d{1,5}(\.\d{1,2})?$/;
 const poundsToPence = (value: string): number | null => {
   const v = value.trim();
-  if (!/^\d{1,5}(\.\d{1,2})?$/.test(v)) return null;
+  if (!BUDGET_FORMAT.test(v)) return null;
   const pence = Math.round(Number(v) * 100);
   return pence > 0 ? pence : null;
 };
+
+const amountIssue = (value: string): string | null => {
+  const v = value.trim();
+  if (!v) return null;
+  if (!BUDGET_FORMAT.test(v)) return 'Use pounds only, like 20 or 22.50.';
+  return poundsToPence(v) === null ? 'Enter an amount above £0.' : null;
+};
+
+/**
+ * Inline Costs errors shown while typing: a malformed or zero amount under its own field, and
+ * “To” below “From” under To. Empty fields are not an error until Continue.
+ */
+export function budgetIssues(draft: Pick<CreateDraft, 'budgetMin' | 'budgetMax'>): { min: string | null; max: string | null } {
+  const min = amountIssue(draft.budgetMin);
+  const max = amountIssue(draft.budgetMax);
+  if (min || max) return { min, max };
+  const lo = poundsToPence(draft.budgetMin);
+  const hi = poundsToPence(draft.budgetMax);
+  return { min: null, max: lo !== null && hi !== null && lo > hi ? `Must be at least £${draft.budgetMin.trim()}, the “From” amount.` : null };
+}
 
 /** Client checks mirror the API (lengths, 2–6, min ≤ capacity, deadline ≤ T−30); the server re-validates. */
 export function validateStep(draft: CreateDraft, step: Step, todayLondon: string): string | null {

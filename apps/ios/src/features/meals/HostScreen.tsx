@@ -20,7 +20,8 @@ import { createStyles } from '../../ui/styles.ts';
 import { colors } from '../../ui/tokens.ts';
 import { longDate } from '../../lib/london.ts';
 import { mealKey } from './MealDetailScreen.tsx';
-import { bookingLabel, closesLabel, venueName, whenLabel, type Application, type Meal } from './format.ts';
+import { bookingLabel, cardWhenLabel, closesLabel, venueName, type Application, type Meal } from './format.ts';
+import { Reveal, RevealScope, useRevealScroll } from '../create/reveal.tsx';
 import { mealActionMessage } from './messages.ts';
 
 type Detail = ResponseOf<'getMeal'>['data'];
@@ -63,6 +64,8 @@ function HostScreenContent() {
   const [reason, setReason] = useState<CancelReason | null>(null);
   const [booking, setBooking] = useState<BookingStatus | null>(null);
   const [count, setCount] = useState<number | null>(null);
+  // “Update reservation” opens in place; its form scrolls above the pinned chat button.
+  const { scrollProps, reveal } = useRevealScroll();
   const keys = useRef(new Map<string, string>());
   const keyFor = (intent: string) => {
     if (!keys.current.has(intent)) keys.current.set(intent, newId());
@@ -129,102 +132,104 @@ function HostScreenContent() {
 
   return (
     <View style={styles.page} testID="host">
-      <ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={styles.scroll}>
-        <Text accessibilityRole="header" style={styles.h1}>{meal.title}</Text>
-        <Text style={styles.meta}>{`${whenLabel(meal.startsAt)} · ${venueName(meal)}`}</Text>
-        <Seats meal={meal} />
-        {cancelled ? <Notice icon>This meal is cancelled. Please cancel or adjust the restaurant reservation yourself. Your group chat stays open.</Notice> : null}
-        <FormMessage message={message?.text ?? null} tone={message?.tone ?? 'error'} />
+      <ScrollView {...scrollProps} testID="host-scroll" contentInsetAdjustmentBehavior="automatic" contentContainerStyle={styles.scroll}>
+        <RevealScope value={reveal}>
+          <Text accessibilityRole="header" style={styles.h1}>{meal.title}</Text>
+          <Text style={styles.meta}>{`${cardWhenLabel(meal.startsAt)} · London time · ${venueName(meal)}`}</Text>
+          <Seats meal={meal} />
+          {cancelled ? <Notice icon>This meal is cancelled. Please cancel or adjust the restaurant reservation yourself. Your group chat stays open.</Notice> : null}
+          <FormMessage message={message?.text ?? null} tone={message?.tone ?? 'error'} />
 
-        <Text accessibilityRole="header" style={styles.h2}>{`Requests · ${pending.length}`}</Text>
-        {apps.error ? (
-          <View style={styles.inline}>
-            <FormMessage message={loadErrorMessage(apps.error)} />
-            <TextAction label="Try again" onPress={() => void apps.reload()} />
-          </View>
-        ) : null}
-        {!apps.data && !apps.error ? <ActivityIndicator accessibilityLabel="Loading requests" /> : null}
-        {apps.data && pending.length === 0 ? <Text style={styles.muted}>{recruiting ? 'No requests waiting. New requests appear here.' : 'No requests waiting.'}</Text> : null}
-        {pending.map((a) => {
-          const name = a.applicant?.displayName ?? 'Member';
-          const approving = busy === `APPROVE:${a.id}:${a.version}`;
-          const declining = busy === `DECLINE:${a.id}:${a.version}`;
-          return (
-            <Pressable
-              key={a.id}
-              style={styles.request}
-              accessibilityLabel={`Request from ${name}`}
-              disabled={!a.applicant}
-              onPress={() => a.applicant && openProfile(a.applicant.id)}
-            >
-              <View style={styles.personRow}>
-                {a.applicant ? <Avatar person={a.applicant} size={44} onPress={() => openProfile(a.applicant!.id)} /> : null}
-                <View style={styles.flex}>
-                  <Text style={styles.name}>{name}</Text>
-                  {a.applicant ? <Text style={styles.small} numberOfLines={1}>{personLine(a.applicant)}</Text> : null}
+          <Text accessibilityRole="header" style={styles.h2}>{`Requests · ${pending.length}`}</Text>
+          {apps.error ? (
+            <View style={styles.inline}>
+              <FormMessage message={loadErrorMessage(apps.error)} />
+              <TextAction label="Try again" onPress={() => void apps.reload()} />
+            </View>
+          ) : null}
+          {!apps.data && !apps.error ? <ActivityIndicator accessibilityLabel="Loading requests" /> : null}
+          {apps.data && pending.length === 0 ? <Text style={styles.muted}>{recruiting ? 'No requests waiting. New requests appear here.' : 'No requests waiting.'}</Text> : null}
+          {pending.map((a) => {
+            const name = a.applicant?.displayName ?? 'Member';
+            const approving = busy === `APPROVE:${a.id}:${a.version}`;
+            const declining = busy === `DECLINE:${a.id}:${a.version}`;
+            return (
+              <Pressable
+                key={a.id}
+                style={styles.request}
+                accessibilityLabel={`Request from ${name}`}
+                disabled={!a.applicant}
+                onPress={() => a.applicant && openProfile(a.applicant.id)}
+              >
+                <View style={styles.personRow}>
+                  {a.applicant ? <Avatar person={a.applicant} size={44} onPress={() => openProfile(a.applicant!.id)} /> : null}
+                  <View style={styles.flex}>
+                    <Text style={styles.name}>{name}</Text>
+                    {a.applicant ? <Text style={styles.small} numberOfLines={1}>{personLine(a.applicant)}</Text> : null}
+                  </View>
+                  <Icon name="ChevronRight" size={14} color={colors.muted} />
                 </View>
-                <Icon name="ChevronRight" size={14} color={colors.muted} />
-              </View>
-              {a.message ? <Text style={styles.quote}>{`“${a.message}”`}</Text> : null}
-              <View style={styles.twoActions}>
-                <CardButton label="Decline" accessibilityLabel={`Decline ${name}`} busy={declining} disabled={busy !== null || !recruiting} onPress={() => void decide(a, 'DECLINE')} />
-                <CardButton primary label="Approve" accessibilityLabel={`Approve ${name}`} busy={approving} disabled={busy !== null || !recruiting || full} onPress={() => void decide(a, 'APPROVE')} />
-              </View>
-            </Pressable>
-          );
-        })}
-        {pending.length ? <Text style={styles.small}>{full ? 'Your table is full, so new approvals aren’t possible.' : 'Pending requests don’t take a seat. Approving confirms a seat straight away.'}</Text> : null}
-        {!recruiting && !cancelled && pending.length ? <Text style={styles.small}>Applications have closed, so requests can’t be decided any more.</Text> : null}
+                {a.message ? <Text style={styles.quote}>{`“${a.message}”`}</Text> : null}
+                <View style={styles.twoActions}>
+                  <CardButton label="Decline" accessibilityLabel={`Decline ${name}`} busy={declining} disabled={busy !== null || !recruiting} onPress={() => void decide(a, 'DECLINE')} />
+                  <CardButton primary label="Approve" accessibilityLabel={`Approve ${name}`} busy={approving} disabled={busy !== null || !recruiting || full} onPress={() => void decide(a, 'APPROVE')} />
+                </View>
+              </Pressable>
+            );
+          })}
+          {pending.length ? <Text style={styles.small}>{full ? 'Your table is full, so new approvals aren’t possible.' : 'Pending requests don’t take a seat. Approving confirms a seat straight away.'}</Text> : null}
+          {!recruiting && !cancelled && pending.length ? <Text style={styles.small}>Applications have closed, so requests can’t be decided any more.</Text> : null}
 
-        <Text accessibilityRole="header" style={styles.h2}>At the table</Text>
-        {members.map((p) => (
-          <Pressable key={p.id} style={styles.memberRow} accessibilityRole="button" accessibilityLabel={p.id === meal.host.id ? `You, the host, ${p.displayName}` : `View ${p.displayName}’s profile`} onPress={() => openProfile(p.id)}>
-            <Avatar person={p} size={34} />
-            <Text style={[styles.name, styles.flex]} numberOfLines={1}>{p.displayName}</Text>
-            {p.id === meal.host.id ? <Text style={styles.badge}>Host</Text> : null}
-          </Pressable>
-        ))}
-        {earlier.length ? (
-          <View style={styles.earlier}>
-            <Text style={styles.small}>Earlier requests</Text>
-            {earlier.map((a) => <Text key={a.id} style={styles.muted}>{`${a.applicant?.displayName ?? 'Member'} · ${STATE_LABELS[a.state]}`}</Text>)}
+          <Text accessibilityRole="header" style={styles.h2}>At the table</Text>
+          {members.map((p) => (
+            <Pressable key={p.id} style={styles.memberRow} accessibilityRole="button" accessibilityLabel={p.id === meal.host.id ? `You, the host, ${p.displayName}` : `View ${p.displayName}’s profile`} onPress={() => openProfile(p.id)}>
+              <Avatar person={p} size={34} />
+              <Text style={[styles.name, styles.flex]} numberOfLines={1}>{p.displayName}</Text>
+              {p.id === meal.host.id ? <Text style={styles.badge}>Host</Text> : null}
+            </Pressable>
+          ))}
+          {earlier.length ? (
+            <View style={styles.earlier}>
+              <Text style={styles.small}>Earlier requests</Text>
+              {earlier.map((a) => <Text key={a.id} style={styles.muted}>{`${a.applicant?.displayName ?? 'Member'} · ${STATE_LABELS[a.state]}`}</Text>)}
+            </View>
+          ) : null}
+
+          <Text accessibilityRole="header" style={styles.h2}>Restaurant reservation</Text>
+          <View style={styles.statusRow}>
+            <View style={[styles.statusTag, declaration?.status === 'REPORTED_CONFIRMED' && !declaration.stale && styles.statusGood]}><Text style={styles.statusText}>{bookingLabel(meal)}</Text></View>
+            {declaration ? <Text style={styles.small}>{`For ${declaration.declaredCount} ${declaration.declaredCount === 1 ? 'person' : 'people'} · reported ${longDate(declaration.reportedAt.slice(0, 10))}`}</Text> : null}
           </View>
-        ) : null}
+          {declaration?.stale && !cancelled ? (
+            <Text style={styles.small}>{`${meal.confirmedCount} ${meal.confirmedCount === 1 ? 'person is' : 'people are'} confirmed now. Check with the restaurant and update your reservation.`}</Text>
+          ) : null}
+          <Text style={styles.small}>You book with the restaurant yourself; guests see this as reported by you. Everyone pays their own share at the restaurant.</Text>
+          {meal.allowedActions.includes('DECLARE_BOOKING') ? (
+            <>
+              <Pressable accessibilityRole="button" accessibilityLabel="Update reservation" accessibilityState={{ expanded: bookingOpen }} onPress={() => setBookingOpen(!bookingOpen)} style={[styles.expander, bookingOpen && styles.expanderOpen]}>
+                <Icon name="Pencil1" size={14} color={colors.forest} />
+                <Text style={styles.expanderText}>Update reservation</Text>
+                <Icon name={bookingOpen ? 'ChevronUp' : 'ChevronDown'} size={11} color={colors.ink} />
+              </Pressable>
+              {bookingOpen ? (
+                <Reveal style={styles.panel} testID="reservation-form">
+                  <ChoiceGroup<BookingStatus> label="Reservation status" options={BOOKING_LABELS} value={booking} onChange={setBooking} />
+                  <ChoiceGroup<string> label="People booked, including you" options={Array.from({ length: meal.capacity }, (_, i) => [String(i + 1), String(i + 1)] as const)} value={String(bookingCount)} onChange={(v) => setCount(Number(v))} />
+                  <Primary label="Save reservation status" busy={busy?.startsWith('booking:') ?? false} disabled={!booking || busy !== null} onPress={saveBooking} />
+                </Reveal>
+              ) : null}
+            </>
+          ) : null}
 
-        <Text accessibilityRole="header" style={styles.h2}>Restaurant reservation</Text>
-        <View style={styles.statusRow}>
-          <View style={[styles.statusTag, declaration?.status === 'REPORTED_CONFIRMED' && !declaration.stale && styles.statusGood]}><Text style={styles.statusText}>{bookingLabel(meal)}</Text></View>
-          {declaration ? <Text style={styles.small}>{`For ${declaration.declaredCount} ${declaration.declaredCount === 1 ? 'person' : 'people'} · reported ${longDate(declaration.reportedAt.slice(0, 10))}`}</Text> : null}
-        </View>
-        {declaration?.stale && !cancelled ? (
-          <Text style={styles.small}>{`${meal.confirmedCount} ${meal.confirmedCount === 1 ? 'person is' : 'people are'} confirmed now. Check with the restaurant and update your reservation.`}</Text>
-        ) : null}
-        <Text style={styles.small}>You book with the restaurant yourself; guests see this as reported by you. Everyone pays their own share at the restaurant.</Text>
-        {meal.allowedActions.includes('DECLARE_BOOKING') ? (
-          <>
-            <Pressable accessibilityRole="button" accessibilityLabel="Update reservation" accessibilityState={{ expanded: bookingOpen }} onPress={() => setBookingOpen(!bookingOpen)} style={[styles.expander, bookingOpen && styles.expanderOpen]}>
-              <Icon name="Pencil1" size={14} color={colors.forest} />
-              <Text style={styles.expanderText}>Update reservation</Text>
-              <Icon name={bookingOpen ? 'ChevronUp' : 'ChevronDown'} size={11} color={colors.ink} />
-            </Pressable>
-            {bookingOpen ? (
-              <View style={styles.panel}>
-                <ChoiceGroup<BookingStatus> label="Reservation status" options={BOOKING_LABELS} value={booking} onChange={setBooking} />
-                <ChoiceGroup<string> label="People booked, including you" options={Array.from({ length: meal.capacity }, (_, i) => [String(i + 1), String(i + 1)] as const)} value={String(bookingCount)} onChange={(v) => setCount(Number(v))} />
-                <Primary label="Save reservation status" busy={busy?.startsWith('booking:') ?? false} disabled={!booking || busy !== null} onPress={saveBooking} />
-              </View>
-            ) : null}
-          </>
-        ) : null}
-
-        <Text accessibilityRole="header" style={styles.h2}>Meal arrangements</Text>
-        <Text style={styles.small}>
-          {meal.arrangementLocked
-            ? 'The restaurant, time, budget and group size are locked after the first approval. To change them, cancel and create a new meal.'
-            : 'Nobody is approved yet. Once you approve the first guest, the restaurant, time, budget and group size are locked.'}
-        </Text>
-        <Text style={styles.small}>{`Applications close ${closesLabel(meal.closesAt)} London time. Minimum ${meal.minimum} people, including you.`}</Text>
-        {meal.allowedActions.includes('CANCEL') ? <View style={styles.cancel}><TextAction destructive label="Cancel meal for everyone" onPress={() => setCancelOpen(true)} /></View> : null}
+          <Text accessibilityRole="header" style={styles.h2}>Meal arrangements</Text>
+          <Text style={styles.small}>
+            {meal.arrangementLocked
+              ? 'The restaurant, time, budget and group size are locked after the first approval. To change them, cancel and create a new meal.'
+              : 'Nobody is approved yet. Once you approve the first guest, the restaurant, time, budget and group size are locked.'}
+          </Text>
+          <Text style={styles.small}>{`Applications close ${closesLabel(meal.closesAt)} London time. Minimum ${meal.minimum} people, including you.`}</Text>
+          {meal.allowedActions.includes('CANCEL') ? <View style={styles.cancel}><TextAction destructive label="Cancel meal for everyone" onPress={() => setCancelOpen(true)} /></View> : null}
+        </RevealScope>
       </ScrollView>
       {conversationId ? (
         <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 12) }]}>
