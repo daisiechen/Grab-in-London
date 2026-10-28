@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import { avatarUrl } from './avatar.ts';
 import { appendAudit } from '@fancy/db';
 import { DomainError } from '../common/errors.ts';
 import { lockActiveActor } from '../common/actor.ts';
@@ -41,7 +42,7 @@ export function registerProfileRoutes(app: FastifyInstance, deps: AppDeps) {
   });
   defineRoute(app, deps, 'getPublicProfile', async ({ request }) => {
     const { userId } = request.params as { userId: string };
-    const { rows } = await deps.pool.query(`SELECT u.id, p.display_name, p.bio, p.languages, p.interests, p.background FROM users u JOIN profiles p ON p.user_id = u.id WHERE u.id = $1 AND u.status = 'ACTIVE' AND p.display_name IS NOT NULL`, [userId]);
+    const { rows } = await deps.pool.query(`SELECT u.id, p.display_name, p.avatar_ref, p.bio, p.languages, p.interests, p.background FROM users u JOIN profiles p ON p.user_id = u.id WHERE u.id = $1 AND u.status = 'ACTIVE' AND p.display_name IS NOT NULL`, [userId]);
     const row = rows[0];
     if (!row) throw new DomainError('NOT_FOUND', 'This profile is unavailable.');
     const q = request.query as {cursor?:string;limit?:number};
@@ -53,6 +54,6 @@ export function registerProfileRoutes(app: FastifyInstance, deps: AppDeps) {
     const eligible=boundary?all.filter(r=>r.publishedAt<boundary![0]||(r.publishedAt===boundary![0]&&r.id>boundary![1])):all;
     const limit=q.limit??20,page=eligible.slice(0,limit),last=page.at(-1);
     const nextReviewCursor=eligible.length>limit&&last?encodeCursor(deps.config.sessionSecret,scope,JSON.stringify([last.publishedAt,last.id])):null;
-    return { data: { profile: { id: row.id, displayName: row.display_name, avatarUrl: null, bio: row.bio, languages: row.languages, interests: row.interests, background: row.background }, reviews:page, nextReviewCursor } };
+    return { data: { profile: { id: row.id, displayName: row.display_name, avatarUrl: avatarUrl(row.avatar_ref), bio: row.bio, languages: row.languages, interests: row.interests, background: row.background }, reviews:page, nextReviewCursor } };
   });
 }

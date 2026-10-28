@@ -31,6 +31,7 @@ import { errorBody, errorHandler } from './errors.ts';
 import { apiLoggerOptions } from './logging.ts';
 import { validatorCompiler } from './validation.ts';
 import { registerIdentityRoutes } from '../identity/routes.ts';
+import { configureAvatarOrigin } from '../profiles/avatar.ts';
 
 export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   deps.assistantRuntime ??= new AssistantRuntime();
@@ -68,6 +69,7 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
     }
   });
 
+  configureAvatarOrigin(deps.config.webOrigin);
   registerIdentityRoutes(app, deps);
   registerProfileRoutes(app, deps);
   registerSurveyRoutes(app, deps);

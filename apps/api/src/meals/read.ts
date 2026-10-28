@@ -4,10 +4,11 @@ import { DomainError } from '../common/errors.ts';
 import type { VenueService } from '../venues/service.ts';
 import { loadSeatEvents,projectLifecycle,rosterAt,type MealRow } from './lifecycle.ts';
 import { londonTime } from './time.ts';
+import { avatarUrl } from '../profiles/avatar.ts';
 export type Db=Pool|PoolClient;
 export async function publicProfile(db:Db,id:string) {
  const {rows:[p]}=await db.query(`SELECT u.status,p.* FROM users u LEFT JOIN profiles p ON p.user_id=u.id WHERE u.id=$1`,[id]);
- return {id,displayName:p?.status==='ACTIVE'?(p.display_name??'Fancy member'):'Deleted member',avatarUrl:null,bio:p?.status==='ACTIVE'?(p.bio??null):null,languages:p?.status==='ACTIVE'?(p.languages??[]):[],interests:p?.status==='ACTIVE'?(p.interests??[]):[],background:p?.status==='ACTIVE'?(p.background??{}):{}};
+ return {id,displayName:p?.status==='ACTIVE'?(p.display_name??'Fancy member'):'Deleted member',avatarUrl:p?.status==='ACTIVE'?avatarUrl(p.avatar_ref):null,bio:p?.status==='ACTIVE'?(p.bio??null):null,languages:p?.status==='ACTIVE'?(p.languages??[]):[],interests:p?.status==='ACTIVE'?(p.interests??[]):[],background:p?.status==='ACTIVE'?(p.background??{}):{}};
 }
 // Seat-event watermark survives count round trips; non-seat events cannot invalidate it.
 // Legacy unversioned declarations compare stale until the host explicitly declares again.
