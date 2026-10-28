@@ -68,7 +68,6 @@ export function SignInScreen() {
       <View style={styles.art}>
         <Image source={images.brandTable} style={styles.artImage} resizeMode="cover" accessibilityLabel="A sculptural green table with colourful chairs, laid for new friends" />
       </View>
-      <Text style={styles.eyebrow}>{BRAND_COPY.welcomeSupport.toUpperCase()}</Text>
       <Text accessibilityRole="header" style={styles.h1}>{BRAND_COPY.invitation}</Text>
       <Text style={styles.lede}>{linking ? 'Sign in using the method already linked to your original account, then confirm the link.' : `${BRAND_COPY.slogan} Join a table, or come back for another.`}</Text>
 
@@ -109,8 +108,7 @@ const styles = createStyles({
   // The artwork absorbs spare height (190–380pt), so tall screens have no empty band under the links.
   art: { flexGrow: 1, flexShrink: 1, minHeight: 190, maxHeight: 380, marginHorizontal: -18, marginTop: 4, overflow: 'hidden' },
   artImage: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' },
-  eyebrow: { fontSize: 9, letterSpacing: 2, color: '#526152', fontWeight: '700', marginTop: 10 },
-  h1: { fontSize: 36, lineHeight: 38, letterSpacing: -1.6, fontWeight: '700', color: colors.ink, marginTop: 6 },
+  h1: { fontSize: 36, lineHeight: 38, letterSpacing: -1.6, fontWeight: '700', color: colors.ink, marginTop: 14 },
   lede: { fontSize: 14, lineHeight: 20, color: '#55625a', marginTop: 6, marginBottom: 16 },
   divider: { flexDirection: 'row', alignItems: 'center', gap: 12, marginVertical: 12 },
   rule: { flex: 1, height: 1, backgroundColor: '#d8dbce' },

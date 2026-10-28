@@ -120,8 +120,11 @@ export function MealDetailScreen() {
     <View style={styles.page} testID="meal-detail">
       <FloatingBack />
       <ScrollView contentContainerStyle={[styles.scroll, { paddingTop: insets.top + 4 }]}>
-        <Text style={styles.eyebrow}>{`${areaName(meal.areaCode).toUpperCase()} · ${meal.capacity === 2 ? 'A TABLE FOR TWO' : 'A SMALL TABLE'}`}</Text>
-        <Text accessibilityRole="header" style={styles.h1}>{meal.title}</Text>
+        {/* Title beside the floating back control, context line under it (shared page-title pattern). */}
+        <View style={styles.titleBlock}>
+          <Text accessibilityRole="header" style={styles.h1}>{meal.title}</Text>
+          <Text style={styles.subtitle}>{`${areaName(meal.areaCode)} · ${meal.capacity === 2 ? 'A table for two' : 'A small table'}`}</Text>
+        </View>
         {myApplication && !isHost ? <Text style={styles.progress}>{applicationLabel(myApplication)}</Text> : null}
 
         <View style={styles.facts}>
@@ -221,9 +224,10 @@ const styles = createStyles({
   state: { paddingHorizontal: 18, gap: 12 },
   scroll: { paddingHorizontal: 18, paddingBottom: 24 },
   flex: { flex: 1, minWidth: 0 },
-  // Shares the first row with the floating back control.
-  eyebrow: { fontSize: 9, letterSpacing: 1.3, color: '#647a6b', fontWeight: '700', marginLeft: FLOATING_BACK_SIZE + 10, lineHeight: FLOATING_BACK_SIZE, marginBottom: 4 },
-  h1: { fontSize: 24, lineHeight: 28, letterSpacing: -0.8, fontWeight: '700', color: colors.ink, marginBottom: 8 },
+  // Shares the first row with the floating back control; the first title line is centred on the disc.
+  titleBlock: { marginLeft: FLOATING_BACK_SIZE + 10, paddingTop: (FLOATING_BACK_SIZE - 28) / 2, marginBottom: 12, gap: 3 },
+  h1: { fontSize: 24, lineHeight: 28, letterSpacing: -0.8, fontWeight: '700', color: colors.ink },
+  subtitle: { fontSize: 12, lineHeight: 17, color: colors.muted },
   progress: { fontSize: 13, fontWeight: '700', color: colors.forest, marginBottom: 6 },
   facts: { flexDirection: 'row', flexWrap: 'wrap', rowGap: 12, paddingVertical: 12, borderTopWidth: 1, borderBottomWidth: 1, borderColor: colors.line },
   fact: { width: '50%', flexDirection: 'row', gap: 8, paddingRight: 8 },

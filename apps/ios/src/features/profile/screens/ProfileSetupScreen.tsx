@@ -61,7 +61,6 @@ function ProfileSetupScreenContent() {
   return (
     <ActionPage testID="profile-setup" paper footer={<Primary label="Take your seat" icon="ArrowRight" busy={busy} onPress={() => void submit()} />}>
       <Stack.Screen options={{ headerStyle: { backgroundColor: BRAND_PAPER }, headerShadowVisible: false }} />
-      <Text style={authText.eyebrow}>ONE LAST INTRODUCTION</Text>
       <Text accessibilityRole="header" style={authText.h1}>A face. A little story. You.</Text>
       <Text style={authText.prose}>Give your future table a little context. Your email stays private.</Text>
       <ProfileFormView form={form} onChange={setForm} error={error} mode="setup" />

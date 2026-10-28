@@ -40,7 +40,6 @@ export function LinkRequiredScreen() {
    :<><Primary label="Sign in with original account" disabled={busy} onPress={()=>router.replace('/sign-in')}/><TextAction label="Cancel account link" disabled={busy} onPress={cancel}/></>;
  return <ActionPage testID="link-required" paper footer={footer}>
   <Stack.Screen options={{headerStyle:{backgroundColor:BRAND_PAPER},headerShadowVisible:false}}/>
-  <Text style={authText.eyebrow}>ONE ACCOUNT, ONE TABLE</Text>
   <Text accessibilityRole="header" style={authText.h1}>You already have an account.</Text>
   <Text style={authText.prose}>This email matches an existing Fancy account. Sign in the way you did before, then confirm the link. Your account data will stay in place.</Text>
   {!pending?<Notice icon>This link has expired or ended. Start sign-in again.</Notice>:<Notice icon>{ready&&state.status==='signedIn'?`Signed in as ${state.session.user.displayName}. Confirm only if this is your original account.`:'Use the sign-in method already linked to your original account.'}</Notice>}

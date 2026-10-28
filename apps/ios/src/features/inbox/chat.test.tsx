@@ -1,4 +1,4 @@
-import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { AppState, type AppStateStatus } from 'react-native';
 import { ChatScreen, mergeMessages } from './ChatScreen.tsx';
 import { InboxScreen, conversationKey } from './InboxScreen.tsx';
@@ -214,6 +214,8 @@ describe('ChatScreen demo layout', () => {
     expect(screen.getByText('Maya')).toBeOnTheScreen();
     expect(screen.getByLabelText('Maya: Shall we meet outside?, 19:05')).toBeOnTheScreen();
     expect(screen.getByLabelText('You: Sounds lovely, 10:30')).toBeOnTheScreen();
+    // Own messages show your avatar too (initial when there is no photo).
+    expect(within(screen.getByLabelText('You: Sounds lovely, 10:30')).getByText('A', { includeHiddenElements: true })).toBeTruthy();
     expect(screen.queryByText('Alex')).toBeNull();
     expect(screen.getByText('TUE 20 OCT')).toBeOnTheScreen();
     expect(screen.getByText('TODAY')).toBeOnTheScreen();

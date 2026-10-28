@@ -57,7 +57,8 @@ describe('SignInScreen (S03)', () => {
     await renderApp(createTestApp(), <SignInScreen />);
     expect(screen.getByLabelText('Fancy')).toBeOnTheScreen();
     expect(screen.getByLabelText('A sculptural green table with colourful chairs, laid for new friends')).toBeOnTheScreen();
-    expect(screen.getByText('THERE’S A SEAT FOR YOU HERE.')).toBeOnTheScreen();
+    // No eyebrow above the title (shared page-title pattern).
+    expect(screen.queryByText('THERE’S A SEAT FOR YOU HERE.')).toBeNull();
     expect(screen.getByText('Fancy a bite?')).toBeOnTheScreen();
     for (const name of ['Continue with email', 'Continue with Google', 'Continue with Apple']) expect(screen.getByRole('button', { name })).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole('button', { name: 'Continue with email' }));

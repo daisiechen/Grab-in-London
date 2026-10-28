@@ -11,6 +11,7 @@ import { Primary, TextAction } from '../../ui/Button.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
 import { Icon } from '../../ui/Icon.tsx';
 import { MealCard } from '../../ui/MealCard.tsx';
+import { PageHeader } from '../../ui/PageHeader.tsx';
 import { createStyles } from '../../ui/styles.ts';
 import { colors } from '../../ui/tokens.ts';
 import { rememberReturnTo } from '../auth/intent.ts';
@@ -32,10 +33,7 @@ export function rowStatus(item: Item, section: Section): string {
 
 function Header() {
   return (
-    <View>
-      <Text style={styles.eyebrow}>GOOD PLANS, ALL IN ONE PLACE</Text>
-      <Text accessibilityRole="header" style={styles.h1}>Your next good meal.</Text>
-    </View>
+    <PageHeader size="tab" title="Your next good meal." subtitle="Good plans, all in one place." />
   );
 }
 
@@ -159,8 +157,6 @@ const styles = createStyles({
   safe: { flex: 1, backgroundColor: colors.white },
   pad: { paddingHorizontal: 16, paddingTop: 2, paddingBottom: 24 },
   headerBlock: { marginBottom: 14 },
-  eyebrow: { fontSize: 9, letterSpacing: 1.3, fontWeight: '700', color: '#647a6b', marginBottom: 6 },
-  h1: { fontSize: 27, lineHeight: 31, letterSpacing: -1.1, fontWeight: '700', color: colors.ink },
   tabsScroll: { marginTop: 14, marginHorizontal: -16 },
   tabs: { gap: 7, paddingHorizontal: 16 },
   tab: { borderWidth: 1, borderColor: colors.line, paddingVertical: 8, paddingHorizontal: 12, borderRadius: 8 },

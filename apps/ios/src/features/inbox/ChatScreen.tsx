@@ -395,6 +395,8 @@ function AuthenticatedChatScreen() {
                     <Text style={[styles.bubble,mine?styles.bubbleMine:null,item.redacted&&styles.redacted]}>{body}</Text>
                     <Text style={[styles.time,mine&&styles.timeMine]}>{stamp.time}</Text>
                   </View>
+                  {/* Own messages carry your avatar on the right, mirroring everyone else's on the left. */}
+                  {mine?<Avatar person={item.sender} size={30}/>:null}
                 </View>
               </View>
             );

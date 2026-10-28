@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { ResponseOf } from '@fancy/client';
 import { Primary } from '../../../ui/Button.tsx';
+import { PageHeader } from '../../../ui/PageHeader.tsx';
 import { Icon } from '../../../ui/Icon.tsx';
 import { colors } from '../../../ui/tokens.ts';
 import { createStyles } from '../../../ui/styles.ts';
@@ -33,7 +34,7 @@ export function MyProfileScreen() {
   if (!me) {
     return (
       <ScrollView style={styles.page} contentContainerStyle={[styles.body, styles.guestPage, { paddingTop: insets.top + 4 }]} testID="profile-guest">
-        <Text accessibilityRole="header" style={styles.h1}>Your profile</Text>
+        <PageHeader size="tab" title="Your profile" subtitle="How your tables get to know you." />
         <View style={styles.guestBody}>
           {/* Same empty-state pattern as the signed-out Meals and Inbox tabs. */}
           <Icon name="Person" size={30} color={colors.forest} />

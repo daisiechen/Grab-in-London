@@ -7,6 +7,7 @@ import { allPages } from '../../api/pages.ts';
 import { useServices, useSessionState, type Services } from '../../services.tsx';
 import { loadErrorMessage, useQuery } from '../../api/useQuery.ts';
 import { Avatar } from '../../ui/Avatar.tsx';
+import { PageHeader } from '../../ui/PageHeader.tsx';
 import { Primary } from '../../ui/Button.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
 import { Icon, type IconName } from '../../ui/Icon.tsx';
@@ -65,16 +66,17 @@ export function InboxScreen() {
 
 function Header({ waiting = false, onBell }: { waiting?: boolean; onBell?: () => void }) {
   return (
-    <View style={styles.header}>
-      <View style={styles.headerCopy}>
-        <Text style={styles.eyebrow}>BEFORE AND AFTER THE TABLE</Text>
-        <Text accessibilityRole="header" style={styles.h1}>{waiting ? 'Your table is taking shape.' : 'A little hello.'}</Text>
-      </View>
-      {onBell ? (
-        <Pressable accessibilityRole="button" accessibilityLabel="Notifications" hitSlop={8} style={styles.bell} onPress={onBell}>
-          <Icon name="Bell" size={17} color={colors.forest} />
-        </Pressable>
-      ) : null}
+    <View>
+      <PageHeader
+        size="tab"
+        title={waiting ? 'Your table is taking shape.' : 'A little hello.'}
+        subtitle="Before and after the table."
+        right={onBell ? (
+          <Pressable accessibilityRole="button" accessibilityLabel="Notifications" hitSlop={8} style={styles.bell} onPress={onBell}>
+            <Icon name="Bell" size={17} color={colors.forest} />
+          </Pressable>
+        ) : null}
+      />
     </View>
   );
 }
@@ -287,10 +289,6 @@ const styles = createStyles({
   centred: { flex: 1, justifyContent: 'center', paddingBottom: 60 },
   safe: { flex: 1, backgroundColor: colors.white },
   pad: { paddingHorizontal: 16, paddingTop: 2, paddingBottom: 24 },
-  header: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
-  headerCopy: { flex: 1 },
-  eyebrow: { fontSize: 9, letterSpacing: 1.3, fontWeight: '700', color: '#647a6b', marginBottom: 6 },
-  h1: { fontSize: 27, lineHeight: 31, letterSpacing: -1.1, fontWeight: '700', color: colors.ink },
   bell: { width: 36, height: 36, borderRadius: 18, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', marginTop: 4 },
   tabs: { flexDirection: 'row', gap: 8, marginTop: 14, marginBottom: 6 },
   tab: { flex: 1, minHeight: 42, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, borderBottomWidth: 2, borderBottomColor: 'transparent' },

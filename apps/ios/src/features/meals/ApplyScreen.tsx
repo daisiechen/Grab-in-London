@@ -59,7 +59,6 @@ function ApplyScreenContent() {
   if (state.status !== 'signedIn') {
     return (
       <ActionPage testID="apply" footer={<Primary label="Sign in" onPress={() => { rememberReturnTo(`/meals/${id}/apply`); router.push('/sign-in'); }} />}>
-        <Text style={pageText.eyebrow}>A GOOD MEAL STARTS WITH HELLO</Text>
         <Text accessibilityRole="header" style={pageText.h1}>Pull up a chair.</Text>
         <Text style={pageText.prose}>Sign in to send a request. Your message will be kept.</Text>
       </ActionPage>
@@ -119,7 +118,6 @@ function ApplyScreenContent() {
 
   return (
     <ActionPage testID="apply" footer={footer}>
-      <Text style={pageText.eyebrow}>A GOOD MEAL STARTS WITH HELLO</Text>
       <Text accessibilityRole="header" style={pageText.h1}>Pull up a chair.</Text>
       <Text style={pageText.prose}>{`Tell ${meal.host.displayName} a little about yourself and why you’d like to join.`}</Text>
 

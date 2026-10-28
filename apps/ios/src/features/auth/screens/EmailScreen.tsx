@@ -75,7 +75,6 @@ export function EmailScreen() {
   return (
     <ActionPage testID="email-sign-in" paper footer={footer}>
       <Stack.Screen options={{ headerStyle: { backgroundColor: BRAND_PAPER }, headerShadowVisible: false }} />
-      <Text style={authText.eyebrow}>YOUR NEXT TABLE STARTS HERE</Text>
       <Text accessibilityRole="header" style={authText.h1}>{challenge ? 'Check your inbox.' : 'Let’s keep in touch.'}</Text>
       <Text style={authText.prose}>{challenge ? `Enter the six-digit code for ${challenge.email}.` : 'We’ll use a one-time code, so there’s no password to remember.'}</Text>
       {!challenge ? (
