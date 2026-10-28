@@ -238,6 +238,8 @@ describe('preview fake API', () => {
     expect((await ctx.api.call('myMeals', { query: { section: 'HOSTING' } })).data.map((i) => i.role)).toEqual(['HOST']);
     const cancelled = await ctx.api.call('cancelMeal', { params: { mealId: meal.id }, body: { reason: 'host' }, ifMatch: declared.data.version, idempotencyKey: newId() });
     expect(cancelled.data).toMatchObject({ status: 'CANCELLED', cancelReason: 'host' });
+    // The host who cancelled is not notified about their own action (like apps/api).
+    expect((await ctx.api.call('listNotifications', { query: {} })).data.filter((n) => n.template === 'meal_cancelled' && n.mealId === meal.id)).toEqual([]);
     expect(ctx.problems).toEqual([]);
   });
 

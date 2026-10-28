@@ -37,7 +37,8 @@ export async function cancelMealState(tx:Tx,meal:MealRow,reason:string,at:Date,a
  await tx.client.query(`UPDATE applications SET state='EXPIRED',version=version+1,decided_at=$2 WHERE meal_id=$1 AND state='PENDING'`,[meal.id,at]);
  meal.status='CANCELLED';meal.cancel_reason=reason;meal.version=String(BigInt(meal.version)+1n);
  const eventId=await mealFact(tx,meal,'meal.cancelled',at,actorId);
- for(const row of rows) {
+ // Whoever cancelled (the host) isn't told about their own action; a system cancellation still reaches the host.
+ for(const row of rows.filter(r=>r.user_id!==actorId)) {
   await insertNotification(tx.client,{eventId,recipientId:row.user_id,template:'meal_cancelled',refs:{mealId:meal.id}});
   await enqueueOutbox(tx.client,{eventId,recipientId:row.user_id,channel:'EMAIL',template:'meal_cancelled',payload:{mealId:meal.id}});
  }

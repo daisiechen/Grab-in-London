@@ -185,7 +185,9 @@ describe('MVP production meal commands and privacy',()=>{
   const host=await actor(),guest=await actor();const meal=await publish(host.b);const application=json(await apply(guest.b,meal.id)).data;
   const cancel=await host.b.request('POST',`/v1/meals/${meal.id}/cancel`,{body:{reason:'booking'},headers:{'idempotency-key':randomUUID(),'if-match':'"1"'}});expect(cancel.statusCode,cancel.body).toBe(200);expect(json(cancel).data).toMatchObject({status:'CANCELLED',cancelReason:'booking'});
   expect((await h.db.pool.query(`SELECT state FROM applications WHERE id=$1`,[application.id])).rows[0].state).toBe('EXPIRED');
-  expect((await h.db.pool.query(`SELECT * FROM notifications WHERE refs->>'mealId'=$1 AND template='meal_cancelled'`,[meal.id])).rowCount).toBe(2);
+  // Only the other members hear about it; the host who cancelled gets neither a notice nor an email.
+  expect((await h.db.pool.query(`SELECT recipient_id FROM notifications WHERE refs->>'mealId'=$1 AND template='meal_cancelled'`,[meal.id])).rows.map(r=>r.recipient_id)).toEqual([guest.id]);
+  expect((await h.db.pool.query(`SELECT recipient_id FROM outbox WHERE payload->>'mealId'=$1 AND template='meal_cancelled'`,[meal.id])).rows.map(r=>r.recipient_id)).toEqual([guest.id]);
   expect((await h.db.pool.query(`SELECT dissolved_at FROM conversations WHERE meal_id=$1`,[meal.id])).rows[0].dissolved_at).toBeNull();
   expect((await apply(guest.b,meal.id)).statusCode).toBe(409);
  });

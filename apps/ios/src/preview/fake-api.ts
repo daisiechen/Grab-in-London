@@ -500,13 +500,14 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
   }
 
   // ── commands shared by handlers and the simulated hosts ──
-  function cancelState(meal: MealRec, reason: NonNullable<MealDto['cancelReason']>, at: number) {
+  function cancelState(meal: MealRec, reason: NonNullable<MealDto['cancelReason']>, at: number, actor: string | null = null) {
     if (meal.status === 'CANCELLED') return;
     meal.status = 'CANCELLED';
     meal.cancelReason = reason;
     meal.version += 1;
     for (const a of w.applications.values()) if (a.mealId === meal.id && a.state === 'PENDING') expire(a, at);
-    notify(ALEX, 'meal_cancelled', { mealId: meal.id }, at);
+    // Like apps/api: whoever cancelled isn't notified about their own action.
+    if (actor !== ALEX) notify(ALEX, 'meal_cancelled', { mealId: meal.id }, at);
   }
   function expire(a: AppRec, at: number) {
     a.state = 'EXPIRED';
@@ -919,7 +920,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
       openMeal(meal);
       checkVersion(meal.version, ifMatch);
       if (now() >= meal.startMs) fail('DEADLINE_PASSED', 'This meal has already started.');
-      cancelState(meal, body.reason, now());
+      cancelState(meal, body.reason, now(), uid);
       return { data: mealDto(meal, uid, false), version: String(meal.version) };
     },
     applyMeal: ({ uid, params, body }) => {
