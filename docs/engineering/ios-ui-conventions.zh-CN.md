@@ -1,0 +1,31 @@
+# iOS 界面实现规范
+
+适用于 `apps/ios`，由 Claude Code 维护。视觉与交互以 `demo/` 为基准，业务规则以主 PRD r07 为准（不做平台支付、退款与代订位，host 平台外订位、到店各付）。以下密度规则来自用户 2026-10-28 三轮真机评审，与 Demo 冲突时以本文为准。
+
+## 1. 版面密度
+
+- 内容紧贴安全区顶端开始，不加多余上边距。一级页面（标签页）由页面自己处理顶部安全区；二级详情类页面不用系统导航栏，用 `src/ui/FloatingBack.tsx` 的悬浮返回按钮，内容从 `insets.top + 4` 开始。表单类二级页面可保留系统导航栏（原生返回按钮）。
+- 关键信息尽量在第一屏展示完整：不用大头图；成组的关键事实用 2×2 信息格；页面主操作固定在底部操作栏（`paddingBottom: max(insets.bottom, 12)`）。
+- 常用间距：页面左右 16–18；小节标题 16pt 粗体，上 18、下 8–10；正文 14/21；辅助文字 11–12。避免 25pt 以上的空白。
+- 不在同一页重复展示同一信息（例如 host 已在成员行里，不再单独一行）。
+
+## 2. 组件与样式
+
+- 样式用 `src/ui/styles.ts` 的 `createStyles`（自动补 Arial 字体），颜色用 `src/ui/tokens.ts`。
+- 图标用 `src/ui/Icon.tsx`（完整 Radix 图标集），价格行用 `£` 字形对齐图标列。
+- 头像 `Avatar`、标签 `Pill`/`Tag`、提示 `Notice`（`src/ui/Bits.tsx`）、按钮 `Primary`/`TextAction`、饭局卡片 `MealCard`（`compact`、`dense` 变体）。
+- 可点击卡片：整张卡片是一个 `Pressable`，内部的头像等可以嵌套独立点击；不要用“兄弟层透明点击区”。
+- 图片放在固定尺寸的容器里并绝对铺满，不能让原图尺寸撑开布局。
+- 筛选、选择类面板优先在触发控件下方就地展开；确认、危险操作可用底部 `Sheet`。
+- 主操作文案与 Demo 一致（如 “Apply to join”），r07 不适用的支付、押金、退款元素一律替换为预计人均与“到店各付”说明。
+
+## 3. 数据与预览
+
+- 所有数据经 `@fancy/client` 调用契约接口；预览模式由 `src/preview/fake-api.ts` 提供 Demo 种子数据（登录任意邮箱，验证码 `000000`）。
+- 契约（`packages/contracts`）、API（`apps/api`）与假 API 的改动统一由主会话负责。
+- Ask Fancy（AI 助手）本版关闭：`ASSISTANT_ENABLED=false`。
+
+## 4. 验证
+
+- `pnpm --filter @fancy/ios typecheck`、`pnpm --filter @fancy/ios test`（同时检查测试套件数，套件加载失败不会计入失败用例数）、仓库根目录 `npx eslint --max-warnings=0 apps/ios`。
+- 网页预览（`npx expo export -p web`）只能检查结构与大致比例；安全区为 0，留白与真实高度以 iOS 模拟器截图测量为准。

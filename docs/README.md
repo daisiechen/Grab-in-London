@@ -4,6 +4,7 @@
 
 ## 当前开发负责人（2026-10-27起）
 
+- [iOS 界面实现规范](engineering/ios-ui-conventions.zh-CN.md)：版面密度、组件、预览数据与验证方式（含用户真机评审结论）。
 - [Claude Code 接手开发计划](delivery/claude-takeover-plan.zh-CN.md)：Claude Code 主开发，视觉按 Demo、规则按 PRD r07，先以模拟数据跑通 iOS 首发旅程再接后端。
 
 ## 当前产品与管理输入（r07范围／r11版本PJ并行执行）

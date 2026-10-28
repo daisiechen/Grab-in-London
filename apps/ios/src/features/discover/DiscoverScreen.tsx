@@ -130,8 +130,8 @@ export function DiscoverScreen() {
   const notify = (message: string) => setToast(message);
   const previewScroll = useRef<ComponentRef<typeof ScrollView>>(null);
   const { height: windowHeight } = useWindowDimensions();
-  // The map keeps about a third of the screen; the scrollable meal list below gets the rest.
-  const mapHeight = Math.max(200, Math.round(windowHeight * 0.32));
+  // The map keeps about a quarter of the screen; the scrollable meal list below gets the rest.
+  const mapHeight = Math.max(190, Math.round(windowHeight * 0.26));
   useHideHelperLauncher(sheet === 'date' || sheet === 'size' || sheet === 'filters');
   useEffect(() => {
     if (!toast) return;
