@@ -32,7 +32,7 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <StatusBar style="dark" />
       <AppRoot services={services}>
-        <Stack screenOptions={{ headerTintColor: colors.ink, headerTitleAlign: 'center', headerTitleStyle: { fontFamily: FONT_FAMILY, fontSize: 13, fontWeight: '700', color: colors.ink }, headerLeft: () => <HeaderBack />, headerBackVisible: false, headerShadowVisible: true, contentStyle: { backgroundColor: colors.white } }}>
+        <Stack screenOptions={{ headerTintColor: colors.ink, headerTitleAlign: 'center', headerTitleStyle: { fontFamily: FONT_FAMILY, fontSize: 13, fontWeight: '700', color: colors.ink }, headerLeft: (props) => <HeaderBack canGoBack={props.canGoBack} />, headerBackVisible: false, headerShadowVisible: true, contentStyle: { backgroundColor: colors.white } }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="sign-in" options={{ title: 'Fancy', presentation: 'modal' }} />
           <Stack.Screen name="email" options={{ title: 'Sign in' }} />

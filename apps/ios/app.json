@@ -15,6 +15,13 @@
       "supportsTablet": false,
       "config": {
         "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "CFBundleDevelopmentRegion": "en",
+        "CFBundleLocalizations": [
+          "en"
+        ],
+        "CFBundleAllowMixedLocalizations": false
       }
     },
     "plugins": [

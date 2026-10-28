@@ -49,7 +49,7 @@ export function PublicProfileScreen() {
   if (!data||data.profile.id!==String(userId)) return <Screen><ActivityIndicator accessibilityLabel="Loading profile" /></Screen>;
   const p = data.profile;
   return (
-    <ScrollView style={styles.page} contentContainerStyle={styles.body} testID="public-profile">
+    <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.page} contentContainerStyle={styles.body} testID="public-profile">
       <ProfileView displayName={p.displayName} avatarUrl={p.avatarUrl} bio={p.bio} languages={p.languages} interests={p.interests} background={p.background} />
       <Text accessibilityRole="header" style={styles.h2}>From people at the table</Text>
       {data.reviews.length === 0 ? <Text style={styles.muted}>No public references yet.</Text> : data.reviews.map((r) => (
@@ -61,7 +61,6 @@ export function PublicProfileScreen() {
       <View style={styles.safety}>
         <MemberSafety subjectId={p.id} name={p.displayName}/>
         <TextAction label="Report this profile" onPress={() => router.push(`/report?targetType=USER&targetId=${p.id}`)} />
-        {router.canGoBack() ? <TextAction label="Go back" onPress={() => router.back()} /> : null}
       </View>
     </ScrollView>
   );

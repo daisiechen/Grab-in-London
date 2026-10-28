@@ -112,7 +112,7 @@ export function MealDetailScreen() {
 
   return (
     <View style={styles.page} testID="meal-detail">
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={styles.scroll}>
         <View style={styles.hero}>
           <RestaurantPhoto venueRef={meal.venue.venueRef} placeId={meal.venue.placeId} name={venueName(meal)} fill>{({ image }) => image}</RestaurantPhoto>
         </View>
@@ -133,10 +133,12 @@ export function MealDetailScreen() {
           </View>
           {myApplication && !isHost ? <Text style={styles.progress}>{applicationLabel(myApplication)}</Text> : null}
           <View style={styles.hostLine}>
-            <Avatar person={meal.host} size={44} onPress={() => openPerson(meal.host.id)} />
-            <Pressable style={styles.hostName} accessibilityRole="button" accessibilityLabel={`Your host, ${meal.host.displayName}`} onPress={() => openPerson(meal.host.id)}>
-              <Text style={styles.small}>Your host</Text>
-              <Text style={styles.hostText}>{meal.host.displayName}</Text>
+            <Pressable style={styles.hostPress} accessibilityRole="button" accessibilityLabel={`Your host, ${meal.host.displayName}`} onPress={() => openPerson(meal.host.id)}>
+              <Avatar person={meal.host} size={44} />
+              <View style={styles.hostName}>
+                <Text style={styles.small}>Your host</Text>
+                <Text style={styles.hostText}>{meal.host.displayName}</Text>
+              </View>
             </Pressable>
             <Pill>{languagesLabel(meal.languages)}</Pill>
           </View>
@@ -235,6 +237,7 @@ const styles = createStyles({
   factSpan: { fontSize: 11, color: colors.muted },
   progress: { fontSize: 13, fontWeight: '700', color: colors.forest },
   hostLine: { flexDirection: 'row', alignItems: 'center', gap: 11, marginVertical: 19 },
+  hostPress: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 11, minWidth: 0 },
   hostName: { flex: 1, minWidth: 0 },
   small: { fontSize: 11, color: colors.muted, marginBottom: 2 },
   hostText: { fontSize: 14, fontWeight: '600', color: colors.ink },

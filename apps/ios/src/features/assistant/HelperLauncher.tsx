@@ -21,8 +21,10 @@ export function HelperSprite({ size = 48 }: { size?: number }) {
   );
 }
 
-// Isolated tests mock expo-router without usePathname; the launcher then uses the generic dock.
+// Isolated tests mock expo-router without these hooks; the launcher then uses the safe bottom dock.
 const usePathname: () => string | null = typeof Router.usePathname === 'function' ? Router.usePathname : () => null;
+const useSegments: () => string[] = typeof Router.useSegments === 'function' ? Router.useSegments as () => string[] : () => [];
+const TAB_PATHS = new Set(['/', '/meals', '/inbox', '/profile']);
 
 const WIDTH = 64;
 const HEIGHT = 74;
@@ -35,13 +37,19 @@ export function HelperLauncher({ onOpen }: { onOpen: () => void }) {
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
   const pathname = usePathname();
+  const segments = useSegments();
+  // Discover (the tabs index) docks on the map below the filters, as in the demo. Everywhere else,
+  // and whenever the route is unknown, it docks bottom-right so it never covers headers or controls.
+  const onDiscover = pathname === '/' || (segments.length === 1 && segments[0] === '(tabs)') || segments[segments.length - 1] === 'index';
+  const onTabs = onDiscover || (pathname !== null && TAB_PATHS.has(pathname)) || segments[0] === '(tabs)';
   const [side, setSide] = useState<'left' | 'right'>('right');
   const [tucked, setTucked] = useState(false);
   const [offsetY, setOffsetY] = useState<number | null>(null);
   const [drag, setDrag] = useState<{ x: number; y: number } | null>(null);
-  const dockTop = insets.top + (pathname === '/' ? 170 : 64);
-  const dockBottom = height - insets.bottom - 83 - HEIGHT - 16;
-  const y = Math.min(Math.max(offsetY ?? dockTop, dockTop), Math.max(dockTop, dockBottom));
+  const dockTop = insets.top + (onDiscover ? 215 : 64);
+  const dockBottom = height - insets.bottom - (onTabs ? 83 : 0) - HEIGHT - 24;
+  const home = onDiscover ? dockTop : dockBottom;
+  const y = Math.min(Math.max(offsetY ?? home, dockTop), Math.max(dockTop, dockBottom));
   const x = side === 'right' ? width - WIDTH - (tucked ? -20 : 14) : tucked ? -20 : 14;
   const start = useRef({ x: 0, y: 0 });
   const pan = useRef(
@@ -87,7 +95,7 @@ export function HelperLauncher({ onOpen }: { onOpen: () => void }) {
 }
 
 const styles = createStyles({
-  launcher: { position: 'absolute', zIndex: 16, width: WIDTH, height: HEIGHT, shadowColor: colors.ink, shadowOpacity: 0.14, shadowRadius: 5, shadowOffset: { width: 0, height: 3 } },
+  launcher: { position: 'absolute', zIndex: 16, width: WIDTH, height: HEIGHT, borderRadius: 24, backgroundColor: colors.white, shadowColor: colors.ink, shadowOpacity: 0.14, shadowRadius: 5, shadowOffset: { width: 0, height: 3 } },
   card: { alignItems: 'center', gap: 1, width: WIDTH, minHeight: HEIGHT, paddingVertical: 5, paddingHorizontal: 8, borderRadius: 24, backgroundColor: colors.white },
   cardTucked: { minHeight: 64, padding: 8, borderWidth: 1, borderColor: colors.line },
   label: { fontSize: 10, fontWeight: '700', color: colors.forest },

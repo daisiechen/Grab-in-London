@@ -79,6 +79,13 @@ On a Mac with Xcode, from `apps/ios` (copy `.env.example` to `.env` and fill the
 - `pnpm ios:preview` — builds the development app and opens it in the iOS Simulator
 - `pnpm ios:preview:device` — same, on a USB-connected iPhone (Xcode signs with your Apple ID team)
 
+CocoaPods is required for the first native build. Without Homebrew, macOS's bundled Ruby 2.6 cannot
+install current CocoaPods dependencies; either install Ruby 3+ (e.g. rbenv) and `gem install cocoapods`, or
+install cocoapods 1.16.2 with `--user-install` pinning ffi 1.16.3, activesupport 6.1.7.10, zeitwerk 2.6.13,
+i18n 1.14.7, minitest 5.15.0 and concurrent-ruby 1.3.4 (verified on Xcode 27.1). Changing the Google key
+requires `rm -rf ios` before the next run, because the key is written into the native project at prebuild.
+Discover is open to guests, so preview starts there; sign-in appears when you apply or create a meal.
+
 `EXPO_PUBLIC_FANCY_PREVIEW=1` swaps the API for the in-memory demo data in `src/preview/`
 (sign in with any email and code `000000`). Without the Google key, Discover shows the illustrated map.
 
