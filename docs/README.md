@@ -150,6 +150,7 @@
 - [平台配置交接](delivery/platform-configuration-2026-10-21.zh-CN.md)：账号、DNS、密钥安全加载方式和真实接入边界，供后续开发会话使用。
 
 - [政策文本与发布核对](policies/README.md)：英文[隐私通知](policies/privacy-notice.draft.en.md)、[使用条款](policies/terms-of-use.draft.en.md)、[社区规则](policies/community-guidelines.draft.en.md)与[支持页](policies/support.draft.en.md)草稿（按当前代码实际数据处理重写，含韩国存储与供应商清单），由 `scripts/build_legal_pages.py` 生成 fancyabite.uk/privacy、/terms、/guidelines、/support 静态页；列出 Owner 必填占位符与需法律确认的要点；未批准、未生效。
+- Online Safety Act 2023 记录草稿（2026-10-29，非法律意见，待 Owner 签署）：[非法内容风险评估](policies/online-safety-illegal-content-risk-assessment.draft.en.md)（18 类优先非法内容逐项评级，暂定多风险，守则措施对照与差距）、[儿童访问评估](policies/online-safety-childrens-access-assessment.draft.en.md)（自我声明不属高效年龄保证；儿童用户条件暂定不满足、低置信度，附监测与复评条件）；中文待办摘要见[政策文本与发布核对](policies/README.md)。
 - [App Store 提交材料](delivery/app-store-submission.zh-CN.md)与[英文上架文案](delivery/app-store-listing.en.md)：名称/副标题/描述/关键词、类别、18+ 分级问卷、隐私营养标签、出口合规、内容权利、审核员登录方案、截图计划、正式 Bundle ID `uk.fancyabite.app` 变更清单与 App 图标。
 
 - [原14条阻塞解除准备](delivery/mvp-gate-unblocking-2026-10-21.zh-CN.md)：逐条负责人、解除条件及本地演练；最终状态由独立QA复验判定。
