@@ -5,6 +5,7 @@ import {loadConfig,type CoreConfig} from '@fancy/config';
 import {createPool,type Pool} from '@fancy/db';
 import {sealSourceSnapshot} from '../../api/src/admin/snapshots.ts';
 import {autoCloseStaleCases,queueModerationDigest} from '../../api/src/moderation/policy.ts';
+import {purgeExpiredSafetyRecords,safetyRecordRetentionDays} from '../../api/src/support/privacy.ts';
 import {UnavailableDeletionStep,type DeletionSteps} from './deletion/provider.ts';
 import {Auth0DeletionStep} from './deletion/auth0.ts';
 import {deletionHandler} from './handlers/deletion.ts';
@@ -36,11 +37,14 @@ export function createWorkerRuntime(pool:Pool,config:CoreConfig){
  },onDead:(job,errorCode)=>console.error(JSON.stringify({event:'job_dead',...job,errorCode}))});
  const mail=mailDelivery(pool,mailProviderFor(config,pool),config.environment,{onDead:logMailDead,deletionMailEncryption:config.deletionMailEncryption,support:{email:config.supportEmail,adminUrl:config.adminUrl}});
  let lastSnapshot=0,lastModeration=0;
+ let lastRetention=0;
  async function tick(){
   if(!await recoveryReady(pool))return {claimed:0,done:0,retried:0,dead:0,lost:0};
   const result=await runner.tick();
   // Moderation housekeeping hourly: close stale cases, then queue the day's digest (from 08:00 London).
   if(Date.now()-lastModeration>=3600_000){await autoCloseStaleCases(pool);await queueModerationDigest(pool,config.supportEmail,new Date());lastModeration=Date.now();}
+  // Safety records of deleted accounts: redact cases whose retention period has ended (hourly).
+  if(Date.now()-lastRetention>=3600_000){await purgeExpiredSafetyRecords(pool,safetyRecordRetentionDays(config.retentionPolicy));lastRetention=Date.now();}
   await mail.tick();
   if(Date.now()-lastSnapshot>=3600_000){
    // Coverage starts at the actual ledger installation, never an invented historical date.

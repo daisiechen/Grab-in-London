@@ -16,7 +16,7 @@ import type { AppDeps } from '../http/context.ts';
 import { revokeAllForUser } from '../identity/sessions.ts';
 import { deleteAvatar } from '../profiles/avatar.ts';
 import { advanceLifecycle, cancelMealState, type MealRow } from '../meals/lifecycle.ts';
-import { casePrivateTextHidden, REMOVED_SUPPORT_TEXT, supportRelatedUserIds } from '../support/privacy.ts';
+import { casePrivateTextHidden, heldEvidence, REMOVED_SUPPORT_TEXT, supportRelatedUserIds } from '../support/privacy.ts';
 import { limitedSql, limitTarget, OUTCOMES, reporterCountSql, restoreTarget, subjectIdSql, type TargetType } from './policy.ts';
 
 type Action = (typeof MODERATION_ACTIONS)[number];
@@ -64,27 +64,31 @@ interface TargetContext {
 async function targetContext(db: Pool | PoolClient, r: ReportRow): Promise<TargetContext> {
   const empty: TargetContext = { user: null, meal: null, message: null };
   if (r.privacy_redacted) return empty;
+  // A deleted member's reported content comes from the safety-record copy while it is retained.
+  const held = await heldEvidence(db, r.case_id);
   if (r.target_type === 'USER') {
     const { rows: [u] } = await db.query(`SELECT u.id,u.status,p.display_name,p.bio,p.languages,p.interests,p.avatar_image_id,p.moderation_hidden_at FROM users u LEFT JOIN profiles p ON p.user_id=u.id WHERE u.id=$1`, [r.target_id]);
+    if (u && gone(u.status) && held.profile) return { ...empty, user: { userId: u.id, accountStatus: u.status, ...held.profile, hasPhoto: false, photoUrl: null, profileHidden: false } };
     if (!u || gone(u.status)) return empty;
     return { ...empty, user: { userId: u.id, accountStatus: u.status, displayName: u.display_name ?? null, bio: u.bio ?? null, hasPhoto: !!u.avatar_image_id, photoUrl: u.avatar_image_id ? `/v1/moderation/reports/${r.report_id}/photo` : null, languages: u.languages ?? [], interests: u.interests ?? [], profileHidden: u.moderation_hidden_at !== null && u.moderation_hidden_at !== undefined } };
   }
   if (r.target_type === 'MEAL') {
     const { rows: [m] } = await db.query<MealRow & { moderation_hidden_at: Date | null }>(`SELECT * FROM meals WHERE id=$1`, [r.target_id]);
     if (!m) return empty;
-    return { ...empty, meal: { mealId: m.id, hostId: m.host_id, title: m.title, description: m.description, status: m.status, startsAt: m.starts_at.toISOString(), startsAtDate: m.starts_at, areaCode: m.area_code, hidden: m.moderation_hidden_at !== null } };
+    return { ...empty, meal: { mealId: m.id, hostId: m.host_id, title: held.meal?.title ?? m.title, description: held.meal?.description ?? m.description, status: m.status, startsAt: m.starts_at.toISOString(), startsAtDate: m.starts_at, areaCode: m.area_code, hidden: m.moderation_hidden_at !== null } };
   }
   const { rows: [target] } = await db.query<{ id: string; conversation_id: string; sender_id: string; seq: string; moderation_hidden_at: Date | null }>(`SELECT id,conversation_id,sender_id,seq,moderation_hidden_at FROM messages WHERE id=$1`, [r.target_id]);
   if (!target) return empty;
   const { rows: lines } = await db.query(`SELECT m.id,m.sender_id,m.body,m.created_at,m.moderation_hidden_at,m.redacted,u.status FROM messages m JOIN users u ON u.id=m.sender_id
      WHERE m.conversation_id=$1 AND m.seq BETWEEN $2::bigint-3 AND $2::bigint+3 ORDER BY m.seq`, [target.conversation_id, target.seq]);
   return { ...empty, message: { messageId: target.id, conversationId: target.conversation_id, senderId: target.sender_id, hidden: target.moderation_hidden_at !== null,
-    context: lines.map((l) => ({ messageId: l.id, senderId: l.sender_id, body: gone(l.status) || l.redacted ? REMOVED_SUPPORT_TEXT : l.body, createdAt: (l.created_at as Date).toISOString(), hidden: l.moderation_hidden_at !== null, isTarget: l.id === target.id })) } };
+    context: lines.map((l) => ({ messageId: l.id, senderId: l.sender_id, body: held.messages?.[l.id] ?? (gone(l.status) || l.redacted ? REMOVED_SUPPORT_TEXT : l.body), createdAt: (l.created_at as Date).toISOString(), hidden: l.moderation_hidden_at !== null, isTarget: l.id === target.id })) } };
 }
 
 function allowedActions(r: ReportRow, ctx: TargetContext, actorId: string, now: Date): Action[] {
   const actions: Action[] = ['UPHOLD', 'RESTORE'];
-  if (r.privacy_redacted) return actions;
+  // Content of a deleted member is gone or already masked; only closing the case remains.
+  if (r.privacy_redacted || gone(r.subject_status)) return actions;
   const exists = !!(ctx.user || ctx.meal || ctx.message);
   if (exists && !r.limited) actions.push('HIDE_CONTENT');
   if (ctx.meal && ctx.meal.status === 'OPEN' && now < ctx.meal.startsAtDate) actions.push('CANCEL_MEAL');
@@ -211,10 +215,12 @@ export function registerModerationRoutes(app: FastifyInstance, deps: AppDeps) {
     const type = before.target_type, target = before.target_id, subject = before.subject_id;
     const beforeState: Record<string, unknown> = { limited: before.limited, subjectStatus: before.subject_status, caseStatus: before.case_status };
     const afterState: Record<string, unknown> = {};
-    const limit = async () => { if (!before.privacy_redacted && (ctx.user || ctx.meal || ctx.message)) await limitTarget(tx.client, type, target, now); };
+    // A deleted member's content is already masked; the retained copy is evidence only.
+    const live = !before.privacy_redacted && !gone(before.subject_status);
+    const limit = async () => { if (live && (ctx.user || ctx.meal || ctx.message)) await limitTarget(tx.client, type, target, now); };
     switch (body.action) {
       case 'UPHOLD': case 'HIDE_CONTENT': await limit(); break;
-      case 'RESTORE': if (!before.privacy_redacted) await restoreTarget(tx.client, type, target); break;
+      case 'RESTORE': if (live) await restoreTarget(tx.client, type, target); break;
       case 'CANCEL_MEAL': await cancelMealState(tx, meal!, 'other', now, auth.userId); await limit(); break;
       case 'RESET_PROFILE_TEXT': {
         beforeState.displayName = ctx.user!.displayName; beforeState.bio = ctx.user!.bio;
