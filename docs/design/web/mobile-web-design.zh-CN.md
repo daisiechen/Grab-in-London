@@ -288,11 +288,11 @@ fancyabite.uk
 | G4 | 发现 | 地图为 Google JS 单点标记 + “Areas”列表；iOS 为插画地图 + 片区数字标记 + 选中片区优先、“More nearby”，列表/地图切换 | 已做（W-P1）：插画地图 + 片区数字标记 + More nearby，列表/地图切换，桌面左列表右地图；筛选、视图、片区写入网址，返回靠浏览历史 |
 | G5 | 饭局页 | 无 `/meals/{id}/{slug}` 网址与规范地址跳转；无分享；无 Who’s coming 成员行与空位；无吸底主操作及各状态文案；无撤回/取消座位确认面板、取消条款、举报饭局入口 | 已做（W-P1）：slug 网址与规范跳转、分享（系统分享/面板）、Who’s coming、主操作各状态、撤回/取消座位确认、取消条款页与举报入口 |
 | G6 | 公开主页 | 无生活状态标签、无 Report this profile 行；拉黑入口文案与 iOS 不同；未 `noindex` | 已做（W-P1）：noindex、Report this profile、iOS 拉黑确认；生活状态仍缺接口字段（同 iOS） |
-| G7 | 路由 | 与 iOS 路径不一致：群聊 `/inbox/:id`（iOS `/chat/:id`）、`/profile/edit`（`/profile-edit`）、无 `/profile-setup`、无 `/meals/:id/status`（申请页兼做状态）、`/inbox/notifications`（`/notifications`）、`/settings/deletion`（`/delete-account` + `/deletion-status`）、举报为面板（iOS `/report` 页）、无 `/blocked-members`、`/cancellation-terms`、`/get-app` | 待做 |
-| G8 | 登录 | 邮箱与验证码同页；无 iOS 的 `/email` 分步、来自申请时的 host 说明、Keep exploring；登录后首次分析授权面板需对齐 | 待做 |
-| G9 | 资料 | 首次补全资料与编辑共用一页；无头像上传/移除（iOS `uploadAvatar` / `removeAvatar`）；必填项无 `*` | 待做 |
-| G10 | 申请 | 无独立状态页（五种状态文案、三步进度、Withdraw 确认）；草稿跨登录保留已有 | 待做 |
-| G11 | 我的饭局 | 分组与 iOS（Upcoming / Requests / Hosting / Past）及卡片状态行不一致 | 待做 |
+| G7 | 路由 | 与 iOS 路径不一致：群聊 `/inbox/:id`（iOS `/chat/:id`）、`/profile/edit`（`/profile-edit`）、无 `/profile-setup`、无 `/meals/:id/status`（申请页兼做状态）、`/inbox/notifications`（`/notifications`）、`/settings/deletion`（`/delete-account` + `/deletion-status`）、举报为面板（iOS `/report` 页）、无 `/blocked-members`、`/cancellation-terms`、`/get-app` | 部分（W-P2）：已改为 iOS 路径 `/meals/:id/status`、`/profile-setup`、`/profile-edit`、`/chat/:id`、`/notifications`、`/report`、`/delete-account`、`/deletion-status`、`/cancellation-terms`、`/get-app`，旧路径重定向；`/blocked-members` 随 W-P3 |
+| G8 | 登录 | 邮箱与验证码同页；无 iOS 的 `/email` 分步、来自申请时的 host 说明、Keep exploring；登录后首次分析授权面板需对齐 | 已做（W-P2）：品牌入口（申请来源时显示 host 与返回说明）、邮箱/验证码分步（倒计时、过期提示、频率限制）、Keep exploring；`signupSource` 内存采集并随 email start/verify、OAuth start 发送；登录后首次弹分析授权 |
+| G9 | 资料 | 首次补全资料与编辑共用一页；无头像上传/移除（iOS `uploadAvatar` / `removeAvatar`）；必填项无 `*` | 已做（W-P2）：`/profile-setup`（单选语言、18+ 确认与条款链接）与 `/profile-edit`（多选语言、工作/学校/家乡）分开；头像上传/更换/移除（浏览器裁剪为 512px JPEG）；必填 `*`、逐项报错并滚动到首个错误 |
+| G10 | 申请 | 无独立状态页（五种状态文案、三步进度、Withdraw 确认）；草稿跨登录保留已有 | 已做（W-P2）：申请页（摘要卡、计数、资料行、草稿跨登录保留）与独立状态页（五种文案、三步进度、待审时 15 秒刷新、撤回确认、Track in Inbox 聚焦） |
+| G11 | 我的饭局 | 分组与 iOS（Upcoming / Requests / Hosting / Past）及卡片状态行不一致 | 已做（W-P2）：五个分区（Upcoming/Applications/Hosting/Past/Cancelled）与 iOS 行状态、Manage、Leave feedback、Open group chat；分区写入网址；底部 Host a meal |
 | G12 | 收件箱 | 排序与聚焦（iOS：未读优先、最近活动排序、从通知进入时定位）、通知页重做（分组、已读、深链）未同步 | 待做 |
 | G13 | 群聊 | 无消息举报（iOS 长按举报，举报者本地隐藏该消息）；被拉黑成员/已离开状态说明需对齐 | 待做 |
 | G14 | 举报 | 仅面板；无 `/report` 页与举报状态页对齐；需为后续“举报原因（5 类）”预留必选下拉 | 部分（W-P1）：`/report` 页与必选原因（5 类，2026-10-29 已合入）；消息举报接入随 W-P3 |
@@ -300,7 +300,7 @@ fancyabite.uk
 | G16 | 发起/编辑 | Web 为旧版单页步骤；iOS 已改为四步（地点与时间 → 介绍 → 费用与人数 → 预览），编辑饭局同样四步、首位客人获批后锁定安排 | 待做 |
 | G17 | host 管理 | 审批/拒绝/取消饭局、订位声明的文案与确认面板需对齐 iOS | 待做 |
 | G18 | 饭后 | iOS 只有出席确认后才能评价/再约（出席门槛）；Web 未做门槛 | 待做 |
-| G19 | 设置与删除 | 删除账号需重新认证（`startReauth` → `requestDeletion`）并显示状态页；`ACCOUNT_SUSPENDED` 文案已有；设置里的法律链接（隐私、条款、社区准则、支持）需与 iOS 一致 | 待做 |
+| G19 | 设置与删除 | 删除账号需重新认证（`startReauth` → `requestDeletion`）并显示状态页；`ACCOUNT_SUSPENDED` 文案已有；设置里的法律链接（隐私、条款、社区准则、支持）需与 iOS 一致 | 部分（W-P2）：设置页按 iOS 分组（通知、隐私与安全、Help shape Fancy、账号、Help & legal、数据来源），确认退出；删除账号重新认证与状态页随 W-P4 |
 | G20 | SEO | 无每页标题/描述、无 canonical、无 OG/JSON-LD、无 robots/sitemap；纯前端无法给链接预览机器人输出 meta | 已做（W-P1）：前端 `useDocumentMeta`；`apps/web/server/serve.ts` 服务器输出 title/description/canonical/OG/JSON-LD、301 规范网址、robots.txt、sitemap.xml |
 | G21 | 无障碍 | 单 `h1`、焦点环、地图标记可读名称、表单错误播报需逐页核对 | 待做 |
 | G22 | Ask Fancy | Web 仍显示助手入口；iOS 本版已关闭（`ASSISTANT_ENABLED = false`） | 已做（W-P1）：入口已移除，代码与测试保留 |
@@ -314,4 +314,5 @@ fancyabite.uk
 - **服务器头部**：`apps/web/server/serve.ts`（Node 24，无依赖）托管构建产物、代理 `/v1`、为首页/发现/饭局/主页输出头部，并提供 robots.txt、sitemap.xml。Seoul 部署包用 nginx 直接托管构建产物时，需把 HTML 请求转给此服务（或改用同等的 nginx 规则），否则预览机器人拿不到饭局标题；分享图暂用品牌图（缺按饭局生成的文字卡片接口，见 §11）。
 - **分析授权**：只在本标签页刚完成登录后弹一次（`lib/freshSignIn.ts`），不在登录、关联、补全资料步骤上弹；之后在资料页的 Analytics preferences 行修改。与 iOS（每次会话未选择时弹）有意差异：网页刷新频繁，避免反复打扰。
 - **注册来源**：`lib/attribution.ts` 只在内存中记录落地网址的 utm 参数或“从饭局分享链接进入”，不写 Cookie/存储；注册请求带 `signupSource`（W-P2 接入）。
+- **登录分步**（W-P2）：品牌入口、邮箱、验证码是 `/sign-in` 一页内的三步（返回圆钮回上一步），不拆成 `/sign-in/email`、`/sign-in/code`，避免刷新丢失验证码会话；返回地址参数为 `returnTo`（也接受 `next`）。契约白名单外的 Web 页面（如 `/chat`、`/profile-setup`）只在本地返回，不作为 `returnTarget` 发给 API。
 - **QA 证据路径**：`docs/qa/evidence/2026-10-21/automated-runs.json` 引用了若干 Web 测试文件路径；这些文件保留并改写为新行为的测试，不删除。

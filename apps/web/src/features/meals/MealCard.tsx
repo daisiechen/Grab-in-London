@@ -44,7 +44,7 @@ export function MealCard({ meal, variant = 'default', compact, status, statusTon
               </div>
             </>
           ) : (
-            <div className="body">
+            <div className="cbody">
               {image}
               <div className="copy">
                 <h3>{meal.title}</h3>

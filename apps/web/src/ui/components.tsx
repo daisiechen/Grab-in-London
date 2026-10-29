@@ -50,7 +50,7 @@ export function Field({ label, hint, error, counter, required, strong, quietErro
   const describedBy = [hint || counter ? helpId : '', error ? errorId : ''].filter(Boolean).join(' ');
   return (
     <div className={`field${strong ? ' strong' : ''}`}>
-      <label htmlFor={id}>{label}{required && <Required />}</label>
+      <div className="lab"><label htmlFor={id}>{label}</label>{required && <Required />}</div>
       {children({ id, ...(describedBy ? { 'aria-describedby': describedBy } : {}), ...(error ? { 'aria-invalid': true as const } : {}), ...(required ? { 'aria-required': true as const } : {}) })}
       {(hint || counter) && <div className="help" id={helpId}><span>{hint}</span>{counter && <span>{counter}</span>}</div>}
       {error && <div className="err" id={errorId} {...(quietError ? {} : { role: 'alert' })}>{error}</div>}
@@ -195,7 +195,7 @@ export function SkeletonCards({ count = 3, label = 'Loading meals' }: { count?: 
       <span className="vh">{label}</span>
       {Array.from({ length: count }, (_, i) => (
         <div className="card" key={i} aria-hidden="true">
-          <div className="body">
+          <div className="cbody">
             <span className="photo sk" />
             <span className="copy">
               <span className="sk" style={{ height: 14, width: '70%', margin: '2px 0 8px' }} />

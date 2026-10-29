@@ -19,7 +19,7 @@ describe('meal detail (T08)', () => {
     expect(document.body.textContent).not.toMatch(/deposit|Visa|card/i);
     expect(screen.getByText('Free to ask · Maya Chen reviews every request')).toBeTruthy();
     await userEvent.click(screen.getByRole('button', { name: /Apply to join/ }));
-    expect(await screen.findByRole('heading', { name: 'Let’s keep in touch.' })).toBeTruthy();
+    expect(await screen.findByRole('button', { name: /Continue with email/ })).toBeTruthy();
   });
 
   it('labels declared values and a stale host booking report', async () => {
@@ -123,9 +123,9 @@ describe('my meals (T08)', () => {
     renderApp(stub.fetch, '/meals');
     expect(await screen.findByText('A good meal is waiting.')).toBeTruthy();
     expect(stub.callsTo('myMeals')[0]!.url.searchParams.get('section')).toBe('UPCOMING');
-    await userEvent.click(screen.getByRole('button', { name: 'Applications' }));
+    await userEvent.click(screen.getByRole('tab', { name: 'Applications' }));
     expect(await screen.findByText('Application pending')).toBeTruthy();
-    await userEvent.click(screen.getByRole('button', { name: 'Hosting' }));
+    await userEvent.click(screen.getByRole('tab', { name: 'Hosting' }));
     expect(await screen.findByText('Your table starts with you.')).toBeTruthy();
     await waitFor(() => expect(stub.callsTo('myMeals').map((c) => c.url.searchParams.get('section'))).toEqual(['UPCOMING', 'APPLICATIONS', 'HOSTING']));
   });

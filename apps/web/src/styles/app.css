@@ -158,9 +158,12 @@ h1, h2, h3 { margin: 0; }
 @media (prefers-reduced-motion: reduce) { .sk, .spinner { animation: none; } * { scroll-behavior: auto !important; } }
 
 /* ---------- Forms ---------- */
-.field { margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; border: 0; padding: 0; }
-.field > label, .flabel, .field > legend { display: block; font-size: 12px; font-weight: 500; color: var(--muted); padding: 0; }
-.field.strong > label, .field.strong > legend { font-size: 13px; font-weight: 700; color: var(--ink); }
+.field { margin: 0 0 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; min-inline-size: 0; border: 0; padding: 0; }
+.inline-link { color: var(--forest); text-decoration: underline; text-underline-offset: 2px; }
+.check input { margin-top: 0 !important; }
+.field > .lab { display: flex; align-items: baseline; }
+.field > label, .field > .lab > label, .flabel, .field > legend { display: block; font-size: 12px; font-weight: 500; color: var(--muted); padding: 0; }
+.field.strong > .lab > label, .field.strong > label, .field.strong > legend { font-size: 13px; font-weight: 700; color: var(--ink); }
 .req { color: #9aa29d; font-weight: 400; margin-left: 2px; }
 .input, .textarea, .select {
   width: 100%; min-height: var(--field); border: 1px solid var(--line); border-radius: var(--r-md); padding: 10px 12px; background: #fff;
@@ -180,6 +183,7 @@ h1, h2, h3 { margin: 0; }
 .choice input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
 .choice:has(input:focus-visible) { outline: 2px solid var(--forest); outline-offset: 2px; }
 .choice:has(input:disabled) { opacity: 0.45; cursor: not-allowed; }
+.mt8 { margin-top: 8px; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
 /* ---------- Footer action bar (phones pin it; tablets put it under the content) ---------- */
@@ -192,7 +196,7 @@ h1, h2, h3 { margin: 0; }
 .card { position: relative; display: block; border-radius: 10px; }
 .card .hit { position: absolute; inset: 0; z-index: 1; border-radius: 10px; }
 .card .hit:active { background: #123f3508; }
-.card .body { display: flex; gap: 12px; }
+.card .cbody { display: flex; gap: 12px; }
 .photo { flex: none; width: 100px; height: 124px; border-radius: 9px; overflow: hidden; background: var(--surface); position: relative; display: block; }
 .card.compact .photo { width: 88px; height: 110px; }
 .card.dense .photo { width: 76px; height: 86px; }
@@ -338,6 +342,20 @@ h1, h2, h3 { margin: 0; }
 .prov + .prov { margin-top: 8px; }
 .brandbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 
+/* ---------- Application progress (iOS ApplicationStatusScreen) ---------- */
+.track { display: flex; position: relative; margin: 10px 0 4px; }
+.track .bar { position: absolute; top: 11px; height: 2px; width: 33.33%; background: var(--line); }
+.track .bar.on { background: var(--forest); }
+.step { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); position: relative; z-index: 1; text-align: center; }
+.step .dot { width: 24px; height: 24px; border-radius: 12px; border: 1px solid var(--line); background: #fff; display: flex; align-items: center; justify-content: center; }
+.step.done .dot { background: var(--forest); border-color: var(--forest); color: #fff; }
+.step.current .dot { background: #5f8a6b; border-color: #5f8a6b; color: #fff; }
+.step.stopped .dot { background: #fbeeec; border-color: #e9c5c0; color: var(--danger); }
+.step.done, .step.current { color: var(--forest); font-weight: 700; }
+.step.stopped { color: var(--danger); }
+.summary-photo .photo { width: 56px; height: 56px; border-radius: 8px; }
+.summary-photo .ph-empty { font-size: 8px; line-height: 10px; }
+
 /* ---------- Segmented tabs, inbox, chat ---------- */
 .segtabs { display: flex; gap: 6px; margin: 4px 0 14px; overflow-x: auto; padding-bottom: 2px; }
 .segtabs button, .segtabs a { min-height: 34px; padding: 0 14px; border-radius: 17px; border: 1px solid var(--line); font-size: 13px; font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
@@ -381,7 +399,7 @@ h1, h2, h3 { margin: 0; }
   .topnav .right { display: flex; gap: 12px; align-items: center; }
   .topnav .right .btn { width: auto; min-height: 38px; padding: 0 16px; }
   .scroll, .scroll.has-footer { padding: 24px var(--page) 40px; }
-  .footer { position: static; transform: none; max-width: none; border: 0; padding: 0 var(--page) 40px; background: none; }
+  .footer { position: static; transform: none; max-width: none; border: 0; padding: 16px 0 0; background: none; }
   .footer .btn, .footer .textact { max-width: 320px; }
   .footer .hint { text-align: left; }
   .footer .textact { justify-content: flex-start; }

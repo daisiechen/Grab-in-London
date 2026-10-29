@@ -89,12 +89,12 @@ describe('sign-up attribution (memory only)', () => {
   it('captures utm parameters, else a shared meal link, once per visit', () => {
     resetAttribution();
     captureArrival('https://fancyabite.uk/discover?utm_source=instagram&utm_medium=social&utm_campaign=launch');
-    expect(signupSource()).toEqual({ kind: 'utm', utmSource: 'instagram', utmMedium: 'social', utmCampaign: 'launch' });
+    expect(signupSource()).toEqual({ utmSource: 'instagram', utmMedium: 'social', utmCampaign: 'launch' });
     captureArrival(`https://fancyabite.uk/meals/${MEAL_ID}`);
-    expect(signupSource()).toMatchObject({ kind: 'utm' });
+    expect(signupSource()).toMatchObject({ utmSource: 'instagram' });
     resetAttribution();
     captureArrival(`https://fancyabite.uk/meals/${MEAL_ID}/friday-dinner-and-new-faces?src=share`);
-    expect(signupSource()).toEqual({ kind: 'meal_link' });
+    expect(signupSource()).toEqual({ entry: 'meal_link' });
     resetAttribution();
     captureArrival('https://fancyabite.uk/');
     expect(signupSource()).toBeNull();

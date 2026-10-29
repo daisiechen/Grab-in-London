@@ -13,6 +13,7 @@ import { MyMealsPage } from '../features/meals/MyMealsPage.tsx';
 import { CreatePage } from '../features/create/CreatePage.tsx';
 import { EditMealPage } from '../features/create/EditMealPage.tsx';
 import { ApplyPage } from '../features/apply/ApplyPage.tsx';
+import { ApplicationStatusPage } from '../features/apply/ApplicationStatusPage.tsx';
 import { HostPage } from '../features/host/HostPage.tsx';
 import { InboxPage } from '../features/inbox/InboxPage.tsx';
 import { NotificationsPage } from '../features/inbox/NotificationsPage.tsx';
@@ -38,7 +39,7 @@ export const appRoutes: AppRoute[] = [
   { path: '/meals/:mealId', element: <MealDetailPage /> },
   { path: '/meals/:mealId/edit', element: <EditMealPage /> },
   { path: '/meals/:mealId/apply', element: <ApplyPage /> },
-  { path: '/meals/:mealId/status', element: <ApplyPage /> },
+  { path: '/meals/:mealId/status', element: <ApplicationStatusPage /> },
   { path: '/meals/:mealId/host', element: <HostPage /> },
   { path: '/cancellation-terms', element: <CancellationTermsPage /> },
   { path: '/meals/:mealId/:slug', element: <MealDetailPage /> },
@@ -50,10 +51,12 @@ export const appRoutes: AppRoute[] = [
   { path: '/chat/:conversationId', element: <ChatPage /> },
   { path: '/profile', element: <ProfilePage /> },
   { path: '/profile-edit', element: <ProfileEditPage /> },
+  { path: '/profile-setup', element: <ProfileEditPage key="setup" mode="setup" /> },
   { path: '/profiles/:userId', element: <PublicProfilePage /> },
   { path: '/settings', element: <SettingsPage /> },
   { path: '/survey', element: <SurveyPage /> },
   { path: '/delete-account', element: <DeletionPage /> },
+  { path: '/deletion-status', element: <DeletionPage /> },
   { path: '/report', element: <ReportPage /> },
   { path: '/settings/reports/:reportId', element: <ReportStatusPage /> },
   { path: '/post-meal/:mealId', element: <PostMealPage /> },
