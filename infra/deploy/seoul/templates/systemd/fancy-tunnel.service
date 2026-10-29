@@ -1,0 +1,33 @@
+# Cloudflare Tunnel for @@PUBLIC_HOSTNAME@@: outbound-only connection to Cloudflare, so no
+# inbound port is opened and the server's public HTTPS port stays with the owner's proxy.
+# Credentials live only on the server (/etc/cloudflared/<tunnel-id>.json, 0600).
+[Unit]
+Description=Cloudflare Tunnel for @@PUBLIC_HOSTNAME@@
+After=network-online.target nginx.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=fancy-tunnel
+Group=fancy-tunnel
+ExecStart=/usr/bin/cloudflared --no-autoupdate --config /etc/cloudflared/fancy.yml tunnel run
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=20
+LogNamespace=fancy
+MemoryMax=300M
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
+CapabilityBoundingSet=
+
+[Install]
+WantedBy=multi-user.target

@@ -46,6 +46,7 @@ J09（支持）、J10/J11（后台）在 iOS 首发旅程完成后另行安排�
 
 | 日期 | 内容 | 提交 |
 | --- | --- | --- |
+| 2026-10-29 | 首尔正式环境部署套件（未在服务器执行）：`infra/deploy/seoul/` 的 bootstrap、密钥录入、服务器端构建、迁移、候选验证后原子切换与自动回滚、加密备份与恢复演练、健康检查，以及 systemd/nginx/cloudflared/PostgreSQL 模板；Cloudflare Tunnel 承载 fancyabite.uk，443 继续归 ss-server，后台同源部署在 `https://fancyabite.uk/admin/`。手册见[首尔正式环境部署手册](../operations/seoul-production-deploy.zh-CN.md)，测试 `infra/tests/seoul-deploy.release.test.ts` | 见 Git 历史 |
 | 2026-10-28 | Web 端恢复设计（用户要求，仅设计不写生产代码）：完成 [Meetup 移动 Web 调研](../design/web/meetup-reference.zh-CN.md)（会话无法直接访问 meetup.com，现为公开资料检索，亲测待补）、[Web 端设计规范](../design/web/mobile-web-design.zh-CN.md)与单文件可点击原型（移动优先，含首页与平板/桌面布局，域名 fancyabite.uk）。推荐 Web 先做“公开分享 + 参加主线”（W1+W2），发起与饭后反馈留在 App；Web 范围、PRD §0.1 表述、已登录首页、主页收录等 8 项待用户决定（规范 §2.3）；`apps/web` 代码未改 | 见 Git 历史 |
 | 2026-10-29 | 管理后台（上架 App Store 所需，用户 2026-10-28 决定扩大后台范围，见 §8）：迁移 `0027_moderation`；契约新增 `listModerationReports`、`claimModerationReport`、`getModerationReport`、`getModerationPhoto`、`moderateReport`、`supportCaseAttendance` 与错误码 `ACCOUNT_SUSPENDED`，`getPublicProfile` 改为可选登录；举报自动处理（举报人立即看不到、重复举报自动限制、自动回执、30天自动关闭、每日摘要邮件）；后台新增员工登录页、举报队列与详情、J09 出席纠错与回复；五个分析页对真实 API（种子数据）逐页走通并修复定义版本显示“vv4”；客户端请求/响应类型改为按操作分配，避免操作增多后超出 TypeScript 联合类型上限 | 见 Git 历史 |
 | 2026-10-28 | 头像改为成员上传本人照片（用户决定，见 §6）：迁移 `0026_avatar_images`；契约新增 `uploadAvatar`（PUT /me/avatar）、`removeAvatar`（DELETE /me/avatar）、`getAvatar`（GET /avatars/{avatarId}），`Me.avatarUrl` 取代 `Me.avatarRef`，`updateMe` 不再接受 `avatarRef`；iOS 设置资料与编辑资料改为“上传/更换/移除照片”，样例头像三选一及 Web 静态样例图移除；新增原生模块 expo-image-picker、expo-image-manipulator（需在 Mac 上重新构建开发版）；`e2e:real-api` 资料步骤增加真实上传 | 见 Git 历史 |
@@ -140,7 +141,7 @@ J09（支持）、J10/J11（后台）在 iOS 首发旅程完成后另行安排�
 - Ethan 侧接收口（Building-Ethan 仓库）上线与端到端核对；`ETHAN_MODERATION_URL` / `ETHAN_MODERATION_TOKEN` 的实际值。
 - Web 举报面板仍只提交旧原因 `private_concern`（按“其他”处理）；如需在 Web 选择原因，另行修改。
 - Auth0 是否对员工强制 MFA 并在令牌中返回 `amr: mfa`（未确认前生产后台不可用）；员工角色授予流程。
-- 后台生产托管位置（同源路径）与 `ADMIN_URL`。
+- ~~后台生产托管位置（同源路径）与 `ADMIN_URL`~~：2026-10-29 部署套件定为 `https://fancyabite.uk/admin/`（与 API 同源，见[首尔正式环境部署手册](../operations/seoul-production-deploy.zh-CN.md)）。
 - 被停用成员如需删除账号，目前只能通过支持渠道处理（其无法登录发起删除）。
 
 ### 8.6 删除账号后的安全记录保留（Owner 2026-10-29 决定：保留 12 个月后删除）

@@ -60,7 +60,7 @@ Web/iOS遇到LINK_REQUIRED时须明确继续用原账号登录，再由用户确
 
 部署后实际复验API来源hook、Web和iOS全部采集入口后，设置 `ANALYTICS_COVERAGE_START` 为三者实际覆盖起点的最晚时刻。worker再与数据库ledger安装起点取较晚值；不设置时保持partial，不把旧历史伪补为完整采集。这个操作不能用代码存在或mock测试替代实际部署验证。
 
-发布目录采用 `/home/ubuntu/fancy/releases/<commit>/`；配置、数据、备份、日志分别放 `shared/config`、`shared/data`、`shared/backups`、`shared/logs`，均不进入公开仓库。先在备用回环端口验证新release，再通过经批准的同源网关切换；旧release保留用于回滚。实际端口、域名、TLS及systemd文件待服务器操作授权后核定，不能猜测并覆盖已有配置。
+正式部署（2026-10-29 起）用 [`infra/deploy/seoul/`](deploy/seoul/) 套件，步骤见[首尔正式环境部署手册](../docs/operations/seoul-production-deploy.zh-CN.md)：发布目录 `/srv/fancy/releases/<时间>-<提交>/`，`/srv/fancy/current` 原子切换；密钥在 root 0600 的 `/etc/fancy/fancy.env`；先在备用回环端口（3101）验证新 release，再切换；旧 release 保留用于回滚。早期规划的 `/home/ubuntu/fancy/releases/`、`shared/` 不再使用，套件只读列出、不改动。
 
 ## 人工门槛与恢复
 

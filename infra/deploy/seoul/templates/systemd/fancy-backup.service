@@ -1,0 +1,11 @@
+# Daily encrypted PostgreSQL backup plus deletion-ledger export (see backup.sh).
+[Unit]
+Description=Fancy encrypted database backup
+After=postgresql@@@PG_MAJOR@@-@@PG_CLUSTER@@.service
+
+[Service]
+Type=oneshot
+ExecStart=@@FANCY_KIT_DIR@@/backup.sh --yes
+Nice=10
+IOSchedulingClass=idle
+LogNamespace=fancy
