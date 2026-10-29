@@ -23,3 +23,7 @@ export function ensureDeletionReceipt(): string {
   if (sessionStorage.getItem(KEY) !== token) throw new Error('RECEIPT_STORAGE_UNAVAILABLE');
   return token;
 }
+/** Forget the receipt saved in this tab (never cancels the deletion itself). */
+export function forgetDeletionReceipt(): void {
+  try { sessionStorage.removeItem(KEY); sessionStorage.removeItem(`${KEY}:status`); } catch { /* nothing saved */ }
+}

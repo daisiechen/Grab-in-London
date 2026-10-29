@@ -6,13 +6,14 @@ import { createFetchStub,ok,page,fail } from '../test/fetchStub.ts';
 import { meal,session,publicProfile,MEAL_ID,HOST_ID } from '../test/fixtures.ts';
 import { saveDraft } from '../lib/drafts.ts';
 import { newDraft } from '../features/create/model.ts';
+import { addDays,londonToday } from '../lib/london.ts';
 import { serverValidationMetrics,validationMetric } from '../features/create/validationMetrics.ts';
 import { fakePollerDeps } from '../test/fakePoller.ts';
 
 describe('analytics source presentations',()=>{
   it('records actual detail presentation after consent without description or venue display',async()=>{
     const stub=createFetchStub({getSession:()=>ok(session()),getMeal:()=>ok({meal:meal(),myApplication:null,conversationId:null}),ingestEvents:()=>ok({results:[]})});
-    renderApp(stub.fetch,`/meals/${MEAL_ID}`);
+    renderApp(stub.fetch,`/meals/${MEAL_ID}`,{consentControl:true});
     await screen.findByRole('heading',{name:'Friday dinner & new faces'});
     fireEvent.click(screen.getByRole('button',{name:'Allow analytics'}));
     await waitFor(()=>expect(stub.callsTo('ingestEvents').some(c=>JSON.stringify(c.body).includes('detail_view'))).toBe(true));
@@ -21,7 +22,7 @@ describe('analytics source presentations',()=>{
   });
   it('records a public profile only once it is displayed, without profile text',async()=>{
     const stub=createFetchStub({getSession:()=>fail(401,'AUTH_REQUIRED'),getPublicProfile:()=>ok({profile:publicProfile(),reviews:[],nextReviewCursor:null}),ingestEvents:()=>ok({results:[]})});
-    renderApp(stub.fetch,`/profiles/${HOST_ID}`);
+    renderApp(stub.fetch,`/profiles/${HOST_ID}`,{consentControl:true});
     await screen.findByRole('heading',{name:'Maya Chen'});
     fireEvent.click(screen.getByRole('button',{name:'Allow analytics'}));
     await waitFor(()=>expect(stub.callsTo('ingestEvents').some(c=>JSON.stringify(c.body).includes('profile_view'))).toBe(true));
@@ -29,7 +30,7 @@ describe('analytics source presentations',()=>{
   });
   it('sends fixed form failure metadata and never advances arranged for an invalid form',async()=>{
     const stub=createFetchStub({getSession:()=>ok(session()),ingestEvents:()=>ok({results:[]})});
-    renderApp(stub.fetch,'/create');
+    renderApp(stub.fetch,'/create',{consentControl:true});
     await screen.findByRole('button',{name:/Continue/});
     fireEvent.click(screen.getByRole('button',{name:'Allow analytics'}));
     await waitFor(()=>expect(stub.callsTo('ingestEvents').some(c=>JSON.stringify(c.body).includes('create_started'))).toBe(true));
@@ -41,10 +42,10 @@ describe('analytics source presentations',()=>{
     expect(stub.callsTo('ingestEvents').some(c=>JSON.stringify(c.body).includes('create_arranged'))).toBe(false);
   });
   it('records arranged after actual arrange validation using the persisted business attempt ID',async()=>{
-    const m=meal(),draft={...newDraft(),venue:m.venue,date:'2026-10-23',time:'19:30',closeDate:'2026-10-23',closeTime:'18:30'};
+    const m=meal(),day=addDays(londonToday(),3),draft={...newDraft(),venue:m.venue,date:day,time:'19:30',closeDate:day,closeTime:'18:30'};
     saveDraft('create',draft);
     const stub=createFetchStub({getSession:()=>ok(session()),ingestEvents:()=>ok({results:[]})});
-    renderApp(stub.fetch,'/create');
+    renderApp(stub.fetch,'/create',{consentControl:true});
     await screen.findByRole('button',{name:/Continue/});
     fireEvent.click(screen.getByRole('button',{name:'Allow analytics'}));
     await screen.findByRole('button',{name:'Analytics preferences'});
@@ -55,7 +56,7 @@ describe('analytics source presentations',()=>{
   });
   it('records a changed filter only after the result succeeds and excludes raw keyword input',async()=>{
     const stub=createFetchStub({getSession:()=>fail(401,'AUTH_REQUIRED'),discoverMeals:()=>page([meal()]),ingestEvents:()=>ok({results:[]})});
-    renderApp(stub.fetch);
+    renderApp(stub.fetch,'/discover',{consentControl:true});
     await screen.findByRole('heading',{name:'Friday dinner & new faces'});
     fireEvent.click(screen.getByRole('button',{name:'Allow analytics'}));
     await screen.findByRole('button',{name:'Analytics preferences'});
@@ -73,7 +74,7 @@ describe('analytics source presentations',()=>{
   });
   it('does not treat old visible results as a successful filter result when the new request fails',async()=>{
     const stub=createFetchStub({getSession:()=>fail(401,'AUTH_REQUIRED'),discoverMeals:c=>c.url.searchParams.has('languages')?fail(503,'SERVICE_UNAVAILABLE'):page([meal()]),ingestEvents:()=>ok({results:[]})});
-    renderApp(stub.fetch);
+    renderApp(stub.fetch,'/discover',{consentControl:true});
     await screen.findByRole('heading',{name:'Friday dinner & new faces'});
     fireEvent.click(screen.getByRole('button',{name:'Allow analytics'}));
     await screen.findByRole('button',{name:'Analytics preferences'});
@@ -88,7 +89,7 @@ describe('analytics source presentations',()=>{
     const id='14141414-1414-4141-8141-141414141414';
     const conversation={id,version:'1',kind:'GROUP',mealId:MEAL_ID,title:'Friday dinner & new faces',canSend:true,dissolved:false,head:'0'};
     const stub=createFetchStub({getSession:()=>ok(session()),inbox:()=>page([{conversation,lastMessage:null,unreadCount:0}]),getMeal:()=>ok({meal:meal(),myApplication:null,conversationId:id}),readMessages:()=>page([]),ingestEvents:()=>ok({results:[]})});
-    renderApp(stub.fetch,`/inbox/${id}`,{pollerDeps:fakePollerDeps().deps});
+    renderApp(stub.fetch,`/inbox/${id}`,{pollerDeps:fakePollerDeps().deps,consentControl:true});
     await screen.findByLabelText('Message');
     fireEvent.click(screen.getByRole('button',{name:'Allow analytics'}));
     await waitFor(()=>expect(stub.callsTo('ingestEvents').some(c=>JSON.stringify(c.body).includes('chat_opened'))).toBe(true));

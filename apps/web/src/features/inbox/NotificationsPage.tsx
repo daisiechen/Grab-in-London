@@ -1,24 +1,34 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Link, Navigate } from 'react-router';
 import type { ApiClient, ResponseOf } from '@fancy/client';
+import { BellIcon, CalendarIcon, CheckCircledIcon, ClockIcon, CrossCircledIcon, PersonIcon, TrashIcon } from '@radix-ui/react-icons';
 import { useApi } from '../../api/ApiProvider.tsx';
 import { useSession } from '../../api/session.tsx';
 import { useQuery } from '../../api/useQuery.ts';
 import { Intent } from '../../api/webApi.ts';
 import { errorMessage } from '../../api/errors.ts';
 import { signInPath } from '../../lib/returnTo.ts';
-import { FormError, Loading, PageHeader, Primary } from '../../ui/components.tsx';
+import { FormMessage, Loading, Primary, StateBlock, TextAction, TitleBar } from '../../ui/components.tsx';
+import { useDocumentMeta } from '../../seo/useDocumentMeta.ts';
 
 type Notification = ResponseOf<'listNotifications'>['data'][number];
-const labels: Record<string, string> = {
-  meal_cancelled: 'Your meal was cancelled.',
-  application_approved: 'Your request was approved.',
-  application_declined: 'Your request was declined.',
-  application_expired: 'Your request has expired.',
-  deletion_received: 'Your deletion request was received.',
-  deletion_completed: 'Your deletion request is complete.',
-};
 
+/** Same labels and icons as iOS NotificationsScreen. */
+const LABELS: Record<string, string> = {
+  deletion_received: 'Account deletion requested', deletion_completed: 'Account deletion completed', meal_cancelled: 'Meal cancelled',
+  application_submitted: 'New request to join', application_withdrawn: 'Request withdrawn', guest_left: 'Guest left the meal',
+  application_expired: 'Request expired', booking_updated: 'Booking updated', application_approved: 'Request approved', application_declined: 'Request declined',
+};
+const ICONS: Record<string, ReactNode> = {
+  meal_cancelled: <CrossCircledIcon />, application_submitted: <PersonIcon />, application_withdrawn: <PersonIcon />, guest_left: <PersonIcon />,
+  application_expired: <ClockIcon />, booking_updated: <CalendarIcon />, application_approved: <CheckCircledIcon />, application_declined: <CrossCircledIcon />,
+  deletion_received: <TrashIcon />, deletion_completed: <TrashIcon />,
+};
+const WHEN = new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London' });
+/** London wall time, e.g. “Wed 21 Oct, 11:00”. */
+export const when = (instant: string) => WHEN.format(new Date(instant));
+
+/** All pages, de-duplicated by id; a cursor that doesn't advance is an error, never a loop. */
 export async function readNotifications(client: ApiClient): Promise<Notification[]> {
   const items = new Map<string, Notification>();
   const seen = new Set<string>();
@@ -33,10 +43,12 @@ export async function readNotifications(client: ApiClient): Promise<Notification
   }
 }
 
+/** Notifications (iOS NotificationsScreen): requests, approvals and meal changes; messages stay in chats. */
 export function NotificationsPage() {
   const { state } = useSession();
-  const { api } = useApi();
+  const { api, cache } = useApi();
   const userId = state.status === 'signed-in' ? state.session.user.id : null;
+  useDocumentMeta({ title: 'Notifications · Fancy', robots: 'noindex, nofollow' });
   const query = useQuery(userId ? `notifications:${userId}` : null, readNotifications);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState('');
@@ -44,7 +56,7 @@ export function NotificationsPage() {
   const intents = useMemo(() => new Map<string, Intent>(), [api, userId]);
   useEffect(() => { active.current = true; return () => { active.current = false; }; }, [userId]);
   if (state.status === 'loading') return <Loading />;
-  if (state.status === 'guest') return <Navigate to={signInPath('/inbox/notifications')} replace />;
+  if (state.status === 'guest') return <Navigate to={signInPath('/notifications')} replace />;
 
   const markRead = async (item: Notification) => {
     if (inFlight.current || item.readAt) return;
@@ -52,22 +64,43 @@ export function NotificationsPage() {
     let intent = intents.get(item.id);
     if (!intent) { intent = new Intent(api.retry); intents.set(item.id, intent); }
     try {
-      const result = await intent.run({ notificationId: item.id }, key => api.client.call('markRead', { params: { notificationId: item.id }, idempotencyKey: key }));
-      if (active.current && query.data) query.setData(query.data.map(row => row.id === item.id ? result.data : row));
-    } catch (e) { if (active.current) setError(errorMessage(e)); }
+      const result = await intent.run({ notificationId: item.id }, (key) => api.client.call('markRead', { params: { notificationId: item.id }, idempotencyKey: key }));
+      cache.delete('notifications:unread');
+      if (active.current && query.data) query.setData(query.data.map((row) => (row.id === item.id ? result.data : row)));
+    } catch (e) { if (active.current) setError(`Couldn’t mark this notification as read. ${errorMessage(e)}`); }
     finally { inFlight.current = false; if (active.current) setBusy(null); }
   };
-  return <><PageHeader title="Notifications" backTo="/inbox" /><div className="body-pad">
-    <h1>Notifications</h1>
-    {query.error ? <><FormError>{errorMessage(query.error)}</FormError><Primary secondary disabled={query.loading} onClick={() => void query.reload()}>Try again</Primary></> : null}
-    {!query.data && !query.error && <Loading />}
-    {query.data?.length === 0 && <p>No notifications yet.</p>}
-    <FormError>{error}</FormError>
-    {query.data?.map(item => <article className="inbox-progress-card" key={item.id}>
-      <h2>{labels[item.template] ?? 'You have an update.'}</h2>
-      <p><time dateTime={item.createdAt}>{new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Europe/London' }).format(new Date(item.createdAt)) + ' London time'}</time> · {item.readAt ? 'Read' : 'Unread'}</p>
-      {item.mealId && <Link className="text-action" to={`/meals/${item.mealId}`}>View meal</Link>}
-      {!item.readAt && <Primary secondary disabled={busy !== null} onClick={() => void markRead(item)}>{busy === item.id ? 'Saving…' : 'Mark as read'}</Primary>}
-    </article>)}
-  </div></>;
+  const target = (n: Notification) => (n.conversationId ? `/chat/${n.conversationId}` : n.mealId ? `/meals/${n.mealId}` : null);
+
+  return (
+    <div className="scroll">
+      <TitleBar title="Notifications" subtitle="Updates about your requests and tables." back="/inbox" />
+      {query.error ? <><FormMessage message={errorMessage(query.error)} /><Primary secondary disabled={query.loading} onClick={() => void query.reload()}>Retry loading notifications</Primary></> : null}
+      {!query.data && !query.error && <p className="muted" role="status">Loading notifications…</p>}
+      {query.data?.length === 0 && <StateBlock icon={<BellIcon width={30} height={30} aria-hidden="true" />} title="No notifications yet.">Requests, approvals and changes to your meals will show up here. Messages stay in your chats.</StateBlock>}
+      <FormMessage message={error} />
+      <ul className="nlist">
+        {query.data?.map((n) => {
+          const unread = !n.readAt;
+          const label = LABELS[n.template] ?? 'You have an update.';
+          const to = target(n);
+          const inner = (
+            <>
+              <span className={`ci${unread ? ' on' : ''}`} aria-hidden="true">{ICONS[n.template] ?? <BellIcon />}</span>
+              <span className="mid"><b className={unread ? 'strong' : ''}>{label}</b><time dateTime={n.createdAt}>{when(n.createdAt)}</time></span>
+              {unread && <span className="dot-unread" aria-hidden="true" />}
+            </>
+          );
+          return (
+            <li key={n.id} className="nrow">
+              {to ? <Link className="nmain" to={to} aria-label={`${label}, ${when(n.createdAt)}${unread ? ', unread' : ''}`} onClick={() => { if (unread) void markRead(n); }}>{inner}</Link>
+                : <div className="nmain" aria-label={`${label}, ${when(n.createdAt)}${unread ? ', unread' : ''}`} role="group">{inner}</div>}
+              {unread && <TextAction className="inline nmark" disabled={busy !== null} onClick={() => void markRead(n)}>{busy === n.id ? 'Saving…' : 'Mark as read'}</TextAction>}
+            </li>
+          );
+        })}
+      </ul>
+      <p className="muted" style={{ marginTop: 12 }}>Important updates are also sent to your email. Messages stay in your chats.</p>
+    </div>
+  );
 }

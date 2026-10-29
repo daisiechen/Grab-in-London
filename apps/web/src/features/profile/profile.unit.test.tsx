@@ -35,7 +35,7 @@ async function fillRequired() {
 describe('profile gate (T05)', () => {
   it('requires the 18+/community acknowledgement before any write', async () => {
     const stub = gateStub();
-    renderApp(stub.fetch, '/profile/edit?returnTo=%2Fprofile');
+    renderApp(stub.fetch, '/profile-setup?returnTo=%2Fprofile');
     await fillRequired();
     await userEvent.click(screen.getByRole('button', { name: /Take your seat/ }));
     expect((await screen.findByRole('alert')).textContent).toBe('Confirm the age and community acknowledgement to continue.');
@@ -45,7 +45,7 @@ describe('profile gate (T05)', () => {
   it('saves with If-Match and consent versions, then returns without replaying the interrupted action', async () => {
     const stub = gateStub();
     saveDraft('apply:m1', { intro: 'Hello, I would love to join your table!' });
-    renderApp(stub.fetch, '/profile/edit?returnTo=%2Fprofile');
+    renderApp(stub.fetch, '/profile-setup?returnTo=%2Fprofile');
     await fillRequired();
     await userEvent.click(screen.getByLabelText(/I’m 18 or older/));
     await userEvent.click(screen.getByRole('button', { name: /Take your seat/ }));
@@ -70,14 +70,14 @@ describe('profile gate (T05)', () => {
       getMe: () => ok(me()),
       updateMe: () => fail(409, 'VERSION_CONFLICT', { currentVersion: '5' }),
     });
-    renderApp(stub.fetch, '/profile/edit');
-    const name = await screen.findByLabelText('Your name');
+    renderApp(stub.fetch, '/profile-edit');
+    const name = await screen.findByLabelText('First name');
     await userEvent.clear(name);
     await userEvent.type(name, 'Sam R');
     await userEvent.click(screen.getByRole('button', { name: /Save profile/ }));
     expect((await screen.findByRole('alert')).textContent).toMatch(/updated elsewhere/);
     expect(stub.callsTo('getMe').length).toBeGreaterThanOrEqual(2);
-    expect((screen.getByLabelText('Your name') as HTMLInputElement).value).toBe('Sam R');
+    expect((screen.getByLabelText('First name') as HTMLInputElement).value).toBe('Sam R');
   });
 
   it('maps server field errors onto fields', async () => {
@@ -86,15 +86,15 @@ describe('profile gate (T05)', () => {
       getMe: () => ok(me()),
       updateMe: () => fail(422, 'VALIDATION_FAILED', { fieldErrors: { displayName: 'Name is not allowed.' } }),
     });
-    renderApp(stub.fetch, '/profile/edit');
+    renderApp(stub.fetch, '/profile-edit');
     await userEvent.click(await screen.findByRole('button', { name: /Save profile/ }));
     expect(await screen.findByText('Name is not allowed.')).toBeTruthy();
   });
 
   it('sends a guest to sign-in with the edit page as return target', async () => {
     const stub = createFetchStub({ getSession: () => fail(401, 'AUTH_REQUIRED') });
-    renderApp(stub.fetch, '/profile/edit');
-    expect(await screen.findByRole('heading', { name: 'Let’s keep in touch.' })).toBeTruthy();
+    renderApp(stub.fetch, '/profile-edit');
+    expect(await screen.findByRole('button', { name: /Continue with email/ })).toBeTruthy();
   });
 });
 
@@ -111,7 +111,7 @@ describe('public profile (T05)', () => {
     renderApp(stub.fetch, `/profiles/${HOST_ID}`);
     expect(await screen.findByRole('heading', { level: 1, name: 'Maya Chen' })).toBeTruthy();
     expect(screen.getByText(/Made everyone feel included/)).toBeTruthy();
-    expect(screen.getByText('English & Chinese', { exact: false })).toBeTruthy();
+    expect(screen.getByText('English · Mandarin', { exact: false })).toBeTruthy();
     expect(stub.callsTo('getPublicProfile')[0]!.params.userId).toBe(HOST_ID);
   });
 });

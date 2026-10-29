@@ -28,5 +28,5 @@ export function ObservedMeal({meal,requestId,children}:{meal:Meal;requestId:stri
     observer.observe(ref.current);document.addEventListener('visibilitychange',start);
     return()=>{stop();observer.disconnect();document.removeEventListener('visibilitychange',start);};
   },[eligible,meal.id,meal.startsAt.instant,meal.closesAt.instant,requestId,telemetry.enabled]);
-  return <div ref={ref} className="list-meal">{children}</div>;
+  return <div ref={ref} className="observed">{children}</div>;
 }

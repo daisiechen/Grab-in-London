@@ -28,7 +28,7 @@ describe('apply (T09)', () => {
     const box = await screen.findByLabelText('Your introduction');
     await userEvent.type(box, 'Too short');
     await userEvent.click(screen.getByRole('button', { name: /Send request/ }));
-    expect((await screen.findByRole('alert')).textContent).toBe('Write an introduction of 20–300 characters.');
+    expect((await screen.findByRole('alert')).textContent).toBe('Write at least 20 characters so Maya Chen can get to know you.');
     expect(s.callsTo('applyMeal')).toHaveLength(0);
     await userEvent.clear(box);
     await userEvent.type(box, INTRO);
@@ -45,7 +45,7 @@ describe('apply (T09)', () => {
     renderApp(s.fetch, `/meals/${MEAL_ID}/apply`);
     await userEvent.type(await screen.findByLabelText('Your introduction'), INTRO);
     await userEvent.click(screen.getByRole('button', { name: /Send request/ }));
-    expect(await screen.findByRole('heading', { name: 'Let’s keep in touch.' })).toBeTruthy();
+    expect(await screen.findByRole('button', { name: /Continue with email/ })).toBeTruthy();
     expect(loadDraft<{ intro: string }>(`apply:${MEAL_ID}`)?.intro).toBe(INTRO);
     expect(s.callsTo('applyMeal')).toHaveLength(0);
   });
@@ -63,7 +63,7 @@ describe('apply (T09)', () => {
     renderApp(s.fetch, `/meals/${MEAL_ID}/apply`);
     await userEvent.type(await screen.findByLabelText('Your introduction'), INTRO);
     await userEvent.click(screen.getByRole('button', { name: /Send request/ }));
-    expect((await screen.findByRole('alert')).textContent).toMatch(/declined, so you can’t apply again/);
+    expect((await screen.findByRole('alert')).textContent).toMatch(/can’t accept another request from you/);
     expect((screen.getByLabelText('Your introduction') as HTMLTextAreaElement).value).toBe(INTRO);
   });
 
@@ -79,6 +79,8 @@ describe('apply (T09)', () => {
   it('withdraws a pending request after confirmation using the application version', async () => {
     const s = stub({ myApplication: app('PENDING', '4'), allowed: ['WITHDRAW'] });
     renderApp(s.fetch, `/meals/${MEAL_ID}/apply`);
+    expect(await screen.findByRole('heading', { name: 'Your hello is on its way.' })).toBeTruthy();
+    expect(screen.getByRole('img', { name: /Application progress: Sent, done; Host reviewing, in progress/ })).toBeTruthy();
     await userEvent.click(await screen.findByRole('button', { name: 'Withdraw request' }));
     const dialog = await screen.findByRole('dialog');
     await userEvent.click(within(dialog).getByRole('button', { name: 'Withdraw request' }));
@@ -86,15 +88,20 @@ describe('apply (T09)', () => {
     const call = s.callsTo('withdrawApplication')[0]!;
     expect(call.params.applicationId).toBe(APPLICATION_ID);
     expect(call.headers['if-match']).toBe('"4"');
-    expect(screen.getByRole('button', { name: /Apply again/ })).toBeTruthy();
+    expect(screen.getByRole('link', { name: /Apply again/ }).getAttribute('href')).toBe(`/meals/${MEAL_ID}/apply`);
   });
 
-  it('a confirmed guest can cancel their place (meal version), with no refund/payment wording', async () => {
+  it('a confirmed guest’s status opens the group chat and the meal page offers Cancel my place (meal version)', async () => {
     const s = stub({ myApplication: app('CONFIRMED', '5'), allowed: ['LEAVE', 'OPEN_GROUP'] });
-    renderApp(s.fetch, `/meals/${MEAL_ID}/apply`);
-    await userEvent.click(await screen.findByRole('button', { name: 'Cancel your place' }));
+    s.on('getMeal', () => ok({ meal: meal({ allowedActions: ['LEAVE', 'OPEN_GROUP'] }), myApplication: app('CONFIRMED', '5'), conversationId: '13131313-1313-4131-8131-131313131313' }));
+    renderApp(s.fetch, `/meals/${MEAL_ID}/status`);
+    expect(await screen.findByRole('heading', { name: 'You’re at the table.' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: /Open group chat/ }).getAttribute('href')).toBe('/chat/13131313-1313-4131-8131-131313131313');
+    await userEvent.click(screen.getByRole('link', { name: 'View Friday dinner & new faces' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Cancel my place' }));
     const dialog = await screen.findByRole('dialog');
-    expect(within(dialog).getByText(/group chat stays open/)).toBeTruthy();
+    expect(within(dialog).getByText(/You stay in the group chat/)).toBeTruthy();
+    expect(dialog.textContent).not.toMatch(/refund|payment/i);
     await userEvent.click(within(dialog).getByRole('button', { name: 'Cancel my place' }));
     await waitFor(() => expect(s.callsTo('leaveMeal')).toHaveLength(1));
     expect(s.callsTo('leaveMeal')[0]!.headers['if-match']).toBe('"7"');

@@ -14,7 +14,7 @@ function hostStub(decide: () => StubResponse, mealOver: Record<string, unknown> 
   let state = 'PENDING';
   return createFetchStub({
     getSession: () => ok(session({ id: HOST_ID })),
-    getMeal: () => ok({ meal: meal({ allowedActions: ['REVIEW_APPLICATIONS', 'CANCEL', 'DECLARE_BOOKING', 'EDIT'], ...mealOver }), myApplication: null, conversationId: null }),
+    getMeal: () => ok({ meal: meal({ allowedActions: ['REVIEW_APPLICATIONS', 'CANCEL', 'DECLARE_BOOKING', 'EDIT'], members: [publicProfile(HOST_ID, 'Maya Chen'), ...(state === 'CONFIRMED' ? [publicProfile(USER_ID, 'Emma Hill')] : [])], ...mealOver }), myApplication: null, conversationId: null }),
     listApplications: () => page([{ ...pendingApp(), state }]),
     decideApplication: () => { const r = decide(); if (r.status === 200) state = 'CONFIRMED'; return r; },
     cancelMeal: () => ok(meal({ status: 'CANCELLED', cancelReason: 'booking' })),
@@ -26,19 +26,21 @@ describe('host decisions (T10)', () => {
   it('approves with Application.version and refreshes the list', async () => {
     const s = hostStub(() => ok({ application: { ...pendingApp('2'), state: 'CONFIRMED' }, mealVersion: '8', conversationId: null }));
     renderApp(s.fetch, `/meals/${MEAL_ID}/host`);
-    await userEvent.click(await screen.findByRole('button', { name: /Approve/ }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Approve Emma Hill' }));
     await waitFor(() => expect(s.callsTo('decideApplication')).toHaveLength(1));
     const call = s.callsTo('decideApplication')[0]!;
     expect(call.body).toEqual({ decision: 'APPROVE' });
     expect(call.headers['if-match']).toBe('"1"');
-    expect(await screen.findByRole('heading', { name: 'Confirmed guests' })).toBeTruthy();
+    expect(await screen.findByText('Emma Hill has a seat.')).toBeTruthy();
+    expect((await screen.findByRole('link', { name: 'View Emma Hill’s profile' })).getAttribute('href')).toBe(`/profiles/${USER_ID}`);
+    expect(screen.getByRole('heading', { name: 'Requests · 0' })).toBeTruthy();
     expect(s.callsTo('listApplications').length).toBeGreaterThanOrEqual(2);
   });
 
   it('on MEAL_FULL shows the reason, refreshes, and does not retry the decision', async () => {
     const s = hostStub(() => fail(409, 'MEAL_FULL'));
     renderApp(s.fetch, `/meals/${MEAL_ID}/host`);
-    await userEvent.click(await screen.findByRole('button', { name: /Approve/ }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Approve Emma Hill' }));
     expect((await screen.findByRole('alert')).textContent).toBe('This table is full.');
     await waitFor(() => expect(s.callsTo('getMeal').length).toBeGreaterThanOrEqual(2));
     expect(s.callsTo('decideApplication')).toHaveLength(1);
@@ -47,9 +49,9 @@ describe('host decisions (T10)', () => {
   it('declining is final and needs confirmation', async () => {
     const s = hostStub(() => ok({ application: { ...pendingApp('2'), state: 'DECLINED' }, mealVersion: '8', conversationId: null }));
     renderApp(s.fetch, `/meals/${MEAL_ID}/host`);
-    await userEvent.click(await screen.findByRole('button', { name: 'Decline' }));
-    const dialog = await screen.findByRole('dialog');
-    expect(within(dialog).getByText(/won’t be able to apply to this meal again/)).toBeTruthy();
+    await userEvent.click(await screen.findByRole('button', { name: 'Decline Emma Hill' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Decline Emma Hill?' });
+    expect(within(dialog).getByText(/can’t request this meal again/)).toBeTruthy();
     expect(s.callsTo('decideApplication')).toHaveLength(0);
     await userEvent.click(within(dialog).getByRole('button', { name: 'Decline request' }));
     await waitFor(() => expect(s.callsTo('decideApplication')[0]?.body).toEqual({ decision: 'DECLINE' }));
@@ -58,10 +60,11 @@ describe('host decisions (T10)', () => {
   it('cancels the whole meal with a host reason and the meal version', async () => {
     const s = hostStub(() => ok({}));
     renderApp(s.fetch, `/meals/${MEAL_ID}/host`);
-    await userEvent.click(await screen.findByRole('button', { name: 'Cancel this meal' }));
-    const dialog = await screen.findByRole('dialog');
+    await userEvent.click(await screen.findByRole('button', { name: 'Cancel meal for everyone' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Cancel this meal?' });
+    expect((within(dialog).getByRole('button', { name: 'Cancel meal for everyone' }) as HTMLButtonElement).disabled).toBe(true);
     expect(within(dialog).getByText(/You must cancel the restaurant reservation yourself/)).toBeTruthy();
-    await userEvent.click(within(dialog).getByLabelText('Restaurant arrangements'));
+    await userEvent.click(within(dialog).getByLabelText('The restaurant booking fell through'));
     await userEvent.click(within(dialog).getByRole('button', { name: 'Cancel meal for everyone' }));
     await waitFor(() => expect(s.callsTo('cancelMeal')).toHaveLength(1));
     const call = s.callsTo('cancelMeal')[0]!;
@@ -75,9 +78,10 @@ describe('host decisions (T10)', () => {
       confirmedCount: 3,
     });
     renderApp(s.fetch, `/meals/${MEAL_ID}/host`);
-    expect(await screen.findByText(/confirmed guest count changed/)).toBeTruthy();
-    await userEvent.click(screen.getByLabelText('Booked with the restaurant'));
-    await userEvent.click(screen.getByRole('button', { name: 'Update reservation status' }));
+    expect(await screen.findByText(/Your table changed since you reported this booking/)).toBeTruthy();
+    await userEvent.click(screen.getByRole('button', { name: 'Update reservation' }));
+    await userEvent.click(screen.getByLabelText('Booked'));
+    await userEvent.click(screen.getByRole('button', { name: 'Save reservation status' }));
     await waitFor(() => expect(s.callsTo('declareBooking')[0]?.body).toEqual({ status: 'REPORTED_CONFIRMED', count: 3 }));
   });
 
@@ -88,7 +92,8 @@ describe('host decisions (T10)', () => {
       listApplications: () => page([pendingApp()]),
     });
     renderApp(s.fetch, `/meals/${MEAL_ID}/host`);
-    expect(await screen.findByText('Applications are closed')).toBeTruthy();
-    expect(screen.queryByRole('button', { name: /Approve/ })).toBeNull();
+    expect(await screen.findByText('Applications have closed, so requests can’t be decided any more.')).toBeTruthy();
+    expect((screen.getByRole('button', { name: 'Approve Emma Hill' }) as HTMLButtonElement).disabled).toBe(true);
+    expect(screen.queryByRole('button', { name: 'Cancel meal for everyone' })).toBeNull();
   });
 });

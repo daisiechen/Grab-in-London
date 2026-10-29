@@ -15,8 +15,8 @@ export function LegalRedirect({ path, navigate = (url) => window.location.replac
   const shouldRedirect = pathname === path;
   useEffect(() => { if (shouldRedirect) navigate(target); }, [navigate, shouldRedirect, target]);
   return (
-    <div className="body-pad empty">
-      <p>{shouldRedirect ? 'Opening ' : 'This page is available at '}<a href={target}>fancyabite.uk{target}</a></p>
+    <div className="scroll">
+      <p className="prose">{shouldRedirect ? 'Opening ' : 'This page is available at '}<a href={target}>fancyabite.uk{target}</a></p>
     </div>
   );
 }

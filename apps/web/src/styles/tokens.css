@@ -1,4 +1,7 @@
-/* Visual tokens from demo/DESIGN.md frontmatter and demo/src/prototype.css (.grab-app). */
+/*
+ * Visual tokens: the same values as apps/ios/src/ui/tokens.ts (demo/DESIGN.md), so web and iOS
+ * read as one product. Single light theme, Arial/Helvetica, no web fonts (web spec §7).
+ */
 :root {
   --forest: #123f35;
   --ink: #10241f;
@@ -7,11 +10,27 @@
   --surface: #f5f6f1;
   --peach: #ffb49b;
   --danger: #a93b32;
-  --radius: 11px;
-  --radius-sm: 7px;
-  --radius-lg: 19px;
-  --page-gutter: 21px;
-  --nav-height: 71px;
+  --white: #ffffff;
+  --sec-border: #b8c8bd;
+  --selected: #e8f0ea;
+  --notice: #f2f5ee;
+  --notice-ink: #607160;
+  --venue: #46594d;
+  --prose: #55625a;
+  --inactive: #818680;
+  --paper: #f5f2e8;
+  --r-sm: 7px;
+  --r-md: 11px;
+  --r-lg: 19px;
+  --button: 45px;
+  --field: 43px;
+  --page: 16px;
+  --bar: 71px;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
+  --content: 720px;
+  --wide: 1168px;
+}
+@media (min-width: 768px) {
+  :root { --page: 24px; }
 }

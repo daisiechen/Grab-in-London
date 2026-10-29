@@ -273,3 +273,54 @@ fancyabite.uk
 - 不做 Ask Fancy（与 iOS 一致，本版关闭）。
 - 不做 Android App 相关的横幅或深链。
 - 法律页面（隐私、Cookie、社区准则、条款）的正文需法律审核后提供，原型只放入口。
+
+## 14. 实施记录
+
+### 14.1 审计（2026-10-29，`apps/web` 对照本规范 §2.3 与 iOS 当前实现）
+
+`apps/web` 是早期阶段按 Demo 搭的单列 480px 外壳，数据层（`@fancy/client` Cookie + CSRF、`Intent` 幂等键、401 清空私有缓存、`useQuery`、`poller`、分析事件）可直接沿用；界面、路由和若干流程落后于本规范和 iOS。差距清单（状态列在实施过程中更新）：
+
+| # | 范围 | 差距 | 状态 |
+| --- | --- | --- | --- |
+| G1 | 视觉系统 | 仍是 Demo 早期样式（全大写眉题、顶部细条标题栏、详情大头图、下划线文字链接），未用 iOS `PageHeader` / `FloatingBack` / `MealCard` / `LinkRow` / 必填 `*` 等现行组件与令牌 | 已做（W-P1）：`styles/tokens.css` 与 iOS 令牌一致；`ui/components.tsx` 对应 iOS PageHeader、返回圆钮、MealCard、LinkRow、必填 `*`、ChoiceGroup、Notice；未迁移页面经共享组件先换新样式 |
+| G2 | 响应式 | 全站最大宽 480px；无平板顶部导航、无桌面双栏（发现左列表右地图、饭局页右侧吸顶卡、主页左资料卡、登录左图右表单） | 已做（W-P1）：手机底部标签栏（含 Create 圆钮）、≥768 顶部导航与 720px 内容列、≥1024 发现双栏、饭局页吸顶卡、主页双栏 |
+| G3 | 首页 | 无首页，`/` 直接跳 `/discover`；无页脚 | 已做（W-P1）：`/` 首页 + 页脚；已登录跳 `/discover` |
+| G4 | 发现 | 地图为 Google JS 单点标记 + “Areas”列表；iOS 为插画地图 + 片区数字标记 + 选中片区优先、“More nearby”，列表/地图切换 | 已做（W-P1）：插画地图 + 片区数字标记 + More nearby，列表/地图切换，桌面左列表右地图；筛选、视图、片区写入网址，返回靠浏览历史 |
+| G5 | 饭局页 | 无 `/meals/{id}/{slug}` 网址与规范地址跳转；无分享；无 Who’s coming 成员行与空位；无吸底主操作及各状态文案；无撤回/取消座位确认面板、取消条款、举报饭局入口 | 已做（W-P1）：slug 网址与规范跳转、分享（系统分享/面板）、Who’s coming、主操作各状态、撤回/取消座位确认、取消条款页与举报入口 |
+| G6 | 公开主页 | 无生活状态标签、无 Report this profile 行；拉黑入口文案与 iOS 不同；未 `noindex` | 已做（W-P1）：noindex、Report this profile、iOS 拉黑确认；生活状态仍缺接口字段（同 iOS） |
+| G7 | 路由 | 与 iOS 路径不一致：群聊 `/inbox/:id`（iOS `/chat/:id`）、`/profile/edit`（`/profile-edit`）、无 `/profile-setup`、无 `/meals/:id/status`（申请页兼做状态）、`/inbox/notifications`（`/notifications`）、`/settings/deletion`（`/delete-account` + `/deletion-status`）、举报为面板（iOS `/report` 页）、无 `/blocked-members`、`/cancellation-terms`、`/get-app` | 已做（W-P3）：路径全部与 iOS 一致（`/meals/:id/status`、`/profile-setup`、`/profile-edit`、`/chat/:id`、`/notifications`、`/report`、`/blocked-members`、`/delete-account`、`/deletion-status`、`/cancellation-terms`、`/get-app`），旧路径重定向 |
+| G8 | 登录 | 邮箱与验证码同页；无 iOS 的 `/email` 分步、来自申请时的 host 说明、Keep exploring；登录后首次分析授权面板需对齐 | 已做（W-P2）：品牌入口（申请来源时显示 host 与返回说明）、邮箱/验证码分步（倒计时、过期提示、频率限制）、Keep exploring；`signupSource` 内存采集并随 email start/verify、OAuth start 发送；登录后首次弹分析授权 |
+| G9 | 资料 | 首次补全资料与编辑共用一页；无头像上传/移除（iOS `uploadAvatar` / `removeAvatar`）；必填项无 `*` | 已做（W-P2）：`/profile-setup`（单选语言、18+ 确认与条款链接）与 `/profile-edit`（多选语言、工作/学校/家乡）分开；头像上传/更换/移除（浏览器裁剪为 512px JPEG）；必填 `*`、逐项报错并滚动到首个错误 |
+| G10 | 申请 | 无独立状态页（五种状态文案、三步进度、Withdraw 确认）；草稿跨登录保留已有 | 已做（W-P2）：申请页（摘要卡、计数、资料行、草稿跨登录保留）与独立状态页（五种文案、三步进度、待审时 15 秒刷新、撤回确认、Track in Inbox 聚焦） |
+| G11 | 我的饭局 | 分组与 iOS（Upcoming / Requests / Hosting / Past）及卡片状态行不一致 | 已做（W-P2）：五个分区（Upcoming/Applications/Hosting/Past/Cancelled）与 iOS 行状态、Manage、Leave feedback、Open group chat；分区写入网址；底部 Host a meal |
+| G12 | 收件箱 | 排序与聚焦（iOS：未读优先、最近活动排序、从通知进入时定位）、通知页重做（分组、已读、深链）未同步 | 已做（W-P3）：iOS 收件箱（Chats/Applications 分区与计数、群聊行头像与未读数、申请进度卡、空状态、私信规则提示）；申请后进入收件箱自动定位到该饭局的群聊或 Applications；通知页按 iOS 标签与图标、未读加粗、点开即已读并跳转、单独“Mark as read”；铃铛未读红点 |
+| G13 | 群聊 | 无消息举报（iOS 长按举报，举报者本地隐藏该消息）；被拉黑成员/已离开状态说明需对齐 | 已做（W-P3）：他人消息旁“Message options”按钮（键盘可达，右键/长按亦可）→ Report message；举报页从内存取发送者与摘录，不进网址；回执后该消息对举报者显示“You reported this message”；群设置面板列出同桌成员、host 管理入口、退出/解散确认 |
+| G14 | 举报 | 仅面板；无 `/report` 页与举报状态页对齐；需为后续“举报原因（5 类）”预留必选下拉 | 已做（W-P1/W-P3）：`/report` 页，必选 5 类原因（2026-10-29 合入），会员/饭局/消息三种对象，回执与状态查询 |
+| G15 | 拉黑 | 无“已拉黑成员”列表页与解除拉黑 | 已做（W-P3）：`/blocked-members` 列表、查看资料、解除拉黑确认（带版本号） |
+| G16 | 发起/编辑 | Web 为旧版单页步骤；iOS 已改为四步（地点与时间 → 介绍 → 费用与人数 → 预览），编辑饭局同样四步、首位客人获批后锁定安排 | 已做（W-P4）：发起与编辑按 iOS 四步（Arrange / Introduce / Costs / Review），每步独立网址（`/create`、`/create/introduce`…；`/meals/:id/edit`…），浏览器后退即上一步；餐厅下拉（打开即列出伦敦中心、可按名搜索、预览后确认）、人数步进器、日期/时间就地面板（48 个半点格、截止时间晚于 T−30 的格不可选）、截止时间默认跟随开饭前 60 分钟、预算即时校验、订位声明逐字同 iOS、预览页分组卡片与“Edit”、BST/GMT 二选一面板、不存在时间报错并可回到时间；编辑沿用四步、只提交改动（If-Match）、锁定/截止/取消时说明原因并返回宾客名单；发布或保存后退出整个向导（后退不回到空向导） |
+| G17 | host 管理 | 审批/拒绝/取消饭局、订位声明的文案与确认面板需对齐 iOS | 已做（W-P4）：宾客名单按 iOS：座位进度条（含最低人数刻度）、请求卡（申请人一行背景、留言、拒绝确认面板“Keep the request / Decline request”、满员与截止后不可批）、At the table、Earlier requests、订位状态（标签、过期提示、展开式“Update reservation”含人数）、安排说明与“Edit meal”、取消饭局须选原因；结果就地显示，冲突后刷新而不重放 |
+| G18 | 饭后 | iOS 只有出席确认后才能评价/再约（出席门槛）；Web 未做门槛 | 已做（W-P4）：饭后页按 iOS：出席自报（无默认选择）、同桌出席一览（谁报告的）、host 代报需先选再“Review”确认、私密整体评分仅在本人出席后开放、对某位同桌的公开评语与再约仅在双方出席后开放（否则说明原因）、再约选择私密、互选后可打招呼、撤回需确认；每项保存结果就地显示；举报改为 `/report?targetType=USER` 页 |
+| G19 | 设置与删除 | 删除账号需重新认证（`startReauth` → `requestDeletion`）并显示状态页；`ACCOUNT_SUSPENDED` 文案已有；设置里的法律链接（隐私、条款、社区准则、支持）需与 iOS 一致 | 已做（W-P2/W-P4）：设置页按 iOS 分组；删除账号按 iOS：说明 + 红色“Delete my account”，需要时按登录方式重新认证（邮箱验证码就地输入，Google/Apple 跳转后回到本页），同一意图沿用同一幂等键；回执先存入本标签页再请求，完成页显示删除编号（可复制）与“Check deletion status”；`/deletion-status` 独立页，凭编号查询（不需登录、编号只放请求体）并可忘记已存编号；产品问卷 `/survey` 按 iOS 文案与选项 |
+| G20 | SEO | 无每页标题/描述、无 canonical、无 OG/JSON-LD、无 robots/sitemap；纯前端无法给链接预览机器人输出 meta | 已做（W-P1）：前端 `useDocumentMeta`；`apps/web/server/serve.ts` 服务器输出 title/description/canonical/OG/JSON-LD、301 规范网址、robots.txt、sitemap.xml |
+| G21 | 无障碍 | 单 `h1`、焦点环、地图标记可读名称、表单错误播报需逐页核对 | 已做（W-P1–P4）：每页唯一 `h1`（截图脚本逐页检查）、跳转主内容链接、路由切换聚焦主区域、统一焦点环、表单错误 `role=alert` 与 `aria-describedby`、步进器/时间格/日期格为原生控件且可键盘操作（方向键移动、Enter/Escape 关闭并回到触发按钮）、图片与地图标记有可读名称、触控目标不小于 44px；三种宽度无横向滚动 |
+| G22 | Ask Fancy | Web 仍显示助手入口；iOS 本版已关闭（`ASSISTANT_ENABLED = false`） | 已做（W-P1）：入口已移除，代码与测试保留 |
+
+已与本规范 §2.3 的决定对齐的新增决定：完整功能下，Web 底部标签栏与 iOS 相同带中间 Create meal 圆钮，平板/桌面顶部导航带 “Host a meal” 按钮（§7 有意差异 1 作废）。
+
+### 14.2 实施决定（W-P1–W-P4，2026-10-29）
+
+- **返回**：返回圆钮优先用浏览器历史；从分享链接直接进入（无站内上一页）时回到 `/discover`。不再用导航 state 携带返回地址，发现页的筛选、视图（`view=list`）和选中片区（`area=`）都在网址里。
+- **网址**：饭局页规范地址 `/meals/{id}/{slug}`（`src/seo/meal-seo.ts`）；slug 与子页面重名（apply/status/host/edit）时加 `-meal`。前端用替换跳转到规范地址；真正的 301 由 `apps/web/server/serve.ts` 给出。
+- **服务器头部**：`apps/web/server/serve.ts`（Node 24，无依赖）托管构建产物、代理 `/v1`、为首页/发现/饭局/主页输出头部，并提供 robots.txt、sitemap.xml。Seoul 部署包用 nginx 直接托管构建产物时，需把 HTML 请求转给此服务（或改用同等的 nginx 规则），否则预览机器人拿不到饭局标题；分享图暂用品牌图（缺按饭局生成的文字卡片接口，见 §11）。
+- **分析授权**：只在本标签页刚完成登录后弹一次（`lib/freshSignIn.ts`），不在登录、关联、补全资料步骤上弹；之后在资料页的 Analytics preferences 行修改。与 iOS（每次会话未选择时弹）有意差异：网页刷新频繁，避免反复打扰。
+- **注册来源**：`lib/attribution.ts` 只在内存中记录落地网址的 utm 参数或“从饭局分享链接进入”，不写 Cookie/存储；注册请求带 `signupSource`（W-P2 接入）。
+- **登录分步**（W-P2）：品牌入口、邮箱、验证码是 `/sign-in` 一页内的三步（返回圆钮回上一步），不拆成 `/sign-in/email`、`/sign-in/code`，避免刷新丢失验证码会话；返回地址参数为 `returnTo`（也接受 `next`）。契约白名单外的 Web 页面（如 `/chat`、`/profile-setup`）只在本地返回，不作为 `returnTarget` 发给 API。
+- **收件箱群聊行**（W-P3）：副标题写 “Meal group”，不写 iOS 的 “Seat confirmed · Meal group”——收件箱只说明群聊权限，不能断言座位仍确认（QA-JOURNEY-003，取消座位后群聊仍可保留）。建议 iOS 同步改。
+- **消息举报入口**（W-P3）：网页没有长按，改为每条他人消息旁的 “Message options” 按钮（键盘可达），右键/触屏长按也能打开同一面板。
+- **QA 证据路径**：`docs/qa/evidence/2026-10-21/automated-runs.json` 引用了若干 Web 测试文件路径；这些文件保留并改写为新行为的测试，不删除。
+- **发起向导网址**（W-P4）：四步各有网址，浏览器后退即上一步；发布/保存后通过历史回到向导入口并替换为新饭局页（或宾客名单），效果同 iOS 关闭整个向导。草稿仍存本标签页（只存餐厅身份），餐厅名称地址只放内存。旧地址 `/create/terms` 重定向到 `/cancellation-terms`。
+- **换餐厅清空时间**（W-P4）：确认另一家餐厅时清空已选时间与两项确认（PRD FR05、QA-CREATE-004）；iOS 只清订位确认、保留时间，属 iOS 待对齐项。
+- **时间面板键盘**（W-P4）：日期/时间格为原生单选；鼠标/触屏点选即关闭面板，键盘用方向键移动、Enter 确认、Escape 关闭，焦点回到触发按钮。
+- **未开放饭后页**（W-P4）：饭局未结束或不在开饭名单时，服务器返回禁止，页面按 iOS 显示原因与“Try again”；截图用的饭后状态为合成数据（真实资料），写操作只由单元测试覆盖。
+- **删除账号**（W-P4）：与 iOS 相同不再要求额外勾选；红色按钮即确认，服务器要求近期认证时就地完成重新认证后继续同一请求（同一幂等键、同一回执）。回执仍只存于本标签页，完成页提供复制。
+- **样式清理**（W-P4）：删除旧 `styles/features.css` 与 `app.css` 末尾的兼容样式；全部页面使用新设计系统类名。
