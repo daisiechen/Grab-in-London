@@ -80,6 +80,18 @@ export const authOperations = [
     success: { status: 201, data: Obj({ authorizationUrl: T.String({ format: 'uri', maxLength: 4000 }), stateTransactionId: Uuid }) },
     errors: ['FORBIDDEN', 'PROVIDER_UNAVAILABLE'],
   }),
+  /**
+   * Admin console (WEB only): Universal Login with the tenant's enabled connections and acr_values
+   * requesting multi-factor. The provider returns to /v1/auth/oauth/callback, which sets the session
+   * cookie and redirects (303) to /admin/. Never creates or links accounts.
+   */
+  op({
+    operationId: 'startStaffSignIn', method: 'POST', path: '/auth/staff/start', summary: 'Begin admin console sign-in (Universal Login, MFA requested)',
+    auth: 'public', write: 'clientRequestId', ifMatch: false,
+    body: Obj({ clientRequestId: ClientRequestId }),
+    success: { status: 201, data: Obj({ authorizationUrl: T.String({ format: 'uri', maxLength: 4000 }), stateTransactionId: Uuid }) },
+    errors: ['FORBIDDEN', 'PROVIDER_UNAVAILABLE'],
+  }),
   op({
     operationId: 'oauthCallback', method: 'GET', path: '/auth/oauth/callback', summary: 'Provider redirect target',
     auth: 'public', write: 'read', ifMatch: false,

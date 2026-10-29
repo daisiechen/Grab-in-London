@@ -699,6 +699,155 @@
         }
       }
     },
+    "/v1/auth/staff/start": {
+      "post": {
+        "operationId": "startStaffSignIn",
+        "summary": "Begin admin console sign-in (Universal Login, MFA requested)",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "additionalProperties": false,
+                      "type": "object",
+                      "required": [
+                        "authorizationUrl",
+                        "stateTransactionId"
+                      ],
+                      "properties": {
+                        "authorizationUrl": {
+                          "format": "uri",
+                          "maxLength": 4000,
+                          "type": "string"
+                        },
+                        "stateTransactionId": {
+                          "format": "uuid",
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_REQUEST"
+            ]
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "FORBIDDEN"
+            ]
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "VALIDATION_FAILED"
+            ]
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "RATE_LIMITED"
+            ]
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INTERNAL_ERROR"
+            ]
+          },
+          "503": {
+            "description": "PROVIDER_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "PROVIDER_UNAVAILABLE"
+            ]
+          }
+        },
+        "x-auth": "public",
+        "x-write-protocol": "clientRequestId",
+        "x-if-match": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "clientRequestId"
+                ],
+                "properties": {
+                  "clientRequestId": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/auth/oauth/callback": {
       "get": {
         "operationId": "oauthCallback",
@@ -849,7 +998,7 @@
             }
           },
           "303": {
-            "description": "SUPPORT_CLI only: registered IPv4 loopback callback with a 60-second PKCE-bound handoff code and start transaction state; no access or refresh token.",
+            "description": "SUPPORT_CLI: registered IPv4 loopback callback with a 60-second PKCE-bound handoff code and start transaction state; no access or refresh token. Admin console sign-in (startStaffSignIn): <web origin>/admin/ after the session cookie is set, or <web origin>/admin/?signin_error=<ERROR_CODE> when sign-in did not finish.",
             "headers": {
               "Location": {
                 "required": true,

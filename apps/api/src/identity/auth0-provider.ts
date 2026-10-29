@@ -1,10 +1,11 @@
 /**
  * Auth0 adapter (T-04). Email OTP via passwordless start + passwordless OTP grant; Google/Apple
- * via Universal Login authorization code + PKCE. ID tokens are validated with the tenant JWKS
+ * via Universal Login authorization code + PKCE; admin console sign-in via Universal Login with all
+ * enabled connections and MFA requested (acr_values). ID tokens are validated with the tenant JWKS
  * (issuer, audience, nonce, expiry). Real-tenant behaviour is unverified until G-AUTH (T03).
  */
 import { createRemoteJWKSet, jwtVerify, type JWTVerifyGetKey } from 'jose';
-import { ProviderRejectedError, ProviderUnavailableError, type IdentityProvider, type ProviderKind, type VerifiedIdentity } from './provider.ts';
+import { MFA_ACR, ProviderRejectedError, ProviderUnavailableError, type IdentityProvider, type ProviderKind, type StartedProvider, type VerifiedIdentity } from './provider.ts';
 
 export interface Auth0Options {
   domain: string;
@@ -16,6 +17,13 @@ export interface Auth0Options {
 }
 
 const CONNECTIONS: Record<'GOOGLE' | 'APPLE', string> = { GOOGLE: 'google-oauth2', APPLE: 'apple' };
+/** Auth0 subjects are `<connection strategy>|<id>`; only the connections Fancy enables are accepted. */
+const SUBJECT_PROVIDERS: Record<string, ProviderKind> = { email: 'EMAIL', 'google-oauth2': 'GOOGLE', apple: 'APPLE' };
+
+export function providerFromSubject(subject: string): ProviderKind | null {
+  const prefix = subject.split('|', 1)[0]!;
+  return subject.includes('|') && Object.hasOwn(SUBJECT_PROVIDERS, prefix) ? SUBJECT_PROVIDERS[prefix]! : null;
+}
 
 export class Auth0IdentityProvider implements IdentityProvider {
   readonly kind = 'auth0' as const;
@@ -49,13 +57,16 @@ export class Auth0IdentityProvider implements IdentityProvider {
     return { status: response.status, json };
   }
 
-  private async verifyIdToken(idToken: unknown, nonce: string | null, provider: ProviderKind): Promise<VerifiedIdentity> {
+  private async verifyIdToken(idToken: unknown, nonce: string | null, expected: ProviderKind | null): Promise<VerifiedIdentity> {
     if (typeof idToken !== 'string') throw new ProviderRejectedError('missing id_token');
     const { payload } = await jwtVerify(idToken, this.jwks, { issuer: this.issuer, audience: this.o.clientId, clockTolerance: 30 }).catch(() => {
       throw new ProviderRejectedError('id_token failed validation');
     });
     if (nonce !== null && payload.nonce !== nonce) throw new ProviderRejectedError('nonce mismatch');
     if (typeof payload.sub !== 'string') throw new ProviderRejectedError('missing sub');
+    // Staff hosted login lets the user pick a connection: the verified subject says which one it was.
+    const provider = expected ?? providerFromSubject(payload.sub);
+    if (!provider) throw new ProviderRejectedError('unsupported connection');
     const email = typeof payload.email === 'string' ? payload.email.toLowerCase() : null;
     // Auth0 documents amr:[...,"mfa"] as session MFA evidence. Only the verified token's
     // well-formed claim counts: https://auth0.com/blog/preventing-destructive-actions-with-step-up-authentication/
@@ -96,7 +107,19 @@ export class Auth0IdentityProvider implements IdentityProvider {
     return url.toString();
   }
 
-  async exchangeAuthorizationCode(i: { provider: 'GOOGLE' | 'APPLE'; code: string; codeVerifier: string; redirectUri: string; nonce: string }) {
+  staffAuthorizationUrl(i: { state: string; nonce: string; codeChallenge: string; redirectUri: string }) {
+    const url = new URL(`${this.issuer}authorize`);
+    // No `connection`: Universal Login offers the app's enabled connections (email code, Google, Apple).
+    // acr_values asks Auth0 to complete MFA for this login even when the tenant MFA policy is "Never";
+    // the callback still trusts only the verified token's amr, never this request.
+    url.search = new URLSearchParams({
+      response_type: 'code', client_id: this.o.clientId, redirect_uri: i.redirectUri, scope: 'openid email',
+      state: i.state, nonce: i.nonce, code_challenge: i.codeChallenge, code_challenge_method: 'S256', acr_values: MFA_ACR,
+    }).toString();
+    return url.toString();
+  }
+
+  async exchangeAuthorizationCode(i: { provider: StartedProvider; code: string; codeVerifier: string; redirectUri: string; nonce: string }) {
     const { status, json } = await this.post('oauth/token', {
       grant_type: 'authorization_code', client_id: this.o.clientId, client_secret: this.o.clientSecret,
       code: i.code, code_verifier: i.codeVerifier, redirect_uri: i.redirectUri,

@@ -129,8 +129,15 @@ J09（支持）、J10/J11（后台）在 iOS 首发旅程完成后另行安排�
 
 ### 8.4 员工登录
 
-- 开发：`FANCY_LOCAL_ACCEPTANCE=1 FANCY_LOCAL_STAFF_FIXTURE=1 node infra/local-acceptance.ts`，后台 Vite 跑在 Web 同源 5174，用 `qa-staff@example.invalid` / `000000` 在后台登录页登录（合成账号，具备 analyst、data_admin、support 与模拟 MFA）。测试身份适配器与固定验证码在 staging/production 由配置守卫拒绝。
-- 生产：后台必须与 API 同源部署在 `WEB_ORIGIN` 下（cookie 会话 + Origin/CSRF 校验，与 Web 相同）；员工用自己的邮箱验证码登录，MFA 由 Auth0 的 `amr: mfa` 证明，未带 MFA 的会话访问员工接口返回 `REAUTH_REQUIRED`。角色在 `roles` 表按 userId 授予（目前通过数据库，由创始人执行），没有员工管理页。
+- 开发：`FANCY_LOCAL_ACCEPTANCE=1 FANCY_LOCAL_STAFF_FIXTURE=1 node infra/local-acceptance.ts`，后台 Vite 跑在 Web 同源 5174，用 `qa-staff@example.invalid` / `000000` 在后台登录页的邮箱验证码表单登录（合成账号，具备 analyst、data_admin、support 与模拟 MFA）。该表单只在开发构建（`import.meta.env.DEV`）显示；测试身份适配器与固定验证码在 staging/production 由配置守卫拒绝。
+- 生产（2026-10-29 修正）：首次部署后发现，后台原先只有邮箱验证码登录，走 Auth0 passwordless OTP 授权（`/oauth/token`），这种授权无法完成交互式 MFA，员工会话永远拿不到 `amr: mfa`，后台不可用。现改为：
+  - 后台登录页主按钮“安全登录”调用 `POST /v1/auth/staff/start`（`startStaffSignIn`），浏览器跳转到 Auth0 Universal Login 的 `/authorize`：不带 `connection`（由员工在登录页选择租户已为该应用开启的邮箱验证码 / Google / Apple），带 `acr_values=http://schemas.openid.net/pape/policies/2007/06/multi-factor` 要求本次登录完成 MFA。会员 Web/iOS/CLI 的登录不带该参数，会员不被要求 MFA。
+  - 复用现有 OAuth 机制：state/PKCE/nonce 服务端绑定、浏览器绑定 cookie（`__Host-fancy_oauth`）、同源 cookie 会话。回调地址复用已登记的 `https://fancyabite.uk/v1/auth/oauth/callback`（API 的 HTTP 回调），不需要在 Auth0 新增回调；回调校验 ID 令牌后设置会话 cookie，303 跳回固定的 `/admin/`（服务端写死，不是客户端可选的 `returnTarget`，`RETURN_TARGET_PREFIXES` 保持不含 `/admin`）。失败（取消、过期、换了浏览器、服务不可用、身份未关联）都 303 回 `/admin/?signin_error=<错误码>`，后台登录页显示说明并清掉该参数。
+  - 员工登录只接受已关联到现有账号的身份：不新建账号、不进入关联流程（`FORBIDDEN`，事务回滚、无写入）。登录方式由已验证的 `sub` 前缀判断（`email|`、`google-oauth2|`、`apple|`），其他连接拒绝。
+  - MFA 仍只认已验证 ID 令牌里格式正确的 `amr` 含 `mfa`；没有 MFA 的会话访问员工接口仍返回 `REAUTH_REQUIRED`，后台的“需要重新验证”页提供“安全登录”按钮。
+  - 后台生产构建不再显示邮箱验证码表单：仅凭邮箱验证码永远得不到员工权限，会员用 Web 登录即可；会员 App 的邮箱验证码登录不变。
+  - Owner 的 Auth0 控制台步骤见[部署手册](../operations/seoul-production-deploy.zh-CN.md) §5“员工 MFA”，不再需要 Post-Login Action（仅作为 MFA 未被触发时的后备）。
+- 角色在 `roles` 表按 userId 授予（目前通过数据库，由创始人执行），没有员工管理页。
 
 ### 8.5 待用户决定 / 外部关口
 

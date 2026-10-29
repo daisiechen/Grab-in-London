@@ -40,6 +40,9 @@ export interface AdminApi {
   classify(userId: string, input: { classification: ClassificationValue; reason: string }, revision: string, idempotencyKey: string): Promise<ClassificationInfo>;
 
   // Staff sign-in on the Web origin (cookie session). MFA comes from the identity provider.
+  /** Hosted provider login with MFA requested; the browser goes to the returned URL and comes back to /admin/. */
+  startSecureSignIn(): Promise<{ authorizationUrl: string }>;
+  /** Email code (development builds only: an email code alone never carries MFA in production). */
   startSignIn(email: string): Promise<{ challengeId: string }>;
   verifySignIn(challengeId: string, code: string): Promise<SignInOutcome>;
   signOut(): Promise<void>;
@@ -106,6 +109,10 @@ export function createAdminApi(options: AdminApiOptions = {}): AdminApi {
     async classify(userId, input, revision, idempotencyKey) {
       const { data } = await client.call('classifyUser', { params: { userId }, body: input, ifMatch: revision, idempotencyKey });
       return data;
+    },
+    async startSecureSignIn() {
+      const { data } = await client.call('startStaffSignIn', { body: { clientRequestId: newIntentKey() } });
+      return { authorizationUrl: data.authorizationUrl };
     },
     async startSignIn(email) {
       const { data } = await client.call('startEmail', { body: { clientRequestId: newIntentKey(), email, client: 'WEB' } });

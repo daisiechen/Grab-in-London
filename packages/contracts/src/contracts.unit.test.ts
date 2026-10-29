@@ -136,7 +136,7 @@ describe('write protocol', () => {
       else if (def.operationId !== 'deletionStatus') expect(def.write, def.operationId).not.toBe('read');
     }
     const clientRequest = all.filter((d) => d.write === 'clientRequestId').map((d) => d.operationId).sort();
-    expect(clientRequest).toEqual(['createGuestSession', 'exchangeHandoff', 'logout', 'refreshSession', 'startEmail', 'startOAuth', 'startReauth', 'verifyEmail']);
+    expect(clientRequest).toEqual(['createGuestSession', 'exchangeHandoff', 'logout', 'refreshSession', 'startEmail', 'startOAuth', 'startReauth', 'startStaffSignIn', 'verifyEmail']);
     expect(all.filter((d) => d.write === 'resourceKey').map((d) => d.operationId).sort()).toEqual(['markConversationRead', 'ingestEvents', 'sendMessage', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'activityAI', 'resetAI', 'requestAI', 'validateAIDraft'].sort());
   });
 

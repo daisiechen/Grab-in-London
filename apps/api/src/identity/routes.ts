@@ -1,4 +1,4 @@
-import type { FastifyInstance, FastifyRequest } from 'fastify';
+import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { isAllowedReturnTarget } from '@fancy/contracts';
 import { DomainError } from '../common/errors.ts';
 import { appendAudit } from '@fancy/db';
@@ -6,12 +6,12 @@ import { withTransaction } from '../common/transaction.ts';
 import { lockActiveActor } from '../common/actor.ts';
 import { invalidateUserAI,revokeGuestAI } from '../assistant/invalidate.ts';
 import type { AppDeps } from '../http/context.ts';
-import { defineRoute, defineWrite } from '../http/routes.ts';
+import { defineRoute, defineWrite, type HandlerResult } from '../http/routes.ts';
 import { assertWebOrigin, cookieOptions, keyedHash, LINK_BINDER_COOKIE, OAUTH_BINDER_COOKIE, SESSION_COOKIE } from '../http/security.ts';
 import { completeAuthentication, type AuthTxRow } from './flows.ts';
 import { normalizeSignupSource, type SignupSourceInput } from './signup-source.ts';
 import { sessionInfo } from './me.ts';
-import { ProviderRejectedError, ProviderUnavailableError, type IdentityProvider, type VerifiedIdentity } from './provider.ts';
+import { ProviderRejectedError, ProviderUnavailableError, type IdentityProvider, type StartedProvider, type VerifiedIdentity } from './provider.ts';
 import { isProvisionalShell, suspendedError } from './resolve.ts';
 import { assertFreshAuth } from './reauth.ts';
 import { authenticateToken, issueNativeCredentials, revokeAllForUser, revokeFamily, rotateRefresh } from './sessions.ts';
@@ -22,6 +22,8 @@ export const OTP_RESEND_MS = 30_000;
 export const OTP_WINDOW_MS = 15 * 60_000;
 export const OTP_PER_WINDOW = 5;
 export const OAUTH_TTL_MS = 10 * 60_000;
+/** Fixed landing page of the admin console sign-in (not a client-chosen return target). */
+export const STAFF_RETURN_PATH = '/admin/';
 
 type Body<T> = { body: T };
 const asBody = <T>(request: FastifyRequest) => (request as unknown as Body<T>).body;
@@ -98,8 +100,10 @@ async function startOtp(deps: AppDeps, request: FastifyRequest, o: { clientReque
 }
 
 /** Creates an OAUTH transaction; Web transactions are bound to this browser by a cookie. */
-async function startOAuthTx(deps: AppDeps, o: { provider: 'GOOGLE' | 'APPLE'; client: AuthTxRow['client']; purpose: 'LOGIN' | 'REAUTH'; userId: string | null; familyId: string | null; returnTarget: string | null; appChallenge: string | null; loopbackRedirectUri?: string; signupSource?: string | null }) {
-  const redirectUri = redirectUriFor(deps, o.client);
+async function startOAuthTx(deps: AppDeps, o: { provider: StartedProvider; client: AuthTxRow['client']; purpose: 'LOGIN' | 'REAUTH'; userId: string | null; familyId: string | null; returnTarget: string | null; appChallenge: string | null; loopbackRedirectUri?: string; signupSource?: string | null; staff?: boolean }) {
+  // Staff sign-in returns through the API's HTTP callback (already a registered callback URL), which
+  // sets the cookie and redirects to /admin/; member Web sign-in returns through the SPA bridge.
+  const redirectUri = o.staff ? `${deps.config.webOrigin}/v1/auth/oauth/callback` : redirectUriFor(deps, o.client);
   const state = randomToken();
   const nonce = randomToken();
   const verifier = randomToken(48);
@@ -108,9 +112,12 @@ async function startOAuthTx(deps: AppDeps, o: { provider: 'GOOGLE' | 'APPLE'; cl
     `INSERT INTO auth_transactions (kind, purpose, client, user_id, secret_hash, binder_hash, app_challenge, provider, provider_state, return_target, expires_at)
      VALUES ('OAUTH', $1, $2, $3, $4, $5, $6, $7, $8, $9, clock_timestamp() + make_interval(secs => $10::double precision / 1000)) RETURNING id, expires_at`,
     [o.purpose, o.client, o.userId, sha256Hex(state), binder && sha256Hex(binder), o.appChallenge, o.provider,
-      JSON.stringify({ nonce, verifier, redirectUri, ...(o.loopbackRedirectUri ? { loopbackRedirectUri: o.loopbackRedirectUri } : {}), ...(o.familyId ? { familyId: o.familyId } : {}), ...(o.signupSource ? { signupSource: o.signupSource } : {}) }), o.returnTarget, OAUTH_TTL_MS],
+      JSON.stringify({ nonce, verifier, redirectUri, ...(o.staff ? { staff: '1' } : {}), ...(o.loopbackRedirectUri ? { loopbackRedirectUri: o.loopbackRedirectUri } : {}), ...(o.familyId ? { familyId: o.familyId } : {}), ...(o.signupSource ? { signupSource: o.signupSource } : {}) }), o.returnTarget, OAUTH_TTL_MS],
   );
-  const authorizationUrl = deps.identity.authorizationUrl({ provider: o.provider, state, nonce, codeChallenge: pkceChallenge(verifier), redirectUri, forceLogin: o.purpose === 'REAUTH' });
+  const codeChallenge = pkceChallenge(verifier);
+  const authorizationUrl = o.staff
+    ? deps.identity.staffAuthorizationUrl({ state, nonce, codeChallenge, redirectUri })
+    : deps.identity.authorizationUrl({ provider: o.provider!, state, nonce, codeChallenge, redirectUri, forceLogin: o.purpose === 'REAUTH' });
   return { id: rows[0].id as string, expiresAt: (rows[0].expires_at as Date).toISOString(), authorizationUrl, binder };
 }
 
@@ -149,6 +156,35 @@ async function finish(deps: AppDeps, row: AuthTxRow, identity: VerifiedIdentity,
   const bearerGuest=/^Bearer ([A-Za-z0-9_-]{43})$/.exec(request.headers.authorization??'')?.[1];
   const guestToken=request.cookies['__Host-fancy_guest']??bearerGuest;
   return withTransaction(deps.pool, (tx) => completeAuthentication(deps, tx, row, identity, current,guestToken));
+}
+
+/**
+ * Admin console callback: a top-level navigation from the provider, so every outcome is a 303 back to
+ * the console (session cookie set, or `?signin_error=<code>`), never a JSON page. MFA is not checked
+ * here: staff endpoints require the verified `mfa` method and answer REAUTH_REQUIRED without it.
+ */
+async function staffCallback(deps: AppDeps, row: AuthTxRow & { binder_hash: string | null }, query: { code?: string; error?: string }, request: FastifyRequest, reply: FastifyReply): Promise<HandlerResult> {
+  const back = (error?: string) => (response: FastifyReply) => {
+    const location = new URL(STAFF_RETURN_PATH, deps.config.webOrigin);
+    if (error) location.searchParams.set('signin_error', error);
+    response.header('location', location.toString());
+    response.header('cache-control', 'no-store');
+    response.header('referrer-policy', 'no-referrer');
+  };
+  try {
+    const binder = request.cookies[OAUTH_BINDER_COOKIE];
+    if (!row.binder_hash || !binder || sha256Hex(binder) !== row.binder_hash) throw new DomainError('STATE_CONFLICT', 'Finish sign-in in the browser where you started it.');
+    await consume(deps, row.id);
+    reply.clearCookie(OAUTH_BINDER_COOKIE, { path: '/' });
+    if (query.error || !query.code) throw new DomainError('STATE_CONFLICT', 'Sign-in was cancelled.');
+    const identity = await callProvider(() => deps.identity.exchangeAuthorizationCode({ provider: null, code: query.code!, codeVerifier: row.provider_state.verifier!, redirectUri: row.provider_state.redirectUri!, nonce: row.provider_state.nonce! }));
+    const result = await finish(deps, row, identity, request);
+    const signedIn = back();
+    return { status: 303, after: (response) => { result.after?.(response); signedIn(response); } };
+  } catch (error) {
+    if (!(error instanceof DomainError)) throw error;
+    return { status: 303, after: back(error.code) };
+  }
 }
 
 async function authFromRequest(deps: AppDeps, request: FastifyRequest) {
@@ -206,6 +242,13 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
     return { data: { authorizationUrl: started.authorizationUrl, stateTransactionId: started.id } };
   });
 
+  defineRoute(app, deps, 'startStaffSignIn', async ({ request, reply }) => {
+    assertWebOrigin(request, deps.config.webOrigin);
+    const started = await startOAuthTx(deps, { provider: null, client: 'WEB', purpose: 'LOGIN', userId: null, familyId: null, returnTarget: STAFF_RETURN_PATH, appChallenge: null, staff: true });
+    reply.setCookie(OAUTH_BINDER_COOKIE, started.binder!, cookieOptions(OAUTH_TTL_MS / 1000));
+    return { data: { authorizationUrl: started.authorizationUrl, stateTransactionId: started.id } };
+  });
+
   defineRoute(app, deps, 'oauthCallback', async ({ request, reply }) => {
     const query = (request.query ?? {}) as { code?: string; state: string; error?: string };
     const { rows } = await deps.pool.query(
@@ -213,8 +256,9 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
          FROM auth_transactions WHERE secret_hash = $1 AND kind = 'OAUTH' AND consumed_at IS NULL AND expires_at > clock_timestamp()`,
       [sha256Hex(query.state)],
     );
-    const row = rows[0] as (AuthTxRow & { provider: 'GOOGLE' | 'APPLE'; binder_hash: string | null }) | undefined;
+    const row = rows[0] as (AuthTxRow & { provider: StartedProvider; binder_hash: string | null }) | undefined;
     if (!row) throw new DomainError('STATE_CONFLICT', 'This sign-in link has expired. Please start again.');
+    if (row.provider_state.staff === '1') return staffCallback(deps, row, query, request, reply);
     if (row.binder_hash) {
       const binder = request.cookies[OAUTH_BINDER_COOKIE];
       if (!binder || sha256Hex(binder) !== row.binder_hash) throw new DomainError('STATE_CONFLICT', 'Finish sign-in in the browser where you started it.');

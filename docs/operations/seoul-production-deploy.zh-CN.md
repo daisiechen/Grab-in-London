@@ -152,13 +152,30 @@ ssh tencent-seoul 'sudo /opt/fancy-deploy/healthcheck.sh --public'
 
 | 平台 | 要做的事 |
 | --- | --- |
-| Auth0（UK 租户） | 建议新建 Regular Web Application “Fancy Production”（与开发应用分开，独立 client secret）；Allowed Callback URLs 只填 `https://fancyabite.uk/auth/callback`、`https://fancyabite.uk/v1/auth/oauth/callback`、`fancy://auth/callback`；Allowed Logout URLs 与 Allowed Web Origins 填 `https://fancyabite.uk`；授权类型只开 Authorization Code 与 Passwordless OTP；连接只开 `email`（6 位验证码，发信用 Resend）、`google-oauth2`、`apple`。另建 Machine-to-Machine 应用授权 Auth0 Management API，**只**勾选 `delete:users` 与 `delete:grants`（多勾会被代码拒绝），用于删号时撤销身份。员工 MFA：用 Post-Login Action 只对员工邮箱要求 MFA，确认令牌带 `amr: mfa` 后后台才能用 |
+| Auth0（UK 租户） | 建议新建 Regular Web Application “Fancy Production”（与开发应用分开，独立 client secret）；Allowed Callback URLs 只填 `https://fancyabite.uk/auth/callback`、`https://fancyabite.uk/v1/auth/oauth/callback`、`fancy://auth/callback`；Allowed Logout URLs 与 Allowed Web Origins 填 `https://fancyabite.uk`；授权类型只开 Authorization Code 与 Passwordless OTP；连接只开 `email`（6 位验证码，发信用 Resend）、`google-oauth2`、`apple`。另建 Machine-to-Machine 应用授权 Auth0 Management API，**只**勾选 `delete:users` 与 `delete:grants`（多勾会被代码拒绝），用于删号时撤销身份。员工 MFA 见下方“员工 MFA”步骤 |
 | Google Cloud（fancy-512319） | 服务端 Places Key（`GOOGLE_MAPS_API_KEY`）：仅 Places API (New)，应用限制为服务器出口 IP（在服务器上 `curl -4 https://ifconfig.me` 查看后由 Owner 填入），不得放进 App 或网页。Web 地图 Key（`VITE_PUBLIC_GOOGLE_MAPS_KEY`）：仅 Maps JavaScript API，HTTP 来源 `https://fancyabite.uk/*`。iOS 地图 Key（`EXPO_PUBLIC_GOOGLE_MAPS_IOS_KEY`）：仅 Maps SDK for iOS，应用限制为 iOS bundle `uk.fancyabite.app`；它在客户端内，可被提取，所以必须靠 bundle 限制。三个 Key 分开、都设预算提醒与配额上限。OAuth 同意屏幕由“测试”改为“正式发布” |
 | Apple Developer | Sign in with Apple：App ID `uk.fancyabite.app` 开启该能力；建 Services ID、私钥（.p8），回调 `https://<租户>.uk.auth0.com/login/callback`；把 Team ID、Key ID、私钥填进 Auth0 的 Apple 连接（私钥只在 Auth0，不进服务器） |
 | Resend | 沿用已验证的 `mail.fancyabite.uk`（爱尔兰区）与仅发信 Key；新建 Webhook 指向 `https://fancyabite.uk/v1/webhooks/resend`，事件选 `email.sent`、`email.delivered`、`email.bounced`、`email.suppressed`，签名密钥填 `RESEND_WEBHOOK_SECRET` |
 | Cloudflare | §4.2 的授权与建议设置；可选：免费的外部可用性监测（如 UptimeRobot）每 5 分钟访问 `https://fancyabite.uk/healthz` |
 | 腾讯云 | 可选：开启云硬盘定期快照作为第二道备份；确认安全组无需为 Fancy 新开端口 |
 | 政策文本 | 填好 `docs/policies` 占位符后发布；`PRIVACY_POLICY_VERSION` 与生效日期一致，`RETENTION_POLICY_JSON.deletionReceiptDays` 与 `{{DELETION_RECEIPT_RETENTION}}` 一致，备份保留 35 天与 `{{BACKUP_RETENTION}}` 一致，日志保留 30 天与 `{{LOG_RETENTION}}` 一致 |
+
+### 员工 MFA（Auth0，Owner）
+
+后台“安全登录”走 Auth0 Universal Login，并在请求里带 `acr_values=http://schemas.openid.net/pape/policies/2007/06/multi-factor` 要求本次登录完成 MFA；会员登录不带，会员不受影响。回调复用已登记的 `https://fancyabite.uk/v1/auth/oauth/callback`，无需新增回调地址。Owner 只需在当前生产所用的 Auth0 应用所在租户里：
+
+1. Security → Multi-factor Auth：开启 **One-time Password**（Google Authenticator、1Password 等验证器应用）；可选再开 **WebAuthn with FIDO Device Biometrics**（通行密钥 / Touch ID）。不要只开 Email 因子（员工本来就用邮箱验证码登录，它不构成第二个因素）。
+2. 同页 “Define policies” → Require Multi-factor Auth 设为 **Never**（会员登录不被强制；后台请求自带的 `acr_values` 仍会触发 MFA）。不需要 Post-Login Action。
+3. Authentication → Passwordless → Email：确认连接已开启，且在 Applications 页签对生产所用应用（目前是 fancy-dev UK 租户的 BFF 应用）打开；Google（`google-oauth2`）连接同样对该应用打开。这样 Universal Login 会列出“邮箱验证码”和 Google 供员工选择。
+4. Applications → 该应用 → Settings：确认 Allowed Callback URLs 里已有 `https://fancyabite.uk/v1/auth/oauth/callback`（已登记则不用改）。
+
+验证：员工在 https://fancyabite.uk/admin/ 点“安全登录”→ 选与员工账号相同的登录方式（同一邮箱，或已关联的 Google）→ 首次会要求绑定验证器 → 回到后台，举报队列可打开。
+
+需上线时实测确认（本会话无法访问 auth0.com 文档，以下按 Auth0 公开文档的既有行为写成，标记为“verify”）：
+
+- verify：MFA 策略为 Never 时，`acr_values` 多因素请求会由 Auth0 原生触发 MFA，ID 令牌 `amr` 含 `mfa`。若实测未要求 MFA（回到后台显示“需要重新验证”），后备做法是加一个 Post-Login Action：`exports.onExecutePostLogin = async (event, api) => { if ((event.transaction?.acr_values ?? []).includes('http://schemas.openid.net/pape/policies/2007/06/multi-factor')) api.multifactor.enable('any', { allowRememberBrowser: false }); };`，只对带该参数的登录生效，会员不受影响。
+- verify：New Universal Login 会显示邮箱验证码（passwordless email）选项。若登录页只有 Google 而没有邮箱，员工可先用已关联的 Google 登录；或在 Authentication → Authentication Profile 选 “Identifier First” 后再试。
+
 
 ## 6. 验证清单
 
@@ -172,7 +189,7 @@ ssh tencent-seoul 'sudo /opt/fancy-deploy/healthcheck.sh --public'
 - [ ] 用邮箱验证码登录 Web（真实邮件到达，发件人 `Fancy <noreply@mail.fancyabite.uk>`）；Google 登录回流成功。
 - [ ] iOS 正式构建（`EXPO_PUBLIC_API_BASE_URL=https://fancyabite.uk`）可登录，含 Apple 登录。
 - [ ] 上传头像后能显示；地点搜索返回真实餐厅（服务端 Places Key 生效）。
-- [ ] 后台 https://fancyabite.uk/admin/ 用员工邮箱登录并通过 MFA，举报队列可打开。
+- [ ] 后台 https://fancyabite.uk/admin/ 点“安全登录”，在 Auth0 页面用员工账号原有登录方式登录并完成 MFA（验证器应用），回到后台后举报队列可打开；未完成 MFA 时后台显示“需要重新验证”。
 - [ ] Resend 控制台看到 webhook 投递成功。
 - [ ] `ssh tencent-seoul 'sudo systemctl start fancy-backup.service && sudo cat /srv/fancy/state/last-backup'` 产生第一份加密备份；随后做一次 §8 的恢复演练。
 - [ ] 把一个饭局链接贴进 iMessage/WhatsApp/Slack，预览显示饭局标题与描述；`curl -s https://fancyabite.uk/discover | grep og:title` 有结果。
@@ -297,7 +314,7 @@ ssh tencent-seoul 'sudo /opt/fancy-deploy/restore-drill.sh --identity /root/fanc
 
 1. 同意合并到 main 并开始部署。
 2. `tunnel.sh login`：在浏览器授权 Cloudflare 的 fancyabite.uk；如有冲突的旧 DNS 记录，在 Cloudflare 控制台删除。
-3. Auth0：正式应用、回调名单、email/Google/Apple 连接、M2M 应用（仅两个权限）、员工 MFA Action。
+3. Auth0：正式应用、回调名单、email/Google/Apple 连接、M2M 应用（仅两个权限）、员工 MFA（§5“员工 MFA”：开 One-time Password、策略 Never，无需 Action）。
 4. Google Cloud：三个 Key 的限制（服务端 Key 限服务器出口 IP、Web Key 限域名、iOS Key 限 bundle）、预算提醒、OAuth 同意屏幕转正式。
 5. Apple Developer：Sign in with Apple 的 Services ID 与私钥，并填进 Auth0。
 6. Resend：Webhook 与签名密钥。

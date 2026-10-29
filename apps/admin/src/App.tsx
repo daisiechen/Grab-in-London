@@ -10,7 +10,7 @@ import { ExportButton } from './features/exports/ExportButton.tsx';
 import { FilterBar } from './features/filters/FilterBar.tsx';
 import { SnapshotPicker } from './features/snapshot/SnapshotPicker.tsx';
 import { FailureScreen } from './features/status/FailureScreen.tsx';
-import { SignIn } from './features/auth/SignIn.tsx';
+import { captureSignInError, SecureSignInButton, SignIn } from './features/auth/SignIn.tsx';
 import { ModerationQueue } from './features/moderation/ModerationQueue.tsx';
 import { ReportDetail } from './features/moderation/ReportDetail.tsx';
 import { formatLondonTime, makeT, versionLabel, type Language, type Translate } from './i18n.ts';
@@ -35,6 +35,8 @@ const descriptions = (t: Translate): Record<AdminPageName, string> => ({
 });
 
 export default function App({ api }: { api: AdminApi }) {
+  // Before the URL state rewrites the address: keep a secure sign-in's returned error for the sign-in page.
+  useState(captureSignInError);
   const { state, page, route, update, go, navigate } = useUrlState();
   const onSnapshotChange = useCallback((snapshotId: string | null) => update({ snapshotId }), [update]);
   return (
@@ -167,6 +169,9 @@ function GateFailure({ t }: { t: Translate }) {
   return (
     <>
       <FailureScreen failure={c.gate.failure} t={t} onRetry={() => c.reloadSession()} />
+      {c.gate.failure.kind === 'reauth' && (
+        <div className="sign-in-form"><SecureSignInButton t={t} /></div>
+      )}
       {(c.gate.failure.kind === 'reauth' || c.gate.failure.kind === 'forbidden') && (
         <p className="method-note">{t('需要用具备权限并完成多因素验证的员工账号登录。', 'Sign in with a staff account that has the role and completed multi-factor verification.')}{' '}
           <button className="text-button" onClick={() => void signOut()}>{t('切换账号', 'Switch account')}</button></p>

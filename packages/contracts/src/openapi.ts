@@ -63,7 +63,7 @@ export function buildOpenApi(): Json {
         ? { description: 'Success', headers: { ETag: { schema: { type: 'string' } }, 'Cache-Control': { schema: { type: 'string' } } }, content: { 'image/jpeg': { schema: { type: 'string', contentMediaType: 'image/jpeg' } } } }
         : { description: 'Success', content: { 'text/csv': { schema: { type: 'string' } } } };
     if(def.operationId==='oauthCallback')responses['303']={
-      description:'SUPPORT_CLI only: registered IPv4 loopback callback with a 60-second PKCE-bound handoff code and start transaction state; no access or refresh token.',
+      description:'SUPPORT_CLI: registered IPv4 loopback callback with a 60-second PKCE-bound handoff code and start transaction state; no access or refresh token. Admin console sign-in (startStaffSignIn): <web origin>/admin/ after the session cookie is set, or <web origin>/admin/?signin_error=<ERROR_CODE> when sign-in did not finish.',
       headers:{Location:{required:true,schema:{type:'string',format:'uri'}},'Cache-Control':{schema:{type:'string',const:'no-store'}},'Referrer-Policy':{schema:{type:'string',const:'no-referrer'}}},
     };
     const byStatus = new Map<number, string[]>();

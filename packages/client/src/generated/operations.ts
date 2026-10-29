@@ -4,6 +4,7 @@ export const OPERATIONS = {
   startEmail: { method: 'POST', path: '/v1/auth/email/start', pathParams: [], auth: 'public', write: 'clientRequestId', ifMatch: false, successStatus: 201, list: false, hasBody: true },
   verifyEmail: { method: 'POST', path: '/v1/auth/email/verify', pathParams: [], auth: 'public', write: 'clientRequestId', ifMatch: false, successStatus: 200, list: false, hasBody: true },
   startOAuth: { method: 'POST', path: '/v1/auth/oauth/start', pathParams: [], auth: 'public', write: 'clientRequestId', ifMatch: false, successStatus: 201, list: false, hasBody: true },
+  startStaffSignIn: { method: 'POST', path: '/v1/auth/staff/start', pathParams: [], auth: 'public', write: 'clientRequestId', ifMatch: false, successStatus: 201, list: false, hasBody: true },
   oauthCallback: { method: 'GET', path: '/v1/auth/oauth/callback', pathParams: [], auth: 'public', write: 'read', ifMatch: false, successStatus: 200, list: false, hasBody: false },
   exchangeHandoff: { method: 'POST', path: '/v1/auth/handoff', pathParams: [], auth: 'public', write: 'clientRequestId', ifMatch: false, successStatus: 200, list: false, hasBody: true },
   refreshSession: { method: 'POST', path: '/v1/auth/refresh', pathParams: [], auth: 'public', write: 'clientRequestId', ifMatch: false, successStatus: 200, list: false, hasBody: true },

@@ -51,6 +51,11 @@ export async function completeAuthentication(deps: AppDeps, tx: Tx, row: AuthTxR
 
   const {rows:[clock]}=await tx.client.query<{now:Date}>(`SELECT clock_timestamp() AS now`);
   const resolution = await resolveIdentity(tx.client, identity, clock!.now, row.client === 'SUPPORT_CLI' ? null : row.provider_state.signupSource ?? null);
+  // Admin console sign-in only admits identities already mapped to an account: it never creates an
+  // account or starts linking (the transaction rolls back, so nothing is written).
+  if (row.provider_state.staff === '1' && (resolution.kind === 'link_required' || resolution.created)) {
+    throw new DomainError('FORBIDDEN', 'Use the sign-in method already linked to your staff account.');
+  }
   if (resolution.kind === 'link_required') {
     await lockActiveActor(tx,resolution.targetUserId);
     const now=await tx.effectiveNow();
