@@ -46,6 +46,7 @@ J09（支持）、J10/J11（后台）在 iOS 首发旅程完成后另行安排�
 
 | 日期 | 内容 | 提交 |
 | --- | --- | --- |
+| 2026-10-28 | Web 端恢复设计（用户要求，仅设计不写生产代码）：完成 [Meetup 移动 Web 调研](../design/web/meetup-reference.zh-CN.md)（会话无法直接访问 meetup.com，现为公开资料检索，亲测待补）、[Web 端设计规范](../design/web/mobile-web-design.zh-CN.md)与单文件可点击原型（移动优先，含首页与平板/桌面布局，域名 fancyabite.uk）。推荐 Web 先做“公开分享 + 参加主线”（W1+W2），发起与饭后反馈留在 App；Web 范围、PRD §0.1 表述、已登录首页、主页收录等 8 项待用户决定（规范 §2.3）；`apps/web` 代码未改 | 见 Git 历史 |
 | 2026-10-28 | 头像改为成员上传本人照片（用户决定，见 §6）：迁移 `0026_avatar_images`；契约新增 `uploadAvatar`（PUT /me/avatar）、`removeAvatar`（DELETE /me/avatar）、`getAvatar`（GET /avatars/{avatarId}），`Me.avatarUrl` 取代 `Me.avatarRef`，`updateMe` 不再接受 `avatarRef`；iOS 设置资料与编辑资料改为“上传/更换/移除照片”，样例头像三选一及 Web 静态样例图移除；新增原生模块 expo-image-picker、expo-image-manipulator（需在 Mac 上重新构建开发版）；`e2e:real-api` 资料步骤增加真实上传 | 见 Git 历史 |
 | 2026-10-27 | 接手：环境基线确认，协作规则更新，本计划建立 | 见 Git 历史 |
 | 2026-10-28 | 后端阶段起步：App 首次对真实 API 端到端跑通（`pnpm --filter @fancy/ios e2e:real-api`，18 步：发现→登录→申请→host 批准→座位/群聊→发起与编辑饭局→屏蔽/举报/问卷/通知），修复 3 个 App 问题、2 个 API 问题并让假 API 与真实 API 对齐（`e2e:parity` 可逐项比对）；收件箱按最近活动排序；样例头像三选一（设置与编辑资料）并由 API 发布头像地址 | 见 Git 历史 |
