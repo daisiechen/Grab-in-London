@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { Suspense, useEffect, useRef, type ReactNode } from 'react';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { ApiProvider } from '../api/ApiProvider.tsx';
 import { SessionProvider } from '../api/session.tsx';
@@ -8,6 +8,7 @@ import { BottomNav, TopNav } from './BottomNav.tsx';
 import { SiteFooter } from './SiteFooter.tsx';
 import { NotFound } from './NotFound.tsx';
 import { appRoutes } from './routes.tsx';
+import { PageLoadBoundary, PageLoading } from './lazyPage.tsx';
 import { TelemetryProvider } from '../api/telemetry.tsx';
 import { AnalyticsConsentSheet } from '../features/settings/AnalyticsConsent.tsx';
 import { captureArrival } from '../lib/attribution.ts';
@@ -52,16 +53,20 @@ function Shell({ extra }: { extra?: ReactNode }) {
       <AnalyticsConsentSheet />
       {extra}
       <main id="main" ref={main} tabIndex={-1} className={['app-main', tabs ? 'with-tabs' : '', wide ? 'wide' : '', home ? 'full' : ''].filter(Boolean).join(' ')}>
-        <Routes>
-          {appRoutes.map((r) => <Route key={r.path} path={r.path} element={r.element} />)}
-          <Route path="/inbox/:conversationId" element={<LegacyRedirect to={(p) => `/chat/${p.conversationId}`} />} />
-          <Route path="/inbox/notifications" element={<LegacyRedirect to={() => '/notifications'} />} />
-          <Route path="/profile/edit" element={<LegacyRedirect to={() => '/profile-edit'} />} />
-          <Route path="/settings/deletion" element={<LegacyRedirect to={() => '/delete-account'} />} />
-          <Route path="/settings/survey" element={<LegacyRedirect to={() => '/survey'} />} />
-          <Route path="/create/terms" element={<LegacyRedirect to={() => '/cancellation-terms'} />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <PageLoadBoundary path={path}>
+          <Suspense fallback={<PageLoading />}>
+            <Routes>
+              {appRoutes.map((r) => <Route key={r.path} path={r.path} element={r.element} />)}
+              <Route path="/inbox/:conversationId" element={<LegacyRedirect to={(p) => `/chat/${p.conversationId}`} />} />
+              <Route path="/inbox/notifications" element={<LegacyRedirect to={() => '/notifications'} />} />
+              <Route path="/profile/edit" element={<LegacyRedirect to={() => '/profile-edit'} />} />
+              <Route path="/settings/deletion" element={<LegacyRedirect to={() => '/delete-account'} />} />
+              <Route path="/settings/survey" element={<LegacyRedirect to={() => '/survey'} />} />
+              <Route path="/create/terms" element={<LegacyRedirect to={() => '/cancellation-terms'} />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </PageLoadBoundary>
       </main>
       {home ? <SiteFooter /> : PUBLIC_PATHS.some((re) => re.test(path)) ? <SiteFooter publicOnly /> : null}
       {tabs && <BottomNav />}

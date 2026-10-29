@@ -667,5 +667,10 @@ a.summary { color: inherit; }
 
 /* ---------- Small shared states ---------- */
 .loading { padding: 32px var(--page); color: var(--muted); text-align: center; }
+/* Route chunk loading (app/lazyPage.tsx): fades in after 150ms so fast loads don't flash. */
+.page-loading { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 48px var(--page); color: var(--muted); text-align: center; animation: page-loading-in 0.2s ease-out 0.15s both; }
+.page-loading .btn { width: auto; }
+@keyframes page-loading-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .page-loading { animation: none; } }
 .auth-state h1 { font-size: 24px; line-height: 28px; letter-spacing: -0.8px; font-weight: 700; margin: 16px 0 8px; }
 .auth-state .btn, .auth-state .form-error { margin-top: 14px; }
