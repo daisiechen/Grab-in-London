@@ -25,6 +25,7 @@ import { HomePage } from '../features/home/HomePage.tsx';
 import { GetAppPage } from '../features/home/GetAppPage.tsx';
 import { CancellationTermsPage } from '../features/meals/CancellationTermsPage.tsx';
 import { ReportPage } from '../features/reports/ReportPage.tsx';
+import { BlockedMembersPage } from '../features/settings/BlockedMembersPage.tsx';
 
 export interface AppRoute { path: string; element: ReactElement }
 
@@ -46,7 +47,6 @@ export const appRoutes: AppRoute[] = [
   { path: '/create', element: <CreatePage /> },
   { path: '/create/terms', element: <CreatePage /> },
   { path: '/inbox', element: <InboxPage /> },
-  { path: '/inbox/notifications', element: <NotificationsPage /> },
   { path: '/notifications', element: <NotificationsPage /> },
   { path: '/chat/:conversationId', element: <ChatPage /> },
   { path: '/profile', element: <ProfilePage /> },
@@ -58,6 +58,7 @@ export const appRoutes: AppRoute[] = [
   { path: '/delete-account', element: <DeletionPage /> },
   { path: '/deletion-status', element: <DeletionPage /> },
   { path: '/report', element: <ReportPage /> },
+  { path: '/blocked-members', element: <BlockedMembersPage /> },
   { path: '/settings/reports/:reportId', element: <ReportStatusPage /> },
   { path: '/post-meal/:mealId', element: <PostMealPage /> },
   ...LEGAL_PATHS.map((path) => ({ path, element: <LegalRedirect path={path} /> })),

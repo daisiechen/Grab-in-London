@@ -171,7 +171,7 @@ describe('inbox list (T12)', () => {
       expect(within(cards[index]!).getByText(m.title)).toBeTruthy();
       expect(within(cards[index]!).getByText(index?'Sat 24 Oct · 12:30 London time':'Fri 23 Oct · 18:00 London time')).toBeTruthy();
       expect(within(cards[index]!).getByText(index?'Hosted by Emma Hill':'Hosted by Maya Chen')).toBeTruthy();
-      expect(within(cards[index]!).getByRole('link',{name:'View application'}).getAttribute('href')).toBe(`/meals/${m.id}/apply`);
+      expect(within(cards[index]!).getByRole('link',{name:'View application'}).getAttribute('href')).toBe(`/meals/${m.id}/status`);
     }
     expect(screen.queryByText('PRIVATE INTRODUCTION')).toBeNull();
   });

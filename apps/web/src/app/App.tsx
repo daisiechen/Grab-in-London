@@ -55,6 +55,7 @@ function Shell({ extra }: { extra?: ReactNode }) {
         <Routes>
           {appRoutes.map((r) => <Route key={r.path} path={r.path} element={r.element} />)}
           <Route path="/inbox/:conversationId" element={<LegacyRedirect to={(p) => `/chat/${p.conversationId}`} />} />
+          <Route path="/inbox/notifications" element={<LegacyRedirect to={() => '/notifications'} />} />
           <Route path="/profile/edit" element={<LegacyRedirect to={() => '/profile-edit'} />} />
           <Route path="/settings/deletion" element={<LegacyRedirect to={() => '/delete-account'} />} />
           <Route path="/settings/survey" element={<LegacyRedirect to={() => '/survey'} />} />
