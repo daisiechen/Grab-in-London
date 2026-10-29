@@ -95,7 +95,8 @@ export const authOperations = [
   op({
     operationId: 'oauthCallback', method: 'GET', path: '/auth/oauth/callback', summary: 'Provider redirect target',
     auth: 'public', write: 'read', ifMatch: false,
-    query: Obj({ code: T.Optional(T.String({ maxLength: 4000 })), state: T.String({ minLength: 1, maxLength: 512 }), error: T.Optional(T.String({ maxLength: 200 })) }),
+    // iss: RFC 9207 authorization-server issuer, sent by Auth0 on every callback; error_description accompanies error.
+    query: Obj({ code: T.Optional(T.String({ maxLength: 4000 })), state: T.String({ minLength: 1, maxLength: 512 }), error: T.Optional(T.String({ maxLength: 200 })), error_description: T.Optional(T.String({ maxLength: 1000 })), iss: T.Optional(T.String({ maxLength: 512 })) }),
     success: { status: 200, data: AuthOutcome },
     errors: ['FORBIDDEN', 'STATE_CONFLICT', 'PROVIDER_UNAVAILABLE', 'ACCOUNT_SUSPENDED'],
   }),

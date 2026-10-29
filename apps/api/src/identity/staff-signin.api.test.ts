@@ -73,6 +73,22 @@ describe('admin console sign-in (hosted login, MFA requested)', () => {
     expect((await b.request('GET', '/v1/admin/snapshots')).statusCode).toBe(200);
   });
 
+  it('accepts the RFC 9207 iss and error_description parameters Auth0 adds to the callback', async () => {
+    const staff = await staffAccount();
+    const b = new Browser(h);
+    const data = await startStaff(b);
+    const grant = h.idp.consent(data.authorizationUrl, { email: staff.email, mfa: true });
+    const r = await callback(b, { ...grant, iss: 'https://tenant.example.invalid/' });
+    expect(r.statusCode, r.body).toBe(303);
+    expect(r.headers.location).toBe(`${ORIGIN}/admin/`);
+    const cancelled = new Browser(h);
+    const started = await startStaff(cancelled);
+    const state = new URL(started.authorizationUrl).searchParams.get('state')!;
+    const c = await callback(cancelled, { state, error: 'access_denied', error_description: 'User cancelled', iss: 'https://tenant.example.invalid/' });
+    expect(c.statusCode, c.body).toBe(303);
+    expect(c.headers.location).toMatch(/\/admin\/\?signin_error=/);
+  });
+
   it('maps a Google identity already linked to the staff account and records its method', async () => {
     const staff = await staffAccount();
     const subject = randomUUID();

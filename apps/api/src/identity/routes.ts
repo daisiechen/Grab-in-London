@@ -250,7 +250,9 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
   });
 
   defineRoute(app, deps, 'oauthCallback', async ({ request, reply }) => {
-    const query = (request.query ?? {}) as { code?: string; state: string; error?: string };
+    const query = (request.query ?? {}) as { code?: string; state: string; error?: string; iss?: string };
+    // RFC 9207: when the provider names its issuer, it must be ours (mix-up defence); the ID token issuer is verified too.
+    if (query.iss !== undefined && deps.config.auth0 && query.iss.replace(/\/$/, '') !== `https://${deps.config.auth0.domain}`) throw new DomainError('STATE_CONFLICT', 'This sign-in came from an unexpected provider. Please start again.');
     const { rows } = await deps.pool.query(
       `SELECT id, kind, purpose, client, user_id, app_challenge, return_target, provider, provider_state, binder_hash
          FROM auth_transactions WHERE secret_hash = $1 AND kind = 'OAUTH' AND consumed_at IS NULL AND expires_at > clock_timestamp()`,

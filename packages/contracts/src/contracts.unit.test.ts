@@ -48,8 +48,15 @@ describe('registry matches the reviewed API contract', () => {
 
   it('keeps additional reviewed operations explicitly enumerated', () => {
     const extra = all.map((d) => d.operationId).filter((id) => !documented.some((d) => d.id === id));
-    expect(extra.sort()).toEqual(['listModerationReports','claimModerationReport','getModerationReport','getModerationPhoto','moderateReport','supportCaseAttendance','uploadAvatar','removeAvatar','getAvatar','getVenuePhoto','getBlock','listBlocks', 'markConversationRead', 'getClassification', 'getExport', 'createGuestSession', 'readAIPreferences', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'readAI', 'activityAI', 'resetAI', 'requestAI', 'pollAI', 'validateAIDraft'].sort());
+    expect(extra.sort()).toEqual(['startStaffSignIn','listModerationReports','claimModerationReport','getModerationReport','getModerationPhoto','moderateReport','supportCaseAttendance','uploadAvatar','removeAvatar','getAvatar','getVenuePhoto','getBlock','listBlocks', 'markConversationRead', 'getClassification', 'getExport', 'createGuestSession', 'readAIPreferences', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'readAI', 'activityAI', 'resetAI', 'requestAI', 'pollAI', 'validateAIDraft'].sort());
     expect(doc).toContain('GET /admin/exports/:id');
+  });
+
+  it('accepts the RFC 9207 iss and error_description parameters on the OAuth callback', () => {
+    const query = validator(byId('oauthCallback')!.query!);
+    expect(query({ code: 'c', state: 's', iss: 'https://tenant.uk.auth0.com/' })).toBe(true);
+    expect(query({ state: 's', error: 'access_denied', error_description: 'User cancelled', iss: 'https://tenant.uk.auth0.com/' })).toBe(true);
+    expect(query({ state: 's', unexpected: 'x' })).toBe(false);
   });
 
   it('defines profile photo upload/remove as versioned own-profile writes and the read as public image/jpeg', () => {
