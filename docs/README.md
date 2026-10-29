@@ -179,6 +179,7 @@
 - [2026-10-20回滚记录](releases/rollback-2026-10-20.zh-CN.md)：当前Demo与主PRD的目标提交、线上版本及回滚边界。
 - [管理端指标与采集修订](delivery/fancy-admin-measurement-review.zh-CN.md)：19条批注、App补充、口径与本轮验证。
 - [管理端可用性审查](delivery/fancy-admin-usability-review.zh-CN.md)：逐页走查、精简决策、规则维护职责及浏览器证据。
+- [后台运营分析能力评审（2026-10-29）](delivery/admin-ops-analytics-review-2026-10-29.zh-CN.md)：上线后 3 个月运营问题覆盖矩阵、P0/P1 补齐方案（优先服务端事实）与数据口径风险；只读评审，待 Owner 决定。
 - 管理端：[验证报告](../admin/qa/verification.zh-CN.md)，截图按批次保存在 `admin/qa/`。
 - [商业交付产物](../outputs/business-2026-10-17/)：PDF、HTML、PPTX 和 XLSX。`outputs/` 保存需交付的产物，`build/` 为忽略的构建中间目录。
 
