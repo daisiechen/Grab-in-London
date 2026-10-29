@@ -1,0 +1,54 @@
+# Fancy Web page-head server (production): apps/web/server/serve.ts on 127.0.0.1 only.
+# nginx sends HTML navigations here so link-preview bots and crawlers get each public page's
+# title, description, canonical URL, OG tags and JSON-LD; static files never come here.
+# It reads public meals/profiles from the API on loopback and needs no secrets, so it does
+# not load the env file. If it is down, nginx falls back to the plain single-page app.
+[Unit]
+Description=Fancy Web page-head server (production)
+After=network-online.target fancy-api.service
+Wants=network-online.target
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=@@FANCY_USER@@
+Group=@@FANCY_USER@@
+WorkingDirectory=@@FANCY_CURRENT@@
+Environment=HOST=127.0.0.1
+Environment=PORT=@@WEB_PORT@@
+Environment=FANCY_API_ORIGIN=http://127.0.0.1:@@API_PORT@@
+Environment=FANCY_PUBLIC_ORIGIN=https://@@PUBLIC_HOSTNAME@@
+Environment=NODE_ENV=production
+Environment=NODE_OPTIONS=--max-old-space-size=128
+ExecStart=@@NODE_DIR@@/bin/node apps/web/server/serve.ts
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=10
+LogNamespace=fancy
+MemoryHigh=160M
+MemoryMax=256M
+TasksMax=64
+LimitNOFILE=4096
+UMask=0077
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+
+[Install]
+WantedBy=multi-user.target

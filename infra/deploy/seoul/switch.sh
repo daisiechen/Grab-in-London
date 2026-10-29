@@ -5,8 +5,10 @@
 #
 # 1. refuses unless the database schema equals the release's latest migration;
 # 2. starts the release as a throwaway candidate API on 127.0.0.1:API_CANDIDATE_PORT and
-#    waits for /health/ready (the live API keeps serving meanwhile);
-# 3. moves the `current` symlink atomically, restarts API + worker, checks health;
+#    waits for /health/ready, then its Web page-head server on 127.0.0.1:WEB_CANDIDATE_PORT
+#    (reading the candidate API) and checks it writes the home page head; the live services
+#    keep serving meanwhile;
+# 3. moves the `current` symlink atomically, restarts API + worker + fancy-web, checks health;
 # 4. on failure, moves `current` back to the previous release and restarts it;
 # 5. records history, refreshes the deploy kit from the release, enables timers.
 . "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
@@ -31,13 +33,25 @@ want="$(release_latest_migration "$REL" 2>/dev/null || true)"; have="$(db_latest
 if [[ "$DRY_RUN" != 1 && "$have" != "$want" ]]; then die "database is at '${have:-empty}', release expects '$want': run migrate.sh first"; fi
 ok "schema ${have:-?} matches $(basename "${REL:-?}")"
 if [[ "$REL" == "$PREV" ]]; then ok "already live: $REL"; fi
+if [[ "$DRY_RUN" != 1 ]] && release_has_web_server "$REL" && [[ ! -f /etc/systemd/system/fancy-web.service ]]; then
+  die "fancy-web.service is not installed yet: run 'sudo bash $REL/infra/deploy/seoul/bootstrap.sh --yes' (idempotent), then switch again"
+fi
 
-step "2/5 Candidate API on 127.0.0.1:$API_CANDIDATE_PORT"
+step "2/5 Candidate API on 127.0.0.1:$API_CANDIDATE_PORT, candidate Web page-head server on 127.0.0.1:$WEB_CANDIDATE_PORT"
 CANDIDATE=fancy-api-candidate
+WEB_CANDIDATE=fancy-web-candidate
 if systemctl list-units --all --plain --no-legend "$CANDIDATE.service" | grep -q .; then
   run systemctl stop "$CANDIDATE.service" || true
   run systemctl reset-failed "$CANDIDATE.service" || true
 fi
+if systemctl list-units --all --plain --no-legend "$WEB_CANDIDATE.service" | grep -q .; then
+  run systemctl stop "$WEB_CANDIDATE.service" || true
+  run systemctl reset-failed "$WEB_CANDIDATE.service" || true
+fi
+stop_candidates() {
+  systemctl stop "$WEB_CANDIDATE.service" || true
+  systemctl stop "$CANDIDATE.service" || true
+}
 run systemd-run --unit="$CANDIDATE" --uid="$FANCY_USER" --gid="$FANCY_USER" --working-directory="$REL" \
   --collect --quiet -p EnvironmentFile="$FANCY_ENV_FILE" -p LogNamespace=fancy -p MemoryMax=900M \
   -p NoNewPrivileges=yes -p ProtectSystem=strict -p ProtectHome=yes -p PrivateTmp=yes \
@@ -45,14 +59,34 @@ run systemd-run --unit="$CANDIDATE" --uid="$FANCY_USER" --gid="$FANCY_USER" --wo
   "$NODE_BIN" apps/api/src/main.ts
 if [[ "$DRY_RUN" != 1 ]]; then
   if wait_http_ok "http://127.0.0.1:$API_CANDIDATE_PORT/health/ready" 45; then
-    ok "candidate ready"
-    systemctl stop "$CANDIDATE.service" || true
+    ok "candidate API ready"
   else
     journalctl --namespace=fancy -u "$CANDIDATE" -n 40 --no-pager || true
-    systemctl stop "$CANDIDATE.service" || true
+    stop_candidates
     die "candidate did not become ready; live traffic was not touched"
   fi
 fi
+if [[ "$DRY_RUN" == 1 ]] || release_has_web_server "$REL"; then
+  # Same environment as fancy-web.service (no secrets), but reading the candidate API.
+  run systemd-run --unit="$WEB_CANDIDATE" --uid="$FANCY_USER" --gid="$FANCY_USER" --working-directory="$REL" \
+    --collect --quiet -p LogNamespace=fancy -p MemoryMax=256M \
+    -p NoNewPrivileges=yes -p ProtectSystem=strict -p ProtectHome=yes -p PrivateTmp=yes \
+    -E HOST=127.0.0.1 -E PORT="$WEB_CANDIDATE_PORT" -E FANCY_API_ORIGIN="http://127.0.0.1:$API_CANDIDATE_PORT" \
+    -E FANCY_PUBLIC_ORIGIN="https://$PUBLIC_HOSTNAME" -E NODE_ENV=production \
+    "$NODE_BIN" apps/web/server/serve.ts
+  if [[ "$DRY_RUN" != 1 ]]; then
+    if wait_http_ok "http://127.0.0.1:$WEB_CANDIDATE_PORT/robots.txt" 20 && serves_page_head "http://127.0.0.1:$WEB_CANDIDATE_PORT/"; then
+      ok "candidate Web page-head server ready"
+    else
+      journalctl --namespace=fancy -u "$WEB_CANDIDATE" -n 40 --no-pager || true
+      stop_candidates
+      die "candidate Web page-head server did not write the page head; live traffic was not touched"
+    fi
+  fi
+else
+  warn "$(basename "$REL") has no apps/web/server/serve.ts: nginx will serve the plain single-page app"
+fi
+if [[ "$DRY_RUN" != 1 ]]; then stop_candidates; fi
 
 step "3/5 Switch current -> $(basename "${REL:-?}")"
 if is_release_dir "$PREV" && [[ "$PREV" != "$REL" && "$DRY_RUN" != 1 ]]; then printf '%s\n' "$PREV" >"$FANCY_STATE/previous"; fi

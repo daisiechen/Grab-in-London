@@ -28,6 +28,7 @@ expect() { local label="$1"; shift; if "$@"; then pass "$label"; else fail "$lab
 # advise LABEL COMMAND...: PASS or WARN (does not fail the check).
 advise() { local label="$1"; shift; if "$@"; then pass "$label"; else note "$label"; fi; }
 code_is() { [[ "$(http_code "$2")" == "$1" ]]; }
+robots_ok() { curl -fsS --max-time 8 "$1" 2>/dev/null | grep -q '^Sitemap:'; }
 reaches_api() { # URL: an unknown /v1 path must come back as the API's own 404 with a request id
   local headers
   headers="$(curl -s -D - -o /dev/null --max-time 8 "$1" || true)"
@@ -35,7 +36,7 @@ reaches_api() { # URL: an unknown /v1 path must come back as the API's own 404 w
 }
 
 section "Services"
-for unit in "postgresql@$PG_MAJOR-$PG_CLUSTER" nginx fancy-api fancy-worker fancy-tunnel; do
+for unit in "postgresql@$PG_MAJOR-$PG_CLUSTER" nginx fancy-api fancy-worker fancy-web fancy-tunnel; do
   expect "$unit active" systemctl is-active --quiet "$unit"
 done
 
@@ -44,6 +45,9 @@ local_gw="http://127.0.0.1:$GATEWAY_PORT"
 expect "API /health/live" code_is 200 "http://127.0.0.1:$API_PORT/health/live"
 expect "API /health/ready (schema current, recovery gate open)" code_is 200 "http://127.0.0.1:$API_PORT/health/ready"
 expect "gateway serves the Web app" code_is 200 "$local_gw/"
+expect "Web page-head server on 127.0.0.1:$WEB_PORT writes the page head" serves_page_head "http://127.0.0.1:$WEB_PORT/"
+expect "gateway sends HTML navigations to the Web page-head server" serves_page_head "$local_gw/discover"
+expect "gateway /robots.txt (from the Web page-head server)" robots_ok "$local_gw/robots.txt"
 for path in /privacy /terms /guidelines /support /admin/; do
   expect "gateway $path" code_is 200 "$local_gw$path"
 done
@@ -79,6 +83,7 @@ if [[ "$PUBLIC" == 1 ]]; then
   section "Public (https://$PUBLIC_HOSTNAME via Cloudflare)"
   base="https://$PUBLIC_HOSTNAME"
   expect "$base/" code_is 200 "$base/"
+  expect "$base/ carries the server-written page head (link previews)" serves_page_head "$base/"
   expect "$base/healthz" code_is 200 "$base/healthz"
   for path in /privacy /terms /guidelines /support /admin/; do
     expect "$base$path" code_is 200 "$base$path"

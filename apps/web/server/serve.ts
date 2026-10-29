@@ -6,6 +6,9 @@
  * (session cookie + CSRF). No dependencies beyond Node 24.
  *
  *   FANCY_API_ORIGIN=http://127.0.0.1:3000 PORT=8080 node apps/web/server/serve.ts
+ *
+ * HOST limits the listening address (production: HOST=127.0.0.1 behind nginx, see the Seoul
+ * deploy kit's fancy-web.service); unset, Node listens on every interface as before.
  */
 import { createServer, request as httpRequest, type IncomingMessage, type ServerResponse } from 'node:http';
 import { request as httpsRequest } from 'node:https';
@@ -21,6 +24,7 @@ const DIST = resolve(fileURLToPath(new URL('../dist', import.meta.url)));
 const API = (process.env.FANCY_API_ORIGIN ?? 'http://127.0.0.1:3000').replace(/\/$/, '');
 const ORIGIN = (process.env.FANCY_PUBLIC_ORIGIN ?? SITE_ORIGIN).replace(/\/$/, '');
 const PORT = Number(process.env.PORT ?? 8080);
+const HOST = process.env.HOST || undefined;
 const TYPES: Record<string, string> = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml',
   '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.ico': 'image/x-icon', '.json': 'application/json', '.map': 'application/json', '.txt': 'text/plain; charset=utf-8',
@@ -127,5 +131,5 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   createServer((req, res) => { handle(req, res).catch(() => { if (!res.headersSent) res.writeHead(500); res.end(); }); })
-    .listen(PORT, () => console.warn(`fancy web on :${PORT} (API ${API})`));
+    .listen(PORT, HOST, () => console.warn(`fancy web on ${HOST ?? ''}:${PORT} (API ${API})`));
 }

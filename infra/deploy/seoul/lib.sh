@@ -97,7 +97,7 @@ render_template() {
   local -a pairs=(
     "FANCY_USER=$FANCY_USER" "FANCY_ROOT=$FANCY_ROOT" "FANCY_CURRENT=$FANCY_CURRENT"
     "FANCY_ENV_FILE=$FANCY_ENV_FILE" "FANCY_KIT_DIR=$FANCY_KIT_DIR" "NODE_DIR=$NODE_DIR"
-    "API_PORT=$API_PORT" "GATEWAY_PORT=$GATEWAY_PORT" "TUNNEL_METRICS_PORT=$TUNNEL_METRICS_PORT"
+    "API_PORT=$API_PORT" "WEB_PORT=$WEB_PORT" "GATEWAY_PORT=$GATEWAY_PORT" "TUNNEL_METRICS_PORT=$TUNNEL_METRICS_PORT"
     "PUBLIC_HOSTNAME=$PUBLIC_HOSTNAME" "PG_PORT=$PG_PORT" "PG_MAJOR=$PG_MAJOR" "PG_CLUSTER=$PG_CLUSTER"
     "LOG_RETENTION_DAYS=$LOG_RETENTION_DAYS" "FANCY_BACKUPS=$FANCY_BACKUPS" "$@"
   )
@@ -220,20 +220,45 @@ is_release_dir() {
   [[ -n "$1" && -d "$1" && "$(dirname "$1")" == "$FANCY_RELEASES" && -f "$1/RELEASE" ]]
 }
 
-# Point `current` at a release atomically, restart API + worker, verify. Returns non-zero
-# (without rolling back) when the new release does not become healthy.
+# A release built before the Web page-head server existed has no apps/web/server/serve.ts;
+# nginx then serves the plain single-page app (its @spa fallback).
+release_has_web_server() { [[ -f "$1/apps/web/server/serve.ts" ]]; }
+
+# The page head written by apps/web/server/serve.ts (og:site_name is not in the built
+# index.html, so its presence proves the HTML came from the page-head server).
+serves_page_head() { # URL
+  curl -fsS --max-time 5 "$1" 2>/dev/null | grep -q 'property="og:site_name"'
+}
+
+# Point `current` at a release atomically, restart API + worker + Web page-head server,
+# verify. Returns non-zero (without rolling back) when the release does not become healthy.
 activate_release() {
-  local rel="$1"
+  local rel="$1" web=1
+  if [[ "$DRY_RUN" != 1 ]] && ! release_has_web_server "$rel"; then web=0; fi
   run ln -sfn "$rel" "$FANCY_CURRENT.tmp"
   run mv -Tf "$FANCY_CURRENT.tmp" "$FANCY_CURRENT"
   run systemctl enable fancy-api fancy-worker
   run systemctl restart fancy-api fancy-worker || { warn "restart failed"; return 1; }
+  if [[ "$web" == 1 ]]; then
+    run systemctl enable fancy-web
+    run systemctl restart fancy-web || { warn "fancy-web restart failed"; return 1; }
+  else
+    warn "$(basename "$rel") has no Web page-head server: stopping fancy-web, nginx serves the plain app"
+    run systemctl disable --now fancy-web || true
+  fi
   run systemctl reload nginx || warn "nginx reload failed (it serves the new release anyway via the symlink)"
   if [[ "$DRY_RUN" == 1 ]]; then return 0; fi
   if ! wait_http_ok "http://127.0.0.1:$API_PORT/health/ready" 45; then
     warn "API not ready on 127.0.0.1:$API_PORT"; return 1
   fi
-  if ! curl -fsS -o /dev/null --max-time 5 "http://127.0.0.1:$GATEWAY_PORT/"; then
+  if [[ "$web" == 1 ]]; then
+    if ! wait_http_ok "http://127.0.0.1:$WEB_PORT/" 20; then
+      warn "Web page-head server not answering on 127.0.0.1:$WEB_PORT"; return 1
+    fi
+    if ! serves_page_head "http://127.0.0.1:$GATEWAY_PORT/"; then
+      warn "gateway does not serve the home page through the Web page-head server"; return 1
+    fi
+  elif ! curl -fsS -o /dev/null --max-time 5 "http://127.0.0.1:$GATEWAY_PORT/"; then
     warn "gateway does not serve the Web app"; return 1
   fi
   sleep 3

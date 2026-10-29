@@ -9,7 +9,8 @@
 # this machine (the Mac is darwin/arm64); and the release is tied to a commit SHA. The build
 # only installs the four production workspaces (API, worker, Web, admin; ~200 MB, not the
 # iOS toolchain) and runs the two Vite builds without type-checking (CI and the Mac run
-# `pnpm core:check` before a deploy). It runs as the `fancy` user inside a transient systemd
+# `pnpm core:check` before a deploy). nginx serves site/; apps/web/dist stays in the release
+# for the Web page-head server (fancy-web, apps/web/server/serve.ts). It runs as the `fancy` user inside a transient systemd
 # unit capped at BUILD_MEMORY_MAX with low CPU/IO priority, so the live API and PostgreSQL
 # keep their memory on the 3.6 GB machine.
 . "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
@@ -79,12 +80,13 @@ pnpm --filter @fancy/admin exec vite build --base=/admin/
 rm -rf site && mkdir -p site/admin
 cp -a apps/web/dist/. site/
 cp -a apps/admin/dist/. site/admin/
-find site -name "*.map" -delete
+find site apps/web/dist -name "*.map" -delete
 for f in site/index.html site/admin/index.html site/privacy/index.html site/terms/index.html site/guidelines/index.html site/support/index.html; do
   test -s "$f" || { echo "missing $f" >&2; exit 1; }
 done
 # Module graph resolves for every runtime entry point (import only; nothing starts).
-node --input-type=module -e "await import(\"./apps/api/src/main.ts\"); await import(\"./apps/worker/src/main.ts\"); await import(\"./packages/db/src/migrate.ts\"); console.warn(\"entry points resolve\")"
+# The Web page-head server only listens when run as the main script, so importing it is safe.
+node --input-type=module -e "await import(\"./apps/api/src/main.ts\"); await import(\"./apps/worker/src/main.ts\"); await import(\"./packages/db/src/migrate.ts\"); await import(\"./apps/web/server/serve.ts\"); console.warn(\"entry points resolve\")"
 '
 run systemd-run --uid="$FANCY_USER" --gid="$FANCY_USER" --working-directory="$STAGING" \
   --pipe --wait --collect --quiet \

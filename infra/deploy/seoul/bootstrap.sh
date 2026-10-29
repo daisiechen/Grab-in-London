@@ -34,6 +34,8 @@ df -h / | sed 's/^/  /'
 require_port_free_or_ours "$PG_PORT" postgres
 require_port_free_or_ours "$API_PORT" node
 require_port_free_or_ours "$API_CANDIDATE_PORT" node
+require_port_free_or_ours "$WEB_PORT" node
+require_port_free_or_ours "$WEB_CANDIDATE_PORT" node
 require_port_free_or_ours "$GATEWAY_PORT" nginx
 require_port_free_or_ours "$TUNNEL_METRICS_PORT" cloudflared
 
@@ -197,6 +199,7 @@ step "9/12 nginx: same-origin gateway on 127.0.0.1:$GATEWAY_PORT only"
 INSTALL_CHANGED=0
 if [[ -L /etc/nginx/sites-enabled/default ]]; then run rm -f /etc/nginx/sites-enabled/default; INSTALL_CHANGED=1; fi
 install_template nginx/fancy-security-headers.conf /etc/nginx/snippets/fancy-security-headers.conf 0644 root:root
+install_template nginx/fancy-web-proxy.conf /etc/nginx/snippets/fancy-web-proxy.conf 0644 root:root
 install_template nginx/fancy.conf /etc/nginx/sites-available/fancy.conf 0644 root:root
 if [[ "$(readlink /etc/nginx/sites-enabled/fancy.conf 2>/dev/null || true)" != /etc/nginx/sites-available/fancy.conf ]]; then
   run ln -sfn /etc/nginx/sites-available/fancy.conf /etc/nginx/sites-enabled/fancy.conf
@@ -229,7 +232,7 @@ printf 'APT::Periodic::Update-Package-Lists "1";\nAPT::Periodic::Unattended-Upgr
 install_template apt/52fancy-unattended-upgrades /etc/apt/apt.conf.d/52fancy-unattended-upgrades 0644 root:root
 
 step "12/12 systemd units and the deploy kit in $FANCY_KIT_DIR"
-for unit in fancy-api.service fancy-worker.service fancy-tunnel.service fancy-backup.service fancy-backup.timer \
+for unit in fancy-api.service fancy-worker.service fancy-web.service fancy-tunnel.service fancy-backup.service fancy-backup.timer \
             fancy-ledger.service fancy-ledger.timer fancy-healthcheck.service fancy-healthcheck.timer; do
   install_template "systemd/$unit" "/etc/systemd/system/$unit" 0644 root:root
 done

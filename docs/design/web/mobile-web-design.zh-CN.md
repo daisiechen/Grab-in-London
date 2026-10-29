@@ -311,7 +311,7 @@ fancyabite.uk
 
 - **返回**：返回圆钮优先用浏览器历史；从分享链接直接进入（无站内上一页）时回到 `/discover`。不再用导航 state 携带返回地址，发现页的筛选、视图（`view=list`）和选中片区（`area=`）都在网址里。
 - **网址**：饭局页规范地址 `/meals/{id}/{slug}`（`src/seo/meal-seo.ts`）；slug 与子页面重名（apply/status/host/edit）时加 `-meal`。前端用替换跳转到规范地址；真正的 301 由 `apps/web/server/serve.ts` 给出。
-- **服务器头部**：`apps/web/server/serve.ts`（Node 24，无依赖）托管构建产物、代理 `/v1`、为首页/发现/饭局/主页输出头部，并提供 robots.txt、sitemap.xml。Seoul 部署包用 nginx 直接托管构建产物时，需把 HTML 请求转给此服务（或改用同等的 nginx 规则），否则预览机器人拿不到饭局标题；分享图暂用品牌图（缺按饭局生成的文字卡片接口，见 §11）。
+- **服务器头部**：`apps/web/server/serve.ts`（Node 24，无依赖）托管构建产物、代理 `/v1`、为首页/发现/饭局/主页输出头部，并提供 robots.txt、sitemap.xml。Seoul 部署包（2026-10-29）已接入：nginx 把页面导航交给 systemd 服务 `fancy-web`（127.0.0.1:3102，`HOST`/`PORT`/`FANCY_API_ORIGIN`/`FANCY_PUBLIC_ORIGIN` 由单元设置），静态文件、法律页、`/v1`、`/admin/` 仍由 nginx 直接处理，`fancy-web` 停机时退回普通单页；候选验证、切换与回滚都覆盖它（见[首尔部署手册](../../operations/seoul-production-deploy.zh-CN.md)）；分享图暂用品牌图（缺按饭局生成的文字卡片接口，见 §11）。
 - **分析授权**：只在本标签页刚完成登录后弹一次（`lib/freshSignIn.ts`），不在登录、关联、补全资料步骤上弹；之后在资料页的 Analytics preferences 行修改。与 iOS（每次会话未选择时弹）有意差异：网页刷新频繁，避免反复打扰。
 - **注册来源**：`lib/attribution.ts` 只在内存中记录落地网址的 utm 参数或“从饭局分享链接进入”，不写 Cookie/存储；注册请求带 `signupSource`（W-P2 接入）。
 - **登录分步**（W-P2）：品牌入口、邮箱、验证码是 `/sign-in` 一页内的三步（返回圆钮回上一步），不拆成 `/sign-in/email`、`/sign-in/code`，避免刷新丢失验证码会话；返回地址参数为 `returnTo`（也接受 `next`）。契约白名单外的 Web 页面（如 `/chat`、`/profile-setup`）只在本地返回，不作为 `returnTarget` 发给 API。

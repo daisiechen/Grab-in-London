@@ -1,6 +1,9 @@
 import { randomBytes } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { createServer, type RequestListener, type Server } from 'node:http';
+import type { AddressInfo } from 'node:net';
+import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { CONFIG_KEYS, loadConfig } from '../../packages/config/src/index.ts';
@@ -95,7 +98,7 @@ describe('Seoul deploy kit: the owner proxy and public ports are never touched',
   });
 
   it('only manages its own systemd units', () => {
-    const allowed = /^(fancy-[a-z-]+(\.service|\.timer)?|\$CANDIDATE\.service|nginx|postgresql@\$PG_MAJOR-\$PG_CLUSTER|daemon-reload)$/;
+    const allowed = /^(fancy-[a-z-]+(\.service|\.timer)?|\$(WEB_)?CANDIDATE\.service|nginx|postgresql@\$PG_MAJOR-\$PG_CLUSTER|daemon-reload)$/;
     const verbs = /\bsystemctl\s+(start|stop|restart|reload|enable|disable|mask|unmask|reset-failed|daemon-reload)\b([^;|&)]*)/g;
     const offending: string[] = [];
     for (const { where, line } of lines) {
@@ -116,9 +119,12 @@ describe('Seoul deploy kit: the owner proxy and public ports are never touched',
     expect(read(join(KIT, 'templates/postgresql/fancy.conf'))).toMatch(/^listen_addresses = '127\.0\.0\.1'$/m);
     const services = [...read(join(KIT, 'templates/cloudflared/fancy.yml')).matchAll(/service:\s*(\S+)/g)].map((m) => m[1]);
     for (const service of services) expect(service).toMatch(/^(http:\/\/127\.0\.0\.1:@@GATEWAY_PORT@@|http_status:404)$/);
-    for (const port of ['PG_PORT', 'API_PORT', 'API_CANDIDATE_PORT', 'GATEWAY_PORT', 'TUNNEL_METRICS_PORT']) {
+    const ports = ['PG_PORT', 'API_PORT', 'API_CANDIDATE_PORT', 'WEB_PORT', 'WEB_CANDIDATE_PORT', 'GATEWAY_PORT', 'TUNNEL_METRICS_PORT'];
+    for (const port of ports) {
+      expect(deployConf[port], port).toMatch(/^\d+$/);
       expect(['22', '443', '53', '3000', '5174', '5175', '5432', '8388', '18741', '18742', '45845']).not.toContain(deployConf[port]);
     }
+    expect(new Set(ports.map((port) => deployConf[port])).size).toBe(ports.length);
   });
 
   it('blocks package scripts from (re)starting services during bootstrap', () => {
@@ -210,7 +216,7 @@ describe('Seoul deploy kit: production configuration coverage', () => {
 
   it('documents every variable in the runbook', () => {
     const runbook = read(RUNBOOK);
-    for (const key of [...keys, 'PORT', 'VITE_PUBLIC_GOOGLE_MAPS_KEY', 'VITE_PUBLIC_GOOGLE_MAPS_ID', 'EXPO_PUBLIC_GOOGLE_MAPS_IOS_KEY']) {
+    for (const key of [...keys, 'PORT', 'HOST', 'FANCY_API_ORIGIN', 'FANCY_PUBLIC_ORIGIN', 'VITE_PUBLIC_GOOGLE_MAPS_KEY', 'VITE_PUBLIC_GOOGLE_MAPS_ID', 'EXPO_PUBLIC_GOOGLE_MAPS_IOS_KEY']) {
       expect(runbook, key).toContain(`\`${key}\``);
     }
   });
@@ -250,6 +256,11 @@ describe('Seoul deploy kit: templates and release layout', () => {
       expect(text).toContain('User=@@FANCY_USER@@');
       expect(text).toContain('NoNewPrivileges=yes');
     }
+    // The Web page-head server reads only public API responses: it never gets the secrets.
+    const web = read(join(KIT, 'templates/systemd/fancy-web.service'));
+    expect(web).not.toMatch(/^EnvironmentFile=/m);
+    expect(web).toContain('User=@@FANCY_USER@@');
+    expect(web).toContain('NoNewPrivileges=yes');
     expect(deployConf.FANCY_ENV_FILE).toBe('/etc/fancy/fancy.env');
     expect(read(join(KIT, 'secrets.sh'))).toContain('chmod 0600 "$tmp"');
   });
@@ -261,5 +272,163 @@ describe('Seoul deploy kit: templates and release layout', () => {
     const runbook = read(RUNBOOK);
     expect(runbook).toContain(`${deployConf.BACKUP_RETENTION_DAYS} 天`);
     expect(runbook).toContain(`${deployConf.LOG_RETENTION_DAYS} 天`);
+  });
+});
+
+describe('Seoul deploy kit: Web page-head server (apps/web/server/serve.ts)', () => {
+  const serve = read(join(ROOT, 'apps/web/server/serve.ts'));
+  const unit = read(join(KIT, 'templates/systemd/fancy-web.service'));
+  const nginx = read(join(KIT, 'templates/nginx/fancy.conf'));
+  const proxy = read(join(KIT, 'templates/nginx/fancy-web-proxy.conf'));
+  const lib = read(join(KIT, 'lib.sh'));
+  const switchSh = read(join(KIT, 'switch.sh'));
+  const serveEnv = [...new Set([...serve.matchAll(/process\.env\.([A-Z_]+)/g)].map((m) => m[1]!))].sort();
+
+  it('serve.ts can be bound to loopback and reads only the variables the kit sets', () => {
+    expect(serve).toMatch(/\.listen\(PORT, HOST,/);
+    expect(serveEnv).toEqual(['FANCY_API_ORIGIN', 'FANCY_PUBLIC_ORIGIN', 'HOST', 'PORT']);
+  });
+
+  it('runs as a loopback systemd service reading the live API, with every variable set', () => {
+    expect(unit).toContain('ExecStart=@@NODE_DIR@@/bin/node apps/web/server/serve.ts');
+    expect(unit).toContain('WorkingDirectory=@@FANCY_CURRENT@@');
+    expect(unit).toContain('Environment=HOST=127.0.0.1');
+    expect(unit).toContain('Environment=PORT=@@WEB_PORT@@');
+    expect(unit).toContain('Environment=FANCY_API_ORIGIN=http://127.0.0.1:@@API_PORT@@');
+    expect(unit).toContain('Environment=FANCY_PUBLIC_ORIGIN=https://@@PUBLIC_HOSTNAME@@');
+    for (const key of serveEnv) expect(unit, key).toMatch(new RegExp(`^Environment=${key}=`, 'm'));
+  });
+
+  it('only needs files the release keeps: its relative imports exist and dist stays in place', () => {
+    const imports = [...serve.matchAll(/^import [^'"]*from '(\.{1,2}\/[^']+)'/gm)].map((m) => m[1]!);
+    expect(imports.length).toBeGreaterThan(0);
+    for (const path of imports) {
+      const target = join(ROOT, 'apps/web/server', path);
+      expect(statSync(target).isFile(), path).toBe(true);
+      expect(relative(ROOT, target)).toMatch(/^(apps|packages)\//);
+      // @fancy/* imports must be type-only so Node runs these files without a bundler.
+      expect(read(target)).not.toMatch(/^import (?!type )[^'"]*from '@fancy\//m);
+    }
+    expect(serve).toContain("new URL('../dist', import.meta.url)");
+    const release = read(join(KIT, 'release.sh'));
+    expect(release).toContain('cp -a apps/web/dist/. site/');
+    expect(release).not.toMatch(/rm -rf[^\n]*apps\/web\/dist/);
+    expect(release).toContain('await import(\\"./apps/web/server/serve.ts\\")');
+  });
+
+  it('nginx sends HTML navigations to it and keeps serving static files and the legal pages itself', () => {
+    expect(proxy).toMatch(/^proxy_pass http:\/\/127\.0\.0\.1:@@WEB_PORT@@;$/m);
+    expect(proxy).toContain('proxy_set_header X-Forwarded-For $fancy_client_ip;');
+    expect(proxy).toContain('include snippets/fancy-security-headers.conf;');
+    expect(proxy).toContain('error_page 502 504 = @spa;');
+    expect(nginx).toMatch(/location \/ \{[^}]*try_files \$uri \$uri\/index\.html @web;/);
+    expect(nginx).toMatch(/location = \/ \{\s*include snippets\/fancy-web-proxy\.conf;\s*\}/);
+    expect(nginx).toMatch(/location @web \{\s*include snippets\/fancy-web-proxy\.conf;\s*\}/);
+    expect(nginx).toMatch(/location @spa \{[^}]*try_files \/index\.html =404;/);
+    expect(nginx).toMatch(/location \/assets\/ \{[^}]*try_files \$uri =404;/);
+    expect(nginx).toMatch(/location \/admin\/ \{[^}]*try_files \$uri \/admin\/index\.html;/);
+    expect(nginx).toMatch(/location \/v1\/ \{[^}]*proxy_pass http:\/\/127\.0\.0\.1:@@API_PORT@@;/);
+    expect(nginx).toContain('absolute_redirect off;');
+  });
+
+  it('is installed by bootstrap and covered by candidate, switch, rollback and health checks', () => {
+    const bootstrap = read(join(KIT, 'bootstrap.sh'));
+    expect(bootstrap).toMatch(/for unit in [^;]*\bfancy-web\.service\b/);
+    expect(bootstrap).toContain('install_template nginx/fancy-web-proxy.conf /etc/nginx/snippets/fancy-web-proxy.conf');
+    expect(bootstrap).toContain('require_port_free_or_ours "$WEB_PORT" node');
+    expect(bootstrap).toContain('require_port_free_or_ours "$WEB_CANDIDATE_PORT" node');
+    expect(lib).toContain('"WEB_PORT=$WEB_PORT"');
+    // Candidate: the release's own serve.ts, reading the candidate API, must write the page head.
+    expect(switchSh).toMatch(/--unit="\$WEB_CANDIDATE"[\s\S]*-E PORT="\$WEB_CANDIDATE_PORT" -E FANCY_API_ORIGIN="http:\/\/127\.0\.0\.1:\$API_CANDIDATE_PORT"[\s\S]*apps\/web\/server\/serve\.ts/);
+    for (const key of serveEnv) expect(switchSh, key).toContain(`-E ${key}=`);
+    expect(switchSh).toContain('serves_page_head "http://127.0.0.1:$WEB_CANDIDATE_PORT/"');
+    // activate_release is shared by switch.sh (including its automatic rollback) and rollback.sh.
+    const activate = lib.match(/activate_release\(\) \{[\s\S]*?\n\}/)![0];
+    expect(activate).toContain('run systemctl restart fancy-web');
+    expect(activate).toContain('serves_page_head "http://127.0.0.1:$GATEWAY_PORT/"');
+    expect(activate).toContain('release_has_web_server "$rel"');
+    expect(read(join(KIT, 'rollback.sh'))).toContain('activate_release "$TARGET"');
+    const health = read(join(KIT, 'healthcheck.sh'));
+    expect(health).toMatch(/for unit in [^;]*\bfancy-web\b/);
+    expect(health).toContain('serves_page_head "http://127.0.0.1:$WEB_PORT/"');
+  });
+
+  it('the runbook documents the service, its ports and the routing', () => {
+    const runbook = read(RUNBOOK);
+    expect(runbook).toContain('fancy-web');
+    expect(runbook).toContain(`${deployConf.WEB_PORT} / ${deployConf.WEB_CANDIDATE_PORT}`);
+    expect(runbook).toContain('apps/web/server/serve.ts');
+  });
+
+  // Real routing check when nginx is available (FANCY_NGINX=/path/to/nginx, or nginx on PATH).
+  const nginxBin = process.env.FANCY_NGINX ?? 'nginx';
+  const hasNginx = spawnSync(nginxBin, ['-v'], { encoding: 'utf8' }).status === 0;
+  it.skipIf(!hasNginx)('routes HTML navigations, static files and a fancy-web outage as intended (real nginx)', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'fancy-nginx-'));
+    const listen = (handler: RequestListener) =>
+      new Promise<Server>((done) => { const server = createServer(handler).listen(0, '127.0.0.1', () => done(server)); });
+    const portOf = (server: Server) => (server.address() as AddressInfo).port;
+    const web = await listen((req, res) => { res.writeHead(200, { 'content-type': 'text/html' }); res.end(`<meta property="og:site_name" content="Fancy">${req.url}`); });
+    const api = await listen((_req, res) => { res.writeHead(404, { 'x-request-id': 'stub' }); res.end(); });
+    const probe = await listen(() => undefined);
+    const gatewayPort = portOf(probe);
+    probe.close();
+    const conf = join(dir, 'nginx.conf');
+    try {
+      const site = join(dir, 'current/site');
+      for (const sub of ['assets', 'privacy', 'admin', 'images']) mkdirSync(join(site, sub), { recursive: true });
+      for (const sub of ['snippets', 'logs']) mkdirSync(join(dir, sub));
+      writeFileSync(join(site, 'index.html'), 'SPA SHELL');
+      writeFileSync(join(site, 'assets/app.js'), 'js');
+      writeFileSync(join(site, 'privacy/index.html'), 'PRIVACY');
+      writeFileSync(join(site, 'admin/index.html'), 'ADMIN');
+      writeFileSync(join(site, 'images/a.jpg'), 'jpg');
+      writeFileSync(join(dir, 'local.conf'), `FANCY_CURRENT=${join(dir, 'current')}\nGATEWAY_PORT=${gatewayPort}\nWEB_PORT=${portOf(web)}\nAPI_PORT=${portOf(api)}\n`);
+      const render = (name: string) => {
+        const result = spawnSync('bash', ['-c', '. ./lib.sh && render_template "$@"', 'render', join(KIT, 'templates/nginx', name)], { cwd: KIT, encoding: 'utf8', env: { ...process.env, FANCY_LOCAL_CONF: join(dir, 'local.conf') } });
+        expect(result.status, result.stderr).toBe(0);
+        return result.stdout.replaceAll('/var/log/fancy/', `${dir}/logs/`);
+      };
+      writeFileSync(join(dir, 'fancy.conf'), render('fancy.conf'));
+      writeFileSync(join(dir, 'snippets/fancy-web-proxy.conf'), render('fancy-web-proxy.conf'));
+      writeFileSync(join(dir, 'snippets/fancy-security-headers.conf'), render('fancy-security-headers.conf'));
+      const temp = ['client_body', 'proxy', 'fastcgi', 'uwsgi', 'scgi'].map((t) => `${t}_temp_path ${dir}/${t};`).join(' ');
+      // Workers must read the 0700 temp dir: as root they run as root, otherwise as the caller.
+      writeFileSync(conf, `${process.getuid?.() === 0 ? 'user root;' : ''} pid ${dir}/nginx.pid; error_log ${dir}/logs/error.log; events {} http { ${temp} include fancy.conf; }`);
+      const start = spawnSync(nginxBin, ['-p', dir, '-c', conf], { encoding: 'utf8' });
+      expect(start.status, start.stderr).toBe(0);
+      try {
+        const get = async (path: string) => {
+          const res = await fetch(`http://127.0.0.1:${gatewayPort}${path}`, { redirect: 'manual' });
+          return { status: res.status, body: await res.text(), location: res.headers.get('location'), frame: res.headers.get('x-frame-options') };
+        };
+        for (const path of ['/', '/discover', '/meals/abc/some-title', '/robots.txt', '/sitemap.xml']) {
+          const res = await get(path);
+          expect(res.status, path).toBe(200);
+          expect(res.body, path).toBe(`<meta property="og:site_name" content="Fancy">${path}`);
+          expect(res.frame, path).toBe('DENY');
+        }
+        expect(await get('/privacy')).toMatchObject({ status: 200, body: 'PRIVACY' });
+        expect(await get('/privacy/')).toMatchObject({ status: 200, body: 'PRIVACY' });
+        expect(await get('/assets/app.js')).toMatchObject({ status: 200, body: 'js' });
+        expect((await get('/assets/missing.js')).status).toBe(404);
+        expect(await get('/images/a.jpg')).toMatchObject({ status: 200, body: 'jpg' });
+        expect(await get('/admin/reports')).toMatchObject({ status: 200, body: 'ADMIN' });
+        expect(await get('/index.html')).toMatchObject({ status: 301, location: '/' });
+        expect(await get('/admin')).toMatchObject({ status: 301, location: '/admin/' });
+        expect((await get('/v1/anything')).status).toBe(404);
+        await new Promise<void>((done) => { web.close(() => done()); web.closeAllConnections(); });
+        // fancy-web down: the plain single-page app, never an error page.
+        expect(await get('/discover')).toMatchObject({ status: 200, body: 'SPA SHELL' });
+        expect(await get('/')).toMatchObject({ status: 200, body: 'SPA SHELL' });
+        expect(await get('/privacy')).toMatchObject({ status: 200, body: 'PRIVACY' });
+      } finally {
+        spawnSync(nginxBin, ['-p', dir, '-c', conf, '-s', 'stop'], { encoding: 'utf8' });
+      }
+    } finally {
+      web.close();
+      api.close();
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });

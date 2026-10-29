@@ -16,7 +16,8 @@
 
 ```
 用户 ──HTTPS──> Cloudflare 边缘 ──Tunnel(外连)──> cloudflared ──> nginx 127.0.0.1:8180
-                                                                   ├─ /            Web App 与法律页（静态）
+                                                                   ├─ 页面导航     → fancy-web 127.0.0.1:3102（写页面头部；挂了退回静态单页）
+                                                                   ├─ /assets/、图片、法律页  静态文件（nginx 直接发）
                                                                    ├─ /admin/      后台（静态）
                                                                    ├─ /v1/         → API 127.0.0.1:3100 ──> PostgreSQL 127.0.0.1:5433 (TLS)
                                                                    └─ /healthz     → API /health/ready
@@ -27,14 +28,15 @@ worker（无端口）───────────────────�
 | --- | --- |
 | Cloudflare Tunnel | 443 已被代理占用；Tunnel 只需外连，不开入站端口，TLS 证书由 Cloudflare 管理 |
 | nginx（Ubuntu 官方包）作同源网关 | API 不提供静态文件，Tunnel 也不能直接发文件；后台必须与 API 同源（cookie 会话 + Origin/CSRF）。nginx 来自 Ubuntu 仓库，安全更新随无人值守升级自动安装。只监听回环，默认站点在启动前删除，不会占 80 端口 |
+| 页面头部服务 fancy-web | Web 是单页应用，链接预览机器人与爬虫不执行 JavaScript，只看服务器返回的 HTML。`apps/web/server/serve.ts`（Node 24、无依赖、无密钥）为首页、发现页、饭局页、主页写入标题/描述/canonical/OG/JSON-LD，饭局旧地址 301 到规范地址，并生成 `robots.txt`、`sitemap.xml`。nginx 只把“页面导航”交给它：构建里真实存在的文件（`/assets/`、图片、图标、法律页 CSS）和法律页目录仍由 nginx 直接发，`/v1`、`/admin/` 不经过它；`/index.html` 301 到 `/`，保证首页总带头部。它只监听 127.0.0.1:3102，经回环读取 API 的公开接口（不带访客 Cookie，头部不因访客而变）；不读 `/etc/fancy/fancy.env`。它停了或不响应时，nginx 自动退回普通单页（`@spa`），网站照常可用，只是预览暂时没有饭局标题 |
 | 真实客户端 IP | nginx 把 Cloudflare 的 `CF-Connecting-IP` 写成唯一的 `X-Forwarded-For`，API 只信任 `127.0.0.1`（`TRUSTED_PROXY_CIDRS`），客户端伪造的转发头一律丢弃，限流按真实 IP 隔离 |
 | Node 24.22.1 装在 `/opt` | 项目要求 Node 24；不替换系统 Node 20，其他服务不受影响。官方压缩包按 SHASUMS256 校验 |
 | PostgreSQL 17（PGDG 官方源） | 与开发、测试一致；只听 127.0.0.1:5433（避开开发常用的 5432）。内存按 3.6 GB 整机分配：shared_buffers 512 MB、effective_cache_size 1.5 GB、work_mem 8 MB、最多 50 连接 |
 | 数据库 TLS（本机 CA，`sslmode=verify-full`） | 生产配置守卫要求 `DATABASE_URL` 开启 TLS；node-postgres 把 `require` 当作 `verify-full`，自签证书会被拒，所以 bootstrap 生成本机 CA 和 127.0.0.1 证书，API 用 `sslrootcert` 校验。CA 私钥签完即删 |
 | 在服务器上按 Git 提交构建 | 仓库公开，服务器无需凭据即可取到确切提交；pnpm 安装的是本机 Linux 包（Mac 是 darwin/arm64）；发布与提交 SHA 一一对应。只装 API、worker、Web、后台四个工作区（约 200 MB，不装 iOS 工具链），只跑两个 Vite 构建、不做类型检查（合并前由 CI/Mac 跑 `pnpm core:check`）。构建在 systemd 临时单元里以 `fancy` 用户运行，内存上限 1800 MB、低 CPU/IO 优先级，不挤占在线 API 与数据库；本机实测构建两端各约 1 秒 |
 | 发布目录 + 原子切换 | `/srv/fancy/releases/<时间>-<提交>`，`/srv/fancy/current` 符号链接用 `mv -T` 原子替换；保留最近 5 个发布供回滚 |
-| 先迁移、后切换 | 迁移前自动加密备份；新版本先在 127.0.0.1:3101 以候选进程启动并通过 `/health/ready`，再切换正式进程；切换后不健康自动退回上一版 |
-| systemd 托管 | `fancy-api`、`fancy-worker`、`fancy-tunnel` 常驻；每日备份、每小时删除台账导出、每 5 分钟健康检查用定时器；服务以 `fancy`/`fancy-tunnel` 系统用户运行并加沙箱限制 |
+| 先迁移、后切换 | 迁移前自动加密备份；新版本先在 127.0.0.1:3101 以候选 API 启动并通过 `/health/ready`，再在 127.0.0.1:3103 以候选 fancy-web（读候选 API）启动并确认写出首页头部，然后才切换正式进程；切换后 API、fancy-web 或网关首页头部不健康就自动退回上一版。回滚到尚无 `serve.ts` 的旧发布时，套件停掉 fancy-web，由 nginx 发普通单页 |
+| systemd 托管 | `fancy-api`、`fancy-worker`、`fancy-web`、`fancy-tunnel` 常驻；每日备份、每小时删除台账导出、每 5 分钟健康检查用定时器；服务以 `fancy`/`fancy-tunnel` 系统用户运行并加沙箱限制 |
 | 密钥文件 | `/etc/fancy/fancy.env`（root:root 0600）由 systemd 在降权前读取，服务用户本身读不到该文件 |
 | 加密备份 | `pg_dump` 直接流入 `age`，用 Owner 的**公钥**加密：服务器能加密、不能解密自己的备份；私钥只在 Owner 的密码管理器里 |
 | 日志 | Fancy 服务写入独立 journald 命名空间 `fancy`，保留 30 天，不改系统全局日志设置；nginx 访问日志只记路径不记查询串，保留 30 天；PostgreSQL 日志不记绑定参数，按星期轮转（最多 7 天） |
@@ -58,6 +60,7 @@ worker（无端口）───────────────────�
 | 端口（均为 127.0.0.1） | 服务 |
 | --- | --- |
 | 3100 / 3101 | API / 切换前的候选 API |
+| 3102 / 3103 | Web 页面头部服务 fancy-web（`apps/web/server/serve.ts`）/ 切换前的候选 fancy-web |
 | 5433 | PostgreSQL 17 |
 | 8180 | nginx 同源网关 |
 | 20241 | cloudflared 指标与 `/ready` |
@@ -143,7 +146,7 @@ ssh tencent-seoul 'sudo /opt/fancy-deploy/deploy.sh --ref main'
 ssh tencent-seoul 'sudo /opt/fancy-deploy/healthcheck.sh --public'
 ```
 
-`deploy.sh` = `release.sh`（取提交、安装、构建、封存）→ `migrate.sh`（生产配置守卫 → 待执行迁移 → 有数据时先备份 → 迁移）→ `switch.sh`（候选进程验证 → 原子切换 → 重启 API 与 worker → 健康检查，失败自动退回 → 同步套件 → 启用定时器）→ `healthcheck.sh`。首次部署是空库，全部迁移（截至 2026-10-29 为 0001–0029）依次执行。
+`deploy.sh` = `release.sh`（取提交、安装、构建、封存）→ `migrate.sh`（生产配置守卫 → 待执行迁移 → 有数据时先备份 → 迁移）→ `switch.sh`（候选 API 与候选 fancy-web 验证 → 原子切换 → 重启 API、worker 与 fancy-web → 健康检查（含网关首页由 fancy-web 写出头部），失败自动退回 → 同步套件 → 启用定时器）→ `healthcheck.sh`。首次部署是空库，全部迁移（截至 2026-10-29 为 0001–0029）依次执行。
 
 ## 5. Owner 控制台清单
 
@@ -161,7 +164,7 @@ ssh tencent-seoul 'sudo /opt/fancy-deploy/healthcheck.sh --public'
 
 ### 6.1 自动检查
 
-`healthcheck.sh --public` 全部 PASS：五个服务运行；API live/ready；网关首页、`/privacy`、`/terms`、`/guidelines`、`/support`、`/admin/` 为 200；`/v1` 到达 API（未知路径返回 API 自己的 404 与 `x-request-id`）；Tunnel 已连接；密钥文件 0600；磁盘与内存；ss-server 与 443 仍在（只读观察）。
+`healthcheck.sh --public` 全部 PASS：六个服务运行（含 fancy-web）；API live/ready；fancy-web 在 127.0.0.1:3102 写出页面头部，网关的 `/discover` 由它返回、`/robots.txt` 由它生成，公网首页带服务器写入的头部；网关首页、`/privacy`、`/terms`、`/guidelines`、`/support`、`/admin/` 为 200；`/v1` 到达 API（未知路径返回 API 自己的 404 与 `x-request-id`）；Tunnel 已连接；密钥文件 0600；磁盘与内存；ss-server 与 443 仍在（只读观察）。
 
 ### 6.2 人工核对（Owner 与 Claude 会话一起）
 
@@ -172,7 +175,8 @@ ssh tencent-seoul 'sudo /opt/fancy-deploy/healthcheck.sh --public'
 - [ ] 后台 https://fancyabite.uk/admin/ 用员工邮箱登录并通过 MFA，举报队列可打开。
 - [ ] Resend 控制台看到 webhook 投递成功。
 - [ ] `ssh tencent-seoul 'sudo systemctl start fancy-backup.service && sudo cat /srv/fancy/state/last-backup'` 产生第一份加密备份；随后做一次 §8 的恢复演练。
-- [ ] `ssh tencent-seoul 'ss -Hltn'`：除原有端口外，Fancy 只新增 127.0.0.1 上的 3100、5433、8180、20241；443 仍由 ss-server 监听。
+- [ ] 把一个饭局链接贴进 iMessage/WhatsApp/Slack，预览显示饭局标题与描述；`curl -s https://fancyabite.uk/discover | grep og:title` 有结果。
+- [ ] `ssh tencent-seoul 'ss -Hltn'`：除原有端口外，Fancy 只新增 127.0.0.1 上的 3100、3102、5433、8180、20241（3101、3103 只在切换时短暂出现）；443 仍由 ss-server 监听。
 
 ### 6.3 授予员工角色
 
@@ -230,7 +234,7 @@ ssh tencent-seoul 'sudo /opt/fancy-deploy/restore-drill.sh --identity /root/fanc
 | 看什么 | 命令 |
 | --- | --- |
 | 健康状态 | `sudo /opt/fancy-deploy/healthcheck.sh`；定时检查失败时 `systemctl --failed` 会列出 `fancy-healthcheck.service` |
-| API/worker/Tunnel 日志 | `sudo journalctl --namespace=fancy -u fancy-api -u fancy-worker -u fancy-tunnel --since -1h` |
+| API/worker/fancy-web/Tunnel 日志 | `sudo journalctl --namespace=fancy -u fancy-api -u fancy-worker -u fancy-web -u fancy-tunnel --since -1h` |
 | 网关日志 | `/var/log/fancy/nginx-access.log`、`nginx-error.log` |
 | 数据库日志 | `/var/log/postgresql/fancy/` |
 | 最近备份/台账 | `/srv/fancy/state/last-backup`、`last-ledger` |
@@ -269,7 +273,10 @@ ssh tencent-seoul 'sudo /opt/fancy-deploy/restore-drill.sh --identity /root/fanc
 | `DELETION_MAIL_KEY_VERSION` | 服务器生成 `v1` | 否 | 与下一项一起生成 |
 | `DELETION_MAIL_KEYS_JSON` | 服务器生成 AES-256 密钥环 | 是 | 删号通知邮件地址加密 |
 | `ANALYTICS_COVERAGE_START` | 首次留空；Owner 在生产采集验证后填写 | 否 | 见 §6.4 |
-| `PORT` | systemd 单元设置（API 3100，候选 3101） | 否 | **不得**写入 env 文件 |
+| `PORT` | systemd 单元设置（API 3100，候选 3101；fancy-web 3102，候选 3103） | 否 | **不得**写入 env 文件 |
+| `HOST` | `fancy-web.service` 设置 `127.0.0.1` | 否 | 只给 fancy-web；不在 env 文件 |
+| `FANCY_API_ORIGIN` | `fancy-web.service` 设置 `http://127.0.0.1:3100`（候选读 3101） | 否 | fancy-web 读取公开饭局/主页的地址；不在 env 文件 |
+| `FANCY_PUBLIC_ORIGIN` | `fancy-web.service` 设置 `https://fancyabite.uk` | 否 | canonical、OG、sitemap 里的网址；不在 env 文件 |
 | `PRIVACY_POLICY_VERSION` | Owner：隐私通知生效日期 | 否 | 生产必填 |
 | `RETENTION_POLICY_JSON` | Owner：G-PRIVACY 批准，如 `{"accountDeletionApproved":true,"deletionReceiptDays":30}` | 否 | 生产必填；`accountDeletionApproved` 为 Owner 的明确声明 |
 | `LOG_LEVEL` | `info` | 否 | |
@@ -305,6 +312,8 @@ ssh tencent-seoul 'sudo /opt/fancy-deploy/restore-drill.sh --identity /root/fanc
 
 - 单机部署：服务器宕机即服务中断；API 与 worker 都只能单实例（见[运行说明](../../infra/README.md)）。
 - 数据库与应用同机，备份默认也在同机，异地副本待定（§8）。
+- fancy-web 每次页面导航（饭局页、主页）向 API 读一次公开数据，没有缓存；流量大时再加 nginx 微缓存。它只在启动时读一次 `apps/web/dist/index.html`，所以切换发布后必须重启（`activate_release` 已做）。
+- 已有服务器上首次部署带 fancy-web 的发布前，要先用新发布里的套件重跑一次 bootstrap（安装 `fancy-web.service` 与 nginx 片段）；`switch.sh` 发现单元缺失会拒绝并给出命令。
 - 不设 Content-Security-Policy（Web 地图加载 Google 脚本，需实测后再加）。
 - 健康检查失败只在服务器上留记录，没有主动告警；建议接外部可用性监测（§5）。
-- 本套件已在本地验证：脚本语法与 shellcheck、模板渲染、systemd 单元校验、TLS `verify-full` 连接、非超级用户执行全部迁移、加密备份与恢复管道、生产形态配置下的 API 启动与 `/health/ready`、发布构建脚本；尚未在首尔服务器实际执行，上线以 §6 的验证为准。
+- 本套件已在本地验证：脚本语法与 shellcheck、模板渲染、systemd 单元校验、真实 nginx 1.24 的页面导航/静态文件/fancy-web 停机退回路由（发布测试在有 nginx 时自动运行，`FANCY_NGINX` 可指定路径）、TLS `verify-full` 连接、非超级用户执行全部迁移、加密备份与恢复管道、生产形态配置下的 API 启动与 `/health/ready`、发布构建脚本；尚未在首尔服务器实际执行，上线以 §6 的验证为准。
