@@ -97,6 +97,12 @@ describe('Edit meal flow', () => {
     await fireEvent.press(await screen.findByRole('button', { name: 'Noodle House, Fitzrovia, London' }));
     await fireEvent.press(screen.getByRole('button', { name: 'Use this restaurant' }));
     expect(await screen.findByLabelText('Selected restaurant Noodle House')).toBeOnTheScreen();
+    // A different restaurant clears the meal time (PRD FR05, QA-CREATE-004): pick it again first.
+    await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
+    expect(mockRouter.push).not.toHaveBeenCalled();
+    expect(screen.getByRole('alert')).toHaveTextContent('Choose a date and time.');
+    await fireEvent.press(screen.getByRole('button', { name: 'Time: Choose a time' }));
+    await fireEvent.press(screen.getByRole('radio', { name: '19:00' }));
     await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
     expect(mockRouter.push).toHaveBeenCalledWith(`/meals/${MEAL_ID}/edit/introduce`);
     const draft = app.services.drafts.get<CreateDraft>(editDraftKey(MEAL_ID))!;

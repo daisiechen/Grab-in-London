@@ -67,14 +67,28 @@ export const emptyDraft = (attemptId: string): CreateDraft => ({
   closeOffset: null,
 });
 
+/** Provider display refreshes do not change the selected restaurant's verified identity (web sameVenue). */
+export const sameVenue = (a: VenueChoice | null | undefined, b: VenueChoice | null | undefined): boolean =>
+  !!a && !!b && (a.placeId && b.placeId ? a.placeId === b.placeId : a.venueRef === b.venueRef);
+
 /**
  * Applies an edit and its dependent invalidations (UX contract: schedule changes invalidate
  * incompatible choices and the external attestation; review confirmation never survives edits).
+ * Confirming a different restaurant clears the meal time and its BST/GMT choices (PRD FR05,
+ * QA-CREATE-004; same as web updateDraft); the first pick keeps a time already chosen, and a
+ * same-place display refresh changes nothing.
  */
 export function updateDraft(draft: CreateDraft, patch: Partial<CreateDraft>): CreateDraft {
   const next: CreateDraft = { ...draft, ...patch };
+  const keys = Object.keys(patch);
+  if (keys.length > 0 && keys.every((k) => k === 'venue') && sameVenue(draft.venue, patch.venue)) return next;
+  const venueChanged = 'venue' in patch && !sameVenue(draft.venue, patch.venue ?? null);
+  if (venueChanged && draft.venue) {
+    if (!('time' in patch)) next.time = null;
+    next.startOffset = null;
+    next.closeOffset = null;
+  }
   const scheduleChanged = ('date' in patch && patch.date !== draft.date) || ('time' in patch && patch.time !== draft.time);
-  const venueChanged = 'venue' in patch && patch.venue?.venueRef !== draft.venue?.venueRef;
   if (scheduleChanged) next.startOffset = null;
   if (('closeDate' in patch && patch.closeDate !== draft.closeDate) || ('closeTime' in patch && patch.closeTime !== draft.closeTime)) next.closeOffset = null;
   if (scheduleChanged && !next.closeEdited && next.date && next.time) {

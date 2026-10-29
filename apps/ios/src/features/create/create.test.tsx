@@ -277,6 +277,29 @@ describe('Create layout and steps (demo create-flow, r07 costs)', () => {
     expect(app.services.drafts.get<CreateDraft>(CREATE_DRAFT_KEY)?.venue?.venueRef).toBe(VENUE_REF);
   });
 
+  it('QA-CREATE-004: confirming a different restaurant clears the meal time and both confirmations, previewing does not', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.services.drafts.set(CREATE_DRAFT_KEY, { ...readyDraft(), startOffset: 60, reviewConfirmed: true });
+    app.mock.on('GET', `/v1/venues/${VENUE_REF}/photo`, ok({ placeId: 'place-1', photo: null }));
+    app.mock.on('GET', '/v1/venues', page([{ placeId: 'place-2', name: 'Kiln', address: '58 Brewer St', location: null, photoRefs: [], attributions: [] }]));
+    app.mock.on('POST', '/v1/venues/confirm', ok({ ...venueResponse, venueRef: '9c1b0a9f-8e7d-4c6b-9a5f-4e3d2c1b0a9f', placeId: 'place-2', name: 'Kiln', address: '58 Brewer St', areaCode: 'soho' }));
+    await renderApp(app, <CreateStepScreen step={0} />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Change restaurant' }));
+    await fireEvent.press(await screen.findByRole('button', { name: 'Kiln, 58 Brewer St' }));
+    // A preview is not a choice: the old time and confirmations stay.
+    expect(app.services.drafts.get<CreateDraft>(CREATE_DRAFT_KEY)).toMatchObject({ time: '01:30', bookingDeclarationConfirmed: true });
+    await fireEvent.press(screen.getByRole('button', { name: 'Use this restaurant' }));
+    expect(await screen.findByLabelText('Selected restaurant Kiln')).toBeOnTheScreen();
+    expect(app.services.drafts.get<CreateDraft>(CREATE_DRAFT_KEY)).toMatchObject({
+      venue: { placeId: 'place-2' }, time: null, startOffset: null, closeOffset: null, bookingDeclarationConfirmed: false, reviewConfirmed: false,
+      date: '2026-10-25', closeDate: '2026-10-24', closeTime: '22:00', title: 'Late supper', budgetMin: '20', budgetMax: '30',
+    });
+    expect(screen.getByRole('button', { name: 'Time: Choose a time' })).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Continue' }));
+    expect(mockRouter.push).not.toHaveBeenCalled();
+    expect(screen.getByRole('alert')).toHaveTextContent('Choose a date and time.');
+  });
+
   it('a previewed restaurant can be dismissed without confirming it', async () => {
     const app = createTestApp(); await signIn(app, me());
     app.mock.on('GET', '/v1/venues', page([{ placeId: 'place-1', name: 'Dishoom', address: '7 Boundary St', location: null, photoRefs: [], attributions: [] }]));

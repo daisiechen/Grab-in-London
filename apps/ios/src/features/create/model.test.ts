@@ -35,6 +35,24 @@ describe('create draft invalidation', () => {
     expect(d.bookingDeclarationConfirmed).toBe(false);
   });
 
+  it('a different restaurant clears the meal time and its offsets but keeps the date, deadline and other fields (PRD FR05, QA-CREATE-004)', () => {
+    const before = updateDraft(complete(), { startOffset: 60, closeOffset: 60, reviewConfirmed: true });
+    const d = updateDraft(before, { venue: { ...VENUE, venueRef: '9c1b0a9f-8e7d-4c6b-9a5f-4e3d2c1b0a9f', placeId: 'place-2', name: 'Kiln' } });
+    expect(d).toMatchObject({ time: null, startOffset: null, closeOffset: null, bookingDeclarationConfirmed: false, reviewConfirmed: false });
+    expect(d).toMatchObject({ date: before.date, closeDate: before.closeDate, closeTime: before.closeTime, title: before.title, budgetMin: '20', budgetMax: '35', capacity: 4, minimum: 3 });
+  });
+
+  it('the first restaurant pick keeps a time already chosen', () => {
+    const d = updateDraft(updateDraft(emptyDraft('a'), { date: '2026-10-25', time: '19:00' }), { venue: VENUE });
+    expect(d.time).toBe('19:00');
+  });
+
+  it('a same-place display refresh keeps the time and both confirmations', () => {
+    const before = updateDraft(complete(), { startOffset: 60, reviewConfirmed: true });
+    const d = updateDraft(before, { venue: { ...VENUE, venueRef: '77777777-7777-4777-8777-777777777777', name: 'Dishoom Shoreditch' } });
+    expect(d).toMatchObject({ time: '19:00', startOffset: 60, bookingDeclarationConfirmed: true, reviewConfirmed: true, venue: { name: 'Dishoom Shoreditch' } });
+  });
+
   it('a text edit keeps the booking attestation but always clears the review tick', () => {
     const d = updateDraft(complete(), { title: 'Sunday dinner!' });
     expect(d.bookingDeclarationConfirmed).toBe(true);
