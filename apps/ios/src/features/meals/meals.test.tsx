@@ -67,6 +67,15 @@ describe('MealDetailScreen (S06)', () => {
 });
 
 describe('ApplyScreen (S07, QA-INPUT-017..020)', () => {
+  it('shows the member’s uploaded photo next to the introduction, not just an initial', async () => {
+    const app = createTestApp();
+    await signIn(app, me({ displayName: 'Alex', avatarUrl: 'preview://images/maya.png' }));
+    app.mock.on('GET', MEAL_PATH, ok({ meal: meal(), myApplication: null, conversationId: null }));
+    await renderApp(app, <ApplyScreen />);
+    await screen.findByLabelText('Your introduction');
+    expect(screen.queryByText('A')).toBeNull();
+  });
+
   it('enforces 20–300 characters, keeps the draft across remounts and reports a full table', async () => {
     const app = createTestApp();
     await signIn(app, me());

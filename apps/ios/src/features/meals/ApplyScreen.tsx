@@ -147,7 +147,7 @@ function ApplyScreenContent() {
       </View>
 
       <View style={styles.me}>
-        <Avatar person={{ displayName: me.displayName ?? 'You', avatarUrl: null }} size={38} />
+        <Avatar person={{ displayName: me.displayName ?? 'You', avatarUrl: me.avatarUrl }} size={38} />
         <View style={styles.flex}>
           <Text style={styles.meName} numberOfLines={1}>{me.displayName ?? 'Your profile'}</Text>
           {about ? <Text style={styles.meAbout} numberOfLines={1}>{about}</Text> : null}
