@@ -31,8 +31,25 @@ export const CLOSING_ACTIONS: readonly ModerationAction[] = ['UPHOLD', 'RESTORE'
 /** Actions that need a second confirmation click. */
 export const CONFIRM_ACTIONS: readonly ModerationAction[] = ['SUSPEND_USER', 'CANCEL_MEAL', 'REMOVE_PROFILE_PHOTO', 'RESET_PROFILE_TEXT'];
 
+/**
+ * Report reason as staff see it (owner decision 2026-10-29). Legacy `private_concern` rows predate the
+ * reasons and show as Other.
+ */
+export const reasonLabel = (t: Translate, reason: string) => ({
+  safety: t('人身安全或威胁', 'Personal safety or threats'),
+  harassment: t('骚扰或仇恨', 'Harassment or hate'),
+  scam: t('诈骗、垃圾信息或广告', 'Scam, spam or advertising'),
+  under_18: t('可能未满 18 岁', 'May be under 18'),
+  other: t('其他', 'Other'),
+  private_concern: t('其他', 'Other'),
+  PRIVACY_REDACTED: t('已按隐私规则移除', 'Removed for privacy'),
+} as Record<string, string>)[reason] ?? t('其他', 'Other');
+
+/** Runbook rule for a possibly under-18 member: a person suspends pending checks; never automatic. */
+export const UNDER_18_NOTE = 'Suspended pending age checks: reported as possibly under 18. Close the account if under 18 is confirmed; lift the suspension if not.';
+
 /** Internal-note presets for one-tap decisions (staff can edit them in the detail view). */
-export const presetNote = (action: ModerationAction) => ({
+export const presetNote = (action: ModerationAction, reason?: string) => (action === 'SUSPEND_USER' && reason === 'under_18' ? UNDER_18_NOTE : ({
   UPHOLD: 'Upheld: content breaks the community guidelines; limit kept.',
   RESTORE: 'Restored: no breach of the community guidelines found.',
   HIDE_CONTENT: 'Hidden while under review.',
@@ -41,7 +58,7 @@ export const presetNote = (action: ModerationAction) => ({
   REMOVE_PROFILE_PHOTO: 'Profile photo removed: breaks the community guidelines.',
   SUSPEND_USER: 'Account suspended for a serious or repeated breach of the community guidelines.',
   UNSUSPEND_USER: 'Suspension lifted after review.',
-})[action];
+})[action]);
 
 /** Remaining time to the response target; negative = overdue. */
 export function sla(summary: Pick<ModerationSummary, 'dueAt' | 'caseStatus'>, now = Date.now()) {
