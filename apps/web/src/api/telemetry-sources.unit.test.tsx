@@ -6,6 +6,7 @@ import { createFetchStub,ok,page,fail } from '../test/fetchStub.ts';
 import { meal,session,publicProfile,MEAL_ID,HOST_ID } from '../test/fixtures.ts';
 import { saveDraft } from '../lib/drafts.ts';
 import { newDraft } from '../features/create/model.ts';
+import { addDays,londonToday } from '../lib/london.ts';
 import { serverValidationMetrics,validationMetric } from '../features/create/validationMetrics.ts';
 import { fakePollerDeps } from '../test/fakePoller.ts';
 
@@ -41,7 +42,7 @@ describe('analytics source presentations',()=>{
     expect(stub.callsTo('ingestEvents').some(c=>JSON.stringify(c.body).includes('create_arranged'))).toBe(false);
   });
   it('records arranged after actual arrange validation using the persisted business attempt ID',async()=>{
-    const m=meal(),draft={...newDraft(),venue:m.venue,date:'2026-10-23',time:'19:30',closeDate:'2026-10-23',closeTime:'18:30'};
+    const m=meal(),day=addDays(londonToday(),3),draft={...newDraft(),venue:m.venue,date:day,time:'19:30',closeDate:day,closeTime:'18:30'};
     saveDraft('create',draft);
     const stub=createFetchStub({getSession:()=>ok(session()),ingestEvents:()=>ok({results:[]})});
     renderApp(stub.fetch,'/create',{consentControl:true});

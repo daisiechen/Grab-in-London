@@ -4,7 +4,7 @@ import { userEvent } from '@testing-library/user-event';
 import { createFetchStub, fail, ok } from '../../test/fetchStub.ts';
 import { renderApp } from '../../test/render.tsx';
 import { HOST_ID, MEAL_ID, USER_ID, meal, publicProfile, session } from '../../test/fixtures.ts';
-import { attendanceStatus } from './PostMealPage.tsx';
+import { attendanceText, mateAttendanceReason } from './PostMealPage.tsx';
 
 const EMMA = '16161616-1616-4161-8161-161616161616';
 const DIRECT = '17171717-1717-4171-8171-171717171717';
@@ -46,12 +46,13 @@ function stub(pm: Record<string, unknown>, me = USER_ID, extra: Record<string, u
   return { s, set: (over: Record<string, unknown>) => { current = state({ ...pm, ...over }); } };
 }
 
-describe('attendance status (T13)', () => {
-  it('keeps unknown separate from absent and explains SELF priority', () => {
-    expect(attendanceStatus(undefined)).toBe('Unknown · no report yet');
-    expect(attendanceStatus({ subjectId: USER_ID, value: 'unknown', source: null, selfValue: null, hostValue: null, version: '0' })).toBe('Unknown · no report yet');
-    expect(attendanceStatus({ subjectId: USER_ID, value: 'present', source: 'HOST', selfValue: null, hostValue: 'present', version: '1' })).toMatch(/reported by your host. Your own report takes priority/);
-    expect(attendanceStatus({ subjectId: USER_ID, value: 'absent', source: 'SELF', selfValue: 'absent', hostValue: 'present', version: '2' })).toBe('Didn’t attend · your report');
+describe('attendance status (T13, iOS attendanceText)', () => {
+  it('keeps unknown separate from absent and says who reported', () => {
+    expect(attendanceText(undefined)).toBe('Not reported yet');
+    expect(attendanceText({ subjectId: USER_ID, value: 'unknown', source: null, selfValue: null, hostValue: null, version: '0' })).toBe('Not reported yet');
+    expect(attendanceText({ subjectId: USER_ID, value: 'present', source: 'HOST', selfValue: null, hostValue: 'present', version: '1' }, true)).toBe('Came · host reported');
+    expect(attendanceText({ subjectId: USER_ID, value: 'absent', source: 'SELF', selfValue: 'absent', hostValue: 'present', version: '2' }, true)).toBe('Didn’t come · you reported');
+    expect(mateAttendanceReason('Maya', 'unknown', false)).toMatch(/hasn’t confirmed attending yet/);
   });
 });
 
@@ -61,7 +62,7 @@ describe('post-meal page (T13/T14/T15)', () => {
     renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
     const group = await screen.findByRole('group', { name: 'Your attendance' });
     expect(within(group).getAllByRole('radio').every((r) => !(r as HTMLInputElement).checked)).toBe(true);
-    expect(screen.getByText(/Unknown · no report yet/)).toBeTruthy();
+    expect(screen.getByText(/· Not reported yet/)).toBeTruthy();
     expect(screen.getByText(/Confirm that you attended/)).toBeTruthy();
     await userEvent.click(within(group).getByLabelText('I attended'));
     await waitFor(() => expect(s.callsTo('reportAttendance')).toHaveLength(1));
@@ -70,6 +71,7 @@ describe('post-meal page (T13/T14/T15)', () => {
     expect(call.body).toEqual({ value: 'present' });
     expect(call.headers['if-match']).toBe('"0"');
     expect(await screen.findByRole('group', { name: 'How was the meal?' })).toBeTruthy();
+    expect(screen.getByText('Saved')).toBeTruthy();
   });
 
   it('rates 1–5 privately only when attended, using the experience revision', async () => {
@@ -85,18 +87,19 @@ describe('post-meal page (T13/T14/T15)', () => {
     expect(s.callsTo('rateExperience')[0]!.headers['if-match']).toBe('"2"');
   });
 
-  it('closed window: no attendance controls, support correction hint', async () => {
+  it('closed window: no attendance or feedback controls', async () => {
     const { s } = stub({ windowOpen: false });
     renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
-    expect(await screen.findByText(/7-day reporting window has closed/)).toBeTruthy();
+    expect(await screen.findByText('The feedback window for this meal has closed.')).toBeTruthy();
+    expect(screen.queryByRole('group', { name: 'How was the meal?' })).toBeNull();
     expect(screen.queryByRole('group', { name: 'Your attendance' })).toBeNull();
   });
 
   it('saves a public reference and shows it as pending until mutual or 7 days', async () => {
-    const { s, set } = stub({ attendance: [{ subjectId: USER_ID, value: 'present', source: 'SELF', selfValue: 'present', hostValue: null, version: '1' }] });
+    const { s, set } = stub({ attendance: [{ subjectId: USER_ID, value: 'present', source: 'SELF', selfValue: 'present', hostValue: null, version: '1' }, { subjectId: HOST_ID, value: 'present', source: 'SELF', selfValue: 'present', hostValue: null, version: '1' }] });
     renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
     await userEvent.type(await screen.findByLabelText(/A public reference/), 'Made everyone feel included.');
-    set({ attendance: [{ subjectId: USER_ID, value: 'present', source: 'SELF', selfValue: 'present', hostValue: null, version: '1' }], reviews: [{ subjectId: HOST_ID, version: '1', visibility: 'PENDING' }] });
+    set({ attendance: [{ subjectId: USER_ID, value: 'present', source: 'SELF', selfValue: 'present', hostValue: null, version: '1' }, { subjectId: HOST_ID, value: 'present', source: 'SELF', selfValue: 'present', hostValue: null, version: '1' }], reviews: [{ subjectId: HOST_ID, version: '1', visibility: 'PENDING' }] });
     await userEvent.click(screen.getByRole('button', { name: /Save reference/ }));
     await waitFor(() => expect(s.callsTo('reviewPerson')).toHaveLength(1));
     expect(s.callsTo('reviewPerson')[0]!.params.subjectId).toBe(HOST_ID);
@@ -105,17 +108,17 @@ describe('post-meal page (T13/T14/T15)', () => {
   });
 
   it('a reconnect choice stays private: WAITING never reveals the other side', async () => {
-    const { s } = stub({});
+    const { s } = stub({ attendance: [{ subjectId: USER_ID, value: 'present', source: 'SELF', selfValue: 'present', hostValue: null, version: '1' }, { subjectId: HOST_ID, value: 'present', source: 'SELF', selfValue: 'present', hostValue: null, version: '1' }], reconnect: [{ subjectId: HOST_ID, selected: false, version: '0', connection: 'NONE' }] });
     renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
-    await userEvent.click(await screen.findByRole('checkbox', { name: /share a table again/ }));
+    await userEvent.click(await screen.findByRole('checkbox', { name: /share a table again with Maya Chen/ }));
     await waitFor(() => expect(s.callsTo('selectReconnect')[0]?.body).toEqual({ selected: true }));
-    expect(await screen.findByText('Your wish to meet again is private until mutual.')).toBeTruthy();
+    expect(await screen.findByText('Your choice is private. Maya Chen is never told unless they choose you too.')).toBeTruthy();
     expect(screen.queryByText(/both want to meet again/)).toBeNull();
     expect(screen.queryByRole('button', { name: /Say hello/ })).toBeNull();
   });
 
   it('a mutual connection opens the direct conversation; withdrawing needs confirmation', async () => {
-    const { s } = stub({ reconnect: [{ subjectId: HOST_ID, selected: true, version: '2', connection: 'OPEN' }] });
+    const { s } = stub({ attendance: [{ subjectId: USER_ID, value: 'present', source: 'SELF', selfValue: 'present', hostValue: null, version: '1' }, { subjectId: HOST_ID, value: 'present', source: 'SELF', selfValue: 'present', hostValue: null, version: '1' }], reconnect: [{ subjectId: HOST_ID, selected: true, version: '2', connection: 'OPEN' }] });
     renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
     expect(await screen.findByText(/both want to meet again/)).toBeTruthy();
     await userEvent.click(screen.getByRole('checkbox', { name: /share a table again/ }));
@@ -127,19 +130,25 @@ describe('post-meal page (T13/T14/T15)', () => {
   });
 
   it('“Say hello” resolves the direct conversation and navigates to it', async () => {
-    const { s } = stub({ reconnect: [{ subjectId: HOST_ID, selected: true, version: '2', connection: 'OPEN' }] });
+    const { s } = stub({ attendance: [{ subjectId: USER_ID, value: 'present', source: 'SELF', selfValue: 'present', hostValue: null, version: '1' }, { subjectId: HOST_ID, value: 'present', source: 'SELF', selfValue: 'present', hostValue: null, version: '1' }], reconnect: [{ subjectId: HOST_ID, selected: true, version: '2', connection: 'OPEN' }] });
     renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
     await userEvent.click(await screen.findByRole('button', { name: /Say hello to Maya Chen/ }));
     await waitFor(() => expect(s.callsTo('getDirect')[0]?.params.subjectId).toBe(HOST_ID));
+    await waitFor(() => expect(screen.queryByRole('heading', { name: 'How was your table?' })).toBeNull());
   });
 
   it('the host can report others; each member’s own report still wins', async () => {
     const { s } = stub({}, HOST_ID, { getMeal: () => ok({ meal: meal(), myApplication: null, conversationId: null }) });
     s.on('getSession', () => ok(session({ id: HOST_ID })));
     renderApp(s.fetch, `/post-meal/${MEAL_ID}`);
-    const fieldset = await screen.findByRole('group', { name: 'Report your table’s attendance' });
-    await userEvent.click(within(within(fieldset).getByRole('group', { name: 'Emma Hill' })).getByLabelText('Attended'));
+    const group = await screen.findByRole('group', { name: 'Host report for Emma Hill' });
+    await userEvent.click(within(group).getByLabelText('Emma Hill came'));
+    expect(s.callsTo('reportAttendance')).toHaveLength(0);
+    await userEvent.click(screen.getByRole('button', { name: 'Review attendance for Emma Hill' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Report attendance for Emma Hill?' });
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Confirm attendance report' }));
     await waitFor(() => expect(s.callsTo('reportAttendance')[0]?.params.subjectId).toBe(EMMA));
+    expect(s.callsTo('reportAttendance')[0]!.body).toEqual({ value: 'present' });
   });
 
   it('shows server rejections instead of assuming eligibility', async () => {

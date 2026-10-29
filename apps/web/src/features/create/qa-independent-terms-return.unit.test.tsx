@@ -5,13 +5,19 @@ import {renderApp} from '../../test/render.tsx';
 import {createFetchStub,ok} from '../../test/fetchStub.ts';
 import {session,VENUE_REF} from '../../test/fixtures.ts';
 import {saveDraft,loadDraft} from '../../lib/drafts.ts';
+import {addDays,londonToday} from '../../lib/london.ts';
 import {newDraft,type MealDraft} from './model.ts';
-it('QA-F16 Back to review returns to Review with the same unsubmitted draft and no create call',async()=>{
- const draft:MealDraft={...newDraft(),venue:{venueRef:VENUE_REF,placeId:'synthetic-place',available:true,name:'Synthetic QA restaurant',address:'Synthetic local address',location:null,areaCode:'soho',attributions:[],displayExpiresAt:null},capacity:4,minimum:3,date:'2026-11-01',time:'19:00',closeDate:'2026-11-01',closeTime:'18:00',title:'Synthetic terms return',description:'Synthetic QA draft that must survive reading cancellation terms.',mood:'EASY_CONVERSATION',languages:['en'],budgetMin:'20',budgetMax:'35',bookingConfirmed:true,reviewConfirmed:false};
+it('QA-F16 Back from cancellation terms returns to Review with the same unsubmitted draft and no create call',async()=>{
+ const day=addDays(londonToday(),7);
+ const draft:MealDraft={...newDraft(),venue:{venueRef:VENUE_REF,placeId:'synthetic-place',available:true,name:'Synthetic QA restaurant',address:'Synthetic local address',location:null,areaCode:'soho',attributions:[],displayExpiresAt:null},capacity:4,minimum:3,date:day,time:'19:00',closeDate:day,closeTime:'18:00',title:'Synthetic terms return',description:'Synthetic QA draft that must survive reading cancellation terms.',mood:'EASY_CONVERSATION',languages:['en'],budgetMin:'20',budgetMax:'35',bookingConfirmed:true,reviewConfirmed:false};
  saveDraft('create',draft);const stub=createFetchStub({getSession:()=>ok(session())});renderApp(stub.fetch,'/create');
- for(let step=0;step<3;step++)await userEvent.click(await screen.findByRole('button',{name:'Continue'}));
- await screen.findByRole('heading',{name:'Ready to bring people together?'});await userEvent.click(screen.getByRole('link',{name:'cancellation terms'}));
- await screen.findByRole('heading',{name:'Cancellation terms'});await userEvent.click(screen.getByRole('link',{name:'Back to review'}));
+ for(let step=0;step<3;step++)await userEvent.click(await screen.findByRole('button',{name:/Continue/}));
+ await screen.findByRole('heading',{name:'Ready to bring people together?'});await userEvent.click(screen.getByRole('link',{name:'Cancellation terms'}));
+ await screen.findByRole('heading',{name:'Cancellation terms'});await userEvent.click(screen.getByRole('button',{name:'Back'}));
  await screen.findByRole('heading',{name:'Ready to bring people together?'});
  expect(loadDraft<MealDraft>('create')).toMatchObject({title:draft.title,description:draft.description,date:draft.date,time:draft.time,budgetMin:'20',budgetMax:'35',bookingConfirmed:true,reviewConfirmed:false});expect(stub.callsTo('createMeal')).toHaveLength(0);
+});
+it('QA-F16 the old in-flow terms address opens the public cancellation terms without starting a draft',async()=>{
+ const stub=createFetchStub({getSession:()=>ok(session())});renderApp(stub.fetch,'/create/terms');
+ expect(await screen.findByRole('heading',{name:'Cancellation terms'})).toBeTruthy();expect(loadDraft('create')).toBeNull();expect(stub.callsTo('createMeal')).toHaveLength(0);
 });

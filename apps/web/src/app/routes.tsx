@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 import { SurveyPage } from '../features/settings/SurveyPage.tsx';
-import { DeletionPage } from '../features/settings/DeletionPage.tsx';
+import { DeletionPage, DeletionStatusPage } from '../features/settings/DeletionPage.tsx';
 import { SignInPage } from '../features/auth/SignInPage.tsx';
 import { OAuthCallbackPage } from '../features/auth/OAuthCallbackPage.tsx';
 import { ProfilePage } from '../features/profile/ProfilePage.tsx';
@@ -39,13 +39,18 @@ export const appRoutes: AppRoute[] = [
   { path: '/meals', element: <MyMealsPage /> },
   { path: '/meals/:mealId', element: <MealDetailPage /> },
   { path: '/meals/:mealId/edit', element: <EditMealPage /> },
+  { path: '/meals/:mealId/edit/introduce', element: <EditMealPage /> },
+  { path: '/meals/:mealId/edit/costs', element: <EditMealPage /> },
+  { path: '/meals/:mealId/edit/review', element: <EditMealPage /> },
   { path: '/meals/:mealId/apply', element: <ApplyPage /> },
   { path: '/meals/:mealId/status', element: <ApplicationStatusPage /> },
   { path: '/meals/:mealId/host', element: <HostPage /> },
   { path: '/cancellation-terms', element: <CancellationTermsPage /> },
   { path: '/meals/:mealId/:slug', element: <MealDetailPage /> },
   { path: '/create', element: <CreatePage /> },
-  { path: '/create/terms', element: <CreatePage /> },
+  { path: '/create/introduce', element: <CreatePage /> },
+  { path: '/create/costs', element: <CreatePage /> },
+  { path: '/create/review', element: <CreatePage /> },
   { path: '/inbox', element: <InboxPage /> },
   { path: '/notifications', element: <NotificationsPage /> },
   { path: '/chat/:conversationId', element: <ChatPage /> },
@@ -56,7 +61,7 @@ export const appRoutes: AppRoute[] = [
   { path: '/settings', element: <SettingsPage /> },
   { path: '/survey', element: <SurveyPage /> },
   { path: '/delete-account', element: <DeletionPage /> },
-  { path: '/deletion-status', element: <DeletionPage /> },
+  { path: '/deletion-status', element: <DeletionStatusPage /> },
   { path: '/report', element: <ReportPage /> },
   { path: '/blocked-members', element: <BlockedMembersPage /> },
   { path: '/settings/reports/:reportId', element: <ReportStatusPage /> },

@@ -16,7 +16,7 @@ import { AssistantProvider } from '../features/assistant/index.ts';
 /** Top-level tabs show the phone tab bar (iOS (tabs) group); focused flows do not. */
 const TAB_PATHS = [/^\/discover$/, /^\/meals$/, /^\/inbox$/, /^\/profile$/];
 /** Pages laid out on the 1120px desktop grid rather than the 720px reading column. */
-const WIDE_PATHS = [/^\/discover$/, /^\/meals\/[^/]+(\/(?!(apply|status|host|edit)$)[^/]+)?$/, /^\/profiles\/[^/]+$/, /^\/sign-in$/];
+const WIDE_PATHS = [/^\/meals\/[^/]+\/host$/, /^\/post-meal\/[^/]+$/, /^\/discover$/, /^\/meals\/[^/]+(\/(?!(apply|status|host|edit)$)[^/]+)?$/, /^\/profiles\/[^/]+$/, /^\/sign-in$/];
 /** Public pages that carry the site footer on tablet and desktop. */
 const PUBLIC_PATHS = [/^\/discover$/, /^\/meals\/[^/]+(\/(?!(apply|status|host|edit)$)[^/]+)?$/, /^\/profiles\/[^/]+$/, /^\/get-app$/];
 const NO_CHROME = [/^\/sign-in/, /^\/auth\/callback$/];
@@ -59,6 +59,7 @@ function Shell({ extra }: { extra?: ReactNode }) {
           <Route path="/profile/edit" element={<LegacyRedirect to={() => '/profile-edit'} />} />
           <Route path="/settings/deletion" element={<LegacyRedirect to={() => '/delete-account'} />} />
           <Route path="/settings/survey" element={<LegacyRedirect to={() => '/survey'} />} />
+          <Route path="/create/terms" element={<LegacyRedirect to={() => '/cancellation-terms'} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
