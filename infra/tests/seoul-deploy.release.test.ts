@@ -167,7 +167,7 @@ describe('Seoul deploy kit: production configuration coverage', () => {
       RETENTION_POLICY_JSON: '{"accountDeletionApproved":true,"deletionReceiptDays":30}',
       SUPPORT_EMAIL: 'support@example.invalid',
       ETHAN_MODERATION_URL: 'https://ethan.example.invalid/fancy/moderation',
-      ETHAN_MODERATION_TOKEN: 'token-example-0123456789',
+      ETHAN_MODERATION_TOKEN: 't'.repeat(24),
       ANALYTICS_COVERAGE_START: '2026-01-01T00:00:00Z',
     };
     const env: Record<string, string> = {};
