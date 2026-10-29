@@ -133,10 +133,11 @@ if [[ "$(readlink "$NODE_DIR" 2>/dev/null || true)" != "$node_real" ]]; then
   run ln -sfn "$node_real" "$NODE_DIR.tmp"
   run mv -Tf "$NODE_DIR.tmp" "$NODE_DIR"
 fi
-if [[ "$("$node_real/bin/pnpm" -v 2>/dev/null || true)" != "$PNPM_VERSION" ]]; then
+# pnpm is a node script: check it with Node 24, not the system Node 20 found first on PATH.
+if [[ "$(PATH="$node_real/bin:/usr/bin:/bin" "$node_real/bin/pnpm" -v 2>/dev/null || true)" != "$PNPM_VERSION" ]]; then
   run env PATH="$node_real/bin:/usr/bin:/bin" "$node_real/bin/npm" install -g --prefix "$node_real" "pnpm@$PNPM_VERSION"
 fi
-if [[ "$DRY_RUN" != 1 ]]; then ok "node $("$NODE_BIN" -v), pnpm $("$PNPM_BIN" -v); system node still $(/usr/local/bin/node -v 2>/dev/null || echo absent)"; fi
+if [[ "$DRY_RUN" != 1 ]]; then ok "node $("$NODE_BIN" -v), pnpm $(PATH="$node_real/bin:/usr/bin:/bin" "$PNPM_BIN" -v); system node still $(/usr/local/bin/node -v 2>/dev/null || echo absent)"; fi
 
 step "8/12 PostgreSQL $PG_MAJOR: loopback-only, TLS with a local CA, tuned for 3.6 GB"
 pg_conf_dir="/etc/postgresql/$PG_MAJOR/$PG_CLUSTER"
