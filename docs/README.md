@@ -2,6 +2,14 @@
 
 项目入口：[README](../README.md)。本目录保存项目知识；Agent 协作规则见 [AGENTS.md](../AGENTS.md)，正式方法在 `.agents/skills/`，待审核候选在 `.agents/candidates/`，不作为现行执行规则。
 
+## 快速定位与阅读顺序
+
+先读[项目文档导读](project-guide.zh-CN.md)，按“产品范围 → 业务规则 → 七版状态 → 最新反馈 → 原实现与验收”查找。本页是完整索引；下方早期方案、逐轮QA及快照保留历史，不宜从某一句“已完成/未启动”推断整个项目状态。
+
+- 当前分版阶段：[r11总览](delivery/version-progress-r11.zh-CN.md)及[执行登记](delivery/execution-r11.json)。
+- 最近原型修订：[r12反馈台账](reviews/r12/feedback-21-register.md)及[需求增量](product/r12/ios-feedback-requirements-2026-10-28.zh-CN.md)。
+- 旧实现与遗留：[MVP封存](delivery/mvp-freeze-2026-10-23.zh-CN.md)及[跨分支快照](delivery/project-status-2026-10-26.zh-CN.md)。
+
 ## 当前产品与管理输入（r07范围／r11版本执行／r12原型反馈增量）
 
 - [21条浏览器批注逐项处理与原型入口](reviews/r12/feedback-21-register.md)、[结构化台账](reviews/r12/feedback-21-register.json)、[独立视觉与真实点击复核](reviews/r12/feedback-21-independent-review-2026-10-28.md)。r11签署保留为历史快照；本轮受影响原型以r12候选及其明确验证范围为准。
@@ -19,7 +27,7 @@
 - [分版Figma、Logo与架构统一交付入口及PJ核对记录](delivery/r10-deliverables-review.zh-CN.md)。
 
 - [当前开发版本方案r10](delivery/development-versions-r10.zh-CN.md)、[版本/派工真源](delivery/development-versions-r10.json)：复用认可的MVP Demo设计，4个iOS、2个后台、1个支持内部迭代；DS＋7份分版Figma、Logo及RD技术方案候选已交，代码及QA未启动。
-- 前一批UX-r01视觉被Owner否定，仅保留历史链接和证据，不作为开发依据。产品需求正文中的旧阶段描述是当时快照，当前执行状态只看r10登记。
+- 前一批UX-r01视觉被Owner否定，仅保留历史链接和证据，不作为开发依据。产品需求正文中的旧阶段描述是当时快照，当前执行状态按r11执行登记、各版状态及r12受影响增量核对，r10保留范围与历史输入。
 - RD准备：[技术选型](engineering/r10/technology-selection.zh-CN.md)、[整体架构](engineering/r10/architecture.zh-CN.md)、[模块工作包](engineering/r10/module-work-packages.json)、[精确输入](engineering/r10/input-manifest.json)、[研发准备交接](engineering/r10/handoff.zh-CN.md)。仅方案，业务实现未签发。
 
 - [MVP项目需求](product/fancy-requirements-baseline.zh-CN.md)：产品使用者、完整用户目标、首发/增量及业务边界。

@@ -3,9 +3,16 @@
 
 文档导航：[项目文档索引](docs/README.md)。Agent 规则见 [AGENTS.md](AGENTS.md)，通用项目技能位于 `.agents/skills/`，待审核候选保存于 `.agents/candidates/`。
 
-## 当前产品与交付（r07范围／r08 PM候选）
+## 项目阅读入口
 
-当前执行以[开发版本方案r10](docs/delivery/development-versions-r10.zh-CN.md)及[版本/派工数据](docs/delivery/development-versions-r10.json)为准：沿用用户认可的原MVP Demo视觉与交互，保留iOS＋管理后台、host外订到店各付，按内部dev迭代交付Figma规范与路径；研发本轮仅做技术选型、架构和模块拆分，业务实现与QA未启动。上一批UX-r01视觉未获接受，保留历史，不作为开发依据。
+先看[项目文档导读](docs/project-guide.zh-CN.md)：按需求、设计、开发、验收与历史记录分开查找；[完整索引](docs/README.md)保留全部文档与证据入口。
+
+- **产品范围**：[需求基线](docs/product/fancy-requirements-baseline.zh-CN.md)、[主PRD](docs/product/PRD.zh-CN.md)及[旅程模块](docs/product/journey-modules.zh-CN.md)。首发iOS＋管理后台，发起人外订、到店各付；移动Web及平台交易/订位后置。
+- **分版执行**：[r11进度总览](docs/delivery/version-progress-r11.zh-CN.md)与[执行登记](docs/delivery/execution-r11.json)；[r10方案](docs/delivery/development-versions-r10.zh-CN.md)定义4个iOS、2个后台、1个支持内部迭代的范围，按r11工作流逐版推进。
+- **最新反馈**：[r12的21条原型批注](docs/reviews/r12/feedback-21-register.md)及[需求增量](docs/product/r12/ios-feedback-requirements-2026-10-28.zh-CN.md)。原型修复与真实服务实现分开，拒绝原因服务契约仍待实现。
+- **既有实现与遗留**：[旧MVP封存](docs/delivery/mvp-freeze-2026-10-23.zh-CN.md)、[跨分支进度快照](docs/delivery/project-status-2026-10-26.zh-CN.md)。旧代码、补丁和QA证据不自动覆盖新版本；新版本方案通过不代表已经开发、部署或发布。
+
+上一批UX-r01视觉未获接受，保留历史，不作为开发依据。各文档的阶段描述按其版本和日期理解，不能把旧局部状态当整项目当前结论。
 
 ## 历史交付与业务来源
 
@@ -22,4 +29,4 @@ Slogan：**吃个饭，认识一下。 / Meet new people over a meal.**
 
 商业方向：商家活动与引流为收入主线；个人端先验证按次服务，有重复购买后再考虑会员。AI 社交支持、A2A 和多活动扩展属于待验证方向，详见 PRD 第 1 节。
 
-Demo 为英文手机式网页，所有人物和交易均为模拟。本轮不开发真实后端。使用 Node24 + pnpm，在 demo 目录执行 `pnpm install --frozen-lockfile` 和 `pnpm dev --host 127.0.0.1 --port 4173`。
+Demo 为英文手机式网页，所有人物和交易均为模拟。真实实现、外部服务与发布状态分别按上述版本和运行交付记录核对。使用 Node24 + pnpm，在 demo 目录执行 `pnpm install --frozen-lockfile` 和 `pnpm dev --host 127.0.0.1 --port 4173`。

@@ -1,6 +1,7 @@
 """Validate document navigation after moves, including relative image links."""
 from pathlib import Path
 import re
+import json
 import unittest
 from urllib.parse import unquote, urlsplit
 
@@ -37,6 +38,29 @@ class DocumentationTest(unittest.TestCase):
                 continue
             with self.subTest(document=document.relative_to(ROOT)):
                 self.assertIn(document.resolve(), indexed)
+
+    def test_project_guide_reaches_all_version_statuses_and_current_inputs(self):
+        guide = ROOT / 'docs/project-guide.zh-CN.md'
+        targets = {(guide.parent / unquote(urlsplit(link).path)).resolve()
+                   for link in LINK.findall(guide.read_text())
+                   if not urlsplit(link).scheme}
+        statuses = list((ROOT / 'docs/delivery/versions').glob('*/status.json'))
+        self.assertTrue(statuses, 'No version status files found')
+        for status in statuses:
+            with self.subTest(version=json.loads(status.read_text())['id']):
+                self.assertIn(status.resolve(), targets,
+                              'A development version is missing from the guide')
+        for source in ('docs/product/PRD.zh-CN.md',
+                       'docs/delivery/execution-r11.json',
+                       'docs/reviews/r12/feedback-21-register.md',
+                       'docs/product/r12/ios-feedback-requirements-2026-10-28.zh-CN.md',
+                       'docs/delivery/mvp-freeze-2026-10-23.zh-CN.md'):
+            with self.subTest(authoritative_input=source):
+                self.assertIn((ROOT / source).resolve(), targets)
+        root_targets = {(ROOT / unquote(urlsplit(link).path)).resolve()
+                        for link in LINK.findall((ROOT / 'README.md').read_text())
+                        if not urlsplit(link).scheme}
+        self.assertIn(guide.resolve(), root_targets)
 
     def test_module_plan_retains_all_patch_sources(self):
         source = (ROOT / 'docs/product/mvp-patch-PRD.zh-CN.md').read_text()
