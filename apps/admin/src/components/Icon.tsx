@@ -14,6 +14,7 @@ const paths: Record<string, ReactNode> = {
   close: <path d="m6 6 12 12M6 18 18 6" />,
   info: (<><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7v1" /></>),
   download: <path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5" />,
+  flag: <path d="M5 21V4m0 0h11l-2 4 2 4H5" />,
   globe: (<><circle cx="12" cy="12" r="9" /><ellipse cx="12" cy="12" rx="4" ry="9" /><path d="M3 12h18" /></>),
 };
 

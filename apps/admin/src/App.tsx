@@ -1,6 +1,6 @@
 import { ADMIN_DRILLDOWN_TARGETS } from '@fancy/contracts';
 import { useCallback, useEffect, useState } from 'react';
-import type { AdminApi, AdminPageName, DrilldownTarget } from './api/admin-api.ts';
+import { hasAnalytics, hasRole, type AdminApi, type AdminPageName, type DrilldownTarget } from './api/admin-api.ts';
 import { DetailDialog } from './components/DetailDialog.tsx';
 import { Icon } from './components/Icon.tsx';
 import { listTitle, metricTitle } from './dictionary/labels.ts';
@@ -10,11 +10,14 @@ import { ExportButton } from './features/exports/ExportButton.tsx';
 import { FilterBar } from './features/filters/FilterBar.tsx';
 import { SnapshotPicker } from './features/snapshot/SnapshotPicker.tsx';
 import { FailureScreen } from './features/status/FailureScreen.tsx';
+import { SignIn } from './features/auth/SignIn.tsx';
+import { ModerationQueue } from './features/moderation/ModerationQueue.tsx';
+import { ReportDetail } from './features/moderation/ReportDetail.tsx';
 import { formatLondonTime, makeT, type Language, type Translate } from './i18n.ts';
 import { openRow, PageBody, type Detail } from './pages/pages.tsx';
 import { ConsoleProvider, useConsole } from './state/console.tsx';
 import { emptyFilters, type AdminFilters } from './state/filters.ts';
-import { PAGES, useUrlState } from './state/url.ts';
+import { PAGES, useUrlState, type Route } from './state/url.ts';
 
 const navNames = (t: Translate): Record<AdminPageName, string> => ({
   overview: t('产品概览', 'Overview'),
@@ -32,12 +35,12 @@ const descriptions = (t: Translate): Record<AdminPageName, string> => ({
 });
 
 export default function App({ api }: { api: AdminApi }) {
-  const { state, page, update, go } = useUrlState();
+  const { state, page, route, update, go, navigate } = useUrlState();
   const onSnapshotChange = useCallback((snapshotId: string | null) => update({ snapshotId }), [update]);
   return (
-    <ConsoleProvider api={api} page={page} filters={state.filters} snapshotId={state.snapshotId} onSnapshotChange={onSnapshotChange}>
-      <Shell lang={state.lang} page={page} filters={state.filters}
-        setLang={(lang) => update({ lang })} setFilters={(filters) => update({ filters })} go={go} />
+    <ConsoleProvider api={api} page={page} filters={state.filters} snapshotId={state.snapshotId} onSnapshotChange={onSnapshotChange} analyticsActive={route.kind === 'analytics'}>
+      <Shell lang={state.lang} page={page} route={route} filters={state.filters}
+        setLang={(lang) => update({ lang })} setFilters={(filters) => update({ filters })} go={go} navigate={navigate} />
     </ConsoleProvider>
   );
 }
@@ -45,12 +48,20 @@ export default function App({ api }: { api: AdminApi }) {
 /** Detail drawer entries carry the binding they were opened with, so nested paging never changes snapshot. */
 type OpenDetail = Detail & { binding: Binding | null };
 
-function Shell({ lang, page, filters, setLang, setFilters, go }: {
-  lang: Language; page: AdminPageName; filters: AdminFilters;
-  setLang(lang: Language): void; setFilters(filters: AdminFilters): void; go(page: AdminPageName): void;
+function Shell({ lang, page, route, filters, setLang, setFilters, go, navigate }: {
+  lang: Language; page: AdminPageName; route: Route; filters: AdminFilters;
+  setLang(lang: Language): void; setFilters(filters: AdminFilters): void; go(page: AdminPageName): void; navigate(route: Route): void;
 }) {
   const t = makeT(lang);
   const c = useConsole();
+  const analytics = !c.session || hasAnalytics(c.session);
+  const support = hasRole(c.session, 'support');
+  const moderation = route.kind === 'moderation';
+  // Support-only staff land on the report queue instead of an analytics page they cannot read.
+  useEffect(() => {
+    if (c.gate.status === 'ready' && c.session && !hasAnalytics(c.session) && support && !moderation) navigate({ kind: 'moderation', reportId: null });
+  }, [c.gate.status, c.session, support, moderation, navigate]);
+  const signOut = async () => { try { await c.api.signOut(); } catch { /* the session is re-read either way */ } c.reloadSession(); };
   const [details, setDetails] = useState<OpenDetail[]>([]);
   const [evidence, setEvidence] = useState('all');
   const nav = navNames(t);
@@ -67,13 +78,23 @@ function Shell({ lang, page, filters, setLang, setFilters, go }: {
       <a className="skip-link" href="#main-content">{t('跳转至内容', 'Skip to content')}</a>
       <aside className="sidebar">
         <a href="#overview" className="wordmark">Fancy<span className="brand-flower">✳</span></a>
-        <nav aria-label={t('主导航', 'Main navigation')}>
-          {PAGES.map((p) => (
-            <a key={p} href={`#${p}`} aria-label={nav[p]} title={nav[p]} aria-current={page === p ? 'page' : undefined}>
-              <Icon name={p} /><span>{nav[p]}</span>{page === p && <span className="nav-active-dot" />}
+        {analytics && (
+          <nav aria-label={t('主导航', 'Main navigation')}>
+            {PAGES.map((p) => (
+              <a key={p} href={`#${p}`} aria-label={nav[p]} title={nav[p]} aria-current={!moderation && page === p ? 'page' : undefined}>
+                <Icon name={p} /><span>{nav[p]}</span>{!moderation && page === p && <span className="nav-active-dot" />}
+              </a>
+            ))}
+          </nav>
+        )}
+        {support && (
+          <nav aria-label={t('安全与支持', 'Trust & support')} className="nav-section">
+            <div className="nav-heading">{t('安全与支持', 'Trust & support')}</div>
+            <a href="#moderation" aria-label={t('举报处理', 'Reports')} title={t('举报处理', 'Reports')} aria-current={moderation ? 'page' : undefined}>
+              <Icon name="flag" /><span>{t('举报处理', 'Reports')}</span>{moderation && <span className="nav-active-dot" />}
             </a>
-          ))}
-        </nav>
+          </nav>
+        )}
         <div className="sidebar-note">
           <div className="little-table"><i /><i /><i /><i /><span /></div>
           <h3>{t('吃个饭，认识一下。', 'A meal. A new connection.')}</h3>
@@ -82,21 +103,26 @@ function Shell({ lang, page, filters, setLang, setFilters, go }: {
       </aside>
       <div className="main-shell">
         <header className="topbar">
-          <div className="breadcrumb">Fancy <span>/</span><strong>{nav[page]}</strong></div>
+          <div className="breadcrumb">Fancy <span>/</span><strong>{moderation ? t('举报处理', 'Reports') : nav[page]}</strong></div>
           <div className="top-actions">
+            {c.session && <button className="text-button" onClick={() => void signOut()}>{t('退出登录', 'Sign out')}</button>}
             <button className="language-button" onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')} aria-label={t('切换为英文', 'Switch to Chinese')}>
               <Icon name="globe" size={16} />{lang === 'zh' ? 'EN' : '中文'}
             </button>
           </div>
         </header>
         <nav className="mobile-nav" aria-label={t('移动端导航', 'Mobile navigation')}>
-          {PAGES.map((p) => (
+          {support && <a href="#moderation" aria-current={moderation ? 'page' : undefined}><Icon name="flag" size={16} /><span>{t('举报处理', 'Reports')}</span></a>}
+          {analytics && PAGES.map((p) => (
             <a href={`#${p}`} aria-label={nav[p]} title={nav[p]} key={p} aria-current={page === p ? 'page' : undefined}>
               <Icon name={p} size={16} /><span>{nav[p]}</span>
             </a>
           ))}
         </nav>
         <main id="main-content" tabIndex={-1}>
+          {moderation ? (
+            <ModerationWorkspace t={t} lang={lang} route={route} navigate={navigate} />
+          ) : (<>
           <div className="page-title">
             <div>
               <div className="eyebrow">{t('伦敦试点', 'London pilot')}</div>
@@ -106,13 +132,16 @@ function Shell({ lang, page, filters, setLang, setFilters, go }: {
             <ExportButton scope={`summary.${page}`} binding={c.gate.status === 'ready' && c.pageState.status === 'ready' ? binding : null} t={t} />
           </div>
           {c.gate.status === 'failed' ? (
-            <FailureScreen failure={c.gate.failure} t={t} onRetry={() => location.reload()} />
+            c.gate.failure.kind === 'signed_out' ? <SignIn t={t} /> : <GateFailure t={t} />
           ) : c.gate.status === 'loading' ? (
             <p role="status">{t('正在验证访问权限…', 'Checking access…')}</p>
+          ) : !hasAnalytics(c.session) ? (
+            <div className="panel load-error" role="alert"><h2>{t('没有访问权限', 'No access')}</h2><p>{t('当前账号没有产品分析权限。', 'This account has no analytics role.')}</p></div>
           ) : (
             <Body t={t} lang={lang} page={page} filters={filters} setFilters={setFilters} go={go} binding={binding}
               open={open} evidence={evidence} setEvidence={setEvidence} />
           )}
+          </>)}
           <footer className="page-footer">
             <span>Fancy · {t('让真实见面成为迭代的起点', 'Build from real meetings')}</span>
             <span>{c.snapshot ? `${t('指标定义', 'Definitions')} v${c.snapshot.definitionVersion}` : ''}</span>
@@ -127,6 +156,48 @@ function Shell({ lang, page, filters, setLang, setFilters, go }: {
         </DetailDialog>
       )}
     </div>
+  );
+}
+
+/** Sign-in for a missing session; otherwise the blocking failure with a way to switch account. */
+function GateFailure({ t }: { t: Translate }) {
+  const c = useConsole();
+  if (c.gate.status !== 'failed') return null;
+  const signOut = async () => { try { await c.api.signOut(); } catch { /* re-read the session regardless */ } c.reloadSession(); };
+  return (
+    <>
+      <FailureScreen failure={c.gate.failure} t={t} onRetry={() => c.reloadSession()} />
+      {(c.gate.failure.kind === 'reauth' || c.gate.failure.kind === 'forbidden') && (
+        <p className="method-note">{t('需要用具备权限并完成多因素验证的员工账号登录。', 'Sign in with a staff account that has the role and completed multi-factor verification.')}{' '}
+          <button className="text-button" onClick={() => void signOut()}>{t('切换账号', 'Switch account')}</button></p>
+      )}
+    </>
+  );
+}
+
+/** Report queue and report detail (support role). Gate failures replace every data surface. */
+function ModerationWorkspace({ t, lang, route, navigate }: { t: Translate; lang: Language; route: Extract<Route, { kind: 'moderation' }>; navigate(route: Route): void }) {
+  const c = useConsole();
+  return (
+    <>
+      <div className="page-title">
+        <div>
+          <div className="eyebrow">{t('安全与支持', 'Trust & support')}</div>
+          <h1>{t('举报处理', 'Reports')}<span className="heading-dot">.</span></h1>
+          <p>{t('及时处理成员举报：限制内容、停用账号并回复举报人，每一步都有审计。', 'Act on member reports promptly: limit content, suspend accounts and reply to reporters — every step audited.')}</p>
+        </div>
+      </div>
+      {c.gate.status === 'failed' ? (c.gate.failure.kind === 'signed_out' ? <SignIn t={t} /> : <GateFailure t={t} />)
+        : c.gate.status === 'loading' ? <p role="status">{t('正在验证访问权限…', 'Checking access…')}</p>
+          : !hasRole(c.session, 'support') ? (
+            <div className="panel load-error" role="alert"><h2>{t('没有访问权限', 'No access')}</h2><p>{t('处理举报需要支持角色与多因素验证。', 'Handling reports needs the support role and multi-factor verification.')}</p></div>
+          ) : route.reportId ? (
+            <ReportDetail key={route.reportId} reportId={route.reportId} t={t} lang={lang} onBack={() => navigate({ kind: 'moderation', reportId: null })} />
+          ) : (
+            <ModerationQueue t={t} lang={lang} onOpen={(reportId) => navigate({ kind: 'moderation', reportId })} />
+          )}
+      <footer className="page-footer"><span>Fancy · {t('社区安全', 'Community safety')}</span><span /></footer>
+    </>
   );
 }
 
