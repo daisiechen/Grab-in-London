@@ -6,7 +6,6 @@ export function TermsPage() {
     <>
       <PageHeader title="Cancellation terms" backTo="/create" />
       <div className="body-pad cancellation-terms">
-        <h1>Cancellation terms</h1>
         <h2>Your place</h2>
         <p>You can withdraw an application or cancel your place before the meal starts. Let your host know as early as possible.</p>
         <p>If the group falls below its minimum after applications close, the meal is cancelled. Before the deadline, the host can keep recruiting.</p>

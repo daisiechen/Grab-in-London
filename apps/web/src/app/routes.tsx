@@ -20,11 +20,17 @@ import { ChatPage } from '../features/inbox/ChatPage.tsx';
 import { PostMealPage } from '../features/post-meal/PostMealPage.tsx';
 import { ReportStatusPage } from '../features/reports/ReportStatusPage.tsx';
 import { LEGAL_PATHS, LegalRedirect } from '../features/legal/LegalRedirect.tsx';
+import { HomePage } from '../features/home/HomePage.tsx';
+import { GetAppPage } from '../features/home/GetAppPage.tsx';
+import { CancellationTermsPage } from '../features/meals/CancellationTermsPage.tsx';
+import { ReportPage } from '../features/reports/ReportPage.tsx';
 
 export interface AppRoute { path: string; element: ReactElement }
 
-/** Route table; each feature slice registers its pages here. */
+/** Route table. Paths match the iOS app (apps/ios/app) so shared links and emails open the same page on both. */
 export const appRoutes: AppRoute[] = [
+  { path: '/', element: <HomePage /> },
+  { path: '/get-app', element: <GetAppPage /> },
   { path: '/sign-in', element: <SignInPage /> },
   { path: '/auth/callback', element: <OAuthCallbackPage /> },
   { path: '/discover', element: <DiscoverPage /> },
@@ -32,18 +38,23 @@ export const appRoutes: AppRoute[] = [
   { path: '/meals/:mealId', element: <MealDetailPage /> },
   { path: '/meals/:mealId/edit', element: <EditMealPage /> },
   { path: '/meals/:mealId/apply', element: <ApplyPage /> },
+  { path: '/meals/:mealId/status', element: <ApplyPage /> },
   { path: '/meals/:mealId/host', element: <HostPage /> },
+  { path: '/cancellation-terms', element: <CancellationTermsPage /> },
+  { path: '/meals/:mealId/:slug', element: <MealDetailPage /> },
   { path: '/create', element: <CreatePage /> },
   { path: '/create/terms', element: <CreatePage /> },
   { path: '/inbox', element: <InboxPage /> },
   { path: '/inbox/notifications', element: <NotificationsPage /> },
-  { path: '/inbox/:conversationId', element: <ChatPage /> },
+  { path: '/notifications', element: <NotificationsPage /> },
+  { path: '/chat/:conversationId', element: <ChatPage /> },
   { path: '/profile', element: <ProfilePage /> },
-  { path: '/profile/edit', element: <ProfileEditPage /> },
+  { path: '/profile-edit', element: <ProfileEditPage /> },
   { path: '/profiles/:userId', element: <PublicProfilePage /> },
   { path: '/settings', element: <SettingsPage /> },
-  { path: '/settings/survey', element: <SurveyPage /> },
-  { path: '/settings/deletion', element: <DeletionPage /> },
+  { path: '/survey', element: <SurveyPage /> },
+  { path: '/delete-account', element: <DeletionPage /> },
+  { path: '/report', element: <ReportPage /> },
   { path: '/settings/reports/:reportId', element: <ReportStatusPage /> },
   { path: '/post-meal/:mealId', element: <PostMealPage /> },
   ...LEGAL_PATHS.map((path) => ({ path, element: <LegalRedirect path={path} /> })),

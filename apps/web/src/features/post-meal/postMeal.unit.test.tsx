@@ -160,22 +160,23 @@ describe('report and block (T15/T18)', () => {
       block: () => ok({ subjectId: HOST_ID, blocked: true, version: '1' }),
     });
     renderApp(s.fetch, `/profiles/${HOST_ID}`);
-    await userEvent.click(await screen.findByRole('button', { name: 'Report or block this member' }));
-    await userEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Report a concern' }));
-    const report = await screen.findByRole('dialog', { name: /Report a concern about Maya Chen/ });
-    await userEvent.type(within(report).getByLabelText('What happened?'), 'Made an unwelcome comment.');
-    await userEvent.click(within(report).getByRole('button', { name: 'Send report' }));
-    expect(await screen.findByText('Receipt FR-7Q2K9')).toBeTruthy();
-    expect(s.callsTo('createReport')[0]!.body).toEqual({ targetType: 'USER', targetId: HOST_ID, reason: 'private_concern', details: 'Made an unwelcome comment.' });
-    await userEvent.keyboard('{Escape}');
+    await userEvent.click(await screen.findByRole('link', { name: 'Report this profile' }));
+    expect(await screen.findByRole('heading', { name: 'Share a private concern' })).toBeTruthy();
+    await userEvent.click(screen.getByRole('button', { name: 'Submit report' }));
+    expect(await screen.findByText('Choose what the report is about.')).toBeTruthy();
+    expect(s.callsTo('createReport')).toHaveLength(0);
+    await userEvent.click(screen.getByLabelText('Harassment or hate'));
+    await userEvent.type(screen.getByLabelText(/What would you like us to know\?/), 'Made an unwelcome comment.');
+    await userEvent.click(screen.getByRole('button', { name: 'Submit report' }));
+    expect(await screen.findByText('FR-7Q2K9')).toBeTruthy();
+    expect(s.callsTo('createReport')[0]!.body).toEqual({ targetType: 'USER', targetId: HOST_ID, reason: 'harassment', details: 'Made an unwelcome comment.' });
+    await userEvent.click(screen.getByRole('button', { name: 'Done' }));
 
-    await userEvent.click(screen.getByRole('button', { name: 'Report or block this member' }));
-    await userEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Block Maya Chen' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Block Maya Chen' }));
     const confirm = await screen.findByRole('dialog', { name: 'Block Maya Chen?' });
-    expect(within(confirm).getByText(/Unblocking will not restore your connection/)).toBeTruthy();
-    await userEvent.click(within(confirm).getByRole('button', { name: 'Block member' }));
-    expect(await screen.findByText('You have blocked this member. Private contact is disabled.')).toBeTruthy();
-    expect(s.callsTo('getBlock')).toHaveLength(1);
+    expect(within(confirm).getByText(/Your previous connection will not be restored/)).toBeTruthy();
+    await userEvent.click(within(confirm).getByRole('button', { name: 'Confirm block' }));
+    expect(await screen.findByText(/You have blocked Maya Chen/)).toBeTruthy();
     expect(s.callsTo('getBlock')[0]!.params).toEqual({subjectId:HOST_ID});
     expect(s.callsTo('block')[0]!.headers['if-match']).toBe('"0"');
   });

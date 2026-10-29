@@ -111,7 +111,7 @@ describe('public profile (T05)', () => {
     renderApp(stub.fetch, `/profiles/${HOST_ID}`);
     expect(await screen.findByRole('heading', { level: 1, name: 'Maya Chen' })).toBeTruthy();
     expect(screen.getByText(/Made everyone feel included/)).toBeTruthy();
-    expect(screen.getByText('English & Chinese', { exact: false })).toBeTruthy();
+    expect(screen.getByText('English · Mandarin', { exact: false })).toBeTruthy();
     expect(stub.callsTo('getPublicProfile')[0]!.params.userId).toBe(HOST_ID);
   });
 });

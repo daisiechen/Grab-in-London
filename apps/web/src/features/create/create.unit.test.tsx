@@ -37,7 +37,7 @@ describe('create meal model (T07)', () => {
     await userEvent.click(await screen.findByRole('button',{name:/Dishoom/}));await userEvent.click(screen.getByRole('button',{name:'Use Dishoom'}));
     await userEvent.click(screen.getByRole('button',{name:/Continue/}));await userEvent.click(screen.getByRole('button',{name:/Continue/}));await userEvent.click(screen.getByRole('checkbox',{name:/I have a reservation/}));await userEvent.click(screen.getByRole('button',{name:/Continue/}));
     await screen.findByRole('heading',{name:'Ready to bring people together?'});if(confirmed)await userEvent.click(screen.getByRole('checkbox',{name:/checked the arrangements/}));await userEvent.click(screen.getByRole('link',{name:'cancellation terms'}));await screen.findByRole('heading',{name:'Cancellation terms'});
-    await userEvent.click(screen.getByRole('link',{name:confirmed?'Back':'Back to review'}));expect(await screen.findByRole('heading',{name:'Ready to bring people together?'})).toBeTruthy();
+    await userEvent.click(confirmed?screen.getByRole('button',{name:'Back'}):screen.getByRole('link',{name:'Back to review'}));expect(await screen.findByRole('heading',{name:'Ready to bring people together?'})).toBeTruthy();
     expect(screen.getByText(/Dishoom · 22 Kingly/)).toBeTruthy();expect((screen.getByRole('checkbox',{name:/checked the arrangements/}) as HTMLInputElement).checked).toBe(confirmed);expect(stub.callsTo('createMeal')).toHaveLength(0);
     expect(loadDraft<MealDraft>('create')?.venue).toMatchObject({venueRef:VENUE_REF,name:null,address:null});
   });

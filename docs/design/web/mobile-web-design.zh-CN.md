@@ -273,3 +273,45 @@ fancyabite.uk
 - 不做 Ask Fancy（与 iOS 一致，本版关闭）。
 - 不做 Android App 相关的横幅或深链。
 - 法律页面（隐私、Cookie、社区准则、条款）的正文需法律审核后提供，原型只放入口。
+
+## 14. 实施记录
+
+### 14.1 审计（2026-10-29，`apps/web` 对照本规范 §2.3 与 iOS 当前实现）
+
+`apps/web` 是早期阶段按 Demo 搭的单列 480px 外壳，数据层（`@fancy/client` Cookie + CSRF、`Intent` 幂等键、401 清空私有缓存、`useQuery`、`poller`、分析事件）可直接沿用；界面、路由和若干流程落后于本规范和 iOS。差距清单（状态列在实施过程中更新）：
+
+| # | 范围 | 差距 | 状态 |
+| --- | --- | --- | --- |
+| G1 | 视觉系统 | 仍是 Demo 早期样式（全大写眉题、顶部细条标题栏、详情大头图、下划线文字链接），未用 iOS `PageHeader` / `FloatingBack` / `MealCard` / `LinkRow` / 必填 `*` 等现行组件与令牌 | 已做（W-P1）：`styles/tokens.css` 与 iOS 令牌一致；`ui/components.tsx` 对应 iOS PageHeader、返回圆钮、MealCard、LinkRow、必填 `*`、ChoiceGroup、Notice；未迁移页面经共享组件先换新样式 |
+| G2 | 响应式 | 全站最大宽 480px；无平板顶部导航、无桌面双栏（发现左列表右地图、饭局页右侧吸顶卡、主页左资料卡、登录左图右表单） | 已做（W-P1）：手机底部标签栏（含 Create 圆钮）、≥768 顶部导航与 720px 内容列、≥1024 发现双栏、饭局页吸顶卡、主页双栏 |
+| G3 | 首页 | 无首页，`/` 直接跳 `/discover`；无页脚 | 已做（W-P1）：`/` 首页 + 页脚；已登录跳 `/discover` |
+| G4 | 发现 | 地图为 Google JS 单点标记 + “Areas”列表；iOS 为插画地图 + 片区数字标记 + 选中片区优先、“More nearby”，列表/地图切换 | 已做（W-P1）：插画地图 + 片区数字标记 + More nearby，列表/地图切换，桌面左列表右地图；筛选、视图、片区写入网址，返回靠浏览历史 |
+| G5 | 饭局页 | 无 `/meals/{id}/{slug}` 网址与规范地址跳转；无分享；无 Who’s coming 成员行与空位；无吸底主操作及各状态文案；无撤回/取消座位确认面板、取消条款、举报饭局入口 | 已做（W-P1）：slug 网址与规范跳转、分享（系统分享/面板）、Who’s coming、主操作各状态、撤回/取消座位确认、取消条款页与举报入口 |
+| G6 | 公开主页 | 无生活状态标签、无 Report this profile 行；拉黑入口文案与 iOS 不同；未 `noindex` | 已做（W-P1）：noindex、Report this profile、iOS 拉黑确认；生活状态仍缺接口字段（同 iOS） |
+| G7 | 路由 | 与 iOS 路径不一致：群聊 `/inbox/:id`（iOS `/chat/:id`）、`/profile/edit`（`/profile-edit`）、无 `/profile-setup`、无 `/meals/:id/status`（申请页兼做状态）、`/inbox/notifications`（`/notifications`）、`/settings/deletion`（`/delete-account` + `/deletion-status`）、举报为面板（iOS `/report` 页）、无 `/blocked-members`、`/cancellation-terms`、`/get-app` | 待做 |
+| G8 | 登录 | 邮箱与验证码同页；无 iOS 的 `/email` 分步、来自申请时的 host 说明、Keep exploring；登录后首次分析授权面板需对齐 | 待做 |
+| G9 | 资料 | 首次补全资料与编辑共用一页；无头像上传/移除（iOS `uploadAvatar` / `removeAvatar`）；必填项无 `*` | 待做 |
+| G10 | 申请 | 无独立状态页（五种状态文案、三步进度、Withdraw 确认）；草稿跨登录保留已有 | 待做 |
+| G11 | 我的饭局 | 分组与 iOS（Upcoming / Requests / Hosting / Past）及卡片状态行不一致 | 待做 |
+| G12 | 收件箱 | 排序与聚焦（iOS：未读优先、最近活动排序、从通知进入时定位）、通知页重做（分组、已读、深链）未同步 | 待做 |
+| G13 | 群聊 | 无消息举报（iOS 长按举报，举报者本地隐藏该消息）；被拉黑成员/已离开状态说明需对齐 | 待做 |
+| G14 | 举报 | 仅面板；无 `/report` 页与举报状态页对齐；需为后续“举报原因（5 类）”预留必选下拉 | 部分（W-P1）：`/report` 页与必选原因（5 类，2026-10-29 已合入）；消息举报接入随 W-P3 |
+| G15 | 拉黑 | 无“已拉黑成员”列表页与解除拉黑 | 待做 |
+| G16 | 发起/编辑 | Web 为旧版单页步骤；iOS 已改为四步（地点与时间 → 介绍 → 费用与人数 → 预览），编辑饭局同样四步、首位客人获批后锁定安排 | 待做 |
+| G17 | host 管理 | 审批/拒绝/取消饭局、订位声明的文案与确认面板需对齐 iOS | 待做 |
+| G18 | 饭后 | iOS 只有出席确认后才能评价/再约（出席门槛）；Web 未做门槛 | 待做 |
+| G19 | 设置与删除 | 删除账号需重新认证（`startReauth` → `requestDeletion`）并显示状态页；`ACCOUNT_SUSPENDED` 文案已有；设置里的法律链接（隐私、条款、社区准则、支持）需与 iOS 一致 | 待做 |
+| G20 | SEO | 无每页标题/描述、无 canonical、无 OG/JSON-LD、无 robots/sitemap；纯前端无法给链接预览机器人输出 meta | 已做（W-P1）：前端 `useDocumentMeta`；`apps/web/server/serve.ts` 服务器输出 title/description/canonical/OG/JSON-LD、301 规范网址、robots.txt、sitemap.xml |
+| G21 | 无障碍 | 单 `h1`、焦点环、地图标记可读名称、表单错误播报需逐页核对 | 待做 |
+| G22 | Ask Fancy | Web 仍显示助手入口；iOS 本版已关闭（`ASSISTANT_ENABLED = false`） | 已做（W-P1）：入口已移除，代码与测试保留 |
+
+已与本规范 §2.3 的决定对齐的新增决定：完整功能下，Web 底部标签栏与 iOS 相同带中间 Create meal 圆钮，平板/桌面顶部导航带 “Host a meal” 按钮（§7 有意差异 1 作废）。
+
+### 14.2 实施决定（W-P1，2026-10-29）
+
+- **返回**：返回圆钮优先用浏览器历史；从分享链接直接进入（无站内上一页）时回到 `/discover`。不再用导航 state 携带返回地址，发现页的筛选、视图（`view=list`）和选中片区（`area=`）都在网址里。
+- **网址**：饭局页规范地址 `/meals/{id}/{slug}`（`src/seo/meal-seo.ts`）；slug 与子页面重名（apply/status/host/edit）时加 `-meal`。前端用替换跳转到规范地址；真正的 301 由 `apps/web/server/serve.ts` 给出。
+- **服务器头部**：`apps/web/server/serve.ts`（Node 24，无依赖）托管构建产物、代理 `/v1`、为首页/发现/饭局/主页输出头部，并提供 robots.txt、sitemap.xml。Seoul 部署包用 nginx 直接托管构建产物时，需把 HTML 请求转给此服务（或改用同等的 nginx 规则），否则预览机器人拿不到饭局标题；分享图暂用品牌图（缺按饭局生成的文字卡片接口，见 §11）。
+- **分析授权**：只在本标签页刚完成登录后弹一次（`lib/freshSignIn.ts`），不在登录、关联、补全资料步骤上弹；之后在资料页的 Analytics preferences 行修改。与 iOS（每次会话未选择时弹）有意差异：网页刷新频繁，避免反复打扰。
+- **注册来源**：`lib/attribution.ts` 只在内存中记录落地网址的 utm 参数或“从饭局分享链接进入”，不写 Cookie/存储；注册请求带 `signupSource`（W-P2 接入）。
+- **QA 证据路径**：`docs/qa/evidence/2026-10-21/automated-runs.json` 引用了若干 Web 测试文件路径；这些文件保留并改写为新行为的测试，不删除。
