@@ -124,7 +124,7 @@ Some providers listed above are based in, or may access information from, other 
 | After you delete your account | See "Deleting your account" below |
 | Sign-in transactions and email codes | A few minutes, until the code expires or is used; session records until they expire or you sign out |
 | Analytics events | {{ANALYTICS_RETENTION}}, or until you delete your account |
-| Reports and safety records | {{SAFETY_RECORD_RETENTION}} after the case is closed, kept to the minimum needed to protect members and handle disputes |
+| Reports and safety records | While the accounts involved are open. Once an account involved is deleted, 12 months after the case is closed or after the deletion, whichever is later. They are kept to the minimum needed to protect members and handle disputes, and only staff handling the case can see them. |
 | Deletion confirmation record | {{DELETION_RECEIPT_RETENTION}} after your account is deleted, so you can check the status of your request |
 | Server logs | {{LOG_RETENTION}} |
 | Backups | Overwritten within {{BACKUP_RETENTION}}. If a backup is ever restored, completed deletions are applied again. |
@@ -140,7 +140,9 @@ When we delete your account we:
 - replace the text of your messages with "Message removed" and your application notes with a removal notice, and replace the title and description of meals you hosted;
 - keep a minimal record that an account took part in past meals (for example, that a seat was held and attendance was recorded), with no name, photo, email or written content, so that other members' histories stay accurate.
 
-We may keep the minimum information needed for an open safety report, a legal claim, or a legal obligation, for as long as that need lasts. We may keep your email address briefly to send the confirmation emails about your deletion.
+Safety records are the exception. If your account is involved in a report, whether the report is about you or you made it, we keep that report and the records needed to handle it: what the reporter told us, a copy of the reported content (profile text, meal details, or your messages close to a reported message), and our notes and decisions. We keep them for 12 months after the case is closed, or 12 months after your account is deleted if that is later, and then delete them. We do not keep your profile photo. These records are no longer linked to your email address or sign-in, only staff handling the case can see them, and we use them only to protect members, handle disputes and complaints, and deal with repeated abuse (legitimate interests).
+
+We may also keep the minimum information needed for a legal claim or a legal obligation, for as long as that need lasts. We may keep your email address briefly to send the confirmation emails about your deletion.
 
 ## Cookies and storage on your device
 

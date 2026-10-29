@@ -1,5 +1,5 @@
 import {enqueueDeletionMail} from '@fancy/db';
-import {purgeKnownSupportText} from '../../../api/src/support/privacy.ts';
+import {holdSafetyRecords} from '../../../api/src/support/privacy.ts';
 import type {Pool} from 'pg';
 import {withTransaction} from '../../../api/src/common/transaction.ts';
 import type {JobHandler} from '../runner/runner.ts';
@@ -19,14 +19,16 @@ export function deletionHandler(pool:Pool,provider:DeletionProvider|DeletionStep
   const {rows:[hint]}=await pool.query<{user_id:string;status:string}>(`SELECT user_id,status FROM deletion_requests WHERE id=$1`,[job.resourceId]);
   if(!hint||hint.status==='COMPLETED')return;
   // Local removal is atomic and repeatable. Historical seat/attendance facts remain intact;
-  // only identities, private text and personal analytics are removed here.
+  // only identities, private text and personal analytics are removed here. Safety records (support
+  // cases about or reported by the member) are held for the retention period, not removed.
   await withTransaction(pool,async(tx)=>{
    const [user]=await tx.locks.lock<{id:string;status:string}>('users',[hint.user_id],'update','id,status');
    if(!user||user.status==='ACTIVE')throw Object.assign(new Error('Invalid deletion barrier'),{code:'DELETION_BARRIER_MISSING'});
    const {rows:[receipt]}=await tx.client.query(`SELECT * FROM deletion_requests WHERE id=$1 FOR UPDATE`,[job.resourceId]);
-   if(!receipt||receipt.status==='COMPLETED'||(receipt.provider_steps.local==='COMPLETED'&&receipt.provider_steps.supportText==='KNOWN_LINKS_REDACTED'))return;
+   if(!receipt||receipt.status==='COMPLETED'||(receipt.provider_steps.local==='COMPLETED'&&receipt.provider_steps.supportText==='SAFETY_RECORDS_HELD'))return;
    await tx.client.query(`SET LOCAL fancy.privacy_purge='on'`);
-   await purgeKnownSupportText(tx.client,hint.user_id);
+   // Before profiles, meals and messages are replaced: the hold copies the reported content.
+   await holdSafetyRecords(tx.client,hint.user_id,receipt.requested_at);
    await tx.client.query(`DELETE FROM avatar_images WHERE user_id=$1`,[hint.user_id]);
    await tx.client.query(`DELETE FROM profiles WHERE user_id=$1`,[hint.user_id]);
    await tx.client.query(`DELETE FROM product_surveys WHERE user_id=$1`,[hint.user_id]);
@@ -48,7 +50,7 @@ export function deletionHandler(pool:Pool,provider:DeletionProvider|DeletionStep
    await tx.client.query(`DELETE FROM roles WHERE user_id=$1`,[hint.user_id]);
    await tx.client.query(`DELETE FROM support_case_grants WHERE user_id=$1`,[hint.user_id]);
    await tx.client.query(`UPDATE outbox SET status='DEAD',last_error_code='RECIPIENT_UNAVAILABLE',claim_token=NULL,lease_until=NULL WHERE recipient_id=$1 AND status<>'SENT' AND NOT(template IN('deletion_received','deletion_completed') AND payload=jsonb_build_object('deletionId',$2::text) AND EXISTS(SELECT 1 FROM deletion_mail_envelopes e WHERE e.deletion_id=$2::uuid AND e.user_id=$1 AND event_id=CASE WHEN template='deletion_received' THEN e.received_event_id ELSE e.completed_event_id END AND e.state='ACTIVE' AND e.expires_at>clock_timestamp()))`,[hint.user_id,job.resourceId]);
-   await tx.client.query(`UPDATE deletion_requests SET status='PROCESSING',provider_steps=provider_steps||'{"local":"COMPLETED","supportText":"KNOWN_LINKS_REDACTED","supportTextScope":"UNSTRUCTURED_ASSOCIATIONS_UNVERIFIED"}'::jsonb WHERE id=$1`,[job.resourceId]);
+   await tx.client.query(`UPDATE deletion_requests SET status='PROCESSING',provider_steps=provider_steps||'{"local":"COMPLETED","supportText":"SAFETY_RECORDS_HELD","supportTextScope":"UNSTRUCTURED_ASSOCIATIONS_UNVERIFIED"}'::jsonb WHERE id=$1`,[job.resourceId]);
   });
   // Remote calls are outside SQL locks. They use the stable deletion ID for provider dedupe.
   let remote:'COMPLETED'|'NEEDS_SUPPORT';

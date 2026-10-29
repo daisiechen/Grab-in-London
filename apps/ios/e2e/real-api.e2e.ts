@@ -687,6 +687,12 @@ async function main() {
       });
     });
 
+    // A report about the guest, so the deletion below has a safety record about them to retain.
+    const aboutGuest = await step('host reports the guest’s profile (API) before the guest deletes the account', async () => {
+      const r = await seedHost.host.call('createReport', { body: { targetType: 'USER', targetId: guestId, reason: 'private_concern', details: `E2E check ${run}: synthetic report about the guest.` }, idempotencyKey: randomUUID() });
+      return r.data.id;
+    });
+
     // ---- J08 account deletion: re-authentication with a second code, receipt, status, data removed.
     const deletion = await step('guest deletes the account after re-authenticating with a new code', async () => {
       // One code per email every 30s; the sign-in older than 5 minutes forces re-authentication.
@@ -749,6 +755,15 @@ async function main() {
       const direct = (await seedHost.host.call('getDirect', { params: { subjectId: guestId } })).data;
       const history = (await seedHost.host.call('readMessages', { params: { conversationId: direct.id }, query: { mode: 'HISTORY' } })).data;
       if (direct.canSend || history.some((m) => m.body === hello) || !history.some((m) => m.redacted && m.sender.id !== seedHost.host.userId)) throw new Error(`deleted member’s chat: canSend=${direct.canSend} ${JSON.stringify(history.map((m) => [m.sender.displayName, m.body, m.redacted]))}`);
+    });
+
+    await step('safety records about and by the deleted member are kept (12-month retention), with a copy of the reported profile', async () => {
+      const { rows: reports } = await db.query<{ id: string; reporter_id: string; details: string; reason: string }>(`SELECT id,reporter_id,details,reason FROM reports WHERE reporter_id=$1 OR id=$2`, [guestId, aboutGuest]);
+      if (reports.length < 3 || reports.some((r) => r.reason === 'PRIVACY_REDACTED' || !r.details.startsWith(`E2E check ${run}`))) throw new Error(`report text was not retained: ${JSON.stringify(reports.map((r) => [r.reason, r.details]))}`);
+      const { rows: holds } = await db.query<{ report_id: string; role: string; profile: boolean }>(`SELECT c.report_id,h.role,(h.evidence ? 'profile') AS profile FROM safety_record_holds h JOIN support_cases c ON c.id=h.case_id WHERE h.user_id=$1`, [guestId]);
+      const subject = holds.filter((x) => x.role === 'SUBJECT'), reporter = holds.filter((x) => x.role === 'REPORTER');
+      if (subject.length !== 1 || subject[0]!.report_id !== aboutGuest || !subject[0]!.profile) throw new Error(`subject holds: ${JSON.stringify(holds)}`);
+      if (reporter.length !== reports.filter((r) => r.reporter_id === guestId).length) throw new Error(`reporter holds: ${JSON.stringify(holds)}`);
     });
 
     await step('the host’s open private chat turns read-only', async () => {

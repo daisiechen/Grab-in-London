@@ -64,7 +64,7 @@ export function DeletionStatusScreen() {
       {status ? (
         <SummaryBox>
           <Text style={accountText.strong}>{`Status: ${LABELS[status.status]}`}</Text>
-          {status.completedAt ? <Text style={accountText.muted}>Your account and its data have been removed.</Text> : null}
+          {status.completedAt ? <Text style={accountText.muted}>Your account has been removed. Some records are kept for a limited time, as explained in the Privacy Notice.</Text> : null}
         </SummaryBox>
       ) : null}
       <View style={{ marginTop: 8 }}><FormMessage message={error} /></View>

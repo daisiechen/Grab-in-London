@@ -287,6 +287,17 @@ describe('DeletionStatusScreen', () => {
     expect(call?.url).not.toContain(EXPECTED_RECEIPT);
     expect(call?.body).toEqual({ receiptToken: EXPECTED_RECEIPT });
   });
+
+  it('says a completed deletion keeps some records for a limited time, without claiming all data is gone', async () => {
+    const app = createTestApp();
+    app.mock.on('POST', '/v1/deletion-status', ok({ status: 'COMPLETED', requestedAt: '2026-10-21T10:01:00Z', completedAt: '2026-10-21T10:05:00Z' }));
+    await renderApp(app, <DeletionStatusScreen />);
+    await fireEvent.changeText(screen.getByLabelText('Deletion reference'), EXPECTED_RECEIPT);
+    await fireEvent.press(screen.getByRole('button', { name: 'Check status' }));
+    expect(await screen.findByText('Status: Completed')).toBeOnTheScreen();
+    expect(screen.getByText('Your account has been removed. Some records are kept for a limited time, as explained in the Privacy Notice.')).toBeOnTheScreen();
+    expect(screen.queryByText(/its data have been removed/)).toBeNull();
+  });
 });
 
 describe('DeleteAccountScreen email re-auth', () => {
