@@ -20,6 +20,7 @@ type QuickAction = Extract<ModerationAction, 'UPHOLD' | 'RESTORE' | 'SUSPEND_USE
  */
 export function ModerationQueue({ t, lang, onOpen }: { t: Translate; lang: Language; onOpen(reportId: string): void }) {
   const c = useConsole();
+  const { reportFailure } = c;
   const [status, setStatus] = useState<Status>('OPEN');
   const [targetType, setTargetType] = useState<string>('');
   const [mine, setMine] = useState(false);
@@ -36,9 +37,9 @@ export function ModerationQueue({ t, lang, onOpen }: { t: Translate; lang: Langu
 
   const fail = useCallback((error: unknown) => {
     const failure = toFailure(error);
-    if (endsSession(failure.kind)) c.reportFailure(error);
+    if (endsSession(failure.kind)) reportFailure(error);
     return failure;
-  }, [c]);
+  }, [reportFailure]);
 
   const load = useCallback(async () => {
     setState({ status: 'loading' });

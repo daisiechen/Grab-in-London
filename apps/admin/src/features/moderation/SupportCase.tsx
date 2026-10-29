@@ -26,6 +26,7 @@ const valueLabel = (t: Translate, v: string | null) => (v === null ? '—' : ({ 
  */
 export function CaseAttendancePanel({ caseId, t, lang, onChanged }: { caseId: string; t: Translate; lang: Language; onChanged(): Promise<void> }) {
   const c = useConsole();
+  const { reportFailure } = c;
   const [facts, setFacts] = useState<CaseAttendance | null>(null);
   const [denied, setDenied] = useState(false);
   const [subjectId, setSubjectId] = useState('');
@@ -42,11 +43,11 @@ export function CaseAttendancePanel({ caseId, t, lang, onChanged }: { caseId: st
       setSubjectId((current) => current || next.roster.find((r) => !r.isHost)?.subjectId || next.roster[0]?.subjectId || '');
     } catch (error) {
       const failure = toFailure(error);
-      if (endsSession(failure.kind)) c.reportFailure(error);
+      if (endsSession(failure.kind)) reportFailure(error);
       // Denied: facts are cleared, never left on screen for a role/grant that no longer allows them.
       setFacts(null); setDenied(true);
     }
-  }, [c, caseId]);
+  }, [c.api, reportFailure, caseId]);
   useEffect(() => { void load(); }, [load]);
 
   if (denied) return <Panel title={t('出席纠错', 'Attendance correction')}><p role="alert">{t('无权查看此个案的出席事实。请重新验证身份或确认个案授权。', 'No access to this case’s attendance facts. Re-verify or check the case grant.')}</p></Panel>;
@@ -66,7 +67,7 @@ export function CaseAttendancePanel({ caseId, t, lang, onChanged }: { caseId: st
       await load(); await onChanged();
     } catch (error) {
       const failure = toFailure(error);
-      if (endsSession(failure.kind)) { c.reportFailure(error); return; }
+      if (endsSession(failure.kind)) { reportFailure(error); return; }
       const code = error instanceof ApiError ? error.code : null;
       if (failure.kind !== 'network') intent.current = null;
       if (code === 'CORRECTION_WINDOW_OPEN') setOutcome({ kind: 'window' });
@@ -145,6 +146,7 @@ function CorrectionOutcome({ outcome, t }: { outcome: Outcome; t: Translate }) {
  */
 export function CaseReplyPanel({ caseId, t, onChanged }: { caseId: string; t: Translate; onChanged(): Promise<void> }) {
   const c = useConsole();
+  const { reportFailure } = c;
   const [info, setInfo] = useState<SupportCaseInfo | null>(null);
   const [denied, setDenied] = useState(false);
   const [status, setStatus] = useState<CaseStatus>('RESOLVED');
@@ -156,8 +158,8 @@ export function CaseReplyPanel({ caseId, t, onChanged }: { caseId: string; t: Tr
 
   const load = useCallback(async () => {
     try { setInfo(await c.api.supportCase(caseId)); setDenied(false); }
-    catch (error) { const failure = toFailure(error); if (endsSession(failure.kind)) c.reportFailure(error); setInfo(null); setDenied(true); }
-  }, [c, caseId]);
+    catch (error) { const failure = toFailure(error); if (endsSession(failure.kind)) reportFailure(error); setInfo(null); setDenied(true); }
+  }, [c.api, reportFailure, caseId]);
   useEffect(() => { void load(); }, [load]);
 
   if (denied) return <Panel title={t('回复并记录处理结果', 'Reply and record the result')}><p role="alert">{t('无权处理此个案。', 'No access to this case.')}</p></Panel>;
@@ -175,7 +177,7 @@ export function CaseReplyPanel({ caseId, t, onChanged }: { caseId: string; t: Tr
       await onChanged();
     } catch (error) {
       const failure = toFailure(error);
-      if (endsSession(failure.kind)) { c.reportFailure(error); return; }
+      if (endsSession(failure.kind)) { reportFailure(error); return; }
       if (failure.kind !== 'network') intent.current = null;
       if (failure.kind === 'conflict') { setMessage({ ok: false, text: t('个案已被更新：已载入最新版本，回复内容已保留，请核对后再保存。', 'The case changed: the latest version is loaded and your reply is kept. Review and save again.') }); await load(); }
       else if (failure.kind === 'forbidden' || failure.kind === 'not_found') { setInfo(null); setDenied(true); }

@@ -1,3 +1,4 @@
+import { INTERESTS } from '@fancy/contracts';
 import { newIntentKey } from '@fancy/client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ModerationAction, ModerationReport } from '../../api/admin-api.ts';
@@ -19,14 +20,15 @@ type Load = { status: 'loading' } | { status: 'unclaimed' } | { status: 'ready';
  */
 export function ReportDetail({ reportId, t, lang, onBack }: { reportId: string; t: Translate; lang: Language; onBack(): void }) {
   const c = useConsole();
+  const { reportFailure } = c;
   const [load, setLoad] = useState<Load>({ status: 'loading' });
   const claimIntent = useRef<string | null>(null);
 
   const handle = useCallback((error: unknown): Failure => {
     const failure = toFailure(error);
-    if (endsSession(failure.kind)) c.reportFailure(error);
+    if (endsSession(failure.kind)) reportFailure(error);
     return failure;
-  }, [c]);
+  }, [reportFailure]);
 
   const refresh = useCallback(async () => {
     try { setLoad({ status: 'ready', report: await c.api.moderationReport(reportId) }); }
@@ -123,7 +125,7 @@ function TargetView({ r, t, lang }: { r: ModerationReport; t: Translate; lang: L
           <dt>{t('账号状态', 'Account')}</dt><dd>{accountLabel(t, r.user.accountStatus)}{r.user.profileHidden ? ` · ${t('简介与头像已隐藏', 'bio & photo hidden')}` : ''}</dd>
           <dt>{t('昵称', 'Display name')}</dt><dd>{r.user.displayName ?? '—'}</dd>
           <dt>{t('简介', 'Bio')}</dt><dd>{r.user.bio ?? '—'}</dd>
-          <dt>{t('语言 / 兴趣', 'Languages / interests')}</dt><dd>{[...r.user.languages, ...r.user.interests].join(', ') || '—'}</dd>
+          <dt>{t('语言 / 兴趣', 'Languages / interests')}</dt><dd>{[...r.user.languages.map((l) => (l === 'zh' ? '中文' : l === 'en' ? 'English' : l)), ...r.user.interests.map((i) => (INTERESTS as Record<string, string>)[i] ?? i)].join(', ') || '—'}</dd>
         </dl>
       </div>
     );

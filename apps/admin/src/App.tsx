@@ -13,7 +13,7 @@ import { FailureScreen } from './features/status/FailureScreen.tsx';
 import { SignIn } from './features/auth/SignIn.tsx';
 import { ModerationQueue } from './features/moderation/ModerationQueue.tsx';
 import { ReportDetail } from './features/moderation/ReportDetail.tsx';
-import { formatLondonTime, makeT, type Language, type Translate } from './i18n.ts';
+import { formatLondonTime, makeT, versionLabel, type Language, type Translate } from './i18n.ts';
 import { openRow, PageBody, type Detail } from './pages/pages.tsx';
 import { ConsoleProvider, useConsole } from './state/console.tsx';
 import { emptyFilters, type AdminFilters } from './state/filters.ts';
@@ -141,11 +141,11 @@ function Shell({ lang, page, route, filters, setLang, setFilters, go, navigate }
             <Body t={t} lang={lang} page={page} filters={filters} setFilters={setFilters} go={go} binding={binding}
               open={open} evidence={evidence} setEvidence={setEvidence} />
           )}
-          </>)}
           <footer className="page-footer">
             <span>Fancy · {t('让真实见面成为迭代的起点', 'Build from real meetings')}</span>
-            <span>{c.snapshot ? `${t('指标定义', 'Definitions')} v${c.snapshot.definitionVersion}` : ''}</span>
+            <span>{c.snapshot ? `${t('指标定义', 'Definitions')} ${versionLabel(c.snapshot.definitionVersion)}` : ''}</span>
           </footer>
+          </>)}
         </main>
       </div>
       <SnapshotPicker t={t} lang={lang} />

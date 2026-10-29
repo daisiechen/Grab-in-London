@@ -1,6 +1,6 @@
 import { DetailDialog } from '../../components/DetailDialog.tsx';
 import { Badge } from '../../components/Panel.tsx';
-import { formatLondonTime, type Language, type Translate } from '../../i18n.ts';
+import { formatLondonTime, versionLabel, type Language, type Translate } from '../../i18n.ts';
 import { useConsole } from '../../state/console.tsx';
 
 /** Explicit snapshot choice; revoked snapshots are listed but cannot be selected. */
@@ -21,7 +21,7 @@ export function SnapshotPicker({ t, lang }: { t: Translate; lang: Language }) {
           <button key={s.id} disabled={s.status !== 'SEALED'} aria-current={c.snapshot?.id === s.id ? 'true' : undefined} onClick={() => c.selectSnapshot(s.id)}>
             <div>
               <strong>{formatLondonTime(lang, s.asOf)}</strong>
-              <p className="mono">{s.id} · v{s.definitionVersion} · rev {s.classificationRevision}</p>
+              <p className="mono">{s.id} · {versionLabel(s.definitionVersion)} · rev {s.classificationRevision}</p>
             </div>
             <Badge tone={s.status === 'SEALED' ? 'green' : 'red'}>{s.status === 'SEALED' ? t('已密封', 'Sealed') : t('已撤销', 'Revoked')}</Badge>
           </button>
