@@ -317,3 +317,9 @@ ssh tencent-seoul 'sudo /opt/fancy-deploy/restore-drill.sh --identity /root/fanc
 - 不设 Content-Security-Policy（Web 地图加载 Google 脚本，需实测后再加）。
 - 健康检查失败只在服务器上留记录，没有主动告警；建议接外部可用性监测（§5）。
 - 本套件已在本地验证：脚本语法与 shellcheck、模板渲染、systemd 单元校验、真实 nginx 1.24 的页面导航/静态文件/fancy-web 停机退回路由（发布测试在有 nginx 时自动运行，`FANCY_NGINX` 可指定路径）、TLS `verify-full` 连接、非超级用户执行全部迁移、加密备份与恢复管道、生产形态配置下的 API 启动与 `/health/ready`、发布构建脚本；尚未在首尔服务器实际执行，上线以 §6 的验证为准。
+
+## 13. 部署记录
+
+| 日期 | 版本 | 结果 |
+| --- | --- | --- |
+| 2026-10-29 | `4d918b5`（分支 `claude/trusting-bohr-uxr7eh`，尚未合并 main） | bootstrap、Cloudflare Tunnel（`fancy-prod`，fancyabite.uk 与 www）、secrets、首次部署均完成；公开健康检查全部通过；首份加密备份已生成，每日定时备份启用；ss-server 与 443 全程未变。Auth0/Resend/Google 服务端 Key 沿用开发环境已配置的值（Auth0 为 fancy-dev UK 租户的 BFF 应用）；Web 地图 Key、Auth0 删号管理应用、Resend webhook、Ethan 推送暂未配置。备份密钥在录入当日因私钥误贴入聊天已轮换，旧密钥未加密过任何数据 |
