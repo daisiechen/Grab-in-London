@@ -6,6 +6,7 @@
 
 - [iOS 界面实现规范](engineering/ios-ui-conventions.zh-CN.md)：版面密度、组件、预览数据与验证方式（含用户真机评审结论）。
 - [Claude Code 接手开发计划](delivery/claude-takeover-plan.zh-CN.md)：Claude Code 主开发，视觉按 Demo、规则按 PRD r07，先以模拟数据跑通 iOS 首发旅程再接后端；上架所需的管理后台（举报处理、自动限制、停用账号、J09 个案）规则见其 §8（2026-10-28 用户扩大后台范围）。
+- [上线当天的运营数据步骤](operations/launch-day-analytics.zh-CN.md)（2026-10-29）：第一位真实用户进来前把 Owner、QA、审核、种子账号标成 test/staff（后台面板与 SQL 兜底），核对生产采集后设置 `ANALYTICS_COVERAGE_START`，记录上线基线。
 - [举报值守流程](operations/moderation-runbook.zh-CN.md)（2026-10-29）：24 小时复核由 Owner 负责、Ethan 只做摘要提醒；每日节奏、判定按钮；五类举报原因与紧急提醒、推送 Ethan 的接口约定（早/晚/紧急）。
 - [Web 端设计规范](design/web/mobile-web-design.zh-CN.md)与[可点击原型](design/web/prototype/index.html)（2026-10-28，设计候选）：以 Meetup 为参考、复用 iOS 视觉，移动优先兼顾桌面；含首页、网址与 App 交接（fancyabite.uk）、逐页规格、SEO、无障碍、分析授权、接口缺口及待用户决定的 Web 范围。参考调研见 [Meetup 移动 Web 调研](design/web/meetup-reference.zh-CN.md)（公开资料，亲测部分待补）。
 - [伦敦片区边界数据](engineering/london-areas.zh-CN.md)：真实 API 用来把餐厅坐标归到片区的数据，说明来源与授权（ONS OGL v3.0、下议院图书馆 Open Parliament Licence）、必须标注的来源说明、首发 9 区范围、West End 细分、已知近似和重新生成方法。
@@ -179,7 +180,7 @@
 - [2026-10-20回滚记录](releases/rollback-2026-10-20.zh-CN.md)：当前Demo与主PRD的目标提交、线上版本及回滚边界。
 - [管理端指标与采集修订](delivery/fancy-admin-measurement-review.zh-CN.md)：19条批注、App补充、口径与本轮验证。
 - [管理端可用性审查](delivery/fancy-admin-usability-review.zh-CN.md)：逐页走查、精简决策、规则维护职责及浏览器证据。
-- [后台运营分析能力评审（2026-10-29）](delivery/admin-ops-analytics-review-2026-10-29.zh-CN.md)：上线后 3 个月运营问题覆盖矩阵、P0/P1 补齐方案（优先服务端事实）与数据口径风险；只读评审，待 Owner 决定。
+- [后台运营分析能力评审（2026-10-29）](delivery/admin-ops-analytics-review-2026-10-29.zh-CN.md)：上线后 3 个月运营问题覆盖矩阵、P0/P1 补齐方案（优先服务端事实）与数据口径风险；P0 已实施（口径 v5，见其 §8，含给 Web 的注册来源契约），P1 待定。
 - 管理端：[验证报告](../admin/qa/verification.zh-CN.md)，截图按批次保存在 `admin/qa/`。
 - [商业交付产物](../outputs/business-2026-10-17/)：PDF、HTML、PPTX 和 XLSX。`outputs/` 保存需交付的产物，`build/` 为忽略的构建中间目录。
 

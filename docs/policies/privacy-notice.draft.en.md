@@ -49,7 +49,7 @@ We do not ask for sensitive information such as health, religion, sexual orienta
 ### Information collected automatically
 
 - **Sign-in and security data**: account and session identifiers, sign-in method, sign-in times and expiry, and hashed (not readable) versions of your IP address and email address used to limit repeated sign-in attempts and abuse.
-- **Service records**: timestamps of actions such as applying, approving or leaving a meal, which members held a seat, notifications we created for you and whether you have read them.
+- **Service records**: timestamps of actions such as applying, approving or leaving a meal, which members held a seat, notifications we created for you and whether you have read them. We also record when your profile was first completed, whether you first signed in on the app or the website, and, when you create your account, how you arrived: "app" for the iOS app, "meal link" if you came from a shared meal page, or the name of the campaign in the link you followed (for example a poster or social media post). This is a short label, not a tracking identifier.
 - **Server logs**: our hosting and security providers process your IP address and basic request details (such as time, address requested and errors) to deliver and protect the service.
 - **Product analytics, only with your permission**: after you sign in, the app asks whether you allow analytics. If you say yes, we record a limited set of events on our own server, for example which filters you used when browsing meals (such as area, dates, budget, group size, language, mood, cuisine or dietary option) and which meals were shown, that a meal card was seen, a meal page or profile was opened, the map was opened, or a step of the create-meal form had an error. Events are linked to your account and a random identifier that changes with each app session. They never contain message text, form text or your location. We do not use third-party analytics or advertising software. You can turn analytics off in Settings; we then stop collecting new events.
 
@@ -71,6 +71,7 @@ The app does not collect your device's location, contacts, advertising identifie
 | Send service emails (for example, your application was approved or declined, a meal was cancelled, your deletion request was received or completed) and in-app notifications | Email, service records | Contract |
 | Keep members safe: handle reports, hide or remove content, restrict or close accounts, enforce blocks, prevent spam and abuse, limit repeated sign-in attempts | Reports, relevant content and records, hashed IP and email | Legitimate interests in protecting members and the service |
 | Understand and improve how Fancy is used | Analytics events | Consent, which you can withdraw in Settings |
+| Count how many people join, where they found Fancy and where sign-up stalls (totals only, no third-party tracking) | How you arrived, first sign-in platform, account and profile completion dates, service records | Legitimate interests in running and improving the service |
 | Learn what members think of Fancy | Optional product survey, private meal scores (in aggregate) | Legitimate interests in improving the service; answering is optional |
 | Answer support requests and requests to exercise your rights | Your message and relevant account records | Legitimate interests, or legal obligation where the request is a data protection request |
 | Comply with the law, respond to lawful requests, and establish or defend legal claims | Relevant records | Legal obligation or legitimate interests |
@@ -123,7 +124,9 @@ Some providers listed above are based in, or may access information from, other 
 | Account, profile, photo, meals, applications, messages and feedback | While your account is open. When you replace or remove your photo, the old one is deleted straight away. |
 | After you delete your account | See "Deleting your account" below |
 | Sign-in transactions and email codes | A few minutes, until the code expires or is used; session records until they expire or you sign out |
-| Analytics events | {{ANALYTICS_RETENTION}}, or until you delete your account |
+| Analytics events | 13 months after we receive them, or until you delete your account |
+| Internal analytics summaries (hourly snapshots used by our staff dashboard) | Hourly snapshots for 48 hours, then one per day for 120 days. A snapshot that includes you is withdrawn and its contents deleted when you delete your account. |
+| Records used to check analytics delivery | Meal search checks for 30 days; delivery records for 90 days |
 | Reports and safety records | While the accounts involved are open. Once an account involved is deleted, 12 months after the case is closed or after the deletion, whichever is later. They are kept to the minimum needed to protect members and handle disputes, and only staff handling the case can see them. |
 | Deletion confirmation record | {{DELETION_RECEIPT_RETENTION}} after your account is deleted, so you can check the status of your request |
 | Server logs | {{LOG_RETENTION}} |
