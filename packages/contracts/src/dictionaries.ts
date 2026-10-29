@@ -75,6 +75,20 @@ export const REPORT_REASONS = ['private_concern'] as const;
 export const REPORT_STATUSES = ['RECEIVED', 'IN_REVIEW', 'RESPONDED'] as const;
 export const DELETION_STATUSES = ['PENDING', 'PROCESSING', 'COMPLETED', 'NEEDS_SUPPORT'] as const;
 export const SUPPORT_CASE_STATUSES = ['OPEN', 'IN_REVIEW', 'RESOLVED'] as const;
+/** Account lifecycle as staff see it; SUSPENDED is a reversible moderation state (owner decision 2026-10-28). */
+export const ACCOUNT_STATUSES = ['ACTIVE', 'SUSPENDED', 'DELETING', 'DELETED'] as const;
+/**
+ * Staff moderation actions (App Store guideline 1.2 back office, owner decision 2026-10-28).
+ * UPHOLD keeps/applies the content limit and closes; RESTORE lifts any limit and closes (no breach);
+ * SUSPEND_USER suspends the responsible account, keeps the limit and closes. The rest change one
+ * thing and close only when asked to.
+ */
+export const MODERATION_ACTIONS = ['UPHOLD', 'RESTORE', 'HIDE_CONTENT', 'CANCEL_MEAL', 'RESET_PROFILE_TEXT', 'REMOVE_PROFILE_PHOTO', 'SUSPEND_USER', 'UNSUSPEND_USER'] as const;
+/** History rows also carry the automatic steps the server takes on its own. */
+export const MODERATION_HISTORY_KINDS = [...MODERATION_ACTIONS, 'AUTO_HIDE', 'AUTO_CLOSE', 'CASE_STATUS', 'ATTENDANCE_CORRECTED'] as const;
+export const MODERATION_QUEUE_STATUSES = ['OPEN', 'RESOLVED', 'ALL'] as const;
+/** Staff response target shown in the queue; a case is overdue 24 hours after the report. */
+export const MODERATION_SLA_HOURS = 24;
 export const AUTH_PROVIDERS = ['GOOGLE', 'APPLE'] as const;
 export const CLIENT_KINDS = ['WEB', 'IOS', 'SUPPORT_CLI'] as const;
 export const CONVERSATION_KINDS = ['GROUP', 'DIRECT'] as const;

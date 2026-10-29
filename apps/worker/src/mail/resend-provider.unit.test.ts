@@ -12,6 +12,16 @@ describe('Resend sending-only production transport',()=>{
   const body=JSON.parse(String(init?.body));expect(body.to).toEqual([input.email]);expect(body.tags).toEqual([{name:'outbox_id',value:id}]);expect(JSON.stringify(body.tags)).not.toContain(input.email);expect(body.subject).toBe('Your Fancy application was approved');expect(body.text).toContain('https://fancy.example/meals/'+mealId);expect(body).not.toHaveProperty('reply_to');
   await provider.send(input);expect(fetcher.mock.calls[1]![1]?.body).toBe(init?.body);expect(fetcher.mock.calls[1]![1]?.headers).toEqual(init?.headers);
  });
+ it('sends the moderation digest as admin report links only and refuses other link shapes',async()=>{
+  const fetcher=vi.fn<typeof fetch>(async()=>Response.json({id})),provider=new ResendMailProvider({...options,fetch:fetcher});
+  const links=[`https://admin.fancy.example/#moderation/${mealId}`,`https://admin.fancy.example/#moderation/${id}`];
+  expect(await provider.send({idempotencyKey:id,email:'support@example.invalid',template:'moderation_digest',refs:{digestId:mealId},links})).toEqual({status:'SENT',providerId:id});
+  const body=JSON.parse(String(fetcher.mock.calls[0]![1]?.body));
+  expect(body.subject).toBe('Fancy moderation: open reports to review (2)');expect(body.text).toContain(links[0]);expect(body.text).toContain(links[1]);expect(body.html).toContain('Report 2');
+  for(const bad of [[],['javascript:alert(1)'],['https://admin.fancy.example/#moderation/not-an-id'],['https://user:pw@admin.fancy.example/#moderation/'+id],['http://evil.example/#moderation/'+id]])
+   expect(await provider.send({idempotencyKey:id,email:'support@example.invalid',template:'moderation_digest',refs:{digestId:mealId},links:bad})).toEqual({status:'RETRY'});
+  expect(fetcher).toHaveBeenCalledTimes(1);
+ });
  it('does not call any API or infer NOT_SENT for an unknown lookup',async()=>{
   const fetcher=vi.fn<typeof fetch>(),provider=new ResendMailProvider({...options,fetch:fetcher});expect(await provider.lookup(id)).toEqual({status:'UNKNOWN'});expect(fetcher).not.toHaveBeenCalled();
  });

@@ -47,6 +47,7 @@ J09（支持）、J10/J11（后台）在 iOS 首发旅程完成后另行安排�
 | 日期 | 内容 | 提交 |
 | --- | --- | --- |
 | 2026-10-28 | Web 端恢复设计（用户要求，仅设计不写生产代码）：完成 [Meetup 移动 Web 调研](../design/web/meetup-reference.zh-CN.md)（会话无法直接访问 meetup.com，现为公开资料检索，亲测待补）、[Web 端设计规范](../design/web/mobile-web-design.zh-CN.md)与单文件可点击原型（移动优先，含首页与平板/桌面布局，域名 fancyabite.uk）。推荐 Web 先做“公开分享 + 参加主线”（W1+W2），发起与饭后反馈留在 App；Web 范围、PRD §0.1 表述、已登录首页、主页收录等 8 项待用户决定（规范 §2.3）；`apps/web` 代码未改 | 见 Git 历史 |
+| 2026-10-29 | 管理后台（上架 App Store 所需，用户 2026-10-28 决定扩大后台范围，见 §8）：迁移 `0027_moderation`；契约新增 `listModerationReports`、`claimModerationReport`、`getModerationReport`、`getModerationPhoto`、`moderateReport`、`supportCaseAttendance` 与错误码 `ACCOUNT_SUSPENDED`，`getPublicProfile` 改为可选登录；举报自动处理（举报人立即看不到、重复举报自动限制、自动回执、30天自动关闭、每日摘要邮件）；后台新增员工登录页、举报队列与详情、J09 出席纠错与回复；五个分析页对真实 API（种子数据）逐页走通并修复定义版本显示“vv4”；客户端请求/响应类型改为按操作分配，避免操作增多后超出 TypeScript 联合类型上限 | 见 Git 历史 |
 | 2026-10-28 | 头像改为成员上传本人照片（用户决定，见 §6）：迁移 `0026_avatar_images`；契约新增 `uploadAvatar`（PUT /me/avatar）、`removeAvatar`（DELETE /me/avatar）、`getAvatar`（GET /avatars/{avatarId}），`Me.avatarUrl` 取代 `Me.avatarRef`，`updateMe` 不再接受 `avatarRef`；iOS 设置资料与编辑资料改为“上传/更换/移除照片”，样例头像三选一及 Web 静态样例图移除；新增原生模块 expo-image-picker、expo-image-manipulator（需在 Mac 上重新构建开发版）；`e2e:real-api` 资料步骤增加真实上传 | 见 Git 历史 |
 | 2026-10-27 | 接手：环境基线确认，协作规则更新，本计划建立 | 见 Git 历史 |
 | 2026-10-28 | 后端阶段起步：App 首次对真实 API 端到端跑通（`pnpm --filter @fancy/ios e2e:real-api`，18 步：发现→登录→申请→host 批准→座位/群聊→发起与编辑饭局→屏蔽/举报/问卷/通知），修复 3 个 App 问题、2 个 API 问题并让假 API 与真实 API 对齐（`e2e:parity` 可逐项比对）；收件箱按最近活动排序；样例头像三选一（设置与编辑资料）并由 API 发布头像地址 | 见 Git 历史 |
@@ -92,3 +93,47 @@ J09（支持）、J10/J11（后台）在 iOS 首发旅程完成后另行安排�
 | ~~收件箱会话没有头像~~ | 已解决（2026-10-28）：`Conversation.avatar` | API、假 API、iOS 已同步 |
 | ~~伦敦片区边界数据未接入~~ | 已接入（2026-10-28，用户授权由开发方选定来源）：ONS LSOA 2021 边界（OGL v3.0）加下议院图书馆 MSOA 名称（Open Parliament Licence），覆盖市中心 9 个区共 232 个片区，West End 细分出 soho、fitzrovia、covent-garden、st-jamess、mayfair；范围外仍为 unknown。QA-F24 的外部关口改为“数据已接入，来源待确认”，详见[伦敦片区边界数据](../engineering/london-areas.zh-CN.md) | App 内需加来源说明（建议放在设置页的关于／法律信息），待用户确认位置 |
 | ~~host 取消饭局时自己也收到通知~~ | 已解决（2026-10-28，用户决定）：取消通知与邮件只发给其他成员；系统因人数不足自动取消时仍通知 host | API、假 API 已同步 |
+
+## 8. 管理后台与举报处理（用户 2026-10-28 决定）
+
+### 8.1 决定与范围
+
+- 背景：App Store 审核指南 1.2 要求含用户生成内容的 App 提供举报、屏蔽，并由开发者及时处理举报（移除违规内容、清退滥用用户）且公布联系方式。App 内已有举报（成员/饭局/消息）与屏蔽，缺后台处理。
+- 范围扩展：原[后台PRD](../product/admin/PRD.zh-CN.md)只建五个分析模块、明确不做客服/内容安全；用户 2026-10-28 要求补齐举报处理与 J09 支持个案，视为已批准的范围扩展。后台PRD正文是冻结快照，未改，以本节为准。
+- 用户是独立创始人，不希望手工逐条处理，要求“近乎零操作、全部可撤回、全部留审计”（同日补充）。下列自动规则即按此设计。
+- 角色：沿用现有 `support` 角色（与 J09 支持 CLI 相同），没有新增 `moderator`；所有员工接口要求服务端角色 + 身份提供方的 MFA。查看举报详情或处理前需“领取”，领取即写入与 J09 相同的个案授权（`support_case_grants`），并记审计。
+- 不做：通用客服工单、批量处理、员工管理页、举报原因分级（目前只有一个 `private_concern` 原因，见 8.5）。
+
+### 8.2 自动规则（服务端实际执行的内容）
+
+| 规则 | 实现 |
+| --- | --- |
+| 举报后对举报人立即隐藏 | 被举报的消息对举报人显示为“[Message unavailable]”；被举报的饭局不再出现在其发现页；被举报成员的简介与头像对其隐藏，该成员主持的饭局也不再出现在其发现页。依据就是 `reports` 表，无需额外操作；员工“恢复”不会撤销举报人自己的隐藏。原有屏蔽流程不变 |
+| 重复举报自动限制 | 同一对象 7 天内有 ≥N 个不同举报人（`MODERATION_AUTO_HIDE_REPORTERS`，默认 2，范围 1–20）时：消息对所有人隐藏正文；饭局从发现页隐藏、非成员打开详情返回 404、不再接受新申请（不取消）；成员资料的简介与头像对他人隐藏。仅设时间戳遮盖，原文不改，可恢复。相关未关闭个案标记“已自动限制，待复核”，写入 `moderation_actions`（系统）与审计 |
+| 自动回执 | 举报人在 `reportStatus` 的公开结果立即看到：已自动限制时 “Thanks — we’ve received this and limited the content while we review.”，否则 “Thanks — we’ve received your report and will review it.” |
+| 30 天自动关闭 | 没有任何员工处理（无员工动作、无 `resolveCase`、无出席纠错）的个案在创建 30 天后由 worker 关闭，自动限制保留；举报人看到 “…The content stays limited and this report is now closed.” 或 “…This report is now closed.”；在“已关闭”列表与处理记录中保留 |
+| 每日摘要邮件 | 配置 `SUPPORT_EMAIL` 后，worker 每个伦敦日 08:00 后最多排队一封摘要（最多 50 条未关闭举报，最旧在前），经现有邮件 outbox 发送；邮件只含后台深链（`ADMIN_URL` + `#moderation/<reportId>`，默认 `WEB_ORIGIN/admin/`），不含举报文字。开发环境 `MAIL_ADAPTER=outbox_test` 只入 outbox 不外发 |
+
+### 8.3 员工操作
+
+- 队列：未关闭举报最旧在前，显示 24 小时处理目标（剩余/已超时）、已自动限制、7 天内举报人数、账号状态；列表不含举报文字、姓名、邮箱。可一键“维持 / 恢复 / 停用”（停用需二次确认），使用预设内部备注。
+- 详情：举报人匿名编号、举报说明、被举报内容的最小上下文（资料公开字段与头像 / 饭局字段 / 被举报消息及前后各最多 3 条），处理记录。
+- 动作（每项必须填写内部备注，If-Match 为个案版本，幂等键防重复）：`UPHOLD` 维持限制并关闭、`RESTORE` 恢复内容并关闭（未违规）、`HIDE_CONTENT` 隐藏、`CANCEL_MEAL` 取消饭局（通知全部成员）、`RESET_PROFILE_TEXT` 清除昵称与简介（成员需重新填写才能继续申请/发起）、`REMOVE_PROFILE_PHOTO` 删除头像、`SUSPEND_USER` 停用账号并关闭、`UNSUSPEND_USER` 恢复账号。关闭时举报人看到员工填写的回复或标准说明。
+- 停用：账号状态 `SUSPENDED`，撤销全部会话；登录与 API 调用返回 403 `ACCOUNT_SUSPENDED`（“This account has been suspended for breaking the Fancy community guidelines. Contact Fancy support if you think this is a mistake.”），iOS/Web 显示同一说明；用同一已验证邮箱换登录方式也被拒绝。公开资料按已删除成员处理（资料 404、消息“Former member”、饭局标题遮盖、主持的饭局不进发现页）。恢复后可重新登录，内容随之恢复。停用不自动取消其主持的饭局。
+- 审计：每次领取、查看、动作写 `audit_events`（谁、何时、动作、前后状态等标量）；`moderation_actions` 追加保存内部备注与前后状态（含被清除的昵称/简介），删除账号的隐私清理会一并抹去这些文字。员工查看举报文字不受被举报人停用影响，只在删除时按隐私规则移除。
+- J09：饭局类个案在详情页可查看开始名单出席事实与有效版本，满 计划结束+7 天后追加支持修订（窗口内、冲突、失败、无权限各有状态），并可“回复并记录处理结果”（`resolveCase`）；与支持 CLI 调用相同接口。
+
+### 8.4 员工登录
+
+- 开发：`FANCY_LOCAL_ACCEPTANCE=1 FANCY_LOCAL_STAFF_FIXTURE=1 node infra/local-acceptance.ts`，后台 Vite 跑在 Web 同源 5174，用 `qa-staff@example.invalid` / `000000` 在后台登录页登录（合成账号，具备 analyst、data_admin、support 与模拟 MFA）。测试身份适配器与固定验证码在 staging/production 由配置守卫拒绝。
+- 生产：后台必须与 API 同源部署在 `WEB_ORIGIN` 下（cookie 会话 + Origin/CSRF 校验，与 Web 相同）；员工用自己的邮箱验证码登录，MFA 由 Auth0 的 `amr: mfa` 证明，未带 MFA 的会话访问员工接口返回 `REAUTH_REQUIRED`。角色在 `roles` 表按 userId 授予（目前通过数据库，由创始人执行），没有员工管理页。
+
+### 8.5 待用户决定 / 外部关口
+
+- 公开支持邮箱（社区规则草稿与 App 内联系方式）及 `SUPPORT_EMAIL` 的实际值；邮件发送需 Resend 已配置。
+- 24 小时目标由谁值守：自动规则保证举报人立即得到回执和限制，但员工复核仍需人看摘要邮件。
+- 是否增加举报原因分级（如人身安全/骚扰/诈骗）：目前 App 只收一个原因，因此“高风险原因立即邮件”尚未实现；增加分级需要 App 举报页与契约同步修改。
+- Auth0 是否对员工强制 MFA 并在令牌中返回 `amr: mfa`（未确认前生产后台不可用）；员工角色授予流程。
+- 后台生产托管位置（同源路径）与 `ADMIN_URL`。
+- 被停用成员如需删除账号，目前只能通过支持渠道处理（其无法登录发起删除）。
+

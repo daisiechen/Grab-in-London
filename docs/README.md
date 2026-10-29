@@ -5,7 +5,7 @@
 ## 当前开发负责人（2026-10-27起）
 
 - [iOS 界面实现规范](engineering/ios-ui-conventions.zh-CN.md)：版面密度、组件、预览数据与验证方式（含用户真机评审结论）。
-- [Claude Code 接手开发计划](delivery/claude-takeover-plan.zh-CN.md)：Claude Code 主开发，视觉按 Demo、规则按 PRD r07，先以模拟数据跑通 iOS 首发旅程再接后端。
+- [Claude Code 接手开发计划](delivery/claude-takeover-plan.zh-CN.md)：Claude Code 主开发，视觉按 Demo、规则按 PRD r07，先以模拟数据跑通 iOS 首发旅程再接后端；上架所需的管理后台（举报处理、自动限制、停用账号、J09 个案）规则见其 §8（2026-10-28 用户扩大后台范围）。
 - [Web 端设计规范](design/web/mobile-web-design.zh-CN.md)与[可点击原型](design/web/prototype/index.html)（2026-10-28，设计候选）：以 Meetup 为参考、复用 iOS 视觉，移动优先兼顾桌面；含首页、网址与 App 交接（fancyabite.uk）、逐页规格、SEO、无障碍、分析授权、接口缺口及待用户决定的 Web 范围。参考调研见 [Meetup 移动 Web 调研](design/web/meetup-reference.zh-CN.md)（公开资料，亲测部分待补）。
 - [伦敦片区边界数据](engineering/london-areas.zh-CN.md)：真实 API 用来把餐厅坐标归到片区的数据，说明来源与授权（ONS OGL v3.0、下议院图书馆 Open Parliament Licence）、必须标注的来源说明、首发 9 区范围、West End 细分、已知近似和重新生成方法。
 

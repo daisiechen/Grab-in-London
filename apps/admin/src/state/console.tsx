@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import type { AdminApi, AdminPageData, AdminPageName, SessionInfo, SnapshotInfo } from '../api/admin-api.ts';
+import { hasAnalytics, hasRole, type AdminApi, type AdminPageData, type AdminPageName, type SessionInfo, type SnapshotInfo } from '../api/admin-api.ts';
 import { isBlocking, toFailure, type Failure } from '../api/failure.ts';
 import { londonDay } from '../i18n.ts';
 import { queryKey, toQuery, type AdminFilters, type FilterQuery } from './filters.ts';
@@ -32,6 +32,8 @@ export interface ConsoleState {
   reportFailure(error: unknown): Failure;
   /** Current snapshot + canonical filters; null until a snapshot is selected. */
   binding: { snapshotId: string; query: FilterQuery; filterHash: string | null } | null;
+  /** Re-reads the session (after staff sign-in or sign-out) and clears every cached view. */
+  reloadSession(): void;
 }
 
 const Ctx = createContext<ConsoleState | null>(null);
@@ -45,9 +47,11 @@ export const useConsole = (): ConsoleState => {
 const newestSealed = (list: SnapshotInfo[]) =>
   list.filter((s) => s.status === 'SEALED').sort((a, b) => b.asOf.localeCompare(a.asOf) || b.createdAt.localeCompare(a.createdAt))[0] ?? null;
 
-export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChange, children }: {
+export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChange, analyticsActive = true, children }: {
   api: AdminApi;
   page: AdminPageName;
+  /** False while a non-analytics workspace (moderation) is open: no page data is requested. */
+  analyticsActive?: boolean;
   filters: AdminFilters;
   /** Snapshot id persisted in the URL (null = use newest sealed). */
   snapshotId: string | null;
@@ -63,6 +67,7 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
   /** Page responses keyed by snapshot|page|filters; cleared entirely on 410/401/403. */
   const cache = useRef(new Map<string, AdminPageData>());
   const [revoked, setRevoked] = useState<ReadonlySet<string>>(new Set());
+  const [sessionEpoch, setSessionEpoch] = useState(0);
 
   const snapshot = useMemo(() => {
     if (!snapshotId) return null;
@@ -93,13 +98,19 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
     return failure;
   }, [api, clearData, onSnapshotChange, snapshotId]);
 
-  // Session first (CSRF + roles for display), then sealed snapshot metadata.
+  // Session first (CSRF + roles for display), then sealed snapshot metadata for analytics roles only.
+  // Support-only staff never call analytics endpoints; a session with no staff role is refused here.
   useEffect(() => {
     let live = true;
+    setGate({ status: 'loading' });
     (async () => {
       try {
         const s = await api.session();
-        const list = await api.snapshots();
+        if (!hasAnalytics(s) && !hasRole(s, 'support')) {
+          if (live) { setSession(s); setGate({ status: 'failed', failure: { kind: 'forbidden', requestId: null } }); }
+          return;
+        }
+        const list = hasAnalytics(s) ? await api.snapshots() : [];
         if (!live) return;
         setSession(s);
         setSnapshots(list);
@@ -109,7 +120,7 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
       }
     })();
     return () => { live = false; };
-  }, [api]);
+  }, [api, sessionEpoch]);
 
   // No (valid) snapshot in the URL: bind the newest sealed one. A revoked selection waits for an explicit pick.
   useEffect(() => {
@@ -118,7 +129,7 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
     if (newest && newest.id !== snapshotId) onSnapshotChange(newest.id);
   }, [gate.status, snapshot, snapshots, snapshotId, revoked, revokedNotice, onSnapshotChange]);
 
-  const key = snapshot && query ? `${snapshot.id}|${page}|${queryKey(query)}` : null;
+  const key = analyticsActive && snapshot && query ? `${snapshot.id}|${page}|${queryKey(query)}` : null;
   useEffect(() => {
     if (!key || !snapshot || !query) return;
     const hit = cache.current.get(key);
@@ -163,6 +174,12 @@ export function ConsoleProvider({ api, page, filters, snapshotId, onSnapshotChan
     openPicker: setPickerOpen,
     refreshSnapshots,
     reportFailure,
+    reloadSession() {
+      clearData();
+      setSnapshots([]);
+      setSession(null);
+      setSessionEpoch((n) => n + 1);
+    },
     binding: snapshot && query ? {
       snapshotId: snapshot.id,
       query,

@@ -9,8 +9,9 @@ import { encodeCursor, decodeCursor } from '../common/cursor.ts';
 import { defineRoute, defineWrite } from '../http/routes.ts';
 import type { AppDeps } from '../http/context.ts';
 import { lockPostMeal } from '../post-meal/lock.ts';
-import { recordAttendanceRevision } from '../post-meal/attendance.ts';
+import { POST_MEAL_WINDOW_MS, projectAttendance, recordAttendanceRevision, type AttendanceRow } from '../post-meal/attendance.ts';
 import { invalidateIneligiblePairs } from '../connections/service.ts';
+import { applyReportAutomation } from '../moderation/policy.ts';
 const reportDto = (r: Record<string, unknown>) => ({ id:r.id, receipt:r.receipt, targetType:r.target_type, status:r.status, publicOutcome:r.privacy_redacted?null:r.public_outcome, createdAt:(r.created_at as Date).toISOString() });
 const notificationDto = (r: Record<string, unknown>) => { const refs = r.refs as Record<string,string>; return { id:r.id,template:r.template,createdAt:(r.created_at as Date).toISOString(),readAt:(r.read_at as Date | null)?.toISOString() ?? null,mealId:refs.mealId ?? null,applicationId:refs.applicationId ?? null,conversationId:refs.conversationId ?? null }; };
 async function caseFor(db: Pool | PoolClient, caseId: string, actor: string,lockGrant=false) {
@@ -61,9 +62,13 @@ export function registerSupportRoutes(app: FastifyInstance, deps: AppDeps) {
     if(!target.rowCount)throw new DomainError('NOT_FOUND','This content is unavailable.');
     const details=body.details.trim();if(!details)throw new DomainError('VALIDATION_FAILED','Describe your concern.');
     const {rows:[r]}=await tx.client.query(`INSERT INTO reports(reporter_id,target_type,target_id,reason,details,receipt) VALUES($1,$2,$3,$4,$5,$6) RETURNING *`,[auth.userId,body.targetType,body.targetId,body.reason,details,randomBytes(12).toString('base64url')]);
-    await tx.client.query(`INSERT INTO support_cases(report_id,target_type,target_id,details) VALUES($1,$2,$3,$4)`,[r.id,r.target_type,r.target_id,details]);
+    const {rows:[supportCase]}=await tx.client.query<{id:string}>(`INSERT INTO support_cases(report_id,target_type,target_id,details) VALUES($1,$2,$3,$4) RETURNING id`,[r.id,r.target_type,r.target_id,details]);
     await appendAudit(tx.client,{actorKind:'USER',actorId:auth.userId,action:'report.created',aggregateType:'report',aggregateId:r.id,requestId:request.id});
-    return {data:reportDto(r),resourceId:r.id};
+    // The reported item is hidden from this reporter at once (reads consult reports); repeated reports
+    // limit it for everyone and the reporter receives an automatic acknowledgement (moderation policy).
+    await applyReportAutomation(tx,{reportId:r.id,caseId:supportCase!.id,targetType:body.targetType,targetId:body.targetId,threshold:deps.config.moderationAutoHideReporters,requestId:request.id});
+    const {rows:[current]}=await tx.client.query(`SELECT * FROM reports WHERE id=$1`,[r.id]);
+    return {data:reportDto(current),resourceId:r.id};
   });
   defineRoute(app,deps,'reportStatus',async({request,auth})=>{
     const {reportId}=request.params as {reportId:string};const {rows:[r]}=await deps.pool.query(`SELECT r.*,${reportPrivateTextHidden} AS privacy_redacted FROM reports r WHERE r.id=$1 AND r.reporter_id=$2`,[reportId,auth!.userId]);if(!r)throw new DomainError('NOT_FOUND','Report not found.');return {data:reportDto(r)};
@@ -71,6 +76,23 @@ export function registerSupportRoutes(app: FastifyInstance, deps: AppDeps) {
   defineRoute(app,deps,'supportCase',async({request,auth})=>{
     const r=await caseFor(deps.pool,(request.params as {caseId:string}).caseId,auth!.userId);
     await appendAudit(deps.pool as unknown as PoolClient,{actorKind:'SUPPORT',actorId:auth!.userId,action:'support.case_viewed',aggregateType:'case',aggregateId:r.id,requestId:request.id});return {data:caseDto(r)};
+  });
+  defineRoute(app,deps,'supportCaseAttendance',async({request,auth})=>{
+    const r=await caseFor(deps.pool,(request.params as {caseId:string}).caseId,auth!.userId);
+    if(r.privacy_redacted)throw new DomainError('FORBIDDEN','This case no longer has available evidence for a correction.');
+    if(r.target_type!=='MEAL')throw new DomainError('STATE_CONFLICT','Attendance applies to meal cases only.');
+    const {rows:[meal]}=await deps.pool.query<{id:string;host_id:string;status:string;scheduled_end_at:Date}>(`SELECT id,host_id,status,scheduled_end_at FROM meals WHERE id=$1`,[r.target_id]);
+    if(!meal)throw new DomainError('NOT_FOUND','Meal not found.');
+    // Start roster only; members whose accounts were deleted are left out (no private facts about them).
+    const {rows:roster}=await deps.pool.query<{user_id:string}>(`SELECT sr.user_id FROM start_roster sr JOIN users u ON u.id=sr.user_id WHERE sr.meal_id=$1 AND u.status NOT IN ('DELETING','DELETED') ORDER BY (sr.user_id=$2) DESC,sr.user_id LIMIT 20`,[meal.id,meal.host_id]);
+    const entries=await Promise.all(roster.map(async({user_id})=>{
+      const {rows:revisions}=await deps.pool.query<AttendanceRow>(`SELECT source,value,version FROM attendance_revisions WHERE meal_id=$1 AND subject_id=$2`,[meal.id,user_id]);
+      const p=projectAttendance(user_id,revisions);
+      const support=revisions.filter(x=>x.source==='SUPPORT').sort((a,b)=>BigInt(a.version)>BigInt(b.version)?-1:1)[0];
+      return {subjectId:user_id,isHost:user_id===meal.host_id,selfValue:p.selfValue,hostValue:p.hostValue,supportValue:support?.value??null,value:p.value,source:p.source,version:p.version};
+    }));
+    await appendAudit(deps.pool as unknown as PoolClient,{actorKind:'SUPPORT',actorId:auth!.userId,action:'support.case_attendance_viewed',aggregateType:'case',aggregateId:r.id,requestId:request.id});
+    return {data:{caseId:r.id,mealId:meal.id,mealStatus:meal.status,scheduledEndAt:meal.scheduled_end_at.toISOString(),correctionOpensAt:new Date(meal.scheduled_end_at.getTime()+POST_MEAL_WINDOW_MS).toISOString(),roster:entries}};
   });
   defineWrite(app,deps,'resolveCase',async({request,auth,ifMatch},tx)=>{
     const id=(request.params as {caseId:string}).caseId;

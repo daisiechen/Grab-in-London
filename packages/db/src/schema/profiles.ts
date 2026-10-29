@@ -10,5 +10,6 @@ export const profiles = pgTable('profiles', {
   background: jsonb('background').notNull().default({}),
   ageConfirmedVersion: text('age_confirmed_version'),
   communityAcceptedVersion: text('community_accepted_version'),
+  moderationHiddenAt: timestamp('moderation_hidden_at', { withTimezone: true, mode: 'date' }),
   updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).notNull().defaultNow(),
 });

@@ -54,6 +54,9 @@ export const CONFIG_KEYS = [
   'RETENTION_POLICY_JSON',
   'LOG_LEVEL',
   'TRUSTED_PROXY_CIDRS',
+  'SUPPORT_EMAIL',
+  'ADMIN_URL',
+  'MODERATION_AUTO_HIDE_REPORTERS',
 ] as const;
 
 const LOG_LEVELS = ['debug', 'info', 'warn', 'error'] as const;
@@ -89,6 +92,12 @@ export interface CoreConfig {
   logLevel: LogLevel;
   /** Explicit proxy addresses only; an empty list distrusts all forwarded headers. */
   trustedProxyCidrs: string[];
+  /** Support inbox for the daily moderation digest; unset = no digest is queued. */
+  supportEmail: string | null;
+  /** Absolute URL of the admin console used in digest deep links (default `${WEB_ORIGIN}/admin/`). */
+  adminUrl: string;
+  /** Distinct reporters within 7 days that make the server limit reported content (default 2). */
+  moderationAutoHideReporters: number;
 }
 
 /** Lists offending keys only; values are never echoed so secrets stay out of logs. */
@@ -255,8 +264,26 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
   if (!LOG_LEVELS.includes(logLevel)) issues.push(`LOG_LEVEL must be one of ${LOG_LEVELS.join('/')}`);
   const trustedProxyCidrs = parseTrustedProxies(value('TRUSTED_PROXY_CIDRS'), issues);
 
+  const supportEmail = value('SUPPORT_EMAIL')?.toLowerCase() ?? null;
+  if (supportEmail && (supportEmail.length > 320 || !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(supportEmail))) issues.push('SUPPORT_EMAIL must be a single email address');
+  let adminUrl = webOrigin ? `${webOrigin}/admin/` : '';
+  const adminRaw = value('ADMIN_URL');
+  if (adminRaw) {
+    try {
+      const url = new URL(adminRaw);
+      if ((url.protocol !== 'https:' && !(url.protocol === 'http:' && !deployed)) || url.username || url.password || url.search || url.hash) throw new Error();
+      adminUrl = url.href.endsWith('/') ? url.href : `${url.href}/`;
+    } catch { issues.push(`ADMIN_URL must be an absolute ${deployed ? 'https ' : ''}URL without credentials, query or fragment`); }
+  }
+  const autoHideRaw = value('MODERATION_AUTO_HIDE_REPORTERS') ?? '2';
+  const moderationAutoHideReporters = Number(autoHideRaw);
+  if (!/^[0-9]{1,2}$/.test(autoHideRaw) || moderationAutoHideReporters < 1 || moderationAutoHideReporters > 20) issues.push('MODERATION_AUTO_HIDE_REPORTERS must be an integer from 1 to 20');
+
   if (issues.length) throw new ConfigError(issues);
   return {
+    supportEmail,
+    adminUrl,
+    moderationAutoHideReporters,
     environment,
     databaseUrl: db!.toString(),
     adapters: adapters as CoreConfig['adapters'],

@@ -8,6 +8,8 @@ export async function applyForMeal(tx:Tx,mealId:string,actorId:string,message:st
  message=message.trim();if([...message].length<20||[...message].length>300)throw new DomainError('VALIDATION_FAILED','Application messages must contain 20 to 300 characters.');
  const {meal,now}=await lockMeal(tx,mealId,actorId);openMeal(meal);await requireProfile(tx,actorId);
  if(meal.host_id===actorId)throw new DomainError('FORBIDDEN','You already host this meal.');
+ // A meal limited by moderation accepts no new applicants until staff restore it.
+ if(meal.moderation_hidden_at)throw new DomainError('NOT_FOUND','This meal is unavailable.');
  if(now>=meal.closes_at)throw new DomainError('DEADLINE_PASSED','Applications have closed.');
  if((await currentSeats(tx,meal,now)).length>=meal.capacity)throw new DomainError('MEAL_FULL','This table is full.');
  const {rows}=await tx.client.query(`SELECT state,round FROM applications WHERE meal_id=$1 AND user_id=$2 ORDER BY round DESC`,[mealId,actorId]);

@@ -11,7 +11,7 @@ import { assertWebOrigin, cookieOptions, keyedHash, LINK_BINDER_COOKIE, OAUTH_BI
 import { completeAuthentication, type AuthTxRow } from './flows.ts';
 import { sessionInfo } from './me.ts';
 import { ProviderRejectedError, ProviderUnavailableError, type IdentityProvider, type VerifiedIdentity } from './provider.ts';
-import { isProvisionalShell } from './resolve.ts';
+import { isProvisionalShell, suspendedError } from './resolve.ts';
 import { assertFreshAuth } from './reauth.ts';
 import { authenticateToken, issueNativeCredentials, revokeAllForUser, revokeFamily, rotateRefresh } from './sessions.ts';
 import { normalizeEmail, pkceChallenge, randomToken, sha256Hex, verifyPkce } from './tokens.ts';
@@ -259,6 +259,8 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
     const outcome = await withTransaction(deps.pool, async (tx) => {
       const {rows:[family]}=await tx.client.query<{user_id:string}>(`SELECT sf.user_id FROM refresh_tokens r JOIN session_families sf ON sf.id=r.family_id WHERE r.token_hash=$1`,[sha256Hex(body.refreshToken)]);
       if(!family)throw new DomainError('AUTH_REQUIRED','Please sign in again.');
+      const {rows:[owner]}=await tx.client.query<{status:string}>(`SELECT status FROM users WHERE id=$1`,[family.user_id]);
+      if(owner?.status==='SUSPENDED')throw suspendedError();
       await lockActiveActor(tx,family.user_id,'update');
       return rotateRefresh(tx.client,body.refreshToken,await tx.effectiveNow());
     });

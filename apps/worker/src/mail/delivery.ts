@@ -4,7 +4,9 @@ import type {Pool} from 'pg';
 export type DeliveryOutcome={status:'SENT';providerId:string}|{status:'UNKNOWN'}|{status:'RETRY'};
 export interface MailProvider {
  kind:'test'|'real'|'unavailable';
- send(input:{idempotencyKey:string;email:string;template:string;refs:Record<string,string>;claimToken?:string;dispatchDeadlineMs?:number}):Promise<DeliveryOutcome>;
+ send(input:{idempotencyKey:string;email:string;template:string;refs:Record<string,string>;claimToken?:string;dispatchDeadlineMs?:number;
+  /** moderation_digest only: admin deep links to open reports (ids only, no report text). */
+  links?:readonly string[]}):Promise<DeliveryOutcome>;
  /** NOT_SENT is only valid with provider-authoritative proof, never a lookup timeout/not-found. */
  lookup(idempotencyKey:string):Promise<DeliveryOutcome|{status:'NOT_SENT'}>;
 }
@@ -13,8 +15,8 @@ export class UnavailableMailProvider implements MailProvider {
  async send():Promise<DeliveryOutcome>{return {status:'RETRY'};}
  async lookup():Promise<DeliveryOutcome>{return {status:'UNKNOWN'};}
 }
-const TEMPLATES=new Set(['application_approved','application_declined','application_expired','meal_cancelled','deletion_received','deletion_completed']);
-const REF_KEYS=new Set(['mealId','applicationId','conversationId','deletionId']);
+const TEMPLATES=new Set(['application_approved','application_declined','application_expired','meal_cancelled','deletion_received','deletion_completed','moderation_digest']);
+const REF_KEYS=new Set(['mealId','applicationId','conversationId','deletionId','digestId']);
 interface DeliveryRow {id:string;recipient_id:string|null;template:string;payload:Record<string,string>;attempts:number;lookup_attempts:number;status:string;claim_token:string}
 export type MailDeadCode='RETRY_EXHAUSTED'|'INVALID_PAYLOAD'|'RECIPIENT_UNAVAILABLE';
 export interface MailDeadEvent {readonly event:'mail_dead';readonly outboxId:string;readonly errorCode:MailDeadCode;readonly attempts:number;readonly lookupAttempts:number}
@@ -23,7 +25,9 @@ export function logMailDead(event:MailDeadEvent){
  console.error(JSON.stringify({event:'mail_dead',outboxId:event.outboxId,errorCode:event.errorCode,attempts:event.attempts,lookupAttempts:event.lookupAttempts}));
 }
 type DeadRow=Pick<DeliveryRow,'id'|'attempts'|'lookup_attempts'>;
-export function mailDelivery(pool:Pool,provider:MailProvider,environment:'development'|'test'|'staging'|'production',options:{deletionMailEncryption?:DeletionMailEncryption|null;onDead?:(event:MailDeadEvent)=>void|Promise<void>}={}){
+export function mailDelivery(pool:Pool,provider:MailProvider,environment:'development'|'test'|'staging'|'production',options:{deletionMailEncryption?:DeletionMailEncryption|null;onDead?:(event:MailDeadEvent)=>void|Promise<void>;
+ /** Moderation digest destination and admin console URL (SUPPORT_EMAIL / ADMIN_URL). */
+ support?:{email:string|null;adminUrl:string}}={}){
  if(provider.kind==='test'&&environment!=='test'&&environment!=='development')throw new Error('TEST_MAIL_FORBIDDEN');
  async function alert(row:DeadRow,errorCode:MailDeadCode){
   const event:MailDeadEvent=Object.freeze({event:'mail_dead',outboxId:row.id,errorCode,attempts:row.attempts,lookupAttempts:row.lookup_attempts});
@@ -56,9 +60,13 @@ export function mailDelivery(pool:Pool,provider:MailProvider,environment:'develo
    }else{
     const beforeResolution=performance.now();
     const deletionDestination=isDeletionMail(row.template)?await withMailTransaction(client=>resolveDeletionMail(client,row,options.deletionMailEncryption??null)):null;
-    const email=isDeletionMail(row.template)?deletionDestination?.email:(await pool.query<{email:string}>(`SELECT c.email FROM private_contact c JOIN users u ON u.id=c.user_id WHERE c.user_id=$1 AND u.status='ACTIVE'`,[row.recipient_id])).rows[0]?.email;
+    const digest=row.template==='moderation_digest';
+    const email=digest?options.support?.email:isDeletionMail(row.template)?deletionDestination?.email:(await pool.query<{email:string}>(`SELECT c.email FROM private_contact c JOIN users u ON u.id=c.user_id WHERE c.user_id=$1 AND u.status='ACTIVE'`,[row.recipient_id])).rows[0]?.email;
     if(!email){await markDead(row.id,token,'RECIPIENT_UNAVAILABLE');continue;}
-    try{outcome=await provider.send({idempotencyKey:row.id,email,template:row.template,refs:row.payload,claimToken:row.claim_token,...(deletionDestination?{dispatchDeadlineMs:beforeResolution+deletionDestination.remainingMs}:{})});}catch{outcome={status:'UNKNOWN'};}
+    // Digest links carry report ids only; staff open them in the admin console after signing in.
+    const links=digest?(await pool.query<{report_ids:string[]}>(`SELECT report_ids FROM moderation_digests WHERE id=$1`,[row.payload.digestId])).rows[0]?.report_ids.map(id=>`${options.support!.adminUrl}#moderation/${id}`):undefined;
+    if(digest&&!links?.length){await markDead(row.id,token,'INVALID_PAYLOAD');continue;}
+    try{outcome=await provider.send({idempotencyKey:row.id,email,template:row.template,refs:row.payload,claimToken:row.claim_token,...(links?{links}:{}),...(deletionDestination?{dispatchDeadlineMs:beforeResolution+deletionDestination.remainingMs}:{})});}catch{outcome={status:'UNKNOWN'};}
    }
    const status=outcome.status==='SENT'?'SENT':outcome.status==='UNKNOWN'?'UNKNOWN':outcome.status==='NOT_SENT'?'PENDING':'FAILED';
    await pool.query(`UPDATE outbox SET status=$3,provider_id=$4,claim_token=NULL,lease_until=NULL,updated_at=clock_timestamp(),next_attempt_at=clock_timestamp()+make_interval(secs=>$5),last_error_code=$6 WHERE id=$1 AND claim_token=$2`,[row.id,token,status,outcome.status==='SENT'?outcome.providerId:null,Math.min(3600,30*2**Math.max(row.attempts,row.lookup_attempts)),status==='SENT'?null:status==='UNKNOWN'?'PROVIDER_UNKNOWN_OUTCOME':'PROVIDER_UNAVAILABLE']);

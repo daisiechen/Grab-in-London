@@ -60,8 +60,8 @@ export const peopleOperations = [
     success: { status: 200, media: 'image/jpeg' }, errors: ['NOT_FOUND'],
   }),
   op({
-    operationId: 'getPublicProfile', method: 'GET', path: '/profiles/{userId}', summary: 'Public profile and published reviews',
-    auth: 'public', write: 'read', ifMatch: false,
+    operationId: 'getPublicProfile', method: 'GET', path: '/profiles/{userId}', summary: 'Public profile and published reviews (a signed-in reporter no longer sees the bio/photo of a member they reported)',
+    auth: 'optionalSession', write: 'read', ifMatch: false,
     params: Obj({ userId: Uuid }), query: Obj({ cursor: T.Optional(Cursor), limit: T.Optional(Limit) }),
     success: { status: 200, data: Obj({ profile: PublicProfile, reviews: T.Array(PublicReview, { maxItems: 100 }), nextReviewCursor: T.Union([Cursor, T.Null()]) }) },
     errors: ['NOT_FOUND'],

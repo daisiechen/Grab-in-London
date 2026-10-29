@@ -11,7 +11,13 @@ type BodyPart<D> = D extends { body: infer B } ? { body: StaticOf<B> } : { body?
 type KeyPart<D> = D extends { write: 'idempotencyKey' } ? { idempotencyKey: string } : D extends { write: 'resourceKey' } ? { idempotencyKey?: string } : { idempotencyKey?: never };
 type IfMatchPart<D> = D extends { ifMatch: true } ? { ifMatch: string } : { ifMatch?: never };
 
-export type RequestOf<I extends OperationId> = ParamsPart<Def<I>> & QueryPart<Def<I>> & BodyPart<Def<I>> & KeyPart<Def<I>> & IfMatchPart<Def<I>>;
+/**
+ * `D extends unknown ? … : never` distributes over the operation first, so the five parts are
+ * intersected per operation. Intersecting parts that were each distributed over a still-generic id
+ * would form their cross product and exceed TS's union limit once the registry grows.
+ */
+type RequestFor<D> = D extends unknown ? ParamsPart<D> & QueryPart<D> & BodyPart<D> & KeyPart<D> & IfMatchPart<D> : never;
+export type RequestOf<I extends OperationId> = RequestFor<Def<I>>;
 
 export interface ResponseMeta {
   requestId: string;
@@ -26,8 +32,9 @@ export interface Page {
 }
 
 type SuccessOf<D> = D extends { success: infer S } ? S : never;
-export type ResponseOf<I extends OperationId> =
-  SuccessOf<Def<I>> extends { status: 204 } ? undefined
-  : SuccessOf<Def<I>> extends { data: infer T; list: true } ? { data: StaticOf<T>[]; page: Page; meta: ResponseMeta }
-  : SuccessOf<Def<I>> extends { data: infer T } ? { data: StaticOf<T>; meta: ResponseMeta }
+type ResponseFor<D> =
+  SuccessOf<D> extends { status: 204 } ? undefined
+  : SuccessOf<D> extends { data: infer T; list: true } ? { data: StaticOf<T>[]; page: Page; meta: ResponseMeta }
+  : SuccessOf<D> extends { data: infer T } ? { data: StaticOf<T>; meta: ResponseMeta }
   : string;
+export type ResponseOf<I extends OperationId> = ResponseFor<Def<I>>;

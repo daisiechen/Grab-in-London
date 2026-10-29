@@ -48,7 +48,7 @@ describe('registry matches the reviewed API contract', () => {
 
   it('keeps additional reviewed operations explicitly enumerated', () => {
     const extra = all.map((d) => d.operationId).filter((id) => !documented.some((d) => d.id === id));
-    expect(extra.sort()).toEqual(['uploadAvatar','removeAvatar','getAvatar','getVenuePhoto','getBlock','listBlocks', 'markConversationRead', 'getClassification', 'getExport', 'createGuestSession', 'readAIPreferences', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'readAI', 'activityAI', 'resetAI', 'requestAI', 'pollAI', 'validateAIDraft'].sort());
+    expect(extra.sort()).toEqual(['listModerationReports','claimModerationReport','getModerationReport','getModerationPhoto','moderateReport','supportCaseAttendance','uploadAvatar','removeAvatar','getAvatar','getVenuePhoto','getBlock','listBlocks', 'markConversationRead', 'getClassification', 'getExport', 'createGuestSession', 'readAIPreferences', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'readAI', 'activityAI', 'resetAI', 'requestAI', 'pollAI', 'validateAIDraft'].sort());
     expect(doc).toContain('GET /admin/exports/:id');
   });
 
@@ -65,6 +65,24 @@ describe('registry matches the reviewed API contract', () => {
     expect(Object.keys((byId('updateMe')!.body as unknown as { properties: object }).properties)).not.toContain('avatarRef');
     const spec = buildOpenApi() as { paths: Record<string, Record<string, { responses: Record<string, { content?: Record<string, unknown> }> }>> };
     expect(Object.keys(spec.paths['/v1/avatars/{avatarId}']!.get!.responses['200']!.content!)).toEqual(['image/jpeg']);
+  });
+
+  it('defines the moderation back office as support-role staff operations with audited, versioned writes', () => {
+    for (const id of ['listModerationReports', 'claimModerationReport', 'getModerationReport', 'getModerationPhoto', 'moderateReport', 'supportCaseAttendance']) {
+      expect(byId(id), id).toMatchObject({ auth: 'staff', roles: ['support'] });
+      expect(errorsFor(byId(id)!), id).toEqual(expect.arrayContaining(['FORBIDDEN', 'REAUTH_REQUIRED', 'ACCOUNT_SUSPENDED']));
+    }
+    expect(byId('moderateReport')).toMatchObject({ method: 'POST', path: '/moderation/reports/{reportId}/actions', write: 'idempotencyKey', ifMatch: true });
+    expect(byId('claimModerationReport')).toMatchObject({ write: 'idempotencyKey', ifMatch: false });
+    const body = validator(byId('moderateReport')!.body!);
+    expect(body({ action: 'SUSPEND_USER', note: 'Repeated harassment.' })).toBe(true);
+    expect(body({ action: 'UPHOLD', note: 'ok' })).toBe(false);
+    expect(body({ action: 'DELETE_EVERYTHING', note: 'Not an action.' })).toBe(false);
+    expect(body({ action: 'RESTORE', note: 'No breach found.', publicOutcome: null, resolve: true })).toBe(true);
+    const summary = Object.keys((byId('listModerationReports')!.success.data as unknown as { properties: object }).properties);
+    for (const field of ['details', 'email', 'displayName']) expect(summary).not.toContain(field);
+    expect(byId('getPublicProfile')!.auth).toBe('optionalSession');
+    expect(errorsFor(byId('verifyEmail')!)).toContain('ACCOUNT_SUSPENDED');
   });
 
   it('defines photo reads as public ref-only and exposes no client media URL/resource-name input',()=>{
@@ -94,7 +112,7 @@ describe('write protocol', () => {
       'block', 'cancelMeal', 'classifyUser', 'declareBooking', 'decideApplication', 'dissolveGroup', 'editMeal', 'leaveGroup',
       'leaveMeal', 'putSurvey', 'rateExperience', 'reportAttendance', 'requestDeletion', 'resolveCase', 'reviewPerson',
       'revokeConnection', 'selectReconnect', 'unblock', 'updateMe', 'withdrawApplication',
-      'replaceAIPreferences', 'deleteAIPreferences', 'uploadAvatar', 'removeAvatar',
+      'replaceAIPreferences', 'deleteAIPreferences', 'uploadAvatar', 'removeAvatar', 'moderateReport',
     ].sort());
     for (const id of ['createMeal', 'applyMeal', 'sendMessage', 'createReport']) expect(byId(id)!.ifMatch, id).toBe(false);
   });

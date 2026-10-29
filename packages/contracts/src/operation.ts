@@ -42,7 +42,11 @@ export const op = <const D extends OperationDef>(def: D): D => def;
 export function errorsFor(def: OperationDef): ErrorCode[] {
   const codes = new Set<ErrorCode>(['INVALID_REQUEST', 'RATE_LIMITED', 'INTERNAL_ERROR', ...def.errors]);
   if (def.params || def.query || def.body) codes.add('VALIDATION_FAILED');
-  if (def.auth === 'session' || def.auth === 'staff') codes.add('AUTH_REQUIRED');
+  if (def.auth === 'session' || def.auth === 'staff') {
+    codes.add('AUTH_REQUIRED');
+    // A suspended member's revoked credential is answered with this clear code instead of 401.
+    codes.add('ACCOUNT_SUSPENDED');
+  }
   if (def.auth === 'staff') {
     codes.add('FORBIDDEN');
     codes.add('REAUTH_REQUIRED');

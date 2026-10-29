@@ -5,7 +5,7 @@ export interface MealRow {
  id:string;host_id:string;venue_ref:string;title:string;description:string;starts_at:Date;closes_at:Date;scheduled_end_at:Date;
  start_local_date:string;start_local_time:string;start_offset:number;close_local_date:string;close_local_time:string;close_offset:number;
  minimum:number;capacity:number;budget_min_pence:number;budget_max_pence:number;languages:string[];mood:string;area_code:string;cuisine_code:string|null;dietary_codes:string[]|null;booking_mode:string;
- status:'OPEN'|'CANCELLED'|'COMPLETED';cancel_reason:string|null;version:string;head:string;arrangement_locked_at:Date|null;terms_version:string;attempt_id:string;created_at:Date;
+ status:'OPEN'|'CANCELLED'|'COMPLETED';cancel_reason:string|null;version:string;head:string;arrangement_locked_at:Date|null;moderation_hidden_at?:Date|null;terms_version:string;attempt_id:string;created_at:Date;
 }
 export interface SeatEvent { userId:string;type:'HOST_CONFIRMED'|'GUEST_CONFIRMED'|'LEFT';effectiveAt:Date;seq:bigint }
 /** Boundary semantics are deliberately asymmetric: confirmation is strict, exit inclusive. */

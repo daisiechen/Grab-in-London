@@ -61,10 +61,11 @@ Don't share other members' messages, photos, contact details or personal informa
 
 ## What happens when something is reported
 
-- We do not check content before it is posted, so reports matter. When several members report the same content, it may be hidden automatically while we review it.
+- We do not check content before it is posted, so reports matter. When you report a profile or a meal, it is hidden from you straight away and you get a receipt in the app.
+- If several different members report the same item within seven days, it is limited for everyone while we review it: a meal is removed from discovery and stops accepting applications, and a profile's bio and photo are hidden. These limits can be reversed.
 - We aim to review reports of objectionable content within 24 hours. We look at the content and any relevant records.
-- Depending on what happened, we may take no action, ask for more information, remove content, give a warning, limit features, suspend an account or close it permanently. Serious breaches, such as threats, sexual harassment, hate or involving anyone under 18, lead to immediate removal from Fancy. Where there is a risk to someone's safety, we may contact the police.
-- Automatic actions can be reversed, and decisions to suspend or close an account are made by a person.
+- Depending on what happened, we may keep or lift a limit, remove content such as a profile name, bio or photo, cancel a meal listing, or suspend an account. A suspended account cannot sign in and its content is hidden from other members. Serious breaches, such as threats, sexual harassment, hate or involving anyone under 18, lead to immediate removal from Fancy. Where there is a risk to someone's safety, we may contact the police.
+- Automatic limits can be reversed, and decisions to suspend an account are made by a person. Every decision is recorded internally. A report that receives no further review within 30 days is closed; any limit already applied stays in place.
 - If you disagree with a decision about your content or account, email {{SUPPORT_EMAIL}} within 30 days. We will look at it again and tell you the outcome.
 
 Fancy support is not an emergency service. For emergencies, call 999.
