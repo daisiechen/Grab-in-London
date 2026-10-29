@@ -6,7 +6,7 @@ const big = (name: string) => bigint(name, { mode: 'bigint' });
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
-  status: text('status', { enum: ['ACTIVE', 'DELETING', 'DELETED'] }).notNull().default('ACTIVE'),
+  status: text('status', { enum: ['ACTIVE', 'SUSPENDED', 'DELETING', 'DELETED'] }).notNull().default('ACTIVE'),
   version: big('version').notNull().default(1n),
   privacyEpoch: big('privacy_epoch').notNull().default(0n),
   createdAt: ts('created_at').notNull().defaultNow(),

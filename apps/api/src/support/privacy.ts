@@ -2,9 +2,9 @@ import type {Pool,PoolClient} from 'pg';
 export const REMOVED_SUPPORT_TEXT='This content has been removed for privacy.';
 /** Aliases are constants owned by this module, never request input. Polymorphic links are explicit. */
 function targetMatches(alias:string,userParameter:string){return `(${alias}.target_type='USER' AND ${alias}.target_id=${userParameter}) OR (${alias}.target_type='MEAL' AND EXISTS(SELECT 1 FROM meals pm WHERE pm.id=${alias}.target_id AND pm.host_id=${userParameter})) OR (${alias}.target_type='MESSAGE' AND EXISTS(SELECT 1 FROM messages pmsg WHERE pmsg.id=${alias}.target_id AND pmsg.sender_id=${userParameter}))`;}
-const affected=(alias:string)=>`EXISTS(SELECT 1 FROM users pu WHERE pu.status<>'ACTIVE' AND (${targetMatches(alias,'pu.id')}))`;
+const affected=(alias:string)=>`EXISTS(SELECT 1 FROM users pu WHERE pu.status IN ('DELETING','DELETED') AND (${targetMatches(alias,'pu.id')}))`;
 /** Used within the same SELECT as the DTO source, before any free text leaves the server. */
-export const reportPrivateTextHidden=`(EXISTS(SELECT 1 FROM users pu WHERE pu.id=r.reporter_id AND pu.status<>'ACTIVE') OR ${affected('r')} OR EXISTS(SELECT 1 FROM support_cases pc WHERE pc.report_id=r.id AND ${affected('pc')}))`;
+export const reportPrivateTextHidden=`(EXISTS(SELECT 1 FROM users pu WHERE pu.id=r.reporter_id AND pu.status IN ('DELETING','DELETED')) OR ${affected('r')} OR EXISTS(SELECT 1 FROM support_cases pc WHERE pc.report_id=r.id AND ${affected('pc')}))`;
 export const casePrivateTextHidden=`(${affected('c')} OR EXISTS(SELECT 1 FROM reports r WHERE r.id=c.report_id AND ${reportPrivateTextHidden}))`;
 
 /** Known structured associations only. Arbitrary text mentions are neither guessed nor copied. */
@@ -19,6 +19,8 @@ export async function purgeKnownSupportText(c:PoolClient,userId:string){
  if(caseIds.length)await c.query(`UPDATE support_cases SET details=$2,version=version+1 WHERE id=ANY($1::uuid[]) AND details<>$2`,[caseIds,REMOVED_SUPPORT_TEXT]);
  if(reportIds.length)await c.query(`UPDATE reports SET details=$2,reason='PRIVACY_REDACTED',public_outcome=NULL WHERE id=ANY($1::uuid[])`,[reportIds,REMOVED_SUPPORT_TEXT]);
  await c.query(`UPDATE attendance_revisions ar SET reason='PRIVACY_REDACTED' FROM audit_events ae WHERE ae.aggregate_type='case' AND ae.aggregate_id=ANY($1::uuid[]) AND ae.action='attendance.corrected' AND ar.source='SUPPORT' AND ar.meal_id::text=ae.payload->>'mealId' AND ar.subject_id::text=ae.payload->>'subjectId' AND ar.version::text=ae.payload->>'revision' AND ar.reason IS DISTINCT FROM 'PRIVACY_REDACTED'`,[caseIds]);
+ // Moderation notes, before/after snapshots and outcomes about this member's reports are staff text too.
+ await c.query(`UPDATE moderation_actions SET note=CASE WHEN actor_kind='SUPPORT' THEN 'PRIVACY_REDACTED' END,before_state='{}'::jsonb,after_state='{}'::jsonb,public_outcome=NULL WHERE (report_id=ANY($1::uuid[]) OR subject_user_id=$2) AND (note IS DISTINCT FROM CASE WHEN actor_kind='SUPPORT' THEN 'PRIVACY_REDACTED' END OR before_state<>'{}'::jsonb OR after_state<>'{}'::jsonb OR public_outcome IS NOT NULL)`,[reportIds,userId]);
  await c.query(`UPDATE audit_events SET reason=NULL WHERE reason IS NOT NULL AND ((aggregate_type='case' AND aggregate_id=ANY($1::uuid[])) OR (aggregate_type='report' AND aggregate_id=ANY($2::uuid[])))`,[caseIds,reportIds]);
  // Keep dedupe metadata intact: deleting a staff intent would permit the same write to run twice.
  await c.query(`UPDATE idempotency SET response_json=jsonb_set(response_json,'{data}',(response_json->'data') || CASE WHEN response_json->'data' ? 'details' THEN jsonb_build_object('details',$2::text) ELSE '{}'::jsonb END || CASE WHEN response_json->'data' ? 'publicOutcome' THEN '{"publicOutcome":null}'::jsonb ELSE '{}'::jsonb END || CASE WHEN response_json->'data' ? 'reason' THEN '{"reason":"PRIVACY_REDACTED"}'::jsonb ELSE '{}'::jsonb END,false) WHERE state='COMPLETED' AND operation IN('resolveCase','createReport','correctAttendance') AND resource_id=ANY($1::uuid[]) AND jsonb_typeof(response_json->'data')='object'`,[[...caseIds,...reportIds],REMOVED_SUPPORT_TEXT]);

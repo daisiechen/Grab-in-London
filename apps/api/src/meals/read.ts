@@ -6,9 +6,14 @@ import { loadSeatEvents,projectLifecycle,rosterAt,type MealRow } from './lifecyc
 import { londonTime } from './time.ts';
 import { avatarUrl } from '../profiles/avatar.ts';
 export type Db=Pool|PoolClient;
-export async function publicProfile(db:Db,id:string) {
- const {rows:[p]}=await db.query(`SELECT u.status,p.* FROM users u LEFT JOIN profiles p ON p.user_id=u.id WHERE u.id=$1`,[id]);
- return {id,displayName:p?.status==='ACTIVE'?(p.display_name??'Fancy member'):'Deleted member',avatarUrl:p?.status==='ACTIVE'?avatarUrl(p.avatar_image_id):null,bio:p?.status==='ACTIVE'?(p.bio??null):null,languages:p?.status==='ACTIVE'?(p.languages??[]):[],interests:p?.status==='ACTIVE'?(p.interests??[]):[],background:p?.status==='ACTIVE'?(p.background??{}):{}};
+/**
+ * Public member projection. A non-ACTIVE (deleted or suspended) member reads as deleted; a moderation
+ * limit hides bio and photo for everyone; a viewer who reported this member no longer sees them either.
+ */
+export async function publicProfile(db:Db,id:string,viewerId:string|null=null) {
+ const {rows:[p]}=await db.query(`SELECT u.status,p.*,(p.moderation_hidden_at IS NOT NULL OR EXISTS(SELECT 1 FROM reports r WHERE r.reporter_id=$2 AND r.target_type='USER' AND r.target_id=u.id)) AS limited FROM users u LEFT JOIN profiles p ON p.user_id=u.id WHERE u.id=$1`,[id,viewerId]);
+ const active=p?.status==='ACTIVE',shown=active&&!p.limited;
+ return {id,displayName:active?(p.display_name??'Fancy member'):'Deleted member',avatarUrl:shown?avatarUrl(p.avatar_image_id):null,bio:shown?(p.bio??null):null,languages:active?(p.languages??[]):[],interests:active?(p.interests??[]):[],background:active?(p.background??{}):{}};
 }
 // Seat-event watermark survives count round trips; non-seat events cannot invalidate it.
 // Legacy unversioned declarations compare stale until the host explicitly declares again.
@@ -30,7 +35,7 @@ export async function mealDto(db:Db,meal:MealRow,now:Date,venues:VenueService,us
  const count=roster.length;
  // Seat holders' public profiles, host first; same projection as the host field.
  const memberIds=[...new Set([meal.host_id,...roster])].filter(id=>roster.includes(id)||id===meal.host_id);
- const members=await Promise.all(memberIds.map(id=>publicProfile(db,id)));
+ const members=await Promise.all(memberIds.map(id=>publicProfile(db,id,userId)));
  const {rows:[v]}=await db.query<{place_id:string;area_code:string}>(`SELECT place_id,area_code FROM venues WHERE id=$1`,[meal.venue_ref]);
  let place=null;
  if(v && withProviderDisplay) {try{place=await venues.details(v.place_id);}catch(error){if(!(error instanceof DomainError))throw error;}}
@@ -42,12 +47,12 @@ export async function mealDto(db:Db,meal:MealRow,now:Date,venues:VenueService,us
  if(userId && conversation?.readable)allowedActions.push('OPEN_GROUP');
  if(projected.status==='OPEN' && now<meal.starts_at){
   if(userId===meal.host_id){allowedActions.push('CANCEL','DECLARE_BOOKING','REVIEW_APPLICATIONS');if(!meal.arrangement_locked_at && now<meal.closes_at)allowedActions.push('EDIT');}
-  else if(userId){if(mine?.state==='PENDING')allowedActions.push('WITHDRAW');else if(mine?.state==='CONFIRMED')allowedActions.push('LEAVE');else if(now<meal.closes_at && count<meal.capacity && !applications.some(a=>a.state==='DECLINED'))allowedActions.push('APPLY');}
+  else if(userId){if(mine?.state==='PENDING')allowedActions.push('WITHDRAW');else if(mine?.state==='CONFIRMED')allowedActions.push('LEAVE');else if(now<meal.closes_at && count<meal.capacity && !applications.some(a=>a.state==='DECLINED') && !meal.moderation_hidden_at)allowedActions.push('APPLY');}
  }
  if(userId && projected.status==='COMPLETED') {
  const {rowCount}=await db.query(`SELECT 1 FROM start_roster WHERE meal_id=$1 AND user_id=$2`,[meal.id,userId]);if(rowCount)allowedActions.push('POST_MEAL');
  }
- return {id:meal.id,version:String(meal.version),host:await publicProfile(db,meal.host_id),venue:{venueRef:meal.venue_ref,placeId:v?.place_id??'unavailable',available:place!==null,name:place?.name??null,address:place?.address??null,location:place?.location??null,areaCode:v?.area_code??'unknown',attributions:place?.attributions??[],displayExpiresAt:null},title:hostStatus?.status==='ACTIVE'?meal.title:'Meal unavailable',description:hostStatus?.status==='ACTIVE'?meal.description:'This meal description is no longer available.',startsAt:londonTime(meal.starts_at),closesAt:londonTime(meal.closes_at),scheduledEndAt:meal.scheduled_end_at.toISOString(),minimum:meal.minimum,capacity:meal.capacity,confirmedCount:count,members:members.slice(0,6),budgetMinPence:meal.budget_min_pence,budgetMaxPence:meal.budget_max_pence,currency:'GBP',languages:meal.languages,mood:meal.mood,areaCode:meal.area_code,cuisineCode:meal.cuisine_code,dietaryCodes:meal.dietary_codes,declarationSource:'host_reported',bookingMode:meal.booking_mode,status:projected.status,cancelReason:projected.cancelReason,arrangementLocked:meal.arrangement_locked_at!==null,bookingDeclaration:booking?{id:booking.id,revision:String(booking.revision),status:booking.status,declaredCount:booking.declared_count,reportedAt:booking.reported_at.toISOString(),stale:booking.arrangement_hash!==arrangementHash(meal,count,events.at(-1)?.seq??0n)}:null,allowedActions};
+ return {id:meal.id,version:String(meal.version),host:await publicProfile(db,meal.host_id,userId),venue:{venueRef:meal.venue_ref,placeId:v?.place_id??'unavailable',available:place!==null,name:place?.name??null,address:place?.address??null,location:place?.location??null,areaCode:v?.area_code??'unknown',attributions:place?.attributions??[],displayExpiresAt:null},title:hostStatus?.status==='ACTIVE'?meal.title:'Meal unavailable',description:hostStatus?.status==='ACTIVE'?meal.description:'This meal description is no longer available.',startsAt:londonTime(meal.starts_at),closesAt:londonTime(meal.closes_at),scheduledEndAt:meal.scheduled_end_at.toISOString(),minimum:meal.minimum,capacity:meal.capacity,confirmedCount:count,members:members.slice(0,6),budgetMinPence:meal.budget_min_pence,budgetMaxPence:meal.budget_max_pence,currency:'GBP',languages:meal.languages,mood:meal.mood,areaCode:meal.area_code,cuisineCode:meal.cuisine_code,dietaryCodes:meal.dietary_codes,declarationSource:'host_reported',bookingMode:meal.booking_mode,status:projected.status,cancelReason:projected.cancelReason,arrangementLocked:meal.arrangement_locked_at!==null,bookingDeclaration:booking?{id:booking.id,revision:String(booking.revision),status:booking.status,declaredCount:booking.declared_count,reportedAt:booking.reported_at.toISOString(),stale:booking.arrangement_hash!==arrangementHash(meal,count,events.at(-1)?.seq??0n)}:null,allowedActions};
 }
 export function parseCursor(cursor:string|undefined):{startsAt:string;id:string}|null {
  if(!cursor)return null;

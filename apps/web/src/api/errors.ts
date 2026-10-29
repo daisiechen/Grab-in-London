@@ -35,6 +35,7 @@ export function errorMessage(error: unknown): string {
     case 'LINK_REQUIRED': return 'An account already uses this email. Sign in the way you did before to link them.';
     case 'LINK_TICKET_INVALID': return 'This link request has expired. Please sign in again.';
     case 'ACCOUNT_LINK_CONFLICT': return 'Both accounts already have activity, so they can’t be linked automatically.';
+    case 'ACCOUNT_SUSPENDED': return 'This account has been suspended for breaking the Fancy community guidelines. Contact Fancy support if you think this is a mistake.';
     default:
       if (error.kind === 'validation') return 'Please check the highlighted details.';
       if (error.kind === 'rate_limit') return 'Too many attempts. Please wait a moment.';

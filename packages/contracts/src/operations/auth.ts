@@ -56,7 +56,7 @@ export const authOperations = [
     auth: 'public', write: 'clientRequestId', ifMatch: false,
     body: Obj({ clientRequestId: ClientRequestId, challengeId: Uuid, code: T.String({ pattern: '^[0-9]{6}$' }), appChallenge: T.Optional(AppChallenge) }),
     success: { status: 200, data: AuthOutcome },
-    errors: ['NOT_FOUND', 'STATE_CONFLICT', 'PROVIDER_UNAVAILABLE'],
+    errors: ['NOT_FOUND', 'STATE_CONFLICT', 'PROVIDER_UNAVAILABLE', 'ACCOUNT_SUSPENDED'],
   }),
   op({
     operationId: 'startOAuth', method: 'POST', path: '/auth/oauth/start', summary: 'Begin Google/Apple sign-in',
@@ -70,7 +70,7 @@ export const authOperations = [
     auth: 'public', write: 'read', ifMatch: false,
     query: Obj({ code: T.Optional(T.String({ maxLength: 4000 })), state: T.String({ minLength: 1, maxLength: 512 }), error: T.Optional(T.String({ maxLength: 200 })) }),
     success: { status: 200, data: AuthOutcome },
-    errors: ['FORBIDDEN', 'STATE_CONFLICT', 'PROVIDER_UNAVAILABLE'],
+    errors: ['FORBIDDEN', 'STATE_CONFLICT', 'PROVIDER_UNAVAILABLE', 'ACCOUNT_SUSPENDED'],
   }),
   op({
     operationId: 'exchangeHandoff', method: 'POST', path: '/auth/handoff', summary: 'iOS/CLI: redeem a one-time handoff code',
@@ -84,7 +84,7 @@ export const authOperations = [
     auth: 'public', write: 'clientRequestId', ifMatch: false,
     body: Obj({ clientRequestId: ClientRequestId, refreshToken: AccessToken }),
     success: { status: 200, data: IosCredentials },
-    errors: ['AUTH_REQUIRED'],
+    errors: ['AUTH_REQUIRED', 'ACCOUNT_SUSPENDED'],
   }),
   op({
     operationId: 'getSession', method: 'GET', path: '/auth/session', summary: 'Current session, CSRF token and profile gate',

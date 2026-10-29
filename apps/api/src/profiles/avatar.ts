@@ -35,10 +35,10 @@ export async function deleteAvatar(db: Db, userId: string): Promise<boolean> {
   return (rowCount ?? 0) > 0;
 }
 
-/** Bytes of a CURRENT photo of an ACTIVE member only; anything else reads as not found. */
+/** Bytes of a CURRENT, unlimited photo of an ACTIVE member only; anything else reads as not found. */
 export async function readAvatar(db: Db, imageId: string): Promise<{ bytes: Buffer; sha256: string } | null> {
   const { rows: [row] } = await db.query<{ bytes: Buffer; sha256: string }>(
     `SELECT a.bytes, a.sha256 FROM avatar_images a JOIN profiles p ON p.avatar_image_id = a.id AND p.user_id = a.user_id
-       JOIN users u ON u.id = a.user_id AND u.status = 'ACTIVE' WHERE a.id = $1`, [imageId]);
+       JOIN users u ON u.id = a.user_id AND u.status = 'ACTIVE' WHERE a.id = $1 AND p.moderation_hidden_at IS NULL`, [imageId]);
   return row ?? null;
 }

@@ -6,6 +6,7 @@ import { registerMealRoutes } from '../meals/routes.ts';
 import { registerConversationRoutes } from '../conversations/routes.ts';
 import { registerAdminRoutes } from '../admin/routes.ts';
 import { registerSupportRoutes } from '../support/routes.ts';
+import { registerModerationRoutes } from '../moderation/routes.ts';
 import { registerAnalyticsIngest } from '../admin/ingest.ts';
 import { AssistantRuntime } from '../../../../packages/assistant/src/index.ts';
 import { registerPostMealRoutes } from '../post-meal/routes.ts';
@@ -89,6 +90,7 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   registerAnalyticsIngest(app, deps);
   registerResendWebhook(app,deps);
   registerSupportRoutes(app, deps);
+  registerModerationRoutes(app, deps);
   const assistant = new AssistantController({ allowedAreas: [], ...deps.assistant, pool: deps.pool, sessions: new SessionService(deps.pool, deps.assistantRuntime), secret: deps.config.sessionSecret,
     venueDisplay:async venueRef=>{
       const {rows:[reference]}=await deps.pool.query<{place_id:string}>(`SELECT place_id FROM venues WHERE id=$1`,[venueRef]);

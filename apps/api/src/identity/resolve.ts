@@ -10,6 +10,10 @@ import { DomainError } from '../common/errors.ts';
 import type { VerifiedIdentity } from './provider.ts';
 import { normalizeEmail } from './tokens.ts';
 
+/** Clear, stable refusal for a suspended account (sign-in and API use). */
+export const suspendedError = () =>
+  new DomainError('ACCOUNT_SUSPENDED', 'This account has been suspended for breaking the Fancy community guidelines. Contact Fancy support if you think this is a mistake.');
+
 export type Resolution =
   | { kind: 'user'; userId: string; created: boolean }
   | { kind: 'link_required'; targetUserId: string };
@@ -20,15 +24,18 @@ export async function resolveIdentity(db: PoolClient, identity: VerifiedIdentity
     [identity.issuer, identity.subject],
   );
   if (existing.rows[0]) {
+    if (existing.rows[0].status === 'SUSPENDED') throw suspendedError();
     if (existing.rows[0].status !== 'ACTIVE') throw new DomainError('FORBIDDEN', 'This account is no longer available.');
     return { kind: 'user', userId: existing.rows[0].user_id, created: false };
   }
   const email = identity.email && identity.emailVerified ? normalizeEmail(identity.email) : null;
   if (email) {
-    const match = await db.query<{ user_id: string }>(
-      `SELECT c.user_id FROM private_contact c JOIN users u ON u.id = c.user_id WHERE c.email = $1 AND u.status = 'ACTIVE' ORDER BY c.user_id LIMIT 1`,
+    const match = await db.query<{ user_id: string; status: string }>(
+      `SELECT c.user_id, u.status FROM private_contact c JOIN users u ON u.id = c.user_id WHERE c.email = $1 AND u.status IN ('ACTIVE', 'SUSPENDED') ORDER BY u.status = 'ACTIVE' DESC, c.user_id LIMIT 1`,
       [email],
     );
+    // A suspended member cannot start over with another sign-in method for the same verified email.
+    if (match.rows[0]?.status === 'SUSPENDED') throw suspendedError();
     if (match.rows[0]) return { kind: 'link_required', targetUserId: match.rows[0].user_id };
   }
   const { rows } = await db.query<{ id: string }>(`INSERT INTO users DEFAULT VALUES RETURNING id`);

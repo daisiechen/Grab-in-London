@@ -10,7 +10,7 @@ import type { AppDeps, AuthContext } from '../http/context.ts';
 import type { HandlerResult } from '../http/routes.ts';
 import { cookieOptions, LINK_BINDER_COOKIE, SESSION_COOKIE } from '../http/security.ts';
 import type { VerifiedIdentity } from './provider.ts';
-import { identityBelongsTo, resolveIdentity } from './resolve.ts';
+import { identityBelongsTo, resolveIdentity, suspendedError } from './resolve.ts';
 import { sessionInfo } from './me.ts';
 import { ABSOLUTE_MS, issueWebSession, markReauthenticated } from './sessions.ts';
 import { randomToken, sha256Hex } from './tokens.ts';
@@ -72,6 +72,7 @@ export async function completeAuthentication(deps: AppDeps, tx: Tx, row: AuthTxR
 
   const users=[...new Set([resolution.userId,...(current?[current.userId]:[])])].sort();
   const locked=await tx.locks.lock<{id:string;status:string}>('users',users,'update','id,status');
+  if(locked.some(u=>u.id===resolution.userId&&u.status==='SUSPENDED'))throw suspendedError();
   if(!locked.some(u=>u.id===resolution.userId&&u.status==='ACTIVE'))throw new DomainError('AUTH_REQUIRED','This account is no longer available.');
   if(current&&current.userId!==resolution.userId){
     await invalidateUserAI(tx.client,deps.assistantRuntime!,current.userId,'ACCOUNT_CHANGE');

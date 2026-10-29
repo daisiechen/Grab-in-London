@@ -10,6 +10,8 @@ import { claimIntent, completeIntent, releaseIntent, replayIfAuthorized } from '
 import { requestHash } from '../common/canonical.ts';
 import { withTransaction, type Tx } from '../common/transaction.ts';
 import { authenticateToken } from '../identity/sessions.ts';
+import { suspendedError } from '../identity/resolve.ts';
+import { sha256Hex } from '../identity/tokens.ts';
 import type { AppDeps, AuthContext } from './context.ts';
 import { domainErrorBody } from './errors.ts';
 import { assertCsrf, assertWebOrigin, SESSION_COOKIE } from './security.ts';
@@ -61,9 +63,21 @@ async function authenticate(request: FastifyRequest, deps: AppDeps): Promise<Aut
   return cookie ? authenticateToken(deps.pool, cookie, true) : null;
 }
 
+/** A presented credential whose account is suspended (its sessions were revoked on suspension). */
+async function presentedTokenSuspended(request: FastifyRequest, deps: AppDeps): Promise<boolean> {
+  const header = request.headers.authorization;
+  const token = typeof header === 'string' ? /^Bearer ([A-Za-z0-9_-]{20,200})$/.exec(header)?.[1] : request.cookies[SESSION_COOKIE];
+  if (!token || !/^[A-Za-z0-9_-]{20,200}$/.test(token)) return false;
+  const { rows } = await deps.pool.query(`SELECT 1 FROM sessions s JOIN session_families f ON f.id = s.family_id JOIN users u ON u.id = f.user_id WHERE s.token_hash = $1 AND u.status = 'SUSPENDED'`, [sha256Hex(token)]);
+  return rows.length === 1;
+}
+
 async function preflight(def: OperationDef, request: FastifyRequest, deps: AppDeps): Promise<{ auth: AuthContext | null; ifMatch: string | null }> {
   const auth = def.auth === 'public' || def.auth === 'receipt' ? null : await authenticate(request, deps);
-  if ((def.auth === 'session' || def.auth === 'staff') && !auth) throw new DomainError('AUTH_REQUIRED', 'Please sign in to continue.');
+  if ((def.auth === 'session' || def.auth === 'staff') && !auth) {
+    if (await presentedTokenSuspended(request, deps)) throw suspendedError();
+    throw new DomainError('AUTH_REQUIRED', 'Please sign in to continue.');
+  }
   if (auth?.viaCookie && def.method !== 'GET') {
     assertWebOrigin(request, deps.config.webOrigin);
     assertCsrf(request, deps.config.sessionSecret, auth.sessionId);

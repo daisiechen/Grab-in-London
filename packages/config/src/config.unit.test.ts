@@ -199,3 +199,23 @@ describe('purpose isolated deletion mail key ring',()=>{
     }
   });
 });
+
+describe('moderation configuration', () => {
+  it('defaults to two reporters, no digest address and an admin URL under the web origin', () => {
+    expect(loadConfig(local)).toMatchObject({ moderationAutoHideReporters: 2, supportEmail: null, adminUrl: 'http://localhost:5174/admin/' });
+  });
+  it('accepts an explicit threshold, support address and admin URL', () => {
+    const config = loadConfig({ ...local, MODERATION_AUTO_HIDE_REPORTERS: '3', SUPPORT_EMAIL: 'Support@Example.invalid', ADMIN_URL: 'http://127.0.0.1:5174/admin' });
+    expect(config).toMatchObject({ moderationAutoHideReporters: 3, supportEmail: 'support@example.invalid', adminUrl: 'http://127.0.0.1:5174/admin/' });
+  });
+  it.each([
+    { MODERATION_AUTO_HIDE_REPORTERS: '0' }, { MODERATION_AUTO_HIDE_REPORTERS: 'two' }, { MODERATION_AUTO_HIDE_REPORTERS: '21' },
+    { SUPPORT_EMAIL: 'not-an-address' }, { ADMIN_URL: 'https://admin.example/?token=x' }, { ADMIN_URL: 'ftp://admin.example/' },
+  ])('rejects invalid moderation settings %o', (extra) => {
+    expect(() => loadConfig({ ...local, ...extra })).toThrow(ConfigError);
+  });
+  it('requires an https admin URL in production', () => {
+    expect(() => loadConfig({ ...production, ADMIN_URL: 'http://admin.example.test/' })).toThrow(/ADMIN_URL/);
+    expect(loadConfig({ ...production, ADMIN_URL: 'https://admin.example.test/' }).adminUrl).toBe('https://admin.example.test/');
+  });
+});

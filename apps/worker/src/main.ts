@@ -4,6 +4,7 @@ import {randomUUID,createHmac} from 'node:crypto';
 import {loadConfig,type CoreConfig} from '@fancy/config';
 import {createPool,type Pool} from '@fancy/db';
 import {sealSourceSnapshot} from '../../api/src/admin/snapshots.ts';
+import {autoCloseStaleCases,queueModerationDigest} from '../../api/src/moderation/policy.ts';
 import {UnavailableDeletionStep,type DeletionSteps} from './deletion/provider.ts';
 import {Auth0DeletionStep} from './deletion/auth0.ts';
 import {deletionHandler} from './handlers/deletion.ts';
@@ -33,11 +34,14 @@ export function createWorkerRuntime(pool:Pool,config:CoreConfig){
   'meal.close':lifecycle,'meal.start':lifecycle,'meal.end':lifecycle,
   'account.purge':deletionHandler(pool,deletionStepsFor(pool,config),deletionPolicyApproved(config)),
  },onDead:(job,errorCode)=>console.error(JSON.stringify({event:'job_dead',...job,errorCode}))});
- const mail=mailDelivery(pool,mailProviderFor(config,pool),config.environment,{onDead:logMailDead,deletionMailEncryption:config.deletionMailEncryption});
- let lastSnapshot=0;
+ const mail=mailDelivery(pool,mailProviderFor(config,pool),config.environment,{onDead:logMailDead,deletionMailEncryption:config.deletionMailEncryption,support:{email:config.supportEmail,adminUrl:config.adminUrl}});
+ let lastSnapshot=0,lastModeration=0;
  async function tick(){
   if(!await recoveryReady(pool))return {claimed:0,done:0,retried:0,dead:0,lost:0};
-  const result=await runner.tick();await mail.tick();
+  const result=await runner.tick();
+  // Moderation housekeeping hourly: close stale cases, then queue the day's digest (from 08:00 London).
+  if(Date.now()-lastModeration>=3600_000){await autoCloseStaleCases(pool);await queueModerationDigest(pool,config.supportEmail,new Date());lastModeration=Date.now();}
+  await mail.tick();
   if(Date.now()-lastSnapshot>=3600_000){
    // Coverage starts at the actual ledger installation, never an invented historical date.
    const {rows:[coverage]}=await pool.query<{started_at:Date}>(`SELECT started_at FROM analytics_delivery_coverage WHERE id=1`);

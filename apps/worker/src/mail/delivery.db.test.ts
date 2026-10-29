@@ -27,4 +27,17 @@ describe('transactional mail delivery',()=>{
   const id=await queued();await mailDelivery(db.pool,new UnavailableMailProvider(),'test').tick();expect((await row(id)).attempts).toBe(0);
   expect(()=>mailDelivery(db.pool,{kind:'test',send:async()=>({status:'UNKNOWN'}),lookup:async()=>({status:'UNKNOWN'})},'production')).toThrow('TEST_MAIL_FORBIDDEN');
  });
+ it('delivers the moderation digest to the support address with admin links, and dead-letters it without one',async()=>{
+  const reportIds=[randomUUID(),randomUUID()];
+  const digest=(await db.pool.query(`INSERT INTO moderation_digests(digest_day,report_ids) VALUES('2026-11-03',$1) RETURNING id`,[reportIds])).rows[0].id as string;
+  const id=(await db.pool.query(`INSERT INTO outbox(event_id,recipient_id,channel,template,payload) VALUES($1,NULL,'EMAIL','moderation_digest',$2) RETURNING id`,[digest,{digestId:digest}])).rows[0].id as string;
+  const seen:Array<{email:string;links?:readonly string[]}>=[];
+  const provider:MailProvider={kind:'test',send:async(input)=>{if(input.template==='moderation_digest')seen.push({email:input.email,...(input.links?{links:input.links}:{})});return{status:'SENT',providerId:'digest'};},lookup:async()=>({status:'UNKNOWN'})};
+  await mailDelivery(db.pool,provider,'test',{support:{email:'support@example.invalid',adminUrl:'https://admin.fancy.example/'}}).tick();
+  expect(seen).toEqual([{email:'support@example.invalid',links:reportIds.map(r=>`https://admin.fancy.example/#moderation/${r}`)}]);expect((await row(id)).status).toBe('SENT');
+  const digest2=(await db.pool.query(`INSERT INTO moderation_digests(digest_day,report_ids) VALUES('2026-11-04',$1) RETURNING id`,[reportIds])).rows[0].id as string;
+  const orphan=(await db.pool.query(`INSERT INTO outbox(event_id,recipient_id,channel,template,payload) VALUES($1,NULL,'EMAIL','moderation_digest',$2) RETURNING id`,[digest2,{digestId:digest2}])).rows[0].id as string;
+  await mailDelivery(db.pool,provider,'test',{support:{email:null,adminUrl:'https://admin.fancy.example/'}}).tick();
+  expect((await row(orphan)).last_error_code).toBe('RECIPIENT_UNAVAILABLE');expect(seen).toHaveLength(1);
+ });
 });

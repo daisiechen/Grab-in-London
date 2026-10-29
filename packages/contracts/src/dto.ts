@@ -5,7 +5,7 @@ import {
   ADMIN_PAGES, APPLICATION_STATES, ATTENDANCE_SOURCES, ATTENDANCE_VALUES, AUTH_PROVIDERS, BOOKING_DECLARATION_STATUSES,
   BOOKING_MODES, CANCEL_REASONS, CLASSIFICATIONS, CONNECTION_STATES, CONVERSATION_KINDS, CUISINES, DELETION_STATUSES,
   DIETARY, INTERESTS, LANGUAGE_CODES, LIFE_STATUSES, MEAL_ACTIONS, MEAL_STATUSES, MOODS, REPORT_STATUSES,
-  REPORT_TARGET_TYPES, ROLES, SUPPORT_CASE_STATUSES, SURVEY_REASONS,
+  REPORT_TARGET_TYPES, ROLES, SUPPORT_CASE_STATUSES, SURVEY_REASONS, ACCOUNT_STATUSES, MODERATION_ACTIONS, MODERATION_HISTORY_KINDS,
 } from './dictionaries.ts';
 
 const keys = <O extends object>(o: O) => Object.keys(o) as Array<keyof O & string>;
@@ -284,6 +284,120 @@ export const SupportCase = Obj({
   targetId: Uuid,
   details: T.String({ maxLength: 1000 }),
   createdAt: Instant,
+});
+
+/**
+ * Moderation queue row (support role). Metadata only: no report text, names or contact details.
+ * dueAt = createdAt + MODERATION_SLA_HOURS; autoActioned = the server limited the content after
+ * repeated reports and the case awaits review; autoClosed = closed after 30 days without staff action.
+ */
+export const ModerationReportSummary = Obj({
+  reportId: Uuid,
+  caseId: Uuid,
+  caseVersion: DecimalString,
+  targetType: Enum(REPORT_TARGET_TYPES),
+  reason: T.String({ maxLength: 40 }),
+  reportStatus: Enum(REPORT_STATUSES),
+  caseStatus: Enum(SUPPORT_CASE_STATUSES),
+  createdAt: Instant,
+  dueAt: Instant,
+  autoActioned: T.Boolean(),
+  autoClosed: T.Boolean(),
+  contentLimited: T.Boolean(),
+  /** Distinct members who reported the same target in the last 7 days. */
+  reporterCount: T.Integer({ minimum: 0 }),
+  claimedByMe: T.Boolean(),
+  subjectStatus: T.Union([Enum(ACCOUNT_STATUSES), T.Null()]),
+});
+
+/** Public fields of a reported profile as staff need them to decide; never email/contact data. */
+export const ModerationUser = Obj({
+  userId: Uuid,
+  accountStatus: Enum(ACCOUNT_STATUSES),
+  displayName: T.Union([T.String({ maxLength: 40 }), T.Null()]),
+  bio: T.Union([T.String({ maxLength: 1000 }), T.Null()]),
+  hasPhoto: T.Boolean(),
+  /** Staff-only photo URL (GET .../photo); null when there is no photo. */
+  photoUrl: T.Union([T.String({ maxLength: 500 }), T.Null()]),
+  languages: UniqueArray(LanguageCode, 0, 5),
+  interests: UniqueArray(InterestCode, 0, 11),
+  profileHidden: T.Boolean(),
+});
+
+export const ModerationMeal = Obj({
+  mealId: Uuid,
+  hostId: Uuid,
+  title: T.String({ maxLength: 200 }),
+  description: T.String({ maxLength: 2000 }),
+  status: Enum(MEAL_STATUSES),
+  startsAt: Instant,
+  areaCode: AreaCode,
+  hidden: T.Boolean(),
+});
+
+export const ModerationMessageLine = Obj({
+  messageId: Uuid,
+  senderId: Uuid,
+  /** Text from a deleted account is withheld for privacy. */
+  body: T.String({ maxLength: 2000 }),
+  createdAt: Instant,
+  hidden: T.Boolean(),
+  isTarget: T.Boolean(),
+});
+
+export const ModerationMessage = Obj({
+  messageId: Uuid,
+  conversationId: Uuid,
+  senderId: Uuid,
+  hidden: T.Boolean(),
+  /** Up to three messages before and after the reported one, oldest first. */
+  context: T.Array(ModerationMessageLine, { maxItems: 7 }),
+});
+
+export const ModerationHistoryEntry = Obj({
+  id: Uuid,
+  kind: Enum(MODERATION_HISTORY_KINDS),
+  /** null = automatic (system) step. */
+  actorId: T.Union([Uuid, T.Null()]),
+  note: T.Union([T.String({ maxLength: 1000 }), T.Null()]),
+  publicOutcome: T.Union([T.String({ maxLength: 1000 }), T.Null()]),
+  createdAt: Instant,
+});
+
+export const ModerationReport = Obj({
+  summary: ModerationReportSummary,
+  reporterId: Uuid,
+  details: T.String({ maxLength: 1000 }),
+  publicOutcome: T.Union([T.String({ maxLength: 1000 }), T.Null()]),
+  /** Reporter or responsible account was deleted: free text is withheld and only closing actions remain. */
+  privacyRedacted: T.Boolean(),
+  /** The account a suspension would apply to (the profile, the meal host or the message sender). */
+  subject: T.Union([Obj({ userId: Uuid, accountStatus: Enum(ACCOUNT_STATUSES) }), T.Null()]),
+  user: T.Union([ModerationUser, T.Null()]),
+  meal: T.Union([ModerationMeal, T.Null()]),
+  message: T.Union([ModerationMessage, T.Null()]),
+  history: T.Array(ModerationHistoryEntry, { maxItems: 200 }),
+  allowedActions: UniqueArray(Enum(MODERATION_ACTIONS), 0, MODERATION_ACTIONS.length),
+});
+
+/** Start-roster attendance facts for a MEAL case (J09), with the effective revision used as expectedVersion. */
+export const CaseAttendance = Obj({
+  caseId: Uuid,
+  mealId: Uuid,
+  mealStatus: Enum(MEAL_STATUSES),
+  scheduledEndAt: Instant,
+  /** scheduledEndAt + 7 days: support corrections are accepted from this instant. */
+  correctionOpensAt: Instant,
+  roster: T.Array(Obj({
+    subjectId: Uuid,
+    isHost: T.Boolean(),
+    selfValue: T.Union([Enum(ATTENDANCE_VALUES), T.Null()]),
+    hostValue: T.Union([Enum(ATTENDANCE_VALUES), T.Null()]),
+    supportValue: T.Union([Enum(ATTENDANCE_VALUES), T.Null()]),
+    value: Enum(['present', 'absent', 'unknown'] as const),
+    source: T.Union([Enum(ATTENDANCE_SOURCES), T.Null()]),
+    version: DecimalString,
+  }), { maxItems: 20 }),
 });
 
 export const AttendanceCorrection = Obj({

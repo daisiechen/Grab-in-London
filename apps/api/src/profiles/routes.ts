@@ -75,9 +75,13 @@ export function registerProfileRoutes(app: FastifyInstance, deps: AppDeps) {
     if (typeof inm === 'string' && inm.split(',').some((t) => t.trim().replace(/^W\//, '') === etag)) return reply.status(304).send();
     return reply.status(200).type('image/jpeg').send(image.bytes);
   });
-  defineRoute(app, deps, 'getPublicProfile', async ({ request }) => {
+  defineRoute(app, deps, 'getPublicProfile', async ({ request, auth }) => {
     const { userId } = request.params as { userId: string };
-    const { rows } = await deps.pool.query(`SELECT u.id, p.display_name, p.avatar_image_id, p.bio, p.languages, p.interests, p.background FROM users u JOIN profiles p ON p.user_id = u.id WHERE u.id = $1 AND u.status = 'ACTIVE' AND p.display_name IS NOT NULL`, [userId]);
+    // Bio and photo are withheld while moderation limits them, and from a signed-in viewer who reported this member.
+    const { rows } = await deps.pool.query(`SELECT u.id, p.display_name, CASE WHEN hidden THEN NULL ELSE p.avatar_image_id END AS avatar_image_id, CASE WHEN hidden THEN NULL ELSE p.bio END AS bio, p.languages, p.interests, p.background
+      FROM users u JOIN profiles p ON p.user_id = u.id
+      CROSS JOIN LATERAL (SELECT p.moderation_hidden_at IS NOT NULL OR (u.id <> $2::uuid AND EXISTS(SELECT 1 FROM reports r WHERE r.reporter_id = $2 AND r.target_type = 'USER' AND r.target_id = u.id)) AS hidden) h
+      WHERE u.id = $1 AND u.status = 'ACTIVE' AND p.display_name IS NOT NULL`, [userId, auth?.userId ?? null]);
     const row = rows[0];
     if (!row) throw new DomainError('NOT_FOUND', 'This profile is unavailable.');
     const q = request.query as {cursor?:string;limit?:number};

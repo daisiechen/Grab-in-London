@@ -304,6 +304,19 @@
               "INVALID_REQUEST"
             ]
           },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
+            ]
+          },
           "404": {
             "description": "NOT_FOUND",
             "content": {
@@ -789,7 +802,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -798,6 +811,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -1150,6 +1164,19 @@
               "AUTH_REQUIRED"
             ]
           },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
+            ]
+          },
           "422": {
             "description": "VALIDATION_FAILED",
             "content": {
@@ -1276,6 +1303,19 @@
               "AUTH_REQUIRED"
             ]
           },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
+            ]
+          },
           "429": {
             "description": "RATE_LIMITED",
             "content": {
@@ -1360,6 +1400,19 @@
             },
             "x-error-codes": [
               "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
             ]
           },
           "422": {
@@ -1518,6 +1571,19 @@
             },
             "x-error-codes": [
               "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
             ]
           },
           "422": {
@@ -1713,7 +1779,7 @@
             ]
           },
           "403": {
-            "description": "REAUTH_REQUIRED",
+            "description": "ACCOUNT_SUSPENDED, REAUTH_REQUIRED",
             "content": {
               "application/json": {
                 "schema": {
@@ -1722,6 +1788,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "REAUTH_REQUIRED"
             ]
           },
@@ -1879,6 +1946,19 @@
               "AUTH_REQUIRED"
             ]
           },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
+            ]
+          },
           "429": {
             "description": "RATE_LIMITED",
             "content": {
@@ -1999,6 +2079,19 @@
             },
             "x-error-codes": [
               "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
             ]
           },
           "409": {
@@ -2274,6 +2367,19 @@
               "AUTH_REQUIRED"
             ]
           },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
+            ]
+          },
           "409": {
             "description": "IDEMPOTENCY_CONFLICT, INTENT_IN_PROGRESS, VERSION_CONFLICT",
             "content": {
@@ -2459,6 +2565,19 @@
               "AUTH_REQUIRED"
             ]
           },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
+            ]
+          },
           "409": {
             "description": "IDEMPOTENCY_CONFLICT, INTENT_IN_PROGRESS, VERSION_CONFLICT",
             "content": {
@@ -2640,7 +2759,7 @@
     "/v1/profiles/{userId}": {
       "get": {
         "operationId": "getPublicProfile",
-        "summary": "Public profile and published reviews",
+        "summary": "Public profile and published reviews (a signed-in reporter no longer sees the bio/photo of a member they reported)",
         "parameters": [
           {
             "name": "userId",
@@ -2793,9 +2912,18 @@
             ]
           }
         },
-        "x-auth": "public",
+        "x-auth": "optionalSession",
         "x-write-protocol": "read",
-        "x-if-match": false
+        "x-if-match": false,
+        "security": [
+          {},
+          {
+            "sessionCookie": []
+          },
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/v1/venues": {
@@ -3162,6 +3290,19 @@
             },
             "x-error-codes": [
               "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
             ]
           },
           "404": {
@@ -3620,7 +3761,7 @@
             ]
           },
           "403": {
-            "description": "PROFILE_INCOMPLETE",
+            "description": "ACCOUNT_SUSPENDED, PROFILE_INCOMPLETE",
             "content": {
               "application/json": {
                 "schema": {
@@ -3629,6 +3770,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "PROFILE_INCOMPLETE"
             ]
           },
@@ -4114,7 +4256,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -4123,6 +4265,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -4488,7 +4631,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -4497,6 +4640,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -4720,7 +4864,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -4729,6 +4873,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -4937,7 +5082,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN, PROFILE_INCOMPLETE",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, PROFILE_INCOMPLETE",
             "content": {
               "application/json": {
                 "schema": {
@@ -4946,6 +5091,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN",
               "PROFILE_INCOMPLETE"
             ]
@@ -5152,6 +5298,19 @@
               "AUTH_REQUIRED"
             ]
           },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
+            ]
+          },
           "404": {
             "description": "NOT_FOUND",
             "content": {
@@ -5338,7 +5497,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -5347,6 +5506,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -5565,7 +5725,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -5574,6 +5734,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -5779,7 +5940,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -5788,6 +5949,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -5987,6 +6149,19 @@
               "AUTH_REQUIRED"
             ]
           },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
+            ]
+          },
           "422": {
             "description": "VALIDATION_FAILED",
             "content": {
@@ -6096,7 +6271,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -6105,6 +6280,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -6278,6 +6454,19 @@
               "AUTH_REQUIRED"
             ]
           },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
+            ]
+          },
           "422": {
             "description": "VALIDATION_FAILED",
             "content": {
@@ -6446,7 +6635,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -6455,6 +6644,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -6598,7 +6788,7 @@
             ]
           },
           "403": {
-            "description": "CONNECTION_NOT_AUTHORIZED, FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, CONNECTION_NOT_AUTHORIZED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -6607,6 +6797,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "CONNECTION_NOT_AUTHORIZED",
               "FORBIDDEN"
             ]
@@ -6815,7 +7006,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -6824,6 +7015,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -7036,7 +7228,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -7045,6 +7237,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -7229,7 +7422,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -7238,6 +7431,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -7410,7 +7604,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -7419,6 +7613,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -7634,7 +7829,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -7643,6 +7838,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -7865,7 +8061,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -7874,6 +8070,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -8097,7 +8294,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -8106,6 +8303,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -8316,6 +8514,19 @@
               "AUTH_REQUIRED"
             ]
           },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
+            ]
+          },
           "404": {
             "description": "NOT_FOUND",
             "content": {
@@ -8494,6 +8705,19 @@
               "AUTH_REQUIRED"
             ]
           },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
+            ]
+          },
           "422": {
             "description": "VALIDATION_FAILED",
             "content": {
@@ -8613,7 +8837,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -8622,6 +8846,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -8783,7 +9008,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -8792,6 +9017,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN"
             ]
           },
@@ -8980,6 +9206,19 @@
               "AUTH_REQUIRED"
             ]
           },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
+            ]
+          },
           "404": {
             "description": "NOT_FOUND",
             "content": {
@@ -9139,6 +9378,19 @@
               "AUTH_REQUIRED"
             ]
           },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
+            ]
+          },
           "404": {
             "description": "NOT_FOUND",
             "content": {
@@ -9258,6 +9510,19 @@
             },
             "x-error-codes": [
               "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
             ]
           },
           "429": {
@@ -9380,6 +9645,19 @@
             },
             "x-error-codes": [
               "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
             ]
           },
           "409": {
@@ -9615,6 +9893,19 @@
               "AUTH_REQUIRED"
             ]
           },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
+            ]
+          },
           "422": {
             "description": "VALIDATION_FAILED",
             "content": {
@@ -9750,6 +10041,19 @@
             },
             "x-error-codes": [
               "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
             ]
           },
           "404": {
@@ -9905,6 +10209,19 @@
             },
             "x-error-codes": [
               "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
             ]
           },
           "404": {
@@ -10095,6 +10412,19 @@
               "AUTH_REQUIRED"
             ]
           },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
+            ]
+          },
           "404": {
             "description": "NOT_FOUND",
             "content": {
@@ -10246,7 +10576,7 @@
             ]
           },
           "403": {
-            "description": "REAUTH_REQUIRED",
+            "description": "ACCOUNT_SUSPENDED, REAUTH_REQUIRED",
             "content": {
               "application/json": {
                 "schema": {
@@ -10255,6 +10585,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "REAUTH_REQUIRED"
             ]
           },
@@ -10564,7 +10895,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN, REAUTH_REQUIRED",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, REAUTH_REQUIRED",
             "content": {
               "application/json": {
                 "schema": {
@@ -10573,6 +10904,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN",
               "REAUTH_REQUIRED"
             ]
@@ -10731,7 +11063,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN, REAUTH_REQUIRED",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, REAUTH_REQUIRED",
             "content": {
               "application/json": {
                 "schema": {
@@ -10740,6 +11072,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN",
               "REAUTH_REQUIRED"
             ]
@@ -10969,7 +11302,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN, REAUTH_REQUIRED",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, REAUTH_REQUIRED",
             "content": {
               "application/json": {
                 "schema": {
@@ -10978,6 +11311,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN",
               "REAUTH_REQUIRED"
             ]
@@ -11209,7 +11543,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN, REAUTH_REQUIRED",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, REAUTH_REQUIRED",
             "content": {
               "application/json": {
                 "schema": {
@@ -11218,6 +11552,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN",
               "REAUTH_REQUIRED"
             ]
@@ -11444,7 +11779,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN, REAUTH_REQUIRED",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, REAUTH_REQUIRED",
             "content": {
               "application/json": {
                 "schema": {
@@ -11453,6 +11788,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN",
               "REAUTH_REQUIRED"
             ]
@@ -11845,7 +12181,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN, REAUTH_REQUIRED",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, REAUTH_REQUIRED",
             "content": {
               "application/json": {
                 "schema": {
@@ -11854,6 +12190,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN",
               "REAUTH_REQUIRED"
             ]
@@ -12017,7 +12354,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN, REAUTH_REQUIRED",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, REAUTH_REQUIRED",
             "content": {
               "application/json": {
                 "schema": {
@@ -12026,6 +12363,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN",
               "REAUTH_REQUIRED"
             ]
@@ -12293,7 +12631,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN, REAUTH_REQUIRED",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, REAUTH_REQUIRED",
             "content": {
               "application/json": {
                 "schema": {
@@ -12302,6 +12640,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN",
               "REAUTH_REQUIRED"
             ]
@@ -12456,7 +12795,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN, REAUTH_REQUIRED",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, REAUTH_REQUIRED",
             "content": {
               "application/json": {
                 "schema": {
@@ -12465,6 +12804,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN",
               "REAUTH_REQUIRED"
             ]
@@ -12630,7 +12970,7 @@
             ]
           },
           "403": {
-            "description": "FORBIDDEN, REAUTH_REQUIRED",
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, REAUTH_REQUIRED",
             "content": {
               "application/json": {
                 "schema": {
@@ -12639,6 +12979,7 @@
               }
             },
             "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
               "FORBIDDEN",
               "REAUTH_REQUIRED"
             ]
@@ -13002,6 +13343,1098 @@
         }
       }
     },
+    "/v1/moderation/reports": {
+      "get": {
+        "operationId": "listModerationReports",
+        "summary": "Report queue: OPEN oldest first (24h response target), RESOLVED/ALL newest first; metadata only",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OPEN",
+                "RESOLVED",
+                "ALL"
+              ]
+            }
+          },
+          {
+            "name": "targetType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "USER",
+                "MEAL",
+                "MESSAGE"
+              ]
+            }
+          },
+          {
+            "name": "claimed",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "me"
+              ]
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "minLength": 1,
+              "maxLength": 2048,
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "data",
+                    "page",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ModerationReportSummary"
+                      }
+                    },
+                    "page": {
+                      "$ref": "#/components/schemas/PageInfo"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_REQUEST"
+            ]
+          },
+          "401": {
+            "description": "AUTH_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, REAUTH_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
+              "FORBIDDEN",
+              "REAUTH_REQUIRED"
+            ]
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "VALIDATION_FAILED"
+            ]
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "RATE_LIMITED"
+            ]
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INTERNAL_ERROR"
+            ]
+          }
+        },
+        "x-auth": "staff",
+        "x-write-protocol": "read",
+        "x-if-match": false,
+        "x-roles": [
+          "support"
+        ],
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/moderation/reports/{reportId}/claim": {
+      "post": {
+        "operationId": "claimModerationReport",
+        "summary": "Take a report for review: grants this staff member the case (audited) and moves it to in review",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": false,
+            "description": "Required for cookie-authenticated (Web) writes",
+            "schema": {
+              "type": "string",
+              "maxLength": 128
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ModerationReport"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_REQUEST"
+            ]
+          },
+          "401": {
+            "description": "AUTH_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, REAUTH_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
+              "FORBIDDEN",
+              "REAUTH_REQUIRED"
+            ]
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "NOT_FOUND"
+            ]
+          },
+          "409": {
+            "description": "IDEMPOTENCY_CONFLICT, INTENT_IN_PROGRESS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "IDEMPOTENCY_CONFLICT",
+              "INTENT_IN_PROGRESS"
+            ]
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "VALIDATION_FAILED"
+            ]
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "RATE_LIMITED"
+            ]
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INTERNAL_ERROR"
+            ]
+          }
+        },
+        "x-auth": "staff",
+        "x-write-protocol": "idempotencyKey",
+        "x-if-match": false,
+        "x-roles": [
+          "support"
+        ],
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/moderation/reports/{reportId}": {
+      "get": {
+        "operationId": "getModerationReport",
+        "summary": "Minimum context of a claimed report (audited read)",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ModerationReport"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_REQUEST"
+            ]
+          },
+          "401": {
+            "description": "AUTH_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, REAUTH_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
+              "FORBIDDEN",
+              "REAUTH_REQUIRED"
+            ]
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "NOT_FOUND"
+            ]
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "VALIDATION_FAILED"
+            ]
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "RATE_LIMITED"
+            ]
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INTERNAL_ERROR"
+            ]
+          }
+        },
+        "x-auth": "staff",
+        "x-write-protocol": "read",
+        "x-if-match": false,
+        "x-roles": [
+          "support"
+        ],
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/moderation/reports/{reportId}/photo": {
+      "get": {
+        "operationId": "getModerationPhoto",
+        "summary": "Current photo of a reported profile for a claimed USER report, even while hidden or suspended",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "ETag": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "type": "string",
+                  "contentMediaType": "image/jpeg"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_REQUEST"
+            ]
+          },
+          "401": {
+            "description": "AUTH_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, REAUTH_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
+              "FORBIDDEN",
+              "REAUTH_REQUIRED"
+            ]
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "NOT_FOUND"
+            ]
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "VALIDATION_FAILED"
+            ]
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "RATE_LIMITED"
+            ]
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INTERNAL_ERROR"
+            ]
+          }
+        },
+        "x-auth": "staff",
+        "x-write-protocol": "read",
+        "x-if-match": false,
+        "x-roles": [
+          "support"
+        ],
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/moderation/reports/{reportId}/actions": {
+      "post": {
+        "operationId": "moderateReport",
+        "summary": "Apply one audited moderation action (If-Match = case version); optionally close with a reporter-visible outcome",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "pattern": "^\"(0|[1-9][0-9]{0,18})\"$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": false,
+            "description": "Required for cookie-authenticated (Web) writes",
+            "schema": {
+              "type": "string",
+              "maxLength": 128
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ModerationReport"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_REQUEST"
+            ]
+          },
+          "401": {
+            "description": "AUTH_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, REAUTH_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
+              "FORBIDDEN",
+              "REAUTH_REQUIRED"
+            ]
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "NOT_FOUND"
+            ]
+          },
+          "409": {
+            "description": "IDEMPOTENCY_CONFLICT, INTENT_IN_PROGRESS, STATE_CONFLICT, VERSION_CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "IDEMPOTENCY_CONFLICT",
+              "INTENT_IN_PROGRESS",
+              "STATE_CONFLICT",
+              "VERSION_CONFLICT"
+            ]
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "VALIDATION_FAILED"
+            ]
+          },
+          "428": {
+            "description": "PRECONDITION_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "PRECONDITION_REQUIRED"
+            ]
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "RATE_LIMITED"
+            ]
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INTERNAL_ERROR"
+            ]
+          }
+        },
+        "x-auth": "staff",
+        "x-write-protocol": "idempotencyKey",
+        "x-if-match": true,
+        "x-roles": [
+          "support"
+        ],
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "action",
+                  "note"
+                ],
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "UPHOLD",
+                      "RESTORE",
+                      "HIDE_CONTENT",
+                      "CANCEL_MEAL",
+                      "RESET_PROFILE_TEXT",
+                      "REMOVE_PROFILE_PHOTO",
+                      "SUSPEND_USER",
+                      "UNSUSPEND_USER"
+                    ]
+                  },
+                  "note": {
+                    "minLength": 5,
+                    "maxLength": 1000,
+                    "pattern": "\\S",
+                    "type": "string"
+                  },
+                  "publicOutcome": {
+                    "anyOf": [
+                      {
+                        "minLength": 1,
+                        "maxLength": 1000,
+                        "pattern": "\\S",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "resolve": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/support/cases/{caseId}/attendance": {
+      "get": {
+        "operationId": "supportCaseAttendance",
+        "summary": "Start-roster attendance facts and current revisions for a granted MEAL case (J09)",
+        "parameters": [
+          {
+            "name": "caseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CaseAttendance"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_REQUEST"
+            ]
+          },
+          "401": {
+            "description": "AUTH_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED, FORBIDDEN, REAUTH_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED",
+              "FORBIDDEN",
+              "REAUTH_REQUIRED"
+            ]
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "NOT_FOUND"
+            ]
+          },
+          "409": {
+            "description": "STATE_CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "STATE_CONFLICT"
+            ]
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "VALIDATION_FAILED"
+            ]
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "RATE_LIMITED"
+            ]
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INTERNAL_ERROR"
+            ]
+          }
+        },
+        "x-auth": "staff",
+        "x-write-protocol": "read",
+        "x-if-match": false,
+        "x-roles": [
+          "support"
+        ],
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/v1/guest-sessions": {
       "post": {
         "operationId": "createGuestSession",
@@ -13337,6 +14770,19 @@
               "AUTH_REQUIRED"
             ]
           },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
+            ]
+          },
           "429": {
             "description": "RATE_LIMITED",
             "content": {
@@ -13567,6 +15013,19 @@
             },
             "x-error-codes": [
               "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
             ]
           },
           "409": {
@@ -13964,6 +15423,19 @@
             },
             "x-error-codes": [
               "AUTH_REQUIRED"
+            ]
+          },
+          "403": {
+            "description": "ACCOUNT_SUSPENDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ACCOUNT_SUSPENDED"
             ]
           },
           "409": {
@@ -17058,6 +18530,140 @@
           }
         }
       },
+      "CaseAttendance": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "caseId",
+          "mealId",
+          "mealStatus",
+          "scheduledEndAt",
+          "correctionOpensAt",
+          "roster"
+        ],
+        "properties": {
+          "caseId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "mealId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "mealStatus": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "CANCELLED",
+              "COMPLETED"
+            ]
+          },
+          "scheduledEndAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "correctionOpensAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "roster": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "additionalProperties": false,
+              "type": "object",
+              "required": [
+                "subjectId",
+                "isHost",
+                "selfValue",
+                "hostValue",
+                "supportValue",
+                "value",
+                "source",
+                "version"
+              ],
+              "properties": {
+                "subjectId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "isHost": {
+                  "type": "boolean"
+                },
+                "selfValue": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "present",
+                        "absent"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "hostValue": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "present",
+                        "absent"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "supportValue": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "present",
+                        "absent"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "value": {
+                  "type": "string",
+                  "enum": [
+                    "present",
+                    "absent",
+                    "unknown"
+                  ]
+                },
+                "source": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "SELF",
+                        "HOST",
+                        "SUPPORT"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "version": {
+                  "pattern": "^(0|[1-9][0-9]{0,18})$",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
       "Classification": {
         "additionalProperties": false,
         "type": "object",
@@ -17296,6 +18902,7 @@
                   "AUTH_REQUIRED",
                   "REAUTH_REQUIRED",
                   "PROFILE_INCOMPLETE",
+                  "ACCOUNT_SUSPENDED",
                   "FORBIDDEN",
                   "CONNECTION_NOT_AUTHORIZED",
                   "NOT_FOUND",
@@ -18233,6 +19840,541 @@
           "snapshotId": {
             "format": "uuid",
             "type": "string"
+          }
+        }
+      },
+      "ModerationHistoryEntry": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "actorId",
+          "note",
+          "publicOutcome",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "UPHOLD",
+              "RESTORE",
+              "HIDE_CONTENT",
+              "CANCEL_MEAL",
+              "RESET_PROFILE_TEXT",
+              "REMOVE_PROFILE_PHOTO",
+              "SUSPEND_USER",
+              "UNSUSPEND_USER",
+              "AUTO_HIDE",
+              "AUTO_CLOSE",
+              "CASE_STATUS",
+              "ATTENDANCE_CORRECTED"
+            ]
+          },
+          "actorId": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "publicOutcome": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        }
+      },
+      "ModerationMeal": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "mealId",
+          "hostId",
+          "title",
+          "description",
+          "status",
+          "startsAt",
+          "areaCode",
+          "hidden"
+        ],
+        "properties": {
+          "mealId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "hostId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 200,
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "CANCELLED",
+              "COMPLETED"
+            ]
+          },
+          "startsAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "areaCode": {
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "maxLength": 64,
+            "type": "string"
+          },
+          "hidden": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ModerationMessage": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "messageId",
+          "conversationId",
+          "senderId",
+          "hidden",
+          "context"
+        ],
+        "properties": {
+          "messageId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "conversationId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "senderId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "hidden": {
+            "type": "boolean"
+          },
+          "context": {
+            "maxItems": 7,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModerationMessageLine"
+            }
+          }
+        }
+      },
+      "ModerationMessageLine": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "messageId",
+          "senderId",
+          "body",
+          "createdAt",
+          "hidden",
+          "isTarget"
+        ],
+        "properties": {
+          "messageId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "senderId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "body": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "hidden": {
+            "type": "boolean"
+          },
+          "isTarget": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ModerationReport": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "summary",
+          "reporterId",
+          "details",
+          "publicOutcome",
+          "privacyRedacted",
+          "subject",
+          "user",
+          "meal",
+          "message",
+          "history",
+          "allowedActions"
+        ],
+        "properties": {
+          "summary": {
+            "$ref": "#/components/schemas/ModerationReportSummary"
+          },
+          "reporterId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "details": {
+            "maxLength": 1000,
+            "type": "string"
+          },
+          "publicOutcome": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "privacyRedacted": {
+            "type": "boolean"
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "userId",
+                  "accountStatus"
+                ],
+                "properties": {
+                  "userId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "accountStatus": {
+                    "type": "string",
+                    "enum": [
+                      "ACTIVE",
+                      "SUSPENDED",
+                      "DELETING",
+                      "DELETED"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "user": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModerationUser"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "meal": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModerationMeal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "message": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModerationMessage"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "history": {
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModerationHistoryEntry"
+            }
+          },
+          "allowedActions": {
+            "uniqueItems": true,
+            "minItems": 0,
+            "maxItems": 8,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "UPHOLD",
+                "RESTORE",
+                "HIDE_CONTENT",
+                "CANCEL_MEAL",
+                "RESET_PROFILE_TEXT",
+                "REMOVE_PROFILE_PHOTO",
+                "SUSPEND_USER",
+                "UNSUSPEND_USER"
+              ]
+            }
+          }
+        }
+      },
+      "ModerationReportSummary": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "reportId",
+          "caseId",
+          "caseVersion",
+          "targetType",
+          "reason",
+          "reportStatus",
+          "caseStatus",
+          "createdAt",
+          "dueAt",
+          "autoActioned",
+          "autoClosed",
+          "contentLimited",
+          "reporterCount",
+          "claimedByMe",
+          "subjectStatus"
+        ],
+        "properties": {
+          "reportId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "caseId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "caseVersion": {
+            "pattern": "^(0|[1-9][0-9]{0,18})$",
+            "type": "string"
+          },
+          "targetType": {
+            "type": "string",
+            "enum": [
+              "USER",
+              "MEAL",
+              "MESSAGE"
+            ]
+          },
+          "reason": {
+            "maxLength": 40,
+            "type": "string"
+          },
+          "reportStatus": {
+            "type": "string",
+            "enum": [
+              "RECEIVED",
+              "IN_REVIEW",
+              "RESPONDED"
+            ]
+          },
+          "caseStatus": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "IN_REVIEW",
+              "RESOLVED"
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "dueAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "autoActioned": {
+            "type": "boolean"
+          },
+          "autoClosed": {
+            "type": "boolean"
+          },
+          "contentLimited": {
+            "type": "boolean"
+          },
+          "reporterCount": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "claimedByMe": {
+            "type": "boolean"
+          },
+          "subjectStatus": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "ACTIVE",
+                  "SUSPENDED",
+                  "DELETING",
+                  "DELETED"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "ModerationUser": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "userId",
+          "accountStatus",
+          "displayName",
+          "bio",
+          "hasPhoto",
+          "photoUrl",
+          "languages",
+          "interests",
+          "profileHidden"
+        ],
+        "properties": {
+          "userId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "accountStatus": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "SUSPENDED",
+              "DELETING",
+              "DELETED"
+            ]
+          },
+          "displayName": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "bio": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "hasPhoto": {
+            "type": "boolean"
+          },
+          "photoUrl": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "languages": {
+            "uniqueItems": true,
+            "minItems": 0,
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "en",
+                "zh",
+                "fr",
+                "es",
+                "hi"
+              ]
+            }
+          },
+          "interests": {
+            "uniqueItems": true,
+            "minItems": 0,
+            "maxItems": 11,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "FOOD",
+                "PHOTOGRAPHY",
+                "TRAVEL",
+                "DESIGN",
+                "BOOKS",
+                "CINEMA",
+                "WALKING",
+                "COOKING",
+                "MUSIC",
+                "ART",
+                "SPORT"
+              ]
+            }
+          },
+          "profileHidden": {
+            "type": "boolean"
           }
         }
       },
@@ -19488,6 +21630,7 @@
     "AUTH_REQUIRED": 401,
     "REAUTH_REQUIRED": 403,
     "PROFILE_INCOMPLETE": 403,
+    "ACCOUNT_SUSPENDED": 403,
     "FORBIDDEN": 403,
     "CONNECTION_NOT_AUTHORIZED": 403,
     "NOT_FOUND": 404,
