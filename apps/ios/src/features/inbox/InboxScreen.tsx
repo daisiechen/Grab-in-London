@@ -223,7 +223,7 @@ function ChatRow({ item, onPress }: { item: InboxItem; onPress: () => void }) {
       <View style={styles.rowCopy}>
         <Text style={[styles.rowTitle, unread && styles.rowTitleUnread]} numberOfLines={1}>{c.title}</Text>
         <Text style={[styles.preview, unread && styles.previewUnread]} numberOfLines={2}>{item.lastMessage ? item.lastMessage.preview : 'No messages yet'}</Text>
-        <Text style={styles.rowMeta}>{archived ? 'Archived · Read-only' : c.kind === 'GROUP' ? 'Seat confirmed · Meal group' : 'You both want to meet again'}</Text>
+        <Text style={styles.rowMeta}>{archived ? 'Archived · Read-only' : c.kind === 'GROUP' ? 'Meal group' : 'You both want to meet again'}</Text>
       </View>
       {unread ? (
         <View style={styles.badge}><Text style={styles.badgeText}>{item.unreadCount > 99 ? '99+' : String(item.unreadCount)}</Text></View>

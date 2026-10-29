@@ -315,7 +315,7 @@ fancyabite.uk
 - **分析授权**：只在本标签页刚完成登录后弹一次（`lib/freshSignIn.ts`），不在登录、关联、补全资料步骤上弹；之后在资料页的 Analytics preferences 行修改。与 iOS（每次会话未选择时弹）有意差异：网页刷新频繁，避免反复打扰。
 - **注册来源**：`lib/attribution.ts` 只在内存中记录落地网址的 utm 参数或“从饭局分享链接进入”，不写 Cookie/存储；注册请求带 `signupSource`（W-P2 接入）。
 - **登录分步**（W-P2）：品牌入口、邮箱、验证码是 `/sign-in` 一页内的三步（返回圆钮回上一步），不拆成 `/sign-in/email`、`/sign-in/code`，避免刷新丢失验证码会话；返回地址参数为 `returnTo`（也接受 `next`）。契约白名单外的 Web 页面（如 `/chat`、`/profile-setup`）只在本地返回，不作为 `returnTarget` 发给 API。
-- **收件箱群聊行**（W-P3）：副标题写 “Meal group”，不写 iOS 的 “Seat confirmed · Meal group”——收件箱只说明群聊权限，不能断言座位仍确认（QA-JOURNEY-003，取消座位后群聊仍可保留）。建议 iOS 同步改。
+- **收件箱群聊行**（W-P3）：副标题写 “Meal group”，不写 iOS 的 “Seat confirmed · Meal group”——收件箱只说明群聊权限，不能断言座位仍确认（QA-JOURNEY-003，取消座位后群聊仍可保留）。iOS 已于 2026-10-29 同步改为 “Meal group”。
 - **消息举报入口**（W-P3）：网页没有长按，改为每条他人消息旁的 “Message options” 按钮（键盘可达），右键/触屏长按也能打开同一面板。
 - **QA 证据路径**：`docs/qa/evidence/2026-10-21/automated-runs.json` 引用了若干 Web 测试文件路径；这些文件保留并改写为新行为的测试，不删除。
 - **发起向导网址**（W-P4）：四步各有网址，浏览器后退即上一步；发布/保存后通过历史回到向导入口并替换为新饭局页（或宾客名单），效果同 iOS 关闭整个向导。草稿仍存本标签页（只存餐厅身份），餐厅名称地址只放内存。旧地址 `/create/terms` 重定向到 `/cancellation-terms`。

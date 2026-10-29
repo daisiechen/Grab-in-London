@@ -41,7 +41,9 @@ describe('InboxScreen', () => {
     ]));
     await renderApp(app, <InboxScreen />);
     expect(await screen.findByRole('button', { name: 'Sunday dinner, 2 unread' })).toBeOnTheScreen();
-    expect(screen.getByText('Seat confirmed · Meal group')).toBeOnTheScreen();
+    // Neutral label: the inbox only shows group access, not that the seat is still confirmed (QA-JOURNEY-003, as on web).
+    expect(screen.getByText('Meal group')).toBeOnTheScreen();
+    expect(screen.queryByText(/Seat confirmed/)).toBeNull();
     expect(screen.getByText('2')).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole('tab', { name: 'Applications · 1' }));
     expect(screen.getByRole('tab', { name: 'Applications · 1' })).toBeSelected();
