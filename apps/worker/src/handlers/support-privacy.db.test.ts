@@ -11,6 +11,7 @@ const day=86_400_000;
 it('holds support records of a deleted account (reports about and by them, notes, reasons) with a copy of the reported content, then redacts them after the retention period',async()=>{
  const users:string[]=[];for(let i=0;i<3;i++)users.push((await db.pool.query(`INSERT INTO users DEFAULT VALUES RETURNING id`)).rows[0].id);
  const [deleted,other,staff]=users as [string,string,string];
+ await db.pool.query(`UPDATE users SET signup_source='instagram:social:launch' WHERE id=$1`,[deleted]);
  await db.pool.query(`INSERT INTO profiles(user_id,display_name,bio,languages,interests) VALUES($1,'Deleted name','PROFILE_SENTINEL bio',ARRAY['en'],ARRAY['FOOD'])`,[deleted]);
  const venue=(await db.pool.query(`INSERT INTO venues(place_id,provider) VALUES($1,'fixture') RETURNING id`,[`fixture_${randomUUID()}`])).rows[0].id;
  const meal=(await db.pool.query(`INSERT INTO meals(host_id,venue_ref,title,description,starts_at,closes_at,scheduled_end_at,start_local_date,start_local_time,start_offset,close_local_date,close_local_time,close_offset,minimum,capacity,budget_min_pence,budget_max_pence,languages,mood,booking_mode,terms_version,attempt_id,status) VALUES($1,$2,'Deleted host title','Deleted host synthetic description',now()-interval '10 day',now()-interval '11 day',now()-interval '10 day'+interval '2 hour','2026-10-01','12:00',60,'2026-09-30','12:00',60,2,4,1000,2000,ARRAY['en'],'EASY_CONVERSATION','EXTERNAL_PAY_AT_VENUE','2026-10-21',$3,'COMPLETED') RETURNING id`,[deleted,venue,randomUUID()])).rows[0].id;
@@ -38,6 +39,7 @@ it('holds support records of a deleted account (reports about and by them, notes
  expect((await db.pool.query(`SELECT title FROM meals WHERE id=$1`,[meal])).rows[0].title).toBe('Meal unavailable');
  expect((await db.pool.query(`SELECT body FROM messages WHERE id=$1`,[message])).rows[0].body).toBe('Message removed');
  expect((await db.pool.query(`SELECT count(*)::int AS n FROM profiles WHERE user_id=$1`,[deleted])).rows[0].n).toBe(0);
+ expect((await db.pool.query(`SELECT signup_source FROM users WHERE id=$1`,[deleted])).rows[0].signup_source).toBeNull();
  for(const item of related){
   expect((await db.pool.query(`SELECT details,reason,public_outcome FROM reports WHERE id=$1`,[item.report])).rows[0]).toEqual({details:'DETAIL_SENTINEL',reason:'REASON_SENTINEL',public_outcome:'OUTCOME_SENTINEL'});
   expect((await db.pool.query(`SELECT details,version FROM support_cases WHERE id=$1`,[item.caseId])).rows[0]).toMatchObject({details:'DETAIL_SENTINEL',version:'1'});

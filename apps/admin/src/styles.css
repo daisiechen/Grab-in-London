@@ -584,6 +584,20 @@ h1 {
 .metric-grid.four {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
+.metric-grid.five {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+.section-heading {
+  font-size: 13px;
+  font-weight: 500;
+  margin: 0 0 10px;
+}
+.section-heading small {
+  font-size: 10px;
+  font-weight: 400;
+  color: #8c967c;
+  margin-left: 8px;
+}
 .metric-card {
   background: #fff;
   border: 1px solid var(--border);
@@ -1677,6 +1691,9 @@ dd {
   .metric-grid.four {
     grid-template-columns: repeat(2, 1fr);
   }
+  .metric-grid.five {
+    grid-template-columns: repeat(3, 1fr);
+  }
   .metric-value {
     font-size: 35px;
   }
@@ -2149,3 +2166,4 @@ dd {
   .report-detail .two-column { grid-template-columns: 1fr; }
   .row-actions { flex-wrap: wrap; }
 }
+@media (max-width: 640px) { .metric-grid.five { grid-template-columns: repeat(2, 1fr); } }

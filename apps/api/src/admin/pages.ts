@@ -15,7 +15,6 @@ export function canonicalFilters(query:Query){
 }
 export async function loadAdminSnapshot(pool:Pool,query:Query){
  const filters=canonicalFilters(query);
- if(filters.sources.length)throw new DomainError('PROVIDER_UNAVAILABLE','Source attribution history is not available for this snapshot.');
  const db=await pool.connect();
  try{
   await db.query('BEGIN');
@@ -27,6 +26,8 @@ export async function loadAdminSnapshot(pool:Pool,query:Query){
   const{rows:stored}=await db.query(`SELECT kind,facts FROM analytics_snapshot_facts WHERE snapshot_id=$1`,[snapshot.id]);
   const facts=Object.fromEntries(stored.map(r=>[r.kind,r.facts]));
   if(!facts.meals||!facts.applications||!facts.seats||!facts.surveys)throw new DomainError('PROVIDER_UNAVAILABLE','This snapshot has no supported source facts.');
+  // Sign-up sources exist from definition v5 (users.signup_source); older snapshots cannot be filtered by them.
+  if(filters.sources.length&&snapshot.definition_version==='v4')throw new DomainError('PROVIDER_UNAVAILABLE','Source attribution history is not available for this snapshot.');
   const metadata={id:snapshot.id as string,dimensions:snapshot.dimensions,asOf:(snapshot.as_of as Date).toISOString(),createdAt:(snapshot.created_at as Date).toISOString(),definitionVersion:snapshot.definition_version as string,classificationRevision:snapshot.revision as string,status:'SEALED' as const};
   const calculated=calculateMetrics({...facts,historyCoverageStart:(snapshot.history_coverage_start as Date).toISOString()} as Facts,filters,metadata.asOf);
   const filterHash=createHash('sha256').update(canonicalJson(filters)).digest('hex');

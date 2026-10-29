@@ -4,6 +4,7 @@ import {randomUUID,createHmac} from 'node:crypto';
 import {loadConfig,type CoreConfig} from '@fancy/config';
 import {createPool,type Pool} from '@fancy/db';
 import {sealSourceSnapshot} from '../../api/src/admin/snapshots.ts';
+import {analyticsEventFloor,analyticsRetention,purgeExpiredAnalytics} from '../../api/src/admin/retention.ts';
 import {autoCloseStaleCases,queueEveningReminder,queueModerationDigest,queuePendingUrgentAlert} from '../../api/src/moderation/policy.ts';
 import {purgeExpiredSafetyRecords,safetyRecordRetentionDays} from '../../api/src/support/privacy.ts';
 import {ethanDelivery,ethanPushFor,type EthanPushAdapter} from './ethan/push.ts';
@@ -42,6 +43,7 @@ export function createWorkerRuntime(pool:Pool,config:CoreConfig,options:{ethanPu
  const alertTargets={supportEmail:config.supportEmail,ethan:!!config.ethanModeration};
  let lastSnapshot=0,lastModeration=0,lastUrgent=0;
  let lastRetention=0;
+ const retention=analyticsRetention(config.retentionPolicy);
  async function tick(){
   if(!await recoveryReady(pool))return {claimed:0,done:0,retried:0,dead:0,lost:0};
   const result=await runner.tick();
@@ -50,7 +52,8 @@ export function createWorkerRuntime(pool:Pool,config:CoreConfig,options:{ethanPu
   // Every minute: urgent reports coalesced during the last 10-minute window, and the 20:00 reminder.
   if(Date.now()-lastUrgent>=60_000){await queuePendingUrgentAlert(pool,alertTargets,new Date());await queueEveningReminder(pool,alertTargets.ethan,new Date());lastUrgent=Date.now();}
   // Safety records of deleted accounts: redact cases whose retention period has ended (hourly).
-  if(Date.now()-lastRetention>=3600_000){await purgeExpiredSafetyRecords(pool,safetyRecordRetentionDays(config.retentionPolicy));lastRetention=Date.now();}
+  // Analytics storage limits (snapshots, raw events, discovery checks, delivery ledger), same hourly pass.
+  if(Date.now()-lastRetention>=3600_000){await purgeExpiredSafetyRecords(pool,safetyRecordRetentionDays(config.retentionPolicy));await purgeExpiredAnalytics(pool,retention);lastRetention=Date.now();}
   await mail.tick();
   await ethan.tick();
   if(Date.now()-lastSnapshot>=3600_000){
@@ -58,7 +61,9 @@ export function createWorkerRuntime(pool:Pool,config:CoreConfig,options:{ethanPu
    const {rows:[coverage]}=await pool.query<{started_at:Date}>(`SELECT started_at FROM analytics_delivery_coverage WHERE id=1`);
    if(coverage){
     const declared=config.analyticsCoverageStart?new Date(config.analyticsCoverageStart):null;
-    const start=declared&&declared>coverage.started_at?declared:coverage.started_at;
+    // Raw events older than the retention floor are purged, so history never starts before it.
+    const floor=await analyticsEventFloor(pool,retention);
+    const start=[declared,coverage.started_at,floor].reduce<Date>((max,d)=>d&&d>max?d:max,coverage.started_at);
     await sealSourceSnapshot(pool,start,{verifiedDiscovery:!!declared,clientTelemetry:!!declared});lastSnapshot=Date.now();
    }
    await pool.query(`DELETE FROM idempotency WHERE expires_at<clock_timestamp()`);

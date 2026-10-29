@@ -163,6 +163,34 @@
                     "pattern": "^/(?![/\\\\])[A-Za-z0-9/_?=&.%-]*$",
                     "maxLength": 300,
                     "type": "string"
+                  },
+                  "signupSource": {
+                    "additionalProperties": false,
+                    "type": "object",
+                    "properties": {
+                      "utmSource": {
+                        "minLength": 1,
+                        "maxLength": 100,
+                        "type": "string"
+                      },
+                      "utmMedium": {
+                        "minLength": 1,
+                        "maxLength": 100,
+                        "type": "string"
+                      },
+                      "utmCampaign": {
+                        "minLength": 1,
+                        "maxLength": 100,
+                        "type": "string"
+                      },
+                      "entry": {
+                        "type": "string",
+                        "enum": [
+                          "meal_link",
+                          "ios_app"
+                        ]
+                      }
+                    }
                   }
                 }
               }
@@ -427,6 +455,34 @@
                   "appChallenge": {
                     "pattern": "^[A-Za-z0-9_-]{43,128}$",
                     "type": "string"
+                  },
+                  "signupSource": {
+                    "additionalProperties": false,
+                    "type": "object",
+                    "properties": {
+                      "utmSource": {
+                        "minLength": 1,
+                        "maxLength": 100,
+                        "type": "string"
+                      },
+                      "utmMedium": {
+                        "minLength": 1,
+                        "maxLength": 100,
+                        "type": "string"
+                      },
+                      "utmCampaign": {
+                        "minLength": 1,
+                        "maxLength": 100,
+                        "type": "string"
+                      },
+                      "entry": {
+                        "type": "string",
+                        "enum": [
+                          "meal_link",
+                          "ios_app"
+                        ]
+                      }
+                    }
                   }
                 }
               }
@@ -607,6 +663,34 @@
                     "maxLength": 100,
                     "pattern": "^http://127\\.0\\.0\\.1:[1-9][0-9]{3,4}/auth/callback$",
                     "type": "string"
+                  },
+                  "signupSource": {
+                    "additionalProperties": false,
+                    "type": "object",
+                    "properties": {
+                      "utmSource": {
+                        "minLength": 1,
+                        "maxLength": 100,
+                        "type": "string"
+                      },
+                      "utmMedium": {
+                        "minLength": 1,
+                        "maxLength": 100,
+                        "type": "string"
+                      },
+                      "utmCampaign": {
+                        "minLength": 1,
+                        "maxLength": 100,
+                        "type": "string"
+                      },
+                      "entry": {
+                        "type": "string",
+                        "enum": [
+                          "meal_link",
+                          "ios_app"
+                        ]
+                      }
+                    }
                   }
                 }
               }
@@ -11893,6 +11977,10 @@
             "schema": {
               "type": "string",
               "enum": [
+                "signups",
+                "mealsPublished",
+                "firstApplications",
+                "mealsHeld",
                 "weekly",
                 "activation",
                 "retention",
@@ -11900,7 +11988,6 @@
                 "discovery7",
                 "impressionNoApply",
                 "applications",
-                "approved",
                 "confirmed",
                 "applicationAttendance",
                 "approval",
@@ -11908,6 +11995,7 @@
                 "pendingApplications",
                 "oldestPendingHours",
                 "formErrors",
+                "consentCoverage",
                 "discovery",
                 "formation",
                 "cancellation",
@@ -12486,7 +12574,7 @@
                     "type": "string"
                   },
                   "metric": {
-                    "pattern": "^(summary\\.(overview|journey|supply|retention|quality)|weekly|activation|retention|coverage|discovery7|impressionNoApply|applications|approved|confirmed|applicationAttendance|approval|approvalP50|pendingApplications|oldestPendingHours|formErrors|discovery|formation|cancellation|mealsWithAttendance|feedback|survey|laterOpportunity|missingRequired|duplicates|excluded|receiveLatencyP90|meals|applications|cohort\\.users|attendance|quality\\.events)$",
+                    "pattern": "^(summary\\.(overview|journey|supply|retention|quality)|signups|mealsPublished|firstApplications|mealsHeld|weekly|activation|retention|coverage|discovery7|impressionNoApply|applications|confirmed|applicationAttendance|approval|approvalP50|pendingApplications|oldestPendingHours|formErrors|consentCoverage|discovery|formation|cancellation|mealsWithAttendance|feedback|survey|laterOpportunity|missingRequired|duplicates|excluded|receiveLatencyP90|meals|applications|cohort\\.users|attendance|quality\\.events)$",
                     "type": "string"
                   },
                   "filters": {

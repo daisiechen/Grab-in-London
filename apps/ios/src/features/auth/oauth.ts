@@ -6,6 +6,12 @@ import { authErrorMessage } from './messages.ts';
 
 export type Provider = 'GOOGLE' | 'APPLE';
 
+/**
+ * Campaign-level sign-up source for a new account (ops analytics P0-3). The App Store passes no campaign
+ * parameters, so every iOS sign-up is recorded as `ios_app`; no device identifiers or attribution SDK.
+ */
+export const IOS_SIGNUP_SOURCE = { entry: 'ios_app' } as const;
+
 export type SignInResult =
   | { kind: 'signedIn'; session: SessionInfo; authProof: string }
   | { kind: 'linkRequired'; linkTicket: string; expiresAt: string | null; appVerifier: string }
@@ -55,7 +61,7 @@ export async function signInWithProvider(provider: Provider, deps: OAuthDeps): P
   try {
     const pair = await deps.createChallenge();
     deps.session.assertGeneration(generation);
-    const start = await deps.api.call('startOAuth', { body: { clientRequestId: deps.newId(), provider, client: 'IOS', appChallenge: pair.challenge } });
+    const start = await deps.api.call('startOAuth', { body: { clientRequestId: deps.newId(), provider, client: 'IOS', appChallenge: pair.challenge, signupSource: IOS_SIGNUP_SOURCE } });
     deps.session.assertGeneration(generation);
     const expectedState=providerState(start.data.authorizationUrl);
     const result = await deps.openAuthSession(start.data.authorizationUrl, deps.redirectUrl);

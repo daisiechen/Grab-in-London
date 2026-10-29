@@ -106,6 +106,11 @@ describe('source snapshot isolation',()=>{
     const supply=await readAdminPage(h.db.pool,'supply',{snapshotId:id});
     expect(supply.metrics.coverage).toEqual({numerator:0,denominator:0});
     expect(supply.metrics.formation).toEqual({numerator:0,denominator:0});
+    // v5 snapshots carry sign-up sources: an unknown source narrows member metrics to nothing, meal metrics stay.
+    const narrowed=await readAdminPage(h.db.pool,'retention',{snapshotId:id,sources:'assisted'});
+    expect(narrowed.metrics.survey).toEqual({numerator:0,denominator:0});
+    // A v4 snapshot predates sign-up sources and cannot be filtered by them.
+    await h.db.pool.query(`UPDATE analytics_snapshots SET definition_version='v4' WHERE id=$1`,[id]);
     await expect(readAdminPage(h.db.pool,'supply',{snapshotId:id,sources:'assisted'})).rejects.toMatchObject({code:'PROVIDER_UNAVAILABLE'});
     await h.db.pool.query(`UPDATE privacy_control SET epoch=epoch+1 WHERE id=1`);
     await expect(readAdminPage(h.db.pool,'retention',{snapshotId:id})).rejects.toMatchObject({code:'SNAPSHOT_REVOKED'});
