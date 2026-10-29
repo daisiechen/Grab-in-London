@@ -1,0 +1,11 @@
+# 04:20 London time: the quietest hour for a London dinner app.
+[Unit]
+Description=Daily Fancy database backup
+
+[Timer]
+OnCalendar=*-*-* 04:20:00 Europe/London
+RandomizedDelaySec=10m
+Persistent=true
+
+[Install]
+WantedBy=timers.target
