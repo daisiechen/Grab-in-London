@@ -65,7 +65,7 @@ describe('moderation workspace', () => {
 
   it('shows each report reason, flags urgent ones and keeps the server order (urgent first); legacy reads as Other', async () => {
     setup({ 'GET /v1/moderation/reports': () => list([
-      summary({ reportId: R2, reason: 'safety', urgent: true, createdAt: hoursAgo(1) }),
+      summary({ reportId: R2, reason: 'safety', urgent: true, createdAt: hoursAgo(0.5) }), // 23.5 h left (floored to whole hours)
       summary({ reason: 'private_concern' }),
       summary({ reportId: CASE, reason: 'scam', createdAt: hoursAgo(3) }),
     ]) }, '/?lang=en#moderation');

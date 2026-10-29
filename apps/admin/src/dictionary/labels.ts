@@ -9,8 +9,6 @@ const metricTitles: Record<string, [string, string]> = {
   ...Object.fromEntries(metrics.map((m) => [m.id, m.title])),
   impressionNoApply: ['看到饭局但 7 天内未申请', 'Saw meals, no application in 7 days'],
   applications: ['申请记录', 'Applications'],
-  approved: ['获准申请', 'Approved applications'],
-  confirmed: ['席位已确认', 'Confirmed seats'],
   applicationAttendance: ['申请后出席率', 'Attendance after application'],
   mealsWithAttendance: ['有出席记录的饭局', 'Meals with attendance records'],
   laterOpportunity: ['后续机会曝光', 'Later opportunity exposure'],
@@ -26,7 +24,9 @@ const metricTitles: Record<string, [string, string]> = {
 
 const seriesTitles: Record<string, [string, string]> = {
   'weekly.trend': ['每周确认出席用户', 'Weekly attended users'],
-  'funnel.join': ['从发现到席位已确认', 'From discovery to a confirmed seat'],
+  'funnel.join': ['从申请到出席', 'From application to attendance'],
+  'ops.previousWeek': ['上周', 'Last week'],
+  'signups.platform': ['本周注册平台', 'Sign-up platform this week'],
   'funnel.create': ['创建卡点', 'Creation friction'],
   'browse.people': ['浏览行为', 'Browsing behaviour'],
   'features.usage': ['功能使用诊断', 'Feature diagnostics'],
@@ -51,7 +51,7 @@ const listTitles: Record<string, [string, string]> = {
 
 const itemLabels: Record<string, [string, string]> = {
   discovery: ['发现', 'Discover'], exposed: ['真实曝光', 'Exposed'], details: ['看详情', 'View details'],
-  applications: ['申请', 'Apply'], approved: ['获准', 'Approved'], confirmed: ['确认', 'Confirmed'],
+  applications: ['申请', 'Apply'], approved: ['获准', 'Approved'], confirmed: ['获准（即确认）', 'Approved (seat confirmed)'],
   createStarted: ['开始创建', 'Started'], createArranged: ['完成安排', 'Arranged'], createPublished: ['发布', 'Published'],
   present: ['出席', 'Present'], absent: ['未出席', 'Absent'], unknown: ['未知', 'Unknown'], conflict: ['来源不一致', 'Source differences'],
   host: ['发起人取消', 'Host cancelled'], booking: ['预约原因取消', 'Booking-related'], other: ['其他原因', 'Other'], insufficient: ['人数不足', 'Insufficient attendance'],
@@ -72,7 +72,11 @@ const itemLabels: Record<string, [string, string]> = {
   date:['日期','Date'],time:['时间','Time'],closeDate:['截止日期','Closing date'],closeTime:['截止时间','Closing time'],
   mood:['氛围','Atmosphere'],languages:['语言','Languages'],budgetMin:['预算下限','Minimum budget'],budgetMax:['预算上限','Maximum budget'],
   bookingConfirmed:['预约确认','Booking confirmation'],reviewConfirmed:['安排确认','Arrangement confirmation'],week:['周起始','Week starting'],
+  IOS: ['iOS', 'iOS'], WEB: ['Web', 'Web'],
   // Drill-down attribute columns.
+  joinedAt: ['注册时间', 'Joined'], platform: ['注册平台', 'Sign-up platform'], signupSource: ['注册来源', 'Sign-up source'],
+  profileCompletedAt: ['资料首次完成', 'Profile first completed'], createdAt: ['创建时间', 'Created'],
+  attendanceEvidence: ['有出席证据', 'Attendance evidence'], consented: ['已同意分析', 'Analytics consent'],
   mealId: ['饭局', 'Meal'], userId: ['用户', 'User'], area: ['区域', 'Area'], startsAt: ['开始时间', 'Starts'],
   appliedAt: ['申请时间', 'Applied'], occurredAt: ['发生时间', 'Occurred'], status: ['状态', 'Status'], source: ['来源', 'Source'],
   role: ['角色', 'Role'], cohortWeek: ['队列周', 'Cohort week'], selfReport: ['本人自报', 'Self-report'], hostReport: ['发起人记录', 'Host report'],

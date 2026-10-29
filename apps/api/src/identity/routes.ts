@@ -9,6 +9,7 @@ import type { AppDeps } from '../http/context.ts';
 import { defineRoute, defineWrite } from '../http/routes.ts';
 import { assertWebOrigin, cookieOptions, keyedHash, LINK_BINDER_COOKIE, OAUTH_BINDER_COOKIE, SESSION_COOKIE } from '../http/security.ts';
 import { completeAuthentication, type AuthTxRow } from './flows.ts';
+import { normalizeSignupSource, type SignupSourceInput } from './signup-source.ts';
 import { sessionInfo } from './me.ts';
 import { ProviderRejectedError, ProviderUnavailableError, type IdentityProvider, type VerifiedIdentity } from './provider.ts';
 import { isProvisionalShell, suspendedError } from './resolve.ts';
@@ -42,7 +43,7 @@ function checkReturnTarget(target: string | undefined): string | null {
 }
 
 /** Creates/dedupes an OTP challenge under shared email and IP quota locks. */
-async function startOtp(deps: AppDeps, request: FastifyRequest, o: { clientRequestId: string; email: string; client: AuthTxRow['client']; purpose: 'LOGIN' | 'REAUTH'; userId: string | null; familyId: string | null; returnTarget: string | null }) {
+async function startOtp(deps: AppDeps, request: FastifyRequest, o: { clientRequestId: string; email: string; client: AuthTxRow['client']; purpose: 'LOGIN' | 'REAUTH'; userId: string | null; familyId: string | null; returnTarget: string | null; signupSource?: string | null }) {
   const emailHash = keyedHash(deps.config.sessionSecret, 'email', o.email);
   const ipHash = keyedHash(deps.config.sessionSecret, 'ip', request.ip);
   const created = await withTransaction(deps.pool, async (tx) => {
@@ -75,7 +76,7 @@ async function startOtp(deps: AppDeps, request: FastifyRequest, o: { clientReque
     const { rows } = await tx.client.query(
       `INSERT INTO auth_transactions (kind, purpose, client, client_request_id, user_id, email_hash, ip_hash, provider, provider_state, return_target, expires_at, created_at)
        VALUES ('EMAIL_OTP', $1, $2, $3, $4, $5, $6, 'EMAIL', $7, $8, $9, $10) RETURNING id, expires_at, created_at`,
-      [o.purpose, o.client, o.clientRequestId, o.userId, emailHash, ipHash, JSON.stringify({ email: o.email, ...(o.familyId ? { familyId: o.familyId } : {}) }), o.returnTarget, new Date(now.getTime() + OTP_TTL_MS), now],
+      [o.purpose, o.client, o.clientRequestId, o.userId, emailHash, ipHash, JSON.stringify({ email: o.email, ...(o.familyId ? { familyId: o.familyId } : {}), ...(o.signupSource ? { signupSource: o.signupSource } : {}) }), o.returnTarget, new Date(now.getTime() + OTP_TTL_MS), now],
     );
     return { row: rows[0], fresh: true };
   });
@@ -97,7 +98,7 @@ async function startOtp(deps: AppDeps, request: FastifyRequest, o: { clientReque
 }
 
 /** Creates an OAUTH transaction; Web transactions are bound to this browser by a cookie. */
-async function startOAuthTx(deps: AppDeps, o: { provider: 'GOOGLE' | 'APPLE'; client: AuthTxRow['client']; purpose: 'LOGIN' | 'REAUTH'; userId: string | null; familyId: string | null; returnTarget: string | null; appChallenge: string | null; loopbackRedirectUri?: string }) {
+async function startOAuthTx(deps: AppDeps, o: { provider: 'GOOGLE' | 'APPLE'; client: AuthTxRow['client']; purpose: 'LOGIN' | 'REAUTH'; userId: string | null; familyId: string | null; returnTarget: string | null; appChallenge: string | null; loopbackRedirectUri?: string; signupSource?: string | null }) {
   const redirectUri = redirectUriFor(deps, o.client);
   const state = randomToken();
   const nonce = randomToken();
@@ -107,7 +108,7 @@ async function startOAuthTx(deps: AppDeps, o: { provider: 'GOOGLE' | 'APPLE'; cl
     `INSERT INTO auth_transactions (kind, purpose, client, user_id, secret_hash, binder_hash, app_challenge, provider, provider_state, return_target, expires_at)
      VALUES ('OAUTH', $1, $2, $3, $4, $5, $6, $7, $8, $9, clock_timestamp() + make_interval(secs => $10::double precision / 1000)) RETURNING id, expires_at`,
     [o.purpose, o.client, o.userId, sha256Hex(state), binder && sha256Hex(binder), o.appChallenge, o.provider,
-      JSON.stringify({ nonce, verifier, redirectUri, ...(o.loopbackRedirectUri ? { loopbackRedirectUri: o.loopbackRedirectUri } : {}), ...(o.familyId ? { familyId: o.familyId } : {}) }), o.returnTarget, OAUTH_TTL_MS],
+      JSON.stringify({ nonce, verifier, redirectUri, ...(o.loopbackRedirectUri ? { loopbackRedirectUri: o.loopbackRedirectUri } : {}), ...(o.familyId ? { familyId: o.familyId } : {}), ...(o.signupSource ? { signupSource: o.signupSource } : {}) }), o.returnTarget, OAUTH_TTL_MS],
   );
   const authorizationUrl = deps.identity.authorizationUrl({ provider: o.provider, state, nonce, codeChallenge: pkceChallenge(verifier), redirectUri, forceLogin: o.purpose === 'REAUTH' });
   return { id: rows[0].id as string, expiresAt: (rows[0].expires_at as Date).toISOString(), authorizationUrl, binder };
@@ -159,15 +160,15 @@ async function authFromRequest(deps: AppDeps, request: FastifyRequest) {
 
 export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): void {
   defineRoute(app, deps, 'startEmail', async ({ request }) => {
-    const body = asBody<{ clientRequestId: string; email: string; client: AuthTxRow['client']; returnTarget?: string }>(request);
+    const body = asBody<{ clientRequestId: string; email: string; client: AuthTxRow['client']; returnTarget?: string; signupSource?: SignupSourceInput }>(request);
     if (body.client === 'WEB') assertWebOrigin(request, deps.config.webOrigin);
     if (body.client === 'SUPPORT_CLI') throw new DomainError('FORBIDDEN', 'Support CLI uses browser sign-in.');
-    const data = await startOtp(deps, request, { clientRequestId: body.clientRequestId, email: normalizeEmail(body.email), client: body.client, purpose: 'LOGIN', userId: null, familyId: null, returnTarget: checkReturnTarget(body.returnTarget) });
+    const data = await startOtp(deps, request, { clientRequestId: body.clientRequestId, email: normalizeEmail(body.email), client: body.client, purpose: 'LOGIN', userId: null, familyId: null, returnTarget: checkReturnTarget(body.returnTarget), signupSource: normalizeSignupSource(body.signupSource) });
     return { data };
   });
 
   defineRoute(app, deps, 'verifyEmail', async ({ request }) => {
-    const body = asBody<{ challengeId: string; code: string; appChallenge?: string }>(request);
+    const body = asBody<{ challengeId: string; code: string; appChallenge?: string; signupSource?: SignupSourceInput }>(request);
     const { rows } = await deps.pool.query(
       `UPDATE auth_transactions SET attempts = attempts + 1
         WHERE id = $1 AND kind = 'EMAIL_OTP' AND consumed_at IS NULL AND expires_at > clock_timestamp() AND attempts < max_attempts
@@ -189,15 +190,18 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
     }
     await consume(deps, row.id);
     if (row.app_challenge) await deps.pool.query(`UPDATE auth_transactions SET app_challenge = $2 WHERE id = $1`, [row.id, row.app_challenge]);
+    // A source sent with the code wins over one sent when the code was requested.
+    const verifySource = normalizeSignupSource(body.signupSource);
+    if (verifySource && row.purpose === 'LOGIN') row.provider_state = { ...row.provider_state, signupSource: verifySource };
     return finish(deps, row, identity, request);
   });
 
   defineRoute(app, deps, 'startOAuth', async ({ request, reply }) => {
-    const body = asBody<{ provider: 'GOOGLE' | 'APPLE'; client: AuthTxRow['client']; returnTarget?: string; appChallenge?: string; loopbackRedirectUri?: string }>(request);
+    const body = asBody<{ provider: 'GOOGLE' | 'APPLE'; client: AuthTxRow['client']; returnTarget?: string; appChallenge?: string; loopbackRedirectUri?: string; signupSource?: SignupSourceInput }>(request);
     if (body.client === 'WEB') assertWebOrigin(request, deps.config.webOrigin);
     if (body.client !== 'WEB' && !body.appChallenge) throw new DomainError('VALIDATION_FAILED', 'appChallenge is required for native sign-in.', { fieldErrors: { 'body.appChallenge': 'Required' } });
     const loopbackRedirectUri = cliLoopback(body.client, body.loopbackRedirectUri);
-    const started = await startOAuthTx(deps, { provider: body.provider, client: body.client, purpose: 'LOGIN', userId: null, familyId: null, returnTarget: checkReturnTarget(body.returnTarget), appChallenge: body.appChallenge ?? null, ...(loopbackRedirectUri ? { loopbackRedirectUri } : {}) });
+    const started = await startOAuthTx(deps, { provider: body.provider, client: body.client, purpose: 'LOGIN', userId: null, familyId: null, returnTarget: checkReturnTarget(body.returnTarget), appChallenge: body.appChallenge ?? null, ...(loopbackRedirectUri ? { loopbackRedirectUri } : {}), signupSource: body.client === 'SUPPORT_CLI' ? null : normalizeSignupSource(body.signupSource) });
     if (started.binder) reply.setCookie(OAUTH_BINDER_COOKIE, started.binder, cookieOptions(OAUTH_TTL_MS / 1000));
     return { data: { authorizationUrl: started.authorizationUrl, stateTransactionId: started.id } };
   });

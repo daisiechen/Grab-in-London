@@ -1,0 +1,48 @@
+# Fancy worker (production): job leases, lifecycle, mail outbox, moderation digest, snapshots.
+# Exactly one worker process; do not scale horizontally (see infra/README.md).
+[Unit]
+Description=Fancy worker (production)
+After=network-online.target postgresql@@@PG_MAJOR@@-@@PG_CLUSTER@@.service
+Wants=network-online.target postgresql@@@PG_MAJOR@@-@@PG_CLUSTER@@.service
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=@@FANCY_USER@@
+Group=@@FANCY_USER@@
+WorkingDirectory=@@FANCY_CURRENT@@
+EnvironmentFile=@@FANCY_ENV_FILE@@
+Environment=NODE_ENV=production
+Environment=NODE_OPTIONS=--max-old-space-size=384
+ExecStart=@@NODE_DIR@@/bin/node apps/worker/src/main.ts
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+KillSignal=SIGTERM
+LogNamespace=fancy
+MemoryHigh=450M
+MemoryMax=600M
+TasksMax=128
+UMask=0077
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+
+[Install]
+WantedBy=multi-user.target

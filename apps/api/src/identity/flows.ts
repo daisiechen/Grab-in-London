@@ -50,7 +50,7 @@ export async function completeAuthentication(deps: AppDeps, tx: Tx, row: AuthTxR
   }
 
   const {rows:[clock]}=await tx.client.query<{now:Date}>(`SELECT clock_timestamp() AS now`);
-  const resolution = await resolveIdentity(tx.client, identity, clock!.now);
+  const resolution = await resolveIdentity(tx.client, identity, clock!.now, row.client === 'SUPPORT_CLI' ? null : row.provider_state.signupSource ?? null);
   if (resolution.kind === 'link_required') {
     await lockActiveActor(tx,resolution.targetUserId);
     const now=await tx.effectiveNow();

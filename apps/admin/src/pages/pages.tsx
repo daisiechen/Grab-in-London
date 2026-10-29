@@ -1,4 +1,4 @@
-import { ADMIN_PAGE_KEYS } from '@fancy/contracts';
+import { ADMIN_CONSENT_SAMPLE_KEYS, ADMIN_OPS_WEEK_METRICS, ADMIN_PAGE_KEYS } from '@fancy/contracts';
 import { useState } from 'react';
 import type { AdminPageData, AdminPageName, DrilldownTarget, RowQuery } from '../api/admin-api.ts';
 import { BarList, MetricCard, TrendChart, type SeriesPoint } from '../components/charts.tsx';
@@ -33,22 +33,48 @@ const series = (data: AdminPageData, key: string): SeriesPoint[] => data.series[
 const isEmpty = (data: AdminPageData) =>
   Object.values(data.metrics).every((v) => v === null || (isRatio(v) && v.denominator === 0)) && Object.values(data.series).every((s) => !s.length);
 
-function Cards({ ids, p }: { ids: readonly string[]; p: PageProps }) {
+const CONSENT_SAMPLE: readonly string[] = ADMIN_CONSENT_SAMPLE_KEYS;
+const OPS_WEEK: readonly string[] = ADMIN_OPS_WEEK_METRICS;
+/** Monday (Europe/London) of the week containing a London calendar day. */
+const mondayOf = (day: string) => { const d = new Date(day + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7)); return d.toISOString().slice(0, 10); };
+/** Consent-sample footnote: never divided by server totals; cites the member consent coverage of this snapshot. */
+function consentNote(p: PageProps) {
+  const coverage = p.data.metrics.consentCoverage;
+  return `${p.t('仅授权样本', 'Consent sample only')}${isRatio(coverage) && coverage.denominator ? ` · ${p.t('授权覆盖', 'consent coverage')} ${formatRatio(coverage)}` : ''}`;
+}
+
+function Cards({ ids, p, className }: { ids: readonly string[]; p: PageProps; className?: string }) {
   const latestWeek=p.data.series['weekly.trend']?.at(-1)?.key;
   const weekEnd=latestWeek?new Date(Date.parse(latestWeek+'T12:00:00Z')+6*86400000).toISOString().slice(0,10):null;
   const partial=!!latestWeek&&!!weekEnd&&((p.binding.query.from??latestWeek)>latestWeek||(p.binding.query.to??weekEnd)<weekEnd||londonDay(p.data.snapshot.asOf)<=weekEnd);
+  const previous = new Map(series(p.data, 'ops.previousWeek').map((point) => [point.key, point.value]));
+  const lastWeek = (id: string) => previous.has(id) ? `${p.t('上周', 'Last week')} ${formatMetric(p.lang, previous.get(id))}` : '';
+  const thisWeek = mondayOf(londonDay(p.data.snapshot.asOf));
+  const platforms = series(p.data, 'signups.platform').map((point) => `${itemLabel(p.t, point.key)} ${formatMetric(p.lang, point.value)}`).join(' · ');
+  const foot = (id: string): string | undefined => {
+    const parts: string[] = [];
+    if (id === 'weekly' && latestWeek) parts.push(`${latestWeek} · ${p.t('最近可见周','Latest visible week')}${partial?` · ${p.t('周数据不完整','Partial week')}`:''}`);
+    else if (OPS_WEEK.includes(id)) parts.push(`${p.t('本周自', 'Week of')} ${thisWeek}`);
+    else if (p.data.metrics[id] == null) parts.push(p.t('未就绪或不适用；请查看定义','Unavailable or not applicable; see definition'));
+    if (OPS_WEEK.includes(id) && lastWeek(id)) parts.push(lastWeek(id));
+    if (id === 'signups' && platforms) parts.push(platforms);
+    if (CONSENT_SAMPLE.includes(id)) parts.push(consentNote(p));
+    return parts.length ? parts.join(' · ') : undefined;
+  };
+  const shown = ids.filter((id) => id !== 'consentCoverage' || p.data.page === 'quality');
   return (
-    <div className={`metric-grid${ids.length > 3 ? ' four' : ''}`}>
-      {ids.map((id) => (
-        <MetricCard key={id} title={metricTitle(p.t, id)} value={p.data.metrics[id]} lang={p.lang} {...(id==='weekly'&&latestWeek?{foot:`${latestWeek} · ${p.t('最近可见周','Latest visible week')}${partial?` · ${p.t('周数据不完整','Partial week')}`:''}`}:p.data.metrics[id]==null?{foot:p.t('未就绪或不适用；请查看定义','Unavailable or not applicable; see definition')}:{})} onOpen={() => p.open({ kind: 'metric', id })} />
-      ))}
+    <div className={`metric-grid${shown.length > 4 ? ' five' : shown.length > 3 ? ' four' : ''}${className ? ` ${className}` : ''}`}>
+      {shown.map((id) => {
+        const note = foot(id);
+        return <MetricCard key={id} title={metricTitle(p.t, id)} value={p.data.metrics[id]} lang={p.lang} {...(note ? { foot: note } : {})} onOpen={() => p.open({ kind: 'metric', id })} />;
+      })}
     </div>
   );
 }
 
 function SeriesPanel({ id, p, className, onSelect, selected }: { id: string; p: PageProps; className?: string; onSelect?(key: string): void; selected?: string | null }) {
   return (
-    <Panel title={seriesTitle(p.t, id)}>
+    <Panel title={seriesTitle(p.t, id)} {...(CONSENT_SAMPLE.includes(id) ? { eyebrow: consentNote(p) } : {})}>
       <BarList points={series(p.data, id)} t={p.t} lang={p.lang} label={(k) => itemLabel(p.t, k)} {...(className ? { className } : {})}
         {...(onSelect ? { onSelect } : {})} {...(selected !== undefined ? { selected } : {})} />
     </Panel>
@@ -61,7 +87,11 @@ function Overview(p: PageProps) {
   const trend = series(p.data, 'weekly.trend');
   return (
     <>
-      <Cards ids={keys.metrics.filter((k) => k !== 'coverage')} p={p} />
+      <section aria-label={p.t('本周运营', 'This week')}>
+        <h2 className="section-heading">{p.t('本周运营', 'This week')} <small>{p.t('服务端事实，不需要分析授权；不受日期范围影响', 'Server facts, no analytics consent needed; not narrowed by the date range')}</small></h2>
+        <Cards ids={OPS_WEEK} p={p} className="ops-week" />
+      </section>
+      <Cards ids={keys.metrics.filter((k) => k !== 'coverage' && !OPS_WEEK.includes(k))} p={p} />
       <div className="overview-grid">
         <Panel title={p.t('真实见面正在如何发生', 'How real meetings happen')} eyebrow={p.t('结果趋势', 'OUTCOME TREND')}
           action={<button className="text-button" onClick={() => p.open({ kind: 'metric', id: 'weekly' })}>{p.t('指标定义', 'Definition')} <Icon name="info" size={14} /></button>}>
@@ -184,9 +214,11 @@ function Quality(p: PageProps & { openMetric(id: string): void }) {
     <>
       <div className="three-stats">
         {ids.map((id) => (
-          <div key={id}><span>{metricTitle(p.t, id)}</span><strong>{formatMetric(p.lang, p.data.metrics[id])}{id === 'receiveLatencyP90' && <small>s</small>}</strong></div>
+          <div key={id}><span>{metricTitle(p.t, id)}</span><strong>{id === 'consentCoverage' ? formatRatio(p.data.metrics[id]) : formatMetric(p.lang, p.data.metrics[id])}{id === 'receiveLatencyP90' && <small>s</small>}</strong>
+            {id === 'consentCoverage' && isRatio(p.data.metrics[id]) && <small className="mono">{formatNumber(p.lang, p.data.metrics[id].numerator)} / {formatNumber(p.lang, p.data.metrics[id].denominator)}</small>}</div>
         ))}
       </div>
+      <p className="method-note">{p.t('标注“仅授权样本”的指标只来自同意分析的登录会话（iOS 游客从不采集）。只用来看趋势或做内部对比，不与服务端总数相除。', 'Metrics marked "Consent sample only" come only from login sessions that allowed analytics (iOS guests are never collected). Use them for trends and internal comparison only; never divide them by server-wide totals.')}</p>
       <p className="method-note">{p.t('因隐私删除排除的主体', 'Subjects excluded after privacy deletion')}: {formatNumber(p.lang, p.data.privacyExcludedCount)}</p>
       <p className="method-note">{p.t('部分来源可能未就绪。— 表示来源缺失、观察期未满或零分母，不等于 0；当前接口未提供逐来源连接状态，不能据图表判断已全部接通。','Sources may be partial. — means missing sources, an immature observation window or a zero denominator, not 0. This response provides no per-source connection status, so charts cannot establish that every source is connected.')}</p>
       <div className="two-column">

@@ -10,6 +10,8 @@ export const profiles = pgTable('profiles', {
   background: jsonb('background').notNull().default({}),
   ageConfirmedVersion: text('age_confirmed_version'),
   communityAcceptedVersion: text('community_accepted_version'),
+  /** 0030: first time the profile gate was complete; set once by the server. */
+  completedAt: timestamp('completed_at', { withTimezone: true, mode: 'date' }),
   moderationHiddenAt: timestamp('moderation_hidden_at', { withTimezone: true, mode: 'date' }),
   updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).notNull().defaultNow(),
 });

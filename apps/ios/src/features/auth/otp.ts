@@ -2,7 +2,7 @@ import { ApiError, type ApiClient } from '@fancy/client';
 import type { AppChallengePair } from './pkce.ts';
 import { StaleSessionError, type SessionManager } from './session.ts';
 import { authErrorMessage } from './messages.ts';
-import type { SignInResult } from './oauth.ts';
+import { IOS_SIGNUP_SOURCE, type SignInResult } from './oauth.ts';
 
 export interface Challenge {
   challengeId: string;
@@ -26,7 +26,7 @@ export async function startEmailChallenge(api: ApiClient, email: string, newId: 
   const invalid = validateEmail(email);
   if (invalid) return { ok: false, message: invalid };
   try {
-    const res = await api.call('startEmail', { body: { clientRequestId: newId(), email: email.trim(), client: 'IOS' } });
+    const res = await api.call('startEmail', { body: { clientRequestId: newId(), email: email.trim(), client: 'IOS', signupSource: IOS_SIGNUP_SOURCE } });
     return { ok: true, challenge: { challengeId: res.data.challengeId, email: email.trim(), expiresAt: Date.parse(res.data.expiresAt), resendAfter: Date.parse(res.data.resendAfter) } };
   } catch (error) {
     if (error instanceof ApiError && error.kind === 'validation') return { ok: false, message: 'Enter a valid email address.' };

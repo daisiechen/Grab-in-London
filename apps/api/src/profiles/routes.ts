@@ -39,6 +39,8 @@ export function registerProfileRoutes(app: FastifyInstance, deps: AppDeps) {
     await tx.client.query(`UPDATE users SET version = version + 1, updated_at = clock_timestamp() WHERE id = $1`, [auth.userId]);
     await appendAudit(tx.client, { actorKind: 'USER', actorId: auth.userId, action: 'profile.updated', aggregateType: 'user', aggregateId: auth.userId, requestId: request.id, payload: { fields: Object.keys(normalized).sort().join(',') } });
     const data = await loadMe(tx.client, auth.userId);
+    // First completion only (the profile gate's definition): later edits never move it. Not exposed to clients.
+    if (data.profileGate.profileComplete) await tx.client.query(`UPDATE profiles SET completed_at = clock_timestamp() WHERE user_id = $1 AND completed_at IS NULL`, [auth.userId]);
     return { data, version: data.version, resourceId: auth.userId };
   });
   // Decoding/re-encoding runs in `prepare`, before the business transaction opens.

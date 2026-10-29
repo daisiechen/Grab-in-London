@@ -15,6 +15,21 @@ const AppChallenge = T.String({ pattern: '^[A-Za-z0-9_-]{43,128}$' });
 /** Per-start CLI registration only; runtime also verifies the parsed port and client kind. */
 export const LoopbackRedirectUri = T.String({ maxLength: 100, pattern: '^http://127\\.0\\.0\\.1:[1-9][0-9]{3,4}/auth/callback$' });
 const AccessToken = T.String({ minLength: 32, maxLength: 512 });
+/** Raw campaign value from a landing URL; the server lower-cases it, keeps [a-z0-9_-] and truncates to 40. */
+const UtmValue = T.String({ minLength: 1, maxLength: 100 });
+/**
+ * Optional, campaign-level acquisition hint for a new account (ops analytics review P0-3). Read only when
+ * this sign-in creates the account, stored once as users.signup_source and never shown to members.
+ * Web: utm_source/utm_medium/utm_campaign of the landing URL (kept in memory or the return URL, never in
+ * cookies or local storage), or entry `meal_link` when the visit started on a shared meal link.
+ * iOS: entry `ios_app`. No device identifiers, IP or free text. utm values take precedence over entry.
+ */
+export const SignupSource = Obj({
+  utmSource: T.Optional(UtmValue),
+  utmMedium: T.Optional(UtmValue),
+  utmCampaign: T.Optional(UtmValue),
+  entry: T.Optional(Enum(['meal_link', 'ios_app'] as const)),
+});
 /** iOS: 15-minute access token (memory) + rotating 30-day refresh token (Keychain). */
 export const IosCredentials = Obj({
   client: T.Literal('IOS'),
@@ -47,21 +62,21 @@ export const authOperations = [
   op({
     operationId: 'startEmail', method: 'POST', path: '/auth/email/start', summary: 'Send an email OTP challenge',
     auth: 'public', write: 'clientRequestId', ifMatch: false,
-    body: Obj({ clientRequestId: ClientRequestId, email: T.String({ format: 'email', maxLength: 320 }), client: Client, returnTarget: T.Optional(ReturnTarget) }),
+    body: Obj({ clientRequestId: ClientRequestId, email: T.String({ format: 'email', maxLength: 320 }), client: Client, returnTarget: T.Optional(ReturnTarget), signupSource: T.Optional(SignupSource) }),
     success: { status: 201, data: Obj({ challengeId: Uuid, expiresAt: Instant, resendAfter: Instant }) },
     errors: ['PROVIDER_UNAVAILABLE'],
   }),
   op({
     operationId: 'verifyEmail', method: 'POST', path: '/auth/email/verify', summary: 'Verify an email OTP',
     auth: 'public', write: 'clientRequestId', ifMatch: false,
-    body: Obj({ clientRequestId: ClientRequestId, challengeId: Uuid, code: T.String({ pattern: '^[0-9]{6}$' }), appChallenge: T.Optional(AppChallenge) }),
+    body: Obj({ clientRequestId: ClientRequestId, challengeId: Uuid, code: T.String({ pattern: '^[0-9]{6}$' }), appChallenge: T.Optional(AppChallenge), signupSource: T.Optional(SignupSource) }),
     success: { status: 200, data: AuthOutcome },
     errors: ['NOT_FOUND', 'STATE_CONFLICT', 'PROVIDER_UNAVAILABLE', 'ACCOUNT_SUSPENDED'],
   }),
   op({
     operationId: 'startOAuth', method: 'POST', path: '/auth/oauth/start', summary: 'Begin Google/Apple sign-in',
     auth: 'public', write: 'clientRequestId', ifMatch: false,
-    body: Obj({ clientRequestId: ClientRequestId, provider: Enum(AUTH_PROVIDERS), client: Client, returnTarget: T.Optional(ReturnTarget), appChallenge: T.Optional(AppChallenge), loopbackRedirectUri: T.Optional(LoopbackRedirectUri) }),
+    body: Obj({ clientRequestId: ClientRequestId, provider: Enum(AUTH_PROVIDERS), client: Client, returnTarget: T.Optional(ReturnTarget), appChallenge: T.Optional(AppChallenge), loopbackRedirectUri: T.Optional(LoopbackRedirectUri), signupSource: T.Optional(SignupSource) }),
     success: { status: 201, data: Obj({ authorizationUrl: T.String({ format: 'uri', maxLength: 4000 }), stateTransactionId: Uuid }) },
     errors: ['FORBIDDEN', 'PROVIDER_UNAVAILABLE'],
   }),
