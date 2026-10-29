@@ -16,8 +16,17 @@ export interface Actor {
   call<I extends OperationId>(op: I, request: RequestOf<I>): Promise<ResponseOf<I>>;
 }
 
-export async function signIn(baseUrl: string, email: string, otp: string): Promise<Actor> {
-  const anon = createApiClient({ baseUrl, credentials: { kind: 'none' } });
+/**
+ * Each simulated device has its own client address (documentation range); the stack's API trusts
+ * X-Forwarded-For from 127.0.0.1 only, as behind a production reverse proxy.
+ */
+const fromAddress = (clientIp: string | undefined): typeof fetch | undefined => clientIp
+  ? (input, init) => { const headers = new Headers(init?.headers); headers.set('x-forwarded-for', clientIp); return fetch(input, { ...init, headers }); }
+  : undefined;
+
+export async function signIn(baseUrl: string, email: string, otp: string, clientIp?: string): Promise<Actor> {
+  const doFetch = fromAddress(clientIp);
+  const anon = createApiClient({ baseUrl, credentials: { kind: 'none' }, ...(doFetch ? { fetch: doFetch } : {}) });
   const start = await anon.call('startEmail', { body: { clientRequestId: randomUUID(), email, client: 'IOS' } });
   const verifier = b64url(randomBytes(32));
   const appChallenge = b64url(createHash('sha256').update(verifier).digest());
@@ -25,7 +34,7 @@ export async function signIn(baseUrl: string, email: string, otp: string): Promi
   if (verified.data.outcome !== 'AUTHENTICATED' || !verified.data.handoffCode) throw new Error(`sign-in for ${email}: ${verified.data.outcome}`);
   const creds = await anon.call('exchangeHandoff', { body: { clientRequestId: randomUUID(), code: verified.data.handoffCode, appVerifier: verifier } });
   const token = creds.data.accessToken;
-  const api: ApiClient = createApiClient({ baseUrl, credentials: { kind: 'bearer', accessToken: () => token } });
+  const api: ApiClient = createApiClient({ baseUrl, credentials: { kind: 'bearer', accessToken: () => token }, ...(doFetch ? { fetch: doFetch } : {}) });
   const me = await api.call('getMe', {});
   return { email, userId: me.data.id, call: (op, request) => api.call(op, request) };
 }

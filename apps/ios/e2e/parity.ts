@@ -12,7 +12,8 @@ import type { OperationId } from '@fancy/contracts';
 import { startStack } from './stack.ts';
 import { stackOptions } from './options.ts';
 import { completeProfile, londonInput, publishMeal, signIn as realSignIn, type Actor } from './driver.ts';
-import { createPreviewBackend } from '../src/preview/fake-api.ts';
+import { createPreviewBackend, PREVIEW_IDS } from '../src/preview/fake-api.ts';
+import { insertFinishedMeal, openDatabase } from './fixtures.ts';
 
 type Result = { op: string; status: number; code?: string; body?: unknown };
 type Call = (label: string, op: OperationId, request: unknown) => Promise<{ data?: unknown; page?: unknown; meta?: { version?: string } } | null>;
@@ -24,6 +25,9 @@ interface Side {
   targetMealId: string;
   /** Host side: approve the actor's pending application. */
   approve(applicationId: string): Promise<void>;
+  /** A meal that ended within the last 7 days with the actor and `pastMateId` (already present) at the table. */
+  pastMealId: string;
+  pastMateId: string;
   results: Result[];
 }
 
@@ -165,7 +169,24 @@ async function scenario(side: Side) {
     await call('markRead replay', 'markRead', { params: { notificationId: notes[0].id }, idempotencyKey: key });
   }
   await call('postMealState not ended', 'postMealState', { params: { mealId: side.targetMealId } });
+  // After the meal (fake: the seeded past supper; real: a finished meal completed by the worker).
+  await call('postMealState', 'postMealState', { params: { mealId: side.pastMealId } });
+  await call('rateExperience before attendance', 'rateExperience', { params: { mealId: side.pastMealId }, ifMatch: '0', idempotencyKey: randomUUID(), body: { score: 4 } });
+  const attended = d<{ version: string }>(await call('reportAttendance self', 'reportAttendance', { params: { mealId: side.pastMealId, subjectId: d<{ id: string }>(await call('getMe#4', 'getMe', {})).id }, ifMatch: '0', idempotencyKey: randomUUID(), body: { value: 'present' } }));
+  void attended;
+  await call('reportAttendance for mate (not host)', 'reportAttendance', { params: { mealId: side.pastMealId, subjectId: side.pastMateId }, ifMatch: '1', idempotencyKey: randomUUID(), body: { value: 'absent' } });
+  await call('rateExperience', 'rateExperience', { params: { mealId: side.pastMealId }, ifMatch: '0', idempotencyKey: randomUUID(), body: { score: 4 } });
+  await call('reviewPerson', 'reviewPerson', { params: { mealId: side.pastMealId, subjectId: side.pastMateId }, ifMatch: '0', idempotencyKey: randomUUID(), body: { body: 'Warm company and a lovely table.' } });
+  const state = d<{ reconnect: Array<{ subjectId: string; version: string }> }>(await call('postMealState after feedback', 'postMealState', { params: { mealId: side.pastMealId } }));
+  const row = state?.reconnect.find((r) => r.subjectId === side.pastMateId);
+  await call('selectReconnect', 'selectReconnect', { params: { mealId: side.pastMealId, subjectId: side.pastMateId }, ifMatch: row?.version ?? '0', idempotencyKey: randomUUID(), body: { selected: true } });
+
   await call('getVenuePhoto', 'getVenuePhoto', { params: { venueRef: venue?.venueRef ?? randomUUID() }, query: {} });
+  // Account deletion (fresh sign-in, so no re-authentication is needed).
+  const receiptToken = Buffer.from(crypto.getRandomValues(new Uint8Array(32))).toString('base64url');
+  const meBefore = d<{ version: string }>(await call('getMe before deletion', 'getMe', {}));
+  await call('requestDeletion', 'requestDeletion', { body: { confirm: true, receiptToken }, ifMatch: meBefore?.version ?? '1', idempotencyKey: randomUUID() });
+  await call('getMe after deletion', 'getMe', {});
   await call('logout', 'logout', { body: { clientRequestId: randomUUID() } });
   await call('getMe after logout', 'getMe', {});
 }
@@ -218,10 +239,10 @@ async function fakeSide(): Promise<Side> {
   const list = await actor.call('discoverMeals', { query: { limit: 50 } });
   const target = list.data.find((m) => m.allowedActions.includes('APPLY'));
   if (!target) throw new Error('fake: no meal open to apply');
-  return { name: 'fake', actor, targetMealId: target.id, results: [], approve: async () => { await sleep(300); } };
+  return { name: 'fake', actor, targetMealId: target.id, results: [], approve: async () => { await sleep(300); }, pastMealId: PREVIEW_IDS.meals.pastSupper, pastMateId: PREVIEW_IDS.users.maya };
 }
 
-async function realSide(apiUrl: string): Promise<Side> {
+async function realSide(apiUrl: string, databaseUrl: string): Promise<Side> {
   const run = randomUUID().slice(0, 8);
   const host: Actor = await realSignIn(apiUrl, `parity.host.${run}@example.invalid`, '000000');
   await completeProfile(host, 'Hana');
@@ -229,8 +250,12 @@ async function realSide(apiUrl: string): Promise<Side> {
   const guest = await realSignIn(apiUrl, `parity.guest.${run}@example.invalid`, '000000');
   await completeProfile(guest, 'Alex');
   const actor: ApiClient = { call: (op, req) => guest.call(op, req) };
+  // A meal that ended an hour ago, completed by the worker; the host already reported attending.
+  const db = openDatabase(databaseUrl);
+  const pastMealId = await insertFinishedMeal(db, { hostId: host.userId, guestId: guest.userId, venueRef: meal.venue.venueRef, title: 'Parity past supper', endedAgoMs: 3_600_000 }).finally(() => db.end());
+  await host.call('reportAttendance', { params: { mealId: pastMealId, subjectId: host.userId }, ifMatch: '0', idempotencyKey: randomUUID(), body: { value: 'present' } });
   return {
-    name: 'real', actor, targetMealId: meal.id, results: [],
+    name: 'real', actor, targetMealId: meal.id, results: [], pastMealId, pastMateId: host.userId,
     approve: async (applicationId) => {
       const apps = await host.call('listApplications', { params: { mealId: meal.id } });
       const a = apps.data.find((x) => x.id === applicationId);
@@ -239,7 +264,8 @@ async function realSide(apiUrl: string): Promise<Side> {
   };
 }
 
-const stack = await startStack({ ...stackOptions(), database: 'fancy_e2e_parity', apiPort: 3311, serveWeb: false });
+const options = stackOptions();
+const stack = await startStack({ ...options, database: `${options.database}_parity`, apiPort: options.apiPort + 1, serveWeb: false });
 try {
   const fakeBackend = createPreviewBackend({ latencyMs: 0 });
   const authFake = await authScenario('fake', 'http://preview.local', fakeBackend.fetch, 'alex@example.com');
@@ -253,7 +279,7 @@ try {
     if (out.length) console.warn(`\n## auth: ${f.op}\n  ${out.join('\n  ')}`);
   }
   const fake = await fakeSide();
-  const real = await realSide(stack.apiUrl);
+  const real = await realSide(stack.apiUrl, stack.databaseUrl);
   await scenario(fake);
   await scenario(real);
   const n = Math.max(fake.results.length, real.results.length);

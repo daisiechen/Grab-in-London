@@ -242,9 +242,13 @@ function PostMealScreenContent() {
         const existing = s.reviews.find((r) => r.subjectId === mate.id);
         const body = reviews[mate.id] ?? '';
         const r = s.reconnect.find((row) => row.subjectId === mate.id);
+        // PRD §0.5: a reference or a meet-again choice needs the tablemate's own valid attendance too;
+        // until then the reason is shown and nothing is offered for submission.
+        const mateAttendance = s.attendance.find((a) => a.subjectId === mate.id)?.value ?? 'unknown';
         return <>
           <Text accessibilityRole="header" style={accountText.h2}>{`Sharing a table with ${mate.displayName}`}</Text>
           {others.length > 1 ? <View style={styles.below}><ChoiceGroup<string> label="Choose a tablemate" value={mate.id} options={others.map((m) => [m.id, m.displayName] as const)} onChange={setMateId} /></View> : null}
+          {mateAttendance !== 'present' ? <Note>{mateAttendanceReason(mate.displayName, mateAttendance, isHost)}</Note> : <>
           <Field
             label="A public reference · optional"
             accessibilityLabel={`Reference for ${mate.displayName}`}
@@ -292,6 +296,7 @@ function PostMealScreenContent() {
               <Primary label={`Say hello to ${mate.displayName}`} icon="ChatBubble" disabled={busy !== null} onPress={() => void openDirect(mate.id)} />
             </> : <Text style={[accountText.muted, styles.privacy]}>{r.selected ? `Your choice is private. ${mate.displayName} is never told unless they choose you too.` : 'Only a mutual choice opens a private conversation. A one-sided choice is never shown to anyone.'}</Text>}
           </> : null}
+          </>}
         </>;
       })() : null}
 
@@ -307,6 +312,14 @@ function PostMealScreenContent() {
       </Sheet>
     </AccountPage>
   );
+}
+
+/** Why references and meet-again aren't open for this tablemate yet (their attendance isn't present). */
+export function mateAttendanceReason(name: string, value: 'absent' | 'unknown', host: boolean): string {
+  if (value === 'absent') return `${name} didn’t attend this meal, so a reference or meeting again isn’t available.`;
+  return host
+    ? `${name} hasn’t confirmed attending yet. Report their attendance above, or wait for them to confirm, to leave a reference or choose to meet again.`
+    : `${name} hasn’t confirmed attending yet. You can leave a reference or choose to meet again once they do.`;
 }
 
 const referenceStatus = (visibility: 'PENDING' | 'PUBLISHED' | 'WITHDRAWN') =>

@@ -347,6 +347,17 @@ describe('preview fake API', () => {
     expect(ctx.problems).toEqual([]);
   });
 
+  it('accepts account deletion as PENDING (202, like the real API); the receipt later reports completion', async () => {
+    const ctx = setup();
+    const result = await signIn(ctx);
+    const receiptToken = 'r'.repeat(43);
+    const accepted = await ctx.api.call('requestDeletion', { body: { confirm: true, receiptToken }, ifMatch: result.session.user.version, idempotencyKey: newId() });
+    expect(accepted.data).toMatchObject({ status: 'PENDING', completedAt: null });
+    const status = await ctx.raw.call('deletionStatus', { body: { receiptToken } });
+    expect(status.data.status).toBe('COMPLETED');
+    expect(ctx.problems).toEqual([]);
+  });
+
   it('answers invalid input, auth, preconditions and unknown routes in the contract error envelope', async () => {
     const ctx = setup();
     const unknown = await ctx.backend.fetch(`${BASE}/v1/nope`, { method: 'GET' });

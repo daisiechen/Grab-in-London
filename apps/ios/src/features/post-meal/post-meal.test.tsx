@@ -35,6 +35,7 @@ describe('attendanceText', () => {
 });
 
 describe('PostMealScreen (S19/S21)', () => {
+  const present = (o: object = {}) => state({ attendance: [att(USER_ID, { value: 'present', source: 'SELF', selfValue: 'present' }), att(HOST_ID, { value: 'present', source: 'SELF' })], ...o });
   it('lets the host open an eligible table member profile even after the feedback window closes', async () => {
     const app = createTestApp(); await signIn(app, me({ id: HOST_ID }));
     app.mock.on('GET', PATH, ok(state({ windowOpen: false })));
@@ -55,7 +56,7 @@ describe('PostMealScreen (S19/S21)', () => {
 
   it('describes a forbidden reconnect as neutral unavailability without retrying or exposing a block', async () => {
     const app = createTestApp(); await signIn(app, me());
-    app.mock.on('GET', PATH, ok(state({ attendance: [att(USER_ID, { value: 'present', source: 'SELF' })] })));
+    app.mock.on('GET', PATH, ok(present()));
     app.mock.on('PUT', `/v1/meals/${MEAL_ID}/reconnect/${HOST_ID}`, fail(403, 'FORBIDDEN'));
     await renderApp(app, <PostMealScreen />);
     await fireEvent.press(await screen.findByRole('checkbox', { name: 'I’d like to share a table again with Maya' }));
@@ -104,7 +105,7 @@ describe('PostMealScreen (S19/S21)', () => {
   it('meet-again is private and reloads on 409', async () => {
     const app = createTestApp();
     await signIn(app, me());
-    app.mock.on('GET', PATH, ok(state({ attendance: [att(USER_ID, { value: 'present', source: 'SELF' })] })));
+    app.mock.on('GET', PATH, ok(present()));
     app.mock.on('PUT', `/v1/meals/${MEAL_ID}/reconnect/${HOST_ID}`, fail(409, 'STATE_CONFLICT'));
     await renderApp(app, <PostMealScreen />);
     await fireEvent.press(await screen.findByRole('checkbox', { name: 'I’d like to share a table again with Maya' }));
@@ -113,7 +114,6 @@ describe('PostMealScreen (S19/S21)', () => {
     expect(app.mock.callsTo('PUT', /reconnect/)[0]).toMatchObject({ body: { selected: true }, headers: { 'if-match': '"1"' } });
   });
 
-  const present = (o: object = {}) => state({ attendance: [att(USER_ID, { value: 'present', source: 'SELF', selfValue: 'present' }), att(HOST_ID, { value: 'present', source: 'SELF' })], ...o });
   const reconnectRow = (o: object) => ({ subjectId: HOST_ID, selected: false, version: '1', connection: 'CLOSED' as const, ...o });
 
   it('never reveals the other side: an unselected WAITING row reads exactly like CLOSED', async () => {
@@ -170,7 +170,7 @@ describe('PostMealScreen (S19/S21)', () => {
   it('keeps one tablemate on screen at a time, with per-member drafts and a private report link', async () => {
     const app = createTestApp(); await signIn(app, me());
     const EMMA = '00000000-0000-4000-8000-0000000000e1';
-    app.mock.on('GET', PATH, ok(present({ eligibleMembers: [publicProfile(USER_ID, 'Alex'), publicProfile(HOST_ID, 'Maya'), publicProfile(EMMA, 'Emma')], attendance: [att(USER_ID, { value: 'present', source: 'SELF', selfValue: 'present' }), att(HOST_ID), att(EMMA)] })));
+    app.mock.on('GET', PATH, ok(present({ eligibleMembers: [publicProfile(USER_ID, 'Alex'), publicProfile(HOST_ID, 'Maya'), publicProfile(EMMA, 'Emma')], attendance: [att(USER_ID, { value: 'present', source: 'SELF', selfValue: 'present' }), att(HOST_ID, { value: 'present', source: 'HOST', hostValue: 'present' }), att(EMMA, { value: 'present', source: 'SELF' })] })));
     await renderApp(app, <PostMealScreen />);
     await fireEvent.changeText(await screen.findByLabelText('Reference for Maya'), 'Lovely company');
     expect(screen.queryByLabelText('Reference for Emma')).toBeNull();
@@ -232,6 +232,23 @@ describe('PostMealScreen (S19/S21)', () => {
     await fireEvent.press(await screen.findByRole('checkbox', { name: 'I’d like to share a table again with Maya' }));
     expect(await within(screen.getByTestId('rc-status')).findByText('Saved privately')).toBeOnTheScreen();
     expect(screen.queryByTestId('att-status')).toBeNull();
+  });
+
+  it('opens references and meet-again only once the tablemate attended too, and says why (PRD §0.5)', async () => {
+    const app = createTestApp(); await signIn(app, me());
+    app.mock.on('GET', PATH, ok(present({ attendance: [att(USER_ID, { value: 'present', source: 'SELF', selfValue: 'present' }), att(HOST_ID)] })), 1);
+    app.mock.on('GET', PATH, ok(present({ attendance: [att(USER_ID, { value: 'present', source: 'SELF', selfValue: 'present' }), att(HOST_ID, { value: 'absent', source: 'SELF' })] })));
+    const view = await renderApp(app, <PostMealScreen />);
+    expect(await screen.findByText('Maya hasn’t confirmed attending yet. You can leave a reference or choose to meet again once they do.')).toBeOnTheScreen();
+    expect(screen.queryByLabelText('Reference for Maya')).toBeNull();
+    expect(screen.queryByRole('checkbox', { name: 'I’d like to share a table again with Maya' })).toBeNull();
+    // Private whole-meal feedback stays available: it depends on your own attendance only.
+    expect(screen.getByText('How was the meal? Tap a score to save it.')).toBeOnTheScreen();
+    await view.unmount();
+    await renderApp(app, <PostMealScreen />);
+    expect(await screen.findByText('Maya didn’t attend this meal, so a reference or meeting again isn’t available.')).toBeOnTheScreen();
+    expect(screen.queryByLabelText('Reference for Maya')).toBeNull();
+    expect(app.mock.callsTo('PUT', /reviews|reconnect/)).toHaveLength(0);
   });
 
   it('keeps the two closing links together as compact links', async () => {

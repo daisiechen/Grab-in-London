@@ -1,9 +1,16 @@
 /**
  * Local stack for the real-API end-to-end run (development only, never staging/production):
  * a fresh migrated PostgreSQL database, the real API process (apps/api/src/main.ts) with the
- * test-only adapters and a fixed dev OTP, the iOS app's web export with preview mode switched off,
+ * test-only adapters and a fixed dev OTP, the real background worker (apps/worker/src/main.ts:
+ * meal lifecycle jobs, account purge), the iOS app's web export with preview mode switched off,
  * and one same-origin server that serves the export and proxies /v1 to the API (the app uses the
  * native bearer credential path, so no cookies or CORS are involved).
+ *
+ * The /v1 proxy behaves like a production reverse proxy: it appends the peer address to
+ * X-Forwarded-For, and the API trusts exactly 127.0.0.1 through the production TRUSTED_PROXY_CIDRS
+ * setting. Each simulated device (browser profile or Node actor) declares its own documentation-range
+ * client address, so per-IP limits (5 OTP codes per IP per 15 minutes) apply per device exactly as in
+ * production, without any limit being relaxed.
  *
  * Secrets are throwaway values generated per run and live only in the child process environment.
  */
@@ -72,8 +79,8 @@ async function waitFor(url: string, timeoutMs: number, child?: ChildProcess) {
   }
 }
 
-function startApi(databaseUrl: string, opts: StackOptions, webOrigin: string): ChildProcess {
-  const env = {
+function apiEnv(databaseUrl: string, opts: StackOptions, webOrigin: string, secret: string) {
+  return {
     PATH: process.env.PATH ?? '',
     HOME: process.env.HOME ?? '',
     ENVIRONMENT: 'development',
@@ -84,17 +91,22 @@ function startApi(databaseUrl: string, opts: StackOptions, webOrigin: string): C
     AI_PROVIDER: 'mock',
     DEV_FIXED_OTP: opts.otp,
     WEB_ORIGIN: webOrigin,
-    SESSION_SECRET: randomBytes(32).toString('hex'),
+    SESSION_SECRET: secret,
     IOS_REDIRECT_URI: 'fancy://auth/callback',
+    // Only the local /v1 proxy below is trusted to forward client addresses (production setting).
+    TRUSTED_PROXY_CIDRS: '127.0.0.1',
     PORT: String(opts.apiPort),
     LOG_LEVEL: 'warn',
   };
-  const child = spawn(process.execPath, [join(REPO, 'apps/api/src/main.ts')], { cwd: REPO, env, stdio: ['ignore', 'pipe', 'pipe'] });
+}
+
+function startProcess(name: string, entry: string, env: Record<string, string>): ChildProcess {
+  const child = spawn(process.execPath, [join(REPO, entry)], { cwd: REPO, env, stdio: ['ignore', 'pipe', 'pipe'] });
   const log: string[] = [];
   const keep = (chunk: Buffer) => { log.push(chunk.toString()); if (log.length > 200) log.shift(); };
   child.stdout?.on('data', keep);
   child.stderr?.on('data', keep);
-  child.on('exit', (code) => { if (code) console.error(`API exited with ${code}\n${log.join('').slice(-4000)}`); });
+  child.on('exit', (code) => { if (code) console.error(`${name} exited with ${code}\n${log.join('').slice(-4000)}`); });
   return child;
 }
 
@@ -124,7 +136,9 @@ function startWebServer(webDir: string, port: number, apiPort: number): Promise<
   const server = createServer((req, res) => {
     const url = new URL(req.url ?? '/', 'http://local');
     if (url.pathname.startsWith('/v1/')) {
-      const upstream = httpRequest({ host: '127.0.0.1', port: apiPort, method: req.method, path: req.url, headers: { ...req.headers, host: `127.0.0.1:${apiPort}` } }, (up) => {
+      // Like a production reverse proxy: append the peer to X-Forwarded-For (the API trusts only 127.0.0.1).
+      const forwarded = [req.headers['x-forwarded-for'], req.socket.remoteAddress].filter(Boolean).join(', ');
+      const upstream = httpRequest({ host: '127.0.0.1', port: apiPort, method: req.method, path: req.url, headers: { ...req.headers, host: `127.0.0.1:${apiPort}`, 'x-forwarded-for': forwarded } }, (up) => {
         res.writeHead(up.statusCode ?? 502, up.headers);
         up.pipe(res);
       });
@@ -144,7 +158,11 @@ export async function startStack(opts: StackOptions): Promise<Stack> {
   const webUrl = `http://127.0.0.1:${opts.webPort}`;
   const apiUrl = `http://127.0.0.1:${opts.apiPort}`;
   const databaseUrl = await resetDatabase(opts.adminUrl, opts.database);
-  const api = startApi(databaseUrl, opts, webUrl);
+  const env = apiEnv(databaseUrl, opts, webUrl, randomBytes(32).toString('hex'));
+  const api = startProcess('API', 'apps/api/src/main.ts', env);
+  // The worker runs meal lifecycle jobs (close → start roster → completed) and the account purge.
+  const worker = startProcess('Worker', 'apps/worker/src/main.ts', env);
+  const stopProcesses = () => { api.kill('SIGTERM'); worker.kill('SIGTERM'); };
   try {
     await waitFor(`${apiUrl}/v1/meals`, 30_000, api);
     let web: Server | null = null;
@@ -156,11 +174,11 @@ export async function startStack(opts: StackOptions): Promise<Stack> {
       apiUrl, webUrl, databaseUrl,
       async stop() {
         if (web) await new Promise<void>((ok) => web.close(() => ok()));
-        api.kill('SIGTERM');
+        stopProcesses();
       },
     };
   } catch (error) {
-    api.kill('SIGTERM');
+    stopProcesses();
     throw error;
   }
 }

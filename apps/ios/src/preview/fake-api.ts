@@ -1291,10 +1291,12 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
       const requestedAt = now();
       deletions.set(body.receiptToken, { requestedAt });
       deleted = true;
-      return { data: { status: 'COMPLETED', requestedAt: iso(requestedAt), completedAt: iso(requestedAt) } };
+      // Like the real API: acceptance is synchronous and PENDING; the purge finishes afterwards.
+      return { data: { status: 'PENDING', requestedAt: iso(requestedAt), completedAt: null } };
     },
     deletionStatus: ({ body }) => {
       const d = deletions.get(body.receiptToken) ?? fail('NOT_FOUND', 'No deletion request matches this receipt.');
+      // Preview has no worker: a later status check reports the purge as finished.
       return { data: { status: 'COMPLETED', requestedAt: iso(d.requestedAt), completedAt: iso(d.requestedAt) } };
     },
     ingestEvents: ({ body }) => {

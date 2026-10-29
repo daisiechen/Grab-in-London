@@ -137,6 +137,15 @@ export function defineRawRoute(app: FastifyInstance, deps: AppDeps, id: Operatio
 }
 
 /**
+ * Rejections that describe the caller's session rather than business state. Re-authentication is
+ * checked at the command's lock-protected instant, so it fails inside the command, but it is not a
+ * stable answer: the same intent (same Idempotency-Key and body) must succeed once the member has
+ * re-authenticated. These release the claim instead of being sealed for replay.
+ */
+const UNSEALED_REJECTIONS: ReadonlySet<string> = new Set(['REAUTH_REQUIRED']);
+const sealable = (error: unknown): error is DomainError => error instanceof DomainError && error.status < 500 && !UNSEALED_REJECTIONS.has(error.code);
+
+/**
  * Idempotent authenticated write (API §1): claim actor+operation+key, run the command in one
  * transaction, seal success or DomainError with the business commit, replay only after the actor
  * is still allowed, release the claim on unexpected failure.
@@ -188,7 +197,7 @@ export function defineWrite<P=undefined>(app: FastifyInstance, deps: AppDeps, id
             await completeIntent(tx.client, claim, { status, body, resourceId: result.resourceId ?? null });
             return { status, body, after:result.after };
           } catch (error) {
-            if (error instanceof DomainError && error.status < 500) {
+            if (sealable(error)) {
               const body=domainErrorBody(request,error);
               await completeIntent(tx.client,claim,{status:error.status,body});
               // Return the exact sealed rejection. Throwing into the global error handler would
@@ -202,7 +211,7 @@ export function defineWrite<P=undefined>(app: FastifyInstance, deps: AppDeps, id
         restoreRetryAfter(reply,body);
         return reply.status(status).send(body);
       } catch (error) {
-        if (!(error instanceof DomainError) || error.status >= 500) await releaseIntent(deps.pool, claim).catch(() => undefined);
+        if (!sealable(error)) await releaseIntent(deps.pool, claim).catch(() => undefined);
         throw error;
       }
     },
