@@ -64,7 +64,7 @@ There is **no data**: Fancy has not launched and collects no birth date. Fancy c
 
 **Stage 2 result (provisional): child user condition not met**, on these conditions:
 
-1. Before launch, add a way to flag a member who may be under 18 (a report reason, or at least a written handling rule), with a rule to suspend pending checks and close the account if the member is under 18.
+1. Before launch, add a way to flag a member who may be under 18 (a report reason, or at least a written handling rule), with a rule to suspend pending checks and close the account if the member is under 18. Done 2026-10-29: "May be under 18" is a report reason that alerts the operator at once; the moderation runbook holds the handling rule.
 2. Count and record every under-18 signal (report, admission in chat or bio, support contact) from launch.
 3. Re-run this assessment within 3 months of launch with real data. Re-run it immediately if any under-18 account is confirmed, if signals keep repeating, or if marketing or features change in a way that could attract children (§6).
 4. Marketing stays aimed at adults and avoids youth channels.
