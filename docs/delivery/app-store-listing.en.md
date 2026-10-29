@@ -41,7 +41,7 @@ STAY IN TOUCH, IF YOU BOTH WANT TO
 
 SAFE AND RESPECTFUL
 • Fancy is for adults 18 and over, and for friendship.
-• Report any profile or meal, and block anyone, straight from the app.
+• Report any profile, meal or chat message, and block anyone, straight from the app.
 • Zero tolerance for harassment, hate and unwanted advances.
 • Your email address is never shown to other members.
 
@@ -89,7 +89,7 @@ Sign-in: {{REVIEW_SIGN_IN_INSTRUCTIONS}}
 
 What to try: Discover shows meals on a map and as a list (no account needed). Open a meal to see the host, who's coming and the budget, then Apply. The demo host account has approved your application in advance for "{{REVIEW_MEAL_TITLE}}", so you can open its group chat in Inbox. Create (centre tab) shows the four-step hosting flow.
 
-Safety (Guideline 1.2): every profile and meal has "Report this profile" / "Report this meal"; members can block others from their profile; reported content can be hidden and is reviewed within 24 hours. Terms with zero tolerance for objectionable content are accepted during profile setup and are at https://fancyabite.uk/terms.
+Safety (Guideline 1.2): every profile and meal has "Report this profile" / "Report this meal"; in group and private chats, pressing and holding another member's message offers "Report message" (also available to VoiceOver as an action on the message), and the reported message is hidden for the reporter straight away; members can block others from their profile; reported content can be hidden and is reviewed within 24 hours. Terms with zero tolerance for objectionable content are accepted during profile setup and are at https://fancyabite.uk/terms.
 
 Account deletion (Guideline 5.1.1(v)): Settings → Delete account.
 

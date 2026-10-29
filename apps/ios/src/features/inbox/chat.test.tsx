@@ -2,6 +2,7 @@ import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-
 import { AppState, type AppStateStatus } from 'react-native';
 import { ChatScreen, mergeMessages } from './ChatScreen.tsx';
 import { InboxScreen, conversationKey } from './InboxScreen.tsx';
+import { markMessageReported } from './message-reports.ts';
 import { createTestApp, renderApp, signIn } from '../../test/render.tsx';
 import { mockRouter, resetRouter, routeParams } from '../../test/router.ts';
 import { fail, ok, page } from '../../test/mock-fetch.ts';
@@ -264,5 +265,59 @@ describe('ChatScreen demo layout', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Open group settings' }));
     expect(screen.getByText('This group is read-only. Your earlier messages remain available.')).toBeOnTheScreen();
     expect(screen.queryByRole('button', { name: 'Leave group' })).toBeNull();
+  });
+});
+
+describe('ChatScreen message reporting (Apple 1.2)', () => {
+  const MAYA_MSG = message('1', 'Something unkind');
+  const MINE = { ...message('2', 'My own words'), sender: publicProfile(USER_ID, 'Alex') };
+  const REMOVED = { ...message('3', '[Message unavailable]'), redacted: true };
+  async function open(kind: 'GROUP' | 'DIRECT' = 'GROUP') {
+    const app = createTestApp();
+    await signIn(app, me());
+    app.services.cache.set(conversationKey(CONVERSATION_ID), conversation(kind === 'DIRECT' ? { kind, mealId: null, title: 'Maya' } : {}));
+    app.mock.on('GET', MSG_PATH, page([MAYA_MSG, MINE, REMOVED]), 1);
+    app.mock.on('GET', MSG_PATH, page([]));
+    await renderApp(app, <ChatScreen />);
+    await screen.findByText('Something unkind');
+    return app;
+  }
+
+  it.each(['GROUP', 'DIRECT'] as const)('long-pressing another member’s message in a %s chat offers Report message, which opens the report page', async (kind) => {
+    const app = await open(kind);
+    await fireEvent(screen.getByTestId(`message-${MAYA_MSG.id}`), 'longPress');
+    expect(screen.getByRole('header', { name: 'Message options' })).toBeOnTheScreen();
+    expect(screen.getByText('Maya: Something unkind')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Report message' }));
+    expect(mockRouter.push).toHaveBeenCalledWith(`/report?targetType=MESSAGE&targetId=${MAYA_MSG.id}`);
+    // Message text reaches the report page through the session cache, never the URL.
+    expect(app.services.cache.get(`report-message:${MAYA_MSG.id}`)).toEqual({ senderName: 'Maya', excerpt: 'Something unkind' });
+    expect(screen.queryByRole('header', { name: 'Message options' })).toBeNull();
+  });
+
+  it('offers no report action on your own messages or on removed messages', async () => {
+    await open();
+    expect(screen.queryByTestId(`message-${MINE.id}`)).toBeNull();
+    expect(screen.queryByTestId(`message-${REMOVED.id}`)).toBeNull();
+    expect(screen.getByText('Message removed')).toBeOnTheScreen();
+    expect(screen.getByLabelText('You: My own words, 11:00').props.accessibilityActions).toBeUndefined();
+    expect(screen.getAllByRole('button').filter((b) => b.props.accessibilityActions)).toHaveLength(0);
+  });
+
+  it('VoiceOver reaches Report message as an accessibility action on the bubble', async () => {
+    await open();
+    const bubble = screen.getByLabelText('Maya: Something unkind, 11:00');
+    expect(bubble.props.accessibilityActions).toEqual([{ name: 'report', label: 'Report message' }]);
+    expect(bubble.props.accessibilityHint).toBe('Long press for message options.');
+    await fireEvent(bubble, 'accessibilityAction', { nativeEvent: { actionName: 'report' } });
+    expect(mockRouter.push).toHaveBeenCalledWith(`/report?targetType=MESSAGE&targetId=${MAYA_MSG.id}`);
+  });
+
+  it('hides the message for the reporter as soon as the report is received', async () => {
+    const app = await open();
+    await act(async () => { markMessageReported(app.services.cache, MAYA_MSG.id); });
+    expect(await screen.findByText('You reported this message')).toBeOnTheScreen();
+    expect(screen.queryByText('Something unkind')).toBeNull();
+    expect(screen.queryByTestId(`message-${MAYA_MSG.id}`)).toBeNull();
   });
 });

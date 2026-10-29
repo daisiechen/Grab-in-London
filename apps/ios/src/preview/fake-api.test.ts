@@ -298,6 +298,31 @@ describe('preview fake API', () => {
     expect(ctx.problems).toEqual([]);
   });
 
+  it('hides a reported message, or every message of a reported member, for the reporter only (like apps/api)', async () => {
+    const ctx = setup();
+    await signIn(ctx);
+    const conversationId = (await ctx.api.call('inbox', { query: {} })).data[0]!.conversation!.id;
+    const read = async () => (await ctx.api.call('readMessages', { params: { conversationId }, query: { mode: 'HISTORY' } })).data;
+    const before = await read();
+    const [latest, first] = before;
+    expect(latest).toMatchObject({ body: 'Sounds lovely! This is my first meal here. 😊', redacted: false });
+    expect(first).toMatchObject({ sender: { displayName: 'Maya' }, redacted: false });
+
+    const report = await ctx.api.call('createReport', { body: { targetType: 'MESSAGE', targetId: latest!.id, reason: 'private_concern', details: 'Not okay.' }, idempotencyKey: newId() });
+    expect(report.data).toMatchObject({ targetType: 'MESSAGE', status: 'RECEIVED' });
+    const after = await read();
+    // Still listed in its place (same id and seq) but masked, exactly like the API's messageDto.
+    expect(after[0]).toMatchObject({ id: latest!.id, seq: latest!.seq, body: '[Message unavailable]', redacted: true });
+    expect(after[1]).toMatchObject({ id: first!.id, body: first!.body, redacted: false });
+    expect((await ctx.api.call('inbox', { query: {} })).data[0]!.lastMessage).toMatchObject({ preview: '[Message unavailable]' });
+
+    await ctx.api.call('createReport', { body: { targetType: 'USER', targetId: first!.sender.id, reason: 'private_concern', details: 'Unwelcome.' }, idempotencyKey: newId() });
+    const masked = (await read()).find((m) => m.id === first!.id);
+    expect(masked).toMatchObject({ body: '[Message unavailable]', redacted: true, sender: { displayName: 'Maya', avatarUrl: null, bio: null } });
+    await expectApiError(ctx.api.call('createReport', { body: { targetType: 'MESSAGE', targetId: newId(), reason: 'private_concern', details: 'Gone.' }, idempotencyKey: newId() }), 404, 'NOT_FOUND');
+    expect(ctx.problems).toEqual([]);
+  });
+
   it('runs the post-meal flow for the past supper: attendance, rating, reference, reconnect, survey', async () => {
     const ctx = setup();
     await signIn(ctx);

@@ -7,6 +7,7 @@ import { StyleSheet } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import { SurveyScreen } from './SurveyScreen.tsx';
 import { ReportScreen } from './ReportScreen.tsx';
+import { rememberMessageSubject, reportedMessages } from '../inbox/message-reports.ts';
 import { DeleteAccountScreen } from './DeleteAccountScreen.tsx';
 import { DeletionStatusScreen } from './DeletionStatusScreen.tsx';
 import { SettingsScreen } from './SettingsScreen.tsx';
@@ -178,6 +179,41 @@ describe('ReportScreen', () => {
     // Pinned footer: an inline button ended up behind the keyboard on device.
     expect(screen.getByTestId('account-footer')).toContainElement(screen.getByRole('button', { name: 'Submit report' }));
     expect(screen.getByTestId('account-footer')).toContainElement(screen.getByRole('button', { name: 'Cancel' }));
+  });
+
+  it('reports a chat message: says “Report this message”, quotes it, and hides it for the reporter once received', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    const MESSAGE_ID = '00000000-0000-4000-8000-000000000071';
+    rememberMessageSubject(app.services.cache, MESSAGE_ID, { senderName: 'Maya', excerpt: 'Something unkind' });
+    routeParams.current = { targetType: 'MESSAGE', targetId: MESSAGE_ID };
+    app.mock.on('POST', '/v1/reports', ok({ id: '1b2c3d4e-5f60-4a7b-8c9d-0e1f2a3b4c5d', receipt: 'FNC-MSG01', status: 'RECEIVED', targetType: 'MESSAGE', publicOutcome: null, createdAt: '2026-10-21T10:00:00Z' }, 201));
+    await renderApp(app, <ReportScreen />);
+    expect(screen.getByRole('header', { name: 'Report this message' })).toBeOnTheScreen();
+    expect(screen.getByLabelText('Reporting a message from Maya: “Something unkind”')).toBeOnTheScreen();
+    expect(screen.getByText('Reports about a message are private and separate from public references. You’ll get a reference number.')).toBeOnTheScreen();
+    // No profile or meal lookup for a message target.
+    expect(app.mock.calls.filter((c) => /\/v1\/(profiles|meals)\//.test(c.path))).toHaveLength(0);
+    await fireEvent.changeText(screen.getByLabelText('What would you like us to know?'), 'Rude remark in the group.');
+    await fireEvent.press(screen.getByRole('button', { name: 'Submit report' }));
+    expect(await screen.findByText('FNC-MSG01')).toBeOnTheScreen();
+    expect(screen.getByText(/The message is now hidden for you\.$/)).toBeOnTheScreen();
+    expect(app.mock.callsTo('POST', '/v1/reports')[0]?.body).toEqual({ targetType: 'MESSAGE', targetId: MESSAGE_ID, reason: 'private_concern', details: 'Rude remark in the group.' });
+    expect(reportedMessages(app.services.cache).has(MESSAGE_ID)).toBe(true);
+  });
+
+  it('a failed message report keeps the message visible', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    const MESSAGE_ID = '00000000-0000-4000-8000-000000000072';
+    routeParams.current = { targetType: 'MESSAGE', targetId: MESSAGE_ID };
+    app.mock.on('POST', '/v1/reports', fail(404, 'NOT_FOUND'));
+    await renderApp(app, <ReportScreen />);
+    expect(screen.getByLabelText('Reporting A message')).toBeOnTheScreen();
+    await fireEvent.changeText(screen.getByLabelText('What would you like us to know?'), 'Rude remark.');
+    await fireEvent.press(screen.getByRole('button', { name: 'Submit report' }));
+    expect(await screen.findByText('We couldn’t send your report. Please try again.')).toBeOnTheScreen();
+    expect(reportedMessages(app.services.cache).has(MESSAGE_ID)).toBe(false);
   });
 
   it('keeps a generic target line when the lookup fails', async () => {

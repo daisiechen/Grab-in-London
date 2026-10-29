@@ -63,7 +63,7 @@ Fancy has **zero tolerance** for objectionable content and abusive behaviour. Yo
 - break the law, including sharing illegal content, or encourage others to do so;
 - interfere with Fancy, for example by scraping, automating accounts, probing security, getting around a block, suspension or limit, or overloading our systems.
 
-**Report and block.** You can report any member or meal from within the app (to report something said in a chat, report the member who said it) and block any member. When content is reported by several members we may hide it automatically while we review it. We aim to review reports of objectionable content within 24 hours. Where content or behaviour breaks these terms, we remove the content and remove the member responsible from Fancy.
+**Report and block.** You can report any member, meal or chat message from within the app (press and hold a message in a chat to report it) and block any member. When content is reported by several members we may hide it automatically while we review it. We aim to review reports of objectionable content within 24 hours. Where content or behaviour breaks these terms, we remove the content and remove the member responsible from Fancy.
 
 ## 6. Suspension and closing accounts
 

@@ -120,7 +120,7 @@ interface Consent { revision: number; active: boolean }
 interface PairRec { users: [string, string]; consents: Map<string, Consent> }
 interface ReviewRec { id: string; mealId: string; authorId: string; subjectId: string; body: string; revision: number; createdAt: number }
 interface NotificationRec { id: string; userId: string; template: string; createdAt: number; readAt: number | null; mealId: string | null; applicationId: string | null; conversationId: string | null }
-interface ReportRec { id: string; userId: string; receipt: string; targetType: 'USER' | 'MEAL' | 'MESSAGE'; createdAt: number }
+interface ReportRec { id: string; userId: string; receipt: string; targetType: 'USER' | 'MEAL' | 'MESSAGE'; targetId: string; createdAt: number }
 
 interface World {
   users: Map<string, UserRec>;
@@ -453,8 +453,20 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
     const p = publicProfile(who);
     return { displayName: p.displayName.slice(0, 40), avatarUrl: p.avatarUrl };
   }
-  function messageDto(m: MsgRec): MessageDto {
-    return { id: m.id, seq: String(m.seq), sender: publicProfile(m.senderId), body: m.body, createdAt: iso(m.createdAt), redacted: false };
+  function reportedBy(viewer: string, targetType: ReportRec['targetType'], targetId: string): boolean {
+    for (const r of w.reports.values()) if (r.userId === viewer && r.targetType === targetType && r.targetId === targetId) return true;
+    return false;
+  }
+  /**
+   * Message projection for one viewer, like apps/api messageDto: a message the viewer reported, or any
+   * message from a member the viewer reported, is masked for that viewer only (text and, for a reported
+   * member, their photo and bio).
+   */
+  function messageDto(m: MsgRec, viewer: string): MessageDto {
+    const senderReported = reportedBy(viewer, 'USER', m.senderId);
+    const redacted = senderReported || reportedBy(viewer, 'MESSAGE', m.id);
+    const sender = publicProfile(m.senderId);
+    return { id: m.id, seq: String(m.seq), sender: senderReported ? { ...sender, avatarUrl: null, bio: null } : sender, body: redacted ? '[Message unavailable]' : m.body, createdAt: iso(m.createdAt), redacted };
   }
 
   function attendanceState(mealId: string, subjectId: string): AttendanceDto {
@@ -1066,7 +1078,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
         entries.push({
           at: Math.max(joined, last?.createdAt ?? 0), id: conv.id,
           data: {
-            conversation: convDto(conv, uid), lastMessage: last ? { seq: String(last.seq), preview: last.body.slice(0, 200), createdAt: iso(last.createdAt) } : null,
+            conversation: convDto(conv, uid), lastMessage: last ? { seq: String(last.seq), preview: messageDto(last, uid).body.slice(0, 200), createdAt: iso(last.createdAt) } : null,
             unreadCount: visible.filter((m) => m.senderId !== uid && m.seq > read).length,
           },
         });
@@ -1108,7 +1120,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
       const page = rows.slice(0, limit);
       const last = page.at(-1)?.seq ?? key;
       return {
-        data: page.map(messageDto),
+        data: page.map((m) => messageDto(m, uid)),
         page: { hasMore, nextCursor: hasMore ? `s${last}` : null, scannedThroughSeq: String(query.mode === 'LIVE' && hasMore ? last : conv.head) },
       };
     },
@@ -1121,10 +1133,10 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
         const duplicate = c.messages.find((m) => m.senderId === uid && m.clientMessageId === body.clientMessageId);
         if (duplicate) {
           if (duplicate.body !== text || c.id !== conv.id) fail('IDEMPOTENCY_CONFLICT', 'This message id was already used.');
-          return { data: messageDto(duplicate) };
+          return { data: messageDto(duplicate, uid) };
         }
       }
-      return { data: messageDto(postMessage(conv, uid, text, now(), body.clientMessageId, w)) };
+      return { data: messageDto(postMessage(conv, uid, text, now(), body.clientMessageId, w), uid) };
     },
     leaveGroup: ({ uid, params, ifMatch }) => {
       const conv = convFor(params.conversationId, uid);
@@ -1277,7 +1289,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
         : body.targetType === 'MEAL' ? w.meals.has(body.targetId)
           : [...w.conversations.values()].some((c) => c.messages.some((m) => m.id === body.targetId && visibleTo(c, uid, m.seq)));
       if (!exists) fail('NOT_FOUND', 'We could not find what you are reporting.');
-      const report: ReportRec = { id: newId(w, 'misc'), userId: uid, receipt: `FCY-${String(w.counter).padStart(6, '0')}`, targetType: body.targetType, createdAt: now() };
+      const report: ReportRec = { id: newId(w, 'misc'), userId: uid, receipt: `FCY-${String(w.counter).padStart(6, '0')}`, targetType: body.targetType, targetId: body.targetId, createdAt: now() };
       w.reports.set(report.id, report);
       return { data: reportDto(report) };
     },

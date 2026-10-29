@@ -27,6 +27,8 @@ interface Locator {
   count(): Promise<number>;
   dispatchEvent(type: string): Promise<void>;
   fill(value: string): Promise<void>;
+  hover(): Promise<void>;
+  isVisible(): Promise<boolean>;
   waitFor(options?: { state?: 'visible'; timeout?: number }): Promise<void>;
   locator(selector: string): Locator;
   first(): Locator;
@@ -41,7 +43,9 @@ interface Page {
   innerText(selector: string): Promise<string>;
   getByRole(role: string, options: { name: string | RegExp; exact?: boolean }): Locator;
   getByText(text: string | RegExp): Locator;
-  getByLabel(text: string, options?: { exact?: boolean }): Locator;
+  getByLabel(text: string | RegExp, options?: { exact?: boolean }): Locator;
+  mouse: { down(): Promise<void>; up(): Promise<void> };
+  waitForTimeout(ms: number): Promise<void>;
   waitForResponse(match: (response: Response) => boolean): Promise<Response>;
   waitForEvent(event: 'filechooser'): Promise<{ setFiles(files: string): Promise<void> }>;
   on(event: 'response', listener: (response: Response) => void): void;
@@ -321,6 +325,39 @@ async function main() {
       if (!chat) throw new Error('host inbox has no group chat for the meal');
       const read = await seedHost.host.call('readMessages', { params: { conversationId: chat.conversation!.id }, query: { mode: 'HISTORY' } });
       if (!read.data.some((m) => m.body === message)) throw new Error('host cannot read the guest message');
+    });
+
+    await step('guest long-presses the host’s chat message, reports it, and it is hidden for the guest only', async () => {
+      const inbox = await seedHost.host.call('inbox', {});
+      const conversationId = inbox.data.find((i) => i.conversation?.mealId === seedHost.supper.id)!.conversation!.id;
+      const unkind = `E2E check ${run}: a message to report.`;
+      const posted = (await seedHost.host.call('sendMessage', { params: { conversationId }, body: { body: unkind, clientMessageId: randomUUID() } })).data;
+      // The open chat picks it up through LIVE polling.
+      const bubble = visible(g.getByLabel(new RegExp(`^Hana: ${unkind.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}, \\d\\d:\\d\\d$`)));
+      await bubble.waitFor({ state: 'visible', timeout: 15_000 });
+      // A press held past the long-press delay (react-native-web Pressable).
+      await bubble.hover();
+      await g.mouse.down();
+      await g.waitForTimeout(900);
+      await g.mouse.up();
+      await see(g, 'Message options');
+      await tap(g, 'Report message');
+      await see(g, 'Report this message');
+      await visible(g.getByLabel(`Reporting a message from Hana: “${unkind}”`)).waitFor();
+      await fill(g, 'What would you like us to know?', `E2E check ${run}: please ignore, this is a synthetic message report.`);
+      const reported = g.waitForResponse(isCall('POST', /\/v1\/reports$/));
+      await tap(g, 'Submit report');
+      const receipt = (await (await expectOk(reported, 'report message')).json()) as { data: { targetType: string } };
+      if (receipt.data.targetType !== 'MESSAGE') throw new Error(`report target ${receipt.data.targetType}`);
+      await see(g, 'Report received');
+      await tap(g, 'Done');
+      await see(g, 'You reported this message');
+      if (await visible(g.getByText(unkind)).isVisible()) throw new Error('the reported message is still shown to the guest');
+      // Server truth: the API masks it for the reporter only.
+      const { rows: [row] } = await db.query<{ n: number }>(`SELECT count(*)::int AS n FROM reports WHERE reporter_id=$1 AND target_type='MESSAGE' AND target_id=$2`, [guestId, posted.id]);
+      if (row?.n !== 1) throw new Error(`message report rows: ${row?.n}`);
+      const hostView = (await seedHost.host.call('readMessages', { params: { conversationId }, query: { mode: 'HISTORY' } })).data.find((m) => m.id === posted.id);
+      if (!hostView || hostView.redacted || hostView.body !== unkind) throw new Error(`the host’s own view changed: ${JSON.stringify(hostView)}`);
     });
 
     const createdTitle = `Ramen and records ${run}`;

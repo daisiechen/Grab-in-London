@@ -55,14 +55,14 @@ Don't share other members' messages, photos, contact details or personal informa
 
 ## Reporting and blocking
 
-- **Report** a member or a meal with “Report this profile” or “Report this meal” in the app. To report something said in a chat, report the member who said it and tell us what was said. Tell us what happened; your report is private and the person you report is not told who reported them. You receive a reference so you can check its status.
+- **Report** a member or a meal with “Report this profile” or “Report this meal” in the app. To report something said in a chat, press and hold the message and choose “Report message”. Tell us what happened; your report is private and the person you report is not told who reported them. You receive a reference so you can check its status.
 - **Block** any member to stop private contact with them. Blocking does not remove either of you from a group chat you share, so leave the chat or report the member if you need to.
 - You can also email {{SUPPORT_EMAIL}}.
 
 ## What happens when something is reported
 
-- We do not check content before it is posted, so reports matter. When you report a profile or a meal, it is hidden from you straight away and you get a receipt in the app.
-- If several different members report the same item within seven days, it is limited for everyone while we review it: a meal is removed from discovery and stops accepting applications, and a profile's bio and photo are hidden. These limits can be reversed.
+- We do not check content before it is posted, so reports matter. When you report a profile, a meal or a message, it is hidden from you straight away and you get a receipt in the app.
+- If several different members report the same item within seven days, it is limited for everyone while we review it: a meal is removed from discovery and stops accepting applications, a profile's bio and photo are hidden, and a message's text is hidden. These limits can be reversed.
 - We aim to review reports of objectionable content within 24 hours. We look at the content and any relevant records.
 - Depending on what happened, we may keep or lift a limit, remove content such as a profile name, bio or photo, cancel a meal listing, or suspend an account. A suspended account cannot sign in and its content is hidden from other members. Serious breaches, such as threats, sexual harassment, hate or involving anyone under 18, lead to immediate removal from Fancy. Where there is a risk to someone's safety, we may contact the police.
 - Automatic limits can be reversed, and decisions to suspend an account are made by a person. Every decision is recorded internally. A report that receives no further review within 30 days is closed; any limit already applied stays in place.

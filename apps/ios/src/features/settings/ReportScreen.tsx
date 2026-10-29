@@ -14,13 +14,15 @@ import { colors, radius, type } from '../../ui/tokens.ts';
 import { createStyles } from '../../ui/styles.ts';
 import { longDate } from '../../lib/london.ts';
 import { rememberReturnTo } from '../auth/intent.ts';
+import { markMessageReported, messageSubject } from '../inbox/message-reports.ts';
 
 type Receipt = ResponseOf<'createReport'>['data'];
 type Target = (typeof REPORT_TARGET_TYPES)[number];
 const STATUS_LABELS: Record<Receipt['status'], string> = { RECEIVED: 'Received', IN_REVIEW: 'In review', RESPONDED: 'Responded' };
 const TARGET_LABELS: Record<Target, string> = { USER: 'a member', MEAL: 'a meal', MESSAGE: 'a message' };
 /** What is being reported, resolved from the route target with the existing public reads. */
-type Subject = { kind: 'USER'; name: string; avatarUrl: string | null } | { kind: 'MEAL'; title: string; date: string };
+type Subject = { kind: 'USER'; name: string; avatarUrl: string | null } | { kind: 'MEAL'; title: string; date: string } | { kind: 'MESSAGE'; senderName: string; excerpt: string };
+const HEADINGS: Record<Target, string> = { USER: 'Share a private concern', MEAL: 'Share a private concern', MESSAGE: 'Report this message' };
 
 /** Private report → receipt (not a resolution). Route: /report?targetType=USER|MEAL|MESSAGE&targetId=… */
 export function ReportScreen() {
@@ -31,7 +33,7 @@ function ReportScreenContent() {
   const params = useLocalSearchParams<{ targetType: string; targetId: string }>();
   const targetType = (REPORT_TARGET_TYPES as readonly string[]).includes(String(params.targetType)) ? (String(params.targetType) as Target) : null;
   const targetId = String(params.targetId ?? '');
-  const { api, newId } = useServices();
+  const { api, cache, newId } = useServices();
   const state = useSessionState();
   const router = useRouter();
   const [details, setDetails] = useState('');
@@ -61,7 +63,7 @@ function ReportScreenContent() {
   if (state.status !== 'signedIn') {
     return (
       <AccountPage>
-        <Text accessibilityRole="header" style={accountText.h1}>Share a private concern</Text>
+        <Text accessibilityRole="header" style={accountText.h1}>{HEADINGS[targetType]}</Text>
         <Text style={accountText.prose}>Sign in to send a private report.</Text>
         <View style={styles.actions}>
           <Primary label="Sign in" onPress={() => { rememberReturnTo('/settings'); router.push('/sign-in'); }} />
@@ -70,7 +72,9 @@ function ReportScreenContent() {
       </AccountPage>
     );
   }
-  const target = subject?.key === subjectKey ? subject.value : null;
+  // A message's sender and excerpt come from the chat via the session cache (never from the URL).
+  const cachedMessage = targetType === 'MESSAGE' ? messageSubject(cache, targetId) : null;
+  const target: Subject | null = cachedMessage ? { kind: 'MESSAGE', ...cachedMessage } : subject?.key === subjectKey ? subject.value : null;
   if (receipt) {
     const refresh = async () => {
       setChecking(true);
@@ -87,7 +91,7 @@ function ReportScreenContent() {
     return (
       <AccountPage testID="report-receipt">
         <Text accessibilityRole="header" style={accountText.h1}>Report received</Text>
-        <Text style={accountText.prose}>Our team reviews reports privately. The other person isn’t told who reported.</Text>
+        <Text style={accountText.prose}>{`Our team reviews reports privately. The other person isn’t told who reported.${targetType === 'MESSAGE' ? ' The message is now hidden for you.' : ''}`}</Text>
         <SummaryBox>
           <Text style={accountText.muted}>Reference number</Text>
           <Text selectable style={accountText.strong}>{receipt.receipt}</Text>
@@ -113,7 +117,10 @@ function ReportScreenContent() {
     setBusy(true);
     setError(null);
     try {
-      setReceipt((await api.call('createReport', { body, idempotencyKey: intent.current.key })).data);
+      const created = (await api.call('createReport', { body, idempotencyKey: intent.current.key })).data;
+      // The API hides a reported message for its reporter; mirror it in the open chat straight away.
+      if (targetType === 'MESSAGE') markMessageReported(cache, targetId);
+      setReceipt(created);
     } catch (e) {
       setError(e instanceof ApiError && e.kind === 'network' ? 'We couldn’t confirm your report was received. Check your connection and send again — it won’t be duplicated.' : 'We couldn’t send your report. Please try again.');
     } finally {
@@ -131,7 +138,7 @@ function ReportScreenContent() {
         {cancel}
       </>}
     >
-      <Text accessibilityRole="header" style={accountText.h1}>Share a private concern</Text>
+      <Text accessibilityRole="header" style={accountText.h1}>{HEADINGS[targetType]}</Text>
       <TargetRow targetType={targetType} target={target} />
       <Text style={[accountText.prose, { marginBottom: 14 }]}>{`Reports about ${TARGET_LABELS[targetType]} are private and separate from public references. You’ll get a reference number.`}</Text>
       <View style={styles.field}>
@@ -145,16 +152,17 @@ function ReportScreenContent() {
 
 /** Who or what the report is about: avatar + name for a member, title + date for a meal. */
 function TargetRow({ targetType, target }: { targetType: Target; target: Subject | null }) {
-  const label = target?.kind === 'USER' ? target.name : target?.kind === 'MEAL' ? target.title : `${TARGET_LABELS[targetType].charAt(0).toUpperCase()}${TARGET_LABELS[targetType].slice(1)}`;
+  const label = target?.kind === 'USER' ? target.name : target?.kind === 'MEAL' ? target.title : target?.kind === 'MESSAGE' ? `a message from ${target.senderName}` : `${TARGET_LABELS[targetType].charAt(0).toUpperCase()}${TARGET_LABELS[targetType].slice(1)}`;
   return (
-    <View style={styles.target} testID="report-target" accessible accessibilityLabel={`Reporting ${label}`}>
+    <View style={styles.target} testID="report-target" accessible accessibilityLabel={target?.kind === 'MESSAGE' ? `Reporting ${label}: “${target.excerpt}”` : `Reporting ${label}`}>
       {target?.kind === 'USER' ? <Avatar person={{ displayName: target.name, avatarUrl: target.avatarUrl }} size={36} /> : (
         <View style={styles.targetIcon}><Icon name={targetType === 'MEAL' ? 'Calendar' : targetType === 'MESSAGE' ? 'ChatBubble' : 'Person'} size={16} color={colors.forest} /></View>
       )}
       <View style={styles.targetText}>
         <Text style={accountText.muted}>Reporting</Text>
-        <Text style={styles.targetName} numberOfLines={1}>{label}</Text>
+        <Text style={styles.targetName} numberOfLines={1}>{target?.kind === 'MESSAGE' ? `Message from ${target.senderName}` : label}</Text>
         {target?.kind === 'MEAL' ? <Text style={accountText.muted}>{longDate(target.date)}</Text> : null}
+        {target?.kind === 'MESSAGE' ? <Text style={accountText.muted} numberOfLines={2}>{`“${target.excerpt}”`}</Text> : null}
       </View>
     </View>
   );

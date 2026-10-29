@@ -1,7 +1,7 @@
 import {useAssistantContext,useAssistantEditor} from '../assistant/hooks.ts';
 import {ReadAcknowledger} from './read-ack.ts';
 import { useAnalyticsPresentation } from '../../analytics/hooks.ts';
-import { useCallback, useEffect, useMemo, useRef, useState, type ComponentRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ComponentRef } from 'react';
 import { AppState, Keyboard, FlatList, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Stack, useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
@@ -11,6 +11,7 @@ import { useServices, useSessionState } from '../../services.tsx';
 import { Primary, TextAction } from '../../ui/Button.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
 import { Sheet } from '../../ui/Sheet.tsx';
+import { LinkRow } from '../../ui/LinkRow.tsx';
 import { Body } from '../../ui/Text.tsx';
 import { Avatar } from '../../ui/Avatar.tsx';
 import { Icon } from '../../ui/Icon.tsx';
@@ -21,6 +22,7 @@ import { bookingLabel, mealPeople, venueName, type Meal } from '../meals/format.
 import { rememberReturnTo } from '../auth/intent.ts';
 import { compareSeq, MessagePoller } from './poller.ts';
 import { conversationKey, type Conversation, type InboxItem } from './InboxScreen.tsx';
+import { messageReportRoute, rememberMessageSubject, reportedMessages } from './message-reports.ts';
 
 type Message = ResponseOf<'readMessages'>['data'][number];
 interface Outgoing { clientMessageId: string; body: string; status: 'sending' | 'failed' }
@@ -103,6 +105,10 @@ function AuthenticatedChatScreen() {
   const [notice, setNotice] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [sheet, setSheet] = useState(false);
+  /** Long-pressed message whose actions sheet is open (only other members' visible messages). */
+  const [actionsFor,setActionsFor]=useState<Message|null>(null);
+  const subscribeCache=useCallback((listener:()=>void)=>cache.subscribe(listener),[cache]);
+  const reported=useSyncExternalStore(subscribeCache,()=>reportedMessages(cache));
   const [busy, setBusy] = useState(false);
   const [meal,setMeal]=useState<Meal|null>(null);
   const [view,setView]=useState<'chat'|'settings'>('chat');
@@ -300,6 +306,9 @@ function AuthenticatedChatScreen() {
     </>
   );
   const people=tableMeal?mealPeople(tableMeal):[];
+  // Reporting a message (Apple 1.2): the report page takes the sender and an excerpt from the session cache,
+  // never the URL. After the receipt the message is hidden for this reporter (message-reports.ts).
+  const openReport=(m:Message)=>{setActionsFor(null);rememberMessageSubject(cache,m.id,{senderName:m.sender.displayName,excerpt:m.body});router.push(messageReportRoute(m.id));};
 
   return (
     <SafeAreaView style={[styles.safe,{paddingTop:insets.top}]} edges={['bottom']} testID="chat">
@@ -355,6 +364,7 @@ function AuthenticatedChatScreen() {
           onViewableItemsChanged={onViewable}
           viewabilityConfig={{itemVisiblePercentThreshold:80}}
           data={messages}
+          extraData={reported}
           keyExtractor={(m) => m.id}
           contentContainerStyle={styles.list}
           keyboardShouldPersistTaps="handled"
@@ -383,16 +393,32 @@ function AuthenticatedChatScreen() {
             const previous=messages[index-1];
             const newDay=!previous||londonStamp(previous.createdAt).day!==stamp.day;
             const mine=item.sender.id===myId;
-            const body=item.redacted ? 'Message removed' : item.body;
+            const hiddenByMe=reported.has(item.id);
+            const body=hiddenByMe ? 'You reported this message' : item.redacted ? 'Message removed' : item.body;
+            const label=`${mine?'You':item.sender.displayName}: ${body}, ${stamp.time}`;
+            // Only another member's visible message can be reported; never your own, a removed or an already reported one.
+            const reportable=!mine&&!item.redacted&&!hiddenByMe;
+            const bubble=<Text style={[styles.bubble,mine?styles.bubbleMine:null,(item.redacted||hiddenByMe)&&styles.redacted]}>{body}</Text>;
             return (
               <View>
                 {newDay?<Text style={styles.day}>{live||index>0?dayLabel(stamp.day):`ARCHIVE · ${dayLabel(stamp.day)}`}</Text>:null}
-                <View style={[styles.message,mine&&styles.messageMine]} accessibilityLabel={`${mine?'You':item.sender.displayName}: ${body}, ${stamp.time}`}>
+                <View style={[styles.message,mine&&styles.messageMine]} accessibilityLabel={reportable?undefined:label}>
                   {!mine?<Avatar person={item.sender} size={30} onPress={()=>router.push(`/profiles/${item.sender.id}`)}/>:null}
                   <View style={styles.messageCopy}>
                     {!mine&&group?<Pressable accessibilityRole="link" accessibilityLabel={`${item.sender.displayName}, view profile`} hitSlop={6} style={styles.senderPress} onPress={()=>router.push(`/profiles/${item.sender.id}`)}><Text style={styles.sender}>{item.sender.displayName}</Text></Pressable>:null}
                     {/* Plain text only: bodies are never interpreted as markup. */}
-                    <Text style={[styles.bubble,mine?styles.bubbleMine:null,item.redacted&&styles.redacted]}>{body}</Text>
+                    {reportable?(
+                      <Pressable
+                        testID={`message-${item.id}`}
+                        accessibilityLabel={label}
+                        accessibilityHint="Long press for message options."
+                        accessibilityActions={[{name:'report',label:'Report message'}]}
+                        onAccessibilityAction={event=>{if(event.nativeEvent.actionName==='report')openReport(item);}}
+                        onLongPress={()=>setActionsFor(item)}
+                        delayLongPress={350}
+                        style={({pressed})=>pressed?styles.bubblePressed:null}
+                      >{bubble}</Pressable>
+                    ):bubble}
                     <Text style={[styles.time,mine&&styles.timeMine]}>{stamp.time}</Text>
                   </View>
                   {/* Own messages carry your avatar on the right, mirroring everyone else's on the left. */}
@@ -437,6 +463,10 @@ function AuthenticatedChatScreen() {
         </View>
       </View>
       </View>
+      <Sheet visible={!!actionsFor} title="Message options" onClose={()=>setActionsFor(null)}>
+        {actionsFor?<Text style={styles.quote} numberOfLines={3}>{`${actionsFor.sender.displayName}: ${actionsFor.body}`}</Text>:null}
+        <LinkRow first icon="ExclamationTriangle" label="Report message" onPress={()=>{if(actionsFor)openReport(actionsFor);}}/>
+      </Sheet>
       <Sheet visible={dissolveSheet} title="Dissolve this group?" onClose={()=>setDissolveSheet(false)}>
         <Body>Everyone will lose the ability to send new messages. Earlier messages stay available. This does not cancel the meal or change attendance. The group cannot reopen.</Body>
         <FormMessage message={dissolveError}/>
@@ -476,6 +506,8 @@ const styles = createStyles({
   bubble: { paddingVertical: 10, paddingHorizontal: 13, backgroundColor: '#f1f3ed', borderTopLeftRadius: 2, borderTopRightRadius: 13, borderBottomLeftRadius: 13, borderBottomRightRadius: 13, overflow: 'hidden', fontSize: 13, lineHeight: 20, color: colors.ink },
   bubbleMine: { backgroundColor: colors.forest, color: colors.white, borderTopLeftRadius: 13, borderTopRightRadius: 2 },
   bubbleFailed: { opacity: 0.6 },
+  bubblePressed: { opacity: 0.7 },
+  quote: { fontSize: 13, lineHeight: 19, color: colors.muted },
   redacted: { fontStyle: 'italic', color: colors.muted },
   time: { fontSize: 9, color: colors.muted, marginTop: 4 },
   timeMine: { textAlign: 'right' },

@@ -13,9 +13,9 @@ Fancy is run by one person. We read every message and aim to reply within {{SUPP
 
 **If you or someone else is in immediate danger, call 999 (or 112).** Fancy support is not an emergency service.
 
-## Report a member or a meal
+## Report a member, a meal or a message
 
-Open the member's profile or the meal and choose “Report this profile” or “Report this meal”. To report something said in a chat, report the member who said it and include what was said. Tell us what happened in a few words. Your report is private and you receive a reference so you can check its status. You can also block a member from their profile to stop private contact.
+Open the member's profile or the meal and choose “Report this profile” or “Report this meal”. To report something said in a chat, press and hold the message and choose “Report message”. Tell us what happened in a few words. Your report is private and you receive a reference so you can check its status. You can also block a member from their profile to stop private contact.
 
 ## Signing in
 
