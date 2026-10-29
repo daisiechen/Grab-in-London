@@ -8,6 +8,15 @@ export function apiBaseUrl(): string {
   return typeof extra?.apiBaseUrl === 'string' && extra.apiBaseUrl ? extra.apiBaseUrl : DEFAULT_API_BASE_URL;
 }
 
+/** Public site serving the legal and support pages (Settings, sign-in sheet, App Store listing). */
+export const DEFAULT_LEGAL_BASE_URL = 'https://fancyabite.uk';
+
+export function legalBaseUrl(): string {
+  const extra = Constants.expoConfig?.extra as { legalBaseUrl?: unknown } | undefined;
+  const value = typeof extra?.legalBaseUrl === 'string' && extra.legalBaseUrl ? extra.legalBaseUrl : DEFAULT_LEGAL_BASE_URL;
+  return value.replace(/\/+$/, '');
+}
+
 /** App deep-link return for system-browser sign-in (registered scheme `fancy`). */
 export const AUTH_REDIRECT_URL = 'fancy://auth/callback';
 

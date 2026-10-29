@@ -116,7 +116,15 @@ against the preview fake and the real API and prints every status/shape differen
 
 Native build (`expo prebuild` / `expo run:ios`), simulator and device runs are blocked by G-IOS
 (full Xcode, Apple Developer team, signing). `ios.bundleIdentifier` `com.example.fancy.dev` is a
-placeholder; no team id is committed. Generated `ios/` is not committed (Continuous Native Generation).
+placeholder used by every development build; `APP_VARIANT=production` (see `app.config.js`) switches
+to the proposed App Store id `uk.fancyabite.app`, which still needs the external changes listed in
+`docs/delivery/app-store-submission.zh-CN.md`. No team id is committed. Generated `ios/` is not
+committed (Continuous Native Generation).
+
+App icon: `assets/images/icon.png` (1024×1024, opaque, square; iOS applies the mask), rendered
+with its SVG source `assets/brand/app-icon.svg` by `python3 scripts/render_app_icon.py`.
+Legal pages open from Settings and the sign-in principles sheet at `extra.legalBaseUrl`
+(default `https://fancyabite.uk`, override with `EXPO_PUBLIC_LEGAL_BASE_URL`).
 
 
 ## Codex takeover verification (2026-10-21)

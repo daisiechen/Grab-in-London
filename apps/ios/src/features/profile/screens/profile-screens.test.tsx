@@ -1,4 +1,5 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
+import * as WebBrowser from 'expo-web-browser';
 import { ProfileSetupScreen } from './ProfileSetupScreen.tsx';
 import { MyProfileScreen } from './MyProfileScreen.tsx';
 import { EditProfileScreen } from './EditProfileScreen.tsx';
@@ -11,6 +12,8 @@ import { clearReturnTo, peekReturnTo, rememberReturnTo } from '../../auth/intent
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
 jest.mock('expo-router', () => require('../../../test/router.ts').expoRouterMock);
+// eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
+jest.mock('expo-web-browser', () => require('../../../test/web-browser.ts').webBrowserMock());
 
 beforeEach(() => {
   resetRouter();
@@ -168,5 +171,18 @@ describe('ProfileSetupScreen layout', () => {
     expect(screen.getByText('A face. A little story. You.')).toBeOnTheScreen();
     expect(screen.getAllByRole('button', { name: 'Take your seat' })).toHaveLength(1);
     expect(screen.queryByRole('checkbox', { name: /I’m 18 or older/ })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Terms of use' })).toBeNull();
+  });
+
+  it('shows the terms being accepted next to the 18+ acknowledgement, each opening the Fancy site', async () => {
+    const app = createTestApp();
+    await signIn(app, incompleteMe());
+    await renderApp(app, <ProfileSetupScreen />);
+    expect(screen.getByText(/Taking your seat means you agree to the Terms of use and Community guidelines/)).toBeOnTheScreen();
+    for (const [label, url] of [['Terms of use', 'https://fancyabite.uk/terms'], ['Community guidelines', 'https://fancyabite.uk/guidelines'], ['Privacy notice', 'https://fancyabite.uk/privacy']] as const) {
+      await fireEvent.press(screen.getByRole('button', { name: label }));
+      expect(WebBrowser.openBrowserAsync).toHaveBeenLastCalledWith(url, expect.anything());
+    }
+    expect(app.mock.callsTo('PATCH', '/v1/me')).toHaveLength(0);
   });
 });

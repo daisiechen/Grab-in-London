@@ -148,7 +148,8 @@
 
 - [平台配置交接](delivery/platform-configuration-2026-10-21.zh-CN.md)：账号、DNS、密钥安全加载方式和真实接入边界，供后续开发会话使用。
 
-- [政策审核清单](policies/README.md)、[隐私通知英文草稿](policies/privacy-notice.draft.en.md)与[社区规则英文草稿](policies/community-guidelines.draft.en.md)：个人发布主体的英文初稿、申请进度与发布前待确认项；未批准、未生效。
+- [政策文本与发布核对](policies/README.md)：英文[隐私通知](policies/privacy-notice.draft.en.md)、[使用条款](policies/terms-of-use.draft.en.md)、[社区规则](policies/community-guidelines.draft.en.md)与[支持页](policies/support.draft.en.md)草稿（按当前代码实际数据处理重写，含韩国存储与供应商清单），由 `scripts/build_legal_pages.py` 生成 fancyabite.uk/privacy、/terms、/guidelines、/support 静态页；列出 Owner 必填占位符与需法律确认的要点；未批准、未生效。
+- [App Store 提交材料](delivery/app-store-submission.zh-CN.md)与[英文上架文案](delivery/app-store-listing.en.md)：名称/副标题/描述/关键词、类别、18+ 分级问卷、隐私营养标签、出口合规、内容权利、审核员登录方案、截图计划、正式 Bundle ID `uk.fancyabite.app` 变更清单与 App 图标。
 
 - [原14条阻塞解除准备](delivery/mvp-gate-unblocking-2026-10-21.zh-CN.md)：逐条负责人、解除条件及本地演练；最终状态由独立QA复验判定。
 - [MVP 本地自测与独测交接](delivery/mvp-local-selftest-2026-10-21.zh-CN.md)：本机验证、精确版本、模拟与真实边界及待用户操作。

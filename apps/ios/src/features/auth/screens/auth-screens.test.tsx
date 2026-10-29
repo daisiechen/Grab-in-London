@@ -1,4 +1,5 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
+import * as WebBrowser from 'expo-web-browser';
 import { WebBrowserResultType } from 'expo-web-browser';
 import { SignInScreen } from './SignInScreen.tsx';
 import { EmailScreen } from './EmailScreen.tsx';
@@ -10,6 +11,8 @@ import { clearReturnTo, rememberReturnTo } from '../intent.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
 jest.mock('expo-router', () => require('../../../test/router.ts').expoRouterMock);
+// eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
+jest.mock('expo-web-browser', () => require('../../../test/web-browser.ts').webBrowserMock());
 
 const CHALLENGE_ID = '1d6f0a3e-2b7c-4f8e-9a1d-3c5e7f9b2d40';
 beforeEach(() => {
@@ -78,6 +81,18 @@ describe('SignInScreen (S03)', () => {
     await renderApp(createTestApp(), <SignInScreen />);
     await fireEvent.press(screen.getByRole('button', { name: 'Privacy & community principles' }));
     expect(screen.getByText(/Adults 18\+ meet for friendship over meals/)).toBeOnTheScreen();
+  });
+
+  it('links the full terms, guidelines and privacy notice from the principles sheet', async () => {
+    await renderApp(createTestApp(), <SignInScreen />);
+    for (const [label, url] of [['Terms of use', 'https://fancyabite.uk/terms'], ['Community guidelines', 'https://fancyabite.uk/guidelines'], ['Privacy notice', 'https://fancyabite.uk/privacy']] as const) {
+      await fireEvent.press(screen.getByRole('button', { name: 'Privacy & community principles' }));
+      expect(screen.getByText(/you’ll agree to the Terms of use and Community guidelines/)).toBeOnTheScreen();
+      await fireEvent.press(screen.getByRole('button', { name: label }));
+      expect(WebBrowser.openBrowserAsync).toHaveBeenLastCalledWith(url, expect.anything());
+      // The sheet closes first so the browser isn't presented over a dismissing modal.
+      expect(screen.queryByText(/Adults 18\+ meet for friendship over meals/)).toBeNull();
+    }
   });
 });
 

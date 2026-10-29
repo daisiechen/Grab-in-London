@@ -4,6 +4,7 @@ import {deferred} from '../../test/deferred.ts';
 import type {MockReply} from '../../test/mock-fetch.ts';
 import { act,fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
 import { SurveyScreen } from './SurveyScreen.tsx';
 import { ReportScreen } from './ReportScreen.tsx';
 import { DeleteAccountScreen } from './DeleteAccountScreen.tsx';
@@ -17,6 +18,8 @@ import { base64UrlEncode } from '../../platform/base64url.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
 jest.mock('expo-router', () => require('../../test/router.ts').expoRouterMock);
+// eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
+jest.mock('expo-web-browser', () => require('../../test/web-browser.ts').webBrowserMock());
 
 beforeEach(resetRouter);
 const EXPECTED_RECEIPT = base64UrlEncode(Uint8Array.from({ length: 32 }, (_, i) => (i * 37 + 11) % 256));
@@ -81,6 +84,20 @@ describe('SettingsScreen groups', () => {
     await renderApp(app, <SettingsScreen />);
     expect(screen.getByRole('header', { name: 'Data sources' })).toBeOnTheScreen();
     expect(screen.getByText(/Open Government Licence v3\.0.*Open Parliament Licence v3\.0/)).toBeOnTheScreen();
+  });
+
+  it.each([['members', true], ['guests', false]] as const)('links the public legal and support pages on the Fancy site for %s', async (_who, signedIn) => {
+    const pages = [['Contact support', 'https://fancyabite.uk/support'], ['Community guidelines', 'https://fancyabite.uk/guidelines'], ['Terms of use', 'https://fancyabite.uk/terms'], ['Privacy notice', 'https://fancyabite.uk/privacy']] as const;
+    const app = createTestApp();
+    if (signedIn) await signIn(app, me());
+    await renderApp(app, <SettingsScreen />);
+    expect(screen.getByRole('header', { name: 'Help & legal' })).toBeOnTheScreen();
+    for (const [label, url] of pages) {
+      await fireEvent.press(screen.getByRole('button', { name: label }));
+      expect(WebBrowser.openBrowserAsync).toHaveBeenLastCalledWith(url, expect.objectContaining({ presentationStyle: 'pageSheet' }));
+    }
+    expect(WebBrowser.openBrowserAsync).toHaveBeenCalledTimes(pages.length);
+    expect(mockRouter.push).not.toHaveBeenCalled();
   });
 
   it('guests only see public privacy copy and deletion status', async () => {

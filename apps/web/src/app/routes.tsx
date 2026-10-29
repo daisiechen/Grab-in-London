@@ -19,6 +19,7 @@ import { NotificationsPage } from '../features/inbox/NotificationsPage.tsx';
 import { ChatPage } from '../features/inbox/ChatPage.tsx';
 import { PostMealPage } from '../features/post-meal/PostMealPage.tsx';
 import { ReportStatusPage } from '../features/reports/ReportStatusPage.tsx';
+import { LEGAL_PATHS, LegalRedirect } from '../features/legal/LegalRedirect.tsx';
 
 export interface AppRoute { path: string; element: ReactElement }
 
@@ -45,4 +46,5 @@ export const appRoutes: AppRoute[] = [
   { path: '/settings/deletion', element: <DeletionPage /> },
   { path: '/settings/reports/:reportId', element: <ReportStatusPage /> },
   { path: '/post-meal/:mealId', element: <PostMealPage /> },
+  ...LEGAL_PATHS.map((path) => ({ path, element: <LegalRedirect path={path} /> })),
 ];

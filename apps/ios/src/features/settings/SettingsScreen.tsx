@@ -9,10 +9,14 @@ import { Sheet } from '../../ui/Sheet.tsx';
 import { Body } from '../../ui/Text.tsx';
 import { useServices, useSessionState } from '../../services.tsx';
 import { AnalyticsConsent } from '../../analytics/Consent.tsx';
+import { LEGAL_PAGES, openLegalPage, type LegalPage } from '../../lib/legal.ts';
+
+/** Order of the public legal/support pages under “Help & legal” (App Store: privacy policy, terms, contact). */
+const LEGAL_ROWS: readonly LegalPage[] = ['support', 'guidelines', 'terms', 'privacy'];
 
 /**
  * Settings (own account only), grouped as in the demo: notifications & previews, privacy & safety,
- * help shape Fancy, account. Sign-out is confirmed in a sheet.
+ * help shape Fancy, account, then help & legal pages and data credits. Sign-out is confirmed in a sheet.
  */
 export function SettingsScreen() {
   const { session, analytics } = useServices();
@@ -60,6 +64,10 @@ export function SettingsScreen() {
       <SettingsLink label="Check deletion status" onPress={() => router.push('/deletion-status')} />
       {signedIn ? <SettingsLink danger label="Delete account" onPress={() => router.push('/delete-account')} /> : null}
       {signedIn ? <SettingsLink danger label="Sign out" onPress={() => setConfirm(true)} /> : null}
+
+      {/* Public pages hosted on the Fancy site; available to guests too (App Store privacy-policy and support links). */}
+      <Text accessibilityRole="header" style={accountText.h2}>Help & legal</Text>
+      {LEGAL_ROWS.map((page) => <SettingsLink key={page} label={LEGAL_PAGES[page].label} onPress={() => void openLegalPage(page)} />)}
 
       {/* Credits the area boundary and name sources as their licences require (docs/engineering/london-areas.zh-CN.md). */}
       <Text accessibilityRole="header" style={accountText.h2}>Data sources</Text>

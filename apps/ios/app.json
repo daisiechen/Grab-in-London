@@ -5,6 +5,7 @@
     "scheme": "fancy",
     "version": "0.1.0",
     "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "light",
     "platforms": [
       "ios",
@@ -40,7 +41,8 @@
       "typedRoutes": false
     },
     "extra": {
-      "apiBaseUrl": "http://localhost:3000"
+      "apiBaseUrl": "http://localhost:3000",
+      "legalBaseUrl": "https://fancyabite.uk"
     },
     "web": {
       "bundler": "metro",

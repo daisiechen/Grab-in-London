@@ -13,6 +13,7 @@ import { colors } from '../../../ui/tokens.ts';
 import { Body } from '../../../ui/Text.tsx';
 import { useServices } from '../../../services.tsx';
 import { AUTH_REDIRECT_URL } from '../../../config.ts';
+import { LEGAL_PAGES, openLegalPage, type LegalPage } from '../../../lib/legal.ts';
 import { signInWithProvider, type Provider } from '../oauth.ts';
 import { useFinishSignIn } from '../useAuthGate.ts';
 import { clearPendingLink, getPendingLink, setPendingLink } from '../link.ts';
@@ -50,6 +51,8 @@ export function SignInScreen() {
     } else if(result.kind==='cancelled')clearPendingLink();
     else if (result.kind === 'failed') setIssue(result.message);
   };
+  // Close the sheet first so the in-app browser isn't presented over a dismissing modal.
+  const openPage = (page: LegalPage) => { setShowTerms(false); void openLegalPage(page); };
   const browse = () => {clearPendingLink();if(router.canGoBack())router.back();else router.replace('/');};
 
   return (
@@ -57,6 +60,10 @@ export function SignInScreen() {
       <Sheet visible={showTerms} title="Community & privacy principles" onClose={() => setShowTerms(false)}>
         <Body>Adults 18+ meet for friendship over meals. Respect boundaries and dietary needs. No harassment or unsolicited pitches.</Body>
         <Body>Your name, photo and introduction are public to other members; your email is private.</Body>
+        <Body>Before you join a table you’ll agree to the Terms of use and Community guidelines. The Privacy notice explains how Fancy uses your information.</Body>
+        <View style={styles.sheetLinks}>
+          {SHEET_PAGES.map((page) => <TextAction key={page} label={LEGAL_PAGES[page].label} onPress={() => openPage(page)} />)}
+        </View>
       </Sheet>
     )}>
       <View style={styles.header}>
@@ -83,6 +90,8 @@ export function SignInScreen() {
     </ActionPage>
   );
 }
+
+const SHEET_PAGES: readonly LegalPage[] = ['terms', 'guidelines', 'privacy'];
 
 /** Outlined provider row (demo .brand-provider): label left, external-link glyph right. */
 function ProviderButton({ label, busy, disabled, onPress }: { label: string; busy: boolean; disabled: boolean; onPress: () => void }) {
@@ -118,4 +127,5 @@ const styles = createStyles({
   pressed: { opacity: 0.85 },
   inactive: { opacity: 0.5 },
   links: { marginTop: 4, alignItems: 'center' },
+  sheetLinks: { alignItems: 'flex-start' },
 });

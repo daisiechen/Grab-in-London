@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { Stack, useRouter } from 'expo-router';
 import { Keyboard, Text, View } from 'react-native';
 import { ActionPage, BRAND_PAPER } from '../../../ui/ActionPage.tsx';
-import { Primary } from '../../../ui/Button.tsx';
+import { Primary, TextAction } from '../../../ui/Button.tsx';
 import { CheckRow } from '../../../ui/CheckRow.tsx';
 import { FormMessage } from '../../../ui/FormMessage.tsx';
 import { createStyles } from '../../../ui/styles.ts';
@@ -11,11 +11,14 @@ import { colors } from '../../../ui/tokens.ts';
 import { authText } from '../../auth/screens/auth-text.ts';
 import { useServices, useSessionState } from '../../../services.tsx';
 import { POLICY_VERSION } from '../../../config.ts';
+import { LEGAL_PAGES, openLegalPage, type LegalPage } from '../../../lib/legal.ts';
 import { takeReturnTo } from '../../auth/intent.ts';
 import { useLeaveAuth } from '../../auth/useAuthGate.ts';
 import { buildPatch, formFromMe, needsConsent, validateProfile, type ProfileField, type ProfileForm } from '../model.ts';
 import { ProfileSaver } from '../save.ts';
 import { ProfileFormView } from './ProfileFormView.tsx';
+
+const CONSENT_PAGES: readonly LegalPage[] = ['terms', 'guidelines', 'privacy'];
 
 /** profileGate completion for the signed-in user (same user; never creates another account). */
 export function ProfileSetupScreen() {
@@ -65,7 +68,11 @@ function ProfileSetupScreenContent() {
       <Text style={authText.prose}>Give your future table a little context. Your email stays private.</Text>
       <ProfileFormView form={form} onChange={setForm} error={error} mode="setup" />
       <Text style={styles.note}>Add work, school, hometown and more interests in Edit profile whenever you like.</Text>
-      {requireConsent ? <View style={styles.consent}><CheckRow label="I’m 18 or older and I’ll keep this community welcoming, respectful and friendship-first." checked={consent} onChange={setConsent} /></View> : null}
+      {requireConsent ? <View style={styles.consent}><CheckRow label="I’m 18 or older and I’ll keep this community welcoming, respectful and friendship-first." checked={consent} onChange={setConsent} />
+        {/* The acknowledgement is where members accept the terms (App Store guideline 1.2: users agree to terms before posting). */}
+        <Text style={styles.terms}>Taking your seat means you agree to the Terms of use and Community guidelines. The Privacy notice explains how your information is used.</Text>
+        <View style={styles.termsLinks}>{CONSENT_PAGES.map((page) => <TextAction key={page} label={LEGAL_PAGES[page].label} onPress={() => void openLegalPage(page)} />)}</View>
+      </View> : null}
       <View style={styles.message}><FormMessage message={error?.message ?? null} /></View>
     </ActionPage>
   );
@@ -74,5 +81,7 @@ function ProfileSetupScreenContent() {
 const styles = createStyles({
   note: { fontSize: 11, lineHeight: 16, color: colors.muted, marginTop: 14 },
   consent: { marginTop: 10 },
+  terms: { fontSize: 11, lineHeight: 16, color: colors.muted, marginTop: 8 },
+  termsLinks: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 16 },
   message: { marginTop: 6 },
 });
