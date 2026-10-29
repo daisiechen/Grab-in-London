@@ -6,7 +6,7 @@ import { ERROR_CODES, ERROR_STATUS } from './errors.ts';
 import { errorsFor, type OperationDef } from './operation.ts';
 import { operations, operationsById } from './registry.ts';
 import { buildClientMetadata, buildOpenApi } from './openapi.ts';
-import { ADMIN_DRILLDOWN_TARGETS, ADMIN_PAGE_KEYS, ADMIN_PAGES, CUISINES, DIETARY, MOODS, SURVEY_REASONS } from './dictionaries.ts';
+import { ADMIN_DRILLDOWN_TARGETS, ADMIN_PAGE_KEYS, ADMIN_PAGES, CUISINES, DIETARY, isUrgentReportReason, MOODS, REPORT_REASONS, SURVEY_REASONS, URGENT_REPORT_REASONS } from './dictionaries.ts';
 import { isAllowedReturnTarget } from './return-target.ts';
 import { normalizeHostDeclarations } from './declarations.ts';
 import { CliCredentials, IosCredentials, ReturnTarget, LoopbackRedirectUri } from './operations/auth.ts';
@@ -81,8 +81,21 @@ describe('registry matches the reviewed API contract', () => {
     expect(body({ action: 'RESTORE', note: 'No breach found.', publicOutcome: null, resolve: true })).toBe(true);
     const summary = Object.keys((byId('listModerationReports')!.success.data as unknown as { properties: object }).properties);
     for (const field of ['details', 'email', 'displayName']) expect(summary).not.toContain(field);
+    expect(summary).toEqual(expect.arrayContaining(['reason', 'urgent']));
     expect(byId('getPublicProfile')!.auth).toBe('optionalSession');
     expect(errorsFor(byId('verifyEmail')!)).toContain('ACCOUNT_SUSPENDED');
+  });
+
+  it('takes one of five report reasons (owner decision 2026-10-29) and still accepts the legacy one', () => {
+    expect([...REPORT_REASONS]).toEqual(['safety', 'harassment', 'scam', 'under_18', 'other']);
+    expect([...URGENT_REPORT_REASONS]).toEqual(['safety', 'harassment', 'under_18']);
+    expect(REPORT_REASONS.filter(isUrgentReportReason)).toEqual(['safety', 'harassment', 'under_18']);
+    expect(isUrgentReportReason('private_concern')).toBe(false);
+    const body = validator(byId('createReport')!.body!);
+    const base = { targetType: 'USER', targetId: '00000000-0000-4000-8000-000000000001', details: 'Something happened.' };
+    for (const reason of [...REPORT_REASONS, 'private_concern']) expect(body({ ...base, reason }), reason).toBe(true);
+    for (const reason of ['', 'urgent', 'PRIVACY_REDACTED', 'SAFETY']) expect(body({ ...base, reason }), reason).toBe(false);
+    expect(body({ targetType: 'USER', targetId: base.targetId, details: base.details })).toBe(false);
   });
 
   it('defines photo reads as public ref-only and exposes no client media URL/resource-name input',()=>{

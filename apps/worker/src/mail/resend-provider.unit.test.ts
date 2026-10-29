@@ -22,6 +22,14 @@ describe('Resend sending-only production transport',()=>{
    expect(await provider.send({idempotencyKey:id,email:'support@example.invalid',template:'moderation_digest',refs:{digestId:mealId},links:bad})).toEqual({status:'RETRY'});
   expect(fetcher).toHaveBeenCalledTimes(1);
  });
+ it('sends the urgent alert as admin report links only',async()=>{
+  const fetcher=vi.fn<typeof fetch>(async()=>Response.json({id})),provider=new ResendMailProvider({...options,fetch:fetcher});
+  const links=[`https://admin.fancy.example/#moderation/${mealId}`];
+  expect(await provider.send({idempotencyKey:id,email:'support@example.invalid',template:'moderation_urgent',refs:{alertId:mealId},links})).toEqual({status:'SENT',providerId:id});
+  const body=JSON.parse(String(fetcher.mock.calls[0]![1]?.body));
+  expect(body.subject).toBe('Fancy moderation: urgent report to review (1)');expect(body.text).toContain(links[0]);
+  expect(await provider.send({idempotencyKey:id,email:'support@example.invalid',template:'moderation_urgent',refs:{alertId:mealId},links:[]})).toEqual({status:'RETRY'});
+ });
  it('does not call any API or infer NOT_SENT for an unknown lookup',async()=>{
   const fetcher=vi.fn<typeof fetch>(),provider=new ResendMailProvider({...options,fetch:fetcher});expect(await provider.lookup(id)).toEqual({status:'UNKNOWN'});expect(fetcher).not.toHaveBeenCalled();
  });

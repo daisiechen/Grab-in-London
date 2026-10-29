@@ -296,7 +296,10 @@ export const ModerationReportSummary = Obj({
   caseId: Uuid,
   caseVersion: DecimalString,
   targetType: Enum(REPORT_TARGET_TYPES),
+  /** One of REPORT_REASONS, the legacy `private_concern`, or PRIVACY_REDACTED after a privacy purge. */
   reason: T.String({ maxLength: 40 }),
+  /** Reason is safety, harassment or under_18: listed first among open reports and alerted at once. */
+  urgent: T.Boolean(),
   reportStatus: Enum(REPORT_STATUSES),
   caseStatus: Enum(SUPPORT_CASE_STATUSES),
   createdAt: Instant,

@@ -4,7 +4,8 @@ import {randomUUID,createHmac} from 'node:crypto';
 import {loadConfig,type CoreConfig} from '@fancy/config';
 import {createPool,type Pool} from '@fancy/db';
 import {sealSourceSnapshot} from '../../api/src/admin/snapshots.ts';
-import {autoCloseStaleCases,queueModerationDigest} from '../../api/src/moderation/policy.ts';
+import {autoCloseStaleCases,queueEveningReminder,queueModerationDigest,queuePendingUrgentAlert} from '../../api/src/moderation/policy.ts';
+import {ethanDelivery,ethanPushFor,type EthanPushAdapter} from './ethan/push.ts';
 import {UnavailableDeletionStep,type DeletionSteps} from './deletion/provider.ts';
 import {Auth0DeletionStep} from './deletion/auth0.ts';
 import {deletionHandler} from './handlers/deletion.ts';
@@ -28,20 +29,26 @@ export function deletionPolicyApproved(config:CoreConfig):boolean{
 }
 
 /** One runtime owns job leases; external integrations remain unavailable until configured. */
-export function createWorkerRuntime(pool:Pool,config:CoreConfig){
+export function createWorkerRuntime(pool:Pool,config:CoreConfig,options:{ethanPush?:EthanPushAdapter|null}={}){
  const lifecycle=lifecycleHandler(pool);
  const runner=createRunner({pool,owner:`fancy-worker:${randomUUID()}`,handlers:{
   'meal.close':lifecycle,'meal.start':lifecycle,'meal.end':lifecycle,
   'account.purge':deletionHandler(pool,deletionStepsFor(pool,config),deletionPolicyApproved(config)),
  },onDead:(job,errorCode)=>console.error(JSON.stringify({event:'job_dead',...job,errorCode}))});
  const mail=mailDelivery(pool,mailProviderFor(config,pool),config.environment,{onDead:logMailDead,deletionMailEncryption:config.deletionMailEncryption,support:{email:config.supportEmail,adminUrl:config.adminUrl}});
- let lastSnapshot=0,lastModeration=0;
+ const ethanPush=options.ethanPush===undefined?ethanPushFor(config):options.ethanPush;
+ const ethan=ethanDelivery(pool,ethanPush,{adminUrl:config.adminUrl,environment:config.environment});
+ const alertTargets={supportEmail:config.supportEmail,ethan:!!config.ethanModeration};
+ let lastSnapshot=0,lastModeration=0,lastUrgent=0;
  async function tick(){
   if(!await recoveryReady(pool))return {claimed:0,done:0,retried:0,dead:0,lost:0};
   const result=await runner.tick();
   // Moderation housekeeping hourly: close stale cases, then queue the day's digest (from 08:00 London).
-  if(Date.now()-lastModeration>=3600_000){await autoCloseStaleCases(pool);await queueModerationDigest(pool,config.supportEmail,new Date());lastModeration=Date.now();}
+  if(Date.now()-lastModeration>=3600_000){await autoCloseStaleCases(pool);await queueModerationDigest(pool,config.supportEmail,new Date(),alertTargets.ethan);lastModeration=Date.now();}
+  // Every minute: urgent reports coalesced during the last 10-minute window, and the 20:00 reminder.
+  if(Date.now()-lastUrgent>=60_000){await queuePendingUrgentAlert(pool,alertTargets,new Date());await queueEveningReminder(pool,alertTargets.ethan,new Date());lastUrgent=Date.now();}
   await mail.tick();
+  await ethan.tick();
   if(Date.now()-lastSnapshot>=3600_000){
    // Coverage starts at the actual ledger installation, never an invented historical date.
    const {rows:[coverage]}=await pool.query<{started_at:Date}>(`SELECT started_at FROM analytics_delivery_coverage WHERE id=1`);

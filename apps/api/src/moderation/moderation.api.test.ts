@@ -293,6 +293,14 @@ describe('housekeeping', () => {
     expect(closed).toMatchObject({ autoClosed: true, autoActioned: true, caseStatus: 'RESOLVED' });
   });
 
+  it('queues no urgent alert when neither a support address nor the Ethan push is configured', async () => {
+    const one = await member(), target = await member();
+    const r = await one.b.request('POST', '/v1/reports', { headers: key(), body: { targetType: 'USER', targetId: target.id, reason: 'safety', details: 'Synthetic urgent concern.' } });
+    expect(r.statusCode, r.body).toBe(201);
+    expect((await h.db.pool.query(`SELECT count(*)::int AS n FROM moderation_alerts`)).rows[0].n).toBe(0);
+    expect((await h.db.pool.query(`SELECT reason FROM reports WHERE id=$1`, [json(r).data.id])).rows[0].reason).toBe('safety');
+  });
+
   it('queues one digest per London day from 08:00 when a support address is configured', async () => {
     const one = await member(), target = await member();
     await reported(one, 'USER', target.id);

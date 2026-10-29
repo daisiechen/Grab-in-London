@@ -11,7 +11,8 @@ import type { AppDeps } from '../http/context.ts';
 import { lockPostMeal } from '../post-meal/lock.ts';
 import { POST_MEAL_WINDOW_MS, projectAttendance, recordAttendanceRevision, type AttendanceRow } from '../post-meal/attendance.ts';
 import { invalidateIneligiblePairs } from '../connections/service.ts';
-import { applyReportAutomation } from '../moderation/policy.ts';
+import { applyReportAutomation, queueUrgentAlert } from '../moderation/policy.ts';
+import { isUrgentReportReason } from '@fancy/contracts';
 const reportDto = (r: Record<string, unknown>) => ({ id:r.id, receipt:r.receipt, targetType:r.target_type, status:r.status, publicOutcome:r.privacy_redacted?null:r.public_outcome, createdAt:(r.created_at as Date).toISOString() });
 const notificationDto = (r: Record<string, unknown>) => { const refs = r.refs as Record<string,string>; return { id:r.id,template:r.template,createdAt:(r.created_at as Date).toISOString(),readAt:(r.read_at as Date | null)?.toISOString() ?? null,mealId:refs.mealId ?? null,applicationId:refs.applicationId ?? null,conversationId:refs.conversationId ?? null }; };
 async function caseFor(db: Pool | PoolClient, caseId: string, actor: string,lockGrant=false) {
@@ -63,10 +64,12 @@ export function registerSupportRoutes(app: FastifyInstance, deps: AppDeps) {
     const details=body.details.trim();if(!details)throw new DomainError('VALIDATION_FAILED','Describe your concern.');
     const {rows:[r]}=await tx.client.query(`INSERT INTO reports(reporter_id,target_type,target_id,reason,details,receipt) VALUES($1,$2,$3,$4,$5,$6) RETURNING *`,[auth.userId,body.targetType,body.targetId,body.reason,details,randomBytes(12).toString('base64url')]);
     const {rows:[supportCase]}=await tx.client.query<{id:string}>(`INSERT INTO support_cases(report_id,target_type,target_id,details) VALUES($1,$2,$3,$4) RETURNING id`,[r.id,r.target_type,r.target_id,details]);
-    await appendAudit(tx.client,{actorKind:'USER',actorId:auth.userId,action:'report.created',aggregateType:'report',aggregateId:r.id,requestId:request.id});
+    await appendAudit(tx.client,{actorKind:'USER',actorId:auth.userId,action:'report.created',aggregateType:'report',aggregateId:r.id,requestId:request.id,payload:{reason:body.reason}});
     // The reported item is hidden from this reporter at once (reads consult reports); repeated reports
     // limit it for everyone and the reporter receives an automatic acknowledgement (moderation policy).
     await applyReportAutomation(tx,{reportId:r.id,caseId:supportCase!.id,targetType:body.targetType,targetId:body.targetId,threshold:deps.config.moderationAutoHideReporters,requestId:request.id});
+    // Urgent reasons queue an immediate alert in this transaction (coalesced; see moderation policy).
+    if(isUrgentReportReason(body.reason))await queueUrgentAlert(tx.client,{supportEmail:deps.config.supportEmail,ethan:!!deps.config.ethanModeration},await tx.effectiveNow(),request.id);
     const {rows:[current]}=await tx.client.query(`SELECT * FROM reports WHERE id=$1`,[r.id]);
     return {data:reportDto(current),resourceId:r.id};
   });

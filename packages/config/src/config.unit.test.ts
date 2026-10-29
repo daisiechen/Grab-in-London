@@ -219,3 +219,33 @@ describe('moderation configuration', () => {
     expect(loadConfig({ ...production, ADMIN_URL: 'https://admin.example.test/' }).adminUrl).toBe('https://admin.example.test/');
   });
 });
+
+describe('Ethan moderation push configuration', () => {
+  const token = 'e'.repeat(40);
+  const sentinelToken = ['SENTINEL', 'TOKEN', '0123456789abcdef'].join('-');
+  it('is off by default and on when both URL and token are set', () => {
+    expect(loadConfig(local).ethanModeration).toBeNull();
+    expect(loadConfig({ ...local, ETHAN_MODERATION_URL: 'http://127.0.0.1:8099/moderation', ETHAN_MODERATION_TOKEN: token }).ethanModeration)
+      .toEqual({ url: 'http://127.0.0.1:8099/moderation', token });
+    expect(loadConfig({ ...production, ETHAN_MODERATION_URL: 'https://ethan.example.test/hooks/fancy', ETHAN_MODERATION_TOKEN: token }).ethanModeration?.url)
+      .toBe('https://ethan.example.test/hooks/fancy');
+  });
+  it.each([
+    { ETHAN_MODERATION_URL: 'https://ethan.example.test/hooks/fancy' },
+    { ETHAN_MODERATION_TOKEN: sentinelToken },
+    { ETHAN_MODERATION_URL: 'not a url', ETHAN_MODERATION_TOKEN: sentinelToken },
+    { ETHAN_MODERATION_URL: 'ftp://ethan.example.test/', ETHAN_MODERATION_TOKEN: sentinelToken },
+    { ETHAN_MODERATION_URL: 'https://user:pw@ethan.example.test/', ETHAN_MODERATION_TOKEN: sentinelToken },
+    { ETHAN_MODERATION_URL: 'https://ethan.example.test/#x', ETHAN_MODERATION_TOKEN: sentinelToken },
+    { ETHAN_MODERATION_URL: 'https://ethan.example.test/', ETHAN_MODERATION_TOKEN: 'SENTINEL short' },
+    { ETHAN_MODERATION_URL: 'https://ethan.example.test/', ETHAN_MODERATION_TOKEN: 'SENTINEL' },
+  ])('rejects %o without echoing the token', (extra) => {
+    let message = '';
+    try { loadConfig({ ...local, ...extra }); } catch (error) { expect(error).toBeInstanceOf(ConfigError); message = (error as Error).message; }
+    expect(message).toContain('ETHAN_MODERATION_');
+    expect(message).not.toContain('SENTINEL');
+  });
+  it('requires an https URL in production', () => {
+    expect(() => loadConfig({ ...production, ETHAN_MODERATION_URL: 'http://ethan.example.test/hooks', ETHAN_MODERATION_TOKEN: token })).toThrow(/ETHAN_MODERATION_URL/);
+  });
+});

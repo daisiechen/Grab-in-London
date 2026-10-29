@@ -57,6 +57,8 @@ export const CONFIG_KEYS = [
   'SUPPORT_EMAIL',
   'ADMIN_URL',
   'MODERATION_AUTO_HIDE_REPORTERS',
+  'ETHAN_MODERATION_URL',
+  'ETHAN_MODERATION_TOKEN',
 ] as const;
 
 const LOG_LEVELS = ['debug', 'info', 'warn', 'error'] as const;
@@ -98,6 +100,11 @@ export interface CoreConfig {
   adminUrl: string;
   /** Distinct reporters within 7 days that make the server limit reported content (default 2). */
   moderationAutoHideReporters: number;
+  /**
+   * Owner's assistant (Ethan) moderation push: counts and an admin link only, Bearer token (secret,
+   * never logged). Both set or both unset; unset = no push.
+   */
+  ethanModeration: { url: string; token: string } | null;
 }
 
 /** Lists offending keys only; values are never echoed so secrets stay out of logs. */
@@ -279,8 +286,25 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
   const moderationAutoHideReporters = Number(autoHideRaw);
   if (!/^[0-9]{1,2}$/.test(autoHideRaw) || moderationAutoHideReporters < 1 || moderationAutoHideReporters > 20) issues.push('MODERATION_AUTO_HIDE_REPORTERS must be an integer from 1 to 20');
 
+  let ethanModeration: CoreConfig['ethanModeration'] = null;
+  const ethanUrl = value('ETHAN_MODERATION_URL'), ethanToken = value('ETHAN_MODERATION_TOKEN');
+  if (ethanUrl || ethanToken) {
+    if (!ethanUrl || !ethanToken) issues.push('ETHAN_MODERATION_URL and ETHAN_MODERATION_TOKEN must be supplied together');
+    else {
+      let urlOk = false;
+      try {
+        const url = new URL(ethanUrl);
+        urlOk = (url.protocol === 'https:' || (url.protocol === 'http:' && !deployed)) && !url.username && !url.password && !url.hash && ethanUrl.length <= 2048;
+      } catch { /* reported below */ }
+      if (!urlOk) issues.push(`ETHAN_MODERATION_URL must be an absolute ${deployed ? 'https ' : ''}URL without credentials or fragment`);
+      if (ethanToken.length < 16 || ethanToken.length > 4096 || /[\p{Cc}\s]/u.test(ethanToken)) issues.push('ETHAN_MODERATION_TOKEN must be 16–4096 printable characters without spaces');
+      if (!issues.some((i) => i.startsWith('ETHAN_'))) ethanModeration = { url: new URL(ethanUrl).href, token: ethanToken };
+    }
+  }
+
   if (issues.length) throw new ConfigError(issues);
   return {
+    ethanModeration,
     supportEmail,
     adminUrl,
     moderationAutoHideReporters,

@@ -6,7 +6,7 @@
  */
 import type { FastifyInstance } from 'fastify';
 import type { Pool, PoolClient } from 'pg';
-import { MODERATION_SLA_HOURS, type MODERATION_ACTIONS } from '@fancy/contracts';
+import { isUrgentReportReason, MODERATION_SLA_HOURS, URGENT_REPORT_REASONS, type MODERATION_ACTIONS } from '@fancy/contracts';
 import { appendAudit } from '@fancy/db';
 import { DomainError } from '../common/errors.ts';
 import { lockActiveActor } from '../common/actor.ts';
@@ -40,7 +40,7 @@ interface ReportRow {
 }
 
 const summaryDto = (r: ReportRow) => ({
-  reportId: r.report_id, caseId: r.case_id, caseVersion: String(r.case_version), targetType: r.target_type, reason: r.reason,
+  reportId: r.report_id, caseId: r.case_id, caseVersion: String(r.case_version), targetType: r.target_type, reason: r.reason, urgent: isUrgentReportReason(r.reason),
   reportStatus: r.report_status, caseStatus: r.case_status, createdAt: r.created_at.toISOString(),
   dueAt: new Date(r.created_at.getTime() + MODERATION_SLA_HOURS * 3600_000).toISOString(),
   autoActioned: r.auto_actioned_at !== null, autoClosed: r.auto_closed_at !== null, contentLimited: r.limited,
@@ -128,24 +128,26 @@ export function registerModerationRoutes(app: FastifyInstance, deps: AppDeps) {
     const q = request.query as { status?: 'OPEN' | 'RESOLVED' | 'ALL'; targetType?: TargetType; claimed?: 'me'; cursor?: string; limit?: number };
     const status = q.status ?? 'OPEN';
     const ascending = status === 'OPEN';
-    const scope = { actor: auth!.userId, resource: 'moderation-reports', filterHash: `${status}|${q.targetType ?? ''}|${q.claimed ?? ''}`, epoch: '1' };
-    let boundary: [string, string] | null = null;
+    // Open reports: urgent reasons first (rank 0), then oldest first. Closed/all: newest first.
+    const scope = { actor: auth!.userId, resource: 'moderation-reports', filterHash: `${status}|${q.targetType ?? ''}|${q.claimed ?? ''}`, epoch: '2' };
+    let boundary: [number, string, string] | null = null;
     if (q.cursor) {
       try {
         const value: unknown = JSON.parse(decodeCursor(deps.config.sessionSecret, scope, q.cursor));
-        if (!Array.isArray(value) || value.length !== 2 || typeof value[0] !== 'string' || !Number.isFinite(Date.parse(value[0])) || typeof value[1] !== 'string' || !UUID.test(value[1])) throw new Error();
-        boundary = value as [string, string];
+        if (!Array.isArray(value) || value.length !== 3 || (value[0] !== 0 && value[0] !== 1) || typeof value[1] !== 'string' || !Number.isFinite(Date.parse(value[1])) || typeof value[2] !== 'string' || !UUID.test(value[2])) throw new Error();
+        boundary = value as [number, string, string];
       } catch { throw new DomainError('VALIDATION_FAILED', 'Invalid queue page.'); }
     }
     const limit = q.limit ?? 20;
-    const { rows } = await deps.pool.query<ReportRow & { cursor_created_at: string }>(`SELECT x.*,x.created_at::text AS cursor_created_at FROM (${reportSql('$1')}) x
+    const rank = `(CASE WHEN x.reason=ANY($8::text[]) THEN 0 ELSE 1 END)`;
+    const { rows } = await deps.pool.query<ReportRow & { cursor_created_at: string; urgent_rank: number }>(`SELECT x.*,x.created_at::text AS cursor_created_at,${rank}::int AS urgent_rank FROM (${reportSql('$1')}) x
       WHERE ($2='ALL' OR ($2='OPEN' AND x.case_status<>'RESOLVED') OR ($2='RESOLVED' AND x.case_status='RESOLVED'))
         AND ($3::text IS NULL OR x.target_type=$3) AND (NOT $4::boolean OR x.claimed)
-        AND ($5::timestamptz IS NULL OR ${ascending ? '(x.created_at,x.report_id)>($5::timestamptz,$6::uuid)' : '(x.created_at,x.report_id)<($5::timestamptz,$6::uuid)'})
-      ORDER BY x.created_at ${ascending ? 'ASC' : 'DESC'},x.report_id ${ascending ? 'ASC' : 'DESC'} LIMIT $7`,
-    [auth!.userId, status, q.targetType ?? null, q.claimed === 'me', boundary?.[0] ?? null, boundary?.[1] ?? null, limit + 1]);
+        AND ($5::timestamptz IS NULL OR ${ascending ? `(${rank},x.created_at,x.report_id)>($9::int,$5::timestamptz,$6::uuid)` : '($9::int IS NOT NULL AND (x.created_at,x.report_id)<($5::timestamptz,$6::uuid))'})
+      ORDER BY ${ascending ? `${rank} ASC,x.created_at ASC,x.report_id ASC` : 'x.created_at DESC,x.report_id DESC'} LIMIT $7`,
+    [auth!.userId, status, q.targetType ?? null, q.claimed === 'me', boundary?.[1] ?? null, boundary?.[2] ?? null, limit + 1, [...URGENT_REPORT_REASONS], boundary?.[0] ?? 0]);
     const page = rows.slice(0, limit), last = page.at(-1);
-    return { data: page.map(summaryDto), page: { hasMore: rows.length > limit, nextCursor: rows.length > limit && last ? encodeCursor(deps.config.sessionSecret, scope, JSON.stringify([last.cursor_created_at, last.report_id])) : null } };
+    return { data: page.map(summaryDto), page: { hasMore: rows.length > limit, nextCursor: rows.length > limit && last ? encodeCursor(deps.config.sessionSecret, scope, JSON.stringify([last.urgent_rank, last.cursor_created_at, last.report_id])) : null } };
   });
 
   defineWrite(app, deps, 'claimModerationReport', async ({ request, auth }, tx) => {
