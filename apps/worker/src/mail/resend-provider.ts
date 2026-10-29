@@ -11,7 +11,7 @@ interface ResendOptions {
  onDispatch?:(input:{outboxId:string;claimToken:string;payloadSha256:string})=>Promise<boolean>;
 }
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const REF_KEYS=new Set(['mealId','applicationId','conversationId','deletionId','digestId']);
+const REF_KEYS=new Set(['mealId','applicationId','conversationId','deletionId','digestId','alertId']);
 const TEMPLATES:Readonly<Record<string,{subject:string;message:string;deletion?:true}>>={
  application_approved:{subject:'Your Fancy application was approved',message:'Your application was approved. Open Fancy to see the meal details.'},
  application_declined:{subject:'Your Fancy application was declined',message:'Your application was declined. Open Fancy to review your application.'},
@@ -20,7 +20,10 @@ const TEMPLATES:Readonly<Record<string,{subject:string;message:string;deletion?:
  deletion_received:{subject:'Fancy received your account deletion request',message:'Your account deletion request was received. Use your saved deletion receipt in Fancy to check its status.',deletion:true},
  deletion_completed:{subject:'Your Fancy account deletion is complete',message:'Your account deletion is complete. Use your saved deletion receipt in Fancy to check its status.',deletion:true},
  moderation_digest:{subject:'Fancy moderation: open reports to review',message:'These reports are still open, oldest first. Each link opens the report in the Fancy admin console (staff sign-in required).'},
+ moderation_urgent:{subject:'Fancy moderation: urgent report to review',message:'A report about personal safety, harassment or a member who may be under 18 was received. Each link opens the report in the Fancy admin console (staff sign-in required).'},
 };
+/** Templates whose body is a list of admin report links (ids only, never report text). */
+const LINK_TEMPLATES=new Set(['moderation_digest','moderation_urgent']);
 const escapeHtml=(value:string)=>value.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
 
 /** Sending-only Resend adapter. It never logs inputs/errors or invents lookup evidence.
@@ -43,7 +46,7 @@ export class ResendMailProvider implements MailProvider {
   const template=Object.hasOwn(TEMPLATES,input.template)?TEMPLATES[input.template]:undefined;
   if(!template||!UUID.test(input.idempotencyKey)||typeof input.email!=='string'||input.email.length>320||!/^[^\s@<>]+@[^\s@<>]+$/.test(input.email)||Object.entries(input.refs).some(([key,value])=>!REF_KEYS.has(key)||typeof value!=='string'||!UUID.test(value)))return {status:'RETRY'};
   let body:string;
-  if(input.template==='moderation_digest'){
+  if(LINK_TEMPLATES.has(input.template)){
    // Only https (or loopback http) admin links ending in a report id; no report text ever enters mail.
    const links=input.links??[];
    if(!links.length||links.length>50||links.some(link=>{try{const url=new URL(link);return !((url.protocol==='https:'||(url.protocol==='http:'&&['localhost','127.0.0.1','[::1]'].includes(url.hostname)))&&!url.username&&!url.password&&/^#moderation\/[0-9a-f-]{36}$/i.test(url.hash));}catch{return true;}}))return {status:'RETRY'};

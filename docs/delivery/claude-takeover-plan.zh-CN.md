@@ -102,7 +102,8 @@ J09（支持）、J10/J11（后台）在 iOS 首发旅程完成后另行安排�
 - 范围扩展：原[后台PRD](../product/admin/PRD.zh-CN.md)只建五个分析模块、明确不做客服/内容安全；用户 2026-10-28 要求补齐举报处理与 J09 支持个案，视为已批准的范围扩展。后台PRD正文是冻结快照，未改，以本节为准。
 - 用户是独立创始人，不希望手工逐条处理，要求“近乎零操作、全部可撤回、全部留审计”（同日补充）。下列自动规则即按此设计。
 - 角色：沿用现有 `support` 角色（与 J09 支持 CLI 相同），没有新增 `moderator`；所有员工接口要求服务端角色 + 身份提供方的 MFA。查看举报详情或处理前需“领取”，领取即写入与 J09 相同的个案授权（`support_case_grants`），并记审计。
-- 不做：通用客服工单、批量处理、员工管理页、举报原因分级（目前只有一个 `private_concern` 原因，见 8.5）。
+- 不做：通用客服工单、批量处理、员工管理页。
+- 举报原因（2026-10-29 Owner 决定，替代原单一 `private_concern`）：`safety` 人身安全或威胁、`harassment` 骚扰或仇恨、`scam` 诈骗/垃圾信息/广告、`under_18` 可能未满 18 岁、`other` 其他；iOS 举报页（成员/饭局/消息）必选其一。`safety`、`harassment`、`under_18` 为紧急。旧数据与旧客户端（含 Web 举报面板）的 `private_concern` 仍被接受，后台显示为“其他”。
 
 ### 8.2 自动规则（服务端实际执行的内容）
 
@@ -112,11 +113,13 @@ J09（支持）、J10/J11（后台）在 iOS 首发旅程完成后另行安排�
 | 重复举报自动限制 | 同一对象 7 天内有 ≥N 个不同举报人（`MODERATION_AUTO_HIDE_REPORTERS`，默认 2，范围 1–20）时：消息对所有人隐藏正文；饭局从发现页隐藏、非成员打开详情返回 404、不再接受新申请（不取消）；成员资料的简介与头像对他人隐藏。仅设时间戳遮盖，原文不改，可恢复。相关未关闭个案标记“已自动限制，待复核”，写入 `moderation_actions`（系统）与审计 |
 | 自动回执 | 举报人在 `reportStatus` 的公开结果立即看到：已自动限制时 “Thanks — we’ve received this and limited the content while we review.”，否则 “Thanks — we’ve received your report and will review it.” |
 | 30 天自动关闭 | 没有任何员工处理（无员工动作、无 `resolveCase`、无出席纠错）的个案在创建 30 天后由 worker 关闭，自动限制保留；举报人看到 “…The content stays limited and this report is now closed.” 或 “…This report is now closed.”；在“已关闭”列表与处理记录中保留 |
+| 紧急提醒（2026-10-29） | 紧急原因的新举报在同一事务内写入 outbox（`moderation_alerts` + outbox 行）：`SUPPORT_EMAIL` 邮件（模板 `moderation_urgent`，只含后台链接）和 Ethan 推送（`kind: "urgent"`）。10 分钟内最多一条，期间的紧急举报由 worker 每分钟检查、窗口结束后合并成一条并带累计数量；每个个案最多提醒一次（`support_cases.urgent_alert_id`）。两个目的地都未配置时不排队 |
+| Ethan 推送（2026-10-29） | 配置 `ETHAN_MODERATION_URL` + `ETHAN_MODERATION_TOKEN` 后，worker 经 outbox（`channel='ETHAN'`）POST JSON（Bearer 令牌）：`morning` 随每日摘要（08:00 后、有未关闭举报）、`evening`（20:00 后每日一次、有超时或 6 小时内到期）、`urgent`（见上）。只含数量与后台链接；429/5xx 退避重试，其他 4xx 终止并只记日志元数据。字段约定见[举报值守流程 §4](../operations/moderation-runbook.zh-CN.md) |
 | 每日摘要邮件 | 配置 `SUPPORT_EMAIL` 后，worker 每个伦敦日 08:00 后最多排队一封摘要（最多 50 条未关闭举报，最旧在前），经现有邮件 outbox 发送；邮件只含后台深链（`ADMIN_URL` + `#moderation/<reportId>`，默认 `WEB_ORIGIN/admin/`），不含举报文字。开发环境 `MAIL_ADAPTER=outbox_test` 只入 outbox 不外发 |
 
 ### 8.3 员工操作
 
-- 队列：未关闭举报最旧在前，显示 24 小时处理目标（剩余/已超时）、已自动限制、7 天内举报人数、账号状态；列表不含举报文字、姓名、邮箱。可一键“维持 / 恢复 / 停用”（停用需二次确认），使用预设内部备注。
+- 队列：未关闭举报中紧急原因在前（标“紧急”），其余最旧在前；显示原因、24 小时处理目标（剩余/已超时）、已自动限制、7 天内举报人数、账号状态；列表不含举报文字、姓名、邮箱。可一键“维持 / 恢复 / 停用”（停用需二次确认），使用预设内部备注。`under_18` 举报的详情页显示值守规则“由人先停用待核实年龄”，停用的预设备注改为对应文字；系统不自动停用。
 - 详情：举报人匿名编号、举报说明、被举报内容的最小上下文（资料公开字段与头像 / 饭局字段 / 被举报消息及前后各最多 3 条），处理记录。
 - 动作（每项必须填写内部备注，If-Match 为个案版本，幂等键防重复）：`UPHOLD` 维持限制并关闭、`RESTORE` 恢复内容并关闭（未违规）、`HIDE_CONTENT` 隐藏、`CANCEL_MEAL` 取消饭局（通知全部成员）、`RESET_PROFILE_TEXT` 清除昵称与简介（成员需重新填写才能继续申请/发起）、`REMOVE_PROFILE_PHOTO` 删除头像、`SUSPEND_USER` 停用账号并关闭、`UNSUSPEND_USER` 恢复账号。关闭时举报人看到员工填写的回复或标准说明。
 - 停用：账号状态 `SUSPENDED`，撤销全部会话；登录与 API 调用返回 403 `ACCOUNT_SUSPENDED`（“This account has been suspended for breaking the Fancy community guidelines. Contact Fancy support if you think this is a mistake.”），iOS/Web 显示同一说明；用同一已验证邮箱换登录方式也被拒绝。公开资料按已删除成员处理（资料 404、消息“Former member”、饭局标题遮盖、主持的饭局不进发现页）。恢复后可重新登录，内容随之恢复。停用不自动取消其主持的饭局。
@@ -130,11 +133,12 @@ J09（支持）、J10/J11（后台）在 iOS 首发旅程完成后另行安排�
 
 ### 8.5 待用户决定 / 外部关口
 
-2026-10-29 Owner 已定：24 小时复核由 Owner 承担、托付 Ethan 做摘要提醒（流程见[举报值守流程](../operations/moderation-runbook.zh-CN.md)）；本版举报原因不分级；被停用成员删号走支持邮箱；员工 MFA 在部署时于 Auth0 开启；运营者为 Owner 个人。以下为仍未关闭的事项：
+2026-10-29 Owner 已定：24 小时复核由 Owner 承担、托付 Ethan 做摘要提醒（流程见[举报值守流程](../operations/moderation-runbook.zh-CN.md)）；同日改定举报原因分五类、紧急原因立即提醒（邮件 + Ethan）、Ethan 推送接口（早/晚/紧急，见值守流程 §4）；被停用成员删号走支持邮箱；员工 MFA 在部署时于 Auth0 开启；运营者为 Owner 个人。以下为仍未关闭的事项：
 
 - 公开支持邮箱（社区规则草稿与 App 内联系方式）及 `SUPPORT_EMAIL` 的实际值；邮件发送需 Resend 已配置。
 - 24 小时目标由谁值守：自动规则保证举报人立即得到回执和限制，但员工复核仍需人看摘要邮件。
-- 是否增加举报原因分级（如人身安全/骚扰/诈骗）：目前 App 只收一个原因，因此“高风险原因立即邮件”尚未实现；增加分级需要 App 举报页与契约同步修改。
+- Ethan 侧接收口（Building-Ethan 仓库）上线与端到端核对；`ETHAN_MODERATION_URL` / `ETHAN_MODERATION_TOKEN` 的实际值。
+- Web 举报面板仍只提交旧原因 `private_concern`（按“其他”处理）；如需在 Web 选择原因，另行修改。
 - Auth0 是否对员工强制 MFA 并在令牌中返回 `amr: mfa`（未确认前生产后台不可用）；员工角色授予流程。
 - 后台生产托管位置（同源路径）与 `ADMIN_URL`。
 - 被停用成员如需删除账号，目前只能通过支持渠道处理（其无法登录发起删除）。

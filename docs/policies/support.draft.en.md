@@ -15,7 +15,7 @@ Fancy is run by one person. We read every message and aim to reply within {{SUPP
 
 ## Report a member, a meal or a message
 
-Open the member's profile or the meal and choose “Report this profile” or “Report this meal”. To report something said in a chat, press and hold the message and choose “Report message”. Tell us what happened in a few words. Your report is private and you receive a reference so you can check its status. You can also block a member from their profile to stop private contact.
+Open the member's profile or the meal and choose “Report this profile” or “Report this meal”. To report something said in a chat, press and hold the message and choose “Report message”. Choose what it is about and tell us what happened in a few words. Reports about personal safety, harassment or someone who may be under 18 reach us straight away. Your report is private and you receive a reference so you can check its status. You can also block a member from their profile to stop private contact.
 
 ## Signing in
 

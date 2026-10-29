@@ -89,6 +89,17 @@ describe('environment template and secrets', () => {
     expect(scan(ROOT)).toEqual([]);
   });
 
+  it('detects an assigned Ethan moderation token in source', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'fancy-scan-ethan-'));
+    try {
+      mkdirSync(join(dir, 'apps/worker'), { recursive: true });
+      writeFileSync(join(dir, 'apps/worker/env.ts'), `const env = { ${'ETHAN_MODERATION_TOKEN'}: "${'tok_' + 'a1B2c3D4e5F6g7H8i9J0'}" };`);
+      expect(scan(dir)).toEqual(['apps/worker/env.ts: Ethan moderation token']);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   it('exits non-zero from the CLI when a secret is present', () => {
     const dir = mkdtempSync(join(tmpdir(), 'fancy-scan-cli-'));
     try {

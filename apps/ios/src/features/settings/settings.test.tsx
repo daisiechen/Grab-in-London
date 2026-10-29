@@ -115,12 +115,13 @@ describe('ReportScreen', () => {
     routeParams.current = { targetType: 'USER', targetId: HOST_ID };
     app.mock.on('POST', '/v1/reports', ok({ id: '1b2c3d4e-5f60-4a7b-8c9d-0e1f2a3b4c5d', receipt: 'FNC-7Q2K9', status: 'RECEIVED', targetType: 'USER', publicOutcome: null, createdAt: '2026-10-21T10:00:00Z' }, 201));
     await renderApp(app, <ReportScreen />);
+    await fireEvent.press(screen.getByRole('radio', { name: 'Harassment or hate' }));
     await fireEvent.changeText(screen.getByLabelText('What would you like us to know?'), 'Unwelcome messages after the meal.');
     await fireEvent.press(screen.getByRole('button', { name: 'Submit report' }));
     expect(await screen.findByText('FNC-7Q2K9')).toBeOnTheScreen();
     expect(screen.getByText('Status: Received')).toBeOnTheScreen();
     expect(screen.queryByText(/resolved|action taken/i)).toBeNull();
-    expect(app.mock.callsTo('POST', '/v1/reports')[0]?.body).toEqual({ targetType: 'USER', targetId: HOST_ID, reason: 'private_concern', details: 'Unwelcome messages after the meal.' });
+    expect(app.mock.callsTo('POST', '/v1/reports')[0]?.body).toEqual({ targetType: 'USER', targetId: HOST_ID, reason: 'harassment', details: 'Unwelcome messages after the meal.' });
   });
 
   it('looks up the status of the report by its id and shows any public outcome', async () => {
@@ -134,6 +135,9 @@ describe('ReportScreen', () => {
     app.mock.on('GET', `/v1/me/reports/${ID}`, ok({ ...receipt, status: 'RESPONDED', publicOutcome: 'We spoke with the host.' }));
     await renderApp(app, <ReportScreen />);
     await fireEvent.press(screen.getByRole('button', { name: 'Submit report' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('Choose what the report is about.');
+    await fireEvent.press(screen.getByRole('radio', { name: 'Scam, spam or advertising' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Submit report' }));
     expect(screen.getByRole('alert')).toHaveTextContent('Tell us what happened in up to 1,000 characters.');
     expect(app.mock.callsTo('POST', '/v1/reports')).toHaveLength(0);
     await fireEvent.changeText(screen.getByLabelText('What would you like us to know?'), 'The venue was not as described.');
@@ -144,6 +148,24 @@ describe('ReportScreen', () => {
     expect(await screen.findByText('Status: Responded')).toBeOnTheScreen();
     expect(screen.getByText('We spoke with the host.')).toBeOnTheScreen();
     expect(app.mock.callsTo('POST', '/v1/reports')).toHaveLength(1);
+  });
+
+  it('offers five reasons in a required single-choice picker, the choice is announced as selected', async () => {
+    const app = createTestApp();
+    await signIn(app, me());
+    routeParams.current = { targetType: 'MEAL', targetId: MEAL_ID };
+    app.mock.on('POST', '/v1/reports', ok({ id: '1b2c3d4e-5f60-4a7b-8c9d-0e1f2a3b4c5d', receipt: 'FNC-U18', status: 'RECEIVED', targetType: 'MEAL', publicOutcome: null, createdAt: '2026-10-21T10:00:00Z' }, 201));
+    await renderApp(app, <ReportScreen />);
+    expect(screen.getByText('What’s it about?')).toBeOnTheScreen();
+    expect(screen.getAllByRole('radio').map((r) => r.props.accessibilityLabel)).toEqual(['Personal safety or threats', 'Harassment or hate', 'Scam, spam or advertising', 'May be under 18', 'Something else']);
+    await fireEvent.press(screen.getByRole('radio', { name: 'Personal safety or threats' }));
+    await fireEvent.press(screen.getByRole('radio', { name: 'May be under 18' }));
+    expect(screen.getByRole('radio', { name: 'May be under 18' })).toBeSelected();
+    expect(screen.getByRole('radio', { name: 'Personal safety or threats' })).not.toBeSelected();
+    await fireEvent.changeText(screen.getByLabelText('What would you like us to know?'), 'Said they are in year 10 at school.');
+    await fireEvent.press(screen.getByRole('button', { name: 'Submit report' }));
+    expect(await screen.findByText('FNC-U18')).toBeOnTheScreen();
+    expect(app.mock.callsTo('POST', '/v1/reports')[0]?.body).toMatchObject({ targetType: 'MEAL', reason: 'under_18' });
   });
 
   it('rejects an invalid target, with a way out', async () => {
@@ -194,11 +216,12 @@ describe('ReportScreen', () => {
     expect(screen.getByText('Reports about a message are private and separate from public references. You’ll get a reference number.')).toBeOnTheScreen();
     // No profile or meal lookup for a message target.
     expect(app.mock.calls.filter((c) => /\/v1\/(profiles|meals)\//.test(c.path))).toHaveLength(0);
+    await fireEvent.press(screen.getByRole('radio', { name: 'Something else' }));
     await fireEvent.changeText(screen.getByLabelText('What would you like us to know?'), 'Rude remark in the group.');
     await fireEvent.press(screen.getByRole('button', { name: 'Submit report' }));
     expect(await screen.findByText('FNC-MSG01')).toBeOnTheScreen();
     expect(screen.getByText(/The message is now hidden for you\.$/)).toBeOnTheScreen();
-    expect(app.mock.callsTo('POST', '/v1/reports')[0]?.body).toEqual({ targetType: 'MESSAGE', targetId: MESSAGE_ID, reason: 'private_concern', details: 'Rude remark in the group.' });
+    expect(app.mock.callsTo('POST', '/v1/reports')[0]?.body).toEqual({ targetType: 'MESSAGE', targetId: MESSAGE_ID, reason: 'other', details: 'Rude remark in the group.' });
     expect(reportedMessages(app.services.cache).has(MESSAGE_ID)).toBe(true);
   });
 
@@ -210,6 +233,7 @@ describe('ReportScreen', () => {
     app.mock.on('POST', '/v1/reports', fail(404, 'NOT_FOUND'));
     await renderApp(app, <ReportScreen />);
     expect(screen.getByLabelText('Reporting A message')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('radio', { name: 'Harassment or hate' }));
     await fireEvent.changeText(screen.getByLabelText('What would you like us to know?'), 'Rude remark.');
     await fireEvent.press(screen.getByRole('button', { name: 'Submit report' }));
     expect(await screen.findByText('We couldn’t send your report. Please try again.')).toBeOnTheScreen();

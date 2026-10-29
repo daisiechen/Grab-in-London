@@ -27,11 +27,11 @@ export interface Harness {
   close(): Promise<void>;
 }
 
-export async function createHarness(serverUrl: string,assistant?:AppDeps['assistant']): Promise<Harness> {
+export async function createHarness(serverUrl: string,assistant?:AppDeps['assistant'],env:Record<string,string>={}): Promise<Harness> {
   const db = await createMigratedDatabase(serverUrl, migrate);
   const config = loadConfig({
     ENVIRONMENT: 'test', DATABASE_URL: db.url, AUTH_ADAPTER: 'test', PLACES_ADAPTER: 'fixture', MAIL_ADAPTER: 'outbox_test',
-    AI_PROVIDER: 'mock', WEB_ORIGIN, SESSION_SECRET: 'api-test-session-secret-0123456789abcdef', IOS_REDIRECT_URI: 'fancy://auth/callback',
+    AI_PROVIDER: 'mock', WEB_ORIGIN, SESSION_SECRET: 'api-test-session-secret-0123456789abcdef', IOS_REDIRECT_URI: 'fancy://auth/callback', ...env,
   });
   const idp = new TestIdentityProvider('test');
   const app = await buildServer({ config, pool: db.pool, identity: idp, publicOrigin: WEB_ORIGIN, ...(assistant?{assistant}:{}) });

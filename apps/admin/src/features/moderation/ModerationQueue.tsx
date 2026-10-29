@@ -8,13 +8,14 @@ import { Badge, Panel } from '../../components/Panel.tsx';
 import { formatLondonTime, type Language, type Translate } from '../../i18n.ts';
 import { useConsole } from '../../state/console.tsx';
 import { FailureScreen } from '../status/FailureScreen.tsx';
-import { accountLabel, ageText, caseStatusLabel, presetNote, sla, SLA_HOURS, slaText, targetLabel } from './labels.ts';
+import { accountLabel, ageText, caseStatusLabel, presetNote, reasonLabel, sla, SLA_HOURS, slaText, targetLabel } from './labels.ts';
 
 type Status = NonNullable<ModerationQuery['status']>;
 type QuickAction = Extract<ModerationAction, 'UPHOLD' | 'RESTORE' | 'SUSPEND_USER'>;
 
 /**
- * Report queue: open reports oldest first with the 24-hour response target, metadata only (no report
+ * Report queue: open reports with urgent reasons (safety, harassment, under 18) first, then oldest
+ * first (server order), with the 24-hour response target, metadata only (no report
  * text, names or contact details). One-tap Uphold / Restore / Suspend claim the report and apply the
  * action with a preset internal note; everything else happens in the report view.
  */
@@ -62,7 +63,7 @@ export function ModerationQueue({ t, lang, onOpen }: { t: Translate; lang: Langu
     try {
       const detail = await c.api.claimReport(row.reportId, newIntentKey());
       if (!detail.allowedActions.includes(action)) { setNotice({ ok: false, text: t('此操作当前不适用，请打开举报查看。', 'That action is not available now. Open the report to review it.') }); return; }
-      await c.api.moderate(row.reportId, { action, note: presetNote(action) }, detail.summary.caseVersion, newIntentKey());
+      await c.api.moderate(row.reportId, { action, note: presetNote(action, row.reason) }, detail.summary.caseVersion, newIntentKey());
       setNotice({ ok: true, text: t('已处理并通知举报人（审计已记录）。', 'Done. The reporter sees the outcome and the action was audited.') });
       await load();
     } catch (error) { setNotice({ ok: false, text: errorText(t, fail(error)) }); }
@@ -92,17 +93,18 @@ export function ModerationQueue({ t, lang, onOpen }: { t: Translate; lang: Langu
               <div className="table-scroll">
                 <table aria-label={t('举报队列', 'Report queue')}>
                   <thead><tr>
-                    <th>{t('举报时间', 'Reported')}</th><th>{t('处理时限', 'Response target')}</th><th>{t('对象', 'Target')}</th><th>{t('状态', 'Status')}</th>
+                    <th>{t('举报时间', 'Reported')}</th><th>{t('处理时限', 'Response target')}</th><th>{t('对象', 'Target')}</th><th>{t('原因', 'Reason')}</th><th>{t('状态', 'Status')}</th>
                     <th>{t('7天内举报人', 'Reporters (7d)')}</th><th>{t('账号', 'Account')}</th><th>{t('操作', 'Actions')}</th>
                   </tr></thead>
                   <tbody>
                     {rows.map((row) => {
                       const s = sla(row, now);
                       return (
-                        <tr key={row.reportId} data-report={row.reportId}>
+                        <tr key={row.reportId} data-report={row.reportId} data-urgent={row.urgent ? 'true' : undefined}>
                           <td><strong>{ageText(t, row.createdAt, now)}</strong><br /><small>{formatLondonTime(lang, row.createdAt)}</small></td>
                           <td><Badge tone={s.tone}>{slaText(t, row, now)}</Badge></td>
                           <td>{targetLabel(t, row.targetType)}</td>
+                          <td>{row.urgent && row.caseStatus !== 'RESOLVED' && <><Badge tone="red">{t('紧急', 'Urgent')}</Badge>{' '}</>}{reasonLabel(t, row.reason)}</td>
                           <td>
                             <Badge tone={row.caseStatus === 'RESOLVED' ? 'neutral' : 'amber'}>{caseStatusLabel(t, row.caseStatus)}</Badge>{' '}
                             {row.autoActioned && row.caseStatus !== 'RESOLVED' && <Badge tone="red">{t('已自动限制 · 待复核', 'Auto-limited · review')}</Badge>}

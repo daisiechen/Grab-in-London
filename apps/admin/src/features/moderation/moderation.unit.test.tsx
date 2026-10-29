@@ -17,7 +17,7 @@ const due = (created: string) => new Date(Date.parse(created) + 24 * 3600_000).t
 
 const summary = (over: Record<string, unknown> = {}) => {
   const createdAt = (over.createdAt as string | undefined) ?? hoursAgo(30);
-  return { reportId: R1, caseId: CASE, caseVersion: '3', targetType: 'USER', reason: 'private_concern', reportStatus: 'IN_REVIEW', caseStatus: 'OPEN', createdAt, dueAt: due(createdAt),
+  return { reportId: R1, caseId: CASE, caseVersion: '3', targetType: 'USER', reason: 'private_concern', urgent: false, reportStatus: 'IN_REVIEW', caseStatus: 'OPEN', createdAt, dueAt: due(createdAt),
     autoActioned: false, autoClosed: false, contentLimited: false, reporterCount: 1, claimedByMe: false, subjectStatus: 'ACTIVE', ...over };
 };
 const report = (over: Record<string, unknown> = {}, sum: Record<string, unknown> = {}) => ({
@@ -61,6 +61,39 @@ describe('moderation workspace', () => {
     await waitFor(() => expect(mock.calls.filter((c) => c.path === '/v1/moderation/reports').at(-1)!.query.get('targetType')).toBe('MEAL'));
     await userEvent.click(screen.getByLabelText('只看我领取的'));
     await waitFor(() => expect(mock.calls.filter((c) => c.path === '/v1/moderation/reports').at(-1)!.query.get('claimed')).toBe('me'));
+  });
+
+  it('shows each report reason, flags urgent ones and keeps the server order (urgent first); legacy reads as Other', async () => {
+    setup({ 'GET /v1/moderation/reports': () => list([
+      summary({ reportId: R2, reason: 'safety', urgent: true, createdAt: hoursAgo(1) }),
+      summary({ reason: 'private_concern' }),
+      summary({ reportId: CASE, reason: 'scam', createdAt: hoursAgo(3) }),
+    ]) }, '/?lang=en#moderation');
+    const table = await screen.findByRole('table', { name: 'Report queue' });
+    const rows = within(table).getAllByRole('row').slice(1);
+    expect(rows[0]!.textContent).toContain('Urgent');
+    expect(rows[0]!.textContent).toContain('Personal safety or threats');
+    expect(rows[0]!.textContent).toContain('23 h left');
+    expect(rows[0]!.getAttribute('data-urgent')).toBe('true');
+    expect(rows[1]!.textContent).toContain('Other');
+    expect(rows[1]!.textContent).not.toContain('Urgent');
+    expect(rows[2]!.textContent).toContain('Scam, spam or advertising');
+  });
+
+  it('an under-18 report shows the runbook rule and pre-fills the suspend-pending-checks note; nothing is automatic', async () => {
+    const mock = setup({
+      [`GET /v1/moderation/reports/${R1}`]: () => ok(report({}, { reason: 'under_18', urgent: true })),
+      [`POST /v1/moderation/reports/${R1}/actions`]: () => ok(report({}, { reason: 'under_18', urgent: true, caseStatus: 'RESOLVED' })),
+      [`GET /v1/support/cases/${CASE}`]: () => ok(caseInfo()),
+    }, `/?lang=en#moderation/${R1}`);
+    expect((await screen.findByText(/a person suspends the account pending age checks/)).getAttribute('role')).toBe('note');
+    expect(screen.getByText('May be under 18')).toBeTruthy();
+    expect(screen.getAllByText('Urgent').length).toBeGreaterThan(0);
+    expect(posts(mock.calls, '/actions')).toHaveLength(0);
+    await userEvent.click(screen.getByRole('button', { name: 'Suspend account' }));
+    expect((screen.getByLabelText('Internal note') as HTMLTextAreaElement).value).toMatch(/^Suspended pending age checks/);
+    await userEvent.click(screen.getByRole('button', { name: 'Hide content' }));
+    expect((screen.getByLabelText('Internal note') as HTMLTextAreaElement).value).toBe('Hidden while under review.');
   });
 
   it('analyst-only sessions get no report navigation', async () => {

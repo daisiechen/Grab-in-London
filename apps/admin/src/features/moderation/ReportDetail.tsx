@@ -9,7 +9,7 @@ import { useConsole } from '../../state/console.tsx';
 import { FailureScreen } from '../status/FailureScreen.tsx';
 import { CaseAttendancePanel, CaseReplyPanel } from './SupportCase.tsx';
 import { errorText } from './ModerationQueue.tsx';
-import { accountLabel, actionLabel, caseStatusLabel, CLOSING_ACTIONS, CONFIRM_ACTIONS, presetNote, sla, slaText, targetLabel } from './labels.ts';
+import { accountLabel, actionLabel, caseStatusLabel, CLOSING_ACTIONS, CONFIRM_ACTIONS, presetNote, reasonLabel, sla, slaText, targetLabel } from './labels.ts';
 
 type Load = { status: 'loading' } | { status: 'unclaimed' } | { status: 'ready'; report: ModerationReport } | { status: 'failed'; failure: Failure };
 
@@ -72,6 +72,7 @@ export function ReportDetail({ reportId, t, lang, onBack }: { reportId: string; 
           <h2>{t('举报详情', 'Report')}</h2>
         </div>
         <div className="badges">
+          {r.summary.urgent && r.summary.caseStatus !== 'RESOLVED' && <Badge tone="red">{t('紧急', 'Urgent')}</Badge>}
           <Badge tone={s.tone}>{slaText(t, r.summary)}</Badge>
           <Badge tone={r.summary.caseStatus === 'RESOLVED' ? 'neutral' : 'amber'}>{caseStatusLabel(t, r.summary.caseStatus)}</Badge>
           {r.summary.autoActioned && <Badge tone="red">{t('已自动限制', 'Auto-limited')}</Badge>}
@@ -85,8 +86,11 @@ export function ReportDetail({ reportId, t, lang, onBack }: { reportId: string; 
             <dt>{t('举报时间', 'Reported at')}</dt><dd>{formatLondonTime(lang, r.summary.createdAt)}</dd>
             <dt>{t('举报人（匿名编号）', 'Reporter (pseudonymous ID)')}</dt><dd className="mono">{r.reporterId}</dd>
             <dt>{t('7天内举报人数', 'Reporters in 7 days')}</dt><dd>{r.summary.reporterCount}</dd>
-            <dt>{t('原因', 'Reason')}</dt><dd>{r.summary.reason === 'private_concern' ? t('私密说明', 'Private concern') : r.summary.reason}</dd>
+            <dt>{t('原因', 'Reason')}</dt><dd>{reasonLabel(t, r.summary.reason)}</dd>
           </dl>
+          {r.summary.reason === 'under_18' && (
+            <p role="note" className="draft-note">{t('值守规则：疑似未满 18 岁时，由人工先停用账号并核实年龄；确认未满 18 岁则关闭账号。系统不会自动停用。“停用账号”已预填相应内部备注。', 'Runbook: a person suspends the account pending age checks, and closes it if the member is under 18. Nothing is suspended automatically. “Suspend account” comes with the matching internal note.')}</p>
+          )}
           <blockquote className="report-text">{r.details}</blockquote>
           {r.privacyRedacted && <p className="method-note">{t('举报人或相关账号已删除，文字已按隐私规则移除；只能关闭个案。', 'The reporter or the account involved was deleted; text was removed for privacy and only closing actions remain.')}</p>}
           <p className="method-note">{t('举报人当前看到：', 'The reporter currently sees: ')}{r.publicOutcome ?? '—'}</p>
@@ -171,7 +175,7 @@ function ActionPanel({ report, t, onDone, onConflict, handle }: {
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
   const intent = useRef<string | null>(null);
 
-  const choose = (next: ModerationAction) => { setAction(next); setNote(presetNote(next)); setReply(''); setResolve(false); setConfirm(false); setMessage(null); intent.current = null; };
+  const choose = (next: ModerationAction) => { setAction(next); setNote(presetNote(next, report.summary.reason)); setReply(''); setResolve(false); setConfirm(false); setMessage(null); intent.current = null; };
   const closes = action ? CLOSING_ACTIONS.includes(action) || resolve : false;
   const noteValid = note.trim().length >= 5 && note.trim().length <= 1000;
 

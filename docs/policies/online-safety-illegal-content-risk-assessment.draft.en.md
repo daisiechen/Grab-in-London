@@ -117,7 +117,7 @@ The scope column follows the Codes' index of measures as published in February 2
 | ICU C2 Swift takedown of illegal content | All | Automatic limit at 2 reporters; staff hide, remove photo, reset profile text, cancel meal, suspend | Met. The 24-hour aim depends on one person |
 | ICU C3 Internal content policies | Multi | Community Guidelines are public. There is no internal policy covering ICJG judgements, CSAM handling or proscribed organisations | **Gap** |
 | ICU C4 Performance targets | Multi | 24-hour review aim shown in the queue | Partly met. Targets need writing down and measuring |
-| ICU C5 Prioritisation | Multi | Oldest first, with an auto-limited flag. **Reports have one reason only** (`private_concern`), so safety or illegal reports cannot be prioritised | **Gap: product change** |
+| ICU C5 Prioritisation | Multi | Reports carry one of five reasons (personal safety or threats / harassment or hate / scam, spam or advertising / may be under 18 / other). Safety, harassment and under-18 reports are listed first and flagged urgent, and trigger an immediate email and assistant alert (coalesced, at most one per 10 minutes); the rest are oldest first, with an auto-limited flag | Met (2026-10-29) |
 | ICU C6 Resourcing | Multi | One person plus a daily digest. No cover for holidays or illness | **Gap** |
 | ICU C7 Training and materials for moderators | Multi | None written | Gap (self-training record on ICJG) |
 | ICU C9 / C10 CSAM hash matching / CSAM URL detection | High risk of CSAM with size or file-sharing conditions | CSAM rated low; no file sharing | Not applicable (re-check if images are ever allowed in chat) |
@@ -145,8 +145,8 @@ Owner = {{OPERATOR_NAME}} unless stated. "Launch" means public App Store release
 | ID | Gap | Action | Product change? | When |
 | --- | --- | --- | --- | --- |
 | D1 | Grooming rating rests on self-declared age | Decide: (a) accept medium with the controls above and launch monitoring, or (b) add highly effective age assurance at sign-up, which would allow low and change the access assessment | (b) yes | Before launch |
-| D2 | No way to flag a suspected under-18 member, and no written handling rule | Add an "I think this person is under 18" report reason, or at least a written rule: suspend pending checks and delete if under 18 | Yes (report reason) | Before launch |
-| C5 | One report reason only; cannot prioritise | Add report categories (for example: immediate safety risk / harassment or threats / sexual content or under-18 / scam / other) and send high-severity categories to email straight away, not only the daily digest (takeover plan §8.5) | Yes (app + contract + API) | Before launch, recommended |
+| D2 | No way to flag a suspected under-18 member, and no written handling rule | Done 2026-10-29: "May be under 18" report reason in the app; it counts as urgent (immediate alert, top of the queue). Written rule in the moderation runbook: a person suspends pending checks and closes the account if under 18 (no automatic suspension); the admin shows the rule and a preset note | Done | — |
+| C5 | One report reason only; cannot prioritise | Done 2026-10-29: five report reasons (personal safety or threats / harassment or hate / scam, spam or advertising / may be under 18 / other). Safety, harassment and under-18 reports go first in the queue and are emailed to support and pushed to the operator's assistant straight away (coalesced to one alert per 10 minutes), not only in the daily digest | Done | — |
 | D2b | Message-level reporting missing in the iOS group chat | Done 2026-10-29: press and hold a message → "Report message" in group and private chats; Guidelines, Terms and Support wording updated | Done | — |
 | D2c | Public references (reviews) cannot be reported directly | Add a report target for references, or document that reporting the author covers it and that staff can remove a reference | Yes, or documented workaround | Within 3 months |
 | D1b | Signed-out visitors cannot use in-app reporting | Add "Report a concern: email support" to public meal and profile pages on web and iOS, and to the support page | Small UI change | Before launch |
@@ -190,3 +190,4 @@ Review log:
 | Date | Reviewer | Trigger | Changes |
 | --- | --- | --- | --- |
 | 2026-10-29 | Draft (agent) | Initial draft before launch | — |
+| 2026-10-29 | Draft (agent) | Owner decision: report reasons and urgent alerts | C5 and D2 marked done; ICU C5 met |

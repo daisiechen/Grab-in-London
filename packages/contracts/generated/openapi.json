@@ -10331,6 +10331,11 @@
                   "reason": {
                     "type": "string",
                     "enum": [
+                      "safety",
+                      "harassment",
+                      "scam",
+                      "under_18",
+                      "other",
                       "private_concern"
                     ]
                   },
@@ -20177,6 +20182,7 @@
           "caseVersion",
           "targetType",
           "reason",
+          "urgent",
           "reportStatus",
           "caseStatus",
           "createdAt",
@@ -20212,6 +20218,9 @@
           "reason": {
             "maxLength": 40,
             "type": "string"
+          },
+          "urgent": {
+            "type": "boolean"
           },
           "reportStatus": {
             "type": "string",

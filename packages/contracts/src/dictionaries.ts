@@ -70,8 +70,22 @@ export const ATTENDANCE_VALUES = ['present', 'absent'] as const;
 export const ATTENDANCE_SOURCES = ['SELF', 'HOST', 'SUPPORT'] as const;
 export const CONNECTION_STATES = ['OPEN', 'WAITING', 'CLOSED'] as const;
 export const REPORT_TARGET_TYPES = ['USER', 'MEAL', 'MESSAGE'] as const;
-/** The prototype collects one private free-text concern; finer reasons need a product decision. */
-export const REPORT_REASONS = ['private_concern'] as const;
+/**
+ * Report reasons the apps offer (owner decision 2026-10-29): personal safety or threats, harassment or
+ * hate, scam/spam/advertising, may be under 18, other. Each report also carries private free text.
+ */
+export const REPORT_REASONS = ['safety', 'harassment', 'scam', 'under_18', 'other'] as const;
+/** Reasons that put a report first in the staff queue and trigger an immediate alert. */
+export const URGENT_REPORT_REASONS = ['safety', 'harassment', 'under_18'] as const;
+/**
+ * The single reason used before 2026-10-29. Stored rows keep it (shown as `other`), and createReport
+ * still accepts it from older app builds and the web sheet; new clients send one of REPORT_REASONS.
+ */
+export const LEGACY_REPORT_REASON = 'private_concern' as const;
+/** Values createReport accepts. */
+export const REPORT_REASON_INPUTS = [...REPORT_REASONS, LEGACY_REPORT_REASON] as const;
+export const isUrgentReportReason = (reason: string): reason is (typeof URGENT_REPORT_REASONS)[number] =>
+  (URGENT_REPORT_REASONS as readonly string[]).includes(reason);
 export const REPORT_STATUSES = ['RECEIVED', 'IN_REVIEW', 'RESPONDED'] as const;
 export const DELETION_STATUSES = ['PENDING', 'PROCESSING', 'COMPLETED', 'NEEDS_SUPPORT'] as const;
 export const SUPPORT_CASE_STATUSES = ['OPEN', 'IN_REVIEW', 'RESOLVED'] as const;

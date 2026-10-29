@@ -55,7 +55,7 @@ Don't share other members' messages, photos, contact details or personal informa
 
 ## Reporting and blocking
 
-- **Report** a member or a meal with “Report this profile” or “Report this meal” in the app. To report something said in a chat, press and hold the message and choose “Report message”. Tell us what happened; your report is private and the person you report is not told who reported them. You receive a reference so you can check its status.
+- **Report** a member or a meal with “Report this profile” or “Report this meal” in the app. To report something said in a chat, press and hold the message and choose “Report message”. Choose what it is about (personal safety or threats, harassment or hate, scam, spam or advertising, someone who may be under 18, or something else) and tell us what happened. Reports about safety, harassment or someone under 18 reach us straight away; your report is private and the person you report is not told who reported them. You receive a reference so you can check its status.
 - **Block** any member to stop private contact with them. Blocking does not remove either of you from a group chat you share, so leave the chat or report the member if you need to.
 - You can also email {{SUPPORT_EMAIL}}.
 

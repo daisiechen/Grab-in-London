@@ -13,10 +13,10 @@ export async function insertNotification(
   return rowCount === 1;
 }
 
-/** Asynchronous side effect (email). Payload must be an allowlisted reference set, never message bodies. */
+/** Asynchronous side effect (email, or the ETHAN moderation push). Payload must be an allowlisted reference set, never message bodies. */
 export async function enqueueOutbox(
   tx: PoolClient,
-  o: { eventId: string; recipientId: string | null; channel: 'EMAIL'; template: string; payload?: Record<string, string> },
+  o: { eventId: string; recipientId: string | null; channel: 'EMAIL' | 'ETHAN'; template: string; payload?: Record<string, string> },
 ): Promise<boolean> {
   const { rowCount } = await tx.query(
     `INSERT INTO outbox (event_id, recipient_id, channel, template, payload) VALUES ($1, $2, $3, $4, $5)

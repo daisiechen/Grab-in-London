@@ -9,6 +9,7 @@ const PATTERNS = [
   ['Google API key', /\bAIza[0-9A-Za-z_-]{35}\b/],
   ['OpenAI key', /\bsk-(?:proj-)?[A-Za-z0-9_-]{32,}\b/],
   ['Slack token', /\bxox[abpr]-[A-Za-z0-9-]{10,}\b/],
+  ['Ethan moderation token', /\bETHAN_MODERATION_TOKEN\s*[:=]\s*['"]?[A-Za-z0-9_\-.~+/]{16,}/],
   ['assigned secret', /\b(?:client_secret|api_key|apikey|secret_key|password)\s*[:=]\s*['"][^'"\s]{12,}['"]/i],
 ];
 const SCANNED = ['apps', 'packages', 'infra'];

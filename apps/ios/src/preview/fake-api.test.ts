@@ -323,6 +323,18 @@ describe('preview fake API', () => {
     expect(ctx.problems).toEqual([]);
   });
 
+  it('takes the five report reasons and the legacy one, and refuses others like the API (422)', async () => {
+    const ctx = setup();
+    await signIn(ctx);
+    const conversationId = (await ctx.api.call('inbox', { query: {} })).data[0]!.conversation!.id;
+    const [message] = (await ctx.api.call('readMessages', { params: { conversationId }, query: { mode: 'HISTORY' } })).data;
+    for (const reason of ['safety', 'harassment', 'scam', 'under_18', 'other', 'private_concern'] as const) {
+      const r = await ctx.api.call('createReport', { body: { targetType: 'MESSAGE', targetId: message!.id, reason, details: 'Synthetic.' }, idempotencyKey: newId() });
+      expect(r.data.status).toBe('RECEIVED');
+    }
+    await expectApiError(ctx.raw.call('createReport', { body: { targetType: 'MESSAGE', targetId: message!.id, reason: 'urgent' as never, details: 'Synthetic.' }, idempotencyKey: newId() }), 422, 'VALIDATION_FAILED');
+  });
+
   it('runs the post-meal flow for the past supper: attendance, rating, reference, reconnect, survey', async () => {
     const ctx = setup();
     await signIn(ctx);
