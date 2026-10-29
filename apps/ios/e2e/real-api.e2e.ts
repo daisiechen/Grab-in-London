@@ -344,10 +344,13 @@ async function main() {
       await tap(g, 'Report message');
       await see(g, 'Report this message');
       await visible(g.getByLabel(`Reporting a message from Hana: “${unkind}”`)).waitFor();
+      await press(radio(g, 'Harassment or hate'));
       await fill(g, 'What would you like us to know?', `E2E check ${run}: please ignore, this is a synthetic message report.`);
       const reported = g.waitForResponse(isCall('POST', /\/v1\/reports$/));
       await tap(g, 'Submit report');
-      const receipt = (await (await expectOk(reported, 'report message')).json()) as { data: { targetType: string } };
+      const reportResponse = await expectOk(reported, 'report message');
+      if ((reportResponse.request().postDataJSON() as { reason?: string }).reason !== 'harassment') throw new Error('report reason not sent');
+      const receipt = (await reportResponse.json()) as { data: { targetType: string } };
       if (receipt.data.targetType !== 'MESSAGE') throw new Error(`report target ${receipt.data.targetType}`);
       await see(g, 'Report received');
       await tap(g, 'Done');
@@ -435,7 +438,11 @@ async function main() {
     await step('guest reports the host’s profile and gets a receipt', async () => {
       await tap(g, 'Report this profile');
       await visible(g.getByLabel('Reporting Hana')).waitFor();
+      // The reason is required: submitting without one is refused in the app.
       await fill(g, 'What would you like us to know?', `E2E check ${run}: please ignore, this is a synthetic report.`);
+      await tap(g, 'Submit report');
+      await see(g, 'Choose what the report is about.');
+      await press(radio(g, 'Scam, spam or advertising'));
       await tap(g, 'Submit report');
       await see(g, 'Report received');
       await see(g, 'Status: Received');

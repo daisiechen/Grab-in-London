@@ -3,10 +3,11 @@ import { useEffect, useRef, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ApiError, type ResponseOf } from '@fancy/client';
-import { REPORT_TARGET_TYPES } from '@fancy/contracts';
+import { REPORT_REASONS, REPORT_TARGET_TYPES } from '@fancy/contracts';
 import { useServices, useSessionState } from '../../services.tsx';
 import { Primary, TextAction } from '../../ui/Button.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
+import { ChoiceGroup } from '../../ui/ChoiceGroup.tsx';
 import { AccountPage, SummaryBox, accountText } from '../../ui/AccountPage.tsx';
 import { Avatar } from '../../ui/Avatar.tsx';
 import { Icon } from '../../ui/Icon.tsx';
@@ -18,6 +19,15 @@ import { markMessageReported, messageSubject } from '../inbox/message-reports.ts
 
 type Receipt = ResponseOf<'createReport'>['data'];
 type Target = (typeof REPORT_TARGET_TYPES)[number];
+type Reason = (typeof REPORT_REASONS)[number];
+/** Required reason (owner decision 2026-10-29); safety, harassment and under 18 reach the team at once. */
+export const REASON_OPTIONS: readonly (readonly [Reason, string])[] = [
+  ['safety', 'Personal safety or threats'],
+  ['harassment', 'Harassment or hate'],
+  ['scam', 'Scam, spam or advertising'],
+  ['under_18', 'May be under 18'],
+  ['other', 'Something else'],
+];
 const STATUS_LABELS: Record<Receipt['status'], string> = { RECEIVED: 'Received', IN_REVIEW: 'In review', RESPONDED: 'Responded' };
 const TARGET_LABELS: Record<Target, string> = { USER: 'a member', MEAL: 'a meal', MESSAGE: 'a message' };
 /** What is being reported, resolved from the route target with the existing public reads. */
@@ -37,6 +47,7 @@ function ReportScreenContent() {
   const state = useSessionState();
   const router = useRouter();
   const [details, setDetails] = useState('');
+  const [reason, setReason] = useState<Reason | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [busy, setBusy] = useState(false);
@@ -110,8 +121,9 @@ function ReportScreenContent() {
 
   const send = async () => {
     const text = details.trim();
+    if (!reason) return setError('Choose what the report is about.');
     if (text.length < 1 || text.length > 1000) return setError('Tell us what happened in up to 1,000 characters.');
-    const body = { targetType, targetId, reason: 'private_concern' as const, details: text };
+    const body = { targetType, targetId, reason, details: text };
     const serialized = JSON.stringify(body);
     if (!intent.current || intent.current.body !== serialized) intent.current = { key: newId(), body: serialized };
     setBusy(true);
@@ -141,6 +153,9 @@ function ReportScreenContent() {
       <Text accessibilityRole="header" style={accountText.h1}>{HEADINGS[targetType]}</Text>
       <TargetRow targetType={targetType} target={target} />
       <Text style={[accountText.prose, { marginBottom: 14 }]}>{`Reports about ${TARGET_LABELS[targetType]} are private and separate from public references. You’ll get a reference number.`}</Text>
+      <View style={styles.reasons}>
+        <ChoiceGroup label="What’s it about?" options={REASON_OPTIONS} value={reason} onChange={setReason} />
+      </View>
       <View style={styles.field}>
         <Text style={styles.label}>What would you like us to know?</Text>
         <TextInput accessibilityLabel="What would you like us to know?" value={details} onChangeText={setDetails} maxLength={1000} multiline placeholderTextColor={colors.muted} style={styles.input} />
@@ -173,6 +188,7 @@ const styles = createStyles({
   targetIcon: { width: 36, height: 36, borderRadius: 18, backgroundColor: colors.selectedSurface, alignItems: 'center', justifyContent: 'center' },
   targetText: { flex: 1, minWidth: 0 },
   targetName: { fontSize: 14, fontWeight: '700', color: colors.ink },
+  reasons: { marginBottom: 14 },
   field: { gap: 6 },
   label: { fontSize: type.control, fontWeight: '700', color: colors.ink },
   input: { minHeight: 140, borderWidth: 1, borderColor: colors.line, borderRadius: radius.md, paddingHorizontal: 12, paddingVertical: 10, fontSize: type.body, color: colors.ink, backgroundColor: colors.white, textAlignVertical: 'top' },

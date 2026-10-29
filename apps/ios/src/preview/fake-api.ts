@@ -120,7 +120,7 @@ interface Consent { revision: number; active: boolean }
 interface PairRec { users: [string, string]; consents: Map<string, Consent> }
 interface ReviewRec { id: string; mealId: string; authorId: string; subjectId: string; body: string; revision: number; createdAt: number }
 interface NotificationRec { id: string; userId: string; template: string; createdAt: number; readAt: number | null; mealId: string | null; applicationId: string | null; conversationId: string | null }
-interface ReportRec { id: string; userId: string; receipt: string; targetType: 'USER' | 'MEAL' | 'MESSAGE'; targetId: string; createdAt: number }
+interface ReportRec { id: string; userId: string; receipt: string; targetType: 'USER' | 'MEAL' | 'MESSAGE'; targetId: string; reason: string; createdAt: number }
 
 interface World {
   users: Map<string, UserRec>;
@@ -1289,7 +1289,7 @@ export function createPreviewBackend(opts: PreviewOptions = {}): PreviewBackend 
         : body.targetType === 'MEAL' ? w.meals.has(body.targetId)
           : [...w.conversations.values()].some((c) => c.messages.some((m) => m.id === body.targetId && visibleTo(c, uid, m.seq)));
       if (!exists) fail('NOT_FOUND', 'We could not find what you are reporting.');
-      const report: ReportRec = { id: newId(w, 'misc'), userId: uid, receipt: `FCY-${String(w.counter).padStart(6, '0')}`, targetType: body.targetType, targetId: body.targetId, createdAt: now() };
+      const report: ReportRec = { id: newId(w, 'misc'), userId: uid, receipt: `FCY-${String(w.counter).padStart(6, '0')}`, targetType: body.targetType, targetId: body.targetId, reason: body.reason, createdAt: now() };
       w.reports.set(report.id, report);
       return { data: reportDto(report) };
     },

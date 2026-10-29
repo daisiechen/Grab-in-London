@@ -153,8 +153,8 @@ async function scenario(side: Side) {
   await call('unblock', 'unblock', { params: { subjectId: hostId }, ifMatch: blocked?.version ?? '0', idempotencyKey: randomUUID() });
   await call('listBlocks after', 'listBlocks', {});
   await call('getDirect', 'getDirect', { params: { subjectId: hostId } });
-  const report = d<{ id: string }>(await call('createReport', 'createReport', { idempotencyKey: randomUUID(), body: { targetType: 'USER', targetId: hostId, reason: 'private_concern', details: 'Parity probe report.' } }));
-  await call('createReport meal', 'createReport', { idempotencyKey: randomUUID(), body: { targetType: 'MEAL', targetId: side.targetMealId, reason: 'private_concern', details: 'Parity probe report.' } });
+  const report = d<{ id: string }>(await call('createReport', 'createReport', { idempotencyKey: randomUUID(), body: { targetType: 'USER', targetId: hostId, reason: 'harassment', details: 'Parity probe report.' } }));
+  await call('createReport meal', 'createReport', { idempotencyKey: randomUUID(), body: { targetType: 'MEAL', targetId: side.targetMealId, reason: 'scam', details: 'Parity probe report.' } });
   if (report) await call('reportStatus', 'reportStatus', { params: { reportId: report.id } });
   await call('reportStatus unknown', 'reportStatus', { params: { reportId: randomUUID() } });
   const survey = d<{ version: string }>(await call('getSurvey', 'getSurvey', {}));
