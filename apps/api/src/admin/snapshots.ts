@@ -1,5 +1,11 @@
 import type { Pool } from 'pg';
+import { ADMIN_DEFINITION_VERSION } from '@fancy/contracts';
 import { projectLifecycle, type MealRow } from '../meals/lifecycle.ts';
+
+/** Source filter options: the first segment of each stored sign-up source (utm source, ios_app, meal_link). */
+export function signupSourceDimensions(values:Array<string|null>){
+  return [...new Set(values.filter((v):v is string=>!!v).map(v=>v.split(':')[0]!))].sort().map(code=>({code,label:code}));
+}
 
 /**
  * Internal worker boundary. Captures one repeatable-read database view at server now.
@@ -22,8 +28,16 @@ export async function sealSourceSnapshot(pool: Pool, historyCoverageStart: Date,
     const { rows: privacy } = await db.query<{ epoch: string }>('SELECT epoch::text FROM privacy_control WHERE id=1 FOR SHARE');
     const { rows: classifications } = await db.query(`SELECT DISTINCT ON(user_id) user_id,classification,revision::text FROM account_classifications WHERE created_at<=$1 ORDER BY user_id,revision DESC`, [asOf]);
     const excluded = classifications.filter(c => c.classification !== 'regular').map(c => c.user_id);
-    const { rows: users } = await db.query(`SELECT id,created_at FROM users WHERE status='ACTIVE' AND created_at<=$1 AND NOT(id=ANY($2::uuid[]))`, [asOf,excluded]);
+    // v5: sign-up platform is the member's earliest WEB/IOS session family (no new tracking); it is
+    // lost when an account deletion purges session families. completed_at is the first profile completion.
+    const { rows: users } = await db.query(`SELECT u.id,u.created_at,u.signup_source,p.completed_at,
+        (SELECT sf.kind FROM session_families sf WHERE sf.user_id=u.id AND sf.kind IN('WEB','IOS') AND sf.created_at<=$1 ORDER BY sf.created_at,sf.id LIMIT 1) AS signup_platform
+      FROM users u LEFT JOIN profiles p ON p.user_id=u.id WHERE u.status='ACTIVE' AND u.created_at<=$1 AND NOT(u.id=ANY($2::uuid[]))`, [asOf,excluded]);
     const ids = users.map(u => u.id);
+    // Consent coverage: member login families and whether each one currently holds an analytics grant.
+    const { rows: families } = await db.query(`SELECT sf.user_id,sf.kind,sf.created_at,(c.granted_at IS NOT NULL AND c.granted_at<=$1) AS consented
+      FROM session_families sf LEFT JOIN analytics_consents c ON c.scope_key='family:'||sf.id::text
+      WHERE sf.created_at<=$1 AND sf.kind IN('WEB','IOS') AND sf.user_id=ANY($2::uuid[])`, [asOf,ids]);
     // A deleted regular host does not erase the shared meal or surviving guests' history.
     // Classification exclusion remains meal-wide; active-account scope below is user-specific.
     const { rows: meals } = await db.query(`SELECT id,host_id,starts_at,closes_at,scheduled_end_at,minimum,capacity,budget_max_pence,languages,area_code,status,cancel_reason,created_at,attempt_id FROM meals WHERE created_at<=$1 AND NOT(host_id=ANY($2::uuid[]))`, [asOf,excluded]);
@@ -47,10 +61,10 @@ export async function sealSourceSnapshot(pool: Pool, historyCoverageStart: Date,
     const deliveryComplete=!!coverage[0]&&coverage[0].started_at<=historyCoverageStart;
     const quality={excludedEvents:excludedEvents.length,deliveryComplete,deliveryCoverageStart:coverage[0]?.started_at.toISOString()??null,incompleteSources:[...(!readiness.verifiedDiscovery?['verifiedDiscovery']:[]),...(!readiness.clientTelemetry?['clientTelemetry']:[]),...(!deliveryComplete?['deliveryHistory']:[])],telemetryIdentityMapping:'no_historical_linking'};
     const revision = classifications.reduce((max: bigint, c) => BigInt(c.revision) > max ? BigInt(c.revision) : max, 0n).toString();
-    const sourceStatus = { accounts: 'ready', classifications: 'ready', meals: 'ready', applications: 'ready', seats: 'ready', productSurvey: 'ready', analytics: readiness.verifiedDiscovery&&readiness.clientTelemetry?'ready':'partial', attendance: 'ready', experience: 'ready',deliveries:deliveryComplete?'ready':'partial' };
-    const { rows: snapshots } = await db.query<{ id: string }>(`INSERT INTO analytics_snapshots(as_of,definition_version,history_coverage_start,privacy_epoch,classification_revision,source_status,quality,dimensions) VALUES($1,'v4',$2,$3,$4,$5,$6,$7) RETURNING id`, [asOf,historyCoverageStart,privacy[0]!.epoch,revision,sourceStatus,quality,{ areas: [...new Set(meals.map(m => m.area_code as string))].sort().map(code => ({ code,label: code })), sources: [] }]);
+    const sourceStatus = { accounts: 'ready', families: 'ready', classifications: 'ready', meals: 'ready', applications: 'ready', seats: 'ready', productSurvey: 'ready', analytics: readiness.verifiedDiscovery&&readiness.clientTelemetry?'ready':'partial', attendance: 'ready', experience: 'ready',deliveries:deliveryComplete?'ready':'partial' };
+    const { rows: snapshots } = await db.query<{ id: string }>(`INSERT INTO analytics_snapshots(as_of,definition_version,history_coverage_start,privacy_epoch,classification_revision,source_status,quality,dimensions) VALUES($1,$8,$2,$3,$4,$5,$6,$7) RETURNING id`, [asOf,historyCoverageStart,privacy[0]!.epoch,revision,sourceStatus,quality,{ areas: [...new Set(meals.map(m => m.area_code as string))].sort().map(code => ({ code,label: code })), sources: signupSourceDimensions(users.map(u => u.signup_source as string|null)) },ADMIN_DEFINITION_VERSION]);
     const id = snapshots[0]!.id;
-    for (const [kind,facts] of Object.entries({ users,meals,applications,seats,surveys,events,attendance,experiences,rosters,quality,excludedEvents,deliveries:deliveryRows,discoveryReady:!!readiness.verifiedDiscovery,telemetryReady:!!readiness.clientTelemetry })) await db.query(`INSERT INTO analytics_snapshot_facts(snapshot_id,kind,facts) VALUES($1,$2,$3)`, [id,kind,JSON.stringify(facts)]);
+    for (const [kind,facts] of Object.entries({ users,families,meals,applications,seats,surveys,events,attendance,experiences,rosters,quality,excludedEvents,deliveries:deliveryRows,discoveryReady:!!readiness.verifiedDiscovery,telemetryReady:!!readiness.clientTelemetry })) await db.query(`INSERT INTO analytics_snapshot_facts(snapshot_id,kind,facts) VALUES($1,$2,$3)`, [id,kind,JSON.stringify(facts)]);
     for (const user of users) await db.query(`INSERT INTO analytics_snapshot_subjects(snapshot_id,user_id) VALUES($1,$2)`, [id,user.id]);
     await db.query('COMMIT');
     return id;

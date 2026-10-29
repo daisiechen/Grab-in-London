@@ -122,24 +122,41 @@ export const MEAL_ACTIONS = [
 /**
  * Admin key registry shared by the five pages and the snapshot worker (T21): metric cards, chart
  * series and drill-down lists per page. Ids follow the prototype (admin/src/metrics.ts) and the
- * measurement contract v4 rows; formulas live in the worker, never in the UI.
+ * measurement contract rows; formulas live in the worker, never in the UI.
+ * v5 (ops analytics review 2026-10-29): overview "this week" row from server facts only
+ * (signups, mealsPublished, firstApplications, mealsHeld, weekly); "approved" merged into "confirmed"
+ * (approval confirms the seat in the first release); consentCoverage on the quality page, and on every
+ * page with consent-sample cards so their footnotes can cite it (it is not drawn as a card there).
  */
 export const ADMIN_PAGE_KEYS = {
-  overview: { metrics: ['weekly', 'activation', 'retention', 'coverage'], series: ['weekly.trend'] },
+  overview: { metrics: ['signups', 'mealsPublished', 'firstApplications', 'mealsHeld', 'weekly', 'activation', 'retention', 'coverage'], series: ['weekly.trend', 'ops.previousWeek', 'signups.platform'] },
   journey: {
-    metrics: ['discovery7', 'impressionNoApply', 'applications', 'approved', 'confirmed', 'applicationAttendance', 'approval', 'approvalP50', 'pendingApplications', 'oldestPendingHours', 'formErrors'],
+    metrics: ['discovery7', 'impressionNoApply', 'applications', 'confirmed', 'applicationAttendance', 'approval', 'approvalP50', 'pendingApplications', 'oldestPendingHours', 'formErrors', 'consentCoverage'],
     series: ['funnel.join', 'funnel.create', 'browse.people', 'features.usage', 'form.errors.byStep', 'form.errors.byField'],
   },
   supply: {
-    metrics: ['discovery', 'formation', 'cancellation', 'coverage', 'mealsWithAttendance'],
+    metrics: ['discovery', 'formation', 'cancellation', 'coverage', 'mealsWithAttendance', 'consentCoverage'],
     series: ['area.compare', 'cancellation.reasons', 'attendance.distribution'],
   },
   retention: {
-    metrics: ['retention', 'activation', 'feedback', 'survey', 'laterOpportunity'],
+    metrics: ['retention', 'activation', 'feedback', 'survey', 'laterOpportunity', 'consentCoverage'],
     series: ['cohort.retention', 'rating.distribution', 'survey.reasons'],
   },
-  quality: { metrics: ['missingRequired', 'duplicates', 'excluded', 'receiveLatencyP90'], series: ['quality.sources'] },
+  quality: { metrics: ['missingRequired', 'duplicates', 'excluded', 'receiveLatencyP90', 'consentCoverage'], series: ['quality.sources'] },
 } as const satisfies Record<(typeof ADMIN_PAGES)[number], { metrics: readonly string[]; series: readonly string[] }>;
+
+/** Overview "this week" row (London week of the snapshot, Monday start); all server facts, no consent needed. */
+export const ADMIN_OPS_WEEK_METRICS = ['signups', 'mealsPublished', 'firstApplications', 'mealsHeld', 'weekly'] as const;
+/**
+ * Metrics and series computed from consented analytics events only. They describe the consent sample,
+ * are labelled as such in the admin, and are never divided by server-wide totals.
+ */
+export const ADMIN_CONSENT_SAMPLE_KEYS = [
+  'discovery', 'discovery7', 'impressionNoApply', 'laterOpportunity', 'formErrors',
+  'browse.people', 'features.usage', 'funnel.create', 'form.errors.byStep', 'form.errors.byField',
+] as const;
+/** Current measurement definition version sealed into new snapshots. */
+export const ADMIN_DEFINITION_VERSION = 'v5';
 
 /** Drill-down targets: every metric id plus the source lists the pages open in drawers. */
 export const ADMIN_LISTS = ['meals', 'applications', 'cohort.users', 'attendance', 'quality.events'] as const;

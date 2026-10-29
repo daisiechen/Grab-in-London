@@ -88,7 +88,10 @@ export function FilterBar({ t, filters, snapshotDay, dimensions, route, onChange
           })}
         </div>
         <MultiSelect label={names.areas} allLabel={t('全部区域', 'All areas')} value={filters.areas} options={areaOptions} onChange={(v) => set('areas', v)} />
-        <MultiSelect label={names.sources} allLabel={t('全部来源', 'All sources')} value={filters.sources} options={sourceOptions} onChange={(v) => set('sources', v)} />
+        {/* Sign-up sources exist from snapshot definition v5; hidden until the pinned snapshot has any. */}
+        {(sourceOptions.length > 0) && (
+          <MultiSelect label={names.sources} allLabel={t('全部来源', 'All sources')} value={filters.sources} options={sourceOptions} onChange={(v) => set('sources', v)} />
+        )}
         {SEGMENTS_SUPPORTED && (
           <MultiSelect label={names.segments} allLabel={t('全部用户', 'All users')} value={filters.segments} options={labels.segments} onChange={(v) => set('segments', v)} />
         )}

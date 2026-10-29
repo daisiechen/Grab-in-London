@@ -33,6 +33,7 @@ export function deletionHandler(pool:Pool,provider:DeletionProvider|DeletionStep
    await tx.client.query(`DELETE FROM profiles WHERE user_id=$1`,[hint.user_id]);
    await tx.client.query(`DELETE FROM product_surveys WHERE user_id=$1`,[hint.user_id]);
    await tx.client.query(`DELETE FROM private_contact WHERE user_id=$1`,[hint.user_id]);
+   await tx.client.query(`UPDATE users SET signup_source=NULL WHERE id=$1`,[hint.user_id]);
    await tx.client.query(`DELETE FROM ai_preferences WHERE user_id=$1`,[hint.user_id]);
    await tx.client.query(`UPDATE messages SET body='Message removed',redacted=true WHERE sender_id=$1`,[hint.user_id]);
    await tx.client.query(`UPDATE applications SET message='This application has been removed.' WHERE user_id=$1`,[hint.user_id]);

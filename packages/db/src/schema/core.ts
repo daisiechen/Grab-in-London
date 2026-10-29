@@ -11,6 +11,8 @@ export const users = pgTable('users', {
   privacyEpoch: big('privacy_epoch').notNull().default(0n),
   createdAt: ts('created_at').notNull().defaultNow(),
   updatedAt: ts('updated_at').notNull().defaultNow(),
+  /** 0030: campaign-level sign-up source, written once at account creation. */
+  signupSource: text('signup_source'),
 });
 
 export const idempotency = pgTable('idempotency', {

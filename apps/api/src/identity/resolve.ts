@@ -18,7 +18,8 @@ export type Resolution =
   | { kind: 'user'; userId: string; created: boolean }
   | { kind: 'link_required'; targetUserId: string };
 
-export async function resolveIdentity(db: PoolClient, identity: VerifiedIdentity, now: Date): Promise<Resolution> {
+/** `signupSource` (normalised users.signup_source) is written only when this call creates the account. */
+export async function resolveIdentity(db: PoolClient, identity: VerifiedIdentity, now: Date, signupSource: string | null = null): Promise<Resolution> {
   const existing = await db.query<{ user_id: string; status: string }>(
     `SELECT i.user_id, u.status FROM identities i JOIN users u ON u.id = i.user_id WHERE i.issuer = $1 AND i.subject = $2`,
     [identity.issuer, identity.subject],
@@ -38,7 +39,7 @@ export async function resolveIdentity(db: PoolClient, identity: VerifiedIdentity
     if (match.rows[0]?.status === 'SUSPENDED') throw suspendedError();
     if (match.rows[0]) return { kind: 'link_required', targetUserId: match.rows[0].user_id };
   }
-  const { rows } = await db.query<{ id: string }>(`INSERT INTO users DEFAULT VALUES RETURNING id`);
+  const { rows } = await db.query<{ id: string }>(`INSERT INTO users (signup_source) VALUES ($1) RETURNING id`, [signupSource]);
   const userId = rows[0]!.id;
   const inserted = await db.query(
     `INSERT INTO identities (user_id, issuer, subject, provider, email_verified) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (issuer, subject) DO NOTHING`,
