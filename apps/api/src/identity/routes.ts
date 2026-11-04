@@ -16,6 +16,7 @@ import { isProvisionalShell, suspendedError } from './resolve.ts';
 import { assertFreshAuth } from './reauth.ts';
 import { authenticateToken, issueNativeCredentials, revokeAllForUser, revokeFamily, rotateRefresh } from './sessions.ts';
 import { normalizeEmail, pkceChallenge, randomToken, sha256Hex, verifyPkce } from './tokens.ts';
+import { isReviewEmail, REVIEW_STATE, startReviewOtp, verifyReviewOtp } from './review-login.ts';
 
 export const OTP_TTL_MS = 5 * 60_000;
 export const OTP_RESEND_MS = 30_000;
@@ -84,7 +85,8 @@ async function startOtp(deps: AppDeps, request: FastifyRequest, o: { clientReque
   });
   if (created.fresh) {
     try {
-      const state = await callProvider(() => deps.identity.startEmailOtp(o.email));
+      // App Store review account (switch on, exact address): no provider call, same response.
+      const state = isReviewEmail(deps.config, o.email) ? await startReviewOtp(deps.config) : await callProvider(() => deps.identity.startEmailOtp(o.email));
       await deps.pool.query(`UPDATE auth_transactions SET provider_state = provider_state || $2 WHERE id = $1`, [created.row.id, JSON.stringify(state)]);
     } catch (error) {
       // Not delivered: retire the challenge so it does not count as a usable code.
@@ -218,7 +220,9 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
       if (!body.appChallenge) throw new DomainError('VALIDATION_FAILED', 'appChallenge is required for native sign-in.', { fieldErrors: { 'body.appChallenge': 'Required' } });
       row.app_challenge = body.appChallenge;
     }
-    const identity = await callProvider(() => deps.identity.verifyEmailOtp({ email: row.provider_state.email!, code: body.code, providerState: row.provider_state }));
+    const identity = row.provider_state.review === REVIEW_STATE.review
+      ? await verifyReviewOtp(deps.config, row.provider_state.email!, body.code, row.provider_state)
+      : await callProvider(() => deps.identity.verifyEmailOtp({ email: row.provider_state.email!, code: body.code, providerState: row.provider_state }));
     if (!identity) {
       const left = row.max_attempts - row.attempts;
       if (left <= 0) await deps.pool.query(`UPDATE auth_transactions SET consumed_at = clock_timestamp() WHERE id = $1`, [row.id]);

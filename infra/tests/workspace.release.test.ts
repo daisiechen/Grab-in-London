@@ -3,7 +3,7 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { CONFIG_KEYS } from '../../packages/config/src/index.ts';
+import { CONFIG_KEYS, hashReviewCode } from '../../packages/config/src/index.ts';
 // @ts-expect-error plain .mjs script without type declarations
 import { scan } from '../scripts/secret-scan.mjs';
 
@@ -95,6 +95,31 @@ describe('environment template and secrets', () => {
       mkdirSync(join(dir, 'apps/worker'), { recursive: true });
       writeFileSync(join(dir, 'apps/worker/env.ts'), `const env = { ${'ETHAN_MODERATION_TOKEN'}: "${'tok_' + 'a1B2c3D4e5F6g7H8i9J0'}" };`);
       expect(scan(dir)).toEqual(['apps/worker/env.ts: Ethan moderation token']);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it('detects an App Store review code or its stored hash in source and documentation', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'fancy-scan-review-'));
+    try {
+      mkdirSync(join(dir, 'infra'), { recursive: true });
+      mkdirSync(join(dir, 'docs/delivery'), { recursive: true });
+      const hash = hashReviewCode('482913');
+      writeFileSync(join(dir, 'infra/review.env'), `${'REVIEW_ACCOUNT_CODE'}_HASH='${hash}'\n`);
+      writeFileSync(join(dir, 'docs/delivery/notes.md'), `Sign in with code: ${'REVIEW_ACCOUNT_CODE'}=${'48' + '2913'}\n`);
+      writeFileSync(join(dir, 'docs/delivery/hash.md'), `stored value ${hash}\n`);
+      expect(scan(dir).sort()).toEqual([
+        'docs/delivery/hash.md: App Store review code hash',
+        'docs/delivery/notes.md: App Store review code',
+        'infra/review.env: App Store review code',
+        'infra/review.env: App Store review code hash',
+      ]);
+      // Placeholders and the format description stay allowed.
+      writeFileSync(join(dir, 'docs/delivery/hash.md'), 'format scrypt:<N>:<r>:<p>:<salt>:<key>; REVIEW_ACCOUNT_CODE_HASH=@review-code-hash\n');
+      writeFileSync(join(dir, 'docs/delivery/notes.md'), 'Code: typed by the Owner in App Store Connect.\n');
+      rmSync(join(dir, 'infra/review.env'));
+      expect(scan(dir)).toEqual([]);
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

@@ -7,7 +7,7 @@
 | # | 决定 | 建议 | 影响 |
 | --- | --- | --- | --- |
 | D1 | 正式 Bundle ID | `uk.fancyabite.app`（Owner 域名 fancyabite.uk 的反向 DNS；一旦在 ASC 建档不可更改） | 第 9 节列出的全部外部配置 |
-| D2 | 审核员登录方式 | 方案 A：审核专用账号＋固定验证码（服务端白名单、仅审核期开启），配合方案 C（审核员可直接用 Sign in with Apple） | 需新增少量 API 代码，见第 7 节 |
+| D2 | 审核员登录方式 | **已定（Owner 2026-11-04 批准）并已实现**：方案 A 审核专用账号＋验证码（服务端只认一个地址、只存哈希、仅审核期开启），配合方案 C（审核员可直接用 Sign in with Apple） | 开关步骤见第 7 节 |
 | D3 | App 名称 | “Fancy: Meet Over a Meal”；名称全商店唯一，被占用时用备选 | ASC 建档 |
 | D4 | 销售地区 | 首发仅英国 | 不在欧盟上架可暂不处理 DSA 交易者信息公开（需公开地址与电话） |
 | D5 | 24 小时处理举报的承诺 | 写入条款（“aim to review within 24 hours”），依靠自动隐藏＋每日摘要＋手机提醒 | Apple 1.2 审核常见要求 |
@@ -91,19 +91,64 @@ ASC 问“是否包含、显示或访问第三方内容”：**是，且拥有�
 - 用户内容：条款第 4 节取得展示所需的许可。
 - 品牌插画与 App 图标：本项目原创（图标见第 10 节）。
 
-## 7. 审核员登录方案（D2，需 Owner 决定）
+## 7. 审核员登录方案（D2，已实现）
 
-背景：生产登录只有 Auth0 邮箱验证码、Google、Apple 三种。Auth0 的验证码由 Auth0 生成并发到用户邮箱，审核员无法读取我们的邮箱；开发用的固定验证码 `DEV_FIXED_OTP=000000` 只存在于测试适配器，**绝不能在生产开启**。
+背景：生产登录只有 Auth0 邮箱验证码、Google、Apple 三种。Auth0 的验证码由 Auth0 生成并发到用户邮箱，审核员无法读取我们的邮箱；开发用的固定验证码 `DEV_FIXED_OTP=000000` 只存在于测试适配器，**绝不能在生产开启**（守卫照旧拒绝，本方案不放宽它）。
 
 | 方案 | 做法 | 安全性 | 可靠性 |
 | --- | --- | --- | --- |
-| A（推荐）审核专用账号 | API 增加两项生产配置：`REVIEW_ACCOUNT_EMAIL`（如 `appreview@mail.fancyabite.uk`，Owner 可收件）与 `REVIEW_ACCOUNT_CODE_HASH`（随机 6 位码的哈希，经 `setup` 脚本录入，不进仓库）。仅当邮箱精确匹配该地址且 `REVIEW_LOGIN_ENABLED=1` 时，`/v1/auth/email/start` 不调用 Auth0，`verify` 比对哈希；其他所有邮箱照旧走 Auth0 | 只影响一个账号；该账号分类为 `test`（不进指标）；沿用现有每邮箱/每 IP 限流与 5 次尝试上限；每次使用写审计日志并邮件提醒 Owner；审核通过后关闭开关并更换验证码 | 高：不依赖审核员访问邮箱 |
+| **A（已实现）审核专用账号** | 一个审核专用邮箱＋一个 6 位验证码，服务端只存验证码哈希，仅审核期间打开 | 只影响一个账号；分类为 `test`（不进指标）；沿用现有限流与尝试上限；每次登录写审计并邮件提醒 Owner；审核通过后关闭并换码 | 高：不依赖审核员访问邮箱 |
 | B 共享收件箱 | 给审核员一个可登录的邮箱账号读取验证码 | 需交出第三方邮箱密码；新设备登录常触发二次验证 | 低 |
 | C Sign in with Apple | 审核员用自己的 Apple ID 登录，创建新账号 | 不削弱任何安全设置 | 高，但新账号没有已批准的饭局和群聊，审核员看不到完整流程 |
 
-建议：实现 A 并在审核说明中同时注明 C 可用。另外用 Owner 控制的 `test` 分类账号预先发布 1–2 场“审核用”饭局（标题见英文文案中的 `{{REVIEW_MEAL_TITLE}}`），并预先批准审核账号入座，使群聊、饭后流程可见。方案 A 的 API 改动不在本轮范围（涉及认证代码，需单独评审与测试）。
+决定：Owner 2026-11-04 批准方案 A，审核说明同时注明方案 C 可用。另外用 Owner 控制的 `test` 分类账号预先发布 1–2 场“审核用”饭局（标题见英文文案中的 `{{REVIEW_MEAL_TITLE}}`），并在审核账号第一次登录、补全资料并申请后预先批准入座，使群聊、饭后流程可见。
 
-审核说明（英文）见英文文案“App Review notes”，`{{REVIEW_SIGN_IN_INSTRUCTIONS}}` 在 D2 决定后填写，例如：“Tap Profile → Sign in → Continue with email, enter appreview@mail.fancyabite.uk and the code 123456 (also provided in the Sign-In Information fields).” 账号与验证码填在 ASC 的“Sign-In Information”字段，不写进仓库。
+### 7.1 实现要点
+
+- 配置三项（API 读取，见[部署手册](../operations/seoul-production-deploy.zh-CN.md)环境变量表）：
+  - `REVIEW_LOGIN_ENABLED`：`1` 打开；留空或 `0` 关闭（默认关闭）。
+  - `REVIEW_ACCOUNT_EMAIL`：一个精确地址（服务端存小写，不支持多个地址或通配）。建议 Owner 可收件、且**从未在 Fancy 注册过**的地址，例如 `appreview@mail.fancyabite.uk`；若该地址已有普通账号，审核登录会进入“关联账号”流程而不是直接登录。
+  - `REVIEW_ACCOUNT_CODE_HASH`：6 位验证码的 scrypt 哈希，一行，格式 `scrypt:<N>:<r>:<p>:<salt>:<key>`（N 为 2^14–2^17，r=8，p=1，salt 16 字节、key 32 字节，base64url；见 `packages/config/src/review-code.ts`）。由 `secrets.sh` 在服务器上生成，明文验证码不进服务器文件、仓库或聊天；仓库的密钥扫描会拒绝提交真实哈希或 `REVIEW_ACCOUNT_CODE=<6 位数字>`。
+- 三项齐全且开关为 `1` 才生效，另外必须设置 `SUPPORT_EMAIL`（接收登录提醒）且两地址不同；否则 API 拒绝启动，报错只列键名、不显示值。
+- 开关打开且邮箱（去空格、转小写后）**完全等于**该地址时：`/v1/auth/email/start` 不调用 Auth0，返回字段与普通邮箱相同，生产环境随机等待 0.25–0.65 秒，接近一次 Auth0 往返；`/v1/auth/email/verify` 以常量时间比较验证码与哈希。挑战记录、30 秒重发间隔、每邮箱和每 IP 15 分钟 5 个验证码、每个验证码 5 次尝试上限全部沿用。删除账号等操作前的重新认证同样可用。
+- 其他所有邮箱（包括 `appreview+x@…` 这类相似地址），以及开关关闭时的这个地址，都照旧走 Auth0。开关关闭后，之前发出的审核验证码也立即失效。
+- 身份：本地稳定身份，issuer `urn:fancy:app-review`，subject `review|<小写邮箱>`。第一次登录像普通注册一样建账号（随后补全资料），之后都是同一账号。
+- 每次成功登录（同一事务内）：确认账号最新统计分类为 `test`，不是就写入新版本并记 `account.classified` 审计；写 `auth.review_signin` 审计（只含登录目的、客户端、是否新建）；向 `SUPPORT_EMAIL` 排队一封固定文案提醒邮件（模板 `review_signin`，不含验证码、地址或链接）。
+- 风险余量：限流下每 15 分钟最多 25 次猜测（每天约 2400 次），6 位码每天被猜中的概率约 0.24%。所以只在审核期间打开；收到不在审核期内的提醒邮件，立即按 7.4 关闭并换码。
+
+### 7.2 Owner 打开（提交审核前）
+
+1. 确认服务器上的部署工具（`/opt/fancy-deploy`）与 API 已更新到包含本功能的版本（由 Claude 会话按部署手册完成）。
+2. 在自己的终端运行：
+
+   ```sh
+   ssh -t tencent-seoul sudo /opt/fancy-deploy/secrets.sh --reset REVIEW_LOGIN_ENABLED,REVIEW_ACCOUNT_EMAIL,REVIEW_ACCOUNT_CODE_HASH
+   ```
+
+   - `REVIEW_LOGIN_ENABLED` 输入 `1`；
+   - `REVIEW_ACCOUNT_EMAIL` 输入审核邮箱（小写）；
+   - 验证码一项：隐藏输入 6 位数字，或输入 `g` 让服务器生成一个并**只显示一次**——立即填进 App Store Connect，按回车后屏幕上的那两行会被擦除。服务器只保存哈希。
+3. 让 Claude 会话执行 `sudo systemctl restart fancy-api`（worker 不用重启），并用 `secrets.sh --check` 确认三项状态为 kept、配置守卫通过。
+4. 自测一次：在 iPhone 上用审核邮箱和验证码登录，确认 `SUPPORT_EMAIL` 收到“the App Store review account signed in”提醒；补全审核账号资料。然后用 Owner 控制的 `test` 账号发布审核用饭局、批准审核账号入座（见上文）。
+
+### 7.3 App Store Connect “Sign-In Information”
+
+| 字段 | 填写 |
+| --- | --- |
+| Sign-in required | 勾选 |
+| User name | 审核邮箱（`REVIEW_ACCOUNT_EMAIL` 的值） |
+| Password | 6 位验证码（Owner 直接在 ASC 页面输入；不写进仓库、文档或聊天） |
+| Notes（英文） | `This account signs in with a one-time email code. In the app: Profile > Sign in > Continue with email, enter the user name above and tap Send code. No email is sent to this review account; enter the password above as the 6-digit code. Sign in with Apple also works, but a new account will not have the pre-approved meal.` |
+
+App Review notes 正文见英文文案“App Review notes”的 Sign-in 段（通用说明，不含验证码）。
+
+### 7.4 审核通过后关闭
+
+```sh
+ssh -t tencent-seoul sudo /opt/fancy-deploy/secrets.sh --reset REVIEW_LOGIN_ENABLED,REVIEW_ACCOUNT_CODE_HASH
+```
+
+开关一项直接回车（留空即关闭），验证码一项直接回车（删除哈希）；然后让 Claude 会话 `sudo systemctl restart fancy-api`。审核账号本身保留（仍为 `test`），下次提交新版本时按 7.2 重新打开并**换新验证码**，同时更新 ASC 的 Password。
 
 ## 8. 截图计划
 
@@ -159,4 +204,4 @@ Apple 要求：iPhone 6.9" 必需（1320×2868 或 1290×2796 竖屏）；6.5"�
 | Sign in with Apple（4.8） | 已提供（Auth0 网页流程） |
 | 生产 API 使用 HTTPS | 待部署（腾讯云首尔＋Cloudflare） |
 | 年龄分级 18+、营养标签、出口合规、内容权利 | 见第 3–6 节 |
-| 审核账号与审核用饭局 | 待 D2 决定 |
+| 审核账号与审核用饭局 | 登录已实现（第 7 节）；提交前按 7.2 打开、发布审核用饭局，审核通过后按 7.4 关闭 |

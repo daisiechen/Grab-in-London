@@ -21,7 +21,10 @@ const TEMPLATES:Readonly<Record<string,{subject:string;message:string;deletion?:
  deletion_completed:{subject:'Your Fancy account deletion is complete',message:'Your account deletion is complete. Use your saved deletion receipt in Fancy to check its status.',deletion:true},
  moderation_digest:{subject:'Fancy moderation: open reports to review',message:'These reports are still open, oldest first. Each link opens the report in the Fancy admin console (staff sign-in required).'},
  moderation_urgent:{subject:'Fancy moderation: urgent report to review',message:'A report about personal safety, harassment or a member who may be under 18 was received. Each link opens the report in the Fancy admin console (staff sign-in required).'},
+ review_signin:{subject:'Fancy: the App Store review account signed in',message:'Someone just signed in with the App Store review account. If App Review is not in progress, turn review sign-in off (REVIEW_LOGIN_ENABLED) and set a new review code.'},
 };
+/** Plain notices to the support inbox: fixed text only, no link, refs or account details. */
+const NOTICE_TEMPLATES=new Set(['review_signin']);
 /** Templates whose body is a list of admin report links (ids only, never report text). */
 const LINK_TEMPLATES=new Set(['moderation_digest','moderation_urgent']);
 const escapeHtml=(value:string)=>value.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
@@ -51,6 +54,9 @@ export class ResendMailProvider implements MailProvider {
    const links=input.links??[];
    if(!links.length||links.length>50||links.some(link=>{try{const url=new URL(link);return !((url.protocol==='https:'||(url.protocol==='http:'&&['localhost','127.0.0.1','[::1]'].includes(url.hostname)))&&!url.username&&!url.password&&/^#moderation\/[0-9a-f-]{36}$/i.test(url.hash));}catch{return true;}}))return {status:'RETRY'};
    body=JSON.stringify({from:this.options.from,to:[input.email],subject:`${template.subject} (${links.length})`,tags:[{name:'outbox_id',value:input.idempotencyKey}],text:template.message+'\n\n'+links.join('\n'),html:'<p>'+escapeHtml(template.message)+'</p><ol>'+links.map((link,i)=>'<li><a href="'+escapeHtml(link)+'">Report '+(i+1)+'</a></li>').join('')+'</ol>'});
+  }else if(NOTICE_TEMPLATES.has(input.template)){
+   if(Object.keys(input.refs).length)return {status:'RETRY'};
+   body=JSON.stringify({from:this.options.from,to:[input.email],subject:template.subject,tags:[{name:'outbox_id',value:input.idempotencyKey}],text:template.message,html:'<p>'+escapeHtml(template.message)+'</p>'});
   }else{
    const path=template.deletion?'/settings/deletion':input.refs.mealId?'/meals/'+input.refs.mealId:'/inbox';
    const link=new URL(path,this.origin).href;

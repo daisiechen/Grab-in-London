@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ConfigError, loadConfig } from './index.ts';
+import { ConfigError, hashReviewCode, loadConfig, parseReviewCodeHash, verifyReviewCode } from './index.ts';
 
 const local = {
   ENVIRONMENT: 'test',
@@ -247,5 +247,62 @@ describe('Ethan moderation push configuration', () => {
   });
   it('requires an https URL in production', () => {
     expect(() => loadConfig({ ...production, ETHAN_MODERATION_URL: 'http://ethan.example.test/hooks', ETHAN_MODERATION_TOKEN: token })).toThrow(/ETHAN_MODERATION_URL/);
+  });
+});
+
+describe('App Store review sign-in configuration', () => {
+  const code = String(100000 + (Date.now() % 900000));
+  const codeHash = hashReviewCode(code);
+  const review = { REVIEW_LOGIN_ENABLED: '1', REVIEW_ACCOUNT_EMAIL: 'AppReview@Example.Test', REVIEW_ACCOUNT_CODE_HASH: codeHash, SUPPORT_EMAIL: 'support@example.test' };
+  const messageOf = (env: Record<string, string>) => { try { loadConfig(env); return ''; } catch (error) { expect(error).toBeInstanceOf(ConfigError); return (error as Error).message; } };
+
+  it('is off by default and when disabled, even with an account configured', () => {
+    expect(loadConfig(local).reviewLogin).toBeNull();
+    expect(loadConfig({ ...local, ...review, REVIEW_LOGIN_ENABLED: '0' }).reviewLogin).toBeNull();
+    expect(loadConfig({ ...local, REVIEW_ACCOUNT_EMAIL: 'appreview@example.test' }).reviewLogin).toBeNull();
+  });
+  it('enables one exact lowercased address in production only when all three are set', () => {
+    expect(loadConfig({ ...production, ...review }).reviewLogin).toEqual({ email: 'appreview@example.test', codeHash });
+    for (const key of ['REVIEW_ACCOUNT_EMAIL', 'REVIEW_ACCOUNT_CODE_HASH'] as const) {
+      const rest: Record<string, string> = { ...production, ...review };
+      delete rest[key];
+      expect(messageOf(rest)).toContain('REVIEW_LOGIN_ENABLED=1 requires REVIEW_ACCOUNT_EMAIL and REVIEW_ACCOUNT_CODE_HASH');
+    }
+    const noSupport: Record<string, string> = { ...production, ...review };
+    delete noSupport.SUPPORT_EMAIL;
+    expect(messageOf(noSupport)).toContain('requires SUPPORT_EMAIL');
+    expect(messageOf({ ...production, ...review, SUPPORT_EMAIL: 'appreview@example.test' })).toContain('must differ from SUPPORT_EMAIL');
+  });
+  it.each([
+    { REVIEW_LOGIN_ENABLED: 'yes' },
+    { REVIEW_ACCOUNT_EMAIL: 'a@example.test,b@example.test' },
+    { REVIEW_ACCOUNT_EMAIL: '*@example.test' },
+    { REVIEW_ACCOUNT_EMAIL: 'Review <appreview@example.test>' },
+    { REVIEW_ACCOUNT_CODE_HASH: 'SENTINEL' },
+  ])('rejects %o without echoing values', (extra) => {
+    const message = messageOf({ ...production, ...review, ...extra });
+    expect(message).toMatch(/REVIEW_/);
+    expect(message).not.toContain('SENTINEL');
+    expect(message).not.toContain(codeHash);
+    expect(message).not.toContain('example.test');
+  });
+  it('refuses a plain code or a weakened hash in place of the stored hash, and never echoes it', () => {
+    for (const bad of [code, codeHash.replace(/^scrypt:16384:/, 'scrypt:1024:'), codeHash.replace(':8:1:', ':1:1:'), codeHash.slice(0, -1)]) {
+      const message = messageOf({ ...production, ...review, REVIEW_ACCOUNT_CODE_HASH: bad });
+      expect(message).toContain('REVIEW_ACCOUNT_CODE_HASH must be the scrypt hash');
+      expect(message).not.toContain(code);
+    }
+  });
+  it('does not relax the fixed development code guard', () => {
+    expect(messageOf({ ...production, ...review, DEV_FIXED_OTP: '000000' })).toContain('DEV_FIXED_OTP must be unset in production');
+  });
+  it('verifies only the hashed code, in constant time', async () => {
+    expect(parseReviewCodeHash(codeHash)).not.toBeNull();
+    expect(codeHash).not.toContain(code);
+    expect(await verifyReviewCode(code, codeHash)).toBe(true);
+    expect(await verifyReviewCode(code === '123456' ? '654321' : '123456', codeHash)).toBe(false);
+    expect(await verifyReviewCode('12345', codeHash)).toBe(false);
+    expect(await verifyReviewCode(code, 'not-a-hash')).toBe(false);
+    expect(hashReviewCode(code)).not.toBe(codeHash);
   });
 });

@@ -7,6 +7,9 @@
 
 import { isIP } from 'node:net';
 import { isAbsolute } from 'node:path';
+import { parseReviewCodeHash } from './review-code.ts';
+
+export { hashReviewCode, isReviewCode, parseReviewCodeHash, verifyReviewCode } from './review-code.ts';
 
 export const ENVIRONMENTS = ['development', 'test', 'staging', 'production'] as const;
 export type Environment = (typeof ENVIRONMENTS)[number];
@@ -59,6 +62,9 @@ export const CONFIG_KEYS = [
   'MODERATION_AUTO_HIDE_REPORTERS',
   'ETHAN_MODERATION_URL',
   'ETHAN_MODERATION_TOKEN',
+  'REVIEW_LOGIN_ENABLED',
+  'REVIEW_ACCOUNT_EMAIL',
+  'REVIEW_ACCOUNT_CODE_HASH',
 ] as const;
 
 const LOG_LEVELS = ['debug', 'info', 'warn', 'error'] as const;
@@ -105,6 +111,12 @@ export interface CoreConfig {
    * never logged). Both set or both unset; unset = no push.
    */
   ethanModeration: { url: string; token: string } | null;
+  /**
+   * App Store review sign-in (app-store-submission §7 option A). Non-null only when
+   * REVIEW_LOGIN_ENABLED=1 with one exact lowercased email and the scrypt hash of its 6-digit code
+   * (never the code); every other email goes to the identity provider as usual.
+   */
+  reviewLogin: { email: string; codeHash: string } | null;
 }
 
 /** Lists offending keys only; values are never echoed so secrets stay out of logs. */
@@ -302,8 +314,25 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
     }
   }
 
+  let reviewLogin: CoreConfig['reviewLogin'] = null;
+  const reviewEnabled = value('REVIEW_LOGIN_ENABLED');
+  const reviewEmail = value('REVIEW_ACCOUNT_EMAIL')?.toLowerCase();
+  const reviewHash = value('REVIEW_ACCOUNT_CODE_HASH');
+  if (reviewEnabled !== undefined && reviewEnabled !== '0' && reviewEnabled !== '1') issues.push('REVIEW_LOGIN_ENABLED must be 0 or 1');
+  const reviewEmailOk = !reviewEmail || (reviewEmail.length <= 254 && /^[a-z0-9._+-]+@[a-z0-9-]+(?:\.[a-z0-9-]+)+$/.test(reviewEmail));
+  if (!reviewEmailOk) issues.push('REVIEW_ACCOUNT_EMAIL must be one exact email address');
+  const reviewHashOk = !reviewHash || parseReviewCodeHash(reviewHash) !== null;
+  if (!reviewHashOk) issues.push('REVIEW_ACCOUNT_CODE_HASH must be the scrypt hash written by secrets.sh, never the code itself');
+  if (reviewEnabled === '1') {
+    if (!reviewEmail || !reviewHash) issues.push('REVIEW_LOGIN_ENABLED=1 requires REVIEW_ACCOUNT_EMAIL and REVIEW_ACCOUNT_CODE_HASH');
+    else if (!supportEmail) issues.push('REVIEW_LOGIN_ENABLED=1 requires SUPPORT_EMAIL for the sign-in notice');
+    else if (reviewEmail === supportEmail) issues.push('REVIEW_ACCOUNT_EMAIL must differ from SUPPORT_EMAIL');
+    else if (reviewEmailOk && reviewHashOk) reviewLogin = { email: reviewEmail, codeHash: reviewHash };
+  }
+
   if (issues.length) throw new ConfigError(issues);
   return {
+    reviewLogin,
     ethanModeration,
     supportEmail,
     adminUrl,

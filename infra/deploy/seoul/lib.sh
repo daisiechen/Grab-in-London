@@ -279,3 +279,21 @@ wait_http_ok() {
   done
   return 1
 }
+
+# App Store review sign-in code (docs/delivery/app-store-submission.zh-CN.md §7). Reads a
+# 6-digit code on stdin and prints its hash in the format packages/config/src/review-code.ts
+# parses: scrypt:<N>:<r>:<p>:<salt b64url>:<key b64url>. The code never appears in argv.
+review_code_hash() {
+  "$NODE_BIN" --input-type=module -e '
+    import { randomBytes, scryptSync } from "node:crypto";
+    let code = "";
+    for await (const chunk of process.stdin) code += chunk;
+    if (!/^[0-9]{6}$/.test(code.trim())) { console.error("review code must be 6 digits"); process.exit(1); }
+    const salt = randomBytes(16), n = 16384;
+    const key = scryptSync(code.trim(), salt, 32, { N: n, r: 8, p: 1, maxmem: 256 * 1024 * 1024 });
+    process.stdout.write(["scrypt", n, 8, 1, salt.toString("base64url"), key.toString("base64url")].join(":"));'
+}
+# A uniformly random 6-digit code (owner copies it into App Store Connect).
+review_code_generate() {
+  "$NODE_BIN" -e 'process.stdout.write(String(require("node:crypto").randomInt(0, 1000000)).padStart(6, "0"))'
+}

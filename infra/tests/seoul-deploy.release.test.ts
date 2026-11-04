@@ -6,7 +6,7 @@ import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { CONFIG_KEYS, loadConfig } from '../../packages/config/src/index.ts';
+import { CONFIG_KEYS, loadConfig, parseReviewCodeHash, verifyReviewCode } from '../../packages/config/src/index.ts';
 
 // Static checks for the Seoul production deploy kit (infra/deploy/seoul). The kit runs on a
 // shared server whose public 443 belongs to the owner's proxy, so these tests pin the safety
@@ -157,7 +157,7 @@ describe('Seoul deploy kit: production configuration coverage', () => {
     }
   });
 
-  it('filled with the values secrets.sh generates or asks for, passes the production guard', () => {
+  it('filled with the values secrets.sh generates or asks for, passes the production guard', async () => {
     const secrets = read(join(KIT, 'secrets.sh'));
     expect(secrets).toContain('postgresql://$PG_ROLE:$pw@127.0.0.1:$PG_PORT/$PG_DB?sslmode=verify-full&sslrootcert=$FANCY_PG_CA');
     const asked: Record<string, string> = {
@@ -175,7 +175,13 @@ describe('Seoul deploy kit: production configuration coverage', () => {
       ETHAN_MODERATION_URL: 'https://ethan.example.invalid/fancy/moderation',
       ETHAN_MODERATION_TOKEN: 't'.repeat(24),
       ANALYTICS_COVERAGE_START: '2026-01-01T00:00:00Z',
+      REVIEW_LOGIN_ENABLED: '1',
+      REVIEW_ACCOUNT_EMAIL: 'appreview@example.invalid',
     };
+    // The kit's own hasher (lib.sh review_code_hash) writes the value the guard accepts.
+    const reviewCode = String(100000 + (Date.now() % 900000));
+    const hashed = spawnSync('bash', ['-c', '. ./lib.sh && NODE_BIN="$1" && review_code_hash', 'hash', process.execPath], { cwd: KIT, encoding: 'utf8', input: reviewCode });
+    expect(hashed.status, hashed.stderr).toBe(0);
     const env: Record<string, string> = {};
     for (const [key, spec] of template) {
       if (spec === '@unset') continue;
@@ -184,7 +190,8 @@ describe('Seoul deploy kit: production configuration coverage', () => {
       else if (spec === '@deletion-keyring') {
         env.DELETION_MAIL_KEY_VERSION = 'v1';
         env.DELETION_MAIL_KEYS_JSON = JSON.stringify({ v1: randomBytes(32).toString('base64') });
-      } else if (spec.startsWith('@')) {
+      } else if (spec === '@review-code-hash') env[key] = hashed.stdout;
+      else if (spec.startsWith('@')) {
         expect(asked[key], `example value for ${key}`).toBeDefined();
         env[key] = asked[key]!;
       } else env[key] = spec;
@@ -198,12 +205,44 @@ describe('Seoul deploy kit: production configuration coverage', () => {
     expect(config.resend?.from).toBe('Fancy <noreply@mail.fancyabite.uk>');
     expect(config.trustedProxyCidrs).toEqual(['127.0.0.1']);
     expect(config.port).toBe(Number(deployConf.API_PORT));
+    expect(config.reviewLogin).toEqual({ email: 'appreview@example.invalid', codeHash: hashed.stdout });
+    expect(hashed.stdout).not.toContain(reviewCode);
+    expect(parseReviewCodeHash(hashed.stdout)).not.toBeNull();
+    expect(await verifyReviewCode(reviewCode, hashed.stdout)).toBe(true);
+    // Off unless the owner turns it on: empty optional answers leave review sign-in disabled.
+    const off: Record<string, string | undefined> = { ...env, PORT: deployConf.API_PORT };
+    for (const key of ['REVIEW_LOGIN_ENABLED', 'REVIEW_ACCOUNT_EMAIL', 'REVIEW_ACCOUNT_CODE_HASH']) delete off[key];
+    expect(loadConfig(off).reviewLogin).toBeNull();
     // Required asks really are required by the guard or by launch.
     for (const key of ['AUTH0_CLIENT_SECRET', 'PRIVACY_POLICY_VERSION', 'RETENTION_POLICY_JSON']) {
       const rest = { ...env };
       delete rest[key];
       expect(() => loadConfig(rest)).toThrow();
     }
+  });
+
+  it('stores only the hash of the App Store review code, never the code', () => {
+    const secrets = read(join(KIT, 'secrets.sh'));
+    const spec = Object.fromEntries(template);
+    expect(spec.REVIEW_ACCOUNT_CODE_HASH).toBe('@review-code-hash');
+    expect(spec.REVIEW_LOGIN_ENABLED).toBe('@ask-optional');
+    // Typed with echo off, sent to the hasher on stdin (never argv), and validated as a hash.
+    expect(secrets).toContain(`read -r -s -p "  REVIEW_ACCOUNT_CODE_HASH: type a 6-digit review code (hidden)`);
+    expect(secrets).toContain(`printf '%s' "$v" | review_code_hash`);
+    expect(secrets).toContain('REVIEW_ACCOUNT_CODE_HASH) [[ "$v" =~ ^scrypt:');
+    expect(secrets).toContain('NEW["$key"]="$hash"');
+    const valid = (key: string, v: string) => spawnSync('bash', ['-c', `eval "$(sed -n '/^valid_value()/,/^}/p' secrets.sh)"; valid_value "$1" "$2"`, 'valid', key, v], { cwd: KIT, encoding: 'utf8' });
+    expect(valid('REVIEW_ACCOUNT_CODE_HASH', '123456').status).toBe(1);
+    expect(valid('REVIEW_LOGIN_ENABLED', 'yes').status).toBe(1);
+    expect(valid('REVIEW_LOGIN_ENABLED', '1').status).toBe(0);
+    expect(valid('REVIEW_ACCOUNT_EMAIL', 'a@example.invalid,b@example.invalid').status).toBe(1);
+    expect(valid('REVIEW_ACCOUNT_EMAIL', 'appreview@example.invalid').status).toBe(0);
+    // The hasher refuses anything but six digits.
+    const bad = spawnSync('bash', ['-c', '. ./lib.sh && NODE_BIN="$1" && review_code_hash', 'hash', process.execPath], { cwd: KIT, encoding: 'utf8', input: '12345' });
+    expect(bad.status).not.toBe(0);
+    expect(bad.stdout).toBe('');
+    const generated = spawnSync('bash', ['-c', '. ./lib.sh && NODE_BIN="$1" && review_code_generate', 'gen', process.execPath], { cwd: KIT, encoding: 'utf8' });
+    expect(generated.stdout).toMatch(/^[0-9]{6}$/);
   });
 
   it('keeps test-only switches out of production', () => {

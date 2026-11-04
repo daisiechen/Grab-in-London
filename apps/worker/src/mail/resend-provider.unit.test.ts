@@ -30,6 +30,15 @@ describe('Resend sending-only production transport',()=>{
   expect(body.subject).toBe('Fancy moderation: urgent report to review (1)');expect(body.text).toContain(links[0]);
   expect(await provider.send({idempotencyKey:id,email:'support@example.invalid',template:'moderation_urgent',refs:{alertId:mealId},links:[]})).toEqual({status:'RETRY'});
  });
+ it('sends the review sign-in notice as fixed text without links, refs or account details',async()=>{
+  const fetcher=vi.fn<typeof fetch>(async()=>Response.json({id})),provider=new ResendMailProvider({...options,fetch:fetcher});
+  expect(await provider.send({idempotencyKey:id,email:'support@example.invalid',template:'review_signin',refs:{}})).toEqual({status:'SENT',providerId:id});
+  const body=JSON.parse(String(fetcher.mock.calls[0]![1]?.body));
+  expect(body.to).toEqual(['support@example.invalid']);expect(body.subject).toBe('Fancy: the App Store review account signed in');
+  expect(body.text).toContain('REVIEW_LOGIN_ENABLED');expect(body.text).not.toMatch(/https?:\/\/|[0-9]{6}|@/);expect(body.html).not.toContain('href');
+  expect(await provider.send({idempotencyKey:id,email:'support@example.invalid',template:'review_signin',refs:{mealId}})).toEqual({status:'RETRY'});
+  expect(fetcher).toHaveBeenCalledTimes(1);
+ });
  it('does not call any API or infer NOT_SENT for an unknown lookup',async()=>{
   const fetcher=vi.fn<typeof fetch>(),provider=new ResendMailProvider({...options,fetch:fetcher});expect(await provider.lookup(id)).toEqual({status:'UNKNOWN'});expect(fetcher).not.toHaveBeenCalled();
  });

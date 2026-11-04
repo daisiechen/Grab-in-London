@@ -40,4 +40,14 @@ describe('transactional mail delivery',()=>{
   await mailDelivery(db.pool,provider,'test',{support:{email:null,adminUrl:'https://admin.fancy.example/'}}).tick();
   expect((await row(orphan)).last_error_code).toBe('RECIPIENT_UNAVAILABLE');expect(seen).toHaveLength(1);
  });
+ it('delivers the review sign-in notice to the support address only, with no refs',async()=>{
+  const id=(await db.pool.query(`INSERT INTO outbox(event_id,recipient_id,channel,template,payload) VALUES($1,NULL,'EMAIL','review_signin','{}') RETURNING id`,[randomUUID()])).rows[0].id as string;
+  const seen:Array<{email:string;refs:Record<string,string>;links?:readonly string[]}>=[];
+  const provider:MailProvider={kind:'test',send:async(input)=>{if(input.template==='review_signin')seen.push({email:input.email,refs:input.refs,...(input.links?{links:input.links}:{})});return{status:'SENT',providerId:'notice'};},lookup:async()=>({status:'UNKNOWN'})};
+  await mailDelivery(db.pool,provider,'test',{support:{email:'support@example.invalid',adminUrl:'https://admin.fancy.example/'}}).tick();
+  expect(seen).toEqual([{email:'support@example.invalid',refs:{}}]);expect((await row(id)).status).toBe('SENT');
+  const orphan=(await db.pool.query(`INSERT INTO outbox(event_id,recipient_id,channel,template,payload) VALUES($1,NULL,'EMAIL','review_signin','{}') RETURNING id`,[randomUUID()])).rows[0].id as string;
+  await mailDelivery(db.pool,provider,'test',{support:{email:null,adminUrl:'https://admin.fancy.example/'}}).tick();
+  expect((await row(orphan)).last_error_code).toBe('RECIPIENT_UNAVAILABLE');expect(seen).toHaveLength(1);
+ });
 });

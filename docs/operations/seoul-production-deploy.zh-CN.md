@@ -302,6 +302,9 @@ ssh tencent-seoul 'sudo /opt/fancy-deploy/restore-drill.sh --identity /root/fanc
 | `MODERATION_AUTO_HIDE_REPORTERS` | `2` | 否 | 7 天内不同举报人数阈值 |
 | `ETHAN_MODERATION_URL` | Owner（可选） | 否 | 举报摘要推送 Ethan，另一分支正在加入；代码合并前留空 |
 | `ETHAN_MODERATION_TOKEN` | Owner（可选） | 是 | 同上 |
+| `REVIEW_LOGIN_ENABLED` | Owner：仅 App Store 审核期间填 `1`，平时留空或 `0` | 否 | 审核专用登录开关，见[上架材料 §7](../delivery/app-store-submission.zh-CN.md#7-审核员登录方案d2已实现) |
+| `REVIEW_ACCOUNT_EMAIL` | Owner：审核账号邮箱（一个精确地址，小写） | 否（不进仓库） | 只有这个地址在开关打开时不走 Auth0 |
+| `REVIEW_ACCOUNT_CODE_HASH` | `secrets.sh` 生成：Owner 隐藏输入 6 位码或让脚本生成并只显示一次 | 是（只存 scrypt 哈希） | 明文验证码只填在 App Store Connect，不进服务器文件、仓库或聊天 |
 | `VITE_PUBLIC_GOOGLE_MAPS_KEY` | Owner：Web 地图 Key，写入 `/etc/fancy/web-build.env` | 否（会出现在网页代码中） | 仅构建时读取；限 HTTP 来源 |
 | `VITE_PUBLIC_GOOGLE_MAPS_ID` | Owner：Web Map ID，写入 `web-build.env` | 否 | |
 | `EXPO_PUBLIC_GOOGLE_MAPS_IOS_KEY` | Owner：iOS 构建环境（Mac / EAS），不在服务器 | 否（在 App 内） | 必须限制为 bundle `uk.fancyabite.app` |
@@ -323,7 +326,8 @@ ssh tencent-seoul 'sudo /opt/fancy-deploy/restore-drill.sh --identity /root/fanc
 9. 决定异地备份方式（Mac 拉取、R2 或腾讯云快照）。
 10. 上线前用自己的员工邮箱登录一次并执行 §6.3 的角色授予；恢复演练时临时提供私钥文件。
 11. 生产采集验证通过后设置 `ANALYTICS_COVERAGE_START`（§6.4）。
-12. 填写并发布政策文本占位符，保持保留期与本手册一致。
+12. 提交 App Store 审核前打开审核专用登录、审核通过后关闭（[上架材料 §7](../delivery/app-store-submission.zh-CN.md#7-审核员登录方案d2已实现)）。
+13. 填写并发布政策文本占位符，保持保留期与本手册一致。
 
 ## 12. 已知限制
 

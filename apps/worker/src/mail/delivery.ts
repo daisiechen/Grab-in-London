@@ -15,7 +15,7 @@ export class UnavailableMailProvider implements MailProvider {
  async send():Promise<DeliveryOutcome>{return {status:'RETRY'};}
  async lookup():Promise<DeliveryOutcome>{return {status:'UNKNOWN'};}
 }
-const TEMPLATES=new Set(['application_approved','application_declined','application_expired','meal_cancelled','deletion_received','deletion_completed','moderation_digest','moderation_urgent']);
+const TEMPLATES=new Set(['application_approved','application_declined','application_expired','meal_cancelled','deletion_received','deletion_completed','moderation_digest','moderation_urgent','review_signin']);
 const REF_KEYS=new Set(['mealId','applicationId','conversationId','deletionId','digestId','alertId']);
 interface DeliveryRow {id:string;recipient_id:string|null;template:string;payload:Record<string,string>;attempts:number;lookup_attempts:number;status:string;claim_token:string}
 export type MailDeadCode='RETRY_EXHAUSTED'|'INVALID_PAYLOAD'|'RECIPIENT_UNAVAILABLE';
@@ -62,7 +62,8 @@ export function mailDelivery(pool:Pool,provider:MailProvider,environment:'develo
     const beforeResolution=performance.now();
     const deletionDestination=isDeletionMail(row.template)?await withMailTransaction(client=>resolveDeletionMail(client,row,options.deletionMailEncryption??null)):null;
     const digest=row.template==='moderation_digest'||row.template==='moderation_urgent';
-    const email=digest?options.support?.email:isDeletionMail(row.template)?deletionDestination?.email:(await pool.query<{email:string}>(`SELECT c.email FROM private_contact c JOIN users u ON u.id=c.user_id WHERE c.user_id=$1 AND u.status='ACTIVE'`,[row.recipient_id])).rows[0]?.email;
+    // Support-inbox notices: moderation links, and the App Store review sign-in notice (no refs).
+    const email=digest||row.template==='review_signin'?options.support?.email:isDeletionMail(row.template)?deletionDestination?.email:(await pool.query<{email:string}>(`SELECT c.email FROM private_contact c JOIN users u ON u.id=c.user_id WHERE c.user_id=$1 AND u.status='ACTIVE'`,[row.recipient_id])).rows[0]?.email;
     if(!email){await markDead(row.id,token,'RECIPIENT_UNAVAILABLE');continue;}
     // Digest links carry report ids only; staff open them in the admin console after signing in.
     const links=digest?(row.template==='moderation_digest'

@@ -85,7 +85,7 @@ dinner,supper,friends,social,london,restaurant,group,newcomers,expat,foodie,tabl
 
 Fancy helps adults (18+) arrange small group meals at London restaurants. There are no payments in the app: hosts book the restaurant themselves and everyone pays the venue directly.
 
-Sign-in: {{REVIEW_SIGN_IN_INSTRUCTIONS}}
+Sign-in: Tap Profile, then Sign in, then Continue with email. Enter the email address from the Sign-In Information fields and tap Send code. No email is sent to this review account: enter the 6-digit code from the Sign-In Information fields instead. Sign in with Apple also works, but a new Apple account starts without the pre-approved meal described below.
 
 What to try: Discover shows meals on a map and as a list (no account needed). Open a meal to see the host, who's coming and the budget, then Apply. The demo host account has approved your application in advance for "{{REVIEW_MEAL_TITLE}}", so you can open its group chat in Inbox. Create (centre tab) shows the four-step hosting flow.
 

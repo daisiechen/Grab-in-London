@@ -77,6 +77,9 @@ valid_value() { # key value
       else
         echo "must be a past UTC instant like 2026-11-20T00:00:00Z"; return 1
       fi ;;
+    REVIEW_LOGIN_ENABLED) [[ "$v" == 0 || "$v" == 1 ]] || { echo "must be 0 (off) or 1 (on)"; return 1; } ;;
+    REVIEW_ACCOUNT_EMAIL) [[ "$v" =~ ^[a-z0-9._+-]+@[a-z0-9-]+(\.[a-z0-9-]+)+$ ]] || { echo "must be one lowercase email address"; return 1; } ;;
+    REVIEW_ACCOUNT_CODE_HASH) [[ "$v" =~ ^scrypt:[0-9]{5,6}:8:1:[A-Za-z0-9_-]{22}:[A-Za-z0-9_-]{43}$ ]] || { echo "must be the hash secrets.sh writes, never the code"; return 1; } ;;
     *_URL) [[ "$v" =~ ^https:// ]] || { echo "must start with https://"; return 1; } ;;
   esac
   return 0
@@ -101,6 +104,30 @@ prompt_value() { # key kind -> prints value on stdout (prompts on the terminal)
     fi
     if reason="$(valid_value "$key" "$v")"; then printf '%s' "$v"; return 0; fi
     echo "    invalid: $reason" >/dev/tty
+  done
+}
+
+# App Store review code: typed with echo off, or generated and shown once on the terminal.
+# Prints only the scrypt hash on stdout; the code goes to the hasher on stdin, never argv.
+prompt_review_code() {
+  local v done_
+  while true; do
+    read -r -s -p "  REVIEW_ACCOUNT_CODE_HASH: type a 6-digit review code (hidden), g to generate one, Enter to skip: " v </dev/tty; echo >/dev/tty
+    [[ -z "$v" ]] && return 0
+    if [[ "$v" == g || "$v" == G ]]; then
+      v="$(review_code_generate)"
+      echo "    review code: $v  (shown once; type it into App Store Connect > Sign-In Information now, it is not stored)" >/dev/tty
+      read -r -p "    press Enter when it is saved there " done_ </dev/tty
+      # Best effort: wipe the two lines that showed the code from the visible screen.
+      printf '\033[2A\033[2K\033[1B\033[2K\r' >/dev/tty
+      echo "    code saved in App Store Connect (wiped from this screen)" >/dev/tty
+    elif [[ ! "$v" =~ ^[0-9]{6}$ ]]; then
+      echo "    must be exactly 6 digits" >/dev/tty; continue
+    else
+      echo "    received 6 digits" >/dev/tty
+    fi
+    if printf '%s' "$v" | review_code_hash; then v=""; return 0; fi
+    echo "    could not hash the code; try again" >/dev/tty
   done
 }
 
@@ -140,6 +167,13 @@ process_template() { # template current_file
             NEW[DELETION_MAIL_KEYS_JSON]="{\"v1\":\"$(openssl rand -base64 32)\"}"
             KEYRING_DONE=1
           fi
+        fi ;;
+      @review-code-hash)
+        if [[ -n "$have" && $reset == 0 ]]; then status="kept"
+        elif [[ "$CHECK_ONLY" == 1 || "$DRY_RUN" == 1 ]]; then status="empty (optional)"
+        else
+          local hash; hash="$(prompt_review_code)"
+          if [[ -n "$hash" ]]; then NEW["$key"]="$hash"; status="hash stored (code not kept)"; else unset "NEW[$key]"; status="left empty (optional)"; fi
         fi ;;
       @ask|@ask-optional|@secret|@secret-optional)
         local kind="${spec#@}"

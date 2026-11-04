@@ -12,7 +12,7 @@
 | --- | --- | --- |
 | Owner 本人的成员账号（含自测用的第二个邮箱） | staff | Owner account used for operations and self-testing |
 | 所有 QA 账号 | test | QA account for launch verification |
-| App Store 审核演示账号（按[上架材料](../delivery/app-store-submission.zh-CN.md)选定的审核账号，例如 `appreview@mail.fancyabite.uk`） | test | App Store review demo account |
+| App Store 审核演示账号（`REVIEW_ACCOUNT_EMAIL`，见[上架材料 §7](../delivery/app-store-submission.zh-CN.md#7-审核员登录方案d2已实现)） | test（**自动**：每次审核登录都会确认最新分类是 test，不是就写入新版本并记 `account.classified` 审计；无需手工标注，但第 1.4 节核对时要能看到它） | App Store review account (classified automatically at review sign-in) |
 | 种子数据或演示饭局的 host | test | Seed host for demo meals |
 
 ### 1.1 先拿到用户编号

@@ -17,6 +17,7 @@ import { randomToken, sha256Hex } from './tokens.ts';
 import { lockActiveActor } from '../common/actor.ts';
 import { invalidateSubjectAI, invalidateUserAI } from '../assistant/invalidate.ts';
 import { revokeFamily } from './sessions.ts';
+import { isReviewIdentity, recordReviewSignIn } from './review-login.ts';
 
 export const HANDOFF_TTL_MS = 60_000;
 export const LINK_TTL_MS = 10 * 60_000;
@@ -44,6 +45,7 @@ export async function completeAuthentication(deps: AppDeps, tx: Tx, row: AuthTxR
     await lockActiveActor(tx,current.userId,'update');
     const now=await tx.effectiveNow();
     await markReauthenticated(tx.client, familyId, identity.amr, now);
+    if (isReviewIdentity(identity)) await recordReviewSignIn(tx, deps.config, { userId: row.user_id, authTxId: row.id, purpose: 'REAUTH', client: row.client, created: false });
     await tx.client.query(`UPDATE auth_transactions SET result_family_id = $2 WHERE id = $1`, [row.id, familyId]);
     const session = await sessionInfo(tx.client, { ...current, authTime: now, amr: [...new Set([...current.amr, ...identity.amr])] }, deps.config.sessionSecret);
     return { data: { outcome: 'AUTHENTICATED', session, authProof } };
@@ -88,6 +90,7 @@ export async function completeAuthentication(deps: AppDeps, tx: Tx, row: AuthTxR
     if(guest){await invalidateSubjectAI(tx.client,deps.assistantRuntime!,`guest:${guest.id}`,'ACCOUNT_CHANGE');await tx.client.query(`UPDATE guest_sessions SET revoked_at=clock_timestamp() WHERE id=$1`,[guest.id]);}
   }
   const now=await tx.effectiveNow();
+  if (isReviewIdentity(identity)) await recordReviewSignIn(tx, deps.config, { userId: resolution.userId, authTxId: row.id, purpose: 'LOGIN', client: row.client, created: resolution.created });
 
   if (row.client === 'WEB') {
     const web = await issueWebSession(tx.client, resolution.userId, identity.amr, now);
