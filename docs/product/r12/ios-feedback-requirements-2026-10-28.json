@@ -1,0 +1,335 @@
+{
+  "schemaVersion": 1,
+  "id": "R12-IOS-FEEDBACK-DELTA",
+  "revision": "PM-DELTA-r01",
+  "baselineCommit": "ecfb54e",
+  "owner": "PM-2-original-J02-author",
+  "status": "product-delta-authorized-prototype-only",
+  "sourceDecision": "docs/reviews/r12/feedback-21-product-review-2026-10-28.md",
+  "implementationAuthorized": false,
+  "productionImplemented": false,
+  "scope": [
+    "C12-existing-language-boundary",
+    "C15-presentation-only-party-range",
+    "C20-optional-decline-reason"
+  ],
+  "inputs": [
+    {
+      "path": "docs/reviews/r12/feedback-21-product-review-2026-10-28.md",
+      "sha256": "41e8a6d2a7637f4ab71d3c3eeca317d0c8a9485503e16a043a83fa55cddf14bd"
+    },
+    {
+      "path": "docs/product/PRD.zh-CN.md",
+      "sha256": "47f6cc2d0314b486c762852f2f61c18eab1e6f6fd63245d852b216527703c305"
+    },
+    {
+      "path": "docs/product/journeys/j02/requirements.zh-CN.md",
+      "sha256": "6a6211922d649a12899803721b709cb67f2e37e6bea428d804cee399d3df4299"
+    },
+    {
+      "path": "docs/product/journeys/j01/requirements.zh-CN.md",
+      "sha256": "af6f88ac83dbf85dc3fe103fcc6bc1ae445ecafb630fb8fa68fe0be9eacb1568"
+    },
+    {
+      "path": "docs/engineering/api-and-client-contract.zh-CN.md",
+      "sha256": "1da659e8dd2e89578b0af9161bdcd4a9b4fbd543ecd008a2c3c61cebcaf5d5ea"
+    },
+    {
+      "path": "packages/contracts/src/operations/meals.ts",
+      "sha256": "85cc4d40187cd64db22e39b350cf2a778fbcf259e3ab9e422a0f457a160df00e"
+    },
+    {
+      "path": "packages/contracts/src/dto.ts",
+      "sha256": "ef5f0f88cbf3adb317ffb73e313d97529ea0ceef74876b9c7d084035788b7388"
+    },
+    {
+      "path": "apps/api/src/meals/commands.ts",
+      "sha256": "cdf2d324b2962685fda793559550e14e561da4fb7a646d677df5868fd4479bb9"
+    }
+  ],
+  "frozenArtifacts": [
+    {
+      "path": "docs/product/PRD.zh-CN.md",
+      "sha256": "47f6cc2d0314b486c762852f2f61c18eab1e6f6fd63245d852b216527703c305"
+    },
+    {
+      "path": "docs/product/journeys/j02/requirements.zh-CN.md",
+      "sha256": "6a6211922d649a12899803721b709cb67f2e37e6bea428d804cee399d3df4299"
+    },
+    {
+      "path": "docs/product/journeys/j01/requirements.zh-CN.md",
+      "sha256": "af6f88ac83dbf85dc3fe103fcc6bc1ae445ecafb630fb8fa68fe0be9eacb1568"
+    },
+    {
+      "path": "demo/journeys/j02/index.html",
+      "sha256": "d876732ddbdc667816a473a91969464c6a49d574d3fc2fc745d207b8a68989bc"
+    },
+    {
+      "path": "docs/product/journeys/j02/artifact-manifest.json",
+      "sha256": "877dc937768de7cdc935788a6cacf890e3696891776d903312396c3227c707bc"
+    }
+  ],
+  "authority": {
+    "overridesOnly": [
+      "C20 optional decline reason presentation and proposed data contract"
+    ],
+    "unchangedSourceRules": [
+      "PRD §0.3/FR-04",
+      "J02 §6/§7",
+      "J01 application round state rules",
+      "P-02 notification channels"
+    ],
+    "frozenPrdDemoRewriteAllowed": false,
+    "rootMaintainsIndexAndVersionPointers": true
+  },
+  "C12": {
+    "interfaceLocale": "en",
+    "localeSwitchImplemented": false,
+    "tapExplanation": "Fancy’s app interface is currently available in English.",
+    "conversationLanguageCta": "Edit conversation languages",
+    "conversationLanguageDestination": "existing Edit profile",
+    "closeReturnsTo": "Settings",
+    "openingDoesNotSave": true
+  },
+  "C15": {
+    "presentationOnly": true,
+    "minimum": 2,
+    "maximum": 6,
+    "constraint": "2 <= minimum <= capacity <= 6",
+    "includesHost": true,
+    "defaultRange": [
+      3,
+      4
+    ],
+    "firstGuestApprovalLocksArrangements": true,
+    "formationAndDeadlineUnchanged": true
+  },
+  "C20": {
+    "journeys": [
+      "J02",
+      "J01",
+      "J03"
+    ],
+    "field": "declineReasonCode",
+    "presets": [
+      {
+        "code": "PLANS_NOT_ALIGNED",
+        "label": "The plans aren’t quite a fit.",
+        "semantic": "host-subjective-arrangement-choice"
+      },
+      {
+        "code": "KEEPING_GROUP_SMALL",
+        "label": "I’m keeping this group small.",
+        "semantic": "host-subjective-group-size-choice-not-MEAL_FULL"
+      }
+    ],
+    "nullOption": {
+      "code": null,
+      "label": "No reason"
+    },
+    "initialSelection": {
+      "reasonTouched": false,
+      "value": null,
+      "checkedOption": null
+    },
+    "reasonRequired": false,
+    "allowFreeText": false,
+    "reasonTouchedInWirePayload": false,
+    "confirmation": {
+      "heading": "Decline this application?",
+      "confirmCta": "Decline application",
+      "cancelCta": "Cancel",
+      "preConfirmSwitchAllowed": true,
+      "cancelPreservesApplicationState": "PENDING",
+      "cancelResetsReasonDraft": true,
+      "saveLocksSelection": true,
+      "reasonEditableAfterDeclined": false
+    },
+    "visibility": {
+      "allowed": [
+        "meal-host",
+        "application-owner"
+      ],
+      "denied": [
+        "other-applicants",
+        "other-meal-hosts",
+        "group-members",
+        "public-profile",
+        "public-meal",
+        "shared-links",
+        "ordinary-analytics",
+        "public-logs"
+      ]
+    },
+    "copy": {
+      "hostStatus": "Declined",
+      "applicantStatus": "Application declined.",
+      "selectedReasonPrefix": "Host’s reason: ",
+      "nullOrLegacyReason": "No reason provided.",
+      "unknown": "Decision status unknown. Check this application before trying again."
+    },
+    "intent": {
+      "binds": [
+        "actorId",
+        "mealId",
+        "applicationId",
+        "expectedVersion",
+        "decision",
+        "declineReasonCode",
+        "idempotencyKey"
+      ],
+      "decision": "DECLINE",
+      "unknownPreservesPayload": true,
+      "unknownMayChangeReason": false,
+      "unknownMayCreateNewIntent": false,
+      "recovery": [
+        "query-original-authoritative-result",
+        "retry-same-key-same-canonical-payload"
+      ],
+      "closeWaitingDoesNotCancelRequest": true,
+      "discardLateResultAcrossActorOrApplication": true,
+      "conflictRequiresReloadAndExplicitConfirmation": true
+    },
+    "notifications": {
+      "recipients": [
+        "application-owner"
+      ],
+      "channels": [
+        "IN_APP",
+        "EMAIL"
+      ],
+      "template": "application_declined",
+      "newHostOrGroupNotification": false,
+      "allowedAdditionalFields": [
+        "declineReasonCode",
+        "declineReasonDictionaryVersion"
+      ],
+      "refs": [
+        "mealId",
+        "applicationId"
+      ],
+      "reasonSource": "accepted-authoritative-decline-result",
+      "bodyIncludesSelectedPreset": true,
+      "nullOmitsReasonSentence": true,
+      "freeTextAllowed": false,
+      "otherMemberDataAllowed": false,
+      "dedupe": [
+        "eventId",
+        "recipientId",
+        "channel"
+      ],
+      "providerAcceptedIsDelivered": false,
+      "newChannels": []
+    },
+    "invariants": {
+      "declinedCannotReapply": true,
+      "pendingDoesNotOccupySeat": true,
+      "declineDoesNotGrantSeatOrRoster": true,
+      "declineDoesNotGrantGroup": true,
+      "declineDoesNotTriggerApprovalLock": true,
+      "mealCapacityRosterGroupUnchanged": true,
+      "doNotReinterpretAuthorityErrorsAsReason": [
+        "MEAL_FULL",
+        "DEADLINE_PASSED",
+        "MEAL_CANCELLED"
+      ],
+      "legacyMissingReason": null,
+      "noBackfillInferredReason": true
+    },
+    "contractDelta": {
+      "status": "proposed-not-implemented",
+      "currentRequestFields": [
+        "decision"
+      ],
+      "currentApplicationHasReason": false,
+      "currentStoreHasReason": false,
+      "doNotSendReasonToOldApi": true,
+      "doNotDropReasonAndShowSaved": true,
+      "futureComponents": [
+        "request-dto-and-validation",
+        "atomic-decision-store-migration",
+        "host-and-applicant-read-projection",
+        "idempotency-payload-hash",
+        "notification-outbox-template-adapter",
+        "versioned-sdk-and-client-capability"
+      ],
+      "futureRequest": {
+        "field": "declineReasonCode",
+        "optional": true,
+        "nullable": true,
+        "absentNormalizesTo": null,
+        "allowedForDecision": "DECLINE",
+        "approveNonNullReasonRejected": true,
+        "unknownCodesAndFreeTextRejected": true
+      },
+      "legacyBackfill": "null-only",
+      "productionEnablementRequiresReasonCapableService": true
+    }
+  },
+  "acceptance": [
+    {
+      "id": "C20-AC01",
+      "section": "§2/§3",
+      "expected": "Unselected optional presets; switch/cancel preserves pending and clears draft.",
+      "status": "specified-not-verified"
+    },
+    {
+      "id": "C20-AC02",
+      "section": "§3/§4",
+      "expected": "Per-round declined reason visible only to host and applicant; null/legacy no reason.",
+      "status": "specified-not-verified"
+    },
+    {
+      "id": "C20-AC03",
+      "section": "§3",
+      "expected": "UNKNOWN same intent/reason; no duplicate decision or silent conflict overwrite.",
+      "status": "specified-not-verified"
+    },
+    {
+      "id": "C20-AC04",
+      "section": "§3",
+      "expected": "No changes to final rejection, seats, roster, group or approval locks.",
+      "status": "specified-not-verified"
+    },
+    {
+      "id": "C20-AC05",
+      "section": "§4",
+      "expected": "Existing applicant-only in-app/email, safe preset from accepted result, null omitted.",
+      "status": "specified-not-verified"
+    },
+    {
+      "id": "C20-AC06",
+      "section": "§5",
+      "expected": "Strict current API not patched; no false persistence/notification success.",
+      "status": "specified-not-verified"
+    },
+    {
+      "id": "C12-AC01",
+      "section": "§1",
+      "expected": "English-only tap explanation with real conversation language profile path.",
+      "status": "specified-not-verified"
+    },
+    {
+      "id": "C15-AC01",
+      "section": "§1",
+      "expected": "Range UI preserves independent min/capacity, host inclusion and lock rules.",
+      "status": "specified-not-verified"
+    }
+  ],
+  "verification": {
+    "kind": "document-structure-and-boundary-checks-only",
+    "doesNotProve": [
+      "prototype-clicks",
+      "api-storage-implementation",
+      "notification-delivery",
+      "product-qa"
+    ],
+    "RDStartedByThisDelta": false,
+    "QAStartedByThisDelta": false
+  },
+  "paths": {
+    "document": "docs/product/r12/ios-feedback-requirements-2026-10-28.zh-CN.md",
+    "structuredDelta": "docs/product/r12/ios-feedback-requirements-2026-10-28.json",
+    "test": "tests/test_pm_feedback_r12.py"
+  }
+}

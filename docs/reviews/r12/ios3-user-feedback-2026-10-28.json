@@ -1,0 +1,40 @@
+{
+  "iteration": "IOS-0.1.0-dev.3",
+  "date": "2026-10-28",
+  "cases": [
+    {
+      "id": "C21",
+      "status": "BLOCKED",
+      "method": "browser-click",
+      "nodeIds": [
+        "13:61",
+        "30:60",
+        "30:445"
+      ],
+      "treatment": "原bottom-nav五槽等宽75px、横向auto-layout；所有labels固定宽/单行15px高；53px Create原图标圆按钮上浮−19px，nav/row/slot不clip。底部safearea前文字结束807.5<818。",
+      "steps": [],
+      "observed": "Figma browser ERR_QUIC_PROTOCOL_ERROR then ERR_SOCKS_CONNECTION_FAILED at all3 entries. 0 business clicks. Current/Left native screenshots viewed separately, not counted browser PASS.",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV/Fancy?node-id=13-14&starting-point-node-id=13%3A14",
+      "visualEvidence": [
+        "docs/design/r12/ios-0.1.0-dev.3/evidence/c21-inbox.png",
+        "docs/design/r12/ios-0.1.0-dev.3/evidence/c21-inbox-left.png"
+      ],
+      "nativeInspection": "3 same-pattern navs repaired; page J04/J06 scan 0; existing group actions preserve current2:2/left6:252/dissolved30:307 targets",
+      "clickBoundary": "Selected Inbox tab stays selected; other-version tab routing not implemented in this file, not declared passing.",
+      "history": [
+        {
+          "method": "browser-click",
+          "status": "BLOCKED",
+          "steps": [],
+          "observed": "Figma browser ERR_QUIC_PROTOCOL_ERROR then ERR_SOCKS_CONNECTION_FAILED at all3 entries. 0 business clicks. Current/Left native screenshots viewed separately, not counted browser PASS."
+        }
+      ],
+      "browserEvidence": "Connector-hosted figma-c21-retest.html and error-page screenshots; no local fake screenshots"
+    }
+  ],
+  "remainingUnverified": [
+    "Browser business clicks blocked by proxy/network, no application FAIL inferred",
+    "Dissolved native root export blank discarded; independent screenshot/browser check pending",
+    "Real backend/native device QA not run"
+  ]
+}

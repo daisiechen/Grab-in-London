@@ -1,0 +1,439 @@
+{
+  "version": "IOS-0.1.0-dev.1",
+  "revision": "UX-r12-03",
+  "date": "2026-10-28",
+  "baselineCommit": "ecfb54e",
+  "fileKey": "CS9oRCq8h3Clg09up2aISj",
+  "status": "candidate-canvas-stopped-awaiting-independent-click-review",
+  "cases": [
+    {
+      "id": "C01",
+      "title": "London与标题同行右置",
+      "status": "AUTHOR_REPAIRED_PENDING_INDEPENDENT_REVIEW",
+      "basis": "Owner screenshot feedback 2026-10-28",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17&starting-point-node-id=5%3A17",
+      "nodeIds": [
+        "5:31",
+        "5:32",
+        "5:36"
+      ],
+      "change": "保持标题与城市间距，取消城市独占顶行，补地图占位间隙。",
+      "visualInspection": {
+        "status": "INSPECTED",
+        "method": "actual Figma rendered screenshots; first-screen and full-content derived-page snapshots",
+        "evidence": [
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/discover.png"
+        ]
+      },
+      "actualClick": {
+        "status": "BLOCKED",
+        "method": "browser-click",
+        "steps": [
+          "Attempted narrow Browser Use Discover/avatar/detail task; tool rejected before browser run"
+        ],
+        "observed": "insufficient_credits; tool explicitly says retry will not help. No run_id was created, no mouse interaction or click PASS claimed. Root assigned independent PJ local Chromium fallback."
+      }
+    },
+    {
+      "id": "C02",
+      "title": "预算线性money图标统一列",
+      "status": "AUTHOR_REPAIRED_PENDING_INDEPENDENT_REVIEW",
+      "basis": "Owner screenshot feedback 2026-10-28",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17&starting-point-node-id=5%3A17",
+      "nodeIds": [
+        "5:114"
+      ],
+      "change": "加入14pt线性钞票图标；文案与地点/日期/人数列对齐。",
+      "visualInspection": {
+        "status": "INSPECTED",
+        "method": "actual Figma rendered screenshots; first-screen and full-content derived-page snapshots",
+        "evidence": [
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/discover.png"
+        ]
+      },
+      "actualClick": {
+        "status": "BLOCKED",
+        "method": "browser-click",
+        "steps": [
+          "Attempted narrow Browser Use Discover/avatar/detail task; tool rejected before browser run"
+        ],
+        "observed": "insufficient_credits; tool explicitly says retry will not help. No run_id was created, no mouse interaction or click PASS claimed. Root assigned independent PJ local Chromium fallback."
+      }
+    },
+    {
+      "id": "C03",
+      "title": "头像独立公开主页及返回",
+      "status": "AUTHOR_REPAIRED_PENDING_INDEPENDENT_REVIEW",
+      "basis": "Owner screenshot feedback 2026-10-28",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17&starting-point-node-id=5%3A17",
+      "nodeIds": [
+        "5:126",
+        "5:128",
+        "5:130",
+        "77:175",
+        "77:277",
+        "77:379"
+      ],
+      "change": "整卡hit放内容后层，头像各指Maya/Leo/Emma；移除个人Settings/Edit入口，各Back回原Discover卡。合成公开资料为原视觉复用样例，不含真实个人数据。",
+      "visualInspection": {
+        "status": "INSPECTED",
+        "method": "actual Figma rendered screenshots; first-screen and full-content derived-page snapshots",
+        "evidence": [
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/maya.png",
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/leo.png",
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/emma.png"
+        ]
+      },
+      "actualClick": {
+        "status": "BLOCKED",
+        "method": "browser-click",
+        "steps": [
+          "Attempted narrow Browser Use Discover/avatar/detail task; tool rejected before browser run"
+        ],
+        "observed": "insufficient_credits; tool explicitly says retry will not help. No run_id was created, no mouse interaction or click PASS claimed. Root assigned independent PJ local Chromium fallback."
+      }
+    },
+    {
+      "id": "C04",
+      "title": "详情先信息、图片次级",
+      "status": "AUTHOR_REPAIRED_PENDING_INDEPENDENT_REVIEW",
+      "basis": "Owner screenshot feedback 2026-10-28",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-195&starting-point-node-id=5%3A195",
+      "nodeIds": [
+        "5:219",
+        "5:218"
+      ],
+      "change": "标题→日期/人数→host→外订各付声明→351×110次级照片；全部7份详情派生underlay一起调整。",
+      "visualInspection": {
+        "status": "INSPECTED",
+        "method": "actual Figma rendered screenshots; first-screen and full-content derived-page snapshots",
+        "evidence": [
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/detail.png",
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/detail-long.png",
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/ai-detail-long.png",
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/pending-detail-long.png"
+        ]
+      },
+      "actualClick": {
+        "status": "BLOCKED",
+        "method": "browser-click",
+        "steps": [
+          "Attempted narrow Browser Use Discover/avatar/detail task; tool rejected before browser run"
+        ],
+        "observed": "insufficient_credits; tool explicitly says retry will not help. No run_id was created, no mouse interaction or click PASS claimed. Root assigned independent PJ local Chromium fallback."
+      },
+      "summarySupplement": {
+        "revision": "UX-r12-03",
+        "sourceFacts": [
+          "mainPRD§0 minimum/capacity inclhost",
+          "demo/src/domain.ts supper capacity4 confirmed3 min25 max35 lacksminimum",
+          "demo/src/readiness.ts minimumFor fallback3 for this historical sample"
+        ],
+        "change": "Existing two-column facts now include14pt money icon and£25–35/person; count subline Minimum3 · incl.host. Original confirmed3of4 and unique deadline unchanged. No new module.",
+        "readback": "docs/design/r12/ios-0.1.0-dev.1/evidence/detail-summary-readback.json",
+        "independentRetest": "detail first-screen + one scroll only, pending separate reviewer evidence"
+      }
+    },
+    {
+      "id": "C05",
+      "title": "移除重复人数保截止",
+      "status": "AUTHOR_REPAIRED_PENDING_INDEPENDENT_REVIEW",
+      "basis": "Owner screenshot feedback 2026-10-28",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-195&starting-point-node-id=5%3A195",
+      "nodeIds": [
+        "5:287"
+      ],
+      "change": "Who’s coming后只保Applications close23Oct18:00，与顶部confirmed人数分离。",
+      "visualInspection": {
+        "status": "INSPECTED",
+        "method": "actual Figma rendered screenshots; first-screen and full-content derived-page snapshots",
+        "evidence": [
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/detail-long.png"
+        ]
+      },
+      "actualClick": {
+        "status": "BLOCKED",
+        "method": "browser-click",
+        "steps": [
+          "Attempted narrow Browser Use Discover/avatar/detail task; tool rejected before browser run"
+        ],
+        "observed": "insufficient_credits; tool explicitly says retry will not help. No run_id was created, no mouse interaction or click PASS claimed. Root assigned independent PJ local Chromium fallback."
+      },
+      "summarySupplement": {
+        "revision": "UX-r12-03",
+        "sourceFacts": [
+          "mainPRD§0 minimum/capacity inclhost",
+          "demo/src/domain.ts supper capacity4 confirmed3 min25 max35 lacksminimum",
+          "demo/src/readiness.ts minimumFor fallback3 for this historical sample"
+        ],
+        "change": "Existing two-column facts now include14pt money icon and£25–35/person; count subline Minimum3 · incl.host. Original confirmed3of4 and unique deadline unchanged. No new module.",
+        "readback": "docs/design/r12/ios-0.1.0-dev.1/evidence/detail-summary-readback.json",
+        "independentRetest": "detail first-screen + one scroll only, pending separate reviewer evidence"
+      }
+    },
+    {
+      "id": "C06",
+      "title": "外订badge单行",
+      "status": "AUTHOR_REPAIRED_PENDING_INDEPENDENT_REVIEW",
+      "basis": "Owner screenshot feedback 2026-10-28",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-195&starting-point-node-id=5%3A195",
+      "nodeIds": [
+        "5:303",
+        "5:304"
+      ],
+      "change": "badge178×26、文字162×16，与venue容器宽度匹配，不被旧112宽容器迫换行。",
+      "visualInspection": {
+        "status": "INSPECTED",
+        "method": "actual Figma rendered screenshots; first-screen and full-content derived-page snapshots",
+        "evidence": [
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/detail-long.png"
+        ]
+      },
+      "actualClick": {
+        "status": "BLOCKED",
+        "method": "browser-click",
+        "steps": [
+          "Attempted narrow Browser Use Discover/avatar/detail task; tool rejected before browser run"
+        ],
+        "observed": "insufficient_credits; tool explicitly says retry will not help. No run_id was created, no mouse interaction or click PASS claimed. Root assigned independent PJ local Chromium fallback."
+      }
+    },
+    {
+      "id": "C07",
+      "title": "费用右列不裁切",
+      "status": "AUTHOR_REPAIRED_PENDING_INDEPENDENT_REVIEW",
+      "basis": "Owner screenshot feedback 2026-10-28",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-195&starting-point-node-id=5%3A195",
+      "nodeIds": [
+        "5:315",
+        "5:318",
+        "5:320",
+        "5:323"
+      ],
+      "change": "右值框140pt、x211，行351pt，取消旧auto-layout使payment列回弹到x327的约束；£25–35和At restaurant完整右对齐。",
+      "visualInspection": {
+        "status": "INSPECTED",
+        "method": "actual Figma rendered screenshots; first-screen and full-content derived-page snapshots",
+        "evidence": [
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/detail-long.png",
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/pending-detail-long.png"
+        ]
+      },
+      "actualClick": {
+        "status": "BLOCKED",
+        "method": "browser-click",
+        "steps": [
+          "Attempted narrow Browser Use Discover/avatar/detail task; tool rejected before browser run"
+        ],
+        "observed": "insufficient_credits; tool explicitly says retry will not help. No run_id was created, no mouse interaction or click PASS claimed. Root assigned independent PJ local Chromium fallback."
+      }
+    },
+    {
+      "id": "C08",
+      "title": "删除认证wordmark红箭头",
+      "status": "AUTHOR_REPAIRED_PENDING_INDEPENDENT_REVIEW",
+      "basis": "Owner screenshot feedback 2026-10-28",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=10-65&starting-point-node-id=10%3A65",
+      "nodeIds": [],
+      "change": "所有认证与注册派生wordmark只保Fancy，不删正常Continue方向箭头。",
+      "visualInspection": {
+        "status": "INSPECTED",
+        "method": "actual Figma rendered screenshots; first-screen and full-content derived-page snapshots",
+        "evidence": [
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/register.png",
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/login.png",
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/register-long.png"
+        ]
+      },
+      "actualClick": {
+        "status": "BLOCKED",
+        "method": "browser-click",
+        "steps": [
+          "Attempted narrow Browser Use Discover/avatar/detail task; tool rejected before browser run"
+        ],
+        "observed": "insufficient_credits; tool explicitly says retry will not help. No run_id was created, no mouse interaction or click PASS claimed. Root assigned independent PJ local Chromium fallback."
+      }
+    },
+    {
+      "id": "C09",
+      "title": "认证模式选中态一致",
+      "status": "AUTHOR_REPAIRED_PENDING_INDEPENDENT_REVIEW",
+      "basis": "Owner screenshot feedback 2026-10-28",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=10-65&starting-point-node-id=10%3A65",
+      "nodeIds": [
+        "10:101",
+        "10:107",
+        "13:133",
+        "13:138"
+      ],
+      "change": "Create/Log in对应Good to meet you/Welcome back及各邮箱验证路径；只选中项粗体、绿色边框与单个勾。",
+      "visualInspection": {
+        "status": "INSPECTED",
+        "method": "actual Figma rendered screenshots; first-screen and full-content derived-page snapshots",
+        "evidence": [
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/register.png",
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/login.png"
+        ]
+      },
+      "actualClick": {
+        "status": "BLOCKED",
+        "method": "browser-click",
+        "steps": [
+          "Attempted narrow Browser Use Discover/avatar/detail task; tool rejected before browser run"
+        ],
+        "observed": "insufficient_credits; tool explicitly says retry will not help. No run_id was created, no mouse interaction or click PASS claimed. Root assigned independent PJ local Chromium fallback."
+      }
+    },
+    {
+      "id": "C10",
+      "title": "Withdrawn无Track按钮",
+      "status": "AUTHOR_REPAIRED_PENDING_INDEPENDENT_REVIEW",
+      "basis": "Owner screenshot feedback 2026-10-28",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1191&starting-point-node-id=11%3A1191",
+      "nodeIds": [
+        "11:1235"
+      ],
+      "change": "两Withdrawn状态移除Track in Inbox，Apply重申不变；不移除Pending的Track或Inbox历史入口。",
+      "visualInspection": {
+        "status": "INSPECTED",
+        "method": "actual Figma rendered screenshots; first-screen and full-content derived-page snapshots",
+        "evidence": [
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/withdrawn.png"
+        ]
+      },
+      "actualClick": {
+        "status": "BLOCKED",
+        "method": "browser-click",
+        "steps": [
+          "Attempted narrow Browser Use Discover/avatar/detail task; tool rejected before browser run"
+        ],
+        "observed": "insufficient_credits; tool explicitly says retry will not help. No run_id was created, no mouse interaction or click PASS claimed. Root assigned independent PJ local Chromium fallback."
+      }
+    },
+    {
+      "id": "C11",
+      "title": "申请身份行去Edit",
+      "status": "AUTHOR_REPAIRED_PENDING_INDEPENDENT_REVIEW",
+      "basis": "Owner screenshot feedback 2026-10-28",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-753&starting-point-node-id=11%3A753",
+      "nodeIds": [],
+      "change": "所有申请编辑器/勾选/AI转入派生删身份行Edit，正常Profile Edit保留。",
+      "visualInspection": {
+        "status": "INSPECTED",
+        "method": "actual Figma rendered screenshots; first-screen and full-content derived-page snapshots",
+        "evidence": [
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/application.png"
+        ]
+      },
+      "actualClick": {
+        "status": "BLOCKED",
+        "method": "browser-click",
+        "steps": [
+          "Attempted narrow Browser Use Discover/avatar/detail task; tool rejected before browser run"
+        ],
+        "observed": "insufficient_credits; tool explicitly says retry will not help. No run_id was created, no mouse interaction or click PASS claimed. Root assigned independent PJ local Chromium fallback."
+      }
+    },
+    {
+      "id": "C12",
+      "title": "English launch说明和交流语言编辑",
+      "status": "AUTHOR_REPAIRED_PENDING_INDEPENDENT_REVIEW",
+      "basis": "Owner screenshot feedback 2026-10-28; main PRD FR-11 English-only + root product-scope confirmation",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1513&starting-point-node-id=11%3A1513",
+      "nodeIds": [
+        "78:297",
+        "11:1689",
+        "78:1174",
+        "78:807",
+        "78:944",
+        "78:1037"
+      ],
+      "change": "主PRD:420明确English只读；root授权行点击说明English at launch，并链接Edit profile；English+Spanish代表选择有Cancel、Save及保存后Edit重入，不造全站本地化。",
+      "visualInspection": {
+        "status": "INSPECTED",
+        "method": "actual Figma rendered screenshots; first-screen and full-content derived-page snapshots",
+        "evidence": [
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/language-info.png",
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/language-choice.png",
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/language-draft-long.png",
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/language-saved.png"
+        ]
+      },
+      "actualClick": {
+        "status": "BLOCKED",
+        "method": "browser-click",
+        "steps": [
+          "Attempted narrow Browser Use Discover/avatar/detail task; tool rejected before browser run"
+        ],
+        "observed": "insufficient_credits; tool explicitly says retry will not help. No run_id was created, no mouse interaction or click PASS claimed. Root assigned independent PJ local Chromium fallback."
+      },
+      "contextRepair": {
+        "id": "R12-I1-C12-CONTEXT",
+        "firstIndependentObservation": "Actual local-browser Settings→English explanation→Edit profile→wheel to language→selector showed Settings/Privacy&safety underlay, losing profile context.",
+        "status": "AUTHOR_REPAIRED_AWAITING_INDEPENDENT_RETEST",
+        "repair": "Replace selector viewport78:1175 with clone88:342 from sourceEdit11:1622. Align selector/draft/savedEdit language position−477. Cancel→11:1611 and choose→78:807 use resetScrollPosition:false. No other source-page layout changed.",
+        "readback": "docs/design/r12/ios-0.1.0-dev.1/evidence/j05-readback.json",
+        "independentApproval": false,
+        "independentReportedResult": {
+          "source": "root PJ relay of independent local-browser reviewer actual results",
+          "observation": "Profile underlay→English+Spanish→Save→public profile E/S→Edit E/S→Back kept saved fields; selector Cancel returned edit TOP with draft fields unchanged. resetScrollPosition:false is native configuration only, not proof of scroll-position restoration.",
+          "formalIndependentReview": "separate reviewer-owned evidence, not signed by original UX here"
+        }
+      }
+    },
+    {
+      "id": "C13",
+      "title": "只标必填、不逐项optional",
+      "status": "AUTHOR_REPAIRED_PENDING_INDEPENDENT_REVIEW",
+      "basis": "Owner screenshot feedback 2026-10-28",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1611&starting-point-node-id=11%3A1611",
+      "nodeIds": [],
+      "change": "Work/School/Hometown不标optional；姓名/简介/生活状态/交流语言/至少一个兴趣标*，注册同类字段一致。",
+      "visualInspection": {
+        "status": "INSPECTED",
+        "method": "actual Figma rendered screenshots; first-screen and full-content derived-page snapshots",
+        "evidence": [
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/profile-edit-long.png",
+          "docs/design/r12/ios-0.1.0-dev.1/evidence/register-long.png"
+        ]
+      },
+      "actualClick": {
+        "status": "BLOCKED",
+        "method": "browser-click",
+        "steps": [
+          "Attempted narrow Browser Use Discover/avatar/detail task; tool rejected before browser run"
+        ],
+        "observed": "insufficient_credits; tool explicitly says retry will not help. No run_id was created, no mouse interaction or click PASS claimed. Root assigned independent PJ local Chromium fallback."
+      }
+    }
+  ],
+  "scope": "Original I1 UX repairs C01–C13 only; original visual source retained except explicit Owner adjustments",
+  "designMutated": true,
+  "independentApproval": false,
+  "browserFailure": {
+    "code": "insufficient_credits",
+    "runCreated": false,
+    "retryAttempted": false
+  },
+  "remainingUnverified": [
+    "Independent local Chromium actual avatar/card/back, auth switching, withdrawn/reapply, language selection/save/cancel/back",
+    "Real account/profile/backend persistence and arbitrary input",
+    "Native device, safe-area keyboard/VoiceOver/Dynamic Type",
+    "Owner final approval; previous signed r11 snapshots remain historical and do not sign this candidate"
+  ],
+  "realServicesCalled": false,
+  "QAStarted": false,
+  "implementationStarted": false,
+  "prototypeUrls": [
+    "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17&starting-point-node-id=5%3A17",
+    "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=10-65&starting-point-node-id=10%3A65",
+    "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1191&starting-point-node-id=11%3A1191",
+    "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1513&starting-point-node-id=11%3A1513"
+  ],
+  "evidencePolicy": "Rendered screenshot inspection and native readback are separately classified, never substituted for browser click results. Temporary source-content audit clones were removed after PNG capture.",
+  "validation": {
+    "command": "python3 -m unittest tests.test_ios_feedback_r12_ios1 -v",
+    "passed": 8,
+    "classification": "Own native geometry/state/links/hash evidence only; no browser PASS"
+  }
+}

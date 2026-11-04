@@ -12,7 +12,13 @@
 - [Web 端设计规范](design/web/mobile-web-design.zh-CN.md)与[可点击原型](design/web/prototype/index.html)（2026-10-28，设计候选）：以 Meetup 为参考、复用 iOS 视觉，移动优先兼顾桌面；含首页、网址与 App 交接（fancyabite.uk）、逐页规格、SEO、无障碍、分析授权、接口缺口及待用户决定的 Web 范围。参考调研见 [Meetup 移动 Web 调研](design/web/meetup-reference.zh-CN.md)（公开资料，亲测部分待补）。
 - [伦敦片区边界数据](engineering/london-areas.zh-CN.md)：真实 API 用来把餐厅坐标归到片区的数据，说明来源与授权（ONS OGL v3.0、下议院图书馆 Open Parliament Licence）、必须标注的来源说明、首发 9 区范围、West End 细分、已知近似和重新生成方法。
 
-## 当前产品与管理输入（r07范围／r11版本PJ并行执行）
+## 当前产品与管理输入（r07范围／r11版本执行／r12原型反馈增量）
+
+- [21条浏览器批注逐项处理与原型入口](reviews/r12/feedback-21-register.md)、[结构化台账](reviews/r12/feedback-21-register.json)、[独立视觉与真实点击复核](reviews/r12/feedback-21-independent-review-2026-10-28.md)。r11签署保留为历史快照；本轮受影响原型以r12候选及其明确验证范围为准。
+- [本轮需求小增量](product/r12/ios-feedback-requirements-2026-10-28.zh-CN.md)：补充原PRD的C12语言边界、C15人数范围呈现及C20可选预设拒绝原因。未改处仍按原PRD；新拒绝原因DTO/API/持久化与通知增量尚未实现，旧工程签署不自动覆盖新增规则。[产品核对及Google组件依据](reviews/r12/feedback-21-product-review-2026-10-28.md)。
+- 原UX本轮交付：[iOS dev.1](design/r12/ios-0.1.0-dev.1/handoff.zh-CN.md)、[iOS dev.2](design/r12/ios-0.1.0-dev.2/handoff.zh-CN.md)、[iOS dev.3](design/r12/ios-0.1.0-dev.3/handoff.zh-CN.md)。各版首次受阻或原作者自检与独立实际复测分开，不能把截图/读回当点击通过。
+- [dev.2 人数范围、编辑及拒绝原因的状态交接](design/r12/ios-0.1.0-dev.2/state-contracts.zh-CN.md)：源页面/确认值与草稿、角色可见性及待实现契约分开。
+- 逐版作者记录：[dev.1](reviews/r12/ios1-user-feedback-2026-10-28.md)、[dev.2](reviews/r12/ios2-user-feedback-2026-10-28.md)、[dev.3](reviews/r12/ios3-user-feedback-2026-10-28.md)；独立本地浏览器补测：[dev.2](reviews/r12/ios2-local-browser-retest-2026-10-28.md)、[dev.3](reviews/r12/ios3-local-browser-retest-2026-10-28.md)。
 
 - [七个版本的评审、方案、负责人和独立PR总览](delivery/version-progress-r11.zh-CN.md)。
 - iOS 真实原型点击补测（与设计检查、产品 QA 分开）：[dev.1](reviews/r11/ios1-prototype-retest-2026-10-27.md)、[dev.2](reviews/r11/ios2-prototype-retest-2026-10-27.md)、[dev.3](reviews/r11/ios3-prototype-retest-2026-10-27.md)、[dev.4](reviews/r11/ios4-prototype-retest-2026-10-27.md)。每项以报告中的实际点击、结果和剩余未验证范围为准。

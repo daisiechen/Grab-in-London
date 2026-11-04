@@ -1,0 +1,463 @@
+{
+  "date": "2026-10-28",
+  "baselineCommit": "ecfb54e70fe5356ed87e82f2e8b2ea1defcf1602",
+  "scope": "21 user browser comments; original UX repairs, per-version PJ retests; no business implementation",
+  "cases": [
+    {
+      "id": "C01",
+      "userComment": 1,
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "node": "5:17",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17&starting-point-node-id=5%3A17",
+      "request": "城市位置移至标题右侧，不单独占一行",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "NOT_APPLICABLE",
+      "evidenceReport": "docs/reviews/r12/ios1-user-feedback-2026-10-28.json",
+      "interactionRequired": false,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-discover-final-loaded.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json"
+    },
+    {
+      "id": "C02",
+      "userComment": 2,
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "node": "5:17",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17&starting-point-node-id=5%3A17",
+      "request": "预算补图标，元信息图标列与文字基线对齐",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "NOT_APPLICABLE",
+      "evidenceReport": "docs/reviews/r12/ios1-user-feedback-2026-10-28.json",
+      "interactionRequired": false,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-discover-final-loaded.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json"
+    },
+    {
+      "id": "C03",
+      "userComment": 3,
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "node": "5:17",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-17&starting-point-node-id=5%3A17",
+      "request": "参与者头像打开对应公开个人主页，不卡片饭局详情",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "PASS",
+      "evidenceReport": "docs/reviews/r12/ios1-user-feedback-2026-10-28.json",
+      "interactionRequired": true,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-avatar-maya.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-avatar-leo.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-avatar-emma.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json",
+      "interactionMethod": "local-browser-click",
+      "interactionEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json"
+    },
+    {
+      "id": "C04",
+      "userComment": 4,
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "node": "5:195",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-195&starting-point-node-id=5%3A195",
+      "request": "详情首屏优先重要安排，图片降级不占顶部大图",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "NOT_APPLICABLE",
+      "evidenceReport": "docs/reviews/r12/ios1-user-feedback-2026-10-28.json",
+      "interactionRequired": false,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-budget-min-final.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-final-609-top.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json",
+      "additionalAffectedVersions": [
+        "IOS-0.1.0-dev.2"
+      ],
+      "additionalResolutionStatus": "RESOLVED",
+      "additionalEvidence": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json"
+    },
+    {
+      "id": "C05",
+      "userComment": 5,
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "node": "5:195",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-195&starting-point-node-id=5%3A195",
+      "request": "移除重复人数信息，保留唯一必要截止信息",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "NOT_APPLICABLE",
+      "evidenceReport": "docs/reviews/r12/ios1-user-feedback-2026-10-28.json",
+      "interactionRequired": false,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-budget-min-scroll-final.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json",
+      "additionalAffectedVersions": [
+        "IOS-0.1.0-dev.2"
+      ],
+      "additionalResolutionStatus": "RESOLVED",
+      "additionalEvidence": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json"
+    },
+    {
+      "id": "C06",
+      "userComment": 6,
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "node": "5:195",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-195&starting-point-node-id=5%3A195",
+      "request": "外订状态标签无串行与文字截断",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "NOT_APPLICABLE",
+      "evidenceReport": "docs/reviews/r12/ios1-user-feedback-2026-10-28.json",
+      "interactionRequired": false,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-budget-min-scroll-final.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json"
+    },
+    {
+      "id": "C07",
+      "userComment": 7,
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "node": "5:195",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=5-195&starting-point-node-id=5%3A195",
+      "request": "费用与支付右列不越界、不裁切",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "NOT_APPLICABLE",
+      "evidenceReport": "docs/reviews/r12/ios1-user-feedback-2026-10-28.json",
+      "interactionRequired": false,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-detail-budget-min-scroll-final.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json"
+    },
+    {
+      "id": "C08",
+      "userComment": 8,
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "node": "10:65",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=10-65&starting-point-node-id=10%3A65",
+      "request": "删除认证字标旁无用红箭头",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "NOT_APPLICABLE",
+      "evidenceReport": "docs/reviews/r12/ios1-user-feedback-2026-10-28.json",
+      "interactionRequired": false,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-auth-create.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-auth-login.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json"
+    },
+    {
+      "id": "C09",
+      "userComment": 9,
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "node": "13:107",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=13-107&starting-point-node-id=13%3A107",
+      "request": "注册登录模式切换同步选中加粗与对勾",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "PASS",
+      "evidenceReport": "docs/reviews/r12/ios1-user-feedback-2026-10-28.json",
+      "interactionRequired": true,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-auth-create.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-auth-login.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-auth-email-login.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-auth-email-create.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json",
+      "interactionMethod": "local-browser-click",
+      "interactionEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json"
+    },
+    {
+      "id": "C10",
+      "userComment": 10,
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "node": "11:1191",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1191&starting-point-node-id=11%3A1191",
+      "request": "撤回结果移除Track in Inbox追踪入口",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "PASS",
+      "evidenceReport": "docs/reviews/r12/ios1-user-feedback-2026-10-28.json",
+      "interactionRequired": true,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-pending-for-withdraw.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-withdraw-confirm.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-withdrawn-actual.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json",
+      "interactionMethod": "local-browser-click",
+      "interactionEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json"
+    },
+    {
+      "id": "C11",
+      "userComment": 11,
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "node": "11:753",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-753&starting-point-node-id=11%3A753",
+      "request": "申请页本人身份行移除无用Edit",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "NOT_APPLICABLE",
+      "evidenceReport": "docs/reviews/r12/ios1-user-feedback-2026-10-28.json",
+      "interactionRequired": false,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-application.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-application-609.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json"
+    },
+    {
+      "id": "C12",
+      "userComment": 12,
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "node": "11:1753",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1753&starting-point-node-id=11%3A1753",
+      "request": "明确App语言首发范围，交流语言能从资料修改",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "PASS",
+      "evidenceReport": "docs/reviews/r12/ios1-user-feedback-2026-10-28.json",
+      "interactionRequired": true,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-info.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-selector.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-selector-fixed.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-selector-cancel-fixed.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-cancel-English.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-Spanish-draft-fixed.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-saved-fixed.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-saved-reentry.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-saved-cancel.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json",
+      "interactionMethod": "local-browser-click",
+      "interactionEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json"
+    },
+    {
+      "id": "C13",
+      "userComment": 13,
+      "version": "IOS-0.1.0-dev.1",
+      "owner": "original UX-1",
+      "node": "11:1611",
+      "entryUrl": "https://www.figma.com/proto/CS9oRCq8h3Clg09up2aISj?node-id=11-1611&starting-point-node-id=11%3A1611",
+      "request": "去除逐项optional标注，仅标必填项",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "NOT_APPLICABLE",
+      "evidenceReport": "docs/reviews/r12/ios1-user-feedback-2026-10-28.json",
+      "interactionRequired": false,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-profile-edit.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-field.png",
+        "docs/reviews/r12/evidence/ios1-independent/r12-i1-language-saved-reentry.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json",
+      "additionalAffectedVersions": [
+        "IOS-0.1.0-dev.2"
+      ],
+      "additionalResolutionStatus": "RESOLVED",
+      "additionalEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json"
+    },
+    {
+      "id": "C14",
+      "userComment": 14,
+      "version": "IOS-0.1.0-dev.2",
+      "owner": "original UX-2",
+      "node": "1:24",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=1-24&starting-point-node-id=1%3A24",
+      "request": "选餐厅地图使用合理小pin，不用饭局聚合大气泡",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "PASS",
+      "evidenceReport": "docs/reviews/r12/ios2-user-feedback-2026-10-28.json",
+      "interactionRequired": true,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios2-independent/r12-final-map-repaint.png",
+        "docs/reviews/r12/evidence/ios2-independent/r12-final-place-picker.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json",
+      "interactionMethod": "local-browser-click",
+      "interactionEvidence": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json"
+    },
+    {
+      "id": "C15",
+      "userComment": 15,
+      "version": "IOS-0.1.0-dev.2",
+      "owner": "original UX-2",
+      "node": "1:24",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=1-24&starting-point-node-id=1%3A24",
+      "request": "人数范围合成一组最小值最大值选择",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "PASS",
+      "evidenceReport": "docs/reviews/r12/ios2-user-feedback-2026-10-28.json",
+      "interactionRequired": true,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios2-independent/r12-final-range-control.png",
+        "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-range-applied-visible.png",
+        "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-range-invalid-repaint.png",
+        "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-range-cancel.png",
+        "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-actual-review-range.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json",
+      "interactionMethod": "local-browser-click",
+      "interactionEvidence": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json",
+      "independentSupplement": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json"
+    },
+    {
+      "id": "C16",
+      "userComment": 16,
+      "version": "IOS-0.1.0-dev.2",
+      "owner": "original UX-2",
+      "node": "1:449",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=1-449&starting-point-node-id=1%3A449",
+      "request": "预算金额遵守卡内边距和文字基线",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "NOT_APPLICABLE",
+      "evidenceReport": "docs/reviews/r12/ios2-user-feedback-2026-10-28.json",
+      "interactionRequired": false,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-costs.png",
+        "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-edit-costs-unchecked.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json"
+    },
+    {
+      "id": "C17",
+      "userComment": 17,
+      "version": "IOS-0.1.0-dev.2",
+      "owner": "original UX-2",
+      "node": "56:857",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=56-857&starting-point-node-id=56%3A857",
+      "request": "勾号居中，复选框与说明正文对齐",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "PASS",
+      "evidenceReport": "docs/reviews/r12/ios2-user-feedback-2026-10-28.json",
+      "interactionRequired": true,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-checkbox-edit-repaint.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json",
+      "interactionMethod": "local-browser-click",
+      "interactionEvidence": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json"
+    },
+    {
+      "id": "C18",
+      "userComment": 18,
+      "version": "IOS-0.1.0-dev.2",
+      "owner": "original UX-2",
+      "node": "1:719",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=1-719&starting-point-node-id=1%3A719",
+      "request": "成员头像小于发起人身份头像",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "NOT_APPLICABLE",
+      "evidenceReport": "docs/reviews/r12/ios2-user-feedback-2026-10-28.json",
+      "interactionRequired": false,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios2-independent/r12-final-published-top.png",
+        "docs/reviews/r12/evidence/ios2-independent/r12-final-published-roster.png",
+        "docs/reviews/r12/evidence/ios2-independent/r12-final-alex-full.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json"
+    },
+    {
+      "id": "C19",
+      "userComment": 19,
+      "version": "IOS-0.1.0-dev.2",
+      "owner": "original UX-2",
+      "node": "56:1111",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=56-1111&starting-point-node-id=56%3A1111",
+      "request": "Save changes单行完整显示在按钮内",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "PASS",
+      "evidenceReport": "docs/reviews/r12/ios2-user-feedback-2026-10-28.json",
+      "interactionRequired": true,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-save-ready-full.png",
+        "docs/reviews/r12/evidence/ios2-independent/fancy-r12-i2-save-unchecked.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json",
+      "interactionMethod": "local-browser-click",
+      "interactionEvidence": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json"
+    },
+    {
+      "id": "C20",
+      "userComment": 20,
+      "version": "IOS-0.1.0-dev.2",
+      "owner": "original UX-2",
+      "node": "6:185",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f?node-id=6-185&starting-point-node-id=6%3A185",
+      "request": "拒绝申请提供可选预设原因与清楚结果",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "PASS",
+      "evidenceReport": "docs/reviews/r12/ios2-user-feedback-2026-10-28.json",
+      "interactionRequired": true,
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-initial.png",
+        "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-selected.png",
+        "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-confirmed.png",
+        "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-cancel.png",
+        "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-reset.png",
+        "docs/reviews/r12/evidence/ios2-independent/r12-final-reason-none.png",
+        "docs/reviews/r12/evidence/ios2-independent/r12-final-applicant-reason-full.png",
+        "docs/reviews/r12/evidence/ios2-independent/r12-final-applicant-null-full.png"
+      ],
+      "independentEvidence": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json",
+      "interactionMethod": "local-browser-click",
+      "interactionEvidence": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json"
+    },
+    {
+      "id": "C21",
+      "userComment": 21,
+      "version": "IOS-0.1.0-dev.3",
+      "owner": "original UX-2",
+      "node": "13:14",
+      "entryUrl": "https://www.figma.com/proto/mKXV0NvBavRb6fnmQ2g2xV?node-id=13-14&starting-point-node-id=13%3A14",
+      "request": "修复底部Inbox换行及中央加号裁切",
+      "resolutionStatus": "RESOLVED",
+      "visualStatus": "PASS",
+      "interactionStatus": "PASS",
+      "evidenceReport": "docs/reviews/r12/ios3-user-feedback-2026-10-28.json",
+      "interactionRequired": true,
+      "interactionMethod": "local-browser-click",
+      "visualEvidence": [
+        "docs/reviews/r12/evidence/c21-fit-609-local.png",
+        "docs/reviews/r12/evidence/c21-inbox-local.png"
+      ],
+      "interactionEvidence": "docs/reviews/r12/ios3-local-browser-retest-2026-10-28.json"
+    }
+  ],
+  "boundaries": [
+    "Visual screenshot review and actual prototype clicks are separate evidence",
+    "C12 follows existing English-only app UI; conversation languages editable in Profile",
+    "C20 is a new optional predefined decline-reason requirement; existing API has no reason field, new contract not implemented",
+    "No product QA, backend calls, deployment or store submission authorized by this repair task"
+  ]
+}

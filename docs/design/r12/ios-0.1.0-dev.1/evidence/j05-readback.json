@@ -1,0 +1,996 @@
+{
+  "fileKey": "CS9oRCq8h3Clg09up2aISj",
+  "page": "9:17",
+  "frames": [
+    {
+      "id": "11:1611",
+      "name": "J05 / Edit profile",
+      "texts": [
+        {
+          "id": "11:1641",
+          "text": "Your name *",
+          "parent": "11:1640"
+        },
+        {
+          "id": "11:1646",
+          "text": "About you *",
+          "parent": "11:1645"
+        },
+        {
+          "id": "11:1667",
+          "text": "Your life in London *",
+          "parent": "11:1666"
+        },
+        {
+          "id": "11:1688",
+          "text": "Conversation language *",
+          "parent": "11:1687"
+        },
+        {
+          "id": "11:1690",
+          "text": "English",
+          "parent": "11:1689"
+        },
+        {
+          "id": "11:1693",
+          "text": "Interests · choose one or more *",
+          "parent": "11:1692"
+        },
+        {
+          "id": "11:1731",
+          "text": "Save profile ",
+          "parent": "11:1730"
+        },
+        {
+          "id": "11:1629",
+          "text": "Edit profile",
+          "parent": "11:1628"
+        }
+      ],
+      "routes": [
+        {
+          "id": "11:1689",
+          "name": "select / Conversation language",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "78:1174",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        },
+        {
+          "id": "11:1730",
+          "name": "button / primary ",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "11:1513",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        },
+        {
+          "id": "11:1625",
+          "name": "button / Go back",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "11:1513",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "11:1753",
+      "name": "J05 / Privacy and settings",
+      "texts": [
+        {
+          "id": "11:1812",
+          "text": "App language",
+          "parent": "11:1811"
+        },
+        {
+          "id": "11:1814",
+          "text": "English",
+          "parent": "11:1813"
+        },
+        {
+          "id": "11:1816",
+          "text": "Conversation languages can be changed in your profile.",
+          "parent": "11:1815"
+        }
+      ],
+      "routes": [
+        {
+          "id": "11:1810",
+          "name": "div / settings-info-row",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "78:297",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        },
+        {
+          "id": "11:1820",
+          "name": "button / settings-link",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "12:882",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        },
+        {
+          "id": "12:881",
+          "name": "input / Meal update bannersShow approval notifications. Your status always remains in Inbox.",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "28:672",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        },
+        {
+          "id": "11:1827",
+          "name": "button / settings-link",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "11:1611",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        },
+        {
+          "id": "11:1831",
+          "name": "button / settings-link danger",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "11:2408",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        },
+        {
+          "id": "11:1767",
+          "name": "button / Go back",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "11:1513",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        },
+        {
+          "id": "11:1838",
+          "name": "button / helper-launch",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "11:2113",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "78:297",
+      "name": "J05 / App language · English launch · from 11:1753",
+      "texts": [
+        {
+          "id": "78:342",
+          "text": "App language",
+          "parent": "78:341"
+        },
+        {
+          "id": "78:344",
+          "text": "English",
+          "parent": "78:343"
+        },
+        {
+          "id": "78:346",
+          "text": "Conversation languages can be changed in your profile.",
+          "parent": "78:345"
+        },
+        {
+          "id": "78:379",
+          "text": "App language",
+          "parent": "78:378"
+        },
+        {
+          "id": "78:383",
+          "text": "Fancy is available in English at launch. You can choose the languages you speak in your profile.",
+          "parent": "78:382"
+        },
+        {
+          "id": "78:385",
+          "text": "Back to settings",
+          "parent": "78:384"
+        },
+        {
+          "id": "78:387",
+          "text": "Edit conversation languages",
+          "parent": "78:386"
+        }
+      ],
+      "routes": [
+        {
+          "id": "78:384",
+          "name": "button / primary secondary",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "11:1753",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        },
+        {
+          "id": "78:386",
+          "name": "button / cancel-confirm",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "11:1611",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "78:399",
+      "name": "J05 / App language · English launch · from 12:882",
+      "texts": [
+        {
+          "id": "78:444",
+          "text": "App language",
+          "parent": "78:443"
+        },
+        {
+          "id": "78:446",
+          "text": "English",
+          "parent": "78:445"
+        },
+        {
+          "id": "78:448",
+          "text": "Conversation languages can be changed in your profile.",
+          "parent": "78:447"
+        },
+        {
+          "id": "78:481",
+          "text": "App language",
+          "parent": "78:480"
+        },
+        {
+          "id": "78:485",
+          "text": "Fancy is available in English at launch. You can choose the languages you speak in your profile.",
+          "parent": "78:484"
+        },
+        {
+          "id": "78:487",
+          "text": "Back to settings",
+          "parent": "78:486"
+        },
+        {
+          "id": "78:489",
+          "text": "Edit conversation languages",
+          "parent": "78:488"
+        }
+      ],
+      "routes": [
+        {
+          "id": "78:486",
+          "name": "button / primary secondary",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "12:882",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        },
+        {
+          "id": "78:488",
+          "name": "button / cancel-confirm",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "11:1611",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "78:501",
+      "name": "J05 / App language · English launch · from 28:672",
+      "texts": [
+        {
+          "id": "78:546",
+          "text": "App language",
+          "parent": "78:545"
+        },
+        {
+          "id": "78:548",
+          "text": "English",
+          "parent": "78:547"
+        },
+        {
+          "id": "78:550",
+          "text": "Conversation languages can be changed in your profile.",
+          "parent": "78:549"
+        },
+        {
+          "id": "78:583",
+          "text": "App language",
+          "parent": "78:582"
+        },
+        {
+          "id": "78:587",
+          "text": "Fancy is available in English at launch. You can choose the languages you speak in your profile.",
+          "parent": "78:586"
+        },
+        {
+          "id": "78:589",
+          "text": "Back to settings",
+          "parent": "78:588"
+        },
+        {
+          "id": "78:591",
+          "text": "Edit conversation languages",
+          "parent": "78:590"
+        }
+      ],
+      "routes": [
+        {
+          "id": "78:588",
+          "name": "button / primary secondary",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "28:672",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        },
+        {
+          "id": "78:590",
+          "name": "button / cancel-confirm",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "11:1611",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "78:603",
+      "name": "J05 / App language · English launch · from 28:778",
+      "texts": [
+        {
+          "id": "78:648",
+          "text": "App language",
+          "parent": "78:647"
+        },
+        {
+          "id": "78:650",
+          "text": "English",
+          "parent": "78:649"
+        },
+        {
+          "id": "78:652",
+          "text": "Conversation languages can be changed in your profile.",
+          "parent": "78:651"
+        },
+        {
+          "id": "78:685",
+          "text": "App language",
+          "parent": "78:684"
+        },
+        {
+          "id": "78:689",
+          "text": "Fancy is available in English at launch. You can choose the languages you speak in your profile.",
+          "parent": "78:688"
+        },
+        {
+          "id": "78:691",
+          "text": "Back to settings",
+          "parent": "78:690"
+        },
+        {
+          "id": "78:693",
+          "text": "Edit conversation languages",
+          "parent": "78:692"
+        }
+      ],
+      "routes": [
+        {
+          "id": "78:690",
+          "name": "button / primary secondary",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "28:778",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        },
+        {
+          "id": "78:692",
+          "name": "button / cancel-confirm",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "11:1611",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "78:705",
+      "name": "J05 / App language · English launch · from 28:884",
+      "texts": [
+        {
+          "id": "78:750",
+          "text": "App language",
+          "parent": "78:749"
+        },
+        {
+          "id": "78:752",
+          "text": "English",
+          "parent": "78:751"
+        },
+        {
+          "id": "78:754",
+          "text": "Conversation languages can be changed in your profile.",
+          "parent": "78:753"
+        },
+        {
+          "id": "78:787",
+          "text": "App language",
+          "parent": "78:786"
+        },
+        {
+          "id": "78:791",
+          "text": "Fancy is available in English at launch. You can choose the languages you speak in your profile.",
+          "parent": "78:790"
+        },
+        {
+          "id": "78:793",
+          "text": "Back to settings",
+          "parent": "78:792"
+        },
+        {
+          "id": "78:795",
+          "text": "Edit conversation languages",
+          "parent": "78:794"
+        }
+      ],
+      "routes": [
+        {
+          "id": "78:792",
+          "name": "button / primary secondary",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "28:884",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        },
+        {
+          "id": "78:794",
+          "name": "button / cancel-confirm",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "11:1611",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "78:807",
+      "name": "J05 / Conversation languages · unsaved English + Spanish",
+      "texts": [
+        {
+          "id": "78:821",
+          "text": "Your name *",
+          "parent": "78:820"
+        },
+        {
+          "id": "78:826",
+          "text": "About you *",
+          "parent": "78:825"
+        },
+        {
+          "id": "78:847",
+          "text": "Your life in London *",
+          "parent": "78:846"
+        },
+        {
+          "id": "78:868",
+          "text": "Conversation language *",
+          "parent": "78:867"
+        },
+        {
+          "id": "78:870",
+          "text": "English, Spanish",
+          "parent": "78:869"
+        },
+        {
+          "id": "78:873",
+          "text": "Interests · choose one or more *",
+          "parent": "78:872"
+        },
+        {
+          "id": "78:911",
+          "text": "Save profile ",
+          "parent": "78:910"
+        },
+        {
+          "id": "78:921",
+          "text": "Edit profile",
+          "parent": "78:920"
+        }
+      ],
+      "routes": [
+        {
+          "id": "78:910",
+          "name": "button / primary ",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "78:944",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        },
+        {
+          "id": "78:917",
+          "name": "button / Go back",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "11:1513",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "78:944",
+      "name": "J05 / Public profile · English + Spanish saved",
+      "texts": [
+        {
+          "id": "78:965",
+          "text": "Edit profile ",
+          "parent": "78:964"
+        },
+        {
+          "id": "78:980",
+          "text": "English, Spanish",
+          "parent": "78:979"
+        }
+      ],
+      "routes": [
+        {
+          "id": "78:953",
+          "name": "button / Settings",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "11:1753",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        },
+        {
+          "id": "78:964",
+          "name": "button / primary secondary",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "78:1037",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "78:1037",
+      "name": "J05 / Edit profile · saved English + Spanish",
+      "texts": [
+        {
+          "id": "78:1051",
+          "text": "Your name *",
+          "parent": "78:1050"
+        },
+        {
+          "id": "78:1056",
+          "text": "About you *",
+          "parent": "78:1055"
+        },
+        {
+          "id": "78:1077",
+          "text": "Your life in London *",
+          "parent": "78:1076"
+        },
+        {
+          "id": "78:1098",
+          "text": "Conversation language *",
+          "parent": "78:1097"
+        },
+        {
+          "id": "78:1100",
+          "text": "English, Spanish",
+          "parent": "78:1099"
+        },
+        {
+          "id": "78:1103",
+          "text": "Interests · choose one or more *",
+          "parent": "78:1102"
+        },
+        {
+          "id": "78:1141",
+          "text": "Save profile ",
+          "parent": "78:1140"
+        },
+        {
+          "id": "78:1151",
+          "text": "Edit profile",
+          "parent": "78:1150"
+        }
+      ],
+      "routes": [
+        {
+          "id": "78:1140",
+          "name": "button / primary ",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "78:944",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        },
+        {
+          "id": "78:1147",
+          "name": "button / Go back",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "78:944",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": true
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "78:1174",
+      "name": "J05 / Conversation language selection",
+      "texts": [
+        {
+          "id": "88:355",
+          "text": "Your name *",
+          "parent": "88:354"
+        },
+        {
+          "id": "88:360",
+          "text": "About you *",
+          "parent": "88:359"
+        },
+        {
+          "id": "88:381",
+          "text": "Your life in London *",
+          "parent": "88:380"
+        },
+        {
+          "id": "88:402",
+          "text": "Conversation language *",
+          "parent": "88:401"
+        },
+        {
+          "id": "88:404",
+          "text": "English",
+          "parent": "88:403"
+        },
+        {
+          "id": "88:407",
+          "text": "Interests · choose one or more *",
+          "parent": "88:406"
+        },
+        {
+          "id": "88:445",
+          "text": "Save profile ",
+          "parent": "88:444"
+        },
+        {
+          "id": "88:455",
+          "text": "Edit profile",
+          "parent": "88:454"
+        },
+        {
+          "id": "78:1256",
+          "text": "Conversation languages",
+          "parent": "78:1255"
+        },
+        {
+          "id": "78:1260",
+          "text": "English is selected. Add Spanish for conversations at your table.",
+          "parent": "78:1259"
+        },
+        {
+          "id": "78:1262",
+          "text": "Cancel",
+          "parent": "78:1261"
+        },
+        {
+          "id": "78:1264",
+          "text": "English + Spanish",
+          "parent": "78:1263"
+        }
+      ],
+      "routes": [
+        {
+          "id": "78:1261",
+          "name": "button / primary secondary",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "11:1611",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": false
+              }
+            ]
+          ]
+        },
+        {
+          "id": "78:1263",
+          "name": "button / cancel-confirm",
+          "actions": [
+            [
+              {
+                "type": "NODE",
+                "destinationId": "78:807",
+                "navigation": "NAVIGATE",
+                "transition": null,
+                "resetVideoPosition": false,
+                "resetScrollPosition": false
+              }
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "optionalRemaining": [],
+  "contextRepair": {
+    "id": "R12-I1-C12-CONTEXT",
+    "sourceProfile": "11:1611",
+    "sourceViewport": "11:1622",
+    "selector": "78:1174",
+    "selectorViewport": "88:342",
+    "underlayTexts": [
+      "Let people meet you.",
+      "A little background makes the first hello easier.",
+      "Your name *",
+      "Alex",
+      "About you *",
+      "New to London and happy to meet people over a relaxed meal.",
+      "New to London and happy to meet people over a relaxed meal.",
+      "Work",
+      "",
+      "School",
+      "",
+      "Hometown",
+      "",
+      "Your life in London *",
+      "New to London",
+      "Making London home",
+      "Living and working in London",
+      "Studying in London",
+      "Visiting London",
+      "Conversation language *",
+      "English",
+      "Interests · choose one or more *",
+      "Food",
+      "Photography",
+      "Travel",
+      "Design",
+      "Books",
+      "Cinema",
+      "Walking",
+      "Cooking",
+      "Music",
+      "Art",
+      "Sport",
+      "Save profile ",
+      "Edit profile",
+      "Ask Fancy",
+      "›"
+    ],
+    "selectorScrollOffset": -477,
+    "draftScrollOffset": -477,
+    "savedEditScrollOffset": -477,
+    "cancel": [
+      [
+        {
+          "type": "NODE",
+          "destinationId": "11:1611",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false,
+          "resetScrollPosition": false
+        }
+      ]
+    ],
+    "choose": [
+      [
+        {
+          "type": "NODE",
+          "destinationId": "78:807",
+          "navigation": "NAVIGATE",
+          "transition": null,
+          "resetVideoPosition": false,
+          "resetScrollPosition": false
+        }
+      ]
+    ]
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "iteration": "IOS-0.1.0-dev.2",
+  "mapping": [
+    {
+      "id": "C14",
+      "nodes": [
+        "1:90",
+        "1:93",
+        "1:95",
+        "3:2492",
+        "56:1235"
+      ],
+      "treatment": "Small place pins, not Discovery clusters",
+      "visualEvidence": "evidence/c14-place-pins.png",
+      "scope": "28×34 selected and24×30 other editable SVG place pins; numeric count text removed. Pin opens native source candidate cards/list. Google provider/real Places are not connected; fixed selected sample only.",
+      "actualClickEvidence": "Independent root browser retest in progress; author BrowserUse unavailable/no business-click PASS"
+    },
+    {
+      "id": "C15",
+      "nodes": [
+        "90:377",
+        "90:388",
+        "90:399",
+        "90:705",
+        "90:667"
+      ],
+      "treatment": "One compact minimum–maximum group-size control",
+      "visualEvidence": "evidence/c15-range-sheet.png",
+      "scope": "One Group size label/outline/including-you note;100px group replaces two large chip fields. min/max choices2…6 with guard; default3–4. Picker draft, create draft, edit draft and published snapshot separate; Use range updates source draft, Cancel does not. Save/Publish only commits. Locked sources retain disabled edit.",
+      "actualClickEvidence": "Independent root browser retest in progress; author BrowserUse unavailable/no business-click PASS"
+    },
+    {
+      "id": "C16",
+      "nodes": [
+        "1:525",
+        "4:217",
+        "56:778",
+        "56:910"
+      ],
+      "treatment": "Receipt inner padding and amount baseline",
+      "visualEvidence": "evidence/c16-c17-costs.png",
+      "scope": "All4 Costs variants use315px inner row within351px card,64px amount block,18px right inset; no new payment behavior.",
+      "actualClickEvidence": "Independent root browser retest in progress; author BrowserUse unavailable/no business-click PASS"
+    },
+    {
+      "id": "C17",
+      "nodes": [
+        "56:930",
+        "4:291",
+        "56:1190"
+      ],
+      "treatment": "Centered checkmark and first-line alignment",
+      "visualEvidence": "evidence/c16-c17-costs.png",
+      "scope": "All6 source confirmations use19×19 glyph box at0,0 within19×19 checkbox, centered both axes. Existing declaration row/first-line checkbox preserved.",
+      "actualClickEvidence": "Independent root browser retest in progress; author BrowserUse unavailable/no business-click PASS"
+    },
+    {
+      "id": "C18",
+      "nodes": [
+        "1:793",
+        "1:794",
+        "92:363",
+        "92:375"
+      ],
+      "treatment": "Small attendee avatar and separate public profile",
+      "visualEvidence": "evidence/c18-attendee-scale.png",
+      "scope": "Six32px attendee images vs44px host; separate public Alex profile uses existing domain.ts bio/Food/Photography/Travel/New to London/English, no application text; source-aware Back.",
+      "actualClickEvidence": "Independent root browser retest in progress; author BrowserUse unavailable/no business-click PASS"
+    },
+    {
+      "id": "C19",
+      "nodes": [
+        "56:1070",
+        "56:1194",
+        "56:1627"
+      ],
+      "treatment": "Single-line Save changes inside button",
+      "visualEvidence": "evidence/c19-save-changes.png",
+      "scope": "Old HORIZONTAL padding caused label/arrow overflow. Keep351×45 button, label271×19 at40,13, arrow17 at316,14; source ready/unchecked/terms clones same fix. Scroll content includes full body/footer/safe area, device viewport fixed.",
+      "actualClickEvidence": "Independent root browser retest in progress; author BrowserUse unavailable/no business-click PASS"
+    },
+    {
+      "id": "C20",
+      "nodes": [
+        "1:931",
+        "94:373",
+        "94:490",
+        "94:493",
+        "6:185",
+        "94:497",
+        "94:513"
+      ],
+      "treatment": "Optional preset reason, private receipt and cancel",
+      "visualEvidence": "evidence/c20-confirm-native-radio.png",
+      "scope": "Initial radio unselected/reasonTouched=false/empty string models null. Optional exact2 presets or explicit No reason. Cancel back Pending; reopening resets draft. Confirm snapshots reason/code to synthetic Declined receipt; applicant role samples show own reason or legacy null. No real API/DTO/store/notification implementation. Fixed recipient privacy copy; native14px outer/6px boolean-selected inner dots avoid Unicode-font variation.",
+      "actualClickEvidence": "Independent root browser retest in progress; author BrowserUse unavailable/no business-click PASS"
+    }
+  ],
+  "businessInputCommit": "14db53257a2b4bb7610a3afad5e1ecfd735db605",
+  "incrementalProductRules": "docs/product/r12/ios-feedback-requirements-2026-10-28.json",
+  "crossVersionImpacts": [
+    {
+      "id": "C13",
+      "scope": "Only I2 Cuisine/Dietary labels remove optional suffix; not provided/host-reported/allergy notes and choices unchanged",
+      "evidence": "evidence/c13-label-readback.json"
+    },
+    {
+      "ids": [
+        "C04",
+        "C05"
+      ],
+      "scope": "6 same meal detail templates information-first,110px secondary image;21 native management/cancelled summary cards budget/minimum; published snapshot variable retained",
+      "evidence": "evidence/shared-detail-final-readback.json"
+    }
+  ]
+}

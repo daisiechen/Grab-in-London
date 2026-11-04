@@ -123,5 +123,41 @@
       "Saving56:1194 redirected immediately; no stable saving-screen visual check."
     ],
     "currentDesignManifestSHA256": "feb061dbbce045d26c28db9b7cfa52e5fcffb6d9fddbabebee3aca68885d84b5"
+  },
+  "userFeedbackR12": {
+    "comments": [
+      "C14",
+      "C15",
+      "C16",
+      "C17",
+      "C18",
+      "C19",
+      "C20"
+    ],
+    "crossVersionComments": [
+      "C04",
+      "C05",
+      "C13"
+    ],
+    "status": "resolved-by-original-UX-and-independent-bounded-browser-review",
+    "authorCandidate": "docs/design/r12/ios-0.1.0-dev.2/artifact-manifest.json",
+    "actualBrowserEvidence": "docs/reviews/r12/ios2-local-browser-retest-2026-10-28.json",
+    "independentEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json",
+    "requirementDelta": "docs/product/r12/ios-feedback-requirements-2026-10-28.json",
+    "engineeringInputUpdateRequired": [
+      "C20 optional declineReasonCode null/two-presets; authorised private host/applicant projection; persistence/migration/notification envelope and UNKNOWN retained intent",
+      "C15 compact range draft/published snapshot isolation and minimum/capacity projection inputs"
+    ],
+    "unaffectedSlicesMayProceedIndependently": true,
+    "implementationStarted": false,
+    "realNotificationTested": false,
+    "realServiceQASigned": false,
+    "historicalR11SnapshotsPreserved": true,
+    "authorCandidateSHA256": "b8191f7064fca438de92bfbe38f0a8898e01256920c294552839d5ee44f9c860",
+    "actualBrowserEvidenceSHA256": "9697772135328734cec73727e5ed5b758c73003236486a6eaa17c0897884b5ef",
+    "actualChangedEditRange": "PASS: Cancel2–5 draft preserves original3–4; explicit Review/consent/Save commits minimum2/capacity5 in synthetic prototype; no server persistence claim",
+    "independentlyApproved": true,
+    "integratedIndependentReview": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json",
+    "integratedIndependentReviewSHA256": "9ec0c59fcfa785dcb67aefce4dc48899e027047c2296eb9512b0da470834c6c4"
   }
 }

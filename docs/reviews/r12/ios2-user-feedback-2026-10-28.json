@@ -1,0 +1,231 @@
+{
+  "iteration": "IOS-0.1.0-dev.2",
+  "date": "2026-10-28",
+  "fileKey": "c04Fi5iarZm7gTPw4u2f7f",
+  "phase": "author-candidate-frozen-handed-to-independent-review",
+  "cases": [
+    {
+      "id": "C14",
+      "status": "BLOCKED",
+      "method": "browser-click",
+      "nodeIds": [
+        "1:90",
+        "1:93",
+        "1:95",
+        "3:2492",
+        "56:1235"
+      ],
+      "treatment": "Small place pins, not Discovery clusters",
+      "steps": [],
+      "observed": "Author native screenshot/readback checked. BrowserUse account insufficient_credits; no new run or business clicks. Independent root fallback browser result must be recorded separately.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f/Fancy?node-id=1-24&starting-point-node-id=1%3A24",
+      "visualStatus": "CHECKED",
+      "visualEvidence": "docs/design/r12/ios-0.1.0-dev.2/evidence/c14-place-pins.png",
+      "scope": "28×34 selected and24×30 other editable SVG place pins; numeric count text removed. Pin opens native source candidate cards/list. Google provider/real Places are not connected; fixed selected sample only.",
+      "prototypeEntryRoot": "1:24"
+    },
+    {
+      "id": "C15",
+      "status": "BLOCKED",
+      "method": "browser-click",
+      "nodeIds": [
+        "90:377",
+        "90:388",
+        "90:399",
+        "90:705",
+        "90:667"
+      ],
+      "treatment": "One compact minimum–maximum group-size control",
+      "steps": [],
+      "observed": "Author native screenshot/readback checked. BrowserUse account insufficient_credits; no new run or business clicks. Independent root fallback browser result must be recorded separately.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f/Fancy?node-id=1-24&starting-point-node-id=1%3A24",
+      "visualStatus": "CHECKED",
+      "visualEvidence": "docs/design/r12/ios-0.1.0-dev.2/evidence/c15-range-sheet.png",
+      "scope": "One Group size label/outline/including-you note;100px group replaces two large chip fields. min/max choices2…6 with guard; default3–4. Picker draft, create draft, edit draft and published snapshot separate; Use range updates source draft, Cancel does not. Save/Publish only commits. Locked sources retain disabled edit.",
+      "prototypeEntryRoot": "1:24"
+    },
+    {
+      "id": "C16",
+      "status": "BLOCKED",
+      "method": "browser-click",
+      "nodeIds": [
+        "1:525",
+        "4:217",
+        "56:778",
+        "56:910"
+      ],
+      "treatment": "Receipt inner padding and amount baseline",
+      "steps": [],
+      "observed": "Author native screenshot/readback checked. BrowserUse account insufficient_credits; no new run or business clicks. Independent root fallback browser result must be recorded separately.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f/Fancy?node-id=1-449&starting-point-node-id=1%3A449",
+      "visualStatus": "CHECKED",
+      "visualEvidence": "docs/design/r12/ios-0.1.0-dev.2/evidence/c16-c17-costs.png",
+      "scope": "All4 Costs variants use315px inner row within351px card,64px amount block,18px right inset; no new payment behavior.",
+      "prototypeEntryRoot": "1:449"
+    },
+    {
+      "id": "C17",
+      "status": "BLOCKED",
+      "method": "browser-click",
+      "nodeIds": [
+        "56:930",
+        "4:291",
+        "56:1190"
+      ],
+      "treatment": "Centered checkmark and first-line alignment",
+      "steps": [],
+      "observed": "Author native screenshot/readback checked. BrowserUse account insufficient_credits; no new run or business clicks. Independent root fallback browser result must be recorded separately.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f/Fancy?node-id=56-857&starting-point-node-id=56%3A857",
+      "visualStatus": "CHECKED",
+      "visualEvidence": "docs/design/r12/ios-0.1.0-dev.2/evidence/c16-c17-costs.png",
+      "scope": "All6 source confirmations use19×19 glyph box at0,0 within19×19 checkbox, centered both axes. Existing declaration row/first-line checkbox preserved.",
+      "prototypeEntryRoot": "56:857"
+    },
+    {
+      "id": "C18",
+      "status": "BLOCKED",
+      "method": "browser-click",
+      "nodeIds": [
+        "1:793",
+        "1:794",
+        "92:363",
+        "92:375"
+      ],
+      "treatment": "Small attendee avatar and separate public profile",
+      "steps": [],
+      "observed": "Author native screenshot/readback checked. BrowserUse account insufficient_credits; no new run or business clicks. Independent root fallback browser result must be recorded separately.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f/Fancy?node-id=1-719&starting-point-node-id=1%3A719",
+      "visualStatus": "CHECKED",
+      "visualEvidence": "docs/design/r12/ios-0.1.0-dev.2/evidence/c18-attendee-scale.png",
+      "scope": "Six32px attendee images vs44px host; separate public Alex profile uses existing domain.ts bio/Food/Photography/Travel/New to London/English, no application text; source-aware Back.",
+      "history": [
+        {
+          "status": "FAIL",
+          "method": "independent-root-browser-click",
+          "observed": "Profile route worked but author incorrectly used missing-data fallback despite existing public Alex sample."
+        },
+        {
+          "status": "NOT_RUN",
+          "method": "native-inspection",
+          "observed": "Known public source restored; full actual final PNG checked, independent click refresh pending."
+        }
+      ],
+      "prototypeEntryRoot": "1:719"
+    },
+    {
+      "id": "C19",
+      "status": "BLOCKED",
+      "method": "browser-click",
+      "nodeIds": [
+        "56:1070",
+        "56:1194",
+        "56:1627"
+      ],
+      "treatment": "Single-line Save changes inside button",
+      "steps": [],
+      "observed": "Author native screenshot/readback checked. BrowserUse account insufficient_credits; no new run or business clicks. Independent root fallback browser result must be recorded separately.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f/Fancy?node-id=56-1111&starting-point-node-id=56%3A1111",
+      "visualStatus": "CHECKED",
+      "visualEvidence": "docs/design/r12/ios-0.1.0-dev.2/evidence/c19-save-changes.png",
+      "scope": "Old HORIZONTAL padding caused label/arrow overflow. Keep351×45 button, label271×19 at40,13, arrow17 at316,14; source ready/unchecked/terms clones same fix. Scroll content includes full body/footer/safe area, device viewport fixed.",
+      "prototypeEntryRoot": "56:1111"
+    },
+    {
+      "id": "C20",
+      "status": "BLOCKED",
+      "method": "browser-click",
+      "nodeIds": [
+        "1:931",
+        "94:373",
+        "94:490",
+        "94:493",
+        "6:185",
+        "94:497",
+        "94:513"
+      ],
+      "treatment": "Optional preset reason, private receipt and cancel",
+      "steps": [],
+      "observed": "Author native screenshot/readback checked. BrowserUse account insufficient_credits; no new run or business clicks. Independent root fallback browser result must be recorded separately.",
+      "entryUrl": "https://www.figma.com/proto/c04Fi5iarZm7gTPw4u2f7f/Fancy?node-id=1-880&starting-point-node-id=1%3A880",
+      "visualStatus": "CHECKED",
+      "visualEvidence": "docs/design/r12/ios-0.1.0-dev.2/evidence/c20-confirm-native-radio.png",
+      "scope": "Initial radio unselected/reasonTouched=false/empty string models null. Optional exact2 presets or explicit No reason. Cancel back Pending; reopening resets draft. Confirm snapshots reason/code to synthetic Declined receipt; applicant role samples show own reason or legacy null. No real API/DTO/store/notification implementation. Fixed recipient privacy copy; native14px outer/6px boolean-selected inner dots avoid Unicode-font variation.",
+      "history": [
+        {
+          "status": "FAIL",
+          "method": "independent-root-browser-click",
+          "observed": "Plans empty Unicode ring grew after select/cancel/reopen; logical reason state already correct."
+        },
+        {
+          "status": "NOT_RUN",
+          "method": "native-inspection",
+          "observed": "Native ELLIPSE14/6 plus boolean visibility replaces glyphs; fixed privacy line. Actual final sheet screenshot checked, independent click refresh pending."
+        }
+      ],
+      "prototypeEntryRoot": "1:880"
+    }
+  ],
+  "remainingUnverified": [
+    "Independent actual clicks pending root fallback browser; native graph/screenshot checks are not browser PASS",
+    "C14 real Google SDK/Places, arbitrary marker/candidate state and provider access not integrated; fixed source card/list sample only",
+    "C15 numeric variable comparisons/string summary expressions need actual engine click evidence; no device/backend authorization claimed",
+    "C20 UNKNOWN/409/failed/duplicate-intent behavior documented-only here, not an executable asynchronous server simulator",
+    "C20 real declineReasonCode API/DTO/store/notification adapter not implemented; no real recipient delivery/private account projection verified",
+    "Arbitrary free text, all screens/devices/accessibility/backend concurrency not covered"
+  ],
+  "history": [
+    {
+      "id": "AUTHOR-SELF-01",
+      "finding": "Save label width alone retained old HORIZONTAL padding causing right overflow; full screenshot caught it",
+      "resolution": "Parent layout constraints fixed, full button and footer screenshot checked"
+    },
+    {
+      "id": "AUTHOR-SELF-02",
+      "finding": "Content-height propagation inflated range and declined receipt ancestor viewport",
+      "resolution": "Restored exact device852/scroll750; whole I2 named viewport audit0 mismatches, long content scrolls"
+    },
+    {
+      "id": "AUTHOR-SELF-03",
+      "finding": "Old subsequent notice overlapped new Declined receipt",
+      "resolution": "Moved following notice to card.bottom+20 and subsequent content; screenshot confirms full receipt"
+    },
+    {
+      "id": "AUTHOR-SELF-04",
+      "finding": "Known public Alex data treated as unknown and subsequent manual paragraph sizing misidentified Auto-layout body",
+      "resolution": "Restored source public fields, profile body AUTO560/scroll750; final full screenshot valid."
+    },
+    {
+      "id": "CROSS-C04-C05",
+      "finding": "I2 same Meal detail pattern retained old185px leading hero after I1 correction",
+      "resolution": "6 actual detail templates reordered facts/host then110px image;21 native state summaries get budget/minimum; no actions changed."
+    },
+    {
+      "id": "C15-SHADOWS",
+      "finding": "3 original shadow/error copies retained old dual large chip fields",
+      "resolution": "Same100px group projection cloned;0 original actions preserved inert, Error date/prompt and original picker Use/Cancel unchanged."
+    },
+    {
+      "id": "C15-EDIT-CAPTION",
+      "finding": "Independent actual Edit range entry showed Create a meal behind the sheet",
+      "resolution": "Only source header STRING binding and4 open-action label SETs added; unchanged scalar/snapshot/Use/Cancel/Save/Publish. Independent PJ title refresh retest pending."
+    }
+  ],
+  "crossVersionImpacts": [
+    {
+      "id": "C13",
+      "scope": "Only I2 Cuisine/Dietary labels remove optional suffix; not provided/host-reported/allergy notes and choices unchanged",
+      "evidence": "evidence/c13-label-readback.json"
+    },
+    {
+      "ids": [
+        "C04",
+        "C05"
+      ],
+      "scope": "6 same meal detail templates information-first,110px secondary image;21 native management/cancelled summary cards budget/minimum; published snapshot variable retained",
+      "evidence": "evidence/shared-detail-final-readback.json"
+    }
+  ],
+  "statusScope": "Author-owned BrowserUse attempt history only; root-owned independent acceptance is separate and current authoritative review.",
+  "authorWritesStopped": true,
+  "statusFileWriter": "root"
+}

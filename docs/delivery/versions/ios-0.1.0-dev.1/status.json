@@ -149,5 +149,48 @@
     "candidateManifestSHA256": "37b91e7192268246b5cda4eab2d0fd91592d9d31ade354f2f220f2bee08bb89a",
     "historicalIndependentSignaturePreserved": true,
     "supplementIndependentlyApproved": false
+  },
+  "designFeedbackR12": {
+    "status": "original-UX-repaired-independent-bounded-browser-review-passed",
+    "revision": "UX-r12-03",
+    "report": "docs/reviews/r12/ios1-user-feedback-2026-10-28.json",
+    "reportSHA256": "6097ed225d66ec09e2c30bfe801d2035bbf570585d80c5ac9e53379ce1e91d39",
+    "manifest": "docs/design/r12/ios-0.1.0-dev.1/artifact-manifest.json",
+    "manifestSHA256": "b63a365887fe02c3d5f45f99e6c6bb03805f8479c41e1cdcf331631fe125462f",
+    "actualClickStatus": "PASS-bounded-fixed-sample",
+    "independentlyApproved": true,
+    "nextStep": "Use r12 affected design inputs; extend scoped contract and engineering inputs for new decline-reason read slice before that implementation.",
+    "currentIssue": null,
+    "authorAttemptStatus": "BLOCKED",
+    "independentEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json",
+    "independentEvidenceSHA256": "9ec0c59fcfa785dcb67aefce4dc48899e027047c2296eb9512b0da470834c6c4"
+  },
+  "userFeedbackR12": {
+    "comments": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C12",
+      "C13"
+    ],
+    "status": "resolved-bounded-prototype-scope",
+    "independentEvidence": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json",
+    "requirementDelta": "docs/product/r12/ios-feedback-requirements-2026-10-28.json",
+    "engineeringInputUpdateRequired": [
+      "C20 applicant private preset-reason read/notification-display contract and tests; English UI launch and Profile language draft/save semantics"
+    ],
+    "unaffectedSlicesMayProceedIndependently": true,
+    "implementationStarted": false,
+    "realServiceQASigned": false,
+    "integratedIndependentReview": "docs/reviews/r12/feedback-21-independent-review-2026-10-28.json",
+    "integratedIndependentReviewSHA256": "9ec0c59fcfa785dcb67aefce4dc48899e027047c2296eb9512b0da470834c6c4"
   }
 }
