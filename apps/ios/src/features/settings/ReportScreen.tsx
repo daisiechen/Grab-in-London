@@ -1,18 +1,38 @@
 import { SessionScope } from '../auth/SessionScope.tsx';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Text, TextInput, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ApiError, type ResponseOf } from '@fancy/client';
-import { REPORT_TARGET_TYPES } from '@fancy/contracts';
+import { REPORT_REASONS, REPORT_TARGET_TYPES } from '@fancy/contracts';
 import { useServices, useSessionState } from '../../services.tsx';
-import { Primary } from '../../ui/Button.tsx';
-import { Field } from '../../ui/Field.tsx';
+import { Primary, TextAction } from '../../ui/Button.tsx';
 import { FormMessage } from '../../ui/FormMessage.tsx';
-import { Screen } from '../../ui/Screen.tsx';
-import { Body, Heading } from '../../ui/Text.tsx';
+import { ChoiceGroup } from '../../ui/ChoiceGroup.tsx';
+import { AccountPage, SummaryBox, accountText } from '../../ui/AccountPage.tsx';
+import { Avatar } from '../../ui/Avatar.tsx';
+import { Icon } from '../../ui/Icon.tsx';
+import { colors, radius, type } from '../../ui/tokens.ts';
+import { createStyles } from '../../ui/styles.ts';
+import { longDate } from '../../lib/london.ts';
 import { rememberReturnTo } from '../auth/intent.ts';
+import { markMessageReported, messageSubject } from '../inbox/message-reports.ts';
 
 type Receipt = ResponseOf<'createReport'>['data'];
 type Target = (typeof REPORT_TARGET_TYPES)[number];
+type Reason = (typeof REPORT_REASONS)[number];
+/** Required reason (owner decision 2026-10-29); safety, harassment and under 18 reach the team at once. */
+export const REASON_OPTIONS: readonly (readonly [Reason, string])[] = [
+  ['safety', 'Personal safety or threats'],
+  ['harassment', 'Harassment or hate'],
+  ['scam', 'Scam, spam or advertising'],
+  ['under_18', 'May be under 18'],
+  ['other', 'Something else'],
+];
+const STATUS_LABELS: Record<Receipt['status'], string> = { RECEIVED: 'Received', IN_REVIEW: 'In review', RESPONDED: 'Responded' };
+const TARGET_LABELS: Record<Target, string> = { USER: 'a member', MEAL: 'a meal', MESSAGE: 'a message' };
+/** What is being reported, resolved from the route target with the existing public reads. */
+type Subject = { kind: 'USER'; name: string; avatarUrl: string | null } | { kind: 'MEAL'; title: string; date: string } | { kind: 'MESSAGE'; senderName: string; excerpt: string };
+const HEADINGS: Record<Target, string> = { USER: 'Share a private concern', MEAL: 'Share a private concern', MESSAGE: 'Report this message' };
 
 /** Private report → receipt (not a resolution). Route: /report?targetType=USER|MEAL|MESSAGE&targetId=… */
 export function ReportScreen() {
@@ -23,45 +43,96 @@ function ReportScreenContent() {
   const params = useLocalSearchParams<{ targetType: string; targetId: string }>();
   const targetType = (REPORT_TARGET_TYPES as readonly string[]).includes(String(params.targetType)) ? (String(params.targetType) as Target) : null;
   const targetId = String(params.targetId ?? '');
-  const { api, newId } = useServices();
+  const { api, cache, newId } = useServices();
   const state = useSessionState();
   const router = useRouter();
   const [details, setDetails] = useState('');
+  const [reason, setReason] = useState<Reason | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [busy, setBusy] = useState(false);
   const intent = useRef<{ key: string; body: string } | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [statusError, setStatusError] = useState<string | null>(null);
+  const [subject, setSubject] = useState<{ key: string; value: Subject } | null>(null);
+  const signedIn = state.status === 'signedIn';
+  const subjectKey = `${targetType}:${targetId}`;
 
-  if (!targetType || !targetId) return <Screen><FormMessage message="This report link isn’t valid." /></Screen>;
+  useEffect(() => {
+    // Best effort: the form works without it, and a failed read keeps the generic “a member / a meal”.
+    if (!signedIn || !targetId || (targetType !== 'USER' && targetType !== 'MEAL')) return;
+    let live = true;
+    const read = targetType === 'USER'
+      ? api.call('getPublicProfile', { params: { userId: targetId } }).then((res): Subject | null => (res.data.profile.id === targetId ? { kind: 'USER', name: res.data.profile.displayName, avatarUrl: res.data.profile.avatarUrl } : null))
+      : api.call('getMeal', { params: { mealId: targetId } }).then((res): Subject | null => (res.data.meal.id === targetId ? { kind: 'MEAL', title: res.data.meal.title, date: res.data.meal.startsAt.localDate } : null));
+    read.then((value) => { if (live && value) setSubject({ key: subjectKey, value }); }).catch(() => {});
+    return () => { live = false; };
+  }, [api, signedIn, targetType, targetId, subjectKey]);
+
+  const cancel = <View style={styles.cancel}><TextAction label="Cancel" onPress={() => router.back()} /></View>;
+  if (!targetType || !targetId) return <AccountPage><FormMessage message="This report link isn’t valid." />{cancel}</AccountPage>;
   if (state.status !== 'signedIn') {
     return (
-      <Screen>
-        <Body>Sign in to send a private report.</Body>
-        <Primary label="Sign in" onPress={() => { rememberReturnTo('/settings'); router.push('/sign-in'); }} />
-      </Screen>
+      <AccountPage>
+        <Text accessibilityRole="header" style={accountText.h1}>{HEADINGS[targetType]}</Text>
+        <Text style={accountText.prose}>Sign in to send a private report.</Text>
+        <View style={styles.actions}>
+          <Primary label="Sign in" onPress={() => { rememberReturnTo('/settings'); router.push('/sign-in'); }} />
+          {cancel}
+        </View>
+      </AccountPage>
     );
   }
+  // A message's sender and excerpt come from the chat via the session cache (never from the URL).
+  const cachedMessage = targetType === 'MESSAGE' ? messageSubject(cache, targetId) : null;
+  const target: Subject | null = cachedMessage ? { kind: 'MESSAGE', ...cachedMessage } : subject?.key === subjectKey ? subject.value : null;
   if (receipt) {
+    const refresh = async () => {
+      setChecking(true);
+      setStatusError(null);
+      try {
+        const fresh = (await api.call('reportStatus', { params: { reportId: receipt.id } })).data;
+        if (fresh.id === receipt.id) setReceipt(fresh);
+      } catch (e) {
+        setStatusError(e instanceof ApiError && e.kind === 'network' ? 'We couldn’t check the status. Check your connection and try again.' : 'We couldn’t check the status. Please try again.');
+      } finally {
+        setChecking(false);
+      }
+    };
     return (
-      <Screen testID="report-receipt">
-        <Heading>Report received</Heading>
-        <Body>{`Reference ${receipt.receipt}. Our team reviews reports privately; the other person isn’t told who reported.`}</Body>
-        <Body muted>You can check the status of your report later in Settings.</Body>
-        <Primary label="Done" onPress={() => router.back()} />
-      </Screen>
+      <AccountPage testID="report-receipt">
+        <Text accessibilityRole="header" style={accountText.h1}>Report received</Text>
+        <Text style={accountText.prose}>{`Our team reviews reports privately. The other person isn’t told who reported.${targetType === 'MESSAGE' ? ' The message is now hidden for you.' : ''}`}</Text>
+        <SummaryBox>
+          <Text style={accountText.muted}>Reference number</Text>
+          <Text selectable style={accountText.strong}>{receipt.receipt}</Text>
+          <Text style={[accountText.body, { marginTop: 6, marginBottom: 0 }]}>{`Status: ${STATUS_LABELS[receipt.status]}`}</Text>
+          {receipt.publicOutcome ? <Text style={accountText.body}>{receipt.publicOutcome}</Text> : null}
+        </SummaryBox>
+        <Text style={accountText.muted}>Keep this reference if you contact support. A receipt is not a decision about the report.</Text>
+        <View style={{ alignItems: 'flex-start' }}>
+          <TextAction label="Check report status" disabled={checking} onPress={() => void refresh()} />
+        </View>
+        <FormMessage message={statusError} />
+        <View style={styles.actions}><Primary label="Done" onPress={() => router.back()} /></View>
+      </AccountPage>
     );
   }
 
   const send = async () => {
     const text = details.trim();
+    if (!reason) return setError('Choose what the report is about.');
     if (text.length < 1 || text.length > 1000) return setError('Tell us what happened in up to 1,000 characters.');
-    const body = { targetType, targetId, reason: 'private_concern' as const, details: text };
+    const body = { targetType, targetId, reason, details: text };
     const serialized = JSON.stringify(body);
     if (!intent.current || intent.current.body !== serialized) intent.current = { key: newId(), body: serialized };
     setBusy(true);
     setError(null);
     try {
-      setReceipt((await api.call('createReport', { body, idempotencyKey: intent.current.key })).data);
+      const created = (await api.call('createReport', { body, idempotencyKey: intent.current.key })).data;
+      // The API hides a reported message for its reporter; mirror it in the open chat straight away.
+      if (targetType === 'MESSAGE') markMessageReported(cache, targetId);
+      setReceipt(created);
     } catch (e) {
       setError(e instanceof ApiError && e.kind === 'network' ? 'We couldn’t confirm your report was received. Check your connection and send again — it won’t be duplicated.' : 'We couldn’t send your report. Please try again.');
     } finally {
@@ -70,12 +141,59 @@ function ReportScreenContent() {
   };
 
   return (
-    <Screen testID="report">
-      <Heading>Report a concern</Heading>
-      <Body>Reports are private. Tell us what happened; you’ll get a reference number.</Body>
-      <Field label="What happened?" value={details} onChangeText={setDetails} maxLength={1000} multiline />
-      <FormMessage message={error} />
-      <Primary label="Send report" busy={busy} onPress={() => void send()} />
-    </Screen>
+    // A text field page: the action is pinned so it rides above the keyboard (an inline button ended up behind it).
+    <AccountPage
+      testID="report"
+      footer={<>
+        <FormMessage message={error} />
+        <Primary label="Submit report" busy={busy} onPress={() => void send()} />
+        {cancel}
+      </>}
+    >
+      <Text accessibilityRole="header" style={accountText.h1}>{HEADINGS[targetType]}</Text>
+      <TargetRow targetType={targetType} target={target} />
+      <Text style={[accountText.prose, { marginBottom: 14 }]}>{`Reports about ${TARGET_LABELS[targetType]} are private and separate from public references. You’ll get a reference number.`}</Text>
+      <View style={styles.reasons}>
+        <ChoiceGroup label="What’s it about?" options={REASON_OPTIONS} value={reason} onChange={setReason} />
+      </View>
+      <View style={styles.field}>
+        <Text style={styles.label}>What would you like us to know?</Text>
+        <TextInput accessibilityLabel="What would you like us to know?" value={details} onChangeText={setDetails} maxLength={1000} multiline placeholderTextColor={colors.muted} style={styles.input} />
+        <Text style={styles.hint}>Up to 1,000 characters.</Text>
+      </View>
+    </AccountPage>
   );
 }
+
+/** Who or what the report is about: avatar + name for a member, title + date for a meal. */
+function TargetRow({ targetType, target }: { targetType: Target; target: Subject | null }) {
+  const label = target?.kind === 'USER' ? target.name : target?.kind === 'MEAL' ? target.title : target?.kind === 'MESSAGE' ? `a message from ${target.senderName}` : `${TARGET_LABELS[targetType].charAt(0).toUpperCase()}${TARGET_LABELS[targetType].slice(1)}`;
+  return (
+    <View style={styles.target} testID="report-target" accessible accessibilityLabel={target?.kind === 'MESSAGE' ? `Reporting ${label}: “${target.excerpt}”` : `Reporting ${label}`}>
+      {target?.kind === 'USER' ? <Avatar person={{ displayName: target.name, avatarUrl: target.avatarUrl }} size={36} /> : (
+        <View style={styles.targetIcon}><Icon name={targetType === 'MEAL' ? 'Calendar' : targetType === 'MESSAGE' ? 'ChatBubble' : 'Person'} size={16} color={colors.forest} /></View>
+      )}
+      <View style={styles.targetText}>
+        <Text style={accountText.muted}>Reporting</Text>
+        <Text style={styles.targetName} numberOfLines={1}>{target?.kind === 'MESSAGE' ? `Message from ${target.senderName}` : label}</Text>
+        {target?.kind === 'MEAL' ? <Text style={accountText.muted}>{longDate(target.date)}</Text> : null}
+        {target?.kind === 'MESSAGE' ? <Text style={accountText.muted} numberOfLines={2}>{`“${target.excerpt}”`}</Text> : null}
+      </View>
+    </View>
+  );
+}
+
+const styles = createStyles({
+  target: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, marginTop: 6, marginBottom: 12, borderRadius: radius.md, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.surface },
+  targetIcon: { width: 36, height: 36, borderRadius: 18, backgroundColor: colors.selectedSurface, alignItems: 'center', justifyContent: 'center' },
+  targetText: { flex: 1, minWidth: 0 },
+  targetName: { fontSize: 14, fontWeight: '700', color: colors.ink },
+  reasons: { marginBottom: 14 },
+  field: { gap: 6 },
+  label: { fontSize: type.control, fontWeight: '700', color: colors.ink },
+  input: { minHeight: 140, borderWidth: 1, borderColor: colors.line, borderRadius: radius.md, paddingHorizontal: 12, paddingVertical: 10, fontSize: type.body, color: colors.ink, backgroundColor: colors.white, textAlignVertical: 'top' },
+  hint: { fontSize: type.meta, color: colors.muted },
+  // Short form: the action sits right after the content instead of a pinned bar with a blank band above it.
+  actions: { marginTop: 16, gap: 4 },
+  cancel: { alignItems: 'center' },
+});

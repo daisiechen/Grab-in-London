@@ -92,7 +92,7 @@ describe('email OTP (QA-AUTH-002/003/007/008)', () => {
     mock.on('POST', '/v1/auth/email/start', ok({ challengeId: CHALLENGE_ID, expiresAt: '2026-10-21T10:05:00Z', resendAfter: '2026-10-21T10:00:30Z' }, 201));
     const res = await startEmailChallenge(api, '  qa@example.com ', seqId);
     expect(res).toEqual({ ok: true, challenge: { challengeId: CHALLENGE_ID, email: 'qa@example.com', expiresAt: Date.parse('2026-10-21T10:05:00Z'), resendAfter: Date.parse('2026-10-21T10:00:30Z') } });
-    expect(mock.calls[0]?.body).toMatchObject({ email: 'qa@example.com', client: 'IOS' });
+    expect(mock.calls[0]?.body).toMatchObject({ email: 'qa@example.com', client: 'IOS', signupSource: { entry: 'ios_app' } });
   });
 
   it('a wrong code does not sign in and keeps the challenge', async () => {

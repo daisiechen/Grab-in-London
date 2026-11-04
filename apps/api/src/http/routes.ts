@@ -4,12 +4,14 @@
  * and the auth mode, CSRF, If-Match and Idempotency-Key rules are enforced before the handler.
  */
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { Meta, operationsById, PageInfo, T, type OperationDef, type OperationId } from '@fancy/contracts';
+import { AVATAR_MAX_BASE64_LENGTH, Meta, operationsById, PageInfo, T, type OperationDef, type OperationId } from '@fancy/contracts';
 import { DomainError } from '../common/errors.ts';
 import { claimIntent, completeIntent, releaseIntent, replayIfAuthorized } from '../common/idempotency.ts';
 import { requestHash } from '../common/canonical.ts';
 import { withTransaction, type Tx } from '../common/transaction.ts';
 import { authenticateToken } from '../identity/sessions.ts';
+import { suspendedError } from '../identity/resolve.ts';
+import { sha256Hex } from '../identity/tokens.ts';
 import type { AppDeps, AuthContext } from './context.ts';
 import { domainErrorBody } from './errors.ts';
 import { assertCsrf, assertWebOrigin, SESSION_COOKIE } from './security.ts';
@@ -61,9 +63,21 @@ async function authenticate(request: FastifyRequest, deps: AppDeps): Promise<Aut
   return cookie ? authenticateToken(deps.pool, cookie, true) : null;
 }
 
+/** A presented credential whose account is suspended (its sessions were revoked on suspension). */
+async function presentedTokenSuspended(request: FastifyRequest, deps: AppDeps): Promise<boolean> {
+  const header = request.headers.authorization;
+  const token = typeof header === 'string' ? /^Bearer ([A-Za-z0-9_-]{20,200})$/.exec(header)?.[1] : request.cookies[SESSION_COOKIE];
+  if (!token || !/^[A-Za-z0-9_-]{20,200}$/.test(token)) return false;
+  const { rows } = await deps.pool.query(`SELECT 1 FROM sessions s JOIN session_families f ON f.id = s.family_id JOIN users u ON u.id = f.user_id WHERE s.token_hash = $1 AND u.status = 'SUSPENDED'`, [sha256Hex(token)]);
+  return rows.length === 1;
+}
+
 async function preflight(def: OperationDef, request: FastifyRequest, deps: AppDeps): Promise<{ auth: AuthContext | null; ifMatch: string | null }> {
   const auth = def.auth === 'public' || def.auth === 'receipt' ? null : await authenticate(request, deps);
-  if ((def.auth === 'session' || def.auth === 'staff') && !auth) throw new DomainError('AUTH_REQUIRED', 'Please sign in to continue.');
+  if ((def.auth === 'session' || def.auth === 'staff') && !auth) {
+    if (await presentedTokenSuspended(request, deps)) throw suspendedError();
+    throw new DomainError('AUTH_REQUIRED', 'Please sign in to continue.');
+  }
   if (auth?.viaCookie && def.method !== 'GET') {
     assertWebOrigin(request, deps.config.webOrigin);
     assertCsrf(request, deps.config.sessionSecret, auth.sessionId);
@@ -93,6 +107,9 @@ function restoreRetryAfter(reply:FastifyReply,body:unknown){
 }
 
 const routePath = (def: OperationDef) => '/v1' + def.path.replace(/\{([A-Za-z]+)\}/g, ':$1');
+/** Request body limits above the server-wide 64 KiB, per operation (base64 photo upload). */
+const BODY_LIMITS: Partial<Record<OperationId, number>> = { uploadAvatar: AVATAR_MAX_BASE64_LENGTH + 64 * 1024 };
+const bodyLimitFor = (id: OperationId) => (BODY_LIMITS[id] ? { bodyLimit: BODY_LIMITS[id] } : {});
 
 function schemaFor(def: OperationDef) {
   const response = envelopeSchema(def);
@@ -134,6 +151,15 @@ export function defineRawRoute(app: FastifyInstance, deps: AppDeps, id: Operatio
 }
 
 /**
+ * Rejections that describe the caller's session rather than business state. Re-authentication is
+ * checked at the command's lock-protected instant, so it fails inside the command, but it is not a
+ * stable answer: the same intent (same Idempotency-Key and body) must succeed once the member has
+ * re-authenticated. These release the claim instead of being sealed for replay.
+ */
+const UNSEALED_REJECTIONS: ReadonlySet<string> = new Set(['REAUTH_REQUIRED']);
+const sealable = (error: unknown): error is DomainError => error instanceof DomainError && error.status < 500 && !UNSEALED_REJECTIONS.has(error.code);
+
+/**
  * Idempotent authenticated write (API §1): claim actor+operation+key, run the command in one
  * transaction, seal success or DomainError with the business commit, replay only after the actor
  * is still allowed, release the claim on unexpected failure.
@@ -145,6 +171,7 @@ export function defineWrite<P=undefined>(app: FastifyInstance, deps: AppDeps, id
     method: def.method,
     url: routePath(def),
     schema: schemaFor(def),
+    ...bodyLimitFor(id),
     handler: async (request, reply) => {
       const { auth, ifMatch } = await preflight(def, request, deps);
       const key = request.headers['idempotency-key'];
@@ -184,7 +211,7 @@ export function defineWrite<P=undefined>(app: FastifyInstance, deps: AppDeps, id
             await completeIntent(tx.client, claim, { status, body, resourceId: result.resourceId ?? null });
             return { status, body, after:result.after };
           } catch (error) {
-            if (error instanceof DomainError && error.status < 500) {
+            if (sealable(error)) {
               const body=domainErrorBody(request,error);
               await completeIntent(tx.client,claim,{status:error.status,body});
               // Return the exact sealed rejection. Throwing into the global error handler would
@@ -198,7 +225,7 @@ export function defineWrite<P=undefined>(app: FastifyInstance, deps: AppDeps, id
         restoreRetryAfter(reply,body);
         return reply.status(status).send(body);
       } catch (error) {
-        if (!(error instanceof DomainError) || error.status >= 500) await releaseIntent(deps.pool, claim).catch(() => undefined);
+        if (!sealable(error)) await releaseIntent(deps.pool, claim).catch(() => undefined);
         throw error;
       }
     },

@@ -4,6 +4,7 @@ export const messages = pgTable('messages', {
   conversationId: uuid('conversation_id').notNull(), seq: bigint('seq', { mode: 'bigint' }).notNull(),
   senderId: uuid('sender_id').notNull(), clientMessageId: uuid('client_message_id').notNull(), body: text('body').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).notNull(), redacted: boolean('redacted').notNull().default(false),
+  moderationHiddenAt: timestamp('moderation_hidden_at', { withTimezone: true, mode: 'date' }),
 });
 export const conversationReads = pgTable('conversation_reads', {
   conversationId: uuid('conversation_id').notNull(), userId: uuid('user_id').notNull(),

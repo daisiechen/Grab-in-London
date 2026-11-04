@@ -28,7 +28,7 @@ it('seeds staff via core login before serving and gives only the explicit synthe
   const bootstrap=await db.pool.query(`SELECT f.revoked_at FROM session_families f JOIN private_contact c ON c.user_id=f.user_id WHERE c.email=$1`,[LOCAL_STAFF_EMAIL]);
   expect(bootstrap.rows).toHaveLength(1);expect(bootstrap.rows.every(row=>row.revoked_at!==null)).toBe(true);
   const staff=await login(LOCAL_STAFF_EMAIL),ordinary=await login('qa-ordinary@example.invalid');
-  expect(staff.json().data.session.user.roles.sort()).toEqual(['analyst','data_admin']);expect(staff.json().data.session.amr).toEqual(['otp','mfa']);
+  expect(staff.json().data.session.user.roles.sort()).toEqual(['analyst','data_admin','support']);expect(staff.json().data.session.amr).toEqual(['otp','mfa']);
   expect(ordinary.json().data.session.user.roles).toEqual([]);expect(ordinary.json().data.session.amr).toEqual(['otp']);
   const staffCookie=staff.cookies.map(c=>`${c.name}=${c.value}`).join('; ');
   expect((await app.inject({url:'/v1/admin/snapshots',headers:{cookie:staffCookie}})).statusCode).toBe(200);

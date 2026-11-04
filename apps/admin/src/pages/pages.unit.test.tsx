@@ -69,15 +69,48 @@ describe('page bodies render server values only', () => {
     setup('/?lang=en#overview');
     const content = await screen.findByLabelText('Page content');
     const cards = within(content).getAllByRole('button').filter((b) => b.className === 'metric-card');
-    expect(cards.map((c) => c.querySelector('.metric-value')!.textContent)).toEqual(['12', '37.5%', '—']);
-    expect(cards[1]!.textContent).toContain('3 / 8');
+    // v5: the "this week" row (signups, meals published, first applications, meals held, weekly) comes first.
+    expect(cards.map((c) => c.querySelector('.metric-value')!.textContent)).toEqual(['—', '—', '—', '—', '12', '37.5%', '—']);
+    expect(cards[5]!.textContent).toContain('3 / 8');
     expect(within(content).getByText('90.0%')).toBeTruthy();
     expect(within(content).getByRole('img', { name: 'Weekly attended user trend' })).toBeTruthy();
     expect(content.querySelector('.chart-values')!.textContent).toContain('10-12 —');
   });
 
+  it('overview: the this-week row shows server counts with last week, the platform split and the week start', async () => {
+    const previous = pages.overview!;
+    pages.overview = { ...previous, metrics: { ...previous.metrics, signups: 5, mealsPublished: 3, firstApplications: 2, mealsHeld: { numerator: 1, denominator: 2 } },
+      series: { ...previous.series, 'ops.previousWeek': [{ key: 'signups', value: 4 }, { key: 'mealsPublished', value: 1 }, { key: 'firstApplications', value: 0 }, { key: 'mealsHeld', value: { numerator: 2, denominator: 2 } }, { key: 'weekly', value: 7 }],
+        'signups.platform': [{ key: 'IOS', value: 3 }, { key: 'WEB', value: 2 }, { key: 'unknown', value: 0 }] } };
+    try {
+      setup('/?lang=en#overview');
+      const content = await screen.findByLabelText('Page content');
+      const row = within(content).getByRole('region', { name: 'This week' });
+      const signups = within(row).getByRole('button', { name: /New members this week/ });
+      expect(signups.querySelector('.metric-value')?.textContent).toBe('5');
+      // Snapshot 2026-10-18 (a Sunday) belongs to the London week starting Monday 2026-10-12.
+      expect(signups.textContent).toContain('Week of 2026-10-12 · Last week 4 · iOS 3 · Web 2 · Unknown 0');
+      expect(within(row).getByRole('button', { name: /Meals held this week/ }).textContent).toContain('1 / 2');
+      expect(within(row).getByRole('button', { name: /Weekly attended users/ }).textContent).toContain('Last week 7');
+      expect(within(row).queryByRole('button', { name: /Analytics consent coverage/ })).toBeNull();
+    } finally { pages.overview = previous; }
+  });
+
+  it('labels consent-sample cards and cites consent coverage without drawing it as a card', async () => {
+    const previous = pages.supply!;
+    pages.supply = { ...previous, metrics: { ...previous.metrics, consentCoverage: { numerator: 1, denominator: 4 } } };
+    try {
+      setup('/?lang=en#supply');
+      const content = await screen.findByLabelText('Page content');
+      const discovery = within(content).getAllByRole('button').find((b) => b.className === 'metric-card' && b.textContent!.includes('2 / 40'))!;
+      expect(discovery.textContent).toContain('Consent sample only · consent coverage 25.0%');
+      expect(within(content).getByRole('button', { name: /Meal formation|formation/i }).textContent).not.toContain('Consent sample only');
+      expect(within(content).queryByRole('button', { name: /Analytics consent coverage/ })).toBeNull();
+    } finally { pages.supply = previous; }
+  });
+
   it('shows an empty state (no stale charts) when the snapshot has no data for the filters', async () => {
-    pages.journey = pageData('journey', A, { applications: null, approved: { numerator: 0, denominator: 0 } });
+    pages.journey = pageData('journey', A, { applications: null, confirmed: { numerator: 0, denominator: 0 } });
     setup('/?lang=en#journey');
     const content = await screen.findByLabelText('Page content');
     expect(within(content).getByText('No calculable metrics')).toBeTruthy();

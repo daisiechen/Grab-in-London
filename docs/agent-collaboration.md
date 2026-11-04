@@ -1,5 +1,9 @@
 # Agent 协作与配置边界
 
+## 2026-10-27 开发负责人变更
+
+用户决定由 Claude Code 接手主开发：`apps/`、`packages/`、根工作区配置及其测试、研发文档由 Claude Code 唯一负责写入，Codex 停止并行修改这些文件。`demo/` 是已认可的视觉与交互基准，开发期间只读；业务规则以主 PRD r07 为准（不做平台支付、退款与代订位，host 平台外订位、到店各付）。下文“研发评审的写入与交付职责”中 Claude 仅只读评审的安排，对上述开发范围不再适用。执行方案见[接手开发计划](delivery/claude-takeover-plan.zh-CN.md)。
+
 ## 共同真源
 
 所有 Agent 使用同一工作区和 Git 历史。项目共同规则在 [AGENTS.md](../AGENTS.md)，Claude 入口在 [CLAUDE.md](../CLAUDE.md)。[文档索引](README.md)指向主 PRD、模块需求、研究、设计及验证记录；按任务读取现有原文，不另建 Claude 专属业务副本。

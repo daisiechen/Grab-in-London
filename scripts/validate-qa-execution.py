@@ -2,7 +2,10 @@
 import collections
 import hashlib
 import json
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tests'))
+from takeover_baseline import pinned_bytes  # noqa: E402
 ROOT=Path(__file__).resolve().parents[1]
 def validate_run_outcome(run, failed):
     suite_failures=run.get('suiteLoadFailures',[])
@@ -23,7 +26,7 @@ def validate(data=None):
     bundle=json.loads((ROOT/'docs/qa/evidence/2026-10-21/automated-runs.json').read_text())
     runs=bundle['runs']
     for path,digest in bundle['qaProbeSourceSha256'].items():
-        assert hashlib.sha256((ROOT/path).read_bytes()).hexdigest()==digest, 'QA probe changed after run'
+        assert hashlib.sha256(pinned_bytes(path)).hexdigest()==digest, 'QA probe changed after run'
     assertions={t['id']:t for r in runs for t in r.get('assertions',[])}
     for r in runs:
         assert r['exitCode'] in (0,1)

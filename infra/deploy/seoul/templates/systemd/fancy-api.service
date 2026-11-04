@@ -1,0 +1,51 @@
+# Fancy API (production). Rendered by bootstrap.sh from infra/deploy/seoul/templates.
+# Binds 127.0.0.1 only; the public path is Cloudflare Tunnel -> nginx (same origin) -> here.
+[Unit]
+Description=Fancy API (production)
+After=network-online.target postgresql@@@PG_MAJOR@@-@@PG_CLUSTER@@.service
+Wants=network-online.target postgresql@@@PG_MAJOR@@-@@PG_CLUSTER@@.service
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=@@FANCY_USER@@
+Group=@@FANCY_USER@@
+WorkingDirectory=@@FANCY_CURRENT@@
+# Secrets: root-owned 0600 file read by systemd before dropping privileges.
+EnvironmentFile=@@FANCY_ENV_FILE@@
+# PORT is set here, never in the env file (EnvironmentFile would override it).
+Environment=PORT=@@API_PORT@@
+Environment=NODE_ENV=production
+Environment=NODE_OPTIONS=--max-old-space-size=512
+ExecStart=@@NODE_DIR@@/bin/node apps/api/src/main.ts
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=20
+LogNamespace=fancy
+MemoryHigh=700M
+MemoryMax=900M
+TasksMax=256
+LimitNOFILE=8192
+UMask=0077
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+
+[Install]
+WantedBy=multi-user.target

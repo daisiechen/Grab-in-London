@@ -24,18 +24,21 @@ export interface Harness {
   app: FastifyInstance;
   db: MigratedDatabase;
   idp: TestIdentityProvider;
+  /** Warn-and-above log lines written so far (JSON, one per entry). */
+  logs?: string[];
   close(): Promise<void>;
 }
 
-export async function createHarness(serverUrl: string,assistant?:AppDeps['assistant']): Promise<Harness> {
+export async function createHarness(serverUrl: string,assistant?:AppDeps['assistant'],env:Record<string,string>={}): Promise<Harness> {
   const db = await createMigratedDatabase(serverUrl, migrate);
   const config = loadConfig({
     ENVIRONMENT: 'test', DATABASE_URL: db.url, AUTH_ADAPTER: 'test', PLACES_ADAPTER: 'fixture', MAIL_ADAPTER: 'outbox_test',
-    AI_PROVIDER: 'mock', WEB_ORIGIN, SESSION_SECRET: 'api-test-session-secret-0123456789abcdef', IOS_REDIRECT_URI: 'fancy://auth/callback',
+    AI_PROVIDER: 'mock', WEB_ORIGIN, SESSION_SECRET: 'api-test-session-secret-0123456789abcdef', IOS_REDIRECT_URI: 'fancy://auth/callback', ...env,
   });
   const idp = new TestIdentityProvider('test');
-  const app = await buildServer({ config, pool: db.pool, identity: idp, publicOrigin: WEB_ORIGIN, ...(assistant?{assistant}:{}) });
-  return { app, db, idp, close: async () => { await app.close(); await db.drop(); } };
+  const logs: string[] = [];
+  const app = await buildServer({ config, pool: db.pool, identity: idp, publicOrigin: WEB_ORIGIN, logStream: { write: (chunk) => { logs.push(chunk); } }, ...(assistant?{assistant}:{}) });
+  return { app, db, idp, logs, close: async () => { await app.close(); await db.drop(); } };
 }
 
 /** Minimal browser: cookie jar, Origin header and CSRF token for writes. */

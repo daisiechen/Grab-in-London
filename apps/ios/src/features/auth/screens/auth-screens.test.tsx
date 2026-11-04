@@ -1,4 +1,5 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
+import * as WebBrowser from 'expo-web-browser';
 import { WebBrowserResultType } from 'expo-web-browser';
 import { SignInScreen } from './SignInScreen.tsx';
 import { EmailScreen } from './EmailScreen.tsx';
@@ -10,6 +11,8 @@ import { clearReturnTo, rememberReturnTo } from '../intent.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
 jest.mock('expo-router', () => require('../../../test/router.ts').expoRouterMock);
+// eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories cannot use ESM imports
+jest.mock('expo-web-browser', () => require('../../../test/web-browser.ts').webBrowserMock());
 
 const CHALLENGE_ID = '1d6f0a3e-2b7c-4f8e-9a1d-3c5e7f9b2d40';
 beforeEach(() => {
@@ -53,14 +56,68 @@ describe('SignInScreen (S03)', () => {
     expect(app.mock.callsTo('POST', /\/applications$/)).toHaveLength(0);
   });
 
+  it('opens on the brand welcome with every account choice on the first screen', async () => {
+    await renderApp(createTestApp(), <SignInScreen />);
+    expect(screen.getByLabelText('Fancy')).toBeOnTheScreen();
+    expect(screen.getByLabelText('A sculptural green table with colourful chairs, laid for new friends')).toBeOnTheScreen();
+    // No eyebrow above the title (shared page-title pattern).
+    expect(screen.queryByText('THERE’S A SEAT FOR YOU HERE.')).toBeNull();
+    expect(screen.getByText('Fancy a bite?')).toBeOnTheScreen();
+    for (const name of ['Continue with email', 'Continue with Google', 'Continue with Apple']) expect(screen.getByRole('button', { name })).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Continue with email' }));
+    expect(mockRouter.push).toHaveBeenCalledWith('/email');
+  });
+
+  it('Close and “Keep exploring” leave without an account', async () => {
+    await renderApp(createTestApp(), <SignInScreen />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Close' }));
+    expect(mockRouter.back).toHaveBeenCalledTimes(1);
+    mockRouter.canGoBack.mockImplementation(() => false);
+    await fireEvent.press(screen.getByRole('button', { name: 'Keep exploring without an account' }));
+    expect(mockRouter.replace).toHaveBeenCalledWith('/');
+  });
+
   it('shows the community principles in a native sheet', async () => {
     await renderApp(createTestApp(), <SignInScreen />);
     await fireEvent.press(screen.getByRole('button', { name: 'Privacy & community principles' }));
     expect(screen.getByText(/Adults 18\+ meet for friendship over meals/)).toBeOnTheScreen();
   });
+
+  it('links the full terms, guidelines and privacy notice from the principles sheet', async () => {
+    await renderApp(createTestApp(), <SignInScreen />);
+    for (const [label, url] of [['Terms of use', 'https://fancyabite.uk/terms'], ['Community guidelines', 'https://fancyabite.uk/guidelines'], ['Privacy notice', 'https://fancyabite.uk/privacy']] as const) {
+      await fireEvent.press(screen.getByRole('button', { name: 'Privacy & community principles' }));
+      expect(screen.getByText(/you’ll agree to the Terms of use and Community guidelines/)).toBeOnTheScreen();
+      await fireEvent.press(screen.getByRole('button', { name: label }));
+      expect(WebBrowser.openBrowserAsync).toHaveBeenLastCalledWith(url, expect.anything());
+      // The sheet closes first so the browser isn't presented over a dismissing modal.
+      expect(screen.queryByText(/Adults 18\+ meet for friendship over meals/)).toBeNull();
+    }
+  });
 });
 
 describe('EmailScreen (S04, QA-AUTH-002/003)', () => {
+  it('a rate-limited send counts down live and keeps Send off until the wait is over', async () => {
+    jest.useFakeTimers();
+    try {
+      let clock = NOW;
+      const app = createTestApp({ now: () => clock });
+      app.mock.on('POST', '/v1/auth/email/start', fail(429, 'RATE_LIMITED', { retryAfterSeconds: 3 }));
+      await renderApp(app, <EmailScreen />);
+      await fireEvent.changeText(screen.getByLabelText('Email address'), 'other@example.com');
+      await fireEvent.press(screen.getByRole('button', { name: 'Send code' }));
+      expect(await screen.findByText('Too many attempts. Try again in 3s.')).toBeOnTheScreen();
+      expect(screen.getByRole('button', { name: 'Send code in 3s' })).toBeDisabled();
+      await act(async () => { clock += 1000; jest.advanceTimersByTime(1000); });
+      expect(screen.getByText('Too many attempts. Try again in 2s.')).toBeOnTheScreen();
+      await act(async () => { clock += 2000; jest.advanceTimersByTime(2000); });
+      expect(screen.queryByText(/Too many attempts/)).toBeNull();
+      expect(screen.getByRole('button', { name: 'Send code' })).toBeEnabled();
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
   it('validates the email, sends a code, enforces the resend cooldown and handles a wrong then right code', async () => {
     const app = createTestApp();
     app.mock.on('POST', '/v1/auth/email/start', ok({ challengeId: CHALLENGE_ID, expiresAt: new Date(NOW + 300_000).toISOString(), resendAfter: new Date(NOW + 30_000).toISOString() }, 201));
@@ -86,8 +143,36 @@ describe('EmailScreen (S04, QA-AUTH-002/003)', () => {
     expect(await screen.findByText('That code doesn’t match. Check the six digits and try again.')).toBeOnTheScreen();
     expect(mockRouter.replace).not.toHaveBeenCalled();
 
+    expect(screen.getByText('Code expires in 5:00')).toBeOnTheScreen();
     await fireEvent.changeText(screen.getByLabelText('6-digit code'), '123456');
     await fireEvent.press(screen.getByRole('button', { name: 'Verify & continue' }));
     await waitFor(() => expect(mockRouter.replace).toHaveBeenCalledWith('/'));
+  });
+});
+
+describe('EmailScreen code stage', () => {
+  it('counts down on services.now, shows expiry and lets the member change the email', async () => {
+    let clock = NOW;
+    const app = createTestApp({ now: () => clock });
+    app.mock.on('POST', '/v1/auth/email/start', ok({ challengeId: CHALLENGE_ID, expiresAt: new Date(NOW + 300_000).toISOString(), resendAfter: new Date(NOW + 30_000).toISOString() }, 201));
+    jest.useFakeTimers();
+    try {
+      await renderApp(app, <EmailScreen />);
+      await fireEvent.changeText(screen.getByLabelText('Email address'), 'qa@example.com');
+      await fireEvent.press(screen.getByRole('button', { name: 'Send code' }));
+      expect(await screen.findByText('Code expires in 5:00')).toBeOnTheScreen();
+      clock = NOW + 31_000;
+      await act(async () => { jest.advanceTimersByTime(1000); });
+      expect(screen.getByText('Code expires in 4:29')).toBeOnTheScreen();
+      expect(screen.getByRole('button', { name: 'Resend code' })).toBeEnabled();
+      clock = NOW + 300_000;
+      await act(async () => { jest.advanceTimersByTime(1000); });
+      expect(screen.getByText('This code has expired. Request a new code.')).toBeOnTheScreen();
+      await fireEvent.press(screen.getByRole('button', { name: 'Change email' }));
+      expect(screen.getByText('Let’s keep in touch.')).toBeOnTheScreen();
+      expect(screen.getByLabelText('Email address')).toHaveDisplayValue('qa@example.com');
+    } finally {
+      jest.useRealTimers();
+    }
   });
 });

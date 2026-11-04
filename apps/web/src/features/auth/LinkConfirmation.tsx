@@ -26,5 +26,5 @@ export function LinkConfirmation({pending,proof,onDone,onCancel,onReverify}:{pen
    setError(e instanceof ApiError&&e.code==='ACCOUNT_LINK_CONFLICT'?'Both accounts have activity and cannot be merged. Use your original sign-in.':'We couldn’t connect this sign-in. Retry only if this request is still available.');
   }finally{if(active.current&&renderedAttempt.current===attempt&&(ownsAttempt()||!readJson('auth.linkTicket')))setBusy(false);}
  };
- return <div className="body-pad"><h1>Connect this sign-in?</h1><p className="prose">Your original sign-in is verified. Confirm to add the new sign-in method to this account.</p><FormError>{error}</FormError><Primary disabled={busy||ended} onClick={()=>void connect()}>Connect this sign-in method</Primary><TextAction disabled={busy} onClick={cancel}>Cancel linking</TextAction></div>;
+ return <div className="scroll auth-state"><h1>Connect this sign-in?</h1><p className="prose">Your original sign-in is verified. Confirm to add the new sign-in method to this account.</p><FormError>{error}</FormError><Primary disabled={busy||ended} onClick={()=>void connect()}>Connect this sign-in method</Primary><TextAction disabled={busy} onClick={cancel}>Cancel linking</TextAction></div>;
 }

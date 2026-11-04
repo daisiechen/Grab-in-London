@@ -49,3 +49,6 @@ export const londonDay = (iso: string): string => {
   const parts = Object.fromEntries(dayFormatter.formatToParts(new Date(iso)).map((p) => [p.type, p.value]));
   return `${parts.year}-${parts.month}-${parts.day}`;
 };
+
+/** Definition versions arrive as stored by the server (`v4`); a bare `4` is shown with the prefix. */
+export const versionLabel = (version: string): string => (/^v/i.test(version) ? version : `v${version}`);

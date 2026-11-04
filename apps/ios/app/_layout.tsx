@@ -9,25 +9,35 @@ import { apiBaseUrl } from '../src/config.ts';
 import { sandboxInstallMarker } from '../src/platform/install-marker.ts';
 import { secureCredentialStore } from '../src/features/auth/credential-store.ts';
 import { createServices } from '../src/services.tsx';
+import { isPreviewMode, memoryCredentialStore, memoryStore, usesMemoryStores } from '../src/platform/preview-mode.ts';
+import { createPreviewBackend } from '../src/preview/fake-api.ts';
 import { colors } from '../src/ui/tokens.ts';
+import { FONT_FAMILY } from '../src/ui/styles.ts';
 
 export default function RootLayout() {
-  const [services] = useState(() =>
-    createServices({
+  const [services] = useState(() => {
+    const preview = isPreviewMode();
+    const backend = preview ? createPreviewBackend() : null;
+    // Preview and the web build never touch the Keychain: expo-secure-store has no web implementation.
+    const memory = usesMemoryStores(preview);
+    return createServices({
+      ...(backend ? { fetch: backend.fetch, now: backend.now } : {}),
+      ...(memory ? { deletionReceiptStore: memoryStore(), guestStore: memoryStore(), aiConversationStore: memoryStore() } : {}),
       baseUrl: apiBaseUrl(),
-      store: secureCredentialStore(),
-      installMarker: sandboxInstallMarker(),
+      store: memory ? memoryCredentialStore() : secureCredentialStore(),
+      installMarker: memory ? null : sandboxInstallMarker(),
       openAuthSession: (url, redirectUrl) => WebBrowser.openAuthSessionAsync(url, redirectUrl, { preferEphemeralSession: true }),
       onClearError: () => console.warn('LOCAL_SIGN_OUT_CLEANUP_FAILED'),
-    }),
-  );
+    });
+  });
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />
       <AppRoot services={services}>
-        <Stack screenOptions={{ headerTintColor: colors.forest, headerBackButtonDisplayMode: 'minimal', contentStyle: { backgroundColor: colors.white } }}>
+        <Stack screenOptions={{ headerTintColor: colors.ink, headerTitleAlign: 'center', headerTitleStyle: { fontFamily: FONT_FAMILY, fontSize: 13, fontWeight: '700', color: colors.ink }, headerBackButtonDisplayMode: 'minimal', headerShadowVisible: true, contentStyle: { backgroundColor: colors.white } }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="sign-in" options={{ title: 'Fancy', presentation: 'modal' }} />
+          {/* A pushed card, not a modal: closing a native modal stack and navigating in the same tick left an invisible layer that swallowed every touch (iOS 27). */}
+          <Stack.Screen name="sign-in" options={{ title: 'Fancy', headerShown: false }} />
           <Stack.Screen name="email" options={{ title: 'Sign in' }} />
           <Stack.Screen name="link-required" options={{ title: 'Sign in' }} />
           <Stack.Screen name="auth/callback" options={{ title: 'Sign in' }} />
@@ -35,18 +45,25 @@ export default function RootLayout() {
           <Stack.Screen name="profile-edit" options={{ title: 'Edit profile' }} />
           <Stack.Screen name="notifications" options={{ title: 'Notifications' }} />
           <Stack.Screen name="settings" options={{ title: 'Settings' }} />
-          <Stack.Screen name="profiles/[userId]" options={{ title: 'Profile' }} />
-          <Stack.Screen name="meals/[mealId]/index" options={{ title: 'Meal' }} />
-          <Stack.Screen name="meals/[mealId]/apply" options={{ title: 'Request to join' }} />
-          <Stack.Screen name="meals/[mealId]/host" options={{ title: 'Your table' }} />
-          <Stack.Screen name="create/index" options={{ title: 'Create meal' }} />
-          <Stack.Screen name="create/introduce" options={{ title: 'Create meal' }} />
-          <Stack.Screen name="create/costs" options={{ title: 'Create meal' }} />
-          <Stack.Screen name="create/review" options={{ title: 'Create meal' }} />
-          <Stack.Screen name="chat/[conversationId]" options={{ title: 'Chat' }} />
+          <Stack.Screen name="profiles/[userId]" options={{ title: 'Meet your table', headerShown: false }} />
+          <Stack.Screen name="meals/[mealId]/index" options={{ title: 'The table', headerShown: false }} />
+          <Stack.Screen name="meals/[mealId]/apply" options={{ title: 'Request a seat' }} />
+          <Stack.Screen name="meals/[mealId]/host" options={{ title: 'Your guest list' }} />
+          <Stack.Screen name="meals/[mealId]/edit/index" options={{ title: 'Edit meal' }} />
+          <Stack.Screen name="meals/[mealId]/edit/introduce" options={{ title: 'Edit meal' }} />
+          <Stack.Screen name="meals/[mealId]/edit/costs" options={{ title: 'Edit meal' }} />
+          <Stack.Screen name="meals/[mealId]/edit/review" options={{ title: 'Edit meal' }} />
+          <Stack.Screen name="create/index" options={{ title: 'Create a meal' }} />
+          <Stack.Screen name="create/introduce" options={{ title: 'Create a meal' }} />
+          <Stack.Screen name="create/costs" options={{ title: 'Create a meal' }} />
+          <Stack.Screen name="create/review" options={{ title: 'Create a meal' }} />
+          <Stack.Screen name="chat/[conversationId]" options={{ title: 'Chat', headerShown: false }} />
           <Stack.Screen name="post-meal/[mealId]" options={{ title: 'After the meal' }} />
           <Stack.Screen name="survey" options={{ title: 'Product survey' }} />
-          <Stack.Screen name="report" options={{ title: 'Report', presentation: 'modal' }} />
+          <Stack.Screen name="cancellation-terms" options={{ title: 'Cancellation terms' }} />
+          <Stack.Screen name="blocked-members" options={{ title: 'Blocked members' }} />
+          {/* A pushed form page, like Apply: inside an iOS sheet the keyboard avoidance is off by the sheet inset. */}
+          <Stack.Screen name="report" options={{ title: 'Report' }} />
           <Stack.Screen name="delete-account" options={{ title: 'Delete account' }} />
           <Stack.Screen name="deletion-status" options={{ title: 'Deletion status' }} />
         </Stack>

@@ -5,7 +5,7 @@ export interface MealRow {
  id:string;host_id:string;venue_ref:string;title:string;description:string;starts_at:Date;closes_at:Date;scheduled_end_at:Date;
  start_local_date:string;start_local_time:string;start_offset:number;close_local_date:string;close_local_time:string;close_offset:number;
  minimum:number;capacity:number;budget_min_pence:number;budget_max_pence:number;languages:string[];mood:string;area_code:string;cuisine_code:string|null;dietary_codes:string[]|null;booking_mode:string;
- status:'OPEN'|'CANCELLED'|'COMPLETED';cancel_reason:string|null;version:string;head:string;arrangement_locked_at:Date|null;terms_version:string;attempt_id:string;created_at:Date;
+ status:'OPEN'|'CANCELLED'|'COMPLETED';cancel_reason:string|null;version:string;head:string;arrangement_locked_at:Date|null;moderation_hidden_at?:Date|null;terms_version:string;attempt_id:string;created_at:Date;
 }
 export interface SeatEvent { userId:string;type:'HOST_CONFIRMED'|'GUEST_CONFIRMED'|'LEFT';effectiveAt:Date;seq:bigint }
 /** Boundary semantics are deliberately asymmetric: confirmation is strict, exit inclusive. */
@@ -37,7 +37,8 @@ export async function cancelMealState(tx:Tx,meal:MealRow,reason:string,at:Date,a
  await tx.client.query(`UPDATE applications SET state='EXPIRED',version=version+1,decided_at=$2 WHERE meal_id=$1 AND state='PENDING'`,[meal.id,at]);
  meal.status='CANCELLED';meal.cancel_reason=reason;meal.version=String(BigInt(meal.version)+1n);
  const eventId=await mealFact(tx,meal,'meal.cancelled',at,actorId);
- for(const row of rows) {
+ // Whoever cancelled (the host) isn't told about their own action; a system cancellation still reaches the host.
+ for(const row of rows.filter(r=>r.user_id!==actorId)) {
   await insertNotification(tx.client,{eventId,recipientId:row.user_id,template:'meal_cancelled',refs:{mealId:meal.id}});
   await enqueueOutbox(tx.client,{eventId,recipientId:row.user_id,channel:'EMAIL',template:'meal_cancelled',payload:{mealId:meal.id}});
  }

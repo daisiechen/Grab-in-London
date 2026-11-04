@@ -6,7 +6,7 @@ import { ERROR_CODES, ERROR_STATUS } from './errors.ts';
 import { errorsFor, type OperationDef } from './operation.ts';
 import { operations, operationsById } from './registry.ts';
 import { buildClientMetadata, buildOpenApi } from './openapi.ts';
-import { ADMIN_DRILLDOWN_TARGETS, ADMIN_PAGE_KEYS, ADMIN_PAGES, CUISINES, DIETARY, MOODS, SURVEY_REASONS } from './dictionaries.ts';
+import { ADMIN_DRILLDOWN_TARGETS, ADMIN_PAGE_KEYS, ADMIN_PAGES, CUISINES, DIETARY, isUrgentReportReason, MOODS, REPORT_REASONS, SURVEY_REASONS, URGENT_REPORT_REASONS } from './dictionaries.ts';
 import { isAllowedReturnTarget } from './return-target.ts';
 import { normalizeHostDeclarations } from './declarations.ts';
 import { CliCredentials, IosCredentials, ReturnTarget, LoopbackRedirectUri } from './operations/auth.ts';
@@ -48,8 +48,61 @@ describe('registry matches the reviewed API contract', () => {
 
   it('keeps additional reviewed operations explicitly enumerated', () => {
     const extra = all.map((d) => d.operationId).filter((id) => !documented.some((d) => d.id === id));
-    expect(extra.sort()).toEqual(['getVenuePhoto','getBlock', 'markConversationRead', 'getClassification', 'getExport', 'createGuestSession', 'readAIPreferences', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'readAI', 'activityAI', 'resetAI', 'requestAI', 'pollAI', 'validateAIDraft'].sort());
+    expect(extra.sort()).toEqual(['startStaffSignIn','listModerationReports','claimModerationReport','getModerationReport','getModerationPhoto','moderateReport','supportCaseAttendance','uploadAvatar','removeAvatar','getAvatar','getVenuePhoto','getBlock','listBlocks', 'markConversationRead', 'getClassification', 'getExport', 'createGuestSession', 'readAIPreferences', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'readAI', 'activityAI', 'resetAI', 'requestAI', 'pollAI', 'validateAIDraft'].sort());
     expect(doc).toContain('GET /admin/exports/:id');
+  });
+
+  it('accepts the RFC 9207 iss and error_description parameters on the OAuth callback', () => {
+    const query = validator(byId('oauthCallback')!.query!);
+    expect(query({ code: 'c', state: 's', iss: 'https://tenant.uk.auth0.com/' })).toBe(true);
+    expect(query({ state: 's', error: 'access_denied', error_description: 'User cancelled', iss: 'https://tenant.uk.auth0.com/' })).toBe(true);
+    expect(query({ state: 's', unexpected: 'x' })).toBe(false);
+  });
+
+  it('defines profile photo upload/remove as versioned own-profile writes and the read as public image/jpeg', () => {
+    expect(byId('uploadAvatar')).toMatchObject({ method: 'PUT', path: '/me/avatar', auth: 'session', write: 'idempotencyKey', ifMatch: true });
+    expect(byId('removeAvatar')).toMatchObject({ method: 'DELETE', path: '/me/avatar', auth: 'session', write: 'idempotencyKey', ifMatch: true });
+    expect(byId('getAvatar')).toMatchObject({ method: 'GET', path: '/avatars/{avatarId}', auth: 'public', write: 'read', success: { status: 200, media: 'image/jpeg' } });
+    const body = validator(byId('uploadAvatar')!.body!);
+    expect(body({ imageBase64: '/9j/4AAQSkZJRg==' })).toBe(true);
+    expect(body({ imageBase64: 'not base64!' })).toBe(false);
+    expect(body({ imageBase64: 'A'.repeat(Math.ceil(2 * 1024 * 1024 / 3) * 4 + 4) })).toBe(false);
+    expect(body({ imageBase64: '/9j/4AAQSkZJRg==', url: 'https://x' })).toBe(false);
+    expect(Object.keys((byId('getMe')!.success.data as unknown as { properties: object }).properties)).toContain('avatarUrl');
+    expect(Object.keys((byId('updateMe')!.body as unknown as { properties: object }).properties)).not.toContain('avatarRef');
+    const spec = buildOpenApi() as { paths: Record<string, Record<string, { responses: Record<string, { content?: Record<string, unknown> }> }>> };
+    expect(Object.keys(spec.paths['/v1/avatars/{avatarId}']!.get!.responses['200']!.content!)).toEqual(['image/jpeg']);
+  });
+
+  it('defines the moderation back office as support-role staff operations with audited, versioned writes', () => {
+    for (const id of ['listModerationReports', 'claimModerationReport', 'getModerationReport', 'getModerationPhoto', 'moderateReport', 'supportCaseAttendance']) {
+      expect(byId(id), id).toMatchObject({ auth: 'staff', roles: ['support'] });
+      expect(errorsFor(byId(id)!), id).toEqual(expect.arrayContaining(['FORBIDDEN', 'REAUTH_REQUIRED', 'ACCOUNT_SUSPENDED']));
+    }
+    expect(byId('moderateReport')).toMatchObject({ method: 'POST', path: '/moderation/reports/{reportId}/actions', write: 'idempotencyKey', ifMatch: true });
+    expect(byId('claimModerationReport')).toMatchObject({ write: 'idempotencyKey', ifMatch: false });
+    const body = validator(byId('moderateReport')!.body!);
+    expect(body({ action: 'SUSPEND_USER', note: 'Repeated harassment.' })).toBe(true);
+    expect(body({ action: 'UPHOLD', note: 'ok' })).toBe(false);
+    expect(body({ action: 'DELETE_EVERYTHING', note: 'Not an action.' })).toBe(false);
+    expect(body({ action: 'RESTORE', note: 'No breach found.', publicOutcome: null, resolve: true })).toBe(true);
+    const summary = Object.keys((byId('listModerationReports')!.success.data as unknown as { properties: object }).properties);
+    for (const field of ['details', 'email', 'displayName']) expect(summary).not.toContain(field);
+    expect(summary).toEqual(expect.arrayContaining(['reason', 'urgent']));
+    expect(byId('getPublicProfile')!.auth).toBe('optionalSession');
+    expect(errorsFor(byId('verifyEmail')!)).toContain('ACCOUNT_SUSPENDED');
+  });
+
+  it('takes one of five report reasons (owner decision 2026-10-29) and still accepts the legacy one', () => {
+    expect([...REPORT_REASONS]).toEqual(['safety', 'harassment', 'scam', 'under_18', 'other']);
+    expect([...URGENT_REPORT_REASONS]).toEqual(['safety', 'harassment', 'under_18']);
+    expect(REPORT_REASONS.filter(isUrgentReportReason)).toEqual(['safety', 'harassment', 'under_18']);
+    expect(isUrgentReportReason('private_concern')).toBe(false);
+    const body = validator(byId('createReport')!.body!);
+    const base = { targetType: 'USER', targetId: '00000000-0000-4000-8000-000000000001', details: 'Something happened.' };
+    for (const reason of [...REPORT_REASONS, 'private_concern']) expect(body({ ...base, reason }), reason).toBe(true);
+    for (const reason of ['', 'urgent', 'PRIVACY_REDACTED', 'SAFETY']) expect(body({ ...base, reason }), reason).toBe(false);
+    expect(body({ targetType: 'USER', targetId: base.targetId, details: base.details })).toBe(false);
   });
 
   it('defines photo reads as public ref-only and exposes no client media URL/resource-name input',()=>{
@@ -79,7 +132,7 @@ describe('write protocol', () => {
       'block', 'cancelMeal', 'classifyUser', 'declareBooking', 'decideApplication', 'dissolveGroup', 'editMeal', 'leaveGroup',
       'leaveMeal', 'putSurvey', 'rateExperience', 'reportAttendance', 'requestDeletion', 'resolveCase', 'reviewPerson',
       'revokeConnection', 'selectReconnect', 'unblock', 'updateMe', 'withdrawApplication',
-      'replaceAIPreferences', 'deleteAIPreferences',
+      'replaceAIPreferences', 'deleteAIPreferences', 'uploadAvatar', 'removeAvatar', 'moderateReport',
     ].sort());
     for (const id of ['createMeal', 'applyMeal', 'sendMessage', 'createReport']) expect(byId(id)!.ifMatch, id).toBe(false);
   });
@@ -90,7 +143,7 @@ describe('write protocol', () => {
       else if (def.operationId !== 'deletionStatus') expect(def.write, def.operationId).not.toBe('read');
     }
     const clientRequest = all.filter((d) => d.write === 'clientRequestId').map((d) => d.operationId).sort();
-    expect(clientRequest).toEqual(['createGuestSession', 'exchangeHandoff', 'logout', 'refreshSession', 'startEmail', 'startOAuth', 'startReauth', 'verifyEmail']);
+    expect(clientRequest).toEqual(['createGuestSession', 'exchangeHandoff', 'logout', 'refreshSession', 'startEmail', 'startOAuth', 'startReauth', 'startStaffSignIn', 'verifyEmail']);
     expect(all.filter((d) => d.write === 'resourceKey').map((d) => d.operationId).sort()).toEqual(['markConversationRead', 'ingestEvents', 'sendMessage', 'replaceAIPreferences', 'deleteAIPreferences', 'bootstrapAI', 'activityAI', 'resetAI', 'requestAI', 'validateAIDraft'].sort());
   });
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Icon } from '../../components/Icon.tsx';
 import { Badge, Empty, Panel } from '../../components/Panel.tsx';
 import { metrics, type Metric } from '../../dictionary/metrics.ts';
-import type { Language, Translate } from '../../i18n.ts';
+import { versionLabel, type Language, type Translate } from '../../i18n.ts';
 
 type CopyKey = 'title' | 'definition' | 'unit' | 'window' | 'source' | 'decision' | 'caveat';
 export const metricCopy = (m: Metric, key: CopyKey, lang: Language) => m[key][lang === 'zh' ? 0 : 1];
@@ -37,7 +37,7 @@ export function MetricDefinition({ metric, t, lang, definitionVersion }: { metri
   const terms = [t('计算方式', 'Calculation'), t('统计单位', 'Unit'), t('时间口径', 'Window'), t('数据来源', 'Source'), t('支持决策', 'Decision'), t('解释边界', 'Caveat')];
   return (
     <>
-      {definitionVersion && <Badge>{t('指标口径', 'Definition')} v{definitionVersion}</Badge>}
+      {definitionVersion && <Badge>{t('指标口径', 'Definition')} {versionLabel(definitionVersion)}</Badge>}
       <dl className="definition-list">
         {keys.map((key, i) => <div key={key}><dt>{terms[i]}</dt><dd>{metricCopy(metric, key, lang)}</dd></div>)}
       </dl>

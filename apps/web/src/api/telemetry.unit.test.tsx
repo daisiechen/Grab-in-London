@@ -7,7 +7,7 @@ import { meal } from '../test/fixtures.ts';
 describe('optional analytics',()=>{
   it('defaults to disabled, establishes consent with an empty batch, then refetches discovery with enabled header',async()=>{
     const stub=createFetchStub({getSession:()=>fail(401,'UNAUTHENTICATED'),discoverMeals:()=>page([]),ingestEvents:()=>ok({accepted:0,rejected:[],duplicate:0})});
-    renderApp(stub.fetch);
+    renderApp(stub.fetch,'/discover',{consentControl:true});
     await screen.findByText('No meals found');
     expect(stub.callsTo('ingestEvents')).toHaveLength(0);
     expect(stub.callsTo('discoverMeals')[0]?.headers['x-fancy-analytics']).toBe('disabled');
@@ -18,7 +18,7 @@ describe('optional analytics',()=>{
   });
   it('allows browsing after decline even when withdrawal delivery fails',async()=>{
     const stub=createFetchStub({getSession:()=>fail(401,'UNAUTHENTICATED'),discoverMeals:()=>page([]),ingestEvents:()=>fail(503,'SERVICE_UNAVAILABLE')});
-    renderApp(stub.fetch);
+    renderApp(stub.fetch,'/discover',{consentControl:true});
     await screen.findByText('No meals found');
     fireEvent.click(screen.getByRole('button',{name:'Decline analytics'}));
     await waitFor(()=>expect(stub.callsTo('ingestEvents')).toHaveLength(1));
@@ -29,7 +29,7 @@ describe('optional analytics',()=>{
   it('keeps collection disabled while bootstrap is unresolved',async()=>{
     const pending=deferred<ReturnType<typeof ok>>();
     const stub=createFetchStub({getSession:()=>fail(401,'UNAUTHENTICATED'),discoverMeals:()=>page([]),ingestEvents:()=>pending.promise});
-    const {api}=renderApp(stub.fetch);
+    const {api}=renderApp(stub.fetch,'/discover',{consentControl:true});
     await screen.findByText('No meals found');
     fireEvent.click(screen.getByRole('button',{name:'Allow analytics'}));
     await api.client.call('discoverMeals',{query:{}});
@@ -40,7 +40,7 @@ describe('optional analytics',()=>{
   it('withdraws immediately and obtains a fresh discovery proof after a later explicit opt-in',async()=>{
     const withdrawal=deferred<ReturnType<typeof ok>>();
     const stub=createFetchStub({getSession:()=>fail(401,'UNAUTHENTICATED'),discoverMeals:()=>page([]),ingestEvents:c=>(c.body as {consent:{analytics:boolean}}).consent.analytics?ok({accepted:0,rejected:[],duplicate:0}):withdrawal.promise});
-    const {api}=renderApp(stub.fetch);
+    const {api}=renderApp(stub.fetch,'/discover',{consentControl:true});
     await screen.findByText('No meals found');
     fireEvent.click(screen.getByRole('button',{name:'Allow analytics'}));
     await screen.findByRole('button',{name:'Analytics preferences'});
@@ -67,7 +67,7 @@ describe('optional analytics',()=>{
     const base=meal();const future=meal({startsAt:{...base.startsAt,instant:new Date(Date.now()+172800000).toISOString()},closesAt:{...base.closesAt,instant:new Date(Date.now()+86400000).toISOString()}});
     const stub=createFetchStub({getSession:()=>fail(401,'UNAUTHENTICATED'),discoverMeals:()=>({...page([future]),body:{...(page([future]).body as object),meta:{requestId:'99999999-9999-4999-8999-999999999999',serverNow:new Date().toISOString()}}}),ingestEvents:()=>ok({accepted:1,rejected:[],duplicate:0})});
     try {
-      renderApp(stub.fetch);
+      renderApp(stub.fetch,'/discover',{consentControl:true});
       await screen.findByText('Friday dinner & new faces');
       fireEvent.click(screen.getByRole('button',{name:'Allow analytics'}));
       await waitFor(()=>expect(stub.callsTo('ingestEvents').some(c=>JSON.stringify(c.body).includes('discovery_results'))).toBe(true));

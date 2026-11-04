@@ -1,4 +1,5 @@
 import type { Pool, PoolClient } from 'pg';
+import { avatarUrl } from '../profiles/avatar.ts';
 import type { FastifyInstance } from 'fastify';
 import { DomainError } from '../common/errors.ts';
 import { lockActiveActor } from '../common/actor.ts';
@@ -11,12 +12,16 @@ import { assertDirectAuthorized, directLockPlan } from '../connections/service.t
 import { londonTime } from '../meals/time.ts';
 import { applicationDto } from '../meals/read.ts';
 
-interface ConversationRow { id: string; kind: 'GROUP' | 'DIRECT'; meal_id: string | null; pair_id: string | null; version: string; head: string; dissolved_at: Date | null; title: string | null; host_id: string | null }
+interface ConversationRow { id: string; kind: 'GROUP' | 'DIRECT'; meal_id: string | null; pair_id: string | null; version: string; head: string; dissolved_at: Date | null; title: string | null; host_id: string | null; avatar_name: string | null; avatar_image_id: string | null }
 async function conversation(db: Pool | PoolClient, id: string, userId: string, live = false): Promise<ConversationRow> {
   const { rows: [row] } = await db.query<ConversationRow>(`SELECT c.*,CASE WHEN c.kind='DIRECT' THEN
       CASE WHEN peer.status='ACTIVE' THEN COALESCE(profile.display_name,'Fancy member') ELSE 'Deleted member' END
-      ELSE m.title END AS title,m.host_id
+      ELSE m.title END AS title,m.host_id,
+      CASE WHEN c.kind='DIRECT' THEN CASE WHEN peer.status='ACTIVE' THEN COALESCE(profile.display_name,'Fancy member') END
+      WHEN host.status='ACTIVE' THEN COALESCE(host_profile.display_name,'Fancy member') END AS avatar_name,
+      CASE WHEN c.kind='DIRECT' THEN CASE WHEN peer.status='ACTIVE' AND profile.moderation_hidden_at IS NULL THEN profile.avatar_image_id END WHEN host.status='ACTIVE' AND host_profile.moderation_hidden_at IS NULL THEN host_profile.avatar_image_id END AS avatar_image_id
     FROM conversations c LEFT JOIN meals m ON m.id=c.meal_id
+    LEFT JOIN users host ON host.id=m.host_id LEFT JOIN profiles host_profile ON host_profile.user_id=host.id
     LEFT JOIN user_pairs pair ON c.kind='DIRECT' AND pair.id=c.pair_id AND $2 IN(pair.low_user,pair.high_user)
     LEFT JOIN users peer ON peer.id=CASE WHEN pair.low_user=$2 THEN pair.high_user WHEN pair.high_user=$2 THEN pair.low_user END
     LEFT JOIN profiles profile ON profile.user_id=peer.id AND peer.status='ACTIVE'
@@ -29,12 +34,24 @@ async function conversation(db: Pool | PoolClient, id: string, userId: string, l
   }
   return row;
 }
-const dto = (c: ConversationRow, canSend: boolean) => ({ id: c.id, version: c.version, kind: c.kind, mealId: c.meal_id, title: c.title ?? 'Conversation', canSend, dissolved: !!c.dissolved_at, head: c.head });
+const dto = (c: ConversationRow, canSend: boolean) => ({ id: c.id, version: c.version, kind: c.kind, mealId: c.meal_id, title: c.title ?? 'Conversation', canSend, dissolved: !!c.dissolved_at, head: c.head,
+  avatar: c.avatar_name ? { displayName: c.avatar_name.slice(0, 40), avatarUrl: avatarUrl(c.avatar_image_id) } : null });
 const visible = `EXISTS (SELECT 1 FROM membership_intervals i WHERE i.conversation_id = msg.conversation_id AND i.user_id = $2 AND i.join_seq < msg.seq AND (i.leave_seq IS NULL OR msg.seq < i.leave_seq))`;
-async function messageDto(db: Pool | PoolClient, id: string) {
-  const { rows: [r] } = await db.query(`SELECT msg.*, u.status, p.display_name, p.bio, p.languages, p.interests FROM messages msg JOIN users u ON u.id = msg.sender_id LEFT JOIN profiles p ON p.user_id = u.id WHERE msg.id = $1`, [id]);
-  const redacted = r.redacted || r.status !== 'ACTIVE';
-  return { id: r.id, seq: r.seq, body: redacted ? '[Message unavailable]' : r.body, redacted, createdAt: r.created_at.toISOString(), sender: { id: r.sender_id, displayName: redacted ? 'Former member' : r.display_name ?? 'Member', avatarUrl: null, bio: redacted ? null : r.bio, languages: redacted ? [] : r.languages ?? [], interests: redacted ? [] : r.interests ?? [] } };
+/**
+ * Message projection for one viewer. A sender who is no longer ACTIVE (deleted or suspended) is masked
+ * entirely; a moderation limit masks the text for everyone; a message or member the viewer reported is
+ * masked for that viewer only (moderation policy).
+ */
+async function messageDto(db: Pool | PoolClient, id: string, viewerId: string) {
+  const { rows: [r] } = await db.query(`SELECT msg.*, u.status, p.display_name, p.avatar_image_id, p.bio, p.languages, p.interests,
+      p.moderation_hidden_at IS NOT NULL AS profile_limited,
+      EXISTS(SELECT 1 FROM reports rp WHERE rp.reporter_id = $2 AND ((rp.target_type = 'MESSAGE' AND rp.target_id = msg.id) OR (rp.target_type = 'USER' AND rp.target_id = msg.sender_id))) AS reported_by_viewer,
+      EXISTS(SELECT 1 FROM reports rp WHERE rp.reporter_id = $2 AND rp.target_type = 'USER' AND rp.target_id = msg.sender_id) AS sender_reported_by_viewer
+    FROM messages msg JOIN users u ON u.id = msg.sender_id LEFT JOIN profiles p ON p.user_id = u.id WHERE msg.id = $1`, [id, viewerId]);
+  const senderMasked = r.status !== 'ACTIVE';
+  const redacted = r.redacted || senderMasked || r.moderation_hidden_at !== null || r.reported_by_viewer;
+  const profileHidden = senderMasked || r.profile_limited || r.sender_reported_by_viewer;
+  return { id: r.id, seq: r.seq, body: redacted ? '[Message unavailable]' : r.body, redacted, createdAt: r.created_at.toISOString(), sender: { id: r.sender_id, displayName: senderMasked ? 'Former member' : r.display_name ?? 'Member', avatarUrl: profileHidden ? null : avatarUrl(r.avatar_image_id), bio: profileHidden ? null : r.bio, languages: senderMasked ? [] : r.languages ?? [], interests: senderMasked ? [] : r.interests ?? [] } };
 }
 export function registerConversationRoutes(app: FastifyInstance, deps: AppDeps) {
   defineRoute(app,deps,'markConversationRead',async({request,auth})=>{
@@ -61,8 +78,13 @@ export function registerConversationRoutes(app: FastifyInstance, deps: AppDeps) 
       } catch { throw new DomainError('VALIDATION_FAILED', 'Invalid inbox page.'); }
     }
     const limit = q.limit ?? 20;
+    // Conversations sort by the latest event this member can see (their join, a message, a leave),
+    // applications by creation: a newly joined or busy chat rises to the top.
     const { rows } = await deps.pool.query<{id:string;kind:string;cursor_created_at:string}>(`WITH items AS (
-      SELECT c.id,'conversation'::text AS kind,c.created_at FROM conversations c WHERE EXISTS(SELECT 1 FROM membership_intervals i WHERE i.conversation_id=c.id AND i.user_id=$1)
+      SELECT c.id,'conversation'::text AS kind,activity.at AS created_at FROM conversations c
+        CROSS JOIN LATERAL (SELECT max(e.effective_at) AS at FROM conversation_events e JOIN membership_intervals i ON i.conversation_id=e.conversation_id AND i.user_id=$1
+          WHERE e.conversation_id=c.id AND e.seq>=i.join_seq AND (i.leave_seq IS NULL OR e.seq<=i.leave_seq)) activity
+        WHERE activity.at IS NOT NULL
       UNION ALL SELECT a.id,'application'::text,a.created_at FROM applications a WHERE a.user_id=$1 AND NOT EXISTS(SELECT 1 FROM conversations c JOIN membership_intervals i ON i.conversation_id=c.id AND i.user_id=$1 WHERE c.meal_id=a.meal_id)
       ) SELECT id,kind,created_at::text AS cursor_created_at FROM items
       WHERE ($2::timestamptz IS NULL OR (created_at,id,kind)<($2::timestamptz,$3::uuid,$4::text)) ORDER BY created_at DESC,id DESC,kind DESC LIMIT $5`, [auth!.userId, boundary?.[0] ?? null, boundary?.[1] ?? null, boundary?.[2] ?? null, limit + 1]);
@@ -78,7 +100,7 @@ export function registerConversationRoutes(app: FastifyInstance, deps: AppDeps) 
       const {rows:[current]}=await deps.pool.query(`SELECT EXISTS(SELECT 1 FROM membership_intervals WHERE conversation_id=$1 AND user_id=$2 AND leave_seq IS NULL) AS active`,[c.id,auth!.userId]);
       const { rows: [last] } = await deps.pool.query(`SELECT msg.id FROM messages msg WHERE msg.conversation_id=$1 AND ${visible} ORDER BY msg.seq DESC LIMIT 1`, [c.id, auth!.userId]);
       const { rows: [count] } = await deps.pool.query(`SELECT count(*)::int AS n FROM messages msg WHERE msg.conversation_id=$1 AND msg.sender_id<>$2 AND ${visible} AND msg.seq>COALESCE((SELECT through_seq FROM conversation_reads WHERE conversation_id=$1 AND user_id=$2),0)`, [c.id, auth!.userId]);
-      const message = last ? await messageDto(deps.pool, last.id) : null;
+      const message = last ? await messageDto(deps.pool, last.id, auth!.userId) : null;
       let canSend = Boolean(current.active) && !c.dissolved_at;
       if (canSend && c.kind === 'DIRECT') { try { await assertDirectAuthorized(deps.pool,c.pair_id!,auth!.userId); } catch(error) { if (!(error instanceof DomainError)) throw error; canSend=false; } }
       return { conversation: dto(c, canSend), lastMessage: message ? { seq: message.seq, preview: message.body.slice(0,200), createdAt: message.createdAt } : null, unreadCount: count.n };
@@ -105,12 +127,12 @@ export function registerConversationRoutes(app: FastifyInstance, deps: AppDeps) 
       const { rows: [duplicate] } = await tx.client.query(`SELECT id, body, conversation_id FROM messages WHERE sender_id = $1 AND client_message_id = $2`, [auth!.userId, input.clientMessageId]);
       if (duplicate) {
         if (duplicate.body !== body || duplicate.conversation_id !== conversationId) throw new DomainError('IDEMPOTENCY_CONFLICT', 'This message id was already used.');
-        return { data: await messageDto(tx.client, duplicate.id) };
+        return { data: await messageDto(tx.client, duplicate.id, auth!.userId) };
       }
       const now = await tx.effectiveNow();
       const seq = await allocateMessageSeq(tx, conversationId, auth!.userId, now);
       const { rows: [row] } = await tx.client.query(`INSERT INTO messages (conversation_id,seq,sender_id,client_message_id,body,created_at) VALUES ($1,$2,$3,$4,$5,$6) RETURNING id`, [conversationId, String(seq), auth!.userId, input.clientMessageId, body, now]);
-      return { data: await messageDto(tx.client, row.id) };
+      return { data: await messageDto(tx.client, row.id, auth!.userId) };
     });
   });
   defineRoute(app, deps, 'readMessages', async ({ request, auth }) => {
@@ -125,7 +147,7 @@ export function registerConversationRoutes(app: FastifyInstance, deps: AppDeps) 
     const { rows } = await deps.pool.query<{ id: string; seq: string }>(`SELECT msg.id, msg.seq FROM messages msg WHERE msg.conversation_id = $1 AND ${visible}
       AND msg.seq ${q.mode === 'LIVE' ? '>' : '<'} $3 AND msg.seq <= $4 ORDER BY msg.seq ${q.mode === 'LIVE' ? 'ASC' : 'DESC'} LIMIT $5`, [conversationId, auth!.userId, key, c.head, limit + 1]);
     const hasMore = rows.length > limit; const page = rows.slice(0, limit); const last = page.at(-1)?.seq ?? key;
-    const data = await Promise.all(page.map((r) => messageDto(deps.pool, r.id)));
+    const data = await Promise.all(page.map((r) => messageDto(deps.pool, r.id, auth!.userId)));
     return { data, page: { hasMore, nextCursor: hasMore ? encodeCursor(deps.config.sessionSecret, scope, last) : null, scannedThroughSeq: q.mode === 'LIVE' && hasMore ? last : c.head } };
   });
   for (const op of ['leaveGroup', 'dissolveGroup'] as const) defineWrite(app, deps, op, async ({ request, auth, ifMatch }, tx) => {

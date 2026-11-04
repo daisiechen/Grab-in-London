@@ -14,9 +14,10 @@ class ClaudeConfigurationTests(unittest.TestCase):
     def test_original_author_write_ownership_is_shared(self):
         rules = (ROOT / 'AGENTS.md').read_text()
         coordination = (ROOT / 'docs/agent-collaboration.md').read_text()
-        self.assertIn('PRD 与 Demo 的修改由原产出会话执行', rules)
-        for phrase in ('产品设计-MVP', '产品设计-管理后台MVP',
-                       'Claude仅独立只读评审', '串行执行', '协调会话不代改PRD或Demo'):
+        self.assertIn('由 Claude Code 接手并负责主开发', rules)
+        self.assertIn('`demo/`）作为已认可的视觉与交互基准保持只读', rules)
+        self.assertIn('Codex 停止并行修改这些文件', coordination)
+        for phrase in ('产品设计-MVP', '产品设计-管理后台MVP', '串行执行', '协调会话不代改PRD或Demo'):
             self.assertIn(phrase, coordination)
 
     def test_skills_resolve_to_canonical_sources(self):

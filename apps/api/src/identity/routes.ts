@@ -1,4 +1,4 @@
-import type { FastifyInstance, FastifyRequest } from 'fastify';
+import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { isAllowedReturnTarget } from '@fancy/contracts';
 import { DomainError } from '../common/errors.ts';
 import { appendAudit } from '@fancy/db';
@@ -6,21 +6,25 @@ import { withTransaction } from '../common/transaction.ts';
 import { lockActiveActor } from '../common/actor.ts';
 import { invalidateUserAI,revokeGuestAI } from '../assistant/invalidate.ts';
 import type { AppDeps } from '../http/context.ts';
-import { defineRoute, defineWrite } from '../http/routes.ts';
+import { defineRoute, defineWrite, type HandlerResult } from '../http/routes.ts';
 import { assertWebOrigin, cookieOptions, keyedHash, LINK_BINDER_COOKIE, OAUTH_BINDER_COOKIE, SESSION_COOKIE } from '../http/security.ts';
 import { completeAuthentication, type AuthTxRow } from './flows.ts';
+import { normalizeSignupSource, type SignupSourceInput } from './signup-source.ts';
 import { sessionInfo } from './me.ts';
-import { ProviderRejectedError, ProviderUnavailableError, type IdentityProvider, type VerifiedIdentity } from './provider.ts';
-import { isProvisionalShell } from './resolve.ts';
+import { ProviderRejectedError, ProviderUnavailableError, type IdentityProvider, type StartedProvider, type VerifiedIdentity } from './provider.ts';
+import { isProvisionalShell, suspendedError } from './resolve.ts';
 import { assertFreshAuth } from './reauth.ts';
 import { authenticateToken, issueNativeCredentials, revokeAllForUser, revokeFamily, rotateRefresh } from './sessions.ts';
 import { normalizeEmail, pkceChallenge, randomToken, sha256Hex, verifyPkce } from './tokens.ts';
+import { isReviewEmail, REVIEW_STATE, startReviewOtp, verifyReviewOtp } from './review-login.ts';
 
 export const OTP_TTL_MS = 5 * 60_000;
 export const OTP_RESEND_MS = 30_000;
 export const OTP_WINDOW_MS = 15 * 60_000;
 export const OTP_PER_WINDOW = 5;
 export const OAUTH_TTL_MS = 10 * 60_000;
+/** Fixed landing page of the admin console sign-in (not a client-chosen return target). */
+export const STAFF_RETURN_PATH = '/admin/';
 
 type Body<T> = { body: T };
 const asBody = <T>(request: FastifyRequest) => (request as unknown as Body<T>).body;
@@ -42,7 +46,7 @@ function checkReturnTarget(target: string | undefined): string | null {
 }
 
 /** Creates/dedupes an OTP challenge under shared email and IP quota locks. */
-async function startOtp(deps: AppDeps, request: FastifyRequest, o: { clientRequestId: string; email: string; client: AuthTxRow['client']; purpose: 'LOGIN' | 'REAUTH'; userId: string | null; familyId: string | null; returnTarget: string | null }) {
+async function startOtp(deps: AppDeps, request: FastifyRequest, o: { clientRequestId: string; email: string; client: AuthTxRow['client']; purpose: 'LOGIN' | 'REAUTH'; userId: string | null; familyId: string | null; returnTarget: string | null; signupSource?: string | null }) {
   const emailHash = keyedHash(deps.config.sessionSecret, 'email', o.email);
   const ipHash = keyedHash(deps.config.sessionSecret, 'ip', request.ip);
   const created = await withTransaction(deps.pool, async (tx) => {
@@ -75,13 +79,14 @@ async function startOtp(deps: AppDeps, request: FastifyRequest, o: { clientReque
     const { rows } = await tx.client.query(
       `INSERT INTO auth_transactions (kind, purpose, client, client_request_id, user_id, email_hash, ip_hash, provider, provider_state, return_target, expires_at, created_at)
        VALUES ('EMAIL_OTP', $1, $2, $3, $4, $5, $6, 'EMAIL', $7, $8, $9, $10) RETURNING id, expires_at, created_at`,
-      [o.purpose, o.client, o.clientRequestId, o.userId, emailHash, ipHash, JSON.stringify({ email: o.email, ...(o.familyId ? { familyId: o.familyId } : {}) }), o.returnTarget, new Date(now.getTime() + OTP_TTL_MS), now],
+      [o.purpose, o.client, o.clientRequestId, o.userId, emailHash, ipHash, JSON.stringify({ email: o.email, ...(o.familyId ? { familyId: o.familyId } : {}), ...(o.signupSource ? { signupSource: o.signupSource } : {}) }), o.returnTarget, new Date(now.getTime() + OTP_TTL_MS), now],
     );
     return { row: rows[0], fresh: true };
   });
   if (created.fresh) {
     try {
-      const state = await callProvider(() => deps.identity.startEmailOtp(o.email));
+      // App Store review account (switch on, exact address): no provider call, same response.
+      const state = isReviewEmail(deps.config, o.email) ? await startReviewOtp(deps.config) : await callProvider(() => deps.identity.startEmailOtp(o.email));
       await deps.pool.query(`UPDATE auth_transactions SET provider_state = provider_state || $2 WHERE id = $1`, [created.row.id, JSON.stringify(state)]);
     } catch (error) {
       // Not delivered: retire the challenge so it does not count as a usable code.
@@ -97,8 +102,10 @@ async function startOtp(deps: AppDeps, request: FastifyRequest, o: { clientReque
 }
 
 /** Creates an OAUTH transaction; Web transactions are bound to this browser by a cookie. */
-async function startOAuthTx(deps: AppDeps, o: { provider: 'GOOGLE' | 'APPLE'; client: AuthTxRow['client']; purpose: 'LOGIN' | 'REAUTH'; userId: string | null; familyId: string | null; returnTarget: string | null; appChallenge: string | null; loopbackRedirectUri?: string }) {
-  const redirectUri = redirectUriFor(deps, o.client);
+async function startOAuthTx(deps: AppDeps, o: { provider: StartedProvider; client: AuthTxRow['client']; purpose: 'LOGIN' | 'REAUTH'; userId: string | null; familyId: string | null; returnTarget: string | null; appChallenge: string | null; loopbackRedirectUri?: string; signupSource?: string | null; staff?: boolean }) {
+  // Staff sign-in returns through the API's HTTP callback (already a registered callback URL), which
+  // sets the cookie and redirects to /admin/; member Web sign-in returns through the SPA bridge.
+  const redirectUri = o.staff ? `${deps.config.webOrigin}/v1/auth/oauth/callback` : redirectUriFor(deps, o.client);
   const state = randomToken();
   const nonce = randomToken();
   const verifier = randomToken(48);
@@ -107,9 +114,12 @@ async function startOAuthTx(deps: AppDeps, o: { provider: 'GOOGLE' | 'APPLE'; cl
     `INSERT INTO auth_transactions (kind, purpose, client, user_id, secret_hash, binder_hash, app_challenge, provider, provider_state, return_target, expires_at)
      VALUES ('OAUTH', $1, $2, $3, $4, $5, $6, $7, $8, $9, clock_timestamp() + make_interval(secs => $10::double precision / 1000)) RETURNING id, expires_at`,
     [o.purpose, o.client, o.userId, sha256Hex(state), binder && sha256Hex(binder), o.appChallenge, o.provider,
-      JSON.stringify({ nonce, verifier, redirectUri, ...(o.loopbackRedirectUri ? { loopbackRedirectUri: o.loopbackRedirectUri } : {}), ...(o.familyId ? { familyId: o.familyId } : {}) }), o.returnTarget, OAUTH_TTL_MS],
+      JSON.stringify({ nonce, verifier, redirectUri, ...(o.staff ? { staff: '1' } : {}), ...(o.loopbackRedirectUri ? { loopbackRedirectUri: o.loopbackRedirectUri } : {}), ...(o.familyId ? { familyId: o.familyId } : {}), ...(o.signupSource ? { signupSource: o.signupSource } : {}) }), o.returnTarget, OAUTH_TTL_MS],
   );
-  const authorizationUrl = deps.identity.authorizationUrl({ provider: o.provider, state, nonce, codeChallenge: pkceChallenge(verifier), redirectUri, forceLogin: o.purpose === 'REAUTH' });
+  const codeChallenge = pkceChallenge(verifier);
+  const authorizationUrl = o.staff
+    ? deps.identity.staffAuthorizationUrl({ state, nonce, codeChallenge, redirectUri })
+    : deps.identity.authorizationUrl({ provider: o.provider!, state, nonce, codeChallenge, redirectUri, forceLogin: o.purpose === 'REAUTH' });
   return { id: rows[0].id as string, expiresAt: (rows[0].expires_at as Date).toISOString(), authorizationUrl, binder };
 }
 
@@ -150,6 +160,38 @@ async function finish(deps: AppDeps, row: AuthTxRow, identity: VerifiedIdentity,
   return withTransaction(deps.pool, (tx) => completeAuthentication(deps, tx, row, identity, current,guestToken));
 }
 
+/**
+ * Admin console callback: a top-level navigation from the provider, so every outcome is a 303 back to
+ * the console (session cookie set, or `?signin_error=<code>`), never a JSON page. MFA is not checked
+ * here: staff endpoints require the verified `mfa` method and answer REAUTH_REQUIRED without it.
+ */
+async function staffCallback(deps: AppDeps, row: AuthTxRow & { binder_hash: string | null }, query: { code?: string; error?: string }, request: FastifyRequest, reply: FastifyReply): Promise<HandlerResult> {
+  const back = (error?: string) => (response: FastifyReply) => {
+    const location = new URL(STAFF_RETURN_PATH, deps.config.webOrigin);
+    if (error) location.searchParams.set('signin_error', error);
+    response.header('location', location.toString());
+    response.header('cache-control', 'no-store');
+    response.header('referrer-policy', 'no-referrer');
+  };
+  try {
+    const binder = request.cookies[OAUTH_BINDER_COOKIE];
+    if (!row.binder_hash || !binder || sha256Hex(binder) !== row.binder_hash) throw new DomainError('STATE_CONFLICT', 'Finish sign-in in the browser where you started it.');
+    await consume(deps, row.id);
+    reply.clearCookie(OAUTH_BINDER_COOKIE, { path: '/' });
+    if (query.error || !query.code) throw new DomainError('STATE_CONFLICT', 'Sign-in was cancelled.');
+    const identity = await callProvider(() => deps.identity.exchangeAuthorizationCode({ provider: null, code: query.code!, codeVerifier: row.provider_state.verifier!, redirectUri: row.provider_state.redirectUri!, nonce: row.provider_state.nonce! }));
+    const result = await finish(deps, row, identity, request);
+    const signedIn = back();
+    return { status: 303, after: (response) => { result.after?.(response); signedIn(response); } };
+  } catch (error) {
+    if (!(error instanceof DomainError)) throw error;
+    // The browser only sees a redirect, so the outcome code (never the message or identity) goes to the log.
+    const providerError = typeof query.error === 'string' && /^[a-z_]{1,40}$/.test(query.error) ? query.error : undefined;
+    request.log.warn({ code: error.code, providerError }, 'staff sign-in did not finish');
+    return { status: 303, after: back(error.code) };
+  }
+}
+
 async function authFromRequest(deps: AppDeps, request: FastifyRequest) {
   const header = request.headers.authorization;
   if (typeof header === 'string' && header.startsWith('Bearer ')) return authenticateToken(deps.pool, header.slice(7), false);
@@ -159,15 +201,15 @@ async function authFromRequest(deps: AppDeps, request: FastifyRequest) {
 
 export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): void {
   defineRoute(app, deps, 'startEmail', async ({ request }) => {
-    const body = asBody<{ clientRequestId: string; email: string; client: AuthTxRow['client']; returnTarget?: string }>(request);
+    const body = asBody<{ clientRequestId: string; email: string; client: AuthTxRow['client']; returnTarget?: string; signupSource?: SignupSourceInput }>(request);
     if (body.client === 'WEB') assertWebOrigin(request, deps.config.webOrigin);
     if (body.client === 'SUPPORT_CLI') throw new DomainError('FORBIDDEN', 'Support CLI uses browser sign-in.');
-    const data = await startOtp(deps, request, { clientRequestId: body.clientRequestId, email: normalizeEmail(body.email), client: body.client, purpose: 'LOGIN', userId: null, familyId: null, returnTarget: checkReturnTarget(body.returnTarget) });
+    const data = await startOtp(deps, request, { clientRequestId: body.clientRequestId, email: normalizeEmail(body.email), client: body.client, purpose: 'LOGIN', userId: null, familyId: null, returnTarget: checkReturnTarget(body.returnTarget), signupSource: normalizeSignupSource(body.signupSource) });
     return { data };
   });
 
   defineRoute(app, deps, 'verifyEmail', async ({ request }) => {
-    const body = asBody<{ challengeId: string; code: string; appChallenge?: string }>(request);
+    const body = asBody<{ challengeId: string; code: string; appChallenge?: string; signupSource?: SignupSourceInput }>(request);
     const { rows } = await deps.pool.query(
       `UPDATE auth_transactions SET attempts = attempts + 1
         WHERE id = $1 AND kind = 'EMAIL_OTP' AND consumed_at IS NULL AND expires_at > clock_timestamp() AND attempts < max_attempts
@@ -181,7 +223,9 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
       if (!body.appChallenge) throw new DomainError('VALIDATION_FAILED', 'appChallenge is required for native sign-in.', { fieldErrors: { 'body.appChallenge': 'Required' } });
       row.app_challenge = body.appChallenge;
     }
-    const identity = await callProvider(() => deps.identity.verifyEmailOtp({ email: row.provider_state.email!, code: body.code, providerState: row.provider_state }));
+    const identity = row.provider_state.review === REVIEW_STATE.review
+      ? await verifyReviewOtp(deps.config, row.provider_state.email!, body.code, row.provider_state)
+      : await callProvider(() => deps.identity.verifyEmailOtp({ email: row.provider_state.email!, code: body.code, providerState: row.provider_state }));
     if (!identity) {
       const left = row.max_attempts - row.attempts;
       if (left <= 0) await deps.pool.query(`UPDATE auth_transactions SET consumed_at = clock_timestamp() WHERE id = $1`, [row.id]);
@@ -189,28 +233,41 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
     }
     await consume(deps, row.id);
     if (row.app_challenge) await deps.pool.query(`UPDATE auth_transactions SET app_challenge = $2 WHERE id = $1`, [row.id, row.app_challenge]);
+    // A source sent with the code wins over one sent when the code was requested.
+    const verifySource = normalizeSignupSource(body.signupSource);
+    if (verifySource && row.purpose === 'LOGIN') row.provider_state = { ...row.provider_state, signupSource: verifySource };
     return finish(deps, row, identity, request);
   });
 
   defineRoute(app, deps, 'startOAuth', async ({ request, reply }) => {
-    const body = asBody<{ provider: 'GOOGLE' | 'APPLE'; client: AuthTxRow['client']; returnTarget?: string; appChallenge?: string; loopbackRedirectUri?: string }>(request);
+    const body = asBody<{ provider: 'GOOGLE' | 'APPLE'; client: AuthTxRow['client']; returnTarget?: string; appChallenge?: string; loopbackRedirectUri?: string; signupSource?: SignupSourceInput }>(request);
     if (body.client === 'WEB') assertWebOrigin(request, deps.config.webOrigin);
     if (body.client !== 'WEB' && !body.appChallenge) throw new DomainError('VALIDATION_FAILED', 'appChallenge is required for native sign-in.', { fieldErrors: { 'body.appChallenge': 'Required' } });
     const loopbackRedirectUri = cliLoopback(body.client, body.loopbackRedirectUri);
-    const started = await startOAuthTx(deps, { provider: body.provider, client: body.client, purpose: 'LOGIN', userId: null, familyId: null, returnTarget: checkReturnTarget(body.returnTarget), appChallenge: body.appChallenge ?? null, ...(loopbackRedirectUri ? { loopbackRedirectUri } : {}) });
+    const started = await startOAuthTx(deps, { provider: body.provider, client: body.client, purpose: 'LOGIN', userId: null, familyId: null, returnTarget: checkReturnTarget(body.returnTarget), appChallenge: body.appChallenge ?? null, ...(loopbackRedirectUri ? { loopbackRedirectUri } : {}), signupSource: body.client === 'SUPPORT_CLI' ? null : normalizeSignupSource(body.signupSource) });
     if (started.binder) reply.setCookie(OAUTH_BINDER_COOKIE, started.binder, cookieOptions(OAUTH_TTL_MS / 1000));
     return { data: { authorizationUrl: started.authorizationUrl, stateTransactionId: started.id } };
   });
 
+  defineRoute(app, deps, 'startStaffSignIn', async ({ request, reply }) => {
+    assertWebOrigin(request, deps.config.webOrigin);
+    const started = await startOAuthTx(deps, { provider: null, client: 'WEB', purpose: 'LOGIN', userId: null, familyId: null, returnTarget: STAFF_RETURN_PATH, appChallenge: null, staff: true });
+    reply.setCookie(OAUTH_BINDER_COOKIE, started.binder!, cookieOptions(OAUTH_TTL_MS / 1000));
+    return { data: { authorizationUrl: started.authorizationUrl, stateTransactionId: started.id } };
+  });
+
   defineRoute(app, deps, 'oauthCallback', async ({ request, reply }) => {
-    const query = (request.query ?? {}) as { code?: string; state: string; error?: string };
+    const query = (request.query ?? {}) as { code?: string; state: string; error?: string; iss?: string };
+    // RFC 9207: when the provider names its issuer, it must be ours (mix-up defence); the ID token issuer is verified too.
+    if (query.iss !== undefined && deps.config.auth0 && query.iss.replace(/\/$/, '') !== `https://${deps.config.auth0.domain}`) throw new DomainError('STATE_CONFLICT', 'This sign-in came from an unexpected provider. Please start again.');
     const { rows } = await deps.pool.query(
       `SELECT id, kind, purpose, client, user_id, app_challenge, return_target, provider, provider_state, binder_hash
          FROM auth_transactions WHERE secret_hash = $1 AND kind = 'OAUTH' AND consumed_at IS NULL AND expires_at > clock_timestamp()`,
       [sha256Hex(query.state)],
     );
-    const row = rows[0] as (AuthTxRow & { provider: 'GOOGLE' | 'APPLE'; binder_hash: string | null }) | undefined;
+    const row = rows[0] as (AuthTxRow & { provider: StartedProvider; binder_hash: string | null }) | undefined;
     if (!row) throw new DomainError('STATE_CONFLICT', 'This sign-in link has expired. Please start again.');
+    if (row.provider_state.staff === '1') return staffCallback(deps, row, query, request, reply);
     if (row.binder_hash) {
       const binder = request.cookies[OAUTH_BINDER_COOKIE];
       if (!binder || sha256Hex(binder) !== row.binder_hash) throw new DomainError('STATE_CONFLICT', 'Finish sign-in in the browser where you started it.');
@@ -259,6 +316,8 @@ export function registerIdentityRoutes(app: FastifyInstance, deps: AppDeps): voi
     const outcome = await withTransaction(deps.pool, async (tx) => {
       const {rows:[family]}=await tx.client.query<{user_id:string}>(`SELECT sf.user_id FROM refresh_tokens r JOIN session_families sf ON sf.id=r.family_id WHERE r.token_hash=$1`,[sha256Hex(body.refreshToken)]);
       if(!family)throw new DomainError('AUTH_REQUIRED','Please sign in again.');
+      const {rows:[owner]}=await tx.client.query<{status:string}>(`SELECT status FROM users WHERE id=$1`,[family.user_id]);
+      if(owner?.status==='SUSPENDED')throw suspendedError();
       await lockActiveActor(tx,family.user_id,'update');
       return rotateRefresh(tx.client,body.refreshToken,await tx.effectiveNow());
     });

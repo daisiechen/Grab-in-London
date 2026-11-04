@@ -12,9 +12,11 @@ const messages:Record<string,readonly [string,string,string]>={
  'Choose an atmosphere.':['introduce','mood','required'],
  'Choose a conversation language.':['introduce','languages','required'],
  'Enter a valid budget, with the maximum at least the minimum.':['costs','budgetMax','invalid'],
- 'Confirm that you’ll reserve the table with the restaurant yourself.':['costs','bookingConfirmed','required'],
+ 'Confirm that you have already booked the table with the restaurant.':['costs','bookingConfirmed','required'],
  'Confirm you’ve reviewed the details before publishing.':['review','reviewConfirmed','required'],
 };
+/** Every client validation message that is recorded; form-errors.test.ts ties it to validateStep. */
+export const FORM_ERROR_MESSAGES:readonly string[]=Object.keys(messages);
 export function formErrorProperties(attemptId:string,message:string):Properties|null {
  const fixed=messages[message];return fixed?{attemptId,step:fixed[0],field:fixed[1],errorCode:fixed[2]}:null;
 }

@@ -1,7 +1,7 @@
 import type {Environment} from '@fancy/config';
 export type Position=readonly[number,number]; // RFC7946: longitude, latitude.
 export type Polygon=readonly(readonly Position[])[];
-export interface AreaPolygons {kind:'fixture'|'verified';version:string;revision:number;areas:readonly{areaCode:string;geometry:{type:'Polygon';coordinates:Polygon}|{type:'MultiPolygon';coordinates:readonly Polygon[]}}[]}
+export interface AreaPolygons {kind:'fixture'|'verified';version:string;revision:number;areas:readonly{areaCode:string;/** Display name; not used for mapping. */name?:string;geometry:{type:'Polygon';coordinates:Polygon}|{type:'MultiPolygon';coordinates:readonly Polygon[]}}[]}
 export interface AreaMapping {areaCode:string;areaVersion:string|null;areaRevision:number}
 
 const invalid=()=>{throw new Error('INVALID_AREA_POLYGONS');};

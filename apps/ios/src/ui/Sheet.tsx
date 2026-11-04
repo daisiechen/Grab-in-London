@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
-import { KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, Pressable, Text, View } from 'react-native';
 import { colors, radius, spacing, type } from './tokens.ts';
+import { createStyles } from './styles.ts';
 
 /**
  * Native modal sheet replacing the prototype runtime BottomSheet. The OS owns presentation; the
@@ -25,7 +26,7 @@ export function Sheet({ visible, title, onClose, children, avoidKeyboard = false
   </Modal>;
 }
 
-const styles = StyleSheet.create({
+const styles = createStyles({
   viewport: { flex: 1 },
   backdrop: { flex: 1, backgroundColor: 'rgba(16,36,31,0.35)' },
   keyboardSheet: { flexShrink: 1, maxHeight: '100%' },

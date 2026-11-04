@@ -49,6 +49,8 @@ describe('MVP production meal commands and privacy',()=>{
  it('publishes host seat, GROUP JOIN, three jobs and self-reported booking atomically; retries do not duplicate',async()=>{
   const {b}=await actor();const {result,body,key}=await create(b);expect(result.statusCode,result.body).toBe(201);const meal=json(result).data;
   expect(meal.confirmedCount).toBe(1);expect(meal.bookingDeclaration).toMatchObject({declaredCount:3,stale:false,status:'REPORTED_CONFIRMED'});
+  // Who's coming: seat holders' public profiles, host first, matching confirmedCount.
+  expect(meal.members.map((m:{id:string})=>m.id)).toEqual([meal.host.id]);
   const replay=await b.request('POST','/v1/meals',{body,headers:{'idempotency-key':key}});expect(replay.headers['idempotent-replay']).toBe('true');expect(json(replay).data.id).toBe(meal.id);
   expect((await h.db.pool.query(`SELECT * FROM conversations WHERE meal_id=$1`,[meal.id])).rowCount).toBe(1);
   expect((await h.db.pool.query(`SELECT * FROM seat_events WHERE meal_id=$1`,[meal.id])).rowCount).toBe(1);
@@ -59,6 +61,21 @@ describe('MVP production meal commands and privacy',()=>{
  it.each([2,4,6])('records the personally declared capacity %i with a fresh initial roster baseline',async capacity=>{
   const host=await actor();const meal=await publish(host.b,{capacity});
   expect(meal.confirmedCount).toBe(1);expect(meal.bookingDeclaration).toMatchObject({declaredCount:capacity,revision:'1',stale:false});
+ });
+ it('keeps a booking declared for more people than are confirmed fresh, and notifies seated guests but not the host',async()=>{
+  const host=await actor(),guest=await actor();const meal=await publish(host.b,{capacity:4});
+  const application=json(await apply(guest.b,meal.id)).data;
+  expect((await decide(host.b,application.id)).statusCode).toBe(200);
+  let latest=(await detail(host.b,meal.id)).meal;
+  expect(latest.confirmedCount).toBe(2);
+  const declared=await host.b.request('POST',`/v1/meals/${meal.id}/booking-declarations`,{body:{status:'REPORTED_CONFIRMED',count:4},headers:{'idempotency-key':randomUUID(),'if-match':`"${latest.version}"`}});
+  expect(declared.statusCode,declared.body).toBe(201);
+  expect(json(declared).data.bookingDeclaration).toMatchObject({declaredCount:4,revision:'2',stale:false});
+  latest=(await detail(guest.b,meal.id)).meal;
+  expect(latest.bookingDeclaration).toMatchObject({declaredCount:4,revision:'2',stale:false});
+  const templates=async(b:Browser)=>(json(await b.request('GET','/v1/me/notifications')).data as Array<{template:string;mealId:string|null}>).filter(n=>n.mealId===meal.id).map(n=>n.template);
+  expect(await templates(guest.b)).toContain('booking_updated');
+  expect(await templates(host.b)).not.toContain('booking_updated');
  });
  it('keeps pending fresh, marks an approved full table stale, and refreshes only after host declaration',async()=>{
   const host=await actor(),guest=await actor();const meal=await publish(host.b,{capacity:2});
@@ -168,7 +185,9 @@ describe('MVP production meal commands and privacy',()=>{
   const host=await actor(),guest=await actor();const meal=await publish(host.b);const application=json(await apply(guest.b,meal.id)).data;
   const cancel=await host.b.request('POST',`/v1/meals/${meal.id}/cancel`,{body:{reason:'booking'},headers:{'idempotency-key':randomUUID(),'if-match':'"1"'}});expect(cancel.statusCode,cancel.body).toBe(200);expect(json(cancel).data).toMatchObject({status:'CANCELLED',cancelReason:'booking'});
   expect((await h.db.pool.query(`SELECT state FROM applications WHERE id=$1`,[application.id])).rows[0].state).toBe('EXPIRED');
-  expect((await h.db.pool.query(`SELECT * FROM notifications WHERE refs->>'mealId'=$1 AND template='meal_cancelled'`,[meal.id])).rowCount).toBe(2);
+  // Only the other members hear about it; the host who cancelled gets neither a notice nor an email.
+  expect((await h.db.pool.query(`SELECT recipient_id FROM notifications WHERE refs->>'mealId'=$1 AND template='meal_cancelled'`,[meal.id])).rows.map(r=>r.recipient_id)).toEqual([guest.id]);
+  expect((await h.db.pool.query(`SELECT recipient_id FROM outbox WHERE payload->>'mealId'=$1 AND template='meal_cancelled'`,[meal.id])).rows.map(r=>r.recipient_id)).toEqual([guest.id]);
   expect((await h.db.pool.query(`SELECT dissolved_at FROM conversations WHERE meal_id=$1`,[meal.id])).rows[0].dissolved_at).toBeNull();
   expect((await apply(guest.b,meal.id)).statusCode).toBe(409);
  });
@@ -182,7 +201,9 @@ describe('MVP production meal commands and privacy',()=>{
  it('uses signed actor/filter-bound cursors and paginates every application round without skipping',async()=>{
   const host=await actor(),guest=await actor();const meal=await publish(host.b);
   const first=json(await apply(guest.b,meal.id)).data;await guest.b.request('POST',`/v1/applications/${first.id}/withdraw`,{headers:{'idempotency-key':randomUUID(),'if-match':'"1"'}});await apply(guest.b,meal.id);
-  const page1=await guest.b.request('GET','/v1/me/meals?section=APPLICATIONS&limit=1');expect(json(page1).data).toHaveLength(1);const cursor=json(page1).page.nextCursor;expect(cursor).toContain('.');
+  const page1=await guest.b.request('GET','/v1/me/meals?section=APPLICATIONS&limit=1');expect(json(page1).data).toHaveLength(1);
+  // A pending applicant has no readable group yet, so the item carries no chat (same rule as getMeal).
+  expect(json(page1).data[0].conversationId).toBeNull();const cursor=json(page1).page.nextCursor;expect(cursor).toContain('.');
   const page2=await guest.b.request('GET',`/v1/me/meals?section=APPLICATIONS&limit=1&cursor=${encodeURIComponent(cursor)}`);expect(page2.statusCode,page2.body).toBe(200);expect(json(page2).data[0].application.id).not.toBe(json(page1).data[0].application.id);
   expect((await host.b.request('GET',`/v1/me/meals?section=APPLICATIONS&limit=1&cursor=${encodeURIComponent(cursor)}`)).statusCode).toBe(422);
   expect((await guest.b.request('GET',`/v1/me/meals?section=HOSTING&limit=1&cursor=${encodeURIComponent(cursor)}`)).statusCode).toBe(422);

@@ -1,4 +1,4 @@
-import { emptyDraft, timeResolution, toCreateBody, updateDraft, validateStep, type CreateDraft } from './model.ts';
+import { budgetIssues, deadlineTooLate, emptyDraft, timeResolution, toCreateBody, updateDraft, validateStep, type CreateDraft } from './model.ts';
 import { minusMinutes } from '../../lib/london.ts';
 
 const VENUE = { venueRef: '2c1b0a9f-8e7d-4c6b-9a5f-4e3d2c1b0a9f', placeId: 'place-1', name: 'Dishoom', address: '7 Boundary St', attribution: 'Google' };
@@ -33,6 +33,24 @@ describe('create draft invalidation', () => {
     d = updateDraft(complete(), { capacity: 2 });
     expect(d.minimum).toBe(2);
     expect(d.bookingDeclarationConfirmed).toBe(false);
+  });
+
+  it('a different restaurant clears the meal time and its offsets but keeps the date, deadline and other fields (PRD FR05, QA-CREATE-004)', () => {
+    const before = updateDraft(complete(), { startOffset: 60, closeOffset: 60, reviewConfirmed: true });
+    const d = updateDraft(before, { venue: { ...VENUE, venueRef: '9c1b0a9f-8e7d-4c6b-9a5f-4e3d2c1b0a9f', placeId: 'place-2', name: 'Kiln' } });
+    expect(d).toMatchObject({ time: null, startOffset: null, closeOffset: null, bookingDeclarationConfirmed: false, reviewConfirmed: false });
+    expect(d).toMatchObject({ date: before.date, closeDate: before.closeDate, closeTime: before.closeTime, title: before.title, budgetMin: '20', budgetMax: '35', capacity: 4, minimum: 3 });
+  });
+
+  it('the first restaurant pick keeps a time already chosen', () => {
+    const d = updateDraft(updateDraft(emptyDraft('a'), { date: '2026-10-25', time: '19:00' }), { venue: VENUE });
+    expect(d.time).toBe('19:00');
+  });
+
+  it('a same-place display refresh keeps the time and both confirmations', () => {
+    const before = updateDraft(complete(), { startOffset: 60, reviewConfirmed: true });
+    const d = updateDraft(before, { venue: { ...VENUE, venueRef: '77777777-7777-4777-8777-777777777777', name: 'Dishoom Shoreditch' } });
+    expect(d).toMatchObject({ time: '19:00', startOffset: 60, bookingDeclarationConfirmed: true, reviewConfirmed: true, venue: { name: 'Dishoom Shoreditch' } });
   });
 
   it('a text edit keeps the booking attestation but always clears the review tick', () => {
@@ -97,5 +115,37 @@ describe('DST resolution (QA-TIME-004..007)', () => {
   });
   it('wall-clock deadline arithmetic crosses midnight', () => {
     expect(minusMinutes('2026-03-29', '00:30', 60)).toEqual({ date: '2026-03-28', time: '23:30' });
+  });
+});
+
+describe('budgetIssues (inline Costs validation while typing)', () => {
+  it.each([
+    [{ budgetMin: '', budgetMax: '' }, { min: null, max: null }],
+    [{ budgetMin: '20', budgetMax: '' }, { min: null, max: null }],
+    [{ budgetMin: '20', budgetMax: '20' }, { min: null, max: null }],
+    [{ budgetMin: '20.50', budgetMax: '35' }, { min: null, max: null }],
+    [{ budgetMin: '40', budgetMax: '30' }, { min: null, max: 'Must be at least £40, the “From” amount.' }],
+    [{ budgetMin: '0', budgetMax: '30' }, { min: 'Enter an amount above £0.', max: null }],
+    [{ budgetMin: '20', budgetMax: 'abc' }, { min: null, max: 'Use pounds only, like 20 or 22.50.' }],
+    [{ budgetMin: '123456', budgetMax: '20.555' }, { min: 'Use pounds only, like 20 or 22.50.', max: 'Use pounds only, like 20 or 22.50.' }],
+  ])('%j → %j', (draft, expected) => {
+    expect(budgetIssues(draft)).toEqual(expected);
+  });
+
+  it('agrees with Continue: inline-valid non-empty amounts pass step 2', () => {
+    expect(validateStep({ ...complete(), budgetMin: '20.50', budgetMax: '35' }, 2, TODAY)).toBeNull();
+    expect(validateStep({ ...complete(), budgetMin: '40', budgetMax: '30' }, 2, TODAY)).not.toBeNull();
+  });
+});
+
+describe('deadlineTooLate (deadline time grid)', () => {
+  const d = { date: '2026-10-30', time: '19:00', closeDate: '2026-10-30' };
+  it.each([
+    ['18:30', false], ['18:00', false], ['19:00', true], ['23:30', true],
+  ])('same day as a 19:00 meal: %s disabled=%s', (slot, expected) => expect(deadlineTooLate(d, slot)).toBe(expected));
+  it('any time the day before is fine; a later date never is; incomplete drafts disable nothing', () => {
+    expect(deadlineTooLate({ ...d, closeDate: '2026-10-29' }, '23:30')).toBe(false);
+    expect(deadlineTooLate({ ...d, closeDate: '2026-10-31' }, '08:00')).toBe(true);
+    expect(deadlineTooLate({ ...d, time: null }, '23:30')).toBe(false);
   });
 });

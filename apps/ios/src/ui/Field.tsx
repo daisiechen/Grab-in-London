@@ -1,5 +1,6 @@
-import { StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
+import { Text, TextInput, View, type TextInputProps } from 'react-native';
 import { colors, radius, sizes, type } from './tokens.ts';
+import { createStyles } from './styles.ts';
 
 type Props = Omit<TextInputProps, 'style'> & { label: string; hint?: string; error?: string | null; multiline?: boolean };
 
@@ -21,9 +22,10 @@ export function Field({ label, hint, error, multiline = false, ...input }: Props
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createStyles({
   wrap: { gap: 6 },
-  label: { fontSize: type.control, fontWeight: '700', color: colors.ink },
+  // Secondary to section titles (16pt bold): field labels are small, medium weight, muted.
+  label: { fontSize: 12, fontWeight: '500', color: colors.muted },
   input: { minHeight: sizes.field, borderWidth: 1, borderColor: colors.line, borderRadius: radius.md, paddingHorizontal: 12, paddingVertical: 10, fontSize: type.body, color: colors.ink, backgroundColor: colors.white },
   multiline: { minHeight: 96, textAlignVertical: 'top' },
   invalid: { borderColor: colors.danger },

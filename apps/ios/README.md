@@ -72,9 +72,76 @@ From the repository root after `source infra/dev-env.sh`:
   `unit` project (`*.unit.test.ts`) never collects React Native tests
 - `pnpm --filter @fancy/ios start` — Metro for a development build (needs `expo run:ios` first)
 
+### Run on a simulator or iPhone with preview data (no server needed)
+
+On a Mac with Xcode, from `apps/ios` (copy `.env.example` to `.env` and fill the Google key first):
+
+- `pnpm ios:preview` — builds the development app and opens it in the iOS Simulator
+- `pnpm ios:preview:device` — same, on a USB-connected iPhone (Xcode signs with your Apple ID team)
+
+CocoaPods is required for the first native build. Without Homebrew, macOS's bundled Ruby 2.6 cannot
+install current CocoaPods dependencies; either install Ruby 3+ (e.g. rbenv) and `gem install cocoapods`, or
+install cocoapods 1.16.2 with `--user-install` pinning ffi 1.16.3, activesupport 6.1.7.10, zeitwerk 2.6.13,
+i18n 1.14.7, minitest 5.15.0 and concurrent-ruby 1.3.4 (verified on Xcode 27.1). Changing the Google key
+requires `rm -rf ios` before the next run, because the key is written into the native project at prebuild.
+The profile photo picker (`expo-image-picker`, `expo-image-manipulator`, added 2026-10-28) is native too:
+an older development build must be rebuilt (`rm -rf ios && pnpm ios:preview`) before Upload photo works.
+Discover is open to guests, so preview starts there; sign-in appears when you apply or create a meal.
+
+`EXPO_PUBLIC_FANCY_PREVIEW=1` swaps the API for the in-memory demo data in `src/preview/`
+(sign in with any email and code `000000`). Without the Google key, Discover shows the illustrated map.
+
+### End-to-end run against the real API (`e2e/`)
+
+The web build normally runs on the preview fake; `EXPO_PUBLIC_FANCY_PREVIEW=0` switches it to the
+real API (`EXPO_PUBLIC_API_BASE_URL`). The web build keeps the session in memory (no Keychain), so a
+full page reload signs out. With Node 24, a local PostgreSQL 17 and Chromium + Playwright installed:
+
+```sh
+FANCY_E2E_ADMIN_URL=postgres://fancy@127.0.0.1:55432/postgres pnpm --filter @fancy/ios e2e:real-api
+```
+
+`e2e/stack.ts` drops and migrates a fresh `fancy_e2e` database, starts `apps/api/src/main.ts` in
+`development` with test-only adapters (test identity with `DEV_FIXED_OTP=000000`, fixture places,
+outbox mail, mock AI) and throwaway secrets, starts the real worker (`apps/worker/src/main.ts`: meal
+lifecycle jobs and the account purge), exports the web build with preview off (`expo export
+--clear`; set `FANCY_E2E_REBUILD=0` to reuse the last export) and serves it with `/v1` proxied to the
+API on the same origin, so the app uses its native bearer credentials. The proxy appends the peer to
+`X-Forwarded-For` and the API trusts only `127.0.0.1` through the production `TRUSTED_PROXY_CIDRS`
+setting; every simulated device (each browser profile and Node actor) sends its own documentation-range
+address, so per-IP limits (5 codes per IP per 15 minutes) apply per device and no limit is relaxed.
+
+`e2e/real-api.e2e.ts` drives two browser profiles (guest and host) through discovery, detail, email
+sign-in, profile setup with photo upload, apply, host approval and booking report, Upcoming, Inbox
+chat, the four Create steps with the map restaurant picker, edit before approval, block/report/unblock,
+survey, notifications, withdraw and re-apply, host decline, cancel my place, host cancels the meal,
+sign out and back in, after the meal (attendance, host attendance report, private score, references
+that publish when both write, a one-sided private choice, a mutual choice opening a direct chat, an
+8-day-old meal read-only), access-token refresh, and account deletion (re-authentication with a second
+code, receipt, status while signed out, profile/photo/sessions/references/messages removed or masked,
+the other member's open chat turning read-only). The other side of each step is checked through the
+API with the same `@fancy/client`. States that need time to pass are written straight into the
+throwaway database by `e2e/fixtures.ts`, as the API tests do: a meal that already took place is
+inserted with its lifecycle jobs due and the worker completes it; a sign-in is aged past the 5-minute
+re-authentication window; access tokens are expired early. Nothing in the API changes for this.
+A failure prints the step, the visible text and a screenshot path. Other tools: `pnpm --filter
+@fancy/ios e2e:serve` keeps the stack up for manual checks (API :3310, app :8090); `e2e:parity`
+replays one scenario (including after-the-meal and deletion) against the preview fake and the real
+API and prints every status/shape difference. `FANCY_E2E_DATABASE`, `FANCY_E2E_API_PORT`,
+`FANCY_E2E_WEB_PORT` and `FANCY_E2E_WEB_DIR` keep parallel runs apart (parity uses the database name
+with `_parity` and the API port + 1).
+
 Native build (`expo prebuild` / `expo run:ios`), simulator and device runs are blocked by G-IOS
 (full Xcode, Apple Developer team, signing). `ios.bundleIdentifier` `com.example.fancy.dev` is a
-placeholder; no team id is committed. Generated `ios/` is not committed (Continuous Native Generation).
+placeholder used by every development build; `APP_VARIANT=production` (see `app.config.js`) switches
+to the proposed App Store id `uk.fancyabite.app`, which still needs the external changes listed in
+`docs/delivery/app-store-submission.zh-CN.md`. No team id is committed. Generated `ios/` is not
+committed (Continuous Native Generation).
+
+App icon: `assets/images/icon.png` (1024×1024, opaque, square; iOS applies the mask), rendered
+with its SVG source `assets/brand/app-icon.svg` by `python3 scripts/render_app_icon.py`.
+Legal pages open from Settings and the sign-in principles sheet at `extra.legalBaseUrl`
+(default `https://fancyabite.uk`, override with `EXPO_PUBLIC_LEGAL_BASE_URL`).
 
 
 ## Codex takeover verification (2026-10-21)

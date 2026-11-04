@@ -1,0 +1,6 @@
+// Fancy: security updates install automatically; the server never reboots on its own
+// (a reboot would interrupt the owner's other services). Kernel updates need a planned
+// reboot announced to the owner; see docs/operations/seoul-production-deploy.zh-CN.md.
+Unattended-Upgrade::Automatic-Reboot "false";
+Unattended-Upgrade::Remove-Unused-Dependencies "false";
+Unattended-Upgrade::MinimalSteps "true";

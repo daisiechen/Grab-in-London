@@ -1,7 +1,7 @@
 import { beforeAll, expect, it } from 'vitest';
 import { createLocalJWKSet, exportJWK, generateKeyPair, SignJWT, type JWTPayload } from 'jose';
-import { Auth0IdentityProvider } from './auth0-provider.ts';
-import { ProviderRejectedError } from './provider.ts';
+import { Auth0IdentityProvider, providerFromSubject } from './auth0-provider.ts';
+import { MFA_ACR, ProviderRejectedError } from './provider.ts';
 
 let keys: Awaited<ReturnType<typeof generateKeyPair>>;
 let jwks: ReturnType<typeof createLocalJWKSet>;
@@ -42,4 +42,28 @@ it('rejects a signed token with the wrong nonce, issuer, audience or expiry', as
 it('never accepts an MFA claim signed by an untrusted key', async () => {
   const other = await generateKeyPair('RS256');
   await expect(exchange(await signed({ amr: ['mfa'] }, other.privateKey))).rejects.toBeInstanceOf(ProviderRejectedError);
+});
+it('requests MFA (acr_values) only on the staff hosted login, which preselects no connection', () => {
+  const p = provider('unused');
+  const staff = new URL(p.staffAuthorizationUrl({ state: 's', nonce: 'n', codeChallenge: 'c', redirectUri: 'https://app.example/v1/auth/oauth/callback' }));
+  expect(staff.origin + staff.pathname).toBe('https://tenant.example/authorize');
+  expect(staff.searchParams.get('acr_values')).toBe(MFA_ACR);
+  expect(staff.searchParams.has('connection')).toBe(false);
+  expect(staff.searchParams.has('prompt')).toBe(false);
+  expect(Object.fromEntries(staff.searchParams)).toMatchObject({ response_type: 'code', client_id: 'synthetic-client', redirect_uri: 'https://app.example/v1/auth/oauth/callback', scope: 'openid email', state: 's', nonce: 'n', code_challenge: 'c', code_challenge_method: 'S256' });
+  for (const kind of ['GOOGLE', 'APPLE'] as const) {
+    const member = new URL(p.authorizationUrl({ provider: kind, state: 's', nonce: 'n', codeChallenge: 'c', redirectUri: 'https://app.example/auth/callback', forceLogin: false }));
+    expect(member.searchParams.has('acr_values')).toBe(false);
+    expect(member.searchParams.get('connection')).toBe(kind === 'GOOGLE' ? 'google-oauth2' : 'apple');
+  }
+});
+it('derives the hosted-login method from the verified subject and keeps verified MFA', async () => {
+  expect(providerFromSubject('email|abc')).toBe('EMAIL');
+  expect(providerFromSubject('google-oauth2|123')).toBe('GOOGLE');
+  expect(providerFromSubject('apple|001')).toBe('APPLE');
+  for (const bad of ['auth0|x', 'samlp|x', 'email', 'toString|x', '__proto__|x', '']) expect(providerFromSubject(bad), bad).toBeNull();
+  const staff = (token: string) => provider(token).exchangeAuthorizationCode({ provider: null, code: 'c', codeVerifier: 'v', redirectUri: 'r', nonce: 'expected-nonce' });
+  expect(await staff(await signed({ sub: 'email|abc', email: 'Staff@Example.invalid', email_verified: true, amr: ['mfa'] }))).toMatchObject({ provider: 'EMAIL', email: 'staff@example.invalid', amr: ['otp', 'mfa'] });
+  expect((await staff(await signed({ sub: 'google-oauth2|1' }))).amr).toEqual(['google']);
+  await expect(staff(await signed({ sub: 'auth0|database-user', amr: ['mfa'] }))).rejects.toBeInstanceOf(ProviderRejectedError);
 });

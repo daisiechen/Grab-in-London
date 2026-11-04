@@ -37,7 +37,7 @@ export async function seedLocalStaff(app:Awaited<ReturnType<typeof buildServer>>
  const verify=await app.inject({method:'POST',url:'/v1/auth/email/verify',headers:{...headers,cookie},payload:{clientRequestId:randomUUID(),challengeId:start.json().data.challengeId,code:'000000'}});
  if(verify.statusCode!==200||verify.json().data.outcome!=='AUTHENTICATED')throw new Error('Local staff fixture sign-in failed');
  const session=verify.json().data.session;
- await pool.query(`INSERT INTO roles(user_id,role,granted_by) SELECT $1,role,'local-acceptance-fixture' FROM unnest(ARRAY['analyst','data_admin']) AS role ON CONFLICT DO NOTHING`,[session.user.id]);
+ await pool.query(`INSERT INTO roles(user_id,role,granted_by) SELECT $1,role,'local-acceptance-fixture' FROM unnest(ARRAY['analyst','data_admin','support']) AS role ON CONFLICT DO NOTHING`,[session.user.id]);
  // Bootstrap credentials remain local to this function and are revoked, never printed or reused.
  const logout=await app.inject({method:'POST',url:'/v1/auth/logout',headers:{...headers,cookie:verify.cookies.map(c=>`${c.name}=${c.value}`).join('; '),'x-csrf-token':session.csrfToken},payload:{clientRequestId:randomUUID()}});
  if(logout.statusCode!==204)throw new Error('Local staff fixture bootstrap logout failed');
@@ -93,7 +93,7 @@ async function main(){
   await seedLocalStaff(app,pool,process.env);
   await app.listen({port:3000,host:'127.0.0.1'});
   console.warn('LOCAL FIXTURE ACCEPTANCE ONLY: API 127.0.0.1:3000; Web/Admin serially 127.0.0.1:5174; email code 000000. No real email, maps, identity or AI integration.');
-  if(process.env.FANCY_LOCAL_STAFF_FIXTURE==='1')console.warn(`SYNTHETIC STAFF ONLY: ${LOCAL_STAFF_EMAIL}; analyst/data_admin; fixture MFA, not real MFA.`);
+  if(process.env.FANCY_LOCAL_STAFF_FIXTURE==='1')console.warn(`SYNTHETIC STAFF ONLY: ${LOCAL_STAFF_EMAIL}; analyst/data_admin/support; fixture MFA, not real MFA.`);
   if(clock&&gate){
    console.warn(`FIXED LOCAL CLOCK ${clock.now()}; stdin: {"advanceTo":"YYYY-MM-DDTHH:mm:ss.sssZ"}. Browser clock remains real.`);
    await runClockRig(clock,gate,createWorkerRuntime(pool,config));

@@ -1,5 +1,6 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { colors, radius, type } from './tokens.ts';
+import { createStyles } from './styles.ts';
 
 /** Explicit opt-in checkbox; never defaults to checked. */
 export function CheckRow({ label, checked, onChange }: { label: string; checked: boolean; onChange: (next: boolean) => void }) {
@@ -11,7 +12,7 @@ export function CheckRow({ label, checked, onChange }: { label: string; checked:
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createStyles({
   row: { flexDirection: 'row', gap: 10, alignItems: 'flex-start', paddingVertical: 6 },
   box: { width: 22, height: 22, borderRadius: radius.sm - 2, borderWidth: 1, borderColor: colors.forest, alignItems: 'center', justifyContent: 'center' },
   checked: { backgroundColor: colors.forest },

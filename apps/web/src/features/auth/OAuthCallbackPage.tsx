@@ -63,7 +63,7 @@ export function OAuthCallbackPage() {
   if(confirmation)return <LinkConfirmation key={`${confirmation.pending.ticket}:${confirmation.proof}`} pending={confirmation.pending} proof={confirmation.proof} onDone={()=>navigate(confirmation.next,{replace:true})} onCancel={()=>{clearLinkTicket();navigate(signInPath('/discover'),{replace:true});}} onReverify={()=>{continueLink();navigate(signInPath(confirmation.pending.returnTo),{replace:true});}}/>;
   if (linkRequired) {
     return (
-      <div className="body-pad">
+      <div className="scroll auth-state">
         <h1>You’ve been here before.</h1>
         <p className="prose">An account already uses this email. Sign in the way you did before to link this sign-in method. We never merge accounts automatically.</p>
         <Primary onClick={()=>{try{continueLink();navigate(signInPath(pendingLink()?.returnTo??'/discover'),{replace:true});}catch{setLinkRequired(false);setError('This linking request expired. Start again.');}}}>Verify original sign-in</Primary>
@@ -73,7 +73,7 @@ export function OAuthCallbackPage() {
   }
   if (error) {
     return (
-      <div className="body-pad">
+      <div className="scroll auth-state">
         <h1>Sign-in didn’t finish.</h1>
         <FormError>{error}</FormError>
         <PrimaryLink to={signInPath(returnTarget.current)}>Try again</PrimaryLink>

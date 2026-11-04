@@ -19,6 +19,12 @@ describe('S05 profile privacy, gates and optimistic writes', () => {
     expect(pub.statusCode).toBe(200);
     expect(Object.keys(json(pub).data.profile).sort()).toEqual(['background', 'avatarUrl', 'bio', 'displayName', 'id', 'interests', 'languages'].sort());
     expect(pub.body).not.toMatch(/email|lifeStatus|ConfirmedVersion|AcceptedVersion|roles|privacyEpoch/);
+    expect(json(pub).data.profile.avatarUrl).toBeNull();
+  });
+  it('no longer accepts the retired sample-portrait reference (photos are uploaded instead)', async () => {
+    const { b } = await signedIn();
+    expect((await patch(b, { ...complete, avatarRef: 'avatar:maya' })).statusCode).toBe(422);
+    expect(json(await b.request('GET', '/v1/me')).data).toMatchObject({ version: '1', avatarUrl: null });
   });
   it('rejects private fields and forged consent versions without changing status or version', async () => {
     const { b } = await signedIn();

@@ -1,9 +1,8 @@
-import { useAssistantEditor, useAssistantEditorRevision } from '../assistant/index.ts';
 import { useRenderedEvent } from '../../api/telemetry.tsx';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import { ApiError, newIntentKey, withRetry } from '@fancy/client';
-import { CalendarIcon, ChevronLeftIcon, GearIcon, LockClosedIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
+import { ArrowRightIcon, CalendarIcon, ChatBubbleIcon, ChevronRightIcon, DotsHorizontalIcon, ExclamationTriangleIcon, GearIcon, HeartIcon, LockClosedIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
 import { useApi } from '../../api/ApiProvider.tsx';
 import { useSession } from '../../api/session.tsx';
 import { Intent } from '../../api/webApi.ts';
@@ -15,7 +14,11 @@ import { longDate } from '../../lib/format.ts';
 import { LivePoller, type TickResult } from '../../lib/poller.ts';
 import { usePollerDeps } from '../../lib/pollerContext.tsx';
 import { signInPath } from '../../lib/returnTo.ts';
-import { Avatar, FormError, Loading, Notice, PageHeader, Primary, PrimaryLink, TextAction } from '../../ui/components.tsx';
+import { Avatar, BackDisc, FormMessage, Loading, Notice, Primary, PrimaryLink, StateBlock, TextAction, TitleBar } from '../../ui/components.tsx';
+import { useDocumentMeta } from '../../seo/useDocumentMeta.ts';
+import { mealPath } from '../../seo/meal-seo.ts';
+import { bookingLabel, mealPeople, venueName } from '../meals/present.ts';
+import { messageReportRoute, rememberMessageSubject, reportedMessages } from '../reports/messageReports.ts';
 import { ConfirmSheet } from '../../ui/ConfirmSheet.tsx';
 import { Sheet } from '../../ui/Sheet.tsx';
 import { useToast } from '../../ui/toast.tsx';
@@ -56,6 +59,9 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
   const [sending, setSending] = useState(false);
   const [sheet, setSheet] = useState<'' | 'settings' | 'leave' | 'dissolve'>('');
   const [sheetError, setSheetError] = useState('');
+  const [actionsFor, setActionsFor] = useState<Message | null>(null);
+  const navigate = useNavigate();
+  useDocumentMeta({ title: 'Chat · Fancy', robots: 'noindex, nofollow' });
   const after = useRef<string | null>(null);
   const loadedFirst = useRef(false);
   const pending = useRef<{ id: string; body: string } | null>(null);
@@ -68,8 +74,6 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
   const [visible,setVisible] = useState(document.visibilityState !== 'hidden');
   useRenderedEvent('chat_opened',{conversationId},!!conversation&&conversation.kind==='GROUP'&&hasRead);
   useEffect(()=>{const changed=()=>setVisible(document.visibilityState !== 'hidden');document.addEventListener('visibilitychange',changed);return()=>document.removeEventListener('visibilitychange',changed);},[]);
-  const editorVersion = useAssistantEditorRevision(text);
-  useAssistantEditor(conversation?.kind === 'GROUP' && conversation.canSend && !conversation.dissolved && mode === 'LIVE' && !sending ? { kind: 'GROUP',targetId:conversationId,version:editorVersion,text,apply:(candidate)=>{if(candidate.text!==null){setText(candidate.text);pending.current=null;setError('');}} } : null);
 
   const absorb = useCallback((list: readonly Message[], scanned?: string) => {
     setHasRead(true);
@@ -156,19 +160,16 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
   }, [conversationId, text]);
 
   if (state.status === 'loading') return <Loading />;
-  if (state.status === 'guest') return <div className="body-pad"><PrimaryLink to={signInPath(`/inbox/${conversationId}`)}>Sign in to see your messages</PrimaryLink></div>;
-  if (conversation === undefined) return error ? <div className="body-pad"><FormError>{error}</FormError></div> : <Loading />;
+  if (state.status === 'guest') return <div className="scroll"><TitleBar title="Chat" back="/inbox" /><StateBlock icon={<ChatBubbleIcon width={30} height={30} aria-hidden="true" />} title="Please sign in again to see this conversation." action={<PrimaryLink to={signInPath(`/chat/${conversationId}`)}>Sign in</PrimaryLink>} /></div>;
+  if (conversation === undefined) return error ? <div className="scroll"><TitleBar title="Chat" back="/inbox" /><FormMessage message={error} /></div> : <Loading label="Loading conversation" />;
   if (conversation === null) {
     return (
-      <>
-        <PageHeader title="Inbox" backTo="/inbox" />
-        <div className="body-pad empty">
-          <LockClosedIcon />
-          <h2>Your chat opens after confirmation</h2>
-          <p>Continue from your meal to meet the people at your table.</p>
-          <PrimaryLink to="/inbox">Back to Inbox</PrimaryLink>
-        </div>
-      </>
+      <div className="scroll">
+        <TitleBar title="Chat" back="/inbox" />
+        <StateBlock icon={<LockClosedIcon width={28} height={28} aria-hidden="true" />} title="This chat opens when you have a seat." action={<PrimaryLink to="/inbox">Back to Inbox</PrimaryLink>}>
+          Only confirmed members of a table can read and send messages.
+        </StateBlock>
+      </div>
     );
   }
 
@@ -228,24 +229,36 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
     }
   };
 
+  const reported = reportedMessages(cache);
+  const people = meal ? mealPeople(meal) : [];
+  const openReport = (m: Message) => {
+    setActionsFor(null);
+    rememberMessageSubject(cache, m.id, { senderName: m.sender.displayName, excerpt: m.body });
+    navigate(messageReportRoute(m.id));
+  };
+  const today = londonDay(new Date().toISOString());
+  const dayLabel = (day: string) => (day === today ? 'TODAY' : longDate(day).toUpperCase());
   let lastDay = '';
   return (
-    <>
-      <header className="page-header">
-        <Link to="/inbox" aria-label="Back"><ChevronLeftIcon /></Link>
-        <strong>{conversation.title}</strong>
-        {conversation.kind === 'GROUP' ? <button type="button" aria-label="Group settings" onClick={() => setSheet('settings')}><GearIcon /></button> : <span />}
-      </header>
-      <div className="body-pad chat-body">
-        {meal && (
-          <div className="chat-pinned">
-            <CalendarIcon />
-            <div>
-              <strong>{longDate(meal.startsAt.localDate)} · {meal.startsAt.localTime}</strong>
-              <p>{meal.venue.available ? meal.venue.name : 'Restaurant information temporarily unavailable'}</p>
-            </div>
-          </div>
-        )}
+    <div className="chat">
+      <div className="chat-head">
+        <BackDisc fallback="/inbox" />
+        <div className="t">
+          <h1>{conversation.title}</h1>
+          <p>{meal ? `${people.length} ${people.length === 1 ? 'person' : 'people'} · ${longDate(meal.startsAt.localDate)}, ${meal.startsAt.localTime}` : conversation.kind === 'DIRECT' ? 'Personal conversation' : 'Meal group'}</p>
+        </div>
+        {conversation.kind === 'GROUP' && <button type="button" className="disc" aria-label="Group settings" onClick={() => setSheet('settings')}><GearIcon width={17} height={17} aria-hidden="true" /></button>}
+      </div>
+      <div className="chat-scroll" aria-live="polite" aria-relevant="additions">
+        {meal ? (
+          <Link className="chat-pinned" to={mealPath(meal)} aria-label={`View meal: ${longDate(meal.startsAt.localDate)} at ${meal.startsAt.localTime}, ${venueName(meal)}, ${bookingLabel(meal)}`}>
+            <CalendarIcon aria-hidden="true" />
+            <span><strong>{`${longDate(meal.startsAt.localDate)} · ${meal.startsAt.localTime}`}</strong><span className="muted">{`${venueName(meal)} · ${bookingLabel(meal)} · Pay at the restaurant`}</span></span>
+            <ChevronRightIcon aria-hidden="true" />
+          </Link>
+        ) : conversation.kind === 'DIRECT' ? (
+          <div className="chat-pinned"><HeartIcon aria-hidden="true" /><span><strong>You both want to meet again</strong><span className="muted">Start a conversation or find another table together.</span></span></div>
+        ) : null}
         {!canSend && (
           <Notice icon={<LockClosedIcon />} role="status">
             {conversation.kind === 'DIRECT'
@@ -254,56 +267,85 @@ function ConversationPage({ conversationId }: { conversationId: string }) {
           </Notice>
         )}
         {olderCursor && <TextAction onClick={() => void loadOlder()}>Load earlier messages</TextAction>}
-        {!hasRead&&!readError&&<p role="status">Loading messages…</p>}
-        <FormError>{readError}</FormError>
-        {historyOnly.current&&readError&&<TextAction disabled={readingHistory} onClick={()=>void readHistory()}>Retry loading messages</TextAction>}
-        {hasRead&&!readError&&!messages.length && <p className="chat-date">{canSend ? 'SAY HELLO' : 'NO MESSAGES'}</p>}
+        {!hasRead && !readError && <p className="muted" role="status">Loading messages…</p>}
+        <FormMessage message={readError} />
+        {historyOnly.current && readError && <TextAction disabled={readingHistory} onClick={() => void readHistory()}>Retry loading messages</TextAction>}
+        {hasRead && !readError && !messages.length && <p className="chat-day">{canSend ? 'No messages yet. Say a little hello!' : 'No earlier messages.'}</p>}
         {messages.map((m) => {
           const day = londonDay(m.createdAt);
-          const sep = day !== lastDay ? <p className="chat-date">{longDate(day).toUpperCase()}</p> : null;
+          const sep = day !== lastDay ? <p className="chat-day">{dayLabel(day)}</p> : null;
           lastDay = day;
           const own = m.sender.id === me?.id;
+          const hiddenByMe = reported.has(m.id);
+          const body = hiddenByMe ? 'You reported this message' : m.redacted ? 'Message removed' : m.body;
+          // Only another member's visible message can be reported; never your own, a removed or an already reported one.
+          const reportable = !own && !m.redacted && !hiddenByMe;
           return (
             <div key={m.id}>
               {sep}
-              <div className={`chat-message${own ? ' own' : ''}${m.redacted ? ' redacted' : ''}`}>
-                {!own && <Link to={`/profiles/${m.sender.id}`} aria-label={m.sender.displayName}><Avatar name={m.sender.displayName} url={m.sender.avatarUrl} size={30} /></Link>}
-                <div>
-                  <small>{own ? 'You' : m.sender.displayName} · {londonTime(m.createdAt)}</small>
-                  <p>{m.redacted ? 'This message was removed.' : m.body}</p>
+              <div className={`msg-row${own ? ' own' : ''}`} onContextMenu={reportable ? (e) => { e.preventDefault(); setActionsFor(m); } : undefined}>
+                {!own && <Link className="avatar-link" to={`/profiles/${m.sender.id}`} aria-label={`View ${m.sender.displayName}’s profile`}><Avatar name={m.sender.displayName} url={m.sender.avatarUrl} size={30} /></Link>}
+                <div className="msg-copy">
+                  {!own && conversation.kind === 'GROUP' && <Link className="msg-sender" to={`/profiles/${m.sender.id}`}>{m.sender.displayName}</Link>}
+                  <p className={`bubble${own ? ' mine' : ''}${m.redacted || hiddenByMe ? ' redacted' : ''}`}><span className="vh">{own ? 'You' : m.sender.displayName}: </span>{body}</p>
+                  <span className="msg-time">{londonTime(m.createdAt)}</span>
                 </div>
+                {reportable && <button type="button" className="msg-more" aria-label={`Message options for ${m.sender.displayName}’s message`} onClick={() => setActionsFor(m)}><DotsHorizontalIcon aria-hidden="true" /></button>}
               </div>
             </div>
           );
         })}
-        <FormError>{error}</FormError>
+        <FormMessage message={error} />
       </div>
       {canSend ? (
-        <form noValidate className="composer" onSubmit={(e) => void send(e)}>
-          <label className="sr-only" htmlFor="composer">Message</label>
-          <textarea className="resize-none" id="composer" rows={1} maxLength={2000} value={text} placeholder="Write a message…"
+        <form noValidate className="chatbar" onSubmit={(e) => void send(e)}>
+          <label className="vh" htmlFor="composer">Message</label>
+          <textarea className="input" id="composer" rows={1} maxLength={2000} value={text} placeholder="Say a little hello…"
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); void send(); } }} />
-          <button type="submit" disabled={sending || !text.trim()} aria-label="Send message"><PaperPlaneIcon /></button>
+          <button type="submit" className="send" disabled={sending || !text.trim()} aria-label="Send message"><PaperPlaneIcon aria-hidden="true" /></button>
         </form>
-      ) : text ? (
-        <div className="body-pad"><p className="muted">Unsent text: {text}</p><TextAction onClick={() => setText('')}>Discard unsent text</TextAction></div>
-      ) : null}
+      ) : (
+        <div className="chatbar readonly">
+          <p className="muted" style={{ display: 'flex', gap: 6, alignItems: 'center' }}><LockClosedIcon aria-hidden="true" /> History is read-only.</p>
+          {text && <><p className="muted">Unsent text: {text}</p><TextAction onClick={() => setText('')}>Discard unsent text</TextAction></>}
+        </div>
+      )}
 
-      <Sheet open={sheet === 'settings'} onOpenChange={(o) => !o && setSheet('')} title="Group settings">
-        <p className="muted">Group membership is separate from your meal participation.</p>
-        {meal && <PrimaryLink secondary to={`/meals/${meal.id}`}>View meal</PrimaryLink>}
-        {canSend && (isHost
-          ? <Primary secondary onClick={() => setSheet('dissolve')}>Dissolve group</Primary>
-          : <Primary secondary onClick={() => setSheet('leave')}>Leave group</Primary>)}
-        {!canSend && <p className="notice">This group is read-only. Your earlier messages remain available.</p>}
+      <Sheet open={actionsFor !== null} onOpenChange={(o) => !o && setActionsFor(null)} title="Message options">
+        {actionsFor && <p className="quote side" style={{ marginBottom: 12 }}>{`${actionsFor.sender.displayName}: “${actionsFor.body.slice(0, 140)}”`}</p>}
+        <Primary secondary onClick={() => actionsFor && openReport(actionsFor)}><ExclamationTriangleIcon aria-hidden="true" /> Report message</Primary>
+        <TextAction onClick={() => setActionsFor(null)}>Cancel</TextAction>
       </Sheet>
-      <ConfirmSheet open={sheet === 'leave'} onOpenChange={(o) => !o && setSheet('')} title="Leave this group?" confirmLabel="Leave group" error={sheetError} onConfirm={() => void leaveOrDissolve('leave')}>
-        <p>You will stop receiving and sending new group messages. Your earlier messages remain available. Your meal participation does not change.</p>
+      <Sheet open={sheet === 'settings'} onOpenChange={(o) => !o && setSheet('')} title="Group settings">
+        <p className="body"><strong>{conversation.title}</strong></p>
+        {meal && <PrimaryLink secondary to={mealPath(meal)}>View meal <ArrowRightIcon aria-hidden="true" /></PrimaryLink>}
+        {people.length > 0 && (
+          <>
+            <h2 style={{ marginTop: 16 }}>At this table <span className="seg-count">{people.length}</span></h2>
+            {people.map((p) => (
+              <Link key={p.id} className="irow" to={`/profiles/${p.id}`} aria-label={`View ${p.displayName}’s profile`}>
+                <Avatar name={p.displayName} url={p.avatarUrl} size={40} />
+                <span className="mid"><b>{p.displayName}</b><span>{`${p.id === meal?.host.id ? 'Host' : 'Guest'}${p.id === me?.id ? ' · You' : ''}`}</span></span>
+              </Link>
+            ))}
+          </>
+        )}
+        {canSend ? (
+          <>
+            <h2 style={{ marginTop: 16 }}>Your membership</h2>
+            <p className="muted" style={{ marginBottom: 10 }}>Group membership is separate from your meal participation.</p>
+            {isHost && meal && <PrimaryLink secondary to={`/meals/${meal.id}/host`}>Manage meal &amp; applications</PrimaryLink>}
+            {isHost ? <Primary secondary className="mt8" onClick={() => setSheet('dissolve')}>Dissolve group</Primary> : <Primary secondary onClick={() => setSheet('leave')}>Leave group</Primary>}
+          </>
+        ) : <Notice icon={<LockClosedIcon />}>This group is read-only. Your earlier messages remain available.</Notice>}
+      </Sheet>
+      <ConfirmSheet open={sheet === 'leave'} onOpenChange={(o) => !o && setSheet('')} title="Leave this group?" keepLabel="Stay in the group" confirmLabel="Leave group" error={sheetError} onConfirm={() => void leaveOrDissolve('leave')}>
+        You will stop receiving and sending new group messages. Your earlier messages remain available. Your meal participation does not change.
       </ConfirmSheet>
-      <ConfirmSheet open={sheet === 'dissolve'} onOpenChange={(o) => !o && setSheet('')} title="Dissolve this group?" confirmLabel="Dissolve group" error={sheetError} onConfirm={() => void leaveOrDissolve('dissolve')}>
-        <p>Everyone will lose the ability to send new messages. Earlier messages remain available. This does not cancel the meal or change attendance.</p>
+      <ConfirmSheet open={sheet === 'dissolve'} onOpenChange={(o) => !o && setSheet('')} title="Dissolve this group?" keepLabel="Keep the group" confirmLabel="Dissolve group" error={sheetError} onConfirm={() => void leaveOrDissolve('dissolve')}>
+        Everyone will lose the ability to send new messages. Earlier messages remain available. This does not cancel the meal or change attendance.
       </ConfirmSheet>
-    </>
+    </div>
   );
 }

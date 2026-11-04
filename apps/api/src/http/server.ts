@@ -6,6 +6,7 @@ import { registerMealRoutes } from '../meals/routes.ts';
 import { registerConversationRoutes } from '../conversations/routes.ts';
 import { registerAdminRoutes } from '../admin/routes.ts';
 import { registerSupportRoutes } from '../support/routes.ts';
+import { registerModerationRoutes } from '../moderation/routes.ts';
 import { registerAnalyticsIngest } from '../admin/ingest.ts';
 import { AssistantRuntime } from '../../../../packages/assistant/src/index.ts';
 import { registerPostMealRoutes } from '../post-meal/routes.ts';
@@ -31,11 +32,12 @@ import { errorBody, errorHandler } from './errors.ts';
 import { apiLoggerOptions } from './logging.ts';
 import { validatorCompiler } from './validation.ts';
 import { registerIdentityRoutes } from '../identity/routes.ts';
+import { configureAvatarOrigin } from '../profiles/avatar.ts';
 
 export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   deps.assistantRuntime ??= new AssistantRuntime();
   const app = Fastify({
-    logger: apiLoggerOptions(deps.config.environment === 'test' ? 'silent' : deps.config.logLevel),
+    logger: deps.logStream ? { ...apiLoggerOptions('warn'), stream: deps.logStream } : apiLoggerOptions(deps.config.environment === 'test' ? 'silent' : deps.config.logLevel),
     genReqId: () => randomUUID(),
     bodyLimit: 64 * 1024,
     trustProxy: deps.config.trustedProxyCidrs.length ? deps.config.trustedProxyCidrs : false,
@@ -48,7 +50,8 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   app.decorateRequest('auth', null);
   app.addHook('onSend', async (request, reply) => {
     reply.header('x-request-id', request.id);
-    if (request.url.startsWith('/v1/')) reply.header('cache-control', 'private, no-store');
+    // API responses are never cached unless the route chose an explicit policy (public avatars).
+    if (request.url.startsWith('/v1/') && !reply.hasHeader('cache-control')) reply.header('cache-control', 'private, no-store');
   });
 
   app.addHook('onRequest',async(request,reply)=>{
@@ -68,6 +71,7 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
     }
   });
 
+  configureAvatarOrigin(deps.publicOrigin);
   registerIdentityRoutes(app, deps);
   registerProfileRoutes(app, deps);
   registerSurveyRoutes(app, deps);
@@ -86,6 +90,7 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   registerAnalyticsIngest(app, deps);
   registerResendWebhook(app,deps);
   registerSupportRoutes(app, deps);
+  registerModerationRoutes(app, deps);
   const assistant = new AssistantController({ allowedAreas: [], ...deps.assistant, pool: deps.pool, sessions: new SessionService(deps.pool, deps.assistantRuntime), secret: deps.config.sessionSecret,
     venueDisplay:async venueRef=>{
       const {rows:[reference]}=await deps.pool.query<{place_id:string}>(`SELECT place_id FROM venues WHERE id=$1`,[venueRef]);

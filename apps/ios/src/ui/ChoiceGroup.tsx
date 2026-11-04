@@ -1,5 +1,6 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, radius, type } from './tokens.ts';
+import { Pressable, Text, View } from 'react-native';
+import { colors, radius } from './tokens.ts';
+import { createStyles } from './styles.ts';
 
 type Option<V extends string> = readonly [value: V, label: string];
 
@@ -39,17 +40,18 @@ function Chip({ label, selected, role, onPress }: { label: string; selected: boo
       onPress={onPress}
       style={[styles.chip, selected && styles.selected]}
     >
-      <Text style={[styles.chipLabel, selected && styles.selectedLabel]}>{selected ? `✓ ${label}` : label}</Text>
+      <Text style={[styles.chipLabel, selected && styles.selectedLabel]}>{label}</Text>
     </Pressable>
   );
 }
 
-const styles = StyleSheet.create({
-  group: { gap: 8 },
-  legend: { fontSize: type.control, fontWeight: '700', color: colors.ink },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { minHeight: 36, paddingHorizontal: 12, paddingVertical: 8, borderRadius: radius.sm, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.white, justifyContent: 'center' },
+const styles = createStyles({
+  group: { gap: 6 },
+  legend: { fontSize: 12, fontWeight: '500', color: colors.muted },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+  chip: { minHeight: 32, paddingHorizontal: 11, paddingVertical: 6, borderRadius: radius.sm, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.white, justifyContent: 'center' },
   selected: { backgroundColor: colors.selectedSurface, borderColor: colors.forest },
-  chipLabel: { fontSize: type.control, color: colors.ink },
-  selectedLabel: { color: colors.forest, fontWeight: '700' },
+  // Same weight in both states: selecting a chip must not widen it or re-wrap the row.
+  chipLabel: { fontSize: 12, fontWeight: '600', color: colors.ink },
+  selectedLabel: { color: colors.forest },
 });

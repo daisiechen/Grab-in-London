@@ -2,7 +2,7 @@ import { DecimalString, Enum, Obj, T, Text, UniqueArray, Uuid } from '../schema.
 import { Cursor, Limit } from '../common.ts';
 import { ATTENDANCE_VALUES, MESSAGE_READ_MODES, SURVEY_REASONS } from '../dictionaries.ts';
 import {
-  AttendanceState, BlockState, Conversation, InboxItem, Message, PostMealState, ProductSurvey, ReconnectState, Revision, ReviewRevision,
+  AttendanceState, BlockState, BlockedMember, Conversation, InboxItem, Message, PostMealState, ProductSurvey, ReconnectState, Revision, ReviewRevision,
 } from '../dto.ts';
 import { op } from '../operation.ts';
 
@@ -69,6 +69,11 @@ export const socialOperations = [
     operationId: 'revokeConnection', method: 'POST', path: '/connections/{subjectId}/revoke', summary: 'Clear both consents; history read-only',
     auth: 'session', write: 'idempotencyKey', ifMatch: true, params: Subject,
     success: { status: 200, data: ReconnectState }, errors: ['NOT_FOUND'],
+  }),
+  op({
+    operationId: 'listBlocks', method: 'GET', path: '/blocks', summary: 'Members the caller currently blocks, newest first',
+    auth: 'session', write: 'read', ifMatch: false, query: Obj({ cursor: T.Optional(Cursor), limit: T.Optional(Limit) }),
+    success: { status: 200, data: BlockedMember, list: true }, errors: [],
   }),
   op({
     operationId: 'getBlock', method: 'GET', path: '/blocks/{subjectId}', summary: 'Own block state and revision; never reveals the other member choice',

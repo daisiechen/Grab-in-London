@@ -85,3 +85,15 @@ describe('QA-F01 application meal summary',()=>{
   expect(deleted.applicationMeal).toMatchObject({title:'Meal unavailable',hostDisplayName:'Deleted member'});
  });
 });
+describe('inbox ordering', () => {
+  it('orders conversations by the latest activity the member can see, not by creation', async () => {
+    const first = await setup(); const second = await setup();
+    const ids = async () => (json(await first.guest.b.request('GET', '/v1/inbox')).data as Array<{ conversation?: { id: string } }>).map((row) => row.conversation?.id).filter(Boolean);
+    // Joining the second (newer-created) group later puts it first…
+    await withTransaction(h.db.pool, (tx) => joinConversation(tx, second.id, first.guest.id, new Date()));
+    expect(await ids()).toEqual([second.id, first.id]);
+    // …and a new message in the first group brings that one back to the top.
+    expect((await send(first.host.b, first.id, 'See you at seven')).statusCode).toBe(201);
+    expect(await ids()).toEqual([first.id, second.id]);
+  });
+});
