@@ -24,6 +24,23 @@ export function captureSignInError(): void {
 }
 const takeSignInError = () => { const code = returnedError; returnedError = null; return code; };
 
+const returnedMessage = (t: Translate, code: string) => {
+  if (code === 'FORBIDDEN') return t('这个登录方式没有关联员工账号。请使用账号原来的登录方式（同一邮箱或已关联的 Google）。', 'This sign-in is not linked to a staff account. Use the method your account already uses (the same email or a linked Google account).');
+  if (code === 'STATE_CONFLICT') return t('登录已取消或已过期，请重新登录。', 'Sign-in was cancelled or expired. Please try again.');
+  if (code === 'PROVIDER_UNAVAILABLE') return t('暂时无法连接登录服务，请稍后重试。', 'Sign-in is temporarily unavailable. Try again shortly.');
+  if (code === 'ACCOUNT_SUSPENDED') return t('此账号已停用。', 'This account has been suspended.');
+  return t('登录未完成，请重试。', 'Sign-in did not finish. Please try again.');
+};
+
+/**
+ * Why the last secure sign-in came back unfinished. Shown wherever the console asks to sign in,
+ * including the re-verification screen of an older session without MFA, which would otherwise hide it.
+ */
+export function ReturnedSignInError({ t }: { t: Translate }) {
+  const [returned] = useState(takeSignInError);
+  return returned ? <p className="inline-error" role="alert">{returnedMessage(t, returned)}</p> : null;
+}
+
 /**
  * Starts the secure sign-in: the provider's hosted login (email code, Google or Apple, whichever the
  * tenant enables) with multi-factor authentication requested, returning to this console.
@@ -64,15 +81,6 @@ export function SignIn({ t, emailCode = import.meta.env.DEV }: { t: Translate; e
   const [challengeId, setChallengeId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [returned] = useState(takeSignInError);
-
-  const returnedMessage = (code: string) => {
-    if (code === 'FORBIDDEN') return t('这个登录方式没有关联员工账号。请使用账号原来的登录方式（同一邮箱或已关联的 Google）。', 'This sign-in is not linked to a staff account. Use the method your account already uses (the same email or a linked Google account).');
-    if (code === 'STATE_CONFLICT') return t('登录已取消或已过期，请重新登录。', 'Sign-in was cancelled or expired. Please try again.');
-    if (code === 'PROVIDER_UNAVAILABLE') return t('暂时无法连接登录服务，请稍后重试。', 'Sign-in is temporarily unavailable. Try again shortly.');
-    if (code === 'ACCOUNT_SUSPENDED') return t('此账号已停用。', 'This account has been suspended.');
-    return t('登录未完成，请重试。', 'Sign-in did not finish. Please try again.');
-  };
 
   const message = (e: unknown) => {
     const { kind } = toFailure(e);
@@ -109,7 +117,7 @@ export function SignIn({ t, emailCode = import.meta.env.DEV }: { t: Translate; e
         <h2>{t('请重新登录', 'Please sign in again')}</h2>
         <p>{t('用员工账号登录，并完成多因素验证（验证器应用或通行密钥）。后台权限由服务端校验。', 'Sign in with your staff account and complete multi-factor verification (authenticator app or passkey). Roles are checked by the server.')}</p>
       </div>
-      {returned && <p className="inline-error" role="alert">{returnedMessage(returned)}</p>}
+      <ReturnedSignInError t={t} />
       <div className="sign-in-form">
         <SecureSignInButton t={t} />
       </div>

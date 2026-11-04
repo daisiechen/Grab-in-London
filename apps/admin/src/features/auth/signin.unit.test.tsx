@@ -62,6 +62,16 @@ describe('admin secure sign-in', () => {
     await waitFor(() => expect(go).toHaveBeenCalledWith(AUTHORIZE));
   });
 
+  it('explains a returned sign-in error even when an older session without MFA is still active', async () => {
+    setup({
+      'GET /v1/auth/session': () => ok({ ...session(['support']), amr: ['otp'] }),
+      'GET /v1/moderation/reports': () => fail(403, 'REAUTH_REQUIRED'),
+    }, '/admin/?lang=en&signin_error=FORBIDDEN#moderation');
+    expect(await screen.findByText(/not linked to a staff account/)).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Sign in securely' })).toBeTruthy();
+    expect(location.search).toBe('?lang=en');
+  });
+
   it('shows a clear error when the secure sign-in cannot start', async () => {
     const go = assign();
     setup({ 'GET /v1/auth/session': () => fail(401, 'AUTH_REQUIRED'), 'POST /v1/auth/staff/start': () => fail(503, 'PROVIDER_UNAVAILABLE') });

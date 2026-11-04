@@ -127,6 +127,22 @@ describe('admin console sign-in (hosted login, MFA requested)', () => {
     expect((await h.db.pool.query(`SELECT count(*)::int AS n FROM auth_transactions WHERE kind='LINK' AND user_id=$1`, [staff.id])).rows[0].n).toBe(0);
   });
 
+  it('logs why a staff sign-in did not finish, without the email or provider codes', async () => {
+    const b = new Browser(h);
+    const email = address();
+    const grant = h.idp.consent((await startStaff(b)).authorizationUrl, { email, mfa: true });
+    const logs = h.logs!;
+    const from = logs.length;
+    expect((await callback(b, grant)).headers.location).toBe(`${ORIGIN}/admin/?signin_error=FORBIDDEN`);
+    const cancelled = await callback(b, { state: new URL((await startStaff(b)).authorizationUrl).searchParams.get('state')!, error: 'access_denied' });
+    expect(cancelled.headers.location).toBe(`${ORIGIN}/admin/?signin_error=STATE_CONFLICT`);
+    const raw = logs.slice(from).join('');
+    const entries = logs.slice(from).map((line) => JSON.parse(line)).filter((row) => row.msg === 'staff sign-in did not finish');
+    expect(entries.map((row) => [row.code, row.providerError])).toEqual([['FORBIDDEN', undefined], ['STATE_CONFLICT', 'access_denied']]);
+    expect(entries.every((row) => typeof row.reqId === 'string')).toBe(true);
+    expect([email, grant.code, grant.state].some((value) => raw.includes(value))).toBe(false);
+  });
+
   it('redirects cancellations, other browsers and replays back to the console with an error code', async () => {
     const staff = await staffAccount();
     const b = new Browser(h);

@@ -185,6 +185,9 @@ async function staffCallback(deps: AppDeps, row: AuthTxRow & { binder_hash: stri
     return { status: 303, after: (response) => { result.after?.(response); signedIn(response); } };
   } catch (error) {
     if (!(error instanceof DomainError)) throw error;
+    // The browser only sees a redirect, so the outcome code (never the message or identity) goes to the log.
+    const providerError = typeof query.error === 'string' && /^[a-z_]{1,40}$/.test(query.error) ? query.error : undefined;
+    request.log.warn({ code: error.code, providerError }, 'staff sign-in did not finish');
     return { status: 303, after: back(error.code) };
   }
 }

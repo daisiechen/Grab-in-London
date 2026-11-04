@@ -37,7 +37,7 @@ import { configureAvatarOrigin } from '../profiles/avatar.ts';
 export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   deps.assistantRuntime ??= new AssistantRuntime();
   const app = Fastify({
-    logger: apiLoggerOptions(deps.config.environment === 'test' ? 'silent' : deps.config.logLevel),
+    logger: deps.logStream ? { ...apiLoggerOptions('warn'), stream: deps.logStream } : apiLoggerOptions(deps.config.environment === 'test' ? 'silent' : deps.config.logLevel),
     genReqId: () => randomUUID(),
     bodyLimit: 64 * 1024,
     trustProxy: deps.config.trustedProxyCidrs.length ? deps.config.trustedProxyCidrs : false,

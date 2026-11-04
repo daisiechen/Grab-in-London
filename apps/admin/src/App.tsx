@@ -10,7 +10,7 @@ import { ExportButton } from './features/exports/ExportButton.tsx';
 import { FilterBar } from './features/filters/FilterBar.tsx';
 import { SnapshotPicker } from './features/snapshot/SnapshotPicker.tsx';
 import { FailureScreen } from './features/status/FailureScreen.tsx';
-import { captureSignInError, SecureSignInButton, SignIn } from './features/auth/SignIn.tsx';
+import { captureSignInError, ReturnedSignInError, SecureSignInButton, SignIn } from './features/auth/SignIn.tsx';
 import { ModerationQueue } from './features/moderation/ModerationQueue.tsx';
 import { ReportDetail } from './features/moderation/ReportDetail.tsx';
 import { formatLondonTime, makeT, versionLabel, type Language, type Translate } from './i18n.ts';
@@ -169,6 +169,7 @@ function GateFailure({ t }: { t: Translate }) {
   return (
     <>
       <FailureScreen failure={c.gate.failure} t={t} onRetry={() => c.reloadSession()} />
+      <ReturnedSignInError t={t} />
       {c.gate.failure.kind === 'reauth' && (
         <div className="sign-in-form"><SecureSignInButton t={t} /></div>
       )}

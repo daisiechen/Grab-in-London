@@ -29,6 +29,8 @@ export interface AppDeps {
   assistantRuntime?: AssistantRuntime;
   /** Explicit verified integration bundle; absent means model unavailable. Never infer
    * approval or prices merely from the existence of a provider credential. */
+  /** Test-only capture of warn-and-above log lines (the test environment is otherwise silent). */
+  logStream?: { write(chunk: string): void };
   assistant?: {allowedAreas:readonly string[];provider:ModelProvider;price:VerifiedPrice;countInputTokens:(request:ModelInput)=>number};
 }
 
