@@ -110,14 +110,14 @@ prompt_value() { # key kind -> prints value on stdout (prompts on the terminal)
 # App Store review code: typed with echo off, or generated and shown once on the terminal.
 # Prints only the scrypt hash on stdout; the code goes to the hasher on stdin, never argv.
 prompt_review_code() {
-  local v done_
+  local v
   while true; do
     read -r -s -p "  REVIEW_ACCOUNT_CODE_HASH: type a 6-digit review code (hidden), g to generate one, Enter to skip: " v </dev/tty; echo >/dev/tty
     [[ -z "$v" ]] && return 0
     if [[ "$v" == g || "$v" == G ]]; then
       v="$(review_code_generate)"
       echo "    review code: $v  (shown once; type it into App Store Connect > Sign-In Information now, it is not stored)" >/dev/tty
-      read -r -p "    press Enter when it is saved there " done_ </dev/tty
+      read -r -p "    press Enter when it is saved there " _ </dev/tty
       # Best effort: wipe the two lines that showed the code from the visible screen.
       printf '\033[2A\033[2K\033[1B\033[2K\r' >/dev/tty
       echo "    code saved in App Store Connect (wiped from this screen)" >/dev/tty
