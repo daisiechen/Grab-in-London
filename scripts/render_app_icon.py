@@ -10,7 +10,6 @@ Usage: python3 scripts/render_app_icon.py
 from math import cos, radians, sin
 from pathlib import Path
 
-from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parents[1]
 SVG_PATH = ROOT / 'apps/ios/assets/brand/app-icon.svg'
@@ -77,7 +76,9 @@ def svg() -> str:
     )
 
 
-def png(scale: int = 4) -> Image.Image:
+def png(scale: int = 4) -> 'Image.Image':
+    # Pillow is needed only to write the PNG; svg() and the repository checks run without it.
+    from PIL import Image, ImageDraw
     big = Image.new('RGB', (SIZE * scale, SIZE * scale), FOREST)
     draw = ImageDraw.Draw(big)
     for shape in SHAPES:
