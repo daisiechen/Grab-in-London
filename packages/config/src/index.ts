@@ -7,6 +7,9 @@
 
 import { isIP } from 'node:net';
 import { isAbsolute } from 'node:path';
+import { parseReviewCodeHash } from './review-code.ts';
+
+export { hashReviewCode, isReviewCode, parseReviewCodeHash, verifyReviewCode } from './review-code.ts';
 
 export const ENVIRONMENTS = ['development', 'test', 'staging', 'production'] as const;
 export type Environment = (typeof ENVIRONMENTS)[number];
@@ -54,6 +57,14 @@ export const CONFIG_KEYS = [
   'RETENTION_POLICY_JSON',
   'LOG_LEVEL',
   'TRUSTED_PROXY_CIDRS',
+  'SUPPORT_EMAIL',
+  'ADMIN_URL',
+  'MODERATION_AUTO_HIDE_REPORTERS',
+  'ETHAN_MODERATION_URL',
+  'ETHAN_MODERATION_TOKEN',
+  'REVIEW_LOGIN_ENABLED',
+  'REVIEW_ACCOUNT_EMAIL',
+  'REVIEW_ACCOUNT_CODE_HASH',
 ] as const;
 
 const LOG_LEVELS = ['debug', 'info', 'warn', 'error'] as const;
@@ -89,6 +100,23 @@ export interface CoreConfig {
   logLevel: LogLevel;
   /** Explicit proxy addresses only; an empty list distrusts all forwarded headers. */
   trustedProxyCidrs: string[];
+  /** Support inbox for the daily moderation digest; unset = no digest is queued. */
+  supportEmail: string | null;
+  /** Absolute URL of the admin console used in digest deep links (default `${WEB_ORIGIN}/admin/`). */
+  adminUrl: string;
+  /** Distinct reporters within 7 days that make the server limit reported content (default 2). */
+  moderationAutoHideReporters: number;
+  /**
+   * Owner's assistant (Ethan) moderation push: counts and an admin link only, Bearer token (secret,
+   * never logged). Both set or both unset; unset = no push.
+   */
+  ethanModeration: { url: string; token: string } | null;
+  /**
+   * App Store review sign-in (app-store-submission §7 option A). Non-null only when
+   * REVIEW_LOGIN_ENABLED=1 with one exact lowercased email and the scrypt hash of its 6-digit code
+   * (never the code); every other email goes to the identity provider as usual.
+   */
+  reviewLogin: { email: string; codeHash: string } | null;
 }
 
 /** Lists offending keys only; values are never echoed so secrets stay out of logs. */
@@ -255,8 +283,60 @@ export function loadConfig(env: Readonly<Record<string, string | undefined>>): C
   if (!LOG_LEVELS.includes(logLevel)) issues.push(`LOG_LEVEL must be one of ${LOG_LEVELS.join('/')}`);
   const trustedProxyCidrs = parseTrustedProxies(value('TRUSTED_PROXY_CIDRS'), issues);
 
+  const supportEmail = value('SUPPORT_EMAIL')?.toLowerCase() ?? null;
+  if (supportEmail && (supportEmail.length > 320 || !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(supportEmail))) issues.push('SUPPORT_EMAIL must be a single email address');
+  let adminUrl = webOrigin ? `${webOrigin}/admin/` : '';
+  const adminRaw = value('ADMIN_URL');
+  if (adminRaw) {
+    try {
+      const url = new URL(adminRaw);
+      if ((url.protocol !== 'https:' && !(url.protocol === 'http:' && !deployed)) || url.username || url.password || url.search || url.hash) throw new Error();
+      adminUrl = url.href.endsWith('/') ? url.href : `${url.href}/`;
+    } catch { issues.push(`ADMIN_URL must be an absolute ${deployed ? 'https ' : ''}URL without credentials, query or fragment`); }
+  }
+  const autoHideRaw = value('MODERATION_AUTO_HIDE_REPORTERS') ?? '2';
+  const moderationAutoHideReporters = Number(autoHideRaw);
+  if (!/^[0-9]{1,2}$/.test(autoHideRaw) || moderationAutoHideReporters < 1 || moderationAutoHideReporters > 20) issues.push('MODERATION_AUTO_HIDE_REPORTERS must be an integer from 1 to 20');
+
+  let ethanModeration: CoreConfig['ethanModeration'] = null;
+  const ethanUrl = value('ETHAN_MODERATION_URL'), ethanToken = value('ETHAN_MODERATION_TOKEN');
+  if (ethanUrl || ethanToken) {
+    if (!ethanUrl || !ethanToken) issues.push('ETHAN_MODERATION_URL and ETHAN_MODERATION_TOKEN must be supplied together');
+    else {
+      let urlOk = false;
+      try {
+        const url = new URL(ethanUrl);
+        urlOk = (url.protocol === 'https:' || (url.protocol === 'http:' && !deployed)) && !url.username && !url.password && !url.hash && ethanUrl.length <= 2048;
+      } catch { /* reported below */ }
+      if (!urlOk) issues.push(`ETHAN_MODERATION_URL must be an absolute ${deployed ? 'https ' : ''}URL without credentials or fragment`);
+      if (ethanToken.length < 16 || ethanToken.length > 4096 || /[\p{Cc}\s]/u.test(ethanToken)) issues.push('ETHAN_MODERATION_TOKEN must be 16–4096 printable characters without spaces');
+      if (!issues.some((i) => i.startsWith('ETHAN_'))) ethanModeration = { url: new URL(ethanUrl).href, token: ethanToken };
+    }
+  }
+
+  let reviewLogin: CoreConfig['reviewLogin'] = null;
+  const reviewEnabled = value('REVIEW_LOGIN_ENABLED');
+  const reviewEmail = value('REVIEW_ACCOUNT_EMAIL')?.toLowerCase();
+  const reviewHash = value('REVIEW_ACCOUNT_CODE_HASH');
+  if (reviewEnabled !== undefined && reviewEnabled !== '0' && reviewEnabled !== '1') issues.push('REVIEW_LOGIN_ENABLED must be 0 or 1');
+  const reviewEmailOk = !reviewEmail || (reviewEmail.length <= 254 && /^[a-z0-9._+-]+@[a-z0-9-]+(?:\.[a-z0-9-]+)+$/.test(reviewEmail));
+  if (!reviewEmailOk) issues.push('REVIEW_ACCOUNT_EMAIL must be one exact email address');
+  const reviewHashOk = !reviewHash || parseReviewCodeHash(reviewHash) !== null;
+  if (!reviewHashOk) issues.push('REVIEW_ACCOUNT_CODE_HASH must be the scrypt hash written by secrets.sh, never the code itself');
+  if (reviewEnabled === '1') {
+    if (!reviewEmail || !reviewHash) issues.push('REVIEW_LOGIN_ENABLED=1 requires REVIEW_ACCOUNT_EMAIL and REVIEW_ACCOUNT_CODE_HASH');
+    else if (!supportEmail) issues.push('REVIEW_LOGIN_ENABLED=1 requires SUPPORT_EMAIL for the sign-in notice');
+    else if (reviewEmail === supportEmail) issues.push('REVIEW_ACCOUNT_EMAIL must differ from SUPPORT_EMAIL');
+    else if (reviewEmailOk && reviewHashOk) reviewLogin = { email: reviewEmail, codeHash: reviewHash };
+  }
+
   if (issues.length) throw new ConfigError(issues);
   return {
+    reviewLogin,
+    ethanModeration,
+    supportEmail,
+    adminUrl,
+    moderationAutoHideReporters,
     environment,
     databaseUrl: db!.toString(),
     adapters: adapters as CoreConfig['adapters'],

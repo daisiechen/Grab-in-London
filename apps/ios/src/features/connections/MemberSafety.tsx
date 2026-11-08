@@ -2,7 +2,10 @@ import {useEffect,useMemo,useRef,useState} from 'react';
 import {ApiError,type ResponseOf} from '@fancy/client';
 import {useServices,useSessionState} from '../../services.tsx';
 import {Primary,TextAction} from '../../ui/Button.tsx';
+import {Text,View} from 'react-native';
 import {Body} from '../../ui/Text.tsx';
+import {colors} from '../../ui/tokens.ts';
+import {createStyles} from '../../ui/styles.ts';
 import {FormMessage} from '../../ui/FormMessage.tsx';
 import {Sheet} from '../../ui/Sheet.tsx';
 
@@ -45,10 +48,10 @@ export function MemberSafety({subjectId,name}:{subjectId:string;name:string}){
    else{if(cause instanceof ApiError&&!cause.retryable)scope.keys.delete(id);setError('We couldn’t save this safety setting. Your confirmation is kept.');}
   }finally{scope.writing=false;if(current())setBusy(false);}
  };
- return <>
+ return <View style={styles.wrap}>
   <FormMessage message={notice} tone="info"/>
   {!confirmation?<FormMessage message={error}/>:null}
-  {loading?<Body muted>Loading safety settings…</Body>:null}
+  {loading?<Text style={styles.muted}>Loading safety settings…</Text>:null}
   {!data&&!loading?<TextAction label="Reload safety settings" onPress={()=>void reload()} disabled={busy}/>:null}
   {data?<TextAction destructive label={`${data.blocked?'Unblock':'Block'} ${name}`} disabled={busy||loading} onPress={()=>{setError(null);setPending({scope,blocked:!data.blocked,version:data.version});}}/>:null}
   <Sheet visible={confirmation!==null} title={`${confirmation?.blocked?'Block':'Unblock'} ${name}?`} onClose={()=>{if(!busy)setPending(null);}}>
@@ -56,7 +59,12 @@ export function MemberSafety({subjectId,name}:{subjectId:string;name:string}){
    <Body>Your previous connection will not be restored. Both people must choose again.</Body>
    <FormMessage message={error}/>
    <Primary secondary label="Cancel" disabled={busy} onPress={()=>setPending(null)}/>
-   <Primary label={confirmation?.blocked?'Confirm block':'Confirm unblock'} disabled={busy||loading||!data} onPress={()=>void confirm()}/>
+   <TextAction destructive label={confirmation?.blocked?'Confirm block':'Confirm unblock'} disabled={busy||loading||!data} onPress={()=>void confirm()}/>
   </Sheet>
- </>;
+ </View>;
 }
+
+const styles=createStyles({
+ wrap:{alignItems:'center'},
+ muted:{fontSize:11,lineHeight:16,color:colors.muted,paddingVertical:8},
+});

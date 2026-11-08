@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { act,render,screen, waitFor } from '@testing-library/react';
+import { act,render,screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { createFetchStub, deferred,fail,ok,meta,type StubResponse } from '../../test/fetchStub.ts';
 import { renderApp,testApi } from '../../test/render.tsx';
@@ -50,6 +50,7 @@ describe('email OTP sign-in (T05)', () => {
     const { stub } = authStub();
     renderApp(stub.fetch, '/sign-in?returnTo=%2Fprofile');
     await enterEmailAndCode();
+    await userEvent.click(within(await screen.findByRole('dialog', { name: 'Help improve Fancy' })).getByRole('button', { name: 'Decline analytics' }));
     expect(await screen.findByRole('heading', { name: 'Sam Rivera' })).toBeTruthy();
     const start = stub.callsTo('startEmail')[0]!.body as Record<string, unknown>;
     expect(start).toMatchObject({ email: 'sam@example.test', client: 'WEB', returnTarget: '/profile' });
@@ -215,6 +216,7 @@ describe('OAuth sign-in (T05)', () => {
     first.unmount();
 
     renderApp(stub.fetch, '/auth/callback?code=abc&state=st-1');
+    await userEvent.click(within(await screen.findByRole('dialog', { name: 'Help improve Fancy' })).getByRole('button', { name: 'Decline analytics' }));
     expect(await screen.findByRole('heading', { name: 'Sam Rivera' })).toBeTruthy();
     const cb = stub.callsTo('oauthCallback');
     expect(cb).toHaveLength(1);

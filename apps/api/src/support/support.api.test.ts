@@ -10,7 +10,7 @@ describe('private report and support access',()=>{
   const reporter=await member(),target=await member(),staff=await member();
   const created=await write(reporter.b,'/v1/reports',{targetType:'USER',targetId:target.id,reason:'private_concern',details:'Private concern only support may read.'});
   expect(created.statusCode,created.body).toBe(201);const report=json(created).data;
-  expect(report).toMatchObject({status:'RECEIVED',targetType:'USER',publicOutcome:null});expect(created.body).not.toContain('Private concern');
+  expect(report).toMatchObject({status:'RECEIVED',targetType:'USER',publicOutcome:expect.stringContaining('received your report')});expect(created.body).not.toContain('Private concern');
   expect((await target.b.request('GET',`/v1/me/reports/${report.id}`)).statusCode).toBe(404);
   const {rows:[c]}=await h.db.pool.query(`SELECT id FROM support_cases WHERE report_id=$1`,[report.id]);
   expect((await staff.b.request('GET',`/v1/support/cases/${c.id}`)).statusCode).toBe(403);

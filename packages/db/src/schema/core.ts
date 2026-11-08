@@ -6,11 +6,13 @@ const big = (name: string) => bigint(name, { mode: 'bigint' });
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
-  status: text('status', { enum: ['ACTIVE', 'DELETING', 'DELETED'] }).notNull().default('ACTIVE'),
+  status: text('status', { enum: ['ACTIVE', 'SUSPENDED', 'DELETING', 'DELETED'] }).notNull().default('ACTIVE'),
   version: big('version').notNull().default(1n),
   privacyEpoch: big('privacy_epoch').notNull().default(0n),
   createdAt: ts('created_at').notNull().defaultNow(),
   updatedAt: ts('updated_at').notNull().defaultNow(),
+  /** 0030: campaign-level sign-up source, written once at account creation. */
+  signupSource: text('signup_source'),
 });
 
 export const idempotency = pgTable('idempotency', {

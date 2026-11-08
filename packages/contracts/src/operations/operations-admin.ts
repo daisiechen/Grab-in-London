@@ -1,7 +1,7 @@
 import { DecimalString, Enum, Instant, Obj, T, Text, Uuid } from '../schema.ts';
 import { Cursor, Limit } from '../common.ts';
 import {
-  ADMIN_DRILLDOWN_SORTS, ADMIN_DRILLDOWN_TARGETS, ADMIN_PAGES, ATTENDANCE_VALUES, CLASSIFICATIONS, CLIENT_EVENT_TYPES, REPORT_REASONS, REPORT_TARGET_TYPES, SUPPORT_CASE_STATUSES,
+  ADMIN_DRILLDOWN_SORTS, ADMIN_DRILLDOWN_TARGETS, ADMIN_PAGES, ATTENDANCE_VALUES, CLASSIFICATIONS, CLIENT_EVENT_TYPES, REPORT_REASON_INPUTS, REPORT_TARGET_TYPES, SUPPORT_CASE_STATUSES,
 } from '../dictionaries.ts';
 import {
   AdminPageData, AttendanceCorrection, Classification, DeletionStatus, DrilldownRow, ExportTicket, IngestResult, Notification,
@@ -60,7 +60,7 @@ export const operationsAdmin = [
   op({
     operationId: 'createReport', method: 'POST', path: '/reports', summary: 'Private report; returns a receipt, not a resolution',
     auth: 'session', write: 'idempotencyKey', ifMatch: false,
-    body: Obj({ targetType: Enum(REPORT_TARGET_TYPES), targetId: Uuid, reason: Enum(REPORT_REASONS), details: Text(1, 1000) }),
+    body: Obj({ targetType: Enum(REPORT_TARGET_TYPES), targetId: Uuid, reason: Enum(REPORT_REASON_INPUTS), details: Text(1, 1000) }),
     success: { status: 201, data: ReportReceipt }, errors: ['NOT_FOUND'],
   }),
   op({

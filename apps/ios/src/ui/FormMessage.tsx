@@ -1,5 +1,6 @@
-import { StyleSheet, Text } from 'react-native';
+import { Text } from 'react-native';
 import { colors, type } from './tokens.ts';
+import { createStyles } from './styles.ts';
 
 /** Single status/alert line (prototype `form-error` role=alert / notify role=status). */
 export function FormMessage({ message, tone = 'error' }: { message: string | null; tone?: 'error' | 'info' }) {
@@ -11,7 +12,7 @@ export function FormMessage({ message, tone = 'error' }: { message: string | nul
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createStyles({
   base: { fontSize: type.control, lineHeight: 18 },
   error: { color: colors.danger },
   info: { color: colors.forest },

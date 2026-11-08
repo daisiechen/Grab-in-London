@@ -1,4 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { peekInboxFocus } from '../inbox/focus.ts';
 import { MealDetailScreen } from './MealDetailScreen.tsx';
 import { ApplyScreen } from './ApplyScreen.tsx';
 import { HostScreen } from './HostScreen.tsx';
@@ -20,15 +21,20 @@ beforeEach(() => {
 });
 
 describe('MealDetailScreen (S06)', () => {
-  it('guest sees public detail with P-05 “Not provided”; Request to join goes to sign-in without applying (QA-AUTH-001)', async () => {
+  it('guest sees public detail with P-05 “Not provided”; Apply to join goes to sign-in without applying (QA-AUTH-001)', async () => {
     const app = createTestApp();
     app.mock.on('GET', MEAL_PATH, ok({ meal: meal(), myApplication: null, conversationId: null }));
     await renderApp(app, <MealDetailScreen />);
     expect(await screen.findByText('Sunday dinner')).toBeOnTheScreen();
-    expect(screen.getByText('Sun 25 Oct · 19:00 GMT')).toBeOnTheScreen();
-    expect(screen.getByText('Cuisine: Not provided · Dietary: Not provided')).toBeOnTheScreen();
-    expect(screen.getByText('£20–£35 per person · Pay at the restaurant')).toBeOnTheScreen();
-    await fireEvent.press(screen.getByRole('button', { name: 'Request to join' }));
+    expect(screen.getByText('Sun 25 Oct')).toBeOnTheScreen();
+    expect(screen.getByText('19:00 · London time')).toBeOnTheScreen();
+    expect(screen.getByText('Cuisine: Not provided · Dietary options: Not provided. Host-reported · not an allergy guarantee.')).toBeOnTheScreen();
+    expect(screen.getByText('£20–35')).toBeOnTheScreen();
+    expect(screen.getByText('No payment is due in the app. Everyone pays their own share at the restaurant.')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Cancellation terms' }));
+    expect(mockRouter.push).toHaveBeenCalledWith('/cancellation-terms');
+    mockRouter.push.mockClear();
+    await fireEvent.press(screen.getByRole('button', { name: 'Apply to join' }));
     expect(mockRouter.push).toHaveBeenCalledWith('/sign-in');
     expect(peekReturnTo()).toBe(`/meals/${MEAL_ID}/apply`);
     expect(app.mock.callsTo('POST', /applications/)).toHaveLength(0);
@@ -61,6 +67,15 @@ describe('MealDetailScreen (S06)', () => {
 });
 
 describe('ApplyScreen (S07, QA-INPUT-017..020)', () => {
+  it('shows the member’s uploaded photo next to the introduction, not just an initial', async () => {
+    const app = createTestApp();
+    await signIn(app, me({ displayName: 'Alex', avatarUrl: 'preview://images/maya.png' }));
+    app.mock.on('GET', MEAL_PATH, ok({ meal: meal(), myApplication: null, conversationId: null }));
+    await renderApp(app, <ApplyScreen />);
+    await screen.findByLabelText('Your introduction');
+    expect(screen.queryByText('A')).toBeNull();
+  });
+
   it('enforces 20–300 characters, keeps the draft across remounts and reports a full table', async () => {
     const app = createTestApp();
     await signIn(app, me());
@@ -73,6 +88,8 @@ describe('ApplyScreen (S07, QA-INPUT-017..020)', () => {
     expect(app.mock.callsTo('POST', /applications/)).toHaveLength(0);
 
     await fireEvent.changeText(screen.getByLabelText('Your introduction'), 'I recently moved here and love trying new food.');
+    // The length error clears as soon as the text is valid.
+    expect(screen.queryByText('Write a short introduction of 20–300 characters.')).toBeNull();
     await first.unmount();
     await renderApp(app, <ApplyScreen />);
     expect(await screen.findByLabelText('Your introduction')).toHaveDisplayValue('I recently moved here and love trying new food.');
@@ -93,7 +110,7 @@ describe('ApplyScreen (S07, QA-INPUT-017..020)', () => {
     expect(app.mock.callsTo('POST', /applications/)).toHaveLength(0);
   });
 
-  it('a successful request clears the draft and returns to the meal', async () => {
+  it('a successful request clears the draft and opens the application status for the meal', async () => {
     const app = createTestApp();
     await signIn(app, me());
     app.mock.on('GET', MEAL_PATH, ok({ meal: meal(), myApplication: null, conversationId: null }));
@@ -101,7 +118,9 @@ describe('ApplyScreen (S07, QA-INPUT-017..020)', () => {
     await renderApp(app, <ApplyScreen />);
     await fireEvent.changeText(await screen.findByLabelText('Your introduction'), 'I recently moved here and love trying new food.');
     await fireEvent.press(screen.getByRole('button', { name: 'Send request' }));
-    await waitFor(() => expect(mockRouter.replace).toHaveBeenCalledWith(`/meals/${MEAL_ID}`));
+    await waitFor(() => expect(mockRouter.replace).toHaveBeenCalledWith(`/meals/${MEAL_ID}/status`));
+    // Inbox will open on this meal next (Applications tab while pending, its chat once seated).
+    expect(peekInboxFocus()).toBe(MEAL_ID);
     expect(app.mock.callsTo('POST', /applications/)[0]?.body).toEqual({ message: 'I recently moved here and love trying new food.' });
     expect(app.services.drafts.get(`apply:${MEAL_ID}`)).toBeUndefined();
   });
@@ -145,10 +164,10 @@ describe('MyMealsScreen', () => {
   it('loads each section from the server', async () => {
     const app = createTestApp();
     await signIn(app, me());
-    app.mock.on('GET', '/v1/me/meals', (c) => page(c.query.get('section') === 'HOSTING' ? [{ meal: meal({ title: 'Hosted lunch' }), application: null, role: 'HOST' }] : []));
+    app.mock.on('GET', '/v1/me/meals', (c) => page(c.query.get('section') === 'HOSTING' ? [{ meal: meal({ title: 'Hosted lunch' }), application: null, role: 'HOST', conversationId: null }] : []));
     await renderApp(app, <MyMealsScreen />);
-    expect(await screen.findByText('Nothing here yet.')).toBeOnTheScreen();
-    await fireEvent.press(screen.getByRole('radio', { name: 'Hosting' }));
+    expect(await screen.findByText('A good meal is waiting.')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole('tab', { name: 'Hosting' }));
     expect(await screen.findByText('Hosted lunch')).toBeOnTheScreen();
     expect(app.mock.calls.filter((c) => c.path === '/v1/me/meals').map((c) => c.query.get('section'))).toEqual(['UPCOMING', 'HOSTING']);
   });

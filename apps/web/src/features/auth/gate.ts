@@ -11,7 +11,7 @@ export const isProfileReady = (session: SessionInfo): boolean => {
   return g.ageConfirmed && g.communityAccepted && g.profileComplete;
 };
 
-export const profileGatePath = (returnTo: string) => `/profile/edit?returnTo=${encodeURIComponent(safeReturnTo(returnTo))}`;
+export const profileGatePath = (returnTo: string) => `/profile-setup?returnTo=${encodeURIComponent(safeReturnTo(returnTo))}`;
 
 /**
  * Before a gated write (apply, create): sends a guest to sign-in and an incomplete profile to

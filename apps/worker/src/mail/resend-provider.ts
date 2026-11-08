@@ -11,7 +11,7 @@ interface ResendOptions {
  onDispatch?:(input:{outboxId:string;claimToken:string;payloadSha256:string})=>Promise<boolean>;
 }
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const REF_KEYS=new Set(['mealId','applicationId','conversationId','deletionId']);
+const REF_KEYS=new Set(['mealId','applicationId','conversationId','deletionId','digestId','alertId']);
 const TEMPLATES:Readonly<Record<string,{subject:string;message:string;deletion?:true}>>={
  application_approved:{subject:'Your Fancy application was approved',message:'Your application was approved. Open Fancy to see the meal details.'},
  application_declined:{subject:'Your Fancy application was declined',message:'Your application was declined. Open Fancy to review your application.'},
@@ -19,7 +19,14 @@ const TEMPLATES:Readonly<Record<string,{subject:string;message:string;deletion?:
  meal_cancelled:{subject:'Your Fancy meal was cancelled',message:'This meal was cancelled. Open Fancy to see its current status.'},
  deletion_received:{subject:'Fancy received your account deletion request',message:'Your account deletion request was received. Use your saved deletion receipt in Fancy to check its status.',deletion:true},
  deletion_completed:{subject:'Your Fancy account deletion is complete',message:'Your account deletion is complete. Use your saved deletion receipt in Fancy to check its status.',deletion:true},
+ moderation_digest:{subject:'Fancy moderation: open reports to review',message:'These reports are still open, oldest first. Each link opens the report in the Fancy admin console (staff sign-in required).'},
+ moderation_urgent:{subject:'Fancy moderation: urgent report to review',message:'A report about personal safety, harassment or a member who may be under 18 was received. Each link opens the report in the Fancy admin console (staff sign-in required).'},
+ review_signin:{subject:'Fancy: the App Store review account signed in',message:'Someone just signed in with the App Store review account. If App Review is not in progress, turn review sign-in off (REVIEW_LOGIN_ENABLED) and set a new review code.'},
 };
+/** Plain notices to the support inbox: fixed text only, no link, refs or account details. */
+const NOTICE_TEMPLATES=new Set(['review_signin']);
+/** Templates whose body is a list of admin report links (ids only, never report text). */
+const LINK_TEMPLATES=new Set(['moderation_digest','moderation_urgent']);
 const escapeHtml=(value:string)=>value.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
 
 /** Sending-only Resend adapter. It never logs inputs/errors or invents lookup evidence.
@@ -41,9 +48,20 @@ export class ResendMailProvider implements MailProvider {
  async send(input:Parameters<MailProvider['send']>[0]):Promise<DeliveryOutcome>{
   const template=Object.hasOwn(TEMPLATES,input.template)?TEMPLATES[input.template]:undefined;
   if(!template||!UUID.test(input.idempotencyKey)||typeof input.email!=='string'||input.email.length>320||!/^[^\s@<>]+@[^\s@<>]+$/.test(input.email)||Object.entries(input.refs).some(([key,value])=>!REF_KEYS.has(key)||typeof value!=='string'||!UUID.test(value)))return {status:'RETRY'};
-  const path=template.deletion?'/settings/deletion':input.refs.mealId?'/meals/'+input.refs.mealId:'/inbox';
-  const link=new URL(path,this.origin).href;
-  const body=JSON.stringify({from:this.options.from,to:[input.email],subject:template.subject,tags:[{name:'outbox_id',value:input.idempotencyKey}],text:template.message+'\n\n'+link,html:'<p>'+escapeHtml(template.message)+'</p><p><a href="'+escapeHtml(link)+'">Open Fancy</a></p>'});
+  let body:string;
+  if(LINK_TEMPLATES.has(input.template)){
+   // Only https (or loopback http) admin links ending in a report id; no report text ever enters mail.
+   const links=input.links??[];
+   if(!links.length||links.length>50||links.some(link=>{try{const url=new URL(link);return !((url.protocol==='https:'||(url.protocol==='http:'&&['localhost','127.0.0.1','[::1]'].includes(url.hostname)))&&!url.username&&!url.password&&/^#moderation\/[0-9a-f-]{36}$/i.test(url.hash));}catch{return true;}}))return {status:'RETRY'};
+   body=JSON.stringify({from:this.options.from,to:[input.email],subject:`${template.subject} (${links.length})`,tags:[{name:'outbox_id',value:input.idempotencyKey}],text:template.message+'\n\n'+links.join('\n'),html:'<p>'+escapeHtml(template.message)+'</p><ol>'+links.map((link,i)=>'<li><a href="'+escapeHtml(link)+'">Report '+(i+1)+'</a></li>').join('')+'</ol>'});
+  }else if(NOTICE_TEMPLATES.has(input.template)){
+   if(Object.keys(input.refs).length)return {status:'RETRY'};
+   body=JSON.stringify({from:this.options.from,to:[input.email],subject:template.subject,tags:[{name:'outbox_id',value:input.idempotencyKey}],text:template.message,html:'<p>'+escapeHtml(template.message)+'</p>'});
+  }else{
+   const path=template.deletion?'/settings/deletion':input.refs.mealId?'/meals/'+input.refs.mealId:'/inbox';
+   const link=new URL(path,this.origin).href;
+   body=JSON.stringify({from:this.options.from,to:[input.email],subject:template.subject,tags:[{name:'outbox_id',value:input.idempotencyKey}],text:template.message+'\n\n'+link,html:'<p>'+escapeHtml(template.message)+'</p><p><a href="'+escapeHtml(link)+'">Open Fancy</a></p>'});
+  }
   if(this.options.onDispatch){
    if(!input.claimToken||!UUID.test(input.claimToken))return {status:'UNKNOWN'};
    try{if(!await this.options.onDispatch({outboxId:input.idempotencyKey,claimToken:input.claimToken,payloadSha256:createHash('sha256').update(body).digest('hex')}))return {status:'UNKNOWN'};}catch{return {status:'UNKNOWN'};}

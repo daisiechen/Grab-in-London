@@ -38,5 +38,11 @@ export function toFailure(error: unknown): Failure {
   return { kind: byKind[error.kind] ?? 'error', requestId };
 }
 
+/**
+ * Moderation/support calls: only a missing or unverified session ends the console view. A 403 there
+ * means this case or action is not allowed and is shown in place (facts cleared), not as a gate.
+ */
+export const endsSession = (kind: FailureKind) => kind === 'signed_out' || kind === 'reauth';
+
 /** Failures that end the whole console session view (no data may remain on screen). */
 export const isBlocking = (kind: FailureKind) => kind === 'signed_out' || kind === 'forbidden' || kind === 'reauth';

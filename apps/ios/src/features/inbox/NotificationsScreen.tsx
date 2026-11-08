@@ -1,11 +1,13 @@
-import {useCallback,useRef,useState} from 'react';
-import {AppState,View} from 'react-native';
+import {useCallback,useRef,useState,type ReactNode} from 'react';
+import {AppState,Pressable,Text,View} from 'react-native';
 import {useFocusEffect,useRouter} from 'expo-router';
 import {ApiError,type ResponseOf} from '@fancy/client';
 import {useServices,useSessionState} from '../../services.tsx';
-import {Screen} from '../../ui/Screen.tsx';
-import {Body,Heading} from '../../ui/Text.tsx';
-import {Primary} from '../../ui/Button.tsx';
+import {AccountPage} from '../../ui/AccountPage.tsx';
+import {Primary,TextAction} from '../../ui/Button.tsx';
+import {Icon,type IconName} from '../../ui/Icon.tsx';
+import {createStyles} from '../../ui/styles.ts';
+import {colors} from '../../ui/tokens.ts';
 import {FormMessage} from '../../ui/FormMessage.tsx';
 import {loadErrorMessage} from '../../api/useQuery.ts';
 import {rememberReturnTo} from '../auth/intent.ts';
@@ -13,8 +15,8 @@ const labels:Record<string,string>={deletion_received:'Account deletion requeste
 type Notice=ResponseOf<'listNotifications'>['data'][number];
 export function NotificationsScreen(){
  const state=useSessionState(),{session}=useServices(),router=useRouter();
- if(state.status==='unavailable')return <Screen><Heading>Notifications</Heading><Body>We couldn’t verify your session.</Body><Primary label="Retry session" onPress={()=>void session.revalidate()}/></Screen>;
- if(state.status!=='signedIn')return <Screen><Heading>Notifications</Heading><Body>Sign in to see your notifications.</Body><Primary label="Sign in" onPress={()=>{rememberReturnTo('/inbox');router.push('/sign-in');}}/></Screen>;
+ if(state.status==='unavailable')return <AccountPage testID="notifications"><Empty icon="ExclamationTriangle" title="We couldn’t verify your session." action={<Primary label="Retry session" onPress={()=>void session.revalidate()}/>}/></AccountPage>;
+ if(state.status!=='signedIn')return <AccountPage testID="notifications"><Empty icon="Bell" title="Sign in to see your notifications." action={<Primary label="Sign in" onPress={()=>{rememberReturnTo('/inbox');router.push('/sign-in');}}/>}/></AccountPage>;
  return <SignedInNotifications key={state.session.user.id}/>;
 }
 function SignedInNotifications(){
@@ -41,5 +43,59 @@ function SignedInNotifications(){
   catch(e){if(valid()){if(e instanceof ApiError&&[401,403,404,410].includes(e.status)){setItems(null);setCursor(null);}setError('Couldn’t mark this notification as read. Retry explicitly.');}}
   finally{writes.current.delete(n.id);if(active.current)setMarking([...writes.current]);}
  };
- return <Screen><Heading>Notifications</Heading>{busy?<Body>Loading notifications…</Body>:null}{error?<><FormMessage message={error}/><Primary label="Retry loading notifications" disabled={busy} onPress={()=>void load()}/></>:null}{items?.length===0&&!error&&!busy?<Body>No notifications yet.</Body>:null}{items?.map(n=><View key={n.id} style={{gap:8}}><Body>{labels[n.template]??'You have an update.'}</Body><Body>{n.createdAt}</Body><Body>{n.readAt?'Read':'Unread'}</Body>{!n.readAt?<Primary label="Mark as read" disabled={busy||marking.includes(n.id)} onPress={()=>void mark(n)}/>:null}{n.mealId?<Primary label="View meal" secondary onPress={()=>router.push(`/meals/${n.mealId}`)}/>:null}</View>)}{cursor?<Primary label="Load more notifications" disabled={busy} onPress={()=>void load(cursor)}/>:null}</Screen>;
+ const open=(n:Notice)=>{if(!n.readAt)void mark(n);if(n.conversationId)router.push(`/chat/${n.conversationId}`);else if(n.mealId)router.push(`/meals/${n.mealId}`);};
+ return (
+  <AccountPage testID="notifications">
+   {error?<View style={styles.error}><FormMessage message={error}/><Primary secondary label="Retry loading notifications" disabled={busy} onPress={()=>void load()}/></View>:null}
+   {busy&&!items?<Text style={styles.loading}>Loading notifications…</Text>:null}
+   {items?.length===0&&!error&&!busy?<Empty icon="Bell" title="No notifications yet." body="Requests, approvals and changes to your meals will show up here. Messages stay in your chats."/>:null}
+   {items?.map(n=>{
+    const unread=!n.readAt,target=!!(n.conversationId||n.mealId),label=labels[n.template]??'You have an update.';
+    return (
+     <View key={n.id} style={styles.row}>
+      <Pressable accessibilityRole={target?'button':'text'} accessibilityLabel={`${label}, ${when(n.createdAt)}${unread?', unread':''}`} disabled={!target} onPress={()=>open(n)} style={styles.rowMain}>
+       <View style={[styles.icon,unread&&styles.iconUnread]}><Icon name={ICONS[n.template]??'Bell'} size={16} color={colors.forest}/></View>
+       <View style={styles.copy}>
+        <Text style={[styles.title,unread&&styles.titleUnread]} numberOfLines={2}>{label}</Text>
+        <Text style={styles.time}>{when(n.createdAt)}</Text>
+       </View>
+       {unread?<View style={styles.dot} accessibilityElementsHidden importantForAccessibility="no"/>:null}
+      </Pressable>
+      {unread?<View style={styles.markRow}><TextAction label="Mark as read" disabled={busy||marking.includes(n.id)} onPress={()=>void mark(n)}/></View>:null}
+     </View>
+    );
+   })}
+   {cursor?<View style={styles.more}><TextAction label="Load more notifications" disabled={busy} onPress={()=>void load(cursor)}/></View>:null}
+  </AccountPage>
+ );
 }
+
+const ICONS:Record<string,IconName>={meal_cancelled:'CrossCircled',application_submitted:'Person',application_withdrawn:'Person',guest_left:'Person',application_expired:'Clock',booking_updated:'Calendar',application_approved:'CheckCircled',application_declined:'CrossCircled',deletion_received:'Trash',deletion_completed:'Trash'};
+const WHEN=new Intl.DateTimeFormat('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Europe/London'});
+/** London wall time, e.g. “Wed 21 Oct, 11:00”. */
+export const when=(instant:string)=>WHEN.format(new Date(instant));
+
+/** Same empty-state pattern as Meals and Inbox. */
+function Empty({icon,title,body,action}:{icon:IconName;title:string;body?:string;action?:ReactNode}){
+ return <View style={styles.empty}><Icon name={icon} size={30} color={colors.forest}/><Text style={styles.emptyTitle}>{title}</Text>{body?<Text style={styles.emptyBody}>{body}</Text>:null}{action?<View style={styles.emptyAction}>{action}</View>:null}</View>;
+}
+
+const styles=createStyles({
+ error:{gap:10,marginBottom:12},
+ loading:{fontSize:13,color:colors.muted},
+ row:{borderBottomWidth:1,borderBottomColor:colors.line,paddingVertical:10},
+ rowMain:{flexDirection:'row',alignItems:'center',gap:12,minHeight:44},
+ icon:{width:36,height:36,borderRadius:18,backgroundColor:colors.surface,alignItems:'center',justifyContent:'center'},
+ iconUnread:{backgroundColor:colors.selectedSurface},
+ copy:{flex:1,gap:2},
+ title:{fontSize:14,lineHeight:19,color:colors.ink},
+ titleUnread:{fontWeight:'700'},
+ time:{fontSize:12,color:colors.muted},
+ dot:{width:8,height:8,borderRadius:4,backgroundColor:colors.forest},
+ markRow:{alignItems:'flex-start',marginLeft:48},
+ more:{alignItems:'center',marginTop:8},
+ empty:{flexGrow:1,alignItems:'center',justifyContent:'center',gap:8,paddingVertical:40,paddingHorizontal:10},
+ emptyTitle:{fontSize:18,fontWeight:'700',color:colors.ink,textAlign:'center',marginTop:4},
+ emptyBody:{fontSize:13,lineHeight:19,color:colors.muted,textAlign:'center'},
+ emptyAction:{alignSelf:'stretch',marginTop:10},
+});

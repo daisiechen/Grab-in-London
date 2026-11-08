@@ -22,6 +22,7 @@ export const lifeStatusOptions = (Object.entries(LIFE_STATUSES) as Array<[LifeSt
 export const interestOptions = (Object.entries(INTERESTS) as Array<[InterestCode, string]>);
 export const languageOptions = (Object.entries(LANGUAGES) as Array<[LanguageCode, string]>).map(([code, label]) => [code, code === 'zh' ? 'Mandarin' : label] as const);
 
+/** Profile photos are uploaded on their own (PUT /me/avatar, see photo.ts), not part of this form. */
 export interface ProfileForm {
   displayName: string;
   bio: string;

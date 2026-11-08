@@ -48,7 +48,7 @@ describe('measurement v4 hand-calculated source facts',()=>{
  });
  it('attributes attendance only to the start-confirmed round and separates real decisions from withdrawal/expiry',()=>{
   const r=calculateMetrics(sample(),filters,asOf);
-  expect(r.metrics.applications).toBe(6);expect(r.metrics.approved).toBe(3);expect(r.metrics.confirmed).toBe(3);
+  expect(r.metrics.applications).toBe(6);expect(r.metrics.approved).toBeUndefined();expect(r.metrics.confirmed).toBe(3);
   expect(r.metrics.applicationAttendance).toEqual({numerator:2,denominator:5});
   expect(r.rows.applicationAttendance!.find(row=>row.rowId==='old')!.inNumerator).toBe(false);
   expect(r.metrics.approval).toBe(10);expect(r.metrics.approvalP50).toBe(3);expect(r.metrics.pendingApplications).toBe(1);expect(r.metrics.oldestPendingHours).toBe(1);
@@ -94,5 +94,51 @@ describe('measurement v4 hand-calculated source facts',()=>{
   expect(r.series['browse.people']!.map(s=>s.value)).toEqual([3,3,1]);
   expect(r.series['funnel.create']!.map(s=>s.value)).toEqual([1,1,1]);
   const narrow=calculateMetrics(data,{...filters,from:'2026-10-01',to:'2026-10-01'},asOf);expect(narrow.metrics.laterOpportunity).toEqual({numerator:1,denominator:2});
+ });
+});
+
+describe('measurement v5: this-week row, merged approval, sources and consent coverage',()=>{
+ // asOf 2026-11-01 (Sunday, GMT): this week starts Monday 2026-10-26, last week 2026-10-19.
+ function v5():Facts{
+  const facts=sample();
+  facts.users.push({id:'n1',created_at:'2026-10-27T09:00:00Z',signup_platform:'IOS',signup_source:'ios_app',completed_at:'2026-10-27T09:10:00Z'},{id:'n2',created_at:'2026-10-28T09:00:00Z',signup_platform:'WEB',signup_source:'instagram:social:launch',completed_at:null},{id:'n3',created_at:'2026-10-21T09:00:00Z',signup_platform:'WEB',signup_source:null,completed_at:null});
+  facts.meals.push(meal('m5','2026-11-05T12:00:00Z',{status:'OPEN',created_at:'2026-10-27T09:00:00Z'}));
+  facts.families=[{user_id:'a',kind:'WEB',created_at:'2026-09-01T00:00:00Z',consented:true},{user_id:'n1',kind:'IOS',created_at:'2026-10-27T09:00:00Z',consented:false},{user_id:'n2',kind:'WEB',created_at:'2026-10-28T09:00:00Z',consented:true},{user_id:'n2',kind:'IOS',created_at:'2026-10-29T09:00:00Z',consented:false}];
+  return facts;
+ }
+ it('counts sign-ups, published meals and first applications for the London week of the snapshot, with last week alongside',()=>{
+  const r=calculateMetrics(v5(),filters,asOf);
+  expect(r.metrics.signups).toBe(2);expect(r.metrics.mealsPublished).toBe(1);expect(r.metrics.firstApplications).toBe(1);
+  expect(r.series['signups.platform']).toEqual([{key:'IOS',value:1},{key:'WEB',value:1},{key:'unknown',value:0}]);
+  expect(Object.fromEntries(r.series['ops.previousWeek']!.map(p=>[p.key,p.value]))).toEqual({signups:1,mealsPublished:0,firstApplications:1,mealsHeld:{numerator:1,denominator:2},weekly:0});
+  // Drill rows carry the week; only this week's rows are in the numerator.
+  expect(r.rows.signups!.map(row=>[row.rowId,row.attributes.week,row.inNumerator])).toEqual([['n1','2026-10-26',true],['n2','2026-10-26',true],['n3','2026-10-19',false]]);
+  expect(r.rows.signups!.find(row=>row.rowId==='n1')!.attributes).toMatchObject({platform:'IOS',signupSource:'ios_app',profileCompletedAt:'2026-10-27T09:10:00Z'});
+  expect(r.rows.firstApplications!.find(row=>row.inNumerator)!.attributes).toMatchObject({userId:'d',applicationId:'pending'});
+ });
+ it('meals held: started meals scheduled this week (cancelled included) with valid attendance, not narrowed by the date range',()=>{
+  const r=calculateMetrics(v5(),filters,asOf);expect(r.metrics.mealsHeld).toEqual({numerator:0,denominator:0});
+  const later=calculateMetrics(v5(),filters,'2026-10-25T13:00:00Z');
+  expect(later.metrics.mealsHeld).toEqual({numerator:1,denominator:2});
+  expect(calculateMetrics(v5(),{...filters,from:'2026-09-01',to:'2026-09-30'},'2026-10-25T13:00:00Z').metrics.mealsHeld).toEqual({numerator:1,denominator:2});
+  const noAttendance=v5();delete noAttendance.attendance;expect(calculateMetrics(noAttendance,filters,asOf).metrics.mealsHeld).toBeNull();
+ });
+ it('keeps the server-only join funnel available without client telemetry and drops the duplicate approved stage',()=>{
+  const r=calculateMetrics(v5(),filters,asOf);
+  expect(r.series['funnel.join']).toEqual([{key:'applications',value:6},{key:'confirmed',value:3},{key:'attended',value:2}]);
+  expect(r.summaries.journey.series['funnel.join']).toBeDefined();expect('approved' in r.summaries.journey.metrics).toBe(false);
+ });
+ it('source filter narrows member metrics by stored source or its first segment and leaves meal metrics alone',()=>{
+  const all=calculateMetrics(v5(),filters,asOf);
+  const instagram=calculateMetrics(v5(),{...filters,sources:['instagram']},asOf);
+  expect(instagram.metrics.signups).toBe(1);expect(instagram.metrics.applications).toBe(0);expect(instagram.metrics.formation).toEqual(all.metrics.formation);
+  expect(instagram.metrics.mealsPublished).toBe(1);
+  expect(calculateMetrics(v5(),{...filters,sources:['instagram:social:launch']},asOf).metrics.signups).toBe(1);
+  expect(calculateMetrics(v5(),{...filters,sources:['ios_app']},asOf).rows.signups!.filter(r=>r.inNumerator).map(r=>r.rowId)).toEqual(['n1']);
+ });
+ it('consent coverage counts members with a consented login family in the period over members with one; unavailable before v5',()=>{
+  expect(calculateMetrics(v5(),filters,asOf).metrics.consentCoverage).toEqual({numerator:2,denominator:3});
+  expect(calculateMetrics(v5(),{...filters,from:'2026-10-01'},asOf).metrics.consentCoverage).toEqual({numerator:1,denominator:2});
+  const legacy=v5();delete legacy.families;expect(calculateMetrics(legacy,filters,asOf).metrics.consentCoverage).toBeNull();
  });
 });

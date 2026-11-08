@@ -5,7 +5,6 @@ import { App } from './app/App.tsx';
 import { createWebApi } from './api/webApi.ts';
 import './styles/tokens.css';
 import './styles/app.css';
-import './styles/features.css';
 
 const root = document.getElementById('root');
 if (!root) throw new Error('#root missing');

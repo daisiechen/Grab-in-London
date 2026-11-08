@@ -31,8 +31,8 @@ describe('Discover page (T08)', () => {
     const stub = createFetchStub({ getSession: guest, discoverMeals: () => page([meal()]) });
     renderApp(stub.fetch, '/discover');
     expect(await screen.findByRole('heading', { name: 'Friday dinner & new faces' })).toBeTruthy();
-    expect(screen.getByText('£25–40 per person')).toBeTruthy();
-    expect(screen.getByRole('link', { name: 'Open Friday dinner & new faces' }).getAttribute('href')).toBe(`/meals/${MEAL_ID}`);
+    expect(screen.getByText('25–40 per person')).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Open Friday dinner & new faces' }).getAttribute('href')).toBe(`/meals/${MEAL_ID}/friday-dinner-and-new-faces`);
     expect(stub.callsTo('discoverMeals')[0]!.url.search).toBe('');
   });
 
@@ -74,15 +74,20 @@ describe('Discover page (T08)', () => {
     expect(stub.callsTo('discoverMeals')[1]!.url.search).toBe('');
   });
 
-  it('groups the same results by area', async () => {
+  it('pins the same results by area on the illustrated map and lists the chosen area first', async () => {
     const stub = createFetchStub({
       getSession: guest,
-      discoverMeals: () => page([meal(), meal({ id: '99999999-9999-4999-8999-999999999999', title: 'Brunch in Hackney', areaCode: 'hackney' })]),
+      discoverMeals: () => page([meal(), meal({ id: '99999999-9999-4999-8999-999999999999', title: 'Brunch in Covent Garden', areaCode: 'covent-garden' })]),
     });
-    renderApp(stub.fetch, '/discover?view=areas');
-    await userEvent.click(await screen.findByRole('button', { name: /Hackney/ }));
-    expect(screen.getByRole('heading', { name: 'Brunch in Hackney' })).toBeTruthy();
-    expect(screen.queryByRole('heading', { name: 'Friday dinner & new faces' })).toBeNull();
+    renderApp(stub.fetch, '/discover');
+    await userEvent.click(await screen.findByRole('button', { name: 'Covent Garden: 1 meal' }));
+    expect(screen.getByRole('button', { name: 'Covent Garden: 1 meal' }).getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByRole('heading', { name: '1 meal in Covent Garden' })).toBeTruthy();
+    const headings = screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
+    expect(headings).toEqual(['Brunch in Covent Garden', 'Friday dinner & new faces']);
+    expect(screen.getByText('More nearby')).toBeTruthy();
+    await userEvent.click(screen.getByRole('button', { name: 'View all in list' }));
+    expect(await screen.findByRole('heading', { name: 'A seat for you' })).toBeTruthy();
   });
 
   it('loads further pages with the opaque cursor', async () => {
@@ -91,7 +96,7 @@ describe('Discover page (T08)', () => {
       getSession: guest,
       discoverMeals: () => (++n === 1 ? page([meal()], 'cursor-2') : page([meal({ id: '99999999-9999-4999-8999-999999999999', title: 'Second page meal' })])),
     });
-    renderApp(stub.fetch, '/discover');
+    renderApp(stub.fetch, '/discover?view=list');
     await userEvent.click(await screen.findByRole('button', { name: 'Show more meals' }));
     expect(await screen.findByRole('heading', { name: 'Second page meal' })).toBeTruthy();
     expect(stub.callsTo('discoverMeals')[1]!.url.searchParams.get('cursor')).toBe('cursor-2');

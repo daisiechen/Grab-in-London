@@ -58,6 +58,7 @@ describe('native consent and actual source hooks (mock transport)',()=>{
   const rendered=app.mock.callsTo('POST','/v1/analytics/events').find(call=>JSON.stringify(call.body).includes('discovery_results'))!.body as {events:{properties:{discoveryRequestId:string}}[]};
   expect(rendered.events[0]?.properties.discoveryRequestId).toBe('11111111-1111-4111-8111-000000000002');
   jest.useFakeTimers();
+  await fireEvent.press(screen.getByRole('button',{name:'List view'}));
   await fireEvent(screen.getByTestId('discover-list'),'viewableItemsChanged',{viewableItems:[{isViewable:true,item:meal()}]});
   await act(async()=>{jest.advanceTimersByTime(600);});await transition('background');
   await act(async()=>{jest.advanceTimersByTime(1200);});
@@ -65,7 +66,8 @@ describe('native consent and actual source hooks (mock transport)',()=>{
   await transition('active');await act(async()=>{jest.advanceTimersByTime(1000);});
   const impression=app.mock.calls.find(call=>JSON.stringify(call.body)?.includes('meal_impression'))?.body as {events:{properties:Record<string,unknown>}[]};
   expect(impression.events[0]?.properties).toMatchObject({discoveryRequestId:'11111111-1111-4111-8111-000000000002',durationMs:1000,foreground:true,eligible:true});
-  expect(app.mock.calls.some(call=>JSON.stringify(call.body)?.includes('map_opened'))).toBe(false);
+  // The illustrated map is the default discovery view (demo), so opening Discover records map_opened.
+  expect(app.mock.calls.some(call=>JSON.stringify(call.body)?.includes('map_opened'))).toBe(true);
  });
  it('captures fixed form errors without private input text and clears scope on logout',async()=>{
   const app=createTestApp();await signIn(app,me());

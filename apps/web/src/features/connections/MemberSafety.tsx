@@ -4,16 +4,14 @@ import {useSignedIn} from '../../api/session.tsx';
 import { useApi } from '../../api/ApiProvider.tsx';
 import { Intent } from '../../api/webApi.ts';
 import { errorMessage } from '../../api/errors.ts';
-import { FormError, Notice, Primary, TextAction } from '../../ui/components.tsx';
+import { FormMessage, Notice, TextAction } from '../../ui/components.tsx';
 import { ConfirmSheet } from '../../ui/ConfirmSheet.tsx';
-import { Sheet } from '../../ui/Sheet.tsx';
 import { useToast } from '../../ui/toast.tsx';
-import { ReportSheet } from '../reports/ReportSheet.tsx';
 
 type BlockState = ResponseOf<'block'>['data'];
 
 /**
- * "Report or block this member" (T15/T18). Blocking clears both reconnect consents and stops
+ * Block / unblock a member (iOS MemberSafety, T15). Blocking clears both reconnect consents and stops
  * private contact; shared meal groups are unaffected; unblocking never restores a connection.
  */
 export function MemberSafety({ subjectId, name }: { subjectId: string; name: string }) {
@@ -23,7 +21,7 @@ export function MemberSafety({ subjectId, name }: { subjectId: string; name: str
 function MemberSafetyForActor({subjectId,name}:{subjectId:string;name:string}){
   const { api } = useApi();
   const notify = useToast();
-  const [sheet, setSheet] = useState<'' | 'menu' | 'report' | 'block'>('');
+  const [sheet, setSheet] = useState<'' | 'block'>('');
   const [block, setBlock] = useState<BlockState | null>(null);
   const [error, setError] = useState('');
   const intent = useMemo(() => new Intent(api.retry), [api]);
@@ -37,7 +35,7 @@ function MemberSafetyForActor({subjectId,name}:{subjectId:string;name:string}){
   },[api,subjectId]);
   useEffect(()=>{void reload();return()=>{life.current++;readJob.current=null;};},[reload]);
   const version=block?.version;
-  const readFeedback=<>{loading&&<p role="status">Loading block status…</p>}<FormError>{error}</FormError>{!loading&&!block&&<TextAction disabled={busy} onClick={()=>void reload()}>Retry block status</TextAction>}</>;
+  const readFeedback=<>{loading&&<p className="muted" role="status">Loading safety settings…</p>}<FormMessage message={error&&!sheet?error:null}/>{!loading&&!block&&<TextAction disabled={busy} onClick={()=>void reload()}>Reload safety settings</TextAction>}</>;
 
   const setBlocked = async (blocked: boolean) => {
     if(writing.current||loading||!version)return;
@@ -49,35 +47,27 @@ function MemberSafetyForActor({subjectId,name}:{subjectId:string;name:string}){
       if(generation!==life.current)return;
       setBlock(res.data);
       setSheet('');
-      notify(blocked ? 'Member blocked. A new mutual connection is required after unblocking.' : 'Member unblocked. Your previous connection is not restored.');
+      notify(blocked ? 'Member blocked. Private contact is disabled. Shared groups are unchanged.' : 'Member unblocked. Your previous connection is not restored.');
     } catch (e) {
       if(generation!==life.current)return;
-      if(e instanceof ApiError&&e.status===409){setBlock(null);await reload();}
+      if(e instanceof ApiError&&e.status===409){setSheet('');setBlock(null);await reload();if(generation===life.current)notify('Safety settings changed. Review the refreshed setting and confirm again.');return;}
       if(generation===life.current)setError(errorMessage(e));
     }finally{
       if(generation===life.current){writing.current=false;setBusy(false);}
     }
   };
 
+  const blocking=!block?.blocked;
   return (
-    <>
-      {block?.blocked && (
-        <>
-          <Notice role="status">You have blocked this member. Private contact is disabled.</Notice>
-          <TextAction disabled={busy||loading} onClick={() => void setBlocked(false)}>Unblock {name}</TextAction>
-        </>
-      )}
-      <TextAction onClick={() => setSheet('menu')}>Report or block this member</TextAction>
-      {!sheet&&readFeedback}
-      <Sheet open={sheet === 'menu'} onOpenChange={(o) => !o && setSheet('')} title={`${name}`}>
-        {readFeedback}
-        <Primary secondary disabled={busy} onClick={() => setSheet('report')}>Report a concern</Primary>
-        {!block?.blocked && <Primary secondary disabled={busy||loading||!block} onClick={() => setSheet('block')}>Block {name}</Primary>}
-      </Sheet>
-      <ReportSheet open={sheet === 'report'} onOpenChange={(o) => setSheet(o ? 'report' : '')} target={{ type: 'USER', id: subjectId, label: name }} />
-      <ConfirmSheet open={sheet === 'block'} onOpenChange={(o) => !o && setSheet('')} title={`Block ${name}?`} confirmLabel="Block member" busy={busy||loading||!block} error={error} onConfirm={() => void setBlocked(true)}>
-        <p>Private messages will stop. Unblocking will not restore your connection; you will both need to choose again. Shared groups are unaffected.</p>
+    <div className="actions">
+      {block?.blocked && <Notice role="status">You have blocked {name}. Private contact is disabled; shared meal groups are unchanged.</Notice>}
+      {readFeedback}
+      {block && <TextAction danger disabled={busy||loading} onClick={() => { setError(''); setSheet('block'); }}>{block.blocked ? `Unblock ${name}` : `Block ${name}`}</TextAction>}
+      <ConfirmSheet open={sheet === 'block'} onOpenChange={(o) => { if (!o && !busy) setSheet(''); }} title={`${blocking ? 'Block' : 'Unblock'} ${name}?`} keepLabel="Cancel"
+        confirmLabel={blocking ? 'Confirm block' : 'Confirm unblock'} busy={busy||loading||!block} error={error} onConfirm={() => void setBlocked(blocking)}>
+        {blocking && <p>Private messages will stop and both reconnect choices will be cleared. Shared meal groups are unaffected.</p>}
+        <p>Your previous connection will not be restored. Both people must choose again.</p>
       </ConfirmSheet>
-    </>
+    </div>
   );
 }

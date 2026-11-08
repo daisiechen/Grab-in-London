@@ -2,6 +2,16 @@
 
 项目入口：[README](../README.md)。本目录保存项目知识；Agent 协作规则见 [AGENTS.md](../AGENTS.md)，正式方法在 `.agents/skills/`，待审核候选在 `.agents/candidates/`，不作为现行执行规则。
 
+## 当前开发负责人（2026-10-27起）
+
+- [iOS 界面实现规范](engineering/ios-ui-conventions.zh-CN.md)：版面密度、组件、预览数据与验证方式（含用户真机评审结论）。
+- [Claude Code 接手开发计划](delivery/claude-takeover-plan.zh-CN.md)：Claude Code 主开发，视觉按 Demo、规则按 PRD r07，先以模拟数据跑通 iOS 首发旅程再接后端；上架所需的管理后台（举报处理、自动限制、停用账号、J09 个案）规则见其 §8（2026-10-28 用户扩大后台范围）。
+- [首尔正式环境部署手册](operations/seoul-production-deploy.zh-CN.md)（2026-10-29，套件就绪、尚未在服务器执行）：Cloudflare Tunnel（不占 443、不开入站端口）、回环 nginx 同源网关、`/opt` 下独立 Node 24、PGDG PostgreSQL 17（回环 + TLS verify-full）、systemd、Web 页面头部服务 fancy-web（链接预览与 SEO）、原子切换与回滚、age 加密备份与恢复演练；Mac 会话与 Owner 的分工、验证清单和全部环境变量来源。脚本在 [`infra/deploy/seoul/`](../infra/deploy/seoul/)。
+- [上线当天的运营数据步骤](operations/launch-day-analytics.zh-CN.md)（2026-10-29）：第一位真实用户进来前把 Owner、QA、审核、种子账号标成 test/staff（后台面板与 SQL 兜底），核对生产采集后设置 `ANALYTICS_COVERAGE_START`，记录上线基线。
+- [举报值守流程](operations/moderation-runbook.zh-CN.md)（2026-10-29）：24 小时复核由 Owner 负责、Ethan 只做摘要提醒；每日节奏、判定按钮；五类举报原因与紧急提醒、推送 Ethan 的接口约定（早/晚/紧急）。
+- [Web 端设计规范](design/web/mobile-web-design.zh-CN.md)与[可点击原型](design/web/prototype/index.html)（2026-10-28，设计候选）：以 Meetup 为参考、复用 iOS 视觉，移动优先兼顾桌面；含首页、网址与 App 交接（fancyabite.uk）、逐页规格、SEO、无障碍、分析授权、接口缺口及待用户决定的 Web 范围。参考调研见 [Meetup 移动 Web 调研](design/web/meetup-reference.zh-CN.md)（公开资料，亲测部分待补）。
+- [伦敦片区边界数据](engineering/london-areas.zh-CN.md)：真实 API 用来把餐厅坐标归到片区的数据，说明来源与授权（ONS OGL v3.0、下议院图书馆 Open Parliament Licence）、必须标注的来源说明、首发 9 区范围、West End 细分、已知近似和重新生成方法。
+
 ## 当前产品与管理输入（r07范围／r11版本执行／r12原型反馈增量）
 
 - [21条浏览器批注逐项处理与原型入口](reviews/r12/feedback-21-register.md)、[结构化台账](reviews/r12/feedback-21-register.json)、[独立视觉与真实点击复核](reviews/r12/feedback-21-independent-review-2026-10-28.md)。r11签署保留为历史快照；本轮受影响原型以r12候选及其明确验证范围为准。
@@ -147,7 +157,12 @@
 
 - [平台配置交接](delivery/platform-configuration-2026-10-21.zh-CN.md)：账号、DNS、密钥安全加载方式和真实接入边界，供后续开发会话使用。
 
-- [政策审核清单](policies/README.md)、[隐私通知英文草稿](policies/privacy-notice.draft.en.md)与[社区规则英文草稿](policies/community-guidelines.draft.en.md)：个人发布主体的英文初稿、申请进度与发布前待确认项；未批准、未生效。
+- [政策文本与发布核对](policies/README.md)：英文[隐私通知](policies/privacy-notice.draft.en.md)、[使用条款](policies/terms-of-use.draft.en.md)、[社区规则](policies/community-guidelines.draft.en.md)与[支持页](policies/support.draft.en.md)草稿（按当前代码实际数据处理重写，含韩国存储与供应商清单），由 `scripts/build_legal_pages.py` 生成 fancyabite.uk/privacy、/terms、/guidelines、/support 静态页；列出 Owner 必填占位符与需法律确认的要点；未批准、未生效。
+- [合法利益评估](policies/legitimate-interests-assessment.draft.en.md)（2026-10-29，非法律意见，待 Owner 签署）：注册来源与平台、问卷与私密评分、安全记录保留、服务端运营统计的三步检验。
+- Online Safety Act 2023 记录草稿（2026-10-29，非法律意见，待 Owner 签署）：[非法内容风险评估](policies/online-safety-illegal-content-risk-assessment.draft.en.md)（18 类优先非法内容逐项评级，暂定多风险，守则措施对照与差距）、[儿童访问评估](policies/online-safety-childrens-access-assessment.draft.en.md)（自我声明不属高效年龄保证；儿童用户条件暂定不满足、低置信度，附监测与复评条件）；中文待办摘要见[政策文本与发布核对](policies/README.md)。
+- [云端→本地会话交接](delivery/handoff-cloud-to-local-2026-11-04.zh-CN.md)（2026-11-04）：分支与线上版本、已上线内容、卡住的后台员工登录、Owner 决定与待办、验证与安全边界；此后由本地会话主开发。
+- [上线行动计划](delivery/launch-plan-2026-11.zh-CN.md)（2026-11-04，Apple 开发者账户通过后）：Web、iOS、后台的分阶段上线路径、分工、依赖与待 Owner 决定事项。
+- [App Store 提交材料](delivery/app-store-submission.zh-CN.md)与[英文上架文案](delivery/app-store-listing.en.md)：名称/副标题/描述/关键词、类别、18+ 分级问卷、隐私营养标签、出口合规、内容权利、审核员登录方案、截图计划、正式 Bundle ID `uk.fancyabite.app` 变更清单与 App 图标。
 
 - [原14条阻塞解除准备](delivery/mvp-gate-unblocking-2026-10-21.zh-CN.md)：逐条负责人、解除条件及本地演练；最终状态由独立QA复验判定。
 - [MVP 本地自测与独测交接](delivery/mvp-local-selftest-2026-10-21.zh-CN.md)：本机验证、精确版本、模拟与真实边界及待用户操作。
@@ -175,6 +190,7 @@
 - [2026-10-20回滚记录](releases/rollback-2026-10-20.zh-CN.md)：当前Demo与主PRD的目标提交、线上版本及回滚边界。
 - [管理端指标与采集修订](delivery/fancy-admin-measurement-review.zh-CN.md)：19条批注、App补充、口径与本轮验证。
 - [管理端可用性审查](delivery/fancy-admin-usability-review.zh-CN.md)：逐页走查、精简决策、规则维护职责及浏览器证据。
+- [后台运营分析能力评审（2026-10-29）](delivery/admin-ops-analytics-review-2026-10-29.zh-CN.md)：上线后 3 个月运营问题覆盖矩阵、P0/P1 补齐方案（优先服务端事实）与数据口径风险；P0 已实施（口径 v5，见其 §8，含给 Web 的注册来源契约），P1 待定。
 - 管理端：[验证报告](../admin/qa/verification.zh-CN.md)，截图按批次保存在 `admin/qa/`。
 - [商业交付产物](../outputs/business-2026-10-17/)：PDF、HTML、PPTX 和 XLSX。`outputs/` 保存需交付的产物，`build/` 为忽略的构建中间目录。
 

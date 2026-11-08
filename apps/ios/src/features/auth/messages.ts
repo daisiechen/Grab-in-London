@@ -13,6 +13,7 @@ export function authErrorMessage(error: unknown): string {
     default:
       break;
   }
+  if (error.code === 'ACCOUNT_SUSPENDED') return 'This account has been suspended for breaking the Fancy community guidelines. Contact Fancy support if you think this is a mistake.';
   if (error.code === 'STATE_CONFLICT') return 'This sign-in link has already been used or expired. Please start again.';
   return 'Sign-in didn’t finish. Please try again.';
 }

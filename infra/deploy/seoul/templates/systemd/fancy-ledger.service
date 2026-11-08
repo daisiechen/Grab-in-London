@@ -1,0 +1,11 @@
+# Hourly encrypted export of the deletion ledger, so a restore can replay deletions that
+# were accepted after the last full backup (infra/README.md, recovery section).
+[Unit]
+Description=Fancy deletion-ledger export
+After=postgresql@@@PG_MAJOR@@-@@PG_CLUSTER@@.service
+
+[Service]
+Type=oneshot
+ExecStart=@@FANCY_KIT_DIR@@/backup.sh --ledger-only --yes
+Nice=10
+LogNamespace=fancy

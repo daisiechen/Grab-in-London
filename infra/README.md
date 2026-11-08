@@ -31,7 +31,7 @@ source infra/dev-env.sh
 FANCY_LOCAL_ACCEPTANCE=1 FANCY_LOCAL_STAFF_FIXTURE=1 node infra/local-acceptance.ts
 ```
 
-在 Web 用 `qa-staff@example.invalid` 和 `000000` 登录。此固定虚构账号预先通过核心登录协议创建，授予 `analyst`、`data_admin`；只有它在第二个开关启用时获得模拟 `mfa` claim。这不代表真实 MFA 验证通过。普通任意 `@example.invalid` 账号仍只有 OTP、无后台角色；第二个开关关闭时，固定邮箱也无模拟 MFA、不会预建角色。bootstrap 的临时登录已注销且不输出凭据；只移除已消费的 bootstrap OTP 行，避免它占用浏览器首次登录的重发窗口，其余限流不变。
+在 Web 或后台登录页用 `qa-staff@example.invalid` 和 `000000` 登录。此固定虚构账号预先通过核心登录协议创建，授予 `analyst`、`data_admin`、`support`（举报处理与 J09 个案）；只有它在第二个开关启用时获得模拟 `mfa` claim。这不代表真实 MFA 验证通过。普通任意 `@example.invalid` 账号仍只有 OTP、无后台角色；第二个开关关闭时，固定邮箱也无模拟 MFA、不会预建角色。bootstrap 的临时登录已注销且不输出凭据；只移除已消费的 bootstrap OTP 行，避免它占用浏览器首次登录的重发窗口，其余限流不变。
 
 后台验收与 Web 串行共用 **5174 同源**：保持 API/临时 PG 运行，先在 Web 登录，再只停止 Web Vite（Ctrl-C），然后运行：
 
@@ -40,7 +40,7 @@ source infra/dev-env.sh
 pnpm --filter @fancy/admin exec vite --port 5174
 ```
 
-在同一浏览器访问 `http://127.0.0.1:5174`，使用已有 cookie；不要清除登录数据。后台读取及写入仍受原角色/MFA/CSRF 校验。返回 Web 时停 admin Vite，再运行 `pnpm --filter @fancy/web dev`。默认 admin dev 的5175适合独立只读开发，但本 rig 的写操作只允许5174，不改变生产 Origin 规则。
+在同一浏览器访问 `http://127.0.0.1:5174`，使用已有 cookie；未登录时后台自带员工登录页（同一邮箱验证码流程），`#moderation` 为举报队列。后台读取及写入仍受原角色/MFA/CSRF 校验。返回 Web 时停 admin Vite，再运行 `pnpm --filter @fancy/web dev`。默认 admin dev 的5175适合独立只读开发，但本 rig 的写操作只允许5174，不改变生产 Origin 规则。
 
 数据库没有预填真实业务历史。最小业务 seed 通过 Web 创建两个不同合成邮箱账号，补资料，搜索 `Fancy` 选虚构餐厅，创建未来饭局，再由另一账号申请、主持人审批。可复用 `FANCY_QA_LOCAL_FIXTURE=1 node scripts/qa-inbox-fixture.mjs` 生成双 pending Inbox 合成场景；脚本日期固定2026-10-23/24，过期后需改用浏览器创建未来饭局。worker 启动并定时生成快照，空库/未到成熟窗口的指标为空或未知，不能当成熟业务数据。
 
@@ -60,7 +60,7 @@ Web/iOS遇到LINK_REQUIRED时须明确继续用原账号登录，再由用户确
 
 部署后实际复验API来源hook、Web和iOS全部采集入口后，设置 `ANALYTICS_COVERAGE_START` 为三者实际覆盖起点的最晚时刻。worker再与数据库ledger安装起点取较晚值；不设置时保持partial，不把旧历史伪补为完整采集。这个操作不能用代码存在或mock测试替代实际部署验证。
 
-发布目录采用 `/home/ubuntu/fancy/releases/<commit>/`；配置、数据、备份、日志分别放 `shared/config`、`shared/data`、`shared/backups`、`shared/logs`，均不进入公开仓库。先在备用回环端口验证新release，再通过经批准的同源网关切换；旧release保留用于回滚。实际端口、域名、TLS及systemd文件待服务器操作授权后核定，不能猜测并覆盖已有配置。
+正式部署（2026-10-29 起）用 [`infra/deploy/seoul/`](deploy/seoul/) 套件，步骤见[首尔正式环境部署手册](../docs/operations/seoul-production-deploy.zh-CN.md)：发布目录 `/srv/fancy/releases/<时间>-<提交>/`，`/srv/fancy/current` 原子切换；密钥在 root 0600 的 `/etc/fancy/fancy.env`；先在备用回环端口（3101）验证新 release，再切换；旧 release 保留用于回滚。早期规划的 `/home/ubuntu/fancy/releases/`、`shared/` 不再使用，套件只读列出、不改动。
 
 ## 人工门槛与恢复
 

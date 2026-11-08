@@ -1,0 +1,8 @@
+# Local health probe; a failure leaves this unit "failed" (visible in `systemctl --failed`).
+[Unit]
+Description=Fancy local health check
+
+[Service]
+Type=oneshot
+ExecStart=@@FANCY_KIT_DIR@@/healthcheck.sh --quiet
+LogNamespace=fancy

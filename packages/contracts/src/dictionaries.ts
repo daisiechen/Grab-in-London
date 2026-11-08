@@ -70,11 +70,39 @@ export const ATTENDANCE_VALUES = ['present', 'absent'] as const;
 export const ATTENDANCE_SOURCES = ['SELF', 'HOST', 'SUPPORT'] as const;
 export const CONNECTION_STATES = ['OPEN', 'WAITING', 'CLOSED'] as const;
 export const REPORT_TARGET_TYPES = ['USER', 'MEAL', 'MESSAGE'] as const;
-/** The prototype collects one private free-text concern; finer reasons need a product decision. */
-export const REPORT_REASONS = ['private_concern'] as const;
+/**
+ * Report reasons the apps offer (owner decision 2026-10-29): personal safety or threats, harassment or
+ * hate, scam/spam/advertising, may be under 18, other. Each report also carries private free text.
+ */
+export const REPORT_REASONS = ['safety', 'harassment', 'scam', 'under_18', 'other'] as const;
+/** Reasons that put a report first in the staff queue and trigger an immediate alert. */
+export const URGENT_REPORT_REASONS = ['safety', 'harassment', 'under_18'] as const;
+/**
+ * The single reason used before 2026-10-29. Stored rows keep it (shown as `other`), and createReport
+ * still accepts it from older app builds and the web sheet; new clients send one of REPORT_REASONS.
+ */
+export const LEGACY_REPORT_REASON = 'private_concern' as const;
+/** Values createReport accepts. */
+export const REPORT_REASON_INPUTS = [...REPORT_REASONS, LEGACY_REPORT_REASON] as const;
+export const isUrgentReportReason = (reason: string): reason is (typeof URGENT_REPORT_REASONS)[number] =>
+  (URGENT_REPORT_REASONS as readonly string[]).includes(reason);
 export const REPORT_STATUSES = ['RECEIVED', 'IN_REVIEW', 'RESPONDED'] as const;
 export const DELETION_STATUSES = ['PENDING', 'PROCESSING', 'COMPLETED', 'NEEDS_SUPPORT'] as const;
 export const SUPPORT_CASE_STATUSES = ['OPEN', 'IN_REVIEW', 'RESOLVED'] as const;
+/** Account lifecycle as staff see it; SUSPENDED is a reversible moderation state (owner decision 2026-10-28). */
+export const ACCOUNT_STATUSES = ['ACTIVE', 'SUSPENDED', 'DELETING', 'DELETED'] as const;
+/**
+ * Staff moderation actions (App Store guideline 1.2 back office, owner decision 2026-10-28).
+ * UPHOLD keeps/applies the content limit and closes; RESTORE lifts any limit and closes (no breach);
+ * SUSPEND_USER suspends the responsible account, keeps the limit and closes. The rest change one
+ * thing and close only when asked to.
+ */
+export const MODERATION_ACTIONS = ['UPHOLD', 'RESTORE', 'HIDE_CONTENT', 'CANCEL_MEAL', 'RESET_PROFILE_TEXT', 'REMOVE_PROFILE_PHOTO', 'SUSPEND_USER', 'UNSUSPEND_USER'] as const;
+/** History rows also carry the automatic steps the server takes on its own. */
+export const MODERATION_HISTORY_KINDS = [...MODERATION_ACTIONS, 'AUTO_HIDE', 'AUTO_CLOSE', 'CASE_STATUS', 'ATTENDANCE_CORRECTED'] as const;
+export const MODERATION_QUEUE_STATUSES = ['OPEN', 'RESOLVED', 'ALL'] as const;
+/** Staff response target shown in the queue; a case is overdue 24 hours after the report. */
+export const MODERATION_SLA_HOURS = 24;
 export const AUTH_PROVIDERS = ['GOOGLE', 'APPLE'] as const;
 export const CLIENT_KINDS = ['WEB', 'IOS', 'SUPPORT_CLI'] as const;
 export const CONVERSATION_KINDS = ['GROUP', 'DIRECT'] as const;
@@ -94,24 +122,41 @@ export const MEAL_ACTIONS = [
 /**
  * Admin key registry shared by the five pages and the snapshot worker (T21): metric cards, chart
  * series and drill-down lists per page. Ids follow the prototype (admin/src/metrics.ts) and the
- * measurement contract v4 rows; formulas live in the worker, never in the UI.
+ * measurement contract rows; formulas live in the worker, never in the UI.
+ * v5 (ops analytics review 2026-10-29): overview "this week" row from server facts only
+ * (signups, mealsPublished, firstApplications, mealsHeld, weekly); "approved" merged into "confirmed"
+ * (approval confirms the seat in the first release); consentCoverage on the quality page, and on every
+ * page with consent-sample cards so their footnotes can cite it (it is not drawn as a card there).
  */
 export const ADMIN_PAGE_KEYS = {
-  overview: { metrics: ['weekly', 'activation', 'retention', 'coverage'], series: ['weekly.trend'] },
+  overview: { metrics: ['signups', 'mealsPublished', 'firstApplications', 'mealsHeld', 'weekly', 'activation', 'retention', 'coverage'], series: ['weekly.trend', 'ops.previousWeek', 'signups.platform'] },
   journey: {
-    metrics: ['discovery7', 'impressionNoApply', 'applications', 'approved', 'confirmed', 'applicationAttendance', 'approval', 'approvalP50', 'pendingApplications', 'oldestPendingHours', 'formErrors'],
+    metrics: ['discovery7', 'impressionNoApply', 'applications', 'confirmed', 'applicationAttendance', 'approval', 'approvalP50', 'pendingApplications', 'oldestPendingHours', 'formErrors', 'consentCoverage'],
     series: ['funnel.join', 'funnel.create', 'browse.people', 'features.usage', 'form.errors.byStep', 'form.errors.byField'],
   },
   supply: {
-    metrics: ['discovery', 'formation', 'cancellation', 'coverage', 'mealsWithAttendance'],
+    metrics: ['discovery', 'formation', 'cancellation', 'coverage', 'mealsWithAttendance', 'consentCoverage'],
     series: ['area.compare', 'cancellation.reasons', 'attendance.distribution'],
   },
   retention: {
-    metrics: ['retention', 'activation', 'feedback', 'survey', 'laterOpportunity'],
+    metrics: ['retention', 'activation', 'feedback', 'survey', 'laterOpportunity', 'consentCoverage'],
     series: ['cohort.retention', 'rating.distribution', 'survey.reasons'],
   },
-  quality: { metrics: ['missingRequired', 'duplicates', 'excluded', 'receiveLatencyP90'], series: ['quality.sources'] },
+  quality: { metrics: ['missingRequired', 'duplicates', 'excluded', 'receiveLatencyP90', 'consentCoverage'], series: ['quality.sources'] },
 } as const satisfies Record<(typeof ADMIN_PAGES)[number], { metrics: readonly string[]; series: readonly string[] }>;
+
+/** Overview "this week" row (London week of the snapshot, Monday start); all server facts, no consent needed. */
+export const ADMIN_OPS_WEEK_METRICS = ['signups', 'mealsPublished', 'firstApplications', 'mealsHeld', 'weekly'] as const;
+/**
+ * Metrics and series computed from consented analytics events only. They describe the consent sample,
+ * are labelled as such in the admin, and are never divided by server-wide totals.
+ */
+export const ADMIN_CONSENT_SAMPLE_KEYS = [
+  'discovery', 'discovery7', 'impressionNoApply', 'laterOpportunity', 'formErrors',
+  'browse.people', 'features.usage', 'funnel.create', 'form.errors.byStep', 'form.errors.byField',
+] as const;
+/** Current measurement definition version sealed into new snapshots. */
+export const ADMIN_DEFINITION_VERSION = 'v5';
 
 /** Drill-down targets: every metric id plus the source lists the pages open in drawers. */
 export const ADMIN_LISTS = ['meals', 'applications', 'cohort.users', 'attendance', 'quality.events'] as const;

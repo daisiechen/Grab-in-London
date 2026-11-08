@@ -1,0 +1,15 @@
+# Fancy gateway logs (client IPs are personal data): kept @@LOG_RETENTION_DAYS@@ days at most.
+/var/log/fancy/nginx-*.log {
+    daily
+    rotate @@LOG_RETENTION_DAYS@@
+    maxage @@LOG_RETENTION_DAYS@@
+    missingok
+    notifempty
+    compress
+    delaycompress
+    create 0640 www-data adm
+    sharedscripts
+    postrotate
+        [ -s /run/nginx.pid ] && nginx -s reopen
+    endscript
+}

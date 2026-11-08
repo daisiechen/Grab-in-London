@@ -1,15 +1,16 @@
 import { SessionScope } from '../../auth/SessionScope.tsx';
 import { useMemo, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { Keyboard } from 'react-native';
+import { Keyboard, Text, View } from 'react-native';
 import { Primary } from '../../../ui/Button.tsx';
 import { FormMessage } from '../../../ui/FormMessage.tsx';
-import { Screen } from '../../../ui/Screen.tsx';
-import { Body } from '../../../ui/Text.tsx';
+import { AccountPage, accountText } from '../../../ui/AccountPage.tsx';
 import { useServices, useSessionState } from '../../../services.tsx';
 import { buildPatch, formFromMe, validateProfile, type ProfileField, type ProfileForm } from '../model.ts';
 import { ProfileSaver } from '../save.ts';
 import { ProfileFormView } from './ProfileFormView.tsx';
+import { PageHeader } from '../../../ui/PageHeader.tsx';
+
 
 export function EditProfileScreen() {
   return <SessionScope><EditProfileScreenContent /></SessionScope>;
@@ -24,7 +25,7 @@ function EditProfileScreenContent() {
   const [error, setError] = useState<{ field: ProfileField | null; message: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const saver = useMemo(() => new ProfileSaver(services.api, services.session, services.newId), [services]);
-  if (!me || !form) return <Screen><Body>Please sign in to edit your profile.</Body></Screen>;
+  if (!me || !form) return <AccountPage><Text style={accountText.prose}>Please sign in to edit your profile.</Text></AccountPage>;
 
   const save = async () => {
     Keyboard.dismiss();
@@ -39,10 +40,10 @@ function EditProfileScreenContent() {
   };
 
   return (
-    <Screen testID="profile-edit">
+    <AccountPage testID="profile-edit" footer={<><FormMessage message={error?.message ?? null} /><Primary label="Save profile" icon="Check" busy={busy} onPress={() => void save()} /></>}>
+      <View style={{ marginBottom: 14 }}><PageHeader title="Let people meet you." subtitle="A little background makes the first hello easier." /></View>
       <ProfileFormView form={form} onChange={setForm} error={error} mode="edit" />
-      <FormMessage message={error?.message ?? null} />
-      <Primary label="Save profile" busy={busy} onPress={() => void save()} />
-    </Screen>
+    </AccountPage>
   );
 }
+

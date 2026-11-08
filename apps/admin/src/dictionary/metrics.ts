@@ -278,4 +278,44 @@ export const metrics: Metric[] = [
     definition:['上述仍在待审申请中，快照时间减申请时间的最大小时数。没有待审申请时为 —。','Maximum hours from application to snapshot among the remaining pending applications. With none pending, the value is —.'],
     unit:['小时','Hours'],window:['期内申请，等待截至快照，不是实时计时。','Applications in the period, wait as of snapshot, not a live clock.'],source:['待审申请与快照时间。','Pending applications and snapshot time.'],decision:['优先检查等待最久的申请。','Prioritise the longest waiting applications.'],caveat:['已结束的申请不继续累加等待时间。','Terminated applications do not continue accumulating wait.'],
   },
+  // v5 (ops analytics review 2026-10-29): overview "this week" row, merged approval card, consent coverage.
+  {
+    id:'signups',title:['本周新注册','New members this week'],
+    definition:['账号创建时间落在快照所在伦敦周（周一起）的成员，排除 test/staff 与非正常状态账号。脚注给出上周同口径人数和本周按注册平台拆分。','Accounts created in the London week (Monday start) containing the snapshot, excluding test/staff and inactive accounts. The footnote shows last week on the same basis and this week by sign-up platform.'],
+    unit:['成员','Members'],window:['快照所在伦敦周；不受日期范围与用户分群影响，来源筛选生效。','London week of the snapshot; not narrowed by the date range or user segment. The source filter applies.'],
+    source:['服务端 users.created_at；平台取该成员最早一条 Web/iOS 登录会话，来源取 users.signup_source（不需要分析授权）。','Server users.created_at; platform from the member\'s earliest Web/iOS session family, source from users.signup_source (no analytics consent needed).'],
+    decision:['看获客规模和渠道变化。','Track acquisition volume and channel mix.'],
+    caveat:['本周未结束；删号会清除会话记录，平台变为未知。','The current week is incomplete; account deletion removes session records, so platform becomes unknown.'],
+  },
+  {
+    id:'mealsPublished',title:['本周新发布饭局','Meals published this week'],
+    definition:['创建时间落在快照所在伦敦周的饭局，包括尚未开始和之后取消的场次；测试 host 的场次整场排除。','Meals created in the London week of the snapshot, including meals not yet started and meals later cancelled. Meals hosted by test accounts are excluded.'],
+    unit:['饭局','Meals'],window:['快照所在伦敦周，按创建时间。','London week of the snapshot, by creation time.'],
+    source:['服务端 meals.created_at。','Server meals.created_at.'],decision:['看供给的先行变化。','Watch leading supply.'],caveat:['区域、语言、人数、预算筛选生效；日期范围不生效。','Area, language, size and budget filters apply; the date range does not.'],
+  },
+  {
+    id:'firstApplications',title:['本周首次申请的成员','First-time applicants this week'],
+    definition:['全历史第一条申请落在快照所在伦敦周的成员。每人只计一次。','Members whose first-ever application falls in the London week of the snapshot. Each member counts once.'],
+    unit:['成员','Members'],window:['快照所在伦敦周，按首次申请时间。','London week of the snapshot, by first application time.'],
+    source:['服务端 applications。','Server applications.'],decision:['看新需求是否转化为行动。','See whether new demand turns into action.'],caveat:['饭局筛选作用于首次申请的那场饭局。','Meal filters apply to the meal of the first application.'],
+  },
+  {
+    id:'mealsHeld',title:['本周成局场次','Meals held this week'],
+    definition:['分母：本周计划开始且已到开始时间的场次（含取消）。分子：其中未取消、并至少有一条有效出席证据的场次。','Denominator: meals scheduled to start this week whose start time has passed (cancelled included). Numerator: those not cancelled with at least one valid present attendance record.'],
+    unit:['饭局','Meals'],window:['快照所在伦敦周，按开始时间。','London week of the snapshot, by start time.'],
+    source:['服务端 meals 与出席修订。','Server meals and attendance revisions.'],decision:['看供给是否真的变成见面。','See whether supply turns into real meetings.'],caveat:['出席报告在结束后 7 天内补齐，本周数字会偏低；先看出席覆盖。','Attendance reports arrive up to 7 days after a meal, so this week reads low; check attendance coverage first.'],
+  },
+  {
+    id:'confirmed',title:['获准（即确认）','Approved (seat confirmed)'],
+    definition:['期内申请中，已有席位确认事件的申请数量。首期获准即确认席位，原“获准申请”和“席位已确认”两张卡数值始终相同，v5 起合并为这一张。','Applications in the period with a seat confirmation. In the first release approval confirms the seat, so the former "approved" and "confirmed" cards were always equal; v5 merges them.'],
+    unit:['申请记录','Applications'],window:['按申请日期入组，状态截至快照。','Cohort by application date, status as of snapshot.'],
+    source:['服务端申请与席位事件。','Server applications and seat events.'],decision:['看审核通过的规模。','Track approval volume.'],caveat:['同一人截止前重新申请会生成新的申请记录；这是申请次数，不是人数。','Re-applying creates a new application record; this counts applications, not people.'],
+  },
+  {
+    id:'consentCoverage',title:['分析授权覆盖率','Analytics consent coverage'],
+    definition:['期内创建过登录会话、且至少一个会话已同意分析的成员 ÷ 期内创建过登录会话的成员。用来判断“仅授权样本”指标覆盖了多少成员。','Members with a login session created in the period where at least one session consented to analytics / members with a login session created in the period. Shows how much of the membership the consent-sample metrics cover.'],
+    unit:['成员','Members'],window:['会话创建时间在筛选范围；授权状态截至快照（撤回后不计）。','Session creation in range; consent state as of snapshot (withdrawn consent does not count).'],
+    source:['服务端 session_families 与 analytics_consents。','Server session_families and analytics_consents.'],decision:['决定授权样本指标能否用于判断趋势。','Decide whether consent-sample metrics are usable for trends.'],
+    caveat:['游客不在分母中：iOS 游客无法授权，Web 游客尚不是成员。不要用它去“放大”授权样本数字。','Guests are not in the denominator: iOS guests cannot consent and Web guests are not members. Never use it to scale consent-sample numbers up.'],
+  },
 ];

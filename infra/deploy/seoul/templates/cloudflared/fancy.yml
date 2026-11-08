@@ -1,0 +1,16 @@
+# Cloudflare Tunnel ingress for Fancy (locally managed tunnel). Rendered by tunnel.sh.
+# The credentials JSON is created on the server by `cloudflared tunnel create` and never
+# leaves it; this file holds only the tunnel id and routing.
+tunnel: @@TUNNEL_ID@@
+credentials-file: /etc/cloudflared/@@TUNNEL_ID@@.json
+metrics: 127.0.0.1:@@TUNNEL_METRICS_PORT@@
+protocol: auto
+
+ingress:
+  - hostname: @@PUBLIC_HOSTNAME@@
+    service: http://127.0.0.1:@@GATEWAY_PORT@@
+    originRequest:
+      connectTimeout: 10s
+  - hostname: www.@@PUBLIC_HOSTNAME@@
+    service: http://127.0.0.1:@@GATEWAY_PORT@@
+  - service: http_status:404

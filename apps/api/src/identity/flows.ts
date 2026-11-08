@@ -10,13 +10,14 @@ import type { AppDeps, AuthContext } from '../http/context.ts';
 import type { HandlerResult } from '../http/routes.ts';
 import { cookieOptions, LINK_BINDER_COOKIE, SESSION_COOKIE } from '../http/security.ts';
 import type { VerifiedIdentity } from './provider.ts';
-import { identityBelongsTo, resolveIdentity } from './resolve.ts';
+import { identityBelongsTo, resolveIdentity, suspendedError } from './resolve.ts';
 import { sessionInfo } from './me.ts';
 import { ABSOLUTE_MS, issueWebSession, markReauthenticated } from './sessions.ts';
 import { randomToken, sha256Hex } from './tokens.ts';
 import { lockActiveActor } from '../common/actor.ts';
 import { invalidateSubjectAI, invalidateUserAI } from '../assistant/invalidate.ts';
 import { revokeFamily } from './sessions.ts';
+import { isReviewIdentity, recordReviewSignIn } from './review-login.ts';
 
 export const HANDOFF_TTL_MS = 60_000;
 export const LINK_TTL_MS = 10 * 60_000;
@@ -44,13 +45,19 @@ export async function completeAuthentication(deps: AppDeps, tx: Tx, row: AuthTxR
     await lockActiveActor(tx,current.userId,'update');
     const now=await tx.effectiveNow();
     await markReauthenticated(tx.client, familyId, identity.amr, now);
+    if (isReviewIdentity(identity)) await recordReviewSignIn(tx, deps.config, { userId: row.user_id, authTxId: row.id, purpose: 'REAUTH', client: row.client, created: false });
     await tx.client.query(`UPDATE auth_transactions SET result_family_id = $2 WHERE id = $1`, [row.id, familyId]);
     const session = await sessionInfo(tx.client, { ...current, authTime: now, amr: [...new Set([...current.amr, ...identity.amr])] }, deps.config.sessionSecret);
     return { data: { outcome: 'AUTHENTICATED', session, authProof } };
   }
 
   const {rows:[clock]}=await tx.client.query<{now:Date}>(`SELECT clock_timestamp() AS now`);
-  const resolution = await resolveIdentity(tx.client, identity, clock!.now);
+  const resolution = await resolveIdentity(tx.client, identity, clock!.now, row.client === 'SUPPORT_CLI' ? null : row.provider_state.signupSource ?? null);
+  // Admin console sign-in only admits identities already mapped to an account: it never creates an
+  // account or starts linking (the transaction rolls back, so nothing is written).
+  if (row.provider_state.staff === '1' && (resolution.kind === 'link_required' || resolution.created)) {
+    throw new DomainError('FORBIDDEN', 'Use the sign-in method already linked to your staff account.');
+  }
   if (resolution.kind === 'link_required') {
     await lockActiveActor(tx,resolution.targetUserId);
     const now=await tx.effectiveNow();
@@ -72,6 +79,7 @@ export async function completeAuthentication(deps: AppDeps, tx: Tx, row: AuthTxR
 
   const users=[...new Set([resolution.userId,...(current?[current.userId]:[])])].sort();
   const locked=await tx.locks.lock<{id:string;status:string}>('users',users,'update','id,status');
+  if(locked.some(u=>u.id===resolution.userId&&u.status==='SUSPENDED'))throw suspendedError();
   if(!locked.some(u=>u.id===resolution.userId&&u.status==='ACTIVE'))throw new DomainError('AUTH_REQUIRED','This account is no longer available.');
   if(current&&current.userId!==resolution.userId){
     await invalidateUserAI(tx.client,deps.assistantRuntime!,current.userId,'ACCOUNT_CHANGE');
@@ -82,6 +90,7 @@ export async function completeAuthentication(deps: AppDeps, tx: Tx, row: AuthTxR
     if(guest){await invalidateSubjectAI(tx.client,deps.assistantRuntime!,`guest:${guest.id}`,'ACCOUNT_CHANGE');await tx.client.query(`UPDATE guest_sessions SET revoked_at=clock_timestamp() WHERE id=$1`,[guest.id]);}
   }
   const now=await tx.effectiveNow();
+  if (isReviewIdentity(identity)) await recordReviewSignIn(tx, deps.config, { userId: resolution.userId, authTxId: row.id, purpose: 'LOGIN', client: row.client, created: resolution.created });
 
   if (row.client === 'WEB') {
     const web = await issueWebSession(tx.client, resolution.userId, identity.amr, now);

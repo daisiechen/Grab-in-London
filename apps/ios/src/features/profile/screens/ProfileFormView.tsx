@@ -6,6 +6,7 @@ import {
   LANGUAGE_CHOICE_LABELS, interestOptions, languageChoiceCodes, languageChoiceFor, languageOptions, lifeStatusOptions,
   type ProfileField, type ProfileForm,
 } from '../model.ts';
+import { ProfilePhotoField } from './ProfilePhotoField.tsx';
 
 const toggle = <T,>(list: readonly T[], v: T) => (list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
 
@@ -14,7 +15,8 @@ export function ProfileFormView({ form, onChange, error, mode }: { form: Profile
   const set = (patch: Partial<ProfileForm>) => onChange({ ...form, ...patch });
   const fieldError = (f: ProfileField) => (error?.field === f ? error.message : null);
   return (
-    <View style={{ gap: 16 }}>
+    <View style={{ gap: 14 }}>
+      <ProfilePhotoField displayName={form.displayName} />
       <Field label="First name" value={form.displayName} onChangeText={(displayName) => set({ displayName })} maxLength={40} placeholder="Alex" textContentType="givenName" autoComplete="given-name" error={fieldError('displayName')} />
       <Field
         label="A little about you"

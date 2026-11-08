@@ -3,6 +3,10 @@ from pathlib import Path
 import hashlib
 import json
 import unittest
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parent))
+from takeover_baseline import pinned_bytes  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 FOLDER = ROOT / 'docs/engineering/r10'
@@ -17,7 +21,7 @@ class ArchitectureR10Test(unittest.TestCase):
         manifest = read('input-manifest.json')
         plan = json.loads((ROOT / manifest['versionAuthority']).read_text())
         for path, digest in manifest['inputHashes'].items():
-            self.assertEqual(hashlib.sha256((ROOT / path).read_bytes()).hexdigest(), digest, path)
+            self.assertEqual(hashlib.sha256(pinned_bytes(path)).hexdigest(), digest, path)
         projection = {
             'scopeRevision': plan['scopeRevision'],
             'iterations': [{k: x[k] for k in ('id', 'productVersion', 'journeys', 'dependsOn')}

@@ -6,26 +6,32 @@ export interface Application {id:string;meal_id:string;user_id:string;state:stri
 export interface Seat {meal_id:string;seq:string;user_id:string;application_id:string|null;type:string;effective_at:string}
 export interface AttendanceRevision {meal_id:string;subject_id:string;source:'SELF'|'HOST'|'SUPPORT';value:'present'|'absent';version:string;created_at:string;actor_id:string}
 export interface Experience {meal_id:string;user_id:string;score:number;revision:string;created_at:string}
-export interface User {id:string;created_at:string}
+/** v5 adds the first-completion time, coarse sign-up source and platform (earliest WEB/IOS session family). */
+export interface User {id:string;created_at:string;signup_source?:string|null;signup_platform?:'WEB'|'IOS'|null;completed_at?:string|null}
+/** v5: one member login family and whether it currently holds an analytics consent grant. */
+export interface Family {user_id:string;kind:'WEB'|'IOS';created_at:string;consented:boolean}
 export interface Survey {user_id:string;version:string;again:boolean|null;reasons:string[];submitted_at:string}
 export interface Event {event_id:string;anonymous_id:string;user_id:string|null;session_id:string;type:string;occurred_at:string;received_at:string;properties:Record<string,unknown>}
 export interface Delivery {id:string;event_id:string|null;outcome:string;reason:string|null;received_at:string}
-export interface Facts {users:User[];meals:Meal[];applications:Application[];seats:Seat[];surveys:Survey[];events:Event[];attendance?:AttendanceRevision[];experiences?:Experience[];quality?:{excludedEvents?:number;deliveryComplete?:boolean};excludedEvents?:Array<{event_id:string;type:string;occurred_at:string;reason:string}>;deliveries?:Delivery[];historyCoverageStart?:string;discoveryReady?:boolean;telemetryReady?:boolean}
+export interface Facts {users:User[];families?:Family[];meals:Meal[];applications:Application[];seats:Seat[];surveys:Survey[];events:Event[];attendance?:AttendanceRevision[];experiences?:Experience[];quality?:{excludedEvents?:number;deliveryComplete?:boolean};excludedEvents?:Array<{event_id:string;type:string;occurred_at:string;reason:string}>;deliveries?:Delivery[];historyCoverageStart?:string;discoveryReady?:boolean;telemetryReady?:boolean}
 export interface Row {rowId:string;inNumerator:boolean;inDenominator:boolean;attributes:Record<string,string|number|boolean|null>}
 type Value=number|null|{numerator:number;denominator:number};
 const DAY=86400000;
 const at=(iso:string)=>Date.parse(iso);
 export const londonDay=(iso:string)=>new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(iso));
 function week(iso:string){const d=new Date(londonDay(iso)+'T12:00:00Z');d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7));return d.toISOString().slice(0,10);}
+const weekBefore=(monday:string)=>{const d=new Date(monday+'T12:00:00Z');d.setUTCDate(d.getUTCDate()-7);return d.toISOString().slice(0,10);};
 const byVersion=(a:{version:string},b:{version:string})=>BigInt(a.version)<BigInt(b.version)?-1:BigInt(a.version)>BigInt(b.version)?1:0;
 const nearest=(values:number[],p:number)=>values.length?[...values].sort((a,b)=>a-b)[Math.ceil(values.length*p)-1]!:null;
 const row=(id:string,attrs:Row['attributes'],n=true,d=true):Row=>({rowId:id,inNumerator:n,inDenominator:d,attributes:attrs});
 
-/** Pure measurement-v4 calculation over one sealed, minimal, server-owned fact set. */
+/** Pure measurement-v5 calculation over one sealed, minimal, server-owned fact set (v4 snapshots stay readable). */
 export function calculateMetrics(facts:Facts,filters:Filters,asOfIso:string){
  const asOf=at(asOfIso);const users=new Map(facts.users.map(u=>[u.id,u]));const meals=new Map(facts.meals.map(m=>[m.id,m]));
  const dates=(iso:string)=>{const day=londonDay(iso);return(!filters.from||day>=filters.from)&&(!filters.to||day<=filters.to);};
- const segment=(id:string)=>{if(!filters.segments.length)return true;const joined=users.get(id);if(!joined)return false;const date=londonDay(joined.created_at);const kind=filters.from&&date<filters.from?'existing':dates(joined.created_at)?'new':null;return kind!==null&&filters.segments.includes(kind);};
+ // Source filter (v5): member-scoped metrics only; matches the stored source or its first segment.
+ const sourceMatch=(id:string)=>{if(!filters.sources.length)return true;const value=users.get(id)?.signup_source;return !!value&&(filters.sources.includes(value)||filters.sources.includes(value.split(':')[0]!));};
+ const segment=(id:string)=>{if(!sourceMatch(id))return false;if(!filters.segments.length)return true;const joined=users.get(id);if(!joined)return false;const date=londonDay(joined.created_at);const kind=filters.from&&date<filters.from?'existing':dates(joined.created_at)?'new':null;return kind!==null&&filters.segments.includes(kind);};
  const fits=(m:Meal)=>{const band=m.budget_max_pence<=2000?'0-20':m.budget_max_pence<=3000?'20-30':m.budget_max_pence<=4000?'30-40':'40+';return(!filters.areas.length||filters.areas.includes(m.area_code))&&(!filters.languages.length||filters.languages.some(l=>m.languages.includes(l)))&&(!filters.sizes.length||filters.sizes.includes(m.capacity>=7?'7+':String(m.capacity)))&&(!filters.budgetBands.length||filters.budgetBands.includes(band))&&(!filters.budgetUpToPence||m.budget_max_pence<=filters.budgetUpToPence);};
  const attrs=(m:Meal)=>({mealId:m.id,startsAt:m.starts_at,area:m.area_code,status:m.status});
  const rows:Record<string,Row[]>={};const metrics:Record<string,Value>=Object.fromEntries([...new Set(Object.values(ADMIN_PAGE_KEYS).flatMap(p=>[...p.metrics]))].map(k=>[k,null]));
@@ -78,13 +84,15 @@ export function calculateMetrics(facts:Facts,filters:Filters,asOfIso:string){
  const confirmed=new Map<string,Seat>();for(const s of orderedSeats)if(s.type==='GUEST_CONFIRMED'&&s.application_id&&!confirmed.has(s.application_id))confirmed.set(s.application_id,s);
  const applicationRows=selectedApplications.map(a=>{const meal=meals.get(a.meal_id)!;const decision=confirmed.get(a.id)?.effective_at??(a.state==='DECLINED'?a.decided_at:null);const decisionHours=decision&&at(decision)>=at(a.created_at)&&at(decision)<=asOf?(at(decision)-at(a.created_at))/3600000:null;const pending=a.state==='PENDING'&&meal.status!=='CANCELLED'&&asOf<at(meal.closes_at);return row(a.id,{...attrs(meal),userId:a.user_id,applicationId:a.id,appliedAt:a.created_at,status:a.state==='PENDING'&&!pending?'EXPIRED':a.state,decisionHours,pendingWaitHours:pending?Math.max(0,(asOf-at(a.created_at))/3600000):null});});
  count('applications',applicationRows);rows.applications=applicationRows;
+ // v5: one card. Approval confirms the seat in the first release, so "approved" always equalled "confirmed".
  count('confirmed',applicationRows.map(r=>({...r,inNumerator:confirmed.has(r.rowId)})));
- count('approved',rows.confirmed!);
  metrics.approval=nearest(applicationRows.map(r=>r.attributes.decisionHours).filter((v):v is number=>typeof v==='number'),.9);rows.approval=applicationRows;
  metrics.approvalP50=nearest(applicationRows.map(r=>r.attributes.decisionHours).filter((v):v is number=>typeof v==='number'),.5);rows.approvalP50=applicationRows;
  count('pendingApplications',applicationRows.filter(r=>typeof r.attributes.pendingWaitHours==='number'));
  const pendingHours=rows.pendingApplications!.map(r=>Number(r.attributes.pendingWaitHours));metrics.oldestPendingHours=pendingHours.length?Math.max(...pendingHours):null;rows.oldestPendingHours=rows.pendingApplications!;
  if(sourceReady){const successful=new Set(parts.filter(p=>p.value==='present'&&p.applicationId).map(p=>p.applicationId));ratio('applicationAttendance',selectedApplications.map(a=>{const m=meals.get(a.meal_id)!;const mature=at(m.scheduled_end_at)+DAY<=asOf;return row(a.id,{...attrs(m),userId:a.user_id,applicationId:a.id,appliedAt:a.created_at,observation:mature?'mature':'observing'},mature&&successful.has(a.id),mature);}));}
+ // Server facts only (applications, seats, attendance): never gated by client telemetry readiness.
+ series['funnel.join']=[{key:'applications',value:Number(metrics.applications)},{key:'confirmed',value:Number(metrics.confirmed)},{key:'attended',value:sourceReady?rows.applicationAttendance?.filter(r=>r.inNumerator).length??null:null}];
  const started=facts.meals.filter(m=>fits(m)&&dates(m.starts_at)&&at(m.starts_at)<=asOf);
  const formation=started.map(m=>{let peak=0;const active=new Set<string>();for(const s of orderedSeats.filter(s=>s.meal_id===m.id&&at(s.effective_at)<at(m.starts_at))){if(s.type==='LEFT')active.delete(s.user_id);else active.add(s.user_id);peak=Math.max(peak,active.size);}return row(m.id,{...attrs(m),minimum:m.minimum,peakConfirmed:peak},peak>=m.minimum);});
  ratio('formation',formation);ratio('cancellation',started.map(m=>row(m.id,{...attrs(m),reason:m.cancel_reason??'unknown'},m.status==='CANCELLED')));rows.meals=started.map(m=>row(m.id,attrs(m)));
@@ -111,7 +119,7 @@ export function calculateMetrics(facts:Facts,filters:Filters,asOfIso:string){
   rows['quality.events']=deliveryRows;
  }
  const matchesEvent=(e:Event)=>{
-  if(!dates(e.occurred_at)||e.user_id&&!segment(e.user_id)||!e.user_id&&filters.segments.length)return false;
+  if(!dates(e.occurred_at)||e.user_id&&!segment(e.user_id)||!e.user_id&&(filters.segments.length||filters.sources.length))return false;
   const p=e.properties.filters;
   const requestFilters=p&&typeof p==='object'?p as Record<string,unknown>:null;
   if(!requestFilters){const m=typeof e.properties.mealId==='string'?meals.get(e.properties.mealId):null;return m?fits(m):!filters.areas.length&&!filters.languages.length&&!filters.budgetBands.length&&!filters.sizes.length&&!filters.budgetUpToPence;}
@@ -142,11 +150,41 @@ export function calculateMetrics(facts:Facts,filters:Filters,asOfIso:string){
   if(facts.discoveryReady)ratio('discovery7',cohort(rendered,false));
   ratio('impressionNoApply',cohort(impressions,true));
   if(sourceReady){const opportunity=(rows.retention??[]).filter(r=>r.inDenominator).map(r=>({...r,inNumerator:facts.events.some(e=>e.type==='meal_impression'&&e.user_id===r.attributes.userId&&typeof e.properties.mealId==='string'&&meals.has(e.properties.mealId)&&e.properties.mealId!==r.attributes.mealId&&at(meals.get(e.properties.mealId)!.starts_at)>at(e.occurred_at)&&at(e.occurred_at)>at(String(r.attributes.firstAttendedAt))&&at(e.occurred_at)<=at(String(r.attributes.firstAttendedAt))+30*DAY)}));ratio('laterOpportunity',opportunity);}
-  // Join/host funnels share the application/seat counts and create attempt chains.
-  series['funnel.join']=[{key:'applications',value:Number(metrics.applications)},{key:'approved',value:Number(metrics.approved)},{key:'confirmed',value:Number(metrics.confirmed)},{key:'attended',value:sourceReady?rows.applicationAttendance!.filter(r=>r.inNumerator).length:null}];
+  // Host funnel: create attempt chains (consented events) ending in a published meal.
   const starts=facts.events.filter(e=>e.type==='create_started'&&typeof e.properties.attemptId==='string').sort((a,b)=>at(a.occurred_at)-at(b.occurred_at));const seen=new Set<string>();let arranged=0,published=0,started=0;
   for(const start of starts){const key=identity(start)+':'+String(start.properties.attemptId);if(seen.has(key))continue;seen.add(key);if(!matchesEvent(start))continue;started++;const next=facts.events.filter(e=>e.type==='create_arranged'&&identity(e)===identity(start)&&e.properties.attemptId===start.properties.attemptId&&at(e.occurred_at)>=at(start.occurred_at)).sort((a,b)=>at(a.occurred_at)-at(b.occurred_at))[0];if(next){arranged++;if(facts.meals.some(m=>m.host_id===start.user_id&&m.attempt_id===start.properties.attemptId&&at(m.created_at)>=at(next.occurred_at)))published++;}}
   series['funnel.create']=[{key:'started',value:started},{key:'arranged',value:arranged},{key:'published',value:published}];
+ }
+ // Overview "this week" row (v5): server facts only, London week (Monday start) containing the snapshot.
+ // Not narrowed by the date range or user segment; meal filters apply to meals, the source filter to members.
+ const thisWeek=week(asOfIso);const lastWeek=weekBefore(thisWeek);
+ const inWeeks=(iso:string)=>{const w=week(iso);return w===thisWeek||w===lastWeek?w:null;};
+ const weekRows=(key:string,items:Array<{id:string;at:string;attrs:Row['attributes']}>)=>{const selected=items.map(i=>({...i,w:inWeeks(i.at)})).filter(i=>i.w);count(key,selected.map(i=>row(i.id,{...i.attrs,week:i.w},i.w===thisWeek)));return selected.filter(i=>i.w===lastWeek).length;};
+ const previous:Array<{key:string;value:Value}>=[];
+ const signupUsers=facts.users.filter(u=>sourceMatch(u.id));
+ previous.push({key:'signups',value:weekRows('signups',signupUsers.map(u=>({id:u.id,at:u.created_at,attrs:{userId:u.id,joinedAt:u.created_at,platform:u.signup_platform??'unknown',signupSource:u.signup_source??null,profileCompletedAt:u.completed_at??null}})))});
+ series['signups.platform']=['IOS','WEB','unknown'].map(key=>({key,value:signupUsers.filter(u=>week(u.created_at)===thisWeek&&(u.signup_platform??'unknown')===key).length}));
+ previous.push({key:'mealsPublished',value:weekRows('mealsPublished',facts.meals.filter(fits).map(m=>({id:m.id,at:m.created_at,attrs:{...attrs(m),createdAt:m.created_at}})))});
+ previous.push({key:'firstApplications',value:weekRows('firstApplications',[...firstApplication].filter(([id,a])=>{const m=meals.get(a.meal_id);return !!m&&fits(m)&&sourceMatch(id);}).map(([id,a])=>({id,at:a.created_at,attrs:{...attrs(meals.get(a.meal_id)!),userId:id,applicationId:a.id,appliedAt:a.created_at}})))});
+ if(sourceReady){
+  const attendedMeals=new Set(parts.filter(p=>p.value==='present').map(p=>p.meal.id));
+  const held=facts.meals.filter(m=>fits(m)&&at(m.starts_at)<=asOf&&inWeeks(m.starts_at)).map(m=>{const w=inWeeks(m.starts_at)!;const ok=m.status!=='CANCELLED'&&attendedMeals.has(m.id);return row(m.id,{...attrs(m),week:w,attendanceEvidence:attendedMeals.has(m.id)},w===thisWeek&&ok,w===thisWeek);});
+  ratio('mealsHeld',held);
+  const prior=held.filter(r=>r.attributes.week===lastWeek);
+  previous.push({key:'mealsHeld',value:{numerator:prior.filter(r=>r.attributes.status!=='CANCELLED'&&r.attributes.attendanceEvidence===true).length,denominator:prior.length}});
+  // "weekly" keeps its own week (latest visible week); its comparison is the calendar week before that.
+  const trend=series['weekly.trend']??[];const latest=trend.at(-1)?.key;
+  const before=latest?weekBefore(latest):null;
+  const clipped=!!before&&!!filters.from&&filters.from>before;
+  previous.push({key:'weekly',value:before&&!clipped?trend.find(t=>t.key===before)?.value??0:null});
+ }
+ series['ops.previousWeek']=previous;
+ // Consent coverage (v5): members with a consented login family / members with a login family, both
+ // created in the date range. iOS guests never appear (they cannot consent); Web guests are not members.
+ if(facts.families!==undefined){
+  const groups=new Map<string,boolean>();
+  for(const f of facts.families){if(!dates(f.created_at)||!segment(f.user_id)||!users.has(f.user_id))continue;groups.set(f.user_id,(groups.get(f.user_id)??false)||f.consented);}
+  ratio('consentCoverage',[...groups].map(([userId,consented])=>row(userId,{userId,consented},consented)));
  }
  const summaries=Object.fromEntries((Object.keys(ADMIN_PAGE_KEYS) as Page[]).map(page=>[page,{metrics:Object.fromEntries(ADMIN_PAGE_KEYS[page].metrics.map(k=>[k,metrics[k]??null])),series:Object.fromEntries(ADMIN_PAGE_KEYS[page].series.filter(k=>k in series).map(k=>[k,series[k]!]))}])) as Record<Page,{metrics:Record<string,Value>;series:Record<string,Array<{key:string;value:Value}>>}>;
  return{metrics,series,rows,summaries};

@@ -2,6 +2,7 @@ import type { SessionState } from '../../api/session.tsx';
 import { safeReturnTo } from '../../lib/returnTo.ts';
 import { readJson, remove, writeJson } from '../../lib/storage.ts';
 import { isProfileReady, profileGatePath } from './gate.ts';
+import { markFreshSignIn } from '../../lib/freshSignIn.ts';
 
 const RETURN_KEY = 'auth.returnTo';
 const LINK_KEY = 'auth.linkTicket';
@@ -36,5 +37,6 @@ export function linkForProof(proof:string):PendingLink|null{
 /** Where to go after a verified sign-in: the profile gate first if incomplete, else the original page. */
 export function destinationAfterSignIn(state: SessionState, returnTo: string): string | null {
   if (state.status !== 'signed-in') return null;
+  markFreshSignIn();
   return isProfileReady(state.session) ? safeReturnTo(returnTo) : profileGatePath(returnTo);
 }

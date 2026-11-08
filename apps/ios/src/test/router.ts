@@ -7,6 +7,8 @@ export const mockRouter = {
   replace: jest.fn(),
   back: jest.fn(),
   dismiss: jest.fn(),
+  dismissAll: jest.fn(),
+  canDismiss: jest.fn(() => true),
   canGoBack: jest.fn(() => true),
   navigate: jest.fn(),
 };
@@ -29,5 +31,6 @@ export const expoRouterMock = {
 export function resetRouter() {
   for (const fn of Object.values(mockRouter)) fn.mockClear();
   mockRouter.canGoBack.mockImplementation(() => true);
+  mockRouter.canDismiss.mockImplementation(() => true);
   routeParams.current = {};
 }

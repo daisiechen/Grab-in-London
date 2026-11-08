@@ -6,6 +6,7 @@
     "dev": "vite",
     "build": "pnpm run typecheck && vite build",
     "preview": "vite preview",
+    "serve": "node server/serve.ts",
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.node.json",
     "test": "cd ../.. && vitest run --project web"
   },

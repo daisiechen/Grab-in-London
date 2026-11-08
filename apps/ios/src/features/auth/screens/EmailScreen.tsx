@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'expo-router';
-import { Keyboard, View } from 'react-native';
+import { Stack, useRouter } from 'expo-router';
+import { Keyboard, Text, TextInput, View } from 'react-native';
+import { ActionPage, BRAND_PAPER } from '../../../ui/ActionPage.tsx';
 import { Primary, TextAction } from '../../../ui/Button.tsx';
 import { Field } from '../../../ui/Field.tsx';
 import { FormMessage } from '../../../ui/FormMessage.tsx';
-import { Screen } from '../../../ui/Screen.tsx';
-import { Body, Eyebrow, Heading } from '../../../ui/Text.tsx';
+import { createStyles } from '../../../ui/styles.ts';
+import { colors, radius } from '../../../ui/tokens.ts';
 import { useServices } from '../../../services.tsx';
 import { startEmailChallenge, verifyEmailCode, type Challenge } from '../otp.ts';
 import { useFinishSignIn } from '../useAuthGate.ts';
 import { clearPendingLink, getPendingLink, setPendingLink } from '../link.ts';
+import { authText } from './auth-text.ts';
 
-/** Email + six-digit code stages; resend cooldown and expiry come from the server challenge. */
+/** Email + six-digit code stages; resend cooldown and expiry come from the server challenge (clock: services.now). */
 export function EmailScreen() {
   const services = useServices();
   const router = useRouter();
@@ -22,21 +24,33 @@ export function EmailScreen() {
   const [issue, setIssue] = useState<{ text: string; tone: 'error' | 'info' } | null>(null);
   const [busy, setBusy] = useState(false);
   const [now, setNow] = useState(services.now());
+  // Set when the server rate-limits sending a code: the message counts down to it and Send stays off.
+  const [blockedUntil, setBlockedUntil] = useState<number | null>(null);
+  const blockedFor = blockedUntil ? Math.max(0, Math.ceil((blockedUntil - now) / 1000)) : 0;
 
   useEffect(() => {
-    if (!challenge) return;
+    if (!challenge && !blockedUntil) return;
     const id = setInterval(() => setNow(services.now()), 1000);
     return () => clearInterval(id);
-  }, [challenge, services]);
+  }, [challenge, blockedUntil, services]);
+
+  useEffect(() => {
+    if (blockedUntil && blockedFor === 0) { setBlockedUntil(null); setIssue(null); }
+  }, [blockedUntil, blockedFor]);
 
   const cooldown = challenge ? Math.max(0, Math.ceil((challenge.resendAfter - now) / 1000)) : 0;
+  const remaining = challenge ? Math.max(0, Math.ceil((challenge.expiresAt - now) / 1000)) : 0;
 
   const send = async () => {
     Keyboard.dismiss();
     setBusy(true);
     const res = await startEmailChallenge(services.api, email, services.newId);
     setBusy(false);
-    if (!res.ok) return setIssue({ text: res.message, tone: 'error' });
+    if (!res.ok) {
+      if (res.retryAfterSeconds) { setNow(services.now()); setBlockedUntil(services.now() + res.retryAfterSeconds * 1000); }
+      return setIssue({ text: res.message, tone: 'error' });
+    }
+    setBlockedUntil(null);
     setChallenge(res.challenge);
     setEmail(res.challenge.email);
     setCode('');
@@ -65,33 +79,60 @@ export function EmailScreen() {
     if (res.kind === 'retry' || res.kind === 'failed') setIssue({ text: res.message, tone: 'error' });
   };
 
+  const footer = challenge
+    ? <Primary label="Verify & continue" icon="ArrowRight" busy={busy} onPress={() => void verify()} />
+    : <Primary label={blockedFor ? `Send code in ${blockedFor}s` : 'Send code'} icon="ArrowRight" busy={busy} disabled={blockedFor > 0} onPress={() => void send()} />;
+
   return (
-    <Screen testID="email-sign-in">
-      <Eyebrow>YOUR NEXT TABLE STARTS HERE</Eyebrow>
-      <Heading>{challenge ? 'Check your inbox.' : 'Let’s keep in touch.'}</Heading>
-      <Body>{challenge ? `Enter the six-digit code for ${challenge.email}.` : 'We’ll use a one-time code, so there’s no password to remember.'}</Body>
+    <ActionPage testID="email-sign-in" paper footer={footer}>
+      <Stack.Screen options={{ headerStyle: { backgroundColor: BRAND_PAPER }, headerShadowVisible: false }} />
+      <Text accessibilityRole="header" style={authText.h1}>{challenge ? 'Check your inbox.' : 'Let’s keep in touch.'}</Text>
+      <Text style={authText.prose}>{challenge ? `Enter the six-digit code for ${challenge.email}.` : 'We’ll use a one-time code, so there’s no password to remember.'}</Text>
       {!challenge ? (
-        <View style={{ gap: 14 }}>
-          <Field label="Email address" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" autoCorrect={false} textContentType="emailAddress" autoComplete="email" placeholder="alex@example.com" returnKeyType="send" onSubmitEditing={() => void send()} />
-          <Primary label="Send code" busy={busy} onPress={() => void send()} />
-        </View>
+        <Field label="Email address" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" autoCorrect={false} textContentType="emailAddress" autoComplete="email" placeholder="alex@example.com" returnKeyType="send" autoFocus onSubmitEditing={() => void send()} />
       ) : (
-        <View style={{ gap: 14 }}>
-          <Field label="6-digit code" value={code} onChangeText={(v) => setCode(v.replace(/\D/g, '').slice(0, 6))} keyboardType="number-pad" textContentType="oneTimeCode" autoComplete="one-time-code" maxLength={6} placeholder="123456" />
-          <Primary label="Verify & continue" busy={busy} onPress={() => void verify()} />
-          <TextAction label={cooldown ? `Resend in ${cooldown}s` : 'Resend code'} disabled={cooldown > 0 || busy} onPress={() => void send()} />
-          <TextAction
-            label="Change email"
-            onPress={() => {
-              setChallenge(null);
-              setCode('');
-              setIssue(null);
-            }}
+        <View style={styles.codeWrap}>
+          <Text style={styles.label}>6-digit code</Text>
+          <TextInput
+            accessibilityLabel="6-digit code"
+            value={code}
+            onChangeText={(v) => setCode(v.replace(/\D/g, '').slice(0, 6))}
+            keyboardType="number-pad"
+            textContentType="oneTimeCode"
+            autoComplete="one-time-code"
+            maxLength={6}
+            placeholder="123456"
+            placeholderTextColor="#c3c8bf"
+            autoFocus
+            returnKeyType="done"
+            onSubmitEditing={() => void verify()}
+            style={styles.code}
           />
+          <Text style={styles.hint}>{remaining > 0 ? `Code expires in ${Math.floor(remaining / 60)}:${String(remaining % 60).padStart(2, '0')}` : 'This code has expired. Request a new code.'}</Text>
+          <View style={styles.row}>
+            <TextAction label={cooldown ? `Resend in ${cooldown}s` : 'Resend code'} disabled={cooldown > 0 || busy} onPress={() => void send()} />
+            <TextAction
+              label="Change email"
+              onPress={() => {
+                setChallenge(null);
+                setCode('');
+                setIssue(null);
+              }}
+            />
+          </View>
         </View>
       )}
+      <View style={styles.message}><FormMessage message={blockedFor ? `Too many attempts. Try again in ${blockedFor}s.` : issue?.text ?? null} tone={issue?.tone ?? 'error'} /></View>
       {getPendingLink(services.now())?<TextAction label="Cancel account link" disabled={busy} onPress={()=>{clearPendingLink();router.replace('/sign-in');}}/>:null}
-      <FormMessage message={issue?.text ?? null} tone={issue?.tone ?? 'error'} />
-    </Screen>
+    </ActionPage>
   );
 }
+
+const styles = createStyles({
+  codeWrap: { gap: 6 },
+  label: { fontSize: 13, fontWeight: '700', color: colors.ink },
+  code: { height: 56, borderWidth: 1, borderColor: colors.line, borderRadius: radius.md, backgroundColor: '#fffdf7', fontSize: 26, letterSpacing: 10, textAlign: 'center', color: colors.ink, fontVariant: ['tabular-nums'] },
+  hint: { fontSize: 11, color: colors.muted },
+  row: { flexDirection: 'row', justifyContent: 'space-between' },
+  message: { marginTop: 8 },
+});
