@@ -344,3 +344,7 @@ ssh tencent-seoul 'sudo /opt/fancy-deploy/restore-drill.sh --identity /root/fanc
 | 日期 | 版本 | 结果 |
 | --- | --- | --- |
 | 2026-10-29 | `4d918b5`（分支 `claude/trusting-bohr-uxr7eh`，尚未合并 main） | bootstrap、Cloudflare Tunnel（`fancy-prod`，fancyabite.uk 与 www）、secrets、首次部署均完成；公开健康检查全部通过；首份加密备份已生成，每日定时备份启用；ss-server 与 443 全程未变。Auth0/Resend/Google 服务端 Key 沿用开发环境已配置的值（Auth0 为 fancy-dev UK 租户的 BFF 应用）；Web 地图 Key、Auth0 删号管理应用、Resend webhook、Ethan 推送暂未配置。备份密钥在录入当日因私钥误贴入聊天已轮换，旧密钥未加密过任何数据 |
+| 2026-10-29 | `4d918b5` 重建（`20261029T200506Z`） | Owner 录入 Web 地图 Key 后按同一提交 `release.sh --rebuild` → `migrate.sh` → `switch.sh` 重新构建上线 |
+| 2026-10-29 | `81bac4d`（`20261029T201353Z`） | 后台员工 Auth0 安全登录（请求 MFA）上线，健康检查通过 |
+| 2026-10-29 | `bd0a207`（`20261029T212845Z-bd0a2074d4b5`） | 回调接受 Auth0 附加的 `iss` 参数，健康检查通过 |
+| 2026-11-08 | `248cdf3`（main，`20261108T184751Z-248cdf31a60a`） | 合并云端交接分支（审核员登录方案 A，默认关闭）与后台员工登录诊断修复；无新迁移；候选验证、切换、全部健康检查通过；ss-server 与 443 未变。`--ref` 须用完整 SHA |
